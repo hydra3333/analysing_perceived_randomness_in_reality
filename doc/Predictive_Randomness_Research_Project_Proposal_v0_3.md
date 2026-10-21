@@ -1,21 +1,36 @@
 # Australian Powerball: Experimental Investigation of Randomness, Predictability, and Perceived Reality
 
-## Comprehensive project proposal — version 0.2 (revised discussion draft)
+## Comprehensive project proposal — version 0.3 (document-coordination and policy-reconciliation review candidate)
 
 **Prepared:** 21 October 2026  
-**Status:** Revised after the user’s October 2026 decisions and one independent Claude review; **the research/design plan remains open to ratification, not yet a predictor implementation specification**  
-**Primary platform:** Windows 10/11; Python 3.14; local, project-specific virtual environment  
+**Status:** v0.3 **review/ratification candidate** incorporating subsequent user agreements and coordinating the project charter with R1 v0.4; **not** a predictor implementation specification, a scored evaluation, or blanket approval of candidate-method formulas  
+**Primary platform:** Windows 11; Python 3.14.8 (standard build); project-local `.venv`; AMD Ryzen 9 3900X (12 physical / 24 logical processors), 32 GB RAM; VS Code and ordinary Windows CMD  
 **Primary observation period:** **19 April 2018, Draw 1144**, onward — exactly the seven-from-35 and one-from-20 format; **no earlier-rule-era records, even for Powerball-only analysis**  
 **Proposed program naming:** `Powerball_Predictor_v001.py`, followed by versioned successors  
 **Experimental method naming:** permanent `E_1`, `E_2`, … identifiers, each paired with an intelligible name  
-**Data acquisition:** date-stamped core CSV; optional, separately cross-checked Lotterywest reported draw-order CSV  
-**Simulation firewall:** all null-world, planted-effect and other synthetic results are confined to separate calibration/evaluation streams and never supply inputs, selection, weights or parameters for real-draw predictions
+**Data acquisition:** date-stamped core ascending-set CSV and separately cross-checked **operator-labelled drawn-order CSV**; operator evidence is not 444 independent broadcast verifications  
+**Simulation safeguards:** artificial draw observations, fitted synthetic states and synthetic outcomes never enter real-data training, predictions or real-result scores; separate synthetic research **may inform disclosed model design, calibration interpretation, feasibility, debugging and priorities**, without becoming evidence of real-world predictive success or an exclusion gate
 
 > **Central premise — deliberately unconventional:** This project is an empirical investigation of whether the apparent randomness of real-world Australian Powerball draws hides any exploitable structure. It expressly permits questioning familiar assumptions about probability, temporal independence, causal relationships, connectedness, and even the way we conceptualise perceived reality. We do **not** rule out a method merely because prevailing models say it should not work. Equally, we do **not** pronounce a method predictive merely because it produces an intriguing pattern. All proposals are welcome to be examined; evidence, reproducibility, mathematical consistency, and prospective performance decide what conclusions can honestly be drawn.
 
 ---
 
-### Revision record — v0.1 to v0.2
+### Revision record — v0.2 to v0.3 (21 October 2026)
+
+This is a **controlled update of the complete v0.2 proposal**, not a replacement charter. Its purpose is to eliminate drift after the separate R1 research and user decisions. Section 2's challenge to conventional notions of randomness and perceived reality is retained without qualification or restriction.
+
+1. **Document roles and authority clarified:** proposal governs agreed project policy; `Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md` governs the 62-method *research catalogue* and candidate mathematics; future R2 and R3 documents will govern detailed method contracts and evaluation rules **once approved**. A research recommendation does not silently amend policy. The R1 v0.4 header naming proposal v0.2 is its historical source basis, not a competing current project charter.
+2. **Research completed to candidate-catalogue stage:** retain the original six `E_1`–`E_6`, and record 56 additional candidate identities `E_7`–`E_62`, including pilot-wave-*inspired mathematical models* `E_57`–`E_62`; permit **up to 100 additional candidates** if useful (potentially through `E_106`), with **no numerical quota** and no automatic implementation authorization.
+3. **Critical synthetic-policy correction:** synthetic null-world, planted-effect and identifiability research is performed and reported separately and may inform **disclosed research design, calibration, sensitivity, computational planning, and interpretation**. Synthetic draws, synthetic-fitted latent states, artificial outcomes and synthetic scores are **not substituted into actual-draw training, fitted forecast states, real-data score tables or forecasts**. No synthetic failure disqualifies a method or prohibits its real-data experiment. Supersedes the blanket no-design-influence prohibitions in v0.2 §§4, 10 and 15.
+4. **Draw order resolved:** the official operator The Lott's **Drawn / Numerical** presentation and its Draw 1297 explicitly labelled historical results corroborate the corresponding Lotterywest-derived order CSV. Name this **operator-labelled drawn order** rather than provisional “reported order”; preserve the limited claim that not all 444 draws have separately been verified from broadcasts. R2 is to define **one common ordered/unordered data-use policy** for compatible experiments.
+5. **Pilot-wave family and user protection:** `E_57`–`E_62` remain investigable on **real** eligible-era observations. Exact/regularised guidance, set-likelihood, cyclic-order and hidden-state diagnostic qualifications are in R1; neither conventional expectations nor artificial identifiability diagnostics exclude any method. Quantum inspiration is **not** evidence of a quantum causal mechanism in lottery apparatus.
+6. **Computational design proposed for R2:** user hardware, one process per method, 1–12 worker pool (optional 24-worker SMT benchmark), single-threaded numerical backends, B1/B10 prediction-target computational benchmarks, 100 versus full development-history training windows, timing/resource/failure-only benchmark reports, and worker-count reproducibility. Computational cost never determines method retention or combination eligibility.
+7. **Reproducibility strengthened:** within controlled matching numerical conditions, 1-worker and 12-worker prediction payloads must be **bit-identical** as the default future implementation acceptance check; an exception requires a specific documented cause and user approval. Benchmark runtime measurements are excluded from byte equality.
+8. **Project-status and repository references refreshed:** the repository now holds two 444-draw source CSVs for Draws 1144–1587, the v0.3 scraper, R1 v0.4, working Python 3.14 `.venv` and `requirements.txt`. Nothing in this edit asserts that the E-methods have been implemented or scored, or that the final holdout has been opened.
+
+**Coordination rule:** The accepted later user instructions recorded here supersede conflicting v0.2 text. Existing v0.2 revision notes below are preserved as history, not operative rules when contradicted by v0.3. Detailed R1 model proposals remain *candidate designs* pending R2 review. No repository files or datasets are modified by this Markdown deliverable.
+
+### Historical revision record — v0.1 to v0.2 (preserved; superseded where stated above)
 
 - Corrected current-rules inception to **Draw 1144 on 19 April 2018**, adding the two valid April draws and updating the script.
 - Confirmed a **hard bar** on all pre-change draw results, including Powerball-only variants (rejection of review D4).
@@ -27,6 +42,39 @@
 - Preserved the central principle that the project deliberately questions perceived reality and accepted independence models.
 
 **Source/status note:** The supplied Claude review is a review input, **not** an independent ratified project authority; this version reflects the user's subsequent decisions and the additional source checks. The optional enhanced scraper was tested with local fixtures. A complete live trial of Lotterywest enrichment was not possible from this document-authoring environment.
+
+## 0. Document control, precedence and current project state
+
+### 0.1 Why there are two substantive documents
+
+The documentation is deliberately **layered, not merged**:
+
+| Document | Repository path / status | Governing responsibility |
+|---|---|---|
+| **Project Proposal v0.3 (this file)** | `doc/Predictive_Randomness_Research_Project_Proposal_v0_3.md` — review/ratification candidate | **Project charter:** research purpose, philosophy, user-agreed policies, boundaries, retain-all-methods rule, and decision/governance controls. |
+| **R1 Experimental Methods Research v0.4** | `doc/Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md` — completed research catalogue, current **review candidate** | Research findings and **E_1–E_62 candidate inventory** (not an approved mathematical/implementation specification). It makes recommendations; it does not independently change the charter. |
+| **R2, future** | No ratified R2 file yet | Detailed mathematical definitions, candidate variants, agreed observation policy, input/output contracts and implementation specifications. Requires review. |
+| **R3, future** | No ratified R3 file yet | Predictive scoring, historical-evaluation protocol, inference and reporting standards; requires review. |
+| **Operational source/data** | `src/`, `source_data/`, `requirements.txt`, `.vscode/` | Implementation and observational evidence. Operational files do not by themselves authorize new research-policy rules. |
+
+**Precedence when documents appear to differ:** (1) a clear subsequent **user-ratified decision** controls; (2) the latest user-approved project proposal governs project-wide policy; (3) an approved R2/R3 specification would control its own expressly delegated technical area, without overriding project policy; (4) R1 supplies candidate research and rationale, not policy overrides. Unratified assistant recommendations are labelled *proposed* or *candidate*. Material conflicts are raised for resolution; do **not** silently average the documents or interpret newer text as authorisation to breach a user decision.
+
+**Transitional cross-reference:** R1 v0.4 records v0.2 as the proposal available when R1 was authored, with “subsequent user instructions controlling”. That is accurate **historical provenance**. This v0.3 succeeds v0.2 for future charter review; retaining R1's historical citation is not a substantive inconsistency. A future metadata-only R1 update may point to a ratified v0.3, but no R1 content needs rewriting now.
+
+### 0.2 Agreed, candidate and deferred are different statuses
+
+- **User-agreed:** items recorded as decisions, including same-rule draw boundary, ten-draw holdout, all-method retention, speculative openness, synthetic separation **with permitted disclosed methodological learning**, and baseline benchmark direction. Their **detailed implementation** may still require ratification.
+- **Research candidate:** the 62 `E_x` concepts in R1, mathematical variants, optional inputs, and software/bench proposals. Recording them does **not** claim they are coded or predictive.
+- **Deferred:** numerical scoring rules, evidence thresholds, ensemble qualification mechanics, actual method implementation order, frozen formula/parameter specifications, and exact execution contracts.
+- **Not performed:** a predictor build, an E-method walk-forward run, synthetic calibration runs, final-holdout evaluation, or genuine next-draw forecast.
+
+### 0.3 Current observed source boundary
+
+As packaged in the inspected repository ZIP on 21 October 2026, `source_data/australian_powerball_history_20261021.csv` and `source_data/australian_powerball_draw_order_20261021.csv` each contain **444 draws, Draw 1144 through 1587**, from 19 April 2018 through 15 October 2026, within the 7-of-35 plus 1-of-20 rules. The two files present **different observational views**, not two independent histories. Their matching seven-number sets, Powerball values and draw keys were checked during R1. The new predictor should never infer extraction order from ascending columns or treat the two CSVs as 888 independent draws.
+
+A **historically labelled** drawn-order series is now supported by official operator evidence described in §11.5. That source qualification does not assert that all 444 draws have been independently video-verified.
+
+---
 
 ## 1. Executive statement
 
@@ -52,6 +100,8 @@ The eventual system should:
 8. Support real, next-draw predictions using all available history when the user explicitly chooses to perform such a prediction.
 9. Keep a transparent, reproducible record of methods, data, configuration, predictions, results, evaluations, and decisions.
 10. Permit the evaluation and method-qualification policies to evolve, with changes explicit, justified, and subject to user agreement.
+11. Support source-qualified **operator-labelled drawn order** as well as unordered seven-number sets where applicable, under one shared R2 input policy.
+12. Support computational benchmarking **separately from predictive merit evaluation**, with resource-safe parallelism, reproducible results and explicit failure reporting.
 
 ### 1.3 What is *not* being claimed
 
@@ -143,21 +193,17 @@ The first draw governed by the current seven-from-35 and one-from-20 game matrix
 
 **Hard exclusion decision:** All historical draws using **any different numbers of balls in a barrel, any different drawing count, or any other incompatible game configuration** are excluded from the real predictive dataset. This applies **even if one component (such as the Powerball barrel) retained its current rules**. There will be **no extended pre-April-2018 Powerball-only training variant**. D4 from the external review is expressly rejected. If future game rules change, the programme must stop and require new, explicit dataset/era policy rather than silently merge data.
 
-The primary snapshot on **21 October 2026**, assuming the archive is complete through **15 October 2026, Draw 1587**, contains **444 consecutive current-format draws (1144 through 1587 inclusive)**. This is a validated *expected count*, not a claim that a new live download has been independently executed in this drafting environment.
+The inspected **repository snapshot dated 21 October 2026** contains **444 consecutive current-format draws**, Draw 1144 through Draw 1587 (latest dated **15 October 2026**), in both source CSVs. This is verified from the supplied repository files and their matching keys/sets, **not** a claim that a fresh live download was carried out in this drafting environment.
 
-### 3.2 Historical CSV
+### 3.2 Historical CSV and operator-labelled drawn order
 
-There is an existing Python downloader/scraper and a locally growing historical CSV. The data-acquisition tool has now been revised to include Draw 1144 and Draw 1145 rather than starting at Draw 1146. It continues to make a **full validated snapshot on each successful run**, rather than merely appending unverified rows. The ordinary CSV retains the existing ten-column interface; as new Thursday draws become available the next dated snapshot can contain additional records.
+The project repository contains a **growing**, date-stamped validated record of draws in its `source_data/` directory. The primary ten-column `australian_powerball_history_20261021.csv` records draw number, ISO date, the seven main numbers (usually stored in ascending order) and one Powerball value. The separately sourced `australian_powerball_draw_order_20261021.csv` records the **operator-labelled drawn order** for the same 444 historical draws, with successful draw-key, set and Powerball agreement against the primary CSV. These are two *views of the same observations*, not an enlarged independent sample.
 
-A second, **optional** data acquisition mode requests the official [Lotterywest per-draw pages](https://www.oz.lotterywest.com/powerball/results/draw/1144), retrieves the **seven main numbers in reported draw order**, and requires a complete per-draw agreement with the corresponding ascending-order archive numbers and Powerball value. Because obtaining this information requires hundreds of additional website requests, and because external HTML can change, it is **not mandatory for ordinary acquisition**. It creates a distinct, dated draw-order CSV only when all requested official checks pass. The optional source is currently an *offline-tested implementation*, not a claim of successful end-to-end live verification.
+The reviewed starting boundary remains **Draw 1144, 19 April 2018**; no observations from a different main- or Powerball-barrel rule configuration may be added even for a barrel-only variant. The valid source dataset will grow as new completed draws are collected and validated. Filename dates represent acquisition dates, not necessarily dates of the most recent draw.
 
-Expected logical columns are:
+**Operator evidence:** The Lott's Draw 1587 `Drawn / Numerical` display, and the explicitly drawn-order-labelled official Draw 1297 results (25 March 2021), match the corresponding repository sequences. Lotterywest's historical display supplies the ordered CSV. This justifies the label **operator-labelled drawn order**, while leaving room for optional independent broadcast checks and later source corrections. §11.5 records the provenance and R2 policy implications.
 
-`Draw_Number, Date, Ball_1, Ball_2, Ball_3, Ball_4, Ball_5, Ball_6, Ball_7, Powerball`
-
-In the current acquisition source, the seven main balls are displayed typically in **ascending numerical order**. They should **not** be interpreted as the physical order in which balls came out of the machine. The database represents a seven-element **unordered set**, whatever display order happens to be used in the CSV. The single Powerball value is a separate target.
-
-A date-stamped filename such as `australian_powerball_history_20261021.csv` records **file generation/download date**, not the last draw date. The loader should inspect the contents to determine the actual latest covered draw. Files with different retrieval dates can contain the same last published draw.
+The period and complete historical record are small enough for standard in-memory techniques, although some proposed latent-state optimisation methods will be computationally intensive. Source integrity and information availability **before each forecast cutoff** remain binding requirements.
 
 ### 3.3 Acquisition is distinct from prediction
 
@@ -193,7 +239,7 @@ The following are recorded as **agreed project intentions**, not merely assistan
 | **A-08** | Reserve the **latest 10 completed draws** as a final, untouched test set while developing and selecting methods. |
 | **A-09** | When deliberately making a **real prediction for the next unobserved draw**, allow the chosen model to use **all currently available history**, including those 10 draws. |
 | **A-10** | The recurrence-interval idea concerns reaching or being near a characteristic **optimal interval on the next draw**, **not** simply being the most overdue. |
-| **A-11** | Begin with six user-proposed experimental families; later research up to **50 additional candidate methods**, including sophisticated and speculative approaches. |
+| **A-11** | Begin with six user-proposed experimental families and allow research into **up to 100 additional candidate methods if useful** (not a quota). R1 currently contains the original six plus **56 additional candidates** (`E_1`–`E_62`). Candidate listing is not implementation approval. |
 | **A-12** | Methods have permanent identifiers `E_1`, `E_2`, … and explanatory names, with modular Python implementations and shared utilities. |
 | **A-13** | Preserve **every method**, regardless of standalone rank, apparent failure, novelty, or lack of explanatory mechanism. |
 | **A-14** | Every method remains eligible for future single-method or multi-method experiments and combinations, subject to transparent criteria. |
@@ -201,23 +247,32 @@ The following are recorded as **agreed project intentions**, not merely assistan
 | **A-16** | Score, compare, and report predictions against known draws, but **defer detailed scoring and selection-policy decisions** until the exploratory-method research and design have been discussed. |
 | **A-17** | Python **3.14** is the intended implementation platform. Additional packages must be flagged explicitly and installed only into a **project-specific virtual environment**, not globally. |
 | **A-18** | Research and method selection come **before writing the predictor**; the project proceeds through discussion and user ratification. Updating the existing independent scraper is permitted ahead of predictor design. |
-| **A-19** | **D1 provisionally accepted:** separately experiment with null-world histories, planted-effect histories and other synthetic tests, including thousands of simulations as useful, while preventing them from affecting forecasts derived from real data. |
-| **A-20** | **Hard simulation firewall:** simulations are executed, analysed, evaluated, stored and reported **entirely separately** from genuine-draw modelling. No synthetic outcomes, calibration findings, selected variants, weights, hyperparameters or pseudo-observations may influence which real-data predictions are issued or how they are calculated. |
-| **A-21** | **D2 accepted:** investigate optional additional observations, including reported physical draw order and possible machine/ball-set information. Equipment metadata is neither necessary nor a gating dependency. |
+| **A-19** | **D1 direction accepted:** separately run null-world, planted-effect and other synthetic/calibration studies, including thousands of simulations where useful. These may inform **disclosed** design, calibration, sensitivity, debugging and interpretation but are not evidence of real predictive success or an automatic eligibility gate. |
+| **A-20** | **Synthetic/real firewall (clarified):** artificial observations, fitted synthetic states, synthetic forecasts/outcome scores and synthetic-only parameter fits are never mixed with real draws, real fitted forecast states or real predictive scores. **Documented methodological learning** from simulations is permitted, including model-design and feasibility choices. No method is automatically excluded for failing a synthetic diagnostic. |
+| **A-21** | **D2 direction accepted:** investigate additional observations, including now-supported **operator-labelled drawn order** and optional machine/ball-set information. Equipment metadata is neither necessary nor a gating dependency. |
 | **A-22** | **D3 accepted:** correct the full compatible historical starting point to **Draw 1144, 19 April 2018**, with no first-two-draw omission. |
 | **A-23** | **D4 rejected:** no historical observations from **any** earlier differing game-matrix configuration; specifically, no older Powerball-only extension even if its barrel individually resembled the current one. |
 | **A-24** | **D5 provisionally accepted:** reserve extensibility for independent external, time-indexed data, subject to provenance and the information-available-before-forecast rule; no external variable is mandatory. |
 | **A-25** | Neither poor standalone scores nor strong correlation with another method may be used to discard, deprioritise as a matter of principle, or make an experimental method ineligible for combinations. Correlation is descriptive reporting information. |
-| **A-26** | Core ascending-number results and optional genuine reported draw order are **distinct observables**. Never infer physical order from sorted columns. |
+| **A-26** | Core ascending-number results and source-qualified **operator-labelled drawn order** are distinct views of the **same draws**. Never infer draw order from sorted columns, and never double-count rows as independent observations. |
 | **A-27** | Revised acquisition preserves the ordinary ten-column dated CSV; official independent verification/draw-order output is optional and must fail closed on missing or contradictory data. |
-| **A-28** | The conventional independent-uniform model can calibrate *interpretation and instrument sensitivity*, but it is **never a gatekeeper** for method eligibility and its synthetic calibration is never an input to a real-data forecast. |
-| **A-29** | One external review from Claude was invited for this proposal; ongoing collaboration between the two assistants is **not** a required project workflow. |
+| **A-28** | The conventional independent-uniform model can calibrate *interpretation and instrument sensitivity* but is **never a gatekeeper** for method eligibility. Synthetic data/states are never genuine forecast inputs, although disclosed simulation-derived methodological learning is permitted. |
+| **A-29** | A one-round external Claude review was originally invited; subsequent voluntary discussions informed R1, but ongoing dual-assistant review is **not** required project governance. |
+
+| **A-30** | The project-charter document and the R1 research-catalogue document serve **separate, coordinated roles**. A research recommendation does not silently overrule later user-approved project policy; user agreement controls substantive changes. |
+| **A-31** | Extend the available research space to 100 additional candidate methods; **keep every** `E_x` concept and variants, regardless of perceived implausibility, speed, poor results or inter-method correlation. |
+| **A-32** | Add all six pilot-wave-inspired **mathematical** research candidates `E_57`–`E_62`, including the corrected guided-particle methods E_61/E_62, as eligible for **real-data** experiments. Their origin does not imply quantum physics is a lottery mechanism; identifiability results are diagnostic, **not** an exclusion rule. |
+| **A-33** | Treat Lotterywest's cross-checked ordered numbers as **The Lott operator-labelled drawn order** (supported by Draw 1297 and 1587 evidence). Retain source provenance and the narrower limitation of no complete independent broadcast verification. R2 will have **one common** ordered/unordered data-use policy for compatible methods. |
+| **A-34** | Develop the initial CPU execution design around configurable **1–12 separate worker processes**, one E-method per worker; optional benchmark to 24 logical workers, controlled native numeric-library threads and **32 GB memory awareness**. Speed does not determine method eligibility. |
+| **A-35** | Keep **computational benchmarking** separate from research scoring. Support `X` walk-forward targets (B1=1, B10=10), a configurable preceding-history length `W` (e.g., 100 or full), and exclude the frozen latest-ten holdout. Do not score or show benchmark predictions in timing reports. |
+| **A-36** | The default acceptance criterion for the future implementation is **bit-identical prediction payloads** under 1-worker and 12-worker runs in a controlled matching numerical configuration. Any specific exception needs a documented cause and **explicit user approval**. |
+| **A-37** | Synthetic datasets may support disclosed design choices and null-world interpretation, but must remain separate in storage, fit state, prediction generation and scoring. Synthetic identifiability, null calibration and planted-effect outcomes must not be interpreted as a ban on real experiments. |
 
 ### 4.1 Boundary between agreed research policy and later choices
 
 The proposals that follow include architectural suggestions, validation safeguards, reporting schemes, possible formulas, and research categories from the assistant. Unless they directly restate the above agreements, they are **proposed for consideration**. Their inclusion in a comprehensive proposal must not be mistaken for silent approval. The **provisional** nature of some D1/D2/D5 details means that implementation mechanisms and experimental formats remain reviewable even though the broad directions are endorsed.
 
-The user requested that **synthetic experiments not influence real predictions**. Consequently a simulation finding cannot be used as a hidden ranking advantage, a parameter search result or a filter when choosing a real-world forecast. The report may explain what synthetic reference worlds look like, but that is **post hoc evaluation or separate methodological research**, not prediction-generation authority.
+The user subsequently clarified that simulations **may inform method design, practical feasibility, sensitivity analysis and interpretation**, provided those influences are transparent. What is prohibited is contaminating a genuine forecast with **artificial observations, fitted synthetic state, synthetic-only parameter estimates or scores masquerading as real data**. Synthetic results do **not** automatically qualify or disqualify methods. Parameters of an actual forecast must be estimated according to the real-data information-cutoff protocol. §§10.6–10.7 specify the operative safeguards. This paragraph supersedes stricter v0.2 wording.
 
 ---
 
@@ -227,17 +282,17 @@ A single invited Claude review proposed five decisions and several corrections. 
 
 | Review item | Disposition | Boundaries |
 |---|---|---|
-| **D1 — whole-pipeline reference and planted-effect simulations** | **Provisionally accept** | Distinct workflows and reports, thousands of simulations permitted; **no influence whatsoever on actual predictions**, including model choices/weights/parameters |
-| **D2 — equipment metadata and actual draw order** | **Accept investigative scope** | Order appears to be published by Lotterywest; apparatus details exploratory only and not a dependency |
+| **D1 — whole-pipeline reference and planted-effect simulations** | **Accept direction; execution details deferred** | Distinct synthetic data/states and reports, thousands of simulations permitted; **disclosed method-design and interpretive learning permitted**, no substitution of artificial observations/fit states/scores into genuine forecasts |
+| **D2 — equipment metadata and drawn order** | **Accept investigative scope** | Order is now supported as **operator-labelled drawn order**; equipment details are exploratory only and not a dependency |
 | **D3 — first qualifying draw 1144** | **Accept and implement in scraper** | Include 19 and 26 April 2018; prohibit earlier configurations |
 | **D4 — older Powerball-only history** | **Reject expressly** | Never bring different-rule-era records into the dataset, even for just the unchanged second barrel |
 | **D5 — date-indexed external observations** | **Provisionally accept** | Keep an extensible interface; require information-time provenance; no obligatory feeds |
 
-The independent review also highlighted sensitivity, the `E_2` recurrence-hazard formulation, common mathematical ancestry among apparently different models, and possible physical-draw-order evidence. These are included as research design considerations, **not as grounds to narrow speculative method eligibility**.
+The independent review also highlighted sensitivity, the `E_2` recurrence-hazard formulation, common mathematical ancestry among apparently different models, and source-qualified drawn-order evidence. These are included as research design considerations, **not as grounds to narrow speculative method eligibility**.
 
 ### 4.3 Immediate software update and its limits
 
-The independent acquisition program is now `scrape_australian_powerball_history_from_2018_04_19_v0_3.py`. Normal execution writes `australian_powerball_history_YYYYMMDD.csv` containing Draw 1144 onward. With `--official-order`, it additionally obtains official Lotterywest draw-order observations and requires complete independent agreement before writing `australian_powerball_draw_order_YYYYMMDD.csv`. It performs **no synthetic experimentation and no forecasting**. The tests already performed against the new script used synthetic **parser fixtures** to check software behaviour; those are not the future prediction-model simulation programme. A successful complete *live run* of the optional official mode has not yet been demonstrated.
+The independent acquisition program is now `scrape_australian_powerball_history_from_2018_04_19_v0_3.py`. Normal execution writes `australian_powerball_history_YYYYMMDD.csv` containing Draw 1144 onward. With `--official-order`, it additionally obtains official Lotterywest draw-order observations and requires complete independent agreement before writing `australian_powerball_draw_order_YYYYMMDD.csv`. It performs **no synthetic experimentation and no forecasting**. The tests already performed against the new script used synthetic **parser fixtures** to check software behaviour; those are not the future prediction-model simulation programme. The later supplied repository ZIP contains the resulting **444-row** official-order CSV and matching core CSV. These were compared during R1. This does not establish that every subsequent live website request will succeed or that every historical draw was independently broadcast-verified.
 
 ## 5. The central experimental workflow
 
@@ -335,10 +390,11 @@ A method that naturally produces only partial rankings, a distribution over full
 
 ### 6.3 Important order and dependence issues
 
-- `Ball_1` … `Ball_7` are **display/storage positions**, not necessarily draw-order positions. A model must not infer that `Ball_1` is physically drawn first merely because it is the first CSV column.
+- `Ball_1` … `Ball_7` in the **ordinary ten-column CSV** are **ascending/storage positions**, not draw-order positions. The **separate operator-labelled drawn-order CSV** supplies that additional observation; a model must not infer that `Ball_1` of the ascending CSV was physically drawn first.
 - Seven main numbers are distinct within a draw. Selecting independently highest-scoring numbers is straightforward, but models of **whole combinations** may require joint scoring to respect interactions between included numbers.
 - A frequency-based probability for one number and a probability for an entire seven-number combination are not interchangeable.
 - Ties must be resolved reproducibly or with a declared and recorded random seed.
+- **One common R2 observation policy** should govern whether a method consumes an unordered set, an operator-labelled ordered sequence, or both; these are two views of one draw, not independent extra observations. The policy applies to all mathematically compatible methods, without automatically creating an `E_x` duplicate for each data view.
 
 ---
 
@@ -445,19 +501,19 @@ Those matters must be resolved in the detailed experimental-method design, not s
 
 Several proposed approaches may be mathematically related—for example, decayed frequencies, smoothed occurrence-curve extrapolations and some conjugate-probability updates can all produce different weighted summaries of recent binary history. **Method-family labels, ranking correlation and error-correlation analyses are desirable as reports, not as deletion, implementation-deprioritisation or ensemble-ineligibility rules.** Subtly distinct related methods may still produce useful conditional or ensemble information. Any suggestion of inversion or combination must be tested under its own independently recorded definition.
 
-## 8. Research programme for up to 50 additional candidate approaches
+## 8. Research programme and completed R1 catalogue — up to 100 additional candidates
 
 ### 8.1 Agreement on scope, not pre-selection of winners
 
-After this proposal is understood and accepted as a starting document, undertake a separate **method-discovery and literature-research phase**. The desired scope is **up to 50 additional experimental methods** beyond the six initial user ideas. “Up to” means select for conceptual diversity and worthwhile experimentation rather than padding a list to an arbitrary quota.
+A separate **R1 method-discovery and literature-research phase** has now produced the current **62-candidate catalogue**: the six original E_1–E_6 and **56 additional E_7–E_62**, including the pilot-wave-inspired mathematical family E_57–E_62. The user’s subsequently expanded scope permits **up to 100 additional experimental candidates beyond the original six** (potentially E_7–E_106 if worthwhile). “Up to” is **not a quota** and does not require implementation of all candidates.
 
 Research should not be confined to literature specifically about lotteries or gambling. Useful approaches may come from research on noisy measurements, randomness testing, signal processing, state estimation, change detection, dynamical systems, information theory, time series, nonlinear statistics, machine learning, complex systems, and speculative research traditions.
 
-**This version does not claim that such a literature survey has already been completed** and does not pre-ratify 50 unresearched methods. It defines the scope and standards for that next phase.
+**R1 v0.4 documents research already conducted and references already collected**, not implementation or evidence of predictive merit. Candidate identities and mathematical variants remain subject to detailed R2 review. This charter establishes research openness and governance, not a list of authorised code changes.
 
 ### 8.2 Research domains to explore
 
-The following are **search domains and illustrative possibilities**, not yet adopted experimental IDs:
+The following are **research domains** represented by or available to extend the current R1 catalogue; the definitive individual *research candidate* descriptions and `E_x` mappings are in R1 v0.4:
 
 1. **Classical and modern probability:** frequency models, exact distribution tests, nonuniform categorical outcomes, occupancy models, hypergeometric structure, exchangeability and deviations from exchangeability.
 2. **Bayesian inference:** hierarchical pooling, Dirichlet-type priors, posterior predictive ranking, dynamic Bayesian models and uncertainty-aware shrinkage.
@@ -479,7 +535,7 @@ These categories intentionally overlap. Cross-disciplinary and apparently unlike
 
 ### 8.3 Research record for each candidate
 
-For each candidate approach, the research phase should provide:
+For each candidate approach, R1’s catalogue records or future additions should provide:
 
 - A permanent *candidate* research reference until an `E_x` implementation ID is granted.
 - A short, understandable name and a concise plain-English explanation.
@@ -509,6 +565,25 @@ The user has asked for plain-spoken advice about whether an idea makes sense. Th
 No one category is a permanent verdict on the possibility of alternative formulations or combination value.
 
 ---
+
+### 8.5 R1 candidate catalogue handoff and pilot-wave-inspired family
+
+**Current catalogue:** E_1–E_62, including 56 additional candidates beyond the original six. The exact explanatory text, references and method-specific constraints reside in R1 v0.4; this proposal **does not duplicate all 62 methods** or silently make their current formulas binding. Its job is to preserve their eligibility and control how specifications are approved.
+
+The six currently catalogued pilot-wave/**Bohmian-inspired** methods are:
+
+| Research ID | Candidate idea | Status and crucial qualification |
+|---|---|---|
+| E_57 | Fixed-Size Determinantal Seven-Set Model | A seven-subset interaction model (symmetric positive-semidefinite kernel); **not** synonymous with sequential Wallenius weighted sampling; main barrel chiefly. |
+| E_58 | Unconditioned Coupled Latent-Wave Field | Hidden coupled oscillatory propensities; needs a separately valid seven-without-replacement selection mechanism. |
+| E_59 | Draw-Conditioned Coupled Latent-Wave Field | Related latent field updated from actual observations available before each prediction. |
+| E_60 | Post-Change Non-Equilibrium Relaxation Analogue | Models changing/relaxing departures after detected or documented regime changes; apparatus details optional. |
+| E_61 | Guided-Particle Circulation | Latent trajectories with shared guiding field, possible one-dimensional **order preservation**, separately specified valid capture likelihood and testable recurrence/association patterns. |
+| E_62 | Guided-Particle Circulation with Reinjection | Outcomes can change hidden particle states through a defined reinjection rule; its hypothesis differs from E_61. |
+
+These are models intended for **real eligible-era draw data**, not synthetic-only demonstrations. Synthetic identifiability testing is informative, not an implementation/eligibility gate. R1 records the correction that an exact node-free guidance reference requires precise coefficient and node conditions; regularised, noisy, different-dimensional or different-feedback variants are distinguished rather than confused with that reference. The **analogy** to de Broglie–Bohm theory gives no evidence of a quantum process in the draw machine. None of these facts prejudges empirical outcome.
+
+Method correlation, expensive inference and absence of apparatus labels cannot delete, exclude or categorically deprioritise any candidate. R2 should determine the practical scope of each implementation, with separate permanent identity for materially changed hypotheses and version/variant metadata for compatible changes.
 
 ## 9. Permanent method retention and evolving qualification
 
@@ -621,37 +696,39 @@ These observations contribute to the experimental record even if no winning pred
 
 ---
 
-### 10.6 Completely separate simulation/calibration programme — accepted principle
+### 10.6 Synthetic research and calibration — separately executed, permitted to inform disclosed design
 
-This subsection resolves an important point from the independent review and subsequent user direction.
+**This v0.3 formulation supersedes the stricter v0.2 “no influence even on design” language.** The aim is to keep separate sources of **evidence** while allowing research instruments to be improved. The user has specifically authorised thousands of synthetic simulations, and has clarified that these may inform design, methodological feasibility and interpretation. The user has **not** authorised mixing simulated draws with actual Powerball history or presenting synthetic performance as proof of real-world predictive ability.
 
-**Isolation invariant S-01:** Real-data forecast generation depends exclusively on allowed **real recorded observations and other explicitly permitted genuine information available at the forecast cutoff**. Null-world, planted-effect or other synthetic experiments do **not** supply observations, pseudo-counts, fitted parameters, weights, calibration coefficients, method eligibility decisions, method-selection rankings, stopping rules, or revised real-world picks. The intended prohibition includes indirect channels, not only copying synthetic observations into the history CSV.
+**S-01 — Real-data information boundary.** When making a prediction for real draw N, only authentic, eligible-era observations and other expressly permitted real-world facts **available before N** may enter real-data fitted state, learned weights and direct forecasting computations. Synthetic histories, synthetic-fitted latent states, artificial forecast outcomes and synthetic-only scores must not be substituted for real observations or real fit states.
 
-**Isolation invariant S-02:** Simulation experiments run as separate jobs with clearly distinct input roots, output roots, configurations, manifests and reports. Every generated record is permanently marked synthetic. Real data and simulated data are never combined for training or forecasting. A real draw record must never inherit a synthetic provenance tag or conversely.
+**S-02 — Physical and logical separation.** Null-world and planted-effect experiments use explicitly marked synthetic inputs, jobs, manifests, outputs and reports. They may share reliable numerical *code* and pure mathematical utilities with real-data methods; **synthetic generated records and learned synthetic states must not enter the real-data training/prediction path**. Keep distinct results and avoid pooled performance tables that confuse artificial and actual observations.
 
-**Isolation invariant S-03:** Simulation findings may be discussed as **instrument diagnostics and interpretive context**—for example, showing that a strange score can occur frequently under a named reference generator, or that a method can detect a synthetic periodicity of a given magnitude. This permits a scientifically honest assessment without allowing simulated findings to *change the prediction*. Interpretation and discovery claims are different activities from choosing a forecast.
+**S-03 — Allowed learning from simulations.** Findings **may inform disclosed choices** about model-family design, mathematically valid likelihoods, optimisation algorithms, parameterisation, research priority, sensitivity, robustness, error interpretation and computational implementation. Such choices must be recorded. A design informed by simulation is **not** a claim that the simulated effect exists in reality; fitting parameters and choosing real-world forecasting configurations must obey the eventual real-data walk-forward, model-selection and holdout protocol. No invisible synthetic-trained state or parameter may be imported into a real forecast.
 
-**Isolation invariant S-04:** A planted-effect test is deliberately artificial and limited to effects its designer has encoded. Failure there does not disprove any broader conjecture about perceived reality; success there is not evidence that the same phenomenon exists in actual lottery draws.
+**S-04 — No automatic gate.** A method that fails a null-world, planted-effect, recovery, identifiability or diagnostic test is **retained** and remains eligible for investigation with real data and combinations. Record the failure beside any apparent real-world success so its interpretation is not overstated. Synthetic tests measure properties of the specified generator/instrument, not all possible structures in reality.
 
-**Isolation invariant S-05:** Work conducted on synthetic datasets may serve as **software correctness testing** and separate evaluation of artificial hypotheses, but findings from those runs **must not be used to discover, favour, choose, tune, or modify a real-data forecast method, combination, parameter, weight or pick**. No synthetic-derived configuration may be adopted for real prediction on the strength of synthetic performance, even indirectly. A superficially identical real-world choice is permissible only if arrived at and documented independently using permitted genuine historical data and other eligible, genuinely pre-forecast information. Synthetic and real method-selection pathways remain separated.
+**S-05 — Interpretation uses a reference ruler, not a veto.** Null-world outputs may help quantify how unusual a real score looks under a precisely defined artificial mechanism, including any search across variants or ensembles. Planted effects can measure ability to detect certain constructed signals. Neither assumes all reality is constrained by the generators. A good synthetic forecast is **not** an actual lottery success.
 
-**Proposed standalone calibration instruments, all separate from real-data outputs:**
+**Illustrative separate calibration programme, not yet a binding set of scores:**
 
-1. A synthetic independent-uniform generator respecting seven distinct values drawn from 35 and one from 20.
-2. A biased-selection generator with a user-specified unequal-ball mechanism.
-3. A generator with explicit gap-dependent inclusion probabilities (including peaks around a chosen recurrence interval).
-4. Periodic, regime-switching, nonstationary, nonlinear and cross-channel synthetic generators.
-5. Thousands or more independently seeded repetitions when computationally appropriate; the experiment count is not capped at 10 or 100.
-6. A whole-pipeline stress-test that includes the simulation-side variant searches, combinations and scoring, to reveal selection and multiple-comparison artefacts.
-7. Sensitivity or detection-power profiles **only for the tested artificial generator families**, reported with the ability to distinguish weak effects from the absence of sensitivity.
+1. Independent-uniform same-format history generator (7 distinct from 35 and 1 from 20).
+2. Deliberately biased inclusion and unequal-selection mechanisms.
+3. Recurrence-specific synthetic dynamics (including characteristic-interval peaks).
+4. Periodic, regime-switching, wave-field, coupled-state, nonlinear and conditional-feedback generators.
+5. Whole-pipeline null-world and planted-effect runs which expose the impact of trying many methods, variants and combinations.
+6. Identifiability diagnostics comparing hidden-state recovery, ranking/probability prediction and numerical repeatability **separately**.
+7. Thousands of replications where informative and computationally feasible, with independently derived task seeds.
 
-**Illustrative (not yet adopted as scoring gates):** Under the independent-uniform main-barrel model, the overlap between a fixed seven-number guess and an actual draw is hypergeometric, with expected value **1.4** and standard deviation approximately **0.96**. On ten draws, sampling noise can readily conceal small changes. Numbers such as these describe the **resolution of a proposed ruler**, not an upper bound on what kinds of real-world signals might exist. The eventual statistical metrics, thresholds and reports remain to be discussed in Phase R3.
+Under the ideal independent model, the expected main-set overlap for a seven-number prediction is 1.4, with standard deviation approximately 0.96. These are **reference assumptions** used to understand a test instrument's sensitivity and limitations, never to pre-empt exploration of unexplained real-world structure. Specific prediction scores and evidence thresholds remain deferred to R3.
 
-### 10.7 Reporting and audit barriers between real and synthetic work
+### 10.7 Reporting, auditing and contamination safeguards
 
-At a minimum, a simulation report should state its artificial generator, effect definition, simulation seeds, replication count, code versions, synthetic-only parameter choices and observed detection/error rates. A real-data report should separately state genuine-data provenance, cutoff, method configuration, historical or future status, and observed scores. A combined narrative **may compare conclusions explicitly**, but must never silently merge datasets or produce one pooled performance ranking based on artificial and real results.
+Real-data reports record authentic data snapshot, temporal cutoff, prediction methods and configurations, original forecasts, actual outcomes and evaluation status. Synthetic-only reports record generator, artificial effects, seeds, sample size, algorithm revision and appropriate synthetic results. A combined *interpretive* narrative may compare conclusions **with origins clearly labelled**; never pool observed and artificial results into one predictive leaderboard.
 
-If a software component executes both modes, enforce strict runtime mode types and reject mixed inputs. Prefer separate entry points and output directories. An automatic test should prove that altering or deleting all synthetic files leaves every archived real-data prediction **byte-for-byte unchanged** under the same allowed genuine inputs and method configuration.
+An implementation should reject attempts to mix source types inadvertently and test that **altering synthetic data files does not change a fixed real-data forecast when real inputs, the agreed method definition and configuration are held constant**. That test does **not** prohibit consciously documented later design revisions that were motivated by simulation findings; such revisions have new version/configuration provenance and must themselves pass proper real-data evaluation.
+
+**No predictive-score feedback from benchmark mode:** Computational benchmarking may generate internal predictions solely to check deterministic equality, but its public report carries resource use, failure/status and output equality digests—not matches, winning numbers, per-ball ranks, prediction comparisons or scores used to decide model merit. (§12.8.)
 
 ## 11. Data integrity, leakage prevention and provenance
 
@@ -692,11 +769,15 @@ Simple tests should deliberately inject distinctive future data and verify that 
 
 A historical draw result might be corrected or an acquisition source might change. Maintain data snapshot identity and allow a run to be reproduced against its original snapshot. A correction should generate new evaluation artefacts with a new provenance record rather than silently rewriting old reports.
 
-### 11.5 Reported draw order is available as a possible **separate** source
+### 11.5 Operator-labelled drawn order — qualified observation, common R2 policy
 
-The ordinary CSV contains **ascending** main numbers. These storage positions do **not** indicate extraction order. However, [powerball.net's detailed Draw 1144 page](https://www.powerball.net/australia/results/2018-04-19) shows both ascending numbers and a labelled "drawn order" sequence, and [Lotterywest's official Draw 1144 page](https://www.oz.lotterywest.com/powerball/results/draw/1144) lists the matching ordered main sequence **9, 5, 32, 13, 33, 4, 25**, Powerball 7. That is a meaningful additional observation, not a reconstruction from sorted columns.
+The basic ten-column history contains the seven main values usually **sorted ascending**. Their storage positions do **not** establish the physical drawing sequence. A separate, cross-checked `australian_powerball_draw_order_20261021.csv` holds the **operator-labelled drawn order** for **the same 444 draws**, not additional independent draws.
 
-The updated downloader can optionally fetch **Lotterywest official pages** to create a separate reported-order CSV. It checks each observed ordered result against the validated ordinary CSV as a consistency gate. A partially acquired series is **not** represented as a complete order-aware dataset. Future independent research must verify that the sequence reflects real physical extraction order throughout the target period, investigate omissions or corrections, and determine whether an order-aware E-method requires any additional metadata. Do not substitute alphabetic, numeric sorting, UI order or inferred pseudo-order for actual sourced order.
+The Lott (the game operator) provides a **Drawn / Numerical** display. In Draw 1587, the **Drawn** sequence is **14, 24, 15, 3, 27, 32, 30**, Powerball **16**; numerical order is 3, 14, 15, 24, 27, 30, 32. Both correspond to the repository observations. An [official The Lott Draw 1297 results document](https://journalists.medianet.com.au/DisplayAttachment.aspx?j=947279&k=4845489&s=0), dated **25 March 2021**, expressly labels the sequence **“Winning Numbers (drawn order)”** and gives **14, 15, 16, 21, 12, 25, 10**, Powerball **5**, identical to the repository row. The [Lotterywest Draw 1144 result](https://www.oz.lotterywest.com/powerball/results/draw/1144) displays the corresponding historical main-number order **9, 5, 32, 13, 33, 4, 25**, Powerball **7**. These support an operator-labelled drawn-order *dataset*, not a claim that each of the 444 rows has been independently broadcast-verified.
+
+**The former “reported order is provisional” statement is superseded.** The source is sufficiently labelled for the project's normal **drawn-order** analyses, with provenance and qualification visible in the source/data manifest; optional broadcast checks remain a useful enhancement, **not an eligibility gate**.
+
+The extra sequence may enable early-versus-late extraction-position hypotheses and simpler ordered sequential-selection likelihoods for compatible methods. Other models may inherently predict only **unordered sets**. R2 must specify **one cross-method policy** for source qualification, information-cutoff rules, ordered versus unordered observation/likelihood, and the fact that an order-sensitive model is not necessarily interchangeable with a set-only model. Do not force a mathematically unordered method such as a fixed-size determinantal set model to use order; do not create a different E-number merely because compatible methods evaluate both standard data views.
 
 ### 11.6 Optional equipment metadata and other observational channels
 
@@ -712,56 +793,53 @@ Exploration of environmental, synchrony, cross-game, indirect or seemingly unrel
 
 ### 12.1 Software philosophy
 
-Aim for **clarity, reproducibility, modularity, traceability and extensibility** rather than a large monolithic collection of scripts. The project’s small data size means scientific rigour and comprehensible implementations matter more than premature high-performance optimisation.
+Aim for **clarity, reproducibility, modularity, traceability and extensibility** rather than a large monolithic collection of scripts. The historical record is small in memory, but some proposed methods are computationally intensive; begin with simple measurable parallel execution and benchmark before adding specialised acceleration. Scientific rigour, comprehensible implementations and reliable timing matter more than premature optimisation.
 
 The user suggested `Powerball_Predictor_v001.py`, with each `E_x` as a separate function (possibly assisted by subordinate functions), plus shared top-level utilities. That remains the initial preferred interface. Splitting into packages or separate experiment modules is an **optional future architecture** if a single file becomes unwieldy; do not treat it as already approved.
 
 ### 12.2 Illustrative conceptual components
 
 1. **Configuration and run controller:** Select dataset, time cutoff, mode (development, reserved final evaluation, live forecast), target range, experiments and parameters.
-2. **Data loader / validator:** Read compatible-era CSV, canonicalise dates and unordered seven-number sets, optionally join separately verified official reported draw order, verify integrity, and supply immutable chronological draw records. Reject earlier-rule-era records even if Powerball fields alone appear compatible.
-3. **Experimental registry:** Map `E_x` IDs and names to implementations, versions, dependencies, parameters, documentation and output adapters.
+2. **Data loader / validator:** Read compatible-era CSV, canonicalise dates and unordered seven-number sets, optionally join source-qualified **operator-labelled drawn order** as the same draw’s second observation view, verify integrity, and supply immutable chronological records. Reject earlier-rule-era records even if Powerball fields alone appear compatible.
+3. **Experimental registry:** Map `E_x` IDs and names to implementations, versions, dependencies, parameters, documentation and output adapters, retaining all 62 current research candidates for eventual R2 specification without assuming they are all already coded.
 4. **Shared mathematical utilities:** Counts, recency, gap histories, indicator matrices, numerical fitting, tie handling and careful probability operations.
 5. **Individual predictors:** Separate implementation entries for E_1, E_2, etc., with no side effects on each other's data.
 6. **Historical walk-forward engine:** Construct permissible training ranges and simulate one future draw at a time.
 7. **Combination engine:** Invoke registered methods and combine their historical-only outputs under separately registered `E_x` rules.
 8. **Evaluation engine:** Compare stored predictions with actual outcomes, calculate agreed scores and uncertainty.
 9. **Reporter:** Produce digestible summaries and full machine-readable results, including low-ranked and highly correlated methods. Keep real-data reports strictly separate from every synthetic report.
-10. **Provenance / audit recorder:** Capture source data identities, method/config versions, Python/package environment and random seeds. Provide a synthetic-data firewall with separate job types and auditable proof that synthetic settings cannot enter a real forecast.
+10. **Provenance / audit recorder:** Capture source data identities, method/config versions, Python/package environment, seeds and declared simulation-informed design changes. Keep synthetic records/fit states/scores out of real forecasts.
+11. **Computational benchmark and process-pool controller (proposed):** configurable worker pool, B1/B10 and history-window timing modes, controlled native threads, reproducibility comparisons, timeouts, memory measurements, and **timing-only** reports.
 
-### 12.3 Illustrative directory layout (not binding)
+### 12.3 Actual repository layout and possible future additions
+
+The user has established a GitHub repository, `hydra3333/analysing_perceived_randomness_in_reality`, with local checkout at `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality`. The repository ZIP inspected for v0.3 already contains:
 
 ```text
-powerball/
-    Powerball_Predictor_v001.py
-    scrape_australian_powerball_history_from_2018_04_19_v0_3.py
-    data/
-        australian_powerball_history_YYYYMMDD.csv
-        australian_powerball_draw_order_YYYYMMDD.csv   # optional official source
-    docs/
-        Australian_Powerball_Predictive_Randomness_Research_Project_Proposal_v0_2.md
-        method_registry.md
-        decisions.md
-    config/
-        research_defaults.json
+analysing_perceived_randomness_in_reality/
+    .vscode/settings.json
+    .gitignore
+    activate_venv.bat
+    deactivate_venv.bat
+    requirements.txt
+    doc/
+        Predictive_Randomness_Research_Project_Proposal_v0_2.md
+        Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md
+        SAL_Powerball-Game-Rules_March-2026.pdf
+    src/
+        scrape_australian_powerball_history_from_2018_04_19_v0_3.py
+    source_data/
+        australian_powerball_history_20261021.csv
+        australian_powerball_draw_order_20261021.csv
     results/
-        real_data/runs/<run_id>/
-            manifest.json
-            predictions.csv
-            per_method_scores.csv
-            comparison_report.md
-        synthetic_only/runs/<simulation_run_id>/
-            simulation_manifest.json
-            artificial_results.csv
-            calibration_report.md
-    tests/
-        test_data_validation.py
-        test_temporal_isolation.py
-        test_methods.py
-    .venv/                 # local only; not committed
+    README.md
+    LICENSE
+    .venv/                         # local environment, untracked; not in ZIP
 ```
 
-The above is a potential end-state structure, **not a request to create it immediately**. If a local Git repository is established, the `.venv`, caches and large/generated run results should be governed by an explicit version-control policy rather than accidentally committed or lost.
+**This v0.3 deliverable should be saved in `doc/` under its new filename.** The existing v0.2 can be retained as an earlier revision. The workspace's Python 3.14 `.venv` has been created and CMD/VS Code activation verified; do not commit `.venv` or automatically install research dependencies globally.
+
+Possible **future** directories such as `src/methods/`, `tests/`, `config/` and isolated real/synthetic subdirectories under `results/` can be agreed in R2 or R3. They are **not** present mandates and are not being created by this proposal. The existing source-data and results locations should be respected unless the user approves a move.
 
 ### 12.4 Shared experiment interface — conceptual, not final Python API
 
@@ -790,11 +868,11 @@ These are **illustrative metadata fields**, not a JSON schema or final type cont
 
 ### 12.5 Numerical reproducibility
 
-Record the Python version, library versions, significant numerical options and pseudo-random seeds. Prefer deterministic methods for direct comparisons, or replicate stochastic experiments under controlled independent seeds. Consider tolerances for floating-point comparisons. A performance claim dependent on one lucky random seed is not yet a robust result.
+Record the Python version, library versions, significant numerical options, floating-point backend and reproducible task-identity-derived pseudo-random seeds. **Future default acceptance test:** on the same controlled host, code revision, data, Python/packages, single-threaded numerical backend and task seeds, **1-worker and 12-worker execution must produce bit-identical canonical predictive payloads**. Timing numbers are excluded. A failure needs investigation, not an automatic tolerance. Only a technically justified, narrowly scoped exception with a disclosed alternative equivalence test and **explicit user approval** may override the default. A performance claim dependent on one lucky random seed is not a robust result.
 
 ### 12.6 Performance and caching
 
-The dataset is small, but some methods may involve nested parameter searches, many candidate transformations, stochastic optimisation or ensemble combinations. Cache safely reusable historical-only computations and parallelise when worthwhile; **never share a cache across forecast cutoffs if it contains future-fitted information**.
+The dataset is small, but some methods may involve expensive latent-state inference, optimisation restarts, integrations and simulations. Start with the simple **one-process-per-E-method** plan using a configurable pool of **1–12 workers** on the 12-physical-core / 24-thread Ryzen 9 3900X, **32 GB RAM**. Keep each worker's native numerical-library parallel threads limited to one initially, and schedule fewer workers when peak memory warrants. Cache safely reusable historical-only computations; **never share a cache across forecast cutoffs if it contains future-fitted information**. Optional 24-worker SMT throughput tests are **benchmarks**, not default parallelism.
 
 ### 12.7 Failure handling
 
@@ -802,13 +880,26 @@ The program should fail clearly on missing source data, impossible selections, m
 
 ---
 
+### 12.8 Provisional benchmark and parallel execution baseline for R2
+
+**Purpose:** computational engineering measurement only, **not** predictive research or a scientific ranking. The final R2 design will specify executable commands and the definitive test contract; these points are the user-accepted *baseline direction*.
+
+- **Scheduler:** Python `concurrent.futures.ProcessPoolExecutor`, Windows-safe importable workers and `if __name__ == "__main__":`; 1–12 configurable worker processes, usually one method task each. Worker-internal BLAS/OpenMP threading pinned to one **before importing** NumPy/SciPy; inspect loaded thread pools. An optional memory-safe **24-worker** test measures simultaneous multithreading, not a required production count.
+- **Single benchmark system, two settings:** `X` = number of consecutive walk-forward **targets** (preset **B1=1**, **B10=10**); `W` = amount of actual history immediately preceding each target (e.g., **100** or **all eligible**). For a target N, training always ends at N−1; `W` does not mean training on only the target draw. Independent full historical research will later use a separately agreed evaluation plan.
+- **Targets:** the `X` draws immediately **before** the frozen latest-ten holdout. With the currently reviewed 444-draw archive, the reserved holdout is **1578–1587**; B1 target **1577** has 433 preceding observations; B10 targets **1568–1577** have 424–433 prior observations. Compare `W=100` and `W=all` on the *same targets*. Never inspect reserved-holdout outcomes when selecting these benchmarks.
+- **Timings / resources:** separate startup/import, fit, prediction and orchestration overhead; log wall clock, correctly scoped process CPU time, peak **real process memory**, worker count, versions, NumPy BLAS details and Windows power plan. `psutil` could be useful for native process measurements and must be flagged for venv installation; `tracemalloc` alone does not measure native NumPy allocations reliably. Three repeated runs are desirable when feasible, but configurable for very long methods.
+- **No benchmark prediction-merit reporting:** forecast results may be generated **internally solely** for reproducibility checking; publish timings, resources, failure status and comparison digests, **not picks, predictive scores, rank tables or match statistics**. A separately labelled one-history synthetic fair fixture is permissible only as a computational fixture, never a scored real prediction or synthetic calibration claim.
+- **Determinism:** seeds derived from stable task identity, **not worker assignment or scheduling order**. One-worker and 12-worker predictions **must be bit-identical** by default under controlled equal conditions; any proposed exception needs justification and prior user approval (§12.5).
+- **Failures:** configurable method timeout and memory safeguards; a timeout, crash, out-of-memory or incomplete result is a **failure with available partial durations**, never an invented completion time or a zero-quality valid forecast. Computational cost may influence workload planning, **never method permanence or ensemble eligibility**.
+- **Later optimisation only if measured:** possibility of independent synthetic-history/restart tasks, target-block work without future leakage, measured compiled numerical kernels or other acceleration. Warm-start dependent targets remain sequential unless the altered protocol is explicitly specified. No need to move to a free-threaded Python build now.
+
 ## 13. Python dependencies and local virtual environment
 
 ### 13.1 Agreed packaging approach
 
 Any needed third-party packages must be stated explicitly before use. **Do not install packages globally** into the user's Python 3.14 environment. Use a project-local virtual environment (`venv`) and ordinary `pip` package installation inside it.
 
-No project environment needs to be created and no packages need to be installed **yet**. The user wants guidance when the implementation stage arrives.
+The user has **already created and verified** a Python 3.14.8 project-local `.venv`, installed `requests` and `beautifulsoup4` inside it, saved `requirements.txt`, and confirmed both VS Code and ordinary CMD activation. **No new research packages are being installed by this document.** Each additional dependency (e.g., NumPy, SciPy, `psutil`, `threadpoolctl`, or any compiled optimiser) must be proposed explicitly and installed inside this same project venv after agreement.
 
 ### 13.2 Preliminary package possibilities — not installation instructions yet
 
@@ -823,24 +914,26 @@ No project environment needs to be created and no packages need to be installed 
 
 Existing `requests` and `beautifulsoup4` belong primarily to the **separate scraper** and need not automatically become predictor dependencies.
 
-### 13.3 Illustrative future environment procedure
+### 13.3 Existing environment: ordinary CMD and VS Code
 
-When approved, a conventional Windows CMD setup could be:
+The project-specific `.venv` **already exists** in the local checkout and is excluded by `.gitignore`. It uses Python 3.14.8, and the local package installation was verified. VS Code has a project-specific Windows Command Prompt profile that activates it; independent Windows CMD sessions can activate it with the user's verified `activate_venv.bat`.
+
+In a **new Windows Command Prompt** already positioned in the repository root:
 
 ```cmd
-cd /d E:\SOFTWARE-Win11\powerball
-python -m venv .venv
-.venv\Scripts\activate
-python -m pip install --upgrade pip
+activate_venv.bat
+python -c "import sys; print(sys.executable)"
 ```
 
-The subsequent `pip install ...` packages must be determined from **the ratified research implementation plan**. Versions should be captured in a requirements/lock-style record as appropriate. The user will be guided through this step; no global installations are envisaged.
+Or, without the helper, run `call .venv\Scripts\activate.bat`. To leave the environment, use the verified `deactivate_venv.bat`. From inside VS Code, **new** terminals already activate the same project venv using the checked project terminal profile. No second virtual environment, new system-wide Python configuration or global package installation is needed.
+
+Future selected methods may require additional packages. Propose each dependency and compatible version before installing, use `python -m pip` from this existing environment, and deliberately update `requirements.txt` after verification. Do not recreate `.venv` or overwrite the existing package set merely to draft R2.
 
 ---
 
 ## 14. Proposed research and development phases
 
-These phases are **proposed sequencing**, not permission to proceed automatically. The immediate next phase, once the user accepts this proposal as a working discussion basis, is **research and method-selection discussion**, not implementation.
+These phases remain a **proposed sequencing**, not permission to proceed automatically. **R1 has produced the research catalogue v0.4** and R2 is the recommended next substantive drafting phase once this proposal and the catalogue are accepted. No predictor implementation is authorised by producing this coordination revision.
 
 ### Phase R0 — Ratify the project charter and operating principles
 
@@ -848,7 +941,7 @@ These phases are **proposed sequencing**, not permission to proceed automaticall
 
 **Activities:**
 
-1. Review agreed items A-01 through A-18, distinguishing actual decisions from recommendations.
+1. Review user-agreed items A-01 through A-37, distinguishing policy commitments from still-proposed technical details.
 2. Correct any misinterpretation, particularly around recurrence timing, holdout use, method retention, and the meaning of challenging perceived reality.
 3. Establish the proposal's role as project guidance and identify which open decisions belong to later design stages.
 
@@ -856,7 +949,7 @@ These phases are **proposed sequencing**, not permission to proceed automaticall
 
 ### Phase R1 — Research the wider experimental landscape
 
-**Objective:** Explore up to **50 additional** potentially relevant analytical and predictive techniques, drawing beyond lottery-specific literature.
+**Objective / current status:** R1 has **catalogued 56 additional candidates** (E_7–E_62) beyond the six original user ideas; exploration of **up to 100 additional candidates** is permitted if future research warrants it. The current R1 v0.4 report is a **completed research deliverable and review candidate**, not a method implementation or proof of predictive value.
 
 **Search domains include:** classical and Bayesian statistics; stochastic processes; nonlinear time-series methods; signal processing; spectral analysis; dynamical systems and chaos; entropy and information theory; change-point detection; state-space estimation; probability calibration; machine learning; model averaging; evolutionary search; unusual or speculative pattern-detection methods; and combinations across these domains.
 
@@ -872,15 +965,15 @@ For each proposed candidate, prepare a research note containing:
 - A recommendation for priority, feasibility, and sensible early tests.
 - References for substantive external claims when that research is performed.
 
-**Deliverable:** An annotated catalogue of up to 50 additional *candidate approaches*. **Not yet delivered by this proposal:** a completed 50-method literature survey or demonstrated predictive findings.
+**Deliverable:** `doc/Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md`, the **completed current catalogue** of E_1–E_62 for review. **Not delivered:** working implementations, evaluated rankings or verified predictive improvements.
 
 ### Phase R2 — Agree on experimental inventory and definitions
 
 **Objective:** Decide which new candidates become individually specified experiments and how related variants will be identified.
 
-Resolve, for example, whether two alternative curve families belong in one tunable E-method or in separately numbered E-methods, and when a changed scientific question requires a new identity. Retain the first six proposed E-methods as the starting catalogue, with final mathematical definitions subject to review.
+Resolve, for example, whether two alternative curve families belong in one tunable E-method or in separately numbered E-methods, and when a changed scientific question requires a new identity. Work against **all 62 current candidate identities**, not merely the first six. Specify operator-labelled ordered/unordered inputs under one common data policy; separate-barrel prediction outputs; model variants (including E_57–E_62); and source/temporal constraints. Candidate formulas in R1 are reviewed rather than silently adopted as implementation authority.
 
-**Deliverable:** Versioned method registry with stable names, definitions, inputs, outputs, dependencies, and unresolved questions.
+**Deliverable:** A separately reviewed **R2 versioned method/implementation specification**, covering method contracts, stable names/variants, formula choices, inputs, outputs, dependencies, benchmarking and unresolved issues. No unratified R1 recommendation becomes binding solely by appearing in its catalogue.
 
 ### Phase R3 — Agree on test design, scoring, and evidence standards
 
@@ -969,7 +1062,7 @@ Similarly, a model's fitted transformations, hyperparameter selection, calibrati
 - Hidden-regime processes and constructed dependencies.
 - Adversarial misleading trends that fit the past but reverse later.
 
-These tests check that an E-method can, where appropriate, detect the sort of structure it claims to detect. Success on artificial mechanisms is **not evidence that the mechanism exists in Australian Powerball**. Report all null/planted outcomes in a **synthetic-only report family** with thousands of repetitions allowed. Test explicitly that synthetic results, scores, preferred variants, fitted weights or tuned parameters **cannot influence genuine predictions**. Simulated and actual draw records may share reusable, purely deterministic mathematics but not training state, observation data, fitted transformations, model selection or forecast weights.
+These tests check whether an E-method can, where appropriate, detect the kind of structure specified by the synthetic generator. Success on artificial mechanisms is **not evidence that the mechanism exists in Australian Powerball**. Report null/planted outcomes in a **synthetic-only report family**, with thousands of repetitions allowed. **Disclosed design learning** from synthetic work may improve algorithms or motivate variants. What must not be mixed into real predictions is the **artificial observation dataset, its fitted synthetic hidden state, its synthetic-only parameters, or its artificial outcome scores**. Real choices must be documented, historically admissible and evaluated on actual data under agreed protocols. No failure here automatically bars real-data investigation.
 
 ### 15.4 Reproducibility and reporting checks
 
@@ -996,9 +1089,9 @@ Maintain inputs, chosen method version, parameter snapshot, library versions, ra
 | Assuming unusual success proves predictive power | Could elevate noise into false confidence | Repeated, independently checked observations, uncertainty analysis, prospective replication |
 | Scraper or website change | Upstream HTML or publication changes may interrupt acquisition | Keep collection separate; reject empty or invalid datasets; preserve working CSVs; optional official-source verification must fail closed |
 | Dependency or environment drift | Results could change as Python libraries evolve | Local `venv`, explicit package/version inventory and controlled numerical seeds |
-| Synthetic-to-real contamination | Simulation findings might influence prediction selection, parameters or data and violate user instruction | Fully separated simulation workflows, stores, reports and provenance; automated **prediction-invariance** tests |
+| Synthetic-to-real contamination | Artificial draws, fitted synthetic state, or scores might leak into real-data training or be misrepresented as real success | Separate execution/data/reports, explicit provenance, tests on fixed real inputs/configuration; **disclosed simulation-informed design remains permitted** |
 | False exclusion through method correlation | Related methods may contain subtle complementary information despite similar overall predictions | Retain all and keep all eligible; report correlation without excluding or deprioritising by default |
-| Unreliable optional physical-order or apparatus metadata | Secondary claims or page structures might be incomplete | Independently verify ordered rows; no invented apparatus values; optional enrichment is not a prerequisite |
+| Incomplete drawn-order or apparatus provenance | Operator-labelled ordering has evidence, but not every row has independent broadcast verification; apparatus identifiers may be missing | Retain source manifest and sequence/set checks; make apparatus optional; do not misstate operator records as independent broadcasts |
 | Prospective forecast rewriting | A forecast could be modified after the result becomes known | Save timestamped, immutable forecast artefact before drawing; optional Git commit timestamp as independent evidence |
 
 The two philosophies at the heart of the project are **both** represented here: avoid dismissing an unorthodox hypothesis merely because it violates a familiar model, and avoid claiming that a surprising backtest alone proves the universe works differently.
@@ -1040,7 +1133,7 @@ Keep all experimental evaluations and anomalies in a versioned or otherwise repr
 
 This section identifies unanswered questions; **none is being silently decided by the proposal**.
 
-1. **Research catalogue:** Which additional candidate techniques are worth turning into formal methods, and in what order?
+1. **Research-to-specification scope:** Which of the **62 currently catalogued** candidates will receive formal R2 contracts in which order, and how future E_63+ candidates will be proposed within the optional 100-additional-method scope? **Retention and combination eligibility remain unconditional**.
 2. **Method granularity:** When does a change define a new E-method, as opposed to a parameter variant or version?
 3. **Recurrence alignment:** Exact interval convention, robust estimator, appropriate fitting window, and prediction score.
 4. **Curve fitting:** Chosen curve families, constraints, forecast extrapolation versus endpoint estimation, gradient definitions, and regularisation.
@@ -1050,13 +1143,13 @@ This section identifies unanswered questions; **none is being silently decided b
 8. **Evaluation metrics:** Which performance measures become primary, secondary, and exploratory?
 9. **Evidence thresholds:** What justifies describing an observed advantage as promising, replicated, or potentially predictive?
 10. **Method combination:** Eligibility, weighting, score normalisation, inversion, conditional gating, and ensemble search.
-11. **Implementation:** Final module structure, CLI design, report formats, runtime priorities, package versions and tests.
+11. **Implementation:** Final module structure, CLI design, report formats, worker-pool and benchmark details, numerical backends, per-method runtime limits, package versions and tests; default requirements of 1–12 workers, 32 GB awareness, B1/B10 computational probes and worker-count reproducibility are stated in §12.8.
 12. **Future forecasts:** Which methods or combinations to use for a real draw, and how to record the pre-draw commitment.
 13. **Independent verification:** What external checks of source data or surprising findings would be most useful?
-14. **Reported order:** Does the complete Lotterywest sequence describe physical drawing order throughout the eligible era, and which order-aware hypotheses are feasible?
+14. **Drawn-order operational policy:** How will the **operator-labelled drawn-order** view be exposed consistently to each compatible method, distinguished from unordered sets, and annotated with provenance? Optional independent video spot checks can improve source assurance but are not a prerequisite.
 15. **Optional external datasets:** Which, if any, provide testable real-time or historical-before-cutoff observations, and with what timestamp provenance?
-16. **Synthetic instrumentation:** Which generator families and diagnostic measurements provide the most informative **separate** sensitivity reports, while preserving the hard no-influence rule for real forecasts?
-17. **Data source robustness:** Has a full end-to-end live optional official draw-order collection been successful, or is it still a fixture-tested feature requiring adaptation to changing HTML?
+16. **Synthetic instrumentation:** Which generator families and diagnostics provide useful **separate** sensitivity and identifiability research, while allowing **disclosed design learning** but forbidding substitution of synthetic observations/fit states/scores into real prediction?
+17. **Data source robustness:** The repository currently contains two validated 444-row source views. How should future downloader executions prove completeness, detect changed HTML and preserve dated provenance?
 
 The user expressly requested **discussion of testing and scoring later**, after candidate methods have been explored. The document therefore records concepts and safeguards without imposing a premature scoring specification.
 
@@ -1082,21 +1175,28 @@ The project does **not** promise a profitable lottery system, a winning ticket, 
 
 ### 20.1 Recommended next action
 
-Review this proposal for fidelity to the user’s intent. Once the project principles are accepted, commence a **distinct research deliverable** investigating up to 50 additional analytical and speculative methods, with citations and explicit assessments of feasibility and assumptions. Present the candidate inventory for discussion **before writing the predictor program**.
+**Review and, if acceptable, ratify this coordinated Proposal v0.3**, with `Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md` retained as the separate current **R1 research review candidate**. If both are accepted, proceed to **R2**, the formal method-and-architecture specification, rather than conducting a second unspecific R1 literature survey or writing predictor code prematurely. R1 may still expand selectively toward up to 100 additional methods if worthwhile; it is not a quota or R2 blocker.
+
+The R2 draft should address: stable E-identity and variants, source-qualified unordered/drawn-order observations, distinct barrel outputs, exact method mathematics and packages, error/timeout contracts, common data cutoffs, the simple 1–12 process/32 GB performance baseline, B1/B10 timing-only benchmarks, and the bit-identical controlled-worker acceptance test. R3 should later settle prediction scoring, combination evaluation and holdout testing without being pre-empted here.
 
 ### 20.2 Status distinctions
 
-- **Agreed:** The substantive commitments listed in section 4, as expressed during the conversation.
-- **Proposed:** The development sequencing, test controls, architecture, reports, method qualification examples, and governance details beyond the agreed commitments.
-- **Deferred:** Specific scoring, technical methods, parameter-selection policies, ensemble rules and implementation interfaces.
-- **Not performed by this document:** The promised broad outside research, any actual implementation, any full walk-forward experiment, any claim of improved prediction, and any independently confirmed prospective forecast.
+- **User-agreed policy:** The substantive A-01–A-37 commitments (§4), subject to the user's acceptance of this written consolidation.
+- **Research complete to catalogue stage:** R1 v0.4 includes E_1–E_62 as **research candidates** with remaining design details for R2.
+- **Proposed:** Exact mathematical variants, implementation approaches and the complete executable test contracts beyond the agreed design direction.
+- **Deferred:** Detailed predictive scoring, actual method implementation choices and thresholds, ensemble selection, final-holdout protocol details, and future forecast selection.
+- **Not done:** No E-method predictor implementation, whole-method predictive backtest, synthetic null/planted run, reserved-holdout scoring or actual next-draw forecast has been asserted.
 
-### 20.3 Change management
+### 20.3 Version and change management
 
-Future versions should preserve an explicit change summary, distinguish corrected factual statements from revised recommendations, and mark new user-approved decisions. Retired ideas and poorly ranked methods should be recorded rather than silently lost. Proposal revisions should not erase the history of what was tried or rewrite past results after outcomes become known.
+- Retain v0.2 for historical traceability; store **this** file as `doc/Predictive_Randomness_Research_Project_Proposal_v0_3.md`.
+- Retain R1 v0.4 separately, including all 62 research-method entries; there is **no need to regenerate or merge R1** because this charter is being updated.
+- If the user ratifies a material change to project policy, amend the proposal/decision register; if an R1 discovery merely suggests a change, label it a recommendation pending approval.
+- R2 and R3 should include document dependencies with **exact filenames and statuses**, reference ratified policies and never silently change user-approved commitments.
+- Preserve original method identities, experimental records, low-ranked methods, synthetic diagnostics, and observed outcomes with explicit provenance. Do not overwrite an unsuccessful past result to match a later improved design.
 
 ### 20.4 Closing project principle
 
 > **We are deliberately willing to challenge the nature of perceived reality, including the usual assumption that past lottery draws contain no predictive information. We will entertain established, unconventional and speculative analytical methods without prejudging their outcomes. Every method is retained, every result can be examined, and claims are strengthened or weakened by transparent, reproducible and genuinely forward-looking evidence.**
 
-**End of project proposal v0.2 — revised discussion draft.**
+**End of Project Proposal v0.3 — coordinated review/ratification candidate.**
