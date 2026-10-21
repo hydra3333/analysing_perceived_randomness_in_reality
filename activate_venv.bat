@@ -1,4 +1,4 @@
-@echo on
-set "venv_on=true"
-call .venv\Scripts\activate.bat
+@echo off
+call "%~dp0.venv\Scripts\activate.bat"
+set VIRTUAL_ENV
 exit /b
