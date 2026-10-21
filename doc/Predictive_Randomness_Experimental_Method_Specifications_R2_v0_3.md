@@ -1,9 +1,9 @@
 # Predictive Randomness — R2 Experimental Method Specifications and Software Contracts
 
-**Version:** 0.2 — revised design/ratification candidate (supersedes R2 v0.1 for review; not ratified)  
-**Date:** 21 October 2026  
+**Version:** 0.3 — consolidated review candidate (supersedes R2 v0.2 for review; not ratified)  
+**Date:** 22 October 2026  
 **Status:** **DRAFT FOR USER REVIEW; NOT YET RATIFIED; NO IMPLEMENTATION AUTHORISED BY THIS DOCUMENT ALONE**  
-**Proposed repository path:** `doc/Predictive_Randomness_Experimental_Method_Specifications_R2_v0_2.md`  
+**Proposed repository path:** `doc/Predictive_Randomness_Experimental_Method_Specifications_R2_v0_3.md`  
 **Governing charter:** `doc/Predictive_Randomness_Research_Project_Proposal_v0_3.md` (**user-ratified 21 October 2026**)  
 **Governing research catalogue:** `doc/Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md` (**user-ratified 21 October 2026**)  
 **Primary platform:** Windows 11, Python 3.14.8, standard CPython, VS Code + Windows CMD, project-local `.venv`; AMD Ryzen 9 3900X, 12 physical cores/24 logical processors, 32 GB RAM  
@@ -15,9 +15,25 @@
 
 ---
 
-## Revision record — v0.2 changes relative to v0.1
+## Revision record — v0.3 changes relative to v0.2
 
-This revision is a **controlled update**, not a replacement for the ratified Proposal v0.3 or R1 v0.4. The content, permanent names and identities of all **62 experimental candidates (E_1–E_62)** are retained. The following decisions/clarifications were made by the user after receiving v0.1; other proposed engineering choices remain proposals:
+This is a **controlled revision of R2 v0.2** incorporating Claude's `Claude_Review_of_R2_v0_2_v1.md` (22 October 2026) and the owner's subsequent clarifications. The **unchanged E_1–E_62 method profiles** remain research candidates, not automatically ratified numerical implementations. No preceding project policy or ratified source is modified in place.
+
+1. **Correct the stochastic-seed / leakage defect (MANDATORY FIX).** Derive random streams and prediction-content identity from a stable digest of only the **permitted pre-target training view**, explicit allowed covariates, fixed method configuration and target identity. The hash of the entire growing source CSV remains provenance only, never a seed or prediction-content input. This ensures an earlier prediction does not change merely because new future draws are appended.
+2. **Mandatory forecast-content perturbation test.** For each historical target `N`, change draw `N` and every later record in a controlled test copy (also test future appended draws); the prediction for `N`, including stochastic methods and complete rankings, must remain **byte-identical**. Audit metadata may legitimately differ and is compared separately. Merely passing an N−1 slice to a function is insufficient if cached features or seeds were constructed from future rows.
+3. **Owner-mandated TOP and WORST predictions side by side.** For every ranking-capable method, produce the native declared **TOP** prediction and a **WORST** (inverse/lowest-ranked) prediction from the **same frozen model and rankings**. This is one fitted method with two documented selection outputs, not automatically two new E-methods. For joint-set primary predictions, preserve the method's native TOP choice; WORST is separately defined from the seven lowest marginal ranks when marginal rankings are available. Otherwise explicitly record `INVERSE_UNAVAILABLE`, without invented values.
+4. **Post-draw rank-position measure is evaluation ONLY.** Preserve separate TOP and WORST match/hit measures **and add**, without replacing them, the mean frozen rank of the seven actual main numbers and the actual Powerball's frozen rank. Use mid-ranks for tied scores **only in this evaluation measure**. Rank position must **never select, tune, modify, flip, arbitrate, or influence TOP or WORST predictions**. Detailed calculation and scoring/reporting ownership remains R3 and must be frozen before the first genuine forecast.
+5. **Prospective weekly batch completeness and immutability.** A FINAL target `L+1` has one identifiable frozen pre-draw batch containing **all registered runnable method/variant prediction outputs** (TOP/WORST where available), plus explicit non-runnable/unavailable/failure statuses. Commit and push the batch before the target draw, retaining repository commit/push evidence. Nothing may be retroactively added to that target's prospective batch; a later diagnostic rerun is a new, distinctly labelled retrospective record.
+6. **Separate prospective performance series.** Preserve independent result tracks keyed by method, revision/variant, data view, barrel and selection rule (`TOP` or `INVERSE/WORST`), not only an across-method weekly winner. Reference chance rates belong alongside hit reports as contextual comparison, **not** as an exclusion rule or declaration of coincidence; R3 specifies statistical interpretations and aggregation.
+7. **Timing and scope unchanged.** The owner will begin the repeated real-world FINAL forecast cycle after the agreed modelling/evaluation preparations, not start prematurely with an arbitrary partial catalogue. All real-data, holdout, method-retention, synthetic-separation and 1–12-worker provisions remain. Detailed method math and statistical scoring decisions not already agreed remain open.
+
+**Terminology:** `WORST` is the user-facing prediction/report label. `INVERSE` is the internal selection-rule identifier; they denote the same inverse-ranked output where defined. `RANK_POSITION` denotes a **later evaluator output**, not a third forecasting rule or an input to either prediction.
+
+---
+
+## Historical revision record — v0.2 changes relative to v0.1
+
+The v0.2 revision was a **controlled update**, not a replacement for the ratified Proposal v0.3 or R1 v0.4. The content, permanent names and identities of all **62 experimental candidates (E_1–E_62)** are retained. The following decisions/clarifications were made by the user after receiving v0.1; other proposed engineering choices remain proposals:
 
 1. **Draw number is the controlling chronological index** for all ordinary Powerball forecasting and evaluation; exact clock timestamps are not required as mathematical inputs to those methods. Dates remain available as source metadata.
 2. **Historical evaluation:** predict a known draw `N` using only eligible draws earlier than `N`, normally `1144 .. N-1`, then independently compare the saved forecast with actual draw `N`. The ten-draw holdout applies to development, historical evaluation and comparison.
@@ -28,7 +44,7 @@ This revision is a **controlled update**, not a replacement for the ratified Pro
 7. **Interpretation over time:** a seemingly surprising fit is not pre-emptively branded a coincidence, synthetic artefact or implementation error because an established theory expects no signal. Several **genuine frozen before-the-draw `L+1` forecasts**, assessed after their actual outcomes become known, are a particularly valuable form of evidence. Such a sequence can remain inconclusive; neither a few successes nor a few failures determines reality. An **independently demonstrated** implementation defect or source-data error can still be identified promptly without waiting weeks; mere suspicion remains a hypothesis to investigate.
 8. **No scoring system has been approved here.** R3 still owns scoring, thresholds, interpretations, prospective-evidence standards and method comparison.
 
-**Review discipline:** These changes are recorded as either subsequent user agreement or proposed implementation wording. The whole R2 v0.2 document remains a review draft until ratified. No source code, existing data, proposal or R1 file has been altered by drafting this revision.
+**Review discipline:** These changes are recorded as either subsequent user agreement or proposed implementation wording. At that point R2 v0.2 remained a review draft; v0.3 is the current unratified candidate. No source code, existing data, proposal or R1 file has been altered by drafting this revision.
 
 ---
 
@@ -61,9 +77,9 @@ Identifiers `R2-Cxx` designate **proposed contract requirements**, not extra exp
 - Preserve inactive/blocked/error methods and variants in the registry, not delete them.
 - Record both proposed design decisions and what the user has actually ratified. An omission or a default in software is **not** a decision.
 
-### 0.4 R2 v0.2 scope
+### 0.4 R2 v0.3 scope
 
-This revised candidate specifies a common architectural contract and provides **one independent method worksheet/profile per E_1–E_62**. Some highly specialised methods remain mathematical **specification candidates**, not fully frozen numerical algorithms. R2 is allowed to progress iteratively: the stable interface, data safety and method registry can be ratified separately from expensive method-specific formula choices. Incomplete mathematics is reported as `FORMULA_OPEN`, not filled in with unrelated standard models.
+This v0.3 candidate specifies a common architectural contract and provides **one independent method worksheet/profile per E_1–E_62**. Some highly specialised methods remain mathematical **specification candidates**, not fully frozen numerical algorithms. R2 is allowed to progress iteratively: the stable interface, data safety and method registry can be ratified separately from expensive method-specific formula choices. Incomplete mathematics is reported as `FORMULA_OPEN`, not filled in with unrelated standard models.
 
 ---
 
@@ -87,13 +103,21 @@ This revised candidate specifies a common architectural contract and provides **
 
 **I-09 — Draw order:** The separate Lotterywest-derived sequence is **operator-labelled drawn order**, supported by The Lott's explicit Drawn/Numerical presentation and the 2021 Draw 1297 operator result document. It is *not* an independent second sample of 444 draws, nor is all 444-row physical-video verification claimed. Ordered and unordered views must be handled under **one cross-method policy** (Section 4).
 
-**I-10 — Scoring deferred:** R2 defines what a forecast contains and how it is frozen. R3 will define statistical performance measures, significance/uncertainty, comparison, combination ranking and qualification. No R2 benchmark evaluates predictive merit.
+**I-10 — Evaluation design separation:** R2 fixes the owner-agreed requirement to preserve TOP and WORST predictions and, after an actual draw, to report their hit comparisons plus rank-position summaries. R3 will finalise their exact computation, statistical aggregation, uncertainty, comparison, interpretation and qualification **before the first genuine FINAL forecast**. Rank-position measurements are never inputs to pre-draw selection or prediction. No R2 benchmark evaluates predictive merit.
 
 **I-11 — Compute availability:** Default architecture is **one worker process per method**, configurable **1–12** processes initially, single-thread numerical libraries within a worker. Optional 24-worker SMT performance trials are non-default. Speed and failures do not control scientific eligibility.
 
 **I-12 — Same-input determinism:** On the same host and pinned software/numerics configuration, **1-worker and 12-worker predictions must be bit-identical by default**; exceptions require a specific documented technical reason and explicit user approval, not an automatic tolerance waiver.
 **I-13 — Interpretation must remain empirically open:** A surprising retrospective result or real-world forecast is not automatically dismissed as a coincidence, synthetic artefact or implementation error merely because it conflicts with a conventional reference model. Interpretations remain **provisional** until sufficiently investigated, including repeated properly frozen genuine future predictions as appropriate. Conversely, repeated apparent wins are not automatic proof of a novel mechanism, and failures are not automatic proof of impossibility. Distinguish a **verified programming/data defect** (which can be established by direct inspection or independent reproduction) from an **unconfirmed explanation** for unusual prediction results. R3 will specify evidence standards; R2 shall not prelabel outcomes as invalid or confirmed discoveries.
 
+
+**I-14 — Two simultaneous inverse-direction predictions, never post-hoc:** For every ranking-capable method, the original/native TOP forecast and the WORST/INVERSE forecast are **both determined, archived and presented side by side before the draw**, from the same fitted method and frozen ranking; unavailable outputs are explicitly unavailable. A later actual result cannot choose which direction to call successful or modify either selection. Primary joint-set TOP rules retain their native identity.
+
+**I-15 — Rank position cannot influence TOP/WORST:** The rank-position evaluation is computed **only after the actual target result is known**, from rankings already archived before that draw. Its result and its mid-rank treatment of ties cannot affect TOP/WORST selection, ordering, fitted parameters, tie-breaking, or the immutable pre-draw forecast. Any future proposal to use rank-derived information as a new **separately declared predictive hypothesis** would require a new approved method/variant and prospective testing; it cannot silently redefine the existing outputs.
+
+**I-16 — Permitted-input identity:** For any historical target, predictions, stochastic seeds, warm starts and canonical forecast content must be invariant under modifications or additions of results at `N` and later. Whole-source hashes are provenance metadata and cannot influence forecasts. Perturbation tests must enforce this even in feature preparation and caching.
+
+**I-17 — Prospective batch integrity:** Every genuine target receives one immutable, pushed-before-the-draw registered-method/variant batch, including TOP/WORST when available and explicit unavailable/failure statuses. Later actual results and analyses are separate; never retrospectively populate a missing prediction in that batch. Genuine forecasting starts on the owner's chosen schedule after agreed preparations.
 
 ---
 
@@ -195,7 +219,7 @@ Next FINAL forecast:      fit using 1144 ... 1588 -> predict 1589
 ... repeat for subsequent genuine weekly draws ...
 ```
 
-A **prospective forecast** is archived/frozen *before its target is drawn*; its content and pre-draw provenance are immutable. The later result and any evaluation live in **separate records**. If an implementation, parameterisation or ensemble rule changes between weeks, retain the prior version and record the new version; do not rewrite the earlier forecasts to match the newly observed result. The collection of consecutive, genuine forecast/result pairs is crucial experimental evidence for R3. It should be possible to report periods in which no valid prediction could be produced rather than omit failures.
+A **prospective forecast** is archived/frozen *before its target is drawn*; its content and pre-draw provenance are immutable. **For each target, the FINAL run is one complete pre-draw batch** of all registered runnable E-methods and supported variants, recording each TOP/WORST result together and recording `INVERSE_UNAVAILABLE`, diagnostic-only, blocked, timed-out, or failed status where applicable. The exact registered roster and versions are frozen with the batch; no new entry or changed forecast can be backfilled afterwards. Commit and push the batch to GitHub before the draw and retain its remote commit/push evidence; Git commit author/committer timestamps alone are not infallible proof of when a forecast was published. New experimental revisions generated after the target are labelled retrospective and do not overwrite the prospective record. The owner has chosen to start this genuine weekly cycle **after modelling and research preparation**, not as an early incomplete-method trial. The later result and any evaluation live in **separate records**. If an implementation, parameterisation or ensemble rule changes between weeks, retain the prior version and record the new version; do not rewrite the earlier forecasts to match the newly observed result. The collection of consecutive, genuine forecast/result pairs is crucial experimental evidence for R3. It should be possible to report periods in which no valid prediction could be produced rather than omit failures.
 
 **Interpretive neutrality:** Do not predeclare a surprising match a coincidence or assume its cause is a synthetic artefact or bug without independent supporting evidence. An actual demonstrated code defect *can* be established and corrected without weeks of additional draws, with its affected forecasts flagged (never erased). Apparent genuine forecasting ability or its absence should be examined across multiple pre-draw forecast/result pairs, with uncertainty; **“several weeks” is an opportunity for evidence, not an automatic proof threshold**. Never infer a novel causal mechanism from an isolated score. R3 controls statistical conclusions and rules for how adaptive changes affect comparability.
 
@@ -241,8 +265,8 @@ The probability of the corresponding **unordered** seven-number set S is the sum
 
 A method may produce one or several typed channels, without inventing unsupported outputs:
 
-1. `MAIN_RANK`: 35 labelled real-valued scores or a complete deterministic ranking.
-2. `POWERBALL_RANK`: 20 scores or complete ranking.
+1. `MAIN_RANK`: a **complete frozen ranking of all 35 labels** (and original 35 scores when available) for every ranking-capable method. Store the full order, tie groups and deterministic prediction-time tie resolution; a top-seven-only list is insufficient.
+2. `POWERBALL_RANK`: a **complete frozen ranking of all 20 labels** (and original scores when available) for every ranking-capable Powerball component. Store ties separately from the deterministic prediction ordering.
 3. `MAIN_MARGINAL_PROB`: 35 valid inclusion probabilities derived from or justified by a legal 7-set model.
 4. `POWERBALL_CATEGORICAL_PROB`: 20 probabilities summing to one.
 5. `MAIN_SET_DISTRIBUTION`: lawful probabilities/scores over seven-number combinations, exact or computable via a declared score/probability API without enumerating all sets.
@@ -250,7 +274,7 @@ A method may produce one or several typed channels, without inventing unsupporte
 7. `DIAGNOSTIC_SIGNAL`: anomaly/regime/coupling or other intermediate feature that may require an explicitly defined **adapter** to produce a prediction; a valid output, not grounds to delete a method.
 8. `ENSEMBLE_RESULT`: combination of already-frozen, time-legitimate source-method outputs under a versioned combination policy.
 
-**R2-C10:** Do not fabricate a numerical probability merely to satisfy an interface. A diagnostic-only method may return `NOT_PREDICTIVE_YET` until a mapping from diagnostics to forecast is specified and validated; it remains registered.
+**R2-C10:** Do not fabricate a numerical probability, complete ranking or inverse result merely to satisfy an interface. A diagnostic-only method may return `NOT_PREDICTIVE_YET` until a mapping from diagnostics to forecast is specified and validated; it remains registered.
 
 ### 5.2 Provisional `ForecastResult` conceptual fields
 
@@ -259,18 +283,34 @@ ForecastResult:
     method_id, method_name, method_revision, variant_id
     run_namespace, observation_view, game_rule_id
     target_draw_number, target_date_if_known, training_last_draw_number
-    history_window, source_snapshot_hashes, source_information_cutoff_if_applicable
+    history_window, permitted_training_view_digest
+    source_snapshot_hashes, source_information_cutoff_if_applicable  # provenance ONLY
     fitting_algorithm_id, hyperparameters, random_seed_identity
-    outputs: typed channels (ranks / scores / probabilities / joint sets / diagnostic)
+    outputs: typed channels (full frozen rankings / scores / probabilities /
+             joint sets / diagnostic; include tie and marginal status)
     top_main_set: exactly 7 unique eligible numbers, when supplied
     top_powerball: exactly 1 eligible number, when supplied
-    selection_rule_id: top marginal / MAP-set / sampled / other declared mapping
+    top_selection_rule_id: TOP_MARGINAL / MAP_SET / SAMPLED / other declared rule
+    worst_main_set: 7 lowest frozen marginal ranks, when available
+    worst_powerball: lowest frozen Powerball rank, when available
+    worst_selection_rule_id: INVERSE / INVERSE_UNAVAILABLE
+    worst_unavailable_reason: when applicable
+    batch_target_id, prospective_series_ids, pre_draw_freeze_status
     fit_provenance, warm_start_parent, source_method_dependencies
     status, warnings, numeric_validity, effective_sample_size_if_meaningful
-    canonical_content_hash, archived_at_if_recorded  # audit metadata, not modelling input
+    canonical_content_hash  # digest of canonical content (excluding digest field itself and whole-source hash)
+    archived_at_if_recorded, remote_commit_evidence  # separate audit metadata
 ```
 
-**R2-C11 [PROPOSED]:** Top-seven by marginal ranking, maximum-probability whole-set, and sequentially generated legal sets are **different selection rules**. A set-valued method must not be forced to misrepresent its joint model as independent seven individual top picks. If it also emits per-number marginals, label those as additional channels. Each forecast must supply a plain-English interpretation of its output or explicitly say that it is uncalibrated.
+**R2-C11 [PROPOSED, revised]:** A ranking-capable method emits both pre-draw selection outputs from **one frozen model**:
+
+- `TOP` (report label **TOP**): the method's **original declared primary** legal selection. For a marginal-ranking method this is the seven highest-ranked main labels and highest-ranked Powerball. A joint-set method may instead have a declared `MAP_SET` or other native joint choice; preserve and label that rule rather than silently replacing it with a top-marginal set.
+- `INVERSE` (report label **WORST**): seven lowest-ranked main labels and the lowest-ranked Powerball **from the same complete frozen marginal rankings**, not the mathematically least-likely joint seven-set. In a method with a native joint-set TOP, the inverse is explicitly named `INVERSE_FROM_MARGINALS`. TOP and WORST need not be disjoint for a joint-set TOP method.
+- An ordered-sequence method may use a distinct native ordered TOP, but WORST remains based on its frozen **main-label marginals**, when those can be defined. Do not manufacture an implausible inverse order by simply reversing an ordered draw sequence.
+- A component without a valid full ranking returns `INVERSE_UNAVAILABLE` and a reason for that component. A diagnostic-only method without a valid forecast remains diagnostic. If a method produces only a main or Powerball forecast, report the other component's availability explicitly; never quietly substitute another model's values.
+- Every selection rule is identified by a stable selection-rule ID and version. Each forecast must explain its meaning and whether any channel is an uncalibrated score. `INVERSE` does **not** create a new E-number automatically, but is preserved as its own prospective performance series.
+
+**R2-C11A [PROPOSED, owner requirement]:** A pre-draw report shows **TOP and WORST next to each other in the same E-method row**, for the main numbers and Powerball separately. Freeze both simultaneously. Evaluations after the draw show TOP matches, WORST matches and **separately** the rank-position metric; they never modify the frozen predictions. Rank position is an **R3-only post-draw evaluator calculation**, not a third selection rule. In particular, neither actual-result rank positions nor mid-rank tie scores may alter BEST/TOP or WORST selections. The full frozen rankings support future analysis without changing the original prediction.
 
 **R2-C12 [PROPOSED]:** All numerical outputs must use a defined finite-number policy; NaN/Inf, integer range errors, malformed ordering, duplicate main numbers and mismatched probability normalisation produce a visible validation failure. Numeric failures never silently coerce to an apparently valid forecast.
 
@@ -278,13 +318,13 @@ ForecastResult:
 
 - `method_id` is a permanent stable `E_x` for a scientific hypothesis; `method_revision` changes when its specification or implementation changes.
 - `variant_id` records alternative estimators, fits, kernels, conditioning policies, data views or legal selection models while retaining the E-number where the core scientific hypothesis is the same.
-- `run_id` identifies one concrete execution; it includes a stable digest of method revision, input snapshots, cutoff, model configuration and randomness scheme.
+- `run_id` identifies one concrete execution and may include the whole-source snapshot hash for audit. **Separately**, the stable **forecast-content identity**, permitted-training-view digest and stochastic seed depend only on actually permitted pre-target inputs and fixed task configuration; they must not contain a growing whole-file hash, creation timestamp, worker ID, result of N, or any future row. The same historical forecast content must be reproducible when the source grows without altering its permitted prefix.
 - If a later combination experiment becomes a distinct scientific method, allocate **a new E-number** by the user-approved method registry procedure. Never re-use or re-number an old ID.
 - Dependencies on earlier forecasts or ensembles are recorded as a **directed acyclic graph**; no current-target evaluation outcome feeds a prediction-time combination.
 
 ### 5.4 Ties and rankings [OPEN decision]
 
-A consistent default could resolve equal scores by increasing ball number, with tie metadata recorded. Seeded random tie-breaking could be a declared variant. The project has **not** ratified one tie policy yet. It should be set once centrally for reproducibility before coding, not implicitly decided by unstable sort ordering.
+A consistent **prediction-time** default could resolve equal scores by increasing ball number, with tie metadata recorded. Seeded tie-breaking could be a separately declared, deterministic variant. The project has **not** ratified one TOP/WORST tie policy yet; it must be fixed before producing affected real forecasts. TOP and WORST are selected using that **frozen prediction policy** alone. **Only** the later rank-position evaluation uses **mid-ranks** for tied scores (mean of the occupied rank positions); the actual result and mid-ranks cannot alter the original ranking order, TOP, WORST or tie rule.
 
 ---
 
@@ -294,9 +334,10 @@ A consistent default could resolve equal scores by increasing ball number, with 
 
 ```text
 register -> validate input capabilities -> prepare/freeze training view
-  -> fit_or_update(training <= N-1) -> forecast(target N)
-  -> validate typed output -> canonicalize and archive prediction
-  -> (separate evaluator, later R3, may reveal N's result)
+  -> fit_or_update(training <= N-1) -> freeze model/rank channels
+  -> generate native TOP + marginal-based WORST (if available) for target N
+  -> validate both outputs -> canonicalize/archive pre-draw predictions
+  -> (separate evaluator, later R3, may reveal N and compute scores/rank positions)
 ```
 
 The experiment itself **never** calls the evaluator for the result of its own target. Its model-fit and prediction path cannot access scoring records. The program may offer a high-level CLI wrapper later; this R2 document specifies interfaces, not a finished `.py` file.
@@ -312,7 +353,7 @@ Suggested implementation status enumeration: `RESEARCH_CANDIDATE`, `FORMULA_OPEN
 - Typed/cutoff-limited CSV loader and external-feature provider.
 - Lag/recurrence and occurrence indicator sequence generator (not globally precomputed using future rows).
 - Legal unordered-set/ordered-sequence probability utilities.
-- Stable seeded random-stream service and deterministic ranking/tie adapters.
+- Stable seeded random-stream service derived from the **permitted training view**, plus immutable full-rank storage, deterministic TOP/WORST selection adapters, and a **separate post-result mid-rank evaluation** utility (not callable from predictor path).
 - Optimisation and validation wrappers, with predictable timeouts/failure reporting.
 - Immutable forecast archiving, logging, provenance hashing and manifest generation.
 - Resource and timing instrumentation independent of prediction performance.
@@ -320,7 +361,7 @@ Suggested implementation status enumeration: `RESEARCH_CANDIDATE`, `FORMULA_OPEN
 
 ### 6.4 Handling outputs other than full predictions [PROPOSED]
 
-An information-theory diagnostic or chaos feature that has no direct seven-number ranking **remains a valid registered experimental method**. An explicit, versioned adapter may translate it to a legal forecast (for example, features to a separate fitted predictive head). The adapter must obey N−1 fitting and use no target outcomes; until specified, the status is `DIAGNOSTIC_ONLY`, not a forced random projection.
+An information-theory diagnostic or chaos feature that has no direct seven-number ranking **remains a valid registered experimental method**. Do not invent an inverse or ranking for it. An explicit, versioned adapter may translate it to a legal forecast (for example, features to a separate fitted predictive head). The adapter must obey N−1 fitting and use no target outcomes; until specified, the status is `DIAGNOSTIC_ONLY`, not a forced random projection.
 
 ---
 
@@ -842,11 +883,15 @@ The runner will present clearly separated top-level modes; a mode flag must not 
 
 ### 8.2 Predict then evaluate, not the reverse
 
-For a historical draw N, the runner first freezes and archives a valid prediction; only an independent evaluator authorised under R3 may load the actual draw N and calculate scores. The predictor interface must not accept a target-outcome argument. An evaluator's result is a separately versioned record that does not rewrite original prediction bytes. Early development can test mechanics on invented fixtures with known answers without counting this as actual research success.
+For a historical draw N, the runner first freezes and archives the method's **TOP and WORST predictions together** (where available), plus its complete rankings; only an independent evaluator authorised under R3 may load the actual draw N and calculate scores, including the agreed **additional rank-position measure**. The predictor interface must not accept a target-outcome argument. An evaluator's result is a separately versioned record that does not rewrite original prediction bytes. Early development can test mechanics on invented fixtures with known answers without counting this as actual research success.
 
 ### 8.2A Prospective evidence and unbiased interpretation [AGREED intention; R3 interpretation DEFERRED]
 
 The project does **not** assume that statistically unusual outcomes are defective simply because conventional models consider them unlikely. Historical walk-forward scores may identify intriguing patterns, but the strongest practical test of prospective usefulness is the repeated **FINAL** sequence: store each `L+1` forecast before the draw; after publication, separately append its actual outcome and evaluation; refresh the source and forecast the next `L+1`. Preserve every attempted target, including abstentions, timeouts, failed fits, and poor predictions, so selection does not hide failures.
+
+**Weekly batch and prospective series (R2-C17A, PROPOSED):** One complete, versioned batch must be produced and pushed **before** each genuine target draw. Freeze the registered method/variant roster and each method's declared TOP and WORST selection-rule outputs. Record failures, abstentions, inverse-unavailable components and not-yet-runnable registered entries explicitly; do not silently omit them. Preserve distinct prospective tracks per `(method, revision, variant, observation view, barrel, selection rule)` even if they coincide or are highly correlated. No post-result rerun can be inserted into the original batch; keep later reanalyses separate and clearly marked as retrospective. The batch's commit ID and evidence of pre-draw push/publication are archived; commit timestamps alone are not accepted as incontrovertible evidence of timely publication.
+
+**Context for later result reports (R2-C17B, PROPOSED):** Any report highlighting a TOP or WORST hit includes its predeclared reference-model chance rate **alongside** the observed result where mathematically applicable. Under a fair, independent draw, a fixed seven-number main-set selection has mean 1.4 matches and a fixed one-number Powerball prediction has 5% hit probability. Batch-level chance estimates require explicit handling of dependent methods and selection multiplicity; naïve independent-method approximations are not universal baselines. These comparisons must **never** automatically dismiss or endorse a real result. R3 fixes the presentation, uncertainty, multiple-testing interpretation and preregistered score definitions before the first FINAL forecast.
 
 For reports, distinguish at least: **observed result**, **possible explanation under investigation**, **independently confirmed data/code fault**, and **provisional interpretation**. “Coincidental fit,” “synthetic artefact,” and “implementation error” are **hypotheses about a result until evidence establishes them**; they must not be imposed as unexplained labels. Clear-cut software defects or source contradictions remain actionable whenever verified, rather than deferred until a series of future draws has accumulated. Repeated prospective successes or failures update evidential confidence, but they do not, without sufficient analysis, conclusively prove a departure from randomness or disprove unconventional mechanisms. R3 decides the statistical framework, adjustment for repeated model changes, and reporting language.
 
@@ -876,18 +921,24 @@ E_55/E_56 and future ensembles consume **frozen origin-matched source-method for
 
 ### 9.2 Stable random-stream assignment [PROPOSED]
 
-Derive the seed stream from an **explicit canonical task identity**, e.g.:
+**Mandatory correction from Claude's R2 v0.2 review:** **Never** put the hash of the *whole source CSV/snapshot* into the seed or forecast-content identity. Appending draw `N` or later would change the earlier target `N` prediction for stochastic methods even though the legitimately visible prefix has not changed; this defeats the perturbation leakage test.
+
+Before any fit, derive an immutable **permitted training view** containing exactly the observations and external inputs actually admissible for target `N`, through `N-1` for historical runs (through `L` for FINAL `L+1`), in a documented canonical encoding. Compute its `training_view_sha256`; a method-specific rolling window is reflected in the view. Build the stochastic task identity from that digest and stable, declared pre-target configuration, e.g.:
 
 ```text
 (root_seed, namespace, method_id, method_revision, variant_id,
- source_snapshot_id, target_draw_number, start/restart_index)
+ observation_view, selection_model_version, target_draw_number,
+ training_view_sha256, admitted_external_input_digest,
+ fitting_config_digest, start_or_restart_index)
 ```
 
-Use a stable binary encoding / cryptographic digest to produce input integers for NumPy `SeedSequence`; do not use Python's salted built-in `hash()` or the worker index. Save the stable derivation rule, seed/root, NumPy version and job ID. **R2-C19:** Parallel/serial job order must not change model randomness or canonical forecast bytes.
+For external inputs, the digest includes **only** inputs truly available before the target and selected by the declared method. Include permissible warm-start lineage in stable input identity if and only if that lineage itself obeyed its preceding cutoffs. `ROOT_SEED`, method configuration and any relevant identities must not secretly incorporate the whole-file hash or future-source change. Use stable binary serialization/digests and NumPy `SeedSequence` (or an equivalently specified derivation), never Python's salted `hash()`, process IDs, worker positions or job completion order.
+
+**R2-C19 [MANDATORY FIX]:** The **forecast's content identity and randomness stream** must be invariant to changes or additions to draws `N` and later. Retain the full-source SHA-256 **only as separate audit/provenance metadata**; a new snapshot may produce a new *run/manifest identity* while the unchanged earlier prediction's **content identity and canonical bytes** remain identical. A predictor must not read whole-source information in precomputed features, caches, seeds, fitter selection or warm starts. Check this by controlled N-and-later mutation and append tests, not by simple inspection of the adapter's parameter list.
 
 ### 9.3 What bit-identical means [PROPOSED]
 
-Compare **canonical prediction payloads**, excluding creation timestamps, elapsed time, CPU time, worker IDs and temporary paths. Canonicalise field ordering and representations (including floats if used) under a documented serialization rule. Record SHA-256 of the canonical payload and require equality of both bytes and digest for 1-worker and 12-worker runs on a matched environment. Equal digests are useful but checking actual bytes where feasible is preferred. Do not compare logs that necessarily differ by scheduling timestamps.
+Compare **canonical prediction payloads**, including the method's full rankings, original TOP and inverse WORST output or explicit unavailable statuses, and excluding creation timestamps, **whole-source snapshot provenance**, remote archive/batch IDs, elapsed time, CPU time, worker IDs and temporary paths. Canonicalise field ordering and representations (including floats if used) under a documented serialization rule. Record SHA-256 of the canonical payload and require equality of both bytes and digest for 1-worker and 12-worker runs on a matched environment. Equal digests are useful but checking actual bytes where feasible is preferred. Do not compare logs that necessarily differ by scheduling timestamps.
 
 A mismatch is `REPRODUCIBILITY_FAIL` until fixed or until the user approves a justified method-specific exception with clear scope and alternative reproducibility criterion. Merely declaring a general numeric tolerance is **not** an automatic waiver. Parallel floating-point summations or nondeterministic native kernels, if encountered, must be diagnosed rather than assumed impossible.
 
@@ -965,7 +1016,7 @@ Record OS edition/build, processor, physical/logical core counts, RAM, power pla
 | T-02 | Pre-1144 or older-format draw injected | Excluded; explicit policy violation if used as actual eligible observation |
 | T-03 | Two source views disagree on set/Powerball | Halt/quarantine affected draw; no silent preference |
 | T-04 | Sorted CSV ball columns treated as extraction positions | Must fail view-type assertion |
-| T-05 | Select a target N with hidden N/N+1 outputs in original file | Predictor sees only rows ≤N−1; leakage test PASS |
+| T-05 | **MANDATORY adversarial leakage test:** run a stochastic and deterministic historical target N, then modify N and every later row (and append later rows), with training rows `<N` unmodified | Identical complete canonical prediction bytes, rankings, TOP, WORST, content IDs and seeds; only external provenance metadata may change. Fail if a whole-file seed, cache or warm start introduces change |
 | T-06 | Post-draw external datum with earlier event date | Not admitted if publication time is after cutoff |
 | T-07 | Fake synthetic source flagged as REAL | Namespace/provenance check rejects it |
 | T-08 | Synthetic fit checkpoint offered to real predictor | Rejected; no latent state can cross namespace boundary |
@@ -976,7 +1027,7 @@ Record OS edition/build, processor, physical/logical core counts, RAM, power pla
 | T-13 | One vs twelve workers, same job identities | Bit-identical canonical forecast bytes by default |
 | T-14 | Worker timeout/crash/out-of-memory | Explicit status with no fabricated duration |
 | T-15 | Benchmark report generation | Contains only resource/timing/status/digest fields; no scores or predicted numbers |
-| T-16 | Repeated same source with changed bytes | Different source digest, run provenance, no silent overwrite |
+| T-16 | Repeated source with altered bytes | Full source digest/run provenance reflects changed snapshot. If alteration is only at/after target N, unchanged permitted training implies **unchanged forecast content/seed**; never silently overwrite the archived original |
 | T-17 | Permitted FINAL real next-draw run | With current validated maximum `L`, uses all `1144..L` without a holdout exclusion and forecasts `L+1`; archive immutable pre-draw evidence |
 | T-18 | Holdout evaluation attempted from development mode | Denied with auditable status |
 | T-19 | Each E-method registration E_1–E_62 | Exact names/IDs present, including unimplemented and blocked candidates |
@@ -989,7 +1040,17 @@ Record OS edition/build, processor, physical/logical core counts, RAM, power pla
 | T-26 | Optional external features absent | Core draw-number-only forecasting still runs; no exact timestamp requirement |
 | T-27 | `transitory_data/` files left from a prior run | No automatic read/reuse as authoritative inputs; scratch isolation and Git ignore verified |
 | T-28 | Method fit state written to scratch and another run starts | No implicit intermediate-state reuse; any authorised checkpoint requires explicit lineage and configuration |
-| T-29 | Repeated real FINAL forecasts and later known results | All pre-draw forecasts archived intact, outcomes added separately, unsuccessful/failed targets retained |
+| T-29 | Repeated real FINAL forecasts and later known results | All pre-draw TOP/WORST forecasts archived intact, outcomes and later rank-position scores added separately, unsuccessful/failed targets retained |
+| T-30 | Ranking-capable method freezes full main/Powerball rankings | All 35 and all 20 labels respectively in complete deterministic order, with tie metadata and no missing/duplicate labels |
+| T-31 | TOP/WORST prediction generation for an ordinary marginal-ranking method | TOP uses highest seven/highest one; WORST is obtained by **exactly reversing the same frozen complete ranking** and selecting its first seven/first one, under the separately declared prediction-time tie policy; no refit or rerank is permitted |
+| T-32 | Joint-set TOP model with available marginals | Preserve native TOP set; WORST uses seven lowest marginal ranks, **not** a fabricated minimum-probability joint set; native TOP/WORST overlap is permitted |
+| T-33 | Diagnostic/set-only method with no genuine full ranking | Explicit per-barrel `INVERSE_UNAVAILABLE` with reason; no fabricated marginal, result or missing-method suppression |
+| T-34 | After actual draw, calculate rank-position mean using tied frozen scores | Mid-rank applied only in evaluator; TOP/WORST archived canonical content stays byte-identical before and after revealing actual target |
+| T-35 | One real target run with all registered runnable variants | Exactly one frozen complete pre-draw batch; all TOP/WORST or unavailable/failure records present; pushed remotely before draw and auditable as such |
+| T-36 | Attempt post-result insert/replace in the prospective batch | Immutable batch rejects mutation; later changes recorded as labelled retrospective reruns with distinct lineage |
+| T-37 | Serial-versus-12-worker TOP/WORST stochastic run | Identical complete canonical bytes, including full frozen rankings and inverse status, for matched environment and seed identity |
+| T-38 | Report a successful prospective TOP/WORST hit | Preserve separate track for each method/variant/selection rule; report reference chance rate as comparison, never automatic coincidence verdict; keep rank-position metric post-draw and separate |
+| T-39 | Weekly live-cycle start before scoring definitions are ratified | Block prospective production mode until R3 predeclares TOP, WORST and rank-position evaluation and reporting rules; do not replace a scheduled actual draw with retrospective predictions |
 
 
 ### 11.2 Method-specific numerical fixtures [PROPOSED]
@@ -1000,7 +1061,7 @@ For E_57 test positivity/PSD, finite `Z_7`, valid fixed-size distribution and `L
 
 ### 11.3 Reproducibility and process robustness [PROPOSED]
 
-- Run repeat-test on one and twelve workers under identical environment/seed/configuration and verify **canonical payload bytes**.
+- Run repeat-test on one and twelve workers under identical environment/seed/configuration and verify **canonical payload bytes**, including complete rankings and TOP/WORST outputs. Separately run the mandatory N-and-later source mutation/append leakage tests, comparing forecast content but not legitimately changing snapshot audit metadata.
 - Verify worker exceptions propagate as status records and that partial results cannot be counted as completed method forecasts.
 - Verify per-method timeout, interruption and restart do not import stale hidden states from a different target or dataset revision.
 - Verify the source/variant/method revision is frozen in forecast provenance.
@@ -1034,7 +1095,7 @@ analysing_perceived_randomness_in_reality/
     README.md
 ```
 
-`...` denotes **illustrative future files**, not existing files. In the previously inspected repository ZIP, a historical proposal version was present; Proposal v0.3 and R1 v0.4 have since been explicitly ratified by the user. Install/update actual repository files under version control explicitly, rather than assuming the ZIP already contains them. The `doc/` directory is the destination selected by the user.
+`...` denotes **illustrative future files**, not existing files. In the previously inspected repository ZIP, a historical proposal version was present; Proposal v0.3 and R1 v0.4 have since been explicitly ratified by the user. Install/update actual repository files under version control explicitly, rather than assuming the ZIP already contains them. The `doc/` directory is the destination selected by the user. The above listing describes the **previous known repository snapshot**, not a claim that R2 v0.3 has already been installed or committed; the new v0.3 file should be added alongside historical v0.2 after the user accepts the draft.
 
 ### 12.2 Future layout proposal, not an instruction to create directories yet
 
@@ -1080,7 +1141,7 @@ python -m predictive_randomness registry --list
 python -m predictive_randomness benchmark --preset B1 --window 100 --workers 1
 python -m predictive_randomness benchmark --preset B10 --window all --workers 12
 python -m predictive_randomness forecast --mode development --methods E_1,E_2
-python -m predictive_randomness forecast --mode final-next-draw --methods ...  # infer current L -> target L+1
+python -m predictive_randomness forecast --mode final-next-draw --all-runnable  # full frozen batch, infer L -> L+1
 ```
 
 These illustrate *purpose*, not installed scripts or approved flags. Versioned command semantics are for a later implementation ticket.
@@ -1097,19 +1158,20 @@ R2 should fix the source schema, registry and immutable method identities, fit/f
 
 **R2 explicitly does not ratify**:
 
-- Main-number and Powerball performance score definitions and aggregation.
-- Whether to rank by count of correctly predicted numbers, likelihood, calibration, proper scoring rules, or other metric; nor any winner threshold.
+- Exact computation, uncertainty, significance and aggregation of the **three owner-agreed reporting components**: TOP-selection main matches/Powerball hit, WORST-selection main matches/Powerball hit, and separate full-ranking mean actual-number rank (main) / actual-number rank (Powerball). These must all be reported **in addition to** one another where output capability permits; no replacement of TOP/WORST by rank position.
+- Definition of any *additional* scores (likelihood, calibration, proper scoring rules, etc.), methods of comparison and any winner threshold. The agreed three reporting components are required; their precise statistical reporting is deferred, **not optional to omit before live launch**.
+- Mid-rank handling of tied scores **only for the post-draw rank-position metric**: the seven actually drawn main numbers' mid-ranks are averaged; the actual Powerball number receives its mid-rank. Under the fair reference, means are 18.0 and 10.5 respectively. The evaluator must not modify the frozen TOP/WORST forecast.
 - Multiplicity correction, uncertainty intervals and standards for a surprising result.
 - Method and ensemble selection/reweighting policy (including apparently poor methods), selection freeze, and holdout disclosure timing beyond established rules.
-- Forecast comparison windows, repeated prospective-forecast evidence and minimum statistically relevant training/evaluation lengths, including how many real future draws can meaningfully support a conclusion.
+- Forecast comparison windows, repeated prospective-forecast evidence, per-method/per-selection-rule track reporting, reference chance rates and minimum statistically relevant training/evaluation lengths, including how many real future draws can meaningfully support a conclusion. **All three required score definitions must be frozen before the first genuine FINAL forecast**, not selected after its results are seen.
 - Any conclusion about perceived reality, independence, quantum causes, equipment physics, or nonlocal association based on research mathematics alone; and rules for avoiding premature “coincidence,” “synthetic artefact” or “implementation error” classifications without excluding demonstrable faults.
 
 ### 13.3 Mathematical specification questions to ratify in later R2 iterations
 
 - Exactly which mathematical **variant** of each E-method will be first implemented, with complete equations and parameter bounds.
 - Which E-methods are diagnostic-only pending a forecast adapter, and which initially generate direct predictions.
-- Global score/rank tie policy; legality and normalization tolerance rules; rounding/serialization of floating-point values.
-- How a whole-set model selects its publicly displayed seven-number prediction and how the Powerball companion is chosen where not internally modelled.
+- **Prediction-time** TOP/WORST ranking tie policy (distinct from post-draw rank-position mid-ranks); legality and normalization tolerance rules; rounding/serialization of floating-point values.
+- How a whole-set method chooses its **native TOP** seven-number set, how its **WORST** derives from truthful marginals if present, what `INVERSE_UNAVAILABLE` means, and how a Powerball companion is selected or declared unavailable where not internally modelled.
 - Which data view is the default for eligible sequential models, while retaining both permitted views.
 - Inference algorithm, seed/restart count, convergence and resource budgets for E_57–E_62.
 - Exact worker timeout, memory management and checkpoint resume rules.
@@ -1134,7 +1196,7 @@ A proposal here marked `[PROPOSED]` is **not ratified merely because this docume
 
 **Stage S4 — Expand all-method catalogue implementation iteratively:** Implement additional E-methods and variants without any exclusion based on speculative status, poor results or correlation. Resource-heavy E_57–E_62 may need separate implementation tickets and benchmarks. Preserve all unimplemented identities and potential future E_63–E_106 research additions.
 
-**Stage S5 — R3-governed scoring/holdout/FINAL forecast:** Only after R3 is ratified, run authorised historical evaluations and (when requested) the reserved independent holdout. Each user-authorised genuine forecast must derive `L` from the validated actual-data CSV, fit from every available eligible actual draw through `L` (subject only to an explicitly defined method window), and forecast `L+1`. Preserve its pre-draw archive proof, append the later actual-result comparison separately, then repeat using updated history for the following week. Draw numbers, not clock timestamps, control the model chronology; archive timestamps are optional evidentiary metadata, not fitted predictors.
+**Stage S5 — R3-governed scoring/holdout/FINAL forecast:** **Before the first prospective prediction**, ratify R3 definitions for all three owner-agreed evaluation outputs (TOP, WORST, rank-position), their reference-rate presentation and per-selection-rule prospective tracks. Only after R3 is ratified, run authorised historical evaluations and (when requested) the reserved independent holdout. Each user-authorised genuine forecast must derive `L` from the validated actual-data CSV, fit from every available eligible actual draw through `L` (subject only to an explicitly defined method window), and forecast `L+1`. Record every runnable method and variant in **one complete pre-draw TOP-and-WORST batch**, recording unavailable/failure statuses, **commit and push before the draw**, and preserve evidence of timely publication. Append the later actual-result comparison and rank-position evaluation separately, then repeat using updated history for the following week. No later rerun is represented as having been in the original batch. Draw numbers, not clock timestamps, control the model chronology; archive timestamps are optional evidentiary metadata, not fitted predictors.
 
 **Stop rule:** At each step, a failure should identify the blocked unit and its evidence. Do not mark the whole method scientifically invalid because implementation is not yet available.
 
@@ -1166,11 +1228,19 @@ The following are proposed decisions requiring user consideration; retaining the
 | R2-D18 | Shared data means common software and permitted in-memory source views; no implicit intermediate-state reuse | Yes | **User clarification; detailed contract PROPOSED** |
 | R2-D19 | Introduce optional Git-ignored `transitory_data/` only for necessary isolated scratch; persistent checkpoint reuse requires a separate approval | Yes | **User requested; detailed contract PROPOSED** |
 | R2-D20 | Do not pre-judge surprising fits as coincidence, synthetic artefact or implementation error; maintain prospective forecast/evaluation trail while recording verified faults | Yes | **User explicitly required; R3 standards DEFERRED** |
+| R2-D21 | Derive stochastic seed and content ID from **permitted training-view digest**, not whole source snapshot | Yes, mandatory bug fix | **Review-identified fix; proposed contract** |
+| R2-D22 | Mandate N-and-later mutation/append leakage test on complete canonical forecasts | Yes | **Review-identified fix; proposed acceptance test** |
+| R2-D23 | Each rank-capable E-method supplies frozen native **TOP** plus **WORST/INVERSE** from same ranking, displayed side by side | Yes | **User explicitly agreed; exact contracts proposed** |
+| R2-D24 | All complete 35/20 rankings retained where method capability supports them; unavailable inverse never fabricated | Yes | **User-approved direction; details proposed** |
+| R2-D25 | Preserve **rank-position** as an additional **post-draw metric**; never influence TOP/WORST predictions | Yes | **User explicitly mandated; R3 details deferred** |
+| R2-D26 | One complete immutable/pushed-before-draw FINAL batch with all runnable registered methods/variants and explicit unavailable/failure statuses; no retroactive additions | Yes | **Claude recommendation; proposed audit contract** |
+| R2-D27 | Separate TOP/WORST prospective tracks and contextual reference rates, without automatically judging unusual successes | Yes | **Review recommendation; statistical policy to R3** |
+| R2-D28 | Define TOP, WORST and rank-position scoring/reporting before first genuine real forecast; retain owner's agreed start timing | Yes | **Owner's previously agreed real-forecast cycle; detailed R3 rule proposed** |
 
 
 ### What acceptance of this document would mean
 
-If the user approves R2 v0.2 **as a framework**, the common contracts and administrative approach become the implementation design basis, while explicitly open mathematical choices remain open. If the user instead requests **complete frozen mathematics for all 62 before any coding**, an additional R2 method-by-method ratification revision will be necessary. Both paths preserve all experimental ideas and do not weaken the project philosophy.
+If the user approves R2 v0.3 **as a framework**, the common contracts and administrative approach become the implementation design basis, while explicitly open mathematical choices remain open. If the user instead requests **complete frozen mathematics for all 62 before any coding**, an additional R2 method-by-method ratification revision will be necessary. Both paths preserve all experimental ideas and do not weaken the project philosophy.
 
 ---
 
@@ -1181,7 +1251,8 @@ If the user approves R2 v0.2 **as a framework**, the common contracts and admini
 1. **Proposal v0.3:** `Predictive_Randomness_Research_Project_Proposal_v0_3.md`, especially §§0–2 (authority/philosophy), §§3–6 (observational and historical contracts), §8 (expanded research), §9 (retention), §10 (synthetic safeguards), §§11–12 (data and proposed software), §14 (stages), and §18 (deferred decisions).
 2. **R1 v0.4:** `Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md`, especially §4 (all numbered methods), §4.7 (pilot-wave family and precise candidate mathematical constraints), §7 (separated research streams), §8 (R3 deferral), §8A (benchmarking), §9 (possible dependencies), §10 (decision proposals), and §11 (technical bibliography).
 3. **Observed repository snapshots:** `source_data/australian_powerball_history_20261021.csv` and `source_data/australian_powerball_draw_order_20261021.csv` for Draws 1144–1587, plus the project scraper v0.3 and Australian game-rules PDF.
-4. **User's subsequent ratification:** explicit in this conversation after the v0.3 proposal and R1 v0.4 deliverables. Ratification is an external approval event, not retroactively changed wording inside the historical source document.
+4. **Claude's review of R2 v0.2:** `Claude_Review_of_R2_v0_2_v1.md`, 22 October 2026, explicitly reviewing `doc/Predictive_Randomness_Experimental_Method_Specifications_R2_v0_2.md`; it identified the full-file seed leakage defect, proposed a complete weekly batch and chance-context guard, and recorded the owner's requests for inverse predictions and an additional rank-position measure.
+5. **Owner's subsequent R2 clarifications:** explicit in this conversation: **TOP and WORST are shown next to each other from each method**, and the rank-position measure is **evaluation only** and must **never affect either prediction**. Previous user ratification of Proposal v0.3 and R1 v0.4 remains binding. Ratification is an external approval event, not retroactively changed historical file text.
 
 This R2 document builds on those sources and deliberately **does not reproduce the full R1 research references or all derivations**; those remain authoritative in R1. When a method-specific mathematical claim is in doubt, consult its complete R1 entry and cited technical source before writing code. Any new inference or proposed design rule in R2 is marked accordingly.
 
@@ -1191,7 +1262,7 @@ No E-method has been coded, statistically scored, accepted as predictive, or use
 
 ### 16.3 Recommended next review action
 
-Review this R2 v0.2 candidate for scientific intent and software-contract boundaries. Approve or revise R2-D02–D20 individually as needed, then decide whether to (a) ratify the common framework and specify method mathematics iteratively or (b) demand complete first-variant mathematics for every method before starting implementation. There is no requirement to convene Claude unless a new substantive mathematical disagreement warrants it.
+Review this R2 v0.3 candidate for scientific intent, the corrected permitted-input seed rule, TOP/WORST reporting and evaluation separation, and software-contract boundaries. Approve or revise R2-D02–D28 individually as needed, then decide whether to (a) ratify the common framework and specify method mathematics iteratively or (b) demand complete first-variant mathematics for every method before starting implementation. There is no requirement to convene Claude unless a new substantive mathematical disagreement warrants it.
 
 **Closing principle:** We do not claim to know in advance what patterns can or cannot exist in perceived reality. We make even unusual hypotheses precise enough to be tested without giving conventional theory veto power. Unexpected results remain worthy of continued, documented investigation—not prematurely classified as a coincidence, artificial-data artefact or bug on theoretical grounds. Verified data/software faults are reported as such; meaningful evidence for (or against) predictive structure is assessed through faithfully archived, repeated real-world forecasts and their subsequent actual results, with the statistical interpretation reserved for R3.
 
