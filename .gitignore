@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Disposable Windows POC runs and generated dependency snapshots
+transitory_data/poc_runs/
+transitory_data/dependency_snapshots/
