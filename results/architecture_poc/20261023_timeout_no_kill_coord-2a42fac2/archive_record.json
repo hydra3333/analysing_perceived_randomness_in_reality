@@ -1,0 +1,45 @@
+{
+  "archive_record_schema": "POC_MANUAL_ORPHAN_CLEARANCE_EVIDENCE_V1",
+  "archived_at_utc": "2026-10-23T10:14:02.918482+00:00",
+  "description": "Non-destructive timeout rehearsal; experiment status is FAILED, not SUCCESS",
+  "files": {
+    "UNRESOLVED_ORPHAN.original.json": {
+      "bytes": 951,
+      "sha256": "2d8269eb3845cf17ce7124254f1f9397ae52a1dd5603a0aeb67bdda05453a2aa"
+    },
+    "canonical_result.json": {
+      "bytes": 352,
+      "sha256": "039906abe074c9c5aaa5b6d8ce68f612b8ff3c9075cd8e468603b23ccc36adc3"
+    },
+    "manifest.json": {
+      "bytes": 1669,
+      "sha256": "1c60cc4f189457b6956b4e5d76226c730a9c2ed9aa1f55ed2faf968dbffacef7"
+    },
+    "pip_freeze.txt": {
+      "bytes": 217,
+      "sha256": "a9ecb7827b24a03aef5de88b66592d450019b4a465ce488cb15688b19d77cc39"
+    },
+    "runtime_environment.json": {
+      "bytes": 551,
+      "sha256": "1aeef8f26ec6c39879deb2d5da2c126ba22f63df7eb0801b759b88a230ec3839"
+    },
+    "status.json": {
+      "bytes": 556,
+      "sha256": "093bd73d0a0e792e2fe570eb8aef5e36282eefde8aba6247d7bb363cbf25c3d5"
+    },
+    "worker_001.stdout.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "group": "coord-2a42fac2c24549b5b216ffa691f225a7",
+  "notes": [
+    "All original wrapper/descendant/status PID identities were checked as exited or reused before archive.",
+    "The original marker has NOT been deleted, renamed or changed by this script.",
+    "Source worker stdout log may be empty because coordinator exited before pipe drain.",
+    "Archive the original operator console transcript separately if available.",
+    "Manual marker clearance is a separate, deliberate operator decision."
+  ],
+  "original_marker_sha256": "2d8269eb3845cf17ce7124254f1f9397ae52a1dd5603a0aeb67bdda05453a2aa",
+  "run": "coord-2a42fac2c24549b5b216ffa691f225a7_w001"
+}

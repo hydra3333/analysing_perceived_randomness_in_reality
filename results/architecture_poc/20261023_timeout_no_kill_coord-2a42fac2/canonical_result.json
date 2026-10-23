@@ -1,0 +1,1 @@
+{"case":"sleep-timeout","completed":true,"duration_requested_seconds":60.0,"engineering_only":true,"environment":{"sys_prefix":"E:\\SOFTWARE-Win11\\powerball\\analysing_perceived_randomness_in_reality\\.venv"},"probe":"POC_Coordinator_Probe","threads":{"MKL_NUM_THREADS":"1","NUMEXPR_NUM_THREADS":"1","OMP_NUM_THREADS":"1","OPENBLAS_NUM_THREADS":"1"}}
