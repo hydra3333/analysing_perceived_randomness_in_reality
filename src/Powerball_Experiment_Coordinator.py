@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import queue
 import re
+import signal
 import subprocess
 import sys
 import threading
@@ -37,6 +38,11 @@ CASE_NAMES = SIMPLE_CASES | EXTRA_CASES
 SAFE_ID = re.compile(r"[A-Za-z0-9_-]{1,90}\Z")
 SAFE_ARG = re.compile(r'[A-Za-z0-9_.,=:/\\ -]+\Z')
 LINE_QUEUE_MAX = 8192
+# OWNER SAFETY SWITCH. Default is NEVER terminate a process.
+# Change to True ONLY after the documented N-series plan-only tests and owner review.
+# A command-line argument CANNOT override this setting.
+ENABLE_PROCESS_TERMINATION = False
+ALLOWED_WRAPPER_DESCENDANTS = frozenset({"cmd.exe", "findstr.exe", "python.exe"})
 ISO = lambda: datetime.now(timezone.utc).isoformat()
 
 
@@ -94,6 +100,10 @@ def validate_environment() -> None:
     actual = str(Path(sys.prefix).resolve()).casefold()
     if actual != expected:
         raise RuntimeError(f"Wrong venv: sys.prefix={sys.prefix}; expected={expected_venv()}")
+    active_env = os.environ.get("VIRTUAL_ENV")
+    if not active_env or str(Path(active_env).resolve()).casefold() != expected:
+        raise RuntimeError("Coordinator requires VIRTUAL_ENV set to this project's .venv; "
+                           "start via Run_Coordinator.bat instead of direct Python")
     if not WRAPPER.is_file():
         raise RuntimeError(f"Missing project experiment wrapper: {WRAPPER}")
     verify_cmd_autorun()
@@ -141,66 +151,221 @@ def read_status(directory: Path) -> dict[str, Any] | None:
         return None
 
 
-def terminate_tree(proc: subprocess.Popen[str], status_file: Path,
-                   *, wait_seconds: float = 8.0) -> tuple[bool, str]:
-    """Snapshot descendants while root lives. Stop descendants then root.
+@dataclass
+class OwnedMember:
+    """Stored psutil object with ancestry checked while root wrapper was alive."""
+    process: psutil.Process
+    pid: int
+    create_time: float
+    name: str
+    parent_pid: int
+    depth: int
 
-    Returns (confirmed_stopped, explanation). Never kill a reused probe PID.
-    Do not rely on Windows virtual-environment redirector internals.
-    """
-    prior = read_status(status_file.parent) or {}
-    probe_pid = prior.get("pid") if isinstance(prior.get("pid"), int) else None
-    born = prior.get("process_create_time_epoch")
-    born = float(born) if isinstance(born, (float, int)) else None
-    seen: dict[int, psutil.Process] = {}
+
+def _member_alive(member: OwnedMember) -> bool | None:
+    """Keep the original Process object, so psutil rejects reused PIDs."""
     try:
-        root = psutil.Process(proc.pid)
-        if root.is_running():
-            for child in root.children(recursive=True):
-                seen[child.pid] = child
-            seen[root.pid] = root
+        return member.process.is_running() and member.process.status() != psutil.STATUS_ZOMBIE
     except psutil.NoSuchProcess:
-        pass
-    except (psutil.AccessDenied, OSError) as exc:
-        return False, f"Cannot enumerate child process tree: {exc}"
+        return False
+    except (psutil.AccessDenied, OSError):
+        return None
 
-    # Include the child's directly self-reported PID even if the wrapper
-    # died before enumeration. Only signal when PID+creation time match.
-    probe_state = same_process(probe_pid, born)
-    if probe_state is True and probe_pid not in seen:
-        try:
-            seen[probe_pid] = psutil.Process(probe_pid)
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
 
-    targets = list(seen.values())
-    # Children before CMD wrapper; psutil handles races and stale processes.
-    targets.sort(key=lambda p: p.pid == proc.pid)
-    for obj in targets:
-        try:
-            # Avoid killing a stale object whose PID has been reused.
-            if obj.is_running():
-                obj.terminate()
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
-    _gone, alive = psutil.wait_procs(targets, timeout=wait_seconds / 2)
-    for obj in alive:
-        try:
-            obj.kill()
-        except (psutil.NoSuchProcess, psutil.AccessDenied):
-            pass
-    _gone2, survivors = psutil.wait_procs(alive, timeout=wait_seconds / 2)
+def _process_brief(member: OwnedMember) -> str:
+    return (f"pid={member.pid} name={member.name} born={member.create_time:.6f} "
+            f"parent_pid={member.parent_pid} depth={member.depth} alive={_member_alive(member)}")
+
+
+def _root_brief(worker: "Worker") -> str:
+    return (f"pid={worker.proc.pid} name=cmd.exe born={worker.root_create_time} "
+            f"alive={worker.proc.poll() is None} (Popen handle)")
+
+
+def register_root(worker: "Worker") -> None:
+    """Immediately after Popen, record root identity; never trust a PID from disk."""
     try:
-        proc.wait(timeout=1)
+        root = psutil.Process(worker.proc.pid)
+        born = root.create_time()
+        name = root.name().lower()
+        if name != "cmd.exe":
+            worker.ownership_errors.append(f"WRONG_ROOT_NAME pid={root.pid} name={name}")
+            return
+        worker.root_process = root
+        worker.root_create_time = born
+    except (psutil.NoSuchProcess, psutil.AccessDenied, OSError) as exc:
+        worker.ownership_errors.append(f"ROOT_IDENTITY_UNVERIFIED pid={worker.proc.pid}: {exc}")
+
+
+def accept_ancestry_candidate(
+        *, pid: int, parent_pid: int, born: float, name: str,
+        known: dict[int, tuple[float, int]], allowed: frozenset[str]
+) -> tuple[bool, str]:
+    """Pure acceptance rule; usable in synthetic N4/N5 unit tests."""
+    parent = known.get(parent_pid)
+    if parent is None:
+        return False, "PARENT_NOT_VERIFIED"
+    if born < parent[0] - 0.001:
+        return False, "CHILD_OLDER_THAN_PARENT"
+    if name.lower() not in allowed:
+        return False, "UNEXPECTED_EXECUTABLE"
+    if pid in known:
+        return False, "PID_ALREADY_REGISTERED"
+    return True, "VERIFIED"
+
+
+def capture_owned_tree(worker: "Worker", *, force: bool = False) -> None:
+    """Capture descendants ONLY while Popen root is alive and has verified identity."""
+    now = time.monotonic()
+    if not force and now - getattr(worker, "last_capture_monotonic", 0.0) < 0.5:
+        return
+    worker.last_capture_monotonic = now
+    if worker.root_process is None or worker.root_create_time is None:
+        return
+    if worker.proc.poll() is not None:
+        return
+    root = worker.root_process
+    try:
+        if not root.is_running() or abs(root.create_time() - worker.root_create_time) >= 0.001:
+            worker.ownership_errors.append("ROOT_IDENTITY_CHANGED; no further capture")
+            return
+        snapshots = root.children(recursive=True)
+    except (psutil.NoSuchProcess, psutil.AccessDenied, OSError) as exc:
+        worker.ownership_errors.append(f"TREE_CAPTURE_ERROR: {exc}")
+        return
+    # Parent must be identified, not merely included in psutil's recursive snapshot.
+    known = {root.pid: (worker.root_create_time, 0)}
+    known.update({m.pid: (m.create_time, m.depth) for m in worker.owned_members.values()
+                  if _member_alive(m) is not False})
+    unprocessed = list(snapshots)
+    for _ in range(len(unprocessed) + 1):
+        if not unprocessed:
+            break
+        progress = False
+        remaining = []
+        for child in unprocessed:
+            try:
+                pid = child.pid
+                parent_pid = child.ppid()
+                born = child.create_time()
+                name = child.name().lower()
+            except (psutil.NoSuchProcess, psutil.AccessDenied, OSError):
+                continue  # a transient exited before inspection; no kill authority
+            previous = worker.owned_members.get(pid)
+            if previous is not None:
+                if abs(previous.create_time - born) >= 0.001:
+                    worker.ownership_errors.append(f"MEMBER_PID_REUSED pid={pid}")
+                continue
+            if parent_pid not in known:
+                remaining.append(child)
+                continue
+            valid, why = accept_ancestry_candidate(
+                pid=pid, parent_pid=parent_pid, born=born, name=name,
+                known=known, allowed=ALLOWED_WRAPPER_DESCENDANTS)
+            if not valid:
+                worker.ownership_errors.append(f"{why}: pid={pid} name={name} parent={parent_pid}")
+                continue
+            member = OwnedMember(child, pid, born, name, parent_pid, known[parent_pid][1] + 1)
+            worker.owned_members[pid] = member
+            known[pid] = (born, member.depth)
+            progress = True
+        unprocessed = remaining
+        if not progress:
+            break
+    for child in unprocessed:
+        worker.ownership_errors.append(f"UNVERIFIED_PARENT descendant_pid={child.pid}")
+
+    status = read_status(worker.run_dir)
+    if status is None or status.get("run_id") != worker.run_id:
+        return
+    pid = status.get("pid")
+    born = status.get("process_create_time_epoch")
+    if type(pid) is not int or not isinstance(born, (float, int)):
+        return
+    found = worker.owned_members.get(pid)
+    if found is not None and abs(found.create_time - float(born)) < 0.001:
+        worker.experiment_member = found
+        worker.unmatched_status = ""
+    else:
+        # STATUS PID IS NEVER ADDED TO THE TARGETS, including if a file changes later.
+        worker.unmatched_status = f"STATUS_PID_NOT_OWNED pid={pid} born={born}"
+
+
+def print_termination_plan(worker: "Worker", reason: str, *, preview: bool) -> None:
+    """Safety BEFORE/AFTER reports for plan-only inspection; performs NO termination."""
+    print(f"[SAFETY BEFORE] worker={worker.sequence:02d} reason={reason} "
+          f"ENABLE_PROCESS_TERMINATION={ENABLE_PROCESS_TERMINATION} "
+          f"mode={'PREVIEW_ONLY' if preview else 'STOP_REQUEST'}", flush=True)
+    print(f"[SAFETY TARGET] root {_root_brief(worker)}", flush=True)
+    for member in sorted(worker.owned_members.values(), key=lambda m: (-m.depth, m.pid)):
+        print(f"[SAFETY TARGET] descendant {_process_brief(member)}", flush=True)
+    print(f"[SAFETY PROOF] experiment_matched={worker.experiment_member is not None} "
+          f"unmatched_status={worker.unmatched_status or 'none'} "
+          f"ownership_anomalies={worker.ownership_errors or 'none'}", flush=True)
+    if preview:
+        print(f"[SAFETY AFTER] worker={worker.sequence:02d} PREVIEW ONLY; "
+              "no termination attempted; workers continue normally", flush=True)
+
+
+def terminate_owned_tree(worker: "Worker", reason: str) -> tuple[bool, str]:
+    """Only stored, verified ancestry may be killed; protected by owner switch."""
+    capture_owned_tree(worker, force=True)
+    print_termination_plan(worker, reason, preview=False)
+    if not ENABLE_PROCESS_TERMINATION or worker.plan_only:
+        details = (f"TERMINATION_DISABLED: switch={ENABLE_PROCESS_TERMINATION} "
+                   f"plan_only={worker.plan_only}, no signals issued; "
+                   f"root_alive={worker.proc.poll() is None}; "
+                   f"experiment_matched={worker.experiment_member is not None}")
+        print(f"[SAFETY AFTER] worker={worker.sequence:02d} {details}", flush=True)
+        return False, details
+    # No destructive action if the wrapper or reported experiment wasn't verified.
+    final_status = read_status(worker.run_dir)
+    experiment = worker.experiment_member
+    verified_status = (final_status is not None and
+                       final_status.get("run_id") == worker.run_id and
+                       experiment is not None and
+                       final_status.get("pid") == experiment.pid and
+                       isinstance(final_status.get("process_create_time_epoch"), (int, float)) and
+                       abs(float(final_status["process_create_time_epoch"]) - experiment.create_time) < 0.001)
+    if (worker.root_process is None or worker.root_create_time is None or
+            not verified_status or worker.ownership_errors or worker.unmatched_status):
+        details = "TERMINATION_REFUSED: root, experiment, or ancestry unverified; no signals issued"
+        print(f"[SAFETY AFTER] worker={worker.sequence:02d} {details}", flush=True)
+        return False, details
+    actions: list[str] = []
+    live_members = sorted(worker.owned_members.values(), key=lambda m: (-m.depth, m.pid))
+    for member in live_members:
+        live = _member_alive(member)
+        if live is not True:
+            actions.append(f"pid={member.pid} not-signalled live={live}")
+            continue
+        print(f"[SAFETY ACTION] worker={worker.sequence:02d} KILL descendant "
+              f"pid={member.pid} name={member.name} born={member.create_time:.6f}", flush=True)
+        try:
+            member.process.kill()  # psutil guards PID reuse via stored creation time
+            actions.append(f"pid={member.pid} kill requested")
+        except (psutil.NoSuchProcess, psutil.AccessDenied, OSError) as exc:
+            actions.append(f"pid={member.pid} kill refused: {type(exc).__name__}: {exc}")
+    if worker.proc.poll() is None:
+        print(f"[SAFETY ACTION] worker={worker.sequence:02d} KILL root (Popen handle) "
+              f"pid={worker.proc.pid} name=cmd.exe born={worker.root_create_time:.6f}", flush=True)
+        try:
+            worker.proc.kill()  # handle-based; never construct new kill PID
+            actions.append(f"root_pid={worker.proc.pid} handle kill requested")
+        except (OSError, subprocess.SubprocessError) as exc:
+            actions.append(f"root_pid={worker.proc.pid} handle kill failed: {exc}")
+    try:
+        worker.proc.wait(timeout=3)
     except (subprocess.TimeoutExpired, OSError):
         pass
-    still = same_process(probe_pid, born)
-    if survivors or still is True or still is None and probe_pid is not None:
-        return False, (f"ORPHAN_SUSPECTED: survivors={[x.pid for x in survivors]}; "
-                       f"probe_pid={probe_pid} probe_state={still}")
-    if proc.poll() is None:
-        return False, "ORPHAN_SUSPECTED: wrapper process did not exit"
-    return True, f"Terminated process tree (enumerated {len(targets)} processes)"
+    # No kill escalation beyond verified members.
+    survivors = [m.pid for m in live_members if _member_alive(m) is not False]
+    root_alive = worker.proc.poll() is None
+    confirmed = not survivors and not root_alive and _member_alive(worker.experiment_member) is False
+    state = "STOPPED_CONFIRMED" if confirmed else "ORPHAN_SUSPECTED"
+    details = f"{state}: actions={actions}; survivors={survivors}; root_alive={root_alive}"
+    print(f"[SAFETY AFTER] worker={worker.sequence:02d} {details}", flush=True)
+    return confirmed, details
 
 
 @dataclass
@@ -226,6 +391,15 @@ class Worker:
     output_lines: int = 0
     latest_progress: str = ""
     lines_tail: deque[str] = field(default_factory=lambda: deque(maxlen=12))
+    root_process: psutil.Process | None = None
+    root_create_time: float | None = None
+    owned_members: dict[int, OwnedMember] = field(default_factory=dict)
+    experiment_member: OwnedMember | None = None
+    ownership_errors: list[str] = field(default_factory=list)
+    unmatched_status: str = ""
+    plan_printed: bool = False
+    plan_only: bool = False
+    last_capture_monotonic: float = 0.0
 
 
 def read_lines(proc: subprocess.Popen[str], number: int, logfile: Path,
@@ -311,6 +485,8 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--min-available-gb", type=float, default=4.0)
     parser.add_argument("--critical-available-gb", type=float, default=2.0)
     parser.add_argument("--console-mode", choices=("all", "summary"), default="all")
+    parser.add_argument("--plan-termination", action="store_true",
+                        help="Print verified process inventory; do not signal any process")
     args = parser.parse_args()
     if not args.poc:
         parser.error("Only explicit --poc engineering runs are permitted")
@@ -326,6 +502,13 @@ def arguments() -> argparse.Namespace:
         parser.error("--memory-mb must be in 1..2048")
     if args.case == "memory-load" and args.memory_mb > 128 and not args.allow_memory_stress:
         parser.error("Memory allocations over 128 MB require --allow-memory-stress")
+    if args.allow_memory_stress and not ENABLE_PROCESS_TERMINATION:
+        parser.error("High memory stress disallowed while process termination is disabled")
+    if args.plan_termination and args.case != "sleep-timeout":
+        parser.error("--plan-termination first-release diagnostic requires --case=sleep-timeout")
+    if args.plan_termination and args.timeout_seconds <= args.sleep_seconds + 2:
+        parser.error("--plan-termination requires timeout > sleep duration + 2s; "
+                     "no cleanup should be requested during a plan-only run")
     if args.min_available_gb <= args.critical_available_gb or args.critical_available_gb < 0:
         parser.error("Available-memory guard floors must be positive and ordered")
     if args.group_id is not None and (not SAFE_ID.fullmatch(args.group_id) or len(args.group_id) > 85):
@@ -376,6 +559,14 @@ def coordinator_main() -> int:
     orphan_suspected = False
     coordinator_issue = ""
     printed_lines = 0
+    interrupt_requested = False
+
+    def on_sigint(_signum: int, _frame: object) -> None:
+        nonlocal interrupt_requested
+        interrupt_requested = True  # flag only: no asynchronous KeyboardInterrupt
+
+    old_handler = signal.getsignal(signal.SIGINT)
+    signal.signal(signal.SIGINT, on_sigint)
 
     def drain(limit: int = 6000) -> None:
         nonlocal printed_lines
@@ -405,11 +596,12 @@ def coordinator_main() -> int:
 
     def stop(worker: Worker, reason: str) -> None:
         nonlocal orphan_suspected, stop_launches
-        good, info = terminate_tree(worker.proc, worker.run_dir / "status.json")
+        good, info = terminate_owned_tree(worker, reason)
         worker.stopped_cleanly = good
         worker.issue = f"{reason}: {info}"
         worker.timed_out = reason == "TIMEOUT"
-        worker.final_state = reason if good else "ORPHAN_SUSPECTED"
+        worker.final_state = reason if good else (
+            "TERMINATION_DISABLED" if not ENABLE_PROCESS_TERMINATION else "ORPHAN_SUSPECTED")
         if not good:
             orphan_suspected = True
             stop_launches = True
@@ -420,13 +612,24 @@ def coordinator_main() -> int:
         print(f"[COORDINATOR] ENGINEERING POC group={group_id} "
               f"case={args.case} count={args.count} workers={args.workers}", flush=True)
         while active or (next_number <= args.count and not stop_launches):
+            if interrupt_requested:
+                interrupted = True
+                stop_launches = True
+                signal.signal(signal.SIGINT, signal.SIG_IGN)
+                print("[COORDINATOR] INTERRUPTED; supervising active workers; "
+                      f"termination_switch={ENABLE_PROCESS_TERMINATION}", flush=True)
+                for w in list(active.values()):
+                    stop(w, "INTERRUPTED")
+                active.clear()
+                break
             free_ram = psutil.virtual_memory().available
             peak_available_pressure = min(peak_available_pressure, free_ram)
             if free_ram < critical:
                 stop_launches = True
                 coordinator_issue = f"Critical available memory floor reached: {free_ram / 2**30:.2f} GiB"
                 for w in list(active.values()):
-                    stop(w, "MEMORY_GUARD")
+                    if w.final_state is None:
+                        stop(w, "MEMORY_GUARD")
             while not stop_launches and len(active) < args.workers and next_number <= args.count:
                 if psutil.virtual_memory().available < min_available:
                     stop_launches = True
@@ -450,13 +653,23 @@ def coordinator_main() -> int:
                                           args=(proc, n, logfile, messages, reader_done),
                                           daemon=True, name=f"worker-output-{n}")
                 w = Worker(n, run_id, proc, time.monotonic(), run_dir, logfile, reader, reader_done)
+                w.plan_only = args.plan_termination
                 all_workers.append(w)
-                active[n] = w
+                active[n] = w  # immediate registration before any blocking operation
+                register_root(w)
+                capture_owned_tree(w)
                 reader.start()
                 next_number += 1
                 print(f"[COORDINATOR] launched worker={n:02d} root_pid={proc.pid}", flush=True)
             drain()
             for n, w in list(active.items()):
+                if w.final_state is None:
+                    capture_owned_tree(w)
+                    if (args.plan_termination and not w.plan_printed and
+                            (w.experiment_member is not None or
+                             time.monotonic() - w.started > 2)):
+                        print_termination_plan(w, "PLAN_ONLY", preview=True)
+                        w.plan_printed = True
                 if w.final_state is not None:
                     active.pop(n)
                     continue
@@ -469,13 +682,6 @@ def coordinator_main() -> int:
                     w.final_state = "EXITED"
                     active.pop(n)
             time.sleep(0.04)
-    except KeyboardInterrupt:
-        interrupted = True
-        stop_launches = True
-        print("[COORDINATOR] INTERRUPTED: stopping all active wrappers", file=sys.stderr, flush=True)
-        for w in list(active.values()):
-            stop(w, "INTERRUPTED")
-        active.clear()
     except Exception as exc:
         stop_launches = True
         coordinator_issue = f"Coordinator error: {type(exc).__name__}: {exc}"
@@ -484,6 +690,9 @@ def coordinator_main() -> int:
             stop(w, "COORDINATOR_ERROR")
         active.clear()
     finally:
+        # Keep SIGINT ignored through final manifest publication after interruption.
+        if not interrupted:
+            signal.signal(signal.SIGINT, old_handler)
         # Always drain pending logs, and never wait indefinitely for a pipe EOF.
         cutoff = time.monotonic() + 3.0
         while time.monotonic() < cutoff:
@@ -528,6 +737,12 @@ def coordinator_main() -> int:
                         "console_integrity": bool(ok and state == "SUCCESS"),
                         "failure_handling_valid": bool(ok) if state != "SUCCESS" else None,
                         "validation": explanation, "issue": w.issue,
+                        "owned_processes": [{"pid": m.pid, "name": m.name,
+                                              "create_time": m.create_time,
+                                              "parent_pid": m.parent_pid, "depth": m.depth}
+                                             for m in w.owned_members.values()],
+                        "ownership_errors": w.ownership_errors,
+                        "unmatched_status": w.unmatched_status,
                         "stdout_log": str(w.stdout_log.relative_to(ROOT)),
                         "result_path": str((w.run_dir / "canonical_result.json").relative_to(ROOT))})
     successful = (total_successes == args.count and len(all_workers) == args.count
@@ -541,11 +756,12 @@ def coordinator_main() -> int:
              "elapsed_seconds": time.monotonic() - started,
              "minimum_observed_available_memory_bytes": peak_available_pressure,
              "interrupted": interrupted, "orphan_suspected": orphan_suspected,
+             "enable_process_termination": ENABLE_PROCESS_TERMINATION,
              "issue": coordinator_issue, "workers": reports}
     save_new(group / "manifest.json", canonical_bytes(final))
     print(f"[COORDINATOR] {'PASS' if successful else 'FAIL'} successes={total_successes}/{args.count}; "
           f"manifest={group / 'manifest.json'}", flush=True)
-    return 0 if successful else 1
+    return 130 if interrupted else (0 if successful else 1)
 
 
 if __name__ == "__main__":
