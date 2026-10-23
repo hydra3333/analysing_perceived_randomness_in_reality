@@ -253,9 +253,24 @@ def capture_owned_tree(worker: "Worker", *, force: bool = False) -> None:
                 continue  # a transient exited before inspection; no kill authority
             previous = worker.owned_members.get(pid)
             if previous is not None:
-                if abs(previous.create_time - born) >= 0.001:
-                    worker.ownership_errors.append(f"MEMBER_PID_REUSED pid={pid}")
-                continue
+                if abs(previous.create_time - born) < 0.001:
+                    continue  # The very same already-verified member.
+                old_alive = _member_alive(previous)
+                if old_alive is False:
+                    # Windows may reuse the PID of a short-lived wrapper/pre-check
+                    # child.  The *stored* process object confirms that the old
+                    # identity is gone; retire it without granting the new process
+                    # any ownership.  The new candidate must still pass the full
+                    # ancestry, creation-time and executable-name checks below.
+                    worker.departed_members.append(previous)
+                    del worker.owned_members[pid]
+                    known.pop(pid, None)  # Never use a departed parent as proof.
+                else:
+                    # Both a live conflict and an unverifiable old identity fail
+                    # closed.  Neither object is a new termination target.
+                    worker.ownership_errors.append(
+                        f"MEMBER_PID_IDENTITY_CONFLICT pid={pid} old_alive={old_alive}")
+                    continue
             if parent_pid not in known:
                 remaining.append(child)
                 continue
@@ -333,6 +348,7 @@ def terminate_owned_tree(worker: "Worker", reason: str) -> tuple[bool, str]:
         print(f"[SAFETY AFTER] worker={worker.sequence:02d} {details}", flush=True)
         return False, details
     actions: list[str] = []
+    kill_requested: list[OwnedMember] = []
     live_members = sorted(worker.owned_members.values(), key=lambda m: (-m.depth, m.pid))
     for member in live_members:
         live = _member_alive(member)
@@ -343,6 +359,7 @@ def terminate_owned_tree(worker: "Worker", reason: str) -> tuple[bool, str]:
               f"pid={member.pid} name={member.name} born={member.create_time:.6f}", flush=True)
         try:
             member.process.kill()  # psutil guards PID reuse via stored creation time
+            kill_requested.append(member)
             actions.append(f"pid={member.pid} kill requested")
         except (psutil.NoSuchProcess, psutil.AccessDenied, OSError) as exc:
             actions.append(f"pid={member.pid} kill refused: {type(exc).__name__}: {exc}")
@@ -354,16 +371,31 @@ def terminate_owned_tree(worker: "Worker", reason: str) -> tuple[bool, str]:
             actions.append(f"root_pid={worker.proc.pid} handle kill requested")
         except (OSError, subprocess.SubprocessError) as exc:
             actions.append(f"root_pid={worker.proc.pid} handle kill failed: {exc}")
+    # TerminateProcess is asynchronous on Windows: a successful kill request
+    # does NOT prove exit.  Wait on the *stored, verified* descendant objects,
+    # with a firm bound, before checking survivors.  This never sends signals.
+    wait_error: str | None = None
+    if kill_requested:
+        try:
+            gone, still_alive = psutil.wait_procs(
+                [m.process for m in kill_requested], timeout=3.0)
+            actions.append(f"descendant_wait gone={len(gone)} alive={len(still_alive)}")
+        except (psutil.Error, OSError, ValueError) as exc:
+            wait_error = f"{type(exc).__name__}: {exc}"
+            actions.append(f"descendant_wait failed={wait_error}")
     try:
         worker.proc.wait(timeout=3)
     except (subprocess.TimeoutExpired, OSError):
         pass
-    # No kill escalation beyond verified members.
+    # No kill escalation beyond verified members.  Only confirmed departures
+    # count as stopped; ambiguous identities or wait failures fail closed.
     survivors = [m.pid for m in live_members if _member_alive(m) is not False]
     root_alive = worker.proc.poll() is None
-    confirmed = not survivors and not root_alive and _member_alive(worker.experiment_member) is False
+    confirmed = (wait_error is None and not survivors and not root_alive
+                 and _member_alive(worker.experiment_member) is False)
     state = "STOPPED_CONFIRMED" if confirmed else "ORPHAN_SUSPECTED"
-    details = f"{state}: actions={actions}; survivors={survivors}; root_alive={root_alive}"
+    details = (f"{state}: actions={actions}; survivors={survivors}; "
+               f"root_alive={root_alive}; wait_error={wait_error or 'none'}")
     print(f"[SAFETY AFTER] worker={worker.sequence:02d} {details}", flush=True)
     return confirmed, details
 
@@ -394,6 +426,8 @@ class Worker:
     root_process: psutil.Process | None = None
     root_create_time: float | None = None
     owned_members: dict[int, OwnedMember] = field(default_factory=dict)
+    # Historical identity evidence only; departed objects grant no kill authority.
+    departed_members: list[OwnedMember] = field(default_factory=list)
     experiment_member: OwnedMember | None = None
     ownership_errors: list[str] = field(default_factory=list)
     unmatched_status: str = ""
