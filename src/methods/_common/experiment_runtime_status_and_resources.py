@@ -36,7 +36,7 @@ def resource_sample() -> dict:
 
 
 class ProbeStatus:
-    def __init__(self, path: Path, run_id: str, case: str):
+    def __init__(self, path: Path, run_id: str, case: str, *, identity: dict | None = None):
         self.path = path
         self.started = time.perf_counter()
         self.start_info = resource_sample()
@@ -45,9 +45,14 @@ class ProbeStatus:
             "state": "STARTED", "pid": os.getpid(), "sys_prefix": sys.prefix,
             "started_utc": _iso_utc(), "process_create_time_epoch": self.start_info["process_create_time_epoch"],
         }
+        if identity is not None:
+            if set(identity) & set(self.value):
+                raise ValueError("identity may not override core runtime fields")
+            self.value.update(identity)
         publish_mutable_status(path, self.value)
 
-    def finish(self, state: str, *, error: str | None = None) -> None:
+    def finish(self, state: str, *, error: str | None = None,
+               terminal_fields: dict | None = None) -> None:
         if state not in ("SUCCESS", "FAILED"):
             raise ValueError("Illegal terminal status")
         self.value.update({"state": state, "finished_utc": _iso_utc(),
@@ -55,4 +60,11 @@ class ProbeStatus:
                            **resource_sample()})
         if error:
             self.value["error"] = error
+        if terminal_fields is not None:
+            reserved = {"schema", "run_id", "case", "state", "pid", "sys_prefix",
+                        "process_create_time_epoch", "started_utc", "finished_utc",
+                        "elapsed_seconds", "cpu_time_seconds", "peak_working_set_bytes", "peak_field"}
+            if set(terminal_fields) & reserved:
+                raise ValueError("terminal fields may not override runtime status fields")
+            self.value.update(terminal_fields)
         publish_mutable_status(self.path, self.value)
