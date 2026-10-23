@@ -1,0 +1,17 @@
+{
+  "action": "operator_verified_clearance_of_exact_marker",
+  "archived_original": "E:\\SOFTWARE-Win11\\powerball\\analysing_perceived_randomness_in_reality\\results\\architecture_poc\\20261023_timeout_no_kill_coord-2a42fac2\\UNRESOLVED_ORPHAN.original.json",
+  "checked_original_identities": [
+    "wrapper cmd.exe: original GONE (PID 31720 absent)",
+    "first python.exe: original GONE (PID 17432 absent)",
+    "experiment python.exe: original GONE (PID 25212 absent)",
+    "status-reported experiment: original GONE (PID 25212 absent)"
+  ],
+  "checked_utc": "2026-10-23T11:48:22.260612+00:00",
+  "group_id": "coord-2a42fac2c24549b5b216ffa691f225a7",
+  "marker_original_sha256": "2d8269eb3845cf17ce7124254f1f9397ae52a1dd5603a0aeb67bdda05453a2aa",
+  "marker_path": "E:\\SOFTWARE-Win11\\powerball\\analysing_perceived_randomness_in_reality\\transitory_data\\poc_runs\\UNRESOLVED_ORPHAN.json",
+  "note": "This check does not claim experiment SUCCESS; archived status is FAILED.",
+  "run_id": "coord-2a42fac2c24549b5b216ffa691f225a7_w001",
+  "schema": "P1P2_ONE_INCIDENT_MANUAL_CLEARANCE_V1"
+}
