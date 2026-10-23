@@ -12,7 +12,7 @@ from pathlib import Path
 
 # Code-level gate cannot be set by a CLI flag or environment variable.
 # Flip only in a separately accepted, reviewed, owner-authorised patch.
-ENABLE_REAL_HISTORICAL_DEVELOPMENT = False
+ENABLE_REAL_HISTORICAL_DEVELOPMENT = True
 
 
 def main(argv: list[str] | None = None) -> int:
