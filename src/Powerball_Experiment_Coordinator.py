@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import queue
@@ -43,6 +44,10 @@ LINE_QUEUE_MAX = 8192
 # A command-line argument CANNOT override this setting.
 ENABLE_PROCESS_TERMINATION = False
 ALLOWED_WRAPPER_DESCENDANTS = frozenset({"cmd.exe", "findstr.exe", "python.exe"})
+# Persistent fail-closed gate. Never silently restart after uncertain cleanup.
+# Operators must review and archive this marker OUTSIDE the coordinator before
+# scheduling new work; the coordinator deliberately has no CLI bypass.
+UNRESOLVED_ORPHAN_MARKER = POC_DIR / "UNRESOLVED_ORPHAN.json"
 ISO = lambda: datetime.now(timezone.utc).isoformat()
 
 
@@ -66,6 +71,212 @@ def save_new(destination: Path, content: bytes) -> None:
         os.rename(tmp, destination)
     finally:
         tmp.unlink(missing_ok=True)
+
+
+def display_orphan_safety_stop(*, reason: str, group_id: str | None = None,
+                               worker: "Worker | None" = None,
+                               marker_write_failed: bool = False,
+                               marker_record: dict[str, Any] | None = None) -> None:
+    """Immediate operator instructions; NEVER offers automatic termination/bypass."""
+    heading = "[SAFETY STOP] " + "=" * 57
+    print(heading, file=sys.stderr, flush=True)
+    print("[SAFETY STOP] UNRESOLVED PROCESS - ALL NEW EXPERIMENTS BLOCKED", file=sys.stderr, flush=True)
+    print(f"[SAFETY STOP] REASON: {reason}", file=sys.stderr, flush=True)
+    if group_id:
+        print(f"[SAFETY STOP] GROUP: {group_id}", file=sys.stderr, flush=True)
+    if worker is not None:
+        print(f"[SAFETY STOP] WORKER: {worker.sequence:02d}, run={worker.run_id}, "
+              f"root_pid={worker.proc.pid}, root_create_time={worker.root_create_time}",
+              file=sys.stderr, flush=True)
+        status_ev = getattr(worker, "status_orphan_evidence", None)
+        if status_ev is not None:
+            print(f"[SAFETY STOP] STATUS-REPORTED PROCESS (EVIDENCE ONLY): "
+                  f"pid={status_ev['pid']} born={status_ev['create_time']} "
+                  f"alive_or_uncertain={status_ev['alive']}; NEVER kill using this PID",
+                  file=sys.stderr, flush=True)
+    elif marker_record is not None:
+        saved_worker = marker_record.get("worker")
+        if isinstance(saved_worker, dict):
+            print(f"[SAFETY STOP] PREVIOUS WORKER: run={saved_worker.get('run_id')} "
+                  f"root_pid={saved_worker.get('root_pid')} "
+                  f"root_create_time={saved_worker.get('root_create_time')}",
+                  file=sys.stderr, flush=True)
+            evidence = saved_worker.get("status_orphan_evidence")
+            if isinstance(evidence, dict):
+                print(f"[SAFETY STOP] STATUS-REPORTED PROCESS (EVIDENCE ONLY): "
+                      f"pid={evidence.get('pid')} born={evidence.get('create_time')} "
+                      f"alive_or_uncertain_at_detection={evidence.get('alive')}; "
+                      "NEVER kill using this PID", file=sys.stderr, flush=True)
+            members = saved_worker.get("members")
+            if isinstance(members, list):
+                print(f"[SAFETY STOP] PREVIOUSLY CAPTURED MEMBERS: {len(members)}; "
+                      "inspect marker for PID + creation time of each",
+                      file=sys.stderr, flush=True)
+    print(f"[SAFETY STOP] MARKER: {UNRESOLVED_ORPHAN_MARKER}", file=sys.stderr, flush=True)
+    if marker_write_failed:
+        print("[SAFETY STOP] CRITICAL: PERSISTENT MARKER WRITE FAILED! "
+              "Future starts may NOT be blocked. DO NOT RUN AGAIN.",
+              file=sys.stderr, flush=True)
+    print("[SAFETY STOP] OPERATOR ACTION REQUIRED:", file=sys.stderr, flush=True)
+    print("[SAFETY STOP]   1. Stop scheduling runs. Inspect marker and group logs.",
+          file=sys.stderr, flush=True)
+    print("[SAFETY STOP]   2. Compare each PID AND original process creation time; "
+          "a PID alone is NOT identity.", file=sys.stderr, flush=True)
+    print("[SAFETY STOP]   3. If any process is alive or its identity uncertain, "
+          "LEAVE THE BLOCK and ESCALATE.", file=sys.stderr, flush=True)
+    print("[SAFETY STOP]      NEVER manually kill a listed PID based only on "
+          "this warning.", file=sys.stderr, flush=True)
+    print("[SAFETY STOP]   4. Only when ALL listed identities are confirmed gone: "
+          "archive the ORIGINAL marker bytes, SHA-256 and run logs.",
+          file=sys.stderr, flush=True)
+    print("[SAFETY STOP]   5. Then manually remove the active marker and retry. "
+          "NO automatic acknowledgement/bypass.", file=sys.stderr, flush=True)
+    print("[SAFETY STOP] No interlock operation sends kill signals.", file=sys.stderr, flush=True)
+    print(heading, file=sys.stderr, flush=True)
+
+
+def require_no_unresolved_orphan() -> None:
+    """Refuse any new work if an earlier coordinator recorded uncertain cleanup."""
+    if UNRESOLVED_ORPHAN_MARKER.exists() or UNRESOLVED_ORPHAN_MARKER.is_symlink():
+        # Never trust or follow a symlink/garbled marker to clear the gate.
+        group = None
+        original_reason = "Previous unresolved-orphan marker is present"
+        recorded: dict[str, Any] | None = None
+        if UNRESOLVED_ORPHAN_MARKER.is_file() and not UNRESOLVED_ORPHAN_MARKER.is_symlink():
+            try:
+                obj = json.loads(UNRESOLVED_ORPHAN_MARKER.read_text(encoding="utf-8"))
+                if isinstance(obj, dict):
+                    recorded = obj
+                    if isinstance(obj.get("group_id"), str):
+                        group = obj["group_id"]
+                    if isinstance(obj.get("reason"), str):
+                        original_reason += "; ORIGINAL DETECTION: " + obj["reason"]
+            except (OSError, ValueError, UnicodeError):
+                original_reason += "; marker cannot be read/parsed - LEAVE BLOCK IN PLACE"
+        else:
+            original_reason += "; marker is not a regular file - LEAVE BLOCK IN PLACE"
+        display_orphan_safety_stop(reason=original_reason,
+                                   group_id=group, marker_record=recorded)
+        raise RuntimeError(f"UNRESOLVED_ORPHAN interlock: {UNRESOLVED_ORPHAN_MARKER}")
+
+
+def record_unresolved_orphan(*, group_id: str, reason: str,
+                             worker: "Worker | None" = None) -> bool:
+    """Durably publish marker. Return False on IO failure (must flag manifest)."""
+    record: dict[str, Any] = {
+        "schema": "ENGINEERING_UNRESOLVED_ORPHAN_V1",
+        "group_id": group_id,
+        "reason": reason,
+        "recorded_utc": ISO(),
+        "coordinator_sha256": sha256(Path(__file__).read_bytes()),
+        "action": "BLOCK_FUTURE_RUNS_PENDING_OPERATOR_INSPECTION",
+        "enable_process_termination": ENABLE_PROCESS_TERMINATION,
+    }
+    if worker is not None:
+        record["worker"] = {
+            "sequence": worker.sequence, "run_id": worker.run_id,
+            "root_pid": worker.proc.pid,
+            "root_create_time": worker.root_create_time,
+            "root_alive_at_record": worker.proc.poll() is None,
+            "experiment_matched": worker.experiment_member is not None,
+            "unmatched_status": worker.unmatched_status,
+            # Identification evidence only. A status PID is NEVER a kill target.
+            "status_orphan_evidence": getattr(worker, "status_orphan_evidence", None),
+            "ownership_errors": list(worker.ownership_errors),
+            "members": [{"pid": m.pid, "name": m.name,
+                         "create_time": m.create_time, "parent_pid": m.parent_pid,
+                         "alive_at_record": _member_alive(m)}
+                        for m in worker.owned_members.values()],
+        }
+    existing = (UNRESOLVED_ORPHAN_MARKER.exists() or
+                UNRESOLVED_ORPHAN_MARKER.is_symlink())
+    if not existing:
+        try:
+            # save_new flushes + fsyncs an exclusive temporary file; the
+            # destination is never overwritten by the initial safety marker.
+            save_new(UNRESOLVED_ORPHAN_MARKER, canonical_bytes(record))
+        except FileExistsError:
+            existing = True
+        except OSError as exc:
+            print(f"[SAFETY INTERLOCK] CRITICAL marker write failed: "
+                  f"{type(exc).__name__}: {exc}", file=sys.stderr, flush=True)
+            display_orphan_safety_stop(reason=reason, group_id=group_id,
+                                       worker=worker, marker_write_failed=True)
+            return False
+    if existing:
+        print(f"[SAFETY INTERLOCK] Existing unresolved-orphan marker retained: "
+              f"{UNRESOLVED_ORPHAN_MARKER}", file=sys.stderr, flush=True)
+    else:
+        print(f"[SAFETY INTERLOCK] BLOCKED FUTURE RUNS: marker durably published "
+              f"at {UNRESOLVED_ORPHAN_MARKER}", file=sys.stderr, flush=True)
+    display_orphan_safety_stop(reason=reason, group_id=group_id, worker=worker)
+    return True
+
+
+def departed_members_check(worker: "Worker") -> list[tuple[OwnedMember, bool | None]]:
+    """Observe retained members after the wrapper exited; never signal them."""
+    return [(member, alive) for member in worker.owned_members.values()
+            if (alive := _member_alive(member)) is not False]
+
+
+def status_orphan_evidence(worker: "Worker") -> dict[str, Any] | None:
+    """Detect a possible live experiment from matching status, even if uncaptured.
+
+    This is evidence for FAIL-CLOSED interlock ONLY. Never make this PID
+    a terminate_owned_tree target; the owner-ratified status + ancestry
+    requirement for issuing any signal is unchanged.
+    """
+    status = read_status(worker.run_dir)
+    if status is None or status.get("run_id") != worker.run_id:
+        return None
+    pid = status.get("pid")
+    if type(pid) is not int or pid <= 0:
+        return None
+    raw_ctime = status.get("process_create_time_epoch")
+    # Missing/invalid time means we cannot verify identity: fail closed.
+    creation_time = (float(raw_ctime)
+                     if type(raw_ctime) in (float, int) and math.isfinite(raw_ctime)
+                     else None)
+    alive = same_process(pid, creation_time)
+    if alive is False:
+        return None
+    return {"pid": pid, "create_time": creation_time, "alive": alive,
+            "matched_run_id": worker.run_id,
+            "interpretation": "POSSIBLE_SURVIVING_EXPERIMENT; EVIDENCE_ONLY; NEVER_KILL_BY_STATUS"}
+
+
+def check_exited_worker_for_orphan(worker: "Worker", *, group_id: str) -> tuple[bool, bool]:
+    """B1/B2: check retained members AND status identity on *every* root exit.
+
+    A root may exit before a child was captured. In that case status PID
+    evidence can require an operator interlock but cannot authorise a kill.
+    """
+    if worker.proc.poll() is None:
+        return False, True
+    uncertain = departed_members_check(worker)
+    status_evidence = status_orphan_evidence(worker)
+    if not uncertain and status_evidence is None:
+        return False, True
+    reasons: list[str] = []
+    if uncertain:
+        details = ", ".join(f"pid={member.pid} name={member.name} "
+                            f"born={member.create_time:.6f} alive={alive}"
+                            for member, alive in uncertain)
+        reasons.append("ROOT_EXITED_WITH_UNRESOLVED_DESCENDANTS: " + details)
+    if status_evidence is not None:
+        reasons.append("ROOT_EXITED_WITH_STATUS_ORPHAN_EVIDENCE: "
+                       f"pid={status_evidence['pid']} "
+                       f"born={status_evidence['create_time']} "
+                       f"alive={status_evidence['alive']} "
+                       "(status is evidence only; NOT a kill target)")
+    worker.status_orphan_evidence = status_evidence
+    worker.issue = "; ".join(reasons)
+    worker.final_state = "ORPHAN_SUSPECTED"
+    print(f"[COORDINATOR] ORPHAN_SUSPECTED worker={worker.sequence:02d} "
+          f"{worker.issue}", file=sys.stderr, flush=True)
+    saved = record_unresolved_orphan(group_id=group_id, reason=worker.issue,
+                                     worker=worker)
+    return True, saved
 
 
 def expected_venv() -> Path:
@@ -235,8 +446,10 @@ def capture_owned_tree(worker: "Worker", *, force: bool = False) -> None:
         return
     # Parent must be identified, not merely included in psutil's recursive snapshot.
     known = {root.pid: (worker.root_create_time, 0)}
+    # An ambiguous parent is NOT proof of ancestry. Only positively live
+    # members may serve as parents for newly observed descendants.
     known.update({m.pid: (m.create_time, m.depth) for m in worker.owned_members.values()
-                  if _member_alive(m) is not False})
+                  if _member_alive(m) is True})
     unprocessed = list(snapshots)
     for _ in range(len(unprocessed) + 1):
         if not unprocessed:
@@ -431,6 +644,7 @@ class Worker:
     experiment_member: OwnedMember | None = None
     ownership_errors: list[str] = field(default_factory=list)
     unmatched_status: str = ""
+    status_orphan_evidence: dict[str, Any] | None = None
     plan_printed: bool = False
     plan_only: bool = False
     last_capture_monotonic: float = 0.0
@@ -575,6 +789,7 @@ def coordinator_main() -> int:
     args = arguments()
     validate_environment()
     POC_DIR.mkdir(parents=True, exist_ok=True)
+    require_no_unresolved_orphan()  # Fail BEFORE new group creation or worker launch.
     group_id = args.group_id or "coord-" + uuid.uuid4().hex
     group = POC_DIR / group_id
     group.mkdir(exist_ok=False)
@@ -591,6 +806,7 @@ def coordinator_main() -> int:
     stop_launches = False
     interrupted = False
     orphan_suspected = False
+    marker_write_failed = False
     coordinator_issue = ""
     printed_lines = 0
     interrupt_requested = False
@@ -629,7 +845,7 @@ def coordinator_main() -> int:
                 printed_lines += 1
 
     def stop(worker: Worker, reason: str) -> None:
-        nonlocal orphan_suspected, stop_launches
+        nonlocal orphan_suspected, stop_launches, marker_write_failed
         good, info = terminate_owned_tree(worker, reason)
         worker.stopped_cleanly = good
         worker.issue = f"{reason}: {info}"
@@ -639,6 +855,8 @@ def coordinator_main() -> int:
         if not good:
             orphan_suspected = True
             stop_launches = True
+            if not record_unresolved_orphan(group_id=group_id, reason=worker.issue, worker=worker):
+                marker_write_failed = True
             print(f"[COORDINATOR] ERROR {worker.issue}", file=sys.stderr, flush=True)
         worker.exit_code = worker.proc.poll()
 
@@ -713,7 +931,14 @@ def coordinator_main() -> int:
                     continue
                 if w.proc.poll() is not None:
                     w.exit_code = w.proc.returncode
-                    w.final_state = "EXITED"
+                    found_orphan, saved = check_exited_worker_for_orphan(w, group_id=group_id)
+                    if found_orphan:
+                        orphan_suspected = True
+                        stop_launches = True
+                        if not saved:
+                            marker_write_failed = True
+                    else:
+                        w.final_state = "EXITED"
                     active.pop(n)
             time.sleep(0.04)
     except Exception as exc:
@@ -739,6 +964,9 @@ def coordinator_main() -> int:
         if stuck_readers:
             orphan_suspected = True
             coordinator_issue += f" Reader pipe(s) still open: {stuck_readers}"
+            if not record_unresolved_orphan(group_id=group_id,
+                                            reason=f"Reader pipes still open: {stuck_readers}"):
+                marker_write_failed = True
             print(f"[COORDINATOR] ORPHAN_SUSPECTED reader threads {stuck_readers}",
                   file=sys.stderr, flush=True)
         for w in all_workers:
@@ -750,6 +978,15 @@ def coordinator_main() -> int:
     total_successes = 0
     for w in all_workers:
         ok, explanation, status = status_and_result(w, require_success=w.final_state == "EXITED" and w.exit_code == 0)
+        # Secondary B2 check: status may appear after the first exit-time
+        # check. Use the same typed identity test, NEVER validation strings.
+        # Do not duplicate the marker/warning for an already flagged worker.
+        if w.proc.poll() is not None and w.final_state != "ORPHAN_SUSPECTED":
+            found_orphan, saved = check_exited_worker_for_orphan(w, group_id=group_id)
+            if found_orphan:
+                orphan_suspected = True
+                if not saved:
+                    marker_write_failed = True
         if w.final_state == "EXITED" and w.exit_code == 0 and ok:
             state = "SUCCESS"
             total_successes += 1
@@ -779,8 +1016,13 @@ def coordinator_main() -> int:
                         "unmatched_status": w.unmatched_status,
                         "stdout_log": str(w.stdout_log.relative_to(ROOT)),
                         "result_path": str((w.run_dir / "canonical_result.json").relative_to(ROOT))})
+    if marker_write_failed:
+        coordinator_issue += " CRITICAL: unresolved-orphan marker could not be persisted; DO NOT RESTART"
+        print("[COORDINATOR] CRITICAL: marker_write_failed=True; DO NOT START ANOTHER RUN",
+              file=sys.stderr, flush=True)
     successful = (total_successes == args.count and len(all_workers) == args.count
-                  and not interrupted and not orphan_suspected and not coordinator_issue)
+                  and not interrupted and not orphan_suspected and not marker_write_failed
+                  and not coordinator_issue)
     final = {"schema": "ENGINEERING_COORDINATOR_POC_V1", "engineering_only": True,
              "group_id": group_id, "case": args.case, "workers_maximum": args.workers,
              "count_requested": args.count, "count_started": len(all_workers),
@@ -790,6 +1032,7 @@ def coordinator_main() -> int:
              "elapsed_seconds": time.monotonic() - started,
              "minimum_observed_available_memory_bytes": peak_available_pressure,
              "interrupted": interrupted, "orphan_suspected": orphan_suspected,
+             "marker_write_failed": marker_write_failed,
              "enable_process_termination": ENABLE_PROCESS_TERMINATION,
              "issue": coordinator_issue, "workers": reports}
     save_new(group / "manifest.json", canonical_bytes(final))
