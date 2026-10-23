@@ -6,6 +6,7 @@ imports nor reads the actual source_data CSV files or the original holdout.
 from __future__ import annotations
 
 import csv
+from unittest.mock import patch
 import json
 import os
 import shutil
@@ -246,11 +247,90 @@ class E1LoaderAndRun(unittest.TestCase):
         self.assertIn('elapsed_seconds',done)
         self.assertIn('cpu_time_seconds',done)
 
-    def test_real_mode_is_code_blocked_before_any_source_read(self):
-        self.assertFalse(runner.ENABLE_REAL_HISTORICAL_DEVELOPMENT)
-        with self.assertRaises(SystemExit):
-            runner.main(['--mode','historical-development','--target','1152',
-                         '--source',str(self.root/'nonexistent.csv')])
+    def test_real_gate_off_refuses_before_source_read(self):
+        """Guard independently of the runner's shipped gate value.
+
+        This test patches the gate OFF even after a future activation commit.
+        No genuine source_data path is used and the CSV loader is never called.
+        """
+        fake_project = self.root / 'isolated_fake_project'
+        fake_source = fake_project / 'source_data' / 'australian_powerball_history_20261021.csv'
+        fake_runner_path = fake_project / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py'
+        with (patch.object(runner, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', False),
+              patch.object(runner, '__file__', str(fake_runner_path)),
+              patch('_common.e1_training_view_v0_1.load_permitted_u_view',
+                    side_effect=AssertionError('disabled real mode must not invoke loader')) as loader):
+            with self.assertRaises(SystemExit) as stopped:
+                runner.main(['--mode', 'historical-development', '--target', '1152',
+                             '--source', str(fake_source), '--run-id', 'e1-gateoff01'])
+            self.assertEqual(stopped.exception.code, 2)
+            loader.assert_not_called()
+        self.assertFalse((fake_project / 'transitory_data' / 'p3_standalone_runs').exists())
+
+    def test_real_gate_on_rejects_invalid_targets_and_sources(self):
+        """Patch gate ON only in-test; never inspect the actual real dataset.
+
+        All "source_data" inputs here live under a fake project in a temporary
+        directory. Non-source-data paths, bad file names and out-of-range
+        targets must fail without opening their CSV. A drawn-order CSV can
+        only be identified by reading its HEADER, but no training rows may
+        be parsed after that header is rejected.
+        """
+        fake_project = self.root / 'isolated_fake_project'
+        trusted = fake_project / 'source_data'
+        trusted.mkdir(parents=True)
+        fake_runner_path = fake_project / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py'
+        name = 'australian_powerball_history_20261021.csv'
+        approved = trusted / name
+        approved.write_text('POISON: this is NOT a permitted training CSV\n', encoding='utf-8')
+        outside = self.root / 'untrusted'
+        outside.mkdir()
+        untrusted = outside / name
+        untrusted.write_text('POISON: source outside trusted directory\n', encoding='utf-8')
+        wrong_name = trusted / 'australian_powerball_drawn_order_20261021.csv'
+        wrong_name.write_text('POISON: wrong name\n', encoding='utf-8')
+        drawn_order = trusted / 'australian_powerball_history_20261022.csv'
+        csv_rows(drawn_order, unordered=False)
+        cases = (
+            ('holdout_1578', 1578, approved, 2, 0, 'invalid target'),
+            ('holdout_1587', 1587, approved, 2, 0, 'invalid target'),
+            ('before_first_1144', 1144, approved, 2, 0, 'invalid target'),
+            ('after_holdout_1588', 1588, approved, 2, 0, 'invalid target'),
+            ('untrusted_directory', 1152, untrusted, 1, 0, 'trusted source_data'),
+            ('wrong_filename', 1152, wrong_name, 1, 0, 'approved unordered-file name'),
+            ('drawn_order_header', 1152, drawn_order, 1, 1, 'drawn-order'),
+        )
+        original_path_open = Path.open
+        with (patch.object(runner, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', True),
+              patch.object(runner, '__file__', str(fake_runner_path))):
+            for case, target, source, expected_rc, expected_opens, failure_text in cases:
+                with self.subTest(case=case):
+                    source_open_count = []
+
+                    def monitored_open(path, *args, **kwargs):
+                        if path == source:
+                            source_open_count.append(1)
+                        return original_path_open(path, *args, **kwargs)
+
+                    run_id = 'e1-gatecheck-' + case.replace('_', '-')
+                    with patch.object(Path, 'open', monitored_open):
+                        rc = runner.main(['--mode', 'historical-development',
+                                          '--target', str(target), '--source', str(source),
+                                          '--run-id', run_id])
+                    self.assertEqual(rc, expected_rc)
+                    self.assertEqual(len(source_open_count), expected_opens)
+                    run_dir = fake_project / 'transitory_data' / 'p3_standalone_runs' / run_id
+                    self.assertFalse((run_dir / 'canonical_result.json').exists())
+                    self.assertFalse((run_dir / 'standalone_manifest.json').exists() and
+                                     json.loads((run_dir / 'standalone_manifest.json').read_text())['state'] == 'PASS')
+                    if expected_rc == 1:
+                        st = json.loads((run_dir / 'status.json').read_text())
+                        self.assertEqual(st['state'], 'FAILED')
+                        self.assertIn(failure_text, st['error'])
+                        mf = json.loads((run_dir / 'standalone_manifest.json').read_text())
+                        self.assertEqual(mf['state'], 'FAIL')
+                    else:
+                        self.assertFalse(run_dir.exists())
 
 
 if __name__ == '__main__':
