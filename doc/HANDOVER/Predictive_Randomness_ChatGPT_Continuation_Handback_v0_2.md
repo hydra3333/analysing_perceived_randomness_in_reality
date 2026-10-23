@@ -1,13 +1,27 @@
 # Predictive Randomness — ChatGPT Project Continuation and Recovery Handback
 
-**Version:** v0.1 — **REVIEW CANDIDATE; not yet owner-ratified**  
+**Version:** v0.2 — **OWNER-RATIFIED, 23 October 2026** (Claude reviews of v0.1 and v0.2 completed)  
 **Prepared:** 23 October 2026 (Australia/Adelaide)  
 **Project:** `hydra3333/analysing_perceived_randomness_in_reality`  
-**Intended repository destination:** `doc/HANDOVER/Predictive_Randomness_ChatGPT_Continuation_Handback_v0_1.md` *after review/ratification*  
+**Repository destination:** `doc/HANDOVER/Predictive_Randomness_ChatGPT_Continuation_Handback_v0_2.md` *(installation and commit by owner pending)*  
 **Snapshot source:** the owner's newly supplied, post-commit/push GitHub ZIP `analysing_perceived_randomness_in_reality-main(4).zip`  
-**Status at transfer:** P0 standalone engineering demonstrations pass; P1 one-worker coordinator test passes; P1/P2 process-ownership safety patch v0.2 has passed a **one-worker non-destructive Windows ancestry preview**. Destructive cleanup, six-worker Windows acceptance, and production approval are **NOT** complete.
+**Status at transfer:** P0 standalone engineering demonstrations pass; P1 one-worker coordinator test passes; P1/P2 process-ownership safety patch v0.2 has passed a **one-worker non-destructive Windows ancestry preview**. Claude review (23 Oct) identified **two OPEN source defects to correct before destructive testing**, and a separate unresolved owner decision on pre-status hangs. Destructive cleanup, six-worker Windows acceptance, and production approval are **NOT** complete.
 
 > **Start here in a new ChatGPT conversation.** This file is a factual orientation and current-state ledger, **not** an amendment to the project's ratified specifications. Read the attached **whole repository ZIP** alongside this handback. Confirm the source identity and inspect the named ratified documents and implementation before changing code. Do **not** assume that a ratified architectural requirement has passed its Windows implementation tests. Do not activate the process-termination safety switch. Do not start scientific E-method implementation without a separately approved P3 task.
+
+---
+
+## v0.2 review corrections (Claude, 23 October 2026)
+
+This review revision incorporates Claude's C1–C3 findings, checked against the
+**unchanged** source in snapshot `(4).zip`: (C1) the current policy refuses all
+termination until a valid experiment status match, rather than Claude review v2's
+verified-members-only alternative; (C2) two implementation defects are OPEN
+(PID reuse after member exit; missing bounded wait for killed descendants);
+(C3) the smoke-test harness's independent 120-second watchdog can kill its
+launched batch process even with the owner kill switch False. The optional
+`Claude_Reviewer_Handover_Predictive_Randomness_v1.md` is not in snapshot (4).
+**This document changes no code, authorisation, or test result.**
 
 ---
 
@@ -17,7 +31,7 @@
 2. Inspect the repository ZIP's relevant `.bat`, Python, safety-review and test files. The actual source, not a speculative reconstructed implementation, governs any code review. Check the safety switch in `src/Powerball_Experiment_Coordinator.py` remains `False`.
 3. Confirm whether the user has supplied a **newer** repository ZIP or commit since this handback. If so, first reconcile the changed files and do not apply older patches blindly.
 4. Distinguish four states: **RATIFIED design**; **IMPLEMENTED source**; **PASSED Windows evidence**; and **PENDING tests/decisions**. Do not silently promote one to another.
-5. Acknowledge the current stage, open safety gates and source identity. The owner has requested a pause to establish a sound handover before additional P2 tests. The **next technical test** after owner/Claude review is the six-worker **non-destructive** process-tree preview, not termination.
+5. Acknowledge the current stage, open safety gates and source identity. The owner has requested a pause to establish a sound handover before additional P2 tests. After owner ratification of the handback, the next proposed live step is a six-worker **plan-only** process-tree preview, not coordinator termination; record any anomalies and do **not** interpret a group PASS as passing the safety gate. The known defects and owner decision in §§5.3 and 6.2 remain open.
 6. Continue the established collaborative process: ChatGPT drafts/implements; Claude independently reviews important design/safety changes; the owner resolves and ratifies. Do not claim a Git commit, a production acceptance, or completed Windows test without corresponding evidence.
 
 **Not permitted as an unprompted new-chat action:** enabling `ENABLE_PROCESS_TERMINATION`, invoking the timeout/forced-termination/interrupt/memory-stress tests, executing a lottery predictor, opening the sealed holdout, upgrading Python/PyPI dependencies, rewriting ratified specifications, or replacing the repository wholesale.
@@ -69,7 +83,7 @@ git log -1 --format="%h %s %ci"
 
 **Version-status warning:** Some historical sections and original headers still say “review draft” or “proposed” because those source drafts were ratified through **later owner messages** without rewriting every historical heading. Do not undo owner decisions merely because a retained historical heading says draft. Conversely, the approved R2 erratum's **ERR-R2-02** production acceptance remains conditional. Later ratified changes prevail over older provisional alternatives.
 
-**Supporting, not binding:** `Claude_Safety_Review_POC_Coordinator_Termination_v2.md` at repository root (independent review; no source change by itself); `P0_INITIAL_SOURCE_PACKAGE_HANDOVER_v0_1.md`; `P1_P2_Coordinator_Ownership_Safety_Handback_v0_2.md`; earlier POC and architecture handbacks/diffs. Retain evidence, but the approved specifications and owner rulings prevail.
+**Supporting, not binding:** `Claude_Safety_Review_POC_Coordinator_Termination_v2.md` at repository root (independent review; no source change by itself); `P0_INITIAL_SOURCE_PACKAGE_HANDOVER_v0_1.md`; `P1_P2_Coordinator_Ownership_Safety_Handback_v0_2.md`; earlier POC and architecture handbacks/diffs. An optional `Claude_Reviewer_Handover_Predictive_Randomness_v1.md` was mentioned by Claude but was **not present in snapshot (4).zip**; consult it only if actually supplied/committed in a later snapshot. Retain evidence, but approved specifications and owner rulings prevail.
 
 ### 3.2 Scope and scientific protections
 
@@ -173,6 +187,7 @@ ENABLE_PROCESS_TERMINATION = False
 - **Before** every coordinator cleanup request, issue `[SAFETY BEFORE]` and per-target `[SAFETY TARGET]` information: root and children PID, executable name, creation time, reason, switch state, ancestry/proof. **After**, issue `[SAFETY AFTER]`: preview/no signals, refusal, actual attempted signals and survivors/outcome. Emit honest incomplete cleanup states; do not misreport “stopped” while the switch is `False`.
 - Ownership must be established by capturing **actual descendants of the coordinator's launched `Run_Experiment.bat` root `cmd.exe` while that wrapper lives**; retain `psutil.Process` identity objects (PID plus creation time), validate each parent-child edge, and only then consider a process eligible for termination.
 - The experiment `status.json` PID and creation time verify that the **right experiment** was observed; **never** construct an additional kill target from status-file PID alone (nor from any external name/PID). The root may be terminated through its original `Popen` handle only; owned descendants through retained, verified `psutil.Process` objects only.
+- **Current v0.2 implementation is deliberately stricter than Claude safety review v2:** `terminate_owned_tree()` (lines 322–334) refuses **all coordinator termination** (issues no signals) unless the experiment has been matched by status PID **and** creation time, and `ownership_errors` and `unmatched_status` are empty. In contrast, Claude review v2 §3 proposed terminating retained verified members even if the experiment was never identified, then reporting `UNVERIFIED`. **Owner decision PENDING:** retain the current strict no-kill rule for a hung-before-status experiment, or adopt the latter verified-members-only/UNVERIFIED approach. Neither choice is approved here; do not silently change behaviour.
 - Root expected process name `cmd.exe`. In the **normal coordinated path** current source sanity-filter permits descendants named `cmd.exe`, `findstr.exe`, `python.exe`: the wrapper uses `findstr.exe` for filename validation and may spawn transient CMD processes. The two-Python process pattern observed on Windows is consistent with venv redirector plus interpreter, though transient pre-check processes may already have exited. `chcp.com` is **not expected** under normal coordinator-managed workers, because their venv is inherited and not reactivated.
 - **Process names are not ownership proof**; they are a refusal/anomaly filter. Never use `taskkill /IM`, `taskkill /PID ... /T /F` as an automatic fallback, terminate other Python projects by process name, or reconstruct an uncaptured kill list. If ancestry/identity fails, **leave the process running, report `UNVERIFIED`/`ORPHAN_SUSPECTED`/`TERMINATION_DISABLED`, stop new scheduling and request human inspection**.
 - Without operating-system containment there is no absolute guarantee that *all* descendants are captured or stopped. The design prioritizes **not terminating unrelated software** over guaranteed orphan cleanup. There are no project-managed Job Objects under the present ratification.
@@ -211,19 +226,21 @@ Earlier standalone W-11 run ID: `poc_W11_20261022_A`. The latest live preview gr
 | Coordinator launcher from initially inactive `.venv` and subsequent parent CMD restoration | **PENDING**, although the **individual** wrapper passed inactive activation/restoration. |
 | W-23 package upgrade/compatibility gate | **UNTESTED**; do not confuse with sentinel no-clobber test. |
 | Broader W-suite CMD quoting, registry AutoRun, redirected output, argument edge cases, abnormal processes/interrupts, resource guards | **PENDING** unless individually evidenced. |
+| **Known v0.2 coordinator source defects (Claude review, 23 Oct)** | **OPEN — fix before any destructive test:** (a) `capture_owned_tree()` lines 254–258 treats a PID reused by a later legitimate child as `MEMBER_PID_REUSED` even after the previously retained child has exited; may create `ownership_errors`, prevent experiment match and refuse termination. Proposed fix: retire confirmed-gone member to a *departed* history, then independently validate the new candidate; flag a genuine anomaly when prior identity remains alive/uncertain. (b) `terminate_owned_tree()` lines 357–364 waits on wrapper root but not on signalled descendant members before its survivor check; Windows termination is asynchronous, so an immediately sampled process can produce a false `ORPHAN_SUSPECTED`. Proposed fix: bounded `psutil.wait_procs` on signalled members, then verify survivors. **Neither fix is implemented in this ZIP.** |
+| Unmatched experiment on timeout (owner policy decision) | **OPEN:** current source refuses all termination unless status identifies experiment. Claude review v2 favours terminating verified ancestry members and reporting `UNVERIFIED` if experiment identification never occurred. Owner to decide **after handback ratification**; no policy assumed. |
 | Process timeout/actual kill; Ctrl+C with active jobs; memory-guard forced cleanup; D-series destructive tests | **NOT AUTHORISED NOW** with switch False; do not run before N-series decoy tests, independent safety review and explicit owner decision. |
 | Comprehensive `P0–P2` closure or scientific/production Option F acceptance | **NOT COMPLETE**. Architecture v0.4 itself is ratified, but code's Windows safety/worker acceptance remains conditional. |
 | First real E-method (P3), valid ranking/results, holdout evaluation, predicted efficacy | **NOT IMPLEMENTED**, no inference of predictive power. |
 
-**Additional test-suite warning:** `tests/windows_architecture_poc_suite.py` has an **optional `--with-timeout`** path that expects successful cleanup. Do **not** run it with the owner kill switch False; it may leave a sleeping process alive and cannot pass the asserted cleanup condition. Likewise do not run ad-hoc short timeout, Ctrl+C, or memory-stress commands as substitutes for a deliberate safe test plan.
+**Additional test-suite warning — no `--with-timeout` does NOT mean kill-free:** `tests/windows_architecture_poc_suite.py` runs child commands through `run()` using `subprocess.run(..., timeout=120)` (lines 24–28). If its **120-second watchdog** expires, Python kills the particular child process it launched (e.g. `Run_Coordinator.bat` / its `cmd.exe` process) using the `Popen` handle; this action **bypasses the coordinator's `ENABLE_PROCESS_TERMINATION` switch**. It does not target unrelated processes by name, but can leave the coordinator's or experiment's descendants orphaned. Thus the suite is not **strictly kill-free**, *even without* `--with-timeout`. Separately, its optional `--with-timeout` case expects successful coordinator cleanup; do **not** run that case while the owner switch is False, since an experiment can continue running and its cleanup assertion cannot be considered valid. Avoid ad-hoc short timeouts, Ctrl+C or memory-stress tests without a separate controlled plan.
 
 ---
 
 ## 7. Next work, in safe order
 
-**First milestone: transfer and review the handback itself.** Deliver this handback and the source ZIP to Claude for independent check of file paths, decision hierarchy, owner commitments, latest safety source, statuses and next gates. Incorporate justified corrections; the owner then ratifies and commits it. Do not silently rewrite already-ratified architecture v0.4 as part of this handover.
+**Handover review milestone: COMPLETE.** Claude reviewed v0.1 against snapshot `(4).zip`, identified corrections C1–C3; those were incorporated into v0.2. Claude then independently checked v0.2 and reported no further corrections. The owner **ratified v0.2 on 23 October 2026**. Repository installation/commit of this final handback is not confirmed by this document; the owner controls that step. Do not silently rewrite already-ratified architecture v0.4 as part of this handover.
 
-**After that handover checkpoint, proposed engineering order:**
+**After the ratified handover checkpoint, proposed engineering order (no tests authorised by ratification alone):**
 
 1. **Six-worker live ownership preview with kill switch remaining False.** First confirm the owner is using the current ZIP source and no unrelated changes; test six synthetic sleepers with a generous timeout and explicit `--plan-termination`. Record all six worker ancestry trees, BEFORE/AFTER, complete outcome, no anomalous target, no signal/kill, exit code, manifest. Review the output before proceeding. Example *for separately authorised use after review*:
 
@@ -232,12 +249,12 @@ Earlier standalone W-11 run ID: `poc_W11_20261022_A`. The latest live preview gr
    echo %ERRORLEVEL%
    ```
 
-   This command does **not request termination**; nevertheless monitor the console and stop/diagnose unexpected memory/admission problems. Do not conflate plan-only success with a later actual-kill test.
+   This command does **not request coordinator termination**; nevertheless monitor the console and diagnose unexpected memory/admission problems without assuming unrelated processes are protected from shared-console interrupts. **If `ownership_anomalies` contains `MEMBER_PID_REUSED`, it may reflect the documented v0.2 transient-PID-reuse defect rather than an unrelated process. Record and review it. The coordinator group can still report PASS even when an ownership anomaly exists; a group PASS alone does NOT constitute a safety gate PASS.** Do not conflate plan-only success with a later actual-kill test.
 2. **Non-destructive real decoy testing (N-series).** Start identifiable unrelated Python/CMD processes in separate consoles; capture both PID **and creation time** before/after; demonstrate none appear on any kill-candidate plan. Independently review forged/missing/wrong-run-ID status and unexpected-name/ancestry tests (synthetic N2–N5 already pass; live decoy coverage is still pending).
 3. **Coordinator inactive environment test.** Start from an ordinary inactive CMD using `Run_Coordinator.bat`, let its batch wrapper activate and restore, verify the parent environment unchanged; verify direct Python coordinator launch with inactive `VIRTUAL_ENV` is rejected (not a normal launch route).
-4. **Non-destructive concurrency/reproducibility.** Perform the safe portion of `tests/windows_architecture_poc_suite.py` **without `--with-timeout`** only after verifying its current source and the user's environment; obtain 1-vs-6 canonical bytes, failure propagation and live-output evidence. Evaluate the risk of any unexpected cleanup before using additional cases.
-5. **Independent safety code review and acceptance plan.** Address any ownership anomalies and the risk of uncaptured descendants; align with ratified §5C and Claude review; refine code through narrow versioned patches, not broad cleanup.
-6. **Only upon explicit owner approval**, consider separately controlled destructive timeout, interrupt, and memory-guard tests, with the exact switch operation and target inventories reviewed. Never flip `ENABLE_PROCESS_TERMINATION` to True merely to make an assertion pass or remove an error. Anomalies require safe refusal, not broader kill authority.
+4. **Concurrency/reproducibility with a test-runner watchdog caveat.** The default `tests/windows_architecture_poc_suite.py` (without `--with-timeout`) exercises normal cases but remains **not strictly kill-free**: its `subprocess.run(..., timeout=120)` can forcibly stop the launched batch process on watchdog expiry while leaving descendants. Before running, inspect/approve this behaviour or amend the test harness through a separately reviewed change; do not label default suite execution guaranteed non-destructive. Obtain 1-vs-6 canonical bytes, failure propagation and live-output evidence only with understood timeout and orphan risks.
+5. **Independent safety code review and acceptance plan.** Resolve both **known v0.2 source defects** in §6.2 (departed-member PID reuse; bounded wait for signalled descendants) **before any destructive test**. Present the pre-status hang policy from §5.3 to the owner for an explicit decision. Review ownership anomalies and uncaptured descendants against ratified §5C; refine code through narrow versioned patches, not broad cleanup. Optional refinement: distinguish hard ownership errors from benign vanished-process races.
+6. **Only upon explicit owner approval and after fixing/reviewing the known defects**, consider separately controlled destructive timeout, interrupt, and memory-guard tests, with the exact switch operation and target inventories reviewed. Never flip `ENABLE_PROCESS_TERMINATION` to True merely to make an assertion pass or remove an error. Anomalies require safe refusal, not broader kill authority.
 7. **P0–P2/W-suite closure and ERR-R2-02 production gate review**; **then** seek distinct P3 method authorization, implementing the validated common method contracts before family batches.
 
 **Do not prematurely update a PASS ledger when a source file merely adds code for the functionality.** Preserve an explicit test-input/expected/observed/status record, with source revision and actual Windows output.
@@ -255,13 +272,13 @@ Earlier standalone W-11 run ID: `poc_W11_20261022_A`. The latest live preview gr
 7. **Historical-document wording:** Architecture v0.4 contains inherited older “draft” or `taskkill`-fallback discussion; **ratified §5C expressly supersedes conflicting earlier proposals**. Some R1/R2/R3 original headers are still marked draft despite subsequent explicit owner ratification. Document precedence by **approved decision date**, not isolated header text.
 8. **Test outputs and secrets:** `transitory_data/` contains generated local output and is generally ignored; do not invent its contents from a source ZIP. Evidence can be copied to a controlled tracked location only after owner selection/sanitization. No source repo ZIP provides a `.venv` binary or full external process tree.
 9. **Environment diagnostics:** The pre-existing `deactivate_venv.bat` printed “virtual environment is not active” after deactivation even when it had just successfully removed the prompt; its wording reflects the **post-deactivation** state. It does not, by itself, imply a wrapper failure. Avoid interactive `SETLOCAL`/`ENDLOCAL` isolation advice; use a batch file or separate `cmd /d` process.
-10. **Risky partial failures:** With kill switch False, if a timeout/interrupt/critical-memory stop is accidentally requested, some processes may continue running. The coordinator should report inability to confirm cleanup; inspect live PIDs (and creation times) before any manual action. Do not promise the switch controls Windows-originated Ctrl+C signals.
+10. **Risky partial failures:** With kill switch False, if a timeout/interrupt/critical-memory stop is accidentally requested, some processes may continue running. The coordinator should report inability to confirm cleanup; inspect live PIDs (and creation times) before any manual action. Do not promise the switch controls Windows-originated Ctrl+C signals. **The separate test runner's 120-second `subprocess.run` watchdog can still kill its launched batch root independently of this switch.**
 
 ---
 
-## 9. Independent review checklist for Claude and owner
+## 9. Independent review checklist for Claude and owner — completed for v0.2
 
-Ask Claude to verify this handback against **both** this GitHub ZIP snapshot and the ratified documents; identify **specific file paths/sections** for corrections:
+Claude independently reviewed v0.1 and v0.2 against snapshot `(4).zip`, and reported v0.2 ready for owner ratification with no further corrections. The owner ratified v0.2 on 23 October 2026. The following checks record that completed review and can be reused if a newer repository snapshot requires a new reconciliation:
 
 - Does the hierarchy correctly distinguish ratified documents from the conditional ERR-R2-02 implementation decision?
 - Is Option F the single human/coordinated **common batch experiment interface**, with `.venv` activation/restoration assigned to the correct layers?
@@ -271,7 +288,7 @@ Ask Claude to verify this handback against **both** this GitHub ZIP snapshot and
 - Are the next proposed commands *strictly non-destructive* under the actual code and owner safety settings, with caveats for timeouts and external Ctrl+C?
 - Are there any overlooked mismatches between **current source** and safety-review v2, or important unfinished gates that a new chat must know before touching the coordinator?
 
-**Approval gate:** This is **v0.1 REVIEW CANDIDATE**. After Claude's review and the owner's ratification, install it at the intended repository path in the opening document metadata and commit it deliberately. The owner need not extract any source-code patch to review this handback. All existing project files remain unchanged by preparing this document.
+**Approval gate: CLOSED for this handback.** **v0.2 was owner-ratified on 23 October 2026** following Claude's independent review, with no further corrections. Install this final Markdown at the repository path in the opening metadata, then commit/push deliberately. That Git commit will be newer than snapshot `(4).zip` and must not be represented as already present in it. No project source code was changed by finalising the handback. The P1/P2/Option F production-acceptance gate remains OPEN.
 
 ---
 
@@ -280,9 +297,9 @@ Ask Claude to verify this handback against **both** this GitHub ZIP snapshot and
 - [ ] Have the newest source ZIP **and** this handback; note actual ZIP hash and available Git commit.
 - [ ] Read **ratified** Proposal v0.3, R1 v0.4, R2 v0.3 + approved erratum v0.2, R3 v0.2, Architecture v0.4 §5C, P0–P2 task spec.
 - [ ] Inspect `Run_Experiment.bat`, `Run_Coordinator.bat`, `src/Powerball_Experiment_Coordinator.py`, owner-switch setting, probes and tests.
-- [ ] Know **P0 wrapper PASS**, **P1 one-worker PASS**, **P1/P2 v0.2 one-worker ancestry preview PASS**, **six-worker/destructive/real-decoy gates PENDING**.
-- [ ] Keep `ENABLE_PROCESS_TERMINATION = False` and never falsely report process cleanup as verified.
+- [ ] Know **P0 wrapper PASS**, **P1 one-worker PASS**, **P1/P2 v0.2 one-worker ancestry preview PASS**, **six-worker/destructive/real-decoy gates PENDING**; the two Claude-identified coordinator defects remain OPEN; pre-status termination policy is undecided.
+- [ ] Keep `ENABLE_PROCESS_TERMINATION = False` and never falsely report process cleanup as verified; remember the test harness has an independent 120-second child-kill watchdog.
 - [ ] Do not change source or start new tests until owner approves the immediate next step.
 - [ ] Verify future code patches only against the user's current source, review with Claude when safety/scientific contracts are material, and require owner ratification for architectural changes.
 
-**END — v0.1 REVIEW CANDIDATE; no P2/Option F production acceptance implied.**
+**END — v0.2 OWNER-RATIFIED 23 OCTOBER 2026; no P2/Option F production acceptance implied.**
