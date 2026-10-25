@@ -2,7 +2,8 @@
 setlocal DisableDelayedExpansion
 rem PROJECT POC: authoritative direct PyPI dependency names are edited HERE.
 rem Modes: INSTALL, UPGRADE, VERIFY. Default: VERIFY (does not install/upgrade).
-set "DIRECT_PACKAGES=requests beautifulsoup4 psutil numpy scipy threadpoolctl"
+rem selenium: owner-run private two-site results check (browser automation, no stealth).
+set "DIRECT_PACKAGES=requests beautifulsoup4 psutil numpy scipy threadpoolctl selenium"
 set "ROOT=%~dp0"
 set "PY=%ROOT%.venv\Scripts\python.exe"
 set "VENV_ACTIVATE=%ROOT%.venv\Scripts\activate.bat"

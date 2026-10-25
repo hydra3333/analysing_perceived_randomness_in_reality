@@ -227,3 +227,7 @@ transitory_data/dependency_snapshots/
 transitory_data/p3_standalone_runs/
 transitory_data/p3_synthetic_runs/
 transitory_data/p3_synthetic_fixtures/
+
+# exclude fetched results
+private_results_checks/
+*.mhtml
