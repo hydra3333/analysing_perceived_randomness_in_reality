@@ -1,7 +1,9 @@
 @echo off
 setlocal DisableDelayedExpansion
 rem PROJECT POC: authoritative direct PyPI dependency names are edited HERE.
-rem Modes: INSTALL, UPGRADE, VERIFY. Default: VERIFY (does not install/upgrade).
+rem Modes: INSTALL_UPGRADE (default: install anything missing AND upgrade), INSTALL (missing only),
+rem UPGRADE (same as INSTALL_UPGRADE), VERIFY (checks only; changes nothing).
+rem Any version change is listed; re-run compatibility/reproducibility checks before research use.
 rem selenium: owner-run private two-site results check (browser automation, no stealth).
 set "DIRECT_PACKAGES=requests beautifulsoup4 psutil numpy scipy threadpoolctl selenium"
 set "ROOT=%~dp0"
@@ -22,13 +24,14 @@ if /I not "%ACTIVE_ENV%"=="%EXPECTED_ENV%" goto :wrong_venv
 :verify_python
 "%PY%" -c "import sys,pathlib;sys.exit(0 if pathlib.Path(sys.prefix).resolve()==pathlib.Path(sys.argv[1]).resolve() else 12)" "%EXPECTED_ENV%"
 if errorlevel 1 goto :prefix_failed
-set "MODE=VERIFY"
+set "MODE=INSTALL_UPGRADE"
 if not "%~2"=="" goto :usage
 if "%~1"=="" goto :dispatch
 if /I "%~1"=="INSTALL" set "MODE=INSTALL"
-if /I "%~1"=="UPGRADE" set "MODE=UPGRADE"
+if /I "%~1"=="INSTALL_UPGRADE" set "MODE=INSTALL_UPGRADE"
+if /I "%~1"=="UPGRADE" set "MODE=INSTALL_UPGRADE"
 if /I "%~1"=="VERIFY" set "MODE=VERIFY"
-if /I not "%~1"=="INSTALL" if /I not "%~1"=="UPGRADE" if /I not "%~1"=="VERIFY" goto :usage
+if /I not "%~1"=="INSTALL" if /I not "%~1"=="INSTALL_UPGRADE" if /I not "%~1"=="UPGRADE" if /I not "%~1"=="VERIFY" goto :usage
 :dispatch
 echo [DEPS] Mode: %MODE%
 echo [DEPS] Project environment: %EXPECTED_ENV%
@@ -37,25 +40,33 @@ echo [DEPS] Direct package requirements: %DIRECT_PACKAGES%
 if errorlevel 1 goto :failure
 "%PY%" -m pip --version
 if errorlevel 1 goto :failure
+if not exist "%ROOT%transitory_data" mkdir "%ROOT%transitory_data"
+if errorlevel 1 goto :failure
+if not exist "%ROOT%transitory_data\dependency_snapshots" mkdir "%ROOT%transitory_data\dependency_snapshots"
+if errorlevel 1 goto :failure
+set "STAMP=%RANDOM%_%RANDOM%"
 if /I "%MODE%"=="VERIFY" goto :post_install
+set "BEFORE=%ROOT%transitory_data\dependency_snapshots\before_%STAMP%.txt"
+set "AFTER=%ROOT%transitory_data\dependency_snapshots\after_%STAMP%.txt"
+"%PY%" -m pip freeze --all > "%BEFORE%"
+if errorlevel 1 goto :failure
 if /I "%MODE%"=="INSTALL" (
     "%PY%" -m pip install %DIRECT_PACKAGES%
 ) else (
     "%PY%" -m pip install --upgrade %DIRECT_PACKAGES%
 )
 if errorlevel 1 goto :failure
+"%PY%" -m pip freeze --all > "%AFTER%"
+if errorlevel 1 goto :failure
+"%PY%" -c "import sys; rd=lambda p: dict(l.strip().split('==',1) for l in open(p,encoding='utf-8',errors='replace') if '==' in l); a=rd(sys.argv[1]); b=rd(sys.argv[2]); ch=[k+': '+a.get(k,'(new)')+' -> '+b[k] for k in sorted(b) if a.get(k)!=b[k]]; [print('[DEPS] CHANGED '+c) for c in ch]; print('[DEPS] No package versions changed.' if not ch else '[DEPS] WARNING: package versions changed. Re-run compatibility and reproducibility checks before using this environment for research.')" "%BEFORE%" "%AFTER%"
+if errorlevel 1 goto :failure
 :post_install
 "%PY%" -m pip check
 if errorlevel 1 goto :failure
 echo [DEPS] Installed direct package versions:
-"%PY%" -c "import importlib.metadata as md,sys; print(chr(10).join(name + '==' + md.version(name) for name in sys.argv[1:]))" %DIRECT_PACKAGES%
+"%PY%" -c "import importlib.metadata as md,sys; r=[(n,next((d.version for d in md.distributions(name=n)),None)) for n in sys.argv[1:]]; [print(n+('=='+v if v else ' NOT INSTALLED - run this script with INSTALL')) for n,v in r]; sys.exit(0 if all(v for n,v in r) else 7)" %DIRECT_PACKAGES%
 if errorlevel 1 goto :failure
 rem Snapshot is generated evidence, NOT a second manually maintained dependency list.
-if not exist "%ROOT%transitory_data" mkdir "%ROOT%transitory_data"
-if errorlevel 1 goto :failure
-if not exist "%ROOT%transitory_data\dependency_snapshots" mkdir "%ROOT%transitory_data\dependency_snapshots"
-if errorlevel 1 goto :failure
-set "STAMP=%RANDOM%_%RANDOM%"
 set "SNAP=%ROOT%transitory_data\dependency_snapshots\environment_%STAMP%.txt"
 "%PY%" -c "import sys,hashlib,pathlib; print('Python:',sys.version.replace(chr(10),' ')); print('Interpreter:',sys.executable); print('Installer_SHA256:',hashlib.sha256(pathlib.Path(sys.argv[1]).read_bytes()).hexdigest()); print('Installed packages:')" "%~f0" > "%SNAP%"
 if errorlevel 1 goto :failure
@@ -82,7 +93,7 @@ echo [DEPS] ERROR: Python sys.prefix does not match project venv. >&2
 set "RC=5"
 goto :finish
 :usage
-echo Usage: %~nx0 [VERIFY ^| INSTALL ^| UPGRADE] >&2
+echo Usage: %~nx0 [INSTALL_UPGRADE (default) ^| INSTALL ^| UPGRADE ^| VERIFY] >&2
 set "RC=6"
 goto :finish
 :failure
