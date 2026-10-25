@@ -1,0 +1,55 @@
+{
+ "build": {
+  "build_tool_sha256": "69cb1decb1a1fed4077ccb41b91607405805721795992f57f302ae6618759aed",
+  "build_tool_version": "0.7",
+  "csv": "lotterywest_dev_OZLOTTO.csv",
+  "csv_sha256": "e127f60f9f19bd2aad1d19c6374b2104f09b2a78e6eccd3a39ae8346e061d235",
+  "provenance_sha256": "9e459b60c3914407f75218af17391871896a495afbee37531b37f79016f4b22c",
+  "run": "run_20261025T020840Z_5a7fbb"
+ },
+ "draw_count": 220,
+ "first_draw": 1474,
+ "game": "OZLOTTO",
+ "last_draw": 1693,
+ "lott_check_provenance_sha256": "1941e51b5b9d19ef3674674812f2262924c7997249a1cd6e0948e8601abef5a8",
+ "lott_check_run": "run_20261025T021022Z_714ecd",
+ "lott_sample": {
+  "all_pass": 31,
+  "expected": 31,
+  "fail": 0,
+  "lott": 31,
+  "lotterywest": 31
+ },
+ "lott_sample_fields": {
+  "date": {
+   "PASS": 31
+  },
+  "date_vs_weekly_rule": {
+   "PASS": 31
+  },
+  "main_order": {
+   "PASS": 31
+  },
+  "main_set": {
+   "PASS": 31
+  },
+  "supplementary_order": {
+   "PASS": 31
+  },
+  "supplementary_set": {
+   "PASS": 31
+  }
+ },
+ "master_file": "OZLOTTO_results_master.csv",
+ "master_sha256": "4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f",
+ "quarantine": {
+  "first_quarantined_draw": 1694,
+  "start_date": "2026-08-01"
+ },
+ "schema": "RESULTS_MASTER_INIT_VERIFICATION_V1",
+ "source": "LOTTERYWEST_GOV_RESULTS_SEARCH",
+ "tool_sha256": "3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619",
+ "tool_version": "0.1",
+ "utc": "2026-10-25T03:27:37.743281+00:00",
+ "warnings": 0
+}

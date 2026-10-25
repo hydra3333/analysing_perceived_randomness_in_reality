@@ -1,0 +1,2 @@
+version,utc,action,master_sha256,first_draw,last_draw,draw_count,added_count,added_first,added_last,grab_file,grab_sha256,backup_file,backup_sha256,tool_version,tool_sha256,note
+1,2026-10-25T03:27:37.743281+00:00,INIT,4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f,1474,1693,220,220,1474,1693,,,,,0.1,3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619,from run_20261025T020840Z_5a7fbb; verified (see OZLOTTO_results_master_init_verification.json)

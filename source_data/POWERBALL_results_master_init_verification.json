@@ -1,0 +1,60 @@
+{
+ "build": {
+  "build_tool_sha256": "69cb1decb1a1fed4077ccb41b91607405805721795992f57f302ae6618759aed",
+  "build_tool_version": "0.7",
+  "csv": "lotterywest_dev_POWERBALL.csv",
+  "csv_sha256": "54eff094652fcfa25e018d4385357643c7a3ebb930ccde8091c48ad6846516d4",
+  "provenance_sha256": "9e459b60c3914407f75218af17391871896a495afbee37531b37f79016f4b22c",
+  "run": "run_20261025T020840Z_5a7fbb"
+ },
+ "draw_count": 433,
+ "first_draw": 1144,
+ "game": "POWERBALL",
+ "last_draw": 1576,
+ "lott_check_provenance_sha256": "1941e51b5b9d19ef3674674812f2262924c7997249a1cd6e0948e8601abef5a8",
+ "lott_check_run": "run_20261025T021022Z_714ecd",
+ "lott_sample": {
+  "all_pass": 52,
+  "expected": 52,
+  "fail": 0,
+  "lott": 52,
+  "lotterywest": 52
+ },
+ "lott_sample_fields": {
+  "date": {
+   "PASS": 52
+  },
+  "date_vs_weekly_rule": {
+   "PASS": 52
+  },
+  "main_order": {
+   "PASS": 52
+  },
+  "main_set": {
+   "PASS": 52
+  },
+  "powerball_order": {
+   "PASS": 52
+  },
+  "powerball_set": {
+   "PASS": 52
+  }
+ },
+ "master_file": "POWERBALL_results_master.csv",
+ "master_sha256": "ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8",
+ "old_files": {
+  "compared": 433,
+  "passed": 433,
+  "source": "working tree source_data/australian_powerball_history_20261021.csv; working tree source_data/australian_powerball_draw_order_20261021.csv"
+ },
+ "quarantine": {
+  "first_quarantined_draw": 1577,
+  "start_date": "2026-08-01"
+ },
+ "schema": "RESULTS_MASTER_INIT_VERIFICATION_V1",
+ "source": "LOTTERYWEST_GOV_RESULTS_SEARCH",
+ "tool_sha256": "3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619",
+ "tool_version": "0.1",
+ "utc": "2026-10-25T03:27:37.736240+00:00",
+ "warnings": 0
+}

@@ -1,0 +1,2 @@
+version,utc,action,master_sha256,first_draw,last_draw,draw_count,added_count,added_first,added_last,grab_file,grab_sha256,backup_file,backup_sha256,tool_version,tool_sha256,note
+1,2026-10-25T03:27:37.736240+00:00,INIT,ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8,1144,1576,433,433,1144,1576,,,,,0.1,3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619,from run_20261025T020840Z_5a7fbb; verified (see POWERBALL_results_master_init_verification.json)
