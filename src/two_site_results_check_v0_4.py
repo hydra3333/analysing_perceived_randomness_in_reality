@@ -1,4 +1,4 @@
-"""Two-site lottery results check: The Lott versus Lotterywest. v0.1 TEST BUILD.
+"""Two-site lottery results check: The Lott versus Lotterywest. v0.4 TEST BUILD.
 
 PRIVATE, OWNER-RUN, DEVELOPMENT DATA ONLY. Place this file in the project's src/
 folder and run it with the project's .venv Python (3.14).
@@ -8,7 +8,9 @@ What it does
 - For each requested month and game it:
     * opens The Lott results page, picks the month and year, clicks Find, makes
       sure the "Drawn" order is selected, and reads that month's draws;
-    * opens the matching Lotterywest month page and reads the same month's draws.
+    * opens Lotterywest's own results-search page (www.lotterywest.wa.gov.au)
+      for that month and reads the same draws. (oz.lotterywest.com blocked
+      automation with Cloudflare on 25 Oct 2026, so it is never contacted.)
 - Writes both sets to CSV in a private, git-ignored run folder, and writes a
   value-free reconciliation report (PASS/FAIL per draw and field, no numbers).
 
@@ -27,8 +29,9 @@ Quarantine (holdout) enforcement - fixed constants, no command-line override
 - v0.1 limit: at most RUN_MONTH_LIMIT months per run (default January-February 2026).
 
 Run
-    python src\\two_site_results_check_v0_1.py --self-test
-    python src\\two_site_results_check_v0_1.py --browser chrome
+    python src\\two_site_results_check_v0_4.py --self-test
+    python src\\two_site_results_check_v0_4.py --diagnose-lotterywest --game POWERBALL --month 2026-01
+    python src\\two_site_results_check_v0_4.py --browser chrome
 Exit codes: 0 all PASS; 1 mismatches or incomplete; 2 STOP (quarantine, blocked,
 page not recognised); 3 usage/configuration refused.
 """
@@ -49,7 +52,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from types import MappingProxyType
 
-TOOL_VERSION = "0.1"
+TOOL_VERSION = "0.4"
 
 # ---------------------------------------------------------------------------
 # FIXED QUARANTINE BOUNDARY (owner decision pending ratification: month-aligned,
@@ -205,9 +208,14 @@ def validate_numbers(game: str, draw_number: int, main: list[int], secondary: li
         raise ParseFailure(f"{game} draw {draw_number}: supplementary overlaps a main number")
 
 
-_MONTHS_RE = "|".join(MONTH_NAMES)
+_MONTHS_RE = (r"Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|"
+              r"Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?")
+
+
+def month_number(token: str) -> int:
+    return [m[:3].lower() for m in MONTH_NAMES].index(token[:3].lower()) + 1
 _LW_HEADER = re.compile(
-    rf"(?P<day>\d{{1,2}})\s+(?P<mon>{_MONTHS_RE})\s+(?P<year>\d{{4}})\s*"
+    rf"(?P<day>\d{{1,2}})(?:st|nd|rd|th)?\s+(?P<mon>{_MONTHS_RE})\.?,?\s+(?P<year>\d{{4}}),?\s*"
     rf"(?:(?P<time>\d{{1,2}}:\d{{2}}\s*[ap]m))?\s*Draw\s*(?P<draw>\d{{3,5}})", re.IGNORECASE)
 _DIGITS = re.compile(r"\d{1,2}\Z")
 
@@ -232,7 +240,7 @@ def parse_lotterywest_text(game: str, year: int, month: int, text: str) -> tuple
     records, info = [], {"headers": len(headers), "other_month_ignored": 0, "pre_era_ignored": 0,
                          "times_seen": set()}
     for idx, h in enumerate(headers):
-        mon = MONTH_NAMES.index(h.group("mon").capitalize()) + 1
+        mon = month_number(h.group("mon"))
         d = date(int(h.group("year")), mon, int(h.group("day")))
         n = int(h.group("draw"))
         if classify(game, n, d) == "PRE_ERA":
@@ -258,6 +266,55 @@ def parse_lotterywest_text(game: str, year: int, month: int, text: str) -> tuple
         records.append(Record(game, n, d.isoformat(), tuple(main), tuple(secondary),
                               "LOTTERYWEST_MONTH_PAGE", "SOURCE_SEQUENCE"))
     info["times_seen"] = sorted(info["times_seen"])
+    return records, info
+
+
+_WEEKDAYS = "Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday"
+_GOV_HEADER = re.compile(
+    rf"Draw\s+(?P<draw>\d{{3,5}})\s+(?:{_WEEKDAYS})\s+(?P<day>\d{{1,2}})\s+(?P<mon>{_MONTHS_RE})\s+(?P<year>\d{{4}})")
+
+
+def parse_gov_text(game: str, year: int, month: int, text: str) -> tuple[list[Record], dict]:
+    """Strict parser for Lotterywest's www.lotterywest.wa.gov.au results-search text.
+
+    Layout: 'Draw N' / 'Weekday D Month YYYY' / 'Winning numbers:' 7 numbers /
+    'Powerball:' 1 number or 'Supplementary [numbers]:' 3 numbers / 'View prizes'.
+    Each block is classified on draw number and date BEFORE its numbers are read.
+    """
+    headers = list(_GOV_HEADER.finditer(text))
+    records, info = [], {"headers": len(headers), "other_month_ignored": 0, "pre_era_ignored": 0}
+    for idx, h in enumerate(headers):
+        n = int(h.group("draw"))
+        d = date(int(h.group("year")), month_number(h.group("mon")), int(h.group("day")))
+        if classify(game, n, d) == "PRE_ERA":
+            info["pre_era_ignored"] += 1
+            continue
+        if (d.year, d.month) != (year, month):
+            info["other_month_ignored"] += 1
+            continue
+        body = text[h.end(): headers[idx + 1].start() if idx + 1 < len(headers) else len(text)]
+        tokens = body.split()
+        try:
+            i = next(k for k in range(len(tokens) - 1)
+                     if tokens[k].lower() == "winning" and tokens[k + 1].lower() == "numbers:")
+        except StopIteration:
+            raise ParseFailure(f"{game} draw {n}: 'Winning numbers:' label not found") from None
+        main, i = _take_numbers(tokens, i + 2)
+        if game == "POWERBALL":
+            if i >= len(tokens) or tokens[i].lower() != "powerball:":
+                raise ParseFailure(f"{game} draw {n}: 'Powerball:' label not where expected")
+            i += 1
+        else:
+            if i < len(tokens) and tokens[i].lower() == "supplementary:":
+                i += 1
+            elif i + 1 < len(tokens) and tokens[i].lower() == "supplementary" and tokens[i + 1].lower() == "numbers:":
+                i += 2
+            else:
+                raise ParseFailure(f"{game} draw {n}: 'Supplementary' label not where expected")
+        secondary, _ = _take_numbers(tokens, i)
+        validate_numbers(game, n, main, secondary)
+        records.append(Record(game, n, d.isoformat(), tuple(main), tuple(secondary),
+                              "LOTTERYWEST_GOV_RESULTS_SEARCH", "SOURCE_SEQUENCE"))
     return records, info
 
 
@@ -408,6 +465,7 @@ def fetch_lott_month(driver, pacer: Pacer, game: str, year: int, month: int) -> 
     url = f"https://www.thelott.com/{era.lott_slug}/results"
     pacer.wait("load", url)
     driver.get(url)
+    _check_not_blocked(driver, "www.thelott.com")
     # Only the search controls are touched; the page's default result block is never read.
     _wait(driver, lambda d: d.find_elements(By.CSS_SELECTOR, "section.results-search select.select-month"),
           "The Lott month selector")
@@ -479,24 +537,80 @@ def fetch_lott_month(driver, pacer: Pacer, game: str, year: int, month: int) -> 
     return records, {"url": url, "order_label": order_label, "blocks": len(rows), "pre_era_ignored": pre_era}
 
 
+def _check_not_blocked(driver, site: str) -> None:
+    title = (driver.title or "").lower()
+    if any(k in title for k in ("attention required", "cloudflare", "access denied", "just a moment", "blocked")):
+        raise BlockedStop(f"{site} served a block/challenge page")
+
+
 def fetch_lotterywest_month(driver, pacer: Pacer, game: str, year: int, month: int) -> tuple[list[Record], dict]:
     from selenium.webdriver.common.by import By
-    era = ERAS[game]
-    url = f"https://www.oz.lotterywest.com/{era.lotterywest_slug}/results/{MONTH_NAMES[month-1].lower()}-{year}"
+    url = gov_search_url(game, year, month)
     pacer.wait("load", url)
     driver.get(url)
     _wait(driver, lambda d: d.execute_script("return document.readyState") == "complete", "Lotterywest page load")
+    _check_not_blocked(driver, "www.lotterywest.wa.gov.au")
 
     def month_blocks_present(d):
         text = d.find_element(By.TAG_NAME, "body").text
-        hits = [h for h in _LW_HEADER.finditer(text)
-                if h.group("mon").capitalize() == MONTH_NAMES[month - 1] and int(h.group("year")) == year]
+        hits = [h for h in _GOV_HEADER.finditer(text)
+                if month_number(h.group("mon")) == month and int(h.group("year")) == year]
         return text if hits else False
 
     text = _wait(driver, month_blocks_present, f"Lotterywest results for {MONTH_NAMES[month-1]} {year}")
-    records, info = parse_lotterywest_text(game, year, month, text)
+    _check_not_blocked(driver, "www.lotterywest.wa.gov.au")
+    records, info = parse_gov_text(game, year, month, text)
     info["url"] = url
     return records, info
+
+
+LOTTERYWEST_GAME_CODE = MappingProxyType({"POWERBALL": 5132, "OZLOTTO": 5130})
+
+
+def gov_search_url(game: str, year: int, month: int) -> str:
+    """www.lotterywest.wa.gov.au results-search page for ONE allowed month.
+
+    From = last day of the previous month, To = last day of the month itself,
+    so the range can never reach the quarantine start date.
+    """
+    if (year, month) > LAST_ALLOWED_MONTH:
+        raise UsageRefused("month is in or after the quarantine boundary month")
+    first = date(year, month, 1)
+    frm = first - timedelta(days=1)
+    to = date(year, month, calendar.monthrange(year, month)[1])
+    if to >= QUARANTINE_START_DATE:
+        raise UsageRefused("search range would reach the quarantine start date")
+    fmt = lambda d: d.strftime("%a+%b+%d+%Y")
+    return (f"https://www.lotterywest.wa.gov.au/results/powerball?filterByGame={LOTTERYWEST_GAME_CODE[game]}"
+            f"&fromDate={fmt(frm)}&toDate={fmt(to)}")
+
+
+def diagnose_lotterywest(args) -> int:
+    """Load ONE allowed Lotterywest month page; print structure with every digit masked."""
+    game = args.game.strip().upper()
+    y, m = (int(x) for x in args.month.split("-"))
+    validate_request([game], (y, m), (y, m))
+    pacer = Pacer(MIN_PAUSE_SECONDS)
+    driver = make_driver(args.browser)
+    try:
+        url = gov_search_url(game, y, m)
+        pacer.wait("load", url)
+        driver.get(url)
+        time.sleep(8)  # let client-side rendering finish
+        from selenium.webdriver.common.by import By
+        text = driver.find_element(By.TAG_NAME, "body").text
+        mask = lambda s: re.sub(r"\d", "#", s)
+        print(f"[DIAG] requested: {url}")
+        print(f"[DIAG] final URL: {mask(driver.current_url)}")
+        print(f"[DIAG] title: {mask(driver.title)}")
+        print(f"[DIAG] body characters: {len(text)}; draw headings recognised: {len(list(_GOV_HEADER.finditer(text)))}")
+        lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
+        print(f"[DIAG] first {min(len(lines), 120)} of {len(lines)} non-empty lines (ALL DIGITS MASKED):")
+        for ln in lines[:120]:
+            print("   | " + mask(ln)[:160])
+    finally:
+        driver.quit()
+    return 0
 
 
 def git_ignored(root: Path, path: Path) -> bool | None:
@@ -668,6 +782,10 @@ def self_test() -> int:
         assert refused(lambda: parse_lotterywest_text("POWERBALL", 2026, 1, rng), ParseFailure)
         overlap = oz_ok.replace("Supplementary\n1 2 3", "Supplementary\n1 2 40")
         assert refused(lambda: parse_lotterywest_text("OZLOTTO", 2026, 2, overlap), ParseFailure)
+        abbr = pb_ok.replace("29 January 2026", "Thu 29 Jan 2026").replace("22 January 2026", "22nd Jan, 2026")
+        recs, _ = parse_lotterywest_text("POWERBALL", 2026, 1, abbr)
+        assert [r.draw_number for r in recs] == [1550, 1549]
+        assert month_number("Sept") == 9 and month_number("jun") == 6
         other = pb_ok + "5 February 2026 8:30 pmDraw 1551\nMain numbers\n1 2 3 4 5 6 7\nPowerball\n1\n"
         recs, info = parse_lotterywest_text("POWERBALL", 2026, 1, other)
         assert len(recs) == 2 and info["other_month_ignored"] == 1
@@ -705,6 +823,41 @@ def self_test() -> int:
         assert not any(re.search(r"\b(1|2|3|4|5|6|7|9)\b(?!\d)", l.split(":", 1)[1]) for l in lines
                        if ":" in l and "MISSING" not in l), "report must not contain ball values"
 
+    gov_pb = ("Search by game, draw number, and date:\nPowerball\nDec 31, 2025\nJan 31, 2026\n"
+              "Draw 1550\nThursday 29 January 2026\nWinning numbers:\n1\n2\n3\n4\n5\n6\n7\nPowerball:\n9\nView prizes\n"
+              "Draw 1549\nThursday 22 January 2026\nWinning numbers:\n11\n12\n13\n14\n15\n16\n17\nPowerball:\n20\nView prizes\n"
+              "What does my money support in WA?\nIn 2024-25, we gave back over $1.5 billion\n")
+    gov_oz = ("Draw 1671\nTuesday 24 February 2026\nWinning numbers:\n40\n41\n42\n43\n44\n45\n46\n"
+              "Supplementary numbers:\n1\n2\n3\nView prizes\n")
+
+    def t_gov_parser():
+        recs, info = parse_gov_text("POWERBALL", 2026, 1, gov_pb)
+        assert [r.draw_number for r in recs] == [1550, 1549] and recs[0].main == (1, 2, 3, 4, 5, 6, 7)
+        assert recs[1].secondary == (20,) and recs[0].source == "LOTTERYWEST_GOV_RESULTS_SEARCH"
+        recs, _ = parse_gov_text("OZLOTTO", 2026, 2, gov_oz)
+        assert recs[0].secondary == (1, 2, 3)
+        recs, _ = parse_gov_text("OZLOTTO", 2026, 2, gov_oz.replace("Supplementary numbers:", "Supplementary:"))
+        assert recs[0].secondary == (1, 2, 3)
+        for bad in (gov_pb.replace("1\n2\n3\n4\n5\n6\n7", "1\n2\n3\n4\n5\n6\n1\n8"),
+                    gov_pb.replace("Powerball:\n9", "Powerball:\n21"),
+                    gov_pb.replace("1\n2\n3\n4\n5\n6\n7", "1\n2\n3\n4\n5\n6\n6")):
+            assert refused(lambda: parse_gov_text("POWERBALL", 2026, 1, bad), ParseFailure)
+        q = gov_pb + "Draw 1577\nThursday 6 August 2026\nWinning numbers:\nX\n"
+        assert refused(lambda: parse_gov_text("POWERBALL", 2026, 1, q), QuarantineStop)
+        q2 = gov_oz + "Draw 1694\nTuesday 4 August 2026\nWinning numbers:\n1\n"
+        assert refused(lambda: parse_gov_text("OZLOTTO", 2026, 2, q2), QuarantineStop)
+        other = gov_pb + "Draw 1551\nThursday 5 February 2026\nWinning numbers:\n1\n2\n3\n4\n5\n6\n7\nPowerball:\n1\n"
+        recs, info = parse_gov_text("POWERBALL", 2026, 1, other)
+        assert len(recs) == 2 and info["other_month_ignored"] == 1
+
+    def t_gov_url():
+        u = gov_search_url("POWERBALL", 2026, 1)
+        assert "filterByGame=5132" in u and "fromDate=Wed+Dec+31+2025" in u and "toDate=Sat+Jan+31+2026" in u, u
+        u = gov_search_url("OZLOTTO", 2026, 7)
+        assert "filterByGame=5130" in u and "toDate=Fri+Jul+31+2026" in u, u
+        assert refused(lambda: gov_search_url("POWERBALL", 2026, 8))
+        assert refused(lambda: gov_search_url("OZLOTTO", 2027, 1))
+
     def t_output_create_only():
         import tempfile
         with tempfile.TemporaryDirectory() as td:
@@ -715,7 +868,8 @@ def self_test() -> int:
     for name, fn in [("constants", t_constants), ("month limits", t_months), ("classify", t_classify),
                      ("expected draws", t_expected), ("Lotterywest parser", t_lw_parser),
                      ("Lotterywest quarantine stop", t_lw_quarantine), ("The Lott block", t_lott_block),
-                     ("reconcile value-free", t_reconcile), ("create-only output", t_output_create_only)]:
+                     ("reconcile value-free", t_reconcile), ("create-only output", t_output_create_only),
+                     ("gov search URL limits", t_gov_url), ("gov results parser", t_gov_parser)]:
         check(name, fn)
     passed = sum(ok for _, ok in results)
     print(f"[SELF-TEST] {passed}/{len(results)} PASS")
@@ -723,8 +877,12 @@ def self_test() -> int:
 
 
 def main(argv=None) -> int:
-    p = argparse.ArgumentParser(description="Private two-site results check (The Lott vs Lotterywest), v0.1")
+    p = argparse.ArgumentParser(description="Private two-site results check (The Lott vs Lotterywest), v0.4")
     p.add_argument("--self-test", action="store_true", help="test blockouts and parsers offline, then exit")
+    p.add_argument("--diagnose-lotterywest", action="store_true",
+                   help="load one allowed Lotterywest month page and print its structure with all digits masked")
+    p.add_argument("--game", default="POWERBALL", help="for --diagnose-lotterywest")
+    p.add_argument("--month", default="2026-01", help="for --diagnose-lotterywest (YYYY-MM, July 2026 or earlier)")
     p.add_argument("--browser", choices=("chrome", "firefox"), default="chrome")
     p.add_argument("--games", default="POWERBALL,OZLOTTO")
     p.add_argument("--from-month", default=f"{DEFAULT_FROM[0]}-{DEFAULT_FROM[1]:02d}")
@@ -737,6 +895,8 @@ def main(argv=None) -> int:
     if args.self_test:
         return self_test()
     try:
+        if args.diagnose_lotterywest:
+            return diagnose_lotterywest(args)
         return run(args)
     except UsageRefused as exc:
         print(f"[CHECK] REFUSED: {exc}", file=sys.stderr)
