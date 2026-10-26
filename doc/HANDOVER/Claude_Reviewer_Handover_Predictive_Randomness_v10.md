@@ -24,10 +24,10 @@ Verified commits on 26 Oct:
 | `ac01678` | Ranking proposal v0.5 and exposure record v0.2, ratified |
 | `cf81f51` | Interim handover note |
 
-The next commit should contain this file (`doc/HANDOVER/Claude_Reviewer_Handover_Predictive_Randomness_v10.md`) and ChatGPT coder handover v1.1, committed together.
+The next commit should contain this file (`doc/HANDOVER/Claude_Reviewer_Handover_Predictive_Randomness_v10.md`) and ChatGPT coder handover v1.1r1 (`doc/HANDOVER/Predictive_Randomness_ChatGPT_Coder_Handover_v1_1r1.md`), committed together.
 
 **First actions in a new chat:**
-1. Pull GitHub. Verify that this file and coder handover v1.1 are committed, and that the hashes in section 4 still match.
+1. Pull GitHub. Verify that this file and coder handover v1.1r1 are committed, and that the hashes in section 4 still match.
 2. Ask the owner where things stand on:
    - (a) integrating the ratified ranking proposal into new governing editions. **Claude drafts this** (section 12, item 1);
    - (b) Package 2 v0.11 in ChatGPT's fresh coding chat.
@@ -175,6 +175,8 @@ All files are in `doc/`. The SHA-256 values are of the Git blobs (LF), checked b
 - `contracts/TIE_SHA256_V1_Ratified_Encoding_v0_2.md` (`045b784d16a4611ac4ba5e8af063733e957b0b9359882d52b7143b912a65a0b6`);
 - `Predictive_Randomness_Windows_POC_Implementation_Task_Specification_v0_2.md` (POC P0-P2 history, subject to Architecture 5C).
 
+**Old headers:** the ratified v0.5 proposal and the v0.2 exposure record still carry their authoring-time headers ("RATIFICATION CANDIDATE" / "CANDIDATE ... awaits owner ratification"). The owner's ratification at `ac01678` overrides those headers. Never edit the ratified files to change them; keep their hashes.
+
 Proposal versions v0.2-v0.4 are in `doc/` as history (v0.1 was never committed). ChatGPT's reviews of the ranking proposal are in `review/`:
 - `MR_v0_2_ChatGPT_Independent_Review_v0_1.md`;
 - `MR_v0_3_ChatGPT_Focused_Spotcheck_v0_1.md`;
@@ -182,7 +184,7 @@ Proposal versions v0.2-v0.4 are in `doc/` as history (v0.1 was never committed).
 
 Claude's response `Claude_Response_ChatGPT_MR_v0_2_Review_v1.md` (`45c7b352...ca3b`) was delivered to the owner, and may not be committed.
 
-The interim note `doc/Interim_Handover_Note_for_both_claude_and_chatgpt_v1.md` (`a46866ca...a1e5`) is superseded by v10 and coder handover v1.1.
+The interim note `doc/Interim_Handover_Note_for_both_claude_and_chatgpt_v1.md` (`a46866ca...a1e5`) is superseded by v10 and coder handover v1.1r1.
 
 **Installation ZIP:** `review/Predictive_Randomness_Governing_Documents_v0_4_OWNER_RATIFIED_INSTALL_CLAUDE_RECHECK_r1.zip`, SHA `178208c6fef7fcb5685cc1572d64f809dae34a6936d6f61ab721ab17623ec2d3`. A byte-identical copy is `review/Ratified_Governing_Documents_Install_r1.zip`.
 
@@ -242,7 +244,7 @@ E_14 and E_54 use dates. The proposed E_63 (Chebyshev/minimax, the owner's idea)
 - **Oz Lotto supplementaries (changed by the ranking proposal, ratified 26 Oct; integration pending):**
   - They may be read **by the evaluator only**, after a target is opened and its forecast is frozen, solely to classify prize divisions.
   - They stay out of every method view, fit, seed, digest and prediction. Methods never forecast supplementaries.
-  - Until integration, the older governing text ("provenance only") still stands in R2/Architecture/Proposal. The ratified proposal records the change.
+  - Until integration, the current editions of R2/Architecture/Proposal still carry the older "provenance only" text. On this subject the later ratified decision governs, and no code reads supplementaries before the E_2-readiness package anyway. Coder handover v1.1r1 states the same.
 - **The Lott:** honest automation gets "0 draws found", so The Lott is used only through pages the owner saves by hand outside the repository (`*.mhtml` git-ignored), as a private verifier.
   - Nothing derived from it is committed. Lottery Corporation terms: browser-only personal use, no reproduction.
   - There is no manual Lott check in production (owner-decided).
@@ -515,7 +517,7 @@ The 23 Oct real orphan was archived and cleared manually, and a later one-worker
 - `doc/HANDOVER/Claude_Reviewer_Handover_Predictive_Randomness_v9.md` (`1c4544ee...dacb`);
 - `doc/HANDOVER/Predictive_Randomness_ChatGPT_Coder_Handover_v1_0r1.md` (`07e37284...9a`).
 
-These are replaced by v10 and coder handover v1.1.
+These are replaced by v10 and coder handover v1.1r1.
 
 **Not done / not authorised:** the updater run; Mode H; FINAL; holdout access; destructive tests; P2 closure; any Oz science; any switch change; Package 2 acceptance.
 
@@ -591,7 +593,14 @@ ChatGPT's reviews caught real errors in Claude's drafts. Each was checked indepe
   - **C7:** the verified inventory.
   - **C8:** the O1/O3 dispositions.
 - Optional items O1-O8 were also listed.
-- **Outcome:** v1.0r1 passed Claude's focused spot-check (own diff; ChatGPT's diff reproduces it). The owner accepted it, and it was committed at `6726963`. ChatGPT is now writing **v1.1**, a full document built from v1.0r1 plus the ranking work and section 2A.
+- **Outcome:** v1.0r1 passed Claude's focused spot-check (own diff; ChatGPT's diff reproduces it). The owner accepted it, and it was committed at `6726963`. ChatGPT then wrote **v1.1** (`639a24f4...c75f`), a full document built from v1.0r1 plus the ranking work and the owner's foundational points, and its chat hit its length limit as it delivered it.
+- **Claude checked v1.1:** the file is complete (hash and size match ChatGPT's report), and preservation holds (every line removed from v1.0r1 was a status line, replaced by an updated one; sections 4-6 and 8 are unchanged).
+- **Claude corrected four mechanical points** as **v1.1r1** (`ab0afb64...8a01`), under the fallback rule:
+  1. the interim-note path;
+  2. the commits verified by Claude, which v1.1 called owner-reported;
+  3. the test list MRT-01..25;
+  4. the status line.
+- ChatGPT's own convention (UTF-8, LF) is kept for its file. The next ChatGPT chat may review the corrections.
 - **Adopted from ChatGPT's handover:**
   - **Evidence classes:** keep these apart in every review:
     - ratified rule;
