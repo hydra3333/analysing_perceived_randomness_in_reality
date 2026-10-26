@@ -39,10 +39,22 @@ CASE_NAMES = SIMPLE_CASES | EXTRA_CASES
 SAFE_ID = re.compile(r"[A-Za-z0-9_-]{1,90}\Z")
 SAFE_ARG = re.compile(r'[A-Za-z0-9_.,=:/\\ -]+\Z')
 LINE_QUEUE_MAX = 8192
+POLL_SECONDS_DEFAULT = 1.0
+POLL_SECONDS_MIN = 0.5
+POLL_SECONDS_MAX = 5.0
+PIPE_EOF_WAIT_SECONDS = 5.0
+LINE_QUEUE_PUT_TIMEOUT_SECONDS = 0.12
+PIPE_READER_JOIN_TIMEOUT_SECONDS = 0.05
 # OWNER SAFETY SWITCH. Default is NEVER terminate a process.
 # Change to True ONLY after the documented N-series plan-only tests and owner review.
 # A command-line argument CANNOT override this setting.
 ENABLE_PROCESS_TERMINATION = False
+# Review gate. No E-method / FINAL invocation path exists in this POC.
+# False until independent v0.7 review + owner approval of real integration.
+ENABLE_SCIENTIFIC_COORDINATION = False
+# Separate owner/Claude-reviewed Windows synthetic-lifecycle gate. Never
+# enabled by a CLI option; False while Windows execution remains unapproved.
+ENABLE_SYNTHETIC_WINDOWS_LIFECYCLE = False
 ALLOWED_WRAPPER_DESCENDANTS = frozenset({"cmd.exe", "findstr.exe", "python.exe"})
 # Persistent fail-closed gate. Never silently restart after uncertain cleanup.
 # Operators must review and archive this marker OUTSIDE the coordinator before
@@ -425,10 +437,10 @@ def accept_ancestry_candidate(
     return True, "VERIFIED"
 
 
-def capture_owned_tree(worker: "Worker", *, force: bool = False) -> None:
+def capture_owned_tree(worker: "Worker", *, force: bool = False, poll_seconds: float = POLL_SECONDS_DEFAULT) -> None:
     """Capture descendants ONLY while Popen root is alive and has verified identity."""
     now = time.monotonic()
-    if not force and now - getattr(worker, "last_capture_monotonic", 0.0) < 0.5:
+    if not force and now - getattr(worker, "last_capture_monotonic", 0.0) < poll_seconds:
         return
     worker.last_capture_monotonic = now
     if worker.root_process is None or worker.root_create_time is None:
@@ -624,6 +636,9 @@ class Worker:
     reader: threading.Thread
     reader_done: threading.Event
     exit_code: int | None = None
+    # UTC timestamp of the first coordinator observation of Popen exit.
+    # Never substitute receipt-issuance time for this observation.
+    exit_observed_utc: str | None = None
     final_state: str | None = None
     issue: str = ""
     timed_out: bool = False
@@ -648,19 +663,23 @@ class Worker:
     plan_printed: bool = False
     plan_only: bool = False
     last_capture_monotonic: float = 0.0
+    # Not populated by this POC. Future reviewed E-run launcher must bind the
+    # exact game/draw/method identity from its own launch request, NEVER worker data.
+    scientific_receipt_identity: dict[str, Any] | None = None
+    console_publication_records: list[str] = field(default_factory=list)
 
 
 def read_lines(proc: subprocess.Popen[str], number: int, logfile: Path,
                messages: queue.Queue[tuple[int, str]], done: threading.Event) -> None:
     """Daemon reader prevents pipe EOF deadlock from hanging coordinator exit."""
     try:
-        with logfile.open("x", encoding="utf-8", newline="\n") as fh:
+        with logfile.open("x", encoding="utf-8", newline="\n", buffering=1) as fh:
             assert proc.stdout is not None
             for line in proc.stdout:
                 fh.write(line)
                 while not done.is_set():
                     try:
-                        messages.put((number, line.rstrip("\r\n")), timeout=0.12)
+                        messages.put((number, line.rstrip("\r\n")), timeout=LINE_QUEUE_PUT_TIMEOUT_SECONDS)
                         break
                     except queue.Full:
                         continue
@@ -722,6 +741,7 @@ def arguments() -> argparse.Namespace:
     parser.add_argument("--workers", type=int, default=6)
     parser.add_argument("--count", type=int, default=1)
     parser.add_argument("--timeout-seconds", type=float, default=30.0)
+    parser.add_argument("--poll-seconds", type=float, default=POLL_SECONDS_DEFAULT)
     parser.add_argument("--group-id", default=None)
     parser.add_argument("--lines", type=int, default=10)
     parser.add_argument("--exit", type=int, default=0)
@@ -742,6 +762,8 @@ def arguments() -> argparse.Namespace:
         parser.error("--workers must be in 1..6")
     if not (1 <= args.count <= 100):
         parser.error("--count must be in 1..100")
+    if not (POLL_SECONDS_MIN <= args.poll_seconds <= POLL_SECONDS_MAX):
+        parser.error("--poll-seconds must be 0.5..5.0")
     if not (1 <= args.timeout_seconds <= 7200):
         parser.error("--timeout-seconds must be in 1..7200")
     if not (0 <= args.lines <= 100_000):
@@ -785,6 +807,24 @@ def child_command(args: argparse.Namespace, run_id: str) -> list[str]:
     return output
 
 
+def receive_messages(messages: queue.Queue, *, poll_seconds: float,
+                     limit: int = 6000, block: bool = False):
+    """One human-speed queue-wait policy for POC and synthetic coordinator.
+
+    Incoming log output wakes immediately; otherwise one timed wait. Subsequent
+    buffered lines are drained without another delay. Never polls at 25/40ms.
+    """
+    if not POLL_SECONDS_MIN <= poll_seconds <= POLL_SECONDS_MAX or limit < 1:
+        raise ValueError('invalid coordinator poll interval or queue limit')
+    for index in range(limit):
+        try:
+            item = (messages.get(timeout=poll_seconds)
+                    if block and index == 0 else messages.get_nowait())
+        except queue.Empty:
+            return
+        yield item
+
+
 def coordinator_main() -> int:
     args = arguments()
     validate_environment()
@@ -818,16 +858,20 @@ def coordinator_main() -> int:
     old_handler = signal.getsignal(signal.SIGINT)
     signal.signal(signal.SIGINT, on_sigint)
 
-    def drain(limit: int = 6000) -> None:
+    def drain(limit: int = 6000, *, block: bool = False) -> None:
         nonlocal printed_lines
-        for _ in range(limit):
-            try:
-                number, line = messages.get_nowait()
-            except queue.Empty:
-                break
+        for number, line in receive_messages(messages, poll_seconds=args.poll_seconds,
+                                             limit=limit, block=block):
             w = all_workers[number - 1]
             w.output_lines += 1
             w.lines_tail.append(line)
+            if line.startswith(('BEGIN ', 'RESULT ', 'DIGEST ', 'FINISH ')):
+                # Finite record set; duplicate/extra lines invalidate scientific
+                # console evidence rather than growing an unbounded list.
+                if len(w.console_publication_records) < 8:
+                    w.console_publication_records.append(line)
+                else:
+                    w.reader_error = True
             if line.startswith("BEGIN "):
                 w.begin_seen = True
             elif line.startswith("FINISH ") and line.endswith(" SUCCESS"):
@@ -909,14 +953,14 @@ def coordinator_main() -> int:
                 all_workers.append(w)
                 active[n] = w  # immediate registration before any blocking operation
                 register_root(w)
-                capture_owned_tree(w)
+                capture_owned_tree(w, force=True, poll_seconds=args.poll_seconds)
                 reader.start()
                 next_number += 1
                 print(f"[COORDINATOR] launched worker={n:02d} root_pid={proc.pid}", flush=True)
-            drain()
+            drain(block=True)
             for n, w in list(active.items()):
                 if w.final_state is None:
-                    capture_owned_tree(w)
+                    capture_owned_tree(w, poll_seconds=args.poll_seconds)
                     if (args.plan_termination and not w.plan_printed and
                             (w.experiment_member is not None or
                              time.monotonic() - w.started > 2)):
@@ -930,6 +974,7 @@ def coordinator_main() -> int:
                     active.pop(n)
                     continue
                 if w.proc.poll() is not None:
+                    w.exit_observed_utc = ISO()  # actual coordinator Popen-exit observation
                     w.exit_code = w.proc.returncode
                     found_orphan, saved = check_exited_worker_for_orphan(w, group_id=group_id)
                     if found_orphan:
@@ -940,7 +985,6 @@ def coordinator_main() -> int:
                     else:
                         w.final_state = "EXITED"
                     active.pop(n)
-            time.sleep(0.04)
     except Exception as exc:
         stop_launches = True
         coordinator_issue = f"Coordinator error: {type(exc).__name__}: {exc}"
@@ -953,12 +997,11 @@ def coordinator_main() -> int:
         if not interrupted:
             signal.signal(signal.SIGINT, old_handler)
         # Always drain pending logs, and never wait indefinitely for a pipe EOF.
-        cutoff = time.monotonic() + 3.0
+        cutoff = time.monotonic() + PIPE_EOF_WAIT_SECONDS
         while time.monotonic() < cutoff:
-            drain()
             if all(w.reader_done.is_set() for w in all_workers) and messages.empty():
                 break
-            time.sleep(0.04)
+            drain(block=True)
         drain(100000)
         stuck_readers = [w.sequence for w in all_workers if not w.reader_done.is_set()]
         if stuck_readers:
@@ -970,7 +1013,7 @@ def coordinator_main() -> int:
             print(f"[COORDINATOR] ORPHAN_SUSPECTED reader threads {stuck_readers}",
                   file=sys.stderr, flush=True)
         for w in all_workers:
-            w.reader.join(timeout=0.05)  # Never wait indefinitely for a pipe EOF.
+            w.reader.join(timeout=PIPE_READER_JOIN_TIMEOUT_SECONDS)  # Never wait indefinitely for a pipe EOF.
             if w.proc.stdout is not None and w.reader_done.is_set():
                 w.proc.stdout.close()
 
@@ -1035,13 +1078,100 @@ def coordinator_main() -> int:
              "marker_write_failed": marker_write_failed,
              "enable_process_termination": ENABLE_PROCESS_TERMINATION,
              "issue": coordinator_issue, "workers": reports}
+    # v0.7 REVIEW SEAM ONLY: must NOT create receipts for POC probes.
+    # Future reviewed method runner supplies identity before launching, and
+    # the group MUST already have passed every v0.6 secondary orphan check.
+    scientific = [w for w in all_workers if w.scientific_receipt_identity is not None]
+    if scientific:
+        if (not ENABLE_SCIENTIFIC_COORDINATION or len(scientific) != len(all_workers) or
+                not successful or os.path.lexists(UNRESOLVED_ORPHAN_MARKER)):
+            final['success'] = False
+            final['status'] = 'FAIL'
+            final['issue'] += ' Scientific receipt path is unapproved or group failed.'
+        else:
+            # This branch is unreachable in ratified POC operation. Keeping it
+            # explicit allows Claude to inspect the proposed safety integration.
+            # The reviewed console module currently uses the method-level
+            # _common namespace. NEVER place method modules before coordinator
+            # modules on the import path: a same-named method-level package
+            # must not shadow coordinator_private (independent reviewer v0.6).
+            receipts_dir = group / 'receipts'
+            try:
+                method_root = str(ROOT / 'src' / 'methods')
+                if method_root not in sys.path:
+                    sys.path.append(method_root)  # do NOT prepend
+                import coordinator_private.multigame_coordinator_exit_receipt_v2 as receipt_module
+                expected_issuer = (ROOT / 'src' / 'coordinator_private' /
+                                   'multigame_coordinator_exit_receipt_v2.py').resolve(strict=True)
+                actual_issuer = Path(receipt_module.__file__).resolve(strict=True)
+                if actual_issuer != expected_issuer:
+                    raise ValueError('untrusted coordinator receipt issuer location')
+                issue_coordinator_receipt = receipt_module.issue_coordinator_receipt
+                receipts_dir.mkdir(exist_ok=False)
+                coordinator_hash = sha256(Path(__file__).read_bytes())
+                for w, report in zip(all_workers, reports, strict=True):
+                    ident = w.scientific_receipt_identity
+                    if ident is None:
+                        raise ValueError('missing coordinator launch identity')
+                    # Popen-observed root exit and captured root creation time.
+                    if (w.proc.poll() is None or w.proc.returncode != 0 or
+                            w.exit_code != 0 or w.final_state != 'EXITED' or
+                            w.root_process is None or w.root_create_time is None or
+                            w.experiment_member is None or w.ownership_errors or
+                            w.exit_observed_utc is None or
+                            w.reader_error or not w.reader_done.is_set()):
+                        raise ValueError('coordinator exit/ancestry/console uncertain')
+                    live, marker_saved = check_exited_worker_for_orphan(w, group_id=group_id)
+                    if live:
+                        final['orphan_suspected'] = True
+                        if not marker_saved:
+                            final['marker_write_failed'] = True
+                        raise ValueError('orphan found at last receipt gate')
+                    status = read_status(w.run_dir)
+                    if (status is None or status.get('pid') != w.experiment_member.pid or
+                            abs(float(status.get('process_create_time_epoch', -1)) -
+                                w.experiment_member.create_time) >= .001):
+                        raise ValueError('run-matched status not from captured experiment')
+                    # C1: issuer opens canonical_result.json ONCE and binds the
+                    # console protocol to the same bytes it hashes.
+                    path = issue_coordinator_receipt(
+                        group_dir=group, run_dir=w.run_dir, identity=ident,
+                        coordinator_sha256=coordinator_hash,
+                        root_pid=w.proc.pid,
+                        root_create_time_epoch=w.root_create_time,
+                        wrapper_exit_code=w.proc.returncode,
+                        exit_observed_utc=w.exit_observed_utc,
+                        console_publication_records=w.console_publication_records)
+                    report['receipt_path'] = str(path.relative_to(ROOT))
+            except Exception as exc:
+                # No invented success on a missing, colliding or invalid receipt.
+                # If any earlier receipt was created, the FAIL group manifest
+                # makes it ineligible for consumption; do not delete evidence.
+                final['success'] = False
+                final['status'] = 'FAIL'
+                final['issue'] += (' Scientific receipt issuance failed: '
+                                   + type(exc).__name__ + ': ' + str(exc))
     save_new(group / "manifest.json", canonical_bytes(final))
-    print(f"[COORDINATOR] {'PASS' if successful else 'FAIL'} successes={total_successes}/{args.count}; "
+    print(f"[COORDINATOR] {final['status']} successes={total_successes}/{args.count}; "
           f"manifest={group / 'manifest.json'}", flush=True)
-    return 130 if interrupted else (0 if successful else 1)
+    return 130 if interrupted else (0 if final['success'] else 1)
 
 
 if __name__ == "__main__":
+    # A distinct synthetic gate must never be interpreted as permission to
+    # execute a scientific E-method. No CLI argument can enable the gate.
+    if "--synthetic-contract-test" in sys.argv[1:]:
+        if not ENABLE_SYNTHETIC_WINDOWS_LIFECYCLE:
+            print("[COORDINATOR] SAFETY STOP: Windows synthetic lifecycle "
+                  "requires separate independent review and owner approval; "
+                  "source gate is False.", file=sys.stderr)
+            raise SystemExit(3)
+        from coordinator_private.multigame_windows_lifecycle_v1 import run_windows_synthetic
+        try:
+            raise SystemExit(run_windows_synthetic(sys.modules[__name__], sys.argv[1:]))
+        except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+            print(f"[COORDINATOR] ERROR {type(exc).__name__}: {exc}", file=sys.stderr)
+            raise SystemExit(2) from exc
     try:
         raise SystemExit(coordinator_main())
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:

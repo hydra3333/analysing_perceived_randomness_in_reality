@@ -1,3 +1,8 @@
+# HISTORICAL FILE — NOT AN AUTHORITATIVE DEPENDENCY SPECIFICATION.
+# Kept unchanged in the committed baseline; PACKAGE 2 DOES NOT INSTALL PACKAGES.
+# The ONLY owner-authorised installer/upgrade source is
+# install_upgrade_dependencies_into_venv.bat (default INSTALL+UPGRADE).
+# This Package 2 scratch overlay must not be installed as a requirements lock.
 beautifulsoup4==4.15.0
 certifi==2026.10.19
 charset-normalizer==3.5.2
