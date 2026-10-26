@@ -1,0 +1,30 @@
+# Method ranking integration - installation manifest v1 (external manifest for register v0.4)
+#
+# Owner ratification: integration candidates v3 ratified 27 October 2026.
+# v3 package: review/Predictive_Randomness_MR_Integration_Candidates_v3.zip
+#   af0e3b81d4c8deb5c818ac47c47ac8498059628b66dd681cdd9cc1c43d9d5324
+# Base commit: c5424839d8fc9d620bae132873e8594b5651d2ce
+# Prepared by Claude, 27 October 2026. The installed editions are the v3 candidates plus the
+# status edits in v3_to_installed.diff, applied by install_status_edits.py (register v0.4,
+# 'On owner ratification'). No other text changed; protected blocks byte-identical.
+#
+# SHA-256 of UTF-8 Git-stored content (LF). This file cannot list its own hash.
+# This register's own SHA-256 is the RATIFICATION_REGISTER_v0_4.md line below.
+#
+# v3 candidate -> installed edition
+#   e80356aadb72f52c6e695bb30960d32923ae1c9820bc759df1d6675567353c2e -> 53e30a3e649b48b8a88923d08bf578caf04a4ce93d6ea6468891ca97e93a57b6  doc/Predictive_Randomness_Evaluation_and_Reporting_Specifications_R3_v0_5.md
+#   62d1c9c99e7dd33fe5c2496615229d5a67e09d3c6f6b68ada2146b60999e53da -> 2c67db8fcba50e469b0490cd85caf2fe964b3b79fc17fe7da4ebf033b91d9a3e  doc/Predictive_Randomness_Experimental_Method_Specifications_R2_v0_5.md
+#   d27115e095e309fc1e6d68099ee397432f561a7cb51eee722522a85493203875 -> 32cf157d9ce8850e790274e962236f2be3b50a8bdee7ec94a28ba00d7fd452ec  doc/Predictive_Randomness_Software_Architecture_Discussion_v0_8.md
+#   ee552a5b530b38604e7b8b8129e5c1ba9485cbe423658e4f5d73bbd9d8b52349 -> 6a281e05127e7db976a16557ba69006327a8d615c2b0ec90bb6b34ee1c648a73  doc/Predictive_Randomness_Research_Project_Proposal_v0_6.md
+#   1c67b074d50d1103a99c3bd98484f9dc3791405430997af8dce18b94950ddf2e -> cdb8c24eeb1a855a042cfebed30a801e9e36a654ccc655b5a2b8cc4eba4585d7  doc/RATIFICATION_REGISTER_v0_4.md
+#
+# Installed files (all newly added paths):
+33ddaf9c1d0d35726088d832893f72c7c97e532967c24b63cc36e6822f2693cf  doc/HANDOVER/Claude_Checkpoint_v2.md
+53e30a3e649b48b8a88923d08bf578caf04a4ce93d6ea6468891ca97e93a57b6  doc/Predictive_Randomness_Evaluation_and_Reporting_Specifications_R3_v0_5.md
+2c67db8fcba50e469b0490cd85caf2fe964b3b79fc17fe7da4ebf033b91d9a3e  doc/Predictive_Randomness_Experimental_Method_Specifications_R2_v0_5.md
+6a281e05127e7db976a16557ba69006327a8d615c2b0ec90bb6b34ee1c648a73  doc/Predictive_Randomness_Research_Project_Proposal_v0_6.md
+32cf157d9ce8850e790274e962236f2be3b50a8bdee7ec94a28ba00d7fd452ec  doc/Predictive_Randomness_Software_Architecture_Discussion_v0_8.md
+cdb8c24eeb1a855a042cfebed30a801e9e36a654ccc655b5a2b8cc4eba4585d7  doc/RATIFICATION_REGISTER_v0_4.md
+1d01adeab771e94dec8f7fb8acc79f1c44ec5431f5c9ac0d2f7a49b5d2a5a95d  review/Independent_ChatGPT_Focused_Review_MR_Integration_Candidates_v3.md
+3d2929479b40474edbe5d997700b2aad0895cec8d0b5011de9145f8540439108  review/MR_Integration_Install_v1/install_status_edits.py
+57314ac73e1da8601824806f651a5f5be7442ea8aac7874893f0c33fed80a1cd  review/MR_Integration_Install_v1/v3_to_installed.diff
