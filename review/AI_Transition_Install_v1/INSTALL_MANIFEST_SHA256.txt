@@ -1,0 +1,31 @@
+# AI roles transition - installation manifest v1 (external manifest for register v0.5)
+#
+# Owner ratification, 27 October 2026: H-1 v1r1, H-2 v1r2 (including R-8..R-11 and section 3.1),
+# H-3 v1r1 and register v0.5, with the final mechanical edits in ratified_to_installed.diff
+# (applied by finalise_transition.py). H-2 is installed byte-for-byte as its author delivered it.
+# Base commit: ae76c29783856dbb9bf0076fabe0c3612340314e. Prepared by Claude, 27 October 2026.
+# The commit that installs these files is the EFFECTIVE COMMIT of the AI roles transition; no file
+# can name it. Claude records its ID in post-push verification.
+#
+# SHA-256 of UTF-8 Git-stored content (LF). This file cannot list its own hash.
+# Register v0.5's own SHA-256 is the RATIFICATION_REGISTER_v0_5.md line below.
+#
+# Installed files (all newly added paths):
+8b01c57fd8804029906e1e9c87e8ecef18edb914a269e43a45dac90880703ce5  doc/HANDOVER/AI_Roles_Transition_Record_H3_v1r1.md
+53f3af3f0845ea8534e25e896ffc8790fe685a7df9ecad8f7d7e48cd53f234a2  doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r2.md
+3223c41732888ea56c5458b365488660d157c93902b3745ed71d7d300fc2751e  doc/HANDOVER/Claude_Primary_Handover_H1_v1r1.md
+551c1b42e99b58ad313dabe7d533e5650db83edce58e04f954b2f616c77afb3f  doc/RATIFICATION_REGISTER_v0_5.md
+2fc8e6baca56b0484fc91f7bbd66c3a79b6f282632d0b4afeb4a558b0d0617f1  review/AI_Transition_Install_v1/finalise_transition.py
+032b0b5659a1144026e00e18ae6649a07519d20d68489519dcbdc96ed45a1ef4  review/AI_Transition_Install_v1/make_register_v05.py
+447ced43fdc88cc2c94c24aab44bfb5c48233ff2286ff464bf1564685edfd74f  review/AI_Transition_Install_v1/ratified_to_installed.diff
+ebc8c9d53516c91363c36476dbab2c4512406fb7a2ae989171cde270ccc85a97  review/AI_Transition_Install_v1/register_v0_4_to_v0_5.diff
+f083238376d9688639948ef1b8c227d08e15c3faaf6295fad05d94044ab1e420  review/ChatGPT_Reviewer_Handover_H2_v1.md
+0f9a8a98a8a56231e2730891ed71f1d2ed0b4afb890458de94b03f61c45668b5  review/ChatGPT_Reviewer_Handover_H2_v1r1.md
+f1fce84c6e6c922b1340a6a7dcb1430a581677467e595f5ad181e92de65ea131  review/Claude_Fact_Check_H2_v1_v1.md
+54827b52dba4a7e228129d92469372590aa3c74afba1648369379f0bda982f24  review/Claude_Fact_Check_H2_v1r2_v1.md
+2286a56ed81c5414e7d1e035a250d2862ebd7fc7579626d3ed564cf7b1a177ae  review/Claude_Transition_Docs_Recheck_v1r2.zip
+4ba3367f8ce35d76ab8b1dc5565d0c6ee2f319cd038e4479327af17531f19632  review/Claude_Transition_Docs_Review_v1.zip
+70df346e6779e653f3ce3b9d349efb4b0788527eab178141897a5061e1965c49  review/Independent_ChatGPT_Focused_Recheck_Claude_Transition_Docs_v1r2.md
+e19cb8754b5106eb26358ac21bd46edaed8624a9db02c1aafcc33ff349b8e645  review/Independent_ChatGPT_Focused_Review_MR_Integration_Install_v1.md
+d6c4efc315b18a88323d12e643c0657830566f1107cc0157bea1bf9773fdbb3e  review/Independent_ChatGPT_Review_Claude_Transition_Docs_v1.md
+154f54d8afb8870c7e4cc613fc9f69d656f8d8bbfbe343cc924f1566c67cd162  review/MR_Integration_Install_v1r1.zip
