@@ -327,17 +327,30 @@ class V011ReaderTests(unittest.TestCase):
                 load_pinned_draw_view(repo_root=root,run_manifest={**normal,'include_dates':True})
             p=root/'source_data'/'OZLOTTO_results_master.csv'
             original=p.read_bytes()
-            p.unlink()
-            p.symlink_to(root/'original.csv')
-            with self.assertRaises(ValueError):load_pinned_draw_view(repo_root=root,run_manifest=normal)
-            p.unlink();p.write_bytes(original)
-            sibling=root/'linked.csv'
-            try:
-                os.link(p,sibling)
-            except (OSError,NotImplementedError):
-                self.skipTest('hardlinks unsupported by test filesystem')
-            with self.assertRaisesRegex(ValueError,'hardlinked'):
-                load_pinned_draw_view(repo_root=root,run_manifest=normal)
+            # TH-1: symlink and hardlink refusal are separate subtests, so that a platform
+            # which cannot create one kind of link (Windows without the symlink privilege,
+            # WinError 1314) still tests the other. A link that cannot be created is a skip,
+            # never a pass.
+            with self.subTest(link='symlink'):
+                (root/'original.csv').write_bytes(original)
+                p.unlink()
+                try:
+                    try:
+                        p.symlink_to(root/'original.csv')
+                    except (OSError,NotImplementedError):
+                        self.skipTest('platform does not permit creating symlinks; symlink refusal not tested here')
+                    with self.assertRaises(ValueError):load_pinned_draw_view(repo_root=root,run_manifest=normal)
+                finally:
+                    if p.is_symlink() or p.exists(): p.unlink()
+                    p.write_bytes(original)
+            with self.subTest(link='hardlink'):
+                sibling=root/'linked.csv'
+                try:
+                    os.link(p,sibling)
+                except (OSError,NotImplementedError):
+                    self.skipTest('hardlinks unsupported by test filesystem')
+                with self.assertRaisesRegex(ValueError,'hardlinked'):
+                    load_pinned_draw_view(repo_root=root,run_manifest=normal)
 
     def test_only_legacy_e1_allowed_at_boundary(self):
         for change in (dict(method_id='E_2'),dict(variant_id='SYNTHETIC'),

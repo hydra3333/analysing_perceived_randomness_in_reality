@@ -1,8 +1,9 @@
 """Non-launching Package 2 v0.11 timing, AST, and safety proof checks.
 
 No subprocesses, Windows lifecycle operations, gate changes, master updates,
-scientific score evaluation or holdout reads. On review, set V06_BASELINE
-path to clean source if running against a delta-only checkout.
+scientific score evaluation or holdout reads. The protected-function AST check uses the
+packaged v0.6 fixture under tests/fixtures/coordinator_v0_6_baseline/ (P2-R1-O3); V06_BASELINE
+may point at another copy.
 """
 from __future__ import annotations
 import ast
@@ -52,12 +53,15 @@ class StaticSafetyTests(unittest.TestCase):
         self.assertEqual(list(coord.receive_messages(q,poll_seconds=1.0)),
                          [(1,'invented synthetic log')])
 
-    def test_protected_v06_ast_mechanically_equal_when_baseline_available(self):
+    def test_protected_v06_ast_mechanically_equal(self):
+        # P2-R1-O3: never skips. The committed v0.6 coordinator (commit d09d669) is packaged as a
+        # hash-pinned, non-importable fixture; V06_BASELINE may still point at another copy.
         baseline=(Path(os.environ['V06_BASELINE']) if 'V06_BASELINE' in os.environ
-                  else ROOT.parent/'baseline'/'src'/'Powerball_Experiment_Coordinator.py')
-        if not baseline.exists():
-            self.skipTest('baseline coordinator not packaged into review delta; see evidence/AST JSON')
-        before=baseline.read_bytes()
+                  else ROOT/'tests'/'fixtures'/'coordinator_v0_6_baseline'/
+                       'Powerball_Experiment_Coordinator_v0_6.py.txt')
+        self.assertTrue(baseline.is_file(), f'v0.6 baseline coordinator missing: {baseline}')
+        # Git stores LF; a Windows checkout may hold CRLF, so hash the LF form.
+        before=baseline.read_bytes().replace(b'\r\n',b'\n')
         self.assertEqual(hashlib.sha256(before).hexdigest(),
             '2e23d55049afa8cf336a14e60d7ee52f3ea5043fda442da4d6837f81f79c762b')
         after=(ROOT/'src'/'Powerball_Experiment_Coordinator.py').read_bytes()
