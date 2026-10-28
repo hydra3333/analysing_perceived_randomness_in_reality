@@ -1,0 +1,13 @@
+--- E1ALIGN_Code_Install_v1_candidate/VERIFY_E1ALIGN_INSTALL.py	2026-10-28 21:31:07.367354547 +1030
++++ E1ALIGN_Code_Install_v1/VERIFY_E1ALIGN_INSTALL.py	2026-10-28 22:17:18.064400944 +1030
+@@ -29,8 +29,8 @@
+ ALLOW_SHA = 'aaf7f46e529ff42036cf7f943c4efc6232edbd2c3ff463e9e1be02f10a975164'          # the reviewed frozen allowlist (E1-ALIGN v0.2r1 design evidence)
+ DATA = json.loads(r'''{
+  "new_sha": {
+-  "doc/RATIFICATION_REGISTER_v0_10.md": "c59192acf988a754d459df47a49084d26ca9928e3988f6bc8a13dda4d490c957",
+-  "review/E1ALIGN_Code_Install_v1/INSTALL_MANIFEST_SHA256.txt": "df028dd0c2c0ba3420841ff1965b0bbeb537cd3baf0fab5e76eb1f2bbe89c100",
++  "doc/RATIFICATION_REGISTER_v0_10.md": "8ee8307e3c98eabbf24743391c7ebb821e6700f8efa8a093996f97d3d43475a4",
++  "review/E1ALIGN_Code_Install_v1/INSTALL_MANIFEST_SHA256.txt": "66109201929822aaa715add71d74244795dc412c107d0a2c1f3acca830f1dddd",
+   "review/E1ALIGN_Code_Install_v1/check_imports_linux_py313.txt": "9e5ef8c69dca78fac5089dab3197f733ccfe87b6c7c74d9bcccd9ff9d5374f26",
+   "review/E1ALIGN_Code_Install_v1/e1align_allowlist.json": "aaf7f46e529ff42036cf7f943c4efc6232edbd2c3ff463e9e1be02f10a975164",
+   "review/E1ALIGN_Code_Install_v1/e1align_checks_output_linux.txt": "85ec7066c3ba8af733bd30c19bdadd2d6ed56dc97cdc641bfe60b5f6e1845dd6",

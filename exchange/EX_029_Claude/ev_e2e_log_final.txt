@@ -1,0 +1,44 @@
+base: ec01766b6f3a130e32328470b5123fc978b3effa  python: Python 3.13.17
+== lf: happy path
+PRE PASS: clean tree; src/ and tests/ exactly as at base b64c2a6; 16 new paths absent. Nothing was changed.
+moves staged: 10 index lines
+POST PASS: index has exactly the 5 moves; the 10 edited files equal predecessor + reviewed allowlist (22 blocks); 11 new files with the expected bytes; no old path remains.
+total ran 84 (expected 84); skips 0
+SUITE PASS: all 84 tests ran and passed; only the allowed symlink skips, if any.
+RESULT PASS
+untracked or changed after suite/check: 0 unexpected; pycache in tree: 0
+staged:      11 A       6 M       5 R 
+COMMITTED PASS: the last commit (d46ced8) made the 5 moves, edited 10 files and added 11; all Git blobs match.
+-- E1A-T13 recovery: git revert in this disposable clone
+revert tree identical to base: yes
+Ran 79 tests in 3.406s  OK 
+== crlf: happy path
+PRE PASS: clean tree; src/ and tests/ exactly as at base b64c2a6; 16 new paths absent. Nothing was changed.
+moves staged: 10 index lines
+POST PASS: index has exactly the 5 moves; the 10 edited files equal predecessor + reviewed allowlist (22 blocks); 11 new files with the expected bytes; no old path remains.
+total ran 84 (expected 84); skips 0
+SUITE PASS: all 84 tests ran and passed; only the allowed symlink skips, if any.
+RESULT PASS
+untracked or changed after suite/check: 0 unexpected; pycache in tree: 0
+staged:      11 A       6 M       5 R 
+COMMITTED PASS: the last commit (c49df9f) made the 5 moves, edited 10 files and added 11; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, unlisted edit on a kept line:
+VERIFICATION STOP: FAIL: src/methods/E_001/e1_historical_appearance_frequency.py: differs from predecessor + allowlist
+-- post, extra file in E_001:
+VERIFICATION STOP: FAIL: untracked files are not exactly the new files: src/methods/E_001/extra.py
+-- post, moved-unchanged file edited:
+VERIFICATION STOP: FAIL: working-tree changes are not exactly the 10 edited files: ('src/methods/E_001/e1_standalone_contract.py', 'M')
+-- post, coordinator touched:
+VERIFICATION STOP: FAIL: working-tree changes are not exactly the 10 edited files: ('src/Powerball_Experiment_Coordinator.py', 'M')
+POST PASS: index has exactly the 5 moves; the 10 edited files equal predecessor + reviewed allowlist (22 blocks); 11 new files with the expected bytes; no old path remains.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths: ('extra.txt', 'A')
+[HEAD and parents] [last 3 commits] [last commit paths] [upstream] [commits not yet pushed] [working tree and index] --- Do NOT push. Do NOT reset. Send Claude this whole output. --- 
+-- post, one move missing:
+VERIFICATION STOP: FAIL: index is not exactly the 5 moves: ('src/methods/E_001/multigame_e1.py', 'A'), ('src/methods/_common/multigame_e1.py', 'D')
+-- damaged allowlist in package:
+VERIFICATION STOP: FAIL: package allowlist is not the reviewed one
+end
