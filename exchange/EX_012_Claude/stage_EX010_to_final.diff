@@ -1,0 +1,18 @@
+--- STAGE_EXACT_FILES.cmd@EX_010
++++ STAGE_EXACT_FILES.cmd@final
+@@ -1,6 +1,6 @@
+ @echo off
+ setlocal
+-rem OPTIONAL owner-run staging of the 41 NAMES-1 content paths (the renames are already staged).
++rem OPTIONAL owner-run staging of the 42 NAMES-1 content paths (the renames are already staged).
+ rem No commit, push or deletion.
+ git add -- ^
+   "src\Powerball_Experiment_Coordinator.py" ^
+@@ -35,6 +35,7 @@
+   "doc\RATIFICATION_REGISTER_v0_8.md" ^
+   "review\Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md" ^
+   "review\Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md" ^
++  "review\Independent_ChatGPT_EX_011_DOC2_Register_v0_8_NAMES1_Final_Recheck.md" ^
+   "review\Independent_ChatGPT_NAMES1_Code_Review_v0_1.md" ^
+   "review\Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md" ^
+   "review\Independent_ChatGPT_Register_v0_8_Review_v0_1.md" ^

@@ -1,0 +1,28 @@
+--- INSTALL_INSTRUCTIONS.md@EX_010
++++ INSTALL_INSTRUCTIONS.md@final
+@@ -1,6 +1,6 @@
+ # NAMES-1 - code installation (only after the reviewer's code RECHECK PASS and the owner's go-ahead)
+ 
+-DOC-2 must already be installed. Windows CMD, repository root. `git status --short` must print nothing first. Delete any earlier extracted `E:\TEMP\NAMES1_*` folders, then save this ZIP to `E:\TEMP` and extract it there (`tar -xf "E:\TEMP\NAMES1_Code_Install_v1.zip" -C E:\TEMP`).
++DOC-2 must already be installed. Windows CMD, repository root. First run `git pull`, so that your copy includes Claude's latest `exchange/` records (otherwise your final push would be refused). Then `git status --short` must print nothing: remove anything you have placed in the repository yourself, such as copies of EX files under `review/` (they are already recorded in `exchange/`). Delete any earlier extracted `E:\TEMP\NAMES1_*` folders, then save this ZIP to `E:\TEMP` and extract it there (`tar -xf "E:\TEMP\NAMES1_Code_Install_v1.zip" -C E:\TEMP`).
+ 
+ ## 1. Check, rename, copy, check
+ 
+@@ -11,7 +11,7 @@
+ python "E:\TEMP\NAMES1_Code_Install_v1\VERIFY_NAMES1_INSTALL.py" --repo . --phase post
+ ```
+ 
+-Expected: `PRE PASS`; `RENAMES DONE`; `41 File(s) copied` (27 replace renamed or existing files, as intended; 14 are new); `POST PASS`.
++Expected: `PRE PASS`; `RENAMES DONE`; `42 File(s) copied` (27 replace renamed or existing files, as intended; 15 are new); `POST PASS`.
+ 
+ ## 2. Tests and import checks (offline; nothing is changed)
+ 
+@@ -31,7 +31,7 @@
+ python "E:\TEMP\NAMES1_Code_Install_v1\VERIFY_NAMES1_INSTALL.py" --repo . --phase committed
+ ```
+ 
+-Expected: the staged list shows renames (`R`) and modifications (`M`), and 14 lines starting with `A`; then `COMMITTED PASS`. **Push only after `COMMITTED PASS`:**
++Expected: the staged list shows renames (`R`) and modifications (`M`), and 15 lines starting with `A`; then `COMMITTED PASS`. **Push only after `COMMITTED PASS`:**
+ 
+ ```bat
+ git push

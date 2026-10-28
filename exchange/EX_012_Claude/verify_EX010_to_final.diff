@@ -1,0 +1,27 @@
+--- VERIFY_NAMES1_INSTALL.py@EX_010
++++ VERIFY_NAMES1_INSTALL.py@final
+@@ -86,6 +86,7 @@
+   "doc/RATIFICATION_REGISTER_v0_8.md",
+   "review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md",
+   "review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md",
++  "review/Independent_ChatGPT_EX_011_DOC2_Register_v0_8_NAMES1_Final_Recheck.md",
+   "review/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md",
+   "review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md",
+   "review/Independent_ChatGPT_Register_v0_8_Review_v0_1.md",
+@@ -99,13 +100,14 @@
+  "new_sha": {
+   "doc/Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md": "d9ffd900c74d8a0cc5002bb78c83121f818514cd88ca9150bada8d6d1fa6653a",
+   "doc/Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md": "07bda3e4a8a99bfc611a76cec672f8642532186567737e1a23de5e5701489e5a",
+-  "doc/RATIFICATION_REGISTER_v0_8.md": "aac76fa0cbc22c332e55ce6c985f99f4829d7bbf83c327513a76439e29e71671",
++  "doc/RATIFICATION_REGISTER_v0_8.md": "3f217c6875d443a0cc1bba2f6c329b1fda455fb4a97bf7fe06090394736fffcf",
+   "review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md": "7a887a780875da5b0f3f315b84d695c363017f8078aa6f6530939a9e5e9683c9",
+   "review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md": "fbe0584ab69d7c59403bfc1f2e65aa3d868573d4fa17c38e6770d0ede7810248",
++  "review/Independent_ChatGPT_EX_011_DOC2_Register_v0_8_NAMES1_Final_Recheck.md": "8c632dbc29916cded75efedecf6e3eea8918f07157e198e9fed2a72e34af6d0e",
+   "review/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md": "767fb75084f23180f8573a3bb0d759a8461fa71f3bf01e185a39e1bcde5646d7",
+   "review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md": "ba64d1ef5a05718ac87f80802a74f08bde88b224c75a6cf58e6e9b7fb946df13",
+   "review/Independent_ChatGPT_Register_v0_8_Review_v0_1.md": "536bbd6807fa921e2f9426a6c66172754ec0c1e9370e9258b708c649ac7caab4",
+-  "review/NAMES1_Code_Install_v1/INSTALL_MANIFEST_SHA256.txt": "25f8623b17bbde0445a780ab1a0183f787a95410193e5b81acbeadbb407cbdc8",
++  "review/NAMES1_Code_Install_v1/INSTALL_MANIFEST_SHA256.txt": "9d8664f38c33ee374ace06d29d98a4d84477af9199359e22bfcef84e1897f6a7",
+   "review/NAMES1_Code_Install_v1/ast_check_output.txt": "e85415cdf57ebb563bab1cb7528ac38cc922dbe1bbe29a213782d762d64a98db",
+   "review/NAMES1_Code_Install_v1/names1_allowlist.tsv": "2074f152b52f0adadd581546ef704341962cffe0c2d00a4d59d8301e1a3c315f",
+   "review/NAMES1_Code_Install_v1/negative_checks_output.txt": "362f43584f6b2dcf908278c4d80a2da3237107a627a41cc81ac5d70c721ee1c6",
