@@ -1,0 +1,39 @@
+base: d8bb8d84338016c8b6803ff3857363282a9e8307
+== lf: happy path
+PRE PASS: clean tree; 6 new paths absent. Nothing was changed.
+POST PASS: exactly the 6 expected new paths, all with the expected bytes.
+staged: 6
+COMMITTED PASS: the last commit (071a913) added exactly 6 files; all Git blobs match.
+-- negative: pre after the commit
+VERIFICATION STOP: FAIL: new path already exists: doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md; STOP
+== crlf: happy path
+PRE PASS: clean tree; 6 new paths absent. Nothing was changed.
+POST PASS: exactly the 6 expected new paths, all with the expected bytes.
+staged: 6
+COMMITTED PASS: the last commit (bed110e) added exactly 6 files; all Git blobs match.
+-- negative: pre after the commit
+VERIFICATION STOP: FAIL: new path already exists: doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md; STOP
+== negatives before commit
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, extra untracked file:
+VERIFICATION STOP: FAIL: unexpected new paths: stray.txt
+-- post, tracked file modified:
+VERIFICATION STOP: FAIL: changes other than new files:
+-- post, wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: doc/RATIFICATION_REGISTER_v0_9.md
+-- post, missing file:
+VERIFICATION STOP: FAIL: unexpected new paths: review/DOC3_Register_v0_9_candidate_to_final.diff
+POST PASS: exactly the 6 expected new paths, all with the expected bytes.
+== negatives after commit
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not add exactly the expected paths: [('doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md', 'A'), ('doc/RATIFICATION_REGISTER_v0_9.md', 'A'), ('extra.txt', 'A'), ('review/DOC3_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/DOC3_Register_v0_9_candidate_to_final.diff', 'A'), ('review/Independent_ChatGPT_EX_016_DOC3_H1_v1r3_Register_v0_9_Review.md', 'A'), ('review/Independent_ChatGPT_EX_018_DOC3_Register_v0_9_r1_Recheck.md', 'A')]
+-- committed, untracked file left:
+VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+-- committed, one file left out (shown untracked):
+VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+-- committed STOP prints identities and the do-not-push line:
+[HEAD and parents] [last 3 commits] [last commit paths] [upstream] [commits not yet pushed] [working tree and index] --- Do NOT push. Do NOT reset. Send Claude this whole output. --- 
+== damaged package
+VERIFICATION STOP: FAIL: package file damaged: doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md
+end
