@@ -87,8 +87,25 @@ class StaticSafetyTests(unittest.TestCase):
 
     def test_method_loader_import_firewall_except_accepted_legacy_e1(self):
         accepted_legacy='E_001_Historical_Appearance_Frequency.py'
-        for method in (ROOT/'src'/'methods').glob('*.py'):
-            if method.name==accepted_legacy:
+        # E1-ALIGN: method folders are scanned too. Every reference to the shared
+        # reader is identified by module AND imported name (so 'from _common import
+        # game_draws_reader' is caught), and every textual mention of the reader or of
+        # source_data is counted. E_1's accepted legacy references inside its folder
+        # are allowed exactly: file, form, module, name, alias and count. Anything
+        # else fails, including a new file in E_001/, and every allowance must be used.
+        # This is a static regression guard, not a defence against obfuscated dynamic
+        # imports; the exact-diff review of each package remains mandatory.
+        allowed_imports={('E_001/e1_common_reader_bridge.py','from','_common.game_draws_reader',
+                          'DrawView',None):1}
+        allowed_text={('E_001/e1_common_reader_bridge.py','game_draws_reader'):1,
+                      ('E_001/e1_training_view.py','source_data'):1}
+        used_imports={}
+        used_text={}
+        methods=ROOT/'src'/'methods'
+        files=sorted([*methods.glob('*.py'),*methods.glob('E_[0-9][0-9][0-9]/**/*.py')])
+        for method in files:
+            rel=method.relative_to(methods).as_posix()
+            if rel==accepted_legacy:
                 # Its own previously accepted standalone historical reader is
                 # grandfathered; do not modify a frozen E1 golden source file.
                 continue
@@ -96,11 +113,26 @@ class StaticSafetyTests(unittest.TestCase):
             tree=ast.parse(contents)
             for node in ast.walk(tree):
                 if isinstance(node,ast.ImportFrom):
-                    self.assertNotIn('game_draws_reader',node.module or '')
+                    module=('.'*node.level)+(node.module or '')
+                    for alias in node.names:
+                        if 'game_draws_reader' in module or 'game_draws_reader' in alias.name:
+                            key=(rel,'from',module,alias.name,alias.asname)
+                            self.assertIn(key,allowed_imports,f'unauthorised reader import in {rel}: {key}')
+                            used_imports[key]=used_imports.get(key,0)+1
                 elif isinstance(node,ast.Import):
                     for alias in node.names:
-                        self.assertNotIn('game_draws_reader',alias.name)
-            self.assertNotIn('source_data',contents)
+                        if 'game_draws_reader' in alias.name:
+                            key=(rel,'import',alias.name,None,alias.asname)
+                            self.assertIn(key,allowed_imports,f'unauthorised reader import in {rel}: {key}')
+                            used_imports[key]=used_imports.get(key,0)+1
+            for word in ('game_draws_reader','source_data'):
+                n=contents.count(word)
+                if n:
+                    key=(rel,word)
+                    self.assertIn(key,allowed_text,f'unauthorised {word} reference in {rel}')
+                    used_text[key]=used_text.get(key,0)+n
+        self.assertEqual(used_imports,allowed_imports)
+        self.assertEqual(used_text,allowed_text)
 
     def test_no_retired_acquisition_overlay_importable(self):
         from importlib.util import find_spec

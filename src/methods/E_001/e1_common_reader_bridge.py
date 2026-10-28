@@ -4,7 +4,7 @@ It does no I/O, scoring, process control or result publication.
 """
 from __future__ import annotations
 
-from .game_draws_reader import DrawView
+from _common.game_draws_reader import DrawView
 from .e1_training_view import build_e1_forecast
 
 def prepared_e1_forecast(view: DrawView) -> tuple[dict, str]:

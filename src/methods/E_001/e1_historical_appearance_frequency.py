@@ -10,15 +10,12 @@ import json
 import re
 from collections.abc import Mapping, Sequence
 
+from _common.canonical_encoding import canonical_bytes, length32_tuple as _length32_tuple
+
 METHOD_ID = 'E_1'
 VARIANT_ID = 'FULL_HISTORY_RAW_COUNTS_V1'
 TIE_VERSION = 'TIE_SHA256_V1'
 DOMAIN = 'PREDICTIVE_RANDOMNESS/TIE_SHA256_V1'
-
-
-def canonical_bytes(value: object) -> bytes:
-    return (json.dumps(value, ensure_ascii=True, sort_keys=True,
-                       separators=(',', ':'), allow_nan=False) + '\n').encode('ascii')
 
 
 def _integer(x: object, what: str) -> int:
@@ -75,19 +72,6 @@ def training_sha256(prefix: Sequence[Mapping[str, object]]) -> str:
     identity = {'schema': 'E1_SYNTHETIC_TRAINING_VIEW_V0_1',
                 'source_kind': 'SYNTHETIC_TEST_ONLY', 'records': prefix}
     return hashlib.sha256(canonical_bytes(identity)).hexdigest()
-
-
-def _length32_tuple(values: Sequence[object]) -> bytes:
-    """Ratified tuple encoding: 4-byte unsigned LE UTF-8 byte length + bytes."""
-    parts = []
-    for value in values:
-        if type(value) is not str:
-            raise ValueError('tie tuple field must be a canonical string')
-        encoded = value.encode('utf-8')
-        if len(encoded) > 0xffffffff:
-            raise ValueError('tie tuple field exceeds uint32 byte length')
-        parts.append(len(encoded).to_bytes(4, byteorder='little') + encoded)
-    return b''.join(parts)
 
 
 def tie_digest(training_digest: str, target: int, barrel: str, label: int) -> str:

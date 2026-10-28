@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
             parser.error('synthetic mode may not read the real source_data directory')
     else:
         root = project / 'transitory_data' / 'p3_standalone_runs'
-    from _common.e1_standalone_contract import (
+    from E_001.e1_standalone_contract import (
         begin, canonical_json, create_only, finish, publish_failed_manifest,
         publish_success_manifest, sha)
     # Durable STARTED happens before CSV/model/numerics imports or source reads.
@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     print(f'[E_001] STARTED run={args.run_id} mode={mode} target={args.target}', flush=True)
     try:
-        from _common.e1_training_view import load_permitted_u_view, build_e1_forecast
+        from E_001.e1_training_view import load_permitted_u_view, build_e1_forecast
         rows, digest = load_permitted_u_view(args.source, args.target, source_kind=mode,
                                            trusted_source_dir=(trusted_real_source if mode == 'REAL_HISTORICAL_DEVELOPMENT' else None))
         result = build_e1_forecast(rows, digest, args.target, source_kind=mode)

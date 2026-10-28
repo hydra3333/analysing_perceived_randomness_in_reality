@@ -9,7 +9,7 @@ import hashlib
 import re
 from collections.abc import Mapping, Sequence
 
-from _common.e1_historical_appearance_frequency import (
+from E_001.e1_historical_appearance_frequency import (
     _length32_tuple, canonical_bytes, DOMAIN, METHOD_ID, VARIANT_ID, TIE_VERSION,
 )
 from _common.game_profiles import GameProfile

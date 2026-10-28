@@ -9,7 +9,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'/'methods'))
 from _common.game_profiles import POWERBALL, OZLOTTO
-from _common.multigame_e1 import forecast
+from E_001.multigame_e1 import forecast
 from _common.multigame_standalone_contract import (
     begin_synthetic, publish_synthetic_success, json_bytes,
 )

@@ -1,0 +1,13 @@
+environment: Linux 6.18.44-fc-v180 Python 3.15.0b4 /tmp/claude-0/-home-claude/5e241a26-14db-516d-9aeb-bda4dbe85524/scratchpad/v315/bin/python
+tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK
+tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK
+tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK
+tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK
+tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK
+tests.test_e1_align                                  ran   5 (expected  5)  skipped 0  OK
+tests.test_e1_standalone                             ran  13 (expected 13)  skipped 0  OK
+tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK
+total ran 84 (expected 84); skips 0
+SUITE PASS: all 84 tests ran and passed; only the allowed symlink skips, if any.
