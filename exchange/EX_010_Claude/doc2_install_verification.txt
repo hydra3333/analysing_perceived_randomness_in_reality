@@ -1,0 +1,38 @@
+DOC-2 installation - Claude's verification from GitHub (28 October 2026)
+
+GitHub main: 908db9ea9d4a37b17833f5d43919804c78ef7e14
+DOC-2 commit: 908db9ea9d4a37b17833f5d43919804c78ef7e14  parents f300f2dfcd5c6a5efccb4c8b1040368728e2ad69  DOC-2: E2R-1 specification v0.3r3 (ratified) and register v0.7
+Owner's earlier history commit: 2c766644215a315edd8b92130e691224b60cd3de  parents 38fc60e03ea0766f72476cbab7c0e1eb5bd59d07  x
+Merge: f300f2dfcd5c6a5efccb4c8b1040368728e2ad69  parents 2c766644215a315edd8b92130e691224b60cd3de 40f423a3121200913dcc0f530dd0f5f0b01f4125
+
+Paths added by 908db9e (git diff --name-status f300f2d 908db9e):
+A	doc/Predictive_Randomness_E2_Readiness_Method_Contract_Specification_v0_3r3.md
+A	doc/RATIFICATION_REGISTER_v0_7.md
+A	review/DOC2_Install_v1/INSTALL_MANIFEST_SHA256.txt
+A	review/DOC2_Register_v0_7_candidate_to_final.diff
+
+Paths added by 2c76664 relative to 38fc60e:
+A	review/DOC2_Register_v0_7_Recheck_r2.zip
+A	review/DOC2_Register_v0_7_Review_v1.zip
+A	review/Independent_ChatGPT_E1_ALIGN_Early_Design_Comments_28Oct2026.md
+A	review/Independent_ChatGPT_Focused_Recheck_DOC2_Register_v0_7_r2.md
+A	review/Independent_ChatGPT_Focused_Recheck_NAMES1_Spec_v0_2.md
+A	review/Independent_ChatGPT_R3_Design_Review_NAMES1_v0_1.md
+A	review/Independent_ChatGPT_Review_DOC2_Register_v0_7_v1.md
+A	review/NAMES1_Spec_Recheck_v0_2.zip
+A	review/NAMES1_Spec_Review_v0_1.zip
+A	review/Owner_Decisions_and_E1_ALIGN_Proposal_28Oct2026.md
+
+The 8 DOC-2 paths at 908db9e (Git blob SHA-256; manifest = review/DOC2_Install_v1/INSTALL_MANIFEST_SHA256.txt):
+MATCH  0a73c92d757f9adbe1e6933e95778e10e27532b31a755f2453afca9895b3a954  doc/Predictive_Randomness_E2_Readiness_Method_Contract_Specification_v0_3r3.md
+MATCH  f9be980c2482c22cb2da6f7af34020f8cfd8e32302694c975c955ec407fcc015  doc/RATIFICATION_REGISTER_v0_7.md
+MATCH  f0bba314f2650142472c42f97cb5da0c955b4dfb896e783367785e655d291978  review/DOC2_Register_v0_7_Recheck_r2.zip
+MATCH  d70d8ce5fff6b10b26ebc012ef95a65885ec9bc7d3c356440450d96aededea2b  review/DOC2_Register_v0_7_Review_v1.zip
+MATCH  ae822418c3ed3bcf1284da933fa8bea470881795d302b67399546eafb874d9cd  review/DOC2_Register_v0_7_candidate_to_final.diff
+MATCH  fc35b3ff7ad6892a066c7aca081f00c90cbc0847901ccebe3a2c202b376af13a  review/Independent_ChatGPT_Focused_Recheck_DOC2_Register_v0_7_r2.md
+MATCH  1f14a995b1d22403d58a87613dce0eff6dbd7c205cd962afefa19c2d8c2756ac  review/Independent_ChatGPT_Review_DOC2_Register_v0_7_v1.md
+MATCH  c3b373a3222d716963a1894ccc9d84f5737fa4af673d74b1fca18fdf1c39f8a0  review/DOC2_Install_v1/INSTALL_MANIFEST_SHA256.txt (expected c3b373a3222d716963a1894ccc9d84f5737fa4af673d74b1fca18fdf1c39f8a0)
+
+src/, tests/ and *.bat changed since 38fc60e: 0 files
+
+Installer log (owner): pre STOP 'new path already exists: review/DOC2_Register_v0_7_Recheck_r2.zip'; post STOP on the same four pre-existing paths; committed STOP only on 'the last commit did not add exactly the expected paths' (the committed phase's blob check, which runs first, passed for all 8). The owner did not push until Claude had confirmed the four pre-existing files were byte-identical.

@@ -1,0 +1,61 @@
+--- RATIFICATION_REGISTER_v0_8_candidate.md@EX_006
++++ RATIFICATION_REGISTER_v0_8_candidate.md@r2
+@@ -1,7 +1,7 @@
+ # Predictive Randomness — Ratification Register
+ 
+ **Register version:** v0.8 RATIFICATION CANDIDATE (drafted 28 October 2026), recording the DOC-2 and NAMES-1 installations, the NAMES-1 ratification and the owner decisions made after register v0.7; v0.7 OWNER-RATIFIED 28 October 2026, recording the E2R-1 specification ratification and the owner decisions of 28 October 2026; v0.6 OWNER-RATIFIED 28 October 2026, recording the records after the effective commit (its identity, the delivery method, the review-disposition procedure and TH-1); v0.5 OWNER-RATIFIED 27 October 2026, recording the AI roles transition, the Package 2 v0.11-r1 acceptance and the integration installation; v0.4 OWNER-RATIFIED 27 October 2026 (drafted 26 October 2026), adding the method-ranking integration; v0.3 OWNER-RATIFIED 26 October 2026; v0.2 OWNER-RATIFIED 24 October 2026. Historical ratifications are preserved and remain valid.
+-**Basis:** the historical owner decisions and approved handovers, with current committed files cross-checked by Claude at GitHub HEAD `1c7cfced` (24 October 2026). Ten other content hashes matched that HEAD; the Architecture hash below is explicitly corrected to the **actually committed** v0.5 content (unfixed §5C heading). The separately proposed one-line heading change and register v0.1 were **not committed**. The pre-integration consolidated editions below were owner-ratified 26 October 2026; only explicit OPEN/PROVISIONAL/RECOMMENDED subitems remain undecided. The v0.4 entries were cross-checked by Claude against GitHub HEAD `618fe48` (26 October 2026), the v0.5 entries against GitHub HEAD `ae76c29` (27 October 2026), the v0.6 entries against GitHub HEAD `b14116b` (27 October 2026), and the already-committed v0.7 references against GitHub commit `38fc60e` (28 October 2026). The E2R-1 v0.3r3 specification is not present at that commit; it is verified by its content hash below, and its installation is a separate owner decision. The v0.8 entries were cross-checked by Claude against GitHub commit `[DOC2-COMMIT]` (28 October 2026); the NAMES-1 specification and code are installed with register v0.8, in one commit, and are identified by content hash.  
++**Basis:** the historical owner decisions and approved handovers, with current committed files cross-checked by Claude at GitHub HEAD `1c7cfced` (24 October 2026). Ten other content hashes matched that HEAD; the Architecture hash below is explicitly corrected to the **actually committed** v0.5 content (unfixed §5C heading). The separately proposed one-line heading change and register v0.1 were **not committed**. The pre-integration consolidated editions below were owner-ratified 26 October 2026; only explicit OPEN/PROVISIONAL/RECOMMENDED subitems remain undecided. The v0.4 entries were cross-checked by Claude against GitHub HEAD `618fe48` (26 October 2026), the v0.5 entries against GitHub HEAD `ae76c29` (27 October 2026), the v0.6 entries against GitHub HEAD `b14116b` (27 October 2026), and the already-committed v0.7 references against GitHub commit `38fc60e` (28 October 2026). The E2R-1 v0.3r3 specification is not present at that commit; it is verified by its content hash below, and its installation is a separate owner decision. The v0.8 entries were cross-checked by Claude against GitHub commit `908db9ea9d4a37b17833f5d43919804c78ef7e14` (28 October 2026); the NAMES-1 specification and code, and the E1-ALIGN specification, are installed with register v0.8, in one commit, and are identified by content hash.  
+ **Authority:** This register records approvals; it does **not** independently ratify any document, authorise an experiment, or supersede an operative specification. If a historic document still says “draft”, “review candidate” or “not ratified”, its status at the time of drafting is historical. The later owner approval recorded here determines its current status.
+ 
+ ## Current and historical ratification identities
+@@ -167,7 +167,11 @@
+ 
+ Paths in this section are under `doc/`, except those beginning `review/` or `exchange/`, which are from the repository root. In this section, "this register" means register v0.8.
+ 
+-**DOC-2 installation.** The E2R-1 specification v0.3r3 and register v0.7 were installed at commit `[DOC2-COMMIT]`. Claude verified that commit: it added exactly 8 files, and every blob matches `review/DOC2_Install_v1/INSTALL_MANIFEST_SHA256.txt`. Register v0.7's final bytes are `f9be980c2482c22cb2da6f7af34020f8cfd8e32302694c975c955ec407fcc015`. Its reviewed candidate r2 was `8b751a878e0626165b6c01bbc49d7d3014b3bd83a171200b4247eb5ec761796d`, and the mechanical finalisation diff is `review/DOC2_Register_v0_7_candidate_to_final.diff`.
++**DOC-2 installation.** The E2R-1 specification v0.3r3 and register v0.7 were installed at commit `908db9ea9d4a37b17833f5d43919804c78ef7e14` (28 October 2026).
++- **It arrived in two commits.** The owner had already committed four of the package's eight files, byte-identical to the package, in commit `2c766644215a315edd8b92130e691224b60cd3de` (merged as `f300f2dfcd5c6a5efccb4c8b1040368728e2ad69`). They were the two DOC-2 review packages and the two DOC-2 reviews. `908db9ea9d4a37b17833f5d43919804c78ef7e14` added the other four.
++- **The installer stopped on its one-commit rule only.** Its final check requires a single commit to add all eight files, and that is the rule that failed. Its blob check, which runs first, had passed for all eight files. The owner pushed after Claude confirmed that.
++- **Claude verified the result from GitHub.** At `908db9ea9d4a37b17833f5d43919804c78ef7e14` all eight files match the package: the seven listed in `review/DOC2_Install_v1/INSTALL_MANIFEST_SHA256.txt`, and the manifest itself (`c3b373a3222d716963a1894ccc9d84f5737fa4af673d74b1fca18fdf1c39f8a0`). No file under `src/` or `tests/`, and no `.bat` file, has changed since `38fc60e`.
++- **Commit `2c76664` also carried six NAMES-1 and E1-ALIGN history files**, byte-identical to those that NAMES-1 cites: the two NAMES-1 review packages and reviews, the owner-decisions record, and the E1-ALIGN early comments. Register v0.7's final bytes are `f9be980c2482c22cb2da6f7af34020f8cfd8e32302694c975c955ec407fcc015`. Its reviewed candidate r2 was `8b751a878e0626165b6c01bbc49d7d3014b3bd83a171200b4247eb5ec761796d`, and the mechanical finalisation diff is `review/DOC2_Register_v0_7_candidate_to_final.diff`.
+ - The DOC-2 reviews were:
+   - `review/Independent_ChatGPT_Review_DOC2_Register_v0_7_v1.md` (2 CORRECTION, 1 OPTIONAL);
+   - the PASS recheck `review/Independent_ChatGPT_Focused_Recheck_DOC2_Register_v0_7_r2.md` (`fc35b3ff7ad6892a066c7aca081f00c90cbc0847901ccebe3a2c202b376af13a`).
+@@ -193,7 +197,17 @@
+   - When the owner relays from a phone, each message between the two AI chats is one upload: `EX_NNN_<Sender>.md`, or a flat `.zip` whose EX message lists its contents.
+   - Claude records every EX file from both sides in `exchange/`, unchanged, and commits **only** inside `exchange/`.
+   - Nothing in `exchange/` is ratified. Only the owner moves material into the main tree.
+-- **E1-ALIGN accepted in principle.** E1-ALIGN is a separate HIGH-tier package after NAMES-1 and before the E_2-readiness code. It brings E_1 into the per-method layout and removes the shared reader's dependence on E_1's module. Its specification is under the reviewer's design review, and its owner decisions E1A-D1..D3 are open. Nothing about it is authorised yet.
++- **E1-ALIGN design ratified.** `Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md` (`d9ffd900c74d8a0cc5002bb78c83121f818514cd88ca9150bada8d6d1fa6653a`) is OWNER-RATIFIED 28 October 2026, as a design only, and is installed with this register. E1-ALIGN brings E_1 into the per-method layout and removes the shared reader's dependence on E_1's module.
++  - **Review history**, all by the ChatGPT reviewer chat. Reviews that arrived through `exchange/` are stored under `review/` with LF line endings; the hashes below are of those LF copies, and the CRLF originals stay in `exchange/` (EX_004, EX_007 and EX_009):
++    - early comments `review/Independent_ChatGPT_E1_ALIGN_Early_Design_Comments_28Oct2026.md` (`0cf83504ecd35440cc35723d74dcafab5c58b4dbd33c7feb3daaca3b475021af`);
++    - the R-3 review of v0.1, `review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md` (`ba64d1ef5a05718ac87f80802a74f08bde88b224c75a6cf58e6e9b7fb946df13`; 1 BLOCKER, 1 CORRECTION, 1 OPTIONAL);
++    - the recheck of v0.2, `review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md` (`7a887a780875da5b0f3f315b84d695c363017f8078aa6f6530939a9e5e9683c9`; 1 CORRECTION);
++    - the **PASS** recheck of v0.2r1, `review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md` (`fbe0584ab69d7c59403bfc1f2e65aa3d868573d4fa17c38e6770d0ede7810248`; the reviewer's message EX_009, unchanged).
++  - **Owner decisions, 28 October 2026** (OWNER-DECIDED):
++    - **E1A-D1:** E_1 stays revision 1 under a structural-migration exception scoped to E1-ALIGN (its E1A-R02 conditions). This is a second scoped exception under E2R-R14A, not a precedent.
++    - **E1A-D2:** the order is NAMES-1, then E1-ALIGN, then the E_2-readiness code. This amends E2R-R59.
++    - **E1A-D3:** E_001's entry file keeps its whole-file firewall exemption for this migration, and the folder `E_001/` gets only the exact, counted allowances of the specification's section 5.
++  - **Nothing about E1-ALIGN's code is authorised.** Its implementation is a separate HIGH-tier package after NAMES-1 is installed. It needs the owner's authorisation, an independent code RECHECK, and the owner's Windows run of all 84 tests.
+ 
+ **A known gap, found in review (28 October 2026).**
+ - The committed static import-firewall test (`test_method_loader_import_firewall_except_accepted_legacy_e1`) reads only the module part of `from X import Y`. So a method file using `from _common import game_draws_reader` would pass it.
+@@ -204,13 +218,16 @@
+ - Register v0.7:
+   - its oversight paragraph ("extended from three to six reviews"): now indefinite (above);
+   - its line on Architecture's standalone `.py` wording ("subject to the owner's separate OPEN-N1 decision"): decided, A (above);
+-  - its basis line ("not present at that commit ... a separate owner decision"): the E2R-1 specification was installed at `[DOC2-COMMIT]`.
++  - its basis line ("not present at that commit ... a separate owner decision"): the E2R-1 specification was installed at `908db9ea9d4a37b17833f5d43919804c78ef7e14`.
+ - E2R-1 section 12A.1 ("the exact entry-file and module layout inside each folder is fixed by NAMES-1"): fixed by OPEN-N1 = A.
++- E2R-1 E2R-R59 (the order: specification, NAMES-1, E_2-readiness code): E1-ALIGN is inserted after NAMES-1 (E1A-D2).
++- E2R-1 E2R-R14A ("the one scoped exception is NAMES-1's"): E1-ALIGN has its own scoped exception (E1A-D1).
+ - File names that NAMES-1 changed, in H-1 v1r2 (its section 7.1 module map and its suite command), in R2, R3 and Architecture, and in the TH-1 records: the old names are historical. The NAMES-1 specification's section 3 maps old to new. The next editions fold them in.
+ 
+ | Document (path under `doc/`) | Author / check | Status and Git-content SHA-256 (LF) |
+ |---|---|---|
+ | `Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 28 Oct 2026; `07bda3e4a8a99bfc611a76cec672f8642532186567737e1a23de5e5701489e5a` |
++| `Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 28 Oct 2026 (design only); `d9ffd900c74d8a0cc5002bb78c83121f818514cd88ca9150bada8d6d1fa6653a` |
+ | `RATIFICATION_REGISTER_v0_7.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 28 Oct 2026; superseded by this register; `f9be980c2482c22cb2da6f7af34020f8cfd8e32302694c975c955ec407fcc015` |
+ 
+ ## Interpretation and verification

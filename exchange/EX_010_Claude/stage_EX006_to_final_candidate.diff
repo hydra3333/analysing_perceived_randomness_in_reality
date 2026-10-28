@@ -1,0 +1,37 @@
+--- STAGE_EXACT_FILES.cmd@EX_006
++++ STAGE_EXACT_FILES.cmd@final-candidate
+@@ -1,6 +1,6 @@
+ @echo off
+ setlocal
+-rem OPTIONAL owner-run staging of the 40 NAMES-1 content paths (the renames are already staged).
++rem OPTIONAL owner-run staging of the 41 NAMES-1 content paths (the renames are already staged).
+ rem No commit, push or deletion.
+ git add -- ^
+   "src\Powerball_Experiment_Coordinator.py" ^
+@@ -30,19 +30,20 @@
+   "tests\test_multigame_static_and_timing.py" ^
+   "tests\test_multigame_windows_lifecycle_review.py" ^
+   "tests\test_t05_hardening.py" ^
++  "doc\Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md" ^
+   "doc\Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md" ^
+   "doc\RATIFICATION_REGISTER_v0_8.md" ^
+-  "review\Independent_ChatGPT_Focused_Recheck_NAMES1_Spec_v0_2.md" ^
+-  "review\Independent_ChatGPT_R3_Design_Review_NAMES1_v0_1.md" ^
++  "review\Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md" ^
++  "review\Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md" ^
++  "review\Independent_ChatGPT_NAMES1_Code_Review_v0_1.md" ^
++  "review\Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md" ^
++  "review\Independent_ChatGPT_Register_v0_8_Review_v0_1.md" ^
+   "review\NAMES1_Code_Install_v1\INSTALL_MANIFEST_SHA256.txt" ^
+   "review\NAMES1_Code_Install_v1\ast_check_output.txt" ^
+   "review\NAMES1_Code_Install_v1\names1_allowlist.tsv" ^
+   "review\NAMES1_Code_Install_v1\negative_checks_output.txt" ^
+   "review\NAMES1_Code_Install_v1\suite_per_module_linux.txt" ^
+-  "review\NAMES1_Code_Install_v1\t02_check_output.txt" ^
+-  "review\NAMES1_Spec_Recheck_v0_2.zip" ^
+-  "review\NAMES1_Spec_Review_v0_1.zip" ^
+-  "review\Owner_Decisions_and_E1_ALIGN_Proposal_28Oct2026.md"
++  "review\NAMES1_Code_Install_v1\t02_check_output.txt"
+ if errorlevel 1 (echo STAGING FAILED & exit /b 1)
+ git status --short
+ endlocal

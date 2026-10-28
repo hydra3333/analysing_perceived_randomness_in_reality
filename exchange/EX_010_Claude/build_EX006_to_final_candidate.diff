@@ -1,0 +1,95 @@
+--- build_names1_install.py@EX_006
++++ build_names1_install.py@final-candidate
+@@ -17,7 +17,7 @@
+ 
+ base, renamed, reg, outdir = (Path(x) for x in sys.argv[1:5])
+ extra = [Path(x) for x in sys.argv[5:]]
+-BASE_COMMIT = 'de2bd530bb548dc74b78daaf94a7d061b1ec2567'
++BASE_COMMIT = '908db9ea9d4a37b17833f5d43919804c78ef7e14'  # the DOC-2 commit
+ W = Path('/home/claude/work')
+ 
+ 
+@@ -56,6 +56,13 @@
+     'review/NAMES1_Spec_Recheck_v0_2.zip': W / 'names1/NAMES1_Spec_Recheck_v0_2.zip',
+     'review/Independent_ChatGPT_Focused_Recheck_NAMES1_Spec_v0_2.md': W / 'names1/reviews/Independent_ChatGPT_Focused_Recheck_NAMES1_Spec_v0_2.md',
+     'review/Owner_Decisions_and_E1_ALIGN_Proposal_28Oct2026.md': W / 'e1align/Owner_Decisions_and_E1_ALIGN_Proposal_28Oct2026.md',
++    'doc/Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md': HERE / 'history/Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md',
++    'review/Independent_ChatGPT_E1_ALIGN_Early_Design_Comments_28Oct2026.md': HERE / 'history/Independent_ChatGPT_E1_ALIGN_Early_Design_Comments_28Oct2026.md',
++    'review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md': HERE / 'history/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md',
++    'review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md': HERE / 'history/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md',
++    'review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md': HERE / 'history/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md',
++    'review/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md': HERE / 'history/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md',
++    'review/Independent_ChatGPT_Register_v0_8_Review_v0_1.md': HERE / 'history/Independent_ChatGPT_Register_v0_8_Review_v0_1.md',
+     'review/NAMES1_Code_Install_v1/names1_allowlist.tsv': ev / 'names1_allowlist.tsv',
+     'review/NAMES1_Code_Install_v1/t02_check_output.txt': ev / 't02_check_output.txt',
+     'review/NAMES1_Code_Install_v1/ast_check_output.txt': ev / 'ast_check_output.txt',
+@@ -64,6 +71,11 @@
+ }
+ for e in extra:
+     new_files['review/' + e.name] = e
++# History files the owner already committed (2c76664, byte-identical): guarded, not added.
++already = {p: src for p, src in new_files.items() if (base / p).exists()}
++for p, src in already.items():
++    assert (base / p).read_bytes() == src.read_bytes(), f'already-committed file differs: {p}'
++    del new_files[p]
+ expected = dict(edited)
+ for p, src in new_files.items():
+     expected[p] = src.read_bytes()
+@@ -74,9 +86,16 @@
+     'review/Independent_ChatGPT_R3_Design_Review_NAMES1_v0_1.md': '30d24ed02ff4ba3b0c84c760f306c8bfd02ddd2717db61013e60f855e3ace85a',
+     'review/Independent_ChatGPT_Focused_Recheck_NAMES1_Spec_v0_2.md': '020fe9f73ba15f5260812d06701713d7b439880afb4197ace3488c4d63849f45',
+     'review/Owner_Decisions_and_E1_ALIGN_Proposal_28Oct2026.md': '244aac86c72ff696e1d658023de8ab14035f2bb732585467bd140830e461cb59',
++    'doc/Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md': 'd9ffd900c74d8a0cc5002bb78c83121f818514cd88ca9150bada8d6d1fa6653a',
++    'review/Independent_ChatGPT_E1_ALIGN_Early_Design_Comments_28Oct2026.md': '0cf83504ecd35440cc35723d74dcafab5c58b4dbd33c7feb3daaca3b475021af',
++    'review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md': 'ba64d1ef5a05718ac87f80802a74f08bde88b224c75a6cf58e6e9b7fb946df13',
++    'review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md': '7a887a780875da5b0f3f315b84d695c363017f8078aa6f6530939a9e5e9683c9',
++    'review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md': 'fbe0584ab69d7c59403bfc1f2e65aa3d868573d4fa17c38e6770d0ede7810248',
++    'review/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md': '767fb75084f23180f8573a3bb0d759a8461fa71f3bf01e185a39e1bcde5646d7',
++    'review/Independent_ChatGPT_Register_v0_8_Review_v0_1.md': '536bbd6807fa921e2f9426a6c66172754ec0c1e9370e9258b708c649ac7caab4',
+ }
+ for p, h in pinned.items():
+-    assert sha(expected[p]) == h, p
++    assert sha(expected[p] if p in expected else (base / p).read_bytes()) == h, p
+ 
+ man_path = 'review/NAMES1_Code_Install_v1/INSTALL_MANIFEST_SHA256.txt'
+ lines = [f'{sha(b)}  {p}' for p, b in sorted(expected.items())]
+@@ -106,9 +125,11 @@
+         'tests/fixtures/coordinator_v0_6_baseline/Powerball_Experiment_Coordinator_v0_6.py.txt':
+             sha((base / 'tests/fixtures/coordinator_v0_6_baseline/Powerball_Experiment_Coordinator_v0_6.py.txt').read_bytes()),
+         'tests/p3_e1_synthetic_v0_3.json': sha((base / 'tests/p3_e1_synthetic_v0_3.json').read_bytes()),
++        **{p: sha((base / p).read_bytes()) for p in sorted(already)},
+     },
+ }
+-assert len(data['guarded']) == 12, len(data['guarded'])
++assert len(data['guarded']) == 12 + len(already), len(data['guarded'])
++print('already committed (now guarded):', len(already), sorted(already))
+ v = (HERE / 'verify_template.py').read_text().replace('@@BASE@@', BASE_COMMIT).replace('@@DATA@@', json.dumps(data, indent=1, sort_keys=True))
+ (out / 'VERIFY_NAMES1_INSTALL.py').write_text(v, newline='\n')
+ mods = {}
+@@ -165,18 +186,23 @@
+ 
+ Expected: `SUITE PASS` (79 tests; the only allowed skips are the two symlink tests, if Windows cannot create symlinks), then `RESULT PASS`. Send Claude both outputs whatever they say. If either says `STOP`, do not commit: to undo, run `git reset --hard` and then `git clean -fd -- doc review`, which puts the repository back exactly as it was.
+ 
+-## 3. Stage, commit, push, check
++## 3. Stage, commit, check, and only then push
+ 
+ ```bat
+ call "E:\\TEMP\\NAMES1_Code_Install_v1\\STAGE_EXACT_FILES.cmd"
+ git diff --cached --name-status
+ git commit -m "NAMES-1: one-off rename to stable file names; NAMES-1 v0.2 (ratified) and register v0.8"
+-git push
+ python "E:\\TEMP\\NAMES1_Code_Install_v1\\VERIFY_NAMES1_INSTALL.py" --repo . --phase committed
++```
++
++Expected: the staged list shows renames (`R`) and modifications (`M`), and {n_new} lines starting with `A`; then `COMMITTED PASS`. **Push only after `COMMITTED PASS`:**
++
++```bat
++git push
+ git rev-parse HEAD
+ ```
+ 
+-Expected: the staged list shows renames (`R`) and modifications (`M`), and {n_new} lines starting with `A`; then `COMMITTED PASS`. Send Claude the commit ID. Claude then verifies it from GitHub and runs the immediate recovery check (N1-T10) in a disposable clone. If anything prints `STOP`, stop and send Claude the output.
++Send Claude the commit ID. Claude then verifies it from GitHub and runs the immediate recovery check (N1-T10) in a disposable clone. If the committed check prints `STOP`, do **not** push: send Claude the output (the commit is still only on your PC; `git reset --hard HEAD~1` removes it). If anything else prints `STOP`, stop and send Claude the output.
+ """
+ (out / 'INSTALL_INSTRUCTIONS.md').write_text(instr, newline='\r\n')
+ print('edited', len(edited), 'pure renames', len(pure), 'new files', n_new, 'overlay files', len(expected))

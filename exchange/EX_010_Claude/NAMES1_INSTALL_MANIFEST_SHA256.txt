@@ -1,0 +1,71 @@
+# NAMES-1 code installation manifest (Git-content SHA-256, LF)
+d9ffd900c74d8a0cc5002bb78c83121f818514cd88ca9150bada8d6d1fa6653a  doc/Predictive_Randomness_E1_ALIGN_Specification_v0_2r1.md
+07bda3e4a8a99bfc611a76cec672f8642532186567737e1a23de5e5701489e5a  doc/Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md
+aac76fa0cbc22c332e55ce6c985f99f4829d7bbf83c327513a76439e29e71671  doc/RATIFICATION_REGISTER_v0_8.md
+7a887a780875da5b0f3f315b84d695c363017f8078aa6f6530939a9e5e9683c9  review/Independent_ChatGPT_E1_ALIGN_v0_2_Focused_Recheck_v0_1.md
+fbe0584ab69d7c59403bfc1f2e65aa3d868573d4fa17c38e6770d0ede7810248  review/Independent_ChatGPT_EX_009_E1_ALIGN_v0_2r1_and_NAMES1_Order_Recheck.md
+767fb75084f23180f8573a3bb0d759a8461fa71f3bf01e185a39e1bcde5646d7  review/Independent_ChatGPT_NAMES1_Code_Review_v0_1.md
+ba64d1ef5a05718ac87f80802a74f08bde88b224c75a6cf58e6e9b7fb946df13  review/Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md
+536bbd6807fa921e2f9426a6c66172754ec0c1e9370e9258b708c649ac7caab4  review/Independent_ChatGPT_Register_v0_8_Review_v0_1.md
+e85415cdf57ebb563bab1cb7528ac38cc922dbe1bbe29a213782d762d64a98db  review/NAMES1_Code_Install_v1/ast_check_output.txt
+2074f152b52f0adadd581546ef704341962cffe0c2d00a4d59d8301e1a3c315f  review/NAMES1_Code_Install_v1/names1_allowlist.tsv
+362f43584f6b2dcf908278c4d80a2da3237107a627a41cc81ac5d70c721ee1c6  review/NAMES1_Code_Install_v1/negative_checks_output.txt
+f7c72673a8d157aa7d01f4b0eb4a1c24fb5234ade870a460fd2bab3ff843e844  review/NAMES1_Code_Install_v1/suite_per_module_linux.txt
+6cd932778c7e21aeace7103d0acb222d8d2957ae7d30d90b6140d9a702aa9067  review/NAMES1_Code_Install_v1/t02_check_output.txt
+6d202f5efd164c8e4a0eba97d435a0ec55787da87fcb2930af51309f573adcff  src/Powerball_Experiment_Coordinator.py
+ba6998be867b0a286aa4097b22cfa66050af94af41558b3a91c9a65b84e110af  src/coordinator_private/multigame_coordinator_exit_receipt.py
+2f4717f4e6be2d2084a01205c24a9ab048b55239da334b4b79181616ce675507  src/coordinator_private/multigame_launch_spec.py
+885fe1e67a5b91ddf5d4cf79f15e3a8ad27c62b087ffbd075ee160c811cab03b  src/coordinator_private/multigame_windows_lifecycle.py
+0874ec012ecf2be3b7c40d8adf3bf22736202fbd209e04878de846c035b0259e  src/methods/E_001_Historical_Appearance_Frequency.py
+3078e9c25c5d3665a785883e72ea17dcce14c77e8d031efbc670d844150f0c17  src/methods/POC_MultiGame_Synthetic_Worker.py
+0504c0c297fd494c4f42f18e3eadf77ec99f7c2bc4b3db714c0f3a606dbe5e0c  src/methods/_common/e1_common_reader_bridge.py
+e9708acfb6918885de7e8b545bece7cb87f6883ecc65253b8db11028da943565  src/methods/_common/e1_training_view.py
+9ed28e3db821272cbeb47725a587eaefb3d38a13f20403a549b82cd0cdd973e3  src/methods/_common/game_draws_reader.py
+d9ee41180f32362de5f7f2ecc5aa8da3f88674a65fc77b26f645c5b1c9bd7dd0  src/methods/_common/multigame_ancestry_release.py
+4a63d70474082e9c71685e99871aa50ee106904bcbea6edd253a0624f4b08406  src/methods/_common/multigame_console_protocol.py
+70dd2954ffd7dfe38204c6dbe70a0ee275f8a4cb86d2c48d77da6422f6cb4cee  src/methods/_common/multigame_coordinated_manifest.py
+4762c65e5a5715942d0ee4cde7e352be9ee226a17ebc5b1a44c6c92f6d39c536  src/methods/_common/multigame_e1.py
+78693c06d109f584b3ce987baaf633028fb8d6eb036f4068006173754b46aacd  src/methods/_common/multigame_method_registry.py
+768e719f17e61a1b246668fcd9050a6e218be43ad89b73bcc1d9d779100eb34b  src/methods/_common/multigame_result_registry.py
+d27fc6b15948e0701ff4c9e7020274e29d2c9423a903f5dc1c8e75139ce20b95  src/methods/_common/multigame_standalone_contract.py
+ff33caea1d2f0ac4ca28e355f1ee983db8d4c80e029229038b66140247595992  src/methods/_common/multigame_synthetic_scorer.py
+8397c5140c2f9f8e3437df88b8a3e845703db54933d30fe3658f8e0e2e3e8e63  src/methods/_common/multigame_worker_launch_handshake.py
+e1eb575744da41a0ace48e78f24203ee2ba0712bfd6f338bb3601635c49f43f1  tests/test_e1_standalone.py
+e6327ed6d3b779f5cd6503229062ea31a56a826f8b2531236cc103a1a3b512f8  tests/test_multigame_console_and_synthetic_scorer.py
+e6422db86185578189b9085a971adf6c541f436e6134f0bba68244a684eb14fa  tests/test_multigame_exit_receipt.py
+239c5b81a02eb357d1dd98866ab9eff04755d94102e15639ad011a2c489abda4  tests/test_multigame_launch_and_manifest.py
+b4252eaead12131b98d4fd7fc855584adc14d6a0e387f21fe9c094ce367212bf  tests/test_multigame_reader_contracts.py
+f70f701b2601ff4c542cc2364763e3b32bbbc013f189161c9f24e0615783fdc8  tests/test_multigame_science_allowlist.py
+bc1f31b87085acfd0206ab7a28cecdc7d017c33227e98a109cb1b8c6e7cf3e79  tests/test_multigame_static_and_timing.py
+82f232daed90a9f9638cb6b7dcd62b6b0cc5286198ce94aaa8ded559bd3033ce  tests/test_multigame_windows_lifecycle_review.py
+b435f57cdaf40092baa72fece56cc528e4263b8cf9be2286f3ec97cc50e2b8ad  tests/test_t05_hardening.py
+794320b0f330acf132f5c1ad78c732fe47fb1e561225df6974313adc68ccb0ef  src/methods/_common/e1_historical_appearance_frequency.py  (pure rename of src/methods/_common/e1_historical_appearance_frequency_v0_3.py)
+d9ef642c2949b1b2a10232d614ba1306365abaefe65338b5c0aa9e3d9f285e50  src/methods/_common/e1_standalone_contract.py  (pure rename of src/methods/_common/e1_standalone_contract_v0_1.py)
+d49e83b5f91f5a0b299c6e08ae48c598d03b969a5dec70e05932daa3e4827a9b  src/methods/_common/game_profiles.py  (pure rename of src/methods/_common/game_profiles_v1.py)
+-  src/coordinator_private/multigame_coordinator_exit_receipt_v2.py  (removed by rename to src/coordinator_private/multigame_coordinator_exit_receipt.py)
+-  src/coordinator_private/multigame_launch_spec_v1.py  (removed by rename to src/coordinator_private/multigame_launch_spec.py)
+-  src/coordinator_private/multigame_windows_lifecycle_v1.py  (removed by rename to src/coordinator_private/multigame_windows_lifecycle.py)
+-  src/methods/_common/e1_common_reader_bridge_v1.py  (removed by rename to src/methods/_common/e1_common_reader_bridge.py)
+-  src/methods/_common/e1_historical_appearance_frequency_v0_3.py  (removed by rename to src/methods/_common/e1_historical_appearance_frequency.py)
+-  src/methods/_common/e1_standalone_contract_v0_1.py  (removed by rename to src/methods/_common/e1_standalone_contract.py)
+-  src/methods/_common/e1_training_view_v0_1.py  (removed by rename to src/methods/_common/e1_training_view.py)
+-  src/methods/_common/game_draws_reader_v1.py  (removed by rename to src/methods/_common/game_draws_reader.py)
+-  src/methods/_common/game_profiles_v1.py  (removed by rename to src/methods/_common/game_profiles.py)
+-  src/methods/_common/multigame_ancestry_release_v1.py  (removed by rename to src/methods/_common/multigame_ancestry_release.py)
+-  src/methods/_common/multigame_console_protocol_v1.py  (removed by rename to src/methods/_common/multigame_console_protocol.py)
+-  src/methods/_common/multigame_coordinated_manifest_v1.py  (removed by rename to src/methods/_common/multigame_coordinated_manifest.py)
+-  src/methods/_common/multigame_e1_v1.py  (removed by rename to src/methods/_common/multigame_e1.py)
+-  src/methods/_common/multigame_method_registry_v1.py  (removed by rename to src/methods/_common/multigame_method_registry.py)
+-  src/methods/_common/multigame_result_registry_v1.py  (removed by rename to src/methods/_common/multigame_result_registry.py)
+-  src/methods/_common/multigame_standalone_contract_v1.py  (removed by rename to src/methods/_common/multigame_standalone_contract.py)
+-  src/methods/_common/multigame_synthetic_scorer_v1.py  (removed by rename to src/methods/_common/multigame_synthetic_scorer.py)
+-  src/methods/_common/multigame_worker_launch_handshake_v1.py  (removed by rename to src/methods/_common/multigame_worker_launch_handshake.py)
+-  tests/test_multigame_console_and_synthetic_scorer_v0_4.py  (removed by rename to tests/test_multigame_console_and_synthetic_scorer.py)
+-  tests/test_multigame_exit_receipt_v0_8.py  (removed by rename to tests/test_multigame_exit_receipt.py)
+-  tests/test_multigame_launch_and_manifest_v0_8.py  (removed by rename to tests/test_multigame_launch_and_manifest.py)
+-  tests/test_multigame_science_allowlist_v0_8.py  (removed by rename to tests/test_multigame_science_allowlist.py)
+-  tests/test_multigame_v011_reader_contracts.py  (removed by rename to tests/test_multigame_reader_contracts.py)
+-  tests/test_multigame_v011_static_and_timing.py  (removed by rename to tests/test_multigame_static_and_timing.py)
+-  tests/test_multigame_windows_lifecycle_review_v0_9.py  (removed by rename to tests/test_multigame_windows_lifecycle_review.py)
+-  tests/test_p2_r1_t05_hardening_v1.py  (removed by rename to tests/test_t05_hardening.py)
+-  tests/test_p3_e1_standalone_v0_1.py  (removed by rename to tests/test_e1_standalone.py)

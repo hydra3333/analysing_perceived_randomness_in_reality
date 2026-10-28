@@ -1,0 +1,74 @@
+Base: a disposable clone of GitHub main at 908db9e (DOC-2 installed for real).
+== happy path, checkout line endings: lf
+PRE PASS: clean tree; DOC-2 installed; 30 files at their base bytes; 41 new paths absent. Nothing was changed.
+renames done (27 git mv, same list as RENAME_FILES.cmd)
+overlay copied
+POST PASS: index has exactly the 27 renames; exactly 27 edited and 14 new files, all with the expected bytes; no old path or old name in live files.
+environment: Linux 6.18.44-fc-v180 Python 3.13.17 
+tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK
+tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK
+tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK
+tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK
+tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK
+tests.test_e1_standalone                             ran  13 (expected 13)  skipped 0  OK
+tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK
+total ran 79 (expected 79); skips 0
+SUITE PASS: all 79 tests ran and passed; only the allowed symlink skips, if any.
+PASS coordinator issuer literal names the new file only
+PASS coordinator issuer comparison and refusal unchanged
+PASS receipt module origin equals the coordinator expected issuer
+PASS a stale old issuer literal would fail closed
+PASS receipt contract-file hashes computed from the renamed files
+PASS firewall control: the installed tree passes
+PASS firewall: a method doing "from _common.game_draws_reader import ..." is rejected
+PASS firewall: a method doing "import _common.game_draws_reader" is rejected
+PASS why the literal had to change: with the old literal, the same import would pass
+RESULT PASS
+(27 old-name refusal and 27 new-name origin PASS lines omitted above)
+staged:  14 A  3 M  27 R 
+COMMITTED PASS: the last commit made the 27 renames, edited 27 files and added 14; all Git blobs match.
+bytecode dirs left in tree: 0
+== happy path, checkout line endings: crlf
+PRE PASS: clean tree; DOC-2 installed; 30 files at their base bytes; 41 new paths absent. Nothing was changed.
+renames done (27 git mv, same list as RENAME_FILES.cmd)
+overlay copied
+POST PASS: index has exactly the 27 renames; exactly 27 edited and 14 new files, all with the expected bytes; no old path or old name in live files.
+environment: Linux 6.18.44-fc-v180 Python 3.13.17 
+tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK
+tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK
+tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK
+tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK
+tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK
+tests.test_e1_standalone                             ran  13 (expected 13)  skipped 0  OK
+tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK
+total ran 79 (expected 79); skips 0
+SUITE PASS: all 79 tests ran and passed; only the allowed symlink skips, if any.
+PASS coordinator issuer literal names the new file only
+PASS coordinator issuer comparison and refusal unchanged
+PASS receipt module origin equals the coordinator expected issuer
+PASS a stale old issuer literal would fail closed
+PASS receipt contract-file hashes computed from the renamed files
+PASS firewall control: the installed tree passes
+PASS firewall: a method doing "from _common.game_draws_reader import ..." is rejected
+PASS firewall: a method doing "import _common.game_draws_reader" is rejected
+PASS why the literal had to change: with the old literal, the same import would pass
+RESULT PASS
+(27 old-name refusal and 27 new-name origin PASS lines omitted above)
+staged:  14 A  3 M  27 R 
+COMMITTED PASS: the last commit made the 27 renames, edited 27 files and added 14; all Git blobs match.
+bytecode dirs left in tree: 0
+== N1-T10 immediate recovery check (disposable clone of the LF test commit)
+files differing from the pre-NAMES-1 tree after revert: 0
+== negative cases (each must STOP)
+tampered edited file -> STOP: FAIL: wrong bytes: src/methods/_common/game_draws_reader.py
+extra file -> STOP: FAIL: untracked files are not exactly the new files: src/methods/stray.py
+one rename missing -> STOP: FAIL: index is not exactly the 27 renames: ('tests/test_e1_standalone.py', 'A'), ('tests/test_p2_r1_t05_
+stale old name in an unchanged live file -> STOP: FAIL: live files still name an old module: README.md
+dirty tree before install -> STOP: FAIL: working tree or index not clean:
+DOC-2 not installed -> STOP: FAIL: HEAD f300f2dfcd5c6a5efccb4c8b1040368728e2ad69 does not descend from base 908db
+extra change in the commit -> STOP: FAIL: the last commit did not change exactly the expected paths: ('README.md', 'M'), ('doc/Predictive_Ra
+undo (git reset --hard; git clean -fd -- doc review) -> status lines 0; PRE PASS
