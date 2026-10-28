@@ -1,0 +1,167 @@
+{
+ "moves": {
+  "src/methods/_common/e1_historical_appearance_frequency.py": "src/methods/E_001/e1_historical_appearance_frequency.py",
+  "src/methods/_common/e1_training_view.py": "src/methods/E_001/e1_training_view.py",
+  "src/methods/_common/e1_standalone_contract.py": "src/methods/E_001/e1_standalone_contract.py",
+  "src/methods/_common/e1_common_reader_bridge.py": "src/methods/E_001/e1_common_reader_bridge.py",
+  "src/methods/_common/multigame_e1.py": "src/methods/E_001/multigame_e1.py"
+ },
+ "added": {
+  "src/methods/E_001/__init__.py": "cd73a76370e0aa1934c1de0ec9b8a831bbea9556b9fcfddac103e6c5c28c8460",
+  "src/methods/_common/canonical_encoding.py": "2096d8adb40737373169aea6c5d94147daa2b16ae6c961bbfcc6063e333efcac",
+  "tests/test_e1_align.py": "fa71ec9d48a92b7d593c8b4c8ade1d184953333aa7305cdae32063d67a8dd863"
+ },
+ "moved_unchanged": [
+  "src/methods/E_001/e1_standalone_contract.py"
+ ],
+ "edited": [
+  {
+   "old_path": "src/methods/_common/e1_common_reader_bridge.py",
+   "new_path": "src/methods/E_001/e1_common_reader_bridge.py",
+   "edits": [
+    {
+     "old": "\nfrom .game_draws_reader import DrawView\n",
+     "new": "\nfrom _common.game_draws_reader import DrawView\n"
+    }
+   ]
+  },
+  {
+   "old_path": "src/methods/_common/e1_historical_appearance_frequency.py",
+   "new_path": "src/methods/E_001/e1_historical_appearance_frequency.py",
+   "edits": [
+    {
+     "old": "from collections.abc import Mapping, Sequence\n\n",
+     "new": "from collections.abc import Mapping, Sequence\n\nfrom _common.canonical_encoding import canonical_bytes, length32_tuple as _length32_tuple\n\n"
+    },
+    {
+     "old": "DOMAIN = 'PREDICTIVE_RANDOMNESS/TIE_SHA256_V1'\n\n\ndef canonical_bytes(value: object) -> bytes:\n    return (json.dumps(value, ensure_ascii=True, sort_keys=True,\n                       separators=(',', ':'), allow_nan=False) + '\\n').encode('ascii')\n",
+     "new": "DOMAIN = 'PREDICTIVE_RANDOMNESS/TIE_SHA256_V1'\n"
+    },
+    {
+     "old": "    return hashlib.sha256(canonical_bytes(identity)).hexdigest()\n\n\ndef _length32_tuple(values: Sequence[object]) -> bytes:\n    \"\"\"Ratified tuple encoding: 4-byte unsigned LE UTF-8 byte length + bytes.\"\"\"\n    parts = []\n    for value in values:\n        if type(value) is not str:\n            raise ValueError('tie tuple field must be a canonical string')\n        encoded = value.encode('utf-8')\n        if len(encoded) > 0xffffffff:\n            raise ValueError('tie tuple field exceeds uint32 byte length')\n        parts.append(len(encoded).to_bytes(4, byteorder='little') + encoded)\n    return b''.join(parts)\n",
+     "new": "    return hashlib.sha256(canonical_bytes(identity)).hexdigest()\n"
+    }
+   ]
+  },
+  {
+   "old_path": "src/methods/_common/e1_training_view.py",
+   "new_path": "src/methods/E_001/e1_training_view.py",
+   "edits": [
+    {
+     "old": "\nfrom _common.e1_historical_appearance_frequency import canonical_bytes\n",
+     "new": "\nfrom E_001.e1_historical_appearance_frequency import canonical_bytes\n"
+    },
+    {
+     "old": "    # Delayed import to keep STARTED publication ahead of heavy future dependencies.\n    from _common.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION\n",
+     "new": "    # Delayed import to keep STARTED publication ahead of heavy future dependencies.\n    from E_001.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION\n"
+    }
+   ]
+  },
+  {
+   "old_path": "src/methods/_common/multigame_e1.py",
+   "new_path": "src/methods/E_001/multigame_e1.py",
+   "edits": [
+    {
+     "old": "\nfrom _common.e1_historical_appearance_frequency import (\n",
+     "new": "\nfrom E_001.e1_historical_appearance_frequency import (\n"
+    }
+   ]
+  },
+  {
+   "old_path": "src/methods/E_001_Historical_Appearance_Frequency.py",
+   "new_path": "src/methods/E_001_Historical_Appearance_Frequency.py",
+   "edits": [
+    {
+     "old": "        root = project / 'transitory_data' / 'p3_standalone_runs'\n    from _common.e1_standalone_contract import (\n",
+     "new": "        root = project / 'transitory_data' / 'p3_standalone_runs'\n    from E_001.e1_standalone_contract import (\n"
+    },
+    {
+     "old": "    try:\n        from _common.e1_training_view import load_permitted_u_view, build_e1_forecast\n",
+     "new": "    try:\n        from E_001.e1_training_view import load_permitted_u_view, build_e1_forecast\n"
+    }
+   ]
+  },
+  {
+   "old_path": "src/methods/_common/game_draws_reader.py",
+   "new_path": "src/methods/_common/game_draws_reader.py",
+   "edits": [
+    {
+     "old": "        \"\"\"Legacy E1 date-free digest is immutable; new schemas bind dates.\"\"\"\n        from _common.e1_historical_appearance_frequency import canonical_bytes\n",
+     "new": "        \"\"\"Legacy E1 date-free digest is immutable; new schemas bind dates.\"\"\"\n        from _common.canonical_encoding import canonical_bytes\n"
+    }
+   ]
+  },
+  {
+   "old_path": "tests/test_e1_standalone.py",
+   "new_path": "tests/test_e1_standalone.py",
+   "edits": [
+    {
+     "old": "sys.path.insert(0, str(BASE / 'src' / 'methods'))\nfrom _common.e1_training_view import (  # noqa\n",
+     "new": "sys.path.insert(0, str(BASE / 'src' / 'methods'))\nfrom E_001.e1_training_view import (  # noqa\n"
+    },
+    {
+     "old": "    U_COLUMNS, load_permitted_u_view, build_e1_forecast)\nfrom _common.e1_standalone_contract import (  # noqa\n",
+     "new": "    U_COLUMNS, load_permitted_u_view, build_e1_forecast)\nfrom E_001.e1_standalone_contract import (  # noqa\n"
+    },
+    {
+     "old": "        valid=self.load(valid_csv)\n        from _common.e1_training_view import build_e1_forecast\n",
+     "new": "        valid=self.load(valid_csv)\n        from E_001.e1_training_view import build_e1_forecast\n"
+    },
+    {
+     "old": "        rid='e1-interruptedstatus01'\n        with patch('_common.e1_training_view.load_permitted_u_view',\n",
+     "new": "        rid='e1-interruptedstatus01'\n        with patch('E_001.e1_training_view.load_permitted_u_view',\n"
+    },
+    {
+     "old": "              patch.object(runner, '__file__', str(fake_runner_path)),\n              patch('_common.e1_training_view.load_permitted_u_view',\n",
+     "new": "              patch.object(runner, '__file__', str(fake_runner_path)),\n              patch('E_001.e1_training_view.load_permitted_u_view',\n"
+    }
+   ]
+  },
+  {
+   "old_path": "tests/test_multigame_console_and_synthetic_scorer.py",
+   "new_path": "tests/test_multigame_console_and_synthetic_scorer.py",
+   "edits": [
+    {
+     "old": "from _common.game_profiles import POWERBALL, OZLOTTO\nfrom _common.multigame_e1 import forecast\n",
+     "new": "from _common.game_profiles import POWERBALL, OZLOTTO\nfrom E_001.multigame_e1 import forecast\n"
+    }
+   ]
+  },
+  {
+   "old_path": "tests/test_multigame_reader_contracts.py",
+   "new_path": "tests/test_multigame_reader_contracts.py",
+   "edits": [
+    {
+     "old": "                                           _parse_prefix, _owned)\nfrom _common.e1_common_reader_bridge import prepared_e1_forecast\nfrom _common.e1_historical_appearance_frequency import canonical_bytes\n",
+     "new": "                                           _parse_prefix, _owned)\nfrom E_001.e1_common_reader_bridge import prepared_e1_forecast\nfrom E_001.e1_historical_appearance_frequency import canonical_bytes\n"
+    },
+    {
+     "old": "        # Pure arithmetic; do not run or enable the real standalone entry point.\n        from _common.e1_training_view import build_e1_forecast\n        from _common.e1_historical_appearance_frequency import canonical_bytes\n        from _common.e1_standalone_contract import sha\n",
+     "new": "        # Pure arithmetic; do not run or enable the real standalone entry point.\n        from E_001.e1_training_view import build_e1_forecast\n        from E_001.e1_historical_appearance_frequency import canonical_bytes\n        from E_001.e1_standalone_contract import sha\n"
+    },
+    {
+     "old": "        \"\"\"Distinct from the later standalone-runner synthetic golden pair.\"\"\"\n        from _common.e1_historical_appearance_frequency import (\n",
+     "new": "        \"\"\"Distinct from the later standalone-runner synthetic golden pair.\"\"\"\n        from E_001.e1_historical_appearance_frequency import (\n"
+    }
+   ]
+  },
+  {
+   "old_path": "tests/test_multigame_static_and_timing.py",
+   "new_path": "tests/test_multigame_static_and_timing.py",
+   "edits": [
+    {
+     "old": "        accepted_legacy='E_001_Historical_Appearance_Frequency.py'\n        for method in (ROOT/'src'/'methods').glob('*.py'):\n            if method.name==accepted_legacy:\n",
+     "new": "        accepted_legacy='E_001_Historical_Appearance_Frequency.py'\n        # E1-ALIGN: method folders are scanned too. Every reference to the shared\n        # reader is identified by module AND imported name (so 'from _common import\n        # game_draws_reader' is caught), and every textual mention of the reader or of\n        # source_data is counted. E_1's accepted legacy references inside its folder\n        # are allowed exactly: file, form, module, name, alias and count. Anything\n        # else fails, including a new file in E_001/, and every allowance must be used.\n        # This is a static regression guard, not a defence against obfuscated dynamic\n        # imports; the exact-diff review of each package remains mandatory.\n        allowed_imports={('E_001/e1_common_reader_bridge.py','from','_common.game_draws_reader',\n                          'DrawView',None):1}\n        allowed_text={('E_001/e1_common_reader_bridge.py','game_draws_reader'):1,\n                      ('E_001/e1_training_view.py','source_data'):1}\n        used_imports={}\n        used_text={}\n        methods=ROOT/'src'/'methods'\n        files=sorted([*methods.glob('*.py'),*methods.glob('E_[0-9][0-9][0-9]/**/*.py')])\n        for method in files:\n            rel=method.relative_to(methods).as_posix()\n            if rel==accepted_legacy:\n"
+    },
+    {
+     "old": "                if isinstance(node,ast.ImportFrom):\n                    self.assertNotIn('game_draws_reader',node.module or '')\n",
+     "new": "                if isinstance(node,ast.ImportFrom):\n                    module=('.'*node.level)+(node.module or '')\n                    for alias in node.names:\n                        if 'game_draws_reader' in module or 'game_draws_reader' in alias.name:\n                            key=(rel,'from',module,alias.name,alias.asname)\n                            self.assertIn(key,allowed_imports,f'unauthorised reader import in {rel}: {key}')\n                            used_imports[key]=used_imports.get(key,0)+1\n"
+    },
+    {
+     "old": "                    for alias in node.names:\n                        self.assertNotIn('game_draws_reader',alias.name)\n            self.assertNotIn('source_data',contents)\n",
+     "new": "                    for alias in node.names:\n                        if 'game_draws_reader' in alias.name:\n                            key=(rel,'import',alias.name,None,alias.asname)\n                            self.assertIn(key,allowed_imports,f'unauthorised reader import in {rel}: {key}')\n                            used_imports[key]=used_imports.get(key,0)+1\n            for word in ('game_draws_reader','source_data'):\n                n=contents.count(word)\n                if n:\n                    key=(rel,word)\n                    self.assertIn(key,allowed_text,f'unauthorised {word} reference in {rel}')\n                    used_text[key]=used_text.get(key,0)+n\n        self.assertEqual(used_imports,allowed_imports)\n        self.assertEqual(used_text,allowed_text)\n"
+    }
+   ]
+  }
+ ]
+}
