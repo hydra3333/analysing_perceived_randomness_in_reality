@@ -1,0 +1,281 @@
+--- a/src/methods/_common/contract_registry.py
++++ b/src/methods/_common/contract_registry.py
+@@ -8,6 +8,7 @@
+ """
+ from __future__ import annotations
+ 
++import hashlib
+ import json
+ from pathlib import Path
+ from types import MappingProxyType
+@@ -38,7 +39,18 @@
+ 
+ 
+ class InstalledRegistry:
+-    """Every installed declaration and registry chain, validated on load; read-only afterwards."""
++    """Every installed declaration and registry chain, validated on load and immutable afterwards.
++
++    Storage (E2RC1-B01): each record is kept only as its canonical bytes, keyed by the SHA-256 digest
++    of those bytes, inside read-only mappings and tuples. Bytes cannot be changed, so no installed
++    value can drift from its digest, at any depth. The instance itself refuses attribute changes.
++    Access: every accessor builds a NEW dict from the stored bytes and checks it against the stored
++    digest before returning it. The caller owns that copy and may keep or change it; a changed copy
++    affects neither the registry nor any other caller, and it is not the installed record: its own
++    record_digest differs, so it can never be passed off under the installed identity.
++    """
++
++    __slots__ = ('_declarations', '_chains')
+ 
+     def __init__(self, root: Path = DATA_ROOT):
+         decls, chains = {}, {}
+@@ -60,28 +72,61 @@
+                     raise ValueError(f'{p}: registry entry files must be entry_0001.json, entry_0002.json, ...')
+                 if (e['game_id'], e['method_id'], e['variant_id']) != tuple(folder.parts[-3:]):
+                     raise ValueError(f'{p}: file location does not match the entry')
+-            active = validate_registry_chain(entries)
++            validate_registry_chain(entries)
+             for e in entries:
+                 validate_entry_declaration_pair(e, decls.get(e['declaration_digest']) if e['declaration_digest'] else None)
+-            chains[tuple(folder.parts[-3:])] = (tuple(MappingProxyType(e) for e in entries), MappingProxyType(active))
+-        self.declarations = MappingProxyType({k: MappingProxyType(v) for k, v in decls.items()})
+-        self.chains = MappingProxyType(chains)
++            chains[tuple(folder.parts[-3:])] = tuple(_frozen(e) for e in entries)
+         for game in ('POWERBALL', 'OZLOTTO'):
+             listed = {m for (g, m, _v) in chains if g == game}
+             if listed != set(REGISTERED_METHODS):
+                 raise ValueError(f'{game}: every method E_1..E_62 must stay registered (E2R-R19)')
++        object.__setattr__(self, '_declarations', MappingProxyType({k: _frozen(v)[1] for k, v in decls.items()}))
++        object.__setattr__(self, '_chains', MappingProxyType(chains))
+ 
+-    def active_entry(self, game_id: str, method_id: str, variant_id: str) -> Mapping:
+-        key = (game_id, method_id, variant_id)
+-        if key not in self.chains:
+-            raise ValueError('no registry chain for this method variant')
+-        return self.chains[key][1]
++    def __setattr__(self, name, value):
++        raise AttributeError('InstalledRegistry is read-only')
++
++    def __delattr__(self, name):
++        raise AttributeError('InstalledRegistry is read-only')
++
++    def declaration_digests(self) -> tuple[str, ...]:
++        return tuple(sorted(self._declarations))
++
++    def chain_keys(self) -> tuple[tuple[str, str, str], ...]:
++        """(game_id, method_id, variant_id) of every registry chain, sorted."""
++        return tuple(sorted(self._chains))
+ 
+     def declaration(self, digest: str) -> dict:
+-        """A fresh copy, so a caller can never alter the installed record."""
+-        if digest not in self.declarations:
++        """A new, caller-owned copy of the installed declaration with this digest."""
++        if digest not in self._declarations:
+             raise ValueError('no installed declaration with this digest')
+-        return json.loads(canonical(dict(self.declarations[digest])))
++        return _thaw(digest, self._declarations[digest])
++
++    def chain(self, game_id: str, method_id: str, variant_id: str) -> list[dict]:
++        """New, caller-owned copies of every entry in one chain, oldest first."""
++        return [_thaw(dig, raw) for dig, raw in self._chain(game_id, method_id, variant_id)]
++
++    def active_entry(self, game_id: str, method_id: str, variant_id: str) -> dict:
++        """A new, caller-owned copy of the newest entry in one chain."""
++        return _thaw(*self._chain(game_id, method_id, variant_id)[-1])
++
++    def _chain(self, game_id, method_id, variant_id):
++        key = (game_id, method_id, variant_id)
++        if key not in self._chains:
++            raise ValueError('no registry chain for this method variant')
++        return self._chains[key]
++
++
++def _frozen(rec: Mapping) -> tuple[str, bytes]:
++    raw = canonical(rec)
++    return hashlib.sha256(raw).hexdigest(), raw
++
++
++def _thaw(digest: str, raw: bytes) -> dict:
++    rec = json.loads(raw.decode('ascii'))
++    if record_digest(rec) != digest or canonical(rec) != raw:
++        raise ValueError('installed record does not match its digest')
++    return rec
+ 
+ 
+ # ---------------------------------------------------------------- revision rollover (E2R-R14A, E2R-T13)
+--- a/src/methods/_common/contract_receipts.py
++++ b/src/methods/_common/contract_receipts.py
+@@ -10,6 +10,7 @@
+ 
+ from collections.abc import Mapping, Sequence
+ from datetime import datetime
++import re
+ 
+ import _common.contract_vocab as V
+ from _common.contract_forecast import validate_diagnostic, validate_forecast
+@@ -34,13 +35,19 @@
+                     'registry_entry_digest', 'receipt_digests')
+ 
+ 
++# A UTC date-time with an explicit clock time and one final Z (E2RC1-C01): YYYY-MM-DDTHH:MM:SS, then
++# optionally 1 to 6 fraction digits, then Z. No offset, no date-only form, ASCII digits only. The
++# value is informational: it is not proof that publication preceded an outcome (E2R-R40C, R2 8.2A).
++_UTC_TIMESTAMP = re.compile(r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(?:\.[0-9]{1,6})?Z')
++
++
+ def _utc(v: object, where: str) -> str:
+-    if type(v) is not str or not v.endswith('Z'):
+-        raise ValueError(f'{where}: UTC timestamp ending in Z required')
++    if type(v) is not str or _UTC_TIMESTAMP.fullmatch(v) is None:
++        raise ValueError(f'{where}: UTC date-time YYYY-MM-DDTHH:MM:SS[.ffffff]Z required')
+     try:
+-        datetime.fromisoformat(v[:-1])
++        datetime.strptime(v[:19], '%Y-%m-%dT%H:%M:%S')   # rejects impossible dates and times
+     except ValueError:
+-        raise ValueError(f'{where}: UTC timestamp required') from None
++        raise ValueError(f'{where}: not a real UTC date-time') from None
+     return v
+ 
+ 
+--- a/tests/test_e2r_contract.py
++++ b/tests/test_e2r_contract.py
+@@ -30,7 +30,8 @@
+     assemble_diagnostic, assemble_forecast, validate_diagnostic, validate_forecast,
+ )
+ from _common.contract_receipts import (
+-    consumable, score_record_key, track_id, validate_freeze_receipt, validate_score_record, validate_terminal,
++    consumable, score_record_key, track_id, validate_diagnostic_receipt, validate_freeze_receipt,
++    validate_score_record, validate_terminal,
+ )
+ from _common.contract_registry import InstalledRegistry, revision_rollover_findings
+ from _common.contract_task import MethodTask, TASK_FIELDS
+@@ -385,9 +386,10 @@
+ 
+     def test_installed_declarations_and_supported_entries(self):
+         reg = InstalledRegistry()
+-        for d in reg.declarations.values():
+-            self.assertIsNone(d['is_interface_version'])
+-        for (g, m, var), (entries, active) in reg.chains.items():
++        for dig in reg.declaration_digests():
++            self.assertIsNone(reg.declaration(dig)['is_interface_version'])
++        for key in reg.chain_keys():
++            active = reg.active_entry(*key)
+             if active['registry_status'] == 'SUPPORTED':
+                 d = reg.declaration(active['declaration_digest'])
+                 self.assertFalse(d['stochastic_fit'])
+@@ -749,7 +751,7 @@
+             shutil.copytree(DATA_ROOT, root)
+             for f in root.rglob('*.json'):
+                 f.write_bytes(f.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))  # as Windows core.autocrlf would
+-            self.assertEqual(len(InstalledRegistry(root).chains), 124)
++            self.assertEqual(len(InstalledRegistry(root).chain_keys()), 124)
+             f = next(root.rglob('entry_0001.json'))
+             f.write_bytes(json.dumps(json.loads(f.read_bytes()), indent=1).encode('ascii'))
+             with self.assertRaises(ValueError):
+@@ -791,5 +793,107 @@
+                     self.assertFalse(m == 'archive' or m.startswith('archive.'), f'{f.name} imports {m}')
+ 
+ 
++class RegistryImmutability(unittest.TestCase):
++    """E2RC1-B01 (EX_034): the installed registry is immutable at every depth. Accessors return new,
++    caller-owned copies; changing a copy, however deep, changes nothing installed, and a changed copy
++    can never carry the installed digest."""
++
++    @classmethod
++    def setUpClass(cls):
++        cls.reg = InstalledRegistry()
++        cls.key = ('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1')
++
++    def test_nested_declaration_mutation_changes_nothing_installed(self):
++        dig = self.reg.active_entry(*self.key)['declaration_digest']
++        before = canonical(self.reg.declaration(dig))
++        for name, change in {
++                'channel readout rule': lambda d: d['channels']['MAIN'].__setitem__('top_rule_id', 'MAP_SET'),
++                'channel removed': lambda d: d['channels'].pop('POWERBALL'),
++                'observation views': lambda d: d['observation_views'].append('OPERATOR_DRAWN_ORDER'),
++                'top-level field': lambda d: d.__setitem__('minimum_history_draws', 99)}.items():
++            with self.subTest(change=name):
++                d = self.reg.declaration(dig)
++                change(d)
++                self.assertNotEqual(record_digest(d), dig)            # a changed copy has its own identity
++                self.assertNotIn(record_digest(d), self.reg.declaration_digests())
++                with self.assertRaises(ValueError):
++                    self.reg.declaration(record_digest(d))
++                again = self.reg.declaration(dig)
++                self.assertEqual(canonical(again), before)
++                self.assertEqual(record_digest(again), dig)
++                self.assertIsNot(again, d)
++
++    def test_nested_entry_mutation_changes_nothing_installed(self):
++        before = [canonical(e) for e in self.reg.chain(*self.key)]
++        for name, get in {'active entry': lambda: self.reg.active_entry(*self.key),
++                          'chain entry': lambda: self.reg.chain(*self.key)[0]}.items():
++            with self.subTest(source=name):
++                e = get()
++                e['text_provenance']['author'] = 'someone else'
++                e['text_provenance'].clear()
++                e['registry_status'] = 'FORMULA_OPEN'
++                self.assertEqual([canonical(x) for x in self.reg.chain(*self.key)], before)
++                self.assertEqual(canonical(self.reg.active_entry(*self.key)), before[-1])
++        a, b = self.reg.active_entry(*self.key), self.reg.active_entry(*self.key)
++        self.assertIsNot(a, b)
++        self.assertIsNot(a['text_provenance'], b['text_provenance'])
++
++    def test_no_writable_state(self):
++        reg = self.reg
++        for attempt in (lambda: setattr(reg, 'extra', 1), lambda: setattr(reg, '_declarations', {}),
++                        lambda: delattr(reg, '_chains')):
++            with self.assertRaises(AttributeError):
++                attempt()
++        with self.assertRaises(TypeError):
++            reg._declarations[next(iter(reg._declarations))] = b'{}'
++        with self.assertRaises(TypeError):
++            reg._chains[self.key] = ()
++        self.assertFalse(hasattr(reg, '__dict__'))
++        # What is stored is bytes and tuples only, all the way down, and each digest is of its bytes.
++        for dig, raw in reg._declarations.items():
++            self.assertIs(type(raw), bytes)
++            self.assertEqual(hashlib.sha256(raw).hexdigest(), dig)
++        for chain in reg._chains.values():
++            self.assertIs(type(chain), tuple)
++            for dig, raw in chain:
++                self.assertIs(type(raw), bytes)
++                self.assertEqual(hashlib.sha256(raw).hexdigest(), dig)
++
++
++class ReceiptTimestamps(unittest.TestCase):
++    """E2RC1-C01 (EX_034): frozen_at_utc is a real UTC date-time, YYYY-MM-DDTHH:MM:SS[.ffffff]Z, in
++    both receipt types. It stays informational: not proof that publication preceded an outcome."""
++
++    GOOD = ('2026-10-28T12:00:00Z', '2026-10-28T12:00:00.5Z', '2026-10-28T12:00:00.123456Z',
++            '2024-02-29T23:59:59Z', '2026-01-01T00:00:00Z')
++    BAD = ('2026-10-28T12:30:00+10:30Z', '2026-10-28Z', '2026-10-28T00:00:00-05:00Z',   # the reviewer's three
++           '2026-10-28T12:00:00+00:00', '2026-10-28T12:00:00', '2026-10-28T12:00:00ZZ', '2026-10-28T12:00Z',
++           '2026-10-28 12:00:00Z', '2026-10-28t12:00:00Z', '2026-10-28T12:00:00z', '2026-10-28T12:00:00.Z',
++           '2026-10-28T12:00:00.1234567Z', '2026-02-30T12:00:00Z', '2025-02-29T12:00:00Z',
++           '2026-13-01T12:00:00Z', '2026-10-28T24:00:00Z', '2026-10-28T12:60:00Z', '2026-10-28T23:59:60Z',
++           '\u0662026-10-28T12:00:00Z', '2026-10-28T12:00:00Z\n', ' 2026-10-28T12:00:00Z', '', 'Z', 20261028, None)
++
++    @classmethod
++    def setUpClass(cls):
++        _d, _r, _v, _t, _o, cls.c1, cls.c2 = F.one_record('POWERBALL')
++        cls.rc, cls.rd = F.receipt_for(cls.c1), F.receipt_for(cls.c2)
++
++    def check(self, validate, receipt, record):
++        validate(receipt, record)
++        for v in self.GOOD:
++            with self.subTest(good=v):
++                validate(dict(receipt, frozen_at_utc=v), record)
++        for v in self.BAD:
++            with self.subTest(bad=v):
++                with self.assertRaises(ValueError):
++                    validate(dict(receipt, frozen_at_utc=v), record)
++
++    def test_forecast_freeze_receipt(self):
++        self.check(validate_freeze_receipt, self.rc, self.c1)
++
++    def test_diagnostic_receipt(self):
++        self.check(validate_diagnostic_receipt, self.rd, self.c2)
++
++
+ if __name__ == '__main__':
+     unittest.main()

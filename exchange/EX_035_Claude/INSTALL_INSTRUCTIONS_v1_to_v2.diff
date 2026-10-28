@@ -1,0 +1,49 @@
+--- a/INSTALL_INSTRUCTIONS.md
++++ b/INSTALL_INSTRUCTIONS.md
+@@ -1,26 +1,26 @@
+ # E2R-CODE-1 - the E_2-readiness contract library (only after the reviewer's RECHECK PASS and the owner's go-ahead)
+ 
+-Windows CMD, repository root, with the project venv. **Save the ZIP to `E:\TEMP`, not into the repository.** Delete any earlier extracted `E:\TEMP\E2R_CODE1_*` folders, then extract it there (`tar -xf "E:\TEMP\E2R_CODE1_Install_v1.zip" -C E:\TEMP`). This package adds 153 new files and changes no existing file.
++Windows CMD, repository root, with the project venv. **Save the ZIP to `E:\TEMP`, not into the repository.** Delete any earlier extracted `E:\TEMP\E2R_CODE1_*` folders, then extract it there (`tar -xf "E:\TEMP\E2R_CODE1_Install_v2.zip" -C E:\TEMP`). This package adds 156 new files and changes no existing file.
+ 
+ ## 1. Update, check, copy, check
+ 
+ ```bat
+ git status --short
+ git pull --ff-only
+-python "E:\TEMP\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase pre
+-xcopy "E:\TEMP\E2R_CODE1_Install_v1\repo_overlay\*" . /E /Y
+-python "E:\TEMP\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase post
++python "E:\TEMP\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase pre
++xcopy "E:\TEMP\E2R_CODE1_Install_v2\repo_overlay\*" . /E /Y
++python "E:\TEMP\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase post
+ ```
+ 
+-Expected: `git status --short` prints nothing; the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `153 File(s) copied`; `POST PASS`.
++Expected: `git status --short` prints nothing; the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `156 File(s) copied`; `POST PASS`.
+ 
+ ## 2. Tests (offline; nothing in the repository is changed)
+ 
+ ```bat
+-.venv\Scripts\python.exe "E:\TEMP\E2R_CODE1_Install_v1\RUN_E2R_SUITE.py" --repo .
++.venv\Scripts\python.exe "E:\TEMP\E2R_CODE1_Install_v2\RUN_E2R_SUITE.py" --repo .
+ ```
+ 
+-Expected: `SUITE PASS` (132 tests; the only allowed skips are the two symlink tests). The determinism test (E2R-T12) starts up to six ordinary Python worker processes and lets them finish normally; nothing is killed. **Send Claude the output whatever it says.** If anything in steps 1 or 2 prints `STOP` or `FAILED`, do not commit: send Claude the output (nothing is committed; the copied files are only new files).
++Expected: `SUITE PASS` (138 tests; the only allowed skips are the two symlink tests). The determinism test (E2R-T12) starts up to six ordinary Python worker processes and lets them finish normally; nothing is killed. **Send Claude the output whatever it says.** If anything in steps 1 or 2 prints `STOP` or `FAILED`, do not commit: send Claude the output (nothing is committed; the copied files are only new files).
+ 
+ ## 3. Stage, commit, check, and only then push
+ 
+@@ -28,10 +28,10 @@
+ git add doc review src tests
+ git status --short
+ git commit -m "E2R-CODE-1: E_2-readiness contract library (new files only) and register v0.11"
+-python "E:\TEMP\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase committed
++python "E:\TEMP\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo . --phase committed
+ ```
+ 
+-Expected: `git status --short` lists 153 lines starting with `A` and nothing else; then `COMMITTED PASS`.
++Expected: `git status --short` lists 156 lines starting with `A` and nothing else; then `COMMITTED PASS`.
+ 
+ **If the committed check prints `STOP`: do not push, and do not reset or undo anything.** Send Claude the whole output.
+ 
