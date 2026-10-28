@@ -1,0 +1,751 @@
+diff --git a/src/Powerball_Experiment_Coordinator.py b/src/Powerball_Experiment_Coordinator.py
+index 7657143..ca5d3a3 100644
+--- a/src/Powerball_Experiment_Coordinator.py
++++ b/src/Powerball_Experiment_Coordinator.py
+@@ -1100,9 +1100,9 @@ def coordinator_main() -> int:
+                 method_root = str(ROOT / 'src' / 'methods')
+                 if method_root not in sys.path:
+                     sys.path.append(method_root)  # do NOT prepend
+-                import coordinator_private.multigame_coordinator_exit_receipt_v2 as receipt_module
++                import coordinator_private.multigame_coordinator_exit_receipt as receipt_module
+                 expected_issuer = (ROOT / 'src' / 'coordinator_private' /
+-                                   'multigame_coordinator_exit_receipt_v2.py').resolve(strict=True)
++                                   'multigame_coordinator_exit_receipt.py').resolve(strict=True)
+                 actual_issuer = Path(receipt_module.__file__).resolve(strict=True)
+                 if actual_issuer != expected_issuer:
+                     raise ValueError('untrusted coordinator receipt issuer location')
+@@ -1166,7 +1166,7 @@ if __name__ == "__main__":
+                   "requires separate independent review and owner approval; "
+                   "source gate is False.", file=sys.stderr)
+             raise SystemExit(3)
+-        from coordinator_private.multigame_windows_lifecycle_v1 import run_windows_synthetic
++        from coordinator_private.multigame_windows_lifecycle import run_windows_synthetic
+         try:
+             raise SystemExit(run_windows_synthetic(sys.modules[__name__], sys.argv[1:]))
+         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
+diff --git a/src/coordinator_private/multigame_coordinator_exit_receipt_v2.py b/src/coordinator_private/multigame_coordinator_exit_receipt.py
+similarity index 97%
+rename from src/coordinator_private/multigame_coordinator_exit_receipt_v2.py
+rename to src/coordinator_private/multigame_coordinator_exit_receipt.py
+index af57afe..58687c7 100644
+--- a/src/coordinator_private/multigame_coordinator_exit_receipt_v2.py
++++ b/src/coordinator_private/multigame_coordinator_exit_receipt.py
+@@ -28,7 +28,7 @@ _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)
+ _VARIANT = re.compile(r'[A-Z0-9_]{3,96}\Z', re.ASCII)
+ _SHA = re.compile(r'[a-f0-9]{64}\Z', re.ASCII)
+ _FILES = ('status.json', 'manifest.json', 'canonical_result.json')
+-_CONTRACT_MODULE_NAMES = ('multigame_result_registry_v1.py', 'multigame_console_protocol_v1.py')
++_CONTRACT_MODULE_NAMES = ('multigame_result_registry.py', 'multigame_console_protocol.py')
+ 
+ 
+ def _contract_hashes() -> dict[str,str]:
+@@ -80,7 +80,7 @@ def _check_artifact_identities(identity: dict, status: dict, manifest: dict, res
+     for name, item in (('status', status), ('manifest', manifest), ('result', result)):
+         if any(item.get(key) != value for key, value in required.items()):
+             raise ValueError(name + ' identity mismatch')
+-    from _common.multigame_result_registry_v1 import (
++    from _common.multigame_result_registry import (
+         SYNTHETIC_MODE, SYNTHETIC_SCHEMA, SCIENTIFIC_MODES,
+         require_synthetic_variant, require_scientific_contract,
+     )
+@@ -150,7 +150,7 @@ def issue_coordinator_receipt(*, group_dir: Path, run_dir: Path, identity: dict,
+     # in this one read. The same in-memory bytes are then SHA-256-bound below.
+     # No second read of canonical_result.json and no unproven boolean from
+     # the caller can certify the digest. The old v0.5 two-read seam is retired.
+-    from _common.multigame_console_protocol_v1 import verify_success_records
++    from _common.multigame_console_protocol import verify_success_records
+     verify_success_records(console_publication_records,
+         game_id=identity['game_id'], method_id=identity['method_id'],
+         run_id=identity['run_id'], target=identity['draw_number'],
+@@ -229,7 +229,7 @@ def verify_receipt_before_consume(*, group_dir: Path, run_dir: Path,
+             not math.isfinite(receipt['status_create_time_epoch']) or
+             receipt['status_create_time_epoch'] <= 0):
+         raise ValueError('invalid worker status identity in receipt')
+-    from _common.multigame_result_registry_v1 import SYNTHETIC_MODE, SCIENTIFIC_MODES
++    from _common.multigame_result_registry import SYNTHETIC_MODE, SCIENTIFIC_MODES
+     receipt_mode = receipt.get('mode')
+     if receipt_mode == SYNTHETIC_MODE:
+         # No result-file read is ever allowed for a synthetic plumbing probe
+@@ -238,7 +238,7 @@ def verify_receipt_before_consume(*, group_dir: Path, run_dir: Path,
+         raise ValueError('synthetic contract test is not a scientific result')
+     if receipt_mode not in SCIENTIFIC_MODES:
+         raise ValueError('unregistered coordinated/FINAL receipt mode')
+-    from _common.multigame_result_registry_v1 import registered_scientific_binding
++    from _common.multigame_result_registry import registered_scientific_binding
+     # Classify by a reviewed registry BEFORE even opening the result file.
+     # Package 2 has no live scientific coordinated/FINAL registrations.
+     registered_scientific_binding(game_id=identity['game_id'],
+diff --git a/src/coordinator_private/multigame_launch_spec_v1.py b/src/coordinator_private/multigame_launch_spec.py
+similarity index 94%
+rename from src/coordinator_private/multigame_launch_spec_v1.py
+rename to src/coordinator_private/multigame_launch_spec.py
+index 6f4ba2f..a6ecb04 100644
+--- a/src/coordinator_private/multigame_launch_spec_v1.py
++++ b/src/coordinator_private/multigame_launch_spec.py
+@@ -49,9 +49,9 @@ def build_synthetic_launch_spec(*, group_id: str, worker_sequence: int,
+     Every run dir is under a deliberately selected game-qualified synthetic root.
+     A real loader is impossible through this interface.
+     """
+-    from _common.game_profiles_v1 import get_profile
+-    from _common.multigame_method_registry_v1 import method_status, SUPPORTED
+-    from _common.multigame_result_registry_v1 import require_synthetic_variant
++    from _common.game_profiles import get_profile
++    from _common.multigame_method_registry import method_status, SUPPORTED
++    from _common.multigame_result_registry import require_synthetic_variant
+     if (type(group_id) is not str or _SAFE_GROUP.fullmatch(group_id) is None or
+             type(worker_sequence) is not int or not 1 <= worker_sequence <= 6 or
+             type(run_id) is not str or _SAFE_RUN.fullmatch(run_id) is None or
+diff --git a/src/coordinator_private/multigame_windows_lifecycle_v1.py b/src/coordinator_private/multigame_windows_lifecycle.py
+similarity index 98%
+rename from src/coordinator_private/multigame_windows_lifecycle_v1.py
+rename to src/coordinator_private/multigame_windows_lifecycle.py
+index 8850979..20f3275 100644
+--- a/src/coordinator_private/multigame_windows_lifecycle_v1.py
++++ b/src/coordinator_private/multigame_windows_lifecycle.py
+@@ -23,8 +23,8 @@ import threading
+ import time
+ import uuid
+ 
+-from .multigame_launch_spec_v1 import build_synthetic_launch_spec
+-from .multigame_coordinator_exit_receipt_v2 import issue_coordinator_receipt
++from .multigame_launch_spec import build_synthetic_launch_spec
++from .multigame_coordinator_exit_receipt import issue_coordinator_receipt
+ 
+ 
+ def parse_synthetic_args(argv: list[str]) -> argparse.Namespace:
+@@ -155,7 +155,7 @@ def run_windows_synthetic(coordinator, argv: list[str]) -> int:
+                     strict_release_eligibility(launch=launch, worker=worker, status=status)
+                     if os.path.lexists(coordinator.UNRESOLVED_ORPHAN_MARKER):
+                         raise ValueError('global orphan marker before release')
+-                    from _common.multigame_ancestry_release_v1 import release_document, RELEASE_NAME
++                    from _common.multigame_ancestry_release import release_document, RELEASE_NAME
+                     path = launch.run_dir / RELEASE_NAME
+                     if os.path.lexists(path):
+                         raise ValueError('ancestry release collision')
+diff --git a/src/methods/E_001_Historical_Appearance_Frequency.py b/src/methods/E_001_Historical_Appearance_Frequency.py
+index 106ea67..68307f0 100644
+--- a/src/methods/E_001_Historical_Appearance_Frequency.py
++++ b/src/methods/E_001_Historical_Appearance_Frequency.py
+@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
+             parser.error('synthetic mode may not read the real source_data directory')
+     else:
+         root = project / 'transitory_data' / 'p3_standalone_runs'
+-    from _common.e1_standalone_contract_v0_1 import (
++    from _common.e1_standalone_contract import (
+         begin, canonical_json, create_only, finish, publish_failed_manifest,
+         publish_success_manifest, sha)
+     # Durable STARTED happens before CSV/model/numerics imports or source reads.
+@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
+         return 2
+     print(f'[E_001] STARTED run={args.run_id} mode={mode} target={args.target}', flush=True)
+     try:
+-        from _common.e1_training_view_v0_1 import load_permitted_u_view, build_e1_forecast
++        from _common.e1_training_view import load_permitted_u_view, build_e1_forecast
+         rows, digest = load_permitted_u_view(args.source, args.target, source_kind=mode,
+                                            trusted_source_dir=(trusted_real_source if mode == 'REAL_HISTORICAL_DEVELOPMENT' else None))
+         result = build_e1_forecast(rows, digest, args.target, source_kind=mode)
+diff --git a/src/methods/POC_MultiGame_Synthetic_Worker.py b/src/methods/POC_MultiGame_Synthetic_Worker.py
+index 7690e3a..d4066dd 100644
+--- a/src/methods/POC_MultiGame_Synthetic_Worker.py
++++ b/src/methods/POC_MultiGame_Synthetic_Worker.py
+@@ -12,10 +12,10 @@ import os
+ from pathlib import Path
+ import sys
+ 
+-from _common.multigame_standalone_contract_v1 import json_bytes
++from _common.multigame_standalone_contract import json_bytes
+ from _common.experiment_runtime_status_and_resources import ProbeStatus
+-from _common.multigame_coordinated_manifest_v1 import publish_coordinated_success
+-from _common.multigame_result_registry_v1 import SYNTHETIC_MODE, SYNTHETIC_VARIANT, SYNTHETIC_SCHEMA
++from _common.multigame_coordinated_manifest import publish_coordinated_success
++from _common.multigame_result_registry import SYNTHETIC_MODE, SYNTHETIC_VARIANT, SYNTHETIC_SCHEMA
+ 
+ METHOD = 'E_1'
+ 
+@@ -37,7 +37,7 @@ def main(argv: list[str] | None = None, *, test_synthetic_root: Path | None = No
+     marker = project / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
+     if os.path.lexists(marker):
+         parser.error('global unresolved orphan safety stop')
+-    from _common.multigame_worker_launch_handshake_v1 import verify_synthetic_worker_request
++    from _common.multigame_worker_launch_handshake import verify_synthetic_worker_request
+     identity,run_dir,profile_version=verify_synthetic_worker_request(
+             group_id=args.group_id,worker_sequence=args.worker_sequence,
+             run_id=args.run_id,game_id=args.game,draw_number=args.target,
+@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None, *, test_synthetic_root: Path | None = No
+     print(f'BEGIN {METHOD} game={args.game} draw={args.target} run={args.run_id}',flush=True)
+     try:
+         if args.await_coordinator_release:
+-            from _common.multigame_ancestry_release_v1 import await_release
++            from _common.multigame_ancestry_release import await_release
+             born = status.value.get('process_create_time_epoch')
+             if type(born) not in (float, int) or born <= 0:
+                 raise ValueError('worker process creation time not available')
+diff --git a/src/methods/_common/e1_common_reader_bridge_v1.py b/src/methods/_common/e1_common_reader_bridge.py
+similarity index 89%
+rename from src/methods/_common/e1_common_reader_bridge_v1.py
+rename to src/methods/_common/e1_common_reader_bridge.py
+index 0448e77..d42a493 100644
+--- a/src/methods/_common/e1_common_reader_bridge_v1.py
++++ b/src/methods/_common/e1_common_reader_bridge.py
+@@ -4,8 +4,8 @@ It does no I/O, scoring, process control or result publication.
+ """
+ from __future__ import annotations
+ 
+-from .game_draws_reader_v1 import DrawView
+-from .e1_training_view_v0_1 import build_e1_forecast
++from .game_draws_reader import DrawView
++from .e1_training_view import build_e1_forecast
+ 
+ def prepared_e1_forecast(view: DrawView) -> tuple[dict, str]:
+     if (not isinstance(view, DrawView) or view.game_id != 'POWERBALL' or
+diff --git a/src/methods/_common/e1_historical_appearance_frequency_v0_3.py b/src/methods/_common/e1_historical_appearance_frequency.py
+similarity index 100%
+rename from src/methods/_common/e1_historical_appearance_frequency_v0_3.py
+rename to src/methods/_common/e1_historical_appearance_frequency.py
+diff --git a/src/methods/_common/e1_standalone_contract_v0_1.py b/src/methods/_common/e1_standalone_contract.py
+similarity index 100%
+rename from src/methods/_common/e1_standalone_contract_v0_1.py
+rename to src/methods/_common/e1_standalone_contract.py
+diff --git a/src/methods/_common/e1_training_view_v0_1.py b/src/methods/_common/e1_training_view.py
+similarity index 97%
+rename from src/methods/_common/e1_training_view_v0_1.py
+rename to src/methods/_common/e1_training_view.py
+index 66b957e..1cb0481 100644
+--- a/src/methods/_common/e1_training_view_v0_1.py
++++ b/src/methods/_common/e1_training_view.py
+@@ -16,7 +16,7 @@ from datetime import date, timedelta
+ from pathlib import Path
+ from typing import Any
+ 
+-from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
++from _common.e1_historical_appearance_frequency import canonical_bytes
+ 
+ FIRST_DRAW = 1144
+ HOLDOUT_FIRST = 1578
+@@ -115,7 +115,7 @@ def load_permitted_u_view(source: Path, target: int, *, source_kind: str,
+ 
+ def build_e1_forecast(records: list[dict], digest: str, target: int, *, source_kind: str) -> dict:
+     # Delayed import to keep STARTED publication ahead of heavy future dependencies.
+-    from _common.e1_historical_appearance_frequency_v0_3 import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
++    from _common.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
+     if source_kind not in ('REAL_HISTORICAL_DEVELOPMENT', 'SYNTHETIC_CONTRACT_TEST'):
+         raise ValueError('source kind not allowed')
+     if len(records) != target-FIRST_DRAW or records[0]['draw'] != FIRST_DRAW or records[-1]['draw'] != target-1:
+diff --git a/src/methods/_common/game_draws_reader_v1.py b/src/methods/_common/game_draws_reader.py
+similarity index 99%
+rename from src/methods/_common/game_draws_reader_v1.py
+rename to src/methods/_common/game_draws_reader.py
+index 64a85f7..59e171e 100644
+--- a/src/methods/_common/game_draws_reader_v1.py
++++ b/src/methods/_common/game_draws_reader.py
+@@ -19,7 +19,7 @@ import re
+ from types import MappingProxyType
+ 
+ import numpy as np
+-from _common.game_profiles_v1 import get_profile
++from _common.game_profiles import get_profile
+ 
+ _DIGIT = re.compile(rb'(0|[1-9][0-9]*)\Z', re.ASCII)
+ _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)
+@@ -105,7 +105,7 @@ class DrawView:
+ 
+     def e1_view_digest(self, *, data_kind: str = _REAL) -> str:
+         """Legacy E1 date-free digest is immutable; new schemas bind dates."""
+-        from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
++        from _common.e1_historical_appearance_frequency import canonical_bytes
+         rows = self.simple_rows()
+         legacy = (self.game_id == 'POWERBALL' and self.method_id == 'E_1' and
+                   self.variant_id == _E1_VARIANT and self.kind == 'UNORDERED_SET' and
+diff --git a/src/methods/_common/game_profiles_v1.py b/src/methods/_common/game_profiles.py
+similarity index 100%
+rename from src/methods/_common/game_profiles_v1.py
+rename to src/methods/_common/game_profiles.py
+diff --git a/src/methods/_common/multigame_ancestry_release_v1.py b/src/methods/_common/multigame_ancestry_release.py
+similarity index 97%
+rename from src/methods/_common/multigame_ancestry_release_v1.py
+rename to src/methods/_common/multigame_ancestry_release.py
+index 45c4994..53d987c 100644
+--- a/src/methods/_common/multigame_ancestry_release_v1.py
++++ b/src/methods/_common/multigame_ancestry_release.py
+@@ -12,7 +12,7 @@ import os
+ from pathlib import Path
+ import time
+ 
+-from .multigame_standalone_contract_v1 import json_bytes
++from .multigame_standalone_contract import json_bytes
+ 
+ RELEASE_NAME = 'coordinator_ancestry_release.json'
+ RELEASE_POLL_SECONDS = 0.5
+diff --git a/src/methods/_common/multigame_console_protocol_v1.py b/src/methods/_common/multigame_console_protocol.py
+similarity index 98%
+rename from src/methods/_common/multigame_console_protocol_v1.py
+rename to src/methods/_common/multigame_console_protocol.py
+index 161e766..975a845 100644
+--- a/src/methods/_common/multigame_console_protocol_v1.py
++++ b/src/methods/_common/multigame_console_protocol.py
+@@ -12,7 +12,7 @@ import json
+ import re
+ from collections.abc import Sequence
+ 
+-from _common.multigame_standalone_contract_v1 import json_bytes
++from _common.multigame_standalone_contract import json_bytes
+ 
+ _ID = re.compile(r'[A-Z][A-Z0-9]*\Z', re.ASCII)
+ _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)
+diff --git a/src/methods/_common/multigame_coordinated_manifest_v1.py b/src/methods/_common/multigame_coordinated_manifest.py
+similarity index 96%
+rename from src/methods/_common/multigame_coordinated_manifest_v1.py
+rename to src/methods/_common/multigame_coordinated_manifest.py
+index 097b6c7..aa475d5 100644
+--- a/src/methods/_common/multigame_coordinated_manifest_v1.py
++++ b/src/methods/_common/multigame_coordinated_manifest.py
+@@ -11,9 +11,9 @@ import json
+ import os
+ from pathlib import Path
+ 
+-from _common.multigame_console_protocol_v1 import prepare_success_records
+-from _common.multigame_standalone_contract_v1 import json_bytes
+-from _common.multigame_result_registry_v1 import (
++from _common.multigame_console_protocol import prepare_success_records
++from _common.multigame_standalone_contract import json_bytes
++from _common.multigame_result_registry import (
+     require_synthetic_variant, SYNTHETIC_MODE, SYNTHETIC_SCHEMA
+ )
+ 
+diff --git a/src/methods/_common/multigame_e1_v1.py b/src/methods/_common/multigame_e1.py
+similarity index 94%
+rename from src/methods/_common/multigame_e1_v1.py
+rename to src/methods/_common/multigame_e1.py
+index b1c5e23..52b107c 100644
+--- a/src/methods/_common/multigame_e1_v1.py
++++ b/src/methods/_common/multigame_e1.py
+@@ -1,6 +1,6 @@
+ """Generic E_1 scoring engine, candidate. No IO or execution on import.
+ 
+-Kept separate from accepted e1_historical_appearance_frequency_v0_3.
++Kept separate from accepted e1_historical_appearance_frequency.
+ Legacy Powerball SHA/rank regression is compulsory before any migration.
+ """
+ from __future__ import annotations
+@@ -9,10 +9,10 @@ import hashlib
+ import re
+ from collections.abc import Mapping, Sequence
+ 
+-from _common.e1_historical_appearance_frequency_v0_3 import (
++from _common.e1_historical_appearance_frequency import (
+     _length32_tuple, canonical_bytes, DOMAIN, METHOD_ID, VARIANT_ID, TIE_VERSION,
+ )
+-from _common.game_profiles_v1 import GameProfile
++from _common.game_profiles import GameProfile
+ 
+ 
+ def _digest(view_sha256: str, target: int, barrel_id: str, label: int) -> str:
+diff --git a/src/methods/_common/multigame_method_registry_v1.py b/src/methods/_common/multigame_method_registry.py
+similarity index 96%
+rename from src/methods/_common/multigame_method_registry_v1.py
+rename to src/methods/_common/multigame_method_registry.py
+index 16a7e50..fe9b667 100644
+--- a/src/methods/_common/multigame_method_registry_v1.py
++++ b/src/methods/_common/multigame_method_registry.py
+@@ -6,7 +6,7 @@ FORMULA_OPEN pending the existing research/family approval process.
+ from __future__ import annotations
+ from types import MappingProxyType
+ 
+-from _common.game_profiles_v1 import get_profile
++from _common.game_profiles import get_profile
+ 
+ SUPPORTED = 'SUPPORTED'
+ UNSUPPORTED = 'UNSUPPORTED_FOR_GAME'
+diff --git a/src/methods/_common/multigame_result_registry_v1.py b/src/methods/_common/multigame_result_registry.py
+similarity index 96%
+rename from src/methods/_common/multigame_result_registry_v1.py
+rename to src/methods/_common/multigame_result_registry.py
+index fe44ef6..7c27ad4 100644
+--- a/src/methods/_common/multigame_result_registry_v1.py
++++ b/src/methods/_common/multigame_result_registry.py
+@@ -11,8 +11,8 @@ Nothing in this module permits process launches, holdout access, or scoring.
+ from __future__ import annotations
+ 
+ from types import MappingProxyType
+-from _common.game_profiles_v1 import get_profile
+-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
++from _common.game_profiles import get_profile
++from _common.multigame_method_registry import method_status, SUPPORTED
+ 
+ SYNTHETIC_MODE = 'SYNTHETIC_CONTRACT_TEST'
+ SYNTHETIC_VARIANT = 'SYNTHETIC_PLUMBING_V1'
+diff --git a/src/methods/_common/multigame_standalone_contract_v1.py b/src/methods/_common/multigame_standalone_contract.py
+similarity index 98%
+rename from src/methods/_common/multigame_standalone_contract_v1.py
+rename to src/methods/_common/multigame_standalone_contract.py
+index 54364d6..3a026e1 100644
+--- a/src/methods/_common/multigame_standalone_contract_v1.py
++++ b/src/methods/_common/multigame_standalone_contract.py
+@@ -14,8 +14,8 @@ import re
+ from pathlib import Path
+ 
+ from _common.experiment_runtime_status_and_resources import ProbeStatus
+-from _common.game_profiles_v1 import GameProfile
+-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
++from _common.game_profiles import GameProfile
++from _common.multigame_method_registry import method_status, SUPPORTED
+ 
+ _RUN = re.compile(r'mg-[a-z0-9][a-z0-9_-]{7,95}\Z',re.ASCII)
+ _HEX = re.compile(r'[0-9a-f]{64}\Z',re.ASCII)
+diff --git a/src/methods/_common/multigame_synthetic_scorer_v1.py b/src/methods/_common/multigame_synthetic_scorer.py
+similarity index 97%
+rename from src/methods/_common/multigame_synthetic_scorer_v1.py
+rename to src/methods/_common/multigame_synthetic_scorer.py
+index aacd5f5..c3868cb 100644
+--- a/src/methods/_common/multigame_synthetic_scorer_v1.py
++++ b/src/methods/_common/multigame_synthetic_scorer.py
+@@ -10,8 +10,8 @@ import math
+ from collections.abc import Callable
+ from pathlib import Path
+ 
+-from _common.game_profiles_v1 import GameProfile
+-from _common.multigame_standalone_contract_v1 import verify_synthetic_and_consume
++from _common.game_profiles import GameProfile
++from _common.multigame_standalone_contract import verify_synthetic_and_consume
+ 
+ 
+ def _native_mid_ranks(scores: dict, *, low: int, high: int) -> dict[int, float]:
+diff --git a/src/methods/_common/multigame_worker_launch_handshake_v1.py b/src/methods/_common/multigame_worker_launch_handshake.py
+similarity index 90%
+rename from src/methods/_common/multigame_worker_launch_handshake_v1.py
+rename to src/methods/_common/multigame_worker_launch_handshake.py
+index 193402e..c83ccca 100644
+--- a/src/methods/_common/multigame_worker_launch_handshake_v1.py
++++ b/src/methods/_common/multigame_worker_launch_handshake.py
+@@ -7,9 +7,9 @@ from __future__ import annotations
+ from pathlib import Path
+ import re
+ 
+-from _common.game_profiles_v1 import get_profile
+-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
+-from _common.multigame_result_registry_v1 import require_synthetic_variant
++from _common.game_profiles import get_profile
++from _common.multigame_method_registry import method_status, SUPPORTED
++from _common.multigame_result_registry import require_synthetic_variant
+ 
+ 
+ def verify_synthetic_worker_request(*, game_id: str, draw_number: int,
+diff --git a/tests/test_p3_e1_standalone_v0_1.py b/tests/test_e1_standalone.py
+similarity index 98%
+rename from tests/test_p3_e1_standalone_v0_1.py
+rename to tests/test_e1_standalone.py
+index 0b9b387..de08d5e 100644
+--- a/tests/test_p3_e1_standalone_v0_1.py
++++ b/tests/test_e1_standalone.py
+@@ -18,9 +18,9 @@ from pathlib import Path
+ 
+ BASE = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(BASE / 'src' / 'methods'))
+-from _common.e1_training_view_v0_1 import (  # noqa
++from _common.e1_training_view import (  # noqa
+     U_COLUMNS, load_permitted_u_view, build_e1_forecast)
+-from _common.e1_standalone_contract_v0_1 import (  # noqa
++from _common.e1_standalone_contract import (  # noqa
+     verify_and_consume, canonical_json, sha)
+ import E_001_Historical_Appearance_Frequency as runner  # noqa
+ 
+@@ -201,7 +201,7 @@ class E1LoaderAndRun(unittest.TestCase):
+         # Even if a late result appears after a FAILED run, it cannot be consumed.
+         valid_csv=self.root/'late_valid.csv'; csv_rows(valid_csv)
+         valid=self.load(valid_csv)
+-        from _common.e1_training_view_v0_1 import build_e1_forecast
++        from _common.e1_training_view import build_e1_forecast
+         result=build_e1_forecast(*valid, TARGET, source_kind='SYNTHETIC_CONTRACT_TEST')
+         (rd/'canonical_result.json').write_bytes(canonical_json(result))
+         with self.assertRaisesRegex(ValueError, 'non-PASS'):
+@@ -210,7 +210,7 @@ class E1LoaderAndRun(unittest.TestCase):
+     def test_interrupt_is_fail_closed(self):
+         from unittest.mock import patch
+         rid='e1-interruptedstatus01'
+-        with patch('_common.e1_training_view_v0_1.load_permitted_u_view',
++        with patch('_common.e1_training_view.load_permitted_u_view',
+                    side_effect=KeyboardInterrupt):
+             self.assertEqual(self.run_cli(rid), 1)
+         rd=self.runs/rid
+@@ -258,7 +258,7 @@ class E1LoaderAndRun(unittest.TestCase):
+         fake_runner_path = fake_project / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py'
+         with (patch.object(runner, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', False),
+               patch.object(runner, '__file__', str(fake_runner_path)),
+-              patch('_common.e1_training_view_v0_1.load_permitted_u_view',
++              patch('_common.e1_training_view.load_permitted_u_view',
+                     side_effect=AssertionError('disabled real mode must not invoke loader')) as loader):
+             with self.assertRaises(SystemExit) as stopped:
+                 runner.main(['--mode', 'historical-development', '--target', '1152',
+diff --git a/tests/test_multigame_console_and_synthetic_scorer_v0_4.py b/tests/test_multigame_console_and_synthetic_scorer.py
+similarity index 96%
+rename from tests/test_multigame_console_and_synthetic_scorer_v0_4.py
+rename to tests/test_multigame_console_and_synthetic_scorer.py
+index f15bb50..296bce9 100644
+--- a/tests/test_multigame_console_and_synthetic_scorer_v0_4.py
++++ b/tests/test_multigame_console_and_synthetic_scorer.py
+@@ -8,15 +8,15 @@ from pathlib import Path
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path.insert(0,str(ROOT/'src'/'methods'))
+-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
+-from _common.multigame_e1_v1 import forecast
+-from _common.multigame_standalone_contract_v1 import (
++from _common.game_profiles import POWERBALL, OZLOTTO
++from _common.multigame_e1 import forecast
++from _common.multigame_standalone_contract import (
+     begin_synthetic, publish_synthetic_success, json_bytes,
+ )
+-from _common.multigame_console_protocol_v1 import (
++from _common.multigame_console_protocol import (
+     prepare_success_records,verify_success_records,verify_failed_records,
+ )
+-from _common.multigame_synthetic_scorer_v1 import score_verified_synthetic
++from _common.multigame_synthetic_scorer import score_verified_synthetic
+ 
+ 
+ def make_run(root: Path,p,draw,tag):
+diff --git a/tests/test_multigame_exit_receipt_v0_8.py b/tests/test_multigame_exit_receipt.py
+similarity index 97%
+rename from tests/test_multigame_exit_receipt_v0_8.py
+rename to tests/test_multigame_exit_receipt.py
+index 24717d1..efe356b 100644
+--- a/tests/test_multigame_exit_receipt_v0_8.py
++++ b/tests/test_multigame_exit_receipt.py
+@@ -13,8 +13,8 @@ from unittest.mock import patch
+ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / 'src'))
+ sys.path.insert(0, str(ROOT / 'src' / 'methods'))
+-import _common.multigame_result_registry_v1 as result_registry
+-from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
++import _common.multigame_result_registry as result_registry
++from coordinator_private.multigame_coordinator_exit_receipt import (
+     issue_coordinator_receipt, verify_receipt_before_consume, _canonical, _hash
+ )
+ 
+@@ -57,7 +57,7 @@ _FAKE_SCIENCE = MappingProxyType({('OZLOTTO','E_1','FULL_HISTORY_RAW_COUNTS_V1',
+                                   ('TEST_ONLY_COORDINATED_E1_RESULT_V1','TEST_ONLY_FAKE_SCIENCE')})
+ 
+ def records(group, run, identity):
+-    from _common.multigame_console_protocol_v1 import prepare_success_records
++    from _common.multigame_console_protocol import prepare_success_records
+     result=json.loads((run/'canonical_result.json').read_bytes())
+     return prepare_success_records(game_id=identity['game_id'],
+         method_id=identity['method_id'], run_id=identity['run_id'],
+@@ -258,7 +258,7 @@ class ReceiptTests(unittest.TestCase):
+         self.assertNotIn('sys.path.insert(0, method_root)',source)
+         self.assertIn('actual_issuer != expected_issuer',source)
+         self.assertIn('untrusted coordinator receipt issuer location',source)
+-        self.assertIn("'multigame_coordinator_exit_receipt_v2.py').resolve(strict=True)",source)
++        self.assertIn("'multigame_coordinator_exit_receipt.py').resolve(strict=True)",source)
+ 
+     def test_verifier_opens_canonical_result_once_and_returns_that_object(self):
+         with tempfile.TemporaryDirectory() as t:
+@@ -277,7 +277,7 @@ class ReceiptTests(unittest.TestCase):
+ 
+     def test_coordinator_private_module_and_noop_removed(self):
+         self.assertFalse((ROOT/'src'/'methods'/'_common'/'multigame_coordinator_exit_receipt_v1.py').exists())
+-        self.assertTrue((ROOT/'src'/'coordinator_private'/'multigame_coordinator_exit_receipt_v2.py').is_file())
++        self.assertTrue((ROOT/'src'/'coordinator_private'/'multigame_coordinator_exit_receipt.py').is_file())
+         source=(ROOT/'src'/'Powerball_Experiment_Coordinator.py').read_text()
+         self.assertNotIn("final['workers'] = reports",source)
+ 
+diff --git a/tests/test_multigame_launch_and_manifest_v0_8.py b/tests/test_multigame_launch_and_manifest.py
+similarity index 97%
+rename from tests/test_multigame_launch_and_manifest_v0_8.py
+rename to tests/test_multigame_launch_and_manifest.py
+index 6defa68..82efef6 100644
+--- a/tests/test_multigame_launch_and_manifest_v0_8.py
++++ b/tests/test_multigame_launch_and_manifest.py
+@@ -11,10 +11,10 @@ import unittest
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path[:0]=[str(ROOT/'src'),str(ROOT/'src'/'methods')]
+-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
+-from _common.multigame_console_protocol_v1 import verify_success_records
+-from _common.multigame_standalone_contract_v1 import json_bytes
+-from _common.multigame_coordinated_manifest_v1 import publish_coordinated_success
++from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
++from _common.multigame_console_protocol import verify_success_records
++from _common.multigame_standalone_contract import json_bytes
++from _common.multigame_coordinated_manifest import publish_coordinated_success
+ 
+ METHOD=ROOT/'src'/'methods'/'POC_MultiGame_Synthetic_Worker.py'
+ spec=importlib.util.spec_from_file_location('e001_multigame_synthetic_review',METHOD)
+@@ -173,7 +173,7 @@ class LaunchAndWorkerManifestTests(unittest.TestCase):
+         self.assertIn('ENABLE_PROCESS_TERMINATION = False',coord)
+ 
+     def test_receipt_consumer_cannot_treat_plumbing_as_forecast(self):
+-        from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
++        from coordinator_private.multigame_coordinator_exit_receipt import (
+             issue_coordinator_receipt,verify_receipt_before_consume)
+         with tempfile.TemporaryDirectory() as td:
+             home=Path(td)
+diff --git a/tests/test_multigame_v011_reader_contracts.py b/tests/test_multigame_reader_contracts.py
+similarity index 97%
+rename from tests/test_multigame_v011_reader_contracts.py
+rename to tests/test_multigame_reader_contracts.py
+index c66c007..ee45cfe 100644
+--- a/tests/test_multigame_v011_reader_contracts.py
++++ b/tests/test_multigame_reader_contracts.py
+@@ -19,12 +19,12 @@ import numpy as np
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / 'src' / 'methods'))
+-from _common.game_draws_reader_v1 import (DrawView, load_pinned_draw_view, header_for,
++from _common.game_draws_reader import (DrawView, load_pinned_draw_view, header_for,
+                                            _parse_prefix, _owned)
+-from _common.e1_common_reader_bridge_v1 import prepared_e1_forecast
+-from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
+-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
+-from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
++from _common.e1_common_reader_bridge import prepared_e1_forecast
++from _common.e1_historical_appearance_frequency import canonical_bytes
++from _common.game_profiles import POWERBALL, OZLOTTO
++from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
+ 
+ SHA = {'POWERBALL':'ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8',
+        'OZLOTTO':'4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f'}
+@@ -108,9 +108,9 @@ class V011ReaderTests(unittest.TestCase):
+ 
+     def test_existing_synthetic_e1_goldens_unchanged(self):
+         # Pure arithmetic; do not run or enable the real standalone entry point.
+-        from _common.e1_training_view_v0_1 import build_e1_forecast
+-        from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
+-        from _common.e1_standalone_contract_v0_1 import sha
++        from _common.e1_training_view import build_e1_forecast
++        from _common.e1_historical_appearance_frequency import canonical_bytes
++        from _common.e1_standalone_contract import sha
+         fixture=json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
+         rows=fixture['rows']
+         digest=hashlib.sha256(canonical_bytes({
+@@ -125,7 +125,7 @@ class V011ReaderTests(unittest.TestCase):
+ 
+     def test_ratified_r2_5_5_synthetic_identity_goldens(self):
+         """Distinct from the later standalone-runner synthetic golden pair."""
+-        from _common.e1_historical_appearance_frequency_v0_3 import (
++        from _common.e1_historical_appearance_frequency import (
+             candidate_forecast, training_prefix, training_sha256, tie_digest)
+         fixture = json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
+         self.assertEqual(fixture['target'], 1152)
+diff --git a/tests/test_multigame_science_allowlist_v0_8.py b/tests/test_multigame_science_allowlist.py
+similarity index 95%
+rename from tests/test_multigame_science_allowlist_v0_8.py
+rename to tests/test_multigame_science_allowlist.py
+index 2630a81..28dfe9a 100644
+--- a/tests/test_multigame_science_allowlist_v0_8.py
++++ b/tests/test_multigame_science_allowlist.py
+@@ -17,13 +17,13 @@ from unittest.mock import patch
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path[:0]=[str(ROOT/'src'),str(ROOT/'src'/'methods')]
+-import _common.multigame_result_registry_v1 as registry
+-from _common.multigame_standalone_contract_v1 import json_bytes
+-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
+-from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
++import _common.multigame_result_registry as registry
++from _common.multigame_standalone_contract import json_bytes
++from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
++from coordinator_private.multigame_coordinator_exit_receipt import (
+     issue_coordinator_receipt, verify_receipt_before_consume
+ )
+-from test_multigame_exit_receipt_v0_8 import (setup, records, CODE_HASH)
++from test_multigame_exit_receipt import (setup, records, CODE_HASH)
+ 
+ WORKER=ROOT/'src'/'methods'/'POC_MultiGame_Synthetic_Worker.py'
+ worker_spec=importlib.util.spec_from_file_location('synthetic_probe_v08',WORKER)
+diff --git a/tests/test_multigame_v011_static_and_timing.py b/tests/test_multigame_static_and_timing.py
+similarity index 92%
+rename from tests/test_multigame_v011_static_and_timing.py
+rename to tests/test_multigame_static_and_timing.py
+index 4d2b115..42c459d 100644
+--- a/tests/test_multigame_v011_static_and_timing.py
++++ b/tests/test_multigame_static_and_timing.py
+@@ -16,9 +16,9 @@ import unittest
+ 
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path[:0] = [str(ROOT/'src'),str(ROOT/'src'/'methods')]
+-from _common.multigame_ancestry_release_v1 import RELEASE_POLL_SECONDS,RELEASE_WAIT_SECONDS
+-from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
+-from coordinator_private.multigame_windows_lifecycle_v1 import PIPE_READER_JOIN_TIMEOUT_SECONDS as LIFE_JOIN
++from _common.multigame_ancestry_release import RELEASE_POLL_SECONDS,RELEASE_WAIT_SECONDS
++from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
++from coordinator_private.multigame_windows_lifecycle import PIPE_READER_JOIN_TIMEOUT_SECONDS as LIFE_JOIN
+ import Powerball_Experiment_Coordinator as coord
+ 
+ PROTECTED=(
+@@ -75,7 +75,7 @@ class StaticSafetyTests(unittest.TestCase):
+ 
+     def test_legacy_waits_untouched_and_new_literals_named(self):
+         source=(ROOT/'src'/'Powerball_Experiment_Coordinator.py').read_text()
+-        life=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle_v1.py').read_text()
++        life=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle.py').read_text()
+         self.assertNotIn('messages.put((number, line.rstrip("\\r\\n")), timeout=0.12)',source)
+         self.assertNotIn('w.reader.join(timeout=0.05)',source)
+         self.assertNotIn('worker.reader.join(timeout=0.05)',life)
+@@ -96,10 +96,10 @@ class StaticSafetyTests(unittest.TestCase):
+             tree=ast.parse(contents)
+             for node in ast.walk(tree):
+                 if isinstance(node,ast.ImportFrom):
+-                    self.assertNotIn('game_draws_reader_v1',node.module or '')
++                    self.assertNotIn('game_draws_reader',node.module or '')
+                 elif isinstance(node,ast.Import):
+                     for alias in node.names:
+-                        self.assertNotIn('game_draws_reader_v1',alias.name)
++                        self.assertNotIn('game_draws_reader',alias.name)
+             self.assertNotIn('source_data',contents)
+ 
+     def test_no_retired_acquisition_overlay_importable(self):
+diff --git a/tests/test_multigame_windows_lifecycle_review_v0_9.py b/tests/test_multigame_windows_lifecycle_review.py
+similarity index 93%
+rename from tests/test_multigame_windows_lifecycle_review_v0_9.py
+rename to tests/test_multigame_windows_lifecycle_review.py
+index 4e52828..cf40f8d 100644
+--- a/tests/test_multigame_windows_lifecycle_review_v0_9.py
++++ b/tests/test_multigame_windows_lifecycle_review.py
+@@ -14,12 +14,12 @@ import unittest
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path.append(str(ROOT/'src'))
+ sys.path.append(str(ROOT/'src'/'methods'))
+-from coordinator_private.multigame_windows_lifecycle_v1 import (
++from coordinator_private.multigame_windows_lifecycle import (
+     parse_synthetic_args,strict_release_eligibility,run_windows_synthetic)
+-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
+-from _common.multigame_ancestry_release_v1 import (
++from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
++from _common.multigame_ancestry_release import (
+     release_document,await_release,RELEASE_NAME)
+-from _common.multigame_standalone_contract_v1 import json_bytes
++from _common.multigame_standalone_contract import json_bytes
+ 
+ 
+ def ident():
+@@ -107,9 +107,9 @@ class SyntheticLifecycleReviewTests(TestCase):
+             self.assertFalse((run/RELEASE_NAME).exists())
+ 
+     def test_no_child_source_network_kill_or_science_registration(self):
+-        from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
++        from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
+         self.assertEqual(len(_COORDINATED_SCIENCE_ALLOWLIST),0)
+-        src=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle_v1.py').read_text()
++        src=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle.py').read_text()
+         self.assertNotIn('taskkill',src)
+         self.assertNotIn('terminate_owned_tree(',src)
+         self.assertNotIn('proc.terminate(',src)
+diff --git a/tests/test_p2_r1_t05_hardening_v1.py b/tests/test_t05_hardening.py
+similarity index 98%
+rename from tests/test_p2_r1_t05_hardening_v1.py
+rename to tests/test_t05_hardening.py
+index 4ba3910..1329bc9 100644
+--- a/tests/test_p2_r1_t05_hardening_v1.py
++++ b/tests/test_t05_hardening.py
+@@ -22,8 +22,8 @@ import numpy as np
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / 'src' / 'methods'))
+-from _common.game_draws_reader_v1 import DrawView, load_pinned_draw_view, header_for
+-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
++from _common.game_draws_reader import DrawView, load_pinned_draw_view, header_for
++from _common.game_profiles import POWERBALL, OZLOTTO
+ 
+ KINDS = ('UNORDERED_SET', 'OPERATOR_DRAWN_ORDER', 'PAIRED_DIAGNOSTIC')
+ FILES = ('{g}_results_master.csv', '{g}_results_master_ledger.csv',

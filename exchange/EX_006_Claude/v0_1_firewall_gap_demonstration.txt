@@ -1,0 +1,5 @@
+Demonstration: the v0.1 proposed firewall, and the committed 38fc60e firewall, ACCEPT the reviewer's E1A-B01 counterexamples (exit 0 = test passed = not caught).
+v0.1 firewall, m9: exit 0
+v0.1 firewall, m10: exit 0
+v0.1 firewall, m11: exit 0
+committed 38fc60e firewall, src/methods/E_999_Probe.py with 'from _common import game_draws_reader_v1': exit 0
