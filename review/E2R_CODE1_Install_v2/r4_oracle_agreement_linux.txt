@@ -1,0 +1,9 @@
+PREPARE PASS: 192 synthetic cases; 48 contexts x 4 suffixes; no real dataset opened
+Manifest: <scratch>/oracle_run2/out/oracle_manifest.json
+960 files exported to <scratch>/oracle_run2/records
+RECORD CHECK PASS: 384 canonical C1/C2 records, 192 D1, 384 TASK; 48 invariant contexts
+NOTE: separate CODE-1 schema validation, task-slot checks and mutation tests still required
+planted change (a warning added) in one LONG TASK_C1 record: check rejects it:
+ValueError: MethodTask c1 mismatch at <scratch>/oracle_run2/rec_bad/OZLOTTO/1692/UNORDERED_SET/DATES/LONG
+planted change (a warning added) in one LONG C1 record: check rejects it:
+ValueError: wrong claimed digest in <scratch>/oracle_run2/rec_bad2/POWERBALL/1146/UNORDERED_SET/DATES/LONG/C1.json

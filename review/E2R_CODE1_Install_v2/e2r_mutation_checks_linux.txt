@@ -1,0 +1,24 @@
+PASS control passes tests.test_e2r_contract.ReceiptTimestamps
+PASS control passes tests.test_e2r_contract.RegistryImmutability
+PASS control passes tests.test_e2r_contract.T01ShapeAndNumericContracts
+PASS control passes tests.test_e2r_contract.T04TieAndWorst
+PASS control passes tests.test_e2r_contract.T06ModeFirewall
+PASS control passes tests.test_e2r_contract.T16ReceiptsAndTerminalRecords
+PASS control passes tests.test_e2r_prefix
+PASS T01 mutation: validator trusts ranked_groups instead of recomputing them from the scores -> tests.test_e2r_contract.T01ShapeAndNumericContracts fails
+PASS T01 mutation: negative zero accepted -> tests.test_e2r_contract.T01ShapeAndNumericContracts fails
+PASS T01 mutation: probability sum not checked -> tests.test_e2r_contract.T01ShapeAndNumericContracts fails
+PASS T03 mutation: the master SHA reaches the method task -> tests.test_e2r_prefix fails
+PASS T04 mutation: ties ordered by label instead of TIE_SHA256_V1 -> tests.test_e2r_contract.T04TieAndWorst fails
+PASS T04 mutation: WORST taken as the last k instead of the reversal -> tests.test_e2r_contract.T04TieAndWorst fails
+PASS T06 mutation: REAL_HOLDOUT made producible (unreserved AND mapped onto the development row) -> tests.test_e2r_contract.T06ModeFirewall fails
+PASS T06 mutation: benchmarks may produce a forecast -> tests.test_e2r_contract.T06ModeFirewall fails
+PASS T10 mutation: the run ID reaches the forecast warnings -> tests.test_e2r_prefix fails
+PASS T16 mutation: consumption ignores the group and firewall gates -> tests.test_e2r_contract.T16ReceiptsAndTerminalRecords fails
+PASS T16 mutation: consumption accepts an interrupted run with no terminal record -> tests.test_e2r_contract.T16ReceiptsAndTerminalRecords fails
+PASS T16 mutation: consumption accepts a non-SUCCESS terminal record (both guards removed) -> tests.test_e2r_contract.T16ReceiptsAndTerminalRecords fails
+PASS B01 mutation: registry accessors hand every caller the same shared object -> tests.test_e2r_contract.RegistryImmutability fails
+PASS B01 mutation: registry attributes can be replaced -> tests.test_e2r_contract.RegistryImmutability fails
+PASS B01 mutation: registry chain store is an ordinary mutable dict -> tests.test_e2r_contract.RegistryImmutability fails
+PASS C01 mutation: the old ends-with-Z timestamp check -> tests.test_e2r_contract.ReceiptTimestamps fails
+RESULT PASS
