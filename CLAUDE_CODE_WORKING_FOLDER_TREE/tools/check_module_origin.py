@@ -1,6 +1,6 @@
 """Check that the project modules a test run uses come from the task clone, not from the main repository.
 
-Written by the Claude web chat, 29 October 2026. Read-only: it imports modules (no program is run) and
+Written by the Claude web chat, 29 October 2026 (v2: uses the CODE-1 v2 registry accessors). Read-only: it imports modules (no program is run) and
 loads the installed contract registry from the clone's own contract_data. It reads no source_data,
 results or transitory_data.
 Usage: <venv python> -I check_module_origin.py --repo <task clone>
@@ -51,7 +51,8 @@ def main():
     reg = CR.InstalledRegistry()
     print(f'contract_data: {data}')
     print(f'contract_data files: {len(files)}, with CRLF line endings: {crlf}')
-    print(f'registry loaded: {len(reg.declarations)} declarations, {len(reg.chains)} registry chains')
+    # CODE-1 v2 accessors (E2RC1-B01); v1's public attributes were removed in v2.
+    print(f'registry loaded: {len(reg.declaration_digests())} declarations, {len(reg.chain_keys())} registry chains')
     if not norm(data).startswith(norm(repo) + os.sep):
         bad.append(f'contract_data is outside the clone: {data}')
     if bad:

@@ -38,8 +38,9 @@ What the two root files do:
 ## Each task
 
 1. `git pull --ff-only` (this brings the new task file).
-2. In Claude Code, type: `Do inbox\TASK_T001.md` (the web chat tells you the task name and any options, such as `with T12`).
-3. Claude Code asks before each command. Approve a command only if it is one of the task file's commands. If anything looks different, say no and tell the web chat.
-4. When Claude Code says "please push": `git push`. Then tell the web chat the task's RESULT line; it reads the report from GitHub.
+2. Start a new Claude Code conversation (or close and reopen Claude Code), so that it loads the rulebook as it now is; it reads `CLAUDE.md` only when a conversation starts.
+3. In Claude Code, type: `Do inbox\TASK_T001.md` (the web chat tells you the task name and any options, such as `with T12`).
+4. Claude Code asks before each command. Approve a command only if it is one of the task file's commands. If anything looks different, say no and tell the web chat.
+5. When Claude Code says "please push": `git push`. Then tell the web chat the task's RESULT line; it reads the report from GitHub.
 
 If `git status` ever shows `.claude/settings.local.json` (your personal "don't ask again" choices), do not commit it.
