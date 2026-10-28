@@ -1,8 +1,10 @@
-# exchange/ - scratch area for AI-to-AI document exchange (v0.3)
+# exchange/ - scratch area for AI-to-AI document exchange (v0.4)
 
-Supersedes: v0.2 (commit 06a672f). Change: adds "Message packaging" -
-one upload per message; the usual blurb goes inside the EX message, and
-any documents travel with it in a single zip.
+Supersedes: v0.3 (commit 262a2c4). Change (owner decision, 28 October
+2026): an enclosed document may keep its project file's encoding (see
+"Content rules"). v0.3 added "Message packaging": one upload per
+message; the blurb goes inside the EX message, and any documents
+travel with it in a single zip.
 
 Purpose
 -------
@@ -72,7 +74,13 @@ Content rules
 -------------
 - Self-contained: do not rely on the reader having seen the sender's chat.
 - Cite repository documents by path and, where it matters, commit hash.
-- US-ASCII only, CRLF line endings.
+- US-ASCII only, CRLF line endings, for every EX message file and for
+  any other enclosed text file that has no project file to match.
+- Exception (v0.4): an enclosed document that is, or derives from, a
+  project file in UTF-8 (for example a ratified text containing
+  non-ASCII characters) keeps that file's characters, with LF or CRLF
+  line endings. Never convert it to ASCII. Its identity is the SHA-256
+  of its canonical LF bytes, which the EX message states.
 - Privacy: refer only to "the owner", "the GitHub project owner" or
   hydra3333. Never use a personal name.
 
