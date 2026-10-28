@@ -1,8 +1,8 @@
 # TASK_T001 - Windows rehearsal of the E2R-CODE-1 install, in a task clone
 
-**Task ID:** T001. **Date:** 29 October 2026. **Author:** the Claude web chat.
+**Task ID:** T001. **Date:** 29 October 2026 (revised the same day for the v2 package of EX_035). **Author:** the Claude web chat.
 
-**Purpose.** Run the E2R-CODE-1 install package (`exchange/EX_033_Claude/E2R_CODE1_Install_v1.zip`) on the owner's Windows machine, but in a disposable task clone that cannot push, so the main repository is not changed at all. This shows how the package's checks and tests behave on a real Windows checkout before the owner's own install. It is a rehearsal only: it installs nothing, authorises nothing, and is not the owner's install or the reviewer's RECHECK.
+**Purpose.** Run the E2R-CODE-1 install package v2 (`exchange/EX_035_Claude/E2R_CODE1_Install_v2.zip`) on the owner's Windows machine, but in a disposable task clone that cannot push, so the main repository is not changed at all. This shows how the package's checks and tests behave on a real Windows checkout before the owner's own install. It is a rehearsal only: it installs nothing, authorises nothing, and is not the owner's install or the reviewer's RECHECK.
 
 It differs from the owner's real install in four ways: it runs in a task clone, not the main repository; files are copied by `tools\cc_clone.py overlay`, not `xcopy`; there is no `git pull` and no push; and E2R-T12 is not run unless the owner asks.
 
@@ -18,7 +18,7 @@ It differs from the owner's real install in four ways: it runs in a task clone, 
 | PY (the main venv's Python) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe` |
 | TOOLS | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools` |
 | CLONE (the task clone) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r` |
-| PKG (the extracted package) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1` |
+| PKG (the extracted package) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2` |
 
 The commands below are written out in full. Run each from MAIN (your normal workspace folder). On anything other than the expected PASS line, or a non-zero exit code: **STOP**, record the output, and go to step 15 (clean-up).
 
@@ -43,28 +43,28 @@ git log -1 --format=%s
 ```
 Expected: `GUARD PASS`, `git remote -v: ''`, the two HEAD lines, the `core.autocrlf` line, then `MAKE PASS`.
 
-**4. Check and extract the package** (from the clone's own copy of EX_033).
+**4. Check and extract the package** (from the clone's own copy of EX_035).
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" unzip --task T001 --zip exchange/EX_033_Claude/E2R_CODE1_Install_v1.zip --sha256 acb9f0ea475697d3b073bae84f7d7fff06d791e04ee2e3c869a1abf5cf5876fb
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" unzip --task T001 --zip exchange/EX_035_Claude/E2R_CODE1_Install_v2.zip --sha256 f21f7d753167059ed50b324ea57474b36c5168e92016477f91f22287e1d1380f
 ```
-Expected: `ZIP SHA-256: acb9f0ea...76fb`, then `UNZIP PASS: ... files extracted`.
+Expected: `ZIP SHA-256: f21f7d75...380f`, then `UNZIP PASS: ... files extracted`.
 
 **5. PRE check.**
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" guard --task T001
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase pre
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase pre
 ```
 Expected: `GUARD PASS`, then `PRE PASS`.
 
 **6. Copy the overlay into the clone** (new files only).
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" overlay --task T001 --src "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1\repo_overlay"
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" overlay --task T001 --src "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\repo_overlay"
 ```
-Expected: `OVERLAY PASS: 153 files copied`.
+Expected: `OVERLAY PASS: 156 files copied`.
 
 **7. POST check.**
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase post
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase post
 ```
 Expected: `POST PASS`.
 
@@ -76,15 +76,15 @@ Expected: every module line starts `ok`, the contract-data and registry lines, t
 
 **9A. Tests without T12** (the default).
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\run_e2r_suite_without_t12.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r"
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\run_e2r_suite_without_t12.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --runner "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\RUN_E2R_SUITE.py"
 ```
-Expected: `SUITE PASS: 132 of the 133 tests ran and passed (E2R-T12 not run)`. A run can take a few minutes.
+Expected: `SUITE PASS: 137 of the 138 tests ran and passed (E2R-T12 not run)`. A run can take a few minutes.
 
 **9B. Tests with T12** (only if the owner said `with T12`; then skip 9A).
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1\RUN_E2R_SUITE.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r"
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\RUN_E2R_SUITE.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r"
 ```
-Expected: `SUITE PASS: all 133 tests ran and passed`. (The package's INSTALL_INSTRUCTIONS.md says 132; that is a known typo in the instructions, which the web chat will correct. Do not treat it as a STOP.)
+Expected: `SUITE PASS: all 138 tests ran and passed`.
 
 **10. Stage in the clone.**
 ```
@@ -96,7 +96,7 @@ Expected: `GUARD PASS (before)`, then `GUARD PASS (after); git add exit code 0`.
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" git --task T001 -- status --short
 ```
-Expected: 153 lines, every one starting with `A`, and `git status exit code 0`. In the report, give the count of lines, the count starting with `A`, and every line that does not start with `A` (do not paste all 153 lines).
+Expected: 156 lines, every one starting with `A`, and `git status exit code 0`. In the report, give the count of lines, the count starting with `A`, and every line that does not start with `A` (do not paste all 156 lines).
 
 **12. Commit in the clone** (this commit exists only in the task clone and is deleted with it).
 ```
@@ -106,7 +106,7 @@ Expected: `git commit exit code 0`.
 
 **13. COMMITTED check.**
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v1\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase committed
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\p\E2R_CODE1_Install_v2\VERIFY_E2R_CODE1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T001\r" --phase committed
 ```
 Expected: `COMMITTED PASS`. (In a task clone, if this STOPs, the identity report's "upstream" lines will say there is no upstream; that is expected and is not the cause.)
 
