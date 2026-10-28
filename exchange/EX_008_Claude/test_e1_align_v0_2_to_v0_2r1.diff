@@ -1,0 +1,30 @@
+--- test_e1_align.py@v0.2
++++ test_e1_align.py@v0.2r1
+@@ -1,7 +1,8 @@
+ """E1-ALIGN guards (proposed new test module; offline, no data, no processes, nothing created).
+ 
+ 1. Shared code imports no method code: no module under src/methods/_common, src/coordinator_private
+-   or the coordinator imports from a method folder (E_<nnn>) or names an E_1-only module.
++   or the coordinator imports from a method folder (E_<nnn>) or names an E_1-only module, whether as
++   the imported module or as a name imported from a package (symbol-aware, E1A2-C01).
+ 2. E_1 keeps its old symbols: the E_1 core module's canonical_bytes and _length32_tuple are the shared
+    functions themselves, and the reader uses the same canonical_bytes.
+ 3. The five E_1-only modules exist only in src/methods/E_001/ and are imported from there.
+@@ -31,10 +32,16 @@
+ 
+ 
+ def _imports(path):
++    # Yields the module of every import AND, for 'from M import N', each 'M.N', so that
++    # 'from methods import E_001' or 'from _common import e1_training_view' is seen.
+     tree = ast.parse(path.read_text('utf-8'))
+     for node in ast.walk(tree):
+         if isinstance(node, ast.ImportFrom):
+-            yield ('.' * node.level) + (node.module or '')
++            base = ('.' * node.level) + (node.module or '')
++            yield base
++            for alias in node.names:
++                if alias.name != '*':
++                    yield base + '.' + alias.name
+         elif isinstance(node, ast.Import):
+             for alias in node.names:
+                 yield alias.name

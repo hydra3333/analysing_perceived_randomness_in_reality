@@ -1,0 +1,26 @@
+--- NAMES1_INSTALL_INSTRUCTIONS.md@EX_006
++++ NAMES1_INSTALL_INSTRUCTIONS.md@r1
+@@ -22,15 +22,20 @@
+ 
+ Expected: `SUITE PASS` (79 tests; the only allowed skips are the two symlink tests, if Windows cannot create symlinks), then `RESULT PASS`. Send Claude both outputs whatever they say. If either says `STOP`, do not commit: to undo, run `git reset --hard` and then `git clean -fd -- doc review`, which puts the repository back exactly as it was.
+ 
+-## 3. Stage, commit, push, check
++## 3. Stage, commit, check, and only then push
+ 
+ ```bat
+ call "E:\TEMP\NAMES1_Code_Install_v1\STAGE_EXACT_FILES.cmd"
+ git diff --cached --name-status
+ git commit -m "NAMES-1: one-off rename to stable file names; NAMES-1 v0.2 (ratified) and register v0.8"
+-git push
+ python "E:\TEMP\NAMES1_Code_Install_v1\VERIFY_NAMES1_INSTALL.py" --repo . --phase committed
++```
++
++Expected: the staged list shows renames (`R`) and modifications (`M`), and 13 lines starting with `A`; then `COMMITTED PASS`. **Push only after `COMMITTED PASS`:**
++
++```bat
++git push
+ git rev-parse HEAD
+ ```
+ 
+-Expected: the staged list shows renames (`R`) and modifications (`M`), and 13 lines starting with `A`; then `COMMITTED PASS`. Send Claude the commit ID. Claude then verifies it from GitHub and runs the immediate recovery check (N1-T10) in a disposable clone. If anything prints `STOP`, stop and send Claude the output.
++Send Claude the commit ID. Claude then verifies it from GitHub and runs the immediate recovery check (N1-T10) in a disposable clone. If the committed check prints `STOP`, do **not** push: send Claude the output (the commit is still only on your PC; `git reset --hard HEAD~1` removes it). If anything else prints `STOP`, stop and send Claude the output.
