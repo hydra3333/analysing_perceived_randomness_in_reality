@@ -1,0 +1,454 @@
+diff --git a/dB/src/methods/E_001/__init__.py b/dB/src/methods/E_001/__init__.py
+new file mode 100644
+index 0000000..e4eb0ba
+--- /dev/null
++++ b/dB/src/methods/E_001/__init__.py
+@@ -0,0 +1 @@
++"""E_1 method folder: E_1-only modules (E1-ALIGN). The entry file stays in src/methods/."""
+diff --git a/dA/src/methods/_common/e1_common_reader_bridge.py b/dB/src/methods/E_001/e1_common_reader_bridge.py
+similarity index 94%
+rename from dA/src/methods/_common/e1_common_reader_bridge.py
+rename to dB/src/methods/E_001/e1_common_reader_bridge.py
+index d42a493..17299a1 100644
+--- a/dA/src/methods/_common/e1_common_reader_bridge.py
++++ b/dB/src/methods/E_001/e1_common_reader_bridge.py
+@@ -4,7 +4,7 @@ It does no I/O, scoring, process control or result publication.
+ """
+ from __future__ import annotations
+ 
+-from .game_draws_reader import DrawView
++from _common.game_draws_reader import DrawView
+ from .e1_training_view import build_e1_forecast
+ 
+ def prepared_e1_forecast(view: DrawView) -> tuple[dict, str]:
+diff --git a/dA/src/methods/_common/e1_historical_appearance_frequency.py b/dB/src/methods/E_001/e1_historical_appearance_frequency.py
+similarity index 88%
+rename from dA/src/methods/_common/e1_historical_appearance_frequency.py
+rename to dB/src/methods/E_001/e1_historical_appearance_frequency.py
+index b4f31dc..a5593cc 100644
+--- a/dA/src/methods/_common/e1_historical_appearance_frequency.py
++++ b/dB/src/methods/E_001/e1_historical_appearance_frequency.py
+@@ -10,17 +10,14 @@ import json
+ import re
+ from collections.abc import Mapping, Sequence
+ 
++from _common.canonical_encoding import canonical_bytes, length32_tuple as _length32_tuple
++
+ METHOD_ID = 'E_1'
+ VARIANT_ID = 'FULL_HISTORY_RAW_COUNTS_V1'
+ TIE_VERSION = 'TIE_SHA256_V1'
+ DOMAIN = 'PREDICTIVE_RANDOMNESS/TIE_SHA256_V1'
+ 
+ 
+-def canonical_bytes(value: object) -> bytes:
+-    return (json.dumps(value, ensure_ascii=True, sort_keys=True,
+-                       separators=(',', ':'), allow_nan=False) + '\n').encode('ascii')
+-
+-
+ def _integer(x: object, what: str) -> int:
+     if type(x) is not int:  # Reject bool as int.
+         raise ValueError(f'{what} must be an integer')
+@@ -77,19 +74,6 @@ def training_sha256(prefix: Sequence[Mapping[str, object]]) -> str:
+     return hashlib.sha256(canonical_bytes(identity)).hexdigest()
+ 
+ 
+-def _length32_tuple(values: Sequence[object]) -> bytes:
+-    """Ratified tuple encoding: 4-byte unsigned LE UTF-8 byte length + bytes."""
+-    parts = []
+-    for value in values:
+-        if type(value) is not str:
+-            raise ValueError('tie tuple field must be a canonical string')
+-        encoded = value.encode('utf-8')
+-        if len(encoded) > 0xffffffff:
+-            raise ValueError('tie tuple field exceeds uint32 byte length')
+-        parts.append(len(encoded).to_bytes(4, byteorder='little') + encoded)
+-    return b''.join(parts)
+-
+-
+ def tie_digest(training_digest: str, target: int, barrel: str, label: int) -> str:
+     if barrel not in ('MAIN', 'POWERBALL'):
+         raise ValueError('unknown barrel')
+diff --git a/dA/src/methods/_common/e1_standalone_contract.py b/dB/src/methods/E_001/e1_standalone_contract.py
+similarity index 100%
+rename from dA/src/methods/_common/e1_standalone_contract.py
+rename to dB/src/methods/E_001/e1_standalone_contract.py
+diff --git a/dA/src/methods/_common/e1_training_view.py b/dB/src/methods/E_001/e1_training_view.py
+similarity index 97%
+rename from dA/src/methods/_common/e1_training_view.py
+rename to dB/src/methods/E_001/e1_training_view.py
+index 1cb0481..c734c9b 100644
+--- a/dA/src/methods/_common/e1_training_view.py
++++ b/dB/src/methods/E_001/e1_training_view.py
+@@ -16,7 +16,7 @@ from datetime import date, timedelta
+ from pathlib import Path
+ from typing import Any
+ 
+-from _common.e1_historical_appearance_frequency import canonical_bytes
++from E_001.e1_historical_appearance_frequency import canonical_bytes
+ 
+ FIRST_DRAW = 1144
+ HOLDOUT_FIRST = 1578
+@@ -115,7 +115,7 @@ def load_permitted_u_view(source: Path, target: int, *, source_kind: str,
+ 
+ def build_e1_forecast(records: list[dict], digest: str, target: int, *, source_kind: str) -> dict:
+     # Delayed import to keep STARTED publication ahead of heavy future dependencies.
+-    from _common.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
++    from E_001.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
+     if source_kind not in ('REAL_HISTORICAL_DEVELOPMENT', 'SYNTHETIC_CONTRACT_TEST'):
+         raise ValueError('source kind not allowed')
+     if len(records) != target-FIRST_DRAW or records[0]['draw'] != FIRST_DRAW or records[-1]['draw'] != target-1:
+diff --git a/dA/src/methods/_common/multigame_e1.py b/dB/src/methods/E_001/multigame_e1.py
+similarity index 98%
+rename from dA/src/methods/_common/multigame_e1.py
+rename to dB/src/methods/E_001/multigame_e1.py
+index 52b107c..7cd8507 100644
+--- a/dA/src/methods/_common/multigame_e1.py
++++ b/dB/src/methods/E_001/multigame_e1.py
+@@ -9,7 +9,7 @@ import hashlib
+ import re
+ from collections.abc import Mapping, Sequence
+ 
+-from _common.e1_historical_appearance_frequency import (
++from E_001.e1_historical_appearance_frequency import (
+     _length32_tuple, canonical_bytes, DOMAIN, METHOD_ID, VARIANT_ID, TIE_VERSION,
+ )
+ from _common.game_profiles import GameProfile
+diff --git a/dA/src/methods/E_001_Historical_Appearance_Frequency.py b/dB/src/methods/E_001_Historical_Appearance_Frequency.py
+index 68307f0..afcf7e1 100644
+--- a/dA/src/methods/E_001_Historical_Appearance_Frequency.py
++++ b/dB/src/methods/E_001_Historical_Appearance_Frequency.py
+@@ -45,7 +45,7 @@ def main(argv: list[str] | None = None) -> int:
+             parser.error('synthetic mode may not read the real source_data directory')
+     else:
+         root = project / 'transitory_data' / 'p3_standalone_runs'
+-    from _common.e1_standalone_contract import (
++    from E_001.e1_standalone_contract import (
+         begin, canonical_json, create_only, finish, publish_failed_manifest,
+         publish_success_manifest, sha)
+     # Durable STARTED happens before CSV/model/numerics imports or source reads.
+@@ -57,7 +57,7 @@ def main(argv: list[str] | None = None) -> int:
+         return 2
+     print(f'[E_001] STARTED run={args.run_id} mode={mode} target={args.target}', flush=True)
+     try:
+-        from _common.e1_training_view import load_permitted_u_view, build_e1_forecast
++        from E_001.e1_training_view import load_permitted_u_view, build_e1_forecast
+         rows, digest = load_permitted_u_view(args.source, args.target, source_kind=mode,
+                                            trusted_source_dir=(trusted_real_source if mode == 'REAL_HISTORICAL_DEVELOPMENT' else None))
+         result = build_e1_forecast(rows, digest, args.target, source_kind=mode)
+diff --git a/dB/src/methods/_common/canonical_encoding.py b/dB/src/methods/_common/canonical_encoding.py
+new file mode 100644
+index 0000000..a6552d4
+--- /dev/null
++++ b/dB/src/methods/_common/canonical_encoding.py
+@@ -0,0 +1,27 @@
++"""Shared canonical encodings, moved unchanged from E_1's module by E1-ALIGN.
++
++canonical_bytes: the project canonical JSON encoding. length32_tuple: the ratified tuple encoding
++(4-byte unsigned little-endian UTF-8 byte length, then the bytes). No method code may live here.
++"""
++from __future__ import annotations
++
++import json
++from collections.abc import Sequence
++
++
++def canonical_bytes(value: object) -> bytes:
++    return (json.dumps(value, ensure_ascii=True, sort_keys=True,
++                       separators=(',', ':'), allow_nan=False) + '\n').encode('ascii')
++
++
++def length32_tuple(values: Sequence[object]) -> bytes:
++    """Ratified tuple encoding: 4-byte unsigned LE UTF-8 byte length + bytes."""
++    parts = []
++    for value in values:
++        if type(value) is not str:
++            raise ValueError('tie tuple field must be a canonical string')
++        encoded = value.encode('utf-8')
++        if len(encoded) > 0xffffffff:
++            raise ValueError('tie tuple field exceeds uint32 byte length')
++        parts.append(len(encoded).to_bytes(4, byteorder='little') + encoded)
++    return b''.join(parts)
+diff --git a/dA/src/methods/_common/game_draws_reader.py b/dB/src/methods/_common/game_draws_reader.py
+index 59e171e..dcd425b 100644
+--- a/dA/src/methods/_common/game_draws_reader.py
++++ b/dB/src/methods/_common/game_draws_reader.py
+@@ -105,7 +105,7 @@ class DrawView:
+ 
+     def e1_view_digest(self, *, data_kind: str = _REAL) -> str:
+         """Legacy E1 date-free digest is immutable; new schemas bind dates."""
+-        from _common.e1_historical_appearance_frequency import canonical_bytes
++        from _common.canonical_encoding import canonical_bytes
+         rows = self.simple_rows()
+         legacy = (self.game_id == 'POWERBALL' and self.method_id == 'E_1' and
+                   self.variant_id == _E1_VARIANT and self.kind == 'UNORDERED_SET' and
+diff --git a/dB/tests/test_e1_align.py b/dB/tests/test_e1_align.py
+new file mode 100644
+index 0000000..fdf2f11
+--- /dev/null
++++ b/dB/tests/test_e1_align.py
+@@ -0,0 +1,122 @@
++"""E1-ALIGN guards (proposed new test module; offline, no data, no processes, nothing created).
++
++1. Shared code imports no method code: no module under src/methods/_common, src/coordinator_private
++   or the coordinator imports from a method folder (E_<nnn>) or names an E_1-only module.
++2. E_1 keeps its old symbols: the E_1 core module's canonical_bytes and _length32_tuple are the shared
++   functions themselves, and the reader uses the same canonical_bytes.
++3. The five E_1-only modules exist only in src/methods/E_001/ and are imported from there.
++4. E_1's real-mode orphan-marker path still resolves to the project marker (path arithmetic only;
++   the marker is never created, read or removed).
++5. Encoder regression alarm: the six live copies of the canonical JSON encoding give identical bytes on
++   a fixed corpus and reject the same invalid inputs. The coordinator's copy is taken from its source by
++   AST, so the coordinator is not imported or run. This is an alarm, not licence to change any of them.
++"""
++import ast
++import importlib
++import importlib.util
++import json
++import math
++import sys
++import unittest
++from pathlib import Path
++
++ROOT = Path(__file__).resolve().parents[1]
++METHODS = ROOT / 'src' / 'methods'
++for p in (str(ROOT / 'src'), str(METHODS)):
++    if p not in sys.path:
++        sys.path.insert(0, p)
++
++E1_ONLY = ('e1_historical_appearance_frequency', 'e1_training_view', 'e1_standalone_contract',
++           'e1_common_reader_bridge', 'multigame_e1')
++
++
++def _imports(path):
++    tree = ast.parse(path.read_text('utf-8'))
++    for node in ast.walk(tree):
++        if isinstance(node, ast.ImportFrom):
++            yield ('.' * node.level) + (node.module or '')
++        elif isinstance(node, ast.Import):
++            for alias in node.names:
++                yield alias.name
++
++
++def _coordinator_encoder():
++    src = (ROOT / 'src' / 'Powerball_Experiment_Coordinator.py').read_text('utf-8')
++    fns = [n for n in ast.parse(src).body if isinstance(n, ast.FunctionDef) and n.name == 'canonical_bytes']
++    assert len(fns) == 1
++    mod = ast.Module(body=[ast.Import(names=[ast.alias(name='json')]), fns[0]], type_ignores=[])
++    ns = {}
++    exec(compile(ast.fix_missing_locations(mod), '<coordinator canonical_bytes>', 'exec'), ns)
++    return ns['canonical_bytes']
++
++
++CORPUS = [
++    None, True, False, 0, -1, 1, 2**31 - 1, 2**32, 2**53 + 1, -2**63, 2**64 + 7, 0.5, -0.0, 1e-7, 1.0e300,
++    '', 'abc', '\u00e9', '\u2028\u2029', '\U0001F600', '\x00\x1f\x7f', '"\\/', 'line\nbreak',
++    [], {}, [1, [2, [3, []]]], {'b': 1, 'a': 2, 'A': 3, '\u00e9': 4, '': 5}, {'z': {'y': {'x': [None]}}},
++    (1, 'two', (3,)), {1: 'int key', 2: [True, None, 1.25]},
++    {'records': [{'draw': 1144, 'main': [1, 2, 3, 4, 5, 6, 7], 'powerball': 20}], 'schema': 'S'},
++]
++INVALID = [(float('nan'), ValueError), (float('inf'), ValueError), (-math.inf, ValueError),
++           ({'a': {1, 2}}, TypeError), (b'bytes', TypeError), ({1: 'a', 'b': 2}, TypeError)]
++
++
++class E1AlignGuards(unittest.TestCase):
++
++    def test_shared_code_imports_no_method_code(self):
++        shared = [*(METHODS / '_common').glob('*.py'), *(ROOT / 'src' / 'coordinator_private').glob('*.py'),
++                  ROOT / 'src' / 'Powerball_Experiment_Coordinator.py']
++        for path in shared:
++            for ref in _imports(path):
++                parts = ref.lstrip('.').split('.')
++                self.assertFalse(any(p.startswith('E_') for p in parts), f'{path.name} imports {ref}')
++                self.assertFalse(any(p in E1_ONLY for p in parts), f'{path.name} imports {ref}')
++
++    def test_e1_symbols_are_the_shared_functions(self):
++        enc = importlib.import_module('_common.canonical_encoding')
++        core = importlib.import_module('E_001.e1_historical_appearance_frequency')
++        reader_src = (METHODS / '_common' / 'game_draws_reader.py').read_text('utf-8')
++        self.assertIs(core.canonical_bytes, enc.canonical_bytes)
++        self.assertIs(core._length32_tuple, enc.length32_tuple)
++        self.assertIn('from _common.canonical_encoding import canonical_bytes', reader_src)
++
++    def test_e1_only_modules_live_in_the_method_folder(self):
++        for name in E1_ONLY:
++            self.assertFalse((METHODS / '_common' / f'{name}.py').exists(), name)
++            m = importlib.import_module(f'E_001.{name}')
++            self.assertEqual(Path(m.__file__).resolve(), (METHODS / 'E_001' / f'{name}.py').resolve())
++            self.assertIsNone(importlib.util.find_spec(f'_common.{name}'))
++        self.assertTrue((METHODS / 'E_001_Historical_Appearance_Frequency.py').is_file())
++
++    def test_e1_orphan_marker_path_unchanged(self):
++        contract = importlib.import_module('E_001.e1_standalone_contract')
++        src = Path(contract.__file__).read_text('utf-8')
++        self.assertEqual(src.count("Path(__file__).resolve().parents[3] / 'transitory_data' / 'poc_runs' / "
++                                   "'UNRESOLVED_ORPHAN.json'"), 1)
++        self.assertEqual(Path(contract.__file__).resolve().parents[3], ROOT.resolve())
++
++    def test_six_encoder_copies_agree(self):
++        encoders = {
++            'shared canonical_bytes': importlib.import_module('_common.canonical_encoding').canonical_bytes,
++            'multigame json_bytes': importlib.import_module('_common.multigame_standalone_contract').json_bytes,
++            'POC canonical_json': importlib.import_module('_common.experiment_console_and_file_output').canonical_json,
++            'E_1 standalone canonical_json': importlib.import_module('E_001.e1_standalone_contract').canonical_json,
++            'exit receipt _canonical': importlib.import_module(
++                'coordinator_private.multigame_coordinator_exit_receipt')._canonical,
++            'coordinator canonical_bytes (AST copy)': _coordinator_encoder(),
++        }
++        for value in CORPUS:
++            expected = (json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(',', ':'),
++                                   allow_nan=False) + '\n').encode('ascii')
++            for name, enc in encoders.items():
++                with self.subTest(value=repr(value)[:40], encoder=name):
++                    self.assertEqual(enc(value), expected)
++        for value, exc in INVALID:
++            for name, enc in encoders.items():
++                with self.subTest(value=repr(value)[:40], encoder=name):
++                    with self.assertRaises(exc):
++                        enc(value)
++
++
++if __name__ == '__main__':
++    unittest.main()
+diff --git a/dA/tests/test_e1_standalone.py b/dB/tests/test_e1_standalone.py
+index de08d5e..6b2fcc6 100644
+--- a/dA/tests/test_e1_standalone.py
++++ b/dB/tests/test_e1_standalone.py
+@@ -18,9 +18,9 @@ from pathlib import Path
+ 
+ BASE = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(BASE / 'src' / 'methods'))
+-from _common.e1_training_view import (  # noqa
++from E_001.e1_training_view import (  # noqa
+     U_COLUMNS, load_permitted_u_view, build_e1_forecast)
+-from _common.e1_standalone_contract import (  # noqa
++from E_001.e1_standalone_contract import (  # noqa
+     verify_and_consume, canonical_json, sha)
+ import E_001_Historical_Appearance_Frequency as runner  # noqa
+ 
+@@ -201,7 +201,7 @@ class E1LoaderAndRun(unittest.TestCase):
+         # Even if a late result appears after a FAILED run, it cannot be consumed.
+         valid_csv=self.root/'late_valid.csv'; csv_rows(valid_csv)
+         valid=self.load(valid_csv)
+-        from _common.e1_training_view import build_e1_forecast
++        from E_001.e1_training_view import build_e1_forecast
+         result=build_e1_forecast(*valid, TARGET, source_kind='SYNTHETIC_CONTRACT_TEST')
+         (rd/'canonical_result.json').write_bytes(canonical_json(result))
+         with self.assertRaisesRegex(ValueError, 'non-PASS'):
+@@ -210,7 +210,7 @@ class E1LoaderAndRun(unittest.TestCase):
+     def test_interrupt_is_fail_closed(self):
+         from unittest.mock import patch
+         rid='e1-interruptedstatus01'
+-        with patch('_common.e1_training_view.load_permitted_u_view',
++        with patch('E_001.e1_training_view.load_permitted_u_view',
+                    side_effect=KeyboardInterrupt):
+             self.assertEqual(self.run_cli(rid), 1)
+         rd=self.runs/rid
+@@ -258,7 +258,7 @@ class E1LoaderAndRun(unittest.TestCase):
+         fake_runner_path = fake_project / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py'
+         with (patch.object(runner, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', False),
+               patch.object(runner, '__file__', str(fake_runner_path)),
+-              patch('_common.e1_training_view.load_permitted_u_view',
++              patch('E_001.e1_training_view.load_permitted_u_view',
+                     side_effect=AssertionError('disabled real mode must not invoke loader')) as loader):
+             with self.assertRaises(SystemExit) as stopped:
+                 runner.main(['--mode', 'historical-development', '--target', '1152',
+diff --git a/dA/tests/test_multigame_console_and_synthetic_scorer.py b/dB/tests/test_multigame_console_and_synthetic_scorer.py
+index 296bce9..f664d8c 100644
+--- a/dA/tests/test_multigame_console_and_synthetic_scorer.py
++++ b/dB/tests/test_multigame_console_and_synthetic_scorer.py
+@@ -9,7 +9,7 @@ from pathlib import Path
+ ROOT=Path(__file__).resolve().parents[1]
+ sys.path.insert(0,str(ROOT/'src'/'methods'))
+ from _common.game_profiles import POWERBALL, OZLOTTO
+-from _common.multigame_e1 import forecast
++from E_001.multigame_e1 import forecast
+ from _common.multigame_standalone_contract import (
+     begin_synthetic, publish_synthetic_success, json_bytes,
+ )
+diff --git a/dA/tests/test_multigame_reader_contracts.py b/dB/tests/test_multigame_reader_contracts.py
+index ee45cfe..1df2222 100644
+--- a/dA/tests/test_multigame_reader_contracts.py
++++ b/dB/tests/test_multigame_reader_contracts.py
+@@ -21,8 +21,8 @@ ROOT = Path(__file__).resolve().parents[1]
+ sys.path.insert(0, str(ROOT / 'src' / 'methods'))
+ from _common.game_draws_reader import (DrawView, load_pinned_draw_view, header_for,
+                                            _parse_prefix, _owned)
+-from _common.e1_common_reader_bridge import prepared_e1_forecast
+-from _common.e1_historical_appearance_frequency import canonical_bytes
++from E_001.e1_common_reader_bridge import prepared_e1_forecast
++from E_001.e1_historical_appearance_frequency import canonical_bytes
+ from _common.game_profiles import POWERBALL, OZLOTTO
+ from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
+ 
+@@ -108,9 +108,9 @@ class V011ReaderTests(unittest.TestCase):
+ 
+     def test_existing_synthetic_e1_goldens_unchanged(self):
+         # Pure arithmetic; do not run or enable the real standalone entry point.
+-        from _common.e1_training_view import build_e1_forecast
+-        from _common.e1_historical_appearance_frequency import canonical_bytes
+-        from _common.e1_standalone_contract import sha
++        from E_001.e1_training_view import build_e1_forecast
++        from E_001.e1_historical_appearance_frequency import canonical_bytes
++        from E_001.e1_standalone_contract import sha
+         fixture=json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
+         rows=fixture['rows']
+         digest=hashlib.sha256(canonical_bytes({
+@@ -125,7 +125,7 @@ class V011ReaderTests(unittest.TestCase):
+ 
+     def test_ratified_r2_5_5_synthetic_identity_goldens(self):
+         """Distinct from the later standalone-runner synthetic golden pair."""
+-        from _common.e1_historical_appearance_frequency import (
++        from E_001.e1_historical_appearance_frequency import (
+             candidate_forecast, training_prefix, training_sha256, tie_digest)
+         fixture = json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
+         self.assertEqual(fixture['target'], 1152)
+diff --git a/dA/tests/test_multigame_static_and_timing.py b/dB/tests/test_multigame_static_and_timing.py
+index 42c459d..176825c 100644
+--- a/dA/tests/test_multigame_static_and_timing.py
++++ b/dB/tests/test_multigame_static_and_timing.py
+@@ -87,20 +87,39 @@ class StaticSafetyTests(unittest.TestCase):
+ 
+     def test_method_loader_import_firewall_except_accepted_legacy_e1(self):
+         accepted_legacy='E_001_Historical_Appearance_Frequency.py'
+-        for method in (ROOT/'src'/'methods').glob('*.py'):
+-            if method.name==accepted_legacy:
++        # E1-ALIGN: method folders are scanned too. E_1's accepted legacy references
++        # inside its folder are allowed exactly (file, kind, reference, count); any
++        # other reference, file or folder is rejected, and every allowance must be used.
++        allowed={('E_001/e1_training_view.py','text','source_data'):1,
++                 ('E_001/e1_common_reader_bridge.py','import','_common.game_draws_reader'):1}
++        used={}
++        methods=ROOT/'src'/'methods'
++        files=sorted([*methods.glob('*.py'),*methods.glob('E_[0-9][0-9][0-9]/**/*.py')])
++        for method in files:
++            rel=method.relative_to(methods).as_posix()
++            if rel==accepted_legacy:
+                 # Its own previously accepted standalone historical reader is
+                 # grandfathered; do not modify a frozen E1 golden source file.
+                 continue
+             contents=method.read_text('utf-8')
+             tree=ast.parse(contents)
++            refs=[]
+             for node in ast.walk(tree):
+                 if isinstance(node,ast.ImportFrom):
+-                    self.assertNotIn('game_draws_reader',node.module or '')
++                    refs.append(node.module or '')
+                 elif isinstance(node,ast.Import):
+-                    for alias in node.names:
+-                        self.assertNotIn('game_draws_reader',alias.name)
+-            self.assertNotIn('source_data',contents)
++                    refs.extend(alias.name for alias in node.names)
++            for ref in refs:
++                if 'game_draws_reader' in ref:
++                    key=(rel,'import',ref)
++                    self.assertIn(key,allowed,f'unauthorised reader import in {rel}')
++                    used[key]=used.get(key,0)+1
++            n=contents.count('source_data')
++            if n:
++                key=(rel,'text','source_data')
++                self.assertIn(key,allowed,f'unauthorised source_data reference in {rel}')
++                used[key]=used.get(key,0)+n
++        self.assertEqual(used,allowed)
+ 
+     def test_no_retired_acquisition_overlay_importable(self):
+         from importlib.util import find_spec

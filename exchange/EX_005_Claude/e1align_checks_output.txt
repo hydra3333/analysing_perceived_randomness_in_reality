@@ -1,0 +1,23 @@
+PASS E1A-T01/T02 exact: 10 edited files, 22 allowlisted blocks, 5 moves, 3 added files; nothing else differs []
+PASS E1A-T02 moved bodies: both definitions byte-for-byte in canonical_encoding.py (tuple helper def name only)
+PASS e1_standalone_contract moved byte-identical
+PASS checker negative: an extra edit on an allowlisted import line is rejected
+PASS checker negative: a different import that still "looks like an import" is rejected
+PASS checker negative: an unlisted new file is rejected
+PASS control: firewall and guard tests pass
+PASS mutation m1: new E_001 file importing the reader is rejected
+PASS mutation m2: E_002 file: import _common.game_draws_reader is rejected
+PASS mutation m3: E_002 file naming source_data is rejected
+PASS mutation m4: second source_data in an allowed E_1 file is rejected
+PASS mutation m5: unused allowance (bridge import removed) is rejected
+PASS mutation m6: shared reader importing E_1 code again is rejected
+PASS mutation m7: changed shared encoder is rejected
+PASS mutation m8: moved orphan-marker path (no marker created) is rejected
+PASS mutation m9: E_002 file: from _common import game_draws_reader is rejected
+PASS mutation m10: bridge imports load_pinned_draw_view instead of DrawView is rejected
+PASS mutation m11: bridge adds an extra reader symbol is rejected
+PASS mutation m12: bridge aliases DrawView is rejected
+PASS mutation m13: bridge star import is rejected
+PASS mutation m14: E_002 file: dynamic import by string is rejected
+PASS mutation m15: E_001 file: from _common import game_draws_reader is rejected
+RESULT PASS

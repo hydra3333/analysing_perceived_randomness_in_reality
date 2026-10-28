@@ -1,0 +1,29 @@
+PASS src/Powerball_Experiment_Coordinator.py: AST equal to predecessor with the map applied
+PASS src/coordinator_private/multigame_coordinator_exit_receipt.py: AST equal to predecessor with the map applied
+PASS src/coordinator_private/multigame_launch_spec.py: AST equal to predecessor with the map applied
+PASS src/coordinator_private/multigame_windows_lifecycle.py: AST equal to predecessor with the map applied
+PASS src/methods/E_001_Historical_Appearance_Frequency.py: AST equal to predecessor with the map applied
+PASS src/methods/POC_MultiGame_Synthetic_Worker.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/e1_common_reader_bridge.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/e1_training_view.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/game_draws_reader.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_ancestry_release.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_console_protocol.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_coordinated_manifest.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_e1.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_method_registry.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_result_registry.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_standalone_contract.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_synthetic_scorer.py: AST equal to predecessor with the map applied
+PASS src/methods/_common/multigame_worker_launch_handshake.py: AST equal to predecessor with the map applied
+PASS tests/test_e1_standalone.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_console_and_synthetic_scorer.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_exit_receipt.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_launch_and_manifest.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_reader_contracts.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_science_allowlist.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_static_and_timing.py: AST equal to predecessor with the map applied
+PASS tests/test_multigame_windows_lifecycle_review.py: AST equal to predecessor with the map applied
+PASS tests/test_t05_hardening.py: AST equal to predecessor with the map applied
+27 edited modules checked
+RESULT PASS

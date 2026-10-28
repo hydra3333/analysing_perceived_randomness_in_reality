@@ -1,0 +1,114 @@
+--- Predictive_Randomness_E1_ALIGN_Specification_v0_1.md
++++ Predictive_Randomness_E1_ALIGN_Specification_v0_2.md
+@@ -1,7 +1,7 @@
+-# Predictive Randomness - E1-ALIGN specification, v0.1
++# Predictive Randomness - E1-ALIGN specification, v0.2
+ 
+ **Document:** the design for E1-ALIGN, which brings E_1 into the same source layout as every later method (owner decision OPEN-N1 = A, and the owner's acceptance in principle of E1-ALIGN, both 28 October 2026).
+-**Version:** v0.1 DRAFT for independent design review (R-3), 28 October 2026 (Adelaide, UTC+10:30).
++**Version:** v0.2 DRAFT for focused RECHECK, 28 October 2026 (Adelaide, UTC+10:30). v0.2 answers the R-3 review of v0.1, `Independent_ChatGPT_R3_Review_E1_ALIGN_v0_1.md` (`5a11390971289e23237ec6839d7530ada4bec1b9134c248fbddeee7eaae45197`, in EX_004; 1 BLOCKER, 1 CORRECTION, 1 OPTIONAL). Section 11 lists the changes.
+ **Author:** Claude (primary designer and coder). **Independent reviewer:** the ChatGPT reviewer chat. **Ratifier:** the project owner.
+ **Status:** DRAFT. A design only. It authorises no move, no source change and no run. The E1-ALIGN code package follows only after this design is reviewed and ratified, NAMES-1 is installed, and the owner authorises the package.
+ **Base:** commit `38fc60e03ea0766f72476cbab7c0e1eb5bd59d07` **with the NAMES-1 v0.2 renames applied** (`07bda3e4a8a99bfc611a76cec672f8642532186567737e1a23de5e5701489e5a`). All names and line numbers below are post-NAMES-1. The code package will be rebased on the actual NAMES-1 commit.
+@@ -31,6 +31,10 @@
+   - the full proof of section 6 passes, including Windows.
+ 
+   If any behaviourally relevant implementation changes, the package cannot claim the exception: E_1 gets revision 2, or the owner reconsiders expressly. This is not a precedent for substantive change.
++- **E1A-R02A (RECOMMENDED; reviewer's E1A-O01; explanatory).** The exception covers import paths and callable metadata. It freezes what E_1 computes: serialisation bytes, view digests, prediction and tie results.
++  - After the move, the two moved functions report `canonical_encoding` as their `__module__`, and the tuple helper's `__name__` becomes `length32_tuple`. These are intended structural differences.
++  - The project uses neither as an identity: no record, digest or registry stores a callable's module or name, and nothing is pickled.
++  - The claim is equal behaviour and output bytes, not that every attribute of the old function object is unchanged.
+ - **E1A-R03 (DECIDED by the code; recorded here).** The two moved functions are behaviourally relevant shared helpers under E2R-R14A, since they are encoding. Moving them unchanged is the structural act the exception covers. Their bytes, and the bytes they produce, do not change.
+ - **E1A-R04 (DECIDED; E2R-R57, R58).** E1-ALIGN activates no gate. It adds no `IN_DEVELOPMENT.txt`, no registry entry and no dispatch check.
+   - The SUPPORTED-and-no-flag admission rule arrives with the separately authorised E_2-readiness code.
+@@ -90,35 +94,41 @@
+   - the owner's data tools and the legacy test scripts (as NAMES-1 OPEN-N2);
+   - `review/`, `doc/` and `transitory_data/`.
+ 
+-## 5. The import firewall, widened (E1A-R07, RECOMMENDED)
++## 5. The import firewall, widened and made symbol-aware (E1A-R07, RECOMMENDED; corrected in v0.2)
+ 
+-Today's static test checks only `src/methods/*.py`. It skips E_001's entry file as a whole, and forbids any other file from importing the shared reader or naming `source_data`. Under option A, files in a method folder would escape it. E1-ALIGN creates the first method folder, so the widening belongs here.
++Today's static test checks only `src/methods/*.py`. It skips E_001's entry file as a whole, and forbids any other file from importing the shared reader or naming `source_data`. It has two weaknesses:
++- **Method folders escape it.** Under option A, files in a method folder would not be checked. E1-ALIGN creates the first method folder, so the widening belongs here.
++- **It reads only the module part of `from X import Y`** (reviewer's E1A-B01). So `from _common import game_draws_reader` passes it. That gap is **already present in the committed test at `38fc60e`**: a probe `src/methods/E_999_Probe.py` containing `from _common import game_draws_reader_v1` passes it today (evidence `v0_1_firewall_gap_demonstration.txt`). No current method uses that form; E1-ALIGN closes it. NAMES-1 leaves the test's logic unchanged.
++
++The rewritten test:
++- **Scope:** `src/methods/*.py` **and** `src/methods/E_[0-9][0-9][0-9]/**/*.py`.
++- **Grandfathering:** E_001's entry file stays exempt as a whole, exactly as today (E1A-D3), because it is accepted frozen code.
++- **Every reader import is identified by form, module, imported name and alias.** For `from M import N [as A]`, each imported name is checked: the import is a reader import if M **or** N contains `game_draws_reader`. For `import M [as A]`, M is checked.
++- **Every textual mention is counted.** In each scanned file, the occurrences of `game_draws_reader` and of `source_data` are counted. A string-based dynamic import is therefore caught too.
++- **Exact allowances.** Inside `E_001/`, only these are allowed, nothing is allowed by folder, and every allowance must be used:
++
++  | File | What | Exact allowance |
++  |---|---|---|
++  | `E_001/e1_common_reader_bridge.py` | import | `from _common.game_draws_reader import DrawView`, no alias, once; no other name from the reader |
++  | `E_001/e1_common_reader_bridge.py` | text | `game_draws_reader`, 1 occurrence (that import line) |
++  | `E_001/e1_training_view.py` | text | `source_data`, 1 occurrence (its accepted trusted-folder check) |
+ 
+-- It scans `src/methods/*.py` **and** `src/methods/E_[0-9][0-9][0-9]/**/*.py`.
+-- E_001's entry file stays exempt as a whole, exactly as today, because it is accepted frozen code.
+-- Inside `E_001/`, two references are allowed, **by file, kind, reference and count**. Nothing is allowed by folder.
+-
+-  | File | Kind | Reference | Count | Why |
+-  |---|---|---|---|---|
+-  | `E_001/e1_training_view.py` | text | `source_data` | 1 | its accepted check that a real source is in the trusted folder |
+-  | `E_001/e1_common_reader_bridge.py` | import | `_common.game_draws_reader` | 1 | the accepted bridge that consumes a permitted `DrawView` |
+-
+-- Every allowance must be used, so an allowance cannot quietly go stale.
+-- Any other reference, in any file or folder, fails, including a new file inside `E_001/`.
++- **Anything else fails.** That includes a new file inside `E_001/`, another import form, an extra or different imported name, an alias, or a star import.
++- **What it is not.** It is a static regression guard, not a complete defence against deliberately obfuscated dynamic imports, such as a module name built up from pieces. The exact-diff review of every package remains mandatory.
+ 
+ ## 6. Proof plan
+ 
+ | Test | What it proves |
+ |---|---|
+-| E1A-T01 | **Exact change set.** The file set changes by exactly the five moves and three additions. Exactly ten files are edited (section 3.3), and `e1_standalone_contract` moves byte-identical. Every other file is byte-identical. |
+-| E1A-T02 | **Moved-code equality.** Both moved definitions appear byte-for-byte in `canonical_encoding.py` (only the tuple helper's `def` name changes). Every changed line in an edited file is an import line, a blank line beside one, a removed line of a moved definition, or a listed `mock.patch` target. The firewall test changes only inside its body. |
++| E1A-T01 | **Exact change set, against a frozen allowlist** (corrected in v0.2, reviewer's E1A-C01). `e1align_allowlist.json` is part of the reviewed design. It lists the five moves, the three added files with their SHA-256, the one file moved unchanged, and, for each of the ten edited files, its edits as exact (old block, new block) pairs. Each old block carries enough unchanged context to occur exactly once. At install, the read-only verifier works against the **installed NAMES-1 predecessor**: it rebuilds every new file from its predecessor using only those blocks, and requires byte equality. It fails on any unlisted file, edit, addition or deletion. Broad categories such as "looks like an import" are not proof. |
++| E1A-T02 | **Moved-code equality.** Both moved definitions appear byte-for-byte in `canonical_encoding.py`; only the tuple helper's `def` name changes. `e1_standalone_contract` is byte-identical. |
+ | E1A-T03 | **AST equality**, as N1-T03, for every edited module, with the import changes applied. |
+ | E1A-T04 | **Shared code imports no method code.** No import in `_common`, `coordinator_private` or the coordinator names an `E_<nnn>` package or an E_1-only module. |
+ | E1A-T05 | **E_1's symbols are the shared functions.** `E_001.e1_historical_appearance_frequency.canonical_bytes` **is** `canonical_encoding.canonical_bytes`, and its `_length32_tuple` **is** `length32_tuple`. The reader imports the shared module. |
+ | E1A-T06 | **Location and origin, in fresh interpreters** (as N1-T05). Each moved module imports from `E_001/`, with `__file__` there; the old `_common` names are refused; no old file remains. |
+ | E1A-T07 | **The orphan-marker path is unchanged**, by path arithmetic only. |
+ | E1A-T08 | **Six-encoder regression alarm.** On a fixed corpus (nested, key order, Unicode including U+2028 and astral characters, control characters, integer and float boundaries, tuples, integer keys), all six copies give the bytes of the stated canonical rule. All six reject the same invalid inputs: `NaN`, infinities, sets, bytes and mixed key types. The coordinator copy is extracted by AST. |
+-| E1A-T09 | **Firewall mutations**, in disposable copies, with the unchanged tree as control. Each of these is rejected: a new `E_001/` file importing the reader; a probe in `E_002/` importing the reader; a probe in `E_002/` naming `source_data`; a second `source_data` in an allowed E_1 file; an unused allowance; the reader importing E_1 code again; a changed shared encoder; a moved orphan-marker path. |
++| E1A-T09 | **Mutations**, in disposable copies, with the unchanged tree as control. Each of these is rejected:<br>- from v0.1: a new `E_001/` file importing the reader; `import _common.game_draws_reader` in `E_002/`; `source_data` in `E_002/`; a second `source_data` in an allowed E_1 file; an unused allowance; the reader importing E_1 code again; a changed shared encoder; a moved orphan-marker path;<br>- added in v0.2 for E1A-B01: `from _common import game_draws_reader`, in `E_002/` and in a new `E_001/` file; the bridge importing `load_pinned_draw_view` instead of `DrawView`, even under the alias `DrawView`; the bridge importing an extra reader symbol; the bridge aliasing `DrawView`; a star import from the reader; a string-based `importlib.import_module` of the reader in `E_002/`.<br>The exact checker of E1A-T01 also rejects three edits made to its own trial: an extra comment on an allowlisted line, a different import that still looks like an import, and an unlisted new file. |
+ | E1A-T10 | **E_1's science is unchanged.** The legacy goldens and identity vectors, the prefix-only and view regressions, T-05, the standalone contract tests and the multi-game E_1 tests all pass unchanged. |
+ | E1A-T11 | The eleven protected coordinator ASTs are unchanged (TH-1, no skip); the three switches are False; the allowlist is empty. |
+ | E1A-T12 | **Windows, all 84 current tests.** The 60 tests of NAMES-1, plus the 5 of `test_e1_align`, make 65 in the standard suite; then the 19 others. The owner runs them on Python 3.14 with the per-module reporter, and with the NAMES-1 N1-T09 rules for counts and symlink skips. No destructive, lifecycle or process test is added. |
+@@ -130,8 +140,14 @@
+ 
+ The NAMES-1 map was applied to a disposable export of `38fc60e`, then `apply_e1align.py` (counted, exact edits) and `test_e1_align.py` were added. These are Claude's own Linux trials (Python 3.13.17), not Windows acceptance:
+ - **All 84 tests OK**, no skips, per module: 10, 6, 11, 18, 6, 7, 2, 5, 13 and 6. All of E_1's goldens are unchanged.
+-- **`e1align_checks.py`: 22 checks, all PASS.** They cover T01, T02, the control, and the eight T09 mutations.
+-- **The exact trial diff** (`e1align_trial_names1_to_e1align.diff`) covers 14 files: 196 lines added and 43 removed, most of the added lines being the new guard test and the firewall body. Git detects the five moves as renames with 88% to 100% similarity.
++- **`e1align_checks.py` (v0.2): 22 checks, all PASS.** They cover:
++  - the exact-allowlist check: 10 edited files, 22 blocks, 5 moves, 3 added files;
++  - the moved bodies;
++  - three negatives against the checker itself;
++  - the control;
++  - fifteen mutations.
++- **`v0_1_firewall_gap_demonstration.txt`** shows the gap is real: the v0.1 proposed test accepts the reviewer's three counterexamples, and the committed test accepts the same import form.
++- **The exact trial diff** (`e1align_trial_names1_to_e1align.diff`) covers 14 files: 208 lines added and 42 removed. Git detects the five moves as renames.
+ 
+ ## 8. Records that go out of date
+ 
+@@ -164,4 +180,14 @@
+ | Caution 2: narrow, explicit E_1 firewall allowance; same-folder probe | Section 5; E1A-T09 |
+ | Caution 3: the reader must not import method code; HIGH tier; Windows evidence; no hashes or Git dependence | E1A-R05, E1A-T04, E1A-T12; nothing records a hash or commit |
+ 
+-*End of E1-ALIGN specification draft v0.1.*
++## 11. Changes from v0.1 (response to EX_004)
++
++| Finding | Response |
++|---|---|
++| E1A-B01 (BLOCKER): `from _common import game_draws_reader` and bridge symbol substitution not caught | Section 5 rewritten: symbol-aware import identification; exact allowance by file, form, module, name, alias and count; textual counts of both words; a stated regression-guard limit. Mutations m9..m15 added to E1A-T09. The same gap was found in the committed test and is closed by E1-ALIGN |
++| E1A-C01 (CORRECTION): checker accepted any import-like line | E1A-T01 now uses a frozen exact allowlist (`e1align_allowlist.json`), applied against the installed NAMES-1 predecessor; three checker negatives |
++| E1A-O01 (OPTIONAL): callable metadata | New E1A-R02A (explanatory) |
++
++Nothing else changed: the moves, the shared module, the tie functions staying with E_1, the six-encoder guard, the orphan-marker path and E_1's science are as in v0.1.
++
++*End of E1-ALIGN specification draft v0.2.*
