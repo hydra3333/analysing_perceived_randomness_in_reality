@@ -11,8 +11,8 @@ Nothing in this module permits process launches, holdout access, or scoring.
 from __future__ import annotations
 
 from types import MappingProxyType
-from _common.game_profiles_v1 import get_profile
-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
+from _common.game_profiles import get_profile
+from _common.multigame_method_registry import method_status, SUPPORTED
 
 SYNTHETIC_MODE = 'SYNTHETIC_CONTRACT_TEST'
 SYNTHETIC_VARIANT = 'SYNTHETIC_PLUMBING_V1'

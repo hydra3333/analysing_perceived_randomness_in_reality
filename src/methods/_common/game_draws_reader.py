@@ -19,7 +19,7 @@ import re
 from types import MappingProxyType
 
 import numpy as np
-from _common.game_profiles_v1 import get_profile
+from _common.game_profiles import get_profile
 
 _DIGIT = re.compile(rb'(0|[1-9][0-9]*)\Z', re.ASCII)
 _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)
@@ -105,7 +105,7 @@ class DrawView:
 
     def e1_view_digest(self, *, data_kind: str = _REAL) -> str:
         """Legacy E1 date-free digest is immutable; new schemas bind dates."""
-        from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
+        from _common.e1_historical_appearance_frequency import canonical_bytes
         rows = self.simple_rows()
         legacy = (self.game_id == 'POWERBALL' and self.method_id == 'E_1' and
                   self.variant_id == _E1_VARIANT and self.kind == 'UNORDERED_SET' and

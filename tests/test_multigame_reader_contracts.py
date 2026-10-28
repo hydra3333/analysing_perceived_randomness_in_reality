@@ -19,12 +19,12 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src' / 'methods'))
-from _common.game_draws_reader_v1 import (DrawView, load_pinned_draw_view, header_for,
+from _common.game_draws_reader import (DrawView, load_pinned_draw_view, header_for,
                                            _parse_prefix, _owned)
-from _common.e1_common_reader_bridge_v1 import prepared_e1_forecast
-from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
-from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
+from _common.e1_common_reader_bridge import prepared_e1_forecast
+from _common.e1_historical_appearance_frequency import canonical_bytes
+from _common.game_profiles import POWERBALL, OZLOTTO
+from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
 
 SHA = {'POWERBALL':'ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8',
        'OZLOTTO':'4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f'}
@@ -108,9 +108,9 @@ class V011ReaderTests(unittest.TestCase):
 
     def test_existing_synthetic_e1_goldens_unchanged(self):
         # Pure arithmetic; do not run or enable the real standalone entry point.
-        from _common.e1_training_view_v0_1 import build_e1_forecast
-        from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
-        from _common.e1_standalone_contract_v0_1 import sha
+        from _common.e1_training_view import build_e1_forecast
+        from _common.e1_historical_appearance_frequency import canonical_bytes
+        from _common.e1_standalone_contract import sha
         fixture=json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
         rows=fixture['rows']
         digest=hashlib.sha256(canonical_bytes({
@@ -125,7 +125,7 @@ class V011ReaderTests(unittest.TestCase):
 
     def test_ratified_r2_5_5_synthetic_identity_goldens(self):
         """Distinct from the later standalone-runner synthetic golden pair."""
-        from _common.e1_historical_appearance_frequency_v0_3 import (
+        from _common.e1_historical_appearance_frequency import (
             candidate_forecast, training_prefix, training_sha256, tie_digest)
         fixture = json.loads((ROOT/'tests'/'p3_e1_synthetic_v0_3.json').read_text())
         self.assertEqual(fixture['target'], 1152)

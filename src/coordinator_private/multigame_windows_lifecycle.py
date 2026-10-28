@@ -23,8 +23,8 @@ import threading
 import time
 import uuid
 
-from .multigame_launch_spec_v1 import build_synthetic_launch_spec
-from .multigame_coordinator_exit_receipt_v2 import issue_coordinator_receipt
+from .multigame_launch_spec import build_synthetic_launch_spec
+from .multigame_coordinator_exit_receipt import issue_coordinator_receipt
 
 
 def parse_synthetic_args(argv: list[str]) -> argparse.Namespace:
@@ -155,7 +155,7 @@ def run_windows_synthetic(coordinator, argv: list[str]) -> int:
                     strict_release_eligibility(launch=launch, worker=worker, status=status)
                     if os.path.lexists(coordinator.UNRESOLVED_ORPHAN_MARKER):
                         raise ValueError('global orphan marker before release')
-                    from _common.multigame_ancestry_release_v1 import release_document, RELEASE_NAME
+                    from _common.multigame_ancestry_release import release_document, RELEASE_NAME
                     path = launch.run_dir / RELEASE_NAME
                     if os.path.lexists(path):
                         raise ValueError('ancestry release collision')

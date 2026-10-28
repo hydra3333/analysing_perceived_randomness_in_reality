@@ -16,9 +16,9 @@ import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT/'src'),str(ROOT/'src'/'methods')]
-from _common.multigame_ancestry_release_v1 import RELEASE_POLL_SECONDS,RELEASE_WAIT_SECONDS
-from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
-from coordinator_private.multigame_windows_lifecycle_v1 import PIPE_READER_JOIN_TIMEOUT_SECONDS as LIFE_JOIN
+from _common.multigame_ancestry_release import RELEASE_POLL_SECONDS,RELEASE_WAIT_SECONDS
+from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
+from coordinator_private.multigame_windows_lifecycle import PIPE_READER_JOIN_TIMEOUT_SECONDS as LIFE_JOIN
 import Powerball_Experiment_Coordinator as coord
 
 PROTECTED=(
@@ -75,7 +75,7 @@ class StaticSafetyTests(unittest.TestCase):
 
     def test_legacy_waits_untouched_and_new_literals_named(self):
         source=(ROOT/'src'/'Powerball_Experiment_Coordinator.py').read_text()
-        life=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle_v1.py').read_text()
+        life=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle.py').read_text()
         self.assertNotIn('messages.put((number, line.rstrip("\\r\\n")), timeout=0.12)',source)
         self.assertNotIn('w.reader.join(timeout=0.05)',source)
         self.assertNotIn('worker.reader.join(timeout=0.05)',life)
@@ -96,10 +96,10 @@ class StaticSafetyTests(unittest.TestCase):
             tree=ast.parse(contents)
             for node in ast.walk(tree):
                 if isinstance(node,ast.ImportFrom):
-                    self.assertNotIn('game_draws_reader_v1',node.module or '')
+                    self.assertNotIn('game_draws_reader',node.module or '')
                 elif isinstance(node,ast.Import):
                     for alias in node.names:
-                        self.assertNotIn('game_draws_reader_v1',alias.name)
+                        self.assertNotIn('game_draws_reader',alias.name)
             self.assertNotIn('source_data',contents)
 
     def test_no_retired_acquisition_overlay_importable(self):

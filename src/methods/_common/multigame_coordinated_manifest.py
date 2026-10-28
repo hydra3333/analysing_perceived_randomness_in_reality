@@ -11,9 +11,9 @@ import json
 import os
 from pathlib import Path
 
-from _common.multigame_console_protocol_v1 import prepare_success_records
-from _common.multigame_standalone_contract_v1 import json_bytes
-from _common.multigame_result_registry_v1 import (
+from _common.multigame_console_protocol import prepare_success_records
+from _common.multigame_standalone_contract import json_bytes
+from _common.multigame_result_registry import (
     require_synthetic_variant, SYNTHETIC_MODE, SYNTHETIC_SCHEMA
 )
 

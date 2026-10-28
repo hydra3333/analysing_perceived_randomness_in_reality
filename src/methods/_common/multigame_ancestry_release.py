@@ -12,7 +12,7 @@ import os
 from pathlib import Path
 import time
 
-from .multigame_standalone_contract_v1 import json_bytes
+from .multigame_standalone_contract import json_bytes
 
 RELEASE_NAME = 'coordinator_ancestry_release.json'
 RELEASE_POLL_SECONDS = 0.5

@@ -1,0 +1,11 @@
+environment: Linux 6.18.44-fc-v180 Python 3.13.17
+tests.test_multigame_reader_contracts         ran  10  skipped 0  OK
+tests.test_multigame_static_and_timing        ran   6  skipped 0  OK
+tests.test_multigame_launch_and_manifest      ran  11  skipped 0  OK
+tests.test_multigame_exit_receipt             ran  18  skipped 0  OK
+tests.test_multigame_science_allowlist        ran   6  skipped 0  OK
+tests.test_multigame_console_and_synthetic_scorer ran   7  skipped 0  OK
+tests.test_t05_hardening                      ran   2  skipped 0  OK
+tests.test_e1_standalone                      ran  13  skipped 0  OK
+tests.test_multigame_windows_lifecycle_review ran   6  skipped 0  OK
+total ran 79

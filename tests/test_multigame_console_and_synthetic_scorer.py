@@ -8,15 +8,15 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'/'methods'))
-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
-from _common.multigame_e1_v1 import forecast
-from _common.multigame_standalone_contract_v1 import (
+from _common.game_profiles import POWERBALL, OZLOTTO
+from _common.multigame_e1 import forecast
+from _common.multigame_standalone_contract import (
     begin_synthetic, publish_synthetic_success, json_bytes,
 )
-from _common.multigame_console_protocol_v1 import (
+from _common.multigame_console_protocol import (
     prepare_success_records,verify_success_records,verify_failed_records,
 )
-from _common.multigame_synthetic_scorer_v1 import score_verified_synthetic
+from _common.multigame_synthetic_scorer import score_verified_synthetic
 
 
 def make_run(root: Path,p,draw,tag):

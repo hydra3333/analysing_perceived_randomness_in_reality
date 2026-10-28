@@ -49,9 +49,9 @@ def build_synthetic_launch_spec(*, group_id: str, worker_sequence: int,
     Every run dir is under a deliberately selected game-qualified synthetic root.
     A real loader is impossible through this interface.
     """
-    from _common.game_profiles_v1 import get_profile
-    from _common.multigame_method_registry_v1 import method_status, SUPPORTED
-    from _common.multigame_result_registry_v1 import require_synthetic_variant
+    from _common.game_profiles import get_profile
+    from _common.multigame_method_registry import method_status, SUPPORTED
+    from _common.multigame_result_registry import require_synthetic_variant
     if (type(group_id) is not str or _SAFE_GROUP.fullmatch(group_id) is None or
             type(worker_sequence) is not int or not 1 <= worker_sequence <= 6 or
             type(run_id) is not str or _SAFE_RUN.fullmatch(run_id) is None or

@@ -1,0 +1,95 @@
+PASS path src/methods/_common/e1_common_reader_bridge_v1.py -> src/methods/_common/e1_common_reader_bridge.py
+PASS path src/methods/_common/e1_historical_appearance_frequency_v0_3.py -> src/methods/_common/e1_historical_appearance_frequency.py
+PASS path src/methods/_common/e1_standalone_contract_v0_1.py -> src/methods/_common/e1_standalone_contract.py
+PASS path src/methods/_common/e1_training_view_v0_1.py -> src/methods/_common/e1_training_view.py
+PASS path src/methods/_common/game_draws_reader_v1.py -> src/methods/_common/game_draws_reader.py
+PASS path src/methods/_common/game_profiles_v1.py -> src/methods/_common/game_profiles.py
+PASS path src/methods/_common/multigame_ancestry_release_v1.py -> src/methods/_common/multigame_ancestry_release.py
+PASS path src/methods/_common/multigame_console_protocol_v1.py -> src/methods/_common/multigame_console_protocol.py
+PASS path src/methods/_common/multigame_coordinated_manifest_v1.py -> src/methods/_common/multigame_coordinated_manifest.py
+PASS path src/methods/_common/multigame_e1_v1.py -> src/methods/_common/multigame_e1.py
+PASS path src/methods/_common/multigame_method_registry_v1.py -> src/methods/_common/multigame_method_registry.py
+PASS path src/methods/_common/multigame_result_registry_v1.py -> src/methods/_common/multigame_result_registry.py
+PASS path src/methods/_common/multigame_standalone_contract_v1.py -> src/methods/_common/multigame_standalone_contract.py
+PASS path src/methods/_common/multigame_synthetic_scorer_v1.py -> src/methods/_common/multigame_synthetic_scorer.py
+PASS path src/methods/_common/multigame_worker_launch_handshake_v1.py -> src/methods/_common/multigame_worker_launch_handshake.py
+PASS path src/coordinator_private/multigame_coordinator_exit_receipt_v2.py -> src/coordinator_private/multigame_coordinator_exit_receipt.py
+PASS path src/coordinator_private/multigame_launch_spec_v1.py -> src/coordinator_private/multigame_launch_spec.py
+PASS path src/coordinator_private/multigame_windows_lifecycle_v1.py -> src/coordinator_private/multigame_windows_lifecycle.py
+PASS path tests/test_multigame_console_and_synthetic_scorer_v0_4.py -> tests/test_multigame_console_and_synthetic_scorer.py
+PASS path tests/test_multigame_exit_receipt_v0_8.py -> tests/test_multigame_exit_receipt.py
+PASS path tests/test_multigame_launch_and_manifest_v0_8.py -> tests/test_multigame_launch_and_manifest.py
+PASS path tests/test_multigame_science_allowlist_v0_8.py -> tests/test_multigame_science_allowlist.py
+PASS path tests/test_multigame_v011_reader_contracts.py -> tests/test_multigame_reader_contracts.py
+PASS path tests/test_multigame_v011_static_and_timing.py -> tests/test_multigame_static_and_timing.py
+PASS path tests/test_multigame_windows_lifecycle_review_v0_9.py -> tests/test_multigame_windows_lifecycle_review.py
+PASS path tests/test_p2_r1_t05_hardening_v1.py -> tests/test_t05_hardening.py
+PASS path tests/test_p3_e1_standalone_v0_1.py -> tests/test_e1_standalone.py
+PASS no old-name .py/.pyc outside __pycache__ under src/ or tests/ (0 found)
+PASS old name not importable: _common.e1_common_reader_bridge_v1
+PASS old name not importable: _common.e1_historical_appearance_frequency_v0_3
+PASS old name not importable: _common.e1_standalone_contract_v0_1
+PASS old name not importable: _common.e1_training_view_v0_1
+PASS old name not importable: _common.game_draws_reader_v1
+PASS old name not importable: _common.game_profiles_v1
+PASS old name not importable: _common.multigame_ancestry_release_v1
+PASS old name not importable: _common.multigame_console_protocol_v1
+PASS old name not importable: _common.multigame_coordinated_manifest_v1
+PASS old name not importable: _common.multigame_e1_v1
+PASS old name not importable: _common.multigame_method_registry_v1
+PASS old name not importable: _common.multigame_result_registry_v1
+PASS old name not importable: _common.multigame_standalone_contract_v1
+PASS old name not importable: _common.multigame_synthetic_scorer_v1
+PASS old name not importable: _common.multigame_worker_launch_handshake_v1
+PASS old name not importable: coordinator_private.multigame_coordinator_exit_receipt_v2
+PASS old name not importable: coordinator_private.multigame_launch_spec_v1
+PASS old name not importable: coordinator_private.multigame_windows_lifecycle_v1
+PASS old name not importable: test_multigame_console_and_synthetic_scorer_v0_4
+PASS old name not importable: test_multigame_exit_receipt_v0_8
+PASS old name not importable: test_multigame_launch_and_manifest_v0_8
+PASS old name not importable: test_multigame_science_allowlist_v0_8
+PASS old name not importable: test_multigame_v011_reader_contracts
+PASS old name not importable: test_multigame_v011_static_and_timing
+PASS old name not importable: test_multigame_windows_lifecycle_review_v0_9
+PASS old name not importable: test_p2_r1_t05_hardening_v1
+PASS old name not importable: test_p3_e1_standalone_v0_1
+PASS new name origin: _common.e1_common_reader_bridge -> src/methods/_common/e1_common_reader_bridge.py
+PASS new name origin: _common.e1_historical_appearance_frequency -> src/methods/_common/e1_historical_appearance_frequency.py
+PASS new name origin: _common.e1_standalone_contract -> src/methods/_common/e1_standalone_contract.py
+PASS new name origin: _common.e1_training_view -> src/methods/_common/e1_training_view.py
+PASS new name origin: _common.game_draws_reader -> src/methods/_common/game_draws_reader.py
+PASS new name origin: _common.game_profiles -> src/methods/_common/game_profiles.py
+PASS new name origin: _common.multigame_ancestry_release -> src/methods/_common/multigame_ancestry_release.py
+PASS new name origin: _common.multigame_console_protocol -> src/methods/_common/multigame_console_protocol.py
+PASS new name origin: _common.multigame_coordinated_manifest -> src/methods/_common/multigame_coordinated_manifest.py
+PASS new name origin: _common.multigame_e1 -> src/methods/_common/multigame_e1.py
+PASS new name origin: _common.multigame_method_registry -> src/methods/_common/multigame_method_registry.py
+PASS new name origin: _common.multigame_result_registry -> src/methods/_common/multigame_result_registry.py
+PASS new name origin: _common.multigame_standalone_contract -> src/methods/_common/multigame_standalone_contract.py
+PASS new name origin: _common.multigame_synthetic_scorer -> src/methods/_common/multigame_synthetic_scorer.py
+PASS new name origin: _common.multigame_worker_launch_handshake -> src/methods/_common/multigame_worker_launch_handshake.py
+PASS new name origin: coordinator_private.multigame_coordinator_exit_receipt -> src/coordinator_private/multigame_coordinator_exit_receipt.py
+PASS new name origin: coordinator_private.multigame_launch_spec -> src/coordinator_private/multigame_launch_spec.py
+PASS new name origin: coordinator_private.multigame_windows_lifecycle -> src/coordinator_private/multigame_windows_lifecycle.py
+PASS new name origin: test_multigame_console_and_synthetic_scorer -> tests/test_multigame_console_and_synthetic_scorer.py
+PASS new name origin: test_multigame_exit_receipt -> tests/test_multigame_exit_receipt.py
+PASS new name origin: test_multigame_launch_and_manifest -> tests/test_multigame_launch_and_manifest.py
+PASS new name origin: test_multigame_science_allowlist -> tests/test_multigame_science_allowlist.py
+PASS new name origin: test_multigame_reader_contracts -> tests/test_multigame_reader_contracts.py
+PASS new name origin: test_multigame_static_and_timing -> tests/test_multigame_static_and_timing.py
+PASS new name origin: test_multigame_windows_lifecycle_review -> tests/test_multigame_windows_lifecycle_review.py
+PASS new name origin: test_t05_hardening -> tests/test_t05_hardening.py
+PASS new name origin: test_e1_standalone -> tests/test_e1_standalone.py
+PASS coordinator issuer literal is the new file name only
+PASS coordinator issuer comparison and refusal unchanged
+PASS fresh interpreter: receipt module origin equals the coordinator expected issuer
+PASS mutation: a stale old issuer literal fails closed (FileNotFoundError)
+PASS receipt contract-module hashes computed from the renamed files
+PASS control: renamed tree, no probe: firewall test passes
+PASS mutation: a method doing "from _common.game_draws_reader import ..." is rejected
+PASS mutation: a method doing "import _common.game_draws_reader" is rejected
+PASS why the literal must change: with the old literal kept, the same new-name import would be accepted
+PASS base tree (test file name only aliased): firewall test passes before the rename
+PASS no old name in any live file outside review/, doc/, transitory_data/, exchange/ (source_data/ and results/ not opened) ([])
+PASS 6 .bat files byte-identical: ['Run_Coordinator.bat', 'Run_Experiment.bat', 'Run_Results_Updater.bat', 'activate_venv.bat', 'deactivate_venv.bat', 'install_upgrade_dependencies_into_venv.bat']
+RESULT PASS

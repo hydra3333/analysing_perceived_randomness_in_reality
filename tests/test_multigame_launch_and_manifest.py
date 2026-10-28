@@ -11,10 +11,10 @@ import unittest
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'src'),str(ROOT/'src'/'methods')]
-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
-from _common.multigame_console_protocol_v1 import verify_success_records
-from _common.multigame_standalone_contract_v1 import json_bytes
-from _common.multigame_coordinated_manifest_v1 import publish_coordinated_success
+from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
+from _common.multigame_console_protocol import verify_success_records
+from _common.multigame_standalone_contract import json_bytes
+from _common.multigame_coordinated_manifest import publish_coordinated_success
 
 METHOD=ROOT/'src'/'methods'/'POC_MultiGame_Synthetic_Worker.py'
 spec=importlib.util.spec_from_file_location('e001_multigame_synthetic_review',METHOD)
@@ -173,7 +173,7 @@ class LaunchAndWorkerManifestTests(unittest.TestCase):
         self.assertIn('ENABLE_PROCESS_TERMINATION = False',coord)
 
     def test_receipt_consumer_cannot_treat_plumbing_as_forecast(self):
-        from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
+        from coordinator_private.multigame_coordinator_exit_receipt import (
             issue_coordinator_receipt,verify_receipt_before_consume)
         with tempfile.TemporaryDirectory() as td:
             home=Path(td)

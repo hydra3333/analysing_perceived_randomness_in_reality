@@ -13,8 +13,8 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
 sys.path.insert(0, str(ROOT / 'src' / 'methods'))
-import _common.multigame_result_registry_v1 as result_registry
-from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
+import _common.multigame_result_registry as result_registry
+from coordinator_private.multigame_coordinator_exit_receipt import (
     issue_coordinator_receipt, verify_receipt_before_consume, _canonical, _hash
 )
 
@@ -57,7 +57,7 @@ _FAKE_SCIENCE = MappingProxyType({('OZLOTTO','E_1','FULL_HISTORY_RAW_COUNTS_V1',
                                   ('TEST_ONLY_COORDINATED_E1_RESULT_V1','TEST_ONLY_FAKE_SCIENCE')})
 
 def records(group, run, identity):
-    from _common.multigame_console_protocol_v1 import prepare_success_records
+    from _common.multigame_console_protocol import prepare_success_records
     result=json.loads((run/'canonical_result.json').read_bytes())
     return prepare_success_records(game_id=identity['game_id'],
         method_id=identity['method_id'], run_id=identity['run_id'],
@@ -258,7 +258,7 @@ class ReceiptTests(unittest.TestCase):
         self.assertNotIn('sys.path.insert(0, method_root)',source)
         self.assertIn('actual_issuer != expected_issuer',source)
         self.assertIn('untrusted coordinator receipt issuer location',source)
-        self.assertIn("'multigame_coordinator_exit_receipt_v2.py').resolve(strict=True)",source)
+        self.assertIn("'multigame_coordinator_exit_receipt.py').resolve(strict=True)",source)
 
     def test_verifier_opens_canonical_result_once_and_returns_that_object(self):
         with tempfile.TemporaryDirectory() as t:
@@ -277,7 +277,7 @@ class ReceiptTests(unittest.TestCase):
 
     def test_coordinator_private_module_and_noop_removed(self):
         self.assertFalse((ROOT/'src'/'methods'/'_common'/'multigame_coordinator_exit_receipt_v1.py').exists())
-        self.assertTrue((ROOT/'src'/'coordinator_private'/'multigame_coordinator_exit_receipt_v2.py').is_file())
+        self.assertTrue((ROOT/'src'/'coordinator_private'/'multigame_coordinator_exit_receipt.py').is_file())
         source=(ROOT/'src'/'Powerball_Experiment_Coordinator.py').read_text()
         self.assertNotIn("final['workers'] = reports",source)
 

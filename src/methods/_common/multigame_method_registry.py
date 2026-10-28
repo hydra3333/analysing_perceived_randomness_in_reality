@@ -6,7 +6,7 @@ FORMULA_OPEN pending the existing research/family approval process.
 from __future__ import annotations
 from types import MappingProxyType
 
-from _common.game_profiles_v1 import get_profile
+from _common.game_profiles import get_profile
 
 SUPPORTED = 'SUPPORTED'
 UNSUPPORTED = 'UNSUPPORTED_FOR_GAME'

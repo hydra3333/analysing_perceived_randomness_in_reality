@@ -14,12 +14,12 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.append(str(ROOT/'src'))
 sys.path.append(str(ROOT/'src'/'methods'))
-from coordinator_private.multigame_windows_lifecycle_v1 import (
+from coordinator_private.multigame_windows_lifecycle import (
     parse_synthetic_args,strict_release_eligibility,run_windows_synthetic)
-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
-from _common.multigame_ancestry_release_v1 import (
+from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
+from _common.multigame_ancestry_release import (
     release_document,await_release,RELEASE_NAME)
-from _common.multigame_standalone_contract_v1 import json_bytes
+from _common.multigame_standalone_contract import json_bytes
 
 
 def ident():
@@ -107,9 +107,9 @@ class SyntheticLifecycleReviewTests(TestCase):
             self.assertFalse((run/RELEASE_NAME).exists())
 
     def test_no_child_source_network_kill_or_science_registration(self):
-        from _common.multigame_result_registry_v1 import _COORDINATED_SCIENCE_ALLOWLIST
+        from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
         self.assertEqual(len(_COORDINATED_SCIENCE_ALLOWLIST),0)
-        src=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle_v1.py').read_text()
+        src=(ROOT/'src'/'coordinator_private'/'multigame_windows_lifecycle.py').read_text()
         self.assertNotIn('taskkill',src)
         self.assertNotIn('terminate_owned_tree(',src)
         self.assertNotIn('proc.terminate(',src)

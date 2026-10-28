@@ -7,9 +7,9 @@ from __future__ import annotations
 from pathlib import Path
 import re
 
-from _common.game_profiles_v1 import get_profile
-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
-from _common.multigame_result_registry_v1 import require_synthetic_variant
+from _common.game_profiles import get_profile
+from _common.multigame_method_registry import method_status, SUPPORTED
+from _common.multigame_result_registry import require_synthetic_variant
 
 
 def verify_synthetic_worker_request(*, game_id: str, draw_number: int,

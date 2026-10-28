@@ -1100,9 +1100,9 @@ def coordinator_main() -> int:
                 method_root = str(ROOT / 'src' / 'methods')
                 if method_root not in sys.path:
                     sys.path.append(method_root)  # do NOT prepend
-                import coordinator_private.multigame_coordinator_exit_receipt_v2 as receipt_module
+                import coordinator_private.multigame_coordinator_exit_receipt as receipt_module
                 expected_issuer = (ROOT / 'src' / 'coordinator_private' /
-                                   'multigame_coordinator_exit_receipt_v2.py').resolve(strict=True)
+                                   'multigame_coordinator_exit_receipt.py').resolve(strict=True)
                 actual_issuer = Path(receipt_module.__file__).resolve(strict=True)
                 if actual_issuer != expected_issuer:
                     raise ValueError('untrusted coordinator receipt issuer location')
@@ -1166,7 +1166,7 @@ if __name__ == "__main__":
                   "requires separate independent review and owner approval; "
                   "source gate is False.", file=sys.stderr)
             raise SystemExit(3)
-        from coordinator_private.multigame_windows_lifecycle_v1 import run_windows_synthetic
+        from coordinator_private.multigame_windows_lifecycle import run_windows_synthetic
         try:
             raise SystemExit(run_windows_synthetic(sys.modules[__name__], sys.argv[1:]))
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:

@@ -14,8 +14,8 @@ import re
 from pathlib import Path
 
 from _common.experiment_runtime_status_and_resources import ProbeStatus
-from _common.game_profiles_v1 import GameProfile
-from _common.multigame_method_registry_v1 import method_status, SUPPORTED
+from _common.game_profiles import GameProfile
+from _common.multigame_method_registry import method_status, SUPPORTED
 
 _RUN = re.compile(r'mg-[a-z0-9][a-z0-9_-]{7,95}\Z',re.ASCII)
 _HEX = re.compile(r'[0-9a-f]{64}\Z',re.ASCII)

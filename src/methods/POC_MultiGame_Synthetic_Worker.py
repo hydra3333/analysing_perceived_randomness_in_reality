@@ -12,10 +12,10 @@ import os
 from pathlib import Path
 import sys
 
-from _common.multigame_standalone_contract_v1 import json_bytes
+from _common.multigame_standalone_contract import json_bytes
 from _common.experiment_runtime_status_and_resources import ProbeStatus
-from _common.multigame_coordinated_manifest_v1 import publish_coordinated_success
-from _common.multigame_result_registry_v1 import SYNTHETIC_MODE, SYNTHETIC_VARIANT, SYNTHETIC_SCHEMA
+from _common.multigame_coordinated_manifest import publish_coordinated_success
+from _common.multigame_result_registry import SYNTHETIC_MODE, SYNTHETIC_VARIANT, SYNTHETIC_SCHEMA
 
 METHOD = 'E_1'
 
@@ -37,7 +37,7 @@ def main(argv: list[str] | None = None, *, test_synthetic_root: Path | None = No
     marker = project / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
     if os.path.lexists(marker):
         parser.error('global unresolved orphan safety stop')
-    from _common.multigame_worker_launch_handshake_v1 import verify_synthetic_worker_request
+    from _common.multigame_worker_launch_handshake import verify_synthetic_worker_request
     identity,run_dir,profile_version=verify_synthetic_worker_request(
             group_id=args.group_id,worker_sequence=args.worker_sequence,
             run_id=args.run_id,game_id=args.game,draw_number=args.target,
@@ -51,7 +51,7 @@ def main(argv: list[str] | None = None, *, test_synthetic_root: Path | None = No
     print(f'BEGIN {METHOD} game={args.game} draw={args.target} run={args.run_id}',flush=True)
     try:
         if args.await_coordinator_release:
-            from _common.multigame_ancestry_release_v1 import await_release
+            from _common.multigame_ancestry_release import await_release
             born = status.value.get('process_create_time_epoch')
             if type(born) not in (float, int) or born <= 0:
                 raise ValueError('worker process creation time not available')

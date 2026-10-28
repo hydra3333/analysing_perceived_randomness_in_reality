@@ -16,7 +16,7 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 
-from _common.e1_historical_appearance_frequency_v0_3 import canonical_bytes
+from _common.e1_historical_appearance_frequency import canonical_bytes
 
 FIRST_DRAW = 1144
 HOLDOUT_FIRST = 1578
@@ -115,7 +115,7 @@ def load_permitted_u_view(source: Path, target: int, *, source_kind: str,
 
 def build_e1_forecast(records: list[dict], digest: str, target: int, *, source_kind: str) -> dict:
     # Delayed import to keep STARTED publication ahead of heavy future dependencies.
-    from _common.e1_historical_appearance_frequency_v0_3 import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
+    from _common.e1_historical_appearance_frequency import rank_counts, METHOD_ID, VARIANT_ID, TIE_VERSION
     if source_kind not in ('REAL_HISTORICAL_DEVELOPMENT', 'SYNTHETIC_CONTRACT_TEST'):
         raise ValueError('source kind not allowed')
     if len(records) != target-FIRST_DRAW or records[0]['draw'] != FIRST_DRAW or records[-1]['draw'] != target-1:

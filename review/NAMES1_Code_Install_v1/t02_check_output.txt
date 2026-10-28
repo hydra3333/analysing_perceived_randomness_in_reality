@@ -1,0 +1,124 @@
+  A-IMPORT         src/Powerball_Experiment_Coordinator.py:1103  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  B1-ORIGIN        src/Powerball_Experiment_Coordinator.py:1105  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  A-IMPORT         src/Powerball_Experiment_Coordinator.py:1169  multigame_windows_lifecycle_v1 -> multigame_windows_lifecycle
+PASS src/Powerball_Experiment_Coordinator.py: 3 authorised change(s) and nothing else
+  B2-CONTRACT-FILE src/coordinator_private/multigame_coordinator_exit_receipt.py:31  multigame_result_registry_v1 -> multigame_result_registry
+  B2-CONTRACT-FILE src/coordinator_private/multigame_coordinator_exit_receipt.py:31  multigame_console_protocol_v1 -> multigame_console_protocol
+  A-IMPORT         src/coordinator_private/multigame_coordinator_exit_receipt.py:83  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         src/coordinator_private/multigame_coordinator_exit_receipt.py:153  multigame_console_protocol_v1 -> multigame_console_protocol
+  A-IMPORT         src/coordinator_private/multigame_coordinator_exit_receipt.py:232  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         src/coordinator_private/multigame_coordinator_exit_receipt.py:241  multigame_result_registry_v1 -> multigame_result_registry
+PASS src/coordinator_private/multigame_coordinator_exit_receipt_v2.py: 6 authorised change(s) and nothing else
+  A-IMPORT         src/coordinator_private/multigame_launch_spec.py:52  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/coordinator_private/multigame_launch_spec.py:53  multigame_method_registry_v1 -> multigame_method_registry
+  A-IMPORT         src/coordinator_private/multigame_launch_spec.py:54  multigame_result_registry_v1 -> multigame_result_registry
+PASS src/coordinator_private/multigame_launch_spec_v1.py: 3 authorised change(s) and nothing else
+  A-IMPORT         src/coordinator_private/multigame_windows_lifecycle.py:26  multigame_launch_spec_v1 -> multigame_launch_spec
+  A-IMPORT         src/coordinator_private/multigame_windows_lifecycle.py:27  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  A-IMPORT         src/coordinator_private/multigame_windows_lifecycle.py:158  multigame_ancestry_release_v1 -> multigame_ancestry_release
+PASS src/coordinator_private/multigame_windows_lifecycle_v1.py: 3 authorised change(s) and nothing else
+  A-IMPORT         src/methods/E_001_Historical_Appearance_Frequency.py:48  e1_standalone_contract_v0_1 -> e1_standalone_contract
+  A-IMPORT         src/methods/E_001_Historical_Appearance_Frequency.py:60  e1_training_view_v0_1 -> e1_training_view
+PASS src/methods/E_001_Historical_Appearance_Frequency.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/POC_MultiGame_Synthetic_Worker.py:15  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         src/methods/POC_MultiGame_Synthetic_Worker.py:17  multigame_coordinated_manifest_v1 -> multigame_coordinated_manifest
+  A-IMPORT         src/methods/POC_MultiGame_Synthetic_Worker.py:18  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         src/methods/POC_MultiGame_Synthetic_Worker.py:40  multigame_worker_launch_handshake_v1 -> multigame_worker_launch_handshake
+  A-IMPORT         src/methods/POC_MultiGame_Synthetic_Worker.py:54  multigame_ancestry_release_v1 -> multigame_ancestry_release
+PASS src/methods/POC_MultiGame_Synthetic_Worker.py: 5 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/e1_common_reader_bridge.py:7  game_draws_reader_v1 -> game_draws_reader
+  A-IMPORT         src/methods/_common/e1_common_reader_bridge.py:8  e1_training_view_v0_1 -> e1_training_view
+PASS src/methods/_common/e1_common_reader_bridge_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/e1_training_view.py:19  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+  A-IMPORT         src/methods/_common/e1_training_view.py:118  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+PASS src/methods/_common/e1_training_view_v0_1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/game_draws_reader.py:22  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/methods/_common/game_draws_reader.py:108  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+PASS src/methods/_common/game_draws_reader_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_ancestry_release.py:15  multigame_standalone_contract_v1 -> multigame_standalone_contract
+PASS src/methods/_common/multigame_ancestry_release_v1.py: 1 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_console_protocol.py:15  multigame_standalone_contract_v1 -> multigame_standalone_contract
+PASS src/methods/_common/multigame_console_protocol_v1.py: 1 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_coordinated_manifest.py:14  multigame_console_protocol_v1 -> multigame_console_protocol
+  A-IMPORT         src/methods/_common/multigame_coordinated_manifest.py:15  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         src/methods/_common/multigame_coordinated_manifest.py:16  multigame_result_registry_v1 -> multigame_result_registry
+PASS src/methods/_common/multigame_coordinated_manifest_v1.py: 3 authorised change(s) and nothing else
+  D-DOC            src/methods/_common/multigame_e1.py:3  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+  A-IMPORT         src/methods/_common/multigame_e1.py:12  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+  A-IMPORT         src/methods/_common/multigame_e1.py:15  game_profiles_v1 -> game_profiles
+PASS src/methods/_common/multigame_e1_v1.py: 3 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_method_registry.py:9  game_profiles_v1 -> game_profiles
+PASS src/methods/_common/multigame_method_registry_v1.py: 1 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_result_registry.py:14  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/methods/_common/multigame_result_registry.py:15  multigame_method_registry_v1 -> multigame_method_registry
+PASS src/methods/_common/multigame_result_registry_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_standalone_contract.py:17  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/methods/_common/multigame_standalone_contract.py:18  multigame_method_registry_v1 -> multigame_method_registry
+PASS src/methods/_common/multigame_standalone_contract_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_synthetic_scorer.py:13  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/methods/_common/multigame_synthetic_scorer.py:14  multigame_standalone_contract_v1 -> multigame_standalone_contract
+PASS src/methods/_common/multigame_synthetic_scorer_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         src/methods/_common/multigame_worker_launch_handshake.py:10  game_profiles_v1 -> game_profiles
+  A-IMPORT         src/methods/_common/multigame_worker_launch_handshake.py:11  multigame_method_registry_v1 -> multigame_method_registry
+  A-IMPORT         src/methods/_common/multigame_worker_launch_handshake.py:12  multigame_result_registry_v1 -> multigame_result_registry
+PASS src/methods/_common/multigame_worker_launch_handshake_v1.py: 3 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_console_and_synthetic_scorer.py:11  game_profiles_v1 -> game_profiles
+  A-IMPORT         tests/test_multigame_console_and_synthetic_scorer.py:12  multigame_e1_v1 -> multigame_e1
+  A-IMPORT         tests/test_multigame_console_and_synthetic_scorer.py:13  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         tests/test_multigame_console_and_synthetic_scorer.py:16  multigame_console_protocol_v1 -> multigame_console_protocol
+  A-IMPORT         tests/test_multigame_console_and_synthetic_scorer.py:19  multigame_synthetic_scorer_v1 -> multigame_synthetic_scorer
+PASS tests/test_multigame_console_and_synthetic_scorer_v0_4.py: 5 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_exit_receipt.py:16  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         tests/test_multigame_exit_receipt.py:17  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  A-IMPORT         tests/test_multigame_exit_receipt.py:60  multigame_console_protocol_v1 -> multigame_console_protocol
+  B1-ORIGIN        tests/test_multigame_exit_receipt.py:261  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  B1-ORIGIN        tests/test_multigame_exit_receipt.py:280  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+PASS tests/test_multigame_exit_receipt_v0_8.py: 5 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_launch_and_manifest.py:14  multigame_launch_spec_v1 -> multigame_launch_spec
+  A-IMPORT         tests/test_multigame_launch_and_manifest.py:15  multigame_console_protocol_v1 -> multigame_console_protocol
+  A-IMPORT         tests/test_multigame_launch_and_manifest.py:16  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         tests/test_multigame_launch_and_manifest.py:17  multigame_coordinated_manifest_v1 -> multigame_coordinated_manifest
+  A-IMPORT         tests/test_multigame_launch_and_manifest.py:176  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+PASS tests/test_multigame_launch_and_manifest_v0_8.py: 5 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_science_allowlist.py:20  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         tests/test_multigame_science_allowlist.py:21  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         tests/test_multigame_science_allowlist.py:22  multigame_launch_spec_v1 -> multigame_launch_spec
+  A-IMPORT         tests/test_multigame_science_allowlist.py:23  multigame_coordinator_exit_receipt_v2 -> multigame_coordinator_exit_receipt
+  A-IMPORT         tests/test_multigame_science_allowlist.py:26  test_multigame_exit_receipt_v0_8 -> test_multigame_exit_receipt
+PASS tests/test_multigame_science_allowlist_v0_8.py: 5 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_reader_contracts.py:22  game_draws_reader_v1 -> game_draws_reader
+  A-IMPORT         tests/test_multigame_reader_contracts.py:24  e1_common_reader_bridge_v1 -> e1_common_reader_bridge
+  A-IMPORT         tests/test_multigame_reader_contracts.py:25  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+  A-IMPORT         tests/test_multigame_reader_contracts.py:26  game_profiles_v1 -> game_profiles
+  A-IMPORT         tests/test_multigame_reader_contracts.py:27  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         tests/test_multigame_reader_contracts.py:111  e1_training_view_v0_1 -> e1_training_view
+  A-IMPORT         tests/test_multigame_reader_contracts.py:112  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+  A-IMPORT         tests/test_multigame_reader_contracts.py:113  e1_standalone_contract_v0_1 -> e1_standalone_contract
+  A-IMPORT         tests/test_multigame_reader_contracts.py:128  e1_historical_appearance_frequency_v0_3 -> e1_historical_appearance_frequency
+PASS tests/test_multigame_v011_reader_contracts.py: 9 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_static_and_timing.py:19  multigame_ancestry_release_v1 -> multigame_ancestry_release
+  A-IMPORT         tests/test_multigame_static_and_timing.py:20  multigame_result_registry_v1 -> multigame_result_registry
+  A-IMPORT         tests/test_multigame_static_and_timing.py:21  multigame_windows_lifecycle_v1 -> multigame_windows_lifecycle
+  B3-SOURCE-READ   tests/test_multigame_static_and_timing.py:78  multigame_windows_lifecycle_v1 -> multigame_windows_lifecycle
+  C-FIREWALL       tests/test_multigame_static_and_timing.py:99  game_draws_reader_v1 -> game_draws_reader
+  C-FIREWALL       tests/test_multigame_static_and_timing.py:102  game_draws_reader_v1 -> game_draws_reader
+PASS tests/test_multigame_v011_static_and_timing.py: 6 authorised change(s) and nothing else
+  A-IMPORT         tests/test_multigame_windows_lifecycle_review.py:17  multigame_windows_lifecycle_v1 -> multigame_windows_lifecycle
+  A-IMPORT         tests/test_multigame_windows_lifecycle_review.py:19  multigame_launch_spec_v1 -> multigame_launch_spec
+  A-IMPORT         tests/test_multigame_windows_lifecycle_review.py:20  multigame_ancestry_release_v1 -> multigame_ancestry_release
+  A-IMPORT         tests/test_multigame_windows_lifecycle_review.py:22  multigame_standalone_contract_v1 -> multigame_standalone_contract
+  A-IMPORT         tests/test_multigame_windows_lifecycle_review.py:110  multigame_result_registry_v1 -> multigame_result_registry
+  B3-SOURCE-READ   tests/test_multigame_windows_lifecycle_review.py:112  multigame_windows_lifecycle_v1 -> multigame_windows_lifecycle
+PASS tests/test_multigame_windows_lifecycle_review_v0_9.py: 6 authorised change(s) and nothing else
+  A-IMPORT         tests/test_t05_hardening.py:25  game_draws_reader_v1 -> game_draws_reader
+  A-IMPORT         tests/test_t05_hardening.py:26  game_profiles_v1 -> game_profiles
+PASS tests/test_p2_r1_t05_hardening_v1.py: 2 authorised change(s) and nothing else
+  A-IMPORT         tests/test_e1_standalone.py:21  e1_training_view_v0_1 -> e1_training_view
+  A-IMPORT         tests/test_e1_standalone.py:23  e1_standalone_contract_v0_1 -> e1_standalone_contract
+  A-IMPORT         tests/test_e1_standalone.py:204  e1_training_view_v0_1 -> e1_training_view
+  A-PATCH          tests/test_e1_standalone.py:213  e1_training_view_v0_1 -> e1_training_view
+  A-PATCH          tests/test_e1_standalone.py:261  e1_training_view_v0_1 -> e1_training_view
+PASS tests/test_p3_e1_standalone_v0_1.py: 5 authorised change(s) and nothing else
+326 other files byte-identical (pure renames included); file count 353 -> 353
+94 authorised changes in 27 files
+RESULT PASS

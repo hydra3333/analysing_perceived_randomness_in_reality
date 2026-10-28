@@ -1,6 +1,6 @@
 """Generic E_1 scoring engine, candidate. No IO or execution on import.
 
-Kept separate from accepted e1_historical_appearance_frequency_v0_3.
+Kept separate from accepted e1_historical_appearance_frequency.
 Legacy Powerball SHA/rank regression is compulsory before any migration.
 """
 from __future__ import annotations
@@ -9,10 +9,10 @@ import hashlib
 import re
 from collections.abc import Mapping, Sequence
 
-from _common.e1_historical_appearance_frequency_v0_3 import (
+from _common.e1_historical_appearance_frequency import (
     _length32_tuple, canonical_bytes, DOMAIN, METHOD_ID, VARIANT_ID, TIE_VERSION,
 )
-from _common.game_profiles_v1 import GameProfile
+from _common.game_profiles import GameProfile
 
 
 def _digest(view_sha256: str, target: int, barrel_id: str, label: int) -> str:

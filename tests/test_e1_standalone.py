@@ -18,9 +18,9 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BASE / 'src' / 'methods'))
-from _common.e1_training_view_v0_1 import (  # noqa
+from _common.e1_training_view import (  # noqa
     U_COLUMNS, load_permitted_u_view, build_e1_forecast)
-from _common.e1_standalone_contract_v0_1 import (  # noqa
+from _common.e1_standalone_contract import (  # noqa
     verify_and_consume, canonical_json, sha)
 import E_001_Historical_Appearance_Frequency as runner  # noqa
 
@@ -201,7 +201,7 @@ class E1LoaderAndRun(unittest.TestCase):
         # Even if a late result appears after a FAILED run, it cannot be consumed.
         valid_csv=self.root/'late_valid.csv'; csv_rows(valid_csv)
         valid=self.load(valid_csv)
-        from _common.e1_training_view_v0_1 import build_e1_forecast
+        from _common.e1_training_view import build_e1_forecast
         result=build_e1_forecast(*valid, TARGET, source_kind='SYNTHETIC_CONTRACT_TEST')
         (rd/'canonical_result.json').write_bytes(canonical_json(result))
         with self.assertRaisesRegex(ValueError, 'non-PASS'):
@@ -210,7 +210,7 @@ class E1LoaderAndRun(unittest.TestCase):
     def test_interrupt_is_fail_closed(self):
         from unittest.mock import patch
         rid='e1-interruptedstatus01'
-        with patch('_common.e1_training_view_v0_1.load_permitted_u_view',
+        with patch('_common.e1_training_view.load_permitted_u_view',
                    side_effect=KeyboardInterrupt):
             self.assertEqual(self.run_cli(rid), 1)
         rd=self.runs/rid
@@ -258,7 +258,7 @@ class E1LoaderAndRun(unittest.TestCase):
         fake_runner_path = fake_project / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py'
         with (patch.object(runner, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', False),
               patch.object(runner, '__file__', str(fake_runner_path)),
-              patch('_common.e1_training_view_v0_1.load_permitted_u_view',
+              patch('_common.e1_training_view.load_permitted_u_view',
                     side_effect=AssertionError('disabled real mode must not invoke loader')) as loader):
             with self.assertRaises(SystemExit) as stopped:
                 runner.main(['--mode', 'historical-development', '--target', '1152',

@@ -28,7 +28,7 @@ _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)
 _VARIANT = re.compile(r'[A-Z0-9_]{3,96}\Z', re.ASCII)
 _SHA = re.compile(r'[a-f0-9]{64}\Z', re.ASCII)
 _FILES = ('status.json', 'manifest.json', 'canonical_result.json')
-_CONTRACT_MODULE_NAMES = ('multigame_result_registry_v1.py', 'multigame_console_protocol_v1.py')
+_CONTRACT_MODULE_NAMES = ('multigame_result_registry.py', 'multigame_console_protocol.py')
 
 
 def _contract_hashes() -> dict[str,str]:
@@ -80,7 +80,7 @@ def _check_artifact_identities(identity: dict, status: dict, manifest: dict, res
     for name, item in (('status', status), ('manifest', manifest), ('result', result)):
         if any(item.get(key) != value for key, value in required.items()):
             raise ValueError(name + ' identity mismatch')
-    from _common.multigame_result_registry_v1 import (
+    from _common.multigame_result_registry import (
         SYNTHETIC_MODE, SYNTHETIC_SCHEMA, SCIENTIFIC_MODES,
         require_synthetic_variant, require_scientific_contract,
     )
@@ -150,7 +150,7 @@ def issue_coordinator_receipt(*, group_dir: Path, run_dir: Path, identity: dict,
     # in this one read. The same in-memory bytes are then SHA-256-bound below.
     # No second read of canonical_result.json and no unproven boolean from
     # the caller can certify the digest. The old v0.5 two-read seam is retired.
-    from _common.multigame_console_protocol_v1 import verify_success_records
+    from _common.multigame_console_protocol import verify_success_records
     verify_success_records(console_publication_records,
         game_id=identity['game_id'], method_id=identity['method_id'],
         run_id=identity['run_id'], target=identity['draw_number'],
@@ -229,7 +229,7 @@ def verify_receipt_before_consume(*, group_dir: Path, run_dir: Path,
             not math.isfinite(receipt['status_create_time_epoch']) or
             receipt['status_create_time_epoch'] <= 0):
         raise ValueError('invalid worker status identity in receipt')
-    from _common.multigame_result_registry_v1 import SYNTHETIC_MODE, SCIENTIFIC_MODES
+    from _common.multigame_result_registry import SYNTHETIC_MODE, SCIENTIFIC_MODES
     receipt_mode = receipt.get('mode')
     if receipt_mode == SYNTHETIC_MODE:
         # No result-file read is ever allowed for a synthetic plumbing probe
@@ -238,7 +238,7 @@ def verify_receipt_before_consume(*, group_dir: Path, run_dir: Path,
         raise ValueError('synthetic contract test is not a scientific result')
     if receipt_mode not in SCIENTIFIC_MODES:
         raise ValueError('unregistered coordinated/FINAL receipt mode')
-    from _common.multigame_result_registry_v1 import registered_scientific_binding
+    from _common.multigame_result_registry import registered_scientific_binding
     # Classify by a reviewed registry BEFORE even opening the result file.
     # Package 2 has no live scientific coordinated/FINAL registrations.
     registered_scientific_binding(game_id=identity['game_id'],

@@ -12,7 +12,7 @@ import json
 import re
 from collections.abc import Sequence
 
-from _common.multigame_standalone_contract_v1 import json_bytes
+from _common.multigame_standalone_contract import json_bytes
 
 _ID = re.compile(r'[A-Z][A-Z0-9]*\Z', re.ASCII)
 _METHOD = re.compile(r'E_[1-9][0-9]*\Z', re.ASCII)

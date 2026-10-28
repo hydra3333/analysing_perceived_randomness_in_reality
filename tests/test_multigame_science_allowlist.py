@@ -17,13 +17,13 @@ from unittest.mock import patch
 
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT/'src'),str(ROOT/'src'/'methods')]
-import _common.multigame_result_registry_v1 as registry
-from _common.multigame_standalone_contract_v1 import json_bytes
-from coordinator_private.multigame_launch_spec_v1 import build_synthetic_launch_spec
-from coordinator_private.multigame_coordinator_exit_receipt_v2 import (
+import _common.multigame_result_registry as registry
+from _common.multigame_standalone_contract import json_bytes
+from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
+from coordinator_private.multigame_coordinator_exit_receipt import (
     issue_coordinator_receipt, verify_receipt_before_consume
 )
-from test_multigame_exit_receipt_v0_8 import (setup, records, CODE_HASH)
+from test_multigame_exit_receipt import (setup, records, CODE_HASH)
 
 WORKER=ROOT/'src'/'methods'/'POC_MultiGame_Synthetic_Worker.py'
 worker_spec=importlib.util.spec_from_file_location('synthetic_probe_v08',WORKER)

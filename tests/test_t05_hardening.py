@@ -22,8 +22,8 @@ import numpy as np
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src' / 'methods'))
-from _common.game_draws_reader_v1 import DrawView, load_pinned_draw_view, header_for
-from _common.game_profiles_v1 import POWERBALL, OZLOTTO
+from _common.game_draws_reader import DrawView, load_pinned_draw_view, header_for
+from _common.game_profiles import POWERBALL, OZLOTTO
 
 KINDS = ('UNORDERED_SET', 'OPERATOR_DRAWN_ORDER', 'PAIRED_DIAGNOSTIC')
 FILES = ('{g}_results_master.csv', '{g}_results_master_ledger.csv',

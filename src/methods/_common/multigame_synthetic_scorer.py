@@ -10,8 +10,8 @@ import math
 from collections.abc import Callable
 from pathlib import Path
 
-from _common.game_profiles_v1 import GameProfile
-from _common.multigame_standalone_contract_v1 import verify_synthetic_and_consume
+from _common.game_profiles import GameProfile
+from _common.multigame_standalone_contract import verify_synthetic_and_consume
 
 
 def _native_mid_ranks(scores: dict, *, low: int, high: int) -> dict[int, float]:

@@ -4,8 +4,8 @@ It does no I/O, scoring, process control or result publication.
 """
 from __future__ import annotations
 
-from .game_draws_reader_v1 import DrawView
-from .e1_training_view_v0_1 import build_e1_forecast
+from .game_draws_reader import DrawView
+from .e1_training_view import build_e1_forecast
 
 def prepared_e1_forecast(view: DrawView) -> tuple[dict, str]:
     if (not isinstance(view, DrawView) or view.game_id != 'POWERBALL' or
