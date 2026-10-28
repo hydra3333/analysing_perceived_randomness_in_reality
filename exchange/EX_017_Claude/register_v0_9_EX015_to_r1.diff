@@ -1,0 +1,49 @@
+--- RATIFICATION_REGISTER_v0_9.md@EX015
++++ RATIFICATION_REGISTER_v0_9.md@r1
+@@ -1,7 +1,7 @@
+ # Predictive Randomness — Ratification Register
+ 
+ **Register version:** v0.9 RATIFICATION CANDIDATE (drafted 28 October 2026), recording the NAMES-1 installation, the move to Python 3.15 and H-1 v1r3; v0.8 OWNER-RATIFIED 28 October 2026, recording the DOC-2 and NAMES-1 installations, the NAMES-1 ratification and the owner decisions made after register v0.7; v0.7 OWNER-RATIFIED 28 October 2026, recording the E2R-1 specification ratification and the owner decisions of 28 October 2026; v0.6 OWNER-RATIFIED 28 October 2026, recording the records after the effective commit (its identity, the delivery method, the review-disposition procedure and TH-1); v0.5 OWNER-RATIFIED 27 October 2026, recording the AI roles transition, the Package 2 v0.11-r1 acceptance and the integration installation; v0.4 OWNER-RATIFIED 27 October 2026 (drafted 26 October 2026), adding the method-ranking integration; v0.3 OWNER-RATIFIED 26 October 2026; v0.2 OWNER-RATIFIED 24 October 2026. Historical ratifications are preserved and remain valid.
+-**Basis:** the historical owner decisions and approved handovers, with current committed files cross-checked by Claude at GitHub HEAD `1c7cfced` (24 October 2026). Ten other content hashes matched that HEAD; the Architecture hash below is explicitly corrected to the **actually committed** v0.5 content (unfixed §5C heading). The separately proposed one-line heading change and register v0.1 were **not committed**. The pre-integration consolidated editions below were owner-ratified 26 October 2026; only explicit OPEN/PROVISIONAL/RECOMMENDED subitems remain undecided. The v0.4 entries were cross-checked by Claude against GitHub HEAD `618fe48` (26 October 2026), the v0.5 entries against GitHub HEAD `ae76c29` (27 October 2026), the v0.6 entries against GitHub HEAD `b14116b` (27 October 2026), and the already-committed v0.7 references against GitHub commit `38fc60e` (28 October 2026). The E2R-1 v0.3r3 specification is not present at that commit; it is verified by its content hash below, and its installation is a separate owner decision. The v0.8 entries were cross-checked by Claude against GitHub commit `908db9ea9d4a37b17833f5d43919804c78ef7e14` (28 October 2026); the NAMES-1 specification and code, and the E1-ALIGN specification, are installed with register v0.8, in one commit, and are identified by content hash. The v0.9 entries were cross-checked by Claude against GitHub commit `83d1515` (28 October 2026); H-1 v1r3 is installed with register v0.9 and is identified by content hash.  
++**Basis:** the historical owner decisions and approved handovers, with current committed files cross-checked by Claude at GitHub HEAD `1c7cfced` (24 October 2026). Ten other content hashes matched that HEAD; the Architecture hash below is explicitly corrected to the **actually committed** v0.5 content (unfixed §5C heading). The separately proposed one-line heading change and register v0.1 were **not committed**. The pre-integration consolidated editions below were owner-ratified 26 October 2026; only explicit OPEN/PROVISIONAL/RECOMMENDED subitems remain undecided. The v0.4 entries were cross-checked by Claude against GitHub HEAD `618fe48` (26 October 2026), the v0.5 entries against GitHub HEAD `ae76c29` (27 October 2026), the v0.6 entries against GitHub HEAD `b14116b` (27 October 2026), and the already-committed v0.7 references against GitHub commit `38fc60e` (28 October 2026). The E2R-1 v0.3r3 specification is not present at that commit; it is verified by its content hash below, and its installation is a separate owner decision. The v0.8 entries were cross-checked by Claude against GitHub commit `908db9ea9d4a37b17833f5d43919804c78ef7e14` (28 October 2026); the NAMES-1 specification and code, and the E1-ALIGN specification, are installed with register v0.8, in one commit, and are identified by content hash. For v0.9, historical predecessor references through commit `83d1515` (28 October 2026) were checked by Claude. The new Python 3.15.2 environment and the Windows results are owner-reported. H-1 v1r3 and register v0.9 are candidates pending owner ratification and DOC-3 installation, and are identified by content hash; the actual install commit and final blobs are verified separately after installation.  
+ **Authority:** This register records approvals; it does **not** independently ratify any document, authorise an experiment, or supersede an operative specification. If a historic document still says “draft”, “review candidate” or “not ratified”, its status at the time of drafting is historical. The later owner approval recorded here determines its current status.
+ 
+ ## Current and historical ratification identities
+@@ -237,7 +237,7 @@
+ Paths in this section are under `doc/`, except those beginning `review/` or `exchange/`, which are from the repository root. In this section, "this register" means register v0.9.
+ 
+ **NAMES-1 installation verified.** NAMES-1 was installed at commit `52ebeaa385fd05b18c4f3805c3cd2000948e343d` (28 October 2026; parent `7f6b4e8`), in one commit with register v0.8, the NAMES-1 v0.2 and E1-ALIGN v0.2r1 specifications and the review history, as register v0.8 records.
+-- **The owner's Windows run** (Python 3.14.10) followed the reviewed instructions:
++- **The owner's Windows run** (Python 3.14.10; owner-reported) followed the reviewed instructions:
+   - PRE PASS; 27 renames; 42 files copied; POST PASS;
+   - all 79 current tests passed, with 2 skips, the reader-contracts symlink subtest and the exit-receipt symlink test;
+   - 63 import-origin and firewall checks passed;
+@@ -254,7 +254,7 @@
+ 
+ **Python 3.15.2 (OWNER-DECIDED, 28 October 2026).**
+ - **The new venv:** the project venv is now Python 3.15.2, built afresh with `py -3.15 -m venv .venv`. The owner's dependency updater installed every package from a ready-built wheel: numpy 2.5.4, scipy 1.18.1, psutil 7.2.2, threadpoolctl 3.7.0, requests 2.34.2, beautifulsoup4 4.15.0 and selenium 4.51.0. Against the 3.14.10 venv, only certifi (2026.10.19 to 2026.10.23) and soupsieve (3.0.3 to 3.0.4) changed.
+-- **Tests:** on Python 3.15.2 at `52ebeaa`, all 79 current tests passed on Windows, with the same 2 symlink skips, and the 63 import checks passed.
++- **Tests (owner-reported):** on Python 3.15.2 at `52ebeaa`, all 79 current tests passed on Windows, with the same 2 symlink skips, and the 63 import checks passed.
+ - **The fallback:** the previous 3.14.10 venv is kept as `venv.bak` (ignored by Git), with Python 3.14 installed. The free-threaded 3.14t build was removed.
+ - **Not yet run under 3.15:** the owner's data tools. Their first run is a first run.
+ - **What changed in the language:** Python 3.15 makes UTF-8 the default text encoding (PEP 686). The tests show no effect on the project.
+@@ -266,8 +266,9 @@
+ 
+   The files are not edited; the next editions fold this in.
+ - **What this is not:** no scientific run, mode or gate changes with it. Moving to a new Python is not a W-23 waiver; the always-review rule on dependency upgrades stands.
++- **Limits of the evidence:** the 79-test Windows run and 63 import checks are the evidence reported for this interpreter change; they do not by themselves establish the full W-23 and related dependency-upgrade acceptance gates. This record claims no completed gate not evidenced here. The owner's interpreter choice does not authorise a scientific or data run, or relax future upgrade preflight, numerical, N-1, golden or independent-review duties.
+ 
+-**H-1 v1r3.** `HANDOVER/Claude_Primary_Handover_H1_v1r3.md` (`19d9cc5973b35b89225e63b244d52869987a6e3d6aedef226fad22d3df04cf01`) is OWNER-RATIFIED [H1-DATE] and installed with this register.
++**H-1 v1r3.** `HANDOVER/Claude_Primary_Handover_H1_v1r3.md` (`ddf4de23b726b2abf55ffcab613f926b62775469076476f939288a278e6422fc`) is a candidate pending owner ratification, to be installed with this register; its ratification is recorded as OWNER-RATIFIED [H1-DATE] when given, and its installation is verified after the install.
+ - It is a records refresh of H-1 v1r2. Its Appendix C lists every change.
+ - It replaces H-1 v1r2 for future roles; v1r2 is kept as history.
+ - It authorises nothing.
+@@ -282,7 +283,7 @@
+ 
+ | Document (path under `doc/`) | Author / check | Status and Git-content SHA-256 (LF) |
+ |---|---|---|
+-| `HANDOVER/Claude_Primary_Handover_H1_v1r3.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED [H1-DATE]; `19d9cc5973b35b89225e63b244d52869987a6e3d6aedef226fad22d3df04cf01` |
++| `HANDOVER/Claude_Primary_Handover_H1_v1r3.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED [H1-DATE]; `ddf4de23b726b2abf55ffcab613f926b62775469076476f939288a278e6422fc` |
+ | `HANDOVER/Claude_Primary_Handover_H1_v1r2.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 28 Oct 2026; superseded by H-1 v1r3; `55543ba522a4085fc4f2476d421a4940171bcd4c183a1fab5a691d291605eac0` |
+ | `RATIFICATION_REGISTER_v0_8.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 28 Oct 2026; superseded by this register; `3f217c6875d443a0cc1bba2f6c329b1fda455fb4a97bf7fe06090394736fffcf` |
+ 
