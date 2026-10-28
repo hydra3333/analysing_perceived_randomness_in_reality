@@ -1,0 +1,32 @@
+base: 2f4e84e1d8454e847fdfd7d8e832adb0d0187460  python: Python 3.15.0b4
+== lf: happy path
+PRE PASS: clean tree; 153 new paths absent. Nothing was changed.
+POST PASS: exactly the 153 expected new paths, all with the expected bytes.
+total ran 133 (expected 133); skips 0
+SUITE PASS: all 133 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 0 non-new
+staged:     153 A 
+COMMITTED PASS: the last commit (943aa63) added exactly 153 files; all Git blobs match.
+== crlf: happy path
+PRE PASS: clean tree; 153 new paths absent. Nothing was changed.
+POST PASS: exactly the 153 expected new paths, all with the expected bytes.
+total ran 133 (expected 133); skips 0
+SUITE PASS: all 133 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 0 non-new
+staged:     153 A 
+COMMITTED PASS: the last commit (8315705) added exactly 153 files; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, existing file modified:
+VERIFICATION STOP: FAIL: changes other than new files:
+-- post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_vocab.py
+-- post, extra data file:
+VERIFICATION STOP: FAIL: unexpected new paths: src/methods/_common/contract_data/extra.json
+POST PASS: exactly the 153 expected new paths, all with the expected bytes.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not add exactly the expected paths: [('doc/Predictive_Randomness_E2R_Code_Scope_v0_1.md', 'A'), ('doc/RATIFICATION_REGISTER_v0_11.md', 'A'), ('extra.txt', 
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/_common/contract_forecast.py
+end
