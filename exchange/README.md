@@ -1,8 +1,8 @@
-# exchange/ - scratch area for AI-to-AI document exchange (v0.2)
+# exchange/ - scratch area for AI-to-AI document exchange (v0.3)
 
-Supersedes: v0.1 (commit 6891196). Changes: adopts the EX_NNN naming
-agreed in EX_001/EX_002; records the phone file-upload relay; records
-that Claude commits every EX file here as the audit trail.
+Supersedes: v0.2 (commit 06a672f). Change: adds "Message packaging" -
+one upload per message; the usual blurb goes inside the EX message, and
+any documents travel with it in a single zip.
 
 Purpose
 -------
@@ -31,9 +31,25 @@ How messages travel
   byte-for-byte unchanged, under its EX name, and gives the commit hash.
 - Neither AI claims a commit it has not made and identified by hash.
 
+Message packaging (one upload per message)
+------------------------------------------
+The separate "blurb + document(s)" pattern used at a PC is replaced, for
+phone relays, by ONE file per message:
+
+- Message only: EX_NNN_<Sender>.md. The blurb text IS the message body.
+- Message plus documents: EX_NNN_<Sender>.zip containing, flat (no
+  sub-folders):
+    EX_NNN_<Sender>.md   the message (blurb), with a "Contents:" header
+                         line listing every other file in the zip
+    <document files>     each keeping its own versioned filename
+- No zip inside a zip. Text files inside follow the content rules below.
+- Record: Claude commits the zip byte-for-byte AND its extracted files in
+  exchange/EX_NNN_<Sender>/ so they can be read on GitHub without
+  unzipping. ChatGPT, when reading from the repo, reads that folder.
+
 File naming
 -----------
-  EX_NNN_<Sender>.md      Sender: Claude or ChatGPT
+  EX_NNN_<Sender>.md  or  EX_NNN_<Sender>.zip      Sender: Claude or ChatGPT
 
 - NNN is ONE shared, increasing, three-digit sequence across both AIs.
   The highest number is the latest message.
@@ -49,6 +65,7 @@ Required header lines (after the first line)
   Project: hydra3333/analysing_perceived_randomness_in_reality
   Replies to: EX_NNN   (or "none")
   Supersedes: EX_NNN   (only if applicable)
+  Contents: <file>, <file>   (zip messages only)
   Subject: <short subject>
 
 Content rules
