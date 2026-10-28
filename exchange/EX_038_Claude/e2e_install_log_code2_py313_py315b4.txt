@@ -1,0 +1,70 @@
+base: 205ae73dba203d8a8bcaf9be66578b7fde9687aa  python: Python 3.13.17
+== lf: happy path
+PRE PASS: clean tree; 16 new paths absent; 1 file at its base version. Nothing was changed.
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+total ran 166 (expected 166); skips 0
+SUITE PASS: all 166 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 1 non-new
+staged:      16 A       1 M 
+COMMITTED PASS: the last commit (3864fa6) added exactly 16 files and modified 1; all Git blobs match.
+== crlf: happy path
+PRE PASS: clean tree; 16 new paths absent; 1 file at its base version. Nothing was changed.
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+total ran 166 (expected 166); skips 0
+SUITE PASS: all 166 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 1 non-new
+staged:      16 A       1 M 
+COMMITTED PASS: the last commit (7534e85) added exactly 16 files and modified 1; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, existing file modified:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/game_profiles.py
+-- post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_dispatch.py
+-- post, extra data file:
+VERIFICATION STOP: FAIL: unexpected new paths: src/methods/_common/contract_data/extra.json
+-- post, replaced file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/multigame_method_registry.py
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths: [('doc/Predictive_Randomness_E2R_CODE2_Design_v0_1.md', 'A'), ('extra.txt', 'A'), ('review/E2R_CODE2_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/E2R_CODE2_Install_v1/e2r_code2_mutation_checks_linux.txt', 'A'), ('review/E2R_CODE2_Install_v1/suite_e2r_code2_linux_py313.txt', 'A'), ('review/E2R_CODE2_Install_v1/suite_e2r_code2_linux_py315b4.txt', 'A'), ('review/E2R_CODE2_Install_v1/tools/e2r_code2_mutations.py', 'A'), ('src/coordinator_private/contract_coordinated_gate.py', 'A'), ('src/methods/Method_Contract_Runner.py', 'A'), ('src/methods/_common/contract_dispatch.py', 'A'), ('src/methods/_common/contract_publication.py', 'A'), ('src/methods/_common/contract_runner.py', 'A'), ('src/methods/_common/multigame_method_registry.py', 'M'), ('src/methods/contract_adapters/__init__.py', 'A'), ('src/methods/contract_adapters/e_001.py', 'A'), ('tests/e2r_code2_fixtures.py', 'A'), ('tests/test_e2r_dispatch.py', 'A'), ('tests/test_e2r_runner.py', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/_common/contract_runner.py
+end
+
+base: 205ae73dba203d8a8bcaf9be66578b7fde9687aa  python: Python 3.15.0b4
+== lf: happy path
+PRE PASS: clean tree; 16 new paths absent; 1 file at its base version. Nothing was changed.
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+total ran 166 (expected 166); skips 0
+SUITE PASS: all 166 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 1 non-new
+staged:      16 A       1 M 
+COMMITTED PASS: the last commit (728131d) added exactly 16 files and modified 1; all Git blobs match.
+== crlf: happy path
+PRE PASS: clean tree; 16 new paths absent; 1 file at its base version. Nothing was changed.
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+total ran 166 (expected 166); skips 0
+SUITE PASS: all 166 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 1 non-new
+staged:      16 A       1 M 
+COMMITTED PASS: the last commit (b7124d0) added exactly 16 files and modified 1; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, existing file modified:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/game_profiles.py
+-- post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_dispatch.py
+-- post, extra data file:
+VERIFICATION STOP: FAIL: unexpected new paths: src/methods/_common/contract_data/extra.json
+-- post, replaced file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/multigame_method_registry.py
+POST PASS: exactly the 16 expected new paths and 1 modified file, all with the expected bytes.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths: [('doc/Predictive_Randomness_E2R_CODE2_Design_v0_1.md', 'A'), ('extra.txt', 'A'), ('review/E2R_CODE2_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/E2R_CODE2_Install_v1/e2r_code2_mutation_checks_linux.txt', 'A'), ('review/E2R_CODE2_Install_v1/suite_e2r_code2_linux_py313.txt', 'A'), ('review/E2R_CODE2_Install_v1/suite_e2r_code2_linux_py315b4.txt', 'A'), ('review/E2R_CODE2_Install_v1/tools/e2r_code2_mutations.py', 'A'), ('src/coordinator_private/contract_coordinated_gate.py', 'A'), ('src/methods/Method_Contract_Runner.py', 'A'), ('src/methods/_common/contract_dispatch.py', 'A'), ('src/methods/_common/contract_publication.py', 'A'), ('src/methods/_common/contract_runner.py', 'A'), ('src/methods/_common/multigame_method_registry.py', 'M'), ('src/methods/contract_adapters/__init__.py', 'A'), ('src/methods/contract_adapters/e_001.py', 'A'), ('tests/e2r_code2_fixtures.py', 'A'), ('tests/test_e2r_dispatch.py', 'A'), ('tests/test_e2r_runner.py', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/_common/contract_runner.py
+end
+
