@@ -1,0 +1,39 @@
+base: 63c19e7515e02acc10af1a9c7a290acc73371b7e
+== lf: happy path
+PRE PASS: clean tree; 8 new paths absent. Nothing was changed.
+POST PASS: exactly the 8 expected new paths, all with the expected bytes.
+staged: 8
+COMMITTED PASS: the last commit (8b48330) added exactly 8 files; all Git blobs match.
+-- negative: pre after the commit
+VERIFICATION STOP: FAIL: new path already exists: doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md; STOP
+== crlf: happy path
+PRE PASS: clean tree; 8 new paths absent. Nothing was changed.
+POST PASS: exactly the 8 expected new paths, all with the expected bytes.
+staged: 8
+COMMITTED PASS: the last commit (b1ddd28) added exactly 8 files; all Git blobs match.
+-- negative: pre after the commit
+VERIFICATION STOP: FAIL: new path already exists: doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md; STOP
+== negatives before commit
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, extra untracked file:
+VERIFICATION STOP: FAIL: unexpected new paths: stray.txt
+-- post, tracked file modified:
+VERIFICATION STOP: FAIL: changes other than new files:
+-- post, wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md
+-- post, missing file:
+VERIFICATION STOP: FAIL: unexpected new paths: review/ChatGPT_Reviewer_Handover_H2_v1r3_to_v1r4.diff
+POST PASS: exactly the 8 expected new paths, all with the expected bytes.
+== negatives after commit
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not add exactly the expected paths: [('doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md', 'A'), ('extra.txt', 'A'), ('review/ChatGPT_Reviewer_Handover_H2_v1r3_to_v1r4.diff', 'A'), ('review/ChatGPT_Reviewer_Handover_H2_v1r4_fact_corrections.diff', 'A'), ('review/ChatGPT_Reviewer_Handover_H2_v1r4_initial_draft.md', 'A'), ('review/Claude_Fact_Check_H2_v1r4_v1.md', 'A'), ('review/DOC4_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/Independent_ChatGPT_EX_024_H2_v1r4_Final_Candidate.md', 'A'), ('review/Owner_Decisions_H2_v1r4_and_Exchange_v0_4_28Oct2026.md', 'A')]
+-- committed, untracked file left:
+VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+-- committed, one file left out (shown untracked):
+VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+-- committed STOP prints identities and the do-not-push line:
+[HEAD and parents] [last 3 commits] [last commit paths] [upstream] [commits not yet pushed] [working tree and index] --- Do NOT push. Do NOT reset. Send Claude this whole output. --- 
+== damaged package
+VERIFICATION STOP: FAIL: package file damaged: review/Claude_Fact_Check_H2_v1r4_v1.md
+end
