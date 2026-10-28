@@ -1,0 +1,23 @@
+PASS file set: exactly 5 moves and 3 additions
+PASS changed files exactly as expected (10); e1_standalone_contract moved unchanged
+PASS shared module holds both functions byte-for-byte (tuple helper renamed only in its def line)
+PASS src/methods/E_001_Historical_Appearance_Frequency.py: 4 changed lines, all import / moved-definition / patch-target lines []
+PASS src/methods/_common/game_draws_reader.py: 2 changed lines, all import / moved-definition / patch-target lines []
+PASS tests/test_e1_standalone.py: 10 changed lines, all import / moved-definition / patch-target lines []
+PASS tests/test_multigame_console_and_synthetic_scorer.py: 2 changed lines, all import / moved-definition / patch-target lines []
+PASS tests/test_multigame_reader_contracts.py: 12 changed lines, all import / moved-definition / patch-target lines []
+PASS tests/test_multigame_static_and_timing.py: only the firewall test body changes (31 lines)
+PASS src/methods/E_001/e1_common_reader_bridge.py: 2 changed lines, all import / moved-definition / patch-target lines []
+PASS src/methods/E_001/e1_historical_appearance_frequency.py: 20 changed lines, all import / moved-definition / patch-target lines []
+PASS src/methods/E_001/e1_training_view.py: 4 changed lines, all import / moved-definition / patch-target lines []
+PASS src/methods/E_001/multigame_e1.py: 2 changed lines, all import / moved-definition / patch-target lines []
+PASS control: firewall and guard tests pass
+PASS mutation: new E_001 file importing the reader is rejected (allowance is per file, not per folder)
+PASS mutation: another method folder importing the reader is rejected
+PASS mutation: another method folder naming source_data is rejected
+PASS mutation: a second source_data reference in an allowed E_1 file is rejected (counted)
+PASS mutation: an unused allowance is rejected (every allowance must be used)
+PASS mutation: the shared reader importing E_1 code again is rejected
+PASS mutation: a changed shared encoder is caught by the three-encoder alarm
+PASS mutation: a moved orphan-marker path is caught (no marker is created)
+RESULT PASS
