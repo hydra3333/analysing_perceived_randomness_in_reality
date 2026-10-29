@@ -1,0 +1,15 @@
+--- RATIFICATION_REGISTER_v0_14_candidate_r0.md	2026-10-29 22:58:10.546025818 +1030
++++ RATIFICATION_REGISTER_v0_14_candidate.md	2026-10-29 22:58:10.601530076 +1030
+@@ -578,9 +578,11 @@
+ 
+ **H-1 v1r4 and H-2 v1r5 (installed with this register).**
+ - `HANDOVER/Claude_Primary_Handover_H1_v1r4.md` (`2050e9363d841634ecf2a9c308d3efb1ed51b359fbdaf2aa3531a60eb1f1c16a`): Claude's handover, refreshed to `ced9b6c` and shortened. Its Appendix B lists what changed and where any material it no longer repeats now lives. It adds the process for adding a new method (its section 9). It changes no rule. It is reviewed by the ChatGPT reviewer chat.
+-- `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r5.md` (`[H2-V1R5-SHA]`): the reviewer's handover, refreshed by the reviewer chat. It gets one factual review by Claude.
++- `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r5.md` (`[H2-V1R5-SHA]`): the reviewer's handover, refreshed to `ced9b6c` and shortened by the reviewer chat. Its reviewer-rights region (R-1..R-11, T-05 and section 3.1; 7,676 bytes) is byte-identical to H-2 v1r4, which Claude checked mechanically. Its one factual review is Claude's, `review/Claude_Fact_Check_H2_v1r5_v1.md` (`58224dfc7b3dcdf5fba8289c4598ce479072dd6663b0786318973ff2d8394203`, installed with this register): no BLOCKER; findings H2F5-01..03 CORRECTION and H2F5-04..07 OPTIONAL, for the reviewer to adopt.
+ - Each replaces its predecessor for future roles; the predecessors are kept as history. Neither authorises anything.
+ 
++**One EX number used twice.** `EX_047` was used by both chats in the same minute (29 October 2026): `EX_047_Claude` (H-1 v1r4 and this register's first candidate; `1c8668e`) and `EX_047_ChatGPT` (H-2 v1r5's draft; `6ba6284`). Neither could have seen the other. Both are recorded under their own names, nothing was overwritten, and numbering continues at `EX_048`.
++
+ **Out-of-date statements (register v0.14).** This register prevails, and the files are not edited:
+ - Register v0.13, "installed with this register" for CODE-2: done, at `ced9b6c`, as above. Its review and Windows results, "recorded after installation", are recorded here.
+ - Register v0.13, "Claude sends the reviewer the narrow diff afterwards": done (EX_046).
