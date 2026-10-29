@@ -1,6 +1,6 @@
 """Check that the project modules a test run uses come from the task clone, not from the main repository.
 
-Written by the Claude web chat, 29 October 2026 (v2: uses the CODE-1 v2 registry accessors). Read-only: it imports modules (no program is run) and
+Written by the Claude web chat, 29 October 2026 (v2: uses the CODE-1 v2 registry accessors; v3: also CODE-2's modules when present). Read-only: it imports modules (no program is run) and
 loads the installed contract registry from the clone's own contract_data. It reads no source_data,
 results or transitory_data.
 Usage: <venv python> -I check_module_origin.py --repo <task clone>
@@ -13,6 +13,10 @@ MODULES = [
     '_common.contract_vocab', '_common.contract_records', '_common.contract_task', '_common.contract_forecast',
     '_common.contract_receipts', '_common.contract_registry', '_common.canonical_encoding',
     '_common.game_profiles', '_common.game_draws_reader', 'E_001.multigame_e1', 'e2r_fixtures',
+]
+OPTIONAL = [  # checked only when the clone has them (E2R-CODE-2; v3 of this tool)
+    '_common.contract_dispatch', '_common.contract_publication', '_common.contract_runner',
+    'contract_adapters.e_001', 'e2r_code2_fixtures',
 ]
 MAIN = Path(__file__).resolve().parents[2]
 
@@ -36,7 +40,9 @@ def main():
         print('checked .pth files in', d)
     # 2. Import from the clone only, and check where each module came from.
     sys.path[:0] = [str(repo / 'src' / 'methods'), str(repo / 'src'), str(repo / 'tests')]
-    for name in MODULES:
+    present = [n for n in OPTIONAL if any((repo / d / (n.replace('.', '/') + '.py')).is_file()
+                                          for d in ('src/methods', 'src', 'tests'))]
+    for name in MODULES + present:
         mod = importlib.import_module(name)
         f = Path(mod.__file__).resolve()
         ok = norm(f).startswith(norm(repo) + os.sep)

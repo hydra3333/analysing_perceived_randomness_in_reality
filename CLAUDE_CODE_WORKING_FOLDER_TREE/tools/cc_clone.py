@@ -7,7 +7,8 @@ Every command checks where it is before it does anything, and prints PASS or STO
                 GitHub, refuse every push with a hook, and run the guard
   guard         check that scratch/<TASK>/r is a task clone with no remote and the refusing hook
   unzip         check a ZIP inside the clone by SHA-256 and extract it into scratch/<TASK>/p
-  overlay       copy an extracted repo_overlay into the clone; new files only
+  overlay       copy an extracted repo_overlay into the clone; new files only, except the tracked
+                files named with --replace (v0.2, 29 Oct 2026, for E2R-CODE-2's 3 replacements)
   git           run one Git command in the clone (add, commit, status, log, diff, show, rev-parse,
                 ls-files), with the guard before and after
   remove        delete scratch/<TASK> after checking the path
@@ -152,13 +153,20 @@ def cmd_overlay(a):
     src = Path(a.src).resolve()
     need(inside(src, task_dir(a.task) / 'p') and src.is_dir(), f'{src} is not an extracted folder of this task')
     files = sorted(p for p in src.rglob('*') if p.is_file())
+    rels = {f.relative_to(src).as_posix() for f in files}
+    replace = set(a.replace or [])
+    for x in sorted(replace):
+        need(x in rels, f'--replace {x} is not in the overlay')
+        need(out(git(r, 'ls-files', '--error-unmatch', '--', x, check=False)) == x, f'--replace {x} is not a tracked file of the clone')
     for f in files:
-        need(not (r / f.relative_to(src)).exists(), f'would overwrite an existing file: {f.relative_to(src)}')
+        rel = f.relative_to(src).as_posix()
+        if rel not in replace:
+            need(not (r / rel).exists(), f'would overwrite an existing file: {rel}')
     for f in files:
         dst = r / f.relative_to(src)
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(f, dst)
-    print(f'OVERLAY PASS: {len(files)} files copied into {r} (new files only)')
+    print(f'OVERLAY PASS: {len(files)} files copied into {r} ({len(files) - len(replace)} new, {len(replace)} replaced)')
 
 
 def cmd_git(a):
@@ -224,6 +232,7 @@ def main():
             sp.add_argument('--sha256', required=True)
         if name == 'overlay':
             sp.add_argument('--src', required=True)
+            sp.add_argument('--replace', nargs='+', help='repository paths (with /) that the overlay may replace')
         if name == 'git':
             sp.add_argument('args', nargs=argparse.REMAINDER)
     a = ap.parse_args()
