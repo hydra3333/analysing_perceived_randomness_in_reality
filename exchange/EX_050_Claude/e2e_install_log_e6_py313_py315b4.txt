@@ -1,0 +1,68 @@
+base: f9de54ad4b877bf45a5e4d8bcca2e4b4b5e3f752  python: Python 3.13.17
+== lf: happy path
+PRE PASS: clean tree; 37 new paths absent; 3 files at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+total ran 210 (expected 210); skips 0
+SUITE PASS: all 210 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 3 non-new
+staged:      37 A       3 M 
+COMMITTED PASS: the last commit (e970097) added exactly 37 files and modified 3; all Git blobs match.
+== crlf: happy path
+PRE PASS: clean tree; 37 new paths absent; 3 files at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+total ran 210 (expected 210); skips 0
+SUITE PASS: all 210 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 3 non-new
+staged:      37 A       3 M 
+COMMITTED PASS: the last commit (0b6852a) added exactly 37 files and modified 3; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, existing file modified:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/game_profiles.py
+-- post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/E_006/beta_bernoulli.py
+-- post, extra data file:
+VERIFICATION STOP: FAIL: unexpected new paths: src/methods/_common/contract_data/extra.json
+-- post, replaced file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/Method_Contract_Runner.py
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths: [('doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md', 'A'), ('doc/METHOD_TEMPLATE/README.md', 'A'), ('doc/METHOD_TEMPLATE/declaration_example.json', 'A'), ('doc/METHOD_TEMPLATE/make_contract_data.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/IN_DEVELOPMENT.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/__init__.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/contract.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/model.py.txt', 'A'), ('doc/METHOD_TEMPLATE/registry_entry_example.json', 'A'), ('doc/METHOD_TEMPLATE/test_template.py.txt', 'A'), ('doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md', 'A'), ('extra.txt', 'A'), ('review/E6_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/E6_Install_v1/e6_mutation_checks_linux.txt', 'A'), ('review/E6_Install_v1/replaced_files_base_to_v1.diff', 'A'), ('review/E6_Install_v1/suite_e6_linux_py313.txt', 'A'), ('review/E6_Install_v1/suite_e6_linux_py315b4.txt', 'A'), ('review/E6_Install_v1/template_trial_linux.txt', 'A'), ('review/E6_Install_v1/tools/e6_mutations.py', 'A'), ('review/E6_Install_v1/tools/make_e6_contract_data.py', 'A'), ('review/E6_Install_v1/tools/template_trial.py', 'A'), ('src/methods/E_006/IN_DEVELOPMENT.txt', 'A'), ('src/methods/E_006/__init__.py', 'A'), ('src/methods/E_006/beta_bernoulli.py', 'A'), ('src/methods/E_006/contract.py', 'A'), ('src/methods/Method_Contract_Runner.py', 'M'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_149_150_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_74_75_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_DECAY_149_150_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_DECAY_74_75_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/r1.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_149_150_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_74_75_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_DECAY_149_150_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_DECAY_74_75_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/entry_0001.json', 'A'), ('tests/test_e2r_contract.py', 'M'), ('tests/test_e2r_dispatch.py', 'M'), ('tests/test_e6_beta_bernoulli.py', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/E_006/contract.py
+end
+base: f9de54ad4b877bf45a5e4d8bcca2e4b4b5e3f752  python: Python 3.15.0b4
+== lf: happy path
+PRE PASS: clean tree; 37 new paths absent; 3 files at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+total ran 210 (expected 210); skips 0
+SUITE PASS: all 210 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 3 non-new
+staged:      37 A       3 M 
+COMMITTED PASS: the last commit (315a1fc) added exactly 37 files and modified 3; all Git blobs match.
+== crlf: happy path
+PRE PASS: clean tree; 37 new paths absent; 3 files at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+total ran 210 (expected 210); skips 0
+SUITE PASS: all 210 tests ran and passed; only the allowed symlink skips, if any.
+status lines after the suite: 3 non-new
+staged:      37 A       3 M 
+COMMITTED PASS: the last commit (78ec58d) added exactly 37 files and modified 3; all Git blobs match.
+== negatives
+-- pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, existing file modified:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/game_profiles.py
+-- post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/E_006/beta_bernoulli.py
+-- post, extra data file:
+VERIFICATION STOP: FAIL: unexpected new paths: src/methods/_common/contract_data/extra.json
+-- post, replaced file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/Method_Contract_Runner.py
+POST PASS: exactly the 37 expected new paths and 3 modified files, all with the expected bytes.
+-- committed, extra file in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths: [('doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md', 'A'), ('doc/METHOD_TEMPLATE/README.md', 'A'), ('doc/METHOD_TEMPLATE/declaration_example.json', 'A'), ('doc/METHOD_TEMPLATE/make_contract_data.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/IN_DEVELOPMENT.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/__init__.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/contract.py.txt', 'A'), ('doc/METHOD_TEMPLATE/method_folder/model.py.txt', 'A'), ('doc/METHOD_TEMPLATE/registry_entry_example.json', 'A'), ('doc/METHOD_TEMPLATE/test_template.py.txt', 'A'), ('doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md', 'A'), ('extra.txt', 'A'), ('review/E6_Install_v1/INSTALL_MANIFEST_SHA256.txt', 'A'), ('review/E6_Install_v1/e6_mutation_checks_linux.txt', 'A'), ('review/E6_Install_v1/replaced_files_base_to_v1.diff', 'A'), ('review/E6_Install_v1/suite_e6_linux_py313.txt', 'A'), ('review/E6_Install_v1/suite_e6_linux_py315b4.txt', 'A'), ('review/E6_Install_v1/template_trial_linux.txt', 'A'), ('review/E6_Install_v1/tools/e6_mutations.py', 'A'), ('review/E6_Install_v1/tools/make_e6_contract_data.py', 'A'), ('review/E6_Install_v1/tools/template_trial.py', 'A'), ('src/methods/E_006/IN_DEVELOPMENT.txt', 'A'), ('src/methods/E_006/__init__.py', 'A'), ('src/methods/E_006/beta_bernoulli.py', 'A'), ('src/methods/E_006/contract.py', 'A'), ('src/methods/Method_Contract_Runner.py', 'M'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_149_150_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_74_75_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/OZLOTTO/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_DECAY_149_150_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_DECAY_74_75_V1/r1.json', 'A'), ('src/methods/_common/contract_data/declarations/POWERBALL/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/r1.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_149_150_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_DECAY_74_75_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/OZLOTTO/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_DECAY_149_150_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_DECAY_74_75_V1/entry_0001.json', 'A'), ('src/methods/_common/contract_data/registry/POWERBALL/E_6/BETA_BERNOULLI_FULL_MEMORY_V1/entry_0001.json', 'A'), ('tests/test_e2r_contract.py', 'M'), ('tests/test_e2r_dispatch.py', 'M'), ('tests/test_e6_beta_bernoulli.py', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/E_006/contract.py
+end
