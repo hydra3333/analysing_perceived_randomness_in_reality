@@ -1,0 +1,492 @@
+--- a/src/coordinator_private/contract_coordinated_gate.py
++++ b/src/coordinator_private/contract_coordinated_gate.py
+@@ -11,16 +11,13 @@
+ 
+ from collections.abc import Mapping
+ 
+-from pathlib import Path
+-
+ from _common.contract_dispatch import DispatchRefused, dispatch_gate, refusal_text
+ 
+ 
+-def gate_coordinated_contract_request(request: Mapping, *, data_root: Path | None = None,
+-                                      methods_root: Path | None = None) -> None:
++def gate_coordinated_contract_request(request: Mapping) -> None:
+     """Always raises DispatchRefused in CODE-2: first the shared gate's own refusal, if any; otherwise
+     COORDINATED_CONTRACT_DISPATCH_NOT_ENABLED."""
+-    dispatch_gate(request, data_root=data_root, methods_root=methods_root)
++    dispatch_gate(request)
+     r = request
+     raise DispatchRefused(refusal_text(r['game_id'], r['method_id'], r['variant_id'], r['method_revision'],
+                                        'COORDINATED_CONTRACT_DISPATCH_NOT_ENABLED: coordinated contract runs '
+--- a/src/methods/_common/contract_dispatch.py
++++ b/src/methods/_common/contract_dispatch.py
+@@ -44,20 +44,21 @@
+             f'{show(revision)}: {reason}. No data was read.')
+ 
+ 
+-def _roots(data_root, methods_root):
+-    """Resolved at call time, so a test can point the gate at a temporary copy."""
++def _roots() -> tuple[Path, Path]:
++    """The installed registry and the method folders. No caller can choose them (reviewer's
++    E2RC2-CODE-B01): they are the fixed module constants, read at call time; only a test harness
++    patches those constants, in-process, for its temporary copies."""
+     import _common.contract_registry as R
+-    return (R.DATA_ROOT if data_root is None else Path(data_root),
+-            METHODS_ROOT if methods_root is None else Path(methods_root))
++    return Path(R.DATA_ROOT), Path(METHODS_ROOT)
+ 
+ 
+-def _admit(ident, *, pinned_entry, pinned_declaration, data_root, methods_root) -> tuple[dict, dict]:
++def _admit(ident, *, pinned_entry, pinned_declaration) -> tuple[dict, dict]:
+     game, method, variant, revision = ident
+ 
+     def refuse(code, detail):
+         raise DispatchRefused(refusal_text(*ident, f'{code}: {detail}'), code)
+ 
+-    data_root, methods_root = _roots(data_root, methods_root)
++    data_root, methods_root = _roots()
+     try:
+         registry = InstalledRegistry(data_root)      # fresh every call, never a cached or caller copy
+     except (ValueError, OSError) as exc:
+@@ -80,8 +81,7 @@
+     return entry, registry.declaration(entry['declaration_digest'])
+ 
+ 
+-def dispatch_gate(request: object, *, data_root: Path | None = None,
+-                  methods_root: Path | None = None) -> tuple[dict, dict]:
++def dispatch_gate(request: object) -> tuple[dict, dict]:
+     """Admit a RUN_REQUEST_V1 or raise DispatchRefused. Returns (active_entry, declaration), both new
+     caller-owned copies fetched from the installed registry by this call.
+ 
+@@ -97,23 +97,20 @@
+     except ValueError as exc:
+         raise DispatchRefused(refusal_text(*ident, f'INVALID_RUN_REQUEST: {exc}'), 'INVALID_RUN_REQUEST') from None
+     return _admit(ident, pinned_entry=request['registry_entry_digest'],
+-                  pinned_declaration=request['declaration_digest'], data_root=data_root, methods_root=methods_root)
++                  pinned_declaration=request['declaration_digest'])
+ 
+ 
+-def legacy_gate(game_id: str, method_id: str, variant_id: str, revision: str, *,
+-                data_root: Path | None = None, methods_root: Path | None = None) -> tuple[dict, dict]:
++def legacy_gate(game_id: str, method_id: str, variant_id: str, revision: str) -> tuple[dict, dict]:
+     """The same release rule for E_1's legacy standalone runner (owner decision D2-3, 29 October 2026),
+     which has no RUN_REQUEST_V1 and so no pins: an active SUPPORTED entry for exactly this game, method,
+     variant and revision, and no IN_DEVELOPMENT.txt. Same refusal codes and text; reads no data."""
+-    return _admit((game_id, method_id, variant_id, revision), pinned_entry=None, pinned_declaration=None,
+-                  data_root=data_root, methods_root=methods_root)
++    return _admit((game_id, method_id, variant_id, revision), pinned_entry=None, pinned_declaration=None)
+ 
+ 
+-def variant_released(game_id: str, method_id: str, variant_id: str, *, data_root: Path | None = None,
+-                     methods_root: Path | None = None) -> bool:
++def variant_released(game_id: str, method_id: str, variant_id: str) -> bool:
+     """True only if this exact (game, method, variant) has an active SUPPORTED entry and the method has no
+     IN_DEVELOPMENT.txt. For synthetic-only checks that have no run request; it is not an admission."""
+-    data_root, methods_root = _roots(data_root, methods_root)
++    data_root, methods_root = _roots()
+     try:
+         entry = InstalledRegistry(data_root).active_entry(game_id, method_id, variant_id)
+     except ValueError:
+@@ -122,8 +119,8 @@
+     return entry['registry_status'] == 'SUPPORTED' and not (flag.exists() or flag.is_symlink())
+ 
+ 
+-def active_pins(game_id: str, method_id: str, variant_id: str, *, data_root: Path | None = None) -> dict:
++def active_pins(game_id: str, method_id: str, variant_id: str) -> dict:
+     """What a request must pin for this method variant now (read from the installed registry only)."""
+-    entry = InstalledRegistry(_roots(data_root, None)[0]).active_entry(game_id, method_id, variant_id)
++    entry = InstalledRegistry(_roots()[0]).active_entry(game_id, method_id, variant_id)
+     return {'registry_status': entry['registry_status'], 'method_revision': entry['method_revision'],
+             'declaration_digest': entry['declaration_digest'], 'registry_entry_digest': record_digest(entry)}
+--- a/src/methods/_common/contract_publication.py
++++ b/src/methods/_common/contract_publication.py
+@@ -107,15 +107,12 @@
+ class RunPublication:
+     """The files of one admitted run, published in E2R-R38A order. One instance per run."""
+ 
+-    def __init__(self, run_root: Path, request: Mapping, *, entry_digest: str, execution_path: str,
+-                 provenance: Mapping):
++    def __init__(self, run_root: Path, request: Mapping, *, entry_digest: str, provenance: Mapping):
+         validate_run_request(request)
+-        if execution_path not in V.EXECUTION_PATHS:
+-            raise ValueError('invalid execution path')
+         if request['registry_entry_digest'] != entry_digest:
+             raise ValueError('the admitted entry is not the one the request pins')
+         self.request = dict(request)
+-        self.execution_path = execution_path
++        self.execution_path = 'STANDALONE'         # CODE-2 publishes standalone runs only (E2RC2-CODE-B02)
+         self.provenance = dict(provenance)          # master_file .. init_record_sha256, from the runner
+         self.folder = run_folder(run_root, request)
+         self.folder.parent.mkdir(parents=True, exist_ok=True)
+@@ -233,7 +230,7 @@
+     return None
+ 
+ 
+-def read_run(folder: Path, *, orphan_marker: Path | None = None, data_root: Path | None = None) -> dict:
++def read_run(folder: Path) -> dict:
+     """The consumption check for a standalone contract run folder (E2R-R38A; reviewer's E2RC2-B02).
+ 
+     Read-only. It establishes every gate itself, from current evidence, and fails closed; no caller can
+@@ -247,13 +244,14 @@
+         never one the caller supplies;
+       - the receipt's registry entry must be in that variant's installed chain, SUPPORTED, and name the
+         same revision and declaration.
+-    Nothing is repaired, moved or deleted.
++    The orphan marker and the installed registry are the fixed module constants; no caller can point
++    this check at other evidence (reviewer's E2RC2-CODE-B01). Nothing is repaired, moved or deleted.
+     """
+     from _common.contract_registry import InstalledRegistry
+     import _common.contract_registry as R
+     import _common.contract_runner as CRun
+     folder = Path(folder)
+-    marker = Path(CRun.ORPHAN_MARKER if orphan_marker is None else orphan_marker)
++    marker = Path(CRun.ORPHAN_MARKER)
+ 
+     def load(key):
+         p = folder / FILES[key]
+@@ -270,7 +268,7 @@
+         if output is None and receipt is None:
+             continue
+         result[out_key] = _consumable_here(folder, output, receipt, terminal, marker,
+-                                           R.DATA_ROOT if data_root is None else Path(data_root), InstalledRegistry)
++                                           Path(R.DATA_ROOT), InstalledRegistry)
+     return result
+ 
+ 
+--- a/src/methods/_common/contract_runner.py
++++ b/src/methods/_common/contract_runner.py
+@@ -94,23 +94,34 @@
+ 
+ 
+ def run_contract_method(request: Mapping, *, compute: Callable, verify: Callable, repo_root: Path,
+-                        run_root: Path, execution_path: str = 'STANDALONE',
+-                        orphan_marker: Path | None = None, data_root: Path | None = None,
+-                        methods_root: Path | None = None) -> RunResult:
+-    """Run one admitted request. Raises RunRefused or DispatchRefused before anything is read or
+-    created; otherwise always returns a RunResult whose terminal record is on disk."""
++                        run_root: Path) -> RunResult:
++    """Run one admitted request, as a STANDALONE run. Raises RunRefused or DispatchRefused before
++    anything is read or created; otherwise always returns a RunResult whose terminal record is on disk.
++
++    Reviewer's E2RC2-CODE-B01 and B02: the orphan marker, the installed registry and the method folders
++    are the fixed module constants, and no caller can choose them; there is no execution-path
++    parameter, so this runner can never publish a COORDINATED run. The data source is fixed too: a
++    REAL_DEVELOPMENT run (switched off) may only read the project itself, and a synthetic run only a
++    workspace outside the project's data, results, code and record folders."""
+     r = request if isinstance(request, Mapping) else {}
+     ident = (r.get('game_id'), r.get('method_id'), r.get('variant_id'), r.get('method_revision'))
+-    marker = Path(ORPHAN_MARKER if orphan_marker is None else orphan_marker)
++    marker = Path(ORPHAN_MARKER)
+     if marker.exists() or marker.is_symlink():
+         raise RunRefused(refusal_text(*ident, 'UNRESOLVED_ORPHAN_MARKER: no experiment is permitted'),
+                          'UNRESOLVED_ORPHAN_MARKER')
+     if r.get('run_mode') == 'REAL_DEVELOPMENT' and ENABLE_CONTRACT_REAL_DEVELOPMENT is not True:
+         raise RunRefused(refusal_text(*ident, 'REAL_DEVELOPMENT_DISABLED: contract runs on the real '
+                                       'development masters are switched off'), 'REAL_DEVELOPMENT_DISABLED')
+-    entry, declaration = dispatch_gate(request, data_root=data_root, methods_root=methods_root)  # reads no data
+-    pub = RunPublication(run_root, request, entry_digest=record_digest(entry), execution_path=execution_path,
+-                         provenance={})
++    try:
++        if r.get('run_mode') == 'REAL_DEVELOPMENT':
++            if Path(repo_root).resolve() != PROJECT_ROOT.resolve():
++                raise ValueError('a real development run reads only the project itself')
++        else:
++            check_synthetic_workspace(repo_root)
++    except ValueError as exc:
++        raise RunRefused(refusal_text(*ident, f'DATA_SOURCE_REFUSED: {exc}'), 'DATA_SOURCE_REFUSED') from None
++    entry, declaration = dispatch_gate(request)                   # reads no data
++    pub = RunPublication(run_root, request, entry_digest=record_digest(entry), provenance={})
+ 
+     def end(outcome, reason):
+         return RunResult(pub.folder, outcome, reason, pub.terminal(outcome, reason))
+--- a/tests/e2r_code2_fixtures.py
++++ b/tests/e2r_code2_fixtures.py
+@@ -6,8 +6,10 @@
+ """
+ from __future__ import annotations
+ 
++import contextlib
+ import shutil
+ from pathlib import Path
++from unittest import mock
+ 
+ import e2r_fixtures as F
+ from test_t05_hardening import write_master
+@@ -81,3 +83,21 @@
+ 
+ def no_verify(task, view, forecast, diagnostic):
+     return None
++
++
++@contextlib.contextmanager
++def installed(data=None, methods=None, marker=None):
++    """Test harness only: temporarily patch the fixed module constants (the installed registry, the
++    method folders, the global orphan marker) to temporary copies. The production APIs take no such
++    arguments (reviewer's E2RC2-CODE-B01)."""
++    import _common.contract_dispatch as D
++    import _common.contract_registry as R
++    import _common.contract_runner as CR
++    with contextlib.ExitStack() as stack:
++        if data is not None:
++            stack.enter_context(mock.patch.object(R, 'DATA_ROOT', Path(data)))
++        if methods is not None:
++            stack.enter_context(mock.patch.object(D, 'METHODS_ROOT', Path(methods)))
++        if marker is not None:
++            stack.enter_context(mock.patch.object(CR, 'ORPHAN_MARKER', Path(marker)))
++        yield
+--- a/tests/test_e2r_dispatch.py
++++ b/tests/test_e2r_dispatch.py
+@@ -37,8 +37,11 @@
+         self.methods = self.td / 'methods'
+         self.methods.mkdir()
+         self.ws, self.sha = C.workspace(self.td / 'ws', 'POWERBALL', 1300)
++        self._marker = C.installed(marker=self.td / 'no_marker')
++        self._marker.__enter__()
+ 
+     def tearDown(self):
++        self._marker.__exit__(None, None, None)
+         self._td.cleanup()
+ 
+     def flag(self, method='E_2', present=True):
+@@ -52,14 +55,13 @@
+     def both(self, req):
+         """(standalone result or refusal text, coordinator refusal text)."""
+         try:
+-            res = CR.run_contract_method(req, compute=C.probe_compute, verify=C.no_verify, repo_root=self.ws,
+-                                         run_root=self.td / 'runs', orphan_marker=self.td / 'no_marker',
+-                                         data_root=self.data, methods_root=self.methods)
+-            standalone = res
++            with C.installed(data=self.data, methods=self.methods):
++                standalone = CR.run_contract_method(req, compute=C.probe_compute, verify=C.no_verify,
++                                                    repo_root=self.ws, run_root=self.td / 'runs')
+         except DispatchRefused as exc:
+             standalone = exc.text
+-        with self.assertRaises(DispatchRefused) as cm:
+-            gate_coordinated_contract_request(req, data_root=self.data, methods_root=self.methods)
++        with self.assertRaises(DispatchRefused) as cm, C.installed(data=self.data, methods=self.methods):
++            gate_coordinated_contract_request(req)
+         return standalone, cm.exception.text
+ 
+     def assert_refused_same(self, req, code):
+@@ -161,10 +163,9 @@
+             return real_open(path, *a, **k)
+         with mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')), \
+                 mock.patch.object(Path, 'open', watch):
+-            with self.assertRaises(DispatchRefused):
++            with self.assertRaises(DispatchRefused), C.installed(data=self.data, methods=self.methods):
+                 CR.run_contract_method(req, compute=C.probe_compute, verify=C.no_verify, repo_root=self.ws,
+-                                       run_root=self.td / 'runs', orphan_marker=self.td / 'no_marker',
+-                                       data_root=self.data, methods_root=self.methods)
++                                       run_root=self.td / 'runs')
+         self.assertEqual(opened, [])
+         self.assertFalse((self.td / 'runs').exists())
+ 
+@@ -203,10 +204,10 @@
+         self.assert_refused_same(C.request(d, e2, 1300, self.sha), 'IN_DEVELOPMENT_FLAG_PRESENT')
+         # Removing the flag alone, without the entry, never releases: shown above in reverse order too.
+         self.flag(present=False)
+-        res = CR.run_contract_method(C.request(d, e2, 1300, self.sha, run_id='mg-release-transition-01'),
+-                                     compute=C.probe_compute, verify=C.no_verify, repo_root=self.ws,
+-                                     run_root=self.td / 'admitted_runs', orphan_marker=self.td / 'no_marker',
+-                                     data_root=self.data, methods_root=self.methods)
++        with C.installed(data=self.data, methods=self.methods):
++            res = CR.run_contract_method(C.request(d, e2, 1300, self.sha, run_id='mg-release-transition-01'),
++                                         compute=C.probe_compute, verify=C.no_verify, repo_root=self.ws,
++                                         run_root=self.td / 'admitted_runs')
+         self.assertEqual(res.outcome, 'SUCCESS')
+         self.assertEqual((decl_file.read_bytes(), e1_file.read_bytes()), (decl_bytes, e1_bytes))
+         import json
+@@ -264,14 +265,7 @@
+ 
+ 
+ def _patched_roots(data=None, methods=None):
+-    """Point every call-time registry and flag lookup at temporary copies."""
+-    import _common.contract_registry as R
+-    stack = contextlib.ExitStack()
+-    if data is not None:
+-        stack.enter_context(mock.patch.object(R, 'DATA_ROOT', data))
+-    if methods is not None:
+-        stack.enter_context(mock.patch.object(CD, 'METHODS_ROOT', methods))
+-    return stack
++    return C.installed(data=data, methods=methods)
+ 
+ 
+ class RosterIsNotAdmission(Base):
+--- a/tests/test_e2r_runner.py
++++ b/tests/test_e2r_runner.py
+@@ -41,8 +41,11 @@
+         self._td = tempfile.TemporaryDirectory()
+         self.td = Path(self._td.name)
+         self.marker = self.td / 'no_marker'
++        self._marker = C.installed(marker=self.marker)
++        self._marker.__enter__()
+ 
+     def tearDown(self):
++        self._marker.__exit__(None, None, None)
+         self._td.cleanup()
+ 
+     def run_e1(self, game, target, *, ws_name='ws', suffix=0, run_id=None, **kw):
+@@ -50,7 +53,7 @@
+         e, d = e1_pins(game)
+         req = C.request(d, e, target, sha, run_id=run_id or CP.new_run_id())
+         return req, d, CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=ws,
+-                                              run_root=self.td / 'runs', orphan_marker=self.marker, **kw)
++                                              run_root=self.td / 'runs', **kw)
+ 
+     def probe(self, *, compute=C.probe_compute, verify=C.no_verify, run_id='mg-synthetic-probe-0001', decl=None,
+               product=None):
+@@ -63,11 +66,13 @@
+         req = C.request(d, e, 1300, sha, run_id=run_id)
+         if product is not None:
+             req['product_kind'] = product
+-        return d, CR.run_contract_method(req, compute=compute, verify=verify, repo_root=ws, run_root=self.td / 'runs',
+-                                         orphan_marker=self.marker, data_root=data, methods_root=self.td / 'methods')
+-
+-    def consumed(self, folder, **kw):
+-        return read_run(folder, orphan_marker=self.marker, **kw)
++        with C.installed(data=data, methods=self.td / 'methods'):
++            return d, CR.run_contract_method(req, compute=compute, verify=verify, repo_root=ws,
++                                             run_root=self.td / 'runs')
++
++    def consumed(self, folder, data_root=None):
++        with C.installed(data=data_root):
++            return read_run(folder)
+ 
+     @staticmethod
+     def files(folder):
+@@ -111,7 +116,7 @@
+         ws, sha = C.workspace(self.td / 'ws', 'POWERBALL', 1300)
+         e, d = e1_pins('POWERBALL')
+         res = CR.run_contract_method(C.request(d, e, 1300, sha), compute=bad_compute, verify=e_001.verify, repo_root=ws,
+-                                     run_root=self.td / 'runs', orphan_marker=self.marker)
++                                     run_root=self.td / 'runs')
+         self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
+         self.assertIn('E_1 identity check', res.reason)
+         self.assertEqual(self.files(res.folder), ['terminal.json'])
+@@ -141,8 +146,7 @@
+         with self.assertRaises(FileExistsError):
+             CP.create_only(res.folder / 'forecast.json', b'{}')
+         with self.assertRaises(FileExistsError):              # the same run ID never gets a second folder
+-            RunPublication(self.td / 'runs', req, entry_digest=req['registry_entry_digest'],
+-                           execution_path='STANDALONE', provenance={})
++            RunPublication(self.td / 'runs', req, entry_digest=req['registry_entry_digest'], provenance={})
+         self.assertFalse([p for p in res.folder.iterdir() if '.part-' in p.name])
+ 
+     def test_interrupted_after_the_receipt_is_not_consumable(self):
+@@ -204,7 +208,7 @@
+         ws, sha = C.workspace(self.td / 'ws', 'POWERBALL', 1300)
+         e, d = e1_pins('POWERBALL')
+         res = CR.run_contract_method(C.request(d, e, 1300, '0' * 64), compute=e_001.compute, verify=e_001.verify,
+-                                     repo_root=ws, run_root=self.td / 'runs', orphan_marker=self.marker)
++                                     repo_root=ws, run_root=self.td / 'runs')
+         self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
+         self.assertTrue(res.reason.startswith('DATA_ADMISSION_REFUSED'))
+         self.assertEqual(self.files(res.folder), ['terminal.json'])
+@@ -225,7 +229,7 @@
+         with mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
+             with self.assertRaises(CR.RunRefused) as cm:
+                 CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=self.td,
+-                                       run_root=self.td / 'runs', orphan_marker=self.marker)
++                                       run_root=self.td / 'runs')
+         self.assertEqual(cm.exception.reason, 'REAL_DEVELOPMENT_DISABLED')
+         self.assertFalse((self.td / 'runs').exists())
+ 
+@@ -288,7 +292,7 @@
+     def test_no_caller_supplied_gate_or_declaration(self):
+         import inspect
+         params = set(inspect.signature(read_run).parameters)
+-        self.assertEqual(params, {'folder', 'orphan_marker', 'data_root'})
++        self.assertEqual(params, {'folder'})
+ 
+     def test_an_active_orphan_marker_blocks_consumption(self):
+         req, d, res = self.run_e1('POWERBALL', 1300)
+@@ -299,15 +303,17 @@
+         self.assertEqual(self.consumed(res.folder)['forecast'], (True, 'CONSUMABLE'))
+ 
+     def test_coordinated_runs_are_never_consumable_here(self):
+-        """A run claiming the COORDINATED path has group and exit-receipt gates CODE-2 cannot evidence."""
+-        ws, sha = C.workspace(self.td / 'ws', 'POWERBALL', 1300)
+-        e, d = e1_pins('POWERBALL')
+-        res = CR.run_contract_method(C.request(d, e, 1300, sha), compute=e_001.compute, verify=e_001.verify,
+-                                     repo_root=ws, run_root=self.td / 'runs', orphan_marker=self.marker,
+-                                     execution_path='COORDINATED')
+-        self.assertEqual(res.outcome, 'SUCCESS')
+-        self.assertEqual(self.consumed(res.folder)['forecast'][0], False)
+-        self.assertTrue(self.consumed(res.folder)['forecast'][1].startswith('COORDINATED_EVIDENCE_NOT_AVAILABLE'))
++        """A folder whose records claim the COORDINATED path (CODE-2 can no longer publish one; this one is
++        fabricated) has group and exit-receipt gates CODE-2 cannot evidence: never consumable here."""
++        req, d, res = self.run_e1('POWERBALL', 1300)
++        for name in ('terminal.json', 'forecast_receipt.json'):
++            rec = json.loads((res.folder / name).read_bytes())
++            rec['execution_path'] = 'COORDINATED'
++            (res.folder / name).unlink()
++            (res.folder / name).write_bytes(CP.canonical(rec))
++        got = self.consumed(res.folder)['forecast']
++        self.assertEqual(got[0], False)
++        self.assertTrue(got[1].startswith('COORDINATED_EVIDENCE_NOT_AVAILABLE'))
+ 
+     def test_declaration_and_admitting_entry_come_from_the_installed_registry(self):
+         d, res = self.probe()
+@@ -446,5 +452,61 @@
+                 CP.create_only(target, b'x')
+         self.assertEqual(sorted(p.name for p in self.td.iterdir()), [])
+ 
++class NoCallerChosenAuthority(Base):
++    """E2RC2-CODE-B01 and B02: the public APIs take no orphan-marker, registry or method-folder locator
++    and no execution path; a genuine marker and a withdrawn or flagged variant always refuse."""
++
++    def test_public_signatures(self):
++        import inspect
++        from _common import contract_dispatch as D
++        from coordinator_private.contract_coordinated_gate import gate_coordinated_contract_request
++        forbidden = {'orphan_marker', 'data_root', 'methods_root', 'execution_path', 'gates_pass', 'marker',
++                     'registry', 'root'}
++        for fn in (CR.run_contract_method, read_run, D.dispatch_gate, D.legacy_gate, D.variant_released,
++                   D.active_pins, gate_coordinated_contract_request):
++            with self.subTest(fn=fn.__name__):
++                self.assertFalse(set(inspect.signature(fn).parameters) & forbidden)
++        self.assertNotIn('execution_path', inspect.signature(RunPublication).parameters)
++
++    def test_locator_arguments_are_refused(self):
++        req, d, res = self.run_e1('POWERBALL', 1300)
++        for kw in ({'orphan_marker': self.td / 'elsewhere'}, {'data_root': self.td}, {'methods_root': self.td},
++                   {'execution_path': 'COORDINATED'}):
++            with self.subTest(kw=kw), self.assertRaises(TypeError):
++                CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=self.td / 'ws',
++                                       run_root=self.td / 'other_runs', **kw)
++            with self.subTest(kw=kw, api='read_run'), self.assertRaises(TypeError):
++                read_run(res.folder, **kw)
++        self.assertFalse((self.td / 'other_runs').exists())
++
++    def test_a_genuine_marker_always_refuses(self):
++        req, d, res = self.run_e1('POWERBALL', 1300)
++        self.marker.write_text('{}')            # the marker at the (patched) fixed location
++        with self.assertRaises(CR.RunRefused):
++            self.run_e1('POWERBALL', 1300, ws_name='ws2')
++        self.assertEqual(self.consumed(res.folder)['forecast'], (False, 'UNRESOLVED_ORPHAN_MARKER'))
++
++    def test_every_run_is_standalone(self):
++        req, d, res = self.run_e1('OZLOTTO', 1600)
++        for name in ('terminal.json', 'forecast_receipt.json'):
++            self.assertEqual(json.loads((res.folder / name).read_bytes())['execution_path'], 'STANDALONE')
++
++    def test_data_source_is_fixed(self):
++        """A synthetic run cannot read the project, and a real run (if the switch were on) only the project."""
++        e, d = e1_pins('POWERBALL')
++        req = C.request(d, e, 1300, '0' * 64)
++        with self.assertRaises(CR.RunRefused) as cm:
++            CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=CR.PROJECT_ROOT,
++                                   run_root=self.td / 'runs')
++        self.assertEqual(cm.exception.reason, 'DATA_SOURCE_REFUSED')
++        real = F.request(d, 1300, 'UNORDERED_SET', run_mode='REAL_DEVELOPMENT', entry_digest=record_digest(e))
++        with mock.patch.object(CR, 'ENABLE_CONTRACT_REAL_DEVELOPMENT', True), \
++                mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
++            with self.assertRaises(CR.RunRefused) as cm:
++                CR.run_contract_method(real, compute=e_001.compute, verify=e_001.verify, repo_root=self.td,
++                                       run_root=self.td / 'runs')
++        self.assertEqual(cm.exception.reason, 'DATA_SOURCE_REFUSED')
++        self.assertFalse((self.td / 'runs').exists())
++
+ if __name__ == '__main__':
+     unittest.main()

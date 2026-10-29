@@ -1,0 +1,10 @@
+== c3_dev
+B2: caller alternate registry admits: SUPPORTED
+C1: standalone API published coordinated D2: SUCCESS
+C2: downstream read_run refuses it: (False, 'COORDINATED_EVIDENCE_NOT_AVAILABLE: only standalone runs are consumable in CODE-2')
+All three synthetic bypass demonstrations reproduced; no installed files were touched.
+== c4_dev
+    success = CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify,
+                                     repo_root=ws, run_root=base / 'runs',
+                                     orphan_marker=fake_absent)
+TypeError: run_contract_method() got an unexpected keyword argument 'orphan_marker'
