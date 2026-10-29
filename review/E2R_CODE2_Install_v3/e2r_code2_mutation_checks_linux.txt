@@ -1,0 +1,31 @@
+PASS control passes tests.test_e2r_dispatch.LegacyRunnerGate
+PASS control passes tests.test_e2r_dispatch.RosterIsNotAdmission
+PASS control passes tests.test_e2r_dispatch.T14ReleaseTransition
+PASS control passes tests.test_e2r_dispatch.T14TruthTable
+PASS control passes tests.test_e2r_runner.AtomicCreateOnly
+PASS control passes tests.test_e2r_runner.ConsumptionGates
+PASS control passes tests.test_e2r_runner.NoCallerChosenAuthority
+PASS control passes tests.test_e2r_runner.NoTicketAndProducts
+PASS control passes tests.test_e2r_runner.T16RunLevel
+PASS T14 mutation: the gate ignores the IN_DEVELOPMENT flag -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T14 mutation: the gate admits a FORMULA_OPEN entry -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T14 mutation: the gate accepts a stale pinned entry -> tests.test_e2r_dispatch.T14ReleaseTransition fails
+PASS T14 mutation: the gate ignores a declaration mismatch -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T14 mutation: the runner reads data before the gate -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T14 mutation: the coordinator side skips the shared gate -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T14 mutation: the gate trusts a cached registry -> tests.test_e2r_dispatch.T14TruthTable fails
+PASS T16 mutation: a failed run still names its receipts -> tests.test_e2r_runner.T16RunLevel fails
+PASS T16 mutation: a failure after a receipt is recorded as SUCCESS -> tests.test_e2r_runner.T16RunLevel fails
+PASS C01 mutation: publication renames over an existing file instead of linking -> tests.test_e2r_runner.AtomicCreateOnly fails
+PASS T16 mutation: a run folder can be reused -> tests.test_e2r_runner.T16RunLevel fails
+PASS B02 mutation: consumption ignores an active orphan marker -> tests.test_e2r_runner.ConsumptionGates fails
+PASS B02 mutation: consumption accepts a coordinated run without its evidence -> tests.test_e2r_runner.ConsumptionGates fails
+PASS B02 mutation: consumption trusts any admitting entry -> tests.test_e2r_runner.ConsumptionGates fails
+PASS B01 mutation: the legacy E_1 runner skips the release gate -> tests.test_e2r_dispatch.LegacyRunnerGate fails
+PASS C02 mutation: a missing declared diagnostic counts as a valid empty target -> tests.test_e2r_runner.NoTicketAndProducts fails
+PASS CODE-B01 mutation: consumption accepts a caller-chosen orphan marker -> tests.test_e2r_runner.NoCallerChosenAuthority fails
+PASS CODE-B01 mutation: the gate accepts a caller-chosen registry root -> tests.test_e2r_runner.NoCallerChosenAuthority fails
+PASS CODE-B02 mutation: the runner publishes a coordinated run -> tests.test_e2r_runner.NoCallerChosenAuthority fails
+PASS CODE-B01 mutation: a synthetic run may read the project itself -> tests.test_e2r_runner.NoCallerChosenAuthority fails
+PASS C03 mutation: Package 2's synthetic prototype trusts the per-method roll-up -> tests.test_e2r_dispatch.RosterIsNotAdmission fails
+RESULT PASS

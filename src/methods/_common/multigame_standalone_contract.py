@@ -46,6 +46,10 @@ def begin_synthetic(run_root: Path, *, run_id: str, profile: GameProfile,
         raise ValueError('method unsupported or FORMULA_OPEN')
     if not variant_id or not re.fullmatch(r'[A-Z0-9_]{3,96}',variant_id,re.ASCII):
         raise ValueError('invalid variant identifier')
+    # E2R-CODE-2 (reviewer's E2RC2-C03): the per-method roll-up above never approves another variant.
+    from _common.contract_dispatch import variant_released
+    if not variant_released(profile.game_id, method_id, variant_id):
+        raise ValueError('this method variant is not released (no active SUPPORTED entry, or flagged)')
     directory = run_root / profile.game_id / run_id
     directory.mkdir(parents=True,exist_ok=False)
     status=ProbeStatus(directory/'status.json',run_id,method_id,identity={

@@ -33,6 +33,14 @@ def main(argv: list[str] | None = None) -> int:
     marker = project / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
     if marker.exists() or marker.is_symlink():
         parser.error('unresolved orphan marker: no standalone experiment permitted')
+    # Release gate (E2R-R57; owner decision D2-3, 29 October 2026), before anything is created or read:
+    # E_1's active registry entry must still be SUPPORTED for this exact variant and revision, and
+    # src/methods/E_001/IN_DEVELOPMENT.txt must not exist. Nothing else in this runner changes.
+    from _common.contract_dispatch import DispatchRefused, legacy_gate
+    try:
+        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '1')
+    except DispatchRefused as exc:
+        parser.error(exc.text)
     mode = ('SYNTHETIC_CONTRACT_TEST' if args.mode == 'synthetic-contract'
             else 'REAL_HISTORICAL_DEVELOPMENT')
     if mode == 'SYNTHETIC_CONTRACT_TEST':
