@@ -1,0 +1,1076 @@
+--- a/src/coordinator_private/contract_coordinated_gate.py
++++ b/src/coordinator_private/contract_coordinated_gate.py
+@@ -13,12 +13,11 @@
+ 
+ from pathlib import Path
+ 
+-from _common.contract_dispatch import METHODS_ROOT, DispatchRefused, dispatch_gate, refusal_text
+-from _common.contract_registry import DATA_ROOT
++from _common.contract_dispatch import DispatchRefused, dispatch_gate, refusal_text
+ 
+ 
+-def gate_coordinated_contract_request(request: Mapping, *, data_root: Path = DATA_ROOT,
+-                                      methods_root: Path = METHODS_ROOT) -> None:
++def gate_coordinated_contract_request(request: Mapping, *, data_root: Path | None = None,
++                                      methods_root: Path | None = None) -> None:
+     """Always raises DispatchRefused in CODE-2: first the shared gate's own refusal, if any; otherwise
+     COORDINATED_CONTRACT_DISPATCH_NOT_ENABLED."""
+     dispatch_gate(request, data_root=data_root, methods_root=methods_root)
+--- /dev/null
++++ b/src/methods/E_001_Historical_Appearance_Frequency.py
+@@ -0,0 +1,99 @@
++"""P3 E_001 single executable review candidate; SYNTHETIC CONTRACT MODE ONLY for now.
++
++The real-data code path is deliberately hard-disabled until independent review.
++No subprocess launches, timers, termination or coordinator invocation.
++"""
++from __future__ import annotations
++
++import argparse
++import sys
++import uuid
++from pathlib import Path
++
++# Code-level gate cannot be set by a CLI flag or environment variable.
++# Flip only in a separately accepted, reviewed, owner-authorised patch.
++ENABLE_REAL_HISTORICAL_DEVELOPMENT = True
++
++
++def main(argv: list[str] | None = None) -> int:
++    parser = argparse.ArgumentParser(description='E_1 standalone review-candidate runner')
++    parser.add_argument('--mode', choices=('synthetic-contract', 'historical-development'), required=True)
++    parser.add_argument('--target', type=int, required=True)
++    parser.add_argument('--source', type=Path, required=True)
++    parser.add_argument('--run-id', default='e1-' + uuid.uuid4().hex)
++    parser.add_argument('--synthetic-run-root', type=Path, default=None,
++                        help='synthetic mode only; isolated test artifact directory')
++    args = parser.parse_args(argv)
++    if args.mode == 'historical-development' and not ENABLE_REAL_HISTORICAL_DEVELOPMENT:
++        parser.error('REAL HISTORICAL DEVELOPMENT DISABLED pending loader/status review and owner gate')
++    if args.mode == 'historical-development' and args.synthetic_run_root is not None:
++        parser.error('synthetic-run-root is not a real-mode option')
++    project = Path(__file__).resolve().parents[2]
++    trusted_real_source = project / 'source_data'
++    marker = project / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
++    if marker.exists() or marker.is_symlink():
++        parser.error('unresolved orphan marker: no standalone experiment permitted')
++    # Release gate (E2R-R57; owner decision D2-3, 29 October 2026), before anything is created or read:
++    # E_1's active registry entry must still be SUPPORTED for this exact variant and revision, and
++    # src/methods/E_001/IN_DEVELOPMENT.txt must not exist. Nothing else in this runner changes.
++    from _common.contract_dispatch import DispatchRefused, legacy_gate
++    try:
++        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '1')
++    except DispatchRefused as exc:
++        parser.error(exc.text)
++    mode = ('SYNTHETIC_CONTRACT_TEST' if args.mode == 'synthetic-contract'
++            else 'REAL_HISTORICAL_DEVELOPMENT')
++    if mode == 'SYNTHETIC_CONTRACT_TEST':
++        if args.synthetic_run_root is None:
++            parser.error('synthetic mode requires --synthetic-run-root')
++        root = args.synthetic_run_root.resolve()
++        if root.is_relative_to((project / 'results').resolve()) or root.is_relative_to(trusted_real_source.resolve()):
++            parser.error('synthetic output cannot be placed in real results/source namespaces')
++        if args.source.resolve().is_relative_to(trusted_real_source.resolve()):
++            parser.error('synthetic mode may not read the real source_data directory')
++    else:
++        root = project / 'transitory_data' / 'p3_standalone_runs'
++    from E_001.e1_standalone_contract import (
++        begin, canonical_json, create_only, finish, publish_failed_manifest,
++        publish_success_manifest, sha)
++    # Durable STARTED happens before CSV/model/numerics imports or source reads.
++    run_dir = root / args.run_id
++    try:
++        status = begin(run_dir, args.run_id, mode, args.target)
++    except Exception as exc:
++        print(f'[E_1] REFUSED before STARTED: {type(exc).__name__}: {exc}', file=sys.stderr, flush=True)
++        return 2
++    print(f'[E_001] STARTED run={args.run_id} mode={mode} target={args.target}', flush=True)
++    try:
++        from E_001.e1_training_view import load_permitted_u_view, build_e1_forecast
++        rows, digest = load_permitted_u_view(args.source, args.target, source_kind=mode,
++                                           trusted_source_dir=(trusted_real_source if mode == 'REAL_HISTORICAL_DEVELOPMENT' else None))
++        result = build_e1_forecast(rows, digest, args.target, source_kind=mode)
++        raw = canonical_json(result)
++        result_digest = sha(raw)
++        create_only(run_dir / 'canonical_result.json', raw)
++        # Any printing must be BEFORE terminal SUCCESS and PASS manifest.
++        print(f'[E_1] synthetic/development result prepared; target={args.target}; '
++              f'canonical_sha256={result_digest}', flush=True)
++        finished = finish(run_dir, status, 'SUCCESS', training_digest=digest,
++                          result_digest=result_digest)
++        publish_success_manifest(run_dir, finished, result_digest, digest)
++        return 0
++    except (Exception, KeyboardInterrupt) as exc:
++        interrupted = isinstance(exc, KeyboardInterrupt)
++        try:
++            failed = finish(run_dir, status, 'FAILED',
++                            error=f'{type(exc).__name__}: {exc}',
++                            failure_reason='INTERRUPTED' if interrupted else None)
++            publish_failed_manifest(run_dir, failed)
++        except Exception as secondary:
++            # If recording failure also fails, no valid PASS manifest may be
++            # assumed; test harness will refuse, and an operator must inspect.
++            print(f'[E_1] CRITICAL failure recording status: {secondary}',
++                  file=sys.stderr, flush=True)
++        print(f'[E_1] FAILED: {type(exc).__name__}: {exc}', file=sys.stderr, flush=True)
++        return 1
++
++
++if __name__ == '__main__':
++    sys.exit(main())
+--- a/src/methods/_common/contract_dispatch.py
++++ b/src/methods/_common/contract_dispatch.py
+@@ -14,7 +14,7 @@
+ 
+ import _common.contract_vocab as V
+ from _common.contract_records import record_digest, validate_run_request
+-from _common.contract_registry import DATA_ROOT, InstalledRegistry
++from _common.contract_registry import InstalledRegistry
+ 
+ METHODS_ROOT = Path(__file__).resolve().parents[1]      # src/methods
+ FLAG_NAME = 'IN_DEVELOPMENT.txt'
+@@ -44,27 +44,20 @@
+             f'{show(revision)}: {reason}. No data was read.')
+ 
+ 
+-def dispatch_gate(request: object, *, data_root: Path = DATA_ROOT,
+-                  methods_root: Path = METHODS_ROOT) -> tuple[dict, dict]:
+-    """Admit a RUN_REQUEST_V1 or raise DispatchRefused. Returns (active_entry, declaration), both new
+-    caller-owned copies fetched from the installed registry by this call.
++def _roots(data_root, methods_root):
++    """Resolved at call time, so a test can point the gate at a temporary copy."""
++    import _common.contract_registry as R
++    return (R.DATA_ROOT if data_root is None else Path(data_root),
++            METHODS_ROOT if methods_root is None else Path(methods_root))
+ 
+-    Admitted only if all hold: the request is a valid stage-1 request; the installed registry has a
+-    chain for its (game, method, variant); the chain's active entry is SUPPORTED; the request pins
+-    exactly that active entry's digest; the entry's revision and declaration digest equal the
+-    request's; and there is no src/methods/E_<nnn>/IN_DEVELOPMENT.txt.
+-    """
+-    r = request if isinstance(request, Mapping) else {}
+-    ident = (r.get('game_id'), r.get('method_id'), r.get('variant_id'), r.get('method_revision'))
++
++def _admit(ident, *, pinned_entry, pinned_declaration, data_root, methods_root) -> tuple[dict, dict]:
++    game, method, variant, revision = ident
+ 
+     def refuse(code, detail):
+         raise DispatchRefused(refusal_text(*ident, f'{code}: {detail}'), code)
+ 
+-    try:
+-        validate_run_request(request)
+-    except ValueError as exc:
+-        refuse('INVALID_RUN_REQUEST', str(exc))
+-    game, method, variant, revision = ident
++    data_root, methods_root = _roots(data_root, methods_root)
+     try:
+         registry = InstalledRegistry(data_root)      # fresh every call, never a cached or caller copy
+     except (ValueError, OSError) as exc:
+@@ -75,21 +68,62 @@
+         refuse('NO_REGISTRY_ENTRY', 'no installed registry chain for this game, method and variant')
+     if entry['registry_status'] != 'SUPPORTED':
+         refuse('NOT_SUPPORTED', f'the active registry entry is {entry["registry_status"]}')
+-    if request['registry_entry_digest'] != record_digest(entry):
++    if pinned_entry is not None and pinned_entry != record_digest(entry):
+         refuse('STALE_REGISTRY_ENTRY', 'the request does not pin the active registry entry')
+     if entry['method_revision'] != revision:
+         refuse('REVISION_MISMATCH', f'the active entry approves revision {entry["method_revision"]}')
+-    if entry['declaration_digest'] != request['declaration_digest']:
++    if pinned_declaration is not None and entry['declaration_digest'] != pinned_declaration:
+         refuse('DECLARATION_MISMATCH', 'the request names a different declaration')
+-    flag = Path(methods_root) / method_folder(method) / FLAG_NAME
++    flag = methods_root / method_folder(method) / FLAG_NAME
+     if flag.exists() or flag.is_symlink():
+         refuse('IN_DEVELOPMENT_FLAG_PRESENT', f'src/methods/{method_folder(method)}/{FLAG_NAME} exists')
+-    declaration = registry.declaration(entry['declaration_digest'])
+-    return entry, declaration
++    return entry, registry.declaration(entry['declaration_digest'])
++
++
++def dispatch_gate(request: object, *, data_root: Path | None = None,
++                  methods_root: Path | None = None) -> tuple[dict, dict]:
++    """Admit a RUN_REQUEST_V1 or raise DispatchRefused. Returns (active_entry, declaration), both new
++    caller-owned copies fetched from the installed registry by this call.
++
++    Admitted only if all hold: the request is a valid stage-1 request; the installed registry has a
++    chain for its (game, method, variant); the chain's active entry is SUPPORTED; the request pins
++    exactly that active entry's digest; the entry's revision and declaration digest equal the
++    request's; and there is no src/methods/E_<nnn>/IN_DEVELOPMENT.txt.
++    """
++    r = request if isinstance(request, Mapping) else {}
++    ident = (r.get('game_id'), r.get('method_id'), r.get('variant_id'), r.get('method_revision'))
++    try:
++        validate_run_request(request)
++    except ValueError as exc:
++        raise DispatchRefused(refusal_text(*ident, f'INVALID_RUN_REQUEST: {exc}'), 'INVALID_RUN_REQUEST') from None
++    return _admit(ident, pinned_entry=request['registry_entry_digest'],
++                  pinned_declaration=request['declaration_digest'], data_root=data_root, methods_root=methods_root)
++
++
++def legacy_gate(game_id: str, method_id: str, variant_id: str, revision: str, *,
++                data_root: Path | None = None, methods_root: Path | None = None) -> tuple[dict, dict]:
++    """The same release rule for E_1's legacy standalone runner (owner decision D2-3, 29 October 2026),
++    which has no RUN_REQUEST_V1 and so no pins: an active SUPPORTED entry for exactly this game, method,
++    variant and revision, and no IN_DEVELOPMENT.txt. Same refusal codes and text; reads no data."""
++    return _admit((game_id, method_id, variant_id, revision), pinned_entry=None, pinned_declaration=None,
++                  data_root=data_root, methods_root=methods_root)
++
++
++def variant_released(game_id: str, method_id: str, variant_id: str, *, data_root: Path | None = None,
++                     methods_root: Path | None = None) -> bool:
++    """True only if this exact (game, method, variant) has an active SUPPORTED entry and the method has no
++    IN_DEVELOPMENT.txt. For synthetic-only checks that have no run request; it is not an admission."""
++    data_root, methods_root = _roots(data_root, methods_root)
++    try:
++        entry = InstalledRegistry(data_root).active_entry(game_id, method_id, variant_id)
++    except ValueError:
++        return False
++    flag = methods_root / method_folder(method_id) / FLAG_NAME
++    return entry['registry_status'] == 'SUPPORTED' and not (flag.exists() or flag.is_symlink())
+ 
+ 
+-def active_pins(game_id: str, method_id: str, variant_id: str, *, data_root: Path = DATA_ROOT) -> dict:
++def active_pins(game_id: str, method_id: str, variant_id: str, *, data_root: Path | None = None) -> dict:
+     """What a request must pin for this method variant now (read from the installed registry only)."""
+-    entry = InstalledRegistry(data_root).active_entry(game_id, method_id, variant_id)
++    entry = InstalledRegistry(_roots(data_root, None)[0]).active_entry(game_id, method_id, variant_id)
+     return {'registry_status': entry['registry_status'], 'method_revision': entry['method_revision'],
+             'declaration_digest': entry['declaration_digest'], 'registry_entry_digest': record_digest(entry)}
+--- a/src/methods/_common/contract_publication.py
++++ b/src/methods/_common/contract_publication.py
+@@ -3,10 +3,10 @@
+ E2R-CODE-2. Orchestration side only: no method code is imported, and nothing here reads draw data.
+ Publication order (E2R-R38A): the output record (C1 or C2) is created, validated, and only then its
+ freeze receipt (D1 or the diagnostic receipt); a SUCCESS terminal record (D2) naming those receipts
+-comes last. Every file is create-only (E2R-R36): written to a new temporary name, flushed, then
+-renamed onto a name that must not exist, never replaced. Nothing here deletes, moves, quarantines or
+-terminates anything, and nothing retries: an interrupted run leaves its files as they are and is
+-not consumable (E2R-T16).
++comes last. Every file is create-only (E2R-R36): written in full to this write's own temporary file,
++then published by an atomic hard link that fails if the name exists, so nothing is ever replaced. Nothing
++here deletes, moves, quarantines or terminates anything (apart from each write's own temporary file), and
++nothing retries: an interrupted run leaves its files as they are and is not consumable (E2R-T16).
+ 
+ Run folder (E2R-R52): <run_root>/<game_id>/<method_id>/<variant_id>/<run_id>/, created exclusively.
+ """
+@@ -41,22 +41,43 @@
+     return rid
+ 
+ 
++def _fsync_dir(folder: Path) -> None:
++    """Make a directory entry durable where the platform allows it (POSIX). Windows has no directory
++    fsync; NTFS journals the link itself."""
++    if os.name == 'nt':
++        return
++    fd = os.open(folder, os.O_RDONLY)
++    try:
++        os.fsync(fd)
++    finally:
++        os.close(fd)
++
++
+ def create_only(path: Path, raw: bytes) -> None:
+-    """Create a new file; never overwrite (E2R-R36). A crash can leave only a .part- file or a
+-    complete file, never a replaced one."""
+-    if path.exists() or path.is_symlink():
+-        raise FileExistsError(f'{path.name} already exists; publication never overwrites')
+-    tmp = path.with_name(path.name + '.part-' + uuid.uuid4().hex)
++    """Publish a new file without ever replacing one (E2R-R36; reviewer's E2RC2-C01).
++
++    The bytes go to a new temporary file owned by this call (exclusive create), are flushed and
++    fsynced, and are then published with os.link(temporary, path). Creating a hard link is atomic and
++    fails with FileExistsError if anything already has that name, on POSIX and on NTFS; so a published
++    file is never overwritten, a reader never sees a partial file, and of several concurrent writers
++    exactly one wins. Only this call's own temporary file is removed afterwards. A filesystem that
++    cannot make hard links refuses publication (fail closed); nothing falls back to a rename."""
++    tmp = path.with_name(f'.{path.name}.part-{uuid.uuid4().hex}')
+     try:
+         with tmp.open('xb') as fh:
+             fh.write(raw)
+             fh.flush()
+             os.fsync(fh.fileno())
+-        if path.exists() or path.is_symlink():
+-            raise FileExistsError(f'{path.name} appeared during publication; not overwritten')
+-        os.rename(tmp, path)
++        try:
++            os.link(tmp, path)
++        except FileExistsError:
++            raise FileExistsError(f'{path.name} already exists; publication never overwrites') from None
++        except (NotImplementedError, OSError) as exc:
++            raise RuntimeError(f'no-clobber publication is not available here ({type(exc).__name__}); '
++                               f'{path.name} was not published') from None
+     finally:
+         tmp.unlink(missing_ok=True)
++    _fsync_dir(path.parent)
+ 
+ 
+ def utc_now() -> str:
+@@ -99,6 +120,7 @@
+         self.folder = run_folder(run_root, request)
+         self.folder.parent.mkdir(parents=True, exist_ok=True)
+         self.folder.mkdir(exist_ok=False)           # a run folder belongs to one run only
++        _fsync_dir(self.folder.parent)
+         self.receipts: list[str] = []
+         self.terminal_written = False
+ 
+@@ -177,14 +199,64 @@
+             raise ValueError('the terminal record is already written; nothing follows it')
+ 
+ 
+-def read_run(folder: Path, declaration: Mapping, *, gates_pass: bool) -> dict:
+-    """Read a run folder and decide, for each output, whether it is consumable (E2R-R38A).
++# Terminal outcome reasons with a fixed meaning (E2RC2-C02). A legitimate empty target, where the method
++# validly reports no available TOP or WORST and declares no diagnostic record, has no output to publish;
++# the frozen D2 vocabulary has no outcome for it, so D2 says VALIDATION_FAILURE with this reason prefix,
++# and run_disposition() counts it as DIAGNOSTIC_ONLY (unscored, valid), never as a failure.
++NO_TICKET_NO_DIAGNOSTIC = 'NO_TICKET_NO_DIAGNOSTIC'
+ 
+-    Read-only. Missing or unreadable files make the output not consumable; nothing is repaired,
+-    moved or deleted. `gates_pass` is the caller's result for every existing group and firewall gate.
++
++def run_disposition(terminal: Mapping) -> str:
++    """How reports count a run (section 7.4): SUCCESS, DIAGNOSTIC_ONLY (a valid empty target) or FAILED.
++    A SUCCESS run's own records say whether it is scorable (record_status); this says only what the run
++    produced. An invalid terminal record is FAILED."""
++    try:
++        validate_terminal(terminal)
++    except ValueError:
++        return 'FAILED'
++    if terminal['outcome'] == 'SUCCESS':
++        return 'SUCCESS'
++    if terminal['outcome'] == 'VALIDATION_FAILURE' and terminal['outcome_reason'].startswith(NO_TICKET_NO_DIAGNOSTIC + ':'):
++        return 'DIAGNOSTIC_ONLY'
++    return 'FAILED'
++
++
++def _installed_entry_for(receipt: Mapping, registry) -> dict | None:
++    """The installed registry entry the receipt says admitted the run, if it is in that variant's chain."""
++    try:
++        chain = registry.chain(receipt['game_id'], receipt['method_id'], receipt['variant_id'])
++    except ValueError:
++        return None
++    for e in chain:
++        if record_digest(e) == receipt['registry_entry_digest']:
++            return e
++    return None
++
++
++def read_run(folder: Path, *, orphan_marker: Path | None = None, data_root: Path | None = None) -> dict:
++    """The consumption check for a standalone contract run folder (E2R-R38A; reviewer's E2RC2-B02).
++
++    Read-only. It establishes every gate itself, from current evidence, and fails closed; no caller can
++    vouch for a gate. For each output (forecast, diagnostic) found, it returns (consumable, reason):
++      - the global unresolved-orphan marker must be absent now (checked on every call);
++      - the terminal record must exist, be valid, be SUCCESS and name the output's receipt;
++      - the run must be STANDALONE: a COORDINATED run's group and exit-receipt gates have no evidence
++        path in CODE-2, so it is never consumable here;
++      - the folder must be <game>/<method>/<variant>/<run_id> of the records it holds;
++      - the declaration is the installed one with the record's declaration digest, fetched afresh,
++        never one the caller supplies;
++      - the receipt's registry entry must be in that variant's installed chain, SUPPORTED, and name the
++        same revision and declaration.
++    Nothing is repaired, moved or deleted.
+     """
++    from _common.contract_registry import InstalledRegistry
++    import _common.contract_registry as R
++    import _common.contract_runner as CRun
++    folder = Path(folder)
++    marker = Path(CRun.ORPHAN_MARKER if orphan_marker is None else orphan_marker)
++
+     def load(key):
+-        p = Path(folder) / FILES[key]
++        p = folder / FILES[key]
+         if not p.is_file() or p.is_symlink():
+             return None
+         try:
+@@ -197,10 +269,34 @@
+         output, receipt = load(out_key), load(rec_key)
+         if output is None and receipt is None:
+             continue
+-        if not isinstance(output, dict) or not isinstance(receipt, dict):
+-            result[out_key] = (False, 'OUTPUT_OR_RECEIPT_MISSING_OR_UNREADABLE')
+-        elif terminal == 'UNREADABLE':
+-            result[out_key] = (False, 'INVALID_TERMINAL_RECORD: unreadable')
+-        else:
+-            result[out_key] = consumable(output, receipt, terminal, gates_pass=gates_pass, declaration=declaration)
++        result[out_key] = _consumable_here(folder, output, receipt, terminal, marker,
++                                           R.DATA_ROOT if data_root is None else Path(data_root), InstalledRegistry)
+     return result
++
++
++def _consumable_here(folder, output, receipt, terminal, marker, data_root, InstalledRegistry) -> tuple[bool, str]:
++    if marker.exists() or marker.is_symlink():
++        return False, 'UNRESOLVED_ORPHAN_MARKER'
++    if not isinstance(output, dict) or not isinstance(receipt, dict):
++        return False, 'OUTPUT_OR_RECEIPT_MISSING_OR_UNREADABLE'
++    if terminal is None:
++        return False, 'NO_TERMINAL_RECORD'
++    if not isinstance(terminal, dict):
++        return False, 'INVALID_TERMINAL_RECORD: unreadable'
++    if terminal.get('execution_path') != 'STANDALONE' or receipt.get('execution_path') != 'STANDALONE':
++        return False, 'COORDINATED_EVIDENCE_NOT_AVAILABLE: only standalone runs are consumable in CODE-2'
++    try:
++        where = tuple(folder.parts[-4:])
++        if where != (receipt['game_id'], receipt['method_id'], receipt['variant_id'], receipt['run_id']):
++            return False, 'RUN_FOLDER_DOES_NOT_MATCH_RECORDS'
++        registry = InstalledRegistry(data_root)
++        declaration = registry.declaration(output['declaration_digest'])
++    except (KeyError, TypeError, ValueError, OSError):
++        return False, 'DECLARATION_NOT_INSTALLED'
++    entry = _installed_entry_for(receipt, registry)
++    if (entry is None or entry['registry_status'] != 'SUPPORTED' or
++            entry['method_revision'] != output.get('method_revision') or
++            entry['declaration_digest'] != output.get('declaration_digest')):
++        return False, 'ADMITTING_ENTRY_NOT_INSTALLED_OR_NOT_SUPPORTED'
++    # Every gate above is established here; consumable() then checks the records themselves.
++    return consumable(output, receipt, terminal, gates_pass=True, declaration=declaration)
+--- a/src/methods/_common/contract_runner.py
++++ b/src/methods/_common/contract_runner.py
+@@ -21,11 +21,10 @@
+ import stat
+ 
+ import _common.contract_vocab as V
+-from _common.contract_dispatch import METHODS_ROOT, DispatchRefused, dispatch_gate, refusal_text
++from _common.contract_dispatch import DispatchRefused, dispatch_gate, refusal_text
+ from _common.contract_forecast import assemble_diagnostic, assemble_forecast
+-from _common.contract_publication import RunPublication
++from _common.contract_publication import NO_TICKET_NO_DIAGNOSTIC, RunPublication
+ from _common.contract_records import reader_pin, record_digest
+-from _common.contract_registry import DATA_ROOT
+ from _common.contract_task import build_method_task
+ from _common.game_draws_reader import load_pinned_draw_view
+ 
+@@ -96,8 +95,8 @@
+ 
+ def run_contract_method(request: Mapping, *, compute: Callable, verify: Callable, repo_root: Path,
+                         run_root: Path, execution_path: str = 'STANDALONE',
+-                        orphan_marker: Path | None = None, data_root: Path = DATA_ROOT,
+-                        methods_root: Path = METHODS_ROOT) -> RunResult:
++                        orphan_marker: Path | None = None, data_root: Path | None = None,
++                        methods_root: Path | None = None) -> RunResult:
+     """Run one admitted request. Raises RunRefused or DispatchRefused before anything is read or
+     created; otherwise always returns a RunResult whose terminal record is on disk."""
+     r = request if isinstance(request, Mapping) else {}
+@@ -138,7 +137,16 @@
+             c2 = (assemble_diagnostic(declaration, task, view, output)
+                   if declaration['diagnostic_schema_id'] is not None else None)
+             if c1 is None and c2 is None:
+-                return end('VALIDATION_FAILURE', 'NO_RECORD: no available TOP or WORST and no diagnostic record')
++                # assemble_forecast returns None only for a valid output with no available TOP or WORST
++                # (any invalid output raises). Section 7.4: with no diagnostic declared, that target is a
++                # legitimate empty target, counted DIAGNOSTIC_ONLY; with a diagnostic declared, the method
++                # owed its C2 record and the output is invalid (E2RC2-C02).
++                if task.product_kind == forecast_product and declaration['diagnostic_schema_id'] is None:
++                    verify(task, view, None, None)
++                    return end('VALIDATION_FAILURE', f'{NO_TICKET_NO_DIAGNOSTIC}: valid output with no available '
++                                                     'TOP or WORST and no declared diagnostic; DIAGNOSTIC_ONLY, unscored')
++                raise ValueError('no record: the declared diagnostic record is missing, or the request asks for '
++                                 'a product this output cannot give')
+             verify(task, view, c1, c2)
+         except Exception as exc:
+             return end('NUMERIC_INVALID' if _numeric(exc) else 'VALIDATION_FAILURE',
+--- a/src/methods/_common/multigame_method_registry.py
++++ b/src/methods/_common/multigame_method_registry.py
+@@ -19,14 +19,19 @@
+ # This is a scientific execution/support roster, NOT a view-entitlement list.
+ # The general-purpose reader does not consult this registry. In particular,
+ # registering a scientific method does NOT enable coordinated/FINAL consumption.
+-# Normal method dispatch uses the contract dispatch gate (contract_dispatch.dispatch_gate), which
+-# checks the exact variant, revision, declaration and pinned entry; this roster is per method only.
++# A per-method roll-up, never an admission (reviewer's E2RC2-C03): SUPPORTED here never by itself grants a
++# run, never selects a variant and never replaces the exact entry pin. Normal method dispatch uses the
++# contract dispatch gate (contract_dispatch.dispatch_gate: exact variant, revision, declaration and pinned
++# entry). Package 2's consumers add their own exact checks: the launch specification and the worker
++# handshake accept only E_1's registered synthetic probe variant; begin_synthetic requires the exact
++# variant to be released (contract_dispatch.variant_released); and the coordinated science allowlist is
++# empty, so registered_scientific_binding always refuses.
+ 
+ 
+ def _roster(game_id: str) -> MappingProxyType:
+-    from _common.contract_dispatch import FLAG_NAME, METHODS_ROOT, method_folder
+-    from _common.contract_registry import InstalledRegistry
+-    registry = InstalledRegistry()
++    import _common.contract_dispatch as D
++    import _common.contract_registry as R
++    registry = R.InstalledRegistry(R.DATA_ROOT)      # module attributes read at call time
+     active = {}
+     for g, m, v in registry.chain_keys():
+         if g == game_id:
+@@ -34,7 +39,7 @@
+     out = {}
+     for m in _METHODS:
+         statuses = active.get(m, [])
+-        flagged = (METHODS_ROOT / method_folder(m) / FLAG_NAME)
++        flagged = D.METHODS_ROOT / D.method_folder(m) / D.FLAG_NAME
+         if SUPPORTED in statuses and not (flagged.exists() or flagged.is_symlink()):
+             out[m] = SUPPORTED
+         elif statuses and all(s == UNSUPPORTED for s in statuses):
+--- /dev/null
++++ b/src/methods/_common/multigame_standalone_contract.py
+@@ -0,0 +1,167 @@
++"""Synthetic-only method-generic status/result/consumer prototype, Package 2.
++
++NO coordinated runs and NO FINAL. In coordinated/FINAL mode, a trusted
++coordinator-written exit_receipt.json, and its reviewed console/run-ID
++handshake, must be implemented before this contract may be used.
++No termination, no subprocesses, and no access to real game data.
++"""
++from __future__ import annotations
++
++import hashlib
++import json
++import os
++import re
++from pathlib import Path
++
++from _common.experiment_runtime_status_and_resources import ProbeStatus
++from _common.game_profiles import GameProfile
++from _common.multigame_method_registry import method_status, SUPPORTED
++
++_RUN = re.compile(r'mg-[a-z0-9][a-z0-9_-]{7,95}\Z',re.ASCII)
++_HEX = re.compile(r'[0-9a-f]{64}\Z',re.ASCII)
++_MODE = 'SYNTHETIC_CONTRACT_TEST'
++
++
++def json_bytes(value: object) -> bytes:
++    return (json.dumps(value,sort_keys=True,ensure_ascii=True,separators=(',',':'),allow_nan=False)+'\n').encode('ascii')
++
++
++def digest(raw: bytes) -> str:
++    return hashlib.sha256(raw).hexdigest()
++
++
++def write_new(path: Path, raw: bytes) -> None:
++    path.parent.mkdir(parents=True,exist_ok=True)
++    with path.open('xb') as f:
++        f.write(raw);f.flush();os.fsync(f.fileno())
++
++
++def begin_synthetic(run_root: Path, *, run_id: str, profile: GameProfile,
++                    target: int, method_id: str, variant_id: str) -> tuple[Path, ProbeStatus]:
++    if not _RUN.fullmatch(run_id):
++        raise ValueError('invalid game-qualified run ID')
++    if not profile.historical_development_target_allowed(target):
++        raise ValueError('outside historical development boundary')
++    if method_status(profile.game_id,method_id) != SUPPORTED:
++        raise ValueError('method unsupported or FORMULA_OPEN')
++    if not variant_id or not re.fullmatch(r'[A-Z0-9_]{3,96}',variant_id,re.ASCII):
++        raise ValueError('invalid variant identifier')
++    # E2R-CODE-2 (reviewer's E2RC2-C03): the per-method roll-up above never approves another variant.
++    from _common.contract_dispatch import variant_released
++    if not variant_released(profile.game_id, method_id, variant_id):
++        raise ValueError('this method variant is not released (no active SUPPORTED entry, or flagged)')
++    directory = run_root / profile.game_id / run_id
++    directory.mkdir(parents=True,exist_ok=False)
++    status=ProbeStatus(directory/'status.json',run_id,method_id,identity={
++        'game_id':profile.game_id,'profile_version':profile.version,
++        'draw_number':target,'draw_key':profile.draw_key(target),
++        'method_id':method_id,'variant_id':variant_id,'mode':_MODE,
++    })
++    if status.value.get('process_create_time_epoch') is None:
++        raise RuntimeError('cannot prove process creation time')
++    return directory,status
++
++
++def publish_synthetic_success(run_dir: Path,status: ProbeStatus, result: dict) -> dict:
++    # NO real source, no FINAL and no external coordinator exit proof.
++    before=dict(status.value)
++    if (before.get('mode') != _MODE or result.get('data_kind') != _MODE or
++            before.get('game_id') != result.get('game_id') or
++            before.get('profile_version') != result.get('profile_version') or
++            before.get('draw_number') != result.get('draw_number') or
++            before.get('method_id') != result.get('method_id') or
++            before.get('variant_id') != result.get('variant_id') or
++            before.get('state') != 'STARTED'):
++        raise ValueError('result identity mismatch')
++    raw=json_bytes(result)
++    result_hash=digest(raw)
++    write_new(run_dir/'canonical_result.json',raw)
++    status.finish('SUCCESS',terminal_fields={
++        'canonical_result_sha256':result_hash,
++        'training_view_sha256':result['training_view_sha256'],
++    })
++    final=dict(status.value)
++    status_raw=json_bytes(final)
++    manifest={
++        'schema':'MULTIGAME_STANDALONE_MANIFEST_V1_REVIEW',
++        'game_id':final['game_id'],'profile_version':final['profile_version'],
++        'method_id':final['method_id'],'variant_id':final['variant_id'],
++        'draw_number':final['draw_number'],'draw_key':final['draw_key'],
++        'run_id':final['run_id'],'mode':_MODE,
++        'state':'PASS','orphan_suspected':False,'marker_write_failed':False,
++        'status_sha256':digest(status_raw),
++        'canonical_result_sha256':result_hash,
++        'training_view_sha256':final['training_view_sha256'],
++        'external_exit_code_verified':False,'self_reported_completion':True,
++    }
++    write_new(run_dir/'standalone_manifest.json',json_bytes(manifest))
++    return manifest
++
++
++def _load_canonical(path: Path) -> tuple[dict,bytes]:
++    if path.is_symlink() or not path.is_file():
++        raise ValueError('required regular JSON record missing')
++    raw=path.read_bytes()
++    obj=json.loads(raw)
++    if type(obj) is not dict or raw != json_bytes(obj):
++        raise ValueError('not a canonical JSON object')
++    return obj,raw
++
++
++def verify_synthetic_and_consume(run_dir: Path, *, run_id: str,
++                                 profile: GameProfile, method_id: str,
++                                 variant_id: str, target: int,
++                                 global_orphan_marker: Path) -> dict:
++    """Manifest/status checked BEFORE result opening, never bypass firewall."""
++    if os.path.lexists(global_orphan_marker):
++        raise ValueError('global unresolved-orphan safety stop')
++    if (not _RUN.fullmatch(run_id) or
++            run_dir.name != run_id or run_dir.parent.name != profile.game_id or
++            not profile.historical_development_target_allowed(target)):
++        raise ValueError('run identity or boundary mismatch')
++    manifest,_=_load_canonical(run_dir/'standalone_manifest.json')
++    if (manifest.get('schema')!='MULTIGAME_STANDALONE_MANIFEST_V1_REVIEW' or
++            manifest.get('state')!='PASS' or manifest.get('orphan_suspected') is not False or
++            manifest.get('marker_write_failed') is not False or
++            manifest.get('mode')!=_MODE or
++            manifest.get('external_exit_code_verified') is not False or
++            manifest.get('self_reported_completion') is not True):
++        raise ValueError('manifest not eligible')
++    expected={'game_id':profile.game_id,'profile_version':profile.version,
++              'draw_number':target,'draw_key':profile.draw_key(target),
++              'method_id':method_id,'variant_id':variant_id,'run_id':run_id}
++    if any(manifest.get(k)!=v for k,v in expected.items()):
++        raise ValueError('manifest identity mismatch')
++    for fld in ('canonical_result_sha256','training_view_sha256','status_sha256'):
++        if type(manifest.get(fld)) is not str or not _HEX.fullmatch(manifest[fld]):
++            raise ValueError('manifest digest invalid')
++    status,sraw=_load_canonical(run_dir/'status.json')
++    if digest(sraw)!=manifest['status_sha256'] or status.get('state')!='SUCCESS' or status.get('schema')!='ENGINEERING_POC_STATUS_V1':
++        raise ValueError('terminal status invalid')
++    if any(status.get(k)!=v for k,v in expected.items()):
++        raise ValueError('status identity mismatch')
++    if (status.get('mode')!=_MODE or status.get('case')!=method_id or
++            status.get('canonical_result_sha256')!=manifest['canonical_result_sha256'] or
++            status.get('training_view_sha256')!=manifest['training_view_sha256']):
++        raise ValueError('status/result digest mismatch')
++    if (type(status.get('pid')) is not int or status['pid']<=0 or
++            not isinstance(status.get('process_create_time_epoch'),(int,float)) or
++            not isinstance(status.get('sys_prefix'),str) or not status['sys_prefix'] or
++            not isinstance(status.get('elapsed_seconds'),(int,float)) or status['elapsed_seconds']<0 or
++            not isinstance(status.get('cpu_time_seconds'),(int,float)) or status['cpu_time_seconds']<0 or
++            status.get('peak_field') not in ('peak_wset','peak_rss','UNAVAILABLE')):
++        raise ValueError('incomplete status identity/metrics')
++    result,raw=_load_canonical(run_dir/'canonical_result.json')
++    if digest(raw)!=manifest['canonical_result_sha256']:
++        raise ValueError('result digest invalid')
++    for k,v in expected.items():
++        if k=='run_id':continue
++        if k in result and result[k]!=v:
++            raise ValueError('result identity mismatch')
++    if (result.get('schema')!='MULTIGAME_E1_FORECAST_V1_REVIEW' or
++            result.get('game_id')!=profile.game_id or
++            result.get('training_view_sha256')!=manifest['training_view_sha256'] or
++            result.get('data_kind')!=_MODE or
++            set(result.get('barrels',{}))!={b.barrel_id for b in profile.barrels}):
++        raise ValueError('wrong result identity or barrels')
++    return result
+--- a/tests/test_e2r_dispatch.py
++++ b/tests/test_e2r_dispatch.py
+@@ -263,5 +263,157 @@
+                 CD.method_folder(bad)
+ 
+ 
++def _patched_roots(data=None, methods=None):
++    """Point every call-time registry and flag lookup at temporary copies."""
++    import _common.contract_registry as R
++    stack = contextlib.ExitStack()
++    if data is not None:
++        stack.enter_context(mock.patch.object(R, 'DATA_ROOT', data))
++    if methods is not None:
++        stack.enter_context(mock.patch.object(CD, 'METHODS_ROOT', methods))
++    return stack
++
++
++class RosterIsNotAdmission(Base):
++    """E2RC2-C03: a SUPPORTED per-method roll-up never approves another, unsupported or stale variant."""
++
++    def add_variant(self, method, variant, status, game='POWERBALL'):
++        d = F.declaration(game, method=method, variant=variant)
++        C.install_declaration(self.data, d)
++        e = C.entry(d, status)
++        C.append_entry(self.data, e)
++        return d, e
++
++    def test_mixed_variants_of_a_new_method(self):
++        from _common.multigame_method_registry import method_status
++        from _common.multigame_result_registry import require_synthetic_variant, registered_scientific_binding
++        from _common.multigame_worker_launch_handshake import verify_synthetic_worker_request
++        from _common.multigame_standalone_contract import begin_synthetic
++        from coordinator_private.multigame_launch_spec import build_synthetic_launch_spec
++        from _common.game_profiles import POWERBALL
++        da, ea = self.add_variant('E_2', 'VARIANT_A_V1', 'SUPPORTED')
++        db, eb = self.add_variant('E_2', 'VARIANT_B_V1', 'FORMULA_OPEN')
++        with _patched_roots(self.data, self.methods):
++            self.assertEqual(method_status('POWERBALL', 'E_2'), 'SUPPORTED')            # the roll-up
++            self.assertTrue(CD.variant_released('POWERBALL', 'E_2', 'VARIANT_A_V1'))
++            self.assertFalse(CD.variant_released('POWERBALL', 'E_2', 'VARIANT_B_V1'))
++            with self.assertRaises(DispatchRefused) as cm:
++                dispatch_gate(C.request(db, eb, 1300, self.sha))
++            self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
++            with self.assertRaises(DispatchRefused) as cm:                              # A's pin cannot admit B
++                dispatch_gate(dict(C.request(db, ea, 1300, self.sha)))
++            self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
++            dispatch_gate(C.request(da, ea, 1300, self.sha))                          # A itself is admitted
++            for variant in ('VARIANT_A_V1', 'VARIANT_B_V1'):
++                with self.subTest(variant=variant):
++                    with self.assertRaises(ValueError):
++                        require_synthetic_variant('POWERBALL', 'E_2', variant)
++                    with self.assertRaises(ValueError):
++                        registered_scientific_binding(game_id='POWERBALL', method_id='E_2', variant_id=variant,
++                                                      mode='COORDINATED')
++                    with self.assertRaises(ValueError):
++                        verify_synthetic_worker_request(game_id='POWERBALL', draw_number=1300, method_id='E_2',
++                                                        variant_id=variant, run_id='mg-roster-check-0001',
++                                                        group_id='g1', worker_sequence=1,
++                                                        root=self.td / 'multigame_synthetic_runs')
++                    with self.assertRaises(ValueError):
++                        build_synthetic_launch_spec(group_id='g1', worker_sequence=1, run_id='mg-roster-check-0001',
++                                                    game_id='POWERBALL', draw_number=1300, method_id='E_2',
++                                                    variant_id=variant, synthetic_root=self.td / 'multigame_synthetic_runs')
++            with self.assertRaises(ValueError):
++                begin_synthetic(self.td / 'p2runs', run_id='mg-roster-check-0002', profile=POWERBALL, target=1300,
++                                method_id='E_2', variant_id='VARIANT_B_V1')
++            self.assertFalse((self.td / 'p2runs').exists())
++
++    def test_e1_extra_and_withdrawn_variants(self):
++        from _common.multigame_method_registry import method_status
++        from _common.multigame_standalone_contract import begin_synthetic
++        from _common.game_profiles import POWERBALL
++        reg = InstalledRegistry()
++        e1 = reg.active_entry('POWERBALL', *C.E1)
++        d1 = reg.declaration(e1['declaration_digest'])
++        dx, ex = self.add_variant('E_1', 'EXTRA_UNRELEASED_V1', 'FORMULA_OPEN')
++        dy, ey = self.add_variant('E_1', 'OTHER_RELEASED_V1', 'SUPPORTED')
++        with _patched_roots(self.data, self.methods):
++            self.assertEqual(method_status('POWERBALL', 'E_1'), 'SUPPORTED')
++            with self.assertRaises(DispatchRefused):
++                dispatch_gate(C.request(dx, ex, 1300, self.sha))
++            with self.assertRaises(ValueError):
++                begin_synthetic(self.td / 'p2runs', run_id='mg-roster-check-0003', profile=POWERBALL, target=1300,
++                                method_id='E_1', variant_id='EXTRA_UNRELEASED_V1')
++            CD.legacy_gate('POWERBALL', *C.E1, '1')                                      # still released
++        # FULL_HISTORY withdrawn (entry 2 FORMULA_OPEN) while another E_1 variant stays SUPPORTED.
++        C.append_entry(self.data, C.entry(d1, 'FORMULA_OPEN', seq=2, prev=e1))
++        with _patched_roots(self.data, self.methods):
++            self.assertEqual(method_status('POWERBALL', 'E_1'), 'SUPPORTED')            # roll-up still says so
++            with self.assertRaises(DispatchRefused) as cm:
++                CD.legacy_gate('POWERBALL', *C.E1, '1')
++            self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
++            with self.assertRaises(DispatchRefused) as cm:
++                dispatch_gate(C.request(d1, e1, 1300, self.sha))
++            self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
++            with self.assertRaises(ValueError):
++                begin_synthetic(self.td / 'p2runs', run_id='mg-roster-check-0004', profile=POWERBALL, target=1300,
++                                method_id='E_1', variant_id=C.E1[1])
++        self.assertFalse((self.td / 'p2runs').exists())
++
++
++class LegacyRunnerGate(Base):
++    """E2RC2-B01, owner decision D2-3 (29 October 2026): E_1's legacy standalone runner is gated too."""
++
++    def runner(self):
++        sys.path.insert(0, str(ROOT / 'src' / 'methods'))
++        import E_001_Historical_Appearance_Frequency as R1
++        return R1
++
++    def refused(self, args, expect, **patches):
++        r1 = self.runner()
++        err = io.StringIO()
++        with _patched_roots(**patches), contextlib.redirect_stderr(err), \
++                mock.patch('E_001.e1_training_view.load_permitted_u_view', side_effect=AssertionError('data read')), \
++                mock.patch('E_001.e1_standalone_contract.begin', side_effect=AssertionError('run started')):
++            with self.assertRaises(SystemExit) as cm:
++                r1.main(args)
++        self.assertEqual(cm.exception.code, 2)
++        self.assertIn(f'DISPATCH REFUSED: POWERBALL E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 1: {expect}: ', err.getvalue())
++
++    def withdraw(self):
++        reg = InstalledRegistry()
++        e1 = reg.active_entry('POWERBALL', *C.E1)
++        C.append_entry(self.data, C.entry(reg.declaration(e1['declaration_digest']), 'FORMULA_OPEN', seq=2, prev=e1))
++
++    def synthetic_args(self):
++        src = self.td / 'synthetic.csv'
++        src.write_text('not read\n')
++        return ['--mode', 'synthetic-contract', '--target', '1152', '--source', str(src),
++                '--synthetic-run-root', str(self.td / 'legacy_runs'), '--run-id', 'e1-gatecheck01']
++
++    def test_withdrawn_or_flagged_e1_is_refused_before_anything(self):
++        self.withdraw()
++        self.refused(self.synthetic_args(), 'NOT_SUPPORTED', data=self.data)
++        flagged = self.td / 'flagged_methods'
++        (flagged / 'E_001').mkdir(parents=True)
++        (flagged / 'E_001' / CD.FLAG_NAME).write_text('in development\n')
++        self.refused(self.synthetic_args(), 'IN_DEVELOPMENT_FLAG_PRESENT', methods=flagged)
++        self.assertFalse((self.td / 'legacy_runs').exists())
++
++    def test_real_development_mode_is_refused_too(self):
++        r1 = self.runner()
++        self.withdraw()
++        fake = self.td / 'fake_project'
++        args = ['--mode', 'historical-development', '--target', '1152', '--source',
++                str(fake / 'nowhere.csv'), '--run-id', 'e1-gatecheck02']
++        with mock.patch.object(r1, 'ENABLE_REAL_HISTORICAL_DEVELOPMENT', True), \
++                mock.patch.object(r1, '__file__', str(fake / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py')):
++            self.refused(args, 'NOT_SUPPORTED', data=self.data)
++        self.assertFalse((fake / 'transitory_data').exists())
++
++    def test_released_e1_still_runs_exactly_as_before(self):
++        """With the installed registry E_1 is released: the legacy goldens still reproduce (see
++        test_e1_standalone and E2R-T09); here, the gate itself admits it."""
++        entry, decl = CD.legacy_gate('POWERBALL', *C.E1, '1')
++        self.assertEqual(entry['registry_status'], 'SUPPORTED')
++        self.assertEqual(decl['method_id'], 'E_1')
++
+ if __name__ == '__main__':
+     unittest.main()
+--- a/tests/test_e2r_runner.py
++++ b/tests/test_e2r_runner.py
+@@ -52,17 +52,23 @@
+         return req, d, CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=ws,
+                                               run_root=self.td / 'runs', orphan_marker=self.marker, **kw)
+ 
+-    def probe(self, *, compute=C.probe_compute, verify=C.no_verify, run_id='mg-synthetic-probe-0001'):
+-        data = C.copy_data_root(self.td)
+-        d = C.release_declaration()
++    def probe(self, *, compute=C.probe_compute, verify=C.no_verify, run_id='mg-synthetic-probe-0001', decl=None,
++              product=None):
++        self.data = data = C.copy_data_root(self.td)
++        d = decl or C.release_declaration()
+         C.install_declaration(data, d)
+         e = C.entry(d, 'SUPPORTED')
+         C.append_entry(data, e)
+         ws, sha = C.workspace(self.td / 'pws', 'POWERBALL', 1300)
+         req = C.request(d, e, 1300, sha, run_id=run_id)
++        if product is not None:
++            req['product_kind'] = product
+         return d, CR.run_contract_method(req, compute=compute, verify=verify, repo_root=ws, run_root=self.td / 'runs',
+                                          orphan_marker=self.marker, data_root=data, methods_root=self.td / 'methods')
+ 
++    def consumed(self, folder, **kw):
++        return read_run(folder, orphan_marker=self.marker, **kw)
++
+     @staticmethod
+     def files(folder):
+         return sorted(p.name for p in folder.iterdir())
+@@ -92,9 +98,7 @@
+                         self.assertEqual(c1['barrels'][bid]['ranking'], b['ranking'])
+                         self.assertEqual(c1['barrels'][bid]['top']['labels'], b['top'])
+                         self.assertEqual(c1['barrels'][bid]['worst']['labels'], b['worst'])
+-                    self.assertEqual(read_run(res.folder, d, gates_pass=True)['forecast'], (True, 'CONSUMABLE'))
+-                    self.assertEqual(read_run(res.folder, d, gates_pass=False)['forecast'],
+-                                     (False, 'GROUP_OR_FIREWALL_GATE_FAILED'))
++                    self.assertEqual(self.consumed(res.folder)['forecast'], (True, 'CONSUMABLE'))
+ 
+     def test_e1_identity_check_refuses_a_different_record(self):
+         def bad_compute(task, view):
+@@ -150,7 +154,7 @@
+         folder = self.td / 'runs' / 'POWERBALL' / 'E_1' / C.E1[1] / 'mg-interrupted-0001'
+         self.assertEqual(self.files(folder), ['forecast.json', 'forecast_receipt.json'])
+         _e, d = e1_pins('POWERBALL')
+-        self.assertEqual(read_run(folder, d, gates_pass=True)['forecast'], (False, 'NO_TERMINAL_RECORD'))
++        self.assertEqual(self.consumed(folder)['forecast'], (False, 'NO_TERMINAL_RECORD'))
+ 
+     def test_failure_after_a_receipt_names_no_receipt(self):
+         """C1 and D1 are published, then the diagnostic publication fails: D2 says RUNTIME_FAILURE, names
+@@ -161,7 +165,7 @@
+         self.assertTrue(res.reason.startswith('PUBLICATION_FAILED: OSError'))
+         self.assertEqual(res.terminal['receipt_digests'], [])
+         self.assertEqual(self.files(res.folder), ['forecast.json', 'forecast_receipt.json', 'terminal.json'])
+-        self.assertEqual(read_run(res.folder, d, gates_pass=True)['forecast'], (False, 'TERMINAL_RUNTIME_FAILURE'))
++        self.assertEqual(self.consumed(res.folder, data_root=self.data)['forecast'], (False, 'TERMINAL_RUNTIME_FAILURE'))
+ 
+     def test_probe_with_diagnostic_publishes_both(self):
+         d, res = self.probe()
+@@ -169,8 +173,9 @@
+         self.assertEqual(self.files(res.folder), ['diagnostic.json', 'diagnostic_receipt.json', 'forecast.json',
+                                                   'forecast_receipt.json', 'terminal.json'])
+         self.assertEqual(len(res.terminal['receipt_digests']), 2)
+-        got = read_run(res.folder, d, gates_pass=True)
++        got = self.consumed(res.folder, data_root=self.data)
+         self.assertEqual(got, {'forecast': (True, 'CONSUMABLE'), 'diagnostic': (True, 'CONSUMABLE')})
++        self.assertEqual(CP.run_disposition(res.terminal), 'SUCCESS')
+ 
+     def test_method_failures_end_in_terminal_records(self):
+         def boom(task, view):
+@@ -277,5 +282,169 @@
+         self.assertTrue(folder.is_relative_to((ws / 'contract_runs').resolve()))
+ 
+ 
++class ConsumptionGates(Base):
++    """E2RC2-B02: read_run establishes every gate itself; nothing a caller passes can vouch for one."""
++
++    def test_no_caller_supplied_gate_or_declaration(self):
++        import inspect
++        params = set(inspect.signature(read_run).parameters)
++        self.assertEqual(params, {'folder', 'orphan_marker', 'data_root'})
++
++    def test_an_active_orphan_marker_blocks_consumption(self):
++        req, d, res = self.run_e1('POWERBALL', 1300)
++        self.assertEqual(self.consumed(res.folder)['forecast'], (True, 'CONSUMABLE'))
++        self.marker.write_text('{}')
++        self.assertEqual(self.consumed(res.folder)['forecast'], (False, 'UNRESOLVED_ORPHAN_MARKER'))
++        self.marker.unlink()
++        self.assertEqual(self.consumed(res.folder)['forecast'], (True, 'CONSUMABLE'))
++
++    def test_coordinated_runs_are_never_consumable_here(self):
++        """A run claiming the COORDINATED path has group and exit-receipt gates CODE-2 cannot evidence."""
++        ws, sha = C.workspace(self.td / 'ws', 'POWERBALL', 1300)
++        e, d = e1_pins('POWERBALL')
++        res = CR.run_contract_method(C.request(d, e, 1300, sha), compute=e_001.compute, verify=e_001.verify,
++                                     repo_root=ws, run_root=self.td / 'runs', orphan_marker=self.marker,
++                                     execution_path='COORDINATED')
++        self.assertEqual(res.outcome, 'SUCCESS')
++        self.assertEqual(self.consumed(res.folder)['forecast'][0], False)
++        self.assertTrue(self.consumed(res.folder)['forecast'][1].startswith('COORDINATED_EVIDENCE_NOT_AVAILABLE'))
++
++    def test_declaration_and_admitting_entry_come_from_the_installed_registry(self):
++        d, res = self.probe()
++        # Under the installed registry this probe's declaration and entry do not exist: not consumable.
++        self.assertEqual(self.consumed(res.folder)['forecast'], (False, 'DECLARATION_NOT_INSTALLED'))
++        self.assertEqual(self.consumed(res.folder, data_root=self.data)['forecast'], (True, 'CONSUMABLE'))
++        # A receipt naming an entry that is not in the chain is refused.
++        rc_path = res.folder / 'forecast_receipt.json'
++        rc = json.loads(rc_path.read_bytes())
++        moved = self.td / 'moved' / 'POWERBALL' / d['method_id'] / d['variant_id'] / rc['run_id']
++        moved.mkdir(parents=True)
++        for f in res.folder.iterdir():
++            (moved / f.name).write_bytes(f.read_bytes())
++        self.assertEqual(self.consumed(moved, data_root=self.data)['forecast'], (True, 'CONSUMABLE'))
++        rc['registry_entry_digest'] = 'e' * 64
++        (moved / 'forecast_receipt.json').unlink()
++        (moved / 'forecast_receipt.json').write_bytes(CP.canonical(rc))
++        self.assertEqual(self.consumed(moved, data_root=self.data)['forecast'],
++                         (False, 'ADMITTING_ENTRY_NOT_INSTALLED_OR_NOT_SUPPORTED'))
++
++    def test_folder_must_match_its_records(self):
++        req, d, res = self.run_e1('POWERBALL', 1300)
++        other = self.td / 'elsewhere' / 'OZLOTTO' / 'E_1' / C.E1[1] / req['run_id']
++        other.mkdir(parents=True)
++        for f in res.folder.iterdir():
++            (other / f.name).write_bytes(f.read_bytes())
++        self.assertEqual(self.consumed(other)['forecast'], (False, 'RUN_FOLDER_DOES_NOT_MATCH_RECORDS'))
++
++
++class NoTicketAndProducts(Base):
++    """E2RC2-C02 and E2RC2-O01."""
++
++    @staticmethod
++    def noprob_decl(diagnostic=True):
++        """Channels that declare rankings but no probability vector, so a NoRanking output is lawful."""
++        d = C.release_declaration()
++        d['channels'] = {'MAIN': F.channel(), 'POWERBALL': F.channel(rk='RANKING_ORDER_ONLY', st='NONE', ot='GROUPED')}
++        if not diagnostic:
++            d['diagnostic_schema_id'] = None
++        return d
++
++    def no_ticket(self, task, view):
++        from _common.contract_forecast import NoRanking
++        return MethodOutput({'MAIN': BarrelOutput(NoRanking('synthetic: no view supports a ranking')),
++                             'POWERBALL': BarrelOutput(NoRanking('synthetic: no view supports a ranking'))})
++
++    def test_valid_empty_target_is_diagnostic_only_not_a_failure(self):
++        d, res = self.probe(compute=self.no_ticket, decl=self.noprob_decl(diagnostic=False))
++        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
++        self.assertTrue(res.reason.startswith(CP.NO_TICKET_NO_DIAGNOSTIC + ':'))
++        self.assertEqual(self.files(res.folder), ['terminal.json'])
++        self.assertEqual(CP.run_disposition(res.terminal), 'DIAGNOSTIC_ONLY')
++
++    def test_no_ticket_with_a_declared_diagnostic_missing_is_invalid(self):
++        d, res = self.probe(compute=self.no_ticket, decl=self.noprob_decl())   # declares a diagnostic
++        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
++        self.assertTrue(res.reason.startswith('CONTRACT_REFUSED_OUTPUT'))
++        self.assertEqual(CP.run_disposition(res.terminal), 'FAILED')
++
++    def test_no_ticket_with_a_diagnostic_publishes_only_c2(self):
++        def diag_only(task, view):
++            out = C.probe_compute(task, view)
++            return MethodOutput(self.no_ticket(task, view).barrels, diagnostic=out.diagnostic)
++        d, res = self.probe(compute=diag_only, decl=self.noprob_decl())
++        self.assertEqual((res.outcome, res.reason), ('SUCCESS', 'PUBLISHED: DIAGNOSTIC_ONLY'))
++        self.assertEqual(self.files(res.folder), ['diagnostic.json', 'diagnostic_receipt.json', 'terminal.json'])
++        self.assertEqual(self.consumed(res.folder, data_root=self.data), {'diagnostic': (True, 'CONSUMABLE')})
++
++    def test_insufficient_history_is_published_but_has_no_ticket(self):
++        d = C.release_declaration()
++        d['minimum_history_draws'] = 5000
++        d, res = self.probe(decl=d)
++        self.assertEqual((res.outcome, res.reason), ('SUCCESS', 'PUBLISHED: INSUFFICIENT_HISTORY'))
++        c1 = json.loads((res.folder / 'forecast.json').read_bytes())
++        self.assertEqual(c1['record_status'], 'INSUFFICIENT_HISTORY')
++        for b in c1['barrels'].values():
++            self.assertNotEqual(b['top']['status'], 'PREDICTION_AVAILABLE')
++            self.assertNotEqual(b['worst']['status'], 'PREDICTION_AVAILABLE')
++
++    def test_diagnostic_only_product_through_the_library(self):
++        """E2R-R41/R62: a C2-only request works in the shared runner; only the command line lacks the option."""
++        d, res = self.probe(product='DIAGNOSTIC_OUTPUT')
++        self.assertEqual((res.outcome, res.reason), ('SUCCESS', 'PUBLISHED: DIAGNOSTIC_ONLY'))
++        self.assertEqual(self.files(res.folder), ['diagnostic.json', 'diagnostic_receipt.json', 'terminal.json'])
++
++
++class AtomicCreateOnly(Base):
++    """E2RC2-C01: publication never replaces a file, also under concurrent writers."""
++
++    def test_existing_target_is_refused_and_untouched(self):
++        target = self.td / 'f.json'
++        target.write_bytes(b'original')
++        with self.assertRaises(FileExistsError):
++            CP.create_only(target, b'new')
++        self.assertEqual(target.read_bytes(), b'original')
++        self.assertEqual(sorted(p.name for p in self.td.iterdir()), ['f.json'])
++
++    def test_dangling_symlink_target_is_refused(self):
++        target = self.td / 'g.json'
++        try:
++            target.symlink_to(self.td / 'nowhere')
++        except (OSError, NotImplementedError):
++            self.skipTest('platform disallows symlinks')
++        with self.assertRaises(FileExistsError):
++            CP.create_only(target, b'new')
++        self.assertFalse((self.td / 'nowhere').exists())
++
++    def test_concurrent_writers_exactly_one_wins(self):
++        import threading
++        target = self.td / 'h.json'
++        n = 12
++        barrier = threading.Barrier(n)
++        results = [None] * n
++
++        def writer(i):
++            barrier.wait()
++            try:
++                CP.create_only(target, f'writer {i}\n'.encode('ascii'))
++                results[i] = 'won'
++            except FileExistsError:
++                results[i] = 'refused'
++        threads = [threading.Thread(target=writer, args=(i,)) for i in range(n)]
++        for th in threads:
++            th.start()
++        for th in threads:
++            th.join()
++        self.assertEqual(results.count('won'), 1)
++        self.assertEqual(results.count('refused'), n - 1)
++        self.assertEqual(target.read_bytes(), f'writer {results.index("won")}\n'.encode('ascii'))
++        self.assertEqual(sorted(p.name for p in self.td.iterdir()), ['h.json'])   # every temporary removed
++
++    def test_no_hard_links_means_no_publication(self):
++        target = self.td / 'k.json'
++        with mock.patch.object(CP.os, 'link', side_effect=OSError('no hard links on this filesystem')):
++            with self.assertRaises(RuntimeError):
++                CP.create_only(target, b'x')
++        self.assertEqual(sorted(p.name for p in self.td.iterdir()), [])
++
+ if __name__ == '__main__':
+     unittest.main()
