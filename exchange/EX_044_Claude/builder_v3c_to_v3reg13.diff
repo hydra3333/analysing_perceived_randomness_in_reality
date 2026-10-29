@@ -1,0 +1,19 @@
+--- build_e2r_code2_install_v3c.py.bak	2026-10-29 18:12:39.814961990 +1030
++++ build_e2r_code2_install.py	2026-10-29 18:12:49.198283996 +1030
+@@ -1,6 +1,6 @@
+ """Build the E2R-CODE-2 installation package (Claude, 29 Oct 2026). New files plus one whole-file replacement.
+ 
+-Usage (v3, after EX_041): python3 -I build_e2r_code2_install.py DEV_TREE BASE_TREE OUTDIR [REGISTER]
++Usage (v3, after EX_041; the EX_043 review copy added for the final package): python3 -I build_e2r_code2_install.py DEV_TREE BASE_TREE OUTDIR [REGISTER]
+ DEV_TREE: the base checkout plus CODE-2's files; BASE_TREE: a checkout of BASE. Every file in DEV_TREE that
+ differs from BASE_TREE must be a new file under the CODE-2 paths, or the one allowed replacement.
+ REGISTER (optional): the register edition installed with CODE-2, when there is one.
+@@ -60,6 +60,8 @@
+     (HERE / 'Independent_ChatGPT_E2R_CODE2_R3_Design_and_Register_v12_Review_v0_1.md').read_bytes().replace(b'\r\n', b'\n'))
+ files['review/Independent_ChatGPT_E2R_CODE2_v2_HIGH_RECHECK_v0_1.md'] = (
+     (HERE / 'Independent_ChatGPT_E2R_CODE2_v2_HIGH_RECHECK_v0_1.md').read_bytes().replace(b'\r\n', b'\n'))
++files['review/Independent_ChatGPT_E2R_CODE2_v3_Focused_RECHECK_v0_1.md'] = (
++    (HERE / 'Independent_ChatGPT_E2R_CODE2_v3_Focused_RECHECK_v0_1.md').read_bytes().replace(b'\r\n', b'\n'))
+ files['review/E2R_CODE2_EX041_Corrections_v0_1.md'] = (HERE / 'E2R_CODE2_EX041_Corrections_v0_1.md').read_bytes()
+ files[f'review/{PKG}/code_v2_to_v3.diff'] = (HERE / 'code_v2_to_v3.diff').read_bytes()
+ if reg is not None:
