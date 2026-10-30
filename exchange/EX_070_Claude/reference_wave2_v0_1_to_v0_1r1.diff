@@ -1,0 +1,134 @@
+--- a/reference_wave2.py
++++ b/reference_wave2.py
+@@ -147,20 +147,94 @@
+     return {j: h[bin_of(g, edges)] for j, g in G.items()}
+ 
+ 
+-def e17_logslope(hist, low, high, K):
++def log_age_coefficients(hist, low, high):
++    """a_k = n E_k - e R_k (integers summing to 0). n * S_zy for the covariate z = ln k is sum_k a_k ln k."""
++    R, E = exposures_by_age(hist, low, high)
++    n, e = sum(R.values()), sum(E.values())
++    return {k: n * E.get(k, 0) - e * r for k, r in R.items()}
++
++
++def atanh_bounds(x, terms):
++    """For rational 0 < x < 1: the partial sum of atanh's series (a lower bound) and that sum plus a bound on
++    the tail (an upper bound)."""
++    s, xp, x2 = Fr(0), x, x * x
++    for i in range(terms):
++        s += xp / (2 * i + 1)
++        xp *= x2
++    return s, s + xp / ((2 * terms + 1) * (1 - x2))
++
++
++def ln_bounds(k, terms):
++    """Rational bounds on ln k for an integer k >= 1: ln k = a ln 2 + ln(k / 2^a) with k / 2^a in [1, 2), and
++    ln m = 2 atanh((m - 1)/(m + 1)); ln 2 = 2 atanh(1/3)."""
++    a = k.bit_length() - 1
++    l2lo, l2hi = atanh_bounds(Fr(1, 3), terms)
++    m = Fr(k, 2 ** a)
++    lo, hi = (Fr(0), Fr(0)) if m == 1 else atanh_bounds((m - 1) / (m + 1), terms)
++    return 2 * a * l2lo + 2 * lo, 2 * a * l2hi + 2 * hi
++
++
++def prime_exponents(a):
++    """sum_k a_k ln k = sum_p e_p ln p, with e_p = sum_k a_k v_p(k); zero exponents dropped."""
++    e = {}
++    for k, c in a.items():
++        n, d = k, 2
++        while d * d <= n:
++            while n % d == 0:
++                e[d] = e.get(d, 0) + c
++                n //= d
++            d += 1
++        if n > 1:
++            e[n] = e.get(n, 0) + c
++    return {p: x for p, x in e.items() if x}
++
++
++def certified_sign(coeffs, start=8):
++    """The exact sign of sum_i c_i ln q_i for integer c_i and integers q_i >= 1, by interval bounds whose number of
++    series terms doubles until the interval excludes 0. With coeffs = prime_exponents(a) this always ends: a
++    combination of logs of distinct primes with integer coefficients is 0 only if every coefficient is 0
++    (unique factorisation), and then coeffs is empty and the sign is 0."""
++    if not coeffs:
++        return 0
++    terms = start
++    while True:
++        lo = hi = Fr(0)
++        for q, c in coeffs.items():
++            l, h = ln_bounds(q, terms)
++            lo += c * (l if c > 0 else h)
++            hi += c * (h if c > 0 else l)
++        if lo > 0:
++            return 1
++        if hi < 0:
++            return -1
++        terms *= 2
++
++
++def e17_logage_sign(hist, low, high, K):
++    """Method A's predictor, exactly in its ranking: the sign of the profiled-intercept logistic slope on ln(age),
++    which is the sign of sum_k a_k ln k. Score: sigma * G_j (sigma in {+1, 0, -1})."""
++    sigma = certified_sign(prime_exponents(log_age_coefficients(hist, low, high)))
++    G = projected_age(len(hist), appearances(hist, low, high))
++    return {j: sigma * g for j, g in G.items()}, sigma
++
++
++def harmonic_slope_beta(hist, low, high):
++    """NOT a variant. v0.1's harmonic-age least-squares slope, kept only to exhibit W2-B01 (EX_069)."""
+     R, E = exposures_by_age(hist, low, high)
+     H = {k: harmonic(k) for k in R}
+     n = sum(R.values())
+     sz = sum(R[k] * H[k] for k in R)
+     sy = sum(E.values())
+-    szy = sum(E[k] * H[k] for k in E)
+-    szz = sum(R[k] * H[k] ** 2 for k in R)
+-    sxy = szy - sz * sy / n
+-    sxx = szz - sz * sz / n
+-    beta = sxy / sxx if sxx else Fr(0)
+-    zbar, ybar = sz / n, Fr(sy, n)
+-    G = projected_age(len(hist), appearances(hist, low, high))
+-    return {j: ybar + beta * (harmonic(g) - zbar) for j, g in G.items()}, beta
++    sxy = sum(E[k] * H[k] for k in E) - sz * sy / n
++    sxx = sum(R[k] * H[k] ** 2 for k in R) - sz * sz / n
++    return sxy / sxx if sxx else Fr(0)
++
++
++def witness_history():
++    """EX_069's W2-B01 witness: 104 invented draws, 7 of 35, from SHA-256 of '32|position|label'."""
++    import hashlib
++    return [sorted(sorted(range(1, 36), key=lambda j: hashlib.sha256(f'32|{t}|{j}'.encode('ascii')).digest())[:7])
++            for t in range(1, 105)]
+ 
+ 
+ # ---------------------------------------------------------------- E_19
+@@ -306,8 +380,10 @@
+     h, _ = binned_hazard(H, low, high, K, 10)
+     print('E_17 bins c=10 hazards by bin', [str(x) for x in h])
+     print('E_17 bins c=10 :', fmt(e17_bins(H, low, high, K, 10)))
+-    s, beta = e17_logslope(H, low, high, K)
+-    print('E_17 logslope beta', beta, float(beta), ':', fmt({j: float(v) for j, v in s.items()}))
++    a = log_age_coefficients(H, low, high)
++    s, sigma = e17_logage_sign(H, low, high, K)
++    print('E_17 log-age sign: a_k', dict(sorted(a.items())), 'prime exponents', prime_exponents(a), 'sigma', sigma,
++          ':', fmt(s))
+     s, phi, psi = e19(H, low, high, K, 2, c=10, d=2)
+     print('E_19 T=2 c=10 d=2 pooled phi', [str(x) for x in phi], 'psi label 1', [str(x) for x in psi[1]], ':', fmt(s))
+     s, w = e18(H, low, high, K, 2)
+@@ -324,7 +400,13 @@
+     assert e2(H, low, high, K, 'median')[1] == Fr(-1, 2) and e2(H, low, high, K, 'mean', 2)[1] == Fr(-3, 5)
+     assert binned_hazard(H, low, high, K, 10)[0] == [Fr(1, 16), Fr(1, 5), Fr(4, 25), Fr(5, 28), Fr(7, 16), Fr(1, 5),
+                                                      Fr(1, 5)]
+-    assert e17_logslope(H, low, high, K)[1] == Fr(362495, 1270704)
++    assert e17_logage_sign(H, low, high, K)[1] == 1
++    wh = witness_history()                                 # W2-B01: the two covariates' signs differ here
++    wa = log_age_coefficients(wh, 1, 35)
++    assert certified_sign(prime_exponents(wa)) == -1 == certified_sign({k: c for k, c in wa.items() if c})
++    assert harmonic_slope_beta(wh, 1, 35) > 0
++    for a_ in (wa, a):                                     # the second route: bounds on each ln k directly
++        assert certified_sign(prime_exponents(a_)) == certified_sign({k: c for k, c in a_.items() if c})
+     assert e19(H, low, high, K, 2, c=10, d=2)[1] == [Fr(448, 379), Fr(160, 199)]
+     assert w[1] == [Fr(3245348069700918737, 4925190825817479938), Fr(0, 1), Fr(0, 1), Fr(1679842756116561201, 4925190825817479938)]
+     assert w[9] == [0, 1, 0, 0] and s[9] == Fr(1, 5)

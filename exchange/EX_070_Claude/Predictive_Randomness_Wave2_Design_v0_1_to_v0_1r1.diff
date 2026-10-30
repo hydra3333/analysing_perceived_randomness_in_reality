@@ -1,0 +1,207 @@
+--- a/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1.md
++++ b/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r1.md
+@@ -1,7 +1,7 @@
+ # Predictive Randomness - wave 2: E_2, E_17 (Method A), E_19 and E_18 (gaps between appearances), design note v0.1
+ 
+ **Document:** the method-level specification of the first variants of E_2, E_17, E_18 and E_19 (R2 v0.5 sections 7.1 and 7.17; R1 v0.4), with one shared gaps helper, and the design of the package that adds them. E_17 takes the predictor of the owner's Method A (`GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md`, section 3).
+-**Version:** v0.1 DRAFT for the reviewer, 30 October 2026. Author: Claude. Ratifier: the project owner.
++**Version:** v0.1r1 DRAFT for the reviewer's focused RECHECK, 30 October 2026. It resolves EX_069's three findings: W2-B01 (E_17's slope variant is replaced by Method A's own log-age rule, decided exactly; owner decision W2-3), W2-C01 (E_18's fitting from completed gaps only, and its limits, are stated) and W2-O01 (the template finding is reworded as a byte-reproducibility rule; owner decision W2-7). Nothing else changes. Author: Claude. Ratifier: the project owner.
+ **Status:**
+ - **Authority:** it authorises nothing and changes no ratified rule.
+ - **No code yet:** the code follows only after this design passes.
+@@ -13,7 +13,7 @@
+ 
+ Four ways of using **how long it has been since each number was last drawn**:
+ - **E_2 (recurrence-interval alignment):** each number has its own typical gap between appearances (its average, or its middle value). E_2 favours the numbers for which the next draw would complete a gap of about that length: "its usual return is due now", not "the longest overdue".
+-- **E_17 (recurrence hazard; your Method A's predictor):** pooled over all numbers of a barrel, how likely is a number to come up, given how long it has been absent? If the answer is flat, there is no effect. If recently drawn numbers come up more often ("hot") or less often, E_17 learns that from the data, including its direction, and ranks accordingly.
++- **E_17 (recurrence hazard; your Method A's predictor):** pooled over all numbers of a barrel, how likely is a number to come up, given how long it has been absent? If the answer is flat, there is no effect. If recently drawn numbers come up more often ("hot") or less often, E_17 learns that from the data, including its direction, and ranks accordingly. One variant is exactly your Method A's rule, using its own log of the age.
+ - **E_19 (periodic hazard):** does that chance repeat with a short cycle? For example, if two draw machines alternated and one favoured a ball, that ball would tend to return after an even number of draws. E_19 looks for cycles of 2, 3 and 4 draws, number by number.
+ - **E_18 (mixture of recurrence modes):** each number's gaps are described as a mix of four fixed patterns: quick returns, fair returns, long absences, and evenly spaced returns. E_18 learns each number's mix and asks how likely its return is now.
+ 
+@@ -37,7 +37,10 @@
+ 
+ **3.2 Censoring (Method A's section 3.4 item 7).**
+ - **The stretch before a label's first appearance** has unknown age. It is excluded everywhere: no gap and no exposure.
+-- **The open stretch since the last appearance** is not a completed gap. It enters the hazard estimates only as at-risk exposures without an event (right-censored), and it is the predictor's input G_j.
++- **The open stretch since the last appearance** is not a completed gap. It is every method's input G_j. How it enters each estimate differs:
++  - **E_17 and E_19** estimate hazards from exposures (3.3), so the open stretch enters them as at-risk exposures without an event: proper right-censoring.
++  - **E_18** fits its mixture weights from completed gaps only (4.4), so the open stretch does not enter the fit; it only says where the fitted hazard is read.
++  - **E_2** estimates no hazard: its characteristic interval comes from completed gaps, and G_j is compared with it.
+ 
+ **3.3 Exposures (for E_17 and E_19).** Each (label, eligible draw) pair with a known age k is one exposure. It is at risk at age k, with an event if j is drawn at that draw. R_k and E_k are the pooled at-risk and event counts at age k over the barrel's labels; a window S restricts them to the newest S draws, with ages still measured from the true last appearance. Under fair draws every exposure's event chance is exactly r, whatever its age.
+ 
+@@ -69,18 +72,27 @@
+   h_b = (E_b + c r) / (R_b + c),  and  s_j = h_{bin(G_j)}
+ 
+   This is each bin's Beta posterior mean, shrunk towards the fair rate by c fair exposures.
+-- **Slope (Method A's A3 predictor):** a least-squares line in the covariate z = H_k, the k-th harmonic number 1 + 1/2 + ... + 1/k, fitted over all exposures:
++- **Log-age sign (Method A's A3 predictor, exactly in its ranking; owner decision W2-3):** with n = sum of R_k exposures and e = sum of E_k events, the integers a_k = n E_k - e R_k (they sum to 0) give
+ 
+-  beta = S_zy / S_zz,  and  s_j = ybar + beta (H_{G_j} - zbar)
++  n S_zy = sum_k a_k ln k,  sigma = sign(n S_zy) in {+1, 0, -1},  and  s_j = sigma G_j
+ 
+-  Here S_zy = sum of (z - zbar)(y - ybar) and S_zz = sum of (z - zbar)^2, over exposures; y is 1 for an event; zbar and ybar are the means. beta = 0 if S_zz = 0.
++  Here S_zy = sum over exposures of (z - zbar)(y - ybar), with the covariate z = ln(age), as Method A has it; y is 1 for an event.
+ 
+-**Why the slope form is Method A's predictor, exactly in its ranking.** Method A fits a logistic regression of appearance on log(gap), with mild shrinkage of the slope towards 0, and ranks by the fitted chance at the projected age. Three facts make the exact form above rank the same way:
++**Why this is Method A's predictor, exactly in its ranking.** Method A fits a logistic regression of appearance on log(gap), with mild shrinkage of the slope towards 0, and ranks by the fitted chance at the projected age. Three facts make sigma G_j rank the same way:
+ 1. **Only the sign of the slope matters for the ranking.** The fitted chance is a strictly increasing (positive slope) or strictly decreasing (negative slope) function of the age. So the ranking is "longest absent first" or "most recently drawn first", and equal ages tie.
+ 2. **Shrinkage towards 0 never changes that sign,** so a ridge penalty of any fixed size has no effect on the ranking. None is used.
+-3. **The logistic slope has the sign of S_zy.** With the intercept profiled out, the log-likelihood is concave in the slope, and its derivative at slope 0 is S_zy, the score statistic. So the maximum-likelihood slope has the sign of S_zy, which is the sign of beta.
++3. **The logistic slope has the sign of S_zy, for the same covariate.** With the intercept profiled out, the log-likelihood is concave in the slope, and its derivative at slope 0 is S_zy, the score statistic. So the maximum-likelihood slope has the sign of S_zy (or is infinite with that sign, if the data separate).
+ 
+-H_k replaces log k so that everything stays exact. H_k - ln k falls from 1 at k = 1 towards Euler's constant 0.577..., so the covariates differ by at most 0.43, mostly at age 1. The two signs can differ only when the trend is close to zero. When beta = 0, every label scores the same: one tie group, ordered by the contract's `TIE_SHA256_V1`. That is a fixed pseudo-random order with no lean towards low numbers, which is what Method A asked of its seeded tie-break, with no seed needed.
++**This needs Method A's own covariate.** v0.1 used the harmonic number H_k in place of ln k and claimed the same ranking. EX_069 (W2-B01) proved that false with an exact witness: another increasing transform of the age can reverse the sign. On fair invented draws, the two signs differed at 10 of 312 targets (section 8). The harmonic slope is withdrawn.
++
++**How the sign is decided exactly.** sum_k a_k ln k = sum_p e_p ln p over the primes p dividing the ages, with integers e_p = sum_k a_k v_p(k) (v_p(k) is the power of p in k).
++- **Bounds:** rational lower and upper bounds on each ln p come from ln p = a ln 2 + 2 atanh((m - 1)/(m + 1)), with p = 2^a m and 1 <= m < 2, and ln 2 = 2 atanh(1/3). The atanh series is summed for a fixed number of terms, and its tail is bounded by a geometric series.
++- **The loop:** the number of terms doubles until the bounds on sum_p e_p ln p exclude 0.
++- **It always ends.** The logs of distinct primes are linearly independent over the rationals (by unique factorisation), so sum_p e_p ln p is 0 only when every e_p is 0. The method then returns sigma = 0 without any bound.
++- **The cost:** at most 0.007 s per target in the probes; 8 terms sufficed at every probed target.
++- **The published scores** are the integers sigma G_j, exactly representable in float64. They are not Method A's fitted chances, which would need an iterative fit, but they rank identically.
++
++When sigma = 0, every label scores the same: one tie group, ordered by the contract's `TIE_SHA256_V1`. That is a fixed pseudo-random order with no lean towards low numbers, which is what Method A asked of its seeded tie-break, with no seed needed.
+ 
+ **4.3 E_19, periodic recurrence hazard.** With cycle length T, residue q = k mod T, E_17's binned hazard b(k) = h_{bin(k)} (prior c) as the trend, and shrinkage d:
+ - **Per label and residue:** O_{j,q}, the events at ages k = q (mod T), and X_{j,q}, the sum of b(k) over j's exposures at those ages (the events the trend alone predicts).
+@@ -105,7 +117,7 @@
+ - **REGULAR:** negative binomial of shape 2 with p = 2r, mean m (the fair average gap, but more evenly spaced): P(g) = (g - 1) p^2 (1 - p)^(g - 2) for g >= 2. Its survival is P(gap >= G) = (1 - p)^(G - 1) + (G - 1) p (1 - p)^(G - 2), and its hazard rises from 0 at age 1 towards 2r.
+ 
+ **Fitting each label:**
+-- **The data:** j's completed gaps (all, or those with both ends inside the newest S draws) are binned with section 3.4's bins.
++- **The data:** j's completed gaps (all, or those with both ends inside the newest S draws) are binned with section 3.4's bins. Only completed gaps are used (W2-C01): this is a descriptive fit of the gaps seen, not a censored-likelihood fit.
+ - **A prior:** c pseudo-gaps distributed exactly as the fair law, giving the shrunk bin shares q_b.
+ - **The mixing weights** w (non-negative, summing to 1) minimise sum_b (q_b - sum_c w_c P_c(b))^2 / P_FAIR(b): a minimum chi-square fit with the fair law's expected shares as denominators.
+ - **Exactly:** the objective is a strictly convex quadratic (the four components' bin vectors are linearly independent), so the optimum is the unique feasible solution with the smallest objective among the equality-constrained solutions on the 15 possible supports. Every support is tried, in fractions.
+@@ -117,6 +129,10 @@
+ - **The fair law is nested.** A label with no completed gap gets w = FAIR exactly and the score r.
+ - **Why minimum chi-square, not EM:** EM would need iterations in floating point (no longer exact or platform-identical) or in fractions (whose size explodes). The fixed library makes the fit a small exact quadratic programme.
+ - **Why four components:** with FAST, FAIR and REGULAR only, a label with rapid returns and long absences was not representable. SLOW was added, and the rapid-plus-absent probe then works (section 8).
++- **The limits of fitting completed gaps only** (W2-C01), stated and accepted for revision 1:
++  - **A current long absence does not enter the fit.** A number in the middle of a long absence has no completed gap for it yet, so its fit leans, slightly, towards its shorter past gaps.
++  - **Long gaps are under-represented.** A gap of length g fits within a span of S draws at only S - g of its possible positions. The windowed variants show this most: for POWERBALL with S = 104, a 40-draw gap carries about 0.6 of a 1-draw gap's chance of being counted. The effect is the same for every label, and it can move weight towards FAST and away from SLOW.
++  - **A censored-likelihood fit,** which would use the open stretch and remove both effects, would be a separate variant with its own design review.
+ 
+ ## 5. Outputs, per barrel (E2R-1 sections 5 and 7)
+ 
+@@ -150,7 +166,7 @@
+ | E_2 | `RECUR_MEAN_LAST8_V1` | mean of its last 8 gaps | 104 | its recent rhythm |
+ | E_17 | `HAZARD_BINS_C100_V1` | binned, c = 100, all exposures | 52 | the hazard's shape, whole history |
+ | E_17 | `HAZARD_BINS_W208_C100_V1` | binned, c = 100, newest 208 draws | 208 | the same over the last 4 years |
+-| E_17 | `HAZARD_LOGSLOPE_V1` | slope on H_k, all exposures | 52 | Method A's predictor |
++| E_17 | `HAZARD_LOGAGE_SIGN_V1` | sign of the log-age trend, all exposures | 52 | Method A's predictor, exactly in its ranking |
+ | E_19 | `PERIODIC_T2_V1` | T = 2, c = 100, d = 20 | 104 | a 2-draw cycle |
+ | E_19 | `PERIODIC_T3_V1` | T = 3, c = 100, d = 20 | 104 | a 3-draw cycle |
+ | E_19 | `PERIODIC_T4_V1` | T = 4, c = 100, d = 20 | 104 | a 4-draw cycle |
+@@ -167,7 +183,7 @@
+ 
+ ## 7. Relation to other methods (honest overlap; template section 8)
+ 
+-- **E_17 `HAZARD_LOGSLOPE_V1` ranks purely by projected age:** longest absent first if beta > 0, most recently drawn first if beta < 0, and labels of equal age tie (section 4.2). No installed method ranks exactly this way. E_9's fastest decay (lambda = 5/6) is the nearest, since its score is dominated by the latest appearance, but it also counts earlier ones.
++- **E_17 `HAZARD_LOGAGE_SIGN_V1` ranks purely by projected age:** longest absent first if sigma = +1, most recently drawn first if sigma = -1, and labels of equal age tie (section 4.2). No installed method ranks exactly this way. E_9's fastest decay (lambda = 5/6) is the nearest, since its score is dominated by the latest appearance, but it also counts earlier ones.
+ - **E_17's binned variants rank by the age bin only,** so all labels in one bin tie, and the order within a bin is the contract's tie order. That is the model's own statement: labels of similar age are equal.
+ - **E_19 is E_17's `HAZARD_BINS_C100_V1` times a periodic factor:** s_j / b(G_j) = psi_{j, G_j mod T} exactly. When no number shows a cycle, E_19's ranking tends towards E_17's binned one, refined by small factors. On fair invented draws, they shared 2.85 of their TOP 7 on average (chance: 1.40).
+ - **E_18 partly ranks by frequency:** a number with more appearances has shorter gaps, more FAST weight and a higher hazard. On fair invented draws, it shared 4.1 of its TOP 7 with E_1. It differs from E_1 where a number's gap pattern, not its count, sets its hazard.
+@@ -178,23 +194,26 @@
+   - clustering after a draw is caught by E_17;
+   - a single-ball 2-draw cycle is caught by E_19 T = 2.
+ 
+-The tests check each exact relation (E_17's slope ranking against a pure age ordering; E_19's ratio identity; E_18's nested fair law), comparing `ranked_groups`.
++The tests check each exact relation (E_17's log-age ranking against a pure age ordering; E_19's ratio identity; E_18's nested fair law), comparing `ranked_groups`.
+ 
+ ## 8. Feasibility and behaviour (author probes; invented draws only, never real data)
+ 
+ Invented draws are deterministic (SHA-256 orderings, no random-number generator). Planted effects use weighted draws without replacement with a fixed multiplier rule.
+ 
+-- **Speed,** one target at the full invented history, exact fractions: the slowest variants (E_18's) took about 0.2 s for Powerball MAIN (433 draws), 0.3 s for POWERBALL and 0.5 s for Oz Lotto MAIN (218 draws). All others took 0.02 s or less. The evidence file `ev_wave2_probes.txt` holds every probe's output.
+-- **E_17's slope on fair draws:**
+-  - over independent fair histories (W = 300), it was positive in 99 of 200 POWERBALL histories (mean -0.03 standard errors from 0) and 69 of 120 MAIN ones (mean +1.49 standard errors); no bias is evident;
+-  - its spread was about 0.0025 (POWERBALL) and 0.0053 (MAIN);
++- **Speed,** one target at the full invented history, exact fractions: the slowest variants (E_18's) took between 0.1 and 0.5 s per target across runs (Powerball 433 draws, Oz Lotto 218). All others took 0.02 s or less. The evidence file `ev_wave2_probes.txt` holds every probe's output.
++- **E_17's log-age sign on fair draws:**
++  - over independent fair histories (W = 300), it was +1 in 99 of 200 POWERBALL histories and 69 of 120 MAIN ones (the mean of S_zy at -0.46 and +1.25 standard errors from 0); no bias is evident;
+   - within one history, consecutive targets share their sign, because they share their draws.
++- **The exact sign rule** (W2-B01):
++  - on EX_069's witness history, it gives -1 (60-digit decimal value of n S_zy: -2798.499...), while v0.1's harmonic slope was positive;
++  - over 312 targets of three invented histories (all three barrels), it agreed with a 60-digit decimal computation, and with the second route of section 10, every time;
++  - the harmonic slope's sign differed from it at 10 of the 312.
+ - **E_18 on fair draws:** on average 40% to 46% of a MAIN number's weight sits off FAIR, by noise. FAST plus SLOW can imitate FAIR, so the split between components is weakly identified; the hazard is what is used.
+ - **Planted effects** (MAIN, 433 draws):
+ 
+   | Planted | Result |
+   |---|---|
+-  | Clustering: a number drawn last draw is 1.6x as likely | E_17's slope -0.036 (fair spread about 0.005); age-1 bin hazard 0.272 against about 0.19 |
++  | Clustering: a number drawn last draw is 1.6x as likely | E_17's log-age sign -1 (n S_zy about -5.75 million; over 40 fair histories of the same size its standard deviation was about 0.65 million); age-1 bin hazard 0.272 against about 0.19 |
+   | One ball 3x as likely on odd draws (a 2-draw cycle) | E_19 T = 2: that ball in the TOP 7 at 79 of 164 favoured targets, and 20 of 165 others. Without dividing out its level: 141 and 101 (mostly a frequency effect, so the level is divided out) |
+   | One ball 2.5x as likely at ages 1-2, 0.4x later | E_18 (`MIX4_ALL`): in the TOP 7 at 42 of 42 favoured targets, and 7 of 123 others; weights FAST 0.65, SLOW 0.35 |
+   | One ball 4x as likely at age 5, 0.25x otherwise | E_2 median: in the TOP 7 at 21 of 21 targets where its projected age is 5, and 27 of 308 others. E_2 mean: 0 of 21. E_18: 0 of 10 |
+@@ -214,9 +233,10 @@
+ 2. **E_17, binned, c = 10:**
+    - the bin hazards are 1/16, 1/5, 4/25, 5/28, 7/16, 1/5, 1/5 (no exposure reached the last two bins, so they stay at r);
+    - label 9 (age 6, bin 6-8) scores highest, at 7/16.
+-3. **E_17, slope:**
+-   - beta = 362495/1270704 = 0.2853 > 0, so the ranking is longest absent first;
+-   - label 9 is first, at 0.4025, then labels 2 and 10, tied (age 5).
++3. **E_17, log-age sign:**
++   - a_k for ages 1 to 7: -308, 44, -48, 8, -17, 254, 67 (n = 81 exposures, e = 14 events);
++   - the prime exponents are e_2 = 314, e_3 = 206, e_5 = -17 and e_7 = 67, and n S_zy = 546.98 > 0, so sigma = +1: longest absent first;
++   - the scores are the projected ages: label 9 first (6), then labels 2 and 10, tied (5).
+ 4. **E_19, T = 2, c = 10, d = 2:**
+    - the pooled phi is 448/379 (even ages) and 160/199 (odd ages);
+    - label 1, drawn every second draw, has psi = 1.0524 (even) and 0.5233 (odd). Its projected age is 1, so its score is 0.0327, the lowest.
+@@ -232,7 +252,7 @@
+ Each `verify()` recomputes by a differently written route and refuses any difference:
+ - **The helper's exposures:** a per-draw walk of ages, against the route built from completed gaps plus the open stretch.
+ - **E_2:** the mean by telescoping, (a_n - a_1)/(n - 1), against the sum of gaps; the median by counting, against sorting.
+-- **E_17:** bin sums from the per-age counts, against direct per-bin counting; S_zy and S_zz by the centred two-pass form, against the raw-sum form. The ranking is checked to be the pure age ordering in the direction of beta's sign.
++- **E_17:** bin sums from the per-age counts, against direct per-bin counting. The log-age sign by the prime-exponent route, against bounds on each ln k taken directly, without factorising; the two must agree. The ranking is checked to be the pure age ordering in the direction of sigma.
+ - **E_19:** the per-residue sums, against a per-exposure loop. The identity s_j / b(G_j) = psi is checked exactly.
+ - **E_18:**
+   - the weights by an optimality certificate rather than a re-run: they are non-negative and sum to 1, and the gradient conditions (KKT) hold exactly at them;
+@@ -245,7 +265,7 @@
+   - appearances, completed gaps, gaps inside a window and projected ages (sections 3.1 and 3.2);
+   - exposures by age, by both routes;
+   - the age bins;
+-  - harmonic numbers.
++  - the certified sign of an integer combination of logs (4.2), by both routes.
+ 
+   It is named by all four methods (the shared-helper case; decision W2-1). It does not touch wave 1's `occurrence_counts.py`.
+ - **`src/methods/E_002/`, `E_017/`, `E_018/` and `E_019/`,** each with `__init__`, `variants.py`, `contract.py` and `IN_DEVELOPMENT.txt`;
+@@ -267,17 +287,18 @@
+ 
+ ## 12. Findings for the template (the owner's keep-current rule) and draft 3
+ 
+-This design found four things for the template. Draft 3 would add them, in the code package, as "things that bite" and checklist items:
+-1. **No iterative floating-point fits in published values.** Logistic regression, EM and the like, in floating point, break the Windows/Linux byte identity (library functions such as `log`, `exp` and `pow` may round differently). Prefer an exact closed form, an exact finite search (E_18's 15 supports) or an exact certificate (E_3/E_4's alternation, E_18's KKT check).
++This design found five things for the template. Draft 3 would add them, in the code package, as "things that bite" and checklist items:
++1. **Published values must be byte-identical on Windows and Linux** (owner decision W2-7, after W2-O01). Exact arithmetic is preferred: an exact closed form, an exact finite search (E_18's 15 supports) or an exact certificate (E_3/E_4's alternation, E_18's KKT check, E_17's certified sign). An iterative floating-point fit is allowed only with objective proof of cross-platform byte identity and canonical output and tie rules. Library functions such as `log`, `exp` and `pow` may round differently between platforms.
+ 2. **The sign trap**, a sibling of the same-count trap. When a score is a monotone function of one shared per-label quantity, with a fitted direction, the ranking depends only on that direction's sign. Shrinkage or rescaling that cannot flip the sign cannot change the ranking, so it is not a variant setting.
+ 3. **Probe pooled methods with a planted single-label effect.** Pooling over labels dilutes an effect carried by one label (E_19's first form). Design the per-label route, or say why pooling is intended.
+ 4. **Divide out what another method already measures** before claiming a new effect (E_19 divides out the age trend and the label's level), and check with a planted effect that the claim survives.
++5. **Changing a covariate is not ranking-preserving** (W2-B01). Replacing a model's covariate by another increasing transform can reverse the fitted direction, and so the ranking. Claim that two forms are equivalent only with a proof, and search for a witness.
+ 
+ ## 13. Owner decisions
+ 
+ - **W2-1 (RECOMMENDED): one shared gaps helper** for the four methods, versioned with them (as W1-1 and D34-1).
+ - **W2-2 (RECOMMENDED): the 12 variants of section 6,** with every setting fixed now. This is a scientific choice; the owner may prefer other windows, priors or cycles.
+-- **W2-3 (RECOMMENDED): Method A becomes E_17 as in section 4.2, and its diagnostics come later.**
++- **W2-3 (OWNER-DECIDED 30 October 2026, after EX_069): Method A becomes E_17 with Method A's own log-age rule (section 4.2), and its diagnostics come later.** The owner chose the faithful rule (EX_069's choice A) over keeping v0.1's harmonic slope as a renamed surrogate, or both.
+   - **What E_17 keeps of Method A:**
+     - the predictor, ranking exactly as Method A's (section 4.2);
+     - the 52-draw burn-in;
+@@ -289,13 +310,11 @@
+     - Method A's "run the predictor on simulated fair histories" is R3's N1 fair-draw simulator at WF-1. For E_17's match counts N1 is exact even though E_17 adapts (R3 section 17.5A).
+     - Method A's diagnostics A1 to A5 (short-gap ratio, gap-distribution distance, hazard slope test, number variance, periodogram), with their 10,000-history simulated envelopes, become a separate "Method A diagnostics" package after WF-1. It needs the seed policy and the NIST root (reminder R-004), and a diagnostic report design.
+   - **Not pursued:** Method A's decisions 3 and 4 (drawn order, machine and ball-set metadata). They would need new data sources, which the project's rules allow only by a separate owner decision, and never by contacting a lottery website.
+-  - **The options:**
+-    - (b) build the diagnostics in wave 2, which means settling R-004 now;
+-    - (c) only the logistic slope, without the binned variants.
++  - **The options still open on the diagnostics' timing:** (b) build them in wave 2, which means settling R-004 now.
+ - **W2-4 (RECOMMENDED): all four score-only in revision 1** (section 5). The option: E_17's binned variants publish a renormalised marginal vector. That needs a stated renormalisation and a check that each value stays at most 1.
+ - **W2-5 (RECOMMENDED): E_18 as a fixed four-law library fitted by exact minimum chi-square** (section 4.4), not EM. The option: a fitted-component mixture as a later variant, which needs an exact or certified fitting route first.
+ - **W2-6 (RECOMMENDED): E_19 per label, with the trend and the label's level divided out, and cycles fixed at 2, 3 and 4,** never scanned. The option: pooled only (simpler, but probes show it misses a single-ball cycle).
+-- **W2-7 (RECOMMENDED): the template's draft 3** with the four findings of section 12, in the code package.
++- **W2-7 (OWNER-DECIDED 30 October 2026, after EX_069): the template's draft 3** with the five findings of section 12, in the code package, finding 1 in the byte-reproducibility wording of W2-O01.
+ - **W2-8 (RECOMMENDED): the NIST seed (R-004) is due at WF-1's design, not in wave 2.** N1 itself draws simulated fair outcomes, so WF-1 is the first part of the project that uses random numbers; the Method A diagnostics would follow.
+ 
+ ## 14. Not in scope
