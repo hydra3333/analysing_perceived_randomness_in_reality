@@ -1,0 +1,40 @@
+PASS control passes tests.test_occurrence_counts.Refusals
+PASS control passes tests.test_occurrence_counts.TwoRoutesAgree
+PASS control passes tests.test_occurrence_counts.WorkedExamples
+PASS control passes tests.test_wave1_frequency.AsInstalled
+PASS control passes tests.test_wave1_frequency.EachVariantsOwnRule
+PASS control passes tests.test_wave1_frequency.FolderGuards
+PASS control passes tests.test_wave1_frequency.InsufficientHistory
+PASS control passes tests.test_wave1_frequency.ThroughTheContract
+PASS control passes tests.test_wave1_frequency.Variants
+PASS control passes tests.test_wave1_frequency.WorkedExamples
+PASS mutation: window counts take one draw too many -> tests.test_occurrence_counts.WorkedExamples fails
+PASS mutation: the prefix-sum route off by one -> tests.test_occurrence_counts.TwoRoutesAgree fails
+PASS mutation: decay weights anchored at the oldest draw -> tests.test_occurrence_counts.WorkedExamples fails
+PASS mutation: the decay recursion weighs the new draw by lambda -> tests.test_occurrence_counts.WorkedExamples fails
+PASS mutation: periods counted from the oldest draw -> tests.test_occurrence_counts.WorkedExamples fails
+PASS mutation: the period-index route off by one -> tests.test_occurrence_counts.TwoRoutesAgree fails
+PASS mutation: a float lambda accepted -> tests.test_occurrence_counts.Refusals fails
+PASS mutation: a repeated label accepted -> tests.test_occurrence_counts.Refusals fails
+PASS mutation: E_7 prior not centred on the fair rate -> tests.test_wave1_frequency.WorkedExamples fails
+PASS mutation: E_7 window ignored -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_7 every variant computed as the first -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_8 every variant computed as the first -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_9 every variant computed as the first -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_10 every variant computed as the first -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_10 sign flipped -> tests.test_wave1_frequency.WorkedExamples fails
+PASS mutation: E_10 long window overlaps the short one -> tests.test_wave1_frequency.WorkedExamples fails
+PASS mutation: E_8 weight not clamped below at 0 -> tests.test_wave1_frequency.WorkedExamples fails
+PASS mutation: E_8 leans towards the oldest period -> tests.test_wave1_frequency.WorkedExamples fails
+PASS mutation: E_8 variance divided by n, not n - 1 (compute only) -> tests.test_wave1_frequency.EachVariantsOwnRule fails
+PASS mutation: E_9 verify() compares nothing -> tests.test_wave1_frequency.ThroughTheContract fails
+PASS mutation: E_7 verify() ignores the probability vector -> tests.test_wave1_frequency.ThroughTheContract fails
+PASS mutation: E_7 compute() accepts the drawn-order view -> tests.test_wave1_frequency.ThroughTheContract fails
+PASS mutation: E_10 minimum history ignored -> tests.test_wave1_frequency.InsufficientHistory fails
+PASS mutation: E_9 factor changed -> tests.test_wave1_frequency.Variants fails
+PASS mutation: E_7 full-history minimum changed -> tests.test_wave1_frequency.Variants fails
+PASS mutation: the method opens a file (it could read beyond its view) -> tests.test_wave1_frequency.FolderGuards fails
+PASS mutation: the runner does not list E_10 -> tests.test_wave1_frequency.AsInstalled fails
+PASS mutation: the E_9 IN_DEVELOPMENT flag deleted without a release -> tests.test_wave1_frequency.AsInstalled fails
+PASS mutation: an E_8 entry installed as SUPPORTED -> tests.test_wave1_frequency.AsInstalled fails
+RESULT PASS

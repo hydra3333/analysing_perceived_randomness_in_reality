@@ -1,6 +1,7 @@
 """E_<n> revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
 
-TEMPLATE (copy to src/methods/E_<nnn>/contract.py and drop the .txt). Taken from E_6's contract.py.
+TEMPLATE, draft 2 (copy to src/methods/E_<nnn>/contract.py and drop the .txt). Taken from E_6's contract.py,
+with wave 1's minimum-history case and separate probability checks.
 
 LEAVE ALONE what this module is for. The shared standalone runner has already checked the release rule
 and loaded the prefix-only view before compute() is called. compute() reads only the view and the frozen
@@ -19,6 +20,8 @@ METHOD_ID = 'E_<n>'                       # FILL IN: for example 'E_6'
 OBSERVATION_VIEW = 'UNORDERED_SET'        # FILL IN: the one view the specification declares
 PROBABILITIES = True                      # FILL IN: False if the declaration's probability_kind is NONE
 PROVENANCE = 'E_<n> r1: FILL IN one line on how the probabilities were computed'
+MINIMUM_HISTORY = 1                      # FILL IN: the declaration's minimum_history_draws; a dict
+                                         # {variant_id: draws} if the variants differ
 
 
 def _setting(task):
@@ -41,15 +44,25 @@ def _barrel_draws(view, barrel_id: str) -> list[list[int]]:
     return [[r['powerball']] for r in rows]
 
 
+def _minimum(task) -> int:
+    return MINIMUM_HISTORY[task.variant_id] if isinstance(MINIMUM_HISTORY, dict) else MINIMUM_HISTORY
+
+
 def _exact(task, view, algorithm):
+    """{barrel_id: {label: exact score}}, or None when the history is shorter than the declared minimum."""
     setting = _setting(task)
+    if len(view.simple_rows()) < _minimum(task):
+        return None                       # LEAVE ALONE: the contract then records INSUFFICIENT_HISTORY
     return {b.barrel_id: algorithm(_barrel_draws(view, b.barrel_id), b.low, b.high, b.selected, setting)
             for b in get_profile(task.game_id).barrels}
 
 
 def compute(task, view) -> MethodOutput:
+    exact_all = _exact(task, view, scores)
+    if exact_all is None:
+        return MethodOutput(barrels={})   # LEAVE ALONE: too little history
     out = {}
-    for bid, exact in _exact(task, view, scores).items():
+    for bid, exact in exact_all.items():
         floats = {j: float(x) for j, x in exact.items()}          # LEAVE ALONE: rounded once, correctly
         prob = ProbabilityVector([floats[j] for j in sorted(floats)], PROVENANCE) if PROBABILITIES else None
         out[bid] = BarrelOutput(ranking=ScoredRanking(floats), probability=prob)
@@ -63,11 +76,19 @@ def verify(task, view, forecast, diagnostic) -> None:
     if forecast is None:
         raise ValueError(f'{METHOD_ID} always has a forecast record')     # FILL IN if empty targets are legal
     exact = _exact(task, view, scores_by_second_algorithm)
+    if exact is None:
+        if forecast['record_status'] != 'INSUFFICIENT_HISTORY':
+            raise ValueError(f'{METHOD_ID} check: too few draws, but the record is not INSUFFICIENT_HISTORY')
+        return
     if set(forecast['barrels']) != set(exact):
         raise ValueError(f'{METHOD_ID} check: barrels differ')
     for bid, x in exact.items():
         b = next(d for d in get_profile(task.game_id).barrels if d.barrel_id == bid)
         want = [float(x[j]) for j in range(b.low, b.high + 1)]
         rec = forecast['barrels'][bid]
-        if rec['scores'] != want or (PROBABILITIES and rec['probability'].get('vector') != want):
+        if rec['scores'] != want:
             raise ValueError(f'{METHOD_ID} check: the record differs from the recomputation in barrel {bid}')
+        if PROBABILITIES and rec['probability'].get('vector') != want:     # test this check on its own
+            raise ValueError(f'{METHOD_ID} check: the probability vector differs in barrel {bid}')
+        if not PROBABILITIES and rec['probability'] != {'kind': 'NONE'}:
+            raise ValueError(f'{METHOD_ID} check: a score-only method published a probability in barrel {bid}')

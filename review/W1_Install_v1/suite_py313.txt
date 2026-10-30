@@ -1,0 +1,361 @@
+Python 3.13.17
+test_e1_only_modules_live_in_the_method_folder (test_e1_align.E1AlignGuards.test_e1_only_modules_live_in_the_method_folder) ... ok
+test_e1_orphan_marker_path_unchanged (test_e1_align.E1AlignGuards.test_e1_orphan_marker_path_unchanged) ... ok
+test_e1_symbols_are_the_shared_functions (test_e1_align.E1AlignGuards.test_e1_symbols_are_the_shared_functions) ... ok
+test_shared_code_imports_no_method_code (test_e1_align.E1AlignGuards.test_shared_code_imports_no_method_code) ... ok
+test_six_encoder_copies_agree (test_e1_align.E1AlignGuards.test_six_encoder_copies_agree) ... ok
+test_early_started_and_success_firewall (test_e1_standalone.E1LoaderAndRun.test_early_started_and_success_firewall) ... [E_001] STARTED run=e1-syntheticpass001 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_1] REFUSED before STARTED: FileExistsError: [Errno 17] File exists: '/tmp/e1_synthetic_contract_9_a4p7t3/runs/e1-syntheticpass001'
+ok
+test_failed_run_persists_without_pass (test_e1_standalone.E1LoaderAndRun.test_failed_run_persists_without_pass) ... [E_001] STARTED run=e1-invalidfixture01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] FAILED: ValueError: unexpected U-view CSV columns; drawn-order input forbidden
+ok
+test_golden_prefix_and_count (test_e1_standalone.E1LoaderAndRun.test_golden_prefix_and_count) ... ok
+test_interrupt_is_fail_closed (test_e1_standalone.E1LoaderAndRun.test_interrupt_is_fail_closed) ... [E_001] STARTED run=e1-interruptedstatus01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] FAILED: KeyboardInterrupt: 
+ok
+test_no_future_read_and_no_whole_source_hash_leakage (test_e1_standalone.E1LoaderAndRun.test_no_future_read_and_no_whole_source_hash_leakage) ... ok
+test_original_poc_status_helper_api (test_e1_standalone.E1LoaderAndRun.test_original_poc_status_helper_api) ... ok
+test_real_gate_off_refuses_before_source_read (test_e1_standalone.E1LoaderAndRun.test_real_gate_off_refuses_before_source_read)
+Guard independently of the runner's shipped gate value. ... usage: python3 -m unittest [-h]
+                           --mode {synthetic-contract,historical-development}
+                           --target TARGET --source SOURCE [--run-id RUN_ID]
+                           [--synthetic-run-root SYNTHETIC_RUN_ROOT]
+python3 -m unittest: error: REAL HISTORICAL DEVELOPMENT DISABLED pending loader/status review and owner gate
+ok
+test_real_gate_on_rejects_invalid_targets_and_sources (test_e1_standalone.E1LoaderAndRun.test_real_gate_on_rejects_invalid_targets_and_sources)
+Patch gate ON only in-test; never inspect the actual real dataset. ... [E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_001] STARTED run=e1-gatecheck-untrusted-directory mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_1] FAILED: ValueError: real source must be in the trusted source_data directory
+[E_001] STARTED run=e1-gatecheck-wrong-filename mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_1] FAILED: ValueError: real source must have approved unordered-file name
+[E_001] STARTED run=e1-gatecheck-drawn-order-header mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_1] FAILED: ValueError: unexpected U-view CSV columns; drawn-order input forbidden
+ok
+test_refuse_wrong_schemas_and_invalid_prefix (test_e1_standalone.E1LoaderAndRun.test_refuse_wrong_schemas_and_invalid_prefix) ... ok
+test_reject_fake_pass_failed_or_orphan (test_e1_standalone.E1LoaderAndRun.test_reject_fake_pass_failed_or_orphan) ... [E_001] STARTED run=e1-firewallchecks01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+ok
+test_reject_holdout_and_sealed_future (test_e1_standalone.E1LoaderAndRun.test_reject_holdout_and_sealed_future) ... ok
+test_runtime_schema_is_shared_with_poc_helper (test_e1_standalone.E1LoaderAndRun.test_runtime_schema_is_shared_with_poc_helper) ... [E_001] STARTED run=e1-sharedruntime01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+ok
+test_same_forecast_content_different_run_ids (test_e1_standalone.E1LoaderAndRun.test_same_forecast_content_different_run_ids) ... [E_001] STARTED run=e1-twoidentities01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_001] STARTED run=e1-twoidentities02 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+ok
+test_diagnostic_receipt (test_e2r_contract.ReceiptTimestamps.test_diagnostic_receipt) ... ok
+test_forecast_freeze_receipt (test_e2r_contract.ReceiptTimestamps.test_forecast_freeze_receipt) ... ok
+test_append_only_chain (test_e2r_contract.RegistryAndDeclarations.test_append_only_chain) ... ok
+test_archive_is_not_importable (test_e2r_contract.RegistryAndDeclarations.test_archive_is_not_importable)
+E2R-R56 static guard (no archive/ exists yet): nothing under src/ or tests/ imports from archive. ... ok
+test_installed_registry (test_e2r_contract.RegistryAndDeclarations.test_installed_registry) ... ok
+test_method_task_is_frozen_and_minimal (test_e2r_contract.RegistryAndDeclarations.test_method_task_is_frozen_and_minimal) ... ok
+test_registry_loads_from_a_crlf_checkout_and_still_refuses_noncanonical_data (test_e2r_contract.RegistryAndDeclarations.test_registry_loads_from_a_crlf_checkout_and_still_refuses_noncanonical_data) ... ok
+test_nested_declaration_mutation_changes_nothing_installed (test_e2r_contract.RegistryImmutability.test_nested_declaration_mutation_changes_nothing_installed) ... ok
+test_nested_entry_mutation_changes_nothing_installed (test_e2r_contract.RegistryImmutability.test_nested_entry_mutation_changes_nothing_installed) ... ok
+test_no_writable_state (test_e2r_contract.RegistryImmutability.test_no_writable_state) ... ok
+test_c01_legacy_e1_digest_unchanged (test_e2r_contract.ReviewerScopeConditions.test_c01_legacy_e1_digest_unchanged)
+For legacy E_1 the contract's real-namespace digest is exactly the reader's frozen legacy digest. ... ok
+test_c01_view_digest_namespaces (test_e2r_contract.ReviewerScopeConditions.test_c01_view_digest_namespaces) ... ok
+test_c03_record_product_kinds_fixed_by_the_contract (test_e2r_contract.ReviewerScopeConditions.test_c03_record_product_kinds_fixed_by_the_contract) ... ok
+test_o01_placeholder_lifecycle (test_e2r_contract.ReviewerScopeConditions.test_o01_placeholder_lifecycle)
+A real variant gets its own chain; the NOT_YET_SPECIFIED placeholder is never promoted or edited. ... ok
+test_content_digest_is_checked (test_e2r_contract.T01ShapeAndNumericContracts.test_content_digest_is_checked) ... ok
+test_defects_hidden_behind_restamped_digests_still_fail (test_e2r_contract.T01ShapeAndNumericContracts.test_defects_hidden_behind_restamped_digests_still_fail)
+Each defect is planted and every digest re-stamped, so only the rule itself can catch it. ... ok
+test_encoding_rules (test_e2r_contract.T01ShapeAndNumericContracts.test_encoding_rules) ... ok
+test_order_only_strict_and_grouped (test_e2r_contract.T01ShapeAndNumericContracts.test_order_only_strict_and_grouped) ... ok
+test_planted_defects_fail (test_e2r_contract.T01ShapeAndNumericContracts.test_planted_defects_fail) ... ok
+test_valid_record_passes (test_e2r_contract.T01ShapeAndNumericContracts.test_valid_record_passes) ... ok
+test_barrel_sizes_only_from_profile (test_e2r_contract.T02ProfileSeparation.test_barrel_sizes_only_from_profile) ... ok
+test_cross_game_refused (test_e2r_contract.T02ProfileSeparation.test_cross_game_refused) ... ok
+test_probability_vector_lengths (test_e2r_contract.T02ProfileSeparation.test_probability_vector_lengths) ... ok
+test_inverse_never_manufactured (test_e2r_contract.T04TieAndWorst.test_inverse_never_manufactured) ... ok
+test_map_set_with_inverse_from_marginals_may_overlap (test_e2r_contract.T04TieAndWorst.test_map_set_with_inverse_from_marginals_may_overlap) ... ok
+test_scored_and_grouped_tie_order (test_e2r_contract.T04TieAndWorst.test_scored_and_grouped_tie_order) ... ok
+test_set_only_and_no_ranking (test_e2r_contract.T04TieAndWorst.test_set_only_and_no_ranking) ... ok
+test_runtime_oz_carries_no_powerball_or_supplementary (test_e2r_contract.T05NoPowerballOrSupplementariesInOz.test_runtime_oz_carries_no_powerball_or_supplementary) ... ok
+test_static_no_supplementary_columns (test_e2r_contract.T05NoPowerballOrSupplementariesInOz.test_static_no_supplementary_columns) ... ok
+test_benchmarks_and_is_produce_nothing (test_e2r_contract.T06ModeFirewall.test_benchmarks_and_is_produce_nothing) ... ok
+test_producible_rows_accept_and_reserved_rows_refuse (test_e2r_contract.T06ModeFirewall.test_producible_rows_accept_and_reserved_rows_refuse) ... ok
+test_real_development_row_accepted_on_synthetic_bytes (test_e2r_contract.T06ModeFirewall.test_real_development_row_accepted_on_synthetic_bytes)
+The REAL_DEVELOPMENT row is exercised on an invented master: no real data is read. ... ok
+test_records_with_wrong_pairings_refused (test_e2r_contract.T06ModeFirewall.test_records_with_wrong_pairings_refused) ... ok
+test_insufficient_history_records_no_numbers (test_e2r_contract.T07NotApplicable.test_insufficient_history_records_no_numbers) ... ok
+test_rows (test_e2r_contract.T07NotApplicable.test_rows) ... ok
+test_installed_declarations_and_supported_entries (test_e2r_contract.T08ExtensionPoints.test_installed_declarations_and_supported_entries) ... ok
+test_static_no_reserved_engines (test_e2r_contract.T08ExtensionPoints.test_static_no_reserved_engines) ... ok
+test_stochastic_placeholder_and_supported_refusal (test_e2r_contract.T08ExtensionPoints.test_stochastic_placeholder_and_supported_refusal) ... ok
+test_e1_method_forecast_v1_equals_legacy (test_e2r_contract.T09VersioningAndMigration.test_e1_method_forecast_v1_equals_legacy) ... ok
+test_legacy_goldens_reproduce (test_e2r_contract.T09VersioningAndMigration.test_legacy_goldens_reproduce) ... ok
+test_legacy_schemas_refused_for_writing (test_e2r_contract.T09VersioningAndMigration.test_legacy_schemas_refused_for_writing) ... ok
+test_no_data_path_and_no_predictor_import (test_e2r_contract.T11PostOutcomeRecord.test_no_data_path_and_no_predictor_import) ... ok
+test_type_validates_and_keys_never_collide (test_e2r_contract.T11PostOutcomeRecord.test_type_validates_and_keys_never_collide) ... ok
+test_two_runs_and_worker_counts (test_e2r_contract.T12Determinism.test_two_runs_and_worker_counts) ... ok
+test_changed_helper_needs_successor_revisions (test_e2r_contract.T13RevisionRollover.test_changed_helper_needs_successor_revisions) ... ok
+test_no_path_hash_or_commit_in_declarations (test_e2r_contract.T13RevisionRollover.test_no_path_hash_or_commit_in_declarations) ... ok
+test_structural_exception_only_for_its_own_package (test_e2r_contract.T13RevisionRollover.test_structural_exception_only_for_its_own_package) ... ok
+test_consumption_rules_and_files_untouched (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_consumption_rules_and_files_untouched) ... ok
+test_receipt_validates_and_has_no_scoring_field (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_receipt_validates_and_has_no_scoring_field) ... ok
+test_terminal_record_rules (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_terminal_record_rules) ... ok
+test_all_publications_retained_and_none_chosen_after_outcome (test_e2r_contract.T17MultiplePublications.test_all_publications_retained_and_none_chosen_after_outcome) ... ok
+test_a_new_root_is_a_new_declaration (test_e2r_contract.T18SeedPolicyStages.test_a_new_root_is_a_new_declaration) ... ok
+test_no_policy_is_approved_and_nothing_falls_back (test_e2r_contract.T18SeedPolicyStages.test_no_policy_is_approved_and_nothing_falls_back) ... ok
+test_real_development_mode_is_refused_too (test_e2r_dispatch.LegacyRunnerGate.test_real_development_mode_is_refused_too) ... ok
+test_released_e1_still_runs_exactly_as_before (test_e2r_dispatch.LegacyRunnerGate.test_released_e1_still_runs_exactly_as_before)
+With the installed registry E_1 is released: the legacy goldens still reproduce (see ... ok
+test_withdrawn_or_flagged_e1_is_refused_before_anything (test_e2r_dispatch.LegacyRunnerGate.test_withdrawn_or_flagged_e1_is_refused_before_anything) ... ok
+test_flag_makes_the_roster_open (test_e2r_dispatch.Package2RosterFromRegistry.test_flag_makes_the_roster_open) ... ok
+test_same_statuses_as_the_old_fixed_roster (test_e2r_dispatch.Package2RosterFromRegistry.test_same_statuses_as_the_old_fixed_roster) ... ok
+test_e1_extra_and_withdrawn_variants (test_e2r_dispatch.RosterIsNotAdmission.test_e1_extra_and_withdrawn_variants) ... ok
+test_mixed_variants_of_a_new_method (test_e2r_dispatch.RosterIsNotAdmission.test_mixed_variants_of_a_new_method) ... ok
+test_method_folder_locator (test_e2r_dispatch.StaticCode2Guards.test_method_folder_locator) ... ok
+test_switch_closed_and_no_flag_in_the_tree (test_e2r_dispatch.StaticCode2Guards.test_switch_closed_and_no_flag_in_the_tree) ... ok
+test_wrappers_read_no_data_and_name_no_receipts (test_e2r_dispatch.StaticCode2Guards.test_wrappers_read_no_data_and_name_no_receipts) ... ok
+test_flag_removal_without_entry_never_releases (test_e2r_dispatch.T14ReleaseTransition.test_flag_removal_without_entry_never_releases) ... ok
+test_release_transition (test_e2r_dispatch.T14ReleaseTransition.test_release_transition) ... ok
+test_gate_fetches_the_registry_again_every_time (test_e2r_dispatch.T14TruthTable.test_gate_fetches_the_registry_again_every_time)
+Reviewer's EX_036 watchpoint: a caller's copy is never trusted or reused. ... ok
+test_installed_e1_admitted_and_e2_to_e62_refused (test_e2r_dispatch.T14TruthTable.test_installed_e1_admitted_and_e2_to_e62_refused) ... ok
+test_missing_stale_and_mismatched_entries (test_e2r_dispatch.T14TruthTable.test_missing_stale_and_mismatched_entries) ... ok
+test_refusal_reads_no_data_and_creates_nothing (test_e2r_dispatch.T14TruthTable.test_refusal_reads_no_data_and_creates_nothing) ... ok
+test_standalone_launcher_prints_the_refusal (test_e2r_dispatch.T14TruthTable.test_standalone_launcher_prints_the_refusal)
+Method_Contract_Runner.py itself: a refused run exits 2 and prints the gate's text only. ... ok
+test_status_times_flag (test_e2r_dispatch.T14TruthTable.test_status_times_flag) ... ok
+test_records_are_suffix_invariant_and_carry_no_orchestration_identity (test_e2r_prefix.T03AndT10PrefixOnlyRecords.test_records_are_suffix_invariant_and_carry_no_orchestration_identity) ... ok
+test_concurrent_writers_exactly_one_wins (test_e2r_runner.AtomicCreateOnly.test_concurrent_writers_exactly_one_wins) ... ok
+test_dangling_symlink_target_is_refused (test_e2r_runner.AtomicCreateOnly.test_dangling_symlink_target_is_refused) ... ok
+test_existing_target_is_refused_and_untouched (test_e2r_runner.AtomicCreateOnly.test_existing_target_is_refused_and_untouched) ... ok
+test_no_hard_links_means_no_publication (test_e2r_runner.AtomicCreateOnly.test_no_hard_links_means_no_publication) ... ok
+test_an_active_orphan_marker_blocks_consumption (test_e2r_runner.ConsumptionGates.test_an_active_orphan_marker_blocks_consumption) ... ok
+test_coordinated_runs_are_never_consumable_here (test_e2r_runner.ConsumptionGates.test_coordinated_runs_are_never_consumable_here)
+A folder whose records claim the COORDINATED path (CODE-2 can no longer publish one; this one is ... ok
+test_declaration_and_admitting_entry_come_from_the_installed_registry (test_e2r_runner.ConsumptionGates.test_declaration_and_admitting_entry_come_from_the_installed_registry) ... ok
+test_folder_must_match_its_records (test_e2r_runner.ConsumptionGates.test_folder_must_match_its_records) ... ok
+test_no_caller_supplied_gate_or_declaration (test_e2r_runner.ConsumptionGates.test_no_caller_supplied_gate_or_declaration) ... ok
+test_e1_identity_check_refuses_a_different_record (test_e2r_runner.E1ThroughTheContract.test_e1_identity_check_refuses_a_different_record) ... ok
+test_e1_runs_and_equals_e1_own_result (test_e2r_runner.E1ThroughTheContract.test_e1_runs_and_equals_e1_own_result) ... ok
+test_e1_wrapper_refuses_non_synthetic_data (test_e2r_runner.E1ThroughTheContract.test_e1_wrapper_refuses_non_synthetic_data)
+E_1's own function refuses anything but SYNTHETIC_CONTRACT_TEST data (unchanged E_1 code). ... ok
+test_a_genuine_marker_always_refuses (test_e2r_runner.NoCallerChosenAuthority.test_a_genuine_marker_always_refuses) ... ok
+test_data_source_is_fixed (test_e2r_runner.NoCallerChosenAuthority.test_data_source_is_fixed)
+A synthetic run cannot read the project, and a real run (if the switch were on) only the project. ... ok
+test_every_run_is_standalone (test_e2r_runner.NoCallerChosenAuthority.test_every_run_is_standalone) ... ok
+test_locator_arguments_are_refused (test_e2r_runner.NoCallerChosenAuthority.test_locator_arguments_are_refused) ... ok
+test_public_signatures (test_e2r_runner.NoCallerChosenAuthority.test_public_signatures) ... ok
+test_diagnostic_only_product_through_the_library (test_e2r_runner.NoTicketAndProducts.test_diagnostic_only_product_through_the_library)
+E2R-R41/R62: a C2-only request works in the shared runner; only the command line lacks the option. ... ok
+test_insufficient_history_is_published_but_has_no_ticket (test_e2r_runner.NoTicketAndProducts.test_insufficient_history_is_published_but_has_no_ticket) ... ok
+test_no_ticket_with_a_declared_diagnostic_missing_is_invalid (test_e2r_runner.NoTicketAndProducts.test_no_ticket_with_a_declared_diagnostic_missing_is_invalid) ... ok
+test_no_ticket_with_a_diagnostic_publishes_only_c2 (test_e2r_runner.NoTicketAndProducts.test_no_ticket_with_a_diagnostic_publishes_only_c2) ... ok
+test_valid_empty_target_is_diagnostic_only_not_a_failure (test_e2r_runner.NoTicketAndProducts.test_valid_empty_target_is_diagnostic_only_not_a_failure) ... ok
+test_orphan_marker_refuses_first (test_e2r_runner.RefusalsBeforeAnything.test_orphan_marker_refuses_first) ... ok
+test_real_development_is_switched_off (test_e2r_runner.RefusalsBeforeAnything.test_real_development_is_switched_off) ... ok
+test_synthetic_workspace_must_stay_out_of_the_project (test_e2r_runner.RefusalsBeforeAnything.test_synthetic_workspace_must_stay_out_of_the_project) ... ok
+test_forecast_bytes_ignore_the_suffix_and_the_receipt_does_not (test_e2r_runner.RunLevelPrefixAndHygiene.test_forecast_bytes_ignore_the_suffix_and_the_receipt_does_not)
+Run-level E2R-T03: rewriting draws at and after the target changes the master and the receipt's ... ok
+test_launcher_end_to_end (test_e2r_runner.RunLevelPrefixAndHygiene.test_launcher_end_to_end)
+Method_Contract_Runner.py: pins, then a synthetic run, exit code 0, nothing printed but status. ... ok
+test_no_run_identity_or_path_in_the_forecast (test_e2r_runner.RunLevelPrefixAndHygiene.test_no_run_identity_or_path_in_the_forecast) ... ok
+test_bad_pin_is_a_data_admission_failure (test_e2r_runner.T16RunLevel.test_bad_pin_is_a_data_admission_failure) ... ok
+test_failure_after_a_receipt_names_no_receipt (test_e2r_runner.T16RunLevel.test_failure_after_a_receipt_names_no_receipt)
+C1 and D1 are published, then the diagnostic publication fails: D2 says RUNTIME_FAILURE, names ... ok
+test_interrupted_after_the_receipt_is_not_consumable (test_e2r_runner.T16RunLevel.test_interrupted_after_the_receipt_is_not_consumable)
+The run stops after D1 and before D2 (no terminal record can be written): files stay, nothing is ... ok
+test_method_failures_end_in_terminal_records (test_e2r_runner.T16RunLevel.test_method_failures_end_in_terminal_records) ... ok
+test_probe_with_diagnostic_publishes_both (test_e2r_runner.T16RunLevel.test_probe_with_diagnostic_publishes_both) ... ok
+test_publication_order_and_create_only (test_e2r_runner.T16RunLevel.test_publication_order_and_create_only) ... ok
+test_declarations_and_entries_match_the_specification (test_e3_e4_polynomial.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_request_is_refused_and_the_roster_says_formula_open (test_e3_e4_polynomial.AsInstalled.test_every_request_is_refused_and_the_roster_says_formula_open) ... ok
+test_flags_present_and_runner_lists_both (test_e3_e4_polynomial.AsInstalled.test_flags_present_and_runner_lists_both) ... ok
+test_least_squares_and_interpolation_polynomials_sum_to_the_constant_k (test_e3_e4_polynomial.CrossLabelInvariant.test_least_squares_and_interpolation_polynomials_sum_to_the_constant_k) ... ok
+test_scores_are_the_specified_coefficients (test_e3_e4_polynomial.EachVariantsOwnFit.test_scores_are_the_specified_coefficients) ... ok
+test_method_folders_are_exactly_these_files_and_read_nothing (test_e3_e4_polynomial.FolderGuards.test_method_folders_are_exactly_these_files_and_read_nothing) ... ok
+test_fewer_draws_than_the_window_gives_an_insufficient_history_record (test_e3_e4_polynomial.InsufficientHistory.test_fewer_draws_than_the_window_gives_an_insufficient_history_record) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_e3_e4_polynomial.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_e3_e4_polynomial.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_every_variant_runs_and_is_consumable (test_e3_e4_polynomial.ThroughTheContract.test_every_variant_runs_and_is_consumable) ... ok
+test_verify_refuses_a_record_that_differs (test_e3_e4_polynomial.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_interpolation_nodes_are_the_chebyshev_formula (test_e3_e4_polynomial.Variants.test_interpolation_nodes_are_the_chebyshev_formula) ... ok
+test_tables_are_exactly_the_specification_and_identical (test_e3_e4_polynomial.Variants.test_tables_are_exactly_the_specification_and_identical) ... ok
+test_declarations_and_entries_match_the_specification (test_e6_beta_bernoulli.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_e6_request_is_refused_before_any_data_is_read (test_e6_beta_bernoulli.AsInstalled.test_every_e6_request_is_refused_before_any_data_is_read) ... ok
+test_supported_but_flagged_is_still_refused (test_e6_beta_bernoulli.AsInstalled.test_supported_but_flagged_is_still_refused) ... ok
+test_the_method_folder_is_exactly_these_files (test_e6_beta_bernoulli.AsInstalled.test_the_method_folder_is_exactly_these_files) ... ok
+test_the_runner_lists_e6 (test_e6_beta_bernoulli.AsInstalled.test_the_runner_lists_e6) ... ok
+test_contract_record_groups_equal_e1_record_groups (test_e6_beta_bernoulli.E1Match.test_contract_record_groups_equal_e1_record_groups)
+Against E_1's own contract record: same equal-count groups in the same order (ties may differ). ... ok
+test_full_memory_ranks_like_e1_counts (test_e6_beta_bernoulli.E1Match.test_full_memory_ranks_like_e1_counts) ... ok
+test_compute_uses_each_variant_own_factor (test_e6_beta_bernoulli.ExactNormalisation.test_compute_uses_each_variant_own_factor)
+compute() equals the specification formula for each variant's lambda, computed here directly ... ok
+test_exact_sums_and_float_tolerance (test_e6_beta_bernoulli.ExactNormalisation.test_exact_sums_and_float_tolerance) ... ok
+test_newest_draw_has_weight_one (test_e6_beta_bernoulli.ExactNormalisation.test_newest_draw_has_weight_one) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_e6_beta_bernoulli.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_the_suffix_variants_really_differ (test_e6_beta_bernoulli.NoPeeking.test_the_suffix_variants_really_differ) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_e6_beta_bernoulli.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_every_variant_runs_publishes_and_is_consumable (test_e6_beta_bernoulli.ThroughTheContract.test_every_variant_runs_publishes_and_is_consumable) ... ok
+test_verify_refuses_a_record_that_differs (test_e6_beta_bernoulli.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_bad_inputs_are_refused (test_e6_beta_bernoulli.WorkedExample.test_bad_inputs_are_refused) ... ok
+test_decay_74_75 (test_e6_beta_bernoulli.WorkedExample.test_decay_74_75) ... ok
+test_full_memory (test_e6_beta_bernoulli.WorkedExample.test_full_memory) ... ok
+test_powerball_barrel_sums_to_one (test_e6_beta_bernoulli.WorkedExample.test_powerball_barrel_sums_to_one) ... ok
+test_variant_table_is_exactly_the_specification (test_e6_beta_bernoulli.WorkedExample.test_variant_table_is_exactly_the_specification) ... ok
+test_console_binding_to_exact_published_json (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_console_binding_to_exact_published_json) ... ok
+test_failed_record_never_publishes_success (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_failed_record_never_publishes_success) ... ok
+test_matching_protocol_and_strict_order (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_matching_protocol_and_strict_order) ... ok
+test_firewall_before_outcome_provider (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_firewall_before_outcome_provider) ... ok
+test_outcome_identity_and_rank_mismatch_rejected (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_outcome_identity_and_rank_mismatch_rejected) ... ok
+test_oz_one_barrel_and_native_mid_rank (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_oz_one_barrel_and_native_mid_rank) ... ok
+test_powerball_two_barrels (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_powerball_two_barrels) ... ok
+test_c1_canonical_file_opened_once_during_issuance (test_multigame_exit_receipt.ReceiptTests.test_c1_canonical_file_opened_once_during_issuance) ... ok
+test_c1_console_digest_is_bound_to_exact_single_read (test_multigame_exit_receipt.ReceiptTests.test_c1_console_digest_is_bound_to_exact_single_read) ... ok
+test_c1_rejects_spoofed_console_digest_or_result (test_multigame_exit_receipt.ReceiptTests.test_c1_rejects_spoofed_console_digest_or_result) ... ok
+test_c2_requires_exit_observed_timestamp_not_issuance_time (test_multigame_exit_receipt.ReceiptTests.test_c2_requires_exit_observed_timestamp_not_issuance_time) ... ok
+test_coordinator_exit_metadata_fails_closed (test_multigame_exit_receipt.ReceiptTests.test_coordinator_exit_metadata_fails_closed) ... ok
+test_coordinator_private_import_is_append_only_and_location_checked (test_multigame_exit_receipt.ReceiptTests.test_coordinator_private_import_is_append_only_and_location_checked) ... ok
+test_coordinator_private_module_and_noop_removed (test_multigame_exit_receipt.ReceiptTests.test_coordinator_private_module_and_noop_removed) ... ok
+test_existing_poc_gates_remain_disabled_and_original_hash_known (test_multigame_exit_receipt.ReceiptTests.test_existing_poc_gates_remain_disabled_and_original_hash_known) ... ok
+test_failed_group_and_orphan_group_block_even_with_receipt (test_multigame_exit_receipt.ReceiptTests.test_failed_group_and_orphan_group_block_even_with_receipt) ... ok
+test_integrity_before_result_open (test_multigame_exit_receipt.ReceiptTests.test_integrity_before_result_open) ... ok
+test_issuer_rejects_tampered_worker_records (test_multigame_exit_receipt.ReceiptTests.test_issuer_rejects_tampered_worker_records) ... ok
+test_preexisting_receipt_is_tamper_fail_no_overwrite (test_multigame_exit_receipt.ReceiptTests.test_preexisting_receipt_is_tamper_fail_no_overwrite) ... ok
+test_receipt_absent_or_global_marker_blocks (test_multigame_exit_receipt.ReceiptTests.test_receipt_absent_or_global_marker_blocks) ... ok
+test_status_manifest_result_late_mutations (test_multigame_exit_receipt.ReceiptTests.test_status_manifest_result_late_mutations) ... ok
+test_symlink_receipts_directory_is_refused (test_multigame_exit_receipt.ReceiptTests.test_symlink_receipts_directory_is_refused) ... ok
+test_valid_issue_and_consume (test_multigame_exit_receipt.ReceiptTests.test_valid_issue_and_consume) ... ok
+test_verifier_opens_canonical_result_once_and_returns_that_object (test_multigame_exit_receipt.ReceiptTests.test_verifier_opens_canonical_result_once_and_returns_that_object) ... ok
+test_wrong_worker_game_draw_variant_or_coordinator_digest (test_multigame_exit_receipt.ReceiptTests.test_wrong_worker_game_draw_variant_or_coordinator_digest) ... ok
+test_games_with_same_draw_do_not_overlap (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_games_with_same_draw_do_not_overlap) ... ok
+test_manifest_refuses_digest_mismatch (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_manifest_refuses_digest_mismatch) ... ok
+test_manifest_rejects_wrong_status_identity (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_manifest_rejects_wrong_status_identity) ... ok
+test_no_enable_or_network_or_termination_code (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_no_enable_or_network_or_termination_code) ... ok
+test_plan_is_immutable_and_does_not_start_process (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_plan_is_immutable_and_does_not_start_process) ... ok
+test_receipt_consumer_cannot_treat_plumbing_as_forecast (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_receipt_consumer_cannot_treat_plumbing_as_forecast) ... ok
+test_reject_unsafe_roots (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_reject_unsafe_roots) ... ok
+test_run_collision_fails_closed_unchanged (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_run_collision_fails_closed_unchanged) ... usage: python3 -m unittest [-h] --synthetic-contract-probe
+                           [--await-coordinator-release]
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           --run-id RUN_ID --group-id GROUP_ID
+                           --worker-sequence WORKER_SEQUENCE
+                           --variant {SYNTHETIC_PLUMBING_V1}
+python3 -m unittest: error: run directory exists: create-only identity collision
+ok
+test_unresolved_global_orphan_blocks_launch (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_unresolved_global_orphan_blocks_launch) ... usage: python3 -m unittest [-h] --synthetic-contract-probe
+                           [--await-coordinator-release]
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           --run-id RUN_ID --group-id GROUP_ID
+                           --worker-sequence WORKER_SEQUENCE
+                           --variant {SYNTHETIC_PLUMBING_V1}
+python3 -m unittest: error: global unresolved orphan safety stop
+ok
+test_valid_worker_is_self_report_only_and_console_exact (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_valid_worker_is_self_report_only_and_console_exact) ... ok
+test_wrong_target_and_registry_rejected_before_run_dir (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_wrong_target_and_registry_rejected_before_run_dir) ... ok
+test_dates_opt_in_schema_digest_and_order_evidence (test_multigame_reader_contracts.V011ReaderTests.test_dates_opt_in_schema_digest_and_order_evidence) ... ok
+test_e1_frozen_1577_forecast_only_without_dev_build (test_multigame_reader_contracts.V011ReaderTests.test_e1_frozen_1577_forecast_only_without_dev_build) ... ok
+test_existing_synthetic_e1_goldens_unchanged (test_multigame_reader_contracts.V011ReaderTests.test_existing_synthetic_e1_goldens_unchanged) ... ok
+test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) ... ok
+test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) ... ok
+test_poisoned_suffix_is_never_decoded_or_parsed (test_multigame_reader_contracts.V011ReaderTests.test_poisoned_suffix_is_never_decoded_or_parsed) ... ok
+test_ratified_r2_5_5_synthetic_identity_goldens (test_multigame_reader_contracts.V011ReaderTests.test_ratified_r2_5_5_synthetic_identity_goldens)
+Distinct from the later standalone-runner synthetic golden pair. ... ok
+test_reject_symlinks_and_hardlinks_and_dateload_mismatch (test_multigame_reader_contracts.V011ReaderTests.test_reject_symlinks_and_hardlinks_and_dateload_mismatch) ... ok
+test_reject_unpinned_missing_and_replaced_master (test_multigame_reader_contracts.V011ReaderTests.test_reject_unpinned_missing_and_replaced_master) ... ok
+test_t05_complete_drawview_is_suffix_independent_for_every_kind (test_multigame_reader_contracts.V011ReaderTests.test_t05_complete_drawview_is_suffix_independent_for_every_kind)
+Re-pin changed N+ rows; compare ALL method-facing slots, array bytes and digest. ... ok
+test_forged_receipt_mode_does_not_convert_synthetic_to_science (test_multigame_science_allowlist.SyntheticSeparationTests.test_forged_receipt_mode_does_not_convert_synthetic_to_science) ... ok
+test_launcher_rejects_science_variant_as_plumbing (test_multigame_science_allowlist.SyntheticSeparationTests.test_launcher_rejects_science_variant_as_plumbing) ... ok
+test_missing_deny_flags_are_not_scientific_approval (test_multigame_science_allowlist.SyntheticSeparationTests.test_missing_deny_flags_are_not_scientific_approval) ... ok
+test_no_scientific_coordination_contract_activated (test_multigame_science_allowlist.SyntheticSeparationTests.test_no_scientific_coordination_contract_activated) ... ok
+test_synthetic_consumer_refuses_before_result_read (test_multigame_science_allowlist.SyntheticSeparationTests.test_synthetic_consumer_refuses_before_result_read) ... ok
+test_synthetic_has_four_modes_and_no_forecast_consumer (test_multigame_science_allowlist.SyntheticSeparationTests.test_synthetic_has_four_modes_and_no_forecast_consumer) ... ok
+test_human_speed_timeout_constants (test_multigame_static_and_timing.StaticSafetyTests.test_human_speed_timeout_constants) ... ok
+test_legacy_waits_untouched_and_new_literals_named (test_multigame_static_and_timing.StaticSafetyTests.test_legacy_waits_untouched_and_new_literals_named) ... ok
+test_method_loader_import_firewall_except_accepted_legacy_e1 (test_multigame_static_and_timing.StaticSafetyTests.test_method_loader_import_firewall_except_accepted_legacy_e1) ... ok
+test_no_retired_acquisition_overlay_importable (test_multigame_static_and_timing.StaticSafetyTests.test_no_retired_acquisition_overlay_importable) ... ok
+test_protected_v06_ast_mechanically_equal (test_multigame_static_and_timing.StaticSafetyTests.test_protected_v06_ast_mechanically_equal) ... ok
+test_switches_closed_and_empty_scientific_allowlist (test_multigame_static_and_timing.StaticSafetyTests.test_switches_closed_and_empty_scientific_allowlist) ... ok
+test_both_scientific_and_synthetic_gates_default_false (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_both_scientific_and_synthetic_gates_default_false) ... ok
+test_cli_strict (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_cli_strict) ... usage: python3 -m unittest [-h] --synthetic-contract-test
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           [--timeout-seconds TIMEOUT_SECONDS]
+                           [--poll-seconds POLL_SECONDS]
+python3 -m unittest: error: the following arguments are required: --synthetic-contract-test, --game, --target
+usage: python3 -m unittest [-h] --synthetic-contract-test
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           [--timeout-seconds TIMEOUT_SECONDS]
+                           [--poll-seconds POLL_SECONDS]
+python3 -m unittest: error: the following arguments are required: --game, --target
+usage: python3 -m unittest [-h] --synthetic-contract-test
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           [--timeout-seconds TIMEOUT_SECONDS]
+                           [--poll-seconds POLL_SECONDS]
+python3 -m unittest: error: unrecognized arguments: --live
+usage: python3 -m unittest [-h] --synthetic-contract-test
+                           --game {POWERBALL,OZLOTTO} --target TARGET
+                           [--timeout-seconds TIMEOUT_SECONDS]
+                           [--poll-seconds POLL_SECONDS]
+python3 -m unittest: error: timeout requires RELEASE_WAIT_SECONDS + 2 x poll_seconds, up to 60
+ok
+test_handshake_release_is_exact_and_create_only (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_handshake_release_is_exact_and_create_only) ... ok
+test_no_child_source_network_kill_or_science_registration (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_no_child_source_network_kill_or_science_registration) ... ok
+test_pure_eligibility_requires_live_verified_ancestry (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_pure_eligibility_requires_live_verified_ancestry) ... ok
+test_timeout_is_rejection_not_self_certification (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_timeout_is_rejection_not_self_certification) ... ok
+test_against_a_from_scratch_count (test_occurrence_counts.Identities.test_against_a_from_scratch_count) ... ok
+test_counts_add_up (test_occurrence_counts.Identities.test_counts_add_up) ... ok
+test_bad_inputs_are_refused (test_occurrence_counts.Refusals.test_bad_inputs_are_refused) ... ok
+test_exact_arithmetic_only_and_no_outside_access (test_occurrence_counts.StaticGuards.test_exact_arithmetic_only_and_no_outside_access) ... ok
+test_every_function_equals_its_second_form (test_occurrence_counts.TwoRoutesAgree.test_every_function_equals_its_second_form) ... ok
+test_decayed_counts (test_occurrence_counts.WorkedExamples.test_decayed_counts) ... ok
+test_period_counts_newest_period_complete_and_remainder_dropped (test_occurrence_counts.WorkedExamples.test_period_counts_newest_period_complete_and_remainder_dropped) ... ok
+test_window_counts (test_occurrence_counts.WorkedExamples.test_window_counts) ... ok
+test_lagrange_equals_newton_and_passes_through_the_points (test_polynomial_fits.Interpolation.test_lagrange_equals_newton_and_passes_through_the_points) ... ok
+test_a_polynomial_is_reproduced_exactly (test_polynomial_fits.LeastSquares.test_a_polynomial_is_reproduced_exactly) ... ok
+test_two_algorithms_agree_and_the_normal_equations_hold (test_polynomial_fits.LeastSquares.test_two_algorithms_agree_and_the_normal_equations_hold) ... ok
+test_an_exact_polynomial_has_zero_error (test_polynomial_fits.Minimax.test_an_exact_polynomial_has_zero_error) ... ok
+test_an_intermediate_reference_with_zero_levelled_error_is_exchanged (test_polynomial_fits.Minimax.test_an_intermediate_reference_with_zero_levelled_error_is_exchanged) ... ok
+test_certificate_holds_and_minimax_beats_least_squares_on_the_worst_error (test_polynomial_fits.Minimax.test_certificate_holds_and_minimax_beats_least_squares_on_the_worst_error) ... ok
+test_certificate_refuses_a_polynomial_that_is_not_minimax (test_polynomial_fits.Minimax.test_certificate_refuses_a_polynomial_that_is_not_minimax) ... ok
+test_certificate_refuses_exactly_one_alternation_too_few (test_polynomial_fits.Minimax.test_certificate_refuses_exactly_one_alternation_too_few) ... ok
+test_the_exchange_cap_raises_rather_than_returning (test_polynomial_fits.Minimax.test_the_exchange_cap_raises_rather_than_returning) ... ok
+test_the_returned_reference_alternates_at_the_minimax_error (test_polynomial_fits.Minimax.test_the_returned_reference_alternates_at_the_minimax_error) ... ok
+test_tied_largest_errors_take_the_lowest_index (test_polynomial_fits.Minimax.test_tied_largest_errors_take_the_lowest_index) ... ok
+test_bad_inputs_are_refused (test_polynomial_fits.Refusals.test_bad_inputs_are_refused) ... ok
+test_exact_arithmetic_only_and_no_outside_access (test_polynomial_fits.StaticGuards.test_exact_arithmetic_only_and_no_outside_access) ... ok
+test_abscissae_and_smoothing (test_polynomial_fits.WorkedExamples.test_abscissae_and_smoothing) ... ok
+test_interpolation (test_polynomial_fits.WorkedExamples.test_interpolation) ... ok
+test_least_squares_flat_line (test_polynomial_fits.WorkedExamples.test_least_squares_flat_line) ... ok
+test_least_squares_rising_line_exceeds_one (test_polynomial_fits.WorkedExamples.test_least_squares_rising_line_exceeds_one) ... ok
+test_minimax_constant (test_polynomial_fits.WorkedExamples.test_minimax_constant) ... ok
+test_minimax_on_raw_alternating_data_is_the_constant_half (test_polynomial_fits.WorkedExamples.test_minimax_on_raw_alternating_data_is_the_constant_half) ... ok
+test_every_suffix_variant_row_is_a_valid_row (test_t05_hardening.T05HardeningTests.test_every_suffix_variant_row_is_a_valid_row)
+Grammar check: load each variant's first changed row as part of an eligible prefix. ... ok
+test_intermediate_targets_and_equal_length_suffix_rewrites (test_t05_hardening.T05HardeningTests.test_intermediate_targets_and_equal_length_suffix_rewrites) ... ok
+test_declarations_and_entries_match_the_specification (test_wave1_frequency.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_request_is_refused_and_the_roster_says_formula_open (test_wave1_frequency.AsInstalled.test_every_request_is_refused_and_the_roster_says_formula_open) ... ok
+test_flags_present_and_runner_lists_each (test_wave1_frequency.AsInstalled.test_flags_present_and_runner_lists_each) ... ok
+test_scores_and_probabilities (test_wave1_frequency.EachVariantsOwnRule.test_scores_and_probabilities) ... ok
+test_method_folders_are_exactly_these_files_and_read_nothing (test_wave1_frequency.FolderGuards.test_method_folders_are_exactly_these_files_and_read_nothing) ... ok
+test_e10_ranks_differently_from_its_short_window_alone (test_wave1_frequency.HonestOverlap.test_e10_ranks_differently_from_its_short_window_alone) ... ok
+test_e7_full_history_has_e1s_groups_and_e9_at_e6s_factor_has_e6s (test_wave1_frequency.HonestOverlap.test_e7_full_history_has_e1s_groups_and_e9_at_e6s_factor_has_e6s) ... ok
+test_e8_with_zero_weight_ranks_by_the_count_over_its_periods (test_wave1_frequency.HonestOverlap.test_e8_with_zero_weight_ranks_by_the_count_over_its_periods) ... ok
+test_exactly_the_minimum_is_enough (test_wave1_frequency.InsufficientHistory.test_exactly_the_minimum_is_enough) ... ok
+test_too_few_draws_gives_an_insufficient_history_record (test_wave1_frequency.InsufficientHistory.test_too_few_draws_gives_an_insufficient_history_record) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_wave1_frequency.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_wave1_frequency.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_every_variant_runs_and_is_consumable (test_wave1_frequency.ThroughTheContract.test_every_variant_runs_and_is_consumable) ... ok
+test_verify_refuses_a_probability_vector_that_differs_with_the_same_scores (test_wave1_frequency.ThroughTheContract.test_verify_refuses_a_probability_vector_that_differs_with_the_same_scores) ... ok
+test_verify_refuses_a_record_that_differs (test_wave1_frequency.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_e9_factors_and_half_lives_stay_clear_of_e6 (test_wave1_frequency.Variants.test_e9_factors_and_half_lives_stay_clear_of_e6) ... ok
+test_tables_are_exactly_the_specification (test_wave1_frequency.Variants.test_tables_are_exactly_the_specification) ... ok
+test_all_examples (test_wave1_frequency.WorkedExamples.test_all_examples) ... ok
+
+----------------------------------------------------------------------
+Ran 268 tests in 87.874s
+
+OK

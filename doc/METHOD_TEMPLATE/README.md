@@ -1,7 +1,8 @@
-# New-method template (draft 1)
+# New-method template (draft 2)
 
 **What this is:** the files and the step-by-step checklist for adding a new method to the project, taken from E_6 (the first method built on the E_2-readiness contract) with its specifics stripped out.
-**Status:** DRAFT 1, 30 October 2026, written with E_6 by Claude and reviewed with it. It will be revised after E_3 and E_4 (methods that share a helper and output scores only), and proved by the E_7-E_16 batch.
+**Status:** DRAFT 2, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 adds what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found. It is reviewed with wave 1's design.
+**Kept up to date** (owner, 30 October 2026): whenever a method's design, review, code or install shows something this template should say or do differently, in Claude's assessment or the reviewer's, Claude proposes the update in the next package, and it is reviewed like any other document. Each method's handback says whether it found anything for the template.
 **Authority:** none. The rules are in E2R-1 v0.3r3, R2, R3 and the current ratification register; where this file differs from them, they win. Using the template authorises no run.
 
 Everything here is outside `src/`, so it can never be imported or run. The code files end in `.py.txt` for the same reason. When you copy one, drop the `.txt`.
@@ -20,7 +21,7 @@ A method needs only its own pieces. The shared contract does the rest:
 | Piece | Where | From this template |
 |---|---|---|
 | Its specification | `doc/`, reviewed and owner-ratified | `METHOD_SPECIFICATION_TEMPLATE.md` |
-| Its mathematics | `src/methods/E_<nnn>/model.py` (name it for what it does) | `method_folder/model.py.txt` |
+| Its mathematics | `src/methods/E_<nnn>/model.py` (name it for what it does), or a shared helper in `src/methods/_common/` used by several methods | `method_folder/model.py.txt` |
 | Its connection to the runner | `src/methods/E_<nnn>/contract.py` | `method_folder/contract.py.txt` |
 | Its package marker and flag | `src/methods/E_<nnn>/__init__.py`, `IN_DEVELOPMENT.txt` | `method_folder/` |
 | One line in the runner | `src/methods/Method_Contract_Runner.py` | step 6 below |
@@ -46,6 +47,7 @@ Do the steps in order. Each says what, where and why.
 - Rename `model.py` to describe the mathematics (E_6: `beta_bernoulli.py`), and fix the import in `contract.py`.
 
 **3. Fill in the mathematics** (`model.py`), at every `FILL IN:` marker.
+- **Or a shared helper:** when several methods need the same calculation (E_3 and E_4: polynomial fits; wave 1: occurrence counts), put it in one module in `src/methods/_common/`, with its own test module, and keep only each method's own rule in its folder. Every method that uses the helper names it in its specification. A change to the helper is a new revision of every method that uses it (E2R-R14A), so fix its behaviour as carefully as a method's.
 - **The variant table:** each `variant_id` with its fixed settings.
 - **The calculation:** a pure function from the eligible draws to one number per label.
 - **Imports:** it imports nothing from the project, reads no file and starts nothing.
@@ -58,6 +60,8 @@ Do the steps in order. Each says what, where and why.
   - one `BarrelOutput` per barrel;
   - a `ScoredRanking` if the method gives every label a score, or an `OrderOnlyRanking` if it gives only an order;
   - a `ProbabilityVector` only if the declaration says it has one.
+- **Scores only** (E_3, E_4, E_9, E_10): if the values are not chances (a curve can leave [0, 1]; a difference of rates is not a chance), declare `probability_kind` `NONE`, return no `ProbabilityVector`, and say why in the specification and the registry texts. Converting scores into chances by an invented transformation is not "marking"; publishing the scores themselves is.
+- **Too little history:** if the eligible draws are fewer than the declared `minimum_history_draws`, return an empty `MethodOutput` (no barrels). The contract then records `INSUFFICIENT_HISTORY`: published, no ticket. `verify()` must accept that record when it recomputes the same shortage, and refuse it otherwise.
 - **`verify()`** must recompute independently and refuse any difference. It is the last check before publication.
 
 **5. Keep `IN_DEVELOPMENT.txt`.** It makes the method non-runnable until its release package removes it.
@@ -89,7 +93,9 @@ Do the steps in order. Each says what, where and why.
 
 They are refused even in comments, because they are checked as text.
 
-**10. Planted-defect (mutation) checks.** For every property the tests claim, plant a defect in a disposable copy and show that a test fails (E_6: 14 defects). A defect that no test catches is a missing test; E_6 found one this way.
+**10. Planted-defect (mutation) checks.** For every property the tests claim, plant a defect in a disposable copy and show that a test fails (E_6: 14 defects; E_3/E_4: 27). Plan at least one defect per variant setting and one per verification rule. A defect that no test catches is a missing test: E_6 found one this way (every variant computed as the first), and E_3/E_4 another (a certificate accepting one alternation too few).
+
+**Several methods in one package** (E_3/E_4; wave 1): one shared helper with its own tests, one generator for all the declarations and entries, one test module for the methods, one `ADAPTERS` line per method, and one mutation tool covering all of them. Each method still gets its own folder, flag, variants and registry chains, and is released on its own.
 
 **11. The install package** (code-package discipline: H-1 section 1.6). It contains:
 - the overlay;
@@ -105,10 +111,15 @@ The package installs the method non-runnable.
 - **Later variants of the same revision:** registry entries only.
 - **Real data is a separate gate:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` stays False until the owner decides otherwise.
 
-## Things that bite (learned on E_6)
+## Things that bite (learned on E_6, E_3/E_4 and wave 1)
 
 - **The tie rule includes the method and variant IDs.** Two methods with identical scores can order exactly tied labels differently, so compare `ranked_groups`, not TOP and WORST, when claiming a match.
 - **Existing tests may count installed data.** E_6's package changed the last two such tests to rules: the registry-chain count, and "flags only in unreleased method folders". Search the tests for literal counts before adding data.
 - **Synthetic masters from the T-05 fixture repeat the same row.** Counting methods need varied invented rows. `test_template.py.txt` has a generator.
 - **Don't pin lists that later methods extend.** E_6's first test asserted the runner's exact method list; the template trial showed that the next method would have had to edit it. Assert only your own method's entry.
 - **A test that can only pass is not evidence.** Make sure each variant's own setting is tested against the formula computed in the test itself, not through the module's own lookup.
+- **The same-count ranking trap.** Every number is at risk in every draw, so all numbers share the same number of draws. Any score given by the same strictly increasing function of each number's count over the same draws (a fixed-strength posterior mean, a fixed-strength credible bound, a fixed shrunk rate) has exactly the ranked groups of counting over those draws: like E_1 over the full history. Count-only scores need not be monotonic in general, and this excludes no deliberately non-monotonic method. Check a new method's ranking against E_1 and against its own family before claiming it differs; if it does not differ, say so and say what does (its probabilities, for example).
+- **Forgetting rates can coincide.** A decayed count at E_6's factor ranks exactly like E_6's decay variant. Choose settings that do not duplicate an installed method, or say that they do.
+- **Compute every worked example with a tool.** The E_3/E_4 draft had two hand-worked values wrong. Ship the reference script with the specification.
+- **Never ask the Claude Code runner to count or filter output.** Ask for the whole output in its report and count it yourself (TASK_T005).
+- **Variants can coincide on particular data.** E_8's three period lengths give identical scores whenever its weight is 0 and their whole periods cover the same draws (Oz Lotto's 218 draws hold 16 quarters, 8 half-years or 4 years: the same 208 draws). Test that variants differ exactly where their correct values differ, not always (wave 1 code).

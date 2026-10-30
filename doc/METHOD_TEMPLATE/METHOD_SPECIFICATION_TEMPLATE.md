@@ -50,11 +50,12 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 
 ## 7. Worked example
 
-**FILL IN:** a tiny case small enough to check by hand, with exact expected values for every variant. The tests check it exactly.
+**FILL IN:** a tiny case small enough to check by hand, with exact expected values for every variant. Compute the values with a reference script, not by hand, and ship the script with this specification. The tests check them exactly.
 
 ## 8. Relation to other methods
 
 **FILL IN** any overlap with other methods, stated plainly, for example "with setting X it ranks exactly like E_1". Overlap is reported (rank correlation), never a reason to exclude.
+- **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap")? If so, what distinguishes it: its probabilities, its window, its settings? The tests check every claimed relation by comparing `ranked_groups`.
 
 ## 9. What the package adds and changes
 
@@ -72,7 +73,8 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 
 **FILL IN:**
 - the tests (README step 8);
-- the planted defects, one or more per property claimed (README step 10).
+- the planted defects, one or more per property claimed, per variant setting and per verification rule (README step 10);
+- whether anything found should change this template (owner, 30 October 2026).
 
 ## 12. Owner decisions
 
