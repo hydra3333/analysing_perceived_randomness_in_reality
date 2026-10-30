@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, with the owner's new order of work (steps 8 onward).
+Last updated: 30 October 2026, after wave 1 was installed (commit 947c370).
 
 ## A few words used below
 
@@ -40,20 +40,21 @@ Last updated: 30 October 2026, with the owner's new order of work (steps 8 onwar
    drawn/not-drawn record over the last 52 or 104 draws. E_3 ranks numbers by where the curve says
    the next draw will be (its value there); E_4 by which way the curve is heading (its slope). Six
    fixed versions each: three curve-fitting styles, different curve shapes and window lengths.
+7. DONE - The two handover documents brought up to date (H-1 for Claude, H-2 for ChatGPT), so a
+   fresh chat can pick up the project with the same rules.
+8. DONE - Wave 1, installed (not yet runnable), with the template's draft 2 (commit 947c370):
+           E_7  counts pulled back towards the fair rate, so a short lucky run counts for less;
+           E_9  counting where each older draw counts a fixed fraction less;
+           E_10 the recent rate compared with the longer-run rate;
+           E_8  each number's rate, with all numbers sharing information (by periods of 13, 26 or
+                52 draws).
+           Three fixed versions each, one shared counting helper, 268 tests passing on your PC and
+           on Linux. The template's draft 2 adds what E_3/E_4 taught: shared helpers, methods that
+           give scores but no probabilities, and a minimum number of past draws.
 
 ## Next, in the owner's order (decided 30 October 2026; replaces the earlier order of the same day)
 
-8.  NOW  - Wave 1, light counting methods, together with the template's draft 2 (which adds what
-           E_3/E_4 taught: shared helpers, methods that give scores but no probabilities, a minimum
-           number of past draws):
-           E_7  Bayesian Frequency Shrinkage - counts, pulled back towards the fair rate so a short
-                lucky run counts for less;
-           E_9  Exponentially Decayed Occurrence Rates - counting where each older draw counts a fixed
-                fraction less (its design must show how it differs from E_6's forgetting versions);
-           E_10 Multi-Horizon Frequency Contrasts - recent rate compared with the long-run rate;
-           E_8  Hierarchical Dirichlet-Multinomial - each number's rate, with all numbers sharing
-                information.
-9.  NEXT - Wave 2, gaps between appearances (one shared "gaps" helper):
+9.  NOW  - Wave 2, gaps between appearances (one shared "gaps" helper):
            E_2  Expected Recurrence-Interval Alignment - one of your original six: predicts each
                 number's next gap and ranks by how well it ends at the next draw;
            E_17 = Method A - your idea from the GASI proposal: the chance of appearing next given how
@@ -87,9 +88,10 @@ Last updated: 30 October 2026, with the owner's new order of work (steps 8 onwar
 21. LAST  - Combinations of methods: E_55, E_56.
 
 The order within a wave may shift once its design starts. The NIST seed (reminder R-004) is settled
-at the first method that uses random numbers.
+at the first method that uses random numbers; that is probably E_17 (Method A) in wave 2, if its
+design keeps the simulated fair-draw comparison.
 
 ## Later (each its own package and decision)
 
-- Releases of E_6, E_3 and E_4 (E_6's remember-everything version first), with step 10.
+- Releases of E_6, E_3, E_4 and wave 1 (E_6's remember-everything version first), with step 10.
 - Holdout testing (the sealed draws), and then real next-draw predictions from all methods together.
