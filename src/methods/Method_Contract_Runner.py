@@ -20,6 +20,7 @@ import sys
 from pathlib import Path
 
 from contract_adapters import e_001
+from E_002 import contract as e_002
 from E_003 import contract as e_003
 from E_004 import contract as e_004
 from E_006 import contract as e_006
@@ -27,11 +28,14 @@ from E_007 import contract as e_007
 from E_008 import contract as e_008
 from E_009 import contract as e_009
 from E_010 import contract as e_010
+from E_017 import contract as e_017
+from E_018 import contract as e_018
+from E_019 import contract as e_019
 
 # The methods this runner can dispatch. Being listed here is not permission: the dispatch gate decides.
 # A new contract method adds one line here and nothing else in this file (E_6 design note, D6-1).
-ADAPTERS = {'E_1': e_001, 'E_3': e_003, 'E_4': e_004, 'E_6': e_006, 'E_7': e_007, 'E_8': e_008, 'E_9': e_009,
-            'E_10': e_010}
+ADAPTERS = {'E_1': e_001, 'E_2': e_002, 'E_3': e_003, 'E_4': e_004, 'E_6': e_006, 'E_7': e_007, 'E_8': e_008,
+            'E_9': e_009, 'E_10': e_010, 'E_17': e_017, 'E_18': e_018, 'E_19': e_019}
 
 
 def build_request(args, run_id: str) -> dict:

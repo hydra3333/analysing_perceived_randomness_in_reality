@@ -40,7 +40,8 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 
 ## 5. Exactness and platform identity
 
-**FILL IN:** why the record is byte-identical on Windows and Linux (exact arithmetic, or a stated float discipline).
+**FILL IN:** why the record is byte-identical on Windows and Linux (exact arithmetic, or, for an iterative floating-point fit, the objective proof and the canonical output and tie rules; README, "published values must be byte-identical").
+- **Answer explicitly:** does any step repeat until a condition holds (narrowing bounds, a search, an iteration)? Say why it ends for every input, including exact ties and exact zero, and what its cap does.
 
 ## 6. Variants (fixed now)
 
@@ -55,7 +56,7 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 ## 8. Relation to other methods
 
 **FILL IN** any overlap with other methods, stated plainly, for example "with setting X it ranks exactly like E_1". Overlap is reported (rank correlation), never a reason to exclude.
-- **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap")? If so, what distinguishes it: its probabilities, its window, its settings? The tests check every claimed relation by comparing `ranked_groups`.
+- **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap" and "the sign trap")? If so, what distinguishes it: its probabilities, its window, its settings? Is any claimed equivalence with another formulation proved, not assumed (README, "changing a covariate")? The tests check every claimed relation by comparing `ranked_groups`.
 
 ## 9. What the package adds and changes
 

@@ -1,0 +1,105 @@
+--- a/doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md
++++ b/doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md
+@@ -40,7 +40,8 @@
+ 
+ ## 5. Exactness and platform identity
+ 
+-**FILL IN:** why the record is byte-identical on Windows and Linux (exact arithmetic, or a stated float discipline).
++**FILL IN:** why the record is byte-identical on Windows and Linux (exact arithmetic, or, for an iterative floating-point fit, the objective proof and the canonical output and tie rules; README, "published values must be byte-identical").
++- **Answer explicitly:** does any step repeat until a condition holds (narrowing bounds, a search, an iteration)? Say why it ends for every input, including exact ties and exact zero, and what its cap does.
+ 
+ ## 6. Variants (fixed now)
+ 
+@@ -55,7 +56,7 @@
+ ## 8. Relation to other methods
+ 
+ **FILL IN** any overlap with other methods, stated plainly, for example "with setting X it ranks exactly like E_1". Overlap is reported (rank correlation), never a reason to exclude.
+-- **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap")? If so, what distinguishes it: its probabilities, its window, its settings? The tests check every claimed relation by comparing `ranked_groups`.
++- **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap" and "the sign trap")? If so, what distinguishes it: its probabilities, its window, its settings? Is any claimed equivalence with another formulation proved, not assumed (README, "changing a covariate")? The tests check every claimed relation by comparing `ranked_groups`.
+ 
+ ## 9. What the package adds and changes
+ 
+--- a/doc/METHOD_TEMPLATE/README.md
++++ b/doc/METHOD_TEMPLATE/README.md
+@@ -1,7 +1,7 @@
+-# New-method template (draft 2)
++# New-method template (draft 3)
+ 
+ **What this is:** the files and the step-by-step checklist for adding a new method to the project, taken from E_6 (the first method built on the E_2-readiness contract) with its specifics stripped out.
+-**Status:** DRAFT 2, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 adds what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found. It is reviewed with wave 1's design.
++**Status:** DRAFT 3, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7). The code skeletons are unchanged from draft 2. It is reviewed with wave 2's code.
+ **Kept up to date** (owner, 30 October 2026): whenever a method's design, review, code or install shows something this template should say or do differently, in Claude's assessment or the reviewer's, Claude proposes the update in the next package, and it is reviewed like any other document. Each method's handback says whether it found anything for the template.
+ **Authority:** none. The rules are in E2R-1 v0.3r3, R2, R3 and the current ratification register; where this file differs from them, they win. Using the template authorises no run.
+ 
+@@ -47,11 +47,11 @@
+ - Rename `model.py` to describe the mathematics (E_6: `beta_bernoulli.py`), and fix the import in `contract.py`.
+ 
+ **3. Fill in the mathematics** (`model.py`), at every `FILL IN:` marker.
+-- **Or a shared helper:** when several methods need the same calculation (E_3 and E_4: polynomial fits; wave 1: occurrence counts), put it in one module in `src/methods/_common/`, with its own test module, and keep only each method's own rule in its folder. Every method that uses the helper names it in its specification. A change to the helper is a new revision of every method that uses it (E2R-R14A), so fix its behaviour as carefully as a method's.
++- **Or a shared helper:** when several methods need the same calculation (E_3 and E_4: polynomial fits; wave 1: occurrence counts), put it in one module in `src/methods/_common/`, with its own test module, and keep only each method's own rule in its folder (wave 2: gaps between appearances). Every method that uses the helper names it in its specification. A change to the helper is a new revision of every method that uses it (E2R-R14A), so fix its behaviour as carefully as a method's.
+ - **The variant table:** each `variant_id` with its fixed settings.
+ - **The calculation:** a pure function from the eligible draws to one number per label.
+ - **Imports:** it imports nothing from the project, reads no file and starts nothing.
+-- **Exactness:** prefer exact arithmetic (`fractions.Fraction`, integers). If floats are unavoidable, say in the specification why the result is the same on Windows and Linux (no `pow`, `exp`, `log` or summation-order differences), or how the method copes with a last-bit difference.
++- **Published values must be byte-identical on Windows and Linux** (owner decision W2-7). Prefer exact arithmetic (`fractions.Fraction`, integers): an exact closed form, an exact finite search (E_18 tries all 15 supports of its fit) or an exact certificate (E_3/E_4's alternation, E_18's optimality conditions, E_17's certified sign). An iterative floating-point fit is allowed only with objective proof of cross-platform byte identity and canonical output and tie rules. Library functions such as `pow`, `exp` and `log` may round differently between platforms, and summation order matters.
+ - **A second, differently written algorithm** for the same quantity, used by `verify()`.
+ 
+ **4. Fill in the connection** (`contract.py`).
+@@ -60,7 +60,7 @@
+   - one `BarrelOutput` per barrel;
+   - a `ScoredRanking` if the method gives every label a score, or an `OrderOnlyRanking` if it gives only an order;
+   - a `ProbabilityVector` only if the declaration says it has one.
+-- **Scores only** (E_3, E_4, E_9, E_10): if the values are not chances (a curve can leave [0, 1]; a difference of rates is not a chance), declare `probability_kind` `NONE`, return no `ProbabilityVector`, and say why in the specification and the registry texts. Converting scores into chances by an invented transformation is not "marking"; publishing the scores themselves is.
++- **Scores only** (E_3, E_4, E_9, E_10, E_2, E_17, E_18, E_19): if the values are not chances (a curve can leave [0, 1]; a difference of rates is not a chance), declare `probability_kind` `NONE`, return no `ProbabilityVector`, and say why in the specification and the registry texts. Converting scores into chances by an invented transformation is not "marking"; publishing the scores themselves is.
+ - **Too little history:** if the eligible draws are fewer than the declared `minimum_history_draws`, return an empty `MethodOutput` (no barrels). The contract then records `INSUFFICIENT_HISTORY`: published, no ticket. `verify()` must accept that record when it recomputes the same shortage, and refuse it otherwise.
+ - **`verify()`** must recompute independently and refuse any difference. It is the last check before publication.
+ 
+@@ -111,7 +111,7 @@
+ - **Later variants of the same revision:** registry entries only.
+ - **Real data is a separate gate:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` stays False until the owner decides otherwise.
+ 
+-## Things that bite (learned on E_6, E_3/E_4 and wave 1)
++## Things that bite (learned on E_6, E_3/E_4, wave 1 and wave 2)
+ 
+ - **The tie rule includes the method and variant IDs.** Two methods with identical scores can order exactly tied labels differently, so compare `ranked_groups`, not TOP and WORST, when claiming a match.
+ - **Existing tests may count installed data.** E_6's package changed the last two such tests to rules: the registry-chain count, and "flags only in unreleased method folders". Search the tests for literal counts before adding data.
+@@ -120,6 +120,11 @@
+ - **A test that can only pass is not evidence.** Make sure each variant's own setting is tested against the formula computed in the test itself, not through the module's own lookup.
+ - **The same-count ranking trap.** Every number is at risk in every draw, so all numbers share the same number of draws. Any score given by the same strictly increasing function of each number's count over the same draws (a fixed-strength posterior mean, a fixed-strength credible bound, a fixed shrunk rate) has exactly the ranked groups of counting over those draws: like E_1 over the full history. Count-only scores need not be monotonic in general, and this excludes no deliberately non-monotonic method. Check a new method's ranking against E_1 and against its own family before claiming it differs; if it does not differ, say so and say what does (its probabilities, for example).
+ - **Forgetting rates can coincide.** A decayed count at E_6's factor ranks exactly like E_6's decay variant. Choose settings that do not duplicate an installed method, or say that they do.
+-- **Compute every worked example with a tool.** The E_3/E_4 draft had two hand-worked values wrong. Ship the reference script with the specification.
++- **Compute every worked example with a tool,** including the expected values inside tests. The E_3/E_4 draft had two hand-worked values wrong, and so did wave 2's first helper tests (a count of events, and a bin edge). Ship the reference script with the specification.
+ - **Never ask the Claude Code runner to count or filter output.** Ask for the whole output in its report and count it yourself (TASK_T005).
+ - **Variants can coincide on particular data.** E_8's three period lengths give identical scores whenever its weight is 0 and their whole periods cover the same draws (Oz Lotto's 218 draws hold 16 quarters, 8 half-years or 4 years: the same 208 draws). Test that variants differ exactly where their correct values differ, not always (wave 1 code).
++- **The sign trap** (wave 2), a sibling of the same-count trap. When a score is a monotone function of one shared per-label quantity (an age, a count) with a fitted direction, the ranking depends only on that direction's sign. Shrinkage or rescaling that cannot flip the sign cannot change the ranking, so it is not a variant setting.
++- **Changing a covariate is not ranking-preserving** (wave 2, W2-B01). Replacing a model's covariate by another increasing transform (a harmonic number for a logarithm) can reverse the fitted direction, and so the ranking. Claim that two forms are equivalent only with a proof, and search for a witness.
++- **Probe pooled methods with a planted single-label effect** (wave 2). Pooling over labels dilutes an effect carried by one label; E_19's first form missed a planted single-ball cycle. Design the per-label route, or say why pooling is intended.
++- **Divide out what another method already measures** before claiming a new effect (E_19 divides out the age trend and each label's own level), and check with a planted effect that the claim survives.
++- **Every loop that waits for a condition needs a proved exit, for every input** (wave 2, W2R1-C01). An interval that narrows until it excludes zero never does when the true value is exactly zero, so test exact zero separately. Add a cap that refuses as an error, never a guess, and test the zero case, the cap and both signs.
+--- a/src/methods/Method_Contract_Runner.py
++++ b/src/methods/Method_Contract_Runner.py
+@@ -20,6 +20,7 @@
+ from pathlib import Path
+ 
+ from contract_adapters import e_001
++from E_002 import contract as e_002
+ from E_003 import contract as e_003
+ from E_004 import contract as e_004
+ from E_006 import contract as e_006
+@@ -27,11 +28,14 @@
+ from E_008 import contract as e_008
+ from E_009 import contract as e_009
+ from E_010 import contract as e_010
++from E_017 import contract as e_017
++from E_018 import contract as e_018
++from E_019 import contract as e_019
+ 
+ # The methods this runner can dispatch. Being listed here is not permission: the dispatch gate decides.
+ # A new contract method adds one line here and nothing else in this file (E_6 design note, D6-1).
+-ADAPTERS = {'E_1': e_001, 'E_3': e_003, 'E_4': e_004, 'E_6': e_006, 'E_7': e_007, 'E_8': e_008, 'E_9': e_009,
+-            'E_10': e_010}
++ADAPTERS = {'E_1': e_001, 'E_2': e_002, 'E_3': e_003, 'E_4': e_004, 'E_6': e_006, 'E_7': e_007, 'E_8': e_008,
++            'E_9': e_009, 'E_10': e_010, 'E_17': e_017, 'E_18': e_018, 'E_19': e_019}
+ 
+ 
+ def build_request(args, run_id: str) -> dict:

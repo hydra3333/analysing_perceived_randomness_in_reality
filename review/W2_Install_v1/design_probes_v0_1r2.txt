@@ -1,0 +1,99 @@
+Wave 2 author probes, design v0.1r2 (invented draws only), Python 3.13.17, 2026-10-30T09:27:22Z, run from a folder holding only these scripts
+
+=== python3 -I reference_wave2.py
+example: 10 labels, K = 2 (r = 1/5, mean gap 5), 12 draws oldest first: [[1, 2], [3, 4], [1, 5], [2, 6], [1, 7], [3, 8], [1, 9], [2, 10], [4, 5], [1, 6], [3, 7], [1, 8]]
+bin edges [1, 2, 3, 5, 8, 13] ; Powerball MAIN [1, 2, 3, 5, 8, 13] POWERBALL [4, 8, 12, 20, 32, 52] Oz MAIN [2, 3, 5, 7, 11, 18]
+gaps {1: [2, 2, 2, 3, 2], 2: [3, 4], 3: [4, 5], 4: [7], 5: [6], 6: [6], 7: [6], 8: [6], 9: [], 10: []}
+projected ages {1: 1, 2: 5, 3: 2, 4: 4, 5: 4, 6: 3, 7: 2, 8: 1, 9: 6, 10: 5}
+R {1: 22, 2: 20, 3: 15, 4: 11, 5: 7, 6: 5, 7: 1} E {2: 4, 3: 2, 4: 2, 5: 1, 6: 4, 7: 1}
+E_2 mean   : 1: -6/11, 2: -3/7, 3: -5/9, 4: -3/7, 5: -1/3, 6: -1/2, 7: -2/3, 8: -5/6, 9: -1/5, 10: 0
+E_2 median : 1: -1/2, 2: -3/7, 3: -5/9, 4: -3/7, 5: -1/3, 6: -1/2, 7: -2/3, 8: -5/6, 9: -1/5, 10: 0
+E_2 last 2 : 1: -3/5, 2: -3/7, 3: -5/9, 4: -3/7, 5: -1/3, 6: -1/2, 7: -2/3, 8: -5/6, 9: -1/5, 10: 0
+E_17 bins c=10 hazards by bin ['1/16', '1/5', '4/25', '5/28', '7/16', '1/5', '1/5']
+E_17 bins c=10 : 1: 1/16, 2: 5/28, 3: 1/5, 4: 5/28, 5: 5/28, 6: 4/25, 7: 1/5, 8: 1/16, 9: 7/16, 10: 5/28
+E_17 log-age sign: a_k {1: -308, 2: 44, 3: -48, 4: 8, 5: -17, 6: 254, 7: 67} prime exponents {2: 314, 3: 206, 5: -17, 7: 67} sigma 1 : 1: 1, 2: 5, 3: 2, 4: 4, 5: 4, 6: 3, 7: 2, 8: 1, 9: 6, 10: 5
+E_19 T=2 c=10 d=2 pooled phi ['448/379', '160/199'] psi label 1 ['279189/265300', '720891/1377677'] : 1: 720891/22042832, 2: 132345/836528, 3: 491691/2340704, 4: 365312/1920393, 5: 1443725/5974556, 6: 1247104/10295265, 7: 156111/597683, 8: 180160/4013631, 9: 381367/631035, 10: 1456600/8668639
+E_18 c=2 weights {1: ['3245348069700918737/4925190825817479938', '0', '0', '1679842756116561201/4925190825817479938'], 2: ['449707662328965173/2110796068207491402', '0', '0', '1661088405878526229/2110796068207491402'], 3: ['18916780405752019685924162303189/188212411018047157883635854446112', '0', '13852669977350638418413064704/5881637844313973683863620451441', '168852345173019917768322474072395/188212411018047157883635854446112'], 4: ['0', '8090133517292817397949387387109681/14803241194565908812347815529509681', '2443972632875096722464479641600000/44409723583697726437043446588529043', '17695350398944177520730804785600000/44409723583697726437043446588529043'], 5: ['0', '8090133517292817397949387387109681/14803241194565908812347815529509681', '2443972632875096722464479641600000/44409723583697726437043446588529043', '17695350398944177520730804785600000/44409723583697726437043446588529043'], 6: ['0', '8090133517292817397949387387109681/14803241194565908812347815529509681', '2443972632875096722464479641600000/44409723583697726437043446588529043', '17695350398944177520730804785600000/44409723583697726437043446588529043'], 7: ['0', '8090133517292817397949387387109681/14803241194565908812347815529509681', '2443972632875096722464479641600000/44409723583697726437043446588529043', '17695350398944177520730804785600000/44409723583697726437043446588529043'], 8: ['0', '8090133517292817397949387387109681/14803241194565908812347815529509681', '2443972632875096722464479641600000/44409723583697726437043446588529043', '17695350398944177520730804785600000/44409723583697726437043446588529043'], 9: ['0', '1', '0', '0'], 10: ['0', '1', '0', '0']}
+E_18 c=2 : 1: 3245348069700918737/12312977064543699845, 2: 14637830234015105351/49052738629126710095, 3: 394953727682480517577480305383701/2257517128897735349579090846472295, 4: 6207911426200631435872390883403227/27858819651088910663368517997391135, 5: 6207911426200631435872390883403227/27858819651088910663368517997391135, 6: 17453334194011996873209640954309681/84314501356625382465294084148048405, 7: 43340485556814871620965236745329043/245695288812715789537671038700645215, 8: 25492386868316000555080401982129043/222048617918488632185217232942645215, 9: 1/5, 10: 1/5
+E_18 c=2 weights (4 dp): {1: [0.6589, 0.0, 0.0, 0.3411], 2: [0.2131, 0.0, 0.0, 0.7869], 3: [0.1005, 0.0, 0.0024, 0.8971], 4: [0.0, 0.5465, 0.055, 0.3985], 5: [0.0, 0.5465, 0.055, 0.3985], 6: [0.0, 0.5465, 0.055, 0.3985], 7: [0.0, 0.5465, 0.055, 0.3985], 8: [0.0, 0.5465, 0.055, 0.3985], 9: [0.0, 1.0, 0.0, 0.0], 10: [0.0, 1.0, 0.0, 0.0]}
+E_18 c=2 scores (4 dp): {1: 0.2636, 2: 0.2984, 3: 0.175, 4: 0.2228, 5: 0.2228, 6: 0.207, 7: 0.1764, 8: 0.1148, 9: 0.2, 10: 0.2}
+E_19 scores (4 dp): {1: 0.0327, 2: 0.1582, 3: 0.2101, 4: 0.1902, 5: 0.2416, 6: 0.1211, 7: 0.2612, 8: 0.0449, 9: 0.6044, 10: 0.168} psi (4 dp) {1: [1.0524, 0.5233], 2: [1.0309, 0.886], 3: [1.0503, 0.8358], 4: [1.0653, 1.1579], 5: [1.3532, 0.7436], 6: [1.2937, 0.7571], 7: [1.306, 0.7136], 8: [1.2811, 0.7182], 9: [1.3814, 0.9308], 10: [1.2926, 0.941]}
+ALL EXAMPLE ASSERTIONS PASS
+exit 0
+
+=== python3 -I probe_logage_sign.py
+EX_069 witness: certified log-age sign -1 ; 60-digit n*S_zy -2798.49922384397641067325331796930596221818193863879002967249 ; harmonic slope positive: True
+312 targets over three barrels: the two certified routes and the 60-digit decimal sign always agree; slowest certification 0.003 s; the harmonic slope sign differed at 10 of 312
+exit 0
+
+=== python3 -I probe_logage_extra.py
+largest number of series terms used by the certified sign over the 312 targets: 8
+n*S_zy over 40 independent fair MAIN histories of 433 draws: mean +89493, standard deviation 653164
+exit 0
+
+=== python3 -I probe_wave2.py timing
+PB MAIN 433 E2_MEAN 0.00s; E2_MEDIAN 0.00s; E2_MEAN_LAST8 0.00s; E17_BINS_C100 0.00s; E17_BINS_W208_C100 0.00s; E17_LOGAGE_SIGN 0.00s; E19_T2 0.02s; E19_T3 0.02s; E19_T4 0.02s; E18_C10 0.14s; E18_W208_C10 0.13s; E18_W104_C10 0.13s
+PB POWERBALL 433 E2_MEAN 0.00s; E2_MEDIAN 0.00s; E2_MEAN_LAST8 0.00s; E17_BINS_C100 0.00s; E17_BINS_W208_C100 0.00s; E17_LOGAGE_SIGN 0.00s; E19_T2 0.01s; E19_T3 0.01s; E19_T4 0.01s; E18_C10 0.21s; E18_W208_C10 0.23s; E18_W104_C10 0.26s
+Oz MAIN 218 E2_MEAN 0.00s; E2_MEDIAN 0.00s; E2_MEAN_LAST8 0.00s; E17_BINS_C100 0.00s; E17_BINS_W208_C100 0.00s; E17_LOGAGE_SIGN 0.00s; E19_T2 0.02s; E19_T3 0.02s; E19_T4 0.02s; E18_C10 0.37s; E18_W208_C10 0.31s; E18_W104_C10 0.31s
+exit 0
+
+=== python3 -I probe_wave2.py fair
+MAIN fair, targets 30 log-age sign +1 at 11 ; -1 at 19
+MAIN fair E_19 T=2 phi range 0.976660333445931 1.0009268531567161 1.0000103274228316 1.0205827556937959
+MAIN fair E_18 C10 mean non-fair weight per target: min 0.39834723042555087 max 0.4615311820902042
+PB fair log-age sign +1 at 0 of 30
+exit 0
+
+=== python3 -I probe_wave2.py planted
+clustering: log-age sign -1 (n*S_zy = -5752893.7); E_17 bin hazards [0.272, 0.19, 0.19, 0.175, 0.181, 0.18, 0.185] ; E_19 T2 phi [1.0, 0.999] ; E_18 weights label 5 [0.611, 0.108, 0.281, 0.0] label 17 [0.087, 0.837, 0.076, 0.0]
+two-cycle 17: log-age sign -1 (n*S_zy = -590746.7); E_17 bin hazards [0.196, 0.21, 0.206, 0.201, 0.2, 0.189, 0.191] ; E_19 T2 phi [1.027, 0.978] ; E_18 weights label 5 [0.0, 0.645, 0.316, 0.039] label 17 [0.688, 0.0, 0.0, 0.312]
+cycle5 label 5: log-age sign -1 (n*S_zy = -511529.8); E_17 bin hazards [0.201, 0.192, 0.216, 0.211, 0.185, 0.207, 0.182] ; E_19 T2 phi [0.995, 1.003] ; E_18 weights label 5 [0.013, 0.0, 0.671, 0.316] label 17 [0.0, 0.994, 0.006, 0.0]
+exit 0
+
+=== python3 -I probe_bias.py
+L=20 K=1 W=300: 200 independent fair histories, log-age sign +1 in 99, -1 in 101; S_zy mean -0.49616, sd 15.26266, mean/se -0.46
+L=35 K=7 W=300: 120 independent fair histories, log-age sign +1 in 69, -1 in 51; S_zy mean +3.88494, sd 34.04953, mean/se +1.25
+exit 0
+
+=== python3 -I probe_overlap.py
+E17_BINS_C100 vs E19_T2: mean TOP-7 overlap 2.85 of 7 over 26 targets (fair expectation 1.40)
+E17_BINS_C100 vs E17_LOGAGE_SIGN: mean TOP-7 overlap 4.00 of 7 over 26 targets (fair expectation 1.40)
+E2_MEAN vs E2_MEDIAN: mean TOP-7 overlap 2.31 of 7 over 26 targets (fair expectation 1.40)
+E2_MEAN vs E2_MEAN_LAST8: mean TOP-7 overlap 3.92 of 7 over 26 targets (fair expectation 1.40)
+E18_C10 vs E18_W208_C10: mean TOP-7 overlap 4.35 of 7 over 26 targets (fair expectation 1.40)
+E18_W208_C10 vs E18_W104_C10: mean TOP-7 overlap 3.65 of 7 over 26 targets (fair expectation 1.40)
+E18_C10 vs E17_BINS_C100: mean TOP-7 overlap 1.96 of 7 over 26 targets (fair expectation 1.40)
+E2_MEAN vs E17_BINS_C100: mean TOP-7 overlap 0.12 of 7 over 26 targets (fair expectation 1.40)
+E1 vs E2_MEAN: mean TOP-7 overlap 1.69 of 7 over 26 targets (fair expectation 1.40)
+E1 vs E18_C10: mean TOP-7 overlap 4.08 of 7 over 26 targets (fair expectation 1.40)
+E19_T2 vs E19_T3: mean TOP-7 overlap 3.12 of 7 over 26 targets (fair expectation 1.40)
+exit 0
+
+=== python3 -I probe_e19pl.py
+two-cycle 17 pooled phi [1.027, 0.978] label17 phi [1.708, 1.194] label17 G 2 rank of 17: 1 max |phi_j-1| over other labels 0.256
+fair pooled phi [1.016, 0.987] label17 phi [1.06, 0.973] label17 G 4 rank of 17: 8 max |phi_j-1| over other labels 0.186
+two-cycle 17: favoured targets 164 17 in E_19 per-label TOP7 at 141
+per-label : 17 in TOP7 at favoured 141 of 164 ; at unfavoured 101 of 165
+per-label, level divided out : 17 in TOP7 at favoured 79 of 164 ; at unfavoured 20 of 165
+exit 0
+
+=== python3 -I probe_e18_lib.py
+rhythm (x4 at age 5, x0.25 otherwise) : label 5 in E_18 TOP7 when favoured 0 of 10 ; otherwise 0 of 155 ; weights FAST FAIR SLOW REGULAR [0.18, 0.0, 0.34, 0.48]
+rapid+absent (x2.5 at ages 1-2, x0.4 later) : label 5 in E_18 TOP7 when favoured 42 of 42 ; otherwise 7 of 123 ; weights FAST FAIR SLOW REGULAR [0.646, 0.0, 0.354, 0.0]
+fair MAIN: mean non-FAIR weight per target, min 0.398 max 0.462
+exit 0
+
+=== python3 -I probe_e2_rhythm.py
+E_2 mean: label 5 in TOP7 when its projected age is 5: 0 of 21; otherwise 17 of 308
+E_2 median: label 5 in TOP7 when its projected age is 5: 21 of 21; otherwise 27 of 308
+E_2 mean last 8: label 5 in TOP7 when its projected age is 5: 6 of 21; otherwise 25 of 308
+exit 0
+
+=== python3 -I probe_recheck.py
+L=35 K=7: 7 bins, rank of the 4 component bin vectors = 4; each sums to 1: True
+L=20 K=1: 7 bins, rank of the 4 component bin vectors = 4; each sums to 1: True
+L=47 K=7: 7 bins, rank of the 4 component bin vectors = 4; each sums to 1: True
+L=10 K=2: 7 bins, rank of the 4 component bin vectors = 4; each sums to 1: True
+E_18 ALL: TOP7 shared with c=10: {2: 6.77, 40: 6.73} over 26 targets
+E_19 T2 final: 17 in TOP7 favoured 79 of 164 ; unfavoured 20 of 165
+exit 0

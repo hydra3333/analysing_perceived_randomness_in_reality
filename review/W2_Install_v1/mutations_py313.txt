@@ -1,0 +1,50 @@
+PASS control passes tests.test_recurrence_gaps.Censoring
+PASS control passes tests.test_recurrence_gaps.LogSign
+PASS control passes tests.test_recurrence_gaps.Refusals
+PASS control passes tests.test_recurrence_gaps.TwoRoutesAgree
+PASS control passes tests.test_recurrence_gaps.WorkedExamples
+PASS control passes tests.test_wave2_recurrence.AsInstalled
+PASS control passes tests.test_wave2_recurrence.EachVariantsOwnRule
+PASS control passes tests.test_wave2_recurrence.ThroughTheContract
+PASS control passes tests.test_wave2_recurrence.ThroughTheContract.test_e18_verify_refuses_weights_that_are_not_optimal
+PASS control passes tests.test_wave2_recurrence.WorkedExamples
+PASS mutation: projected age one short -> tests.test_recurrence_gaps.WorkedExamples fails
+PASS mutation: a never-seen label aged W, not W + 1 -> tests.test_recurrence_gaps.Censoring fails
+PASS mutation: exposures counted before the first appearance -> tests.test_recurrence_gaps.Censoring fails
+PASS mutation: the open stretch left out of the gaps route -> tests.test_recurrence_gaps.WorkedExamples fails
+PASS mutation: the walk window one draw short -> tests.test_recurrence_gaps.Censoring fails
+PASS mutation: gaps_in_window admits a gap starting just outside -> tests.test_recurrence_gaps.Censoring fails
+PASS mutation: bin edges rounded down -> tests.test_recurrence_gaps.WorkedExamples fails
+PASS mutation: an age on an edge put in the next bin -> tests.test_recurrence_gaps.WorkedExamples fails
+PASS mutation: log-age coefficients with the wrong sign -> tests.test_recurrence_gaps.WorkedExamples fails
+PASS mutation: trial division takes each prime once -> tests.test_recurrence_gaps.TwoRoutesAgree fails
+PASS mutation: the sieve stops short of a square -> tests.test_recurrence_gaps.LogSign fails
+PASS mutation: a positive sign read from the upper bound -> tests.test_recurrence_gaps.LogSign fails
+PASS mutation: route 2 without its exact-zero test -> tests.test_recurrence_gaps.LogSign fails
+PASS mutation: route 1 bounds an empty map -> tests.test_recurrence_gaps.LogSign fails
+PASS mutation: a repeated label accepted -> tests.test_recurrence_gaps.Refusals fails
+PASS mutation: E_2 fallback is not the fair mean gap -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_2 absolute, not relative, distance -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_2 median takes the upper middle only -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_2 telescoping one gap short (verify route) -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_2 every variant computed as the first -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: E_2 verify() compares nothing -> tests.test_wave2_recurrence.ThroughTheContract fails
+PASS mutation: E_17 bins shrunk towards one half -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_17 window ignored (compute route) -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: E_17 log-age sign reversed -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_17 every variant computed as the first -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: E_17 verify() compares nothing -> tests.test_wave2_recurrence.ThroughTheContract fails
+PASS mutation: E_19 level not divided out -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_19 residue of the wrong age -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_19 shrunk towards 1, not the pooled factor -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_19 every variant computed as the first -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: E_18 FAST law at three times the fair rate -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_18 prior pseudo-gaps shaped as FAST, not FAIR -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_18 negative weights accepted -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: E_18 optimality certificate not checked -> tests.test_wave2_recurrence.ThroughTheContract.test_e18_verify_refuses_weights_that_are_not_optimal fails
+PASS mutation: E_18 certificate ignores the off-support gradients -> tests.test_wave2_recurrence.ThroughTheContract.test_e18_verify_refuses_weights_that_are_not_optimal fails
+PASS mutation: E_18 hazard read one gap too far -> tests.test_wave2_recurrence.WorkedExamples fails
+PASS mutation: E_18 every variant computed as the first -> tests.test_wave2_recurrence.EachVariantsOwnRule fails
+PASS mutation: the runner does not list E_18 -> tests.test_wave2_recurrence.AsInstalled fails
+PASS mutation: E_19 flag file deleted -> tests.test_wave2_recurrence.AsInstalled fails
+RESULT PASS
