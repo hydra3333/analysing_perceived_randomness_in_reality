@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, after wave 1 was installed (commit 947c370).
+Last updated: 30 October 2026: wave 2's design ratified, its code under review; handover step added.
 
 ## A few words used below
 
@@ -62,6 +62,10 @@ Last updated: 30 October 2026, after wave 1 was installed (commit 947c370).
                 exact rule for the catalogue's existing slot E_17, not a new method number;
            E_19 Periodic Recurrence-Hazard Peaks - does that chance rise at regular intervals?
            E_18 Mixtures of Recurrence Modes - several typical gap lengths.
+9b. NEXT - The handover documents brought up to date again (owner, 30 October 2026), straight after
+           wave 2 is installed: Claude's H-1 and ChatGPT's H-2 refreshed with waves 1 and 2, Method A,
+           the template's draft 3 and the current order of work, so a fresh chat could take over. Same
+           routine as before: drafts, cross-review, your ratification, a document-only install.
 10. NEXT - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
            each past draw predicted only from the draws before it) with the scorer, so the project
            produces its first real measured results.
