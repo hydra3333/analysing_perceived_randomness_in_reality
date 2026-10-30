@@ -64,6 +64,12 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Steps when due: the method's design note includes its seed policy; the owner picks a future pulse
   time, recorded before it arrives; after it is published, the owner fetches it in a browser and gives
   it to Claude; Claude checks it, and it goes into the register.
+- Progress (30 October 2026): the releases and WF-1 design note v0.1 (EX_077, section 8.1) announces
+  the pulse: NIST Beacon 2.0, chain 2, timeStamp 2026-11-06T00:00:00.000Z (10:30 am Adelaide, Friday
+  6 November), field outputValue. The owner may pick another later minute before that one arrives
+  (decision WF1-9). After that time: open
+  https://beacon.nist.gov/beacon/2.0/pulse/time/1793923200000 in the browser, save the JSON to
+  E:\TEMP and attach it to the Claude chat.
 - When: at WF-1's design (owner decision W2-8, 30 October 2026). Wave 2 uses no random numbers; R3's
   N1 fair-draw simulator, used at WF-1, is the first part that does. Method A's later diagnostics,
   Method B's simulated checks and wave 9's machine learning also use random numbers.

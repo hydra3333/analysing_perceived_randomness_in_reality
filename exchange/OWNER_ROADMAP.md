@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, after the handovers were installed (commit 03f7da4).
+Last updated: 30 October 2026, after the new reviewer chat took over and the WF-1 design was sent (EX_077).
 
 ## A few words used below
 
@@ -64,11 +64,14 @@ Last updated: 30 October 2026, after the handovers were installed (commit 03f7da
 9b. DONE - The handover documents brought up to date (commit 03f7da4): Claude's H-1 v1r6 and the
            reviewer's H-2 v1r7, each with an introductory blurb saved beside it, and register v0.20.
            The old ChatGPT chat had reached its limit, so Claude wrote both, on your instruction, with
-           H-2's reviewer rights unchanged byte for byte. NOW: start the new ChatGPT reviewer chat from
-           its blurb; its first reply (to you) checks its understanding and its own handover.
-10. NEXT - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
+           H-2's reviewer rights unchanged byte for byte. The new ChatGPT reviewer chat took over on
+           30 October 2026: its takeover check found 0 BLOCKER, 0 CORRECTION and 1 OPTIONAL.
+10. NOW  - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
            each past draw predicted only from the draws before it) with the scorer, so the project
-           produces its first real measured results.
+           produces its first real measured results. The design (EX_077) is with the new reviewer.
+           Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
+           real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
+           6 November), WF-1B (the scorer and report, with the fair-draw simulator).
 11. NEXT - Wave 3, look-alike past draws:
            E_27 Nearest Neighbour of Historical Draw Sets - predict from what followed the past draws
                 most like the latest one;

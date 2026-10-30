@@ -1,0 +1,24 @@
+1. Sigma conversion (decimal, deterministic), against R3 17.5.3:
+   1 sigma: Q = 0.158655 (R3 0.158655); back-converted 1.000000
+   2 sigma: Q = 0.0227501 (R3 0.0227501); back-converted 2.000000
+   3 sigma: Q = 0.0013499 (R3 0.00134990); back-converted 3.000000
+   4 sigma: Q = 3.16712e-05 (R3 3.16712e-5); back-converted 4.000000
+   5 sigma: Q = 2.86652e-07 (R3 2.86652e-7); back-converted 5.000000
+   6 sigma: Q = 9.86588e-10 (R3 9.86588e-10); back-converted 6.000000
+   deficit example: zero PD9 wins in 291: P_lo = 0.0111058, deficit sigma = 2.28673 (R3: 0.0111058, 2.28673)
+2. MR16 reference rows, exact:
+   Powerball any division   n=291: expected 6.6; k_3 = 16 (2.42x); power 0.04 / 0.25
+   Powerball 3+ main        n=291: expected 36.3; k_3 = 55 (1.51x); power 0.49 / 0.99
+   Powerball hit            n=291: expected 14.6; k_3 = 28 (1.92x); power 0.11 / 0.61
+   Oz Lotto any division    n=220: expected 4.4; k_3 = 13 (2.97x); power 0.02 / 0.10
+   Oz Lotto 3+ main         n=220: expected 12.5; k_3 = 25 (2.01x); power 0.08 / 0.52
+3. MR7 exact null distribution (integer coefficients):
+   POWERBALL n=291: 2038 coefficients, built in 0.79 s; exact mean 2037/5 per window = 1.400000 per draw
+   POWERBALL n=432: 3025 coefficients, built in 2.28 s; exact mean 3024/5 per window = 1.400000 per draw
+   OZLOTTO n=219: 1534 coefficients, built in 0.34 s; exact mean 10731/47 per window = 1.042553 per draw
+4. N1 generator: 58200 Powerball draws in 0.50 s, so R = 10,000 x 291 draws takes about 25 s
+   main-match counts [10070, 22774, 17944, 6284, 1055, 71, 2, 0]; chi-square over 6 cells (5 df) = 8.69; Powerball hits 2954 of 58200 (expected 2910)
+   determinism: replicate 17 target 1400 twice -> equal True; replicate 18 differs True; first draw [9, 12, 13, 17, 27, 28, 35] + 8 (invented root)
+   Oz Lotto shape: 7 main [1, 5, 12, 18, 19, 21, 44], 3 supplementary [3, 15, 39], disjoint True
+   key SHA-256 for that draw: fe3ba4409dbde0e31a78dced448659df574147a296014cb49f81e66a88ffd741; first word 4609bee9cffb0e7d
+5. MR1 comparison decided exactly by rational products: replicate >= observed is False (float route agrees: False)
