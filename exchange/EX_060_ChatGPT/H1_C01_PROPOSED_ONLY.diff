@@ -1,0 +1,20 @@
+--- H1_v1r5_EX059
++++ H1_v1r5_EX060_C01_proposed
+@@ -89,6 +89,8 @@
+   - `OWNER_REMINDERS.md`: things the owner asked to be reminded of, each with the date asked and its status (OPEN, DONE or DROPPED, never deleted). Raise each OPEN item when its "when" arrives, or when the owner asks.
+ - **When the owner is away** and has said to carry on: work in chunks, each ending in something the reviewer can review; hold code whose design has not yet passed; and leave a short summary of what was done, what to send and what to decide.
+ 
++The owner restated the purpose on 30 October 2026, with the reviewer chat's six working principles (register v0.15). It restates these points and changes no rule.
++
+ ### 2A. The owner's foundational points (26 Oct; binding)
+ 
+ 1. The project is **deliberately and extremely speculative**. It looks for patterns that conventional statistics may have missed. No idea, method or measure is excluded because conventional statistics says it cannot work.
+@@ -98,8 +100,6 @@
+ 5. **Openness with discipline:** any idea may be explored, but a claim needs a definable, testable form.
+ 6. **Design test for any proposal:** does it make a number more honest without making any idea, method or measure ineligible? If it would act as a veto, flag it against this philosophy.
+ 7. **Plain language in outputs:** terms such as "walk-forward" and "in-sample" are always printed with their exact project meaning.
+-
+-The owner restated the purpose on 30 October 2026, with the reviewer chat's six working principles (register v0.15). It restates these points and changes no rule.
+ 
+ ---
+ 
