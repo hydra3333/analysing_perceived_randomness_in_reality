@@ -70,6 +70,10 @@ Last updated: 31 October 2026, after the owner ratified the WF-1 design (EX_081)
            each past draw predicted only from the draws before it) with the scorer, so the project
            produces its first real measured results. The design passed review (EX_077 to EX_081)
            and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). Now: coding REL-1 and WF-1A.
+           E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
+           contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
+           runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
+           E_1 r2 then gets its own batch, so it can still be in the first report.
            Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
            real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
            6 November), WF-1B (the scorer and report, with the fair-draw simulator).
