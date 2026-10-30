@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026: wave 2's design ratified, its code under review; handover step added.
+Last updated: 30 October 2026, after wave 2 was installed (commit b61b1a2).
 
 ## A few words used below
 
@@ -54,15 +54,14 @@ Last updated: 30 October 2026: wave 2's design ratified, its code under review; 
 
 ## Next, in the owner's order (decided 30 October 2026; replaces the earlier order of the same day)
 
-9.  NOW  - Wave 2, gaps between appearances (one shared "gaps" helper):
-           E_2  Expected Recurrence-Interval Alignment - one of your original six: predicts each
-                number's next gap and ranks by how well it ends at the next draw;
-           E_17 = Method A - your idea from the GASI proposal: the chance of appearing next given how
-                long since a number was last drawn. "Method A as E_17" means your idea becomes the
-                exact rule for the catalogue's existing slot E_17, not a new method number;
-           E_19 Periodic Recurrence-Hazard Peaks - does that chance rise at regular intervals?
-           E_18 Mixtures of Recurrence Modes - several typical gap lengths.
-9b. NEXT - The handover documents brought up to date again (owner, 30 October 2026), straight after
+9.  DONE - Wave 2, installed (not yet runnable), with the template's draft 3 (commit b61b1a2):
+           E_2  favours numbers whose next draw would complete their usual gap (mean, middle, recent);
+           E_17 = your Method A: the chance of coming up, by how long a number has been away, learned
+                from the data, including your exact log-of-age rule;
+           E_19 short repeating cycles (2, 3 or 4 draws), number by number;
+           E_18 each number's gaps as a mix of four patterns (quick, fair, long absences, even).
+           299 tests passing on your PC and on Linux.
+9b. NOW  - The handover documents brought up to date again (owner, 30 October 2026), straight after
            wave 2 is installed: Claude's H-1 and ChatGPT's H-2 refreshed with waves 1 and 2, Method A,
            the template's draft 3 and the current order of work, so a fresh chat could take over. Same
            routine as before: drafts, cross-review, your ratification, a document-only install.
@@ -97,5 +96,5 @@ design keeps the simulated fair-draw comparison.
 
 ## Later (each its own package and decision)
 
-- Releases of E_6, E_3, E_4 and wave 1 (E_6's remember-everything version first), with step 10.
+- Releases of E_6, E_3, E_4, wave 1 and wave 2 (E_6's remember-everything version first), with step 10.
 - Holdout testing (the sealed draws), and then real next-draw predictions from all methods together.
