@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, after wave 2 was installed (commit b61b1a2).
+Last updated: 30 October 2026, after the handovers were installed (commit 03f7da4).
 
 ## A few words used below
 
@@ -61,10 +61,11 @@ Last updated: 30 October 2026, after wave 2 was installed (commit b61b1a2).
            E_19 short repeating cycles (2, 3 or 4 draws), number by number;
            E_18 each number's gaps as a mix of four patterns (quick, fair, long absences, even).
            299 tests passing on your PC and on Linux.
-9b. NOW  - The handover documents brought up to date again (owner, 30 October 2026), straight after
-           wave 2 is installed: Claude's H-1 and ChatGPT's H-2 refreshed with waves 1 and 2, Method A,
-           the template's draft 3 and the current order of work, so a fresh chat could take over. Same
-           routine as before: drafts, cross-review, your ratification, a document-only install.
+9b. DONE - The handover documents brought up to date (commit 03f7da4): Claude's H-1 v1r6 and the
+           reviewer's H-2 v1r7, each with an introductory blurb saved beside it, and register v0.20.
+           The old ChatGPT chat had reached its limit, so Claude wrote both, on your instruction, with
+           H-2's reviewer rights unchanged byte for byte. NOW: start the new ChatGPT reviewer chat from
+           its blurb; its first reply (to you) checks its understanding and its own handover.
 10. NEXT - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
            each past draw predicted only from the draws before it) with the scorer, so the project
            produces its first real measured results.
