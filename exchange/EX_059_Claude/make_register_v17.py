@@ -1,0 +1,132 @@
+"""Draft register v0.17 from the installed register v0.16 by counted in-place edits (Claude, 30 Oct 2026).
+
+Records: the E_3/E_4 rehearsal (TASK_T006) and installation, with its departure; the reviewer's E_3/E_4 R-2 and
+v0.16 review (EX_055 to EX_057); the owner's decisions and order of work of 30 October 2026; the owner's working
+lists; and the handover round (H-1 v1r5, H-2 v1r6), installed with this register by the document-only
+procedure. Every old string must occur exactly once; inserted text is ASCII. The input is the Git blob of
+doc/RATIFICATION_REGISTER_v0_16.md (d84fc3dd...c220).
+Placeholders, finalised after review and the owner's ratification: "RATIFICATION CANDIDATE" (version line),
+[H-STATUS] (twice), [H2-V1R6-SHA] (twice) and [H2-CHECK] (Claude's factual check of H-2 v1r6).
+Usage: python3 -I make_register_v17.py REGISTER_v0_16 OUT_v0_17
+"""
+import hashlib, sys
+
+src, out = sys.argv[1:3]
+raw = open(src, 'rb').read()
+assert hashlib.sha256(raw).hexdigest() == 'd84fc3ddd5978f0a5529bad20f9db9d1f95142c7e06e3dd78599cc0d4fa1c220'
+t = raw.decode('utf-8')
+assert '\r' not in t
+H1 = '95e0f096de9d63070a24c7715e5a5333199560ee0fed6320b8ef730c20e988ae'
+
+NEW_SECTION = """## E_3 and E_4 installed, the owner's order of work, and the handovers refreshed (register v0.17)
+
+Paths in this section are under `doc/`, except those beginning `review/`, `exchange/`, `src/`, `tests/` or `CLAUDE_CODE_WORKING_FOLDER_TREE/`, which are from the repository root. In this section, "this register" means register v0.17.
+
+**The E_3/E_4 review (EX_055 to EX_057).** The verdict is `review/Independent_ChatGPT_E34_HIGH_R2_and_Register_v16_Review_v0_1.md`, LF copy, `f58821b8a09aede3df4481ae9fa6ad6c47438aaac9cac172c1d11a2f67c6accb`, installed with this register. It found 0 BLOCKER, 0 CORRECTION, 0 OPTIONAL and 0 RECONSIDER.
+- **The code candidate:** HIGH-tier R-2 PASS.
+  - The overlay was verified against the base snapshot of `7c93320`, and the one replaced file rebuilt exactly.
+  - 231 selected offline tests were independently reproduced, with no skips. The 10 real-master tests and T12 were left for the owner's run, so this is not the full 242-test acceptance.
+  - 1,968 extra exact minimax checks passed.
+  - Claude's 27 of 27 mutation result is author evidence only: the reviewer's attempt to rerun it timed out.
+- **Register v0.16:** CONTENT PASS; the exact predecessor was reconstructed and the three counted edits reproduced the candidate byte for byte.
+- **REVIEWER-DECIDED, checked by Claude, no exception to report:**
+  - E34-056-RD-01: the code PASS, provided the installed overlay stays byte-identical to the reviewed code;
+  - REG16-056-RD-02: v0.16 content PASS; only the owner's finalisation and its dependent identities may change;
+  - E34-056-RD-03: both EX_053 optional test expectations are satisfied.
+- **EX_057** (Claude) recorded the owner's decisions below and the final E_3/E_4 package, for the record only.
+
+**Owner decisions after EX_056 (30 October 2026).**
+- **Register v0.16 OWNER-RATIFIED,** as reviewed.
+- **E2R-T12 OWNER-APPROVED** for the E_3/E_4 package's rehearsal and install run.
+
+**The E_3/E_4 rehearsal (TASK_T006).** Claude Code ran the final package (`exchange/EX_057_Claude/E34_Install_v1.zip`, `9d9949d5...15fc`) in a disposable task clone on the owner's machine. The report (`CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T006.md`, commit `6dc54f9`) gives:
+- PASS in all 15 steps;
+- all 242 tests, including E2R-T12, in 94 seconds, with the 3 allowed symlink skips;
+- the main repository unchanged.
+
+Step 11 now asked for the whole status output, copied as printed, and Claude counted it from the report: 70 lines, 69 `A` and 1 `M`. The runner needed no temporary file this time.
+
+**The E_3/E_4 package installed** at commit `5b9edb44d4f4bf01e2d4e8cd7ec9561b32b3110e` (30 October 2026; parent `6dc54f9`, the T006 report).
+- **The owner's log**, in order:
+  - the ZIP's SHA-256 checked;
+  - `git status --short` empty, and `Already up to date`;
+  - `PRE PASS`;
+  - 70 files copied;
+  - `POST PASS`;
+  - 69 `A` and 1 `M`;
+  - `COMMITTED PASS`, then the push.
+- **Departure, recorded.** The log has no test run between `POST PASS` and the commit. The owner ran the suite straight after the push, unchanged in the repository: `SUITE PASS`, all 242 tests including E2R-T12, with only the 3 allowed symlink skips, and `git status --short` empty afterwards. The same package bytes had already passed all 242 tests on the owner's machine in the T006 rehearsal. No further action is needed.
+
+  This is the second such departure (the first was at the CODE-1 install, register v0.12). Claude's install steps will put the suite command in the same block as POST.
+- **Claude's check, from a fresh GitHub clone:**
+  - the parent and the 69 `A` + 1 `M` change set;
+  - `COMMITTED PASS` repeated;
+  - all 69 manifest entries match their Git blobs;
+  - register v0.16 is the ratified `d84fc3dd...c220`;
+  - 242 tests pass on Linux.
+
+E_3 and E_4 are installed non-runnable, as designed.
+
+**The owner's order of work (OWNER-DECIDED, 30 October 2026).**
+1. This handover round.
+2. The template, draft 2.
+3. The E_7-E_16 batch, made from the template.
+4. Method A, as E_17.
+5. Method B, as E_45.
+6. The discussion of the non-local means idea.
+
+Each step keeps its own design review, code review and owner go-ahead.
+
+**The owner's two further methods, identified.**
+- **What they are:** the owner confirmed them as Methods A and B of `GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md`:
+  - A, a recurrence-gap spectrum: whether a number that has just been drawn repels or clusters;
+  - B, delay-embedding analogues: what followed the past draws that looked most like the recent ones, with forbidden ordinal patterns as a diagnostic.
+- **The source:** that proposal supersedes the pre-exploratory `GASI_thought_experiments/GASI_thought_experiments_possibly_unexplored_areas.md`.
+- **Their place in the catalogue:** R2 already lists close relatives. A is near E_17 (Discrete Recurrence Hazard Curves; also E_19); B is near E_45 (Delay-Embedded Nearest-Analogue Forecast; also E_27 and E_32). They become those methods' specifications, not new E-numbers.
+
+**Keeping the template current (OWNER-DECIDED, 30 October 2026).** The new-method template is reviewed and kept up to date whenever new findings, in Claude's assessment or the reviewer's, suggest an update is warranted.
+- Claude proposes each update in the next package, and it is reviewed like any other document.
+- Each method's handback says whether it found anything for the template.
+
+**The owner's working lists.** Claude keeps two lists in `exchange/` for the owner. They are working lists, not reviewed and not part of the rules; this register stays the record.
+- `exchange/OWNER_REMINDERS.md` (from `43c95c5`; updated at `95ad6bf` and `eadb3e3`): things the owner asked to be reminded of, each with the date asked and its status. As of this register:
+  - R-001: the two methods above;
+  - R-002: the non-local means idea, postponed by the owner until after Methods A and B;
+  - R-003: the optional tidy-up of old EX copies in `review/`;
+  - R-004: the NIST Randomness Beacon root (D-9..D-11), due at the first method that uses random numbers.
+- `exchange/OWNER_ROADMAP.md` (from `eadb3e3`): the steps in plain English and where the project is up to. Claude updates it at each milestone and shows it to the owner then, and whenever asked.
+
+**H-1 v1r5 and H-2 v1r6 (installed with this register).** The owner asked for the handovers to be refreshed at this milestone, the first three new methods installed, as register v0.14 foresaw.
+- `HANDOVER/Claude_Primary_Handover_H1_v1r5.md` (`""" + H1 + """`): Claude's handover, refreshed in place to `5b9edb4` with 37 counted edits from v1r4. It keeps v1r4's structure; section 2A is byte-identical. Its Appendix B lists what changed. It folds in the out-of-date statements of registers v0.15 and v0.16 that concern H-1 v1r4.
+- `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r6.md` (`[H2-V1R6-SHA]`): the reviewer's handover, refreshed by the reviewer chat. Claude's factual check: [H2-CHECK].
+
+**Out-of-date statements (register v0.17).** This register prevails, and the files are not edited:
+- Register v0.16, "installed with this register" for the E_3/E_4 package: done, at `5b9edb4`, as above.
+- H-1 v1r4 and H-2 v1r5, generally: superseded by H-1 v1r5 and H-2 v1r6.
+- The E_6 design note v0.1 and the E_3/E_4 design note v0.1, where they describe the next steps: superseded by the owner's order of work above.
+
+| Document (path under `doc/`) | Author / check | Status and Git-content SHA-256 (LF) |
+|---|---|---|
+| `HANDOVER/Claude_Primary_Handover_H1_v1r5.md` | Claude; reviewed by the ChatGPT reviewer chat | [H-STATUS]; installed with this register; `""" + H1 + """` |
+| `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r6.md` | the ChatGPT reviewer chat; factual review by Claude | [H-STATUS]; installed with this register; `[H2-V1R6-SHA]` |
+| `HANDOVER/Claude_Primary_Handover_H1_v1r4.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 29 Oct 2026; superseded by H-1 v1r5; `2050e9363d841634ecf2a9c308d3efb1ed51b359fbdaf2aa3531a60eb1f1c16a` |
+| `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r5.md` | the ChatGPT reviewer chat; factual review by Claude | OWNER-RATIFIED 29 Oct 2026; superseded by H-2 v1r6; `67a1b3eaa3e1f51415eceba513fd7e1a39de91619296f0efba97ba108570a094` |
+| `RATIFICATION_REGISTER_v0_16.md` | Claude; reviewed by the ChatGPT reviewer chat | OWNER-RATIFIED 30 Oct 2026; installed at `5b9edb4`; superseded by this register; `d84fc3ddd5978f0a5529bad20f9db9d1f95142c7e06e3dd78599cc0d4fa1c220` |
+
+"""
+
+EDITS = [
+    ('**Register version:** v0.16 OWNER-RATIFIED 30 October 2026, recording',
+     '**Register version:** v0.17 RATIFICATION CANDIDATE (drafted 30 October 2026), recording the E_3/E_4 installation, the owner\'s order of work and the handover round (H-1 v1r5, H-2 v1r6); v0.16 OWNER-RATIFIED 30 October 2026, recording'),
+    ("The E_3/E_4 package and this register are installed together, in one commit identified after installation; the owner's Windows results for it are recorded after installation.",
+     "The E_3/E_4 package and this register are installed together, in one commit identified after installation; the owner's Windows results for it are recorded after installation. For v0.17, the E_3/E_4 installation commit `5b9edb4` was verified by Claude from GitHub. This register, H-1 v1r5 and H-2 v1r6 are installed together by the document-only procedure."),
+    ('\n## Interpretation and verification\n',
+     '\n' + NEW_SECTION + '## Interpretation and verification\n'),
+]
+for old, new in EDITS:
+    n = t.count(old)
+    assert n == 1, (n, old[:80])
+    assert all(ord(c) < 128 for c in new), old[:60]
+    t = t.replace(old, new)
+open(out, 'wb').write(t.encode('utf-8'))
+print(out, hashlib.sha256(t.encode()).hexdigest(), len(t.splitlines()), 'lines')

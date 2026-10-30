@@ -1,0 +1,190 @@
+"""Draft H-1 v1r5 from the installed H-1 v1r4 by counted in-place edits (Claude, 30 Oct 2026).
+
+A refresh at the milestone "three new methods installed" (owner, 30 October 2026): it brings the baseline to
+the E_3/E_4 installation (5b9edb4), records what E_6 and E_3/E_4 changed in how a method is added (D6-1, the
+template), and sets out the owner's order of work. It changes no rule. Every old string must occur exactly
+once; inserted text is ASCII. Section 2A is unchanged.
+Usage: python3 -I make_h1_v1r5.py H1_v1r4 OUT_v1r5
+"""
+import hashlib, sys
+
+src, out = sys.argv[1:3]
+raw = open(src, 'rb').read()
+assert hashlib.sha256(raw).hexdigest() == '2050e9363d841634ecf2a9c308d3efb1ed51b359fbdaf2aa3531a60eb1f1c16a'
+t = raw.decode('utf-8')
+assert '\r' not in t
+sec2a = t[t.index('### 2A.'):t.index('## 3. Project in one paragraph')]
+
+E = []
+def edit(old, new):
+    E.append((old, new))
+
+# ---------------------------------------------------------------- header and section 0
+edit('# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v1r4',
+     '# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v1r5')
+edit("**Version:** v1r4 DRAFT, 29 October 2026 (Adelaide, UTC+10:30). v1r4 is a refresh and a **deliberate shortening** of v1r3 (owner-agreed, 29 October 2026): it describes the current state, the rules and how to work, and points to the register for history instead of retelling it. Appendix B lists what changed and where any material that is no longer repeated here now lives.",
+     "**Version:** v1r5 DRAFT, 30 October 2026 (Adelaide, UTC+10:30). v1r5 refreshes v1r4 at the milestone of the first three new methods (owner, 30 October 2026). It keeps v1r4's structure, describes the current state and the owner's order of work, and changes no rule. Appendix B lists what changed.")
+edit("**Status:** DRAFT for review. It becomes authoritative only when the owner ratifies it and installs it with register v0.14; until then H-1 v1r3 stands.",
+     "**Status:** DRAFT for review. It becomes authoritative only when the owner ratifies it and installs it with register v0.17; until then H-1 v1r4 stands.")
+edit("**Baseline described:** E2R-CODE-2 installed at `ced9b6cbd43b98e9584b8020724388109eb28d68` (29 October 2026; verified by Claude from GitHub; section 7).",
+     "**Baseline described:** the E_3/E_4 package installed at `5b9edb44d4f4bf01e2d4e8cd7ec9561b32b3110e` (30 October 2026; verified by Claude from GitHub; section 7).")
+edit("**Replaces, for future roles:** H-1 v1r3, v1r2 and v1r1 (kept as history),",
+     "**Replaces, for future roles:** H-1 v1r4, v1r3, v1r2 and v1r1 (kept as history),")
+edit("`exchange/README.md`; `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (the local runner's rulebook); the governing set in section 4; the newest `exchange/EX_NNN_*` files, which show the latest open exchange with the reviewer.",
+     "`exchange/README.md`; `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (the local runner's rulebook); `doc/METHOD_TEMPLATE/README.md` (how a method is added); the governing set in section 4; the newest `exchange/EX_NNN_*` files, which show the latest open exchange with the reviewer; and the owner's two working lists, `exchange/OWNER_ROADMAP.md` and `exchange/OWNER_REMINDERS.md` (section 2).")
+edit("3. Ask the owner where things stand, using section 10 as the list.",
+     "3. Ask the owner where things stand, using section 10 and `exchange/OWNER_ROADMAP.md` as the list.")
+
+# ---------------------------------------------------------------- section 1
+edit("No departure has been found so far (through E2RC2-RD-17).",
+     "No departure has been found so far (through E34-056-RD-03).")
+edit("- **Review rounds** (owner, 29 October 2026): register text goes to the reviewer only together with a code package or the handovers, never in a round of its own.",
+     "- **Review rounds** (owner, 29 October 2026): register text goes to the reviewer only together with a code package or the handovers, never in a round of its own.\n"
+     "- **Final packages after ratification** differ from the reviewed candidate only by the owner's finalisation (the register's status line, any filled placeholder, and the dependent manifest line and verifier hashes). They travel to `exchange/` in a for-the-record EX message that needs no reply (EX_046, EX_054, EX_057), with the narrow diff; the reviewer is not asked to re-review them.")
+edit("**The owner uploads the reviewer's zips to Claude and does not save them into the repository** (owner, 29 October 2026).",
+     "**The owner uploads the reviewer's zips to Claude and does not save them into the repository** (owner, 29 October 2026). Besides EX files, Claude keeps two owner working lists in `exchange/` (section 2); they are not EX messages and not rules.")
+
+# ---------------------------------------------------------------- section 2
+edit("- **Package sizing (owner, 27 October 2026):** small packages for complex or HIGH work; a lead item that proves the pattern before a batch of similar items; heavy methods one at a time; ensembles last.",
+     "- **Package sizing (owner, 27 October 2026):** small packages for complex or HIGH work; a lead item that proves the pattern before a batch of similar items; heavy methods one at a time; ensembles last.\n"
+     "- **The owner's working lists** (owner, 30 October 2026), both in `exchange/`, both outside the rules:\n"
+     "  - `OWNER_ROADMAP.md`: the steps in plain English and where the project is up to. Update it at each milestone and show it to the owner then, and whenever asked;\n"
+     "  - `OWNER_REMINDERS.md`: things the owner asked to be reminded of, each with the date asked and its status (OPEN, DONE or DROPPED, never deleted). Raise each OPEN item when its \"when\" arrives, or when the owner asks.\n"
+     "- **When the owner is away** and has said to carry on: work in chunks, each ending in something the reviewer can review; hold code whose design has not yet passed; and leave a short summary of what was done, what to send and what to decide.")
+edit("7. **Plain language in outputs:** terms such as \"walk-forward\" and \"in-sample\" are always printed with their exact project meaning.\n",
+     "7. **Plain language in outputs:** terms such as \"walk-forward\" and \"in-sample\" are always printed with their exact project meaning.\n\n"
+     "The owner restated the purpose on 30 October 2026, with the reviewer chat's six working principles (register v0.15). It restates these points and changes no rule.\n")
+
+# ---------------------------------------------------------------- section 4
+edit("| `Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md` |",
+     "| `Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md` | `cef16b44fb7088ec018e0a8d6f233231c04e3fe6d5431cf0a2e604ad8f6fc82e` | E_6's specification and the new-method template's design; D6-1..D6-5 (for lambda < 1, read \"discounted (power-likelihood) Beta update\" for \"posterior mean\": register v0.15) |\n"
+     "| `Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md` | `b9d60b4c753bb90c6a7ca302fb4802c353b0ae23fbe82c2b417ae7b089fad072` | E_3's and E_4's specification and the shared polynomial-fit helper; D34-1..D34-5 |\n"
+     "| `METHOD_TEMPLATE/README.md` (and the 9 other template files) | `f17e2d6eb489797415252689038078047011b7aa7ba2e24f987c265078df3e26` | The new-method template, draft 1 (D6-5): what to copy, what to fill in, the checklist |\n"
+     "| `Predictive_Randomness_NAMES1_Rename_Specification_v0_2.md` |")
+edit("register v0.14 is installed with this file (register v0.13 is `6ff86e728142ce47adb76cb975e9f1ad75f01de48b6ab71c005fdb6c2331391e`).",
+     "register v0.17 is installed with this file (register v0.16 is `d84fc3ddd5978f0a5529bad20f9db9d1f95142c7e06e3dd78599cc0d4fa1c220`).")
+
+# ---------------------------------------------------------------- section 5.3
+edit("The installed data has E_1 `SUPPORTED` (variant `FULL_HISTORY_RAW_COUNTS_V1`, revision 1) in both games, and E_2..E_62 `FORMULA_OPEN` with variant `NOT_YET_SPECIFIED` in both games.",
+     "The installed data, in both games: E_1 `SUPPORTED` (variant `FULL_HISTORY_RAW_COUNTS_V1`, revision 1); E_3 and E_4 revision 1 (six variants each) and E_6 revision 1 (three variants), all `FORMULA_OPEN` with their `IN_DEVELOPMENT.txt` flags present; and E_2..E_62 each keeping a `FORMULA_OPEN` placeholder with variant `NOT_YET_SPECIFIED`, which is never edited. That is 32 declarations and 154 registry chains (186 files).")
+edit("- **Layout:** each method's entry file is directly in `src/methods/` (`E_<nnn>_<Name>.py`), as the Option F wrapper requires; its folder holds its method-specific modules and its `IN_DEVELOPMENT.txt`.",
+     "- **Owner decisions for the new methods (30 October 2026):** D6-1..D6-5 (E_6: no per-method entry file for a contract method, E_6's model and variants, the release plan, WF-1 planning only, the template draft 1) and D34-1..D34-5 (E_3/E_4: one shared helper, six frozen variants, raw least squares and smoothed interpolation and minimax, scores only, precise naming). Each method's variant settings are fixed in its specification before its code, because any later code change to a released method is a new revision (E2R-R14A).\n"
+     "- **Layout:** a **contract method** (D6-1) has no entry file of its own: the shared standalone runner, `Method_Contract_Runner.py`, is its entry, through one `ADAPTERS` line. Its code is in its own folder, `src/methods/E_<nnn>/`, with `contract.py` (compute and verify) and `IN_DEVELOPMENT.txt`. E_1 keeps its legacy entry file directly in `src/methods/` (`E_<nnn>_<Name>.py`), as the Option F wrapper requires.")
+
+# ---------------------------------------------------------------- section 7.1
+edit("| `ced9b6c` | E2R-CODE-2 v3 | Dispatch gate, standalone contract runner, create-only publication, `read_run`, E_1 wrapper, legacy-runner gate, refusing coordinator entry point; register v0.13 (register v0.14) |",
+     "| `ced9b6c` | E2R-CODE-2 v3 | Dispatch gate, standalone contract runner, create-only publication, `read_run`, E_1 wrapper, legacy-runner gate, refusing coordinator entry point; register v0.13 (register v0.14) |\n"
+     "| `7c93320` | E_6 package v2 | E_6 revision 1, per-number Beta-Bernoulli with three fixed forgetting variants, installed non-runnable; the new-method template draft 1; register v0.15 (register v0.16) |\n"
+     "| `5b9edb4` | E_3/E_4 package v1 | E_3 and E_4 revision 1, exact polynomial fits (value and slope at the target) with the shared helper `polynomial_fits.py`, installed non-runnable; register v0.16 (register v0.17) |")
+edit("Document-only installs: `be18548` (DOC-1), `ee62eb6` (DOC-3), `040f80e` (DOC-4), `b846519` (register v0.12).",
+     "Document-only installs: `be18548` (DOC-1), `ee62eb6` (DOC-3), `040f80e` (DOC-4), `b846519` (register v0.12), `337b5b2` (DOC-6: H-1 v1r4, H-2 v1r5, register v0.14; four duplicate zips removed at `f9de54a`).")
+
+# ---------------------------------------------------------------- section 7.2
+edit("| `src/methods/_common/contract_data/` | Installed declarations and hash-chained registry entries (126 files) |",
+     "| `src/methods/_common/contract_data/` | Installed declarations and hash-chained registry entries (186 files) |")
+edit("| `src/methods/Method_Contract_Runner.py` | CODE-2: the command line (`pins`, `run`); `ADAPTERS` maps a method ID to its adapter |",
+     "| `src/methods/Method_Contract_Runner.py` | CODE-2: the command line (`pins`, `run`); `ADAPTERS` maps a method ID to its adapter: E_1, E_3, E_4, E_6 |")
+edit("| `src/methods/contract_adapters/e_001.py` | E_1's contract wrapper: compute through E_1's own function; verify label-for-label equality |",
+     "| `src/methods/contract_adapters/e_001.py` | E_1's contract wrapper: compute through E_1's own function; verify label-for-label equality |\n"
+     "| `src/methods/E_006/` | E_6: `beta_bernoulli.py` (exact Beta-Bernoulli with forgetting; the variant table) and `contract.py`; flag present |\n"
+     "| `src/methods/_common/polynomial_fits.py` | Shared helper for E_3 and E_4, revision 1: exact least squares, interpolation and minimax, each with a second algorithm or certificate for verify() |\n"
+     "| `src/methods/E_003/`, `src/methods/E_004/` | E_3 and E_4: `variants.py` (the same six-row table) and `contract.py` (scores p(0) and p'(0)); flags present |")
+
+# ---------------------------------------------------------------- section 7.4
+edit("- **190 offline tests in 14 modules** at `ced9b6c`: 84 earlier, 54 CODE-1 (`test_e2r_contract` 53 including the six-worker T12, `test_e2r_prefix` 1), 52 CODE-2 (`test_e2r_dispatch` 18, `test_e2r_runner` 34). The suite runner `RUN_E2R_CODE2_SUITE.py` (inside `exchange/EX_046_Claude/E2R_CODE2_Install_v3.zip`) runs each module and compares its count; Windows allows only the three symlink skips. Results: Linux (Claude, Python 3.13.17 and 3.15.0b4) 190 pass; Windows (owner-reported, Python 3.15.2, 29 October 2026) 190 pass with 3 symlink skips, before the commit.",
+     "- **242 offline tests in 17 modules** at `5b9edb4`: 84 earlier, 54 CODE-1 (`test_e2r_contract` 53 including the six-worker T12, `test_e2r_prefix` 1), 52 CODE-2 (`test_e2r_dispatch` 18, `test_e2r_runner` 34), 20 E_6 (`test_e6_beta_bernoulli`), 19 for the shared helper (`test_polynomial_fits`) and 13 E_3/E_4 (`test_e3_e4_polynomial`). The suite runner `RUN_E34_SUITE.py` (inside `exchange/EX_057_Claude/E34_Install_v1.zip`) runs each module and compares its count; Windows allows only the three symlink skips. Results: Linux (Claude, Python 3.13.17 and 3.15.0b4) 242 pass; Windows (owner-reported, Python 3.15.2, 30 October 2026) 242 pass with 3 symlink skips, run straight after the push (a recorded departure; the rehearsal T006 had passed the same bytes before).")
+edit("it needs the owner's approval for each run context (approved for CODE-1's and CODE-2's rehearsal and install).",
+     "it needs the owner's approval for each run context (approved for the rehearsals and installs of CODE-1, CODE-2, E_6 and E_3/E_4).")
+
+# ---------------------------------------------------------------- section 8.6, 8.7, 8.8
+edit("- **Use it** to rehearse a code package on the owner's Windows machine before the real install (T003 for CODE-1, T004 for CODE-2), when the owner wants that. Check that the task's tools fit the package's shape (for example replaced files) before writing the task.",
+     "- **Use it** to rehearse a code package on the owner's Windows machine before the real install (T003 for CODE-1, T004 for CODE-2, T005 for E_6, T006 for E_3/E_4), when the owner wants that. Check that the task's tools fit the package's shape (for example replaced files) before writing the task. Make each new task from the last one by counted edits.\n"
+     "- **Never ask the runner to count or filter output** (T005: it redirected status output to a file outside the repository to count it, and could not delete the file). Ask for the whole output in the report, and count it yourself from the report.")
+edit("The mutation tool is installed as `review/E2R_CODE2_Install_v3/tools/e2r_code2_mutations.py`. A new chat can rebuild a package from these and check it against the recorded hashes.",
+     "The mutation tool is installed as `review/E2R_CODE2_Install_v3/tools/e2r_code2_mutations.py`. For E_6: `EX_050_Claude/` (first candidate, base snapshot), `EX_052_Claude/` (v2 candidate, builder, register v0.15 builder) and `EX_054_Claude/` (final zip). For E_3/E_4: `EX_055_Claude/` (candidate, builder, base snapshot `BASE_7c93320_src_tests.zip`, register v0.16 builder) and `EX_057_Claude/` (final zip). Their mutation tools and contract-data generators are installed under `review/E6_Install_v2/tools/` and `review/E34_Install_v1/tools/`. A new chat can rebuild a package from these and check it against the recorded hashes.")
+edit("- **The suite step before the commit was once skipped** (CODE-1 install; recorded as a departure). Say plainly in the owner's steps not to skip it.",
+     "- **The suite step before the commit has been skipped twice** (CODE-1 and E_3/E_4 installs; both recorded as departures, both run straight after the push and passed). Say plainly not to skip it, and put the suite command in the same command block as POST, not in a block of its own.\n"
+     "- **Mutation checks find real gaps:** \"every variant computed as full memory\" passed every E_6 test until a test computed each variant's own setting; a certificate accepting D + 1 alternations passed until a hand case was added. Plan one mutation per variant setting and per verification rule.\n"
+     "- **Do not pin lists other packages will extend** (E_6's test pinned the whole `ADAPTERS` list; the template trial caught it). Assert only your own entry.\n"
+     "- **Compute every worked example in a design note with a tool** (the E_3/E_4 draft had two wrong hand-worked values, caught before sending).\n"
+     "- **An owner decision given before the reviewer's formal reply** is recorded as OWNER-DECIDED, subject to revisiting if the review changes anything (D6-1..D6-5).")
+
+# ---------------------------------------------------------------- section 9
+edit("CODE-1 and CODE-2 give every method the release gate, create-only publication, receipts and traceability. A new method needs only its own pieces:",
+     "CODE-1 and CODE-2 give every method the release gate, create-only publication, receipts and traceability. A new method needs only its own pieces, and starts from the template, `doc/METHOD_TEMPLATE/` (draft 1; README and checklist), as E_6 and E_3/E_4 did:")
+edit("and its plain-English text (D-3). Check it against the owner's philosophy (section 2A): no number suppressed, no veto.",
+     "and its plain-English text (D-3). **Fix every variant's settings here, before code** (E2R-R14A). Check it against the owner's philosophy (section 2A): no number suppressed, no veto.")
+edit("3. **One code package** (HIGH; R-2 reproduction; owner's Windows run): the entry file, its folder with `IN_DEVELOPMENT.txt`, its `METHOD_DECLARATION_V1` and a non-SUPPORTED registry entry, its contract adapter and the `ADAPTERS` line in `Method_Contract_Runner.py` (an edit to an existing file, listed and checked), synthetic tests including T-05, its goldens, and mutation checks. The register text rides in the same round. It installs non-runnable.",
+     "3. **One code package** (HIGH; R-2 reproduction; owner's Windows run): its folder `src/methods/E_<nnn>/` with `contract.py` and `IN_DEVELOPMENT.txt` (no entry file, D6-1), any shared helper in `_common/`, a `METHOD_DECLARATION_V1` and a `FORMULA_OPEN` registry entry for each variant in each game (generated by a script that travels with the package), the `ADAPTERS` line in `Method_Contract_Runner.py` (an edit to an existing file, listed and checked), synthetic tests including T-05 and each variant's own setting computed in the test, and mutation checks. The register text rides in the same round. It installs non-runnable, after a Claude Code rehearsal.")
+edit("The owner has said there are two more methods to propose. Start with step 1 when the owner is ready, and follow the package-sizing rule: the first new method proves the pattern before any batch.",
+     "**Keeping the template current** (owner, 30 October 2026): whenever a method's design, review, code or install shows something the template should say or do differently, in Claude's assessment or the reviewer's, Claude proposes the template update in the next package. It is reviewed like any other document, and its draft number goes up. Each method's handback says whether it found anything for the template.\n\n"
+     "E_6 proved the pattern and E_3/E_4 used it for a pair sharing a helper; template draft 2 (section 10) folds in what they taught. The owner's two further methods are Methods A and B of `doc/GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md` (which supersedes the pre-exploratory `GASI_thought_experiments_possibly_unexplored_areas.md`). R2 already lists close relatives: A is near E_17 (and E_19), B near E_45 (and E_27, E_32). They become those methods' specifications, not new E-numbers.")
+
+# ---------------------------------------------------------------- section 10
+old10 = t[t.index("1. **Done since v1r3:**"):t.index("8. **Housekeeping, owner's choice:**")]
+new10 = """1. **Done since v1r4:** DOC-6; E_6 with the template draft 1; E_3/E_4; the rehearsals T005 and T006 (sections 7.1, 7.4, 8.6).
+2. **Now:** this file, H-2 v1r6 (the reviewer's) and register v0.17, in one document round.
+3. **Then, in the owner's order (30 October 2026):**
+   - the template, draft 2: shared helpers, score-only methods, minimum history;
+   - the E_7-E_16 batch (frequency, Bayesian and regime), from the template;
+   - Method A, as E_17;
+   - Method B, as E_45;
+   - the NL-means discussion (`exchange/OWNER_REMINDERS.md` R-002).
+4. **Releases** (D6-3), each a small reviewed package: E_6 full memory first, then the decay variants; E_3/E_4 when the owner wants. Even released, contract runs stay synthetic (D2-2).
+5. **WF-1** (D6-4, planning only): real-data contract runs, the walk-forward driver and the R3 scorer, as one later reviewed package.
+6. **E2R-CODE-3, retirement tooling** (E2R-T15; D-5): kept by the owner. Needed before any method's second revision.
+7. **The seed-policy package** (D-9..D-11), at the first method that uses random numbers (R-004). Method A's and B's simulated fair-draw checks use random numbers too.
+8. **Coordinated contract runs** (a later package; D2-1), when the owner wants many methods run together.
+9. **Still permission-gated, each separately:** real-data contract runs (D2-2); new real-data scientific evaluation, including the E_1 development walk-forward and the R3 scorer on real draws; walk-forward preregistration; Windows lifecycle and destructive gates (P2 closure, ERR-R2-02 / Option F final acceptance); allowlist entries; ranking and in-sample engines (R3 17.13 stages 2-3); any Oz Lotto science; Mode H; FINAL and the production weekly loop.
+"""
+edit(old10, new10)
+edit("8. **Housekeeping, owner's choice:** the data tools' first run under 3.15; later, delete `venv.bak` and Python 3.14; the owner tools' versioned names (OPEN-N2, deferred); the duplicate \"(1)\" copy of the Claude Code exploration note in `doc/`, which the owner may delete.",
+     "10. **Housekeeping, owner's choice:** the data tools' first run under 3.15; later, delete `venv.bak` and Python 3.14; the owner tools' versioned names (OPEN-N2, deferred); the duplicate \"(1)\" copy of the Claude Code exploration note in `doc/`, which the owner may delete; the 10 older EX copies in `review/` (R-003).")
+edit("Mode H storage; E_2-E_6 batching; scientific allowlist activation;",
+     "Mode H storage; when E_2 and E_5 are taken up; scientific allowlist activation;")
+
+# ---------------------------------------------------------------- Appendix A
+edit("| H-2 v1r4 (current reviewer handover until v1r5 is installed) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md`, `73b90ea348aea5fc337097a14ec4a8669258bc6cba55ce5a2485de26575f3f3a` |\n"
+     "| H-1 v1r3 (predecessor) | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md`, `ddf4de23b726b2abf55ffcab613f926b62775469076476f939288a278e6422fc` |",
+     "| H-2 v1r5 (current reviewer handover until v1r6 is installed) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r5.md`, `67a1b3eaa3e1f51415eceba513fd7e1a39de91619296f0efba97ba108570a094` |\n"
+     "| H-1 v1r4 (predecessor) | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r4.md`, `2050e9363d841634ecf2a9c308d3efb1ed51b359fbdaf2aa3531a60eb1f1c16a` |\n"
+     "| H-1 v1r3 | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md`, `ddf4de23b726b2abf55ffcab613f926b62775469076476f939288a278e6422fc` |")
+edit("| Register v0.13 | `doc/RATIFICATION_REGISTER_v0_13.md`, `6ff86e728142ce47adb76cb975e9f1ad75f01de48b6ab71c005fdb6c2331391e` |",
+     "| Register v0.16 | `doc/RATIFICATION_REGISTER_v0_16.md`, `d84fc3ddd5978f0a5529bad20f9db9d1f95142c7e06e3dd78599cc0d4fa1c220` |\n"
+     "| Claude Code rulebook v0.2 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |")
+edit("| CODE-1 final package | `exchange/EX_037_Claude/E2R_CODE1_Install_v2.zip`, `5a2b978c96d82e3159cc50e8c24a2f29a944a39d29b7452452f8b484b9a23a11` |",
+     "| CODE-1 final package | `exchange/EX_037_Claude/E2R_CODE1_Install_v2.zip`, `5a2b978c96d82e3159cc50e8c24a2f29a944a39d29b7452452f8b484b9a23a11` |\n"
+     "| E_6 install manifest | `review/E6_Install_v2/INSTALL_MANIFEST_SHA256.txt`, `a1426607bd4076d10fd53c44d1c55b0dc991e3259de5a6870df8b2cfb4f3ef1c` |\n"
+     "| E_6 final package | `exchange/EX_054_Claude/E6_Install_v2.zip`, `eea8e4442285a6569c9060f8076bbebef42a936acae63daf4d15eb1a5bcf3e29` |\n"
+     "| E_3/E_4 install manifest | `review/E34_Install_v1/INSTALL_MANIFEST_SHA256.txt`, `4855549182ab5e944d69ef1b7dd14f89f3c37da2a857e46c9ea1acf21d7785ce` |\n"
+     "| E_3/E_4 final package | `exchange/EX_057_Claude/E34_Install_v1.zip`, `9d9949d545dad0c32761e9d377f7e5c945a7b99a6909753b180eb56636ee15fc` |")
+
+# ---------------------------------------------------------------- Appendix B
+oldB = t[t.index("## Appendix B. Changes in v1r4, and where shortened material lives"):t.index("*End of H-1.*")]
+newB = """## Appendix B. Changes in v1r5
+
+v1r5 refreshes v1r4 in place. It changes no rule; where it states a rule, the ratified documents and the register prevail. Nothing in v1r4 was dropped except what is superseded below. v1r4's own change list stays in v1r4.
+
+1. **Header and section 0:** baseline `5b9edb4`; the reading list adds the template's README and the owner's two working lists.
+2. **Section 1:** the oversight status through E34-056-RD-03; final packages after ratification travel in for-the-record EX messages; the owner's working lists in `exchange/`.
+3. **Section 2:** the owner's working lists; working in chunks while the owner is away; a pointer to the owner's purpose restatement (register v0.15). Section 2A is unchanged, word for word.
+4. **Section 4:** the E_6 and E_3/E_4 design notes and the template added; the register pointer moves to v0.17.
+5. **Section 5.3:** the installed contract data (E_3, E_4, E_6); D6-1..D6-5 and D34-1..D34-5; the layout for contract methods (D6-1), which supersedes v1r4 section 9 step 3's "entry file" (register v0.15).
+6. **Section 7:** two installed packages and DOC-6; the module map adds E_6, E_3, E_4 and the shared helper; tests are 242 in 17 modules.
+7. **Section 8:** T005 and T006; never ask the runner to count output; rebuilding E_6 and E_3/E_4; five lessons added, and the suite-skip lesson updated.
+8. **Section 9:** starts from the template; keeping the template current (owner, 30 October 2026); settings fixed before code; the code package without an entry file; the owner's two methods identified, with their R2 relatives.
+9. **Section 10:** rewritten for the owner's order of 30 October 2026; releases, WF-1, the seed policy (R-004); E_2-E_6 batching is no longer OPEN.
+10. **Appendix A:** current identities.
+
+"""
+edit(oldB, newB)
+
+for old, new in E:
+    n = t.count(old)
+    assert n == 1, (n, old[:90])
+    assert all(ord(c) < 128 for c in new), old[:60]
+    t = t.replace(old, new)
+points = sec2a[:sec2a.index('their exact project meaning.\n') + len('their exact project meaning.\n')]
+assert t.count(points) == 1   # section 2A's heading and seven points are byte-identical
+open(out, 'wb').write(t.encode('utf-8'))
+print(out, hashlib.sha256(t.encode()).hexdigest(), len(t.encode()), 'bytes', len(t.splitlines()), 'lines,', len(E), 'edits')
