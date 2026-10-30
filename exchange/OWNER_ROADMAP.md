@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, during the handover round (step 7).
+Last updated: 30 October 2026, after the handovers were installed (step 7 done).
 
 ## A few words used below
 
@@ -43,9 +43,9 @@ Last updated: 30 October 2026, during the handover round (step 7).
 
 ## Next, in the owner's order
 
-7.  NOW  - Refresh the two handovers (Claude's H-1, ChatGPT's H-2) and register v0.17. A handover
-           is the briefing a new chat reads to take over the work.
-8.  NEXT - The template, draft 2: adds what E_3/E_4 taught (shared helpers, methods that give scores
+7.  DONE - Refreshed the two handovers (Claude's H-1 v1r5, ChatGPT's H-2 v1r6) and register v0.17,
+           installed at 8defe9d. A handover is the briefing a new chat reads to take over the work.
+8.  NOW  - The template, draft 2: adds what E_3/E_4 taught (shared helpers, methods that give scores
            but no probabilities, a minimum number of past draws).
 9.  NEXT - The E_7 to E_16 batch, built from the template. These ten catalogue methods are the
            "frequency, Bayesian and regime" family: more ways of estimating how likely each number
