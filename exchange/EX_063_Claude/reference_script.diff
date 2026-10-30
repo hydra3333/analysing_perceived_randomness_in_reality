@@ -1,0 +1,8 @@
+47,48c47,50
+<     ex2 = [{1, 2}, {3, 4}, {1, 2}, {3, 4}, {1, 5}, {1, 5}, {1, 3}, {1, 2}]
+<     t2, w, s = e8(ex2, labels, K, 2); print('E_8 ex2 P=2 : tau2', t2, 'w', w, '|', show(s), '| sum', sum(s.values()))
+---
+>     cap = [{2, 4}, {2, 4}, {2, 4}, {1, 2}, {1, 3}, {1, 3}]          # design note section 9, example 5
+>     t2, w, s = e8(cap, range(1, 5), 2, 2)
+>     assert (t2, w, s) == (F(1, 4), F(1), {1: F(1), 2: F(0), 3: F(1), 4: F(0)}), (t2, w, s)
+>     print('E_8 cap P=2 : tau2', t2, 'w', w, '|', show(s), '| sum', sum(s.values()), '(asserted)')

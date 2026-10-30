@@ -1,0 +1,12 @@
+1c1
+< # Predictive Randomness - wave 1: E_7, E_8, E_9 and E_10 (frequency methods) and the template's draft 2, design note v0.1
+---
+> # Predictive Randomness - wave 1: E_7, E_8, E_9 and E_10 (frequency methods) and the template's draft 2, design note v0.1r1
+4c4
+< **Version:** v0.1 DRAFT for the reviewer's design-stage review (R-3), 30 October 2026. Author: Claude. Ratifier: the project owner.
+---
+> **Version:** v0.1r1 DRAFT for the reviewer's focused RECHECK, 30 October 2026. It corrects only the ranking statement of section 1 (W1-C01, EX_062), and the reference script now prints and asserts the cap example (W1-O01). No formula, variant or setting changed. Author: Claude. Ratifier: the project owner.
+20c20
+< **A design point found while specifying them.** Every number is at risk in every draw, so all numbers share the same number of draws. A score that depends only on a number's own count over the same draws is therefore a monotone function of that count, and gives exactly the ranking of counting over those draws. The plain textbook versions of E_7 and E_8 would rank exactly like E_1. A plain E_9 at E_6's forgetting rates would rank exactly like E_6's decay variants.
+---
+> **A design point found while specifying them.** Every number is at risk in every draw, so all numbers share the same number of draws. Any score given by the same strictly increasing function of each number's count over the same draws therefore has exactly the ranked groups of counting over those draws. The plain textbook versions of E_7 (a fixed-strength posterior mean) and E_8 (at weight 0) are such functions, so they would rank exactly like E_1. A plain E_9 at E_6's forgetting rates would rank exactly like E_6's decay variants. Count-only scores need not be monotonic in general, and this observation excludes no deliberately non-monotonic method.
