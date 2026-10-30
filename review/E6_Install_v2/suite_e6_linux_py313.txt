@@ -1,0 +1,18 @@
+environment: Linux 6.18.44-fc-v185 Python 3.13.17 /usr/local/bin/python3
+tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK
+tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK
+tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK
+tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK
+tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK
+tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK
+tests.test_e1_align                                  ran   5 (expected  5)  skipped 0  OK
+tests.test_e1_standalone                             ran  13 (expected 13)  skipped 0  OK
+tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK
+tests.test_e2r_contract                              ran  53 (expected 53)  skipped 0  OK
+tests.test_e2r_prefix                                ran   1 (expected  1)  skipped 0  OK
+tests.test_e2r_dispatch                              ran  18 (expected 18)  skipped 0  OK
+tests.test_e2r_runner                                ran  34 (expected 34)  skipped 0  OK
+tests.test_e6_beta_bernoulli                         ran  20 (expected 20)  skipped 0  OK
+total ran 210 (expected 210); skips 0
+SUITE PASS: all 210 tests ran and passed; only the allowed symlink skips, if any.

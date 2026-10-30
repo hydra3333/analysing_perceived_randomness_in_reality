@@ -1,0 +1,8 @@
+"""E_<n> - FILL IN the method name from R1/R2 (revision 1: FILL IN the variant family in a few words).
+
+TEMPLATE (copy to src/methods/E_<nnn>/__init__.py and drop the .txt; delete this paragraph).
+
+Specification: doc/FILL_IN_specification_file_name.md.
+This folder is self-contained: the model module holds the mathematics, `contract` connects it to the
+shared contract runner. Neither module reads a file, starts a process or touches orchestration.
+"""

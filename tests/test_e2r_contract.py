@@ -751,7 +751,9 @@ class RegistryAndDeclarations(unittest.TestCase):
             shutil.copytree(DATA_ROOT, root)
             for f in root.rglob('*.json'):
                 f.write_bytes(f.read_bytes().replace(b'\r\n', b'\n').replace(b'\n', b'\r\n'))  # as Windows core.autocrlf would
-            self.assertEqual(len(InstalledRegistry(root).chain_keys()), 124)
+            # Every installed chain folder still loads (124 at CODE-1; each method package adds its own).
+            self.assertEqual(len(InstalledRegistry(root).chain_keys()),
+                             len({p.parent for p in (root / 'registry').glob('*/*/*/entry_*.json')}))
             f = next(root.rglob('entry_0001.json'))
             f.write_bytes(json.dumps(json.loads(f.read_bytes()), indent=1).encode('ascii'))
             with self.assertRaises(ValueError):

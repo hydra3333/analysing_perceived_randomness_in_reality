@@ -248,7 +248,17 @@ class Package2RosterFromRegistry(unittest.TestCase):
 class StaticCode2Guards(unittest.TestCase):
     def test_switch_closed_and_no_flag_in_the_tree(self):
         self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, False)
-        self.assertEqual(sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / 'src').rglob(CD.FLAG_NAME)), [])
+        # A flag may sit only in the folder of a method in development: no active SUPPORTED entry in either
+        # game (E2R-R58: the release package removes the flag and appends SUPPORTED together). E_1 has none.
+        reg = InstalledRegistry()
+        supported = {m for (g, m, v) in reg.chain_keys() if reg.active_entry(g, m, v)['registry_status'] == 'SUPPORTED'}
+        for p in sorted((ROOT / 'src').rglob(CD.FLAG_NAME)):
+            rel = p.relative_to(ROOT / 'src' / 'methods').parts
+            self.assertEqual(len(rel), 2, f'a flag outside a method folder: {p}')
+            method = 'E_' + str(int(rel[0][2:]))
+            self.assertEqual(CD.method_folder(method), rel[0])
+            self.assertNotIn(method, supported, f'{method} is released but still flagged')
+        self.assertFalse((ROOT / 'src' / 'methods' / 'E_001' / CD.FLAG_NAME).exists())
 
     def test_wrappers_read_no_data_and_name_no_receipts(self):
         for f in sorted((ROOT / 'src' / 'methods' / 'contract_adapters').glob('*.py')):

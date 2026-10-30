@@ -1,0 +1,60 @@
+"""E_<n> revision 1: FILL IN one line saying what this module computes.
+
+TEMPLATE (copy to src/methods/E_<nnn>/<descriptive_name>.py and drop the .txt). Taken from E_6's
+beta_bernoulli.py. Every place to change is marked FILL IN; everything else is there for a reason given
+beside it. Delete these template notes when the method is filled in: the FILL IN guard test fails while
+any marker remains.
+
+The mathematics only (specification section 3). LEAVE ALONE: this module imports nothing from the
+project, reads no file, starts no process and does not know which run it is in. It receives the eligible
+draws (oldest first; the last one is the target's previous draw, N - 1) and returns one exact number per
+label. The caller (contract.py) rounds each to a float64 exactly once.
+
+FILL IN: the formula, in the same words as the specification, with every symbol defined.
+"""
+from __future__ import annotations
+
+from collections.abc import Sequence
+from fractions import Fraction          # LEAVE ALONE unless the specification justifies floats (section 5)
+from types import MappingProxyType
+
+# FILL IN: the fixed variants of revision 1 (specification section 6): variant_id -> its settings.
+# LEAVE ALONE the rule: changing or adding an entry after release is a code change and a new revision
+# (E2R-R14A), so every variant is listed here from the start, even those released later.
+VARIANTS = MappingProxyType({
+    'FILL_IN_VARIANT_ONE_V1': Fraction(1),          # FILL IN: setting(s); a tuple or a small frozen record
+    'FILL_IN_VARIANT_TWO_V1': Fraction(1, 2),       # FILL IN
+})
+
+
+def _check(draws: Sequence[Sequence[int]], low: int, high: int, selected: int, setting) -> None:
+    """LEAVE ALONE the input checks; FILL IN any check of the setting itself."""
+    if type(low) is not int or type(high) is not int or type(selected) is not int or not 1 <= selected <= high - low:
+        raise ValueError('invalid barrel description')
+    for i, labels in enumerate(draws):
+        if (not isinstance(labels, (list, tuple)) or len(labels) != selected or len(set(labels)) != selected or
+                any(type(x) is not int or not low <= x <= high for x in labels)):
+            raise ValueError(f'draw {i}: needs {selected} distinct labels in {low}..{high}')
+    # FILL IN: for example, "if type(setting) is not Fraction or not 0 < setting <= 1: raise ValueError(...)"
+
+
+def scores(draws: Sequence[Sequence[int]], low: int, high: int, selected: int, setting) -> dict[int, Fraction]:
+    """FILL IN: the exact score for every label low..high, by the specification's formula."""
+    _check(draws, low, high, selected, setting)
+    result = {j: Fraction(0) for j in range(low, high + 1)}
+    # FILL IN: the calculation.
+    # If the specification claims an exact identity (for example "the scores sum to `selected`"), check it
+    # here and raise if it ever fails: an identity that is never checked is not evidence.
+    raise NotImplementedError('FILL IN')
+    return result
+
+
+def scores_by_second_algorithm(draws: Sequence[Sequence[int]], low: int, high: int, selected: int,
+                               setting) -> dict[int, Fraction]:
+    """FILL IN: the same quantity by a differently written algorithm, used only by contract.verify().
+
+    LEAVE ALONE the purpose: verify() compares the published record with this, so a slip in one algorithm
+    is caught by the other before anything is published. Do not call scores() from here.
+    """
+    _check(draws, low, high, selected, setting)
+    raise NotImplementedError('FILL IN')

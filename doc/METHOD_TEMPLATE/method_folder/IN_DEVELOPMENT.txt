@@ -1,0 +1,6 @@
+E_<n> is in development: the dispatch gate refuses every E_<n> request while this file exists (E2R-R57).
+
+Release is a separate, small, reviewed package that deletes this file and appends a SUPPORTED registry
+entry (E2R-R58). Deleting this file alone releases nothing.
+
+(TEMPLATE: copy to src/methods/E_<nnn>/IN_DEVELOPMENT.txt, replace <n>, and delete this line.)

@@ -1,0 +1,3 @@
+contract data generator exit 0 ; records written: 8
+Ran 106 tests in 13.589s | OK
+TRIAL PASS

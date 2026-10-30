@@ -1,0 +1,197 @@
+"""E_<n> revision 1: FILL IN the method name. Specification, no peeking, release state, folder guards.
+
+TEMPLATE (copy to tests/test_e<nnn>_<name>.py and drop the .txt). Taken from E_6's
+tests/test_e6_beta_bernoulli.py, which is the filled-in example of every class here. LEAVE ALONE every test
+class: they are the minimum (template README step 8). Add more where the specification claims more.
+
+OFFLINE, synthetic only. Every master here is invented and written to a temporary folder; no file under the
+repository's data folders is opened and no real draw value is read. The installed contract data is only read.
+"""
+from __future__ import annotations
+
+from fractions import Fraction
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+import e2r_fixtures as F
+import e2r_code2_fixtures as C
+
+from _common import contract_publication as CP
+from _common import contract_runner as CR
+from _common.contract_dispatch import DispatchRefused, dispatch_gate, METHODS_ROOT, method_folder
+from _common.contract_forecast import assemble_forecast
+from _common.contract_publication import read_run
+from _common.contract_records import record_digest
+from _common.contract_registry import InstalledRegistry
+from _common.game_draws_reader import header_for
+from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
+from _common.multigame_method_registry import method_status
+from E_<nnn> import contract as METHOD                     # FILL IN
+from E_<nnn>.model import VARIANTS, scores                 # FILL IN: the module's real name
+
+METHOD_ID = 'E_<n>'                                        # FILL IN
+GAMES = (POWERBALL, OZLOTTO)                               # FILL IN: drop OZLOTTO if UNSUPPORTED_FOR_GAME there
+FILES = ('{g}_results_master.csv', '{g}_results_master_ledger.csv', '{g}_results_master_init_verification.json')
+
+
+# ---------------------------------------------------------------- LEAVE ALONE: an invented, varied master
+
+def _pick(seed: str, low: int, high: int, k: int, exclude=()) -> list[int]:
+    labels = [x for x in range(low, high + 1) if x not in exclude]
+    labels.sort(key=lambda x: hashlib.sha256(f'{seed}:{x}'.encode()).digest())
+    return labels[:k]
+
+
+def varied_row(profile, draw: int, variant: int) -> str:
+    """An invented, structurally valid row whose numbers vary from draw to draw. Never a real result."""
+    seed = f'{profile.game_id}:{draw}:{variant}'
+    main = _pick(seed + ':main', 1, 35 if profile is POWERBALL else 47, 7)
+    extra = [_pick(seed + ':pb', 1, 20, 1)[0]] if profile is POWERBALL else _pick(seed + ':sup', 1, 47, 3, main)
+    return ','.join(map(str, [draw, profile.derived_date(draw).isoformat(), *main, *extra]))
+
+
+def write_varied_master(root: Path, profile, target: int, variant: int) -> str:
+    game = profile.game_id
+    folder = root / 'source_data'
+    folder.mkdir(parents=True, exist_ok=True)
+    rows = [','.join(header_for(game))]
+    rows += [varied_row(profile, d, 0 if d < target else variant) for d in range(profile.first_draw, profile.holdout_first)]
+    raw = ('\n'.join(rows) + '\n').encode('ascii')
+    sha = hashlib.sha256(raw).hexdigest()
+    (folder / FILES[0].format(g=game)).write_bytes(raw)
+    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
+              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'
+              f'{profile.holdout_first - profile.first_draw}\n')
+    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))
+    (folder / FILES[2].format(g=game)).write_text(json.dumps({
+        'master_sha256': sha, 'master_file': FILES[0].format(g=game), 'game': game,
+        'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1,
+        'draw_count': profile.holdout_first - profile.first_draw, 'source': 'LOTTERYWEST_GOV_RESULTS_SEARCH'}))
+    return sha
+
+
+def method_view(td: Path, game: str, variant: str, target: int, suffix: int = 0):
+    sha = write_varied_master(td, get_profile(game), target, suffix)
+    reg = InstalledRegistry()
+    d = reg.declaration(reg.active_entry(game, METHOD_ID, variant)['declaration_digest'])
+    req, view, task = F.load_view(td, d, target, 'UNORDERED_SET', sha)      # FILL IN the view if not unordered
+    return d, req, view, task
+
+
+class WorkedExample(unittest.TestCase):
+    """FILL IN: the specification's worked example (section 7), exactly, for every variant."""
+
+    def test_worked_example(self):
+        self.fail('FILL IN: the exact expected values of the worked example')
+
+    def test_variant_table_is_exactly_the_specification(self):
+        self.assertEqual(dict(VARIANTS), {'FILL_IN_VARIANT_ONE_V1': None})      # FILL IN: the exact table
+
+
+class EachVariantsOwnSetting(unittest.TestCase):
+    """LEAVE ALONE the idea: compute() must equal the formula computed HERE, for each variant's setting
+    written out in this test (not through the module's own lookup), and the variants must differ.
+    E_6 found by planted defect that without this test every variant could silently compute the same."""
+
+    def test_compute_uses_each_variant_own_setting(self):
+        self.fail('FILL IN: recompute the formula here for each variant and compare with METHOD.compute()')
+
+
+class NoPeeking(unittest.TestCase):
+    """LEAVE ALONE: T-05 for this method. Rows at and after the target are rewritten; the record must not move."""
+
+    def test_record_identical_whatever_the_target_and_later_rows_say(self):
+        for profile in GAMES:
+            for variant in VARIANTS:
+                for target in F.targets(profile)[:2]:
+                    with self.subTest(game=profile.game_id, variant=variant, target=target):
+                        digests = set()
+                        for suffix in (0, 1, 2):
+                            with tempfile.TemporaryDirectory() as td:
+                                d, _r, view, task = method_view(Path(td), profile.game_id, variant, target, suffix)
+                                digests.add(assemble_forecast(d, task, view, METHOD.compute(task, view))['canonical_content_digest'])
+                        self.assertEqual(len(digests), 1)
+
+
+class ThroughTheContract(unittest.TestCase):
+    """LEAVE ALONE: every variant runs to SUCCESS under a simulated release (test harness only) and is consumable."""
+
+    def setUp(self):
+        self._td = tempfile.TemporaryDirectory()
+        self.td = Path(self._td.name)
+        self.data = C.copy_data_root(self.td)
+        reg = InstalledRegistry(self.data)
+        self.released = {}
+        for profile in GAMES:
+            for variant in VARIANTS:
+                e1 = reg.active_entry(profile.game_id, METHOD_ID, variant)
+                e2 = dict(e1, entry_sequence=2, registry_status='SUPPORTED', previous_entry_digest=record_digest(e1),
+                          registry_status_reason='test harness: simulated release')
+                C.append_entry(self.data, e2)
+                self.released[(profile.game_id, variant)] = (reg.declaration(e1['declaration_digest']), e2)
+        (self.td / 'methods').mkdir()
+        self.ctx = C.installed(data=self.data, methods=self.td / 'methods', marker=self.td / 'no_marker')
+        self.ctx.__enter__()
+
+    def tearDown(self):
+        self.ctx.__exit__(None, None, None)
+        self._td.cleanup()
+
+    def test_every_variant_runs_and_is_consumable(self):
+        for profile in GAMES:
+            target = F.targets(profile)[2]
+            ws = self.td / f'ws_{profile.game_id}'
+            sha = write_varied_master(ws, profile, target, 0)
+            for variant in VARIANTS:
+                with self.subTest(game=profile.game_id, variant=variant):
+                    d, e = self.released[(profile.game_id, variant)]
+                    req = C.request(d, e, target, sha, run_id=CP.new_run_id())
+                    res = CR.run_contract_method(req, compute=METHOD.compute, verify=METHOD.verify, repo_root=ws,
+                                                 run_root=self.td / 'runs')
+                    self.assertEqual((res.outcome, res.reason), ('SUCCESS', 'PUBLISHED: PREDICTION_AVAILABLE'))
+                    self.assertEqual(read_run(res.folder)['forecast'], (True, 'CONSUMABLE'))
+
+    def test_verify_refuses_a_record_that_differs(self):
+        self.fail('FILL IN: a compute() that returns a valid but different output must end VALIDATION_FAILURE')
+
+
+class AsInstalled(unittest.TestCase):
+    """LEAVE ALONE: installed non-runnable, refused before any data is read, and listed in the runner."""
+
+    def test_every_request_is_refused_and_the_roster_says_formula_open(self):
+        reg = InstalledRegistry()
+        for profile in GAMES:
+            for variant in VARIANTS:
+                e = reg.active_entry(profile.game_id, METHOD_ID, variant)
+                self.assertEqual((e['entry_sequence'], e['registry_status']), (1, 'FORMULA_OPEN'))
+                req = C.request(reg.declaration(e['declaration_digest']), e, profile.first_draw + 10, 'f' * 64)
+                with self.assertRaises(DispatchRefused) as cm:
+                    dispatch_gate(req)
+                self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
+            self.assertEqual(method_status(profile.game_id, METHOD_ID), 'FORMULA_OPEN')
+
+    def test_the_flag_is_present_and_the_runner_lists_the_method(self):
+        import Method_Contract_Runner as M
+        self.assertTrue((METHODS_ROOT / method_folder(METHOD_ID) / 'IN_DEVELOPMENT.txt').is_file())
+        self.assertIs(M.ADAPTERS[METHOD_ID], METHOD)
+
+
+class FolderGuards(unittest.TestCase):
+    """LEAVE ALONE: the method folder reads no data and touches no orchestration; no FILL IN remains."""
+
+    def test_no_forbidden_words_and_no_fill_in_marker(self):
+        folder = METHODS_ROOT / method_folder(METHOD_ID)
+        for f in sorted(folder.glob('*.py')) + [Path(__file__)]:
+            text = f.read_text('utf-8')
+            self.assertNotIn('FILL' + ' IN', text, f'{f.name} still has a template marker')
+            if f.parent == folder:
+                for word in ('game_draws_reader', 'source' + '_data', 'contract_receipts', 'contract_publication',
+                             'contract_runner', 'open(', 'read_bytes', 'write_bytes', 'import os', 'subprocess'):
+                    self.assertNotIn(word, text, f'{f.name} mentions {word}')
+
+
+if __name__ == '__main__':
+    unittest.main()

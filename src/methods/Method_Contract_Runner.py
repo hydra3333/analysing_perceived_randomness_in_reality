@@ -20,9 +20,11 @@ import sys
 from pathlib import Path
 
 from contract_adapters import e_001
+from E_006 import contract as e_006
 
 # The methods this runner can dispatch. Being listed here is not permission: the dispatch gate decides.
-ADAPTERS = {'E_1': e_001}
+# A new contract method adds one line here and nothing else in this file (E_6 design note, D6-1).
+ADAPTERS = {'E_1': e_001, 'E_6': e_006}
 
 
 def build_request(args, run_id: str) -> dict:

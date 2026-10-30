@@ -1,0 +1,19 @@
+PASS control passes tests.test_e6_beta_bernoulli.AsInstalled
+PASS control passes tests.test_e6_beta_bernoulli.ExactNormalisation
+PASS control passes tests.test_e6_beta_bernoulli.ThroughTheContract
+PASS control passes tests.test_e6_beta_bernoulli.WorkedExample
+PASS mutation: a prior not centred on the fair-draw rate -> tests.test_e6_beta_bernoulli.WorkedExample fails
+PASS mutation: a prior worth two draws (the sums stay exact) -> tests.test_e6_beta_bernoulli.WorkedExample fails
+PASS mutation: weights anchored at the oldest draw -> tests.test_e6_beta_bernoulli.WorkedExample fails
+PASS mutation: ages off by one (the newest draw weighs lambda) -> tests.test_e6_beta_bernoulli.WorkedExample fails
+PASS mutation: a float power in place of the exact power -> tests.test_e6_beta_bernoulli.AsInstalled fails
+PASS mutation: a variant factor changed -> tests.test_e6_beta_bernoulli.WorkedExample fails
+PASS mutation: every variant computed as full memory -> tests.test_e6_beta_bernoulli.ExactNormalisation fails
+PASS mutation: verify() compares nothing -> tests.test_e6_beta_bernoulli.ThroughTheContract fails
+PASS mutation: the probability vector out of label order -> tests.test_e6_beta_bernoulli.ThroughTheContract fails
+PASS mutation: the method opens a file (it could read beyond its view) -> tests.test_e6_beta_bernoulli.AsInstalled fails
+PASS mutation: compute() accepts the drawn-order view -> tests.test_e6_beta_bernoulli.ThroughTheContract fails
+PASS mutation: the runner does not list E_6 -> tests.test_e6_beta_bernoulli.AsInstalled fails
+PASS mutation: the IN_DEVELOPMENT flag deleted without a release -> tests.test_e6_beta_bernoulli.AsInstalled fails
+PASS mutation: an E_6 entry installed as SUPPORTED -> tests.test_e6_beta_bernoulli.AsInstalled fails
+RESULT PASS

@@ -1,0 +1,73 @@
+"""E_<n> revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+
+TEMPLATE (copy to src/methods/E_<nnn>/contract.py and drop the .txt). Taken from E_6's contract.py.
+
+LEAVE ALONE what this module is for. The shared standalone runner has already checked the release rule
+and loaded the prefix-only view before compute() is called. compute() reads only the view and the frozen
+task it is given, and returns a MethodOutput with no identity fields: the contract assembles, ranks,
+applies the tie rule, reads TOP and WORST, and validates the record (E2R-R07). verify() then recomputes by
+a second algorithm and refuses the record if anything differs, before anything is published.
+LEAVE ALONE: no file, process, clock, environment or network access here (the folder guard test refuses it).
+"""
+from __future__ import annotations
+
+from E_<nnn>.model import VARIANTS, scores, scores_by_second_algorithm   # FILL IN: the module's real name
+from _common.contract_forecast import BarrelOutput, MethodOutput, ProbabilityVector, ScoredRanking
+from _common.game_profiles import get_profile
+
+METHOD_ID = 'E_<n>'                       # FILL IN: for example 'E_6'
+OBSERVATION_VIEW = 'UNORDERED_SET'        # FILL IN: the one view the specification declares
+PROBABILITIES = True                      # FILL IN: False if the declaration's probability_kind is NONE
+PROVENANCE = 'E_<n> r1: FILL IN one line on how the probabilities were computed'
+
+
+def _setting(task):
+    """LEAVE ALONE: refuse any task this method was not written for."""
+    if task.method_id != METHOD_ID:
+        raise ValueError(f'this module computes {METHOD_ID} only')
+    if task.variant_id not in VARIANTS:
+        raise ValueError(f'unknown {METHOD_ID} variant {task.variant_id!r}')
+    if task.observation_view != OBSERVATION_VIEW or task.include_dates:   # FILL IN if the method uses dates
+        raise ValueError(f'{METHOD_ID} uses the {OBSERVATION_VIEW} view without dates')
+    return VARIANTS[task.variant_id]
+
+
+def _barrel_draws(view, barrel_id: str) -> list[list[int]]:
+    """The labels drawn in one barrel at each eligible draw, oldest first. FILL IN for an ordered view
+    (use r['main'] for the drawn order under OPERATOR_DRAWN_ORDER; see the reader's simple_rows())."""
+    rows = view.simple_rows()
+    if barrel_id == 'MAIN':
+        return [list(r['main']) for r in rows]
+    return [[r['powerball']] for r in rows]
+
+
+def _exact(task, view, algorithm):
+    setting = _setting(task)
+    return {b.barrel_id: algorithm(_barrel_draws(view, b.barrel_id), b.low, b.high, b.selected, setting)
+            for b in get_profile(task.game_id).barrels}
+
+
+def compute(task, view) -> MethodOutput:
+    out = {}
+    for bid, exact in _exact(task, view, scores).items():
+        floats = {j: float(x) for j, x in exact.items()}          # LEAVE ALONE: rounded once, correctly
+        prob = ProbabilityVector([floats[j] for j in sorted(floats)], PROVENANCE) if PROBABILITIES else None
+        out[bid] = BarrelOutput(ranking=ScoredRanking(floats), probability=prob)
+    return MethodOutput(barrels=out)
+
+
+def verify(task, view, forecast, diagnostic) -> None:
+    """Raise ValueError unless the record equals the second algorithm's result. LEAVE ALONE the strictness."""
+    if diagnostic is not None:
+        raise ValueError(f'{METHOD_ID} declares no diagnostic record')   # FILL IN if it declares one
+    if forecast is None:
+        raise ValueError(f'{METHOD_ID} always has a forecast record')     # FILL IN if empty targets are legal
+    exact = _exact(task, view, scores_by_second_algorithm)
+    if set(forecast['barrels']) != set(exact):
+        raise ValueError(f'{METHOD_ID} check: barrels differ')
+    for bid, x in exact.items():
+        b = next(d for d in get_profile(task.game_id).barrels if d.barrel_id == bid)
+        want = [float(x[j]) for j in range(b.low, b.high + 1)]
+        rec = forecast['barrels'][bid]
+        if rec['scores'] != want or (PROBABILITIES and rec['probability'].get('vector') != want):
+            raise ValueError(f'{METHOD_ID} check: the record differs from the recomputation in barrel {bid}')
