@@ -46,6 +46,22 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   one git rm commit; Claude would give the exact commands and check the result.
 - When: whenever convenient.
 
+## R-004  The NIST Randomness Beacon root for the first stochastic method
+
+- Asked: 30 October 2026 ("we had talked about a NIST seed ... when do we do that?").
+- Status: OPEN.
+- What: decisions D-9 to D-11 (owner, 28 October 2026; in the register) say a seed policy's root is one
+  pre-announced NIST Randomness Beacon pulse, fetched once by the owner by hand and checked
+  independently; runs never fetch it. Roots may be switched as a new revision or variant, and every root
+  tried is logged and counted. For development runs on past draws, a pulse published afterwards may be
+  used, labelled as experiment randomisation; a real forecast needs a root approved beforehand.
+- Not needed yet: E_1, E_6, E_3 and E_4 are deterministic and use no random numbers.
+- Steps when due: the method's design note includes its seed policy; the owner picks a future pulse
+  time, recorded before it arrives; after it is published, the owner fetches it in a browser and gives
+  it to Claude; Claude checks it, and it goes into the register.
+- When: at the design of the first method that uses random numbers (likely in the E_7 to E_16 batch,
+  or one of R-001's methods).
+
 ## Standing reminder
 
 - Save every downloaded ZIP to E:\TEMP, never into the repository (the browser defaults to review/).
