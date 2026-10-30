@@ -1,0 +1,11 @@
+53c53
+< **FILL IN:** a tiny case small enough to check by hand, with exact expected values for every variant. The tests check it exactly.
+---
+> **FILL IN:** a tiny case small enough to check by hand, with exact expected values for every variant. Compute the values with a reference script, not by hand, and ship the script with this specification. The tests check them exactly.
+57a58
+> - **Answer explicitly:** does any variant rank exactly like an installed method (README, "the same-count ranking trap")? If so, what distinguishes it: its probabilities, its window, its settings? The tests check every claimed relation by comparing `ranked_groups`.
+75c76,77
+< - the planted defects, one or more per property claimed (README step 10).
+---
+> - the planted defects, one or more per property claimed, per variant setting and per verification rule (README step 10);
+> - whether anything found should change this template (owner, 30 October 2026).
