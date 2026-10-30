@@ -1,0 +1,12 @@
+A. series and continued fraction agree on x in [2.5, 3.5]: worst relative difference 2.62e-11
+B. ln Q(z) for z = 12..60 against the asymptotic series: worst absolute difference 1.95e-17
+C. p = 1e-300      : sigma 37.0470962993612 in 104 ms; Q(float sigma)/p - 1 = 2.8e-14
+C. p = 1e-700      : sigma 56.68955328257109 in 101 ms; Q(float sigma)/p - 1 = 1.8e-13
+C. p = 1/2 - 1e-20 : sigma 2.5066282746310004e-20 in 6 ms; Q(float sigma)/p - 1 = 4.3e-37
+C. p = 1/2         : sigma 0.0 in 0 ms; Q(float sigma)/p - 1 = 0.0e+00
+D. n=5000 p=1e-09 P(X>=40): log10 = -260.021, exact in 178.50 s
+D. n=5000 p=1e-09 P(X>=3): log10 = -16.682, exact in 183.30 s
+D. n=5000 p=0.0153 P(X<=0): log10 = -33.582, exact in 0.00 s
+E. MR7 exact null, Powerball n = 432: 2.1 s
+E. MR7 exact null, Powerball n = 1000: 23.7 s
+F. NIST chain 1 pulses 1705577 -> 1705578 (public archive): SHA-512(next localRandomValue) == precommitmentValue: True; next "previous" == outputValue: True

@@ -1,0 +1,6 @@
+1. series vs continued fraction (depth 400) on x in [5.0, 6.0]: worst relative difference 1.7e-47
+2. continued fraction depth 400 vs 4000 at x = 5, 8, 20, 45: worst relative difference 0.0e+00
+3. exact P(X>=40), n=5000, p=1/1000000000: log10 -260.0208, in 0.087 s
+3. exact P(X>=3), n=5000, p=1/1000000000: log10 -16.6815, in 0.034 s
+3. exact P(X>=120), n=5000, p=51597/3362260: log10 -5.6100, in 0.130 s
+3. exact P(X>=16), n=432, p=611573/26898080: log10 -1.3876, in 0.001 s
