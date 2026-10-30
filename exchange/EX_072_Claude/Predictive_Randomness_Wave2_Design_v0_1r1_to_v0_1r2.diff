@@ -1,0 +1,59 @@
+--- a/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r1.md
++++ b/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md
+@@ -1,7 +1,7 @@
+ # Predictive Randomness - wave 2: E_2, E_17 (Method A), E_19 and E_18 (gaps between appearances), design note v0.1
+ 
+ **Document:** the method-level specification of the first variants of E_2, E_17, E_18 and E_19 (R2 v0.5 sections 7.1 and 7.17; R1 v0.4), with one shared gaps helper, and the design of the package that adds them. E_17 takes the predictor of the owner's Method A (`GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md`, section 3).
+-**Version:** v0.1r1 DRAFT for the reviewer's focused RECHECK, 30 October 2026. It resolves EX_069's three findings: W2-B01 (E_17's slope variant is replaced by Method A's own log-age rule, decided exactly; owner decision W2-3), W2-C01 (E_18's fitting from completed gaps only, and its limits, are stated) and W2-O01 (the template finding is reworded as a byte-reproducibility rule; owner decision W2-7). Nothing else changes. Author: Claude. Ratifier: the project owner.
++**Version:** v0.1r2 DRAFT for the reviewer's focused RECHECK, 30 October 2026. It resolves EX_071's findings: W2R1-C01 (verify()'s second sign route gets an independent exact-zero test and a refusal cap; section 10), W2R1-C02 (a stale option line in W2-3 relabelled) and W2R1-O01 (section 4.4's survival-fit sentence made precise). Nothing else changes. v0.1r1 resolved EX_069's three findings: W2-B01 (E_17's slope variant is replaced by Method A's own log-age rule, decided exactly; owner decision W2-3), W2-C01 (E_18's fitting from completed gaps only, and its limits, are stated) and W2-O01 (the template finding is reworded as a byte-reproducibility rule; owner decision W2-7). Nothing else changes. Author: Claude. Ratifier: the project owner.
+ **Status:**
+ - **Authority:** it authorises nothing and changes no ratified rule.
+ - **No code yet:** the code follows only after this design passes.
+@@ -87,7 +87,7 @@
+ 
+ **How the sign is decided exactly.** sum_k a_k ln k = sum_p e_p ln p over the primes p dividing the ages, with integers e_p = sum_k a_k v_p(k) (v_p(k) is the power of p in k).
+ - **Bounds:** rational lower and upper bounds on each ln p come from ln p = a ln 2 + 2 atanh((m - 1)/(m + 1)), with p = 2^a m and 1 <= m < 2, and ln 2 = 2 atanh(1/3). The atanh series is summed for a fixed number of terms, and its tail is bounded by a geometric series.
+-- **The loop:** the number of terms doubles until the bounds on sum_p e_p ln p exclude 0.
++- **The loop:** the number of terms doubles until the bounds on sum_p e_p ln p exclude 0. A cap of 1,024 terms is a defensive limit (8 always sufficed in the probes): reaching it is refused as an error, never guessed.
+ - **It always ends.** The logs of distinct primes are linearly independent over the rationals (by unique factorisation), so sum_p e_p ln p is 0 only when every e_p is 0. The method then returns sigma = 0 without any bound.
+ - **The cost:** at most 0.007 s per target in the probes; 8 terms sufficed at every probed target.
+ - **The published scores** are the integers sigma G_j, exactly representable in float64. They are not Method A's fitted chances, which would need an iterative fit, but they rank identically.
+@@ -132,7 +132,7 @@
+ - **The limits of fitting completed gaps only** (W2-C01), stated and accepted for revision 1:
+   - **A current long absence does not enter the fit.** A number in the middle of a long absence has no completed gap for it yet, so its fit leans, slightly, towards its shorter past gaps.
+   - **Long gaps are under-represented.** A gap of length g fits within a span of S draws at only S - g of its possible positions. The windowed variants show this most: for POWERBALL with S = 104, a 40-draw gap carries about 0.6 of a 1-draw gap's chance of being counted. The effect is the same for every label, and it can move weight towards FAST and away from SLOW.
+-  - **A censored-likelihood fit,** which would use the open stretch and remove both effects, would be a separate variant with its own design review.
++  - **A future survival likelihood** handling right censoring and window selection (the left-boundary and ascertainment effects of counting only gaps inside a span) could address these effects. It would be a separate variant with its own design review.
+ 
+ ## 5. Outputs, per barrel (E2R-1 sections 5 and 7)
+ 
+@@ -252,7 +252,11 @@
+ Each `verify()` recomputes by a differently written route and refuses any difference:
+ - **The helper's exposures:** a per-draw walk of ages, against the route built from completed gaps plus the open stretch.
+ - **E_2:** the mean by telescoping, (a_n - a_1)/(n - 1), against the sum of gaps; the median by counting, against sorting.
+-- **E_17:** bin sums from the per-age counts, against direct per-bin counting. The log-age sign by the prime-exponent route, against bounds on each ln k taken directly, without factorising; the two must agree. The ranking is checked to be the pure age ordering in the direction of sigma.
++- **E_17:** bin sums from the per-age counts, against direct per-bin counting. The ranking is checked to be the pure age ordering in the direction of sigma. The log-age sign by two routes, which must agree:
++  - **Route 1 (the method):** prime exponents by trial division, then bounds on each ln p (section 4.2). An empty exponent map gives sigma = 0 exactly.
++  - **Route 2 (verify()), with its own exact-zero test** (W2R1-C01): the prime exponents are recomputed independently, from a smallest-prime-factor sieve. If they all vanish, sigma = 0 exactly. Otherwise the value is not 0, and bounds on each ln k taken directly, without factorising, must exclude 0. That loop therefore ends; the same 1,024-term cap refuses as an error.
++  - **Why a zero test is needed:** a direct interval can never exclude 0 when the value is exactly 0. EX_071's eight-draw witness (2 labels, 1 per draw: {1}, {1}, {2}, {2}, {1}, {1}, {1}, {2}) has a_k = 6, -12, 0, 6 at ages 1 to 4. Then 6 ln 1 - 12 ln 2 + 6 ln 4 = 0, while every direct interval straddles 0.
++  - **The tests:** that zero case (both routes give 0, and bounds alone are refused at the cap), and nonzero agreement in both signs (EX_069's witness, -1; this note's worked example, +1).
+ - **E_19:** the per-residue sums, against a per-exposure loop. The identity s_j / b(G_j) = psi is checked exactly.
+ - **E_18:**
+   - the weights by an optimality certificate rather than a re-run: they are non-negative and sum to 1, and the gradient conditions (KKT) hold exactly at them;
+@@ -272,6 +276,7 @@
+ - the 24 declarations and 24 entries (replacing nothing: the four methods' `NOT_YET_SPECIFIED` placeholders stay, as in wave 1);
+ - **tests:** `tests/test_recurrence_gaps.py` and `tests/test_wave2_recurrence.py`. They cover:
+   - the worked examples and the bins of the three real barrels;
++  - the log-age sign's zero case and its two-route agreement in both signs (section 10);
+   - censoring, and the never-seen convention;
+   - each variant's own setting, computed in the test;
+   - the relations of section 7;
+@@ -310,7 +315,7 @@
+     - Method A's "run the predictor on simulated fair histories" is R3's N1 fair-draw simulator at WF-1. For E_17's match counts N1 is exact even though E_17 adapts (R3 section 17.5A).
+     - Method A's diagnostics A1 to A5 (short-gap ratio, gap-distribution distance, hazard slope test, number variance, periodogram), with their 10,000-history simulated envelopes, become a separate "Method A diagnostics" package after WF-1. It needs the seed policy and the NIST root (reminder R-004), and a diagnostic report design.
+   - **Not pursued:** Method A's decisions 3 and 4 (drawn order, machine and ball-set metadata). They would need new data sources, which the project's rules allow only by a separate owner decision, and never by contacting a lottery website.
+-  - **The options still open on the diagnostics' timing:** (b) build them in wave 2, which means settling R-004 now.
++  - **Not selected under owner decision W2-3:** building the diagnostics in wave 2. It would need a new owner decision, and settling R-004 first.
+ - **W2-4 (RECOMMENDED): all four score-only in revision 1** (section 5). The option: E_17's binned variants publish a renormalised marginal vector. That needs a stated renormalisation and a check that each value stays at most 1.
+ - **W2-5 (RECOMMENDED): E_18 as a fixed four-law library fitted by exact minimum chi-square** (section 4.4), not EM. The option: a fitted-component mixture as a later variant, which needs an exact or certified fitting route first.
+ - **W2-6 (RECOMMENDED): E_19 per label, with the trend and the label's level divided out, and cycles fixed at 2, 3 and 4,** never scanned. The option: pooled only (simpler, but probes show it misses a single-ball cycle).

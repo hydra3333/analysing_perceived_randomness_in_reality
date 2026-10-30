@@ -1,0 +1,81 @@
+--- a/reference_wave2.py
++++ b/reference_wave2.py
+@@ -189,6 +189,9 @@
+     return {p: x for p, x in e.items() if x}
+ 
+ 
++MAX_TERMS = 1024             # a defensive cap (8 terms always sufficed in probes); reaching it is an error, never a guess
++
++
+ def certified_sign(coeffs, start=8):
+     """The exact sign of sum_i c_i ln q_i for integer c_i and integers q_i >= 1, by interval bounds whose number of
+     series terms doubles until the interval excludes 0. With coeffs = prime_exponents(a) this always ends: a
+@@ -208,6 +211,35 @@
+         if hi < 0:
+             return -1
+         terms *= 2
++        if terms > MAX_TERMS:
++            raise ValueError('log-combination sign not certified within the term cap')
++
++
++def prime_exponents_by_sieve(a):
++    """verify()'s independent exact-zero test: the same prime exponents, from a smallest-prime-factor sieve
++    (no trial division). The log combination is 0 exactly when this returns an empty map."""
++    top = max(a) if a else 1
++    spf = list(range(top + 1))
++    for i in range(2, int(top ** 0.5) + 1):
++        if spf[i] == i:
++            for m in range(i * i, top + 1, i):
++                if spf[m] == m:
++                    spf[m] = i
++    e = {}
++    for k, c in a.items():
++        while k > 1:
++            p = spf[k]
++            e[p] = e.get(p, 0) + c
++            k //= p
++    return {p: x for p, x in e.items() if x}
++
++
++def direct_sign(a):
++    """verify()'s second route. Exact zero by the sieve route; otherwise interval bounds on each ln k taken
++    directly, without factorising, which must exclude 0 because the value is then not 0."""
++    if not prime_exponents_by_sieve(a):
++        return 0
++    return certified_sign({k: c for k, c in a.items() if c})
+ 
+ 
+ def e17_logage_sign(hist, low, high, K):
+@@ -230,6 +262,9 @@
+     return sxy / sxx if sxx else Fr(0)
+ 
+ 
++ZERO_WITNESS = [[1], [1], [2], [2], [1], [1], [1], [2]]    # EX_071: 2 labels, 1 per draw; sum a_k ln k = 0 exactly
++
++
+ def witness_history():
+     """EX_069's W2-B01 witness: 104 invented draws, 7 of 35, from SHA-256 of '32|position|label'."""
+     import hashlib
+@@ -403,10 +438,19 @@
+     assert e17_logage_sign(H, low, high, K)[1] == 1
+     wh = witness_history()                                 # W2-B01: the two covariates' signs differ here
+     wa = log_age_coefficients(wh, 1, 35)
+-    assert certified_sign(prime_exponents(wa)) == -1 == certified_sign({k: c for k, c in wa.items() if c})
++    assert certified_sign(prime_exponents(wa)) == -1 == direct_sign(wa)
+     assert harmonic_slope_beta(wh, 1, 35) > 0
+-    for a_ in (wa, a):                                     # the second route: bounds on each ln k directly
+-        assert certified_sign(prime_exponents(a_)) == certified_sign({k: c for k, c in a_.items() if c})
++    assert certified_sign(prime_exponents(a)) == 1 == direct_sign(a)
++    za = log_age_coefficients(ZERO_WITNESS, 1, 2)          # W2R1-C01 (EX_071): an exact zero with nonzero a_k
++    assert za == {1: 6, 2: -12, 3: 0, 4: 6}
++    assert prime_exponents(za) == {} == prime_exponents_by_sieve(za)
++    assert certified_sign(prime_exponents(za)) == 0 == direct_sign(za)
++    assert e17_logage_sign(ZERO_WITNESS, 1, 2, 1)[1] == 0
++    try:                                                   # without the zero branch, bounds alone are refused
++        certified_sign({k: c for k, c in za.items() if c})
++        raise AssertionError('the cap did not refuse')
++    except ValueError:
++        pass
+     assert e19(H, low, high, K, 2, c=10, d=2)[1] == [Fr(448, 379), Fr(160, 199)]
+     assert w[1] == [Fr(3245348069700918737, 4925190825817479938), Fr(0, 1), Fr(0, 1), Fr(1679842756116561201, 4925190825817479938)]
+     assert w[9] == [0, 1, 0, 0] and s[9] == Fr(1, 5)
