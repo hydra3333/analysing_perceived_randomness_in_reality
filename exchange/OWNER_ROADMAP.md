@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, after the new reviewer chat took over and the WF-1 design was sent (EX_077).
+Last updated: 31 October 2026, after the owner ratified the WF-1 design (EX_081).
 
 ## A few words used below
 
@@ -68,7 +68,8 @@ Last updated: 30 October 2026, after the new reviewer chat took over and the WF-
            30 October 2026: its takeover check found 0 BLOCKER, 0 CORRECTION and 1 OPTIONAL.
 10. NOW  - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
            each past draw predicted only from the draws before it) with the scorer, so the project
-           produces its first real measured results. The design (EX_077) is with the new reviewer.
+           produces its first real measured results. The design passed review (EX_077 to EX_081)
+           and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). Now: coding REL-1 and WF-1A.
            Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
            real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
            6 November), WF-1B (the scorer and report, with the fair-draw simulator).
