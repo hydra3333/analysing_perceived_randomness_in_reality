@@ -10,19 +10,22 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Asked: 29 October 2026 ("I have 2 more I'd like considered later"; discuss the process for adding
   new methods).
 - Status: OPEN.
-- What: consider the owner's two further method ideas. Probably Methods A and B in
-  doc/GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md:
+- What: the owner's two further method ideas, confirmed by the owner on 30 October 2026 as
+  Methods A and B in doc/GASI_thought_experiments/Proposal_Methods_A_and_B_FROM_GAIS_v0.1.md, which
+  supersedes the pre-exploratory GASI_thought_experiments_possibly_unexplored_areas.md:
   A, recurrence-gap spectrum (does a number that has just been drawn repel or cluster?);
   B, delay-embedding analogues (predict from what followed the past draws that looked most like
-  the recent ones; also look for up/down patterns that never occur). The owner to confirm.
-- Progress: the add-a-method process now exists in draft (the new-method template, first used for
-  E_6 and then for E_3/E_4).
-- When: after the E_3/E_4 review passes, at the next method-design round.
+  the recent ones; also look for up/down patterns that never occur).
+- R2 already lists close relatives: A is near E_17 (Discrete Recurrence Hazard Curves, also E_19);
+  B is near E_45 (Delay-Embedded Nearest-Analogue Forecast, also E_27 and E_32). A and B are to
+  become those methods' specifications rather than new E-numbers.
+- Progress: the add-a-method process exists (the new-method template, used for E_6 and E_3/E_4).
+- When (owner's order, 30 October 2026): after the E_7 to E_16 batch; A first, then B.
 
 ## R-002  Pattern-spotting by non-local means (the NLMEANS idea)
 
 - Asked: 30 October 2026.
-- Status: OPEN.
+- Status: OPEN (postponed by the owner, 30 October 2026).
 - What: discuss, even if only to record why it is set aside, whether non-local means (NL-means, an
   image denoising method that averages each pixel with others anywhere in the image whose
   surrounding patches look alike) or a similar "non-local" technique could say anything about the
@@ -35,7 +38,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
     draw;
   - whether it suggests some other oddball method that is easy to code.
   The owner's own view: probably not feasible, but worth discussing and recording either way.
-- When: in the same method-design round as R-001, or whenever the owner asks.
+- When (owner's order, 30 October 2026): after Methods A and B are implemented, or earlier if Claude
+  sees a good reason, or whenever the owner asks.
 
 ## R-003  Optional tidy-up of old EX copies in review/
 
@@ -59,9 +63,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Steps when due: the method's design note includes its seed policy; the owner picks a future pulse
   time, recorded before it arrives; after it is published, the owner fetches it in a browser and gives
   it to Claude; Claude checks it, and it goes into the register.
-- When: at the design of the first method that uses random numbers (likely in the E_7 to E_16 batch,
-  or one of R-001's methods).
+- When: at the design of the first method that uses random numbers (likely in the E_7 to E_16 batch;
+  Method A's and B's simulated fair-draw checks also use random numbers).
 
-## Standing reminder
+## Standing reminders
 
+- Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and
+  whenever asked.
 - Save every downloaded ZIP to E:\TEMP, never into the repository (the browser defaults to review/).
