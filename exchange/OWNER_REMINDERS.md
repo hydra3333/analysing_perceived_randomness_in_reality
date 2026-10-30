@@ -64,8 +64,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Steps when due: the method's design note includes its seed policy; the owner picks a future pulse
   time, recorded before it arrives; after it is published, the owner fetches it in a browser and gives
   it to Claude; Claude checks it, and it goes into the register.
-- When: at the design of the first method that uses random numbers (possibly in wave 1 or 2;
-  Method A's and B's simulated fair-draw checks, and wave 9's machine learning, use random numbers).
+- When: at WF-1's design (owner decision W2-8, 30 October 2026). Wave 2 uses no random numbers; R3's
+  N1 fair-draw simulator, used at WF-1, is the first part that does. Method A's later diagnostics,
+  Method B's simulated checks and wave 9's machine learning also use random numbers.
 
 ## Standing reminders
 
