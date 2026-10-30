@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 30 October 2026, after the handovers were installed (step 7 done).
+Last updated: 30 October 2026, with the owner's new order of work (steps 8 onward).
 
 ## A few words used below
 
@@ -41,38 +41,55 @@ Last updated: 30 October 2026, after the handovers were installed (step 7 done).
    the next draw will be (its value there); E_4 by which way the curve is heading (its slope). Six
    fixed versions each: three curve-fitting styles, different curve shapes and window lengths.
 
-## Next, in the owner's order
+## Next, in the owner's order (decided 30 October 2026; replaces the earlier order of the same day)
 
-7.  DONE - Refreshed the two handovers (Claude's H-1 v1r5, ChatGPT's H-2 v1r6) and register v0.17,
-           installed at 8defe9d. A handover is the briefing a new chat reads to take over the work.
-8.  NOW  - The template, draft 2: adds what E_3/E_4 taught (shared helpers, methods that give scores
-           but no probabilities, a minimum number of past draws).
-9.  NEXT - The E_7 to E_16 batch, built from the template. These ten catalogue methods are the
-           "frequency, Bayesian and regime" family: more ways of estimating how likely each number
-           is from how often it has come up (E_7 to E_10: shrinking towards fair, a shared
-           "family" estimate, faster forgetting, short-versus-long-term contrasts), and ways of
-           spotting whether behaviour changes between periods (E_11 to E_13: change points, hidden
-           states, slow drift; E_14: calendar effects; E_15: eras; E_16: a slightly biased urn).
-           Some (E_12, E_13) may be heavy enough to need their own package; that is decided at
-           design. The NIST seed (reminder R-004) is settled here if any of them uses random numbers.
-10. NEXT - Method A as E_17. Method A is the first of your two ideas (from the GASI proposal): does
-           a number that has just been drawn tend to stay away for a while, or come back sooner,
-           than fair draws allow? The catalogue already has a slot for that idea, E_17 "Discrete
-           Recurrence Hazard Curves", so Method A becomes E_17's exact rule rather than a new method
-           number. It ranks numbers by their chance of appearing next, given how long since they
-           were last drawn.
-11. NEXT - Method B as E_45. Method B is your second idea: find the past weeks whose recent run of
-           draws looked most like the latest run, and predict from what came next after them; also
-           look for up/down patterns that never occur. Its catalogue slot is E_45 "Delay-Embedded
-           Nearest-Analogue Forecast".
-12. NEXT - Discuss the NL-means idea (reminder R-002): whether an image-style "non-local" method
-           could find repeated patches in the draw history.
+8.  NOW  - Wave 1, light counting methods, together with the template's draft 2 (which adds what
+           E_3/E_4 taught: shared helpers, methods that give scores but no probabilities, a minimum
+           number of past draws):
+           E_7  Bayesian Frequency Shrinkage - counts, pulled back towards the fair rate so a short
+                lucky run counts for less;
+           E_9  Exponentially Decayed Occurrence Rates - counting where each older draw counts a fixed
+                fraction less (its design must show how it differs from E_6's forgetting versions);
+           E_10 Multi-Horizon Frequency Contrasts - recent rate compared with the long-run rate;
+           E_8  Hierarchical Dirichlet-Multinomial - each number's rate, with all numbers sharing
+                information.
+9.  NEXT - Wave 2, gaps between appearances (one shared "gaps" helper):
+           E_2  Expected Recurrence-Interval Alignment - one of your original six: predicts each
+                number's next gap and ranks by how well it ends at the next draw;
+           E_17 = Method A - your idea from the GASI proposal: the chance of appearing next given how
+                long since a number was last drawn. "Method A as E_17" means your idea becomes the
+                exact rule for the catalogue's existing slot E_17, not a new method number;
+           E_19 Periodic Recurrence-Hazard Peaks - does that chance rise at regular intervals?
+           E_18 Mixtures of Recurrence Modes - several typical gap lengths.
+10. NEXT - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
+           each past draw predicted only from the draws before it) with the scorer, so the project
+           produces its first real measured results.
+11. NEXT - Wave 3, look-alike past draws:
+           E_27 Nearest Neighbour of Historical Draw Sets - predict from what followed the past draws
+                most like the latest one;
+           E_45 = Method B - your second idea: the same with runs of recent draws, plus the
+                never-occurring up/down patterns check;
+           E_26 Draw-Level Geometry and Summary States; E_28 Markov Transitions of Draw Summaries.
+12. NEXT - Discuss the NL-means idea (reminder R-002); any method it yields joins a later wave.
+13. LATER - Wave 4: E_5 (your original: one model for all numbers together), E_11 change points,
+           E_15 eras, E_14 calendar (uses dates); then, each in its own package, E_13 slow drift,
+           E_12 hidden modes, E_16 slightly unequal ball weights.
+14. LATER - Wave 5, curves and cycles: E_37 (reuses E_3/E_4's helper), E_33, E_35, E_34, E_39, E_36;
+           heavy: E_38, E_40.
+15. LATER - Wave 6, numbers acting together: E_23 pairs, E_25 association network, E_20, E_21, E_22;
+           heavy: E_24 triplets.
+16. LATER - Wave 7, the order the balls come out: E_32, E_29, E_30; heavy: E_31.
+17. LATER - Wave 8, information and chaos-style methods: E_41, E_42; heavy: E_43, E_44, E_46, E_47.
+18. LATER - Wave 9, machine learning (needs a new library, an owner-approved dependency change, and
+           the NIST seed): E_49, E_50, E_51, E_52, E_53.
+19. LATER - Wave 10, your pilot-wave-inspired family, one at a time: E_57, E_60, E_58, E_59, E_61, E_62.
+20. LATER - Wave 11, outside data: E_54, E_48.
+21. LAST  - Combinations of methods: E_55, E_56.
+
+The order within a wave may shift once its design starts. The NIST seed (reminder R-004) is settled
+at the first method that uses random numbers.
 
 ## Later (each its own package and decision)
 
-- Releases: switch methods on, one at a time (E_6's remember-everything version first). Even then
-  they run only on invented test data until WF-1.
-- WF-1: real-data runs over past draws (walk-forward: for each past draw, predict it from the draws
-  before it only, then score), and the scorer that measures them.
-- The rest of the catalogue (E_2, E_5, E_18 onward).
+- Releases of E_6, E_3 and E_4 (E_6's remember-everything version first), with step 10.
 - Holdout testing (the sealed draws), and then real next-draw predictions from all methods together.

@@ -20,7 +20,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   B is near E_45 (Delay-Embedded Nearest-Analogue Forecast, also E_27 and E_32). A and B are to
   become those methods' specifications rather than new E-numbers.
 - Progress: the add-a-method process exists (the new-method template, used for E_6 and E_3/E_4).
-- When (owner's order, 30 October 2026): after the E_7 to E_16 batch; A first, then B.
+- When (owner's revised order, 30 October 2026): A in wave 2 (with E_2, E_19, E_18), right after the
+  first light counting methods; B in wave 3 (with E_27), after releases and WF-1.
 
 ## R-002  Pattern-spotting by non-local means (the NLMEANS idea)
 
@@ -38,8 +39,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
     draw;
   - whether it suggests some other oddball method that is easy to code.
   The owner's own view: probably not feasible, but worth discussing and recording either way.
-- When (owner's order, 30 October 2026): after Methods A and B are implemented, or earlier if Claude
-  sees a good reason, or whenever the owner asks.
+- When (owner's revised order, 30 October 2026): straight after wave 3 (Method B), or whenever the
+  owner asks. Any method it yields joins a later wave.
 
 ## R-003  Optional tidy-up of old EX copies in review/
 
@@ -63,8 +64,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Steps when due: the method's design note includes its seed policy; the owner picks a future pulse
   time, recorded before it arrives; after it is published, the owner fetches it in a browser and gives
   it to Claude; Claude checks it, and it goes into the register.
-- When: at the design of the first method that uses random numbers (likely in the E_7 to E_16 batch;
-  Method A's and B's simulated fair-draw checks also use random numbers).
+- When: at the design of the first method that uses random numbers (possibly in wave 1 or 2;
+  Method A's and B's simulated fair-draw checks, and wave 9's machine learning, use random numbers).
 
 ## Standing reminders
 
