@@ -1,0 +1,40 @@
+PASS control passes tests.test_e3_e4_polynomial.AsInstalled
+PASS control passes tests.test_e3_e4_polynomial.CrossLabelInvariant
+PASS control passes tests.test_e3_e4_polynomial.EachVariantsOwnFit
+PASS control passes tests.test_e3_e4_polynomial.FolderGuards
+PASS control passes tests.test_e3_e4_polynomial.InsufficientHistory
+PASS control passes tests.test_e3_e4_polynomial.ThroughTheContract
+PASS control passes tests.test_e3_e4_polynomial.Variants
+PASS control passes tests.test_polynomial_fits.Interpolation
+PASS control passes tests.test_polynomial_fits.LeastSquares
+PASS control passes tests.test_polynomial_fits.Minimax
+PASS control passes tests.test_polynomial_fits.StaticGuards
+PASS control passes tests.test_polynomial_fits.WorkedExamples
+PASS mutation: the target placed inside the window (t = -M+1..0) -> tests.test_polynomial_fits.WorkedExamples fails
+PASS mutation: smoothing not clipped (always divides by 2H + 1) -> tests.test_polynomial_fits.WorkedExamples fails
+PASS mutation: a wrong normal matrix -> tests.test_polynomial_fits.LeastSquares fails
+PASS mutation: a wrong recurrence coefficient (beta inverted) -> tests.test_polynomial_fits.LeastSquares fails
+PASS mutation: Newton divided differences off by one level -> tests.test_polynomial_fits.Interpolation fails
+PASS mutation: minimax stops before the levelled error is reached -> tests.test_polynomial_fits.Minimax fails
+PASS mutation: the exchange swaps the wrong neighbour -> tests.test_polynomial_fits.Minimax fails
+PASS mutation: the certificate accepts D + 1 alternations -> tests.test_polynomial_fits.Minimax fails
+PASS mutation: the largest error taken at its highest index (tie rule reversed) -> tests.test_polynomial_fits.Minimax fails
+PASS mutation: the exchange cap ignored (returns the last fit) -> tests.test_polynomial_fits.Minimax fails
+PASS mutation: floating point in the helper -> tests.test_polynomial_fits.StaticGuards fails
+PASS mutation: E_3 scores the slope -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: E_4 scores the value -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: the window drops the newest draw (off by one) -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: minimax fitted to the raw series (smoothing skipped) -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: interpolation through the raw series -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: every variant computed as the first -> tests.test_e3_e4_polynomial.EachVariantsOwnFit fails
+PASS mutation: an interpolation node moved -> tests.test_e3_e4_polynomial.Variants fails
+PASS mutation: the two tables differ (E_4 window 100) -> tests.test_e3_e4_polynomial.Variants fails
+PASS mutation: too few draws not recognised -> tests.test_e3_e4_polynomial.InsufficientHistory fails
+PASS mutation: the MAIN series also counts the Powerball number -> tests.test_e3_e4_polynomial.CrossLabelInvariant fails
+PASS mutation: verify() compares nothing -> tests.test_e3_e4_polynomial.ThroughTheContract fails
+PASS mutation: compute() accepts the drawn-order view -> tests.test_e3_e4_polynomial.ThroughTheContract fails
+PASS mutation: the method opens a file (it could read beyond its view) -> tests.test_e3_e4_polynomial.FolderGuards fails
+PASS mutation: the runner does not list E_3 -> tests.test_e3_e4_polynomial.AsInstalled fails
+PASS mutation: the E_4 IN_DEVELOPMENT flag deleted without a release -> tests.test_e3_e4_polynomial.AsInstalled fails
+PASS mutation: an E_3 entry installed as SUPPORTED -> tests.test_e3_e4_polynomial.AsInstalled fails
+RESULT PASS
