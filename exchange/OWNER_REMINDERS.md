@@ -96,6 +96,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   EX_095: RECHECK PASS (O02 optional). The owner accepted the package and chose to apply O02 first:
   E1R2_Install_v3 (base 0d98706) sent in EX_096 for a focused check; TASK_T011 rehearses it. Register
   v0.22 follows the install as a document-only update (owner, 31 October 2026).
+  EX_097: PASS. INSTALLED by the owner at 86d12ea (31 October 2026); Claude verified it from GitHub.
+- Status: DONE, except register v0.22 (document-only, after the first batch is under way).
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.
