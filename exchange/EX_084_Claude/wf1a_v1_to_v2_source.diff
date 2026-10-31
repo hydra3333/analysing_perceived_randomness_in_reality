@@ -1,0 +1,380 @@
+--- a/.gitignore
++++ b/.gitignore
+@@ -232,5 +232,7 @@
+ private_results_checks/
+ *.mhtml
+ 
+-# WF-1A: real-development contract runs (bulk; the batch plans and segment records in wf_batches/ are committed)
++# WF-1A: real-development contract runs and each batch's attempts log (bulk; the batch plans and segment records
++# in wf_batches/ are committed)
+ results/real/development/contract_runs/
++results/real/development/wf_batches/**/attempts.jsonl
+--- a/src/methods/_common/walk_forward.py
++++ b/src/methods/_common/walk_forward.py
+@@ -32,6 +32,7 @@
+ import _common.contract_runner as CR
+ import _common.contract_vocab as V
+ from _common.contract_dispatch import DispatchRefused
++from _common.contract_receipts import consumable, validate_terminal
+ from _common.contract_records import canonical, record_digest, sha256_hex
+ from _common.contract_registry import InstalledRegistry
+ from _common.game_draws_reader import _trusted_file_bytes
+@@ -249,54 +250,154 @@
+             raise BatchRefused(f'{ident}: no runner adapter')
+ 
+ 
+-def _member_index(plan: Mapping, mem: Mapping) -> dict:
+-    """target -> list of (outcome, reason, run_id) of terminal records under the plan's pins for this member."""
+-    folder = roots()['runs'] / plan['game_id'] / mem['method_id'] / mem['variant_id']
+-    index: dict = {}
+-    if not folder.is_dir():
+-        return index
+-    for run in sorted(folder.iterdir()):
+-        t = run / CP.FILES['terminal']
+-        if not t.is_file() or t.is_symlink():
++def request_for(plan: Mapping, mem: Mapping, target: int, run_id: str) -> dict:
++    """The exact RUN_REQUEST_V1 this plan issues for one pair and one attempt (run ID)."""
++    return {'schema': V.RUN_REQUEST, 'game_id': plan['game_id'], 'method_id': mem['method_id'],
++            'variant_id': mem['variant_id'], 'method_revision': mem['method_revision'], 'target_draw_number': target,
++            'observation_view': plan['observation_view'], 'include_dates': plan['include_dates'],
++            'run_mode': plan['run_mode'], 'product_kind': plan['product_kind'],
++            'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
++            'run_id': run_id, 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
++            'master_sha256': plan['master_sha256']}
++
++
++# ---------------------------------------------------------------- attempts bound to the batch (EX_083 WF1A-R2-B01)
++#
++# Before each run, the driver appends one WF_BATCH_ATTEMPT_V1 line to the batch's attempts.jsonl, naming the fresh
++# run ID and the digest of the exact request it is about to issue. A pair counts as done only through an attempt of
++# THIS batch whose run folder holds a valid terminal record matching that request, in a CONTINUE class, and, for a
++# SUCCESS, a consumable forecast whose receipt and record carry this plan's master pin, run mode, view, declaration
++# and registry entry. Runs of any other batch, folders without an attempt line, and anything that fails a check are
++# never counted: the pair runs again. Nothing is deleted or rewritten.
++
++ATTEMPT_SCHEMA = 'WF_BATCH_ATTEMPT_V1'
++
++
++def _attempts_path(plan: Mapping) -> Path:
++    return roots()['batches'] / plan['game_id'] / plan['batch_id'] / 'attempts.jsonl'
++
++
++def _append_attempt(plan: Mapping, req: Mapping) -> None:
++    line = canonical({'schema': ATTEMPT_SCHEMA, 'batch_id': plan['batch_id'], 'method_id': req['method_id'],
++                      'variant_id': req['variant_id'], 'target_draw_number': req['target_draw_number'],
++                      'run_id': req['run_id'], 'request_digest': record_digest(req)})   # ends with its newline
++    with open(_attempts_path(plan), 'ab') as fh:
++        fh.write(line)
++        fh.flush()
++        os.fsync(fh.fileno())
++
++
++def _attempts(plan: Mapping) -> tuple[dict, int]:
++    """(method, variant, target) -> [run IDs] of this batch's well-formed attempt lines whose request digest is the
++    plan's own request for that pair and run ID; and the number of lines ignored as malformed or foreign."""
++    path = _attempts_path(plan)
++    out, bad = {}, 0
++    if not path.is_file() or path.is_symlink():
++        return out, bad
++    members = {(m['method_id'], m['variant_id']): m for m in plan['cohort']}
++    for raw in path.read_bytes().split(b'\n'):
++        if not raw:
+             continue
+         try:
+-            rec = json.loads(t.read_bytes().decode('ascii'))
+-        except (ValueError, UnicodeDecodeError):
++            a = json.loads(raw.decode('ascii'))
++            mem = members[(a['method_id'], a['variant_id'])]
++            ok = (canonical(a) == raw + b'\n' and a['schema'] == ATTEMPT_SCHEMA and a['batch_id'] == plan['batch_id'] and
++                  type(a['target_draw_number']) is int and
++                  plan['window_first'] <= a['target_draw_number'] <= plan['window_last'] and
++                  V.RUN_ID.fullmatch(a['run_id']) is not None and
++                  a['request_digest'] == record_digest(request_for(plan, mem, a['target_draw_number'], a['run_id'])))
++        except (ValueError, UnicodeDecodeError, KeyError, TypeError, AttributeError):
++            ok = False
++        if not ok:
++            bad += 1
+             continue
+-        if (isinstance(rec, dict) and rec.get('registry_entry_digest') == mem['registry_entry_digest'] and
+-                rec.get('method_revision') == mem['method_revision'] and rec.get('run_id') == run.name):
+-            index.setdefault(rec.get('target_draw_number'), []).append(
+-                (rec.get('outcome'), rec.get('outcome_reason'), rec.get('run_id')))
+-    return index
++        out.setdefault((a['method_id'], a['variant_id'], a['target_draw_number']), []).append(a['run_id'])
++    return out, bad
+ 
+ 
+-def pending(plan: Mapping) -> list[tuple[dict, int]]:
+-    """Every (member, target) pair without a CONTINUE-class terminal record, in run order."""
+-    out = []
++def _canonical_json(path: Path):
++    """A record file's content, only if it is a plain file holding exactly the canonical bytes of its JSON."""
++    if not path.is_file() or path.is_symlink():
++        return None
++    raw = path.read_bytes()
++    try:
++        rec = json.loads(raw.decode('ascii'))
++    except (ValueError, UnicodeDecodeError):
++        return None
++    return rec if isinstance(rec, dict) and canonical(rec) == raw else None
++
++
++def attempt_state(plan: Mapping, mem: Mapping, target: int, run_id: str, declaration: Mapping) -> tuple[str, str]:
++    """('DONE', reason) only if this attempt's run folder proves the planned run happened and ended in a CONTINUE
++    class; otherwise ('NOT_DONE', why). The checks repeat read_run's record checks with the installed declaration."""
++    req = request_for(plan, mem, target, run_id)
++    folder = roots()['runs'] / plan['game_id'] / mem['method_id'] / mem['variant_id'] / run_id
++    if not folder.is_dir() or folder.is_symlink():
++        return 'NOT_DONE', 'no run folder'
++    term = _canonical_json(folder / CP.FILES['terminal'])
++    if term is None:
++        return 'NOT_DONE', 'no valid terminal record'
++    try:
++        validate_terminal(term)
++    except ValueError as exc:
++        return 'NOT_DONE', f'invalid terminal record: {exc}'
++    for k in ('run_id', 'game_id', 'method_id', 'variant_id', 'method_revision', 'registry_entry_digest'):
++        if term[k] != req[k]:
++            return 'NOT_DONE', f'terminal {k} differs from the planned request'
++    if term['target_draw_number'] != target or term['execution_path'] != 'STANDALONE':
++        return 'NOT_DONE', 'terminal target or execution path differs from the planned request'
++    if classify(term['outcome'], term['outcome_reason']) != 'CONTINUE':
++        return 'NOT_DONE', f"terminal {term['outcome']} {reason_prefix(term['outcome_reason'])}"
++    if term['outcome'] != 'SUCCESS':
++        return 'DONE', f"{term['outcome']} {reason_prefix(term['outcome_reason'])} (bound to this batch's request)"
++    forecast = _canonical_json(folder / CP.FILES['forecast'])
++    receipt = _canonical_json(folder / CP.FILES['forecast_receipt'])
++    if forecast is None or receipt is None:
++        return 'NOT_DONE', 'SUCCESS without a valid forecast and receipt'
++    ok, why = consumable(forecast, receipt, term, gates_pass=True, declaration=declaration)
++    if not ok:
++        return 'NOT_DONE', f'forecast not consumable: {why}'
++    for k in ('master_sha256', 'run_mode', 'product_kind', 'registry_entry_digest', 'run_id'):
++        if receipt[k] != req[k]:
++            return 'NOT_DONE', f'receipt {k} differs from the planned request'
++    if receipt['execution_path'] != 'STANDALONE' or receipt['master_file'] != req['master_file']:
++        return 'NOT_DONE', 'receipt execution path or master file differs'
++    for k in ('declaration_digest', 'method_revision', 'observation_view', 'include_dates', 'run_mode', 'product_kind'):
++        if forecast[k] != req[k]:
++            return 'NOT_DONE', f'forecast {k} differs from the planned request'
++    if forecast['target_draw_number'] != target or forecast['game_id'] != plan['game_id']:
++        return 'NOT_DONE', 'forecast target or game differs'
++    return 'DONE', 'SUCCESS, consumable, under this plan\'s pins'
++
++
++def pair_states(plan: Mapping) -> tuple[dict, int]:
++    """(method, variant, target) -> 'DONE' or 'NOT_DONE' for every pair of the plan; and the ignored attempt lines."""
++    attempts, bad = _attempts(plan)
++    reg = _registry()
++    out = {}
+     for mem in plan['cohort']:
+-        index = _member_index(plan, mem)
++        decl = reg.declaration(mem['declaration_digest'])
+         for target in range(plan['window_first'], plan['window_last'] + 1):
+-            if not any(classify(o, r) == 'CONTINUE' for o, r, _ in index.get(target, ())):
+-                out.append((mem, target))
+-    return out
++            key = (mem['method_id'], mem['variant_id'], target)
++            done = any(attempt_state(plan, mem, target, rid, decl)[0] == 'DONE' for rid in attempts.get(key, ()))
++            out[key] = 'DONE' if done else 'NOT_DONE'
++    return out, bad
+ 
+ 
+-def request_for(plan: Mapping, mem: Mapping, target: int) -> dict:
+-    return {'schema': V.RUN_REQUEST, 'game_id': plan['game_id'], 'method_id': mem['method_id'],
+-            'variant_id': mem['variant_id'], 'method_revision': mem['method_revision'], 'target_draw_number': target,
+-            'observation_view': plan['observation_view'], 'include_dates': plan['include_dates'],
+-            'run_mode': plan['run_mode'], 'product_kind': plan['product_kind'],
+-            'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
+-            'run_id': CP.new_run_id(), 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
+-            'master_sha256': plan['master_sha256']}
++def pending(plan: Mapping) -> list[tuple[dict, int]]:
++    """Every (member, target) pair that is not proven done by an attempt of this batch, in run order."""
++    states, _bad = pair_states(plan)
++    return [(mem, t) for mem in plan['cohort'] for t in range(plan['window_first'], plan['window_last'] + 1)
++            if states[(mem['method_id'], mem['variant_id'], t)] != 'DONE']
+ 
+ 
+ def _loop(plan: Mapping, todo, adapters: Mapping, runs: list):
+     """Run the pending pairs in order. Returns None if every one ended in a CONTINUE class, otherwise the stop
+     reason (design 5.3). Each run's summary is appended to `runs` as it ends."""
+     for mem, target in todo:
+-        req = request_for(plan, mem, target)
++        req = request_for(plan, mem, target, CP.new_run_id())
+         ident = f"{mem['method_id']} {mem['variant_id']} target {target}"
++        _append_attempt(plan, req)                          # bound to this batch before the run (EX_083 B01)
+         try:
+             res = CR.run_contract_method(req, compute=adapters[mem['method_id']].compute,
+                                          verify=adapters[mem['method_id']].verify,
+@@ -352,18 +453,24 @@
+ 
+ 
+ def status(game_id: str, batch_id: str) -> dict:
+-    """Read-only counts per member: pairs done, pairs pending, and terminal outcomes by reason prefix."""
++    """Read-only counts per member: pairs proven done by this batch's own attempts, pairs pending, the attempts made
++    and how each attempt stands (EX_083 WF1A-R2-B01); and the number of ignored attempt lines."""
+     plan = load_plan(game_id, batch_id)
+-    out = {}
+-    n = plan['window_last'] - plan['window_first'] + 1
++    attempts, bad = _attempts(plan)
++    reg = _registry()
++    out = {'ignored_attempt_lines': bad}
+     for mem in plan['cohort']:
+-        index = _member_index(plan, mem)
+-        done = sum(1 for t in range(plan['window_first'], plan['window_last'] + 1)
+-                   if any(classify(o, r) == 'CONTINUE' for o, r, _ in index.get(t, ())))
+-        counts: dict = {}
+-        for recs in index.values():
+-            for o, r, _ in recs:
+-                k = f'{o} {reason_prefix(r)}'
+-                counts[k] = counts.get(k, 0) + 1
+-        out[f"{mem['method_id']} {mem['variant_id']}"] = {'done': done, 'pending': n - done, 'terminals': counts}
++        decl = reg.declaration(mem['declaration_digest'])
++        done, made, why = 0, 0, {}
++        for target in range(plan['window_first'], plan['window_last'] + 1):
++            states = [attempt_state(plan, mem, target, rid, decl)
++                      for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ())]
++            made += len(states)
++            done += any(s == 'DONE' for s, _ in states)
++            for s, r in states:
++                k = f'{s}: {r}'
++                why[k] = why.get(k, 0) + 1
++        n = plan['window_last'] - plan['window_first'] + 1
++        out[f"{mem['method_id']} {mem['variant_id']}"] = {'done': done, 'pending': n - done, 'attempts': made,
++                                                           'attempt_states': why}
+     return out
+--- a/tests/test_wf1a_walk_forward.py
++++ b/tests/test_wf1a_walk_forward.py
+@@ -24,7 +24,7 @@
+ import _common.contract_publication as CP
+ import _common.contract_runner as CR
+ import _common.walk_forward as WF
+-from _common.contract_records import record_digest
++from _common.contract_records import canonical, record_digest
+ from _common.contract_registry import InstalledRegistry
+ from _common.game_profiles import POWERBALL, get_profile
+ 
+@@ -147,7 +147,9 @@
+         self.assertEqual(len(rows), 2)
+         self.assertEqual((rows[1][0], rows[1][11], rows[1][13]), ('WF_BATCH', plan['batch_id'], record_digest(plan)))
+         st = WF.status('POWERBALL', plan['batch_id'])
++        self.assertEqual(st.pop('ignored_attempt_lines'), 0)
+         self.assertEqual({v['done'] for v in st.values()}, {3})
++        self.assertEqual({v['attempts'] for v in st.values()}, {3})
+         self.assertEqual(self.run_batch(plan), 0)                       # nothing pending: no new run
+         self.assertEqual(len(self.run_folders()), 18)
+         self.assertEqual(self.segments(plan)[-1]['runs'], [])
+@@ -271,6 +273,113 @@
+         self.assertEqual(self.run_folders(), [])
+ 
+ 
++class AttemptBinding(Base):
++    """EX_083 WF1A-R2-B01: a pair is done only through an attempt of THIS batch whose run proves the planned request."""
++
++    def folder_of(self, plan, mem, target):
++        attempts, _ = WF._attempts(plan)
++        rid = attempts[(mem['method_id'], mem['variant_id'], target)][-1]
++        return WF.roots()['runs'] / 'POWERBALL' / mem['method_id'] / mem['variant_id'] / rid
++
++    def rewrite(self, path, rec):
++        path.chmod(0o644)
++        path.unlink()
++        path.write_bytes(canonical(rec))
++
++    def test_forged_terminal_without_an_attempt_is_not_done(self):
++        """The reviewer's counterexample: a well-formed SUCCESS terminal with no attempt line and no records."""
++        plan = self.plan()
++        mem = plan['cohort'][0]
++        req = WF.request_for(plan, mem, FIRST, 'mg-forgedforgedforged0001')
++        folder = WF.roots()['runs'] / 'POWERBALL' / mem['method_id'] / mem['variant_id'] / req['run_id']
++        folder.mkdir(parents=True)
++        term = {'schema': 'RUN_TERMINAL_RECORD_V1', 'run_id': req['run_id'], 'game_id': 'POWERBALL',
++                'method_id': mem['method_id'], 'variant_id': mem['variant_id'], 'method_revision': mem['method_revision'],
++                'target_draw_number': FIRST, 'execution_path': 'STANDALONE', 'outcome': 'SUCCESS',
++                'outcome_reason': 'PUBLISHED: PREDICTION_AVAILABLE', 'registry_entry_digest': mem['registry_entry_digest'],
++                'receipt_digests': ['c' * 64]}
++        (folder / 'terminal.json').write_bytes(canonical(term))
++        self.assertIn((mem, FIRST), WF.pending(plan))                   # no attempt line: not done
++        WF._append_attempt(plan, req)                                   # even with a matching attempt line ...
++        self.assertEqual(WF.attempt_state(plan, mem, FIRST, req['run_id'],
++                                          InstalledRegistry().declaration(mem['declaration_digest']))[0], 'NOT_DONE')
++        self.assertIn((mem, FIRST), WF.pending(plan))                   # ... no forecast and receipt: not done
++
++    def test_a_new_master_pin_reruns_every_pair(self):
++        plan_a = self.plan()
++        self.assertEqual(self.run_batch(plan_a), 0)
++        write_varied_master(self.proj, POWERBALL, 1500, 1)              # the admitted master changes (a new pin)
++        plan_b = self.plan()
++        self.assertNotEqual(plan_b['master_sha256'], plan_a['master_sha256'])
++        self.assertEqual(len(WF.pending(plan_b)), 18)                   # nothing of batch A counts for B
++        self.assertEqual(self.run_batch(plan_b), 0)
++        self.assertEqual(len(self.run_folders()), 36)
++        for f in self.run_folders():
++            r = json.loads((f / 'forecast_receipt.json').read_bytes())
++            self.assertIn(r['master_sha256'], (plan_a['master_sha256'], plan_b['master_sha256']))
++        self.assertEqual(self.run_batch(plan_a), 0)                     # A stays proven under its own pin
++        self.assertEqual(len(self.run_folders()), 36)
++
++    def test_another_batch_with_the_same_pins_is_not_reused(self):
++        plan_a = self.plan()
++        self.assertEqual(self.run_batch(plan_a), 0)
++        plan_b = self.plan()
++        self.assertEqual(plan_b['master_sha256'], plan_a['master_sha256'])
++        self.assertEqual(len(WF.pending(plan_b)), 18)
++        a_lines = WF._attempts_path(plan_a).read_bytes()                # A's attempt lines copied into B's log
++        with open(WF._attempts_path(plan_b), 'ab') as fh:
++            fh.write(a_lines)
++        self.assertEqual(len(WF.pending(plan_b)), 18)                   # another batch's lines are ignored
++        self.assertEqual(WF.status('POWERBALL', plan_b['batch_id'])['ignored_attempt_lines'], 18)
++
++    def test_corrupt_or_mismatched_records_make_the_pair_run_again(self):
++        plan = self.plan()
++        self.assertEqual(self.run_batch(plan), 0)
++        m = plan['cohort']
++        f0 = self.folder_of(plan, m[0], FIRST)                          # a terminal that is not canonical bytes
++        raw = (f0 / 'terminal.json').read_bytes()
++        (f0 / 'terminal.json').chmod(0o644)
++        (f0 / 'terminal.json').unlink()
++        (f0 / 'terminal.json').write_bytes(raw.replace(b'{', b'{ ', 1))
++        f1 = self.folder_of(plan, m[1], FIRST)                          # the forecast's content changed
++        rec = json.loads((f1 / 'forecast.json').read_bytes())
++        self.rewrite(f1 / 'forecast.json', dict(rec, warnings=['tampered']))
++        self.assertEqual(WF.attempt_state(plan, m[1], FIRST, f1.name,
++                                          InstalledRegistry().declaration(m[1]['declaration_digest']))[1][:24],
++                         'forecast not consumable:')
++        f2 = self.folder_of(plan, m[2], FIRST)                          # receipt and terminal changed together
++        rec = json.loads((f2 / 'forecast_receipt.json').read_bytes())
++        new = dict(rec, master_sha256='d' * 64)
++        self.rewrite(f2 / 'forecast_receipt.json', new)
++        term = json.loads((f2 / 'terminal.json').read_bytes())
++        self.rewrite(f2 / 'terminal.json', dict(term, receipt_digests=[record_digest(new)]))
++        f3 = self.folder_of(plan, m[3], FIRST)                          # the forecast removed
++        (f3 / 'forecast.json').chmod(0o644)
++        (f3 / 'forecast.json').unlink()
++        decl = InstalledRegistry().declaration
++        self.assertEqual(WF.attempt_state(plan, m[2], FIRST, f2.name, decl(m[2]['declaration_digest'])),
++                         ('NOT_DONE', 'receipt master_sha256 differs from the planned request'))
++        self.assertEqual(sorted((p[0]['variant_id'], p[1]) for p in WF.pending(plan)),
++                         sorted((m[i]['variant_id'], FIRST) for i in range(4)))
++        self.assertEqual(self.run_batch(plan), 0)                       # they run again; nothing is removed
++        self.assertEqual(len(self.run_folders()), 22)
++
++    def test_an_attempt_without_a_folder_and_junk_lines(self):
++        plan = self.plan()
++        mem = plan['cohort'][0]
++        WF._append_attempt(plan, WF.request_for(plan, mem, FIRST, 'mg-neverrannever0000001'))
++        wrong = WF.request_for(plan, mem, FIRST + 1, 'mg-wrongdigestwrong00001')    # digest of another pair
++        line = canonical({'schema': WF.ATTEMPT_SCHEMA, 'batch_id': plan['batch_id'], 'method_id': mem['method_id'],
++                          'variant_id': mem['variant_id'], 'target_draw_number': FIRST,
++                          'run_id': wrong['run_id'], 'request_digest': record_digest(wrong)})
++        with open(WF._attempts_path(plan), 'ab') as fh:
++            fh.write(b'not json\n{"schema":"WF_BATCH_ATTEMPT_V1"}\n' + line)
++        self.assertIn((mem, FIRST), WF.pending(plan))
++        self.assertEqual(WF.status('POWERBALL', plan['batch_id'])['ignored_attempt_lines'], 3)
++        self.assertEqual(self.run_batch(plan), 0)
++        self.assertEqual(len(self.run_folders()), 18)
++
++
+ class NotRealCapable(Base):
+     def test_a_listed_method_is_named_in_the_plan_and_never_run(self):
+         self.assertEqual(set(WF.NOT_REAL_CAPABLE), {'E_1'})             # E_1 r1 until its revision 2 (WF1-13)
