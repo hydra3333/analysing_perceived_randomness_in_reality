@@ -123,6 +123,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   one method run at a time in one process, so it uses one CPU core (about 4% of a 24-thread machine)
   and takes hours. Study running variants in parallel to use more cores, keeping what the
   one-at-a-time order gives today: a reproducible batch, and a clean stop at the first problem.
+- Brought forward by the owner (31 October 2026, WORKERS-1): parallel walk-forward batches, and the
+  coordinator's worker limit raised from 6 to the machine's logical processor count (default half),
+  now ship with WF-1B (roadmap item 10). The rest of this study stays FINAL and inactive.
 
 ## Standing reminders
 

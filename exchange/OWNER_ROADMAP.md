@@ -83,6 +83,13 @@ and you scheduled the deferred performance stage (item 22).
            40-variant walk-forward predictions, frozen and waiting to be scored.
            Next: register v0.22 (document-only); SEED-1 (6 November); WF-1B, the scorer and report (it
            also adds a progress line to the batch driver; descriptive real-outcome tables first).
+           WF-1B also carries your worker decision (WORKERS-1, 31 October 2026): the coordinator's
+           fixed 1..6 limit becomes 1 up to the machine's logical processor count (24 on your PC),
+           default half of that (12); the walk-forward driver gets the same --workers option
+           (variants in parallel, each variant's draws in order, records written in a fixed order,
+           so a batch gives the same records at any worker count and still stops cleanly). The
+           Architecture's six-worker wording is amended in the register, and the identity tests
+           (one worker versus many) run once at the new settings.
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
            runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
