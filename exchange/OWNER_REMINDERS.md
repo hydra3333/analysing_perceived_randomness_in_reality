@@ -161,6 +161,16 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   taught (released methods, walk-forward batches, scoring), as draft 4, in the wave 3 package.
 - When: wave 3 (roadmap item 11).
 
+## R-010  EX_113 O02: the test runner's failure-detail label
+
+- Asked: 1 November 2026 (the owner accepted WF1B_Install_v3 and deferred EX_113's optional O02).
+- Status: OPEN (optional; wording only).
+- What: when a test module fails, WF1B_Install_v3's runner heads the printed details "invented test data
+  only". Some older tests read the development masters, so the label should not promise that. Claude has
+  already changed the runner template to "test failure output; inspect before sharing". Until then, a
+  failure log is checked before it is relayed, so no restricted outcome is forwarded.
+- When: the next install package's runner (it comes from the template automatically).
+
 ## Standing reminders
 
 - Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and

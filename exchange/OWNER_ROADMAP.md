@@ -2,8 +2,8 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 1 November 2026, after WF-1B's code review passed (EX_111) and you accepted its
-install package; item 10 condensed, and the next steps set out as items 10b to 10d.
+Last updated: 1 November 2026, after WF-1B v3 passed review (EX_113) and you accepted it; item 10
+condensed, and the next steps set out as items 10b to 10d.
 
 ## A few words used below
 
@@ -85,12 +85,13 @@ install package; item 10 condensed, and the next steps set out as items 10b to 1
              workers moved to WF-1C, WB-1 real results first, WB-2 seed in WF-1B). Code reviewed EX_108
              to EX_111: PASS. You accepted WF1B_Install_v2 on 1 November 2026 and deferred EX_111's
              optional O01 to a later package (reminder R-007).
+           - Windows rehearsals: T012 and T013 stopped safely (a task-file wording fault, then one test
+             that made a symlink, which Windows refuses; the other 462 tests passed on your PC). v3
+             fixes that test only (EX_112); EX_113: PASS. You accepted v3 on 1 November 2026 and
+             deferred EX_113's optional O02 (a label in the test runner; reminder R-010).
            Left in this item, in order:
-           a. Claude Code rehearses the install (TASK_T013); you push its report; Claude checks it.
-              (T012 stopped safely at its step 9 on 1 November: two of its commands named the
-              wrapper's .bat file, which Claude Code's settings refuse. Steps 1-8 passed; nothing
-              changed. T013 is the same task with those two commands reworded.)
-           b. You install WF1B_Install_v2 (Claude leads you step by step); Claude checks it.
+           a. Claude Code rehearses the v3 install (TASK_T014); you push its report; Claude checks it.
+           b. You install WF1B_Install_v3 (Claude leads you step by step); Claude checks it.
            c. You run the two reports (Run_Method_Rankings.bat, one per game: Powerball draws
               1286-1576, Oz Lotto 1474-1693) and commit them; Claude and ChatGPT read them.
 10b. NEXT - The snapshot (your request, 1 November 2026): one document package, reviewed by ChatGPT and
