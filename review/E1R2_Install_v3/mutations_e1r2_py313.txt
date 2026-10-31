@@ -1,0 +1,34 @@
+PASS control passes tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static
+PASS control passes tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths
+PASS control passes tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_loading
+PASS control passes tests.test_code3_retirement.InstalledArchive.test_archive_holds_revision_1_complete
+PASS control passes tests.test_code3_retirement.RetirementT15.test_retire_checks_every_input_before_writing
+PASS control passes tests.test_code3_retirement.RetirementT15.test_without_git_history
+PASS control passes tests.test_e1r2_revision2.DataKinds
+PASS control passes tests.test_e1r2_revision2.Driver
+PASS control passes tests.test_e1r2_revision2.IdentityWithRevision1.test_r2_equals_r1_label_for_label
+PASS control passes tests.test_e1r2_revision2.InstallBarrier
+PASS control passes tests.test_e1r2_revision2.LegacyRunner
+PASS control passes tests.test_e1r2_revision2.RealNamespaceOzLotto
+PASS control passes tests.test_e1r2_revision2.Registry
+PASS mutation: r2's data-kind line admitting REAL_HOLDOUT -> tests.test_e1r2_revision2.DataKinds fails
+PASS mutation: the legacy gate left at revision 1 -> tests.test_e1r2_revision2.LegacyRunner fails
+PASS mutation: an archived file with one byte changed -> tests.test_code3_retirement.InstalledArchive.test_archive_holds_revision_1_complete fails
+PASS mutation: a README without its helper list -> tests.test_code3_retirement.InstalledArchive.test_archive_holds_revision_1_complete fails
+PASS mutation: the archive missing one file -> tests.test_code3_retirement.InstalledArchive.test_archive_holds_revision_1_complete fails
+PASS mutation: an import from archive in src/ -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static fails
+PASS mutation: a test loading an archived file with importlib -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static fails
+PASS mutation: the static check blind to import_module -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_loading fails
+PASS mutation: the static check blind to Path(...) / parts (EX_093 B01) -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths fails
+PASS mutation: the static check not folding Path('archive', 'methods') (EX_093 B01) -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths fails
+PASS mutation: the path-construction rule removed (EX_095 O02) -> tests.test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths fails
+PASS mutation: retire writing before checking every input (EX_093 O01) -> tests.test_code3_retirement.RetirementT15.test_retire_checks_every_input_before_writing fails
+PASS mutation: retirement not removing a dropped path -> tests.test_code3_retirement.RetirementT15.test_without_git_history fails
+PASS mutation: the archive check ignoring changed bytes -> tests.test_code3_retirement.RetirementT15.test_without_git_history fails
+PASS mutation: E_1 left in NOT_REAL_CAPABLE -> tests.test_e1r2_revision2.Driver fails
+PASS mutation: r2's declaration differing in another field -> tests.test_e1r2_revision2.Registry fails
+PASS mutation: E_1's counting changed -> tests.test_e1r2_revision2.IdentityWithRevision1.test_r2_equals_r1_label_for_label fails
+PASS mutation: E_1's Oz Lotto tie order changed -> tests.test_e1r2_revision2.RealNamespaceOzLotto fails
+PASS mutation: the r1 reference file edited by one value -> tests.test_e1r2_revision2.IdentityWithRevision1.test_r2_equals_r1_label_for_label fails
+PASS mutation: the gate's flag check moved before the pin check -> tests.test_e1r2_revision2.InstallBarrier fails
+RESULT e1r2: PASS (20 mutants)

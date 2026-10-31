@@ -4,8 +4,8 @@ OFFLINE.
 Every batch runs in a temporary project folder holding an invented master, ledger and INIT record (the existing
 fixtures' varied rows; never a real result). The test harness patches the runner's PROJECT_ROOT and ORPHAN_MARKER
 constants to that folder, as the existing tests patch fixed constants; the installed registry and method folders
-are used as installed (after REL-1). A small cohort (E_6 and E_7, six variants; E_1 revision 1 is not real-capable, so it is named in each plan as not in
-the cohort) over three targets keeps it fast.
+are used as installed. A small cohort (E_6 and E_7, six variants) over three targets keeps it fast; E_1, in the
+cohort since its revision 2 (owner decision WF1-13), is run by test_e1r2_revision2.
 Nothing in the repository is written, and no real draw is read.
 """
 from __future__ import annotations
@@ -34,7 +34,7 @@ FIRST, LAST = 1574, 1576
 
 def small_adapters():
     import Method_Contract_Runner as M
-    return {'E_1': M.ADAPTERS['E_1'], 'E_6': M.ADAPTERS['E_6'], 'E_7': M.ADAPTERS['E_7']}
+    return {'E_6': M.ADAPTERS['E_6'], 'E_7': M.ADAPTERS['E_7']}
 
 
 class Stub:
@@ -127,8 +127,7 @@ class TheBatch(Base):
                          [('E_6', 'BETA_BERNOULLI_DECAY_149_150_V1'), ('E_6', 'BETA_BERNOULLI_DECAY_74_75_V1'),
                           ('E_6', 'BETA_BERNOULLI_FULL_MEMORY_V1'), ('E_7', 'BETA_SHRINK_FULL_C52_V1'),
                           ('E_7', 'BETA_SHRINK_W104_C52_V1'), ('E_7', 'BETA_SHRINK_W52_C52_V1')])
-        self.assertEqual([(x['method_id'], x['variant_id']) for x in plan['not_in_cohort']],
-                         [('E_1', 'FULL_HISTORY_RAW_COUNTS_V1')])           # named with its reason, not run
+        self.assertEqual(plan['not_in_cohort'], [])                         # empty since E_1 revision 2
         self.assertEqual(self.run_batch(plan), 0)
         seg, = self.segments(plan)
         self.assertEqual([(r['method_id'], r['variant_id'], r['target']) for r in seg['runs']],
@@ -382,22 +381,23 @@ class AttemptBinding(Base):
 
 class NotRealCapable(Base):
     def test_a_listed_method_is_named_in_the_plan_and_never_run(self):
-        self.assertEqual(set(WF.NOT_REAL_CAPABLE), {'E_1'})             # E_1 r1 until its revision 2 (WF1-13)
+        self.assertEqual(WF.NOT_REAL_CAPABLE, {})                       # empty since E_1 revision 2 (WF1-13)
         with mock.patch.dict(WF.NOT_REAL_CAPABLE, {'E_6': 'test harness: not real-capable'}):
             plan = self.plan()
         self.assertEqual([m['method_id'] for m in plan['cohort']], ['E_7'] * 3)
         self.assertEqual(sorted((x['method_id'], x['reason']) for x in plan['not_in_cohort']),
-                         sorted([('E_1', WF.NOT_REAL_CAPABLE['E_1'])] + [('E_6', 'test harness: not real-capable')] * 3))
+                         [('E_6', 'test harness: not real-capable')] * 3)
         self.assertEqual(self.run_batch(plan), 0)
         self.assertEqual(len(self.run_folders()), 9)
 
-    def test_why_e1_revision_1_is_not_in_the_cohort(self):
-        """E_1's frozen revision-1 function refuses real data, so a run of it would only ever fail."""
+    def test_e1_revision_2_admits_real_development(self):
+        """E_1 revision 1's function refused real data; revision 2's admits it and still refuses a holdout run."""
         from E_001.multigame_e1 import forecast
         rows = [{'draw': POWERBALL.first_draw, 'MAIN': [1, 2, 3, 4, 5, 6, 7], 'POWERBALL': [1]}]
         forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='SYNTHETIC_CONTRACT_TEST')
+        forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_DEVELOPMENT')
         with self.assertRaises(ValueError):
-            forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_DEVELOPMENT')
+            forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_HOLDOUT')
 
 
 class Classification(unittest.TestCase):

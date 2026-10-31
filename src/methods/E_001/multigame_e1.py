@@ -27,8 +27,8 @@ def _digest(view_sha256: str, target: int, barrel_id: str, label: int) -> str:
 
 def forecast(profile: GameProfile, records: Sequence[Mapping], digest: str, target: int,
              *, data_kind: str) -> dict:
-    if data_kind != 'SYNTHETIC_CONTRACT_TEST':
-        # This new multi-game science runner remains OFF until later review.
+    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_DEVELOPMENT'):
+        # Revision 2 (owner decision WF1-13): synthetic contract tests and real development runs only.
         raise ValueError('multi-game E_1 real execution not authorised')
     if not profile.historical_development_target_allowed(target):
         raise ValueError('historical target outside development boundary')

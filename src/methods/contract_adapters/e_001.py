@@ -4,8 +4,8 @@ Reviewer's E2RC-C04, option (a): E_1's reviewed scientific functions are not tou
 calls E_1's own multi-game function, E_001.multigame_e1.forecast, unchanged, and turns its counts
 into a contract MethodOutput. Then verify() recomputes E_1's own result and requires the contract
 record to equal it label for label (scores, ranking, TOP, WORST) before anything is published, so a
-published record can never differ from what E_1 itself computes. E_1 keeps revision 1: no E_1 byte
-changes. E_1's function itself accepts only SYNTHETIC_CONTRACT_TEST data; real runs stay off there.
+published record can never differ from what E_1 itself computes. Since E_1 revision 2 (owner decision
+WF1-13), E_1's function accepts SYNTHETIC_CONTRACT_TEST and REAL_DEVELOPMENT data, with revision 1's counting.
 The wrapper reads only the DrawView and the MethodTask it is given.
 """
 from __future__ import annotations

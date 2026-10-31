@@ -38,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     # src/methods/E_001/IN_DEVELOPMENT.txt must not exist. Nothing else in this runner changes.
     from _common.contract_dispatch import DispatchRefused, legacy_gate
     try:
-        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '1')
+        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '2')
     except DispatchRefused as exc:
         parser.error(exc.text)
     mode = ('SYNTHETIC_CONTRACT_TEST' if args.mode == 'synthetic-contract'

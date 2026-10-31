@@ -49,8 +49,8 @@ SEARCH_LOG_HEADER = ('row_type', 'utc', 'game_id', 'mode', 'window_first', 'wind
 
 # Released methods that cannot run on real data through the contract, with the reason. They are listed in every
 # plan as not in the cohort, never silently dropped (mark, never suppress).
-NOT_REAL_CAPABLE = {'E_1': ("E_1 revision 1's multi-game function accepts synthetic contract data only (E2RC-C04 "
-                            "option (a)); E_1 joins walk-forward batches as revision 2 (owner decision WF1-13)")}
+# Empty since E_1 revision 2 (owner decision WF1-13), whose multi-game function admits real development runs.
+NOT_REAL_CAPABLE: dict[str, str] = {}
 
 # The STOP rule (design 5.3): only these (outcome, reason prefix) pairs continue; everything else stops.
 CONTINUE = frozenset({('SUCCESS', 'PUBLISHED'), ('RUNTIME_FAILURE', 'METHOD_FAILED'),

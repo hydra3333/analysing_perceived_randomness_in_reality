@@ -1,0 +1,168 @@
+--- a/src/methods/E_001/multigame_e1.py
++++ b/src/methods/E_001/multigame_e1.py
+@@ -27,8 +27,8 @@
+ 
+ def forecast(profile: GameProfile, records: Sequence[Mapping], digest: str, target: int,
+              *, data_kind: str) -> dict:
+-    if data_kind != 'SYNTHETIC_CONTRACT_TEST':
+-        # This new multi-game science runner remains OFF until later review.
++    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_DEVELOPMENT'):
++        # Revision 2 (owner decision WF1-13): synthetic contract tests and real development runs only.
+         raise ValueError('multi-game E_1 real execution not authorised')
+     if not profile.historical_development_target_allowed(target):
+         raise ValueError('historical target outside development boundary')
+--- a/src/methods/E_001_Historical_Appearance_Frequency.py
++++ b/src/methods/E_001_Historical_Appearance_Frequency.py
+@@ -38,7 +38,7 @@
+     # src/methods/E_001/IN_DEVELOPMENT.txt must not exist. Nothing else in this runner changes.
+     from _common.contract_dispatch import DispatchRefused, legacy_gate
+     try:
+-        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '1')
++        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '2')
+     except DispatchRefused as exc:
+         parser.error(exc.text)
+     mode = ('SYNTHETIC_CONTRACT_TEST' if args.mode == 'synthetic-contract'
+--- a/src/methods/_common/walk_forward.py
++++ b/src/methods/_common/walk_forward.py
+@@ -49,8 +49,8 @@
+ 
+ # Released methods that cannot run on real data through the contract, with the reason. They are listed in every
+ # plan as not in the cohort, never silently dropped (mark, never suppress).
+-NOT_REAL_CAPABLE = {'E_1': ("E_1 revision 1's multi-game function accepts synthetic contract data only (E2RC-C04 "
+-                            "option (a)); E_1 joins walk-forward batches as revision 2 (owner decision WF1-13)")}
++# Empty since E_1 revision 2 (owner decision WF1-13), whose multi-game function admits real development runs.
++NOT_REAL_CAPABLE: dict[str, str] = {}
+ 
+ # The STOP rule (design 5.3): only these (outcome, reason prefix) pairs continue; everything else stops.
+ CONTINUE = frozenset({('SUCCESS', 'PUBLISHED'), ('RUNTIME_FAILURE', 'METHOD_FAILED'),
+--- a/src/methods/contract_adapters/e_001.py
++++ b/src/methods/contract_adapters/e_001.py
+@@ -4,8 +4,8 @@
+ calls E_1's own multi-game function, E_001.multigame_e1.forecast, unchanged, and turns its counts
+ into a contract MethodOutput. Then verify() recomputes E_1's own result and requires the contract
+ record to equal it label for label (scores, ranking, TOP, WORST) before anything is published, so a
+-published record can never differ from what E_1 itself computes. E_1 keeps revision 1: no E_1 byte
+-changes. E_1's function itself accepts only SYNTHETIC_CONTRACT_TEST data; real runs stay off there.
++published record can never differ from what E_1 itself computes. Since E_1 revision 2 (owner decision
++WF1-13), E_1's function accepts SYNTHETIC_CONTRACT_TEST and REAL_DEVELOPMENT data, with revision 1's counting.
+ The wrapper reads only the DrawView and the MethodTask it is given.
+ """
+ from __future__ import annotations
+--- a/tests/test_e2r_dispatch.py
++++ b/tests/test_e2r_dispatch.py
+@@ -346,13 +346,13 @@
+             with self.assertRaises(ValueError):
+                 begin_synthetic(self.td / 'p2runs', run_id='mg-roster-check-0003', profile=POWERBALL, target=1300,
+                                 method_id='E_1', variant_id='EXTRA_UNRELEASED_V1')
+-            CD.legacy_gate('POWERBALL', *C.E1, '1')                                      # still released
++            CD.legacy_gate('POWERBALL', *C.E1, '2')                                      # still released
+         # FULL_HISTORY withdrawn (entry 2 FORMULA_OPEN) while another E_1 variant stays SUPPORTED.
+-        C.append_entry(self.data, C.entry(d1, 'FORMULA_OPEN', seq=2, prev=e1))
++        C.append_entry(self.data, C.entry(d1, 'FORMULA_OPEN', seq=e1['entry_sequence'] + 1, prev=e1))
+         with _patched_roots(self.data, self.methods):
+             self.assertEqual(method_status('POWERBALL', 'E_1'), 'SUPPORTED')            # roll-up still says so
+             with self.assertRaises(DispatchRefused) as cm:
+-                CD.legacy_gate('POWERBALL', *C.E1, '1')
++                CD.legacy_gate('POWERBALL', *C.E1, '2')
+             self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
+             with self.assertRaises(DispatchRefused) as cm:
+                 dispatch_gate(C.request(d1, e1, 1300, self.sha))
+@@ -380,12 +380,13 @@
+             with self.assertRaises(SystemExit) as cm:
+                 r1.main(args)
+         self.assertEqual(cm.exception.code, 2)
+-        self.assertIn(f'DISPATCH REFUSED: POWERBALL E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 1: {expect}: ', err.getvalue())
++        self.assertIn(f'DISPATCH REFUSED: POWERBALL E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: {expect}: ', err.getvalue())
+ 
+     def withdraw(self):
+         reg = InstalledRegistry()
+         e1 = reg.active_entry('POWERBALL', *C.E1)
+-        C.append_entry(self.data, C.entry(reg.declaration(e1['declaration_digest']), 'FORMULA_OPEN', seq=2, prev=e1))
++        C.append_entry(self.data, C.entry(reg.declaration(e1['declaration_digest']), 'FORMULA_OPEN',
++                                          seq=e1['entry_sequence'] + 1, prev=e1))
+ 
+     def synthetic_args(self):
+         src = self.td / 'synthetic.csv'
+@@ -416,7 +417,7 @@
+     def test_released_e1_still_runs_exactly_as_before(self):
+         """With the installed registry E_1 is released: the legacy goldens still reproduce (see
+         test_e1_standalone and E2R-T09); here, the gate itself admits it."""
+-        entry, decl = CD.legacy_gate('POWERBALL', *C.E1, '1')
++        entry, decl = CD.legacy_gate('POWERBALL', *C.E1, '2')                         # E_1 revision 2 (WF1-13)
+         self.assertEqual(entry['registry_status'], 'SUPPORTED')
+         self.assertEqual(decl['method_id'], 'E_1')
+ 
+--- a/tests/test_rel1_release.py
++++ b/tests/test_rel1_release.py
+@@ -53,7 +53,9 @@
+             for i in range(2, 63):
+                 self.assertEqual(len(reg.chain(g, f'E_{i}', 'NOT_YET_SPECIFIED')), 1)
+             e1 = reg.chain(g, 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1')
+-            self.assertEqual([(e['entry_sequence'], e['registry_status']) for e in e1], [(1, 'SUPPORTED')])
++            # E_1's chain gained revision 2 (CODE-3 and E_1 revision 2 package); REL-1 itself left it unchanged.
++            self.assertEqual([(e['entry_sequence'], e['registry_status'], e['method_revision']) for e in e1],
++                             [(1, 'SUPPORTED', '1'), (2, 'SUPPORTED', '2')])
+         sup = {(g, m, v) for (g, m, v) in reg.chain_keys() if reg.active_entry(g, m, v)['registry_status'] == 'SUPPORTED'}
+         self.assertEqual(len(sup), 80)
+ 
+--- a/tests/test_wf1a_walk_forward.py
++++ b/tests/test_wf1a_walk_forward.py
+@@ -4,8 +4,8 @@
+ Every batch runs in a temporary project folder holding an invented master, ledger and INIT record (the existing
+ fixtures' varied rows; never a real result). The test harness patches the runner's PROJECT_ROOT and ORPHAN_MARKER
+ constants to that folder, as the existing tests patch fixed constants; the installed registry and method folders
+-are used as installed (after REL-1). A small cohort (E_6 and E_7, six variants; E_1 revision 1 is not real-capable, so it is named in each plan as not in
+-the cohort) over three targets keeps it fast.
++are used as installed. A small cohort (E_6 and E_7, six variants) over three targets keeps it fast; E_1, in the
++cohort since its revision 2 (owner decision WF1-13), is run by test_e1r2_revision2.
+ Nothing in the repository is written, and no real draw is read.
+ """
+ from __future__ import annotations
+@@ -34,7 +34,7 @@
+ 
+ def small_adapters():
+     import Method_Contract_Runner as M
+-    return {'E_1': M.ADAPTERS['E_1'], 'E_6': M.ADAPTERS['E_6'], 'E_7': M.ADAPTERS['E_7']}
++    return {'E_6': M.ADAPTERS['E_6'], 'E_7': M.ADAPTERS['E_7']}
+ 
+ 
+ class Stub:
+@@ -127,8 +127,7 @@
+                          [('E_6', 'BETA_BERNOULLI_DECAY_149_150_V1'), ('E_6', 'BETA_BERNOULLI_DECAY_74_75_V1'),
+                           ('E_6', 'BETA_BERNOULLI_FULL_MEMORY_V1'), ('E_7', 'BETA_SHRINK_FULL_C52_V1'),
+                           ('E_7', 'BETA_SHRINK_W104_C52_V1'), ('E_7', 'BETA_SHRINK_W52_C52_V1')])
+-        self.assertEqual([(x['method_id'], x['variant_id']) for x in plan['not_in_cohort']],
+-                         [('E_1', 'FULL_HISTORY_RAW_COUNTS_V1')])           # named with its reason, not run
++        self.assertEqual(plan['not_in_cohort'], [])                         # empty since E_1 revision 2
+         self.assertEqual(self.run_batch(plan), 0)
+         seg, = self.segments(plan)
+         self.assertEqual([(r['method_id'], r['variant_id'], r['target']) for r in seg['runs']],
+@@ -382,22 +381,23 @@
+ 
+ class NotRealCapable(Base):
+     def test_a_listed_method_is_named_in_the_plan_and_never_run(self):
+-        self.assertEqual(set(WF.NOT_REAL_CAPABLE), {'E_1'})             # E_1 r1 until its revision 2 (WF1-13)
++        self.assertEqual(WF.NOT_REAL_CAPABLE, {})                       # empty since E_1 revision 2 (WF1-13)
+         with mock.patch.dict(WF.NOT_REAL_CAPABLE, {'E_6': 'test harness: not real-capable'}):
+             plan = self.plan()
+         self.assertEqual([m['method_id'] for m in plan['cohort']], ['E_7'] * 3)
+         self.assertEqual(sorted((x['method_id'], x['reason']) for x in plan['not_in_cohort']),
+-                         sorted([('E_1', WF.NOT_REAL_CAPABLE['E_1'])] + [('E_6', 'test harness: not real-capable')] * 3))
++                         [('E_6', 'test harness: not real-capable')] * 3)
+         self.assertEqual(self.run_batch(plan), 0)
+         self.assertEqual(len(self.run_folders()), 9)
+ 
+-    def test_why_e1_revision_1_is_not_in_the_cohort(self):
+-        """E_1's frozen revision-1 function refuses real data, so a run of it would only ever fail."""
++    def test_e1_revision_2_admits_real_development(self):
++        """E_1 revision 1's function refused real data; revision 2's admits it and still refuses a holdout run."""
+         from E_001.multigame_e1 import forecast
+         rows = [{'draw': POWERBALL.first_draw, 'MAIN': [1, 2, 3, 4, 5, 6, 7], 'POWERBALL': [1]}]
+         forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='SYNTHETIC_CONTRACT_TEST')
++        forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_DEVELOPMENT')
+         with self.assertRaises(ValueError):
+-            forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_DEVELOPMENT')
++            forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_HOLDOUT')
+ 
+ 
+ class Classification(unittest.TestCase):

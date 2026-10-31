@@ -346,13 +346,13 @@ class RosterIsNotAdmission(Base):
             with self.assertRaises(ValueError):
                 begin_synthetic(self.td / 'p2runs', run_id='mg-roster-check-0003', profile=POWERBALL, target=1300,
                                 method_id='E_1', variant_id='EXTRA_UNRELEASED_V1')
-            CD.legacy_gate('POWERBALL', *C.E1, '1')                                      # still released
+            CD.legacy_gate('POWERBALL', *C.E1, '2')                                      # still released
         # FULL_HISTORY withdrawn (entry 2 FORMULA_OPEN) while another E_1 variant stays SUPPORTED.
-        C.append_entry(self.data, C.entry(d1, 'FORMULA_OPEN', seq=2, prev=e1))
+        C.append_entry(self.data, C.entry(d1, 'FORMULA_OPEN', seq=e1['entry_sequence'] + 1, prev=e1))
         with _patched_roots(self.data, self.methods):
             self.assertEqual(method_status('POWERBALL', 'E_1'), 'SUPPORTED')            # roll-up still says so
             with self.assertRaises(DispatchRefused) as cm:
-                CD.legacy_gate('POWERBALL', *C.E1, '1')
+                CD.legacy_gate('POWERBALL', *C.E1, '2')
             self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
             with self.assertRaises(DispatchRefused) as cm:
                 dispatch_gate(C.request(d1, e1, 1300, self.sha))
@@ -380,12 +380,13 @@ class LegacyRunnerGate(Base):
             with self.assertRaises(SystemExit) as cm:
                 r1.main(args)
         self.assertEqual(cm.exception.code, 2)
-        self.assertIn(f'DISPATCH REFUSED: POWERBALL E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 1: {expect}: ', err.getvalue())
+        self.assertIn(f'DISPATCH REFUSED: POWERBALL E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: {expect}: ', err.getvalue())
 
     def withdraw(self):
         reg = InstalledRegistry()
         e1 = reg.active_entry('POWERBALL', *C.E1)
-        C.append_entry(self.data, C.entry(reg.declaration(e1['declaration_digest']), 'FORMULA_OPEN', seq=2, prev=e1))
+        C.append_entry(self.data, C.entry(reg.declaration(e1['declaration_digest']), 'FORMULA_OPEN',
+                                          seq=e1['entry_sequence'] + 1, prev=e1))
 
     def synthetic_args(self):
         src = self.td / 'synthetic.csv'
@@ -416,7 +417,7 @@ class LegacyRunnerGate(Base):
     def test_released_e1_still_runs_exactly_as_before(self):
         """With the installed registry E_1 is released: the legacy goldens still reproduce (see
         test_e1_standalone and E2R-T09); here, the gate itself admits it."""
-        entry, decl = CD.legacy_gate('POWERBALL', *C.E1, '1')
+        entry, decl = CD.legacy_gate('POWERBALL', *C.E1, '2')                         # E_1 revision 2 (WF1-13)
         self.assertEqual(entry['registry_status'], 'SUPPORTED')
         self.assertEqual(decl['method_id'], 'E_1')
 
