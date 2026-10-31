@@ -1,0 +1,37 @@
+PASS control passes tests.test_wf1a_walk_forward.AttemptBinding.test_an_attempt_without_a_folder_and_junk_lines
+PASS control passes tests.test_wf1a_walk_forward.AttemptBinding.test_another_batch_with_the_same_pins_is_not_reused
+PASS control passes tests.test_wf1a_walk_forward.AttemptBinding.test_corrupt_or_mismatched_records_make_the_pair_run_again
+PASS control passes tests.test_wf1a_walk_forward.AttemptBinding.test_forged_terminal_without_an_attempt_is_not_done
+PASS control passes tests.test_wf1a_walk_forward.Classification
+PASS control passes tests.test_wf1a_walk_forward.PlanRefusals
+PASS control passes tests.test_wf1a_walk_forward.PlanRefusals.test_supported_but_flagged_is_refused_by_name
+PASS control passes tests.test_wf1a_walk_forward.ResumeAndStop.test_changed_master_stops_with_zero_later_runs
+PASS control passes tests.test_wf1a_walk_forward.ResumeAndStop.test_escaping_exception_and_unknown_reason_stop
+PASS control passes tests.test_wf1a_walk_forward.ResumeAndStop.test_marker_between_targets_stops
+PASS control passes tests.test_wf1a_walk_forward.ResumeAndStop.test_start_checks_refuse_a_changed_registry_or_a_new_flag
+PASS control passes tests.test_wf1a_walk_forward.StaticAndInstalled
+PASS control passes tests.test_wf1a_walk_forward.TheBatch.test_plan_is_frozen_and_checked
+PASS control passes tests.test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable
+PASS mutation: the switch left off -> tests.test_wf1a_walk_forward.StaticAndInstalled fails
+PASS mutation: the real run root back in transitory_data -> tests.test_wf1a_walk_forward.StaticAndInstalled fails
+PASS mutation: the gitignore line missing -> tests.test_wf1a_walk_forward.StaticAndInstalled fails
+PASS mutation: DATA_ADMISSION_REFUSED classified CONTINUE -> tests.test_wf1a_walk_forward.ResumeAndStop.test_changed_master_stops_with_zero_later_runs fails
+PASS mutation: an unknown reason classified CONTINUE -> tests.test_wf1a_walk_forward.Classification fails
+PASS mutation: a runner refusal does not stop the batch -> tests.test_wf1a_walk_forward.ResumeAndStop.test_marker_between_targets_stops fails
+PASS mutation: an escaping exception does not stop the batch -> tests.test_wf1a_walk_forward.ResumeAndStop.test_escaping_exception_and_unknown_reason_stop fails
+PASS mutation: a holdout target admitted at plan -> tests.test_wf1a_walk_forward.PlanRefusals fails
+PASS mutation: the era's first draw admitted at plan -> tests.test_wf1a_walk_forward.PlanRefusals fails
+PASS mutation: resume re-runs finished pairs -> tests.test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable fails
+PASS mutation: attempt lines of another batch accepted (B01) -> tests.test_wf1a_walk_forward.AttemptBinding.test_another_batch_with_the_same_pins_is_not_reused fails
+PASS mutation: an attempt line's request digest not checked (B01) -> tests.test_wf1a_walk_forward.AttemptBinding.test_an_attempt_without_a_folder_and_junk_lines fails
+PASS mutation: the receipt's master pin not checked (B01) -> tests.test_wf1a_walk_forward.AttemptBinding.test_corrupt_or_mismatched_records_make_the_pair_run_again fails
+PASS mutation: a SUCCESS counted without the consumable check (B01) -> tests.test_wf1a_walk_forward.AttemptBinding.test_corrupt_or_mismatched_records_make_the_pair_run_again fails
+PASS mutation: a forged terminal counted without its records (B01) -> tests.test_wf1a_walk_forward.AttemptBinding.test_forged_terminal_without_an_attempt_is_not_done fails
+PASS mutation: the attempt not bound before the run (B01) -> tests.test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable fails
+PASS mutation: an altered plan accepted -> tests.test_wf1a_walk_forward.TheBatch.test_plan_is_frozen_and_checked fails
+PASS mutation: the start checks skip the flag -> tests.test_wf1a_walk_forward.ResumeAndStop.test_start_checks_refuse_a_changed_registry_or_a_new_flag fails
+PASS mutation: the registry read from its import-time default -> tests.test_wf1a_walk_forward.ResumeAndStop.test_start_checks_refuse_a_changed_registry_or_a_new_flag fails
+PASS mutation: E_1 revision 1 put in the cohort -> tests.test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable fails
+PASS mutation: no WF_BATCH search-log row -> tests.test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable fails
+PASS mutation: a flagged SUPPORTED member silently skipped at plan -> tests.test_wf1a_walk_forward.PlanRefusals.test_supported_but_flagged_is_refused_by_name fails
+RESULT wf1a: PASS (22 mutants)

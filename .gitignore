@@ -231,3 +231,8 @@ transitory_data/p3_synthetic_fixtures/
 # exclude fetched results
 private_results_checks/
 *.mhtml
+
+# WF-1A: real-development contract runs and each batch's attempts log (bulk; the batch plans and segment records
+# in wf_batches/ are committed)
+results/real/development/contract_runs/
+results/real/development/wf_batches/**/attempts.jsonl

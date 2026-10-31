@@ -222,11 +222,12 @@ class RefusalsBeforeAnything(Base):
         self.assertEqual(cm.exception.reason, 'UNRESOLVED_ORPHAN_MARKER')
         self.assertFalse((self.td / 'runs').exists())
 
-    def test_real_development_is_switched_off(self):
-        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, False)
+    def test_real_development_switch_is_on_since_wf1a_and_refuses_when_off(self):
+        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, True)          # WF-1A (design v0.1r1 5.5; WF1-3)
         e, d = e1_pins('POWERBALL')
         req = F.request(d, 1300, 'UNORDERED_SET', run_mode='REAL_DEVELOPMENT', entry_digest=record_digest(e))
-        with mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
+        with mock.patch.object(CR, 'ENABLE_CONTRACT_REAL_DEVELOPMENT', False), \
+                mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
             with self.assertRaises(CR.RunRefused) as cm:
                 CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=self.td,
                                        run_root=self.td / 'runs')

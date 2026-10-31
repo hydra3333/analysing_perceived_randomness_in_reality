@@ -247,8 +247,8 @@ class Package2RosterFromRegistry(unittest.TestCase):
 
 
 class StaticCode2Guards(unittest.TestCase):
-    def test_switch_closed_and_no_flag_in_the_tree(self):
-        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, False)
+    def test_switch_open_since_wf1a_and_no_flag_in_the_tree(self):
+        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, True)          # WF-1A (design v0.1r1 5.5; WF1-3)
         # A flag may sit only in the folder of a method in development: no active SUPPORTED entry in either
         # game (E2R-R58: the release package removes the flag and appends SUPPORTED together). E_1 has none.
         reg = InstalledRegistry()

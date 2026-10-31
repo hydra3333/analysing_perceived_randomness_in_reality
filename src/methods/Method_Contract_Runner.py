@@ -9,7 +9,9 @@
         workspace and publish under DIR/contract_runs/<game>/<method>/<variant>/<run_id>/.
 
 Every run is refused before any data is read unless the dispatch gate admits it (E2R-R57). Contract
-runs on the real development masters are switched off in the shared runner (a code-level switch).
+runs on the real development masters (--mode REAL_DEVELOPMENT, no --workspace) are allowed by the shared
+runner's code-level switch since WF-1A, for released variants and development targets only; they publish
+under results/real/development/contract_runs/<game>/<method>/<variant>/<run_id>/.
 No subprocess, timer, termination or coordinator is involved. Exit codes: 0 SUCCESS; 1 a run that
 ended in a non-SUCCESS terminal record; 2 refused, or invalid arguments.
 """
@@ -85,7 +87,7 @@ def main(argv: list[str] | None = None) -> int:
         if args.workspace is not None:
             parser.error('--workspace is for synthetic runs only')
         repo_root = CR.PROJECT_ROOT
-        run_root = CR.PROJECT_ROOT / 'transitory_data' / 'contract_runs'
+        run_root = CR.PROJECT_ROOT / 'results' / 'real' / 'development' / 'contract_runs'   # WF-1A (design 5.4)
     else:
         if args.workspace is None:
             parser.error('a synthetic run needs --workspace')

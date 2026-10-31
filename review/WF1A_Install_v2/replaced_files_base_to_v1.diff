@@ -1,0 +1,81 @@
+--- a/.gitignore
++++ b/.gitignore
+@@ -231,3 +231,8 @@
+ # exclude fetched results
+ private_results_checks/
+ *.mhtml
++
++# WF-1A: real-development contract runs and each batch's attempts log (bulk; the batch plans and segment records
++# in wf_batches/ are committed)
++results/real/development/contract_runs/
++results/real/development/wf_batches/**/attempts.jsonl
+--- a/src/methods/Method_Contract_Runner.py
++++ b/src/methods/Method_Contract_Runner.py
+@@ -9,7 +9,9 @@
+         workspace and publish under DIR/contract_runs/<game>/<method>/<variant>/<run_id>/.
+ 
+ Every run is refused before any data is read unless the dispatch gate admits it (E2R-R57). Contract
+-runs on the real development masters are switched off in the shared runner (a code-level switch).
++runs on the real development masters (--mode REAL_DEVELOPMENT, no --workspace) are allowed by the shared
++runner's code-level switch since WF-1A, for released variants and development targets only; they publish
++under results/real/development/contract_runs/<game>/<method>/<variant>/<run_id>/.
+ No subprocess, timer, termination or coordinator is involved. Exit codes: 0 SUCCESS; 1 a run that
+ ended in a non-SUCCESS terminal record; 2 refused, or invalid arguments.
+ """
+@@ -85,7 +87,7 @@
+         if args.workspace is not None:
+             parser.error('--workspace is for synthetic runs only')
+         repo_root = CR.PROJECT_ROOT
+-        run_root = CR.PROJECT_ROOT / 'transitory_data' / 'contract_runs'
++        run_root = CR.PROJECT_ROOT / 'results' / 'real' / 'development' / 'contract_runs'   # WF-1A (design 5.4)
+     else:
+         if args.workspace is None:
+             parser.error('a synthetic run needs --workspace')
+--- a/src/methods/_common/contract_runner.py
++++ b/src/methods/_common/contract_runner.py
+@@ -28,9 +28,11 @@
+ from _common.contract_task import build_method_task
+ from _common.game_draws_reader import load_pinned_draw_view
+ 
+-# Code-level gate: contract runs on the real development masters stay OFF until a separately
+-# reviewed, owner-authorised patch. It cannot be set by a command-line flag or an environment variable.
+-ENABLE_CONTRACT_REAL_DEVELOPMENT = False
++# Code-level gate: contract runs on the real development masters. Turned ON by package WF-1A (releases and
++# WF-1 design v0.1r1 section 5.5; owner decision WF1-3, ratified 31 October 2026): it admits standalone runs of
++# released variants on the development prefix only; the reader still refuses every holdout target. It cannot
++# be set by a command-line flag or an environment variable.
++ENABLE_CONTRACT_REAL_DEVELOPMENT = True
+ 
+ PROJECT_ROOT = Path(__file__).resolve().parents[3]
+ ORPHAN_MARKER = PROJECT_ROOT / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
+--- a/tests/test_e2r_dispatch.py
++++ b/tests/test_e2r_dispatch.py
+@@ -247,8 +247,8 @@
+ 
+ 
+ class StaticCode2Guards(unittest.TestCase):
+-    def test_switch_closed_and_no_flag_in_the_tree(self):
+-        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, False)
++    def test_switch_open_since_wf1a_and_no_flag_in_the_tree(self):
++        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, True)          # WF-1A (design v0.1r1 5.5; WF1-3)
+         # A flag may sit only in the folder of a method in development: no active SUPPORTED entry in either
+         # game (E2R-R58: the release package removes the flag and appends SUPPORTED together). E_1 has none.
+         reg = InstalledRegistry()
+--- a/tests/test_e2r_runner.py
++++ b/tests/test_e2r_runner.py
+@@ -222,11 +222,12 @@
+         self.assertEqual(cm.exception.reason, 'UNRESOLVED_ORPHAN_MARKER')
+         self.assertFalse((self.td / 'runs').exists())
+ 
+-    def test_real_development_is_switched_off(self):
+-        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, False)
++    def test_real_development_switch_is_on_since_wf1a_and_refuses_when_off(self):
++        self.assertIs(CR.ENABLE_CONTRACT_REAL_DEVELOPMENT, True)          # WF-1A (design v0.1r1 5.5; WF1-3)
+         e, d = e1_pins('POWERBALL')
+         req = F.request(d, 1300, 'UNORDERED_SET', run_mode='REAL_DEVELOPMENT', entry_digest=record_digest(e))
+-        with mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
++        with mock.patch.object(CR, 'ENABLE_CONTRACT_REAL_DEVELOPMENT', False), \
++                mock.patch.object(CR, 'load_pinned_draw_view', side_effect=AssertionError('data read')):
+             with self.assertRaises(CR.RunRefused) as cm:
+                 CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=self.td,
+                                        run_root=self.td / 'runs')

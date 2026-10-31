@@ -28,9 +28,11 @@ from _common.contract_records import reader_pin, record_digest
 from _common.contract_task import build_method_task
 from _common.game_draws_reader import load_pinned_draw_view
 
-# Code-level gate: contract runs on the real development masters stay OFF until a separately
-# reviewed, owner-authorised patch. It cannot be set by a command-line flag or an environment variable.
-ENABLE_CONTRACT_REAL_DEVELOPMENT = False
+# Code-level gate: contract runs on the real development masters. Turned ON by package WF-1A (releases and
+# WF-1 design v0.1r1 section 5.5; owner decision WF1-3, ratified 31 October 2026): it admits standalone runs of
+# released variants on the development prefix only; the reader still refuses every holdout target. It cannot
+# be set by a command-line flag or an environment variable.
+ENABLE_CONTRACT_REAL_DEVELOPMENT = True
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
 ORPHAN_MARKER = PROJECT_ROOT / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
