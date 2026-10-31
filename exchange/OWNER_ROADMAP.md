@@ -75,9 +75,11 @@ and you scheduled the deferred performance stage (item 22).
            31 October 2026. REL-1 is INSTALLED (6a1bed9) and WF-1A is INSTALLED (0d98706), both on
            31 October 2026, after their rehearsals T009 and T010; Claude verified both from GitHub.
            E_1 revision 2 (with CODE-3) is INSTALLED too (86d12ea, 31 October 2026; T011 PASS; verified
-           from GitHub). All 40 variants can now run on past draws. Next: your first 40-variant Powerball
-           batch (Claude leads you through it), then Oz Lotto when you say; then SEED-1 (6 November) and
-           WF-1B, the scorer and report (it also adds a progress line to the batch driver).
+           from GitHub). All 40 variants can now run on past draws. The FIRST POWERBALL BATCH IS DONE:
+           wf-3347ad1160df45faaaab1e2eedcedd0f, targets 1145-1576, 17,280 runs, all SUCCESS (about
+           80 minutes, 31 October 2026); its plan, segment record and search-log row committed at 86a1a01.
+           Next: Oz Lotto when you say; then SEED-1 (6 November) and WF-1B, the scorer and report (it
+           also adds a progress line to the batch driver; descriptive real-outcome tables first).
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
            runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
