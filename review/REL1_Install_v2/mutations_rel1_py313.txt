@@ -1,0 +1,7 @@
+PASS control passes tests.test_rel1_release.InstalledChains
+PASS control passes tests.test_rel1_release.InstalledChains.test_no_development_flag_remains
+PASS mutation: a released variant without its entry_0002 -> tests.test_rel1_release.InstalledChains fails
+PASS mutation: a development flag left in place -> tests.test_rel1_release.InstalledChains.test_no_development_flag_remains fails
+PASS mutation: an entry_0002 with another reason -> tests.test_rel1_release.InstalledChains fails
+PASS mutation: an entry_0002 with another date -> tests.test_rel1_release.InstalledChains fails
+RESULT rel1: PASS (4 mutants)

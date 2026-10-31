@@ -1,4 +1,0 @@
-E_6 is in development: the dispatch gate refuses every E_6 request while this file exists (E2R-R57).
-
-Release is a separate, small, reviewed package that deletes this file and appends a SUPPORTED registry
-entry (E2R-R58). Deleting this file alone releases nothing.

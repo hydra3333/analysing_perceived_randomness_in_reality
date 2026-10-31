@@ -270,9 +270,8 @@ class ThroughTheContract(unittest.TestCase):
             for variant in VARIANTS:
                 e1 = reg.active_entry(game, 'E_6', variant)
                 d = reg.declaration(e1['declaration_digest'])
-                e2 = dict(e1, entry_sequence=2, registry_status='SUPPORTED', previous_entry_digest=record_digest(e1),
-                          registry_status_reason='test harness: simulated release')
-                C.append_entry(self.data, e2)
+                e2 = e1                        # REL-1: the installed entry_0002 is already SUPPORTED
+                self.assertEqual((e2['entry_sequence'], e2['registry_status']), (2, 'SUPPORTED'))
                 self.released[(game, variant)] = (d, e2)
         self.methods = self.td / 'methods'          # a method tree with no IN_DEVELOPMENT.txt
         self.methods.mkdir()
@@ -340,7 +339,7 @@ class ThroughTheContract(unittest.TestCase):
 E6_KIND = {'MAIN': 'MARGINAL_INCLUSION_PROBABILITY', 'POWERBALL': 'PB_CATEGORICAL'}
 
 
-# ---------------------------------------------------------------- 6.6 as installed: in development, refused
+# ---------------------------------------------------------------- 6.6 as installed: released by REL-1
 
 class AsInstalled(unittest.TestCase):
     def test_declarations_and_entries_match_the_specification(self):
@@ -352,7 +351,7 @@ class AsInstalled(unittest.TestCase):
             self.assertEqual(len(placeholder), 1)                     # never promoted or edited
             for variant in VARIANTS:
                 chain = reg.chain(game, 'E_6', variant)
-                self.assertEqual([(e['entry_sequence'], e['registry_status']) for e in chain], [(1, 'FORMULA_OPEN')])
+                self.assertEqual([(e['entry_sequence'], e['registry_status']) for e in chain], [(1, 'FORMULA_OPEN'), (2, 'SUPPORTED')])   # REL-1
                 d = reg.declaration(chain[0]['declaration_digest'])
                 fit = 'BETA_BERNOULLI_POSTERIOR_MEAN_V1' if variant == FULL else 'BETA_BERNOULLI_DISCOUNTED_UPDATE_V1'
                 self.assertEqual((d['method_revision'], d['observation_views'], d['uses_dates'], d['stochastic_fit'],
@@ -364,7 +363,7 @@ class AsInstalled(unittest.TestCase):
                                       ch['probability_kind'], ch['probability_sum_tolerance']),
                                      ('RANKING_WITH_SCORES', 'FLOAT64', 'TOP_MARGINAL', 'INVERSE', E6_KIND[bid], 1e-12))
 
-    def test_every_e6_request_is_refused_before_any_data_is_read(self):
+    def test_every_e6_request_is_admitted_and_the_roster_says_supported(self):
         reg = InstalledRegistry()
         for game in ('POWERBALL', 'OZLOTTO'):
             for variant in VARIANTS:
@@ -372,21 +371,21 @@ class AsInstalled(unittest.TestCase):
                     e = reg.active_entry(game, 'E_6', variant)
                     d = reg.declaration(e['declaration_digest'])
                     req = C.request(d, e, get_profile(game).first_draw + 10, 'f' * 64)
-                    with self.assertRaises(DispatchRefused) as cm:
-                        dispatch_gate(req)
-                    self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
-            self.assertEqual(method_status(game, 'E_6'), 'FORMULA_OPEN')
+                    entry, _decl = dispatch_gate(req)                  # REL-1: admitted; reads no data
+                    self.assertEqual(record_digest(entry), record_digest(e))
+            self.assertEqual(method_status(game, 'E_6'), 'SUPPORTED')
 
     def test_supported_but_flagged_is_still_refused(self):
-        self.assertTrue((METHODS_ROOT / 'E_006' / 'IN_DEVELOPMENT.txt').is_file())
+        self.assertFalse((METHODS_ROOT / 'E_006' / 'IN_DEVELOPMENT.txt').exists())   # REL-1 removed it
         with tempfile.TemporaryDirectory() as td:
-            data = C.copy_data_root(Path(td))
-            reg = InstalledRegistry(data)
-            e1 = reg.active_entry('POWERBALL', 'E_6', FULL)
-            e2 = dict(e1, entry_sequence=2, registry_status='SUPPORTED', previous_entry_digest=record_digest(e1))
-            C.append_entry(data, e2)
-            req = C.request(reg.declaration(e1['declaration_digest']), e2, POWERBALL.first_draw + 10, 'f' * 64)
-            with C.installed(data=data):                              # the real method folders, flag present
+            methods = Path(td) / 'methods'                            # a method tree where E_6 is flagged again
+            (methods / 'E_006').mkdir(parents=True)
+            (methods / 'E_006' / 'IN_DEVELOPMENT.txt').write_text('test harness')
+            reg = InstalledRegistry()
+            e2 = reg.active_entry('POWERBALL', 'E_6', FULL)
+            self.assertEqual(e2['registry_status'], 'SUPPORTED')
+            req = C.request(reg.declaration(e2['declaration_digest']), e2, POWERBALL.first_draw + 10, 'f' * 64)
+            with C.installed(methods=methods):                        # the installed registry, flag present
                 with self.assertRaises(DispatchRefused) as cm:
                     dispatch_gate(req)
             self.assertEqual(cm.exception.reason, 'IN_DEVELOPMENT_FLAG_PRESENT')
@@ -398,7 +397,7 @@ class AsInstalled(unittest.TestCase):
     def test_the_method_folder_is_exactly_these_files(self):
         folder = METHODS_ROOT / 'E_006'
         self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'),
-                         ['IN_DEVELOPMENT.txt', '__init__.py', 'beta_bernoulli.py', 'contract.py'])
+                         ['__init__.py', 'beta_bernoulli.py', 'contract.py'])   # REL-1 removed the flag
         src = (folder / 'beta_bernoulli.py').read_text('utf-8')
         self.assertNotIn('import math', src)                          # exact arithmetic only (spec 2.4)
         self.assertNotIn('float(', src)

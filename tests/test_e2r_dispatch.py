@@ -229,7 +229,8 @@ class Package2RosterFromRegistry(unittest.TestCase):
     def test_same_statuses_as_the_old_fixed_roster(self):
         from _common.multigame_method_registry import all_statuses, method_status
         for game in ('POWERBALL', 'OZLOTTO'):
-            want = {f'E_{i}': ('SUPPORTED' if i == 1 else 'FORMULA_OPEN') for i in range(1, 63)}
+            released = {1, 2, 3, 4, 6, 7, 8, 9, 10, 17, 18, 19}          # E_1, and REL-1's eleven methods
+            want = {f'E_{i}': ('SUPPORTED' if i in released else 'FORMULA_OPEN') for i in range(1, 63)}
             self.assertEqual(dict(all_statuses(game)), want)
             self.assertEqual(method_status(game, 'E_1'), 'SUPPORTED')
             with self.assertRaises(ValueError):

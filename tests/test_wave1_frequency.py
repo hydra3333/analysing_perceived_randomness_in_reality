@@ -260,9 +260,8 @@ class ThroughTheContract(unittest.TestCase):
             for name in MODULES:
                 for variant in SPEC[name]:
                     e1 = reg.active_entry(profile.game_id, name, variant)
-                    e2 = dict(e1, entry_sequence=2, registry_status='SUPPORTED', previous_entry_digest=record_digest(e1),
-                              registry_status_reason='test harness: simulated release')
-                    C.append_entry(self.data, e2)
+                    e2 = e1                    # REL-1: the installed entry_0002 is already SUPPORTED
+                    self.assertEqual((e2['entry_sequence'], e2['registry_status']), (2, 'SUPPORTED'))
                     self.released[(profile.game_id, name, variant)] = (reg.declaration(e1['declaration_digest']), e2)
         (self.td / 'methods').mkdir()
         self.ctx = C.installed(data=self.data, methods=self.td / 'methods', marker=self.td / 'no_marker')
@@ -362,7 +361,7 @@ class AsInstalled(unittest.TestCase):
                 self.assertEqual(len(reg.chain(game, name, 'NOT_YET_SPECIFIED')), 1)   # the placeholder stays
                 for variant, cfg in SPEC[name].items():
                     chain = reg.chain(game, name, variant)
-                    self.assertEqual([(e['entry_sequence'], e['registry_status']) for e in chain], [(1, 'FORMULA_OPEN')])
+                    self.assertEqual([(e['entry_sequence'], e['registry_status']) for e in chain], [(1, 'FORMULA_OPEN'), (2, 'SUPPORTED')])   # REL-1
                     d = reg.declaration(chain[0]['declaration_digest'])
                     self.assertEqual((d['minimum_history_draws'], d['fit_sampling_model_version'], d['observation_views'],
                                       d['uses_dates'], d['stochastic_fit'], d['diagnostic_schema_id']),
@@ -374,22 +373,21 @@ class AsInstalled(unittest.TestCase):
                                           ch['probability_sum_tolerance']),
                                          ('RANKING_WITH_SCORES', kind, 1e-12 if PROBS[name] else None))
 
-    def test_every_request_is_refused_and_the_roster_says_formula_open(self):
+    def test_every_request_is_admitted_and_the_roster_says_supported(self):
         reg = InstalledRegistry()
         for name in MODULES:
             for profile in GAMES:
                 for variant in SPEC[name]:
                     e = reg.active_entry(profile.game_id, name, variant)
                     req = C.request(reg.declaration(e['declaration_digest']), e, profile.first_draw + 10, 'f' * 64)
-                    with self.assertRaises(DispatchRefused) as cm:
-                        dispatch_gate(req)
-                    self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
-                self.assertEqual(method_status(profile.game_id, name), 'FORMULA_OPEN')
+                    entry, _decl = dispatch_gate(req)                  # REL-1: admitted; reads no data
+                    self.assertEqual(record_digest(entry), record_digest(e))
+                self.assertEqual(method_status(profile.game_id, name), 'SUPPORTED')
 
-    def test_flags_present_and_runner_lists_each(self):
+    def test_flags_absent_and_runner_lists_each(self):
         import Method_Contract_Runner as M
         for name, mod in MODULES.items():
-            self.assertTrue((METHODS_ROOT / method_folder(name) / 'IN_DEVELOPMENT.txt').is_file())
+            self.assertFalse((METHODS_ROOT / method_folder(name) / 'IN_DEVELOPMENT.txt').exists())   # REL-1
             self.assertIs(M.ADAPTERS[name], mod)
 
 
@@ -398,7 +396,7 @@ class FolderGuards(unittest.TestCase):
         for name in MODULES:
             folder = METHODS_ROOT / method_folder(name)
             self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'),
-                             ['IN_DEVELOPMENT.txt', '__init__.py', 'contract.py', 'variants.py'])
+                             ['__init__.py', 'contract.py', 'variants.py'])   # REL-1 removed the flag
             for f in sorted(folder.glob('*.py')):
                 text = f.read_text('utf-8')
                 for word in ('game_draws_reader', 'source' + '_data', 'contract_receipts', 'contract_publication',
