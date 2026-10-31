@@ -77,7 +77,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-005  E_1 revision 2 (real-capable), with CODE-3 first
 
 - Asked: 31 October 2026 (owner decision WF1-13, option C, while WF-1A was being coded).
-- Status: OPEN.
+- Status: OPEN. Design v0.1 sent for review in EX_086 (31 October 2026). Owner choices before review:
+  ER-1 to ER-4 as recommended (one package; install and release together in two separate steps; r1
+  archived complete; the adapter docstring corrected); ER-6 (an E_1-only batch plan) declined.
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.
@@ -85,7 +87,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   E_1 r2 design note; the r2 declaration and registry entries (installed unreleased, then released); the
   legacy runner's release check (D2-3) and E_1's goldens reviewed for r2.
 - Interim: WF-1A names E_1 in each batch plan as not in the cohort, with the reason; families have 78
-  tracks until E_1 r2 joins with its own batch.
+  tracks until E_1 r2 joins. Then a new batch over the full cohort (40 variants, about 105 minutes
+  for Powerball) gives one complete batch per game to score.
 - When: after the REL-1 and WF-1A packages, before or alongside WF-1B, so E_1 can be in the first report.
 
 ## Standing reminders

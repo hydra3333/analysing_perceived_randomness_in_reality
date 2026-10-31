@@ -2,7 +2,7 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 31 October 2026, after the owner ratified the WF-1 design (EX_081).
+Last updated: 31 October 2026, after the code review passed (EX_085) and you ratified register v0.21.
 
 ## A few words used below
 
@@ -69,12 +69,15 @@ Last updated: 31 October 2026, after the owner ratified the WF-1 design (EX_081)
 10. NOW  - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
            each past draw predicted only from the draws before it) with the scorer, so the project
            produces its first real measured results. The design passed review (EX_077 to EX_081)
-           and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). REL-1 and WF-1A are coded
-           and with the reviewer (EX_082), with register v0.21.
+           and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). REL-1 and WF-1A passed
+           code review (EX_082 to EX_085); you ratified register v0.21 and accepted both packages on
+           31 October 2026. Now: Claude Code rehearses REL-1 (TASK_T009), then you install REL-1, then
+           WF-1A (rebuilt on your REL-1 commit), then you run the first Powerball batch.
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
            runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
-           E_1 r2 then gets its own batch, so it can still be in the first report.
+           Its design is with the reviewer (EX_086). After it installs, a new batch over all 40 variants
+           (you chose full-cohort batches, not ER-6's E_1-only plan) gives the first report.
            Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
            real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
            6 November), WF-1B (the scorer and report, with the fair-draw simulator).

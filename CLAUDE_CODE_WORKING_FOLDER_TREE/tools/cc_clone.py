@@ -10,7 +10,8 @@ Every command checks where it is before it does anything, and prints PASS or STO
   overlay       copy an extracted repo_overlay into the clone; new files only, except the tracked
                 files named with --replace (v0.2, 29 Oct 2026, for E2R-CODE-2's 3 replacements)
   git           run one Git command in the clone (add, commit, status, log, diff, show, rev-parse,
-                ls-files), with the guard before and after
+                ls-files, rm), with the guard before and after (rm: v0.3, 31 Oct 2026, for REL-1's
+                11 flag deletions; it acts only inside the task clone)
   remove        delete scratch/<TASK> after checking the path
   commit-report commit one report file outbox/REPORT_<TASK>.md in the main repository, and nothing else
 
@@ -29,7 +30,7 @@ WF_NAME = 'CLAUDE_CODE_WORKING_FOLDER_TREE'
 HOOK = ('#!/bin/sh\n'
         'echo "pre-push refused: this is a Claude Code task clone; it never pushes." >&2\n'
         'exit 1\n')
-CLONE_GIT_ALLOWED = {'add', 'commit', 'status', 'log', 'diff', 'show', 'rev-parse', 'ls-files'}
+CLONE_GIT_ALLOWED = {'add', 'commit', 'status', 'log', 'diff', 'show', 'rev-parse', 'ls-files', 'rm'}
 ENV = {**os.environ, 'GIT_TERMINAL_PROMPT': '0', 'GIT_OPTIONAL_LOCKS': '0'}
 
 

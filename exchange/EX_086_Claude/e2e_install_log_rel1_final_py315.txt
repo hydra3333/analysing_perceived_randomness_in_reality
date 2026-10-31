@@ -1,0 +1,50 @@
+base: ef51305260f3b5529db6be4a7c34a36aa39851bb  python: Python 3.15.0b4
+== lf: REL-1 happy path
+PRE PASS: clean tree; 92 new paths absent; 5 files to replace and 11 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 92 expected new paths, 5 modified files and 11 staged deletions, all with the expected bytes.
+total ran 304 (expected 304); skips 0
+SUITE PASS: all 304 tests ran and passed; only the allowed symlink skips, if any.
+staged:      92 A      11 D       5 M 
+COMMITTED PASS: the last commit (b2c6a37) added exactly 92 files, modified 5 and deleted 11; all Git blobs match.
+== lf: WF-1A happy path (base b2c6a37e2e8b1280d01c4a5b91dd37146c7d1e16)
+WF1A_Install_v2 10 new, 5 replaced, 0 deleted; suite 326 ; base b2c6a37e2e8b1280d01c4a5b91dd37146c7d1e16
+PRE PASS: clean tree; 10 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 10 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+total ran 326 (expected 326); skips 0
+SUITE PASS: all 326 tests ran and passed; only the allowed symlink skips, if any.
+staged:      10 A       5 M 
+COMMITTED PASS: the last commit (a494488) added exactly 10 files, modified 5 and deleted 0; all Git blobs match.
+status after both: ''
+== crlf: REL-1 happy path
+PRE PASS: clean tree; 92 new paths absent; 5 files to replace and 11 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 92 expected new paths, 5 modified files and 11 staged deletions, all with the expected bytes.
+total ran 304 (expected 304); skips 0
+SUITE PASS: all 304 tests ran and passed; only the allowed symlink skips, if any.
+staged:      92 A      11 D       5 M 
+COMMITTED PASS: the last commit (58689f9) added exactly 92 files, modified 5 and deleted 11; all Git blobs match.
+== crlf: WF-1A happy path (base 58689f905ca5a0cb45b47f0b413611559cd0896c)
+WF1A_Install_v2 10 new, 5 replaced, 0 deleted; suite 326 ; base 58689f905ca5a0cb45b47f0b413611559cd0896c
+PRE PASS: clean tree; 10 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 10 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+total ran 326 (expected 326); skips 0
+SUITE PASS: all 326 tests ran and passed; only the allowed symlink skips, if any.
+staged:      10 A       5 M 
+COMMITTED PASS: the last commit (e7d9cb1) added exactly 10 files, modified 5 and deleted 0; all Git blobs match.
+status after both: ''
+== negatives
+-- REL-1 pre, untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- REL-1 post, flags not deleted:
+VERIFICATION STOP: FAIL: unexpected staged deletions: src/methods/E_002/IN_DEVELOPMENT.txt, src/methods/E_003/IN_DEVELOPMENT.txt, src/methods/E_004/IN_DEVELOPMENT.txt, src/methods/E_006/IN_DEVELOPMENT.txt, src/methods/E_007/IN_DEVELOPMENT.txt, src/methods/E_008/IN_DEVELOPMENT.txt, src/methods/E_009/IN_DEVELOPMENT.txt, src/methods/E_010/IN_DEVELOPMENT.txt, src/methods/E_017/IN_DEVELOPMENT.txt, src/methods/E_018/IN_DEVELOPMENT.txt, src/methods/E_019/IN_DEVELOPMENT.txt
+-- REL-1 post, an extra deletion:
+VERIFICATION STOP: FAIL: unexpected staged deletions: src/methods/E_006/contract.py
+-- REL-1 post, new file wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: tests/test_rel1_release.py
+POST PASS: exactly the 92 expected new paths, 5 modified files and 11 staged deletions, all with the expected bytes.
+-- REL-1 committed, an extra deletion in the commit:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths; differences (path, status): [('src/methods/E_006/beta_bernoulli.py', 'D')]
+-- WF-1A pre, REL-1 not installed:
+VERIFICATION STOP: FAIL: HEAD ef51305260f3b5529db6be4a7c34a36aa39851bb does not descend from base b2c6a37e2e8b1280d01c4a5b91dd37146c7d1e16; STOP
+-- WF-1A damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/methods/_common/walk_forward.py
+end
