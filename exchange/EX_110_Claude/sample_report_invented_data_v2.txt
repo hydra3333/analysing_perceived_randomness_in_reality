@@ -1,0 +1,1288 @@
+PREDICTIVE RANDOMNESS - METHOD RANKINGS REPORT
+
+Game: POWERBALL
+Mode: WF - Walk-forward ("honest test: trained on earlier draws only")
+  For every past draw that is scored, the method was trained only on the draws before it, then its prediction for that draw was compared with the actual result. This is exactly the position in real life, where the next draw is unknown when the prediction is made. It is an honest test of prediction.
+Evidence tier: DEVELOPMENT_WF_EXPLORATORY (retrospective development walk-forward); randomness chosen for the experiment where N1 runs (D-11)
+Window: 1566-1576 (each track scored on its own fixed grid inside it: OWN_SET, decision WF1-6)
+Batch: wf-d2fb100f045e439b821f37b766d74622 (targets 1566-1576); cohort digest b8d4deb5ca739d8c4f279cc81c4ab161ada149a3bd0aba2f208c0352df79d262; 6 variants, 12 tracks
+Families: none apply to this window: every table is EXPLORATORY_COHORT
+Track counts by status: GRID_COMPLETE 12
+Master: POWERBALL_results_master.csv version 1, SHA-256 58f84a8647445b81e5495f0b80dc75ce19db974f837f8029352e45da7edf49a4
+Tool: Method_Rankings_Report.py WF1B_EVALUATOR_V1, sources SHA-256 b796d126a1cbfe332a2d04fed7ebca6990d2082a77b675f78601f4e9fe68117d
+N1: policy N1_ROOT_TEST_ONLY_V1, R = 200; N1 seed policies on file for this game: 1
+Environment: python_version test
+Report attempt: rr-827676faf671486fa985b6b91b156bce; search-log row 2; scoring plan digest 76a3cad883dfb97f14d10aab37b7cbbff71c2728338cde03f6bd9e2cae03e270; generated 2026-10-31T00:00:00Z
+Search log (POWERBALL): 1 RANKING_REPORT rows, of which 0 have no completed report besides this one; 1 WF_BATCH rows
+
+====================================================================================================
+PART A - LEAGUE TABLES: RESULTS AGAINST THE REAL DRAWS
+====================================================================================================
+
++--------------------------------------------------------------------------------------------------
+| RK-4 disclosure - global and significance context, not part of the descriptive rankings (full figures in Part B)
+| Tracks compared: 12; variants: 6; local tests counted for this report: 312
+| Search log (POWERBALL): RANKING_REPORT rows 1 (without a completed report, other than this one: 0); WF_BATCH rows 1
+| N1: policy N1_ROOT_TEST_ONLY_V1, R = 200; N1 seed policies on file: 1
++--------------------------------------------------------------------------------------------------
+
+MR0 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 2
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 1
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0
+
+MR1 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 2; bits per draw 1.09564; fair 0.153679; minus fair 0.941958
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 1; bits per draw 0.547818; fair 0.153679; minus fair 0.39414
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: wins by division 0 0 0 0 0 0 0 0 0; bits per draw 0; fair 0.153679; minus fair -0.153679
+
+MR1-T - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: top-division score 0
+
+MR5.MAIN - descriptive ranking (by the raw result against the real draws; lower is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WF               11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 17.8312; fair 18
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WF                     11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 17.8312; fair 18
+    3  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WF             11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 17.8442; fair 18
+    4  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WF               11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 18.039; fair 18
+    5  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WF                     11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 18.0649; fair 18
+    6  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WF                      11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 18.4221; fair 18
+
+MR5.PB - descriptive ranking (by the raw result against the real draws; lower is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WF                     11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 9.90909; fair 10.5
+    2  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WF                      11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 10.5; fair 10.5
+    3  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WF               11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 10.6364; fair 10.5
+    4  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WF             11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 11.6364; fair 10.5
+   5=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WF               11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: mean rank of the drawn numbers (1 = most favoured) 13.8636; fair 10.5
+   5=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WF                     11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: mean rank of the drawn numbers (1 = most favoured) 13.8636; fair 10.5
+
+MR7.MAIN - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 21; per draw 1.90909; above fair 5.6
+    2  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 20; per draw 1.81818; above fair 4.6
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 16; per draw 1.45455; above fair 0.6
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 16; per draw 1.45455; above fair 0.6
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 14; per draw 1.27273; above fair -1.4
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 14; per draw 1.27273; above fair -1.4
+   5=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 14; per draw 1.27273; above fair -1.4
+   8=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 12; per draw 1.09091; above fair -3.4
+   8=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 12; per draw 1.09091; above fair -3.4
+   8=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 12; per draw 1.09091; above fair -3.4
+   11  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: main matches 11; per draw 1; above fair -4.4
+   12  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: main matches 10; per draw 0.909091; above fair -5.4
+
+MR7.PB - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 3; above fair 2.45
+    2  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 2; above fair 1.45
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 1; above fair 0.45
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 1; above fair 0.45
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 1; above fair 0.45
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 1; above fair 0.45
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 1; above fair 0.45
+   8=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 0; above fair -0.55
+   8=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: Powerball hits 0; above fair -0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 0; above fair -0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 0; above fair -0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: Powerball hits 0; above fair -0.55
+
+MR16.ANYDIV - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 0.250103
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.250103
+
+MR16.PD1 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 8.17902e-08
+
+MR16.PD2 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.55401e-06
+
+MR16.PD3 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.60309e-05
+
+MR16.PD4 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000304587
+
+MR16.PD5 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.000649251
+
+MR16.PD6 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.00937807
+
+MR16.PD7 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0123358
+
+MR16.PD8 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.0586129
+
+MR16.PD9 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 0.168805
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.168805
+
+MR16.M2 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 6; rate 0.545455; 95% interval (0.233794, 0.832512); fair expectation 4.74923
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 5; rate 0.454545; 95% interval (0.167488, 0.766206); fair expectation 4.74923
+   2=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 5; rate 0.454545; 95% interval (0.167488, 0.766206); fair expectation 4.74923
+   2=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 5; rate 0.454545; 95% interval (0.167488, 0.766206); fair expectation 4.74923
+   2=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 5; rate 0.454545; 95% interval (0.167488, 0.766206); fair expectation 4.74923
+    6  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 4; rate 0.363636; 95% interval (0.109263, 0.692095); fair expectation 4.74923
+   7=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 3; rate 0.272727; 95% interval (0.0602177, 0.609743); fair expectation 4.74923
+   7=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 3; rate 0.272727; 95% interval (0.0602177, 0.609743); fair expectation 4.74923
+   9=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 4.74923
+   9=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 4.74923
+   9=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 4.74923
+   9=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 4.74923
+
+MR16.M3 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 4; rate 0.363636; 95% interval (0.109263, 0.692095); fair expectation 1.37313
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 4; rate 0.363636; 95% interval (0.109263, 0.692095); fair expectation 1.37313
+    3  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 1.37313
+    4  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 1.37313
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+   5=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 1.37313
+
+MR16.M4 - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.200869
+
+MR16.PB - descriptive ranking (by the raw result against the real draws; higher is better)
+ Rank  Unit                                                          n  Status; result
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 3; rate 0.272727; 95% interval (0.0602177, 0.609743); fair expectation 0.55
+    2  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 2; rate 0.181818; 95% interval (0.0228312, 0.517756); fair expectation 0.55
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.55
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.55
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.55
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.55
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 1; rate 0.0909091; 95% interval (0.00229897, 0.41278); fair expectation 0.55
+   8=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.55
+   8=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11  GRID_COMPLETE LOW_N
+       E_6 Per-Number Fitted Distribution Models: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.55
+   8=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11  GRID_COMPLETE LOW_N
+       E_7 Bayesian Frequency Shrinkage: hits 0; rate 0; 95% interval (0, 0.284914); fair expectation 0.55
+
+====================================================================================================
+GLOSSARY
+====================================================================================================
+WF - Walk-forward ("honest test: trained on earlier draws only")
+  For every past draw that is scored, the method was trained only on the draws before it, then its prediction for that draw was compared with the actual result. This is exactly the position in real life, where the next draw is unknown when the prediction is made. It is an honest test of prediction.
+IS - In-sample ("hindsight fit: trained on all draws, including the ones scored")
+  The method was trained once on every draw in the history, including the draws it is then scored against, and its predictions were checked against those same draws. It shows how well the method describes results it has already seen. It is not a test of prediction, and its success figures can be inflated by hindsight. How much depends on the method. In a separate fair-draw illustration using this project's E_1 method, in-sample fitting alone produced an apparent gain of about 3 sigma; that is not a general value for all methods (R3 section 17.18.3).
+
+MR0 - Division win profile
+  One line: who has won the best prizes, best division first.
+  Short explanation: counts how many times the track's entries would have won each prize division. Tracks are ranked by top-division wins first, then the next division, and so on. Top-division wins are extremely rare under a fair draw, so most tracks share the same counts at the top; the lower divisions carry most of the information.
+MR1 - Surprisal-weighted division score; MR1-T - owner's top-division score
+  One line: the average "rarity" of prizes won per draw, in bits.
+  Short explanation: each division win is worth the bits of surprise it represents under a fair draw: about 6.0 bits for Powerball Division 9, up to 27.0 bits for Division 1. MR1 is the average bits won per draw, next to the fair-draw expectation. MR1-T keeps the owner's original weighting of the three top divisions (Division 1 90%, Division 2 7%, Division 3 3%); it is a declared preference score, not a statistical weight.
+MR4 - Division sigma (excess wins)
+  One line: how many sigma above fair-draw chance this track's division wins are.
+  Short explanation: counts the track's wins in a set of divisions and asks how likely at least that many would be under a fair draw over the same draws. That probability is shown on the sigma scale used in science reporting. Zero wins is 0 excess sigma. The local figure treats the track alone; the global figures allow for how many tests were made.
+MR5 - Rank position (existing R3 measure)
+  One line: where the method's ranking placed the numbers that were actually drawn.
+  Short explanation: R3's ratified evaluator measure: the average mid-rank of the 7 drawn main numbers in the method's full frozen ranking (1 = most favoured), and the drawn Powerball's mid-rank. Fair-draw expectations are 18.0 (Powerball main), 10.5 (Powerball) and 24.0 (Oz Lotto). Lower means the method tended to favour numbers that came up. It belongs to the method and variant, because TOP and WORST share one ranking.
+MR7 - Total main-match excess (ChatGPT; core stage)
+  One line: did the track hit more main numbers in total than fair draws would produce?
+  Short explanation: counts every main-number match, prize or not. It is the most direct test of a steady advantage and applies to every method that produces tickets.
+MR16 - Hit-rate estimate with exact interval
+  One line: how often this track achieved a given kind of success, how uncertain that rate is, and what observed rate would be needed to reach 3 sigma.
+  Short explanation: a success here is a yes/no event per draw, such as any prize division, a particular division, at least 2, 3 or 4 main matches, or a Powerball hit. MR16 shows the track's observed rate with an exact 95% interval and the fair-draw rate beside it. It also shows the observed rate needed to reach 3 sigma locally over this window, and the chance of reaching it if the method were truly 1.5x or 2x better. With a few hundred draws the intervals are wide, and seeing that plainly prevents striking-looking counts being over-read. It vetoes nothing.
+
+Calibration labels:
+  EXACT_LOCAL: Exact reference tail for this single track and sub-measure (for example binomial division counts, MR7, MR8, MR11).
+  APPROX_UNCALIBRATED: Normal or other approximation not yet checked against N1. Shown, labelled.
+  N1_CALIBRATED: Probability from N1, only for single-track statistics in the hit-sequence class (17.5A), where the replay is exact even for adaptive methods. The Monte Carlo uncertainty is shown.
+  N1_FIXED_FORECAST_REFERENCE: N1 replay figure for any other statistic (cross-track maxima; measures scored with forecast weights or probabilities). Shown as a reference; not a calibrated probability for adaptive WF methods.
+  SELECTION_UNVERIFIED: The table's opportunity set is not a fixed grid (17.3.7A), so exact or N1 tails are not calibrated. The figures are shown.
+  BONFERRONI_REFERENCE_UNCALIBRATED: Bonferroni arithmetic applied where its prerequisites fail (an input not `EXACT_LOCAL`/`N1_CALIBRATED`, or a post-hoc family). Shown; not a guaranteed figure.
+  IS_NOT_CALIBRATED: Any significance figure in an IS table. The number is shown, but because the method was fitted on these outcomes it is not a calibrated probability (R2 section 8.4).
+  NOT_A_P_VALUE: Descriptive scores and Bayes factors.
+  MR_EXACT_BOUND_EXCEEDED, P_BELOW_FLOAT64_RANGE, SIGMA_ABOVE_BOUND, N1_NOT_RUN: design v0.1r1 6.6 and 7.6.
+Report statuses:
+  MR_NOT_APPLICABLE: capability missing
+  MR_INSUFFICIENT_DATA: below a measure's stated minimum
+  MR_UNDEFINED: mathematically undefined, for example a period with fewer than 2 wins
+  MR_NUMERIC_INVALID: non-finite or invalid input
+  NULL_VARIANCE_ZERO: the reference variance is 0, so no sigma is defined; shown as neutral
+  GRID_COMPLETE / GRID_INCOMPLETE / GRID_EMPTY: design v0.1r1 6.2A (track statuses).
+Evidence tiers:
+  DEVELOPMENT_WF_EXPLORATORY: walk-forward on development data that methods, windows and measures may have been designed against
+  HOLDOUT_MODE_H: FINAL_HOLDOUT_10 after Mode H scoring
+  PROSPECTIVE: forecasts frozen and published before their draws
+  IS_DESCRIPTIVE: in-sample.
+Pattern origins:
+  PO-1 An unavoidable consequence of how the method works: Partly diagnosable: N1 fixed-forecast replays show some method-built patterns, but not all for adaptive methods (17.5A). Planted-effect and null synthetic tests (MRT-07). A full recursive simulator (MRO-10) would cover more.
+  PO-2 An effect of fitting to past outcomes: Present in IS by construction; absent in WF by N-1 isolation. Shown by the IS-versus-WF comparison.
+  PO-3 Chance, many comparisons or selection: Bonferroni, the N1 maximum statistic, the search log, predeclared cohorts.
+  PO-4 A pattern that persists on genuinely new outcomes: Only HOLDOUT_MODE_H and PROSPECTIVE tiers can show it.
+Methods:
+  E_6 BETA_BERNOULLI_DECAY_149_150_V1: Per-Number Fitted Distribution Models - Estimates each number's own chance of being drawn from earlier draws, each older draw counting 149/150 as much as the next (about two years' half-life), starting from the fair-draw chance.
+  E_6 BETA_BERNOULLI_DECAY_74_75_V1: Per-Number Fitted Distribution Models - Estimates each number's own chance of being drawn from earlier draws, each older draw counting 74/75 as much as the next (about a year's half-life), starting from the fair-draw chance.
+  E_6 BETA_BERNOULLI_FULL_MEMORY_V1: Per-Number Fitted Distribution Models - Estimates each number's own chance of being drawn from all earlier draws of the current era, counted equally, starting from the fair-draw chance.
+  E_7 BETA_SHRINK_FULL_C52_V1: Bayesian Frequency Shrinkage - Ranks every number by the count over all earlier draws, pulled towards the fair rate by a prior worth 52 fair draws.
+  E_7 BETA_SHRINK_W104_C52_V1: Bayesian Frequency Shrinkage - Ranks every number by the count over the last 104 draws (about two years), pulled towards the fair rate by a prior worth 52 fair draws.
+  E_7 BETA_SHRINK_W52_C52_V1: Bayesian Frequency Shrinkage - Ranks every number by the count over the last 52 draws (about a year), pulled towards the fair rate by a prior worth 52 fair draws.
+
+====================================================================================================
+FAIR-DRAW REFERENCE
+====================================================================================================
+Division probabilities per draw (exact) and expected wins over n = 100 draws:
+  Division 1: 1/134490400 (7.43547e-09); expected per 100 draws 7.435e-07
+  Division 2: 19/134490400 (1.41274e-07); expected per 100 draws 1.413e-05
+  Division 3: 49/33622600 (1.45735e-06); expected per 100 draws 0.0001457
+  Division 4: 931/33622600 (2.76897e-05); expected per 100 draws 0.002769
+  Division 5: 3969/67245200 (5.90228e-05); expected per 100 draws 0.005902
+  Division 6: 5733/6724520 (0.000852552); expected per 100 draws 0.08526
+  Division 7: 75411/67245200 (0.00112143); expected per 100 draws 0.1121
+  Division 8: 28665/5379616 (0.00532845); expected per 100 draws 0.5328
+  Division 9: 51597/3362260 (0.0153459); expected per 100 draws 1.535
+Main matches per draw: mean0 7/5 (1.4), Var0 392/425 (0.922353)
+Sigma table (one-sided): 1 sigma 0.158655; 2 sigma 0.0227501; 3 sigma 0.00134990; 4 sigma 3.16712e-5; 5 sigma 2.86652e-7; 6 sigma 9.86588e-10. A local sigma treats one track alone; see the family figures.
+
+====================================================================================================
+PART B - LEAGUE TABLES: ADJUSTED AGAINST FAIR RANDOM DRAWS
+====================================================================================================
+
+MR1 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      1.88    2.98507e-02  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 5 of R = 200 replicates; P = (k+1)/(R+1) = 2.98507e-02; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.00816617, 0.0573744]
+       also: APPROX_UNCALIBRATED, Z_plus 3.05, P_up -
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.51    3.03483e-01  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 60 of R = 200 replicates; P = (k+1)/(R+1) = 3.03483e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.23739, 0.36865]
+       also: APPROX_UNCALIBRATED, Z_plus 1.27, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  N1_CALIBRATED LOW_N
+       N1 Monte Carlo: k = 200 of R = 200 replicates; P = (k+1)/(R+1) = 1.00000e+00; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.981725, 1]
+       also: APPROX_UNCALIBRATED, Z_plus 0.00, P_up -
+
+MR4.X.1 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.2 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.3 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.4 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.5 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.6 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.7 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.8 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.X.9 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      2.26    1.18131e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      1.01    1.56431e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.1 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.2 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.3 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.4 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.5 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.6 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.7 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.8 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.C.9 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      1.96    2.48075e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.76    2.23525e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR4.B.2-3 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR5.MAIN - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WF               11      0.16              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.07, P_up 4.72637e-01
+             N1 Monte Carlo: k = 94 of R = 200 replicates; P = (k+1)/(R+1) = 4.72637e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.399233, 0.541669]
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WF                     11      0.16              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.07, P_up 4.72637e-01
+             N1 Monte Carlo: k = 94 of R = 200 replicates; P = (k+1)/(R+1) = 4.72637e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.399233, 0.541669]
+    3  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WF             11      0.15              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.14, P_up 4.42786e-01
+             N1 Monte Carlo: k = 88 of R = 200 replicates; P = (k+1)/(R+1) = 4.42786e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.370056, 0.51175]
+   4=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WF               11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 5.12438e-01
+             N1 Monte Carlo: k = 102 of R = 200 replicates; P = (k+1)/(R+1) = 5.12438e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.438522, 0.581177]
+   4=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WF                     11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 5.12438e-01
+             N1 Monte Carlo: k = 102 of R = 200 replicates; P = (k+1)/(R+1) = 5.12438e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.438522, 0.581177]
+   4=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WF                      11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 6.51741e-01
+             N1 Monte Carlo: k = 130 of R = 200 replicates; P = (k+1)/(R+1) = 6.51741e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.579549, 0.715929]
+
+MR5.PB - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WF                     11      0.34              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.51, P_up 3.03483e-01
+             N1 Monte Carlo: k = 60 of R = 200 replicates; P = (k+1)/(R+1) = 3.03483e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.23739, 0.36865]
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WF             11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 7.06468e-01
+             N1 Monte Carlo: k = 141 of R = 200 replicates; P = (k+1)/(R+1) = 7.06468e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.636577, 0.767231]
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WF               11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.07, P_up 4.72637e-01
+             N1 Monte Carlo: k = 94 of R = 200 replicates; P = (k+1)/(R+1) = 4.72637e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.399233, 0.541669]
+   2=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WF               11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 9.75124e-01
+             N1 Monte Carlo: k = 195 of R = 200 replicates; P = (k+1)/(R+1) = 9.75124e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.942626, 0.991834]
+   2=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WF                     11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.00, P_up 9.75124e-01
+             N1 Monte Carlo: k = 195 of R = 200 replicates; P = (k+1)/(R+1) = 9.75124e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.942626, 0.991834]
+   2=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WF                      11      0.00              -  APPROX_UNCALIBRATED LOW_N
+       also: N1_FIXED_FORECAST_REFERENCE, Z_plus 0.13, P_up 4.47761e-01
+             N1 Monte Carlo: k = 89 of R = 200 replicates; P = (k+1)/(R+1) = 4.47761e-01; Monte Carlo 95% interval on k/R (Clopper-Pearson) [0.374901, 0.516754]
+
+MR7.MAIN - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      1.58    5.73717e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      1.28    1.00652e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.05    4.79475e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.05    4.79475e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    7.20248e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    7.20248e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    9.42239e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    8.92125e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    8.92125e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    7.20248e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    8.92125e-01  EXACT_LOCAL LOW_N
+   5=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    9.72364e-01  EXACT_LOCAL LOW_N
+
+MR7.PB - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      2.16    1.52353e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      1.27    1.01895e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.ANYDIV - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      1.96    2.48075e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.76    2.23525e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD1 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD2 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD3 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD4 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD5 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD6 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD7 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD8 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PD9 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      2.26    1.18131e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      1.01    1.56431e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.M2 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.47    3.20852e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    5.54219e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    9.81331e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    7.73611e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    9.17989e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    9.81331e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    5.54219e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    9.81331e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    5.54219e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    5.54219e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    9.81331e-01  EXACT_LOCAL LOW_N
+   2=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    9.17989e-01  EXACT_LOCAL LOW_N
+
+MR16.M3 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      1.76    3.87967e-02  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      1.76    3.87967e-02  EXACT_LOCAL LOW_N
+    3  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.23    4.07376e-01  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    7.69316e-01  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   4=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.M4 - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   1=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+MR16.PB - significance ranking (local Z_plus, adjusted against fair random draws)
+ Rank  Unit                                                          n    Z_plus           P_up  Label
+    1  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF                11      2.16    1.52353e-02  EXACT_LOCAL LOW_N
+    2  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF         11      1.27    1.01895e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF       11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF           11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF         11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF               11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   3=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF               11      0.17    4.31200e-01  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF         11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF           11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF                 11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+   8=  POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF                  11      0.00    1.00000e+00  EXACT_LOCAL LOW_N
+
+Families (global figures):
+
+====================================================================================================
+PER-TRACK DETAIL
+====================================================================================================
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:TOP:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WORST:WF: status GRID_COMPLETE; scored 11; invalid cells none
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_149_150_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+POWERBALL:E_6:BETA_BERNOULLI_DECAY_74_75_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+POWERBALL:E_6:BETA_BERNOULLI_FULL_MEMORY_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+POWERBALL:E_7:BETA_SHRINK_FULL_C52_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+POWERBALL:E_7:BETA_SHRINK_W104_C52_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+POWERBALL:E_7:BETA_SHRINK_W52_C52_V1:WF (ranking): status GRID_COMPLETE; scored 11; invalid none
+
+NOTES
+- Every number above is computed from frozen forecasts and the actual development draws; no holdout draw is read or scored. Rankings are reports and change no forecast (R3 17.9 RK-1).
+- Ties: standard competition ranking, listed by track ID (R3 17.10.4). Undefined values are listed last, never sorted as zero.
+- LOW_N marks n < 30. GRID_INCOMPLETE tracks carry SELECTION_UNVERIFIED on their exact figures (design 6.2A).
+- Not produced in this stage: MR2, MR3, MR6, MR8-MR15, the in-sample mode and the side-by-side tables (R3 stage 3).

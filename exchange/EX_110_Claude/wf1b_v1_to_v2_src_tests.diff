@@ -1,0 +1,729 @@
+--- a/src/evaluation/measures.py
++++ b/src/evaluation/measures.py
+@@ -324,13 +324,13 @@
+ def _n1_block(n1: dict | None, base: str, ctx: dict) -> dict:
+     if n1 is None or ctx['status'] != 'OK':
+         out = _empty_block('N1_NOT_RUN' if ctx['status'] == 'OK' else _label(base, ctx))
+-        out.update({'ci': None, 'R': None})
++        out.update({'ci': None, 'R': None, 'k': None})
+         return out
+     p_up = n1['p_up']
+     if not isinstance(p_up, Fraction) or not 0 < p_up <= 1:
+         raise ValueError('an N1 p-value must be a Fraction in (0, 1]')
+     out = _exact_block(p_up, n1.get('p_lo'), base, ctx)
+-    out.update({'ci': n1.get('ci'), 'R': n1.get('R')})
++    out.update({'ci': n1.get('ci'), 'R': n1.get('R'), 'k': n1.get('k')})
+     return out
+ 
+ 
+--- a/src/evaluation/report_writer.py
++++ b/src/evaluation/report_writer.py
+@@ -87,7 +87,8 @@
+ 
+ 
+ def _sig_text(sig: dict | None) -> tuple[str, str, str]:
+-    """(Z_plus, P_up, label) for display."""
++    """(Z_plus, P_up, labels) for display. The calibration label is shown together with any range label of the
++    p-value (P_BELOW_FLOAT64_RANGE) or the sigma (SIGMA_ABOVE_BOUND), never replaced by it (EX_109 C02)."""
+     if not sig:
+         return '-', '-', '-'
+     zp = sig.get('Z_plus')
+@@ -95,7 +96,37 @@
+                                                           else NU.format_sigma(zp['sigma']))
+     po = sig.get('P_up_output')
+     p = '-' if not po else (NU.format_prob(po['p_float']) if po['label'] is None else f"10^{po['p_log10']}")
+-    return z, p, sig.get('label') or '-'
++    labels = [sig.get('label')] + [x.get('label') if isinstance(x, dict) else None for x in (po, zp)]
++    out = []
++    for lab in labels:
++        if lab and lab not in out:
++            out.append(lab)
++    return z, p, '+'.join(out) or '-'
++
++
++def mc_fields(blk) -> dict | None:
++    """N1's Monte Carlo facts for a block, if it carries them: k, R, P = (k+1)/(R+1) and the Clopper-Pearson 95%
++    interval on k/R (R3 17.5A, 17.5.3; EX_109 C01)."""
++    if not isinstance(blk, dict) or blk.get('R') is None or blk.get('k') is None:
++        return None
++    lo, hi = blk['ci']
++    return {'k': blk['k'], 'R': blk['R'], 'p_mc': Fraction(blk['k'] + 1, blk['R'] + 1), 'ci_low': lo, 'ci_high': hi}
++
++
++def mc_text(blk) -> str | None:
++    m = mc_fields(blk)
++    if m is None:
++        return None
++    return (f"N1 Monte Carlo: k = {m['k']} of R = {m['R']} replicates; P = (k+1)/(R+1) = {NU.format_prob(float(m['p_mc']))}; "
++            f"Monte Carlo 95% interval on k/R (Clopper-Pearson) [{m['ci_low']:.6g}, {m['ci_high']:.6g}]")
++
++
++def _mc_csv(blk) -> dict:
++    m = mc_fields(blk)
++    if m is None:
++        return {}
++    return {'n1_mc_k': m['k'], 'n1_mc_R': m['R'], 'n1_mc_p': repr(float(m['p_mc'])), 'n1_mc_ci95_low_k_over_R': repr(m['ci_low']),
++            'n1_mc_ci95_high_k_over_R': repr(m['ci_high'])}
+ 
+ 
+ def _method_texts(game_id: str, members) -> dict:
+@@ -240,7 +271,7 @@
+         n1 = f['n1_max']
+         w(f"| Family {f['family_id']}: M = {f['M']}; Bonferroni P = {p}, Z_plus = {z}, "
+           f"{_bonf_label_text(f)}; tracks breaking the guarantee's conditions: {f['n_broken']}; "
+-          f"N1 maximum statistic: {n1.get('label')}" + (f", P = {_num(n1.get('p'))}" if n1.get('p') is not None else ''))
++          f"N1 maximum statistic: {n1.get('label')}" + (f"; {mc_text(n1)}" if mc_text(n1) else ''))
+     w(f'| N1: {seed_line}; N1 seed policies on file: {n1_policies_on_file}')
+     w('+' + '-' * 98)
+     w('')
+@@ -248,6 +279,8 @@
+                  'rank': '', 'n': '', 'descriptive_key': '', 'z_plus': _num((f.get('Z_plus') or {}).get('sigma')),
+                  'p_value': _num(f.get('P_bonf')), 'label': _bonf_label_text(f), 'track_status': f"broken={f['n_broken']}"}
+                 for f in fams]
++    for row, f in zip(csv_rows, fams):
++        row.update(_mc_csv(f['n1_max']))
+     descriptive_tables, significance_tables = [], []
+     subs = []
+     for r in rows:
+@@ -297,7 +330,7 @@
+     w('')
+     w('Calibration labels:')
+     for lab in mreg['calibration_labels']:
+-        w(f"  {lab['label']}: {lab['meaning']}")
++        w(f"  {lab['label']}: {lab['meaning'].replace('**', '')}")
+     w('  MR_EXACT_BOUND_EXCEEDED, P_BELOW_FLOAT64_RANGE, SIGMA_ABOVE_BOUND, N1_NOT_RUN: design v0.1r1 6.6 and 7.6.')
+     w('Report statuses:')
+     for st in mreg['report_statuses']:
+@@ -339,21 +372,27 @@
+         w(f"{'Rank':>5}  {'Unit':<58} {'n':>4}  {'Z_plus':>8}  {'P_up':>13}  Label")
+         for e in ranked:
+             r = e['row']['r']
+-            z, p, lab = _sig_text(r['sub'].get('significance'))
++            sig = r['sub'].get('significance')
++            z, p, lab = _sig_text(sig)
+             w(f"{e['display']:>5}  {r['unit_id']:<58} {r['sub']['n']:>4}  {z:>8}  {p:>13}  {lab}"
+               f"{' ' + ','.join(r['sub']['flags']) if r['sub']['flags'] else ''}")
+-            csv_rows.append({'table_kind': 'SIGNIFICANCE', 'analysis_unit': r['analysis_unit'], 'unit_id': r['unit_id'],
+-                             'sub_measure': sid, 'rank': e['display'], 'n': r['sub']['n'], 'descriptive_key': '',
+-                             'z_plus': z, 'p_value': p, 'label': lab, 'track_status': r['track_status']})
++            if mc_text(sig):
++                w(f"{'':7}{mc_text(sig)}")
++            csv_rows.append(dict({'table_kind': 'SIGNIFICANCE', 'analysis_unit': r['analysis_unit'],
++                                  'unit_id': r['unit_id'], 'sub_measure': sid, 'rank': e['display'],
++                                  'n': r['sub']['n'], 'descriptive_key': '', 'z_plus': z, 'p_value': p, 'label': lab,
++                                  'track_status': r['track_status']}, **_mc_csv(sig)))
+             for extra_key in ('approx', 'n1_reference'):           # shown beside it, never instead (design 7.1)
+                 blk = r['sub'].get(extra_key)
+-                if isinstance(blk, dict) and blk is not r['sub'].get('significance') and blk.get('label'):
++                if isinstance(blk, dict) and blk is not sig and blk.get('label'):
+                     z2, p2, lab2 = _sig_text(blk)
+                     w(f"{'':7}also: {lab2}, Z_plus {z2}, P_up {p2}")
+-                    csv_rows.append({'table_kind': 'SIGNIFICANCE', 'analysis_unit': r['analysis_unit'],
+-                                     'unit_id': r['unit_id'], 'sub_measure': f'{sid}:{extra_key}', 'rank': '',
+-                                     'n': r['sub']['n'], 'descriptive_key': '', 'z_plus': z2, 'p_value': p2,
+-                                     'label': lab2, 'track_status': r['track_status']})
++                    if mc_text(blk):
++                        w(f"{'':13}{mc_text(blk)}")
++                    csv_rows.append(dict({'table_kind': 'SIGNIFICANCE', 'analysis_unit': r['analysis_unit'],
++                                          'unit_id': r['unit_id'], 'sub_measure': f'{sid}:{extra_key}', 'rank': '',
++                                          'n': r['sub']['n'], 'descriptive_key': '', 'z_plus': z2, 'p_value': p2,
++                                          'label': lab2, 'track_status': r['track_status']}, **_mc_csv(blk)))
+         w('')
+     w('Families (global figures):')
+     for f in fams:
+@@ -363,7 +402,9 @@
+           f"Bonferroni P = {p}, Z_plus = {z}, {_bonf_label_text(f)}")
+         for tid, why in f['broken']:
+             w(f'    breaks the guarantee: {tid} ({why})')
+-        w(f"    N1 maximum statistic: {f['n1_max']}")
++        n1m = f['n1_max']
++        w(f"    N1 maximum statistic: {n1m.get('label')}" + (f", flag {n1m['flag']}" if n1m.get('flag') else '') +
++          (f"; {mc_text(n1m)}" if mc_text(n1m) else ''))
+     w('')
+ 
+     # ---------------------------------------------------------------- 6. per-track detail and notes
+@@ -389,13 +430,22 @@
+ 
+     buf = io.StringIO()
+     cols = ['table_kind', 'analysis_unit', 'unit_id', 'sub_measure', 'rank', 'n', 'descriptive_key', 'z_plus',
+-            'p_value', 'label', 'track_status']
++            'p_value', 'label', 'track_status', 'n1_mc_k', 'n1_mc_R', 'n1_mc_p', 'n1_mc_ci95_low_k_over_R',
++            'n1_mc_ci95_high_k_over_R']
+     wr = csv.DictWriter(buf, fieldnames=cols, lineterminator='\n')
+     wr.writeheader()
+     for r in csv_rows:
+         wr.writerow({k: r.get(k, '') for k in cols})
+     csv_bytes = buf.getvalue().encode('ascii', errors='replace')
+-    manifest = {'schema': 'RANKING_REPORT_MANIFEST_V1', 'game_id': g, 'mode': 'WF', 'mode_display': mreg['modes']['WF']['display'],
++    n1_figures = []
++    for r in rows:
++        for kind in ('significance', 'n1_reference'):
++            m = mc_fields(r['sub'].get(kind))
++            if m is not None:
++                n1_figures.append({'unit_id': r['unit_id'], 'sub_measure': r['sub']['sub_measure'], 'block': kind,
++                                   'label': r['sub'][kind].get('label'), 'k': m['k'], 'R': m['R'],
++                                   'p_mc': str(m['p_mc']), 'ci95_k_over_R': [m['ci_low'], m['ci_high']]})
++    manifest = {'schema': 'RANKING_REPORT_MANIFEST_V1', 'n1_figures': n1_figures, 'game_id': g, 'mode': 'WF', 'mode_display': mreg['modes']['WF']['display'],
+                 'evidence_tier': TIER, 'window_first': S, 'window_last': L, 'batch_id': plan['batch_id'],
+                 'attempt_id': res['attempt_id'], 'search_log_row': res['search_log_row'],
+                 'scoring_plan_digest': res['scoring_plan_digest'], 'grid_digest': res['grid_digest'],
+--- a/src/evaluation/seed_policies.py
++++ b/src/evaluation/seed_policies.py
+@@ -1,8 +1,16 @@
+-"""N1's seed policy records (releases and WF-1 design v0.1r1 sections 7.6 and 8; decision WF1-12).
++"""N1's seed policy records (releases and WF-1 design v0.1r1 sections 7.6 and 8; decisions WF1-9, WF1-12; D-9..D-11).
+ 
+ Records live in src/evaluation/seed_policies/, are reviewed and immutable, and are all kept (provisional, refused,
+ replaced and approved), so that every root tried is counted (D-10; design 8.4). The report tool uses N1 only with
+-exactly one APPROVED record; there is no default, test or fallback root in production code (7.6)."""
++exactly one APPROVED record; there is no default, test or fallback root in production code (7.6).
++
++Binding (EX_109 WF1B-R2-B01): every record must name a policy in ANNOUNCED below, the review-pinned list of the
++pulses announced in exchange/ before they existed. An APPROVED record must describe exactly that announced pulse
++(chain, exact UTC time stamp, version), with a well-typed pulse index, NIST's canonical URI for it, and the two
++HTTPS reads of design 8.2 at their exact official addresses (the time lookup the owner opened and the permanent
++pulse address Claude read). Anything else fails closed: the record is refused and N1 does not run.
++No live fetch and no signature check is made (WF1-12).
++"""
+ from __future__ import annotations
+ 
+ import json
+@@ -12,10 +20,86 @@
+ FOLDER = Path(__file__).resolve().parent / 'seed_policies'
+ SCHEMA = 'SEED_POLICY_V1'
+ STATUSES = ('PROVISIONAL', 'APPROVED', 'REFUSED', 'REPLACED_BEFORE_PULSE')
+-ROOT = re.compile(r'[0-9A-F]{128}\Z', re.ASCII)
++BEACON = 'https://beacon.nist.gov/beacon/2.0'
++
++# The pulses announced before they existed (review-pinned; a new announcement is a reviewed change to this table).
++ANNOUNCED = {
++    'N1_ROOT_NIST_C2_20261106T0000Z_V1': {'time_stamp': '2026-11-06T00:00:00.000Z', 'epoch_ms': 1793923200000,
++                                          'chain_index': 2, 'version': '2.0',
++                                          'announced_in': 'design v0.1r1 section 8.1 (EX_077, EX_079)'},
++    'N1_ROOT_NIST_C2_20261031T1030Z_V1': {'time_stamp': '2026-10-31T10:30:00.000Z', 'epoch_ms': 1793442600000,
++                                          'chain_index': 2, 'version': '2.0',
++                                          'announced_in': 'EX_103 (commit 92a6cef)'},
++}
++
++_HEX128_UPPER = re.compile(r'[0-9A-F]{128}\Z', re.ASCII)
++_HEX128_LOWER = re.compile(r'[0-9a-f]{128}\Z', re.ASCII)
++_SHA256 = re.compile(r'[0-9a-f]{64}\Z', re.ASCII)
+ _APPROVED_FIELDS = ('output_value', 'uri', 'pulse_index', 'time_stamp', 'status_code', 'certificate_id', 'chain_index',
+                     'version', 'sources', 'owner_file_sha256', 'fetched_by', 'fetched_utc', 'verified_by',
+-                    'verified_utc', 'signature_verification', 'trust_basis', 'nist_notice')
++                    'verified_utc', 'signature_verification', 'trust_basis', 'nist_notice', 'approved_by',
++                    'approved_utc')
++
++
++def _int(v) -> bool:
++    return type(v) is int
++
++
++def _text(v) -> bool:
++    return type(v) is str and bool(v) and v.isascii()
++
++
++def validate(rec) -> dict:
++    """Fail closed unless the record is a SEED_POLICY_V1 of an announced policy and, if APPROVED, describes exactly
++    the announced pulse and its two official reads."""
++    if type(rec) is not dict or rec.get('schema') != SCHEMA or rec.get('status') not in STATUSES:
++        raise ValueError('not a SEED_POLICY_V1 record with a known status')
++    pid = rec.get('policy_id')
++    if pid not in ANNOUNCED:
++        raise ValueError(f'policy {pid!r} was not announced before its pulse (not in the pinned ANNOUNCED table)')
++    ann = ANNOUNCED[pid]
++    if rec['status'] != 'APPROVED':
++        if 'output_value' in rec:
++            raise ValueError(f'{pid}: a {rec["status"]} record carries no root')
++        return rec
++    missing = [k for k in _APPROVED_FIELDS if k not in rec]
++    if missing:
++        raise ValueError(f'{pid}: APPROVED record lacks {missing}')
++    if rec['time_stamp'] != ann['time_stamp']:
++        raise ValueError(f'{pid}: time stamp {rec["time_stamp"]!r} is not the announced {ann["time_stamp"]}')
++    if not _int(rec['chain_index']) or rec['chain_index'] != ann['chain_index']:
++        raise ValueError(f'{pid}: chain must be {ann["chain_index"]}')
++    if rec['version'] != ann['version']:
++        raise ValueError(f'{pid}: version must be {ann["version"]}')
++    if not _int(rec['pulse_index']) or rec['pulse_index'] < 1:
++        raise ValueError(f'{pid}: pulse_index must be a positive integer')
++    canonical_uri = f"{BEACON}/chain/{ann['chain_index']}/pulse/{rec['pulse_index']}"
++    if rec['uri'] != canonical_uri:
++        raise ValueError(f'{pid}: uri must be {canonical_uri}')
++    if not _int(rec['status_code']) or rec['status_code'] != 0:
++        raise ValueError(f'{pid}: statusCode must be 0')
++    if type(rec['output_value']) is not str or not _HEX128_UPPER.fullmatch(rec['output_value']):
++        raise ValueError(f'{pid}: outputValue must be 128 upper-case hexadecimal characters, as published')
++    if type(rec['certificate_id']) is not str or not _HEX128_LOWER.fullmatch(rec['certificate_id']):
++        raise ValueError(f'{pid}: certificateId must be 128 lower-case hexadecimal characters, as published')
++    expected_sources = [f"{BEACON}/pulse/time/{ann['epoch_ms']}", canonical_uri]
++    srcs = rec['sources']
++    if (type(srcs) is not list or len(srcs) != 2 or any(type(s) is not dict for s in srcs) or
++            [s.get('url') for s in srcs] != expected_sources or not all(_text(s.get('read_by')) for s in srcs) or
++            srcs[0]['read_by'] == srcs[1]['read_by']):
++        raise ValueError(f'{pid}: sources must be the two official reads, by two different people: '
++                         f'{expected_sources}')
++    if type(rec['owner_file_sha256']) is not str or not _SHA256.fullmatch(rec['owner_file_sha256']):
++        raise ValueError(f'{pid}: owner_file_sha256 must be a SHA-256')
++    if rec['signature_verification'] != 'NOT_PERFORMED':
++        raise ValueError(f'{pid}: signature_verification must be NOT_PERFORMED (WF1-12)')
++    for k in ('fetched_by', 'fetched_utc', 'verified_by', 'verified_utc', 'trust_basis', 'nist_notice', 'approved_by',
++              'approved_utc'):
++        if not _text(rec[k]):
++            raise ValueError(f'{pid}: {k} must be non-empty ASCII text')
++    if rec['fetched_by'] == rec['verified_by']:
++        raise ValueError(f'{pid}: the pulse must be verified by someone other than the person who fetched it (D-9)')
++    return rec
+ 
+ 
+ def _records() -> list[dict]:
+@@ -25,29 +109,15 @@
+     for p in sorted(FOLDER.glob('*.json')):
+         rec = json.loads(p.read_bytes().decode('ascii'))
+         validate(rec)
++        if p.stem != rec['policy_id']:
++            raise ValueError(f'{p.name}: the file name must be the policy ID')
+         out.append(rec)
++    ids = [r['policy_id'] for r in out]
++    if len(ids) != len(set(ids)):
++        raise ValueError('two records for one policy')
+     return out
+ 
+ 
+-def validate(rec) -> dict:
+-    if type(rec) is not dict or rec.get('schema') != SCHEMA or rec.get('status') not in STATUSES:
+-        raise ValueError('not a SEED_POLICY_V1 record with a known status')
+-    if type(rec.get('policy_id')) is not str or not rec['policy_id'].startswith('N1_ROOT_'):
+-        raise ValueError('invalid policy_id')
+-    if rec['status'] == 'APPROVED':
+-        missing = [k for k in _APPROVED_FIELDS if k not in rec]
+-        if missing:
+-            raise ValueError(f"APPROVED record {rec['policy_id']} lacks {missing}")
+-        if type(rec['output_value']) is not str or not ROOT.fullmatch(rec['output_value']):
+-            raise ValueError('outputValue must be 128 upper-case hexadecimal characters')
+-        if rec['signature_verification'] != 'NOT_PERFORMED' or rec['status_code'] != 0 or rec['chain_index'] != 2 \
+-                or rec['version'] != '2.0' or len(rec['sources']) != 2:
+-            raise ValueError('APPROVED record fails the WF1-12 acceptance fields')
+-        if type(rec['owner_file_sha256']) is not str or not re.fullmatch(r'[0-9a-f]{64}', rec['owner_file_sha256']):
+-            raise ValueError('owner_file_sha256 must be a SHA-256')
+-    return rec
+-
+-
+ def count_policies() -> int:
+     return len(_records())
+ 
+--- /dev/null
++++ b/src/evaluation/seed_policies/N1_ROOT_NIST_C2_20261031T1030Z_V1.json
+@@ -0,0 +1,40 @@
++{
++ "announced": "EX_103 (commit 92a6cef, pushed 31 October 2026 about 09:30 UTC, before the pulse existed); replaces N1_ROOT_NIST_C2_20261106T0000Z_V1 under WF1-9 and D-10",
++ "approved_by": "the project owner (hydra3333)",
++ "approved_utc": "2026-10-31 about 12:45 UTC",
++ "certificate_id": "5b6386e6ac8a993bac8d99d6549deda44af82f2fa4a0e9c0025b6474ab0cbfcab67bfff264fda41aac003b0c9ee7fb77d2938dc0f286fb73cc8fa79864ec0c18",
++ "chain_index": 2,
++ "fetched_by": "the project owner (hydra3333)",
++ "fetched_utc": "2026-10-31 (after 10:30 UTC; attached to the Claude chat at about 12:39 UTC)",
++ "field": "outputValue (512 bits, 128 upper-case hexadecimal characters), used as published",
++ "nist_notice": "NIST's notice of 23 October 2026 on its Beacon 2.0 page (pulses since 3 September 2026 refer to an incorrect certificate); recorded, not blocking (WF1-12)",
++ "output_value": "E9C629FAC8D346CB5394E9D436D3DB5CCFA88024520F8591E9936DB6A521FD016560B48692D3DAF21587D8F219AE0BFB75C36790F7DCD8959D777E5AF1C79F97",
++ "owner_file_sha256": "d06fd535c27cda6ed4afc0ba93d3309b9c72e8b04db5e7a1d05f6e4ec0aa5dfd",
++ "policy_id": "N1_ROOT_NIST_C2_20261031T1030Z_V1",
++ "pulse_index": 2007128,
++ "purpose": "the N1 fair-draw simulator (R3 17.5A) of WF-1B, both games",
++ "schema": "SEED_POLICY_V1",
++ "service": "NIST Randomness Beacon, version 2.0",
++ "signature_verification": "NOT_PERFORMED",
++ "sources": [
++  {
++   "how": "opened in a browser after the pulse time; the JSON saved and attached to the Claude chat",
++   "read_by": "the project owner (hydra3333)",
++   "url": "https://beacon.nist.gov/beacon/2.0/pulse/time/1793442600000"
++  },
++  {
++   "how": "read independently over HTTPS from the permanent archive address",
++   "read_by": "Claude (the Claude web chat)",
++   "url": "https://beacon.nist.gov/beacon/2.0/chain/2/pulse/2007128"
++  }
++ ],
++ "status": "APPROVED",
++ "status_code": 0,
++ "time_stamp": "2026-10-31T10:30:00.000Z",
++ "trust_basis": "NIST's official HTTPS service (beacon.nist.gov); owner decision WF1-12",
++ "uri": "https://beacon.nist.gov/beacon/2.0/chain/2/pulse/2007128",
++ "verification": "version, chainIndex, pulseIndex, timeStamp, statusCode, outputValue (all 128 characters) and certificateId equal in both reads",
++ "verified_by": "Claude (the Claude web chat)",
++ "verified_utc": "2026-10-31 about 12:40 UTC",
++ "version": "2.0"
++}
+--- /dev/null
++++ b/tests/test_wf1b_n1_replay.py
+@@ -0,0 +1,120 @@
++"""WF-1B: N1 replays the exact tails of MR4 division sets, MR7 and MR16 events (design v0.1r1 section 7.1; R3 MRT-16 (a),
++MRT-19; EX_109 C03). Invented tickets and an invented root ('AB' x 64), never a beacon value or a real draw.
++
++For the hit-sequence class the per-target hit law is the same whatever ticket is picked, so N1's replay must match
++the exact binomial (MR4, MR16) and convolution (MR7) tails within Monte Carlo error, for fixed tickets and also for
++an adaptive synthetic rule whose ticket depends on the previous simulated draw (MRT-16 (a))."""
++from __future__ import annotations
++
++import hashlib
++import sys
++import unittest
++from fractions import Fraction
++from pathlib import Path
++from unittest import mock
++
++import numpy as np
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++from evaluation import divisions as DV      # noqa: E402
++from evaluation import measures as MS       # noqa: E402
++from evaluation import n1 as N1             # noqa: E402
++from evaluation import n1_generator as G    # noqa: E402
++from evaluation import numerics as NU       # noqa: E402
++
++POLICY = {'policy_id': 'N1_ROOT_TEST_ONLY_V1', 'output_value': 'AB' * 64}
++R = 3000
++
++
++def tickets(game: str, targets) -> dict:
++    """Invented, target-varying tickets (7 main labels; plus a Powerball for Powerball)."""
++    size = DV.MAIN_POOL[game]
++    out = {}
++    for t in targets:
++        lab = sorted(range(1, size + 1), key=lambda x: hashlib.sha256(f'{game}:{t}:{x}'.encode()).digest())[:7]
++        out[t] = (tuple(sorted(lab)), (1 + int(hashlib.sha256(f'pb:{t}'.encode()).digest()[0]) % 20)
++                  if game == 'POWERBALL' else None)
++    return out
++
++
++def within(test, k_rep: np.ndarray, exact_tail, ks, what):
++    reps = len(k_rep)
++    for k in ks:
++        emp = float((k_rep >= k).mean())
++        ex = float(exact_tail(k))
++        se = max((ex * (1 - ex) / reps) ** 0.5, 1 / reps)
++        test.assertLess(abs(emp - ex), 5 * se, (what, k, emp, ex))
++
++
++class FixedTickets(unittest.TestCase):
++
++    def check_game(self, game, targets):
++        ent = tickets(game, targets)
++        with mock.patch.object(N1, 'R', R):
++            sim = N1.simulate(POLICY, game, targets)
++        mm, div = N1._replay(sim, game, ent)
++        n = len(targets)
++        # MR4 division sets (exact binomial on p_S): any division, the lowest division, and a two-division band.
++        D = DV.DIVISION_COUNT[game]
++        for name, dset in (('C.all', set(range(1, D + 1))), (f'X.{D}', {D}), (f'B.{D - 1}-{D}', {D - 1, D})):
++            p_s = DV.division_set_probability(game, frozenset(dset))
++            k_rep = np.isin(div, list(dset)).sum(axis=1)
++            within(self, k_rep, lambda k: NU.binom_upper(n, p_s, k), range(0, 9), f'{game} MR4 {name}')
++        # MR16 events: at least 2 and 3 main matches.
++        for j in (2, 3):
++            p = DV.main_match_at_least(game, j)
++            within(self, (mm >= j).sum(axis=1), lambda k: NU.binom_upper(n, p, k), range(0, 30, 3), f'{game} MR16.M{j}')
++        # MR7: the total main matches against its exact convolution null.
++        tails = N1._tail_table(game, n)
++        within(self, mm.sum(axis=1), lambda s: tails[s], range(60, 120, 8), f'{game} MR7')
++        return mm, div, sim, ent
++
++    def test_powerball(self):
++        targets = list(range(1400, 1520))
++        mm, div, sim, ent = self.check_game('POWERBALL', targets)
++        cols = [sim['index'][t] for t in targets]
++        pb = np.array([ent[t][1] for t in targets])
++        hits = (sim['extra'][:, cols] == pb[None, :]).sum(axis=1)                      # MR16.PB / MR7.PB
++        within(self, hits, lambda k: NU.binom_upper(len(targets), Fraction(1, 20), k), range(0, 12, 2), 'MR7.PB')
++
++    def test_oz_lotto_supplementary_branch(self):
++        targets = list(range(1500, 1620))
++        mm, div, sim, ent = self.check_game('OZLOTTO', targets)
++        # The supplementary classification itself: replayed divisions equal the per-draw classifier's.
++        r = 0
++        for j, t in enumerate(targets[:40]):
++            m, s = G.fair_draw(POLICY['output_value'], POLICY['policy_id'], 'OZLOTTO', r + 1, t)
++            rec = DV.match_record('OZLOTTO', ent[t][0], None, m, s)
++            self.assertEqual((int(mm[r, j]), int(div[r, j])), (rec['main_matches'], rec['division']))
++
++
++class AdaptiveTickets(unittest.TestCase):
++    """An adaptive synthetic rule: each target's ticket is the previous simulated draw's main numbers (so it depends
++    on outcomes). The hit-sequence tails must still match the exact ones (MRT-16 (a))."""
++
++    def test_adaptive_rule(self):
++        game, targets, reps = 'POWERBALL', list(range(1400, 1460)), 2000
++        root, pid = POLICY['output_value'], POLICY['policy_id']
++        k_any, s_tot = np.zeros(reps, dtype=np.int64), np.zeros(reps, dtype=np.int64)
++        for r in range(reps):
++            ticket, tpb = tuple(range(1, 8)), 1
++            for t in targets:
++                m, b = G.fair_draw(root, pid, game, r + 1, t)
++                rec = DV.match_record(game, ticket, tpb, m, b)
++                k_any[r] += rec['division'] >= 1
++                s_tot[r] += rec['main_matches']
++                ticket, tpb = m, b                                   # adapt to the outcome just seen
++        n = len(targets)
++        p_any = DV.any_division_probability(game)
++        within(self, k_any, lambda k: NU.binom_upper(n, p_any, k), range(0, 8), 'adaptive MR4 C.all')
++        tails = N1._tail_table(game, n)
++        within(self, s_tot, lambda s: tails[s], range(70, 100, 6), 'adaptive MR7')
++        # The adaptive replay is a hit-sequence statistic, so MR1's calibration class stays N1_CALIBRATED; the
++        # cross-track maximum and forecast-weighted figures stay references (labels, MRT-16 (b)/(c)).
++        out = MS.mr1(game, [{'draw_number': 1400, 'main_matches': 0, 'powerball_match': 0, 'division': 0}],
++                     'GRID_COMPLETE', n1={'p_up': Fraction(1, 2), 'ci': (0.4, 0.6), 'R': 10, 'k': 4})
++        self.assertEqual(out['sub_measures']['MR1']['significance']['label'], 'N1_CALIBRATED')
++
++
++if __name__ == '__main__':
++    unittest.main()
+--- a/tests/test_wf1b_report.py
++++ b/tests/test_wf1b_report.py
+@@ -273,5 +273,87 @@
+             self.assertLess(abs(emp - exact), 5 * se, (s, emp, exact))
+ 
+ 
++class N1Display(Batch):
++    """EX_109 C01 and C02: every N1 figure is printed with k, R, (k+1)/(R+1) and its Monte Carlo interval, in the text,
++    the CSV and the JSON, the RK-4 block agreeing with Part B; range labels are kept beside calibration labels."""
++    FIRST, LAST = 1568, 1576
++
++    def family(self, res):
++        roster = sorted(tr['track_id'] for tr in res['per_track'].values())
++        return {'family_id': 'TEST_FAMILY_MR7_MAIN', 'game_id': self.GAME, 'measure': 'MR7.MAIN', 'M': len(roster),
++                'roster': roster, 'roster_digest': hashlib.sha256('\n'.join(roster).encode()).hexdigest(),
++                'window_first': self.FIRST, 'window_last': self.LAST}
++
++    def build(self, res):
++        c = RW.build(res, generated_utc='x', seed_line='policy N1_ROOT_TEST_ONLY_V1, R = 200', n1_policies_on_file=1,
++                     environment={})
++        return c['txt'].decode('ascii'), list(csv.DictReader(io.StringIO(c['csv'].decode('ascii')))), json.loads(c['json'])
++
++    def test_monte_carlo_facts_everywhere(self):
++        with mock.patch.object(RP, 'load_families', side_effect=lambda g, f, l: []):
++            res = RP.run_report(self.GAME, self.plan['batch_id'], self.FIRST, self.LAST)
++        fam = self.family(res)
++        res = None
++        with mock.patch.object(RP, 'load_families', side_effect=lambda g, f, l: [fam]):
++            res = RP.run_report(self.GAME, self.plan['batch_id'], self.FIRST, self.LAST, n1_runner=N1.runner(TEST_POLICY))
++        text, rows, man = self.build(res)
++        # MR1 (N1_CALIBRATED) and MR5 (reference) rows carry k, R and the interval, in text and CSV.
++        mr1 = [r for r in rows if r['sub_measure'] == 'MR1' and r['table_kind'] == 'SIGNIFICANCE']
++        self.assertTrue(mr1)
++        for r in mr1:
++            self.assertEqual(r['n1_mc_R'], '200')
++            k = int(r['n1_mc_k'])
++            self.assertEqual(float(r['n1_mc_p']), (k + 1) / 201)
++            self.assertLessEqual(float(r['n1_mc_ci95_low_k_over_R']), k / 200)
++            self.assertGreaterEqual(float(r['n1_mc_ci95_high_k_over_R']), k / 200)
++            self.assertIn('N1_CALIBRATED', r['label'])
++        self.assertTrue([r for r in rows if r['sub_measure'] == 'MR5.MAIN:n1_reference' and r['n1_mc_R'] == '200'])
++        self.assertIn('Monte Carlo 95% interval on k/R (Clopper-Pearson)', text)
++        # In Part B's MR1 table, every row is followed by its own Monte Carlo line.
++        part_b = text[text.index(RW.PART_B):]
++        table = part_b[part_b.index('MR1 - significance ranking'):]
++        table = table[:table.index('\n\n')].splitlines()[2:]
++        rows_b = [i for i, l in enumerate(table) if ':WF ' in l]
++        self.assertEqual(len(rows_b), len(mr1))
++        for i in rows_b:
++            self.assertTrue(table[i + 1].strip().startswith('N1 Monte Carlo: k = '), table[i:i + 2])
++        self.assertTrue(any(f['block'] == 'significance' and f['R'] == 200 for f in man['n1_figures']))
++        # The family's maximum statistic: the same Monte Carlo text in the RK-4 block and in Part B.
++        f = RW.families_global(res)[0]
++        line = RW.mc_text(f['n1_max'])
++        self.assertIsNotNone(line)
++        block = text[text.index(RW.RK4_TITLE):text.index('GLOSSARY')]
++        part_b = text[text.index(RW.PART_B):text.index('PER-TRACK DETAIL')]
++        self.assertIn(line, block)
++        self.assertIn(line, part_b)
++        fam_row = next(r for r in rows if r['table_kind'] == 'RK4_DISCLOSURE')
++        self.assertEqual(fam_row['n1_mc_R'], '200')
++        # An incomplete grid: the family's N1 figure is flagged, and its Monte Carlo facts are still shown.
++        key = sorted(res['per_track'])[0]
++        res['per_track'][key]['status'] = 'GRID_INCOMPLETE'
++        text2, _rows2, _m2 = self.build(res)
++        self.assertIn('N1_FIXED_FORECAST_REFERENCE, flag SELECTION_UNVERIFIED; ' + line, text2)
++
++    def test_range_labels_are_kept(self):
++        from evaluation import numerics as NU
++        tiny = Fraction(1, 10 ** 400)
++        z, p, lab = RW._sig_text({'Z_plus': NU.z_plus(tiny), 'P_up_output': NU.p_output(tiny), 'label': 'EXACT_LOCAL'})
++        self.assertEqual((p, lab), ('10^-400', 'EXACT_LOCAL+P_BELOW_FLOAT64_RANGE'))
++        z, p, lab = RW._sig_text({'Z_plus': NU.z_plus(Fraction(1, 10 ** 220000)),
++                                  'P_up_output': NU.p_output(Fraction(1, 10 ** 220000)), 'label': 'EXACT_LOCAL'})
++        self.assertEqual((z, lab), ('>= 1000', 'EXACT_LOCAL+P_BELOW_FLOAT64_RANGE+SIGMA_ABOVE_BOUND'))
++        # Through a whole report: one track's MR7 tail replaced by an extreme exact tail.
++        res = RP.run_report(self.GAME, self.plan['batch_id'], self.FIRST, self.LAST)
++        key = sorted(res['results'])[0]
++        sub = res['results'][key]['MR7']['sub_measures']['MR7.MAIN']
++        sub['significance'] = dict(sub['significance'], P_up=tiny, P_up_output=NU.p_output(tiny), Z_plus=NU.z_plus(tiny))
++        sub['significance_key'] = NU.z_plus(tiny)['sigma']
++        text, rows, _m = self.build(res)
++        row = next(r for r in rows if r['sub_measure'] == 'MR7.MAIN' and r['unit_id'] == res['per_track'][key]['track_id']
++                   and r['table_kind'] == 'SIGNIFICANCE')
++        self.assertEqual((row['p_value'], row['label']), ('10^-400', 'EXACT_LOCAL+P_BELOW_FLOAT64_RANGE'))
++        self.assertIn('10^-400  EXACT_LOCAL+P_BELOW_FLOAT64_RANGE', text)
++
++
+ if __name__ == '__main__':
+     unittest.main()
+--- /dev/null
++++ b/tests/test_wf1b_seed_policy.py
+@@ -0,0 +1,156 @@
++"""WF-1B: N1's seed policy records (design v0.1r1 sections 7.6, 8.1-8.4 and 10; decisions WF1-9, WF1-12; EX_109 B01).
++
++The negative fixtures use an invented root ('AB' x 64), never a beacon value."""
++from __future__ import annotations
++
++import copy
++import json
++import sys
++import tempfile
++import unittest
++from pathlib import Path
++from unittest import mock
++
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
++from evaluation import seed_policies as SP   # noqa: E402
++
++INSTALLED = 'N1_ROOT_NIST_C2_20261031T1030Z_V1'
++
++
++class Installed(unittest.TestCase):
++
++    def test_the_installed_records(self):
++        recs = {r['policy_id']: r for r in SP._records()}
++        self.assertEqual(set(recs), set(SP.ANNOUNCED))
++        self.assertEqual(recs['N1_ROOT_NIST_C2_20261106T0000Z_V1']['status'], 'REPLACED_BEFORE_PULSE')
++        p = SP.approved_policy()
++        self.assertEqual(p['policy_id'], INSTALLED)
++        self.assertEqual((p['time_stamp'], p['chain_index'], p['pulse_index'], p['status_code'], p['version']),
++                         ('2026-10-31T10:30:00.000Z', 2, 2007128, 0, '2.0'))
++        self.assertEqual(p['uri'], 'https://beacon.nist.gov/beacon/2.0/chain/2/pulse/2007128')
++        self.assertEqual([s['url'] for s in p['sources']],
++                         ['https://beacon.nist.gov/beacon/2.0/pulse/time/1793442600000', p['uri']])
++        self.assertEqual(p['signature_verification'], 'NOT_PERFORMED')
++        self.assertEqual(SP.count_policies(), 2)
++
++    def test_announced_epochs_match_their_time_stamps(self):
++        from datetime import datetime, timezone
++        for pid, a in SP.ANNOUNCED.items():
++            t = datetime.strptime(a['time_stamp'], '%Y-%m-%dT%H:%M:%S.000Z').replace(tzinfo=timezone.utc)
++            self.assertEqual(int(t.timestamp()) * 1000, a['epoch_ms'], pid)
++
++
++class Binding(unittest.TestCase):
++    """Every way a record can fail to describe the announced pulse and its two official reads is refused."""
++
++    def setUp(self):
++        self.good = json.loads((SP.FOLDER / f'{INSTALLED}.json').read_text())
++        self.good['output_value'] = 'AB' * 64                     # invented, never a beacon value
++
++    def refused(self, rec):
++        with self.assertRaises(ValueError):
++            SP.validate(rec)
++
++    def variant(self, **changes):
++        rec = copy.deepcopy(self.good)
++        rec.update(changes)
++        return rec
++
++    def test_the_good_fixture_passes(self):
++        SP.validate(self.good)
++
++    def test_wrong_time_chain_version_and_status(self):
++        self.refused(self.variant(time_stamp='2099-01-01T00:00:00.000Z'))
++        self.refused(self.variant(time_stamp='2026-10-31T10:31:00.000Z'))
++        self.refused(self.variant(chain_index=1))
++        self.refused(self.variant(chain_index='2'))
++        self.refused(self.variant(version='1.0'))
++        self.refused(self.variant(status_code=1))
++        self.refused(self.variant(status_code=False))
++
++    def test_malformed_pulse_index_and_uri(self):
++        self.refused(self.variant(pulse_index='not-an-integer'))
++        self.refused(self.variant(pulse_index=0))
++        self.refused(self.variant(pulse_index=True))
++        self.refused(self.variant(pulse_index=2007129))             # no longer matches the URI and source
++        self.refused(self.variant(uri='https://beacon.nist.gov/beacon/2.0/chain/2/pulse/2007129'))
++        self.refused(self.variant(uri='http://beacon.nist.gov/beacon/2.0/chain/2/pulse/2007128'))
++
++    def test_wrong_origin_and_reads(self):
++        for srcs in ([], [self.good['sources'][0]],
++                     [dict(self.good['sources'][0], url='https://example.com/beacon/2.0/pulse/time/1793442600000'),
++                      self.good['sources'][1]],
++                     [dict(self.good['sources'][0], url='https://beacon.nist.gov/beacon/2.0/pulse/last'),
++                      self.good['sources'][1]],
++                     [self.good['sources'][1], self.good['sources'][0]],
++                     [self.good['sources'][0], dict(self.good['sources'][1], read_by=self.good['sources'][0]['read_by'])],
++                     ['https://beacon.nist.gov/beacon/2.0/pulse/time/1793442600000', self.good['uri']]):
++            with self.subTest(sources=srcs):
++                self.refused(self.variant(sources=srcs))
++        self.refused(self.variant(verified_by=self.good['fetched_by']))
++
++    def test_mismatched_or_unannounced_policy(self):
++        self.refused(self.variant(policy_id='N1_ROOT_NIST_C2_20261101T0000Z_V1'))
++        self.refused(self.variant(policy_id='N1_ROOT_NIST_C2_20261106T0000Z_V1'))   # announced, but another pulse
++
++    def test_root_certificate_and_signature_fields(self):
++        self.refused(self.variant(output_value=('AB' * 64).lower()))
++        self.refused(self.variant(output_value='AB' * 63))
++        self.refused(self.variant(certificate_id=self.good['certificate_id'].upper()))
++        self.refused(self.variant(signature_verification='VERIFIED'))
++        self.refused(self.variant(owner_file_sha256='x'))
++        for missing in ('owner_file_sha256', 'certificate_id', 'sources', 'signature_verification', 'approved_by'):
++            bad = copy.deepcopy(self.good)
++            del bad[missing]
++            self.refused(bad)
++
++    def test_other_statuses_carry_no_root(self):
++        SP.validate({'schema': SP.SCHEMA, 'policy_id': INSTALLED, 'status': 'REFUSED'})
++        self.refused({'schema': SP.SCHEMA, 'policy_id': INSTALLED, 'status': 'REFUSED', 'output_value': 'AB' * 64})
++
++
++class Selection(unittest.TestCase):
++
++    def setUp(self):
++        self.td = tempfile.TemporaryDirectory()
++        self.dir = Path(self.td.name)
++        self.good = json.loads((SP.FOLDER / f'{INSTALLED}.json').read_text())
++        self.good['output_value'] = 'AB' * 64
++
++    def tearDown(self):
++        self.td.cleanup()
++
++    def put(self, rec, name=None):
++        (self.dir / f"{name or rec['policy_id']}.json").write_text(json.dumps(rec))
++
++    def test_only_one_valid_approved_record_is_used(self):
++        with mock.patch.object(SP, 'FOLDER', self.dir):
++            self.assertIsNone(SP.approved_policy())                 # no record: N1 off (7.6), no fallback root
++            self.put({'schema': SP.SCHEMA, 'policy_id': 'N1_ROOT_NIST_C2_20261106T0000Z_V1',
++                      'status': 'REPLACED_BEFORE_PULSE'})
++            self.assertIsNone(SP.approved_policy())
++            self.put(self.good)
++            self.assertEqual(SP.approved_policy()['output_value'], 'AB' * 64)
++            self.assertEqual(SP.count_policies(), 2)
++            bad = dict(self.good, time_stamp='2099-01-01T00:00:00.000Z')
++            self.put(bad)
++            with self.assertRaises(ValueError):                       # a bad record stops everything (fail closed)
++                SP.approved_policy()
++
++    def test_two_approved_records_or_a_misnamed_file_are_refused(self):
++        with mock.patch.object(SP, 'FOLDER', self.dir):
++            self.put(self.good)
++            self.put(self.good, name='copy_of_the_same_policy')
++            with self.assertRaises(ValueError):
++                SP.approved_policy()
++        with mock.patch.object(SP, 'FOLDER', self.dir), mock.patch.dict(
++                SP.ANNOUNCED, {'N1_ROOT_TEST_SECOND_V1': dict(SP.ANNOUNCED[INSTALLED])}):
++            (self.dir / 'copy_of_the_same_policy.json').unlink()
++            second = dict(self.good, policy_id='N1_ROOT_TEST_SECOND_V1')
++            self.put(second)
++            with self.assertRaises(ValueError):                       # two APPROVED policies: refused
++                SP.approved_policy()
++
++
++if __name__ == '__main__':
++    unittest.main()
