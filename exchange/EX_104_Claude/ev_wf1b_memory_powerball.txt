@@ -1,0 +1,42 @@
+E_18  MIX4_W104_C10_V1                            955.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_18  MIX4_ALL_C10_V1                             872.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_18  MIX4_W208_C10_V1                            692.4 ms/target  {'PUBLISHED: INSUFFICIENT_HISTORY': 1, 'PUBLISHED: PREDICTION_AVAILABLE': 2}
+E_3   POLY_MINIMAX_W52_D3_H4_V1                   552.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_MINIMAX_W52_D3_H4_V1                   516.5 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_3   POLY_LS_W104_D3_V1                          430.0 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_LS_W104_D3_V1                          426.7 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_MINIMAX_W52_D2_H4_V1                   391.2 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_3   POLY_MINIMAX_W52_D2_H4_V1                   386.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_3   POLY_LS_W52_D3_V1                           355.6 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_LS_W52_D3_V1                           308.0 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_3   POLY_LS_W52_D2_V1                           288.6 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_LS_W52_D2_V1                           281.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_6   BETA_BERNOULLI_DECAY_149_150_V1             252.0 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_19  PERIODIC_T4_V1                              249.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_9   EXP_DECAY_37_38_V1                          246.7 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_9   EXP_DECAY_5_6_V1                            243.8 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_6   BETA_BERNOULLI_DECAY_74_75_V1               235.7 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_19  PERIODIC_T3_V1                              215.9 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_6   BETA_BERNOULLI_FULL_MEMORY_V1               215.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_9   EXP_DECAY_18_19_V1                          215.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_1   FULL_HISTORY_RAW_COUNTS_V1                  208.0 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_17  HAZARD_LOGAGE_SIGN_V1                       198.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_7   BETA_SHRINK_W104_C52_V1                     197.9 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_19  PERIODIC_T2_V1                              197.2 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_3   POLY_INTERP_W52_D4_H4_V1                    196.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_7   BETA_SHRINK_FULL_C52_V1                     195.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_4   POLY_INTERP_W52_D4_H4_V1                    193.6 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_7   BETA_SHRINK_W52_C52_V1                      187.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_10  CONTRAST_S26_L208_V1                        185.6 ms/target  {'PUBLISHED: INSUFFICIENT_HISTORY': 1, 'PUBLISHED: PREDICTION_AVAILABLE': 2}
+E_8   HIER_PERIODS_P26_V1                         184.8 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_10  CONTRAST_S13_L104_V1                        184.1 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_2   RECUR_MEAN_ALL_V1                           183.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_8   HIER_PERIODS_P13_V1                         182.7 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_8   HIER_PERIODS_P52_V1                         181.4 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_17  HAZARD_BINS_C100_V1                         181.3 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_17  HAZARD_BINS_W208_C100_V1                    179.3 ms/target  {'PUBLISHED: INSUFFICIENT_HISTORY': 1, 'PUBLISHED: PREDICTION_AVAILABLE': 2}
+E_10  CONTRAST_S52_FULL_V1                        176.9 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_2   RECUR_MEDIAN_ALL_V1                         174.5 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+E_2   RECUR_MEAN_LAST8_V1                         171.7 ms/target  {'PUBLISHED: PREDICTION_AVAILABLE': 3}
+POWERBALL: 40 variants, 3 sampled targets; mean sum over variants 11.89 s per target; full window 291 targets -> about 57.7 min
+PEAK_RSS_MB 45.9 seconds 36.2
