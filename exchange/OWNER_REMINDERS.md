@@ -77,7 +77,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-005  E_1 revision 2 (real-capable), with CODE-3 first
 
 - Asked: 31 October 2026 (owner decision WF1-13, option C, while WF-1A was being coded).
-- Status: OPEN. Design v0.1 sent for review in EX_086 (31 October 2026). Owner choices before review:
+- History: design v0.1 sent for review in EX_086 (31 October 2026). Owner choices before review:
   ER-1 to ER-4 as recommended (one package; install and release together in two separate steps; r1
   archived complete; the adapter docstring corrected); ER-6 (an E_1-only batch plan) declined.
   EX_087: RECHECK (B01: the install's interim was not fail-closed; C01, C02, O01). v0.1r1 sent in
