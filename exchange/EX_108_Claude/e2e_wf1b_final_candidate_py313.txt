@@ -1,0 +1,33 @@
+base: a2e8ce03318d49025b0c97dc7c8a0eebd3c8e8a0  python: Python 3.13.17
+== lf: WF-1B happy path
+PRE PASS: clean tree; 37 new paths absent; 1 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths, 1 modified files and 0 staged deletions, all with the expected bytes.
+tests.test_wf1b_crossplatform                        ran   1 (expected  1)  skipped 0  OK  (21.2 s)
+total ran 447 (expected 447); skips 0
+SUITE PASS: all 447 tests ran and passed; only the allowed symlink skips, if any.
+staged:      37 A       1 M 
+COMMITTED PASS: the last commit (b21f403) added exactly 37 files, modified 1 and deleted 0; all Git blobs match.
+status after: ''
+== crlf: WF-1B happy path
+PRE PASS: clean tree; 37 new paths absent; 1 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 37 expected new paths, 1 modified files and 0 staged deletions, all with the expected bytes.
+tests.test_wf1b_crossplatform                        ran   1 (expected  1)  skipped 0  OK  (20.5 s)
+total ran 447 (expected 447); skips 0
+SUITE PASS: all 447 tests ran and passed; only the allowed symlink skips, if any.
+staged:      37 A       1 M 
+COMMITTED PASS: the last commit (c64a6fd) added exactly 37 files, modified 1 and deleted 0; all Git blobs match.
+status after: ''
+== negatives (each must STOP)
+-- pre, an untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, a new file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/evaluation/report.py
+-- post, a new file missing:
+VERIFICATION STOP: FAIL: unexpected new paths: tests/test_wf1b_static.py
+-- post, an unexpected change:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/walk_forward.py
+-- committed, a stray file committed too:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths; differences (path, status): [('stray2.txt', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/evaluation/numerics.py
+end
