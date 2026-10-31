@@ -1,0 +1,22 @@
+--- make_register_v22_candidate2.py
++++ make_register_v22.py
+@@ -4,8 +4,8 @@
+ installations and their rehearsals T009 to T011; the CODE-3 and E_1 revision 2 design and code reviews (EX_086 to
+ EX_097) and the owner's decisions; the first two walk-forward batches; the owner's performance proposal; and the
+ owner's directions for WF-1B. Every old string must occur exactly once; inserted text is ASCII. Input: the Git blob
+-of doc/RATIFICATION_REGISTER_v0_21.md (65524f92...8405). Placeholder, finalised after the owner's ratification:
+-"RATIFICATION CANDIDATE" (version line). This register is installed by the document-only procedure.
++of doc/RATIFICATION_REGISTER_v0_21.md (65524f92...8405). Finalised after the owner's ratification
++(31 October 2026; content checked in EX_099 and EX_101): the version line says OWNER-RATIFIED. This register is installed by the document-only procedure.
+ Usage: python3 -I make_register_v22.py REGISTER_v0_21 OUT_v0_22
+ """
+ import hashlib, sys
+@@ -108,7 +108,7 @@
+ 
+ EDITS = [
+     ('**Register version:** v0.21 OWNER-RATIFIED 31 October 2026, recording',
+-     '**Register version:** v0.22 RATIFICATION CANDIDATE (drafted 31 October 2026), recording the REL-1, WF-1A and E_1 revision 2 installations, the CODE-3 and E_1 revision 2 design and code reviews with the owner\'s decisions, the first walk-forward batches and the owner\'s performance proposal; v0.21 OWNER-RATIFIED 31 October 2026, recording'),
++     '**Register version:** v0.22 OWNER-RATIFIED 31 October 2026, recording the REL-1, WF-1A and E_1 revision 2 installations, the CODE-3 and E_1 revision 2 design and code reviews with the owner\'s decisions, the first walk-forward batches and the owner\'s performance proposal; v0.21 OWNER-RATIFIED 31 October 2026, recording'),
+     ("The REL-1 package and this register are installed together, in one commit identified after installation; WF-1A follows in its own commit. The owner's Windows results for both are recorded after installation.",
+      "The REL-1 package and this register are installed together, in one commit identified after installation; WF-1A follows in its own commit. The owner's Windows results for both are recorded after installation. For v0.22, the installation commits `6a1bed9` (REL-1), `0d98706` (WF-1A) and `86d12ea` (CODE-3 and E_1 revision 2), the batch commits `86a1a01` and `8430a15`, and the exchange records from `ef51305` onward were verified by Claude from GitHub; the Windows results are owner-reported. This register is installed by the document-only procedure, in one commit identified after installation."),
+     ('\n## Interpretation and verification\n',
