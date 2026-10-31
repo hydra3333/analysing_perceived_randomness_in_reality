@@ -72,9 +72,10 @@ and you scheduled the deferred performance stage (item 22).
            produces its first real measured results. The design passed review (EX_077 to EX_081)
            and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). REL-1 and WF-1A passed
            code review (EX_082 to EX_085); you ratified register v0.21 and accepted both packages on
-           31 October 2026. REL-1 is INSTALLED (your commit 6a1bed9, 31 October 2026; T009 rehearsal PASS;
-           Claude verified it from GitHub). Now: Claude Code rehearses WF-1A (TASK_T010), you install it,
-           then you run the first Powerball batch.
+           31 October 2026. REL-1 is INSTALLED (6a1bed9) and WF-1A is INSTALLED (0d98706), both on
+           31 October 2026, after their rehearsals T009 and T010; Claude verified both from GitHub.
+           You decided to run no batch until E_1 revision 2 is installed, so the first batch holds all
+           40 variants.
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
            runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.

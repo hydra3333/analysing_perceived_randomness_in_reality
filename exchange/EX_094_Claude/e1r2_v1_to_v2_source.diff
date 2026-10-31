@@ -1,0 +1,266 @@
+--- a/archive/methods/E_001/r1/README.md
++++ b/archive/methods/E_001/r1/README.md
+@@ -26,4 +26,4 @@
+ 
+ ## Replay
+ 
+-These files are kept for reading. Nothing imports or runs them: `archive/` is on no import path, and normal runners never dispatch an archived revision (E2R-R56). Re-running revision 1 would be a separate, owner-approved act, attempted only if the preserved code, configuration and dependencies are sufficient; exact historical replay is not promised. The shared helpers listed above are revision 1 of the shared code; none was revised by the package that archived this revision.
++These files are kept for reading. Nothing imports or runs them: no project code or test refers to a path or module inside `archive/` (a static and a runtime check enforce this), and normal runners never dispatch an archived revision (E2R-R56). `archive/` has no `__init__.py` files, but that alone would not stop an import (Python 3 namespace packages). Re-running revision 1 would be a separate, owner-approved act, attempted only if the preserved code, configuration and dependencies are sufficient; exact historical replay is not promised. The shared helpers listed above are revision 1 of the shared code; none was revised by the package that archived this revision.
+--- a/src/package_tools/method_retirement.py
++++ b/src/package_tools/method_retirement.py
+@@ -9,10 +9,10 @@
+   readme_text()     the README of E2R-R54: the method and revision, the dates, the previous paths, the shared
+                     helpers with their revisions; no Git commit ID and no file hash
+   check_archive()   E2R-R55's package-time checks: exact file list, bytes equal to the pre-install baseline,
+-                    lower-case unique revision folders, no package marker above the revision's own files, and
+-                    README helper references that resolve
+-  archive_execution_findings()   E2R-R56's static check over Python files: no import of archive, and no dynamic
+-                    loading or path change that names an archive folder
++                    lower-case unique revision folders, no package marker above the revision's own files (a layout
++                    rule, not an import barrier), and README helper references that resolve
++  archive_execution_findings()   E2R-R56's static check over Python files: no import of archive, no dynamic
++                    loading or path change that names it, and no expression that builds a path into it
+ """
+ from __future__ import annotations
+ 
+@@ -85,11 +85,15 @@
+     adir = repo / archive_dir(method_id, revision)
+     if adir.exists():
+         raise ValueError(f'{adir} already exists')
++    for f in files:                       # every input is checked before anything is written (EX_093 O01)
++        src = repo / 'src' / 'methods' / f
++        if src.is_symlink() or not src.is_file():
++            raise ValueError(f'not a regular file: {src}')
++    if len(set(files)) != len(files):
++        raise ValueError('a file is listed twice')
+     written = []
+     for f in files:
+         src = repo / 'src' / 'methods' / f
+-        if not src.is_file():
+-            raise ValueError(f'not a file: {src}')
+         dst = adir / f
+         dst.parent.mkdir(parents=True, exist_ok=True)
+         with dst.open('xb') as fh:
+@@ -136,7 +140,8 @@
+         problems.append(f'{mroot.relative_to(repo).as_posix()}: revision folders differ only in case')
+     for level in (repo / 'archive', repo / ARCHIVE_METHODS, mroot, adir):
+         if (level / '__init__.py').exists():
+-            problems.append(f'{level.relative_to(repo).as_posix()}/__init__.py: the archive must not be a package')
++            problems.append(f'{level.relative_to(repo).as_posix()}/__init__.py: the archive layout has no package '
++                            'marker (a layout rule; namespace packages mean it does not by itself prevent an import)')
+     readme = adir / README
+     if readme.is_file():
+         text = readme.read_bytes()
+@@ -166,31 +171,68 @@
+     return problems
+ 
+ 
+-ARCHIVE_PATH = re.compile(r'(^|[\\/])archive[\\/.](methods|common)([\\/.]|$)')
++PATH_CALLS = frozenset({'Path', 'PurePath', 'PurePosixPath', 'PureWindowsPath', 'PosixPath', 'WindowsPath'})
++UNKNOWN = '\x00'          # a path component the static check cannot know (a variable, a call result)
++
++
++def _parts(node: ast.AST) -> list[str]:
++    """The path or module-name components an expression spells, as far as constants show them; UNKNOWN for a part
++    that is not a constant. Folds strings (split at '/', '\\' and '.'), `a / b`, `a + b`, Path(...)-style calls,
++    `x.joinpath(...)`, `os.path.join(...)`, `sep.join([...])`, lists, tuples and starred arguments."""
++    if isinstance(node, ast.Constant) and isinstance(node.value, str):
++        return [x for x in re.split(r'[\\/.]', node.value)]
++    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
++        return _parts(node.left) + _parts(node.right)
++    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
++        return _parts(node.left) + _parts(node.right)
++    if isinstance(node, (ast.List, ast.Tuple)):
++        return [x for e in node.elts for x in _parts(e)]
++    if isinstance(node, ast.Starred):
++        return _parts(node.value)
++    if isinstance(node, ast.Call):
++        fn = node.func
++        name = fn.attr if isinstance(fn, ast.Attribute) else getattr(fn, 'id', '')
++        args = [x for a in node.args for x in _parts(a)]
++        if name in PATH_CALLS or ast.unparse(fn).endswith('path.join') or name == 'join':
++            return args
++        if name == 'joinpath' and isinstance(fn, ast.Attribute):
++            return _parts(fn.value) + args
++    return [UNKNOWN]
++
++
++def _spells_archive(parts: list[str], *, strict: bool) -> bool:
++    """`archive` followed (after any empty parts) by `methods` or `common`; when `strict`, any part `archive`."""
++    words = [p for p in parts if p != '']
++    for k, w in enumerate(words):
++        if w == 'archive':
++            if strict or (k + 1 < len(words) and words[k + 1] in ('methods', 'common')):
++                return True
++    return False
+ 
+ 
+ def _names_archive(node: ast.AST, *, strict: bool) -> bool:
+-    """True if `node` names the project's archive: a string holding `archive/methods` or `archive/common` (either
+-    slash, or as a dotted module name); a path joined with the bare string 'archive' (`x / 'archive'`,
+-    `os.path.join(..., 'archive', ...)`); and, when `strict` (the arguments of a loader or path change), any string
+-    starting `archive` as a path or module name."""
++    """True if any expression inside `node` spells the project's archive: `archive/methods` or `archive/common`
++    however it is built (a string with either slash or dots, `Path('archive') / 'methods'`,
++    `Path('archive', 'methods')`, `Path('archive').joinpath('methods')`, `os.path.join('archive', 'methods')`,
++    `'archive' + '/methods'`, a list of parts); and, when `strict` (the arguments of a loader, exec or path change),
++    any expression with an `archive` component at all. The bare word "archive" in ordinary text is not a path to
++    the archive, and is not flagged outside those arguments."""
+     for n in ast.walk(node):
+-        if isinstance(n, ast.Constant) and isinstance(n.value, str):
+-            if ARCHIVE_PATH.search(n.value) or (strict and re.match(r'[\\/]?archive([\\/.]|$)', n.value)):
+-                return True
+-        if isinstance(n, ast.BinOp) and isinstance(n.op, ast.Div):
+-            if any(isinstance(x, ast.Constant) and x.value == 'archive' for x in (n.left, n.right)):
+-                return True
+-        if isinstance(n, ast.Call) and ast.unparse(n.func).endswith('path.join'):
+-            if any(isinstance(x, ast.Constant) and x.value == 'archive' for x in n.args):
+-                return True
++        if isinstance(n, (ast.Constant, ast.BinOp, ast.Call, ast.List, ast.Tuple)) and \
++                _spells_archive(_parts(n), strict=strict):
++            return True
+     return False
+ 
+ 
+ def archive_execution_findings(paths: Iterable[Path], *, allowed: Iterable[Path] = ()) -> list[str]:
+     """E2R-R56's static check. For each Python file: no `import archive...`; no dynamic import, `runpy`, `exec`,
+     `compile`, loader or `sys.path` change whose arguments name `archive`; and, outside the `allowed` files (those
+-    that compare archived bytes), no reference to the archive's `methods` or `common` folders at all."""
++    that compare archived bytes), no expression that spells the archive's `methods` or `common` folders at all, so
++    that no code can build a path into the archive to load from (EX_093 B01).
++
++    This, with the runtime check in the tests, is the boundary. Leaving out `__init__.py` files is a layout rule
++    only: under Python 3's namespace packages (PEP 420) a folder without one can still be imported when its parent
++    is on the import path, as the repository root is when tests run from it."""
+     allowed = {Path(p).resolve() for p in allowed}
+     out = []
+     for f in paths:
+--- a/tests/test_code3_retirement.py
++++ b/tests/test_code3_retirement.py
+@@ -121,9 +121,40 @@
+                              'f.py: names an archive path but is not an allowed byte-comparison file'):
+                 self.assertIn(specific, found)
+ 
++    def test_static_check_catches_constructed_paths(self):
++        """EX_093 B01: a path into the archive built from parts is found, whatever builds it; each case gives its own
++        finding. Ordinary uses of the word "archive" are not flagged. Nothing here is run."""
++        with tempfile.TemporaryDirectory() as td:
++            cases = {
++                'counterexample.py': ('from pathlib import Path\n'
++                                      'p = Path("archive") / "methods" / "E_001" / "r1" / "E_001" / "multigame_e1.py"\n'
++                                      'exec(p.read_text())\n'),
++                'div.py': 'from pathlib import Path\nx = Path("archive") / "methods"\n',
++                'args.py': 'from pathlib import Path\nx = Path("archive", "methods", "E_001")\n',
++                'joinpath.py': 'from pathlib import Path\nx = Path("archive").joinpath("common")\n',
++                'rootdiv.py': 'from pathlib import Path\nroot = Path(".")\nx = root / "archive" / "methods"\n',
++                'plus.py': 'x = "archive" + "/methods"\n',
++                'starjoin.py': 'import os\nx = os.path.join(*["archive", "methods"])\n',
++                'pure.py': 'from pathlib import PurePosixPath\nx = PurePosixPath("archive", "common", "h")\n',
++                'ok.py': ('u = "https://example.invalid/australia/archive/"\nw = "archive"\n'
++                          'msg = "archive the ORIGINAL marker"\nfrom pathlib import Path\ny = Path("results") / "methods"\n'),
++            }
++            for name, src in cases.items():
++                (Path(td) / name).write_text(src)
++            found = MR.archive_execution_findings(sorted(Path(td).glob('*.py')))
++            for name in cases:
++                want = f'{name}: names an archive path but is not an allowed byte-comparison file'
++                if name == 'ok.py':
++                    self.assertNotIn(want, found)
++                else:
++                    self.assertIn(want, found)
++            self.assertEqual(len(found), len(cases) - 1)
++
+     def test_runtime(self):
+         """In a fresh process: import the inventory, then run E_1's contract path in both games on invented data;
+-        no loaded module comes from archive/, and archive/ is on no import path."""
++        no loaded module comes from archive/: no module file, no namespace package (PEP 420: a folder without
++        __init__.py can still be imported, so the check does not rely on that) and no module named archive...;
++        and no sys.path entry lies inside archive/. The child runs from the repository root, as the suite does."""
+         child = r'''
+ import importlib, json, sys, tempfile
+ from pathlib import Path
+@@ -147,8 +178,11 @@
+                                      verify=e_001.verify, repo_root=td / game, run_root=td / 'runs')
+         outcomes.append(json.loads((res.folder / 'terminal.json').read_bytes())['outcome'])
+ arch = (Path(sys.argv[2]) / 'archive').resolve()
++def inside(p):
++    return p is not None and Path(p).resolve().is_relative_to(arch)
+ bad = sorted(n for n, m in list(sys.modules.items())
+-             if getattr(m, '__file__', None) and Path(m.__file__).resolve().is_relative_to(arch))
++             if n == 'archive' or n.startswith('archive.') or inside(getattr(m, '__file__', None))
++             or any(inside(p) for p in (getattr(m, '__path__', None) or [])))
+ paths = [p for p in sys.path if 'archive' in Path(p).parts]
+ print(json.dumps({'bad': bad, 'paths': paths, 'outcomes': outcomes, 'n': len(sys.modules)}))
+ '''
+@@ -236,6 +270,17 @@
+     def test_without_git_history(self):
+         self.retire_and_check(False)
+ 
++    def test_retire_checks_every_input_before_writing(self):
++        """EX_093 O01: a missing or repeated input is refused before anything is created."""
++        with tempfile.TemporaryDirectory() as td:
++            root = Path(td)
++            synthetic_tree(root)
++            for files in (['E_998/kept.py', 'E_998/missing.py'], ['E_998/kept.py', 'E_998/kept.py'],
++                          ['E_998/kept.py', 'E_998']):
++                with self.assertRaises(ValueError):
++                    MR.retire(root, 'E_998', '1', files, 'x')
++                self.assertFalse((root / 'archive').exists(), files)
++
+     def test_refusals(self):
+         with tempfile.TemporaryDirectory() as td:
+             root = Path(td)
+--- a/review/E1R2_Install_v1/tools/make_e1r2.py
++++ b/review/E1R2_Install_v2/tools/make_e1r2.py
+@@ -42,8 +42,10 @@
+             "legacy runner moved to revision 2's release check at the same time. Revision 2 reuses all seven paths: "
+             'five files unchanged, and `E_001/multigame_e1.py` and `E_001_Historical_Appearance_Frequency.py` '
+             'changed.'),
+-    replay_note=('These files are kept for reading. Nothing imports or runs them: `archive/` is on no import path, '
+-                 'and normal runners never dispatch an archived revision (E2R-R56). Re-running revision 1 would be a '
++    replay_note=('These files are kept for reading. Nothing imports or runs them: no project code or test refers '
++                 'to a path or module inside `archive/` (a static and a runtime check enforce this), and normal '
++                 'runners never dispatch an archived revision (E2R-R56). `archive/` has no `__init__.py` files, but '
++                 'that alone would not stop an import (Python 3 namespace packages). Re-running revision 1 would be a '
+                  'separate, owner-approved act, attempted only if the preserved code, configuration and dependencies '
+                  'are sufficient; exact historical replay is not promised. The shared helpers listed above are '
+                  'revision 1 of the shared code; none was revised by the package that archived this revision.'))
+--- a/review/E1R2_Install_v1/tools/make_e1_r1_reference.py
++++ b/review/E1R2_Install_v2/tools/make_e1_r1_reference.py
+@@ -57,7 +57,7 @@
+        'purpose': ('E_1 revision 1 synthetic contract forecast records, frozen before the E_1 revision 2 package, for '
+                    'E1R2-T01 (r2 must equal them apart from method_revision, declaration_digest and '
+                    'canonical_content_digest)'),
+-       'made_by': 'review/E1R2_Install_v1/tools/make_e1_r1_reference.py, run on the base tree in a copy outside the repository',
++       'made_by': 'review/E1R2_Install_v2/tools/make_e1_r1_reference.py, run on the base tree in a copy outside the repository',
+        'inputs': ('tests/test_e6_beta_bernoulli.write_varied_master(variant 0) at e2r_fixtures.targets() per game; '
+                   "the base tree's installed E_1 revision-1 pins; run_id mg-11111111111111111111111111111111"),
+        'base_r1_sources_sha256': {p: hashlib.sha256((base / p).read_bytes()).hexdigest() for p in R1_FILES},
+--- a/review/E1R2_Install_v1/tools/e1r2_mutations.py
++++ b/review/E1R2_Install_v2/tools/e1r2_mutations.py
+@@ -38,6 +38,18 @@
+      T3 + 'ArchiveIsNeverExecuted.test_static'),
+     ('the static check blind to import_module', MR, "frozenset({'import_module', ", "frozenset({",
+      T3 + 'ArchiveIsNeverExecuted.test_static_check_catches_loading'),
++    ('the static check blind to Path(...) / parts (EX_093 B01)', MR,
++     "    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):\n        return _parts(node.left) + _parts(node.right)\n",
++     "    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):\n        return [UNKNOWN]\n",
++     T3 + 'ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths'),
++    ("the static check not folding Path('archive', 'methods') (EX_093 B01)", MR,
++     "        if name in PATH_CALLS or ast.unparse(fn).endswith('path.join') or name == 'join':",
++     "        if ast.unparse(fn).endswith('path.join') or name == 'join':",
++     T3 + 'ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths'),
++    ('retire writing before checking every input (EX_093 O01)', MR,
++     "            raise ValueError(f'not a regular file: {src}')\n    if len(set(files)) != len(files):\n        raise ValueError('a file is listed twice')\n",
++     "            pass\n",
++     T3 + 'RetirementT15.test_retire_checks_every_input_before_writing'),
+     ('retirement not removing a dropped path', MR, "    for f in drop:\n        (repo / 'src' / 'methods' / f).unlink()\n",
+      "    for f in drop:\n        pass\n", T3 + 'RetirementT15.test_without_git_history'),
+     ('the archive check ignoring changed bytes', MR, '        if exp is None or got != exp:', '        if exp is None:',
+--- a/barrier_overlay/src/methods/E_001/IN_DEVELOPMENT.txt
++++ b/barrier_overlay/src/methods/E_001/IN_DEVELOPMENT.txt
+@@ -1,3 +1,3 @@
+-E_1 is being replaced by revision 2 (package E1R2_Install_v1, design v0.1r2, owner decision ER-2r1).
++E_1 is being replaced by revision 2 (package E1R2_Install_v2, design v0.1r2, owner decision ER-2r1).
+ This file is the install barrier: it is copied first, deleted last, and never committed.
+ If you see it, the install is not complete: run nothing, push nothing, and send Claude the verifier output.

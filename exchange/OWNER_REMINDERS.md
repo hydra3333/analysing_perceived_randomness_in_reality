@@ -89,6 +89,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   same day, in parallel with the REL-1 and WF-1A installs; it installs after WF-1A.
   Code candidate E1R2_Install_v1 sent for R-2 review in EX_092 (31 October 2026): 348 tests on both
   Pythons, 16/16 mutations, rehearsals PASS. Register v0.22 follows after the REL-1 and WF-1A installs.
+  EX_093: RECHECK (B01: the archive check missed paths built with Path(...); importability overstated;
+  O01 optional). E1R2_Install_v2 sent in EX_094 (350 tests, 19/19 mutations, rehearsals PASS).
+  REL-1 installed at 6a1bed9 and WF-1A at 0d98706 (31 October 2026). The owner runs no batch until
+  E_1 revision 2 is installed.
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.
