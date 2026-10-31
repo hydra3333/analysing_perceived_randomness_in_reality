@@ -89,7 +89,13 @@ and you scheduled the deferred performance stage (item 22).
            report; Mode H on the 10 holdout draws per game; the results update; the prospective (next draw)
            mode; then you declare it developed. Mode H and the prospective mode are designed together while
            WF-1B is reviewed; the workers change (WF-1C) follows WF-1B.
-           Next: WF-1B, the scorer and report (it
+           WF-1B: supplement design v0.1r1 OWNER-RATIFIED (EX_104-EX_107; WB-0 workers deferred to WF-1C,
+           WB-1 real results first, WB-2 seed in WF-1B). SEED APPROVED by you: pulse 2007128 (EX_110).
+           Code reviewed EX_108-EX_111: PASS; you accepted WF1B_Install_v2 (EX_110) on 1 November 2026, with
+           EX_111's optional O01 (seed record reader names cross-checked) deferred to a later package.
+           Now: Claude Code rehearsal TASK_T012, your install, then the two reports; then the snapshot of the
+           handovers and related documents (your request, 1 November 2026).
+           Earlier plan: WF-1B, the scorer and report (it
            also adds a progress line to the batch driver; descriptive real-outcome tables first).
            WF-1B also carries your worker decision (WORKERS-1, 31 October 2026): the coordinator's
            fixed 1..6 limit becomes 1 up to the machine's logical processor count (24 on your PC),
