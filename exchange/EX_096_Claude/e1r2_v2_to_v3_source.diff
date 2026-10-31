@@ -1,0 +1,77 @@
+--- a/src/package_tools/method_retirement.py
++++ b/src/package_tools/method_retirement.py
+@@ -210,17 +210,37 @@
+     return False
+ 
+ 
++def _is_path_construction(node: ast.AST) -> bool:
++    """A Path-like call, `x.joinpath(...)`, `os.path.join(...)` or a `/` join: an expression that builds a path."""
++    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
++        return True
++    if isinstance(node, ast.Call):
++        fn = node.func
++        name = fn.attr if isinstance(fn, ast.Attribute) else getattr(fn, 'id', '')
++        return name in PATH_CALLS or name == 'joinpath' or ast.unparse(fn).endswith('path.join')
++    return False
++
++
+ def _names_archive(node: ast.AST, *, strict: bool) -> bool:
+     """True if any expression inside `node` spells the project's archive: `archive/methods` or `archive/common`
+     however it is built (a string with either slash or dots, `Path('archive') / 'methods'`,
+     `Path('archive', 'methods')`, `Path('archive').joinpath('methods')`, `os.path.join('archive', 'methods')`,
+     `'archive' + '/methods'`, a list of parts); and, when `strict` (the arguments of a loader, exec or path change),
+     any expression with an `archive` component at all. The bare word "archive" in ordinary text is not a path to
+-    the archive, and is not flagged outside those arguments."""
++    the archive, and is not flagged outside those arguments; but any path construction (`Path(...)`, `joinpath`,
++    `os.path.join`, `/`) with an `archive` component is (EX_095 O02).
++
++    Scope: this folds constants within one expression. It is not data-flow analysis: a path assembled from
++    variables that hold only non-archive-looking parts, or a computed string, is not traced across statements. The
++    check is E2R-R56's normal-workflow control, not a security boundary."""
+     for n in ast.walk(node):
+         if isinstance(n, (ast.Constant, ast.BinOp, ast.Call, ast.List, ast.Tuple)) and \
+                 _spells_archive(_parts(n), strict=strict):
+             return True
++        # EX_095 O02: a path construction with an `archive` component at all, so that a root such as
++        # `root = Path("archive")` is found on its own line, whatever later joins it to.
++        if _is_path_construction(n) and _spells_archive(_parts(n), strict=True):
++            return True
+     return False
+ 
+ 
+--- a/tests/test_code3_retirement.py
++++ b/tests/test_code3_retirement.py
+@@ -136,8 +136,13 @@
+                 'plus.py': 'x = "archive" + "/methods"\n',
+                 'starjoin.py': 'import os\nx = os.path.join(*["archive", "methods"])\n',
+                 'pure.py': 'from pathlib import PurePosixPath\nx = PurePosixPath("archive", "common", "h")\n',
++                'o02.py': ('from pathlib import Path\nroot = Path("archive")\n'           # EX_095 O02: across statements
++                           'path = root / "methods" / "E_001" / "r1" / "E_001" / "multigame_e1.py"\nexec(path.read_text())\n'),
++                'o02cwd.py': 'from pathlib import Path\nbase = Path.cwd() / "archive"\n',
++                'o02join.py': 'import os\nbase = os.path.join("archive")\n',
+                 'ok.py': ('u = "https://example.invalid/australia/archive/"\nw = "archive"\n'
+-                          'msg = "archive the ORIGINAL marker"\nfrom pathlib import Path\ny = Path("results") / "methods"\n'),
++                          'msg = "archive the ORIGINAL marker"\nfrom pathlib import Path\ny = Path("results") / "methods"\n'
++                          'z = Path("results") / "archive_notes.txt"\n'),
+             }
+             for name, src in cases.items():
+                 (Path(td) / name).write_text(src)
+--- a/review/E1R2_Install_v2/tools/e1r2_mutations.py
++++ b/review/E1R2_Install_v3/tools/e1r2_mutations.py
+@@ -46,6 +46,9 @@
+      "        if name in PATH_CALLS or ast.unparse(fn).endswith('path.join') or name == 'join':",
+      "        if ast.unparse(fn).endswith('path.join') or name == 'join':",
+      T3 + 'ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths'),
++    ('the path-construction rule removed (EX_095 O02)', MR,
++     "        if _is_path_construction(n) and _spells_archive(_parts(n), strict=True):\n",
++     "        if False:\n", T3 + 'ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths'),
+     ('retire writing before checking every input (EX_093 O01)', MR,
+      "            raise ValueError(f'not a regular file: {src}')\n    if len(set(files)) != len(files):\n        raise ValueError('a file is listed twice')\n",
+      "            pass\n",
+--- a/barrier_overlay/src/methods/E_001/IN_DEVELOPMENT.txt
++++ b/barrier_overlay/src/methods/E_001/IN_DEVELOPMENT.txt
+@@ -1,3 +1,3 @@
+-E_1 is being replaced by revision 2 (package E1R2_Install_v2, design v0.1r2, owner decision ER-2r1).
++E_1 is being replaced by revision 2 (package E1R2_Install_v3, design v0.1r2, owner decision ER-2r1).
+ This file is the install barrier: it is copied first, deleted last, and never committed.
+ If you see it, the install is not complete: run nothing, push nothing, and send Claude the verifier output.
