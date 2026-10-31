@@ -1,0 +1,25 @@
+baseline (unmutated) passes: True
+CAUGHT   outcome reader admits a holdout target
+CAUGHT   outcome reader decodes rows that are not requested
+CAUGHT   outcome reader skips the master hash check
+CAUGHT   outcomes read before the search-log row
+CAUGHT   a refused window appends a row
+CAUGHT   unequal duplicates accepted
+CAUGHT   family guarantee ignores incomplete tracks
+CAUGHT   Bonferroni M reduced to the tracks with a p-value
+CAUGHT   a significance label shown in Part A
+CAUGHT   Part B before the glossary
+CAUGHT   N1 root accepts lower case
+CAUGHT   N1 word read big-endian
+CAUGHT   binomial upper tail off by one
+CAUGHT   sigma precision loss for small p (the fixed bug)
+CAUGHT   a method may import the evaluator
+CAUGHT   supplementaries stored in the match record
+CAUGHT   seed record time stamp not checked
+CAUGHT   seed record sources not checked
+CAUGHT   an unannounced policy accepted
+CAUGHT   range label replaced by the calibration label
+CAUGHT   N1 Monte Carlo interval not printed in Part B
+CAUGHT   Oz Lotto supplementaries replayed against the main draw
+CAUGHT   the reader admits a hard-linked master
+23 of 23 mutants caught

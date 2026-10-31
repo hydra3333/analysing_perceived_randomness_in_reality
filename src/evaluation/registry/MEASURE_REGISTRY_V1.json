@@ -1,0 +1,152 @@
+{
+ "schema": "MEASURE_REGISTRY_V1",
+ "source": {
+  "document": "Predictive_Randomness_Evaluation_and_Reporting_Specifications_R3_v0_5.md",
+  "sha256_lf": "53e30a3e649b48b8a88923d08bf578caf04a4ce93d6ea6468891ca97e93a57b6"
+ },
+ "stage": 2,
+ "measures": [
+  {
+   "id": "MR0",
+   "heading": "MR0 - Division win profile",
+   "one_liner": "who has won the best prizes, best division first.",
+   "short_explanation": "counts how many times the track's entries would have won each prize division. Tracks are ranked by top-division wins first, then the next division, and so on. Top-division wins are extremely rare under a fair draw, so most tracks share the same counts at the top; the lower divisions carry most of the information."
+  },
+  {
+   "id": "MR1",
+   "heading": "MR1 - Surprisal-weighted division score; MR1-T - owner's top-division score",
+   "one_liner": "the average \"rarity\" of prizes won per draw, in bits.",
+   "short_explanation": "each division win is worth the bits of surprise it represents under a fair draw: about 6.0 bits for Powerball Division 9, up to 27.0 bits for Division 1. MR1 is the average bits won per draw, next to the fair-draw expectation. MR1-T keeps the owner's original weighting of the three top divisions (Division 1 90%, Division 2 7%, Division 3 3%); it is a declared preference score, not a statistical weight."
+  },
+  {
+   "id": "MR4",
+   "heading": "MR4 - Division sigma (excess wins)",
+   "one_liner": "how many sigma above fair-draw chance this track's division wins are.",
+   "short_explanation": "counts the track's wins in a set of divisions and asks how likely at least that many would be under a fair draw over the same draws. That probability is shown on the sigma scale used in science reporting. Zero wins is 0 excess sigma. The local figure treats the track alone; the global figures allow for how many tests were made."
+  },
+  {
+   "id": "MR5",
+   "heading": "MR5 - Rank position (existing R3 measure)",
+   "one_liner": "where the method's ranking placed the numbers that were actually drawn.",
+   "short_explanation": "R3's ratified evaluator measure: the average mid-rank of the 7 drawn main numbers in the method's full frozen ranking (1 = most favoured), and the drawn Powerball's mid-rank. Fair-draw expectations are 18.0 (Powerball main), 10.5 (Powerball) and 24.0 (Oz Lotto). Lower means the method tended to favour numbers that came up. It belongs to the method and variant, because TOP and WORST share one ranking."
+  },
+  {
+   "id": "MR7",
+   "heading": "MR7 - Total main-match excess (ChatGPT; core stage)",
+   "one_liner": "did the track hit more main numbers in total than fair draws would produce?",
+   "short_explanation": "counts **every** main-number match, prize or not. It is the most direct test of a steady advantage and applies to every method that produces tickets."
+  },
+  {
+   "id": "MR16",
+   "heading": "MR16 - Hit-rate estimate with exact interval",
+   "one_liner": "how often this track achieved a given kind of success, how uncertain that rate is, and what observed rate would be needed to reach 3 sigma.",
+   "short_explanation": "a success here is a yes/no event per draw, such as any prize division, a particular division, at least 2, 3 or 4 main matches, or a Powerball hit. MR16 shows the track's observed rate with an exact 95% interval and the fair-draw rate beside it. It also shows the observed rate needed to reach 3 sigma locally over this window, and the chance of reaching it if the method were truly 1.5x or 2x better. With a few hundred draws the intervals are wide, and seeing that plainly prevents striking-looking counts being over-read. It vetoes nothing."
+  }
+ ],
+ "modes": {
+  "WF": {
+   "display": "WF - Walk-forward (\"honest test: trained on earlier draws only\")",
+   "plain_meaning": "For every past draw that is scored, the method was trained **only on the draws before it**, then its prediction for that draw was compared with the actual result. This is exactly the position in real life, where the next draw is unknown when the prediction is made. It is an honest test of prediction."
+  },
+  "IS": {
+   "display": "IS - In-sample (\"hindsight fit: trained on all draws, including the ones scored\")",
+   "plain_meaning": "The method was trained **once on every draw in the history**, including the draws it is then scored against, and its predictions were checked against those same draws. It shows how well the method describes results it has already seen. It is **not** a test of prediction, and its success figures can be inflated by hindsight. How much depends on the method. In a separate fair-draw illustration using this project's E_1 method, in-sample fitting alone produced an apparent gain of about 3 sigma; that is not a general value for all methods (R3 section 17.18.3)."
+  }
+ },
+ "calibration_labels": [
+  {
+   "label": "EXACT_LOCAL",
+   "meaning": "Exact reference tail for this single track and sub-measure (for example binomial division counts, MR7, MR8, MR11)."
+  },
+  {
+   "label": "APPROX_UNCALIBRATED",
+   "meaning": "Normal or other approximation not yet checked against N1. Shown, labelled."
+  },
+  {
+   "label": "N1_CALIBRATED",
+   "meaning": "Probability from N1, **only** for single-track statistics in the hit-sequence class (17.5A), where the replay is exact even for adaptive methods. The Monte Carlo uncertainty is shown."
+  },
+  {
+   "label": "N1_FIXED_FORECAST_REFERENCE",
+   "meaning": "N1 replay figure for any other statistic (cross-track maxima; measures scored with forecast weights or probabilities). Shown as a reference; not a calibrated probability for adaptive WF methods."
+  },
+  {
+   "label": "SELECTION_UNVERIFIED",
+   "meaning": "The table's opportunity set is not a fixed grid (17.3.7A), so exact or N1 tails are not calibrated. The figures are shown."
+  },
+  {
+   "label": "BONFERRONI_REFERENCE_UNCALIBRATED",
+   "meaning": "Bonferroni arithmetic applied where its prerequisites fail (an input not `EXACT_LOCAL`/`N1_CALIBRATED`, or a post-hoc family). Shown; not a guaranteed figure."
+  },
+  {
+   "label": "IS_NOT_CALIBRATED",
+   "meaning": "Any significance figure in an IS table. The number is shown, but because the method was fitted on these outcomes it is not a calibrated probability (R2 section 8.4)."
+  },
+  {
+   "label": "NOT_A_P_VALUE",
+   "meaning": "Descriptive scores and Bayes factors."
+  }
+ ],
+ "report_statuses": [
+  {
+   "status": "MR_NOT_APPLICABLE",
+   "meaning": "capability missing"
+  },
+  {
+   "status": "MR_INSUFFICIENT_DATA",
+   "meaning": "below a measure's stated minimum"
+  },
+  {
+   "status": "MR_UNDEFINED",
+   "meaning": "mathematically undefined, for example a period with fewer than 2 wins"
+  },
+  {
+   "status": "MR_NUMERIC_INVALID",
+   "meaning": "non-finite or invalid input"
+  },
+  {
+   "status": "NULL_VARIANCE_ZERO",
+   "meaning": "the reference variance is 0, so no sigma is defined; shown as neutral"
+  }
+ ],
+ "evidence_tiers": [
+  {
+   "tier": "DEVELOPMENT_WF_EXPLORATORY",
+   "meaning": "walk-forward on development data that methods, windows and measures may have been designed against"
+  },
+  {
+   "tier": "HOLDOUT_MODE_H",
+   "meaning": "FINAL_HOLDOUT_10 after Mode H scoring"
+  },
+  {
+   "tier": "PROSPECTIVE",
+   "meaning": "forecasts frozen and published before their draws"
+  },
+  {
+   "tier": "IS_DESCRIPTIVE",
+   "meaning": "in-sample."
+  }
+ ],
+ "pattern_origins": [
+  {
+   "id": "PO-1",
+   "origin": "An unavoidable consequence of how the method works",
+   "distinguished_by": "Partly diagnosable: N1 fixed-forecast replays show some method-built patterns, but not all for adaptive methods (17.5A). Planted-effect and null synthetic tests (MRT-07). A full recursive simulator (MRO-10) would cover more."
+  },
+  {
+   "id": "PO-2",
+   "origin": "An effect of fitting to past outcomes",
+   "distinguished_by": "Present in IS by construction; absent in WF by N-1 isolation. Shown by the IS-versus-WF comparison."
+  },
+  {
+   "id": "PO-3",
+   "origin": "Chance, many comparisons or selection",
+   "distinguished_by": "Bonferroni, the N1 maximum statistic, the search log, predeclared cohorts."
+  },
+  {
+   "id": "PO-4",
+   "origin": "A pattern that persists on genuinely new outcomes",
+   "distinguished_by": "Only HOLDOUT_MODE_H and PROSPECTIVE tiers can show it."
+  }
+ ]
+}

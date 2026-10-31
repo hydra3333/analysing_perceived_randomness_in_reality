@@ -1,0 +1,11 @@
+{
+ "announced": "design v0.1r1 section 8.1 (EX_077/EX_079; owner-ratified 31 October 2026)",
+ "field": "outputValue (512 bits, 128 upper-case hexadecimal characters), used as published",
+ "policy_id": "N1_ROOT_NIST_C2_20261106T0000Z_V1",
+ "pulse_time_stamp": "2026-11-06T00:00:00.000Z",
+ "purpose": "the N1 fair-draw simulator (R3 17.5A) of WF-1B, both games",
+ "replaced": "EX_103 (commit 92a6cef, 31 October 2026, before its pulse existed); never fetched, never used",
+ "schema": "SEED_POLICY_V1",
+ "service": "NIST Randomness Beacon, version 2.0",
+ "status": "REPLACED_BEFORE_PULSE"
+}

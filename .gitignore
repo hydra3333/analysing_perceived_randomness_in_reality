@@ -236,3 +236,6 @@ private_results_checks/
 # in wf_batches/ are committed)
 results/real/development/contract_runs/
 results/real/development/wf_batches/**/attempts.jsonl
+# WF-1B: the score and rank-position ledgers hold drawn numbers, so they stay local (design 6.4, 6.8; WF1-10);
+# the report files in results/method_rankings/ and the search log are committed
+results/real/development/scores/
