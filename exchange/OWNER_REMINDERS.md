@@ -54,7 +54,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-004  The NIST Randomness Beacon root for the first stochastic method
 
 - Asked: 30 October 2026 ("we had talked about a NIST seed ... when do we do that?").
-- Status: OPEN.
+- Status: DONE (31 October 2026; the seed record ships in WF1B_Install_v2, EX_110). Later stochastic
+  methods (Method A's diagnostics, Method B's checks, wave 9) get their own seed policies the same way.
 - What: decisions D-9 to D-11 (owner, 28 October 2026; in the register) say a seed policy's root is one
   pre-announced NIST Randomness Beacon pulse, fetched once by the owner by hand and checked
   independently; runs never fetch it. Roots may be switched as a new revision or variant, and every root
@@ -73,6 +74,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: at WF-1's design (owner decision W2-8, 30 October 2026). Wave 2 uses no random numbers; R3's
   N1 fair-draw simulator, used at WF-1, is the first part that does. Method A's later diagnostics,
   Method B's simulated checks and wave 9's machine learning also use random numbers.
+- Progress (31 October 2026): the owner brought the pulse forward to 2026-10-31T10:30:00.000Z
+  (EX_103, 92a6cef, announced before the pulse); the 6 November policy stays on record as
+  REPLACED_BEFORE_PULSE, never fetched. After the pulse the owner saved it from the browser; Claude
+  read it independently; both agreed. The owner APPROVED policy N1_ROOT_NIST_C2_20261031T1030Z_V1
+  (pulse 2007128) on 31 October 2026; ChatGPT compared the saved file with the record (EX_111).
 
 ## R-005  E_1 revision 2 (real-capable), with CODE-3 first
 
@@ -97,7 +103,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   E1R2_Install_v3 (base 0d98706) sent in EX_096 for a focused check; TASK_T011 rehearses it. Register
   v0.22 follows the install as a document-only update (owner, 31 October 2026).
   EX_097: PASS. INSTALLED by the owner at 86d12ea (31 October 2026); Claude verified it from GitHub.
-- Status: DONE, except register v0.22 (document-only, after the first batch is under way).
+- Status: DONE (31 October 2026). Register v0.22 was installed at 2b1e7e3 (31 October 2026).
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.
@@ -126,6 +132,34 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Brought forward by the owner (31 October 2026, WORKERS-1): parallel walk-forward batches, and the
   coordinator's worker limit raised from 6 to the machine's logical processor count (default half),
   now ship with WF-1B (roadmap item 10). The rest of this study stays FINAL and inactive.
+- Changed by the owner (31 October 2026, decision WB-0): the workers change moved out of WF-1B into its
+  own package, WF-1C (roadmap item 10d), designed after WF-1B with EX_101's and EX_105's obligations.
+
+## R-007  EX_111 O01: cross-check the seed record's reader names
+
+- Asked: 1 November 2026 (the owner deferred EX_111's optional O01 to a later package).
+- Status: OPEN (optional; not a gate).
+- What: src/evaluation/seed_policies.py checks that the two source reads have different readers and
+  that the fetcher differs from the verifier, but not that sources[0].read_by equals fetched_by and
+  sources[1].read_by equals verified_by. The approved record already matches both. Remedy: add the two
+  equalities and one invented-data negative test.
+- When: in the next package that touches src/evaluation (WF-1C, or the Mode H package).
+
+## R-008  The install verifier's wording when an expected file is missing
+
+- Asked: noted by Claude on 1 November 2026, during the WF-1B rehearsals.
+- Status: OPEN (wording only; the check itself is correct and stops).
+- What: when an expected new file is missing, the verifier's STOP message speaks of "unexpected new
+  paths", which points the reader the wrong way. Reword it to name the missing paths.
+- When: in the next install package's verifier.
+
+## R-009  The new-method template, draft 4, at wave 3
+
+- Asked: noted by Claude on 1 November 2026.
+- Status: OPEN.
+- What: bring doc/METHOD_TEMPLATE/ up to date with what releases, WF-1A, E_1 revision 2 and WF-1B
+  taught (released methods, walk-forward batches, scoring), as draft 4, in the wave 3 package.
+- When: wave 3 (roadmap item 11).
 
 ## Standing reminders
 

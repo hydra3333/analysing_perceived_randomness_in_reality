@@ -2,8 +2,8 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 31 October 2026, after the code review passed (EX_085), you ratified register v0.21,
-and you scheduled the deferred performance stage (item 22).
+Last updated: 1 November 2026, after WF-1B's code review passed (EX_111) and you accepted its
+install package; item 10 condensed, and the next steps set out as items 10b to 10d.
 
 ## A few words used below
 
@@ -53,7 +53,7 @@ and you scheduled the deferred performance stage (item 22).
            on Linux. The template's draft 2 adds what E_3/E_4 taught: shared helpers, methods that
            give scores but no probabilities, and a minimum number of past draws.
 
-## Next, in the owner's order (decided 30 October 2026; replaces the earlier order of the same day)
+## Next, in the owner's order (decided 30 October 2026; items 10b to 10d added 1 November 2026)
 
 9.  DONE - Wave 2, installed (not yet runnable), with the template's draft 3 (commit b61b1a2):
            E_2  favours numbers whose next draw would complete their usual gap (mean, middle, recent);
@@ -67,53 +67,58 @@ and you scheduled the deferred performance stage (item 22).
            The old ChatGPT chat had reached its limit, so Claude wrote both, on your instruction, with
            H-2's reviewer rights unchanged byte for byte. The new ChatGPT reviewer chat took over on
            30 October 2026: its takeover check found 0 BLOCKER, 0 CORRECTION and 1 OPTIONAL.
-10. NOW  - Releases and WF-1: switch these methods on, then run them on past draws (walk-forward:
-           each past draw predicted only from the draws before it) with the scorer, so the project
-           produces its first real measured results. The design passed review (EX_077 to EX_081)
-           and you ratified it on 31 October 2026 (design v0.1r1, 03f95fbe). REL-1 and WF-1A passed
-           code review (EX_082 to EX_085); you ratified register v0.21 and accepted both packages on
-           31 October 2026. REL-1 is INSTALLED (6a1bed9) and WF-1A is INSTALLED (0d98706), both on
-           31 October 2026, after their rehearsals T009 and T010; Claude verified both from GitHub.
-           E_1 revision 2 (with CODE-3) is INSTALLED too (86d12ea, 31 October 2026; T011 PASS; verified
-           from GitHub). All 40 variants can now run on past draws. The FIRST POWERBALL BATCH IS DONE:
-           wf-3347ad1160df45faaaab1e2eedcedd0f, targets 1145-1576, 17,280 runs, all SUCCESS (about
-           80 minutes, 31 October 2026); its plan, segment record and search-log row committed at 86a1a01.
-           The OZ LOTTO BATCH IS DONE too: wf-a75988650fb04cc399f8f7409ea27243, targets 1475-1693, 8,760
-           runs (about 35 minutes, 31 October 2026); committed at 8430a15. Both games now have their full
-           40-variant walk-forward predictions, frozen and waiting to be scored.
-           Register v0.22 is INSTALLED (2b1e7e3, 31 October 2026; reviewed in EX_099 and EX_101;
-           verified by Claude from GitHub).
-           SEED-1 brought forward by you (EX_103, 92a6cef, pushed 31 October 09:30 UTC): the pulse of
-           2026-10-31T10:30:00.000Z (21:00 Adelaide tonight) replaces 6 November's, which was never fetched.
-           Your goal (31 October 2026): forecasts for the draws of the week of 9 November. The road: WF-1B
-           report; Mode H on the 10 holdout draws per game; the results update; the prospective (next draw)
-           mode; then you declare it developed. Mode H and the prospective mode are designed together while
-           WF-1B is reviewed; the workers change (WF-1C) follows WF-1B.
-           WF-1B: supplement design v0.1r1 OWNER-RATIFIED (EX_104-EX_107; WB-0 workers deferred to WF-1C,
-           WB-1 real results first, WB-2 seed in WF-1B). SEED APPROVED by you: pulse 2007128 (EX_110).
-           Code reviewed EX_108-EX_111: PASS; you accepted WF1B_Install_v2 (EX_110) on 1 November 2026, with
-           EX_111's optional O01 (seed record reader names cross-checked) deferred to a later package.
-           Now: Claude Code rehearsal TASK_T012, your install, then the two reports; then the snapshot of the
-           handovers and related documents (your request, 1 November 2026).
-           Earlier plan: WF-1B, the scorer and report (it
-           also adds a progress line to the batch driver; descriptive real-outcome tables first).
-           WF-1B also carries your worker decision (WORKERS-1, 31 October 2026): the coordinator's
-           fixed 1..6 limit becomes 1 up to the machine's logical processor count (24 on your PC),
-           default half of that (12); the walk-forward driver gets the same --workers option
-           (variants in parallel, each variant's draws in order, records written in a fixed order,
-           so a batch gives the same records at any worker count and still stops cleanly). The
-           Architecture's six-worker wording is amended in the register, and the identity tests
-           (one worker versus many) run once at the new settings.
-           E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
-           contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
-           runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
-           Its design passed review (EX_086 to EX_091) and you ratified it on 31 October 2026
-           (v0.1r2); its coding has started and it installs after WF-1A. After it installs, a new batch over all 40 variants
-           (you chose full-cohort batches, not ER-6's E_1-only plan) gives the first report.
-           Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
-           real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
-           6 November), WF-1B (the scorer and report, with the fair-draw simulator).
-11. NEXT - Wave 3, look-alike past draws:
+10. NOW  - Releases and WF-1: switch the methods on, run them on past draws (walk-forward: each past
+           draw predicted only from the draws before it), and score them, so the project produces
+           its first real measured results.
+           Done so far (all 31 October to 1 November 2026, each reviewed, ratified by you and checked
+           by Claude from GitHub):
+           - design v0.1r1 (EX_077 to EX_081); REL-1 INSTALLED (6a1bed9); WF-1A, the walk-forward
+             driver, INSTALLED (0d98706); E_1 revision 2 with CODE-3 INSTALLED (86d12ea). All 40
+             variants can run on past draws.
+           - The two batches are DONE, every run SUCCESS, frozen and waiting to be scored:
+             Powerball wf-3347ad1160df45faaaab1e2eedcedd0f (targets 1145-1576, 17,280 runs; 86a1a01);
+             Oz Lotto wf-a75988650fb04cc399f8f7409ea27243 (targets 1475-1693, 8,760 runs; 8430a15).
+           - Register v0.22 INSTALLED (2b1e7e3).
+           - The N1 seed: you brought the pulse forward to 2026-10-31T10:30Z (EX_103, 92a6cef) and
+             APPROVED it on 31 October (pulse 2007128). The 6 November pulse was never fetched.
+           - WF-1B, the scorer and report: supplement design v0.1r1 ratified (EX_104 to EX_107; WB-0
+             workers moved to WF-1C, WB-1 real results first, WB-2 seed in WF-1B). Code reviewed EX_108
+             to EX_111: PASS. You accepted WF1B_Install_v2 on 1 November 2026 and deferred EX_111's
+             optional O01 to a later package (reminder R-007).
+           Left in this item, in order:
+           a. Claude Code rehearses the install (TASK_T013); you push its report; Claude checks it.
+              (T012 stopped safely at its step 9 on 1 November: two of its commands named the
+              wrapper's .bat file, which Claude Code's settings refuse. Steps 1-8 passed; nothing
+              changed. T013 is the same task with those two commands reworded.)
+           b. You install WF1B_Install_v2 (Claude leads you step by step); Claude checks it.
+           c. You run the two reports (Run_Method_Rankings.bat, one per game: Powerball draws
+              1286-1576, Oz Lotto 1474-1693) and commit them; Claude and ChatGPT read them.
+10b. NEXT - The snapshot (your request, 1 November 2026): one document package, reviewed by ChatGPT and
+           ratified by you:
+           - register v0.23 (EX_099 to EX_111, WORKERS-1, WB-0 to WB-2, the seed, the installs);
+           - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
+           - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);
+           - the Claude Code rulebook: the report tool joins rule 7's "never run" list, with the
+             matching deny entry in .claude\settings.json (that file is yours to edit);
+           - a short README.md for the repository;
+           - settle the holdout exposure record (HOLDOUT_EXPOSURE_RECORD v0.2, still a candidate)
+             before Mode H uses the holdout draws.
+10c. NEXT - Mode H, the results update and the prospective mode (your goal: forecasts for the draws of
+           the week of 9 November 2026). Designed together, alongside the snapshot:
+           - Mode H: each method tested once on the 10 sealed holdout draws per game (Powerball
+             1577-1586, Oz Lotto 1694-1703);
+           - the results update: the draws after the holdout added to the results, by the update
+             process already designed;
+           - the prospective mode: each method's forecast for the next draw, frozen and published
+             before the draw;
+           then you decide whether to declare the system developed.
+10d. NEXT - WF-1C, the workers change (your decision WORKERS-1, 31 October 2026), in its own design
+           round carrying EX_101's and EX_105's obligations: the coordinator's limit becomes 1 up to the
+           machine's logical processor count (24 on your PC), default half (12); the walk-forward
+           driver gets --workers (variants in parallel, same records at any worker count, clean stop);
+           a progress line; a compare command; the identity tests run once. Until then the six-worker
+           limit stands.
+11. NEXT - Wave 3, look-alike past draws (with the template's draft 4, reminder R-009):
            E_27 Nearest Neighbour of Historical Draw Sets - predict from what followed the past draws
                 most like the latest one;
            E_45 = Method B - your second idea: the same with runs of recent draws, plus the
