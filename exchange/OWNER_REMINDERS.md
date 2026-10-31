@@ -84,6 +84,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   EX_088; the owner chose ER-2r1 (one package, five steps behind a temporary E_1 flag).
   EX_089: B01, C01, C02 resolved; new C03 (exact refusal codes in the barrier test). v0.1r2 sent in
   EX_090 for a focused RECHECK.
+  EX_091: PASS (O03 optional: T09's step-0 planning wording, applied in the code's test).
+  OWNER-RATIFIED 31 October 2026: design v0.1r2 (LF fb3b26da...209a) as reviewed. Coding started the
+  same day, in parallel with the REL-1 and WF-1A installs; it installs after WF-1A.
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.

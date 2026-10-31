@@ -77,7 +77,8 @@ and you scheduled the deferred performance stage (item 22).
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
            runner moved to revision 2 too. It needs CODE-3 (the tool that archives an old revision) first.
-           Its design is with the reviewer (EX_086). After it installs, a new batch over all 40 variants
+           Its design passed review (EX_086 to EX_091) and you ratified it on 31 October 2026
+           (v0.1r2); its coding has started and it installs after WF-1A. After it installs, a new batch over all 40 variants
            (you chose full-cohort batches, not ER-6's E_1-only plan) gives the first report.
            Four steps: REL-1 (switch the methods on), WF-1A (the walk-forward driver; you run it on
            real past draws, about 1-2 hours per game), SEED-1 (the NIST seed, announced for
