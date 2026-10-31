@@ -91,6 +91,17 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   for Powerball) gives one complete batch per game to score.
 - When: after the REL-1 and WF-1A packages, before or alongside WF-1B, so E_1 can be in the first report.
 
+## R-006  Deferred performance study (the very last stage)
+
+- Asked: 31 October 2026 (the owner scheduled it; "need not read nor consider it now, only schedule it").
+- Status: SCHEDULED, NOT ACTIVE. Nothing to do until the owner activates it.
+- What: the owner's proposal doc/Deferred_Performance_Engineering_Proposal_v0_1.md (v0.1, committed
+  by the owner at 1050338): a profiling-first study of where the time goes, then a decision on any
+  speed-up, under the project's usual review and owner gates.
+- When: at the very end of the project, after all implementation and clean-up (roadmap item 22).
+- Record: the next register edition lists the proposal as owner-committed and unreviewed, with this
+  stage as scheduled only; no review is asked for now.
+
 ## Standing reminders
 
 - Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and

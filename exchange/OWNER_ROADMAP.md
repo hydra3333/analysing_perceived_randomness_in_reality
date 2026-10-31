@@ -2,7 +2,8 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 31 October 2026, after the code review passed (EX_085) and you ratified register v0.21.
+Last updated: 31 October 2026, after the code review passed (EX_085), you ratified register v0.21,
+and you scheduled the deferred performance stage (item 22).
 
 ## A few words used below
 
@@ -102,6 +103,10 @@ Last updated: 31 October 2026, after the code review passed (EX_085) and you rat
 19. LATER - Wave 10, your pilot-wave-inspired family, one at a time: E_57, E_60, E_58, E_59, E_61, E_62.
 20. LATER - Wave 11, outside data: E_54, E_48.
 21. LAST  - Combinations of methods: E_55, E_56.
+22. FINAL - Deferred performance study, only after everything else here and under "Later" (all the
+           implementation, holdout work and clean-up), and only when you activate it (reminder R-006):
+           measure first, then decide whether anything is worth speeding up. Your proposal:
+           doc/Deferred_Performance_Engineering_Proposal_v0_1.md (v0.1, committed at 1050338).
 
 The order within a wave may shift once its design starts. The NIST seed (reminder R-004) is settled
 at the first method that uses random numbers; that is probably E_17 (Method A) in wave 2, if its
