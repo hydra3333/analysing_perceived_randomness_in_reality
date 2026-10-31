@@ -87,6 +87,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   EX_091: PASS (O03 optional: T09's step-0 planning wording, applied in the code's test).
   OWNER-RATIFIED 31 October 2026: design v0.1r2 (LF fb3b26da...209a) as reviewed. Coding started the
   same day, in parallel with the REL-1 and WF-1A installs; it installs after WF-1A.
+  Code candidate E1R2_Install_v1 sent for R-2 review in EX_092 (31 October 2026): 348 tests on both
+  Pythons, 16/16 mutations, rehearsals PASS. Register v0.22 follows after the REL-1 and WF-1A installs.
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.

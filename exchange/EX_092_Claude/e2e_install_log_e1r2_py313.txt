@@ -1,0 +1,67 @@
+base: b997d0842213c09ca466e2aa00933ee17311406f  python: Python 3.13.17
+== lf: REL-1 and WF-1A installed first (their own checks)
+COMMITTED PASS: the last commit (dc11d59) added exactly 92 files, modified 5 and deleted 11; all Git blobs match.
+WF1A_Install_v2 10 new, 5 replaced, 0 deleted; suite 326 ; base dc11d59316cda830c66473418b3bf4745d4e2e2e
+COMMITTED PASS: the last commit (44f7f0c) added exactly 10 files, modified 5 and deleted 0; all Git blobs match.
+== lf: E1R2 happy path (base 44f7f0c885491dd6528fde75be18743635b9e2e2)
+E1R2_Install_v1 29 new, 2 release, 7 replaced; suite 348 ; base 44f7f0c885491dd6528fde75be18743635b9e2e2
+PRE PASS: clean tree; no barrier; 29 new paths and 2 release entries absent; 7 files to replace at their base version. Nothing was changed.
+BARRIER PASS: E_1 is closed by its IN_DEVELOPMENT.txt flag; nothing else has changed.
+CODE PASS: the barrier is in place; exactly the 29 new paths and 7 modified files, with the expected bytes; the archive equals the base commit; no release entry yet.
+RELEASE PASS: the barrier is in place; the 2 release entries are present, linked and name revision 2; everything else as in the code phase.
+POST PASS: the barrier is gone; exactly the 29 new paths, 2 release entries and 7 modified files, all with the expected bytes; the archive equals the base commit.
+total ran 348 (expected 348); skips 0
+SUITE PASS: all 348 tests ran and passed; only the allowed symlink skips, if any.
+staged:      31 A       7 M 
+COMMITTED PASS: the last commit (33a7e60) added exactly 31 files and modified 7; all Git blobs match; no barrier; the archive equals the base commit.
+status after: ''
+== crlf: REL-1 and WF-1A installed first (their own checks)
+COMMITTED PASS: the last commit (5faf3d3) added exactly 92 files, modified 5 and deleted 11; all Git blobs match.
+WF1A_Install_v2 10 new, 5 replaced, 0 deleted; suite 326 ; base 5faf3d3a23a0625f914ad74f42973b73696b61a6
+COMMITTED PASS: the last commit (307bee3) added exactly 10 files, modified 5 and deleted 0; all Git blobs match.
+== crlf: E1R2 happy path (base 307bee3b07b272268cc9e6adf4ad8dbf89f35391)
+E1R2_Install_v1 29 new, 2 release, 7 replaced; suite 348 ; base 307bee3b07b272268cc9e6adf4ad8dbf89f35391
+PRE PASS: clean tree; no barrier; 29 new paths and 2 release entries absent; 7 files to replace at their base version. Nothing was changed.
+BARRIER PASS: E_1 is closed by its IN_DEVELOPMENT.txt flag; nothing else has changed.
+CODE PASS: the barrier is in place; exactly the 29 new paths and 7 modified files, with the expected bytes; the archive equals the base commit; no release entry yet.
+RELEASE PASS: the barrier is in place; the 2 release entries are present, linked and name revision 2; everything else as in the code phase.
+POST PASS: the barrier is gone; exactly the 29 new paths, 2 release entries and 7 modified files, all with the expected bytes; the archive equals the base commit.
+total ran 348 (expected 348); skips 0
+SUITE PASS: all 348 tests ran and passed; only the allowed symlink skips, if any.
+staged:      31 A       7 M 
+COMMITTED PASS: the last commit (8c20baf) added exactly 31 files and modified 7; all Git blobs match; no barrier; the archive equals the base commit.
+status after: ''
+== negatives (each must STOP, except where PASS is stated)
+-- pre, an untracked file:
+VERIFICATION STOP: FAIL: new paths differ from this step: stray.txt
+-- barrier skipped: code phase:
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/E_001/IN_DEVELOPMENT.txt
+-- barrier skipped: barrier phase:
+VERIFICATION STOP: FAIL: new paths differ from this step: archive/methods/E_001/r1/E_001/__init__.py, archive/methods/E_001/r1/E_001/e1_common_reader_bridge.py, archive/methods/E_001/r1/E_001/e1_historical_appearance_frequency.py, archive/methods/E_001/r1/E_001/e1_standalone_contract.py, archive/methods/E_001/r1/E_001/e1_training_view.py, archive/methods/E_001/r1/E_001/multigame_e1.py, archive/methods/E_001/r1/E_001_Historical_Appearance_Frequency.py, archive/methods/E_001/r1/README.md, doc/Predictive_Randomness_CODE3_and_E1_Revision2_Design_v0_1r2.md, review/E1R2_Install_v1/INSTALL_MANIFEST_SHA256.txt, review/E1R2_Install_v1/mutations_e1r2_py313.txt, review/E1R2_Install_v1/replaced_files_base_to_v1.diff, review/E1R2_Install_v1/suite_e1r2_py313.txt, review/E1R2_Install_v1/suite_e1r2_py315.txt, review/E1R2_Install_v1/tools/build_dev.sh, review/E1R2_Install_v1/tools/e1r2_mutations.py, review/E1R2_Install_v1/tools/edit_tests_e1r2.py, review/E1R2_Install_v1/tools/make_e1_r1_reference.py, review/E1R2_Install_v1/tools/make_e1r2.py, review/Independent_ChatGPT_E1R2_Design_Focused_RECHECK_EX089.md
+-- barrier removed before the code check:
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/E_001/IN_DEVELOPMENT.txt
+-- release entries copied before the code check:
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0002.json, src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0002.json
+-- barrier removed before the release check:
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/E_001/IN_DEVELOPMENT.txt
+-- post with the barrier still present:
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/E_001/IN_DEVELOPMENT.txt
+-- an archived file changed:
+VERIFICATION STOP: FAIL: wrong bytes: archive/methods/E_001/r1/E_001/multigame_e1.py
+-- a release entry changed:
+VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0002.json
+-- re-barrier after post (O02): release phase PASS, post phase STOP:
+POST PASS: the barrier is gone; exactly the 29 new paths, 2 release entries and 7 modified files, all with the expected bytes; the archive equals the base commit.
+RELEASE PASS: the barrier is in place; the 2 release entries are present, linked and name revision 2; everything else as in the code phase.
+VERIFICATION STOP: FAIL: new paths differ from this step: src/methods/E_001/IN_DEVELOPMENT.txt
+-- the barrier committed:
+VERIFICATION STOP: FAIL: the barrier flag is present after the commit
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: barrier_overlay/src/methods/E_001/IN_DEVELOPMENT.txt
+== phase matrix: each state passes its own phase only
+state pre: pre=PASS barrier=stop code=stop release=stop post=stop committed=stop
+state barrier: pre=stop barrier=PASS code=stop release=stop post=stop committed=stop
+state code: pre=stop barrier=stop code=PASS release=stop post=stop committed=stop
+state release: pre=stop barrier=stop code=stop release=PASS post=stop committed=stop
+state post: pre=stop barrier=stop code=stop release=stop post=PASS committed=stop
+end
