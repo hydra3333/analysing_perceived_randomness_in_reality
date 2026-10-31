@@ -102,8 +102,11 @@ condensed, and the next steps set out as items 10b to 10d.
            - the Claude Code rulebook: the report tool joins rule 7's "never run" list, with the
              matching deny entry in .claude\settings.json (that file is yours to edit);
            - a short README.md for the repository;
-           - settle the holdout exposure record (HOLDOUT_EXPOSURE_RECORD v0.2, still a candidate)
-             before Mode H uses the holdout draws.
+           - settle the holdout exposure record (HOLDOUT_EXPOSURE_RECORD v0.2, still a candidate). You
+             decided on 1 November 2026: record the exposure (a reviewer chat displayed Powerball
+             1585-1588); Mode H scores all 10 holdout draws per game, with Powerball 1585 and 1586
+             flagged; until then all 10 are treated as unseen, with every rule in force;
+           - a Git line-ending rule so files under results/ are never converted on your PC.
 10c. NEXT - Mode H, the results update and the prospective mode (your goal: forecasts for the draws of
            the week of 9 November 2026). Designed together, alongside the snapshot:
            - Mode H: each method tested once on the 10 sealed holdout draws per game (Powerball
