@@ -80,6 +80,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Status: OPEN. Design v0.1 sent for review in EX_086 (31 October 2026). Owner choices before review:
   ER-1 to ER-4 as recommended (one package; install and release together in two separate steps; r1
   archived complete; the adapter docstring corrected); ER-6 (an E_1-only batch plan) declined.
+  EX_087: RECHECK (B01: the install's interim was not fail-closed; C01, C02, O01). v0.1r1 sent in
+  EX_088; the owner chose ER-2r1 (one package, five steps behind a temporary E_1 flag).
 - What: E_1 revision 1's multi-game function refuses real data (kept unchanged on purpose when E_1 was
   wired into the contract), so E_1 cannot run in WF-1's walk-forward batches. The owner chose a new
   revision, E_1 r2, which accepts real development runs, with E_1's legacy runner moved to r2 too.
