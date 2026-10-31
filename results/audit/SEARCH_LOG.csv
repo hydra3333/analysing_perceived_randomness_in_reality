@@ -1,0 +1,2 @@
+row_type,utc,game_id,mode,window_first,window_last,cohort_size,cohort_digest,family_ids,test_count,measures,batch_id,attempt_id,plan_digest,tool,tool_version,tool_sha256
+WF_BATCH,2026-10-31T05:52:56.878100Z,POWERBALL,WF,1145,1576,40,5e8919fb45171692e9f2f3bf04f8418280e557ee6e1430cc5fbfaf6090cc10f8,,,,wf-3347ad1160df45faaaab1e2eedcedd0f,,1019c22dfb4b24cf965ea365c36af1b270ece41ce491bd4e8291857d87f709ac,Method_Walk_Forward.py,WF1A_DRIVER_V1,c11cf709e8a5bf6fb87b7467c94b56a82e16355e0a1bb7265efb4b4ac45922a7
