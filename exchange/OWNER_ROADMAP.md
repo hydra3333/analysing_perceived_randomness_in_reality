@@ -78,7 +78,10 @@ and you scheduled the deferred performance stage (item 22).
            from GitHub). All 40 variants can now run on past draws. The FIRST POWERBALL BATCH IS DONE:
            wf-3347ad1160df45faaaab1e2eedcedd0f, targets 1145-1576, 17,280 runs, all SUCCESS (about
            80 minutes, 31 October 2026); its plan, segment record and search-log row committed at 86a1a01.
-           Next: Oz Lotto when you say; then SEED-1 (6 November) and WF-1B, the scorer and report (it
+           The OZ LOTTO BATCH IS DONE too: wf-a75988650fb04cc399f8f7409ea27243, targets 1475-1693, 8,760
+           runs (about 35 minutes, 31 October 2026); committed at 8430a15. Both games now have their full
+           40-variant walk-forward predictions, frozen and waiting to be scored.
+           Next: register v0.22 (document-only); SEED-1 (6 November); WF-1B, the scorer and report (it
            also adds a progress line to the batch driver; descriptive real-outcome tables first).
            E_1 sits out the first batches: its frozen revision 1 accepts only invented data through the
            contract. You chose (WF1-13) a proper E_1 revision 2 that can run on past draws, with E_1's old
