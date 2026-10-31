@@ -83,7 +83,13 @@ and you scheduled the deferred performance stage (item 22).
            40-variant walk-forward predictions, frozen and waiting to be scored.
            Register v0.22 is INSTALLED (2b1e7e3, 31 October 2026; reviewed in EX_099 and EX_101;
            verified by Claude from GitHub).
-           Next: SEED-1 (6 November); WF-1B, the scorer and report (it
+           SEED-1 brought forward by you (EX_103, 92a6cef, pushed 31 October 09:30 UTC): the pulse of
+           2026-10-31T10:30:00.000Z (21:00 Adelaide tonight) replaces 6 November's, which was never fetched.
+           Your goal (31 October 2026): forecasts for the draws of the week of 9 November. The road: WF-1B
+           report; Mode H on the 10 holdout draws per game; the results update; the prospective (next draw)
+           mode; then you declare it developed. Mode H and the prospective mode are designed together while
+           WF-1B is reviewed; the workers change (WF-1C) follows WF-1B.
+           Next: WF-1B, the scorer and report (it
            also adds a progress line to the batch driver; descriptive real-outcome tables first).
            WF-1B also carries your worker decision (WORKERS-1, 31 October 2026): the coordinator's
            fixed 1..6 limit becomes 1 up to the machine's logical processor count (24 on your PC),
