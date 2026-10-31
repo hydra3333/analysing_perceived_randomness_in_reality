@@ -1,0 +1,92 @@
+--- v0_1r1
++++ v0_1r2
+@@ -1,12 +1,12 @@
+-# Predictive Randomness - CODE-3 (retirement tooling) and E_1 revision 2, design note v0.1r1
++# Predictive Randomness - CODE-3 (retirement tooling) and E_1 revision 2, design note v0.1r2
+ 
+ **Document:** the design of the package that retires E_1 revision 1 into the archive (CODE-3's retirement tooling, used here for the first time) and installs E_1 revision 2, which can run walk-forward on past draws through the contract. E_1's legacy runner moves to revision 2.
+-**Version:** v0.1r1 DRAFT for the reviewer's RECHECK, 31 October 2026, answering EX_087 (E1R2-R3-B01, C01, C02 and O01; section 11 maps each change). v0.1 (LF `6cff9f90...e6e8`) was reviewed in EX_087. Author: Claude. Ratifier: the project owner.
++**Version:** v0.1r2 DRAFT for the reviewer's focused RECHECK, 31 October 2026, answering EX_089 (E1R2-R3-C03 and O02; section 12). v0.1r1 (LF `933b0a07...942b8b`) answered EX_087 (section 11) and was rechecked in EX_089. v0.1 (LF `6cff9f90...e6e8`) was reviewed in EX_087. Author: Claude. Ratifier: the project owner.
+ **Status:**
+ - **Authority:** it authorises nothing and changes no ratified rule. Where it proposes an exception, the owner decision is listed in section 9.
+ - **No code yet.**
+ - **Origin:** owner decision WF1-13 (31 October 2026, option C), made when WF-1A's coding found that E_1 revision 1 refuses real data (EX_082 section 1; `exchange/OWNER_REMINDERS.md` R-005).
+-- **Base:** `main` at `cf5b065` (EX_087). This package installs **after REL-1 and WF-1A (v2, the version that answers EX_083's B01)**, because it edits WF-1A's driver (sections 4.4 and 7).
++- **Base:** `main` at `ae190c7` (EX_089). This package installs **after REL-1 and WF-1A (v2, the version that answers EX_083's B01)**, because it edits WF-1A's driver (sections 4.4 and 7).
+ 
+ ## 1. In plain English
+ 
+@@ -130,13 +130,28 @@
+ 
+ Then the usual stage, commit (`committed` phase: the commit holds exactly the archive, code, declarations, entries and tests, and no flag), and push.
+ 
+-**What each interim state does** (proved by E1R2-T09 on synthetic copies, not by running anything during the install):
+-- **after step 1 or 2:** r1 and r2 requests both refuse with `IN_DEVELOPMENT_FLAG_PRESENT`, through the contract and through the legacy runner. In the walk-forward driver, planning a new batch for either game refuses (`cohort()` treats a `SUPPORTED` method with a flag as an inconsistent installed state), and starting a planned batch whose cohort includes E_1 refuses at its start-of-run check. A batch planned earlier without E_1 is not blocked by the flag, so the install instructions say that no batch is run or resumed between step 0 and the push;
+-- **after step 3:** the same refusals (the flag is still there); r1 is already stale;
+-- **after step 4:** only r2 admits; an r1-pinned request refuses as `STALE_REGISTRY_ENTRY`; the data, orphan and owner gates are unchanged.
++**What each state does** (proved by E1R2-T09 on synthetic copies, not by running anything during the install). The gate's check order is unchanged (EX_089 C03): `_admit` checks, in turn, the active entry's status, the pinned entry digest, the revision, the declaration digest, and only then the flag. So **the property** is that nothing admits after steps 1, 2 or 3, and **the reason** depends on the request and the step:
++- an **r1 contract request** pins entry_0001's digest, revision "1" and r1's declaration;
++- an **r2 contract request** pins entry_0002's digest, revision "2" and r2's declaration;
++- the **legacy gate** has no pin, only a revision: "1" from the legacy entry file until step 2 copies r2's file, "2" after. The table also shows the other revision string, for completeness.
++
++| State | r1 contract request | r2 contract request | legacy gate, revision "1" | legacy gate, revision "2" |
++|---|---|---|---|---|
++| after step 0 (`pre`) | admits (as today) | `STALE_REGISTRY_ENTRY` | admits (the installed legacy file, as today) | `REVISION_MISMATCH` |
++| after step 1 (`barrier`) | `IN_DEVELOPMENT_FLAG_PRESENT` | `STALE_REGISTRY_ENTRY` | `IN_DEVELOPMENT_FLAG_PRESENT` (the installed legacy file) | `REVISION_MISMATCH` |
++| after step 2 (`code`) | `IN_DEVELOPMENT_FLAG_PRESENT` | `STALE_REGISTRY_ENTRY` | `IN_DEVELOPMENT_FLAG_PRESENT` | `REVISION_MISMATCH` (the installed legacy file) |
++| after step 3 (`release`) | `STALE_REGISTRY_ENTRY` | `IN_DEVELOPMENT_FLAG_PRESENT` | `REVISION_MISMATCH` | `IN_DEVELOPMENT_FLAG_PRESENT` (the installed legacy file) |
++| after step 4 (`post`) | `STALE_REGISTRY_ENTRY` | admits, subject to the unchanged data, orphan, owner and environment gates | `REVISION_MISMATCH` | admits, subject to the same gates (the installed legacy file) |
++
++**The walk-forward driver** in the same states: planning a new batch for either game refuses after steps 1, 2 and 3 (`cohort()` treats a `SUPPORTED` method with a flag as an inconsistent installed state), and so does starting a planned batch whose cohort includes E_1. A batch planned earlier without E_1 is not blocked by the flag, so the install instructions say that no batch is run or resumed between step 0 and the push. The flag is the gates' application-level safeguard, not an operating-system lock.
+ 
+ **On any STOP before step 4,** the owner stops, leaves the flag where it is and sends Claude the output. Recovery is the owner's decision; nothing removes the flag automatically, and no step bypasses it. While the flag exists, E_1 cannot run by either path.
+ 
++**On any STOP after step 4** (EX_089 O02: the `post` check, the tests, the commit or the `committed` check fails, or the install is interrupted), r2's code and entries are present without the flag, but the install is not complete. Then:
++- the owner does not push, runs no E_1 run and no batch of either game, and sends Claude the whole output;
++- nothing is undone automatically: no reset, rollback, deletion or process termination;
++- if the owner decides to close the gate again while the failure is examined, the owner copies `barrier_overlay/` again and runs the verifier's `release` phase, which accepts exactly that state (r2 installed, the flag present). Removing the flag again is step 4, after the owner's decision.
++
+ **Why one package with a barrier is acceptable here:** revision 2's computation is proven identical to revision 1's (section 6, E1R2-T01, T02 and T02B). The only behavioural difference is the data kinds it admits. Admitting real data is the owner's decision WF1-13, and is reviewed in this round. The barrier gives every intermediate state the property R58 asks for: no code runs under an approval that was not given for it.
+ 
+ **The alternative:** R58's two packages, with a committed interim in which E_1 cannot run and the 68 tests are edited twice.
+@@ -154,7 +169,7 @@
+ | E1R2-T06 | **Driver:** `NOT_REAL_CAPABLE` is empty, and a plan names no method as not in the cohort; the cohort has 40 variants including E_1; in a temporary project, a full batch runs E_1's pairs alongside the others, and E_1's SUCCESS pairs pass the same attempt and record checks (`attempt_state` DONE). |
+ | E1R2-T07 | **Archive (E2R-R55 and R56):** archived bytes equal the base commit's (verifier, every phase after `pre`); exact file list; README fields (including the preparation-date wording of 4.3); helper references resolve; the static and runtime no-execution checks of 4.1. |
+ | E1R2-T08 | **E2R-T15** on the synthetic E_998 tree: a dropped path, a reused path with new bytes and a reused unchanged path, with and without `.git` (4.1). |
+-| E1R2-T09 | **The install barrier** (EX_087 B01): on synthetic copies of the installed contract data and method folder, each interim state of section 5 is built in turn (after steps 1, 2, 3 and 4). For each, r1- and r2-pinned contract requests and the legacy gate give exactly the results in section 5's list, planning a batch refuses, and starting a plan that includes E_1 refuses, until step 4. The verifier's six phases are also run against those states and each accepts only its own. |
++| E1R2-T09 | **The install barrier** (EX_087 B01; reasons corrected by EX_089 C03): on synthetic copies of the installed contract data and method folder, the states after steps 0 to 4 of section 5, and the re-barriered state of the STOP-after-step-4 recovery, are built in turn. For each state the test checks **two properties separately:** (1) whether each of the four requests in section 5's table admits, which must be never after steps 1, 2 and 3, and (2) its exact refusal code, cell by cell as in the table, keeping the pinned contract requests apart from the unpinned legacy gate. It also checks that planning a batch refuses, and starting a plan that includes E_1 refuses, until step 4. The verifier's six phases are run against the same states, and each accepts only its own (the re-barriered state passes `release` only). The gate's code and order are not changed. |
+ | (edits) | `test_e2r_dispatch`'s three `legacy_gate(..., '1')` become `'2'`. WF-1A's tests updated for `NOT_REAL_CAPABLE == {}`. Every other E_1 test reads the active entry, so it follows r2 unchanged. |
+ 
+ **Mutation checks**, each caught:
+@@ -170,8 +185,15 @@
+ - the verifier's `code` phase accepting an E_1 `entry_0002.json`;
+ - a test loading an archived file with `importlib` (the static check);
+ - E_1's Oz Lotto tie order changed (T02B's oracle);
++- the gate's flag check moved before the pin check (T09's code matrix), and T09 expecting the flag code in a cell where the gate gives another;
+ - the r1 reference file edited by one score (T01).
+ 
++**Implementation commitments (EX_089's notes):**
++- **The r1 reference file's provenance** (T01): the package records how it was made (the base commit's r1 files, by path, the builder's command and the inputs), and its review evidence regenerates it from the base tree byte for byte.
++- **T15 without Git** compares the archive with pre-install bytes saved by the test before the retirement step, not with a Git operation.
++- **T02B's oracle** calls none of E_1's code or the contract's ranking, tie or digest helpers. It implements the count, `TIE_SHA256_V1` and the digest rule in the test, and its published labels are scores, not probabilities.
++- **T07's runtime import** imports only a listed inventory of library modules, each checked to have no side effects on import. It never imports an entry-point script (a `Method_*.py`, `E_001_Historical_Appearance_Frequency.py`, the coordinator or a scraper), and it opens no data and no network.
++
+ ## 7. After installation, and how it fits the measurement and ranking scheme
+ 
+ 1. **The full-cohort batch (the owner declined ER-6, 31 October 2026).** Since WF-1A v2 (EX_083 B01), a batch never reuses another batch's runs. No batch is run or resumed during the install (an instruction, section 5); while the barrier flag exists, planning a new batch refuses, and so does starting one whose cohort includes E_1. After installation, the owner plans and runs a new batch over the whole cohort, now 40 variants including E_1, over the same window: for Powerball 1145-1576, about 105 minutes on this estimate. The earlier 39-variant batch stays on record, unchanged and counted in the search log; nothing is deleted.
+@@ -232,3 +254,15 @@
+ 3. That T02B is an independent oracle for Oz Lotto's real namespace.
+ 
+ Nothing else changed from v0.1.
++
++## 12. Changes in v0.1r2 (answering EX_089), and what the focused RECHECK is asked to check
++
++| Finding | Change | Where |
++|---|---|---|
++| E1R2-R3-C03 (CORRECTION) | Section 5's list is replaced by a table of the exact result for each of four requests (r1 and r2 contract requests, the legacy gate with revision "1" and "2") after each step, matching the gate's unchanged check order. T09 tests the never-admits property and the per-cell refusal codes separately. | 5; 6 (T09, mutations) |
++| E1R2-R3-O02 (OPTIONAL) | Adopted: a STOP after step 4 means no push, no E_1 run and no batch, nothing undone automatically, and an owner-controlled way to close the gate again (copy `barrier_overlay/` again; the `release` phase accepts exactly that state). | 5; 6 (T09) |
++| EX_089's implementation notes | Recorded as commitments: the reference file's provenance, T15's no-Git comparison, T02B's independence, T07's import inventory. | 6 |
++
++**Please RECHECK:** section 5's table against the gate's order, and T09's two properties. The five-step mechanism (ER-2r1) is unchanged.
++
++Nothing else changed from v0.1r1.
