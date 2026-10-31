@@ -119,6 +119,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: at the very end of the project, after all implementation and clean-up (roadmap item 22).
 - Record: the next register edition lists the proposal as owner-committed and unreviewed, with this
   stage as scheduled only; no review is asked for now.
+- Added by the owner (31 October 2026, during the first Powerball batch): the walk-forward batch runs
+  one method run at a time in one process, so it uses one CPU core (about 4% of a 24-thread machine)
+  and takes hours. Study running variants in parallel to use more cores, keeping what the
+  one-at-a-time order gives today: a reproducible batch, and a clean stop at the first problem.
 
 ## Standing reminders
 
