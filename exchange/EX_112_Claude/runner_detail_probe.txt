@@ -1,0 +1,18 @@
+# v3 runner, failure-detail probe: one invented module (tests/test_fake.py, one passing test and one raising OSError 1314) run through RUN_WF1B_SUITE.py's main() with EXPECTED patched to that module. Linux, Python 3.13.
+environment: Linux 6.18.44-fc-v185 Python 3.13.17 /usr/local/bin/python3
+tests.test_fake                                      ran   2 (expected  2)  skipped 0  FAILED (errors=1)  (0.1 s)
+    detail (the failing tests and their tracebacks; invented test data only):
+    | ERROR: test_err (tests.test_fake.T.test_err)
+    | ----------------------------------------------------------------------
+    | Traceback (most recent call last):
+    |   File "fakerepo/tests/test_fake.py", line 4, in test_err
+    |     def test_err(self): raise OSError(1314, 'A required privilege is not held by the client')
+    |                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    | OSError: [Errno 1314] A required privilege is not held by the client
+    | ----------------------------------------------------------------------
+    | Ran 2 tests in 0.001s
+    | FAILED (errors=1)
+total ran 2 (expected 2); skips 0
+SUITE STOP:
+  tests.test_fake: exit 1, ran 2 expected 2, "FAILED (errors=1)"
+exit code: 1

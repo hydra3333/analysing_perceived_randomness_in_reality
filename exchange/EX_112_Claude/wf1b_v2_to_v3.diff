@@ -1,0 +1,255 @@
+# WF1B_Install_v2 -> v3, complete. To make the review folder comparable, v2's review/WF1B_Install_v2/ is shown
+# renamed to review/WF1B_Install_v3/, and its mutations_wf1b_v2_py313.txt to mutations_wf1b_v3_py313.txt.
+diff -ruN WF1B_Install_v2/INSTALL_INSTRUCTIONS.md WF1B_Install_v3/INSTALL_INSTRUCTIONS.md
+--- WF1B_Install_v2/INSTALL_INSTRUCTIONS.md	2026-11-01 08:18:25.338592739 +1030
++++ WF1B_Install_v3/INSTALL_INSTRUCTIONS.md	2026-11-01 08:18:25.362806071 +1030
+@@ -1,19 +1,19 @@
+-# WF1B_Install_v2 - WF-1B package (the R3 stage-2 scorer and ranking report, N1 and its seed policy) (only after the owner's go-ahead)
++# WF1B_Install_v3 - WF-1B package (the R3 stage-2 scorer and ranking report, N1 and its seed policy) (only after the owner's go-ahead)
+ 
+-Windows CMD, repository root, with the project venv. **Save the ZIP to `E:\TEMP`, not into the repository.** Delete any earlier extracted `E:\TEMP\WF1B_Install_*` folders, then extract it there (`tar -xf "E:\TEMP\WF1B_Install_v2.zip" -C E:\TEMP`). This package adds 38 new files and replaces 1 existing file (`.gitignore`); nothing else changes. It runs no report: running one is your separate decision afterwards.
++Windows CMD, repository root, with the project venv. **Save the ZIP to `E:\TEMP`, not into the repository.** Delete any earlier extracted `E:\TEMP\WF1B_Install_*` folders, then extract it there (`tar -xf "E:\TEMP\WF1B_Install_v3.zip" -C E:\TEMP`). This package adds 38 new files and replaces 1 existing file (`.gitignore`); nothing else changes. It runs no report: running one is your separate decision afterwards.
+ 
+ ## 1. Update, check, copy, check, and the tests (one block; do not skip the last command)
+ 
+ ```bat
+ git status --short
+ git pull --ff-only
+-python "E:\TEMP\WF1B_Install_v2\VERIFY_WF1B_INSTALL.py" --repo . --phase pre
+-xcopy "E:\TEMP\WF1B_Install_v2\repo_overlay\*" . /E /Y
+-python "E:\TEMP\WF1B_Install_v2\VERIFY_WF1B_INSTALL.py" --repo . --phase post
+-.venv\Scripts\python.exe "E:\TEMP\WF1B_Install_v2\RUN_WF1B_SUITE.py" --repo .
++python "E:\TEMP\WF1B_Install_v3\VERIFY_WF1B_INSTALL.py" --repo . --phase pre
++xcopy "E:\TEMP\WF1B_Install_v3\repo_overlay\*" . /E /Y
++python "E:\TEMP\WF1B_Install_v3\VERIFY_WF1B_INSTALL.py" --repo . --phase post
++.venv\Scripts\python.exe "E:\TEMP\WF1B_Install_v3\RUN_WF1B_SUITE.py" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing (if it prints anything, stop and send Claude the output); the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `39 File(s) copied`; `POST PASS`; then `SUITE PASS` (463 tests; the only allowed skips are symlink tests: on Windows without symlink rights, up to 3). E2R-T12 starts up to six ordinary Python worker processes and lets them finish normally. The WF-1B tests run on invented data in temporary folders, with an invented N1 root. If anything prints `STOP` or `FAILED`, do not commit: send Claude the output.
++Expected: `git status --short` prints nothing (if it prints anything, stop and send Claude the output); the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `39 File(s) copied`; `POST PASS`; then `SUITE PASS` (464 tests; the only allowed skips are symlink tests: on Windows without symlink rights, up to 4). E2R-T12 starts up to six ordinary Python worker processes and lets them finish normally. The WF-1B tests run on invented data in temporary folders, with an invented N1 root. If anything prints `STOP` or `FAILED`, do not commit: send Claude the output.
+ 
+ ## 2. Stage, commit, check, and only then push
+ 
+@@ -21,7 +21,7 @@
+ git add .gitignore Run_Method_Rankings.bat doc review src tests
+ git status --short
+ git commit -m "WF-1B: the R3 stage-2 scorer and ranking report (src/evaluation, Run_Method_Rankings.bat), N1 and its seed policy records; WF-1B supplement design v0.1r1"
+-python "E:\TEMP\WF1B_Install_v2\VERIFY_WF1B_INSTALL.py" --repo . --phase committed
++python "E:\TEMP\WF1B_Install_v3\VERIFY_WF1B_INSTALL.py" --repo . --phase committed
+ ```
+ 
+ Expected: `git status --short` lists 38 lines starting with `A` and 1 starting with `M`, and nothing else; then `COMMITTED PASS`. Git's "LF will be replaced by CRLF" warnings while staging are normal.
+diff -ruN WF1B_Install_v2/RUN_WF1B_SUITE.py WF1B_Install_v3/RUN_WF1B_SUITE.py
+--- WF1B_Install_v2/RUN_WF1B_SUITE.py	2026-11-01 08:18:25.338922418 +1030
++++ WF1B_Install_v3/RUN_WF1B_SUITE.py	2026-11-01 08:18:25.362369300 +1030
+@@ -1,5 +1,5 @@
+ #!/usr/bin/env python3
+-"""WF1B_Install_v2: run all 463 current tests, module by module, and compare with the expected counts.
++"""WF1B_Install_v3: run all 464 current tests, module by module, and compare with the expected counts.
+ 
+ Claude, 31 October 2026 (from the wave 2 package runner). Adds src/evaluation/ (the scorer, the outcome reader, N1 and the report writer), Run_Method_Rankings.bat and ten WF-1B test modules. Owner-run on Windows, after the overlay is
+ copied and before committing. The tests are offline: temporary registries, method folders, invented masters and
+@@ -8,8 +8,8 @@
+ make no network access; this script only runs them.
+ Each module runs in its own `python -B -m unittest -v` process (no bytecode written).
+ A skip is allowed only where a test skips because Windows cannot create a symlink (the reader-contracts
+-symlink subtest, the exit-receipt symlink test and CODE-2's dangling-symlink publication test). Anything
+-else stops.
++symlink subtest, the exit-receipt symlink test, CODE-2's dangling-symlink publication test and WF-1B's
++symlinked-master test). Anything else stops. A module that fails has its failing tests and tracebacks printed.
+ Usage (repository root):  .venv\\Scripts\\python.exe RUN_WF1B_SUITE.py --repo .
+ """
+ import argparse, os, platform, re, subprocess, sys, time
+@@ -32,7 +32,7 @@
+     ('tests.test_wf1b_n1_generator', 8),
+     ('tests.test_wf1b_divisions', 17),
+     ('tests.test_wf1b_measures', 33),
+-    ('tests.test_wf1b_outcome_reader', 5),
++    ('tests.test_wf1b_outcome_reader', 6),
+     ('tests.test_wf1b_report', 10),
+     ('tests.test_wf1b_static', 4),
+     ('tests.test_wf1b_crossplatform', 1),
+@@ -41,7 +41,7 @@
+ ]
+ TOTAL = sum(n for _m, n in EXPECTED)
+ SYMLINK_SKIP_OK = {'tests.test_multigame_reader_contracts', 'tests.test_multigame_exit_receipt',
+-                   'tests.test_e2r_runner'}
++                   'tests.test_e2r_runner', 'tests.test_wf1b_outcome_reader'}
+ 
+ 
+ def main():
+@@ -68,6 +68,11 @@
+             print('    skip:', s[:200])
+         if r.returncode != 0 or ran != want or not last.startswith('OK'):
+             bad.append(f'{mod}: exit {r.returncode}, ran {ran} expected {want}, "{last}"')
++            detail = [ln for ln in (err + r.stdout).splitlines() if ln.strip()]
++            start = next((i for i, ln in enumerate(detail) if ln.startswith(('ERROR:', 'FAIL:'))), max(len(detail) - 40, 0))
++            print('    detail (the failing tests and their tracebacks; invented test data only):')
++            for ln in detail[start:start + 60]:
++                print('    | ' + ln[:200])
+         for s in skips:
+             if mod not in SYMLINK_SKIP_OK or 'symlink' not in s.lower():
+                 bad.append(f'{mod}: unexpected skip: {s[:120]}')
+diff -ruN WF1B_Install_v2/VERIFY_WF1B_INSTALL.py WF1B_Install_v3/VERIFY_WF1B_INSTALL.py
+--- WF1B_Install_v2/VERIFY_WF1B_INSTALL.py	2026-11-01 08:18:25.339243167 +1030
++++ WF1B_Install_v3/VERIFY_WF1B_INSTALL.py	2026-11-01 08:18:25.361935850 +1030
+@@ -22,7 +22,7 @@
+ import argparse, hashlib, os, subprocess, sys
+ from pathlib import Path
+ 
+-BASE = '0c8799d7b5a98cd6a0c37da88961e81f19d37379'
++BASE = '40958d616c85d7f76d0df9650ab784a596c531dc'
+ GIT_ENV = dict(os.environ, GIT_OPTIONAL_LOCKS='0')
+ NEW = {  # path: Git-content SHA-256 (LF)
+     'Run_Method_Rankings.bat': '087813da95aa163d2f308b47284710bc4f3bf1fc88014faa80dc0df9a1eb2973',
+@@ -31,12 +31,12 @@
+     'review/Independent_ChatGPT_Register_v0_22_Focused_RECHECK_EX101.md': '32f464bdd19ee4bf984c5f980884f282ccea43eb7ad924f3affa30201080fabb',
+     'review/Independent_ChatGPT_WF1B_Supplement_Design_Focused_RECHECK_EX107.md': 'a88011455862a52b86e379dd7c9bd9a3b358487ccde007b698e91538de95657d',
+     'review/Independent_ChatGPT_WF1B_Supplement_Design_R3_Review_EX105.md': '07b71a62793ab56d2b12e355ffb3fa9befb8bddd139c12fa0a281681d3ff570d',
+-    'review/WF1B_Install_v2/INSTALL_MANIFEST_SHA256.txt': '6635d68bbc612e43a49773c311797cd48ff609db837dd6332df255be5df9a85f',
+-    'review/WF1B_Install_v2/mutations_wf1b_v2_py313.txt': '41ece9f3bfa5ebbb6c4b383db1f6cd52d1ea80c97edbe27ba503d1a802b00df4',
+-    'review/WF1B_Install_v2/replaced_files_base_to_v1.diff': 'da0c667f61961afcc9b250649cbadf7b4f14f64d2defce63e283043290b6b13b',
+-    'review/WF1B_Install_v2/tools/build_wf1b_pkg.py': '2f3d6d02d6b331873efb466f7827cc529b8ca232ac530e353685e700d5a81042',
+-    'review/WF1B_Install_v2/tools/make_wf1b_registries.py': '02d65f9fd70c7c1a34627269f97e9050dfcc035659ec1d0e86dcd2ab54798636',
+-    'review/WF1B_Install_v2/tools/wf1b_mutations.py': '6439bbc5ca8bccffd0ab1b1fc323d686d23d1e41f571468f30da816882c72894',
++    'review/WF1B_Install_v3/INSTALL_MANIFEST_SHA256.txt': 'd8b89e25ab937a2e737fc3a0dad28ba3e11380fb6b2cc5aa98be88f164baa033',
++    'review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt': '465b7c1ec3e1170fca3391c803ccd8753cd230200ff1cbdb4b14928e4921ab86',
++    'review/WF1B_Install_v3/replaced_files_base_to_v1.diff': 'da0c667f61961afcc9b250649cbadf7b4f14f64d2defce63e283043290b6b13b',
++    'review/WF1B_Install_v3/tools/build_wf1b_pkg.py': '0f2dee769715aa9a0616e7e7a7da1b5ca16c2200a76dbd092cc92f628b8f7560',
++    'review/WF1B_Install_v3/tools/make_wf1b_registries.py': '02d65f9fd70c7c1a34627269f97e9050dfcc035659ec1d0e86dcd2ab54798636',
++    'review/WF1B_Install_v3/tools/wf1b_mutations.py': '6079dd754891410f51b56a602a73db09f311738ff125817d791e22d264d582a5',
+     'src/evaluation/Method_Rankings_Report.py': '06261a6f1f867543faec79d5971a1c2d52d2ef042f033058858fa2f56b7d25f0',
+     'src/evaluation/__init__.py': 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
+     'src/evaluation/collect.py': 'ea9214ebc7320a2a197e7164b97474085e116ef46cdc735c82f821a3f9486c02',
+@@ -59,7 +59,7 @@
+     'tests/test_wf1b_n1_generator.py': '3645a0130204be46f7f8a2c28ec9f37e0a5d63aa4aeccdadee4c60f5bb2a5293',
+     'tests/test_wf1b_n1_replay.py': '8cc25761244d2f976f57f26d864f72d7fb31d5a001fe5c33fd4d61fb24962079',
+     'tests/test_wf1b_numerics.py': '79db742a4f5a288c2276cf411f6dd0d72cac3f7783080bad8f57d2cc260fd5c9',
+-    'tests/test_wf1b_outcome_reader.py': 'e018a10eb9c2715c353d167244067ea9ce8d549fa4b4ca1916ec5e7fe745988a',
++    'tests/test_wf1b_outcome_reader.py': '9e09654e7f20d66bb42c808cca938bbeddca8b51e83931995e5cd05e1b60fb1b',
+     'tests/test_wf1b_report.py': 'f8e615bc02d4192a08b746afff54e5e687c4fa4988147fb38fbe72f6575814f1',
+     'tests/test_wf1b_seed_policy.py': 'fbb6c7b707e1600ada8d99d6be2e34e696bd150500ac5ccbc4cb9f2077130bc2',
+     'tests/test_wf1b_static.py': 'a45c47f1a58d355692c1e5672b398325352ef728e8bb3880c0273ec114974ca8',
+diff -ruN WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/INSTALL_MANIFEST_SHA256.txt WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/INSTALL_MANIFEST_SHA256.txt
+--- WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/INSTALL_MANIFEST_SHA256.txt	2026-11-01 08:18:25.324621357 +1030
++++ WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/INSTALL_MANIFEST_SHA256.txt	2026-11-01 08:18:25.358366466 +1030
+@@ -1,15 +1,15 @@
+-# WF1B_Install_v2 installation manifest (Git-content SHA-256, LF); "A" new path, "M" replaced file
++# WF1B_Install_v3 installation manifest (Git-content SHA-256, LF); "A" new path, "M" replaced file
+ A 087813da95aa163d2f308b47284710bc4f3bf1fc88014faa80dc0df9a1eb2973  Run_Method_Rankings.bat
+ A a2f470797f31e387f44b5492ed406f1376b3eb92f2181dc76f6ac4c80168185a  doc/Predictive_Randomness_WF1B_Supplement_Design_v0_1r1.md
+ A c948844083625c63cf20f041abc93fa8b6a55ab276fb17720e5de3237b525292  review/Independent_ChatGPT_Register_v0_22_Content_Check_EX099.md
+ A 32f464bdd19ee4bf984c5f980884f282ccea43eb7ad924f3affa30201080fabb  review/Independent_ChatGPT_Register_v0_22_Focused_RECHECK_EX101.md
+ A a88011455862a52b86e379dd7c9bd9a3b358487ccde007b698e91538de95657d  review/Independent_ChatGPT_WF1B_Supplement_Design_Focused_RECHECK_EX107.md
+ A 07b71a62793ab56d2b12e355ffb3fa9befb8bddd139c12fa0a281681d3ff570d  review/Independent_ChatGPT_WF1B_Supplement_Design_R3_Review_EX105.md
+-A 41ece9f3bfa5ebbb6c4b383db1f6cd52d1ea80c97edbe27ba503d1a802b00df4  review/WF1B_Install_v2/mutations_wf1b_v2_py313.txt
+-A da0c667f61961afcc9b250649cbadf7b4f14f64d2defce63e283043290b6b13b  review/WF1B_Install_v2/replaced_files_base_to_v1.diff
+-A 2f3d6d02d6b331873efb466f7827cc529b8ca232ac530e353685e700d5a81042  review/WF1B_Install_v2/tools/build_wf1b_pkg.py
+-A 02d65f9fd70c7c1a34627269f97e9050dfcc035659ec1d0e86dcd2ab54798636  review/WF1B_Install_v2/tools/make_wf1b_registries.py
+-A 6439bbc5ca8bccffd0ab1b1fc323d686d23d1e41f571468f30da816882c72894  review/WF1B_Install_v2/tools/wf1b_mutations.py
++A 465b7c1ec3e1170fca3391c803ccd8753cd230200ff1cbdb4b14928e4921ab86  review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt
++A da0c667f61961afcc9b250649cbadf7b4f14f64d2defce63e283043290b6b13b  review/WF1B_Install_v3/replaced_files_base_to_v1.diff
++A 0f2dee769715aa9a0616e7e7a7da1b5ca16c2200a76dbd092cc92f628b8f7560  review/WF1B_Install_v3/tools/build_wf1b_pkg.py
++A 02d65f9fd70c7c1a34627269f97e9050dfcc035659ec1d0e86dcd2ab54798636  review/WF1B_Install_v3/tools/make_wf1b_registries.py
++A 6079dd754891410f51b56a602a73db09f311738ff125817d791e22d264d582a5  review/WF1B_Install_v3/tools/wf1b_mutations.py
+ A 06261a6f1f867543faec79d5971a1c2d52d2ef042f033058858fa2f56b7d25f0  src/evaluation/Method_Rankings_Report.py
+ A e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  src/evaluation/__init__.py
+ A ea9214ebc7320a2a197e7164b97474085e116ef46cdc735c82f821a3f9486c02  src/evaluation/collect.py
+@@ -32,7 +32,7 @@
+ A 3645a0130204be46f7f8a2c28ec9f37e0a5d63aa4aeccdadee4c60f5bb2a5293  tests/test_wf1b_n1_generator.py
+ A 8cc25761244d2f976f57f26d864f72d7fb31d5a001fe5c33fd4d61fb24962079  tests/test_wf1b_n1_replay.py
+ A 79db742a4f5a288c2276cf411f6dd0d72cac3f7783080bad8f57d2cc260fd5c9  tests/test_wf1b_numerics.py
+-A e018a10eb9c2715c353d167244067ea9ce8d549fa4b4ca1916ec5e7fe745988a  tests/test_wf1b_outcome_reader.py
++A 9e09654e7f20d66bb42c808cca938bbeddca8b51e83931995e5cd05e1b60fb1b  tests/test_wf1b_outcome_reader.py
+ A f8e615bc02d4192a08b746afff54e5e687c4fa4988147fb38fbe72f6575814f1  tests/test_wf1b_report.py
+ A fbb6c7b707e1600ada8d99d6be2e34e696bd150500ac5ccbc4cb9f2077130bc2  tests/test_wf1b_seed_policy.py
+ A a45c47f1a58d355692c1e5672b398325352ef728e8bb3880c0273ec114974ca8  tests/test_wf1b_static.py
+diff -ruN WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt
+--- WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt	2026-11-01 08:18:25.324971075 +1030
++++ WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/mutations_wf1b_v3_py313.txt	2026-11-01 08:18:25.356245570 +1030
+@@ -21,4 +21,5 @@
+ CAUGHT   range label replaced by the calibration label
+ CAUGHT   N1 Monte Carlo interval not printed in Part B
+ CAUGHT   Oz Lotto supplementaries replayed against the main draw
+-22 of 22 mutants caught
++CAUGHT   the reader admits a hard-linked master
++23 of 23 mutants caught
+diff -ruN WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/tools/build_wf1b_pkg.py WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/tools/build_wf1b_pkg.py
+--- WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/tools/build_wf1b_pkg.py	2026-11-01 08:18:25.323473215 +1030
++++ WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/tools/build_wf1b_pkg.py	2026-11-01 08:18:25.357953916 +1030
+@@ -12,7 +12,7 @@
+ HERE = Path(__file__).resolve().parent
+ WH = Path('/home/claude/work/wf1code')
+ REPO = '/home/claude/analysing_perceived_randomness_in_reality'
+-PKG, TITLE = 'WF1B_Install_v2', 'WF-1B package (the R3 stage-2 scorer and ranking report, N1 and its seed policy)'
++PKG, TITLE = 'WF1B_Install_v3', 'WF-1B package (the R3 stage-2 scorer and ranking report, N1 and its seed policy)'
+ REPLACED = {'.gitignore'}
+ EVAL_TESTS = ('test_wf1b_numerics', 'test_wf1b_n1_generator', 'test_wf1b_divisions', 'test_wf1b_measures',
+               'test_wf1b_outcome_reader', 'test_wf1b_report', 'test_wf1b_static', 'test_wf1b_crossplatform',
+@@ -139,7 +139,7 @@
+ .venv\\Scripts\\python.exe "{P}\\{RUNNER}" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing (if it prints anything, stop and send Claude the output); the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; then `SUITE PASS` ({SUITE_N} tests; the only allowed skips are symlink tests: on Windows without symlink rights, up to 3). E2R-T12 starts up to six ordinary Python worker processes and lets them finish normally. The WF-1B tests run on invented data in temporary folders, with an invented N1 root. If anything prints `STOP` or `FAILED`, do not commit: send Claude the output.
++Expected: `git status --short` prints nothing (if it prints anything, stop and send Claude the output); the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; then `SUITE PASS` ({SUITE_N} tests; the only allowed skips are symlink tests: on Windows without symlink rights, up to 4). E2R-T12 starts up to six ordinary Python worker processes and lets them finish normally. The WF-1B tests run on invented data in temporary folders, with an invented N1 root. If anything prints `STOP` or `FAILED`, do not commit: send Claude the output.
+ 
+ ## 2. Stage, commit, check, and only then push
+ 
+diff -ruN WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/tools/wf1b_mutations.py WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/tools/wf1b_mutations.py
+--- WF1B_Install_v2/repo_overlay/review/WF1B_Install_v3/tools/wf1b_mutations.py	2026-11-01 08:18:25.324261331 +1030
++++ WF1B_Install_v3/repo_overlay/review/WF1B_Install_v3/tools/wf1b_mutations.py	2026-11-01 08:18:25.357527993 +1030
+@@ -62,6 +62,10 @@
+     ('Oz Lotto supplementaries replayed against the main draw', E + 'n1.py',
+      "        second = _popcount(sim['extra'][:, cols] & tick[None, :])", "        second = _popcount(sim['main'][:, cols] & tick[None, :]) * 0",
+      ['test_wf1b_n1_replay']),
++    ('the reader admits a hard-linked master',
++     'src/methods/_common/game_draws_reader.py',
++     "        if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:",
++     "        if not stat.S_ISREG(before.st_mode):", ['test_wf1b_outcome_reader']),
+ ]
+ 
+ 
+diff -ruN WF1B_Install_v2/repo_overlay/tests/test_wf1b_outcome_reader.py WF1B_Install_v3/repo_overlay/tests/test_wf1b_outcome_reader.py
+--- WF1B_Install_v2/repo_overlay/tests/test_wf1b_outcome_reader.py	2026-11-01 08:18:25.336633572 +1030
++++ WF1B_Install_v3/repo_overlay/tests/test_wf1b_outcome_reader.py	2026-11-01 08:18:25.353168958 +1030
+@@ -3,6 +3,7 @@
+ 
+ import hashlib
+ import json
++import os
+ import sys
+ import tempfile
+ import unittest
+@@ -116,16 +117,29 @@
+         with self.assertRaises(R.OutcomeRefused):
+             R.read_outcomes(repo_root=self.root, game_id='OZLOTTO', master_sha256=sha, targets=t)
+ 
+-    def test_a_linked_master_is_refused(self):
++    def test_a_hard_linked_master_is_refused(self):
++        """A master with a second name (a hard link) is refused. This runs on every platform, Windows included."""
++        sha = _master(self.root, 'POWERBALL')
++        path = self.root / 'source_data' / FILES[0].format(g='POWERBALL')
++        R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha, targets=[1200])   # control
++        os.link(path, self.root / 'second_name.csv')
++        with self.assertRaises(R.OutcomeRefused):
++            R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha, targets=[1200])
++
++    def test_a_symlinked_master_is_refused(self):
++        """A master that is a symbolic link is refused. Skipped where the platform cannot make a symlink (Windows
++        without the symlink privilege), as the other symlink tests are."""
+         sha = _master(self.root, 'POWERBALL')
+         path = self.root / 'source_data' / FILES[0].format(g='POWERBALL')
+         other = self.root / 'copy.csv'
+         other.write_bytes(path.read_bytes())
+         path.unlink()
+-        path.symlink_to(other)
++        try:
++            path.symlink_to(other)
++        except (OSError, NotImplementedError):
++            self.skipTest('platform disallows symlinks')
+         with self.assertRaises(R.OutcomeRefused):
+             R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha, targets=[1200])
+ 
+-
+ if __name__ == '__main__':
+     unittest.main()

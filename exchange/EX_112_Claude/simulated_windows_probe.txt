@@ -1,0 +1,34 @@
+# Simulated Windows without the symlink privilege: Path.symlink_to patched to raise OSError(1314). Linux, Python 3.13.
+## v2's tests/test_wf1b_outcome_reader.py
+test_a_linked_master_is_refused (test_old_or.Reading.test_a_linked_master_is_refused) ... ERROR
+test_only_grid_targets_returned (test_old_or.Reading.test_only_grid_targets_returned) ... ok
+test_rows_after_the_last_target_and_holdout_rows_are_never_decoded (test_old_or.Reading.test_rows_after_the_last_target_and_holdout_rows_are_never_decoded)
+A planted line beyond 1576 (in an invented master) is never parsed; nor is an undecodable non-grid row. ... ok
+test_source_checks (test_old_or.Reading.test_source_checks) ... ok
+test_targets_outside_the_prefix_refused_before_any_read (test_old_or.Reading.test_targets_outside_the_prefix_refused_before_any_read) ... ok
+
+======================================================================
+ERROR: test_a_linked_master_is_refused (test_old_or.Reading.test_a_linked_master_is_refused)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+OSError: [Errno 1314] A required privilege is not held by the client
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.119s
+
+FAILED (errors=1)
+## v3's tests/test_wf1b_outcome_reader.py
+test_a_hard_linked_master_is_refused (tests.test_wf1b_outcome_reader.Reading.test_a_hard_linked_master_is_refused)
+A master with a second name (a hard link) is refused. This runs on every platform, Windows included. ... ok
+test_a_symlinked_master_is_refused (tests.test_wf1b_outcome_reader.Reading.test_a_symlinked_master_is_refused)
+A master that is a symbolic link is refused. Skipped where the platform cannot make a symlink (Windows ... skipped 'platform disallows symlinks'
+test_only_grid_targets_returned (tests.test_wf1b_outcome_reader.Reading.test_only_grid_targets_returned) ... ok
+test_rows_after_the_last_target_and_holdout_rows_are_never_decoded (tests.test_wf1b_outcome_reader.Reading.test_rows_after_the_last_target_and_holdout_rows_are_never_decoded)
+A planted line beyond 1576 (in an invented master) is never parsed; nor is an undecodable non-grid row. ... ok
+test_source_checks (tests.test_wf1b_outcome_reader.Reading.test_source_checks) ... ok
+test_targets_outside_the_prefix_refused_before_any_read (tests.test_wf1b_outcome_reader.Reading.test_targets_outside_the_prefix_refused_before_any_read) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.157s
+
+OK (skipped=1)
