@@ -107,14 +107,16 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
              Oz Lotto report committed (441daf2; about 4.5 hours before PERF-1). The Powerball batch
              records were restored (line endings) and its report committed (608025c; about 26 minutes).
              Both games: no method beats chance (development evidence only). Item 10 is complete.
-10b. NOW  - The snapshot (your request, 1 November 2026): one document package (DOC10_Snapshot_v1),
+10b. DONE - The snapshot (your request, 1 November 2026): one document package (DOC10_Snapshot_v1),
            sent to ChatGPT in EX_116 (candidate 2, after a cold-read test of H-1 by a fresh helper
            found 20 gaps, now fixed). EX_117: RECHECK with 3 corrections (a historical paragraph in the
            register, H-1's wording on stopping test jobs, a line-ending check after the pull); fixed in
            candidate 3, sent in EX_118. EX_119: one correction left (the line-ending checker must treat
            a nonempty file with no line ending as a STOP); fixed in candidate 4, sent in EX_120. EX_121: PASS. You ratified
-           it on 1 November 2026; the final build (status lines only) is in EX_122. Next: your install,
-           your settings.json line, then the new Claude chat:
+           it on 1 November 2026; the final build (status lines only) is in EX_122. INSTALLED at
+           7bb0bfd (1 November 2026; COMMITTED PASS, EOL PASS; verified by Claude from GitHub, 30 of 30
+           manifest rows). Your settings.json deny line is committed at 905ecee. Next: the new Claude
+           chat, started from doc/HANDOVER/Claude_Primary_Handover_H1_v1r7_introductory_blurb.md:
            - register v0.23 (EX_099 to EX_115, the installs, the two reports, your decisions);
            - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
            - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);
