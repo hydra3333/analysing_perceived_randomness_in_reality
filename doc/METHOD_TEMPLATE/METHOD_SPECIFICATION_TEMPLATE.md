@@ -34,7 +34,7 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 - the ranking kind (`RANKING_WITH_SCORES`, `RANKING_ORDER_ONLY` or `NONE`), and the score type;
 - the TOP and WORST rules: `TOP_MARGINAL`/`INVERSE`, or `MAP_SET`/`INVERSE_FROM_MARGINALS`, and so on (E2R-R15A);
 - the probability kind, its tolerance, its smoothing note and its calibration note;
-- the minimum history, any diagnostic record, whether the fit is stochastic (a stochastic fit needs a reviewed seed policy, which does not exist yet), and the fit-model version tag.
+- the minimum history, any diagnostic record, whether the fit is stochastic (a stochastic fit needs its own reviewed and owner-approved seed policy before any run; README step 13), and the fit-model version tag.
 
 **FILL IN the probability justification**, if it publishes probabilities (R2 7.1: "only if justified"): under which model they are exact or approximate, and what they ignore.
 
@@ -42,6 +42,7 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 
 **FILL IN:** why the record is byte-identical on Windows and Linux (exact arithmetic, or, for an iterative floating-point fit, the objective proof and the canonical output and tie rules; README, "published values must be byte-identical").
 - **Answer explicitly:** does any step repeat until a condition holds (narrowing bounds, a search, an iteration)? Say why it ends for every input, including exact ties and exact zero, and what its cap does.
+- **Answer explicitly:** how long does one run take at full size (the longest history, every variant), measured on invented data? A walk-forward batch runs it once per variant per target.
 
 ## 6. Variants (fixed now)
 
@@ -64,17 +65,18 @@ E_6's specification (`doc/Predictive_Randomness_E6_Specification_and_Method_Temp
 - the new files;
 - the replaced files, each listed;
 - what is unchanged;
-- that the four switches stay False and the allowlist empty.
+- that the switches and the allowlist are unchanged (`ENABLE_CONTRACT_REAL_DEVELOPMENT` True since WF-1A; the other three False; the allowlist empty).
 
 ## 10. Release
 
-**FILL IN:** installed non-runnable; which variants each release package makes `SUPPORTED`; real data stays a separate gate.
+**FILL IN:** installed non-runnable; which variants each release package makes `SUPPORTED`; that the method then joins the next full-cohort walk-forward batch and the ranking report (README step 13), and what that adds to the report's families.
 
 ## 11. Tests and planted defects
 
 **FILL IN:**
 - the tests (README step 8);
 - the planted defects, one or more per property claimed, per variant setting and per verification rule (README step 10);
+- that every test is Windows-safe (README step 8);
 - whether anything found should change this template (owner, 30 October 2026).
 
 ## 12. Owner decisions

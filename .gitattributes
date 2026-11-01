@@ -1,3 +1,5 @@
 *.bat text eol=crlf
 # Results masters, ledgers, grabs and backups: stored byte-for-byte (their SHA-256 values are recorded)
 source_data/** -text
+# Run records, batch plans and the search log: checked byte for byte by the project tools, so never converted
+results/** -text

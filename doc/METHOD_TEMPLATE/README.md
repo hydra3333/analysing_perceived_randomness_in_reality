@@ -1,7 +1,7 @@
-# New-method template (draft 3)
+# New-method template (draft 4)
 
 **What this is:** the files and the step-by-step checklist for adding a new method to the project, taken from E_6 (the first method built on the E_2-readiness contract) with its specifics stripped out.
-**Status:** DRAFT 3, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7). The code skeletons are unchanged from draft 2. It is reviewed with wave 2's code.
+**Status:** DRAFT 3, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7); draft 4 (1 November 2026) adds what the releases (REL-1), the walk-forward driver and batches (WF-1A), CODE-3 with E_1 revision 2, the scorer (WF-1B) and its Windows rehearsals taught, and is reviewed with the snapshot documents. The code skeletons are unchanged from draft 2.
 **Kept up to date** (owner, 30 October 2026): whenever a method's design, review, code or install shows something this template should say or do differently, in Claude's assessment or the reviewer's, Claude proposes the update in the next package, and it is reviewed like any other document. Each method's handback says whether it found anything for the template.
 **Authority:** none. The rules are in E2R-1 v0.3r3, R2, R3 and the current ratification register; where this file differs from them, they win. Using the template authorises no run.
 
@@ -86,6 +86,10 @@ Do the steps in order. Each says what, where and why.
 - the folder guard;
 - the `FILL IN` guard.
 
+**Windows-safe tests** (WF-1B, TASK_T013): every test runs on the owner's Windows PC as well as on Linux.
+- **Symbolic links:** Windows refuses to create them without a privilege it does not give by default. Wrap every `symlink_to` or `os.symlink` in `try` / `except (OSError, NotImplementedError): self.skipTest('platform disallows symlinks')`, test hard links (`os.link`, which NTFS allows) separately so the refusal is still exercised on Windows, and add the module to the suite runner's allowed-skip list.
+- **No timing assertions, no POSIX-only paths or permissions,** and no reliance on line endings: Windows checkouts get CRLF.
+
 **9. Words to keep out of the method folder.** The import firewall and the folder guard refuse them:
 - the reader module's name (`game_draws_reader`) and the data folder's name;
 - `open(`, `read_bytes`, `write_bytes`, `subprocess`, `import os`;
@@ -104,14 +108,21 @@ They are refused even in comments, because they are checked as text.
 - the exact diffs, the mutation tool and its output;
 - install run-throughs in LF and CRLF clones of the current `main`, on both Pythons.
 
-The package installs the method non-runnable.
+The package installs the method non-runnable. Before the owner installs it, Claude Code rehearses it on the owner's Windows PC in a disposable task clone (a `TASK_T0NN` file). Check every command in a task file against `.claude\settings.json`'s refused patterns before sending it (it refuses, for example, any command containing `.bat`; the tool is `exchange/CLAUDE_WEB_TOOLS/cc/check_task_vs_deny.py`).
 
 **12. Release** (a separate, small, reviewed package; the owner's two deliberate actions, E2R-R58).
 - **The first release:** delete `IN_DEVELOPMENT.txt`, and append `entry_0002.json` with `SUPPORTED` for each variant being released.
 - **Later variants of the same revision:** registry entries only.
-- **Real data is a separate gate:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` stays False until the owner decides otherwise.
+- **Real development data:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` has been True since WF-1A's install (31 October 2026, WF1-3); the other switches stay False and the allowlist stays empty. A released variant meets real past draws only through the walk-forward driver's batches, and the holdout never.
+- **The pattern:** REL-1 released the 39 variants of E_2, E_3, E_4, E_6 to E_10 and E_17 to E_19 together, in both games: one `entry_0002.json` (`SUPPORTED`) per game and variant, and the 11 flags deleted.
 
-## Things that bite (learned on E_6, E_3/E_4, wave 1 and wave 2)
+**13. After release: walk-forward batches and scoring** (WF-1A, WF-1B).
+- **Batches hold the full cohort** (owner, ER-6 declined): a newly released method joins the next batch plan, which freezes every released variant and the target range; the plan's search-log row is written before any run.
+- **Each variant becomes two tracks** (its TOP and WORST readouts) in the ranking report, which scores the frozen forecasts after the plan and the scoring plan are written. The report's families count the tracks (M), so adding methods raises the multiple-testing correction: say so in the specification.
+- **Any change after release is a new revision:** CODE-3 archives the old revision complete under `archive/methods/E_<nnn>/r<k>/` (E_1 revision 2 is the worked example), and the next batch runs the new one.
+- **A method that uses random numbers** needs a seed policy first: a pre-announced NIST Randomness Beacon pulse, fetched by the owner after it is published, checked independently and approved (decisions D-9 to D-11; WF-1B's `src/evaluation/seed_policies/` records are the pattern).
+
+## Things that bite (learned on E_6, E_3/E_4, wave 1, wave 2, the releases and WF-1)
 
 - **The tie rule includes the method and variant IDs.** Two methods with identical scores can order exactly tied labels differently, so compare `ranked_groups`, not TOP and WORST, when claiming a match.
 - **Existing tests may count installed data.** E_6's package changed the last two such tests to rules: the registry-chain count, and "flags only in unreleased method folders". Search the tests for literal counts before adding data.
@@ -128,3 +139,6 @@ The package installs the method non-runnable.
 - **Probe pooled methods with a planted single-label effect** (wave 2). Pooling over labels dilutes an effect carried by one label; E_19's first form missed a planted single-ball cycle. Design the per-label route, or say why pooling is intended.
 - **Divide out what another method already measures** before claiming a new effect (E_19 divides out the age trend and each label's own level), and check with a planted effect that the claim survives.
 - **Every loop that waits for a condition needs a proved exit, for every input** (wave 2, W2R1-C01). An interval that narrows until it excludes zero never does when the true value is exactly zero, so test exact zero separately. Add a cap that refuses as an error, never a guess, and test the zero case, the cap and both signs.
+- **Exact arithmetic can be slow at full size** (PERF-1). Exactness is still the rule, but an exact routine that is fast on a test's few dozen draws can take hours at full size (WF-1B's exact Monte Carlo interval did). Time every exact routine at the real sizes (all targets, R = 10,000) on invented data before the code review, and profile first if anything is slow.
+- **Record files must keep their bytes.** Frozen plans and records are checked byte for byte. On the owner's PC Git converts text files to CRLF when it rewrites them (`core.autocrlf=true`), which can make a committed record look altered (the first Powerball report was refused this way). New record types must be covered by `.gitattributes` (`-text`).
+- **Keep data values out of progress and log lines.** Print stage names and counts only; a static test checks it (PERF-1).
