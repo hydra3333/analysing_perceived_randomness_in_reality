@@ -98,7 +98,8 @@ condensed, and the next steps set out as items 10b to 10d.
              with bit-identical results (the statistics stage: hours down to about 4 minutes on invented
              data), and progress lines for the report tool. Sent for review in EX_114; rehearsal T015.
            Left in this item, in order:
-           a. ChatGPT's check of PERF-1 (EX_115); Claude Code's rehearsal (T015); your PERF-1 install.
+           a. EX_115: PERF-1 PASS (no findings); you accepted it on 1 November 2026. Next: Claude Code's
+              rehearsal (T015), then your PERF-1 install once the Oz Lotto report is committed.
            b. The Oz Lotto report finishes (its results stand; PERF-1 changes no result) and is committed.
            c. The Powerball plan file is restored, and the Powerball report is run and committed.
            d. You attach the two .txt reports; Claude and ChatGPT read them.
