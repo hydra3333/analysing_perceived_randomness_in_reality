@@ -87,7 +87,7 @@ rep("| `Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md` | `2ab34291
 rep("| `METHOD_TEMPLATE/README.md` (and the 9 other template files) | `daac8da1f404e21bd1869609e4621f47bc25a84b3524c1688703c69ca2064214` | The new-method template, draft 3 (W2-7): what to copy, what to fill in, the checklist, \"things that bite\" |",
     "| `METHOD_TEMPLATE/README.md` (and the other template files) | `9e993efafe1528e9a26470d6f557f4ba32d6042b5595b802727c462a7df4d41a` | The new-method template, draft 4 (snapshot; draft 3 `daac8da1...4214` is history): what to copy, what to fill in, the checklist, \"things that bite\" |")
 rep("| `HOLDOUT_EXPOSURE_RECORD_v0_2.md` | `aec833fe031b6d1d73e6acbb81757b50b193425a6899c84d438431d9df4433e2` | Factual, value-free exposure record (6 items) |",
-    "| `HOLDOUT_EXPOSURE_RECORD_v0_3.md` | `9f47ff3976767e6aa14ae009ac1723dd2493f0a83ab2851cd0ec5ed33547bcd5` | Factual, value-free exposure record, with the owner's decision HX-1 (1 November 2026; section 5.1). v0.2 (`aec833fe...33e2`, owner-ratified 26 October 2026 although its header reads CANDIDATE) is history |")
+    "| `HOLDOUT_EXPOSURE_RECORD_v0_3.md` | `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` | Factual, value-free exposure record, with the owner's decision HX-1 (1 November 2026; section 5.1). v0.2 (`aec833fe...33e2`, owner-ratified 26 October 2026 although its header reads CANDIDATE) is history |")
 rep("register v0.20 is installed with this file (register v0.19 is `b3ae51fd162960b64a9d145a52646dceeb3aec5b91e4b359ad7166e5e4c8e6a0`).",
     "register v0.23 is installed with this file (register v0.22 is `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b`).")
 
@@ -288,6 +288,58 @@ v1r7 refreshes v1r6 in place for the chat switch, with more detail than usual (o
 
 # ================================================================ apply
 for old, new in E:
+    c = t.count(old)
+    assert c == 1, (c, old[:90])
+    assert new.isascii(), old[:60]
+    t = t.replace(old, new)
+
+# ================================================================ candidate 2: the cold-read test's gaps (1 Nov 2026)
+R1_LOC = ("`doc/Predictive_Randomness_Experimental_Methods_Research_R1_v0_4.md` mentions draw numbers at or after "
+          "the quarantine boundary on lines 14 (\"R1 v0.4 revision record\"), 59 and 62 (section 1), 81 (section 1.1a), "
+          "926 and 928-931 (section 8A.2), 980 (section 10) and 1056-1057 (section 11). Skip those lines and their "
+          "paragraphs entirely: do not read, print, quote or diff them (located by line number only, with "
+          "`grep -n PATTERN FILE | cut -d: -f1`)")
+E2 = [
+    ("1. Clone `main`. Check that this file is the H-1 edition the current register names, and that the hashes in sections 4 and 7 and Appendix A match `git show HEAD:<path> | sha256sum`.",
+     "1. Clone `main`. Check that this file's Git-content SHA-256 equals its line in the snapshot's manifest, `review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt` (a file cannot name its own hash; later register editions record it), and that the hashes in sections 4 and 7 and Appendix A match `git show HEAD:<path> | sha256sum`."),
+    ("and R-8..R-11 (problem framing, evidence sufficiency, declining unsafe tests, material findings outside a narrow scope).",
+     "and R-8..R-11 (problem framing, evidence sufficiency, declining unsafe tests, material findings outside a narrow scope). R-8..R-11 are ratified (register; H2-TAKEOVER-O01): H-2's section 3 still calls them \"proposed for owner ratification\" only because its rights region is kept byte-identical; the register's ratification prevails."),
+    ("No verifier, no PRE/POST/COMMITTED, no reviewer check of the install zip. Content review is unchanged.",
+     "Until the snapshot these had no verifier. **DOC-10 (the snapshot) has one** (`VERIFY_DOC10_INSTALL.py`, pre/post/committed), because it also replaces files outside `doc/` and `review/` (`README.md`, `.gitattributes`, the Claude Code rulebook); a small document-only install may still use the short form. Content review is unchanged."),
+    ("- **The exchange protocol** (`exchange/README.md` v0.4, `63c19e7`).",
+     "- **The exchange protocol** (`exchange/README.md` v0.5, 1 November 2026, which brought v0.4 (`63c19e7`) into line with this section)."),
+    ("Real weekly forecasting starts only after modelling is complete: train on all eligible draws before the target, predict, freeze and push before the draw, score afterwards, append the draw, repeat.",
+     "Real weekly forecasting (**the prospective mode**, the owner's weekly session MH-1, section 10) starts once the owner declares the pipeline **developed** for the released cohort (GOAL-1); later waves keep adding methods afterwards. Each week: update the results, catch up missed draws in order, score the open forecast, then train on all eligible draws before the next target, predict, freeze and record it before the draw. How R3's FINAL mode maps onto this loop is OPEN for the Mode H design (section 10)."),
+    ("| `METHOD_TEMPLATE/README.md` (and the other template files) | `9e993efafe1528e9a26470d6f557f4ba32d6042b5595b802727c462a7df4d41a` |",
+     "| `METHOD_TEMPLATE/README.md`; `METHOD_SPECIFICATION_TEMPLATE.md` `82705363c26994cea253edd49416a4bc5a6f3cfcfe615ef2261cc2e61e0b9da5`; `CHANGES.md` `eda583e42f93c5734523e49e0f2c4fc849d16ce94a1f0b405b3d192287068ed8` (the other template files unchanged) | `9e993efafe1528e9a26470d6f557f4ba32d6042b5595b802727c462a7df4d41a` |"),
+    ("- **The owner will not run `results_master update`**, even to test; it is gated by `HOLDOUT_OPENED_<GAME>.json`, which is not authorised.",
+     "- **The owner will not run `results_master update`**, even to test, **until he separately approves the first update run at the Mode H stage** (an always-review subject); it is gated by `HOLDOUT_OPENED_<GAME>.json`, which is not authorised. Opening the holdout (writing that record) is also a separate owner approval; who or what writes it is designed in Mode H."),
+    ("Until Mode H, all ten are treated as unseen**, and every rule above stays in force. The record is settled in the snapshot (section 4).",
+     "Until Mode H, all ten are treated as unseen**, and every rule above stays in force. **HX-2 (owner, 1 November 2026):** the holdout is fixed and is never extended; Powerball 1587 and 1588 are ordinary post-holdout draws the same chat saw, and when the catch-up (MH-1) scores them those two catch-up scores carry the same flag (flagged draws remain fully valid and counted, no gap; the flag is information only); until then every rule for draws at or after 1577 applies to them. The record v0.3 is settled in the snapshot (section 4)."),
+    ("When diffing documents containing the R1 draw-1587 paragraph, filter it out first.",
+     "When diffing documents containing the R1 paragraphs that name quarantined draws, filter them out first. **Where they are:** " + R1_LOC + "."),
+    ("- Never let a tool print a quarantined row or the R1 draw-1587 paragraph.",
+     "- Never let a tool print a quarantined row or the R1 paragraphs that name quarantined draws (their line numbers are in section 5.1)."),
+    ("| CODE-2: `run_contract_method` and the switch `ENABLE_CONTRACT_REAL_DEVELOPMENT = False` |",
+     "| CODE-2: `run_contract_method` and the switch `ENABLE_CONTRACT_REAL_DEVELOPMENT` (True since WF-1A, WF1-3) |"),
+    ("master-version pinning (probe A6: `NO_CHANGE` rows share a SHA)",
+     "master-version pinning (probe A1: `NO_CHANGE` rows bump the version with the same SHA)"),
+    ("| Exchange protocol v0.4 | `exchange/README.md` at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |",
+     "| Exchange protocol v0.5 | `exchange/README.md` (committed by Claude with the snapshot's candidate 2), as stored (CRLF) `722df2e0cdef406d04ab635ee0e1bb34dc51a654095315197855fd4670d732ba`; v0.4 at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |"),
+    ("| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |",
+     "| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6` |\n| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |\n| H-2 v1r8 (installed with this file) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`, `4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2`; its blurb `17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a` |\n| Holdout exposure record v0.3 (installed with this file) | `doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md`, `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` |\n| Architecture v0.9 (installed with this file) | `doc/Predictive_Randomness_Software_Architecture_Discussion_v0_9.md`, `3a88e6d166bf09385760a4c191006d2072e01b0f323cd242abf88604012de104` |\n| This file (H-1 v1r7) | identified by the DOC-10 manifest, `review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt` |"),
+    ("| Claude Code rulebook v0.2 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |",
+     "| Claude Code rulebook v0.3 (installed with this file) | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `509e381ed612e7572940014d33f2724172a12a0da8a8a1e76020571ede63b56b` |\n| Claude Code rulebook v0.2 (until the snapshot) | `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |"),
+    ("- **The runner never runs `Run_Method_Rankings.bat` or `Method_Rankings_Report.py`**",
+     "- **Before writing any task file:** check that `.claude/settings.json` holds the owner's deny entry for the report tool (`Bash(*Method_Rankings_Report*--game*)`, added by the owner after the snapshot install; if absent, ask him), then run `check_task_vs_deny.py` on the task file.\n- **The runner never runs `Run_Method_Rankings.bat` or `Method_Rankings_Report.py`**"),
+    ("   - **Mode H:** each method tested once on the ten sealed holdout draws per game (R3 sections 3 and 6; V1), all ten scored, Powerball 1585 and 1586 flagged (HX-1).",
+     "   - **Mode H:** every released variant forecasts each of the ten sealed holdout draws per game walk-forward (each from the draws before it; R3 sections 3 and 6; V1), all frozen before the holdout is opened, then scored once; all ten scored, Powerball 1585 and 1586 flagged (HX-1). OPEN: whether Mode H's ten steps also serve as the first catch-up steps of MH-1, and how the post-holdout draws are handled (Powerball 1587 and 1588 flagged when caught up, HX-2)."),
+    ("   - **the prospective mode:** each method's forecast for the next draw, frozen and published before the draw (R3-D20: the timing proof, GitHub push evidence, is an OPEN implementation choice), scored after it;\n   - then the owner decides whether to declare the system developed.",
+     "   - **the prospective mode** = the owner's weekly session MH-1 (section 12.8): each method's forecast for the next draw, frozen and recorded before the draw, scored after it. R3 sections 10.1(6) and 10.2 and R3-D20 name a GitHub push as the timing proof; under OFF-1 a ratified R3 amendment, or a ratified design that supersedes those clauses, must come before the first prospective forecast. How R3's FINAL mode relates to this loop is OPEN;\n   - then the owner decides whether to declare the system developed (GOAL-1: the pipeline is ready for the released cohort; later waves continue).\n   - **Schedule:** the draws are weekly, Oz Lotto on Tuesday and Powerball on Thursday; the goal is the draws of Tuesday 10 and Thursday 12 November 2026. The critical path: the snapshot installed; the design (reviewed, owner-ratified, version-2 reader first); the code (reviewed, rehearsed by Claude Code, installed); the owner's approvals to run the first update and open the holdout; Mode H; the first weekly session. **FB-1 (owner, 1 November 2026):** if that cannot be ready, the first forecasts slip a week rather than any review or rehearsal being cut; the catch-up covers the missed draws."),
+    ("13. **Appendix A:** current identities.\n",
+     "13. **Appendix A:** current identities.\n14. **Candidate 2 (after a cold-read test of this file by a fresh helper, 1 November 2026):** the 20 gaps it found fixed (`exchange/EX_116_Claude/cold_read_h1_gaps.md`): the prospective-mode, developed and FINAL terms; R3's push-based timing proof against OFF-1; Mode H stated precisely; HX-2 and FB-1; the schedule; who approves the first update; the R1 lines to skip, by line number; the switch in the module map; the 3.15 venv's packages; where the suite runs; document-only installs with a verifier; `exchange/README.md` v0.5; repository access; R-8..R-11 ratified; the source of the no-manual-Lott-check decision; Appendix A and section 0; the deny-entry check before a task file; `--mirror`.\n"),
+]
+for old, new in E2:
     c = t.count(old)
     assert c == 1, (c, old[:90])
     assert new.isascii(), old[:60]

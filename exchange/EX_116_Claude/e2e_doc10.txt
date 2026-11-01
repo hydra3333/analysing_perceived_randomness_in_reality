@@ -5,7 +5,7 @@ PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at
 POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
 results EOL after overlay:      19 w/lf       1 w/none 
 staged:      26 A       5 M 
-COMMITTED PASS: the last commit (531a1db) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
+COMMITTED PASS: the last commit (3475b17) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
 status after: ''
 results EOL after commit:      19 w/lf       1 w/none 
 == crlf: DOC-10 happy path
@@ -15,13 +15,13 @@ PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at
 POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
 results EOL after overlay:      19 w/lf       1 w/none 
 staged:      26 A       5 M 
-COMMITTED PASS: the last commit (58a18e7) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
+COMMITTED PASS: the last commit (58f31e8) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
 status after: ''
 results EOL after commit:      19 w/lf       1 w/none 
 == crlf without the restore step (shows why step 0 exists)
 results working-copy EOL:      19 w/crlf       1 w/none 
 PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
-VERIFICATION STOP: FAIL: unexpected modified paths: results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/UNRESOLVED_ORPHAN.original.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/archive_record.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/canonical_result.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/manifest.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/manual_clearance_record.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/pip_freeze.txt, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/runtime_environment.json, results/architecture_poc/20261023_timeout_no_kill_coord-2a42fac2/status.json, results/audit/SEARCH_LOG.csv, results/method_rankings/OZLOTTO/ranking_OZLOTTO_WF_1474-1693_20261101T042953Z_rr-4be324abd2e04dfd84b3e8087e308770.csv, results/method_rankings/OZLOTTO/ranking_OZLOTTO_WF_1474-1693_20261101T042953Z_rr-4be324abd2e04dfd84b3e8087e308770.json, results/method_rankings/OZLOTTO/ranking_OZLOTTO_WF_1474-1693_20261101T042953Z_rr-4be324abd2e04dfd84b3e8087e308770.txt, results/method_rankings/POWERBALL/ranking_POWERBALL_WF_1286-1576_20261101T084044Z_rr-97bb48617b994a8ea18332cd36bbc98f.csv, results/method_rankings/POWERBALL/ranking_POWERBALL_WF_1286-1576_20261101T084044Z_rr-97bb48617b994a8ea18332cd36bbc98f.json, results/method_rankings/POWERBALL/ranking_POWERBALL_WF_1286-1576_20261101T084044Z_rr-97bb48617b994a8ea18332cd36bbc98f.txt, results/real/development/wf_batches/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/plan.json, results/real/development/wf_batches/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/segment_20261031T080033143489Z_a0e25c9c.json, results/real/development/wf_batches/POWERBALL/wf-3347ad1160df45faaaab1e2eedcedd0f/plan.json, results/real/development/wf_batches/POWERBALL/wf-3347ad1160df45faaaab1e2eedcedd0f/segment_20261031T071337231436Z_23a3de8d.json
+POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
 == negatives (each must STOP)
 -- pre, an untracked file:
 VERIFICATION STOP: FAIL: working tree or index not clean:

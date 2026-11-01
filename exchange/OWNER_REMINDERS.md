@@ -126,8 +126,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Record: the next register edition lists the proposal as owner-committed and unreviewed, with this
   stage as scheduled only; no review is asked for now.
 - Added by the owner (31 October 2026, during the first Powerball batch): the walk-forward batch runs
-  one method run at a time in one process, so it uses one CPU core (about 4% of a 24-thread machine)
-  and takes hours. Study running variants in parallel to use more cores, keeping what the
+  one method run at a time in one process, so it keeps about one logical processor busy (the owner saw
+  about 4% total use on a 24-thread machine; this was never profiled, EX_099 C01) and takes hours. Study running variants in parallel to use more cores, keeping what the
   one-at-a-time order gives today: a reproducible batch, and a clean stop at the first problem.
 - Brought forward by the owner (31 October 2026, WORKERS-1): parallel walk-forward batches, and the
   coordinator's worker limit raised from 6 to the machine's logical processor count (default half),
@@ -160,7 +160,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-009  The new-method template, draft 4, at wave 3
 
 - Asked: noted by Claude on 1 November 2026.
-- Status: OPEN.
+- Status: IN DOC-10 (pending install). Brought forward from wave 3 into the snapshot; DONE when installed.
 - What: bring doc/METHOD_TEMPLATE/ up to date with what releases, WF-1A, E_1 revision 2 and WF-1B
   taught (released methods, walk-forward batches, scoring), as draft 4, in the wave 3 package.
 - When: wave 3 (roadmap item 11).
@@ -179,7 +179,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: noted by Claude on 1 November 2026 (the Powerball report refused: its batch plan file on the owner's PC
   no longer matched its committed bytes; most likely Git rewrote it with Windows line endings).
-- Status: OPEN.
+- Status: IN DOC-10 (pending install); DONE when installed. The cause was confirmed on 1 November 2026: both
+  committed Powerball batch records were w/crlf; the owner restored them. The install's step 0 checks every
+  results file (git ls-files --eol results) first.
 - What: a .gitattributes rule (for example `results/** -text`, as `source_data/**` already has), in an
   owner-ratified package, so Git never converts record files; plus a check of the other committed records.
 - When: the snapshot package.
@@ -195,6 +197,14 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   update when given no arguments; the two-site checker's default mode drives The Lott's website automatically
   (it must never be run that way).
 - When: the snapshot (documents) and the Mode H + update + prospective design (the version-2 reader).
+- Where: exchange/EX_116_Claude/cold_read_probe_findings.md (the 23 findings, and which the snapshot settles).
+- Progress (1 November 2026): register v0.23 records which findings the snapshot settles and which it
+  carries. The owner decided A5 (TSC-1: the checker stays unchanged and is never used again). A third fresh
+  helper then cold-read the new H-1 and found 20 gaps; candidate 2 of the snapshot fixes them
+  (exchange/EX_116_Claude/cold_read_h1_gaps.md). Two needed the owner: HX-2 (Powerball 1587 and 1588 are
+  post-holdout draws, flagged when the catch-up scores them, staying fully valid and counted; the
+  holdout is not extended) and FB-1 (if the
+  week-of-9-November forecasts cannot be ready, slip a week rather than rush).
 
 ## Standing reminders
 

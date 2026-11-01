@@ -1,8 +1,13 @@
-# exchange/ - scratch area for AI-to-AI document exchange (v0.4)
+# exchange/ - scratch area for AI-to-AI document exchange (v0.5)
 
-Supersedes: v0.3 (commit 262a2c4). Change (owner decision, 28 October
-2026): an enclosed document may keep its project file's encoding (see
-"Content rules"). v0.3 added "Message packaging": one upload per
+Supersedes: v0.4 (commit 63c19e7). Changes in v0.5 (Claude, 1 November
+2026, bringing this file into line with practice and with H-1): Claude
+also commits in CLAUDE_CODE_WORKING_FOLDER_TREE/ (owner, 28 and 29
+October 2026); an install package may travel as a zip member of an EX
+zip; the reviewer may send a .md or a zip; Claude's two owner working
+lists and its tools folder live here too. v0.4 (owner decision, 28
+October 2026): an enclosed document may keep its project file's
+encoding (see "Content rules"). v0.3 added "Message packaging": one upload per
 message; the blurb goes inside the EX message, and any documents
 travel with it in a single zip.
 
@@ -19,14 +24,21 @@ Status of anything in this folder
   them into the main tree (doc/, review/, src/, etc.).
 - If anything here conflicts with a document in the main tree, the main
   tree prevails.
-- AI chats may commit ONLY inside exchange/. Nothing outside it is touched.
+- The Claude chat commits only inside exchange/ and inside
+  CLAUDE_CODE_WORKING_FOLDER_TREE/ (the Claude Code local runner's task
+  files and tools; owner, 28 and 29 October 2026). The ChatGPT reviewer
+  chat has no write route. Nothing else is touched by an AI chat.
+- Besides EX files, Claude keeps here the owner's two working lists
+  (OWNER_ROADMAP.md, OWNER_REMINDERS.md; CRLF, US-ASCII; not rules) and
+  its working tools (CLAUDE_WEB_TOOLS/, with a README).
 
 How messages travel
 -------------------
-- ChatGPT -> Claude: ChatGPT produces a downloadable .md file; the owner
-  downloads it and uploads it to the Claude chat. (ChatGPT has no write
+- ChatGPT -> Claude: ChatGPT produces a downloadable .md file, or a zip
+  packaged as below; the owner downloads it and uploads it to the Claude
+  chat (he does not save it into the repository). (ChatGPT has no write
   route to this repo; its GitHub connector is read-only.)
-- Claude -> ChatGPT: Claude returns a downloadable .md file; the owner
+- Claude -> ChatGPT: Claude returns a downloadable .md file or zip; the owner
   uploads it to the ChatGPT chat. Alternatively the owner may simply tell
   ChatGPT the EX number, and ChatGPT reads it from exchange/ on main.
 - Record: Claude commits every EX file from both sides into exchange/,
@@ -44,7 +56,9 @@ phone relays, by ONE file per message:
     EX_NNN_<Sender>.md   the message (blurb), with a "Contents:" header
                          line listing every other file in the zip
     <document files>     each keeping its own versioned filename
-- No zip inside a zip. Text files inside follow the content rules below.
+- No zip inside a zip, with one exception: an install package travels as
+  its own zip member (built deterministically), with its member list as
+  a second member. Text files inside follow the content rules below.
 - Record: Claude commits the zip byte-for-byte AND its extracted files in
   exchange/EX_NNN_<Sender>/ so they can be read on GitHub without
   unzipping. ChatGPT, when reading from the repo, reads that folder.

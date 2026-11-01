@@ -2,8 +2,8 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 1 November 2026, after WF-1B v3 passed review (EX_113) and you accepted it; item 10
-condensed, and the next steps set out as items 10b to 10d.
+Last updated: 1 November 2026 (evening), after both first reports, the PERF-1 install and the
+snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with your design inputs.
 
 ## A few words used below
 
@@ -13,7 +13,12 @@ condensed, and the next steps set out as items 10b to 10d.
 - **Installed (not yet runnable):** the method's code and tests are in the repository and pass, but
   its registry entry says "not released" and its folder holds an IN_DEVELOPMENT flag, so every request
   to run it is refused before any data is read. A later small "release" package switches it on.
-- **Released:** allowed to run, but still only on invented test data until WF-1 (below) is approved.
+- **Released:** allowed to run. Since WF-1A (31 October 2026) released methods also run on the real
+  development draws (walk-forward batches you authorise), never on the sealed holdout.
+- **Prospective mode:** the weekly production loop (your MH-1): each week, per game, the results
+  update, the catch-up of any missed draws, the scoring of the open forecast, and the next forecast.
+- **Developed:** you declare the pipeline ready for the released methods; later waves keep adding
+  methods afterwards.
 
 ## How every package goes (the routine)
 
@@ -67,7 +72,7 @@ condensed, and the next steps set out as items 10b to 10d.
            The old ChatGPT chat had reached its limit, so Claude wrote both, on your instruction, with
            H-2's reviewer rights unchanged byte for byte. The new ChatGPT reviewer chat took over on
            30 October 2026: its takeover check found 0 BLOCKER, 0 CORRECTION and 1 OPTIONAL.
-10. NOW  - Releases and WF-1: switch the methods on, run them on past draws (walk-forward: each past
+10. DONE - Releases and WF-1: switch the methods on, run them on past draws (walk-forward: each past
            draw predicted only from the draws before it), and score them, so the project produces
            its first real measured results.
            Done so far (all 31 October to 1 November 2026, each reviewed, ratified by you and checked
@@ -103,8 +108,9 @@ condensed, and the next steps set out as items 10b to 10d.
              records were restored (line endings) and its report committed (608025c; about 26 minutes).
              Both games: no method beats chance (development evidence only). Item 10 is complete.
 10b. NOW  - The snapshot (your request, 1 November 2026): one document package (DOC10_Snapshot_v1),
-           sent to ChatGPT in EX_116; then your ratification and install, then the new Claude chat:
-           - register v0.23 (EX_099 to EX_111, WORKERS-1, WB-0 to WB-2, the seed, the installs);
+           to go to ChatGPT in EX_116 (candidate 2, after a cold-read test of H-1 by a fresh helper
+           found 20 gaps, now fixed); then your ratification and install, then the new Claude chat:
+           - register v0.23 (EX_099 to EX_115, the installs, the two reports, your decisions);
            - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
            - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);
            - the Claude Code rulebook: the report tool joins rule 7's "never run" list, with the
@@ -118,20 +124,32 @@ condensed, and the next steps set out as items 10b to 10d.
            - the findings of the two cold-read probes (1 November 2026: the results updater, and the
              performance plan), each settled in the documents or carried into the Mode H design.
 10c. NEXT - Mode H, the results update and the prospective mode (your goal: forecasts for the draws of
-           the week of 9 November 2026). Designed together, alongside the snapshot:
-           - Mode H: each method tested once on the 10 sealed holdout draws per game (Powerball
-             1577-1586, Oz Lotto 1694-1703);
-           - the results update: the draws after the holdout added to the results, by the update
-             process already designed;
-           - the prospective mode: each method's forecast for the next draw, frozen and published
-             before the draw;
+           the week of 9 November 2026: Oz Lotto on Tuesday 10, Powerball on Thursday 12). Designed
+           together by the new Claude chat, straight after the snapshot is installed:
+           - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
+             (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, all frozen
+             before the holdout is opened, then scored once; Powerball 1585 and 1586 flagged (HX-1);
+           - the results update: the updater exists as code (your tool), but how it is used with
+             Mode H is still to be designed. The critical gap: today every reader accepts only the
+             first (version-1) results file, so a version-2 reader is needed first (probe A1). The
+             first update run and the opening of the holdout each need your separate approval;
+           - the prospective mode, your weekly session (MH-1): update, catch up missed draws in order,
+             score the open forecast, freeze and publish the next one; PROSPECTIVE and CATCH-UP kept
+             apart; Powerball 1587 and 1588 flagged when caught up (HX-2; flagged draws stay
+             fully valid and counted, no gaps);
+           - your other inputs: everything runs offline, GitHub only an optional witness (OFF-1; R3's
+             push-based timing proof must be amended first); the weekly path is incremental (EFF-1);
+           - if it cannot be ready for the week of 9 November, it slips a week rather than being
+             rushed (FB-1); the catch-up covers the missed draws;
            then you decide whether to declare the system developed.
 10d. NEXT - WF-1C, the workers change (your decision WORKERS-1, 31 October 2026), in its own design
            round carrying EX_101's and EX_105's obligations: the coordinator's limit becomes 1 up to the
            machine's logical processor count (24 on your PC), default half (12); the walk-forward
            driver gets --workers (variants in parallel, same records at any worker count, clean stop);
-           a progress line; a compare command; the identity tests run once. Until then the six-worker
-           limit stands.
+           a progress line; a compare command; the identity tests run once. Open for its design: the
+           60-worker cap, a 4 GiB memory floor, separate approvals for any real-data rerun and for
+           Windows multi-process tests (EX_105 C03), and WB-3/WB-4. Until then the coordinator's
+           six-worker limit stands, and the walk-forward driver runs one method run at a time.
 11. NEXT - Wave 3, look-alike past draws (with the template's draft 4, reminder R-009):
            E_27 Nearest Neighbour of Historical Draw Sets - predict from what followed the past draws
                 most like the latest one;
@@ -158,11 +176,11 @@ condensed, and the next steps set out as items 10b to 10d.
            measure first, then decide whether anything is worth speeding up. Your proposal:
            doc/Deferred_Performance_Engineering_Proposal_v0_1.md (v0.1, committed at 1050338).
 
-The order within a wave may shift once its design starts. The NIST seed (reminder R-004) is settled
-at the first method that uses random numbers; that is probably E_17 (Method A) in wave 2, if its
-design keeps the simulated fair-draw comparison.
+The order within a wave may shift once its design starts. The NIST seed (reminder R-004) was settled
+on 31 October 2026 for the scorer's fair-draw simulator (N1); a later method that uses random numbers
+gets its own seed policy the same way.
 
 ## Later (each its own package and decision)
 
-- Releases of E_6, E_3, E_4, wave 1 and wave 2 (E_6's remember-everything version first), with step 10.
-- Holdout testing (the sealed draws), and then real next-draw predictions from all methods together.
+- Each new wave's methods are released and join the walk-forward batches, then the weekly session,
+  as they are installed (the releases of E_6 to wave 2 were done at step 10).

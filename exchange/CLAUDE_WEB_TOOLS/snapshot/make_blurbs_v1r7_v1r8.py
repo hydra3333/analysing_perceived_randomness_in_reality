@@ -56,8 +56,10 @@ t = apply(t, [(old_state, """**Where things stand (1 November 2026, at the snaps
 - **Next, in the owner's order:**
   1. Mode H (each method tested once on the ten sealed holdout draws per game), the results update and the
      prospective (next-draw) mode, designed together. The owner's goal is forecasts for the draws of the week of
-     9 November 2026. H-1 section 10 and section 12.8 list what is still open, including a version-2 master
-     reader that the results update needs;
+     9 November 2026 (Oz Lotto Tuesday 10, Powerball Thursday 12); if it cannot be ready, it slips a week
+     rather than being rushed (FB-1). H-1 section 10 and section 12.8 list what is still open, including a
+     version-2 master reader that the results update needs, and the owner's binding inputs MH-1, OFF-1 and
+     EFF-1;
   2. WF-1C, the workers change;
   3. wave 3, with the owner's Method B as E_45;
   4. an NL-means discussion, waves 4 to 11 and the ensembles last.

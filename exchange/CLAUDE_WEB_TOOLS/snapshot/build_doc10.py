@@ -131,7 +131,7 @@ Windows CMD, repository root, with the project venv. **Save the ZIP to `E:\\TEMP
 
 ## 0. First, check the line endings of the committed record files
 
-The new `.gitattributes` rule (`results/** -text`) stops Git converting record files. Once it is in place, any record file whose working copy Git had already converted shows as modified, and the POST check would stop. So check first:
+The new `.gitattributes` rule (`results/** -text`) stops Git converting record files. Once it is in place, any record file whose working copy Git had already converted can show as modified whenever Git next rechecks it (at the POST check, or at some later `git status`). So check first:
 
 ```bat
 git status --short
