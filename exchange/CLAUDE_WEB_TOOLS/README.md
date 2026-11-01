@@ -75,8 +75,11 @@ Scripts that take their trees and output folders as arguments have no other hidd
 
 ## Gotchas learned the hard way
 
-- **Never `pkill -f unittest`** (or any pattern that matches your own shell's command line): it killed the shell
-  twice (exit 144). Find PIDs with `ps -eo pid,cmd` and kill those.
+- **Your own cloud test jobs only.** Never stop a job by a name pattern (`pkill -f unittest` killed this
+  workspace's own shell twice, exit 144). For an expendable, non-scientific test job you started yourself in the
+  cloud workspace, find it with `ps -eo pid,ppid,etime,cmd`, confirm its parent and full command line, and stop
+  only that one; if unsure, let it finish. A PID is neither proof of ownership nor permission: never stop any
+  project process (experiment, worker, coordinator, batch, report) on any machine (Architecture 5C; EX_117 C02).
 - **Run the e2e rehearsals one after another.** Two clones made in parallel from a freshly fetched mirror failed
   with "tmp_pack missing".
 - **Long jobs:** the Bash tool times out at 2 minutes by default (10 at most). Start long jobs with `nohup ... &`,
