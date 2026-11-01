@@ -99,3 +99,7 @@ Scripts that take their trees and output folders as arguments have no other hidd
 ## snapshot/ (added 1 November 2026)
 
 The DOC-10 snapshot tools: build_doc10.py (package builder), e2e_doc10.sh (rehearsal), assemble_ex116.py (EX assembly; --to-exchange off by default), and the document generators make_register_v23.py, make_arch_v09.py, make_h1_v1r7.py (uses section12.md, kept in the package review folder), make_blurbs_v1r7_v1r8.py and make_h2_v1r8.py. Copies are also in review/DOC10_Snapshot_v1/ once the snapshot is installed. Hard-coded paths are under /home/claude/work/snap/.
+
+## previous_chat_working_log.md (added 1 November 2026)
+
+The previous chat's running notes, for reference only; the register, H-1 and the EX record prevail.

@@ -160,7 +160,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-009  The new-method template, draft 4, at wave 3
 
 - Asked: noted by Claude on 1 November 2026.
-- Status: IN DOC-10 (pending install). Brought forward from wave 3 into the snapshot; DONE when installed.
+- Status: DONE (1 November 2026; installed with DOC-10 at 7bb0bfd). Brought forward from wave 3 into the snapshot.
 - What: bring doc/METHOD_TEMPLATE/ up to date with what releases, WF-1A, E_1 revision 2 and WF-1B
   taught (released methods, walk-forward batches, scoring), as draft 4, in the wave 3 package.
 - When: wave 3 (roadmap item 11).
@@ -179,7 +179,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: noted by Claude on 1 November 2026 (the Powerball report refused: its batch plan file on the owner's PC
   no longer matched its committed bytes; most likely Git rewrote it with Windows line endings).
-- Status: IN DOC-10 (pending install); DONE when installed. The cause was confirmed on 1 November 2026: both
+- Status: DONE (1 November 2026; the rule installed with DOC-10 at 7bb0bfd, whose install also found and restored
+  results/audit/SEARCH_LOG.csv, which had mixed line endings on the owner's PC). The cause was confirmed on 1 November 2026: both
   committed Powerball batch records were w/crlf; the owner restored them. The install's step 0 checks every
   results file (git ls-files --eol results) first.
 - What: a .gitattributes rule (for example `results/** -text`, as `source_data/**` already has), in an
@@ -190,7 +191,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner asked for the probes on 1 November 2026; run the same day by two fresh helpers that read the
   documents only.
-- Status: OPEN.
+- Status: PARTLY DONE. The snapshot (DOC-10, installed 7bb0bfd) settled the document findings and
+  TSC-1 settled the checker finding; the rest is carried into the Mode H + update + prospective design
+  (register v0.23 lists which).
 - What: Claude's list of 23 findings (gaps, ambiguities, stale text). The most important: the readers accept
   only the version-1 master, so any results update makes every run and report refuse until a version-2 reader
   is designed (Mode H design); the HOLDOUT_OPENED record is defined only in code; the updater's launcher runs an
