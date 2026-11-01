@@ -43,7 +43,7 @@ rep("# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r7 (D
 rep("**Repository target:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r7.md`",
     "**Repository target:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`")
 rep("**Status:** **DRAFT, for owner ratification with H-1 v1r6 and Register v0.20; NOT installed.**",
-    "**Status:** **DRAFT, for the reviewer's check and owner ratification with H-1 v1r7 and Register v0.23 (the snapshot); NOT installed.**")
+    "**Status:** **OWNER-RATIFIED 1 November 2026 (content reviewed in EX_117, EX_119 and EX_121), with H-1 v1r7 and Register v0.23 (the snapshot); installed with DOC-10.**")
 rep("**Prepared:** 30 October 2026 (Australia/Adelaide).",
     "**Prepared:** 1 November 2026 (Australia/Adelaide).")
 rep(t[t.index('**Author:** **Claude (the primary designer and coder), on the project owner'):t.index('\n', t.index('**Author:** **Claude (the primary designer and coder), on the project owner'))],

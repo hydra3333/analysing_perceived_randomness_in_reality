@@ -112,8 +112,9 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
            found 20 gaps, now fixed). EX_117: RECHECK with 3 corrections (a historical paragraph in the
            register, H-1's wording on stopping test jobs, a line-ending check after the pull); fixed in
            candidate 3, sent in EX_118. EX_119: one correction left (the line-ending checker must treat
-           a nonempty file with no line ending as a STOP); fixed in candidate 4, sent in EX_120. Then
-           your ratification and install, then the new Claude chat:
+           a nonempty file with no line ending as a STOP); fixed in candidate 4, sent in EX_120. EX_121: PASS. You ratified
+           it on 1 November 2026; the final build (status lines only) is in EX_122. Next: your install,
+           your settings.json line, then the new Claude chat:
            - register v0.23 (EX_099 to EX_115, the installs, the two reports, your decisions);
            - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
            - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);

@@ -60,9 +60,9 @@ Claude checks the owner's results commits by paths and sizes only; no AI session
 
 EDITS = [
     ('**Version:** 0.8 OWNER-RATIFIED 27 October 2026 (drafted 26 October 2026): Architecture v0.7 plus',
-     "**Version:** 0.9 CANDIDATE 1 November 2026, for the reviewer's check and the owner's ratification: Architecture v0.8 plus a status section (0B) and five pointer lines; no design decision changes. Predecessor: 0.8 OWNER-RATIFIED 27 October 2026 (drafted 26 October 2026): Architecture v0.7 plus"),
+     "**Version:** 0.9 OWNER-RATIFIED 1 November 2026 (content reviewed in EX_117, EX_119 and EX_121): Architecture v0.8 plus a status section (0B) and five pointer lines; no design decision changes. Predecessor: 0.8 OWNER-RATIFIED 27 October 2026 (drafted 26 October 2026): Architecture v0.7 plus"),
     ('**Edition status: OWNER-RATIFIED 27 October 2026; Architecture v0.7 is historical.**',
-     '**Edition status: CANDIDATE; Architecture v0.8 stays operative until the owner ratifies this edition.** Edition 0.8: **OWNER-RATIFIED 27 October 2026; Architecture v0.7 is historical.**'),
+     '**Edition status: OWNER-RATIFIED 1 November 2026; Architecture v0.8 is historical.** Edition 0.8: **OWNER-RATIFIED 27 October 2026; Architecture v0.7 is historical.**'),
     ('\n---\n\n## 0. Document purpose, authority and controls\n',
      '\n' + SECTION_0B + '\n---\n\n## 0. Document purpose, authority and controls\n'),
     ('- **Wrapper:** `Run_Method_Rankings.bat` follows the ratified wrapper rules',

@@ -113,20 +113,20 @@ Paths in this section are under `doc/`, except those beginning `review/`, `excha
 | `Predictive_Randomness_WF1B_Supplement_Design_v0_1r1.md` | Claude; reviewed by the ChatGPT reviewer chat (EX_105, EX_107) | OWNER-RATIFIED 31 Oct 2026; installed at `24d192f`; `a2f470797f31e387f44b5492ed406f1376b3eb92f2181dc76f6ac4c80168185a` |
 | `GASI_thought_experiments/Proposal_Methods_FROM_GAIS_MORE_EXPERIMENTS_v0.1.md` | The owner (committed at `b67c045` and `b022606`); not reviewed | The owner's ideas; not ratified; `29307c472cd4dc52908b1148245cbd413f9934b4ba0c89506489e9aaebdeb9f5` |
 | `RATIFICATION_REGISTER_v0_22.md` | Claude; content checked by the ChatGPT reviewer chat (EX_099, EX_101) | OWNER-RATIFIED 31 Oct 2026; installed at `2b1e7e3`; superseded by this register; `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |
-| `Predictive_Randomness_Software_Architecture_Discussion_v0_9.md` | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `HANDOVER/Claude_Primary_Handover_H1_v1r7.md` and its introductory blurb | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md` and its introductory blurb | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `HOLDOUT_EXPOSURE_RECORD_v0_3.md` | Claude, recording HX-1 and HX-2; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `METHOD_TEMPLATE/` (draft 4) | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `README.md` (repository root) | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (the Claude Code rulebook v0.3) | Claude; for the reviewer's check | In this package, pending ratification; identified at installation |
-| `.gitattributes` (repository root; a rule that Git never converts files under `results/`) | Claude, for R-011; for the reviewer's check | In this package, pending ratification; identified at installation |
+| `Predictive_Randomness_Software_Architecture_Discussion_v0_9.md` | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `HANDOVER/Claude_Primary_Handover_H1_v1r7.md` and its introductory blurb | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md` and its introductory blurb | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `HOLDOUT_EXPOSURE_RECORD_v0_3.md` | Claude, recording HX-1 and HX-2; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `METHOD_TEMPLATE/` (draft 4) | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `README.md` (repository root) | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (the Claude Code rulebook v0.3) | Claude; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
+| `.gitattributes` (repository root; a rule that Git never converts files under `results/`) | Claude, for R-011; for the reviewer's check | OWNER-RATIFIED 1 November 2026; installed with DOC-10, identified at installation |
 
 """
 
 EDITS = [
     ('**Register version:** v0.22 OWNER-RATIFIED 31 October 2026, recording',
-     "**Register version:** v0.23 CANDIDATE 1 November 2026 for the reviewer's content check (not owner-ratified), recording register v0.22's installation, the seed brought forward and approved, the WF-1B supplement design and code reviews, the WF-1B and PERF-1 installations, the first real report runs, the owner's decisions GOAL-1, SD-1, SD-2, WB-0 to WB-2, WF1B-A1, WF1B-A2, PF-1, PF-2, HX-1, HX-2, ORD-1, HO-1, TSC-1, MH-1, OFF-1, EFF-1 and FB-1, the cold-read probes, the cold-read test of H-1 and the snapshot package's documents; v0.22 OWNER-RATIFIED 31 October 2026, recording"),
+     "**Register version:** v0.23 OWNER-RATIFIED 1 November 2026 (content reviewed in EX_117, EX_119 and EX_121), recording register v0.22's installation, the seed brought forward and approved, the WF-1B supplement design and code reviews, the WF-1B and PERF-1 installations, the first real report runs, the owner's decisions GOAL-1, SD-1, SD-2, WB-0 to WB-2, WF1B-A1, WF1B-A2, PF-1, PF-2, HX-1, HX-2, ORD-1, HO-1, TSC-1, MH-1, OFF-1, EFF-1 and FB-1, the cold-read probes, the cold-read test of H-1 and the snapshot package's documents; v0.22 OWNER-RATIFIED 31 October 2026, recording"),
     ('This register is installed by the document-only procedure, in one commit identified after installation.',
      'This register is installed by the document-only procedure, in one commit identified after installation. For v0.23, the installation commits `2b1e7e3` (register v0.22) and `24d192f` (WF-1B), the Claude Code reports `bf47668`, `40958d6` and `2cc6933`, and the exchange records from `0b067f1` onward were verified by Claude from GitHub; the Windows results are owner-reported. Register v0.23 is installed with the snapshot package, by the document-only procedure, in one commit identified after installation.'),
     ('\n## Interpretation and verification\n\n- **Until the integration editions',
