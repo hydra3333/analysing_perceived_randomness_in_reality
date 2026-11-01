@@ -214,3 +214,13 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and
   whenever asked.
 - Save every downloaded ZIP to E:\TEMP, never into the repository (the browser defaults to review/).
+- Model choice (owner, 2 November 2026; provisional, the owner may drop it after assessing it): before
+  starting any of these, Claude stops and says "Suggest switching to Fable (High) for this" and waits for
+  the owner's "go": designing a new subsystem or a major change to one (for example Mode H, the results
+  update, the version-2 reader, catch-up, the prospective record); statistical design or validity
+  questions; root-cause investigation of an unexplained failure or STOP; a cold-read review of a design
+  before it goes to ChatGPT. Everything else (packaging, task files, install steps, roadmap and reminder
+  updates, explanations, paste blocks) goes ahead without asking. When a Fable task is finished, Claude
+  says so, so the owner can switch back to Opus before the everyday work. Claude cannot see which model
+  is selected, so it always flags and holds; a request mixing both kinds is split at the boundary.
+  To be carried into the next H-1 edition.
