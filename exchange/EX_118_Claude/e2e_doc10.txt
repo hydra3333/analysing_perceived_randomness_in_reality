@@ -1,0 +1,52 @@
+base: 7ca107c1d0b9a7794f6816c81d1ff3e36d2e9114
+== lf: DOC-10 happy path
+results working-copy EOL before:      19 w/lf       1 w/none 
+EOL check before PRE: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+results EOL after overlay:      19 w/lf       1 w/none 
+EOL check after POST: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+staged:      26 A       5 M 
+COMMITTED PASS: the last commit (8b7bf66) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
+status after: ''
+results EOL after commit:      19 w/lf       1 w/none 
+EOL check before push: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+== crlf: DOC-10 happy path
+results working-copy EOL before:      19 w/crlf       1 w/none 
+after the restore step:      19 w/lf       1 w/none ; status ''
+EOL check before PRE: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+results EOL after overlay:      19 w/lf       1 w/none 
+EOL check after POST: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+staged:      26 A       5 M 
+COMMITTED PASS: the last commit (d2ea73e) added exactly 26 files, modified 5 and deleted 0; all Git blobs match.
+status after: ''
+results EOL after commit:      19 w/lf       1 w/none 
+EOL check before push: EOL PASS: 20 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+== crlf without the restore step (shows why step 0 exists)
+results working-copy EOL:      19 w/crlf       1 w/none 
+EOL check: EOL STOP: 19 of 20 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+PRE PASS: clean tree; 26 new paths absent; 5 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+EOL check after POST: EOL STOP: 19 of 20 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+== negatives (each must STOP)
+-- pre, an untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, a new file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: doc/RATIFICATION_REGISTER_v0_23.md
+-- post, a replaced file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: README.md
+-- post, a new file missing:
+VERIFICATION STOP: FAIL: unexpected new paths: doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md
+-- post, an unexpected change:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/evaluation/n1.py
+-- committed, a stray file committed too:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths; differences (path, status): [('stray2.txt', 'A')]
+POST PASS: exactly the 26 expected new paths, 5 modified files and 0 staged deletions, all with the expected bytes.
+-- EOL, one record file rewritten with CRLF after the pull (POST may still pass; the EOL check must STOP):
+VERIFICATION STOP: FAIL: unexpected modified paths: results/real/development/wf_batches/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/plan.json
+EOL STOP: 1 of 20 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md
+end

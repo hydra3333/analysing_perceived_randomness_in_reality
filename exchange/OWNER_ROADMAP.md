@@ -108,8 +108,11 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
              records were restored (line endings) and its report committed (608025c; about 26 minutes).
              Both games: no method beats chance (development evidence only). Item 10 is complete.
 10b. NOW  - The snapshot (your request, 1 November 2026): one document package (DOC10_Snapshot_v1),
-           to go to ChatGPT in EX_116 (candidate 2, after a cold-read test of H-1 by a fresh helper
-           found 20 gaps, now fixed); then your ratification and install, then the new Claude chat:
+           sent to ChatGPT in EX_116 (candidate 2, after a cold-read test of H-1 by a fresh helper
+           found 20 gaps, now fixed). EX_117: RECHECK with 3 corrections (a historical paragraph in the
+           register, H-1's wording on stopping test jobs, a line-ending check after the pull); fixed in
+           candidate 3, sent in EX_118 for a focused recheck. Then your ratification and install, then
+           the new Claude chat:
            - register v0.23 (EX_099 to EX_115, the installs, the two reports, your decisions);
            - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
            - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);

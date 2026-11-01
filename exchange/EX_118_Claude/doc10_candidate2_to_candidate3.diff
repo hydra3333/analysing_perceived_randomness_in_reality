@@ -1,0 +1,387 @@
+# DOC10_Snapshot_v1: complete diff of the package folder, candidate 2 (EX_116) to candidate 3 (EX_118).
+diff -ruN a/CHECK_RESULTS_EOL.py b/CHECK_RESULTS_EOL.py
+--- a/CHECK_RESULTS_EOL.py	1970-01-01 09:30:00.000000000 +0930
++++ b/CHECK_RESULTS_EOL.py	2026-11-01 20:58:43.427537353 +1030
+@@ -0,0 +1,38 @@
++#!/usr/bin/env python3
++"""DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
++
++It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
++changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
++file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
++Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
++"""
++import argparse, subprocess, sys
++
++ap = argparse.ArgumentParser()
++ap.add_argument('--repo', required=True)
++repo = ap.parse_args().repo
++r = subprocess.run(['git', '-C', repo, 'ls-files', '--eol', '--', 'results'], capture_output=True, text=True)
++if r.returncode != 0:
++    print('EOL STOP: git ls-files failed:', r.stderr.strip())
++    sys.exit(1)
++bad, n, empty = [], 0, 0
++for line in r.stdout.splitlines():
++    meta, _tab, path = line.partition('\t')
++    w = next((p for p in meta.split() if p.startswith('w/')), 'w/?')
++    n += 1
++    if w == 'w/lf':
++        continue
++    if w == 'w/none':
++        empty += 1
++        continue
++    bad.append(f'{w:8} {path}')
++if n == 0:
++    print('EOL STOP: no tracked files under results/ (wrong folder?)')
++    sys.exit(1)
++if bad:
++    for b in bad:
++        print('  ' + b)
++    print(f'EOL STOP: {len(bad)} of {n} tracked files under results/ are not LF in the working tree. Do not continue, '
++          'commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.')
++    sys.exit(1)
++print(f'EOL PASS: {n} tracked files under results/, all w/lf ({empty} empty, w/none). Read-only: nothing changed.')
+diff -ruN a/INSTALL_INSTRUCTIONS.md b/INSTALL_INSTRUCTIONS.md
+--- a/INSTALL_INSTRUCTIONS.md	2026-11-01 20:58:43.423411257 +1030
++++ b/INSTALL_INSTRUCTIONS.md	2026-11-01 20:58:43.427553297 +1030
+@@ -8,22 +8,23 @@
+ 
+ ```bat
+ git status --short
+-git ls-files --eol results
++python "E:\TEMP\DOC10_Snapshot_v1\CHECK_RESULTS_EOL.py" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing, and every line of the second command shows `w/lf` (one empty log file may show `w/none`). **If any line shows `w/crlf`, stop here and send Claude the output:** Claude will give you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
++Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`CHECK_RESULTS_EOL.py`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+ 
+ ## 1. Update, check, copy, check
+ 
+ ```bat
+ git pull --ff-only
++python "E:\TEMP\DOC10_Snapshot_v1\CHECK_RESULTS_EOL.py" --repo .
+ python "E:\TEMP\DOC10_Snapshot_v1\VERIFY_DOC10_INSTALL.py" --repo . --phase pre
+ xcopy "E:\TEMP\DOC10_Snapshot_v1\repo_overlay\*" . /E /Y
+ python "E:\TEMP\DOC10_Snapshot_v1\VERIFY_DOC10_INSTALL.py" --repo . --phase post
+-git ls-files --eol results
++python "E:\TEMP\DOC10_Snapshot_v1\CHECK_RESULTS_EOL.py" --repo .
+ ```
+ 
+-Expected: the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `31 File(s) copied`; `POST PASS`; and every results line still `w/lf` (or `w/none`). If anything prints `STOP`, do not commit: send Claude the output.
++Expected: the pull says `Fast-forward` or `Already up to date`; `EOL PASS` (the pull rewrote no record file); `PRE PASS`; `31 File(s) copied`; `POST PASS`; `EOL PASS` again. If anything prints `STOP` (including `EOL STOP`, even when PRE or POST said PASS), do not commit: send Claude the output.
+ 
+ ## 2. Stage, commit, check, and only then push
+ 
+@@ -33,13 +34,14 @@
+ git commit -m "DOC-10: the snapshot - register v0.23, Architecture v0.9, H-1 v1r7 and H-2 v1r8 with blurbs, holdout exposure record v0.3, template draft 4, README, Claude Code rulebook v0.3, .gitattributes results rule (document-only install)"
+ python "E:\TEMP\DOC10_Snapshot_v1\VERIFY_DOC10_INSTALL.py" --repo . --phase committed
+ git status --short
++python "E:\TEMP\DOC10_Snapshot_v1\CHECK_RESULTS_EOL.py" --repo .
+ ```
+ 
+-Expected: the first `git status --short` lists 26 lines starting with `A` and 5 starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file). Git's "LF will be replaced by CRLF" warnings while staging are normal.
++Expected: the first `git status --short` lists 26 lines starting with `A` and 5 starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file); then `EOL PASS`. Git's "LF will be replaced by CRLF" warnings while staging are normal.
+ 
+ **If the committed check prints `STOP`: do not push, and do not reset or undo anything.** Send Claude the whole output.
+ 
+-**Push only after `COMMITTED PASS`:**
++**Push only after `COMMITTED PASS` and the last `EOL PASS`:**
+ 
+ ```bat
+ git push
+diff -ruN a/VERIFY_DOC10_INSTALL.py b/VERIFY_DOC10_INSTALL.py
+--- a/VERIFY_DOC10_INSTALL.py	2026-11-01 20:58:43.423263661 +1030
++++ b/VERIFY_DOC10_INSTALL.py	2026-11-01 20:58:43.427516180 +1030
+@@ -27,26 +27,26 @@
+ NEW = {  # path: Git-content SHA-256 (LF)
+     'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md': '4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2',
+     'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8_introductory_blurb.md': '17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a',
+-    'doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md': '4b2f8261c5a7ff22ee71ddb02972b5026442e63671f2cbf36f7c0dbf6e6fa9dd',
++    'doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md': '60ef995b3cc3575de4fa7b943af773a3cf9462dbfe36568e2f0c7a0d62ade250',
+     'doc/HANDOVER/Claude_Primary_Handover_H1_v1r7_introductory_blurb.md': 'bc46c07a1705aa49738ba6b8d8797f46df40cbc7996e4ba22a25eaefdab73240',
+     'doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md': '53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38',
+     'doc/METHOD_TEMPLATE/CHANGES.md': 'eda583e42f93c5734523e49e0f2c4fc849d16ce94a1f0b405b3d192287068ed8',
+     'doc/Predictive_Randomness_Software_Architecture_Discussion_v0_9.md': '3a88e6d166bf09385760a4c191006d2072e01b0f323cd242abf88604012de104',
+-    'doc/RATIFICATION_REGISTER_v0_23.md': 'dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6',
++    'doc/RATIFICATION_REGISTER_v0_23.md': '22a6f2f7a213bbd86124fd77d52df7b0c0bdcf673298429f9341005bc8e51cdc',
+     'review/DOC10_Snapshot_v1/H1_blurb_v1r6_to_v1r7.diff': 'a84990ef39d3ce1f2ca6cad788d2d7d3d477bec8fecd7c25c6200aefbe140c17',
+-    'review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff': '81791b1694876e9eb5525e7e939e73dbc84d05fd37a2e648efd0e92d5651b26e',
++    'review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff': 'af812f44d35d1377ac3e89f27b5b5f4c1ba55e978b5a23e1de1239bd195e60a3',
+     'review/DOC10_Snapshot_v1/H2_blurb_v1r7_to_v1r8.diff': '015f0113789f5c0e56bc16ea86120ca0b459eb301d2bdf9fc1b5a285031cbc2c',
+     'review/DOC10_Snapshot_v1/H2_v1r7_to_v1r8.diff': '09b8f753cef198caf2d8c38a32d41dce7b7886883df93dd659d2d0cba6109c22',
+-    'review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt': 'f773426c83a086b27da3efb2da8b3ed9d48c46223dcf82cf94bfc767fd747a9f',
++    'review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt': '25801ca12f6ffe41d1a4586970e9cdde88365ecb901baf2898b7af787b49da0e',
+     'review/DOC10_Snapshot_v1/arch_v0_8_to_v0_9.diff': 'b3151e6889d4426f1fb8dcd67330aa50d22d1d46210a05e7e9c93a3aa94c283e',
+-    'review/DOC10_Snapshot_v1/build_doc10.py': '56847d4b2389fd14a903bb056b6841628a6c2107de34efa2beae09d5cfbdcb13',
+-    'review/DOC10_Snapshot_v1/h1_section12.md': 'e18c630e6fbf45523cac483298f7dec5cf04afcfe4550f5e4d88c2032c0d7735',
++    'review/DOC10_Snapshot_v1/build_doc10.py': '3a1c1b5aea537e28661d809b12c310e4979acedcce126af3b3faa80779d43540',
++    'review/DOC10_Snapshot_v1/h1_section12.md': '91badeee9dfb3e4c52d5536f04770eb466ce52d7674a9ebc1cf401d4d1bf2a5c',
+     'review/DOC10_Snapshot_v1/make_arch_v09.py': '236c99999f68b0193b25dabda0cd524cd07fec35e067b18c3ec3656a4107561d',
+     'review/DOC10_Snapshot_v1/make_blurbs_v1r7_v1r8.py': '9923977512cb738257e3f0038cb1e54dd564a0a308621e3f12ddf13916abbf32',
+-    'review/DOC10_Snapshot_v1/make_h1_v1r7.py': 'a74c884b69bf9cc69f63341be83c4aa0e2cf03beaec43c5dba49eb0efb0a9b4c',
++    'review/DOC10_Snapshot_v1/make_h1_v1r7.py': '5f70f34fe87dad4e8b5462e46af0cc347f9c32e47194530defdeb6764d7b902e',
+     'review/DOC10_Snapshot_v1/make_h2_v1r8.py': '5c3a49c544f1c499f584db6a14f1dfdd3784b1ac0f76317ad51c916e75cea85c',
+-    'review/DOC10_Snapshot_v1/make_register_v23.py': 'f3f309c4d0514c5c06746d5ca1e858fb2ce3a3385b5bd1a1ac82c08ff8aabf42',
+-    'review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff': 'ab6023b40c62d66d5a6bb045dbcb312f25d6d2e38b7164bb34e9423df1e3e2a3',
++    'review/DOC10_Snapshot_v1/make_register_v23.py': '977bdfe3f23a42bc5b59a1dac19b07601897d3f9f8848d51d347baf77d1010d8',
++    'review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff': '1b09be110228afd008cc44624fa743b3fdb06ed630b965217763df790265381f',
+     'review/Independent_ChatGPT_PERF1_Code_Review_EX115.md': '2c8f270617ea12651360bf504e4b0ff1909b11b8cf060b36e50679768beee5f5',
+     'review/Independent_ChatGPT_WF1B_Code_Focused_RECHECK_EX111.md': 'bf0f76f7bbcfc02a73c791a3b90af91c1b5294108c60b7cea86e0729fd7841a3',
+     'review/Independent_ChatGPT_WF1B_Code_R2_Review_EX109.md': 'd00b0aaacca89aa86baf85cb64fa20268e4a37797bb237ff6f896bcb29c3f019',
+diff -ruN a/repo_overlay/doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md b/repo_overlay/doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md
+--- a/repo_overlay/doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md	2026-11-01 20:58:43.418116966 +1030
++++ b/repo_overlay/doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md	2026-11-01 20:58:43.426293749 +1030
+@@ -507,7 +507,7 @@
+ 
+ ### 12.5 Traps in the cloud workspace
+ 
+-- **Kill background processes by PID only.** `pkill -f unittest` matched the chat's own shell twice and killed it.
++- **Stopping your own test jobs in the cloud workspace, and nothing else (EX_117 C02).** This applies only to expendable, non-scientific test processes that Claude itself started in its own cloud workspace for this chat (a test suite, a rehearsal, a mutation run, a profile). Never stop them by a name pattern: `pkill -f unittest` matched the chat's own shell twice and killed it. Find the job you started (`ps -eo pid,ppid,etime,cmd`), confirm from its parent and its full command line that it is that job, and stop only that one; if you are not certain, let it finish. **A PID is neither proof of ownership nor permission to stop anything else.** Claude never terminates a project process: no experiment, worker, coordinator, batch, report or uncertain process, on any machine. The protected no-status/no-kill interlock (Architecture section 5C; section 5.4 above) and the owner's separate process-control gates govern those, and nothing on the owner's computer is ever stopped by Claude.
+ - **The shell tool's default timeout is about two minutes.** Give a longer timeout, or run long jobs in the background (`nohup ... &`) writing to a file, and poll the file with short sleeps.
+ - **Do not import a package's own scripts in place** for a probe (a `__pycache__` folder crept into a package and had to be removed and the package rebuilt); copy the script elsewhere or load it with Python's `-B`.
+ - **The shell resets its working directory** after some commands; use absolute paths.
+@@ -585,7 +585,7 @@
+ | H-1 v1r3 | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r3.md`, `ddf4de23b726b2abf55ffcab613f926b62775469076476f939288a278e6422fc` |
+ | Review-disposition procedure | `review/REVIEWER_FIX-and-PROCEED_RECHECK_PROCEDURE_v1.md`, `5067aa520990b8ccc8521a04f3581424100cdd94994f5b9e3cb9e37863685339` |
+ | Exchange protocol v0.5 | `exchange/README.md` (committed by Claude with the snapshot's candidate 2), as stored (CRLF) `722df2e0cdef406d04ab635ee0e1bb34dc51a654095315197855fd4670d732ba`; v0.4 at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |
+-| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6` |
++| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `22a6f2f7a213bbd86124fd77d52df7b0c0bdcf673298429f9341005bc8e51cdc` |
+ | Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |
+ | H-2 v1r8 (installed with this file) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`, `4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2`; its blurb `17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a` |
+ | Holdout exposure record v0.3 (installed with this file) | `doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md`, `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` |
+diff -ruN a/repo_overlay/doc/RATIFICATION_REGISTER_v0_23.md b/repo_overlay/doc/RATIFICATION_REGISTER_v0_23.md
+--- a/repo_overlay/doc/RATIFICATION_REGISTER_v0_23.md	2026-11-01 20:58:43.416309428 +1030
++++ b/repo_overlay/doc/RATIFICATION_REGISTER_v0_23.md	2026-11-01 20:58:43.425811407 +1030
+@@ -1363,6 +1363,7 @@
+ 
+ ## Interpretation and verification
+ 
++- **Current status (register v0.23; read this first, EX_117 C01).** The bullets below are kept as earlier editions wrote them. Two of their statements are historical and no longer describe the present position. (a) "Oz science ... not permission for new Oz runs" and "The current multi-game development pause remains binding": that general pause was superseded, for separately owner-authorised development only, by REL-1 and WF-1A (`ENABLE_CONTRACT_REAL_DEVELOPMENT` True, WF1-3) and by the owner's recorded approvals of the two walk-forward batches (Powerball `86a1a01`, Oz Lotto `8430a15`) and the two ranking reports (`441daf2`, `608025c`), all recorded above. Those past authorised runs are facts, not permission for any future one: every further real-data run, batch, report, results update, holdout opening, Mode H, FINAL run or science run still needs its own explicit owner approval, and nothing is authorised implicitly by this register or by any earlier approval. (b) "exposure record v0.2" in the first bullet: on the owner's ratification of this register and installation of DOC-10, `HOLDOUT_EXPOSURE_RECORD_v0_3.md` supersedes v0.2 (decisions HX-1 and HX-2). Everything else in this section stands as written.
+ - **Until the integration editions listed in the preceding table are owner-ratified**, the predecessor set identified below remains operative on its unaffected subjects, and the independently owner-ratified Method Ranking Measures Proposal v0.5 already governs its adopted subjects. **Upon owner ratification** (given 27 October 2026), the operative editions are Proposal v0.6, R1 v0.4, R2 v0.5, R3 v0.5, Architecture v0.8, the Windows POC Task Specification v0.2, P3 v0.2, TIE_SHA256_V1 v0.2, and exposure record v0.2.
+ - **Pre-integration predecessor set (ratified before this integration):** Proposal v0.5, R1 v0.4, R2 v0.4, R3 v0.4, Architecture v0.7, the Windows POC Task Specification v0.2, P3 v0.2 and TIE_SHA256_V1 v0.2. Their historical approvals and hashes remain valid; their operative status is superseded only on adoption of the corresponding later edition. Earlier editions and ChatGPT handovers remain historical sources, not replacement current specifications.
+ - ERR-R2-02 / Option F is **provisional for production** pending the P2 test evidence and owner disposition, even though the Architecture and POC Task Specification are ratified.
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff b/repo_overlay/review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff
+--- a/repo_overlay/review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff	2026-11-01 20:58:43.421773552 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff	2026-11-01 20:58:43.427069663 +1030
+@@ -1,5 +1,5 @@
+ --- H1_v1r6.md	2026-11-01 12:38:39.808231622 +1030
+-+++ Claude_Primary_Handover_H1_v1r7.md	2026-11-01 20:13:43.946443975 +1030
+++++ Claude_Primary_Handover_H1_v1r7.md	2026-11-01 20:46:50.587487679 +1030
+ @@ -1,12 +1,12 @@
+ -# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v1r6
+ +# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v1r7
+@@ -446,7 +446,7 @@
+ +
+ +### 12.5 Traps in the cloud workspace
+ +
+-+- **Kill background processes by PID only.** `pkill -f unittest` matched the chat's own shell twice and killed it.
+++- **Stopping your own test jobs in the cloud workspace, and nothing else (EX_117 C02).** This applies only to expendable, non-scientific test processes that Claude itself started in its own cloud workspace for this chat (a test suite, a rehearsal, a mutation run, a profile). Never stop them by a name pattern: `pkill -f unittest` matched the chat's own shell twice and killed it. Find the job you started (`ps -eo pid,ppid,etime,cmd`), confirm from its parent and its full command line that it is that job, and stop only that one; if you are not certain, let it finish. **A PID is neither proof of ownership nor permission to stop anything else.** Claude never terminates a project process: no experiment, worker, coordinator, batch, report or uncertain process, on any machine. The protected no-status/no-kill interlock (Architecture section 5C; section 5.4 above) and the owner's separate process-control gates govern those, and nothing on the owner's computer is ever stopped by Claude.
+ +- **The shell tool's default timeout is about two minutes.** Give a longer timeout, or run long jobs in the background (`nohup ... &`) writing to a file, and poll the file with short sleeps.
+ +- **Do not import a package's own scripts in place** for a probe (a `__pycache__` folder crept into a package and had to be removed and the package rebuilt); copy the script elsewhere or load it with Python's `-B`.
+ +- **The shell resets its working directory** after some commands; use absolute paths.
+@@ -527,7 +527,7 @@
+ -| Register v0.19 | `doc/RATIFICATION_REGISTER_v0_19.md`, `b3ae51fd162960b64a9d145a52646dceeb3aec5b91e4b359ad7166e5e4c8e6a0` |
+ -| Claude Code rulebook v0.2 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |
+ +| Exchange protocol v0.5 | `exchange/README.md` (committed by Claude with the snapshot's candidate 2), as stored (CRLF) `722df2e0cdef406d04ab635ee0e1bb34dc51a654095315197855fd4670d732ba`; v0.4 at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |
+-+| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6` |
+++| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `22a6f2f7a213bbd86124fd77d52df7b0c0bdcf673298429f9341005bc8e51cdc` |
+ +| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |
+ +| H-2 v1r8 (installed with this file) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`, `4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2`; its blurb `17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a` |
+ +| Holdout exposure record v0.3 (installed with this file) | `doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md`, `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` |
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt b/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt
+--- a/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-01 20:58:43.422441950 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-01 20:58:43.427281378 +1030
+@@ -1,25 +1,25 @@
+ # DOC10_Snapshot_v1 installation manifest (Git-content SHA-256, LF); "A" new path, "M" replaced file
+ A 4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2  doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md
+ A 17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a  doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8_introductory_blurb.md
+-A 4b2f8261c5a7ff22ee71ddb02972b5026442e63671f2cbf36f7c0dbf6e6fa9dd  doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md
++A 60ef995b3cc3575de4fa7b943af773a3cf9462dbfe36568e2f0c7a0d62ade250  doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md
+ A bc46c07a1705aa49738ba6b8d8797f46df40cbc7996e4ba22a25eaefdab73240  doc/HANDOVER/Claude_Primary_Handover_H1_v1r7_introductory_blurb.md
+ A 53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38  doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md
+ A eda583e42f93c5734523e49e0f2c4fc849d16ce94a1f0b405b3d192287068ed8  doc/METHOD_TEMPLATE/CHANGES.md
+ A 3a88e6d166bf09385760a4c191006d2072e01b0f323cd242abf88604012de104  doc/Predictive_Randomness_Software_Architecture_Discussion_v0_9.md
+-A dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6  doc/RATIFICATION_REGISTER_v0_23.md
++A 22a6f2f7a213bbd86124fd77d52df7b0c0bdcf673298429f9341005bc8e51cdc  doc/RATIFICATION_REGISTER_v0_23.md
+ A a84990ef39d3ce1f2ca6cad788d2d7d3d477bec8fecd7c25c6200aefbe140c17  review/DOC10_Snapshot_v1/H1_blurb_v1r6_to_v1r7.diff
+-A 81791b1694876e9eb5525e7e939e73dbc84d05fd37a2e648efd0e92d5651b26e  review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff
++A af812f44d35d1377ac3e89f27b5b5f4c1ba55e978b5a23e1de1239bd195e60a3  review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff
+ A 015f0113789f5c0e56bc16ea86120ca0b459eb301d2bdf9fc1b5a285031cbc2c  review/DOC10_Snapshot_v1/H2_blurb_v1r7_to_v1r8.diff
+ A 09b8f753cef198caf2d8c38a32d41dce7b7886883df93dd659d2d0cba6109c22  review/DOC10_Snapshot_v1/H2_v1r7_to_v1r8.diff
+ A b3151e6889d4426f1fb8dcd67330aa50d22d1d46210a05e7e9c93a3aa94c283e  review/DOC10_Snapshot_v1/arch_v0_8_to_v0_9.diff
+-A 56847d4b2389fd14a903bb056b6841628a6c2107de34efa2beae09d5cfbdcb13  review/DOC10_Snapshot_v1/build_doc10.py
+-A e18c630e6fbf45523cac483298f7dec5cf04afcfe4550f5e4d88c2032c0d7735  review/DOC10_Snapshot_v1/h1_section12.md
++A 3a1c1b5aea537e28661d809b12c310e4979acedcce126af3b3faa80779d43540  review/DOC10_Snapshot_v1/build_doc10.py
++A 91badeee9dfb3e4c52d5536f04770eb466ce52d7674a9ebc1cf401d4d1bf2a5c  review/DOC10_Snapshot_v1/h1_section12.md
+ A 236c99999f68b0193b25dabda0cd524cd07fec35e067b18c3ec3656a4107561d  review/DOC10_Snapshot_v1/make_arch_v09.py
+ A 9923977512cb738257e3f0038cb1e54dd564a0a308621e3f12ddf13916abbf32  review/DOC10_Snapshot_v1/make_blurbs_v1r7_v1r8.py
+-A a74c884b69bf9cc69f63341be83c4aa0e2cf03beaec43c5dba49eb0efb0a9b4c  review/DOC10_Snapshot_v1/make_h1_v1r7.py
++A 5f70f34fe87dad4e8b5462e46af0cc347f9c32e47194530defdeb6764d7b902e  review/DOC10_Snapshot_v1/make_h1_v1r7.py
+ A 5c3a49c544f1c499f584db6a14f1dfdd3784b1ac0f76317ad51c916e75cea85c  review/DOC10_Snapshot_v1/make_h2_v1r8.py
+-A f3f309c4d0514c5c06746d5ca1e858fb2ce3a3385b5bd1a1ac82c08ff8aabf42  review/DOC10_Snapshot_v1/make_register_v23.py
+-A ab6023b40c62d66d5a6bb045dbcb312f25d6d2e38b7164bb34e9423df1e3e2a3  review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff
++A 977bdfe3f23a42bc5b59a1dac19b07601897d3f9f8848d51d347baf77d1010d8  review/DOC10_Snapshot_v1/make_register_v23.py
++A 1b09be110228afd008cc44624fa743b3fdb06ed630b965217763df790265381f  review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff
+ A 2c8f270617ea12651360bf504e4b0ff1909b11b8cf060b36e50679768beee5f5  review/Independent_ChatGPT_PERF1_Code_Review_EX115.md
+ A bf0f76f7bbcfc02a73c791a3b90af91c1b5294108c60b7cea86e0729fd7841a3  review/Independent_ChatGPT_WF1B_Code_Focused_RECHECK_EX111.md
+ A d00b0aaacca89aa86baf85cb64fa20268e4a37797bb237ff6f896bcb29c3f019  review/Independent_ChatGPT_WF1B_Code_R2_Review_EX109.md
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py b/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py
+--- a/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py	2026-11-01 20:58:43.422383111 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py	2026-11-01 20:58:43.427260139 +1030
+@@ -122,6 +122,46 @@
+      .replace('@@TITLE@@', TITLE).replace('@@VERIFIER@@', VERIFIER))
+ assert '@@' not in v
+ (outdir / VERIFIER).write_bytes(v.encode('ascii'))
++EOLCHK = 'CHECK_RESULTS_EOL.py'
++(outdir / EOLCHK).write_bytes(b"""#!/usr/bin/env python3
++\"\"\"DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
++
++It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
++changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
++file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
++Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
++\"\"\"
++import argparse, subprocess, sys
++
++ap = argparse.ArgumentParser()
++ap.add_argument('--repo', required=True)
++repo = ap.parse_args().repo
++r = subprocess.run(['git', '-C', repo, 'ls-files', '--eol', '--', 'results'], capture_output=True, text=True)
++if r.returncode != 0:
++    print('EOL STOP: git ls-files failed:', r.stderr.strip())
++    sys.exit(1)
++bad, n, empty = [], 0, 0
++for line in r.stdout.splitlines():
++    meta, _tab, path = line.partition('\\t')
++    w = next((p for p in meta.split() if p.startswith('w/')), 'w/?')
++    n += 1
++    if w == 'w/lf':
++        continue
++    if w == 'w/none':
++        empty += 1
++        continue
++    bad.append(f'{w:8} {path}')
++if n == 0:
++    print('EOL STOP: no tracked files under results/ (wrong folder?)')
++    sys.exit(1)
++if bad:
++    for b in bad:
++        print('  ' + b)
++    print(f'EOL STOP: {len(bad)} of {n} tracked files under results/ are not LF in the working tree. Do not continue, '
++          'commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.')
++    sys.exit(1)
++print(f'EOL PASS: {n} tracked files under results/, all w/lf ({empty} empty, w/none). Read-only: nothing changed.')
++""")
+ TOTAL = len(NEWH) + len(MODH)
+ P = rf'E:\TEMP\{PKG}'
+ GIT_ADD = 'git add .gitattributes README.md CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md doc review'
+@@ -135,22 +175,23 @@
+ 
+ ```bat
+ git status --short
+-git ls-files --eol results
++python "{P}\\{EOLCHK}" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing, and every line of the second command shows `w/lf` (one empty log file may show `w/none`). **If any line shows `w/crlf`, stop here and send Claude the output:** Claude will give you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
++Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+ 
+ ## 1. Update, check, copy, check
+ 
+ ```bat
+ git pull --ff-only
++python "{P}\\{EOLCHK}" --repo .
+ python "{P}\\{VERIFIER}" --repo . --phase pre
+ xcopy "{P}\\repo_overlay\\*" . /E /Y
+ python "{P}\\{VERIFIER}" --repo . --phase post
+-git ls-files --eol results
++python "{P}\\{EOLCHK}" --repo .
+ ```
+ 
+-Expected: the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; and every results line still `w/lf` (or `w/none`). If anything prints `STOP`, do not commit: send Claude the output.
++Expected: the pull says `Fast-forward` or `Already up to date`; `EOL PASS` (the pull rewrote no record file); `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; `EOL PASS` again. If anything prints `STOP` (including `EOL STOP`, even when PRE or POST said PASS), do not commit: send Claude the output.
+ 
+ ## 2. Stage, commit, check, and only then push
+ 
+@@ -160,13 +201,14 @@
+ git commit -m "DOC-10: the snapshot - register v0.23, Architecture v0.9, H-1 v1r7 and H-2 v1r8 with blurbs, holdout exposure record v0.3, template draft 4, README, Claude Code rulebook v0.3, .gitattributes results rule (document-only install)"
+ python "{P}\\{VERIFIER}" --repo . --phase committed
+ git status --short
++python "{P}\\{EOLCHK}" --repo .
+ ```
+ 
+-Expected: the first `git status --short` lists {len(NEWH)} lines starting with `A` and {len(MODH)} starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file). Git's "LF will be replaced by CRLF" warnings while staging are normal.
++Expected: the first `git status --short` lists {len(NEWH)} lines starting with `A` and {len(MODH)} starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file); then `EOL PASS`. Git's "LF will be replaced by CRLF" warnings while staging are normal.
+ 
+ **If the committed check prints `STOP`: do not push, and do not reset or undo anything.** Send Claude the whole output.
+ 
+-**Push only after `COMMITTED PASS`:**
++**Push only after `COMMITTED PASS` and the last `EOL PASS`:**
+ 
+ ```bat
+ git push
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/h1_section12.md b/repo_overlay/review/DOC10_Snapshot_v1/h1_section12.md
+--- a/repo_overlay/review/DOC10_Snapshot_v1/h1_section12.md	2026-11-01 20:58:43.421605412 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/h1_section12.md	2026-11-01 20:58:43.426969181 +1030
+@@ -51,7 +51,7 @@
+ 
+ ### 12.5 Traps in the cloud workspace
+ 
+-- **Kill background processes by PID only.** `pkill -f unittest` matched the chat's own shell twice and killed it.
++- **Stopping your own test jobs in the cloud workspace, and nothing else (EX_117 C02).** This applies only to expendable, non-scientific test processes that Claude itself started in its own cloud workspace for this chat (a test suite, a rehearsal, a mutation run, a profile). Never stop them by a name pattern: `pkill -f unittest` matched the chat's own shell twice and killed it. Find the job you started (`ps -eo pid,ppid,etime,cmd`), confirm from its parent and its full command line that it is that job, and stop only that one; if you are not certain, let it finish. **A PID is neither proof of ownership nor permission to stop anything else.** Claude never terminates a project process: no experiment, worker, coordinator, batch, report or uncertain process, on any machine. The protected no-status/no-kill interlock (Architecture section 5C; section 5.4 above) and the owner's separate process-control gates govern those, and nothing on the owner's computer is ever stopped by Claude.
+ - **The shell tool's default timeout is about two minutes.** Give a longer timeout, or run long jobs in the background (`nohup ... &`) writing to a file, and poll the file with short sleeps.
+ - **Do not import a package's own scripts in place** for a probe (a `__pycache__` folder crept into a package and had to be removed and the package rebuilt); copy the script elsewhere or load it with Python's `-B`.
+ - **The shell resets its working directory** after some commands; use absolute paths.
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/make_h1_v1r7.py b/repo_overlay/review/DOC10_Snapshot_v1/make_h1_v1r7.py
+--- a/repo_overlay/review/DOC10_Snapshot_v1/make_h1_v1r7.py	2026-11-01 20:58:43.421516670 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/make_h1_v1r7.py	2026-11-01 20:58:43.426930374 +1030
+@@ -327,7 +327,7 @@
+     ("| Exchange protocol v0.4 | `exchange/README.md` at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |",
+      "| Exchange protocol v0.5 | `exchange/README.md` (committed by Claude with the snapshot's candidate 2), as stored (CRLF) `722df2e0cdef406d04ab635ee0e1bb34dc51a654095315197855fd4670d732ba`; v0.4 at `63c19e7`, `b08d9e2b62daf1f435c5c02b8908e447c1bc790b28d1d92c2866f110846b2256` |"),
+     ("| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |",
+-     "| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `dc384897e478fafeb07b8209a001d042fb132a0a5b115aae5662fe55c7ee37d6` |\n| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |\n| H-2 v1r8 (installed with this file) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`, `4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2`; its blurb `17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a` |\n| Holdout exposure record v0.3 (installed with this file) | `doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md`, `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` |\n| Architecture v0.9 (installed with this file) | `doc/Predictive_Randomness_Software_Architecture_Discussion_v0_9.md`, `3a88e6d166bf09385760a4c191006d2072e01b0f323cd242abf88604012de104` |\n| This file (H-1 v1r7) | identified by the DOC-10 manifest, `review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt` |"),
++     "| Register v0.23 (installed with this file) | `doc/RATIFICATION_REGISTER_v0_23.md`, `22a6f2f7a213bbd86124fd77d52df7b0c0bdcf673298429f9341005bc8e51cdc` |\n| Register v0.22 | `doc/RATIFICATION_REGISTER_v0_22.md`, `ca955cf23b5681a534e784b4a4852acd2e8d0ccd0484e34150a05c824c0fe56b` |\n| H-2 v1r8 (installed with this file) | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md`, `4239f566eb4e7e4a938552a01709f169448c26514b7dc57837c7eb8238f4bcb2`; its blurb `17633e4ec5413d12ed3c2909819b9f899a156af22631a31ee3e1b6f145ea0d2a` |\n| Holdout exposure record v0.3 (installed with this file) | `doc/HOLDOUT_EXPOSURE_RECORD_v0_3.md`, `53a27b02535a3a7b8d66d4c8915f451b32e01fa95daafe932c671f4e0e45ad38` |\n| Architecture v0.9 (installed with this file) | `doc/Predictive_Randomness_Software_Architecture_Discussion_v0_9.md`, `3a88e6d166bf09385760a4c191006d2072e01b0f323cd242abf88604012de104` |\n| This file (H-1 v1r7) | identified by the DOC-10 manifest, `review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt` |"),
+     ("| Claude Code rulebook v0.2 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |",
+      "| Claude Code rulebook v0.3 (installed with this file) | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `509e381ed612e7572940014d33f2724172a12a0da8a8a1e76020571ede63b56b` |\n| Claude Code rulebook v0.2 (until the snapshot) | `12b50a5cadda0d5cef73106b75ec31051fd1c6b4cbe80ddafa387bd49936f562` |"),
+     ("- **The runner never runs `Run_Method_Rankings.bat` or `Method_Rankings_Report.py`**",
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/make_register_v23.py b/repo_overlay/review/DOC10_Snapshot_v1/make_register_v23.py
+--- a/repo_overlay/review/DOC10_Snapshot_v1/make_register_v23.py	2026-11-01 20:58:43.420874279 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/make_register_v23.py	2026-11-01 20:58:43.426597421 +1030
+@@ -129,8 +129,8 @@
+      "**Register version:** v0.23 CANDIDATE 1 November 2026 for the reviewer's content check (not owner-ratified), recording register v0.22's installation, the seed brought forward and approved, the WF-1B supplement design and code reviews, the WF-1B and PERF-1 installations, the first real report runs, the owner's decisions GOAL-1, SD-1, SD-2, WB-0 to WB-2, WF1B-A1, WF1B-A2, PF-1, PF-2, HX-1, HX-2, ORD-1, HO-1, TSC-1, MH-1, OFF-1, EFF-1 and FB-1, the cold-read probes, the cold-read test of H-1 and the snapshot package's documents; v0.22 OWNER-RATIFIED 31 October 2026, recording"),
+     ('This register is installed by the document-only procedure, in one commit identified after installation.',
+      'This register is installed by the document-only procedure, in one commit identified after installation. For v0.23, the installation commits `2b1e7e3` (register v0.22) and `24d192f` (WF-1B), the Claude Code reports `bf47668`, `40958d6` and `2cc6933`, and the exchange records from `0b067f1` onward were verified by Claude from GitHub; the Windows results are owner-reported. Register v0.23 is installed with the snapshot package, by the document-only procedure, in one commit identified after installation.'),
+-    ('\n## Interpretation and verification\n',
+-     '\n' + NEW_SECTION + '## Interpretation and verification\n'),
++    ('\n## Interpretation and verification\n\n- **Until the integration editions',
++     '\n' + NEW_SECTION + '## Interpretation and verification\n\n' + "- **Current status (register v0.23; read this first, EX_117 C01).** The bullets below are kept as earlier editions wrote them. Two of their statements are historical and no longer describe the present position. (a) \"Oz science ... not permission for new Oz runs\" and \"The current multi-game development pause remains binding\": that general pause was superseded, for separately owner-authorised development only, by REL-1 and WF-1A (`ENABLE_CONTRACT_REAL_DEVELOPMENT` True, WF1-3) and by the owner's recorded approvals of the two walk-forward batches (Powerball `86a1a01`, Oz Lotto `8430a15`) and the two ranking reports (`441daf2`, `608025c`), all recorded above. Those past authorised runs are facts, not permission for any future one: every further real-data run, batch, report, results update, holdout opening, Mode H, FINAL run or science run still needs its own explicit owner approval, and nothing is authorised implicitly by this register or by any earlier approval. (b) \"exposure record v0.2\" in the first bullet: on the owner's ratification of this register and installation of DOC-10, `HOLDOUT_EXPOSURE_RECORD_v0_3.md` supersedes v0.2 (decisions HX-1 and HX-2). Everything else in this section stands as written.\n" + '- **Until the integration editions'),
+ ]
+ for old, new in EDITS:
+     n = t.count(old)
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff b/repo_overlay/review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff
+--- a/repo_overlay/review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff	2026-11-01 20:58:43.420991771 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/register_v0_22_to_v0_23.diff	2026-11-01 20:58:43.426707694 +1030
+@@ -1,5 +1,5 @@
+ --- v0_22.md	2026-11-01 12:33:45.856214148 +1030
+-+++ RATIFICATION_REGISTER_v0_23.md	2026-11-01 20:13:15.852166577 +1030
+++++ RATIFICATION_REGISTER_v0_23.md	2026-11-01 20:45:22.395750596 +1030
+ @@ -1,7 +1,7 @@
+  # Predictive Randomness — Ratification Register
+  
+@@ -10,7 +10,7 @@
+  **Authority:** This register records approvals; it does **not** independently ratify any document, authorise an experiment, or supersede an operative specification. If a historic document still says “draft”, “review candidate” or “not ratified”, its status at the time of drafting is historical. The later owner approval recorded here determines its current status.
+  
+  ## Current and historical ratification identities
+-@@ -1257,6 +1257,110 @@
++@@ -1257,8 +1257,113 @@
+  | `Deferred_Performance_Engineering_Proposal_v0_1.md` | The owner (committed at `1050338`); not reviewed | Scheduled as the final stage; not ratified; `a5ed53c7d0cfb3278ef8342043ab1d39a99557f6f79684f3bd3276d61a5b22cb` |
+  | `RATIFICATION_REGISTER_v0_21.md` | Claude; content checked by the ChatGPT reviewer chat (EX_083, EX_085) | OWNER-RATIFIED 31 Oct 2026; installed at `6a1bed9`; superseded by this register; `65524f92b99db2f9556c300536700af43bb1e449c55a998c8c87f427e1b78405` |
+  
+@@ -120,4 +120,7 @@
+ +
+  ## Interpretation and verification
+  
+++- **Current status (register v0.23; read this first, EX_117 C01).** The bullets below are kept as earlier editions wrote them. Two of their statements are historical and no longer describe the present position. (a) "Oz science ... not permission for new Oz runs" and "The current multi-game development pause remains binding": that general pause was superseded, for separately owner-authorised development only, by REL-1 and WF-1A (`ENABLE_CONTRACT_REAL_DEVELOPMENT` True, WF1-3) and by the owner's recorded approvals of the two walk-forward batches (Powerball `86a1a01`, Oz Lotto `8430a15`) and the two ranking reports (`441daf2`, `608025c`), all recorded above. Those past authorised runs are facts, not permission for any future one: every further real-data run, batch, report, results update, holdout opening, Mode H, FINAL run or science run still needs its own explicit owner approval, and nothing is authorised implicitly by this register or by any earlier approval. (b) "exposure record v0.2" in the first bullet: on the owner's ratification of this register and installation of DOC-10, `HOLDOUT_EXPOSURE_RECORD_v0_3.md` supersedes v0.2 (decisions HX-1 and HX-2). Everything else in this section stands as written.
+  - **Until the integration editions listed in the preceding table are owner-ratified**, the predecessor set identified below remains operative on its unaffected subjects, and the independently owner-ratified Method Ranking Measures Proposal v0.5 already governs its adopted subjects. **Upon owner ratification** (given 27 October 2026), the operative editions are Proposal v0.6, R1 v0.4, R2 v0.5, R3 v0.5, Architecture v0.8, the Windows POC Task Specification v0.2, P3 v0.2, TIE_SHA256_V1 v0.2, and exposure record v0.2.
++ - **Pre-integration predecessor set (ratified before this integration):** Proposal v0.5, R1 v0.4, R2 v0.4, R3 v0.4, Architecture v0.7, the Windows POC Task Specification v0.2, P3 v0.2 and TIE_SHA256_V1 v0.2. Their historical approvals and hashes remain valid; their operative status is superseded only on adoption of the corresponding later edition. Earlier editions and ChatGPT handovers remain historical sources, not replacement current specifications.
++ - ERR-R2-02 / Option F is **provisional for production** pending the P2 test evidence and owner disposition, even though the Architecture and POC Task Specification are ratified.

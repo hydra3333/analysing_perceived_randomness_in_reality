@@ -122,6 +122,46 @@ v = (Path('/home/claude/work/wf1code/verifier_template.py').read_text()
      .replace('@@TITLE@@', TITLE).replace('@@VERIFIER@@', VERIFIER))
 assert '@@' not in v
 (outdir / VERIFIER).write_bytes(v.encode('ascii'))
+EOLCHK = 'CHECK_RESULTS_EOL.py'
+(outdir / EOLCHK).write_bytes(b"""#!/usr/bin/env python3
+\"\"\"DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
+
+It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
+changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
+file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
+Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
+\"\"\"
+import argparse, subprocess, sys
+
+ap = argparse.ArgumentParser()
+ap.add_argument('--repo', required=True)
+repo = ap.parse_args().repo
+r = subprocess.run(['git', '-C', repo, 'ls-files', '--eol', '--', 'results'], capture_output=True, text=True)
+if r.returncode != 0:
+    print('EOL STOP: git ls-files failed:', r.stderr.strip())
+    sys.exit(1)
+bad, n, empty = [], 0, 0
+for line in r.stdout.splitlines():
+    meta, _tab, path = line.partition('\\t')
+    w = next((p for p in meta.split() if p.startswith('w/')), 'w/?')
+    n += 1
+    if w == 'w/lf':
+        continue
+    if w == 'w/none':
+        empty += 1
+        continue
+    bad.append(f'{w:8} {path}')
+if n == 0:
+    print('EOL STOP: no tracked files under results/ (wrong folder?)')
+    sys.exit(1)
+if bad:
+    for b in bad:
+        print('  ' + b)
+    print(f'EOL STOP: {len(bad)} of {n} tracked files under results/ are not LF in the working tree. Do not continue, '
+          'commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.')
+    sys.exit(1)
+print(f'EOL PASS: {n} tracked files under results/, all w/lf ({empty} empty, w/none). Read-only: nothing changed.')
+""")
 TOTAL = len(NEWH) + len(MODH)
 P = rf'E:\TEMP\{PKG}'
 GIT_ADD = 'git add .gitattributes README.md CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md doc review'
@@ -135,22 +175,23 @@ The new `.gitattributes` rule (`results/** -text`) stops Git converting record f
 
 ```bat
 git status --short
-git ls-files --eol results
+python "{P}\\{EOLCHK}" --repo .
 ```
 
-Expected: `git status --short` prints nothing, and every line of the second command shows `w/lf` (one empty log file may show `w/none`). **If any line shows `w/crlf`, stop here and send Claude the output:** Claude will give you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
 
 ## 1. Update, check, copy, check
 
 ```bat
 git pull --ff-only
+python "{P}\\{EOLCHK}" --repo .
 python "{P}\\{VERIFIER}" --repo . --phase pre
 xcopy "{P}\\repo_overlay\\*" . /E /Y
 python "{P}\\{VERIFIER}" --repo . --phase post
-git ls-files --eol results
+python "{P}\\{EOLCHK}" --repo .
 ```
 
-Expected: the pull says `Fast-forward` or `Already up to date`; `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; and every results line still `w/lf` (or `w/none`). If anything prints `STOP`, do not commit: send Claude the output.
+Expected: the pull says `Fast-forward` or `Already up to date`; `EOL PASS` (the pull rewrote no record file); `PRE PASS`; `{TOTAL} File(s) copied`; `POST PASS`; `EOL PASS` again. If anything prints `STOP` (including `EOL STOP`, even when PRE or POST said PASS), do not commit: send Claude the output.
 
 ## 2. Stage, commit, check, and only then push
 
@@ -160,13 +201,14 @@ git status --short
 git commit -m "DOC-10: the snapshot - register v0.23, Architecture v0.9, H-1 v1r7 and H-2 v1r8 with blurbs, holdout exposure record v0.3, template draft 4, README, Claude Code rulebook v0.3, .gitattributes results rule (document-only install)"
 python "{P}\\{VERIFIER}" --repo . --phase committed
 git status --short
+python "{P}\\{EOLCHK}" --repo .
 ```
 
-Expected: the first `git status --short` lists {len(NEWH)} lines starting with `A` and {len(MODH)} starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file). Git's "LF will be replaced by CRLF" warnings while staging are normal.
+Expected: the first `git status --short` lists {len(NEWH)} lines starting with `A` and {len(MODH)} starting with `M`, and nothing else; then `COMMITTED PASS`; then the last `git status --short` prints nothing (the new `.gitattributes` rule changes no stored file); then `EOL PASS`. Git's "LF will be replaced by CRLF" warnings while staging are normal.
 
 **If the committed check prints `STOP`: do not push, and do not reset or undo anything.** Send Claude the whole output.
 
-**Push only after `COMMITTED PASS`:**
+**Push only after `COMMITTED PASS` and the last `EOL PASS`:**
 
 ```bat
 git push
