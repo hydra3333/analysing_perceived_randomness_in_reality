@@ -90,6 +90,7 @@
       "Bash(*os.remove*)",
       "Bash(*unlink*)",
       "Bash(*.bat*)",
+      "Bash(*Method_Rankings_Report*--game*)",
       "Read(**/source_data/**)",
       "Read(**/results/**)",
       "Read(**/transitory_data/**)",
