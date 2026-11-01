@@ -1,0 +1,26 @@
+# PERF-1 timing evidence (Claude, Linux container with 2 cores, Python 3.13; INVENTED data only).
+# The statistics stage only (report step 8: the N1 runner and the measures), at full size: 40 invented variants,
+# 80 tracks, every target; invented tickets and invented draws; invented root AB x 64. profile_stats.py.
+# Timings were taken while another job shared the machine, so they are upper bounds.
+
+## Before (WF1B_Install_v3 code), Oz Lotto shape, R = 1,000
+OZLOTTO: 80 tracks, 40 variants, 220 targets, R=1000, 1 families
+N1 runner 72.6 s; measures 20.2 s
+clopper_pearson cumulative: 68.776 s of the stage
+
+## After (PERF-1), Oz Lotto shape, R = 1,000
+OZLOTTO: 80 tracks, 40 variants, 220 targets, R=1000, 1 families
+N1 runner 19.3 s; measures 9.3 s
+
+## After (PERF-1), Oz Lotto shape, R = 10,000
+OZLOTTO: 80 tracks, 40 variants, 220 targets, R=10000, 1 families
+N1 runner 199.9 s; measures 9.4 s
+clopper_pearson cumulative: 51.008 s; simulate: 77.662 s
+
+## After (PERF-1), Powerball shape, R = 10,000
+POWERBALL: 80 tracks, 40 variants, 291 targets, R=10000, 2 families
+N1 runner 267.4 s; measures 14.0 s
+
+## Single intervals at n = 10,000 (old vs new, same float64 pair)
+k = 37: old 14.1 s, new 0.06 s; k = 9990: old 10.1 s, new 0.07 s (old code with its Horner sums).
+k = 4999: new about 1 s (the old code was not timed at this k).

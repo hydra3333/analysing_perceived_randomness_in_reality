@@ -89,11 +89,19 @@ condensed, and the next steps set out as items 10b to 10d.
              that made a symlink, which Windows refuses; the other 462 tests passed on your PC). v3
              fixes that test only (EX_112); EX_113: PASS. You accepted v3 on 1 November 2026 and
              deferred EX_113's optional O02 (a label in the test runner; reminder R-010).
+           - WF1B_Install_v3 INSTALLED (24d192f, 1 November 2026; T014 PASS; verified from GitHub).
+           - First report runs (1 November): Oz Lotto started at 09:55 and was still in its statistics
+             after an hour; Powerball was refused (its batch plan file differs on your PC, probably line
+             endings; to be checked and restored).
+           - PERF-1 (you approved it on 1 November, as a small piece brought forward from the performance
+             study, coded and tested first and reviewed once): the exact uncertainty interval made fast
+             with bit-identical results (the statistics stage: hours down to about 4 minutes on invented
+             data), and progress lines for the report tool. Sent for review in EX_114; rehearsal T015.
            Left in this item, in order:
-           a. Claude Code rehearses the v3 install (TASK_T014); you push its report; Claude checks it.
-           b. You install WF1B_Install_v3 (Claude leads you step by step); Claude checks it.
-           c. You run the two reports (Run_Method_Rankings.bat, one per game: Powerball draws
-              1286-1576, Oz Lotto 1474-1693) and commit them; Claude and ChatGPT read them.
+           a. ChatGPT's check of PERF-1 (EX_115); Claude Code's rehearsal (T015); your PERF-1 install.
+           b. The Oz Lotto report finishes (its results stand; PERF-1 changes no result) and is committed.
+           c. The Powerball plan file is restored, and the Powerball report is run and committed.
+           d. You attach the two .txt reports; Claude and ChatGPT read them.
 10b. NEXT - The snapshot (your request, 1 November 2026): one document package, reviewed by ChatGPT and
            ratified by you:
            - register v0.23 (EX_099 to EX_111, WORKERS-1, WB-0 to WB-2, the seed, the installs);
@@ -106,7 +114,9 @@ condensed, and the next steps set out as items 10b to 10d.
              decided on 1 November 2026: record the exposure (a reviewer chat displayed Powerball
              1585-1588); Mode H scores all 10 holdout draws per game, with Powerball 1585 and 1586
              flagged; until then all 10 are treated as unseen, with every rule in force;
-           - a Git line-ending rule so files under results/ are never converted on your PC.
+           - a Git line-ending rule so files under results/ are never converted on your PC;
+           - the findings of the two cold-read probes (1 November 2026: the results updater, and the
+             performance plan), each settled in the documents or carried into the Mode H design.
 10c. NEXT - Mode H, the results update and the prospective mode (your goal: forecasts for the draws of
            the week of 9 November 2026). Designed together, alongside the snapshot:
            - Mode H: each method tested once on the 10 sealed holdout draws per game (Powerball

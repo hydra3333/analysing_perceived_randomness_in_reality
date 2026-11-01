@@ -1,0 +1,147 @@
+# TASK_T015 - Windows rehearsal of the PERF-1 install (faster exact intervals, report progress lines), in a task clone
+
+**Task ID:** T015. **Date:** 1 November 2026. **Author:** the Claude web chat. The pattern of T014, for the PERF-1 package (`PERF1_Install_v1`, base `209db44`). The package adds 8 files and replaces 3 (`src/evaluation/numerics.py`, `report.py` and `Method_Rankings_Report.py`); it deletes nothing. As in T009 to T011, step 13 asks for the whole status output, copied as printed.
+
+**Purpose.** Run the package (`exchange/EX_114_Claude/PERF1_Install_v1_candidate.zip`) on the owner's Windows machine, in a disposable task clone that cannot push, so the main repository is not changed at all. It shows the verifier's three phases and the whole suite on a real Windows checkout before the owner's own install. It is a rehearsal only: it installs nothing, runs no report and no batch, and reads no real data itself (the project's accepted tests read what they are written to read, rulebook rule 2.5). It may run while the reviewer's code review is pending.
+
+It differs from the owner's real install in three ways: it runs in a task clone; files are copied by `tools\cc_clone.py overlay` (not `xcopy`); and there is no `git pull` and no push. All 471 tests run, including E2R-T12, the cross-platform test (the report's pinned digest must not change) and the new PERF-1 tests, which compare the faster code with WF-1B's exactly.
+
+## Owner options
+
+- None. E2R-T12 (one test that starts up to six ordinary Python worker processes, which finish normally) is run in step 11, as in T008 to T011. The project owner approves it for this rehearsal by giving this task.
+
+## Paths
+
+| Name | Full path |
+|---|---|
+| MAIN (the main repository) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality` |
+| PY (the main venv's Python) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe` |
+| TOOLS | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools` |
+| CLONE (the task clone) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r` |
+| PKG (the extracted package) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1` |
+
+The commands below are written out in full. Run each from MAIN (your normal workspace folder). On anything other than the expected PASS line, or a non-zero exit code: **STOP**, record the output, and go to step 17 (clean-up).
+
+## Steps
+
+**1. Python.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import sys, platform; print(sys.executable); print(sys.version); print(platform.platform())"
+```
+Expected: the venv path, a Python version, and a Windows platform line.
+
+**2. The main repository's state** (read-only; record the output; this step does not stop the task).
+```
+git status --short
+git rev-parse HEAD
+git log -1 --format=%s
+```
+
+**3. Make the task clone.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" make --task T015
+```
+Expected: `GUARD PASS`, `git remote -v: ''`, the two HEAD lines, the `core.autocrlf` line, then `MAKE PASS`.
+
+**4. Check and extract the package** (from the clone's own copy).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" unzip --task T015 --zip exchange/EX_114_Claude/PERF1_Install_v1_candidate.zip --sha256 f5f375001ca98c99a79d897e4e99e2c55fd6bd48d9b6635e1a1c74e68982b4bc
+```
+Expected: `ZIP SHA-256: f5f37500...b4bc`, then `UNZIP PASS: ... files extracted ...`.
+
+**5. PRE check.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" guard --task T015
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1\VERIFY_PERF1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r" --phase pre
+```
+Expected: `GUARD PASS`, then `PRE PASS`.
+
+**6. Copy the overlay** (8 new files and the three named replacements).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" overlay --task T015 --src "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1\repo_overlay" --replace src/evaluation/numerics.py src/evaluation/report.py src/evaluation/Method_Rankings_Report.py
+```
+Expected: `OVERLAY PASS: 11 files copied into ... (8 new, 3 replaced)`.
+
+**7. POST check.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1\VERIFY_PERF1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r" --phase post
+```
+Expected: `POST PASS: exactly the 8 expected new paths, 3 modified files and 0 staged deletions, all with the expected bytes.`.
+
+**8. Module origin** (the tests must use the clone's code, not the main repository's).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\check_module_origin.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r"
+```
+Expected: every module line starts `ok`, then `ORIGIN PASS`.
+
+**9. The faster code is in place** (read-only).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import pathlib; t = (pathlib.Path(r'E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r') / 'src' / 'evaluation' / 'numerics.py').read_text(encoding='ascii'); print('_bisect_guided' in t, '_tail_dec' in t)"
+```
+Expected: `True True`.
+
+**10. Record the clone's Python files under `src\evaluation`** (read-only).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import pathlib; r = pathlib.Path(r'E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r') / 'src' / 'evaluation'; print(sorted(p.name for p in r.glob('*.py')))"
+```
+
+**11. All 471 tests, including E2R-T12** (the package's own runner).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1\RUN_PERF1_SUITE.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r"
+```
+Expected: `SUITE PASS: all 471 tests ran and passed`. Up to 4 symlink skips are allowed on Windows; the runner itself decides, so record its output as printed, including each module's time. Record exactly the lines for `tests.test_wf1b_crossplatform` and `tests.test_perf1_numerics`.
+
+**12. Stage in the clone.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" git --task T015 -- add review src tests
+```
+Expected: `GUARD PASS (before)`, then `GUARD PASS (after); git add exit code 0`.
+
+**13. Status in the clone.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" git --task T015 -- status --short
+```
+Expected: 11 lines: 8 starting with `A` and 3 starting with `M`, and `git status exit code 0`. In the report, copy the whole output exactly as printed, all 11 lines. Do not redirect the output to a file and do not count it with another command; Claude checks the counts from the report.
+
+**14. Commit in the clone** (this commit exists only in the task clone and is deleted with it).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" git --task T015 -- commit -q -m "PERF1 rehearsal (task clone T015 only; never pushed)"
+```
+Expected: `git commit exit code 0`.
+
+**15. COMMITTED check.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\p\PERF1_Install_v1\VERIFY_PERF1_INSTALL.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T015\r" --phase committed
+```
+Expected: `COMMITTED PASS: the last commit (...) added exactly 8 files, modified 3 and deleted 0; all Git blobs match.`.
+(In a task clone, if this STOPs, the identity report's "upstream" lines will say there is no upstream; that is expected and is not the cause.)
+
+**16. Final state of the clone.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" git --task T015 -- log --oneline -2
+```
+Expected: the rehearsal commit on top of the clone's starting commit, and `git log exit code 0`.
+
+## Clean-up (always, whether the task passed or stopped)
+
+**17. Remove the task clone.**
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" remove --task T015
+```
+Expected: `REMOVE PASS`. If it STOPs, leave the folder as it is, say so in the report, and do not run step 19; tell the project owner.
+
+## Report
+
+**18. Write** `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\outbox\REPORT_T015.md` in the format of `outbox\README.md`, with every step's command, exit code and full output (step 13 as described there). Also record:
+- the wall-clock time step 11 took;
+- whether the main repository's `git status --short` after step 17 is the same as in step 2 (run it again and include it).
+
+## Finish
+
+**19. Commit the report** (one file; not pushed).
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" commit-report --task T015
+```
+Expected: `COMMIT-REPORT PASS`. If it STOPs, leave the report uncommitted and tell the project owner.
+
+**20. Tell the project owner** the RESULT line, the report's path, and: "please push".

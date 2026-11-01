@@ -134,6 +134,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   now ship with WF-1B (roadmap item 10). The rest of this study stays FINAL and inactive.
 - Changed by the owner (31 October 2026, decision WB-0): the workers change moved out of WF-1B into its
   own package, WF-1C (roadmap item 10d), designed after WF-1B with EX_101's and EX_105's obligations.
+- Brought forward by the owner (1 November 2026, PERF-1): one measured hot spot in the ranking report's
+  statistics (the exact Monte Carlo uncertainty interval), fixed with bit-identical results. Profiling on
+  invented data found the rest of the stage is now the N1 simulation (about 80 s) and the family-maximum loop
+  (about 30 s); both are left for this study. The rest of the study stays FINAL and inactive.
 
 ## R-007  EX_111 O01: cross-check the seed record's reader names
 
@@ -170,6 +174,27 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   already changed the runner template to "test failure output; inspect before sharing". Until then, a
   failure log is checked before it is relayed, so no restricted outcome is forwarded.
 - When: the next install package's runner (it comes from the template automatically).
+
+## R-011  Record files under results/ must never be line-ending converted
+
+- Asked: noted by Claude on 1 November 2026 (the Powerball report refused: its batch plan file on the owner's PC
+  no longer matched its committed bytes; most likely Git rewrote it with Windows line endings).
+- Status: OPEN.
+- What: a .gitattributes rule (for example `results/** -text`, as `source_data/**` already has), in an
+  owner-ratified package, so Git never converts record files; plus a check of the other committed records.
+- When: the snapshot package.
+
+## R-012  The two cold-read probes' findings (results updater; performance plan)
+
+- Asked: the owner asked for the probes on 1 November 2026; run the same day by two fresh helpers that read the
+  documents only.
+- Status: OPEN.
+- What: Claude's list of 23 findings (gaps, ambiguities, stale text). The most important: the readers accept
+  only the version-1 master, so any results update makes every run and report refuse until a version-2 reader
+  is designed (Mode H design); the HOLDOUT_OPENED record is defined only in code; the updater's launcher runs an
+  update when given no arguments; the two-site checker's default mode drives The Lott's website automatically
+  (it must never be run that way).
+- When: the snapshot (documents) and the Mode H + update + prospective design (the version-2 reader).
 
 ## Standing reminders
 

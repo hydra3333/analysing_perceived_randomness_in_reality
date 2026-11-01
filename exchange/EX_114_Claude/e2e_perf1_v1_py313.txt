@@ -1,0 +1,35 @@
+base: 209db44c22efabdda0cf064cc84f88108bcc4d52  python: Python 3.13.17
+== lf: PERF-1 happy path
+PRE PASS: clean tree; 8 new paths absent; 3 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 8 expected new paths, 3 modified files and 0 staged deletions, all with the expected bytes.
+tests.test_perf1_numerics                            ran   7 (expected  7)  skipped 0  OK  (45.7 s)
+total ran 471 (expected 471); skips 0
+SUITE PASS: all 471 tests ran and passed; only the allowed symlink skips, if any.
+staged:       8 A       3 M 
+COMMITTED PASS: the last commit (96fdef6) added exactly 8 files, modified 3 and deleted 0; all Git blobs match.
+status after: ''
+== crlf: PERF-1 happy path
+PRE PASS: clean tree; 8 new paths absent; 3 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 8 expected new paths, 3 modified files and 0 staged deletions, all with the expected bytes.
+tests.test_perf1_numerics                            ran   7 (expected  7)  skipped 0  OK  (46.0 s)
+total ran 471 (expected 471); skips 0
+SUITE PASS: all 471 tests ran and passed; only the allowed symlink skips, if any.
+staged:       8 A       3 M 
+COMMITTED PASS: the last commit (3f3a896) added exactly 8 files, modified 3 and deleted 0; all Git blobs match.
+status after: ''
+== negatives (each must STOP)
+-- pre, an untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, a new file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: tests/test_perf1_numerics.py
+-- post, a replaced file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: src/evaluation/numerics.py
+-- post, a new file missing:
+VERIFICATION STOP: FAIL: unexpected new paths: tests/test_perf1_numerics.py
+-- post, an unexpected change:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/evaluation/n1.py
+-- committed, a stray file committed too:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths; differences (path, status): [('stray2.txt', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: src/evaluation/numerics.py
+end
