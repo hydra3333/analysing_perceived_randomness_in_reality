@@ -1,0 +1,11 @@
+baseline (unmutated) passes: True
+CAUGHT   binary splitting: the halves combined with the wrong power
+CAUGHT   binary splitting: the binomial recurrence off by one
+CAUGHT   binary splitting: the short-range Horner skips a term
+CAUGHT   guided search: the midpoint rule inverted
+CAUGHT   guided search: never confirmed with the exact tails
+CAUGHT   guided search: confirms the wrong side
+CAUGHT   decimal guide: one term too many (the guided path would fall back)
+CAUGHT   lower-bound exact predicate compares the wrong way
+CAUGHT   a progress line shows a value, not a count
+9 of 9 mutants caught

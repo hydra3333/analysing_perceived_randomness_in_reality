@@ -102,9 +102,17 @@ def declared_tests(game_id: str, n_tracks: int, n_variants: int) -> int:
     return n_tracks * per_track + n_variants * per_variant
 
 
-def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print, n1_runner=None) -> dict:
+def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None, n1_runner=None) -> dict:
     """Steps 1-7 of design 6.1 and the measures; returns everything the report writer needs. Raises ReportRefused
-    at step 1 (nothing appended). Any later exception leaves the search-log row in place."""
+    at step 1 (nothing appended). Any later exception leaves the search-log row in place.
+
+    `echo`, if given, receives one progress line per stage (PERF-1): the UTC time, stage names and counts only,
+    never a draw, a forecast or a measured value."""
+
+    def progress(text: str) -> None:
+        if echo is not None:
+            echo(f'{CP.utc_now()[11:19]} UTC  {text}')
+
     # ---------------------------------------------------------------- step 1: refusals that read nothing
     m = Path(CR.ORPHAN_MARKER)
     if m.exists() or m.is_symlink():
@@ -126,6 +134,7 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print
     families = load_families(game_id, first, last)
 
     # ---------------------------------------------------------------- steps 2-3: grid and frozen forecasts
+    progress(f'checks passed; collecting the frozen forecasts of {len(plan["cohort"])} variants')
     collected = COL.collect(plan, first, last)
     members = plan['cohort']
     tracks = [(mem, ro) for mem in members for ro in COL.READOUTS]
@@ -144,6 +153,7 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print
                     'availability': dict(sorted(availability.items())), 'evaluator_version': EVALUATOR_VERSION,
                     'receipt_selection_policy': 'EARLIEST_FROZEN_AT_UTC_EQUAL_CONTENT_DIGESTS'}
     sp_digest = record_digest(scoring_plan)
+    progress(f'forecasts collected: {len(collected["cells"])} grid cells, {len(selected)} valid')
 
     # ---------------------------------------------------------------- step 4: the search-log row (before outcomes)
     row = WF._append_search_row({'row_type': 'RANKING_REPORT', 'utc': CP.utc_now(), 'game_id': game_id, 'mode': 'WF',
@@ -159,6 +169,7 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print
     folder = roots()['scores'] / game_id / batch_id / scoring_run_id
     folder.mkdir(parents=True, exist_ok=False)
     CP.create_only(folder / 'scoring_plan.json', canonical(scoring_plan_record))
+    progress(f'search-log row {row} appended and scoring plan written; reading the outcomes of the grid targets')
 
     # ---------------------------------------------------------------- step 6: the outcomes of valid grid targets only
     targets = sorted({k[2] for k, c in collected['cells'].items() if c['valid']})
@@ -220,9 +231,13 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print
         raise RuntimeError('duplicate score-record key inside one ledger')
     CP.create_only(folder / 'score_ledger.jsonl', b''.join(canonical(s) for s in scores))   # each ends with \n
     CP.create_only(folder / 'rank_ledger.jsonl', b''.join(canonical(r) for r in ranks))
+    progress(f'ledgers written: {len(scores)} score records, {len(ranks)} rank records')
 
     # ---------------------------------------------------------------- step 8: measures (N1 optional)
+    if n1_runner is not None:
+        progress('N1: simulating the fair-draw histories and the Monte Carlo figures')
     n1 = n1_runner(game_id, per_track, per_variant, families) if n1_runner is not None else None
+    progress(f'measures for {len(per_track)} tracks and {len(per_variant)} variants')
     results = {}
     for (mid, vid, ro), tr in per_track.items():
         res = {}
@@ -239,6 +254,7 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=print
         if n1 is not None:
             kw['n1'] = n1['mr5'].get(key)
         var_results[key] = MS.mr5(game_id, vr['targets'], vr['status'], **kw)
+    progress('measures done; writing the report')
     return {'plan': plan, 'families': families, 'collected': collected, 'per_track': per_track,
             'per_variant': per_variant, 'results': results, 'var_results': var_results, 'n1': n1,
             'attempt_id': attempt_id, 'search_log_row': row, 'scoring_plan': scoring_plan_record,

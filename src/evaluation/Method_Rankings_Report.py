@@ -40,7 +40,8 @@ def main(argv: list[str] | None = None) -> int:
     seed_line = (f"policy {policy['policy_id']}, R = {N1.R}" if policy else 'N1_NOT_RUN: seed policy not approved')
     try:
         res = RP.run_report(args.game, args.batch, args.first, args.last,
-                            n1_runner=(N1.runner(policy) if policy else None))
+                            n1_runner=(N1.runner(policy) if policy else None),
+                            echo=lambda text: print(f'[RANKINGS] {text}', flush=True))
     except RP.ReportRefused as exc:
         print(f'[RANKINGS] REFUSED: {exc}. Nothing was read or written.', file=sys.stderr, flush=True)
         return 2

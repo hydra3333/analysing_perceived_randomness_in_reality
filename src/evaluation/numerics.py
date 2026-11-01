@@ -9,7 +9,8 @@ Deterministic, bounded-accuracy decimal transforms (not exact values):
     for x = z/sqrt(2) < 5 and the Laplace continued fraction (400 terms) from 5 up. 1 - p is never formed in
     floating point; near p = 1/2 the comparison uses d = 1/2 - p, formed exactly as a Fraction.
   - log10 of a p-value, to 15 significant digits, from the Fraction (never from an underflowed float);
-  - the Clopper-Pearson interval by bisection on the exact binomial tails.
+  - the Clopper-Pearson interval: the float64 that bisection on the exact binomial tails returns, found by the
+    same bisection guided by 80-digit decimal tails and then confirmed with the exact tails (PERF-1).
 Each transform is accurate to a relative 1e-30 or better before ONE correctly rounded conversion to float64.
 
 Standard library only. Every decimal computation runs in a local context; the global context is never changed.
@@ -82,15 +83,34 @@ def _check_prob(name: str, p) -> Fraction:
 def _pmf_num_sum(n: int, a: int, c: int, lo: int, hi: int) -> int:
     """sum_{j=lo..hi} C(n, j) a**j c**(n-j), exactly, as an integer (lo <= hi).
 
-    Written as a**lo c**(n-hi) times the homogeneous polynomial sum_i C(n, lo+i) a**i c**(L-i), L = hi - lo,
-    which is evaluated by Horner's rule in a with the powers of c built up step by step."""
-    length = hi - lo
-    acc = comb(n, hi)
-    cpow = 1
-    for i in range(length - 1, -1, -1):
-        cpow *= c
-        acc = acc * a + comb(n, lo + i) * cpow
-    return acc * a ** lo * c ** (n - hi)
+    Written as a**lo c**(n-hi) times P(lo, hi), where P(l, h) = sum_{j=l..h} C(n, j) a**(j-l) c**(h-j). P is
+    evaluated by binary splitting, P(l, h) = P(l, m) c**(h-m) + a**(m+1-l) P(m+1, h), with Horner's rule on short
+    ranges; the binomial coefficients come from the exact recurrence C(n, j+1) = C(n, j) (n - j) / (j + 1).
+    The same integer as the plain Horner sum (PERF-1), in far fewer long multiplications."""
+    binoms = [comb(n, lo)]
+    for j in range(lo, hi):
+        binoms.append(binoms[-1] * (n - j) // (j + 1))
+    apow: dict[int, int] = {}
+    cpow: dict[int, int] = {}
+
+    def _pow(cache: dict, base: int, e: int) -> int:
+        v = cache.get(e)
+        if v is None:
+            v = cache[e] = base ** e
+        return v
+
+    def part(l: int, h: int) -> int:
+        if h - l < 16:
+            acc = binoms[h - lo]
+            cp = 1
+            for j in range(h - 1, l - 1, -1):
+                cp *= c
+                acc = acc * a + binoms[j - lo] * cp
+            return acc
+        m = (l + h) // 2
+        return part(l, m) * _pow(cpow, c, h - m) + _pow(apow, a, m + 1 - l) * part(m + 1, h)
+
+    return part(lo, hi) * a ** lo * c ** (n - hi)
 
 
 def _upper_num(n: int, a: int, b: int, k: int) -> int:
@@ -399,11 +419,80 @@ def _bisect_float(pred_high) -> float:
     return hi if pred_high((Fraction(lo) + Fraction(hi)) / 2) is False else lo
 
 
+def _tail_dec(n: int, q: Decimal, lo: int, hi: int) -> Decimal:
+    """sum_{j=lo..hi} C(n, j) q**j (1-q)**(n-j) in the current decimal context (0 < q < 1). A guide only."""
+    p = 1 - q
+    r = q / p
+    t = Decimal(comb(n, lo)) * q ** lo * p ** (n - lo)
+    total = t
+    for j in range(lo, hi):
+        t = t * r * (n - j) / (j + 1)
+        total += t
+    return total
+
+
+def _upper_gt_exact(n: int, q: Fraction, k: int, half: Fraction) -> bool:
+    """P(X >= k; q) > half, exactly, by integer comparison (1 <= k <= n; 0 < q < 1)."""
+    return _upper_num(n, q.numerator, q.denominator, k) * half.denominator > half.numerator * q.denominator ** n
+
+
+def _lower_lt_exact(n: int, q: Fraction, k: int, half: Fraction) -> bool:
+    """P(X <= k; q) < half, exactly, by integer comparison (0 <= k < n; 0 < q < 1)."""
+    a, b = q.numerator, q.denominator
+    c = b - a
+    if k + 1 <= n - k:
+        num = _pmf_num_sum(n, a, c, 0, k)
+    else:
+        num = b ** n - _pmf_num_sum(n, a, c, k + 1, n)
+    return num * half.denominator < half.numerator * b ** n
+
+
+def _upper_gt_dec(n: int, q: Decimal, k: int, half: Decimal) -> bool:
+    if n - k + 1 <= k:
+        return _tail_dec(n, q, k, n) > half
+    return 1 - _tail_dec(n, q, 0, k - 1) > half
+
+
+def _lower_lt_dec(n: int, q: Decimal, k: int, half: Decimal) -> bool:
+    if k + 1 <= n - k:
+        return _tail_dec(n, q, 0, k) < half
+    return 1 - _tail_dec(n, q, k + 1, n) < half
+
+
+def _bisect_guided(guide, exact) -> float:
+    """The float64 that _bisect_float(exact) returns, found with the cheap predicate `guide` (PERF-1).
+
+    The bisection runs as in _bisect_float, deciding each step with `guide`. It ends at two adjacent floats
+    lo < hi; the exact predicate is then evaluated at their exact midpoint and, on the side that midpoint does
+    not settle, at lo or hi. If they show that exact() changes between lo and hi, (lo, hi) is the one adjacent
+    pair where the monotone exact predicate changes, which is where _bisect_float ends too, and the same
+    midpoint rule picks the same float. If not, _bisect_float(exact) is run and returned."""
+    with decimal.localcontext(_ctx(_PREC)):
+        lo, hi = 0.0, 1.0
+        while True:
+            mid = lo + (hi - lo) / 2
+            if mid <= lo or mid >= hi:
+                break
+            if guide(Decimal(mid)):
+                hi = mid
+            else:
+                lo = mid
+    at_mid = exact((Fraction(lo) + Fraction(hi)) / 2)
+    if at_mid is False:
+        confirmed = hi == 1.0 or exact(Fraction(hi)) is True
+    else:
+        confirmed = lo == 0.0 or exact(Fraction(lo)) is False
+    if not confirmed:
+        return _bisect_float(exact)
+    return hi if at_mid is False else lo
+
+
 def clopper_pearson(k: int, n: int, conf: Fraction = Fraction(95, 100)) -> tuple[float, float]:
     """The exact two-sided Clopper-Pearson interval for k successes in n trials (alpha/2 in each tail).
 
-    The lower bound solves P(X >= k; p) = alpha/2 and the upper bound P(X <= k; p) = alpha/2, both by bisection
-    on the exact binomial tails, correctly rounded to float64. k = 0 gives lower 0.0; k = n gives upper 1.0."""
+    The lower bound solves P(X >= k; p) = alpha/2 and the upper bound P(X <= k; p) = alpha/2. Each is the float64
+    that bisection on the exact binomial tails returns (correctly rounded); _bisect_guided finds it with decimal
+    tails and confirms it with the exact ones (PERF-1). k = 0 gives lower 0.0; k = n gives upper 1.0."""
     k = _check_int('k', k)
     n = _check_int('n', n)
     if n <= 0:
@@ -415,16 +504,20 @@ def clopper_pearson(k: int, n: int, conf: Fraction = Fraction(95, 100)) -> tuple
     if not (0 < conf < 1):
         raise ValueError('conf must lie strictly between 0 and 1')
     half = (1 - conf) / 2
+    with decimal.localcontext(_ctx(_PREC)):
+        half_dec = Decimal(half.numerator) / Decimal(half.denominator)
     if k == 0:
         lower = 0.0
     else:
         # P(X >= k; p) rises with p: True above the root.
-        lower = _bisect_float(lambda q: binom_upper(n, q, k) > half)
+        lower = _bisect_guided(lambda d: _upper_gt_dec(n, d, k, half_dec),
+                               lambda q: _upper_gt_exact(n, q, k, half))
     if k == n:
         upper = 1.0
     else:
         # P(X <= k; p) falls with p: True above the root.
-        upper = _bisect_float(lambda q: binom_lower(n, q, k) < half)
+        upper = _bisect_guided(lambda d: _lower_lt_dec(n, d, k, half_dec),
+                               lambda q: _lower_lt_exact(n, q, k, half))
     return lower, upper
 
 
