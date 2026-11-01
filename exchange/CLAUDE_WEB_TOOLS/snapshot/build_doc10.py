@@ -127,11 +127,12 @@ EOLCHK = 'CHECK_RESULTS_EOL.py'
 \"\"\"DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
 
 It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
-changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
-file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
+changes nothing. Accepted: `w/lf`; and `w/none` only when the working file's size is zero (checked with os.stat,
+metadata only; EX_119 C03). Anything else (`w/crlf`, `w/mixed`, `w/none` on a nonempty file, a missing or unstatable
+working file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
 Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
 \"\"\"
-import argparse, subprocess, sys
+import argparse, os, subprocess, sys
 
 ap = argparse.ArgumentParser()
 ap.add_argument('--repo', required=True)
@@ -148,7 +149,15 @@ for line in r.stdout.splitlines():
     if w == 'w/lf':
         continue
     if w == 'w/none':
-        empty += 1
+        try:
+            size = os.stat(os.path.join(repo, path)).st_size
+        except OSError:
+            bad.append(f'{w:8} {path}  (cannot stat the working file)')
+            continue
+        if size == 0:
+            empty += 1
+            continue
+        bad.append(f'{w:8} {path}  (not empty, yet has no line ending at all)')
         continue
     bad.append(f'{w:8} {path}')
 if n == 0:
@@ -178,7 +187,7 @@ git status --short
 python "{P}\\{EOLCHK}" --repo .
 ```
 
-Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for a file whose size is zero. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
 
 ## 1. Update, check, copy, check
 

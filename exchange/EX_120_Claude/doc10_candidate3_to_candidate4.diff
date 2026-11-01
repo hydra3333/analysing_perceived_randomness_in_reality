@@ -1,0 +1,121 @@
+# DOC10_Snapshot_v1: complete diff of the package folder, candidate 3 (EX_118) to candidate 4 (EX_120).
+diff -ruN a/CHECK_RESULTS_EOL.py b/CHECK_RESULTS_EOL.py
+--- a/CHECK_RESULTS_EOL.py	2026-11-01 21:06:54.933013869 +1030
++++ b/CHECK_RESULTS_EOL.py	2026-11-01 21:06:54.935776168 +1030
+@@ -2,11 +2,12 @@
+ """DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
+ 
+ It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
+-changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
+-file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
++changes nothing. Accepted: `w/lf`; and `w/none` only when the working file's size is zero (checked with os.stat,
++metadata only; EX_119 C03). Anything else (`w/crlf`, `w/mixed`, `w/none` on a nonempty file, a missing or unstatable
++working file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
+ Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
+ """
+-import argparse, subprocess, sys
++import argparse, os, subprocess, sys
+ 
+ ap = argparse.ArgumentParser()
+ ap.add_argument('--repo', required=True)
+@@ -23,7 +24,15 @@
+     if w == 'w/lf':
+         continue
+     if w == 'w/none':
+-        empty += 1
++        try:
++            size = os.stat(os.path.join(repo, path)).st_size
++        except OSError:
++            bad.append(f'{w:8} {path}  (cannot stat the working file)')
++            continue
++        if size == 0:
++            empty += 1
++            continue
++        bad.append(f'{w:8} {path}  (not empty, yet has no line ending at all)')
+         continue
+     bad.append(f'{w:8} {path}')
+ if n == 0:
+diff -ruN a/INSTALL_INSTRUCTIONS.md b/INSTALL_INSTRUCTIONS.md
+--- a/INSTALL_INSTRUCTIONS.md	2026-11-01 21:06:54.933030025 +1030
++++ b/INSTALL_INSTRUCTIONS.md	2026-11-01 21:06:54.935787796 +1030
+@@ -11,7 +11,7 @@
+ python "E:\TEMP\DOC10_Snapshot_v1\CHECK_RESULTS_EOL.py" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`CHECK_RESULTS_EOL.py`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
++Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`CHECK_RESULTS_EOL.py`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for a file whose size is zero. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+ 
+ ## 1. Update, check, copy, check
+ 
+diff -ruN a/VERIFY_DOC10_INSTALL.py b/VERIFY_DOC10_INSTALL.py
+--- a/VERIFY_DOC10_INSTALL.py	2026-11-01 21:06:54.932984348 +1030
++++ b/VERIFY_DOC10_INSTALL.py	2026-11-01 21:06:54.935756674 +1030
+@@ -37,9 +37,9 @@
+     'review/DOC10_Snapshot_v1/H1_v1r6_to_v1r7.diff': 'af812f44d35d1377ac3e89f27b5b5f4c1ba55e978b5a23e1de1239bd195e60a3',
+     'review/DOC10_Snapshot_v1/H2_blurb_v1r7_to_v1r8.diff': '015f0113789f5c0e56bc16ea86120ca0b459eb301d2bdf9fc1b5a285031cbc2c',
+     'review/DOC10_Snapshot_v1/H2_v1r7_to_v1r8.diff': '09b8f753cef198caf2d8c38a32d41dce7b7886883df93dd659d2d0cba6109c22',
+-    'review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt': '25801ca12f6ffe41d1a4586970e9cdde88365ecb901baf2898b7af787b49da0e',
++    'review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt': '998243771af98577b1435f4848ed2ac844040e2c58195aead8f6138860d78f76',
+     'review/DOC10_Snapshot_v1/arch_v0_8_to_v0_9.diff': 'b3151e6889d4426f1fb8dcd67330aa50d22d1d46210a05e7e9c93a3aa94c283e',
+-    'review/DOC10_Snapshot_v1/build_doc10.py': '3a1c1b5aea537e28661d809b12c310e4979acedcce126af3b3faa80779d43540',
++    'review/DOC10_Snapshot_v1/build_doc10.py': 'd394f9dc29475b4630254a6a041491236fcbab5b0102bafd082805eebd5ca1c5',
+     'review/DOC10_Snapshot_v1/h1_section12.md': '91badeee9dfb3e4c52d5536f04770eb466ce52d7674a9ebc1cf401d4d1bf2a5c',
+     'review/DOC10_Snapshot_v1/make_arch_v09.py': '236c99999f68b0193b25dabda0cd524cd07fec35e067b18c3ec3656a4107561d',
+     'review/DOC10_Snapshot_v1/make_blurbs_v1r7_v1r8.py': '9923977512cb738257e3f0038cb1e54dd564a0a308621e3f12ddf13916abbf32',
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt b/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt
+--- a/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-01 21:06:54.932817942 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-01 21:06:54.935617106 +1030
+@@ -12,7 +12,7 @@
+ A 015f0113789f5c0e56bc16ea86120ca0b459eb301d2bdf9fc1b5a285031cbc2c  review/DOC10_Snapshot_v1/H2_blurb_v1r7_to_v1r8.diff
+ A 09b8f753cef198caf2d8c38a32d41dce7b7886883df93dd659d2d0cba6109c22  review/DOC10_Snapshot_v1/H2_v1r7_to_v1r8.diff
+ A b3151e6889d4426f1fb8dcd67330aa50d22d1d46210a05e7e9c93a3aa94c283e  review/DOC10_Snapshot_v1/arch_v0_8_to_v0_9.diff
+-A 3a1c1b5aea537e28661d809b12c310e4979acedcce126af3b3faa80779d43540  review/DOC10_Snapshot_v1/build_doc10.py
++A d394f9dc29475b4630254a6a041491236fcbab5b0102bafd082805eebd5ca1c5  review/DOC10_Snapshot_v1/build_doc10.py
+ A 91badeee9dfb3e4c52d5536f04770eb466ce52d7674a9ebc1cf401d4d1bf2a5c  review/DOC10_Snapshot_v1/h1_section12.md
+ A 236c99999f68b0193b25dabda0cd524cd07fec35e067b18c3ec3656a4107561d  review/DOC10_Snapshot_v1/make_arch_v09.py
+ A 9923977512cb738257e3f0038cb1e54dd564a0a308621e3f12ddf13916abbf32  review/DOC10_Snapshot_v1/make_blurbs_v1r7_v1r8.py
+diff -ruN a/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py b/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py
+--- a/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py	2026-11-01 21:06:54.932801210 +1030
++++ b/repo_overlay/review/DOC10_Snapshot_v1/build_doc10.py	2026-11-01 21:06:54.935596352 +1030
+@@ -127,11 +127,12 @@
+ \"\"\"DOC-10 (EX_117 C03): read-only check that every tracked file under results/ has LF line endings in the working tree.
+ 
+ It runs only `git ls-files --eol -- results` and reads its output. It imports no project code, opens no record file and
+-changes nothing. Accepted: `w/lf`, and `w/none` (an empty file). Anything else (`w/crlf`, `w/mixed`, a missing working
+-file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
++changes nothing. Accepted: `w/lf`; and `w/none` only when the working file's size is zero (checked with os.stat,
++metadata only; EX_119 C03). Anything else (`w/crlf`, `w/mixed`, `w/none` on a nonempty file, a missing or unstatable
++working file) is EOL STOP: do not continue, commit or push; send Claude the output. Do not try to repair anything yourself.
+ Usage (repository root):  python CHECK_RESULTS_EOL.py --repo .
+ \"\"\"
+-import argparse, subprocess, sys
++import argparse, os, subprocess, sys
+ 
+ ap = argparse.ArgumentParser()
+ ap.add_argument('--repo', required=True)
+@@ -148,7 +149,15 @@
+     if w == 'w/lf':
+         continue
+     if w == 'w/none':
+-        empty += 1
++        try:
++            size = os.stat(os.path.join(repo, path)).st_size
++        except OSError:
++            bad.append(f'{w:8} {path}  (cannot stat the working file)')
++            continue
++        if size == 0:
++            empty += 1
++            continue
++        bad.append(f'{w:8} {path}  (not empty, yet has no line ending at all)')
+         continue
+     bad.append(f'{w:8} {path}')
+ if n == 0:
+@@ -178,7 +187,7 @@
+ python "{P}\\{EOLCHK}" --repo .
+ ```
+ 
+-Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for an empty file. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
++Expected: `git status --short` prints nothing, then `EOL PASS`. The check (`{EOLCHK}`, in the package folder, read-only) accepts only `w/lf`, and `w/none` for a file whose size is zero. **Every time it prints `EOL STOP` (here or in steps 1 and 2), stop at once: do not continue, commit or push, and do not try to repair anything.** Send Claude the output; Claude gives you the exact commands to put those files' committed bytes back, as for the Powerball batch records on 1 November 2026.
+ 
+ ## 1. Update, check, copy, check
+ 

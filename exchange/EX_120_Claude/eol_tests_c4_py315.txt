@@ -1,0 +1,42 @@
+python 3.15.0b4 | checker /home/claude/work/snap/final/pkg/CHECK_RESULTS_EOL.py
+ok   all files as committed (one zero-byte file, two LF files): expected PASS, got PASS (exit 0)
+       ls-files: i/lf    w/lf    attr/-text              results/a/record.json
+       ls-files: i/lf    w/lf    attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  EOL PASS: 3 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+ok   zero-byte file stays zero bytes: expected PASS, got PASS (exit 0)
+       ls-files: i/lf    w/lf    attr/-text              results/a/record.json
+       ls-files: i/lf    w/lf    attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  EOL PASS: 3 tracked files under results/, all w/lf (1 empty, w/none). Read-only: nothing changed.
+ok   nonempty file with no newline at all (w/none, size 6): expected STOP, got STOP (exit 1)
+       ls-files: i/lf    w/none  attr/-text              results/a/record.json
+       ls-files: i/lf    w/lf    attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  w/none   results/a/record.json  (not empty, yet has no line ending at all)
+       checker:  EOL STOP: 1 of 3 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+ok   the empty log given content with no newline (w/none, size 3): expected STOP, got STOP (exit 1)
+       ls-files: i/lf    w/lf    attr/-text              results/a/record.json
+       ls-files: i/lf    w/lf    attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  w/none   results/empty.log  (not empty, yet has no line ending at all)
+       checker:  EOL STOP: 1 of 3 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+ok   CRLF rewrite of an LF record: expected STOP, got STOP (exit 1)
+       ls-files: i/lf    w/lf    attr/-text              results/a/record.json
+       ls-files: i/lf    w/crlf  attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  w/crlf   results/b/table.csv
+       checker:  EOL STOP: 1 of 3 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+ok   mixed endings: expected STOP, got STOP (exit 1)
+       ls-files: i/lf    w/lf    attr/-text              results/a/record.json
+       ls-files: i/lf    w/mixed attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  w/mixed  results/b/table.csv
+       checker:  EOL STOP: 1 of 3 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+ok   a tracked record missing from the working tree: expected STOP, got STOP (exit 1)
+       ls-files: i/lf    w/      attr/-text              results/a/record.json
+       ls-files: i/lf    w/lf    attr/-text              results/b/table.csv
+       ls-files: i/none  w/none  attr/-text              results/empty.log
+       checker:  w/       results/a/record.json
+       checker:  EOL STOP: 1 of 3 tracked files under results/ are not LF in the working tree. Do not continue, commit or push. Send Claude this output; Claude gives the exact owner-run restore commands.
+7 of 7 cases as expected
