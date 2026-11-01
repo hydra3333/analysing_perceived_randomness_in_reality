@@ -1,0 +1,57 @@
+"""Assemble EX_116 (Claude): the package zip, its member list, the EX md with its member table and EX_116_Claude.zip,
+all under /home/claude/work/snap/final/ex116/. Nothing is copied into the repository unless --to-exchange is given.
+Usage: python3 assemble_ex116.py [--to-exchange]"""
+import hashlib, re, shutil, subprocess, sys
+from pathlib import Path
+
+H = Path('/home/claude/work/snap/final')
+R = Path('/home/claude/analysing_perceived_randomness_in_reality')
+MZ = R / 'exchange/EX_019_Claude/make_zip.py'
+X = H / 'ex116'
+ST, ZS = X / 'stage', X / 'zsrc'
+for d in (ST, ZS):
+    shutil.rmtree(d, ignore_errors=True); d.mkdir(parents=True)
+assert not list((H / 'pkg').rglob('__pycache__'))
+shutil.copytree(H / 'pkg', ZS / 'DOC10_Snapshot_v1')
+
+
+def sha(b): return hashlib.sha256(b).hexdigest()
+
+
+def lfsha(b): return sha(b.replace(b'\r\n', b'\n'))
+
+
+subprocess.run([sys.executable, '-I', str(MZ), str(ZS / 'DOC10_Snapshot_v1'), str(ST / 'DOC10_Snapshot_v1_candidate.zip'),
+                str(ST / 'DOC10_Snapshot_v1_zip_members.txt')], check=True)
+shutil.copy(H / 'e2e_doc10.txt', ST / 'e2e_doc10.txt')
+shutil.copy(H / 'suite_doc10_py313.txt', ST / 'suite_doc10_py313.txt')
+shutil.copy('/home/claude/work/snapshot/probe_findings.md', ST / 'cold_read_probe_findings.md')
+e2e = (H / 'e2e_doc10.txt').read_text()
+assert e2e.count('COMMITTED PASS') == 2 and e2e.count('VERIFICATION STOP') == 8, 'rehearsal evidence incomplete'
+suite = (H / 'suite_doc10_py313.txt').read_text()
+m = re.search(r'SUITE PASS: all (\d+) tests ran and passed', suite)
+assert m and m.group(1) == '471', 'suite evidence incomplete'
+man = (H / 'pkg/repo_overlay/review/DOC10_Snapshot_v1/INSTALL_MANIFEST_SHA256.txt').read_text()
+nnew = sum(1 for ln in man.splitlines() if ln.startswith('A ')) + 1          # + the manifest itself
+nmod = sum(1 for ln in man.splitlines() if ln.startswith('M '))
+t = (H / 'ex116.in').read_text()
+t = (t.replace('@@NNEW@@', str(nnew)).replace('@@NMOD@@', str(nmod))
+      .replace('@@SUITE@@', 'SUITE PASS, all 471 tests (Python 3.13, an LF clone of `608025c` with the overlay copied in, '
+               'run with PERF-1\'s runner)'))
+rows = []
+for f in sorted(p for p in ST.iterdir() if p.name != 'EX_116_Claude.md'):
+    b = f.read_bytes()
+    rows.append(f'| `{f.name}` | `{sha(b)}` | `{lfsha(b)}` |')
+t = t.replace('@@MEMBERS@@', '\n'.join(rows))
+assert '@@' not in t and all(ord(c) < 128 for c in t)
+(ST / 'EX_116_Claude.md').write_bytes(t.replace('\n', '\r\n').encode('ascii'))
+subprocess.run([sys.executable, '-I', str(MZ), str(ST), str(X / 'EX_116_Claude.zip'), str(X / 'members.txt'), 'flat'],
+               check=True)
+if '--to-exchange' in sys.argv[1:]:
+    out = R / 'exchange/EX_116_Claude'
+    shutil.rmtree(out, ignore_errors=True); out.mkdir()
+    for f in ST.iterdir():
+        shutil.copy(f, out / f.name)
+    shutil.copy(X / 'EX_116_Claude.zip', R / 'exchange/EX_116_Claude.zip')
+print('package zip', sha((ST / 'DOC10_Snapshot_v1_candidate.zip').read_bytes()))
+print('EX zip', sha((X / 'EX_116_Claude.zip').read_bytes()))

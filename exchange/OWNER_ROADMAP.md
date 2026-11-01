@@ -98,13 +98,12 @@ condensed, and the next steps set out as items 10b to 10d.
              with bit-identical results (the statistics stage: hours down to about 4 minutes on invented
              data), and progress lines for the report tool. Sent for review in EX_114; rehearsal T015.
            Left in this item, in order:
-           a. EX_115: PERF-1 PASS (no findings); you accepted it on 1 November 2026. Next: Claude Code's
-              rehearsal (T015), then your PERF-1 install once the Oz Lotto report is committed.
-           b. The Oz Lotto report finishes (its results stand; PERF-1 changes no result) and is committed.
-           c. The Powerball plan file is restored, and the Powerball report is run and committed.
-           d. You attach the two .txt reports; Claude and ChatGPT read them.
-10b. NEXT - The snapshot (your request, 1 November 2026): one document package, reviewed by ChatGPT and
-           ratified by you:
+           - DONE (1 November 2026): EX_115 PERF-1 PASS; T015 PASS; PERF-1 INSTALLED (3fce327).
+             Oz Lotto report committed (441daf2; about 4.5 hours before PERF-1). The Powerball batch
+             records were restored (line endings) and its report committed (608025c; about 26 minutes).
+             Both games: no method beats chance (development evidence only). Item 10 is complete.
+10b. NOW  - The snapshot (your request, 1 November 2026): one document package (DOC10_Snapshot_v1),
+           sent to ChatGPT in EX_116; then your ratification and install, then the new Claude chat:
            - register v0.23 (EX_099 to EX_111, WORKERS-1, WB-0 to WB-2, the seed, the installs);
            - new editions of the two handovers (H-1 for Claude, H-2 for ChatGPT) with their blurbs;
            - Architecture v0.9 (the scorer and report, the walk-forward driver, where records live);
