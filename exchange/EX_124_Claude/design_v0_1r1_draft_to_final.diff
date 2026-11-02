@@ -1,0 +1,547 @@
+3c3
+< **Version:** v0.1r1, 3 November 2026 (Adelaide, UTC+10:30). CANDIDATE for design-stage review (R-3). Replaces v0.1 (recorded in `exchange/EX_123_Claude/` at `c01717d`, never sent to the reviewer, overtaken by the stock-take round of 2 November 2026 and the owner's ratification of its positions). Appendix B lists what changed.
+---
+> **Version:** v0.1r1, 3 November 2026 (Adelaide, UTC+10:30). CANDIDATE for design-stage review (R-3). Replaces v0.1 (recorded in `exchange/EX_123_Claude/` at `c01717d`, never sent to the reviewer; overtaken by the stock-take round of 2 November 2026 and the owner's ratification of its positions). This edition was cold-read twice by a fresh helper before sending; its draft, the helper's two reports and the diff travel with it (Appendix C). Appendix B lists what changed from v0.1.
+5c5
+< **Base:** `main` at `3a9f6ac` (documents); `src/` and `tests/` unchanged since PERF-1 at `3fce327` (register v0.23). Code facts are cited by file and line at that base.
+---
+> **Base:** `main` at `3a9f6ac` (documents); `src/` and `tests/` unchanged since PERF-1 at `3fce327` (register v0.23). Code facts are cited by file and line at that base and were checked there.
+8a9,20
+> ## Terms used in this note
+> 
+> - **MHUP-1:** this work item (Mode H, the results Update and the Prospective mode). **MHUP-A, MHUP-B:** its two code packages (section 8).
+> - **Mode H:** the one-time test on the ten sealed holdout draws per game (Powerball 1577-1586, Oz Lotto 1694-1703).
+> - **The master:** a game's results file, `source_data/<GAME>_results_master.csv`; **the master ledger:** its append-only version list, one row per updater run. **The forecast ledger**, **the witness ledger** and **the score ledger** are new weekly records (sections 6.5, 6.6). R3's **outcome record** is the master row that supplied an outcome, identified by master version and SHA-256; R3's **evaluation record** is the score ledger (6.6).
+> - **"Version 1 only":** today every reader accepts only the first (INIT) master version. **The version-2 rules** (section 3) accept version 2 and every later version.
+> - **Freeze** has three senses, kept apart: the **plan freeze** (the study manifest and code fixed before the holdout is opened, 4.1); a **frozen forecast** (a method's run record, published create-only, as today); a **freeze line** (one line of the forecast ledger saying every active variant's run for a target is DONE, 6.5).
+> - **DONE, COMPLETE:** the driver's terms for a planned run that ended in a continue class, and for a batch all of whose runs are DONE (5.2).
+> - **Evidence tier:** the label a scored draw carries: `HOLDOUT_MODE_H`, `PROSPECTIVE`, `CATCH_UP` (new) or `DEVELOPMENT_WF_EXPLORATORY` (R3 17.3.9; MH-1). "Development" therefore has two senses: the development **prefix** (draws before the holdout, R3 6) and the development **tier** (MH-1's label for a post-holdout forecast made by a method released after that draw); 3.2 rule 3 and 6.4 keep them apart.
+> - **Q1 to Q10:** the owner's questions, listed with their answers in section 9.
+> - **R-4 oracles:** the reviewer's right to independent reference checks (exact-arithmetic or independently built fixtures) for high-consequence code (agreed position; H-1 1.4).
+> 
+13c25
+< | Item | MHUP-1: Mode H, the results update and the prospective (weekly) mode (roadmap item 10c; GOAL-1, ORD-1) |
+---
+> | Item | MHUP-1 (roadmap item 10c; GOAL-1, ORD-1) |
+15c27
+< | Risk tier | HIGH (reader and digest code; evaluator and scorer; holdout access and unsealing; freezing and publication; a new contract vocabulary row; `source_data/`) |
+---
+> | Risk tier | HIGH (reader, digest and record-validator code; evaluator and scorer; holdout access and unsealing; freezing and publication; contract vocabulary; a new E_1 revision; launchers; `source_data/`) |
+18,19c30,31
+< | Probe findings carried | A1, A2, A3, A6, A7, A8, A11 (register v0.23) |
+< | Reviewer input carried | the three takeover notes (1 November); Response 2 of the stock-take (the three-way split, the primary statement for Q1, no double scoring, an unaccepted draw left open, the status block, the registry-versus-register distinction); the direction content check |
+---
+> | Probe findings carried | A1, A2, A3, A6, A7, A8, A9, A11 (register v0.23) |
+> | Reviewer input carried | the three takeover notes of 1 November (flagged holdout draws stay valid and counted; holdout outcomes stay inaccessible until the reviewed, owner-authorised Mode H procedure, which then permits scoring; results described as "no statistically compelling departure", never as proof of randomness); Response 2 of the stock-take; the direction content check. Appendix A says where each lands |
+24c36
+< Today the system can only look at draws before the holdout. To make real next-draw forecasts we need four things, in this order:
+---
+> Today the system can only look at draws before the holdout. To make real next-draw forecasts we need five things, in this order:
+26,29c38,42
+< 1. **Read a results file that has grown.** Every reader today refuses the results file as soon as it has a second version (finding A1): even an update that finds nothing new writes a NO_CHANGE line and stops everything. The first job is a reader that accepts the updater's later versions, checks their history, and still serves each forecast only the draws before its target.
+< 2. **Open the holdout, once, on the record.** You freeze a study plan (which methods, which measures, which software, which installed packages), then write the opening record. Only then does the updater add the holdout draws and every later draw.
+< 3. **Mode H.** Every released variant forecasts each of the ten holdout draws, each from the draws before it. No forecast is scored until all are frozen; then the ten draws are scored once. Powerball 1585 and 1586 carry their exposure flag and count fully. Under the owner's preferred reading (option A) this is a precommitted holdout evaluation, not pre-draw forecasting, and the design says so.
+< 4. **The weekly session (MH-1).** Per game, one command: it works through every draw that has a result but no score, strictly in draw order, scoring an existing forecast or making, freezing and scoring a catch-up forecast; then it freezes the next draw's forecast before that draw. Everything runs offline; the timing proof is a local, chained record; a GitHub push is only an optional witness.
+---
+> 1. **Read a master that has grown.** Every reader today refuses the master as soon as it has a second version (finding A1): even an update that finds nothing new writes a NO_CHANGE line and stops everything. The first job is a reader that accepts later versions, checks their history, and still serves each forecast only the draws before its target.
+> 2. **Let E_1 take part.** E_1's installed revision 2 refuses, in its own code, every run mode except development and every target beyond the development cap (section 2). It needs a revision 3 with the same arithmetic and wider admission, or it sits out Mode H.
+> 3. **Open the holdout, once, on the record.** You freeze a study plan (which methods, which measures, which software, which installed packages), then write the opening record. Only then does the updater add the holdout draws and every later draw.
+> 4. **Mode H.** Every released variant forecasts each of the ten holdout draws, each from the draws before it. No forecast is scored until all are frozen; then the ten draws are scored once. Powerball 1585 and 1586 carry their exposure flag and count fully. Under the owner's preferred reading (option A) this is a precommitted holdout evaluation with N-1 isolation, not pre-draw forecasting, and every record and report says so.
+> 5. **The weekly session (MH-1).** Per game, one command you type: it works through every draw that has a result but no score, strictly in draw order, freezing every variant's forecast for a draw before any of them is scored; then it freezes the next draw's forecast before that draw's deadline. Everything runs offline; the timing proof is a local, chained record; a GitHub push is an optional witness.
+31c44
+< The draws in view (from the weekly calendar rule): the planning target is **Oz Lotto 1709 on Tuesday 17 November** and **Powerball 1592 on Thursday 19 November** as the first forecasts frozen before their draws; the week of 9 November (Oz Lotto 1708, Powerball 1591) is a stretch only. Whatever the first session's date, the catch-up covers every draw since the holdout: Oz Lotto 1704-1706 and Powerball 1587-1589 as development evidence (they predate the 31 October installs), Oz Lotto 1707 onward and Powerball 1590 onward as CATCH-UP.
+---
+> The draws in view (from the weekly calendar rule): the planning target is **Oz Lotto 1709 on Tuesday 17 November** and **Powerball 1592 on Thursday 19 November** as the first forecasts frozen before their draws; the week of 9 November (Oz Lotto 1708, Powerball 1591) is a stretch only. Whatever the first session's date, the catch-up covers every draw since the holdout. For the 39 variants released on 31 October 2026, Oz Lotto 1704-1706 and Powerball 1587-1589 are development evidence (they predate the release) and Oz Lotto 1707 onward and Powerball 1590 onward are CATCH-UP; for E_1 revision 3 the boundary is its own release date (section 2).
+37,39c50,54
+< - **A (the owner's preference, 2 November 2026): the study plan and code are frozen before the holdout is opened; the holdout is opened and added to the results file; then one Mode H batch forecasts all ten targets, each method seeing only the draws before its target (the N-1 rule, which test T-05 already proves); every forecast is frozen, create-only, before the scorer reads any holdout result; then the ten are scored once.** This is exactly how the reviewed walk-forward batches and the WF-1B scorer already work, so it needs the least new code, and it is exactly what the weekly catch-up will do, so Mode H doubles as the rehearsal of the weekly mechanics. Its honest description, which this design uses throughout: **a precommitted holdout evaluation with N-1 isolation, not pre-draw forecasting**: the outcomes are already in the system when the forecasts are made, held away from the methods by the reader.
+< - **B (kept as the alternative for the reviewer's R-3 review):** for each target in turn, freeze every forecast for N, then release N's result, score N, move on. The forecasting half exists (the driver runs one target at a time); what B adds is a staged release of the results file (ten updater steps or a capped copy of the master, each with its own ledger line), a check that each forecast predates the line that admitted its outcome, and recovery rules for a stop halfway: new code in the most protected area (master, ledger, readers). It buys a local timestamp ordering between each freeze and each release; since the outcomes are already public, it is not prospective evidence either.
+< - **C (withdrawn):** forecast all ten holdout draws from the development draws only, freeze, then open and score. Checked at the base: no released method uses its target's draw number in its calculation (the driver runs unordered, date-free views; `walk_forward.py` line 45; E_1 alone carries the target in its forecast record as a label, `contract_adapters/e_001.py` line 27). With the same training prefix every variant would therefore produce the same ranking ten times, scored against ten different draws: a fixed-origin test of one forecast, not a test of the retraining process.
+---
+> - **A (the owner's preference, 2 November 2026): the study plan and code are frozen before the holdout is opened; the holdout is opened and added to the master; then one Mode H batch forecasts all ten targets, each method seeing only the draws before its target (the N-1 rule, which test T-05 already proves); every forecast is frozen, create-only, before the scorer reads any holdout result; then the ten are scored once.** This is how the reviewed walk-forward batches and the WF-1B scorer already work, so it needs the least new code, and it is what the weekly catch-up will do, so Mode H doubles as the rehearsal of the weekly mechanics. Its honest description, used throughout: **a precommitted holdout evaluation with N-1 isolation, not pre-draw forecasting**; the outcomes are already in the system when the forecasts are made, held away from the methods by the reader (R3 17.3.5, line 1130: "historical evaluation, not advance-frozen prospective forecasting").
+> - **B (kept as the alternative for the reviewer's R-3 review):** for each target in turn, freeze every forecast for N, then release N's result, score N, move on. The forecasting half exists (the driver runs one target at a time); B adds a staged release of the master (ten updater steps, or a capped copy, each with its own ledger row), a check that each forecast predates the row that admitted its outcome, and recovery rules for a stop halfway: new code in the most protected area (master, ledger, readers). It buys a local timestamp ordering between each freeze and each release; since the outcomes are already public, it is not prospective evidence either. Sections 4.5 and 5.3 say where B would differ.
+> - **C (withdrawn, with a corrected reason):** forecast all ten holdout draws from the development draws only, freeze, then open and score. The stock-take's Responses 3 and 4 and the roadmap said "no released method uses its target's draw number"; that is wrong as stated. The target is not a scientific input of any released method (the driver runs unordered, date-free views: `walk_forward.py` lines 45 and 143-144), but it does enter every method's tie-break key (`contract_records.py` lines 405-409, `tie_identity_for`), every non-legacy view digest (`game_draws_reader.py` line 125) and E_1's own tie key (`E_001/multigame_e1.py` lines 23 and 50). Under C, the ten forecasts from one prefix would have identical scores for every number and could differ only in tie order where a tie straddles the TOP or WORST boundary: a fixed-origin test of one scoring, not a test of the retraining process. The withdrawal stands. The corrected reason is committed to the roadmap alongside EX_124 and appended to the stock-take record as a correction note; register v0.24 records it.
+> 
+> **The primary statement Mode H supports (RECOMMENDED wording, for the register amendment):** "a locked holdout study: the study plan and code were frozen before the holdout was opened; every forecast used only draws before its target; no forecast was scored until all were frozen." Register v0.23's sentence "all frozen before the holdout is opened" is to be read, and in register v0.24 amended, to this wording; v0.23's text is not edited. **Q1 stays OPEN until this review and the owner's ratification of the design.**
+41c56
+< **The primary statement Mode H supports (RECOMMENDED wording, for the register amendment):** "a locked holdout study: the study plan and code were frozen before the holdout was opened; every forecast used only draws before its target; no forecast was scored until all were frozen." The register's sentence "all frozen before the holdout is opened" is to be read, and in register v0.24 amended, to this wording; register v0.23's text is not edited. **Q1 stays OPEN until this review and the owner's ratification of the design.** Everything below is written for A and says where B would differ.
+---
+> ## 2. E_1 revision 3 (a precondition found by the cold read)
+43c58
+< ## 2. Piece 1: reading a results file that has grown (finding A1)
+---
+> E_1 revision 2's multi-game function (`src/methods/E_001/multigame_e1.py`) refuses any `data_kind` other than `SYNTHETIC_CONTRACT_TEST` or `REAL_DEVELOPMENT` (lines 30-32; the adapter passes the run mode as the data kind, `contract_adapters/e_001.py` line 27) and any target outside `historical_development_target_allowed` (lines 33-34). Both checks are inside the released method's own code, so E_1 would end every Mode H, catch-up or prospective run with `RUNTIME_FAILURE METHOD_FAILED`. Any change to a released method's code is a new revision (E2R-R14A; R3 6.3).
+45c60
+< ### 2.1 What the code does today
+---
+> **RECOMMENDED: E_1 revision 3 inside MHUP-A**, by the CODE-3 pattern used for revision 2: the same counting, ranking and tie order as revision 2; the two admission checks replaced by the shared rules of section 3 (any real run mode of 6.4 whose request passes the validators; any target the target gate allows); revision 2's files archived unchanged under `archive/methods/E_001/r2/` (E2R-R54); a new declaration and registry entries. **Identity proof:** a frozen reference fixture `tests/fixtures/e1_r2_reference_v1.json`, computed at the base outside the repository as E1R2-T01 did with `e1_r1_reference_v1.json`, against which revision 3 must match label for label on invented data; the archive is never executed (E2R-R56; `test_code3_retirement.ArchiveIsNeverExecuted`).
+47,51c62
+< - `src/methods/_common/game_draws_reader.py` lines 241-254: the run manifest must pin `ledger_version == 1`; the ledger must have exactly one row, `INIT`, with `last_draw == holdout_first - 1`; line 237: the target must be below `holdout_first` (`game_profiles.historical_development_target_allowed`, lines 72-76), apart from E_1's forecast-only 1577 exception (lines 234-236).
+< - `src/methods/_common/walk_forward.py` lines 100-109 and 184-195: a batch pins row 1 of the ledger only, with `ledger_version: 1`, and refuses `last >= holdout_first`.
+< - `src/evaluation/outcome_reader.py` lines 49-51 and 55-80: targets only in `[first_draw + 1, holdout_first - 1]`, and the ledger must be the single INIT row.
+< - `src/evaluation/report.py` lines 125-126: `last <= holdout_first - 1`.
+< - The updater (`src/results_master_v0_1.py`): rewrites the whole master with `to_csv_bytes` (lines 185-189: the header, then one CRLF-terminated line per draw) after appending the new draws (lines 640-647); appends one ledger row per run, `UPDATE`, or `NO_CHANGE` with the same SHA-256 and a new version number (lines 633-636); keeps a create-only backup of the previous master (line 639) and a create-only copy of what it fetched (line 613). The INIT master was written by the same `to_csv_bytes` (`cmd_init`). `Run_Results_Updater.bat` with no arguments runs `update` with the default window (its line 4 and line 33). **Consequence, binding until piece 1 is installed: the updater is not run in any form.** A `NO_CHANGE` row alone makes every batch, run, report and install's suite step refuse; the updater itself still works, and committed records stay readable as files.
+---
+> **Release (Q10, for the owner).** E2R-R58 makes release a separate small package and new code arrives non-runnable. For revision 2 the owner granted **ER-2r1** (register v0.23 line 1200): one package, installed in five named steps behind a temporary barrier (E_1's own `IN_DEVELOPMENT.txt`, copied first and deleted last, never committed), "an exception to E2R-R58's recommended two packages, for E_1 only". RECOMMENDED: extend ER-2r1 to revision 3 (the same method and the same mechanism; it saves one install and one rehearsal). Alternative: revision 3 arrives non-runnable in MHUP-A and a separate small package REL-2 releases it (two owner actions, one more rehearsal).
+53c64
+< ### 2.2 The version-2 reading rules (RECOMMENDED)
+---
+> Consequences the owner should see: the Mode H cohort stays 40 variants; E_1 revision 3's release date is MHUP-A's install date, so under MH-1's rule (4.3) every draw dated on or before that install is development evidence for revision 3, not CATCH-UP, whatever its number; the baseline install record (4.3) lists the 39 variants released on 31 October 2026 and E_1 revision 2 marked superseded; MHUP-A's own install record lists revision 3. The legacy forecast-only E_1 record for target 1577 (H-1 7.3) stays as it is and is never scored (R3 6: "never Mode H"); the Mode H forecast for 1577 is a separate revision-3 contract record and is scored. Under one data kind (3.3) the two coincide label for label (the same prefix, the same tie rule), which is a free R-4 oracle: R3 6 protects the legacy record's status, not the numbers. **Existing tests that change** (listed, not "unchanged"): `tests/test_code3_retirement.py` line 91 (the archive holds `r1` and `r2`); `tests/test_e1r2_revision2.py` lines 223-239 (revision 2's refusals become revision 3's admissions, and the revision-2-equals-revision-1 test becomes a fixture comparison once revision 3 holds the active `SUPPORTED` entry).
+55c66
+< One shared, orchestration-only module, `src/methods/_common/master_versions.py`, used by the draw reader, the outcome reader, the walk-forward driver, the report and the weekly command. Nothing in it reaches a method; its outputs never enter a `DrawView` (the B1 rule holds).
+---
+> ## 3. Piece 1: reading a master that has grown (finding A1)
+57c68,94
+< 1. **Ledger chain check.** The header equals the updater's `LEDGER_COLUMNS` exactly. Versions run 1, 2, 3, ... with no gap. Row 1 is the INIT row with today's exact checks (unchanged). Every later row is `UPDATE` or `NO_CHANGE`:
+---
+> ### 3.1 What pins version 1 or the development ceiling today
+> 
+> The complete inventory at the base (the cold read found the first list short):
+> 
+> | File and lines | What it does today | New rule |
+> |---|---|---|
+> | `_common/game_draws_reader.py` 237, 234-236 | target below `holdout_first` (E_1 1577 forecast-only exception) | the target gate of 3.2 rule 3 |
+> | `_common/game_draws_reader.py` 241-254 | manifest `ledger_version == 1`; ledger exactly one INIT row | the chain and pin rules of 3.2 |
+> | `_common/contract_records.py` 335-336 | `validate_run_request`: target below the cap (E2R-R52) | the target gate and the mode gates (3.4) |
+> | `_common/contract_records.py` 354 | `ledger_version` in 1..1 | any version the chain accepts |
+> | `_common/contract_forecast.py` 275-277 | forecast and diagnostic header: target below the cap | the target gate (a Mode H record is otherwise never consumable) |
+> | `_common/contract_receipts.py` 68 | receipt `ledger_version` in 1..1 | any version the chain accepts |
+> | `_common/contract_task.py` 45-46 | view data kind by run mode | one data kind for every real mode (3.3) |
+> | `Method_Contract_Runner.py` 50 | the command line hard-codes `ledger_version: 1` | the current last row |
+> | `_common/walk_forward.py` 98-109, 184-195 | the batch pins ledger row 1; refuses `last >= holdout_first` | pins the current last row; the Mode H kind of section 5 |
+> | `evaluation/outcome_reader.py` 49-51, 64-69, 120-121 | targets in `[first_draw + 1, holdout_first - 1]`; single INIT row; a second guard | up to `last_draw(v)`, under the freeze-before-outcome rule (5.3) |
+> | `evaluation/report.py` 125-126 | `last <= holdout_first - 1` | relaxed for a Mode H batch with a valid opening record |
+> | `E_001/multigame_e1.py` 30-34 | E_1's own admission checks | revision 3 (section 2) |
+> | `_common/multigame_standalone_contract.py` 43, 120; `_common/multigame_worker_launch_handshake.py` 27; `coordinator_private/multigame_launch_spec.py` 63 | the legacy Package 2 standalone path's and the coordinated path's own ceilings | **unchanged**: the coordinated path stays refused (D2-1) and this design does not touch it |
+> 
+> The updater (`src/results_master_v0_1.py`) rewrites the whole master with `to_csv_bytes` (lines 185-189: the header, then one CRLF-terminated line per draw) after appending the new draws (lines 640-647); increments the version (line 629); appends one ledger row per run, `UPDATE` (643-647) or `NO_CHANGE` with the same SHA-256 (633-637); keeps a create-only backup of the previous master (639) and a create-only copy of what it fetched (613). The INIT master was written by the same `to_csv_bytes` (line 446). `Run_Results_Updater.bat` with no arguments runs `update` with the default window (its lines 4 and 33). **Binding until MHUP-A is installed: the updater is not run in any form.** A `NO_CHANGE` row alone makes every batch, run, report and install's suite step refuse; the updater itself still works, and committed records stay readable as files.
+> 
+> ### 3.2 The version-2 rules (RECOMMENDED)
+> 
+> One shared, orchestration-only module, `src/methods/_common/master_versions.py`, used by every file in the table above. Nothing in it reaches a method; its outputs never enter a `DrawView` (the B1 rule holds). It carries its own copy of the updater's `LEDGER_COLUMNS`, with a test asserting equality with `src/results_master_v0_1.py` (the owner's tool is not imported by project code). `tests/test_wf1b_static.py` lines 12-14 (`ALLOWED_COMMON`) gains `_common.master_versions`.
+> 
+> 1. **Ledger chain check.** The header equals `LEDGER_COLUMNS`. Versions run 1, 2, 3, ... with no gap. Row 1 is the INIT row with today's exact checks (unchanged). Every later row is `UPDATE` or `NO_CHANGE`:
+61c98
+< 2. **Prefix-verified pins.** Because the updater only appends and re-serialises with the same function, version v's bytes are an exact prefix of every later version. The reader therefore checks **every row** of the ledger against the current master: the SHA-256 of the first `1 + draw_count(row)` lines (the header and that row's draws, each with its CRLF) must equal the row's `master_sha256`, and the whole file's SHA-256 must equal the last row's. A run still pins `(ledger_version v, master_sha256 s)`; the pin is accepted when row v exists with that SHA-256 and passed the prefix check. Consequences:
+---
+> 2. **Prefix-verified pins.** Because the updater only appends and re-serialises with the same function, version v's bytes are an exact prefix of every later version. The reader checks **every row** against the current master: the SHA-256 of the first `1 + draw_count(row)` lines (the header and that row's draws, each with its CRLF) must equal the row's `master_sha256`, and the whole file's SHA-256 must equal the last row's. A run pins `(ledger_version v, master_sha256 s)`: every run of a session pins the current last row; the pin is accepted when row v exists with that SHA-256 and passed the prefix check; a scorer verifies a forecast's own pin the same way. Consequences:
+64,68c101,107
+<    - a later change to any earlier row (a correction) breaks the prefix check and every run refuses: result corrections need their own reviewed design (R3 10.3); this note does not provide one;
+<    - an update interrupted between the master replace and the ledger append (finding A7) leaves a master whose full SHA-256 matches no row: every reader refuses, and so does the updater's own next run (`load_verified_master`, lines 298-300). Recovery is in section 6.
+< 3. **The target ceiling.** For a pin to version v, the reader allows targets up to `last_draw(v) + 1`. A target at or above the game's `holdout_first` additionally needs a valid opening record for that game (section 3.2); without one the reader refuses exactly as today. The E_1 1577 exception is unchanged.
+< 4. **What does not change.** The prefix parse (`_parse_prefix`, lines 161-209) still reads no data column of the target or any later row. View schemas and digests are unchanged, so every existing forecast, golden and T-05 test is unchanged. Whole-master and prefix SHA-256 values remain orchestration-only provenance.
+< 5. **The outcome reader** uses the same chain and pin rules and serves targets up to `last_draw(v)` only. It releases a target's outcome to a scoring step only under the **freeze-before-outcome rule** of section 4.3.
+---
+>    - a later change to any earlier row (a correction) breaks the prefix check and every run refuses: corrections need their own reviewed design (R3 10.3); this note does not provide one;
+>    - an update interrupted between the master replace and the ledger append (finding A7) leaves a master whose SHA-256 matches no row: every reader refuses, as does the updater's own next run (`load_verified_master`, lines 298-300). Recovery is in section 7.
+> 3. **The target gate** (replacing `historical_development_target_allowed` as the run-time gate in every file of the table): for a pin to version v, targets up to `last_draw(v) + 1`; a target at or above the game's `holdout_first` additionally needs a valid opening record for that game (4.2). `historical_development_target_allowed` stays as the **definition of the development prefix** (what counts as development data) and is what the mode gates of 3.4 use; E2R-R52's "hard-coded target ceilings (now the profile's `historical_development_target_allowed`)" and R3 6's "development caps remain 1576/1693" are amended to this reading in the register. The E_1 1577 legacy exception is unchanged.
+> 4. **What does not change.** The prefix parse (`_parse_prefix`, lines 161-209) still reads no data column of the target or any later row. View schemas and digests are unchanged for every existing run.
+> 5. **The outcome reader** uses the same chain and pin rules and serves targets up to `last_draw(v)` only, and only under the freeze-before-outcome rule (5.3).
+> 
+> ### 3.3 One data kind for every real mode (RECOMMENDED)
+70c109
+< **Tests (planned; R-4 oracles):** a synthetic ledger of one INIT, two UPDATE and one NO_CHANGE rows, with every chain rule broken once (each must refuse); a byte-exact prefix oracle built independently of the updater; T-05 rerun on a version-3 synthetic master (the same view bytes and digests as on version 1 for every development target); a corrected earlier row must refuse; an "interrupted update" fixture (master replaced, ledger not appended) must refuse; the existing 471 tests unchanged.
+---
+> `contract_task.view_data_kind` (lines 45-46) maps `REAL_DEVELOPMENT` to `REAL_HISTORICAL_DEVELOPMENT` and any other run mode to its own name; the data kind is part of the permitted-view digest, which feeds every tie-break. If the new real modes kept their own names, a Mode H or weekly forecast on prefix P would have a different digest, and possibly a different tie order, from a development forecast on the same P. RECOMMENDED: every real run mode (`REAL_DEVELOPMENT`, `REAL_HOLDOUT`, `CATCH_UP`, `FINAL_NEXT_DRAW`) maps to the one existing string `REAL_HISTORICAL_DEVELOPMENT`, documented as "the real master's prefix view", so that a forecast depends on the prefix, the configuration and the software only (R3 1.4), never on the mode; every existing digest and golden is unchanged. Alternative: mode-specific data kinds, accepting that tie order may differ between modes.
+72c111
+< ## 3. Piece 2: opening the holdout (findings A2, A3) and the install records (Q5)
+---
+> ### 3.4 Mode gates in the validators (no caller-chosen authority)
+74c113,117
+< ### 3.1 The study manifest (R3 6.2)
+---
+> The validators (`validate_run_request`, the forecast header, the receipts) cannot see who built a request (E2RC2-B01, B02), so each real mode's admissible targets are request-level rules, enforced wherever the target gate is:
+> - `REAL_DEVELOPMENT`: targets in the development prefix as today; above it only with the game's opening record (the post-holdout development-tier runs of 6.4);
+> - `REAL_HOLDOUT`: targets in `[holdout_first, holdout_last]` only, with the opening record;
+> - `CATCH_UP` and `FINAL_NEXT_DRAW`: targets above `holdout_last` only, with the game's developed record (6.7).
+> A hand-made request through `Method_Contract_Runner.py` that passes these gates is admitted and publishes a record like any other; it is never scored unless the weekly command bound it (6.3), and the status block lists such unbound records.
+76c119,125
+< Before the holdout is opened, an owner-run command writes, create-only, `results/real/holdout/<GAME>/MODE_H_STUDY_MANIFEST_V1.json`, and appends one search-log row (R3 7.4). It binds:
+---
+> **Tests (planned; R-4 oracles):** a synthetic ledger of one INIT, two UPDATE and one NO_CHANGE rows, with every chain rule broken once (each must refuse); a byte-exact prefix oracle built independently of the updater; T-05 rerun on a version-3 synthetic master (the same view bytes and digests as on version 1 for every development target); a corrected earlier row must refuse; an interrupted-update fixture (master replaced, ledger not appended) must refuse; a forecast made in each real mode on the same invented prefix has the same digest and ranking; each mode gate refused once per rule; every existing test unchanged except those listed in sections 2, 3.2 and 6.1.
+> 
+> ## 4. Piece 2: opening the holdout (findings A2, A3) and the install records (Q5)
+> 
+> ### 4.1 The study manifest (R3 6.2)
+> 
+> Before the holdout is opened, an owner-run command (`Run_Evaluation.bat Method_Mode_H.py manifest --game G`, section 6.1 for the launcher) writes, create-only, `results/real/holdout/<GAME>/MODE_H_STUDY_MANIFEST_V1.json`, and appends one search-log row of type `MODE_H_STUDY_MANIFEST` (R3 7.4). It binds:
+78,80c127,129
+< - the targets: the ten holdout draws (Powerball 1577-1586, Oz Lotto 1694-1703), with the exposure flags of HX-1 (Powerball 1585 and 1586);
+< - the measures and the Mode H families (section 4.4), the N1 seed policy, and the scorer's version;
+< - the code: the SHA-256 of every file under `src/` that the batch and the scorer import;
+---
+> - the targets: the ten holdout draws, with the exposure flags of HX-1 (Powerball 1585 and 1586);
+> - the measures and the Mode H families (5.4), the N1 seed policy, and the scorer's version;
+> - the code: the SHA-256 of every `.py` under `src/methods/_common/`, `src/methods/E_*/`, `src/methods/contract_adapters/`, the entry files directly under `src/methods/`, and everything under `src/evaluation/` including its registries and seed records; a fixed, enumerable set, which the batch (5.1) re-digests and compares;
+85c134
+< ### 3.2 The opening record (finding A2)
+---
+> ### 4.2 The opening record (finding A2)
+88c137
+< - written only by a new owner-run command, `open --game G`, create-only in `source_data/`, after it checks that the study manifest exists, is valid and has the SHA-256 it names; the owner types a fixed sentence as `owner_statement`;
+---
+> - written only by an owner-run command (`Method_Mode_H.py open --game G`), create-only in `source_data/`, after it checks that the study manifest exists, is valid and has the SHA-256 it names; the owner types a fixed sentence as `owner_statement`; one search-log row of type `HOLDOUT_OPENED`;
+90c139
+< - the readers (section 2.2 rule 3) accept it with the updater's field checks, plus a check that the named study manifest exists with that SHA-256.
+---
+> - the readers (3.2 rule 3) accept it with the updater's field checks, plus a check that the named study manifest exists with that SHA-256.
+92c141
+< ### 3.3 Install records (Q5; owner-ratified mechanism, 2 November 2026)
+---
+> **Exposure after the first update (stated so nobody is surprised):** the six master files are tracked by Git. After the first update, the masters hold the holdout and every later outcome, and when the owner pushes, every clone (this chat's, the reviewer's, Claude Code's) contains them. The rules do not change: no chat and no runner opens `source_data`, `results` or `transitory_data`, and `.claude/settings.json` denies those reads to Claude Code; only the owner decides whether `source_data/` keeps being pushed (OFF-1 makes GitHub optional). RECOMMENDED `.gitignore` lines (MHUP-A members): `source_data/backups/`, `source_data/grabs/`, `source_data/.results_master.lock` (local working files, covered by the owner's backups); the opening and developed records are small owner records and stay tracked. Q7 (section 9) lists the documents whose wording changes once a game's holdout is open.
+94,97c143
+< MH-1 makes a catch-up forecast valid only if the method revision was installed before that draw's date; OFF-1 says this is checked against local install records, not Git history (E2R-R54 also says Git history is never relied on). Design:
+< - **From package A onward**, every code install writes one create-only record, `src/methods/_common/contract_data/install_records/INSTALL_<PACKAGE>_V1.json`, by a small tool in the package run right after POST PASS and before staging, so the record is committed with the package; it holds the package name, its manifest SHA-256, the UTC time and the local calendar date of the POST PASS, and the list of (game, method, revision, variant) registry entries the package added or released. The verifier's COMMITTED phase checks it is present and consistent. The verifier itself stays read-only.
+< - **For the current cohort**, one record, `INSTALL_BASELINE_20261031_V1.json`, travels in package A as an ordinary reviewed member: all 40 released variants, install date 31 October 2026 (REL-1 at `6a1bed9`, WF-1A at `0d98706`, E1R2 at `86d12ea`; register v0.23 lines 1183, 1189, 1215). The owner's installation of package A is his confirmation of it.
+< - **The rule (RECOMMENDED):** a catch-up forecast for draw N by a variant is CATCH-UP if the variant's install date (local calendar date) is before N's derived draw date; otherwise it is development evidence. Format, verification (the record's own digest; the registry entries it names must exist) and recovery (a missing record makes the variant ineligible for CATCH-UP, never an error) are what Q5 leaves to this design.
+---
+> ### 4.3 Install records (Q5; owner-ratified mechanism, 2 November 2026)
+99c145,148
+< ### 3.4 The order of events for each game (each step is the owner's separate approval)
+---
+> MH-1 makes a catch-up forecast valid only if the method revision was installed before that draw's date; OFF-1 says this is checked against local install records, not Git history (E2R-R54: Git history is never relied on). Design:
+> - **From MHUP-A onward**, every code install writes one create-only record, `src/methods/_common/contract_data/install_records/INSTALL_<PACKAGE>_V1.json`, by a small tool in the package run right after POST PASS and before staging, so the record is committed with the package; it holds the package name, its manifest SHA-256, the UTC time and the local calendar date of the POST PASS, and the list of (game, method, revision, variant) registry entries the package added or released. No commit ID is stored. The verifier's COMMITTED phase checks the record is present and consistent; the verifier itself stays read-only.
+> - **The baseline record**, `INSTALL_BASELINE_20261031_V1.json`, travels in MHUP-A as an ordinary reviewed member: 40 entries, the 39 variants released on 31 October 2026 (REL-1 at `6a1bed9` and WF-1A at `0d98706`; register v0.23 lines 1183 and 1189) and E_1 revision 2 (E1R2 at `86d12ea`, line 1215) marked `superseded_by: revision 3`; the dates are the days the variants became released, not the earlier dates their non-runnable code was installed. The owner's installation of MHUP-A is his confirmation of the record.
+> - **The rule (RECOMMENDED):** a catch-up forecast for draw N by a variant is CATCH-UP if the variant's release date (local calendar date) is before N's derived draw date; otherwise it is development evidence. **Validation:** each record carries its own digest; every entry it names must have a registry chain entry, active or superseded; two records naming the same (game, method, revision, variant) refuse at validation; a variant with no record is ineligible for CATCH-UP (its forecasts are development evidence), never an error.
+101c150,152
+< 1. Packages A and B installed and verified. Nothing has read a holdout result.
+---
+> ### 4.4 The order of events for each game (each step is the owner's separate approval)
+> 
+> 1. MHUP-A installed and verified. MHUP-B is installed **either before Approval 1 or after Approval 4, never between them**, because an install changes the code digests the study manifest freezes (4.1) and the Mode H batch would refuse (5.1); section 8's plan installs it before. Nothing has read a holdout result.
+103,106c154,157
+< 3. **Approval 2:** the first results update (`Run_Results_Updater.bat update --games G`; never bare). It adds the holdout and every later draw in one version (finding A3). Before this first run, the updater's offline `--self-test` is run under Python 3.15 (finding A9).
+< 4. **Approval 3:** the Mode H batch (section 4).
+< 5. **Approval 4:** the Mode H score and report (sections 4.3 to 4.5).
+< 6. Then the owner decides whether to declare the system developed (GOAL-1, section 5.7), and the first weekly session follows.
+---
+> 3. **Approval 2:** the first results update (`Run_Results_Updater.bat update --games G`; never bare). It adds the holdout and every later draw in one version (finding A3). Before this first run, the updater's offline `--self-test` is run under Python 3.15 (finding A9); the owner reads its output and any `FAIL` or traceback is a STOP that comes to Claude.
+> 4. **Approval 3:** the Mode H batch (section 5).
+> 5. **Approval 4:** the Mode H score and report (5.3 to 5.5).
+> 6. Then the owner decides whether to declare the system developed (GOAL-1, 6.7), and the first weekly session follows.
+108c159
+< ### 3.5 The store (R3 6.2; Q2)
+---
+> ### 4.5 The store (R3 6.2; Q2)
+110c161
+< RECOMMENDED: **the combined master** that the updater already writes, with the version-2 reader of section 2. A separate quarantine store releasing one result at a time belongs to option B.
+---
+> R3 6.2 asks the design to compare a combined master holding the holdout outcomes with a separate store releasing one outcome at a time. **Combined master (RECOMMENDED, option A):** the outcomes sit in the file the reader opens; what keeps them from the methods is the prefix parse (no data column of the target or any later row is decoded, 3.2 rule 4), T-05 (a forecast is byte-identical when later rows change), the B1 rule (whole-file provenance never reaches a method), the frozen study plan and code (4.1), create-only records, and the freeze-before-outcome rule (5.3) on the scorer's side; these are the guarantees the weekly catch-up relies on anyway. **Separate store (option B):** the outcomes are released one at a time, so the reader can never see a later outcome even in principle; the cost is the staged-release engine in the most protected area and its recovery rules. The reviewer leaned to B "where safely feasible" and the owner prefers A; the review decides Q1 and with it Q2.
+112c163
+< ## 4. Piece 3: Mode H
+---
+> ## 5. Piece 3: Mode H
+114c165
+< ### 4.1 The batch
+---
+> ### 5.1 The batch
+116c167
+< The existing walk-forward driver gains a Mode H batch kind: `plan --mode H --game G`. It:
+---
+> The walk-forward driver gains a Mode H batch kind: `Run_Experiment.bat Method_Walk_Forward.py plan --mode H --game G` (Option F for method runs: no new launcher here). It:
+119,121c170,175
+< - refuses unless the installed environment and code digests equal the study manifest's (R3-T50: no upgrade within Mode H);
+< - runs each (variant, target) exactly as today, one contract run each, with `run_mode` `REAL_HOLDOUT`, under the run root `results/real/holdout/contract_runs/` derived from the project root (never caller-chosen; `Method_Contract_Runner.py` lines 89-90 show the pattern). In the contract vocabulary (`contract_vocab.py` lines 69-100) `REAL_HOLDOUT` is reserved and refused today; this package adds the producible row `REAL_HOLDOUT / FORECAST -> (HOLDOUT_FORECAST, HOLDOUT_MODE_H)`; the tier exists, the product kind is new (an E2R-1 vocabulary addition, recorded in the register). The runner's data-source rule (`contract_runner.py` lines 118-121) treats every real mode as REAL_DEVELOPMENT is treated: the project itself, nothing else;
+< - uses the existing STOP rule unchanged.
+---
+> - refuses unless the installed environment and code digests (4.1's set) equal the study manifest's (R3-T50: no upgrade within Mode H);
+> - records its batch id, create-only, as `MODE_H_BATCH_ID.json` beside the study manifest, which is what makes a second plan for the game refuse;
+> - runs each (variant, target) exactly as today, one contract run each, with run mode `REAL_HOLDOUT`, under roots derived from the project root by batch kind (`roots()` becomes kind-aware, `walk_forward.py` lines 66-70): `results/real/holdout/wf_batches/<GAME>/<batch id>/` and `results/real/holdout/contract_runs/`; the same `wf-<32 hex>` batch-id scheme, so `load_plan` (lines 208-214) changes only its root and accepts the plan's search-log row type `MODE_H_BATCH` (today it requires `WF_BATCH`, lines 220-230); `.gitignore` lines for the new run and attempts folders are package members, as WF-1B's were;
+> - uses the existing STOP rule unchanged (lines 56-59).
+> 
+> **Vocabulary.** E2R-R41's reserved table (E2R-1 lines 500-503) already fixes `REAL_HOLDOUT / FORECAST -> (WF_FORECAST, HOLDOUT_MODE_H)`. This design unreserves that row as written, and E2R-R44 ("Mode H and FINAL stay shut") is amended by it: the row opens under the owner's opening record and the mode gate of 3.4, not freely. No new product kind. The runner's data-source rule (`contract_runner.py` lines 118-122) treats every real mode as it treats `REAL_DEVELOPMENT`: the project itself, nothing else. **No new code switch:** the new real modes are gated by the owner's create-only records (the opening record here, the developed record in 6.7) and the mode gates of 3.4 rather than by a constant the owner would have to edit; `ENABLE_CONTRACT_REAL_DEVELOPMENT` (lines 114-116) keeps gating development runs only; H-1 5.4's switch list is amended to say so.
+123c177
+< Size: 40 variants x 10 targets = 400 runs per game; on the first batches' measured rate (17,280 runs in about 80 minutes) about two minutes per game (estimated).
+---
+> Size: 40 variants x 10 targets = 400 runs per game; on the first batches' rate (17,280 runs in about 80 minutes, owner-reported, H-1 7.5) about two minutes per game, estimated; the holdout prefixes are the longest, so the average rate understates slightly.
+125c179
+< ### 4.2 One batch only
+---
+> ### 5.2 One batch only, and what "complete" means
+127c181
+< One Mode H plan per game, create-only at `results/real/holdout/<GAME>/MODE_H_BATCH/plan.json`, bound to the study manifest's digest; a second plan is refused. The driver's resume works as today: a run that stops is recorded as stopped and never retried silently; the owner decides what follows; completed runs are kept.
+---
+> One Mode H plan per game (the batch-id record above); a second plan is refused. The driver's resume works as today (lines 264-271, 387-391): a pair not proven DONE is attempted again on the next `run`; completed runs are kept. **A pair is DONE when its attempt's run folder proves the planned run happened and ended in a CONTINUE class** (lines 331-352): a `RUNTIME_FAILURE METHOD_FAILED` is DONE, is scored as missing (R3 3.6, missingness is reported; R3 10.5 status `PREDICTION_FAILED` in the records), and blocks nothing. **The batch is COMPLETE when every planned pair is DONE.** The Mode H forecast of a pair is its first DONE attempt bound to the batch; every attempt precedes any outcome read, because the rule below reads nothing until the batch is COMPLETE.
+129c183
+< ### 4.3 The freeze-before-outcome rule (an always-review subject)
+---
+> ### 5.3 The freeze-before-outcome rule (an always-review subject)
+131,134c185,188
+< One orchestration-only function, `outcome_release_allowed(game, N)`, with fixed evidence paths and no caller-chosen inputs (E2RC2-B01, B02), decides whether the outcome reader may serve target N to a scoring step:
+< - for a holdout target: only when the Mode H batch plan and segment records show every (variant, target) of the study manifest with a terminal, consumable record (the batch COMPLETE);
+< - for a later target: only when the forecast ledger (section 5.5) holds the freeze line for N.
+< Every frozen forecast record is create-only (`os.link`, as today), so nothing can be added or changed after scoring starts. The score attempt records the digests of the records it scores before its first outcome read. Under option B the same function would instead check the staged-release ledger line for N.
+---
+> One orchestration-only function in the evaluator, `outcome_release_allowed(game, N)`, with fixed evidence paths and no caller-chosen inputs (E2RC2-B01, B02), decides whether the outcome reader may serve target N to a scoring step:
+> - for a holdout target: only when the game's Mode H batch is COMPLETE (5.2);
+> - for a later target: only when the game's forecast ledger holds the freeze line for N (6.5).
+> Every frozen forecast record is create-only (`os.link`, as today), so nothing can be added or changed after scoring starts. The score attempt records the digests of every record it scores before its first outcome read. Under option B the holdout half would instead check the staged-release ledger row for N.
+136c190
+< ### 4.4 Scoring once, and the report
+---
+> ### 5.4 Scoring once, and the report
+138,143c192,198
+< - The WF-1B scorer and report are reused unchanged in their measures (MR0-MR16), N1 (R = 10,000) and layout, with Part A (descriptive) first. The report's ceiling (`report.py` lines 125-126) is relaxed for a Mode H batch with a valid opening record. New Mode H families are added to the family registry with `mode: "H"` and windows equal to the ten targets; they are fixed in the study manifest before opening.
+< - **N1 seed (RECOMMENDED):** reuse the approved root `N1_ROOT_NIST_C2_20261031T1030Z_V1` unchanged. N1's streams are keyed by policy, root, game, replicate and target (`src/evaluation/n1_generator.py` lines 48-50), and no earlier report used a target at or after the holdout, so the Mode H targets draw fair draws never generated before. Alternative: a fresh pre-announced pulse, which adds at least a day.
+< - **Scored once:** one score attempt per game, create-only; a second is refused unless the first ended in a STOP before any outcome read.
+< - **Flags:** Powerball 1585 and 1586 carry `HOLDOUT_EXPOSED_HX1` in every per-target record and in the report; they are scored and counted in every measure like any other draw (no gap, nothing excluded); the flag is information only.
+< - **Words:** the report describes any null result as "no statistically compelling departure from the fair-draw reference under the reported measures", never as proof of randomness; it states that ten draws per game give limited statistical power; and it labels the study as a precommitted holdout evaluation (section 1).
+< - **No double counting:** the weekly session never re-forecasts or re-scores the Mode H draws for a variant that has Mode H records (section 5.3); the league table shows Mode H in its own column.
+---
+> - The WF-1B scorer and report are reused in their measures (MR0-MR16), N1 (R = 10,000) and layout, with Part A (descriptive) first; the report's ceiling (`report.py` lines 125-126) is relaxed for a Mode H batch with a valid opening record; the report's fixed texts become tier-aware (today `report_writer.py` lines 422-423 print that no holdout draw is read or scored; the Mode H report states instead that the ten holdout draws were scored once under the primary statement of section 1). The search-log row type is `MODE_H_REPORT`.
+> - **Families:** new Mode H families in the family registry with **mode `WF`** (E2R-R39 and R3 17.3.5 allow `WF` or `IS` only; a Mode H forecast is a walk-forward record) and a new field `evidence_tier: HOLDOUT_MODE_H`, windows equal to the ten targets; fixed in the study manifest before opening; every report prints the WF meaning (R3 17.3.5A) and the tier.
+> - **N1 seed (RECOMMENDED):** reuse the approved root `N1_ROOT_NIST_C2_20261031T1030Z_V1` unchanged. N1's streams are keyed by policy, root, game, replicate and target (`n1_generator.py` lines 48-50), and no earlier report used a target at or after the holdout, so the Mode H targets draw fair draws never generated before. Alternative: a fresh pre-announced pulse, which adds at least a day (estimated).
+> - **Scored once:** one routine score attempt per game, create-only; a second routine attempt is refused unless the first ended in a STOP before any outcome read. The ratified exception applies here as in the weekly session: a separately identified scoring run beside the first, to correct a scorer fault or add a measure, under its own identity (the three-way split, 2 November 2026); the first score is never edited.
+> - **The exposure flag:** one flag, naming the record (`HOLDOUT_EXPOSURE_RECORD_v0_3`, item 1), with the decision it rests on (HX-1 for Powerball 1585 and 1586 in Mode H; HX-2 for 1587 and 1588 when the weekly session scores them). It lives in the score records, the ledgers and the reports, not in the frozen forecast (`METHOD_FORECAST_V1` is a closed schema, E2R-R13). Flagged draws are scored and counted in every measure like any other draw; the flag is information only.
+> - **Words:** the report describes any null result as "no statistically compelling departure from the fair-draw reference under the reported measures", never as proof of randomness; states that ten draws per game give limited statistical power; and labels the study a precommitted holdout evaluation (section 1).
+> - **No double counting:** the weekly session never re-forecasts or re-scores a Mode H target for a variant whose Mode H pair is DONE (6.3); the league table shows Mode H in its own column.
+145c200
+< ## 5. Piece 4: the weekly session (MH-1, OFF-1, EFF-1)
+---
+> ## 6. Piece 4: the weekly session (MH-1, OFF-1, EFF-1)
+147c202
+< ### 5.1 Two programs, in order
+---
+> ### 6.1 The programs, the launchers and the firewall
+148a204,213
+> Two rules meet here. **Option F** (H-1 5.4): method code runs only through `Run_Experiment.bat`, which launches files under `src\methods\` (its lines 20 and 38), and there is "no second production launcher". **The import firewall** (Architecture 12.5, MRT-05; `tests/test_wf1b_static.py` lines 34-38 and 60-63): no file under `src/methods/` may import the evaluator or name the outcome reader, and the evaluator imports no method code. A single program that both forecasts and scores would breach the firewall. WF-1B already bent the launcher rule once, with review: the evaluator has its own launcher, `Run_Method_Rankings.bat` (it runs one fixed tool, `Method_Rankings_Report.py`, its line 9).
+> 
+> **RECOMMENDED:** keep the firewall intact and bend the launcher rule the same way again, explicitly:
+> - `Run_Evaluation.bat <file> <args>`: a general evaluator launcher mirroring `Run_Experiment.bat` for files under `src\evaluation\` (venv checks, `SETLOCAL`, `SAFE_ARG`, `%*`); `Run_Method_Rankings.bat` stays as it is. It launches `Method_Mode_H.py` (4.1, 4.2, 6.7) and `Method_Weekly_Score.py` (below), both under `src/evaluation/`, because they read the family registry, the measures and the scorer's version.
+> - `Method_Weekly_Forecast.py` under `src/methods/`, run through `Run_Experiment.bat`: the forecasting half (6.2 to 6.5). It never imports the evaluator.
+> - `Method_Weekly_Score.py` under `src/evaluation/`: the scoring half (6.6) and the witness command (6.5). It imports the outcome reader, so `test_wf1b_static.py` line 63 (only `report.py` may) gains it.
+> - `Run_Weekly_Session.bat --game G`: the one command the owner types (MH-1), a thin sequencing wrapper with the standard venv checks that runs `Run_Experiment.bat Method_Weekly_Forecast.py --game G` and, if it exits 0, `Run_Evaluation.bat Method_Weekly_Score.py --game G`. Two processes, so the firewall holds; method runs still go through `Run_Experiment.bat`, so Option F holds for them; H-1 5.4's launcher sentence is amended in the register to name the evaluator launchers. The Claude Code rulebook's rule 7 and the owner's `.claude/settings.json` deny patterns gain all of these (the runner never runs them).
+> Alternative: two commands typed by the owner per game, no sequencing wrapper (keeps MH-1's "one command" only in spirit).
+> 
+> **In order, each session:**
+150c215,216
+< 2. **The weekly command**, `Run_Weekly_Session.bat --game G` (a new wrapper with the standard venv checks), offline, refusing unless the game's developed record exists (section 5.7).
+---
+> 2. `Run_Weekly_Session.bat --game OZLOTTO`, then `--game POWERBALL`; each refuses unless the game's developed record exists (6.7).
+> 3. The owner copies `source_data/` and `results/` to the backup drive (section 7's checklist) and may push the ledgers as a witness, then records the witness (6.5).
+152c218
+< ### 5.2 The status block
+---
+> ### 6.2 The status block
+154c220
+< The command first prints, per game: the last accepted draw (from the master); the last draw with a forecast and the last scored draw per variant, summarised; the backlog (outstanding draws); the next target, its derived date and its deadline; the number of active variants; and the label each outstanding target will receive. If an expected result is not yet in the master, it says so and does nothing for that target.
+---
+> Both halves print it first, per game: the last accepted draw (from the master); per variant, summarised, the last draw with a DONE record and the last scored draw; the backlog (outstanding draws), each with its R3 10.5 status `OUTCOME_AVAILABLE` or `OUTCOME_PENDING`; the next target, its derived date and its deadline; the number of active variants; the label each outstanding target will receive; and any unbound records found under the weekly root (3.4). If an expected result is not yet in the master, it says so and does nothing for that target.
+156c222
+< ### 5.3 Outstanding draws, strictly in order
+---
+> ### 6.3 Outstanding draws, strictly in order, target by target
+158,163c224,228
+< For each active variant of the game, the command's scope is every draw from the game's `holdout_first` onward (the holdout draws included, so that a method released later gets development-evidence forecasts for them), except the draws that variant already has Mode H records for. Working through the accepted draws in ascending order, for each target N:
+< - a frozen forecast exists and is scored: nothing;
+< - a frozen forecast exists, unscored, and N's result is accepted: score it (section 5.6);
+< - no forecast exists and N's result is accepted: run one contract run (run mode by the rule in 5.4), freeze it, then score it;
+< - N's result is not accepted: stop here for this variant and report it in the status block.
+< Only when every accepted draw is scored does the command move to the next target (5.4). Nothing is scored twice: a score record is create-only, keyed by (variant, target), and the command checks the score ledger before scoring. A separately identified scoring run to correct a scorer fault or add a measure is the exception, under its own identity (the three-way split, 2 November 2026).
+---
+> The scope for a game is every draw from `holdout_first` onward (the holdout draws included, so that a method released later gets development-tier forecasts for them). A target N is finished for a variant when it has a DONE Mode H pair (5.2) or a score record. **The forecasting half** binds every run it starts to its own session in an attempts ledger (as the driver's `attempts.jsonl` binds runs to a batch) and recognises only bound DONE records. Working through the accepted draws in ascending order, for each outstanding target N (**target-outer, so that every variant's run for N is DONE before any of them is scored, as the freeze rule requires**):
+> 1. for every active variant without a bound DONE record for N: one contract run in the mode given by 6.4; a failed run is DONE with status `PREDICTION_FAILED` and is not run again;
+> 2. when every active variant has a DONE record for N: append N's freeze line to the forecast ledger (6.5);
+> 3. move to N + 1; if N's result is not accepted, stop here and report it (`OUTCOME_PENDING`).
+> When no outstanding accepted draw is left, it turns to the next target (6.4, last two cases). **The scoring half** then takes every target with a freeze line and an accepted result, in ascending order, and scores every variant's record for it (6.6), skipping any (variant, N) that already has a score record. Nothing is scored twice: a score record is create-only, keyed by (variant, target); a separately identified scoring run to correct a scorer fault or add a measure is the exception, under its own identity (the three-way split of 2 November 2026).
+165c230
+< ### 5.4 Run modes and labels (Q3, Q4, Q5)
+---
+> ### 6.4 Run modes and labels (Q3, Q4, Q5)
+167,172c232,237
+< The command decides each run's mode by a fixed rule before the run, so the contract vocabulary stays a pure table (E2R-R41):
+< - N's result is accepted and the variant's install date is before N's draw date: run mode `CATCH_UP` (new), producible row `CATCH_UP / FORECAST -> (CATCH_UP_FORECAST, CATCH_UP)` (a new tier);
+< - N's result is accepted and the install date is not before N's draw date: run mode `REAL_DEVELOPMENT`, tier `DEVELOPMENT_WF_EXPLORATORY`, as today (its runs go to the development run root);
+< - N = last accepted draw + 1 and the time is before N's deadline: run mode `FINAL_NEXT_DRAW` (unreserved here), row `FINAL_NEXT_DRAW / FORECAST -> (PROSPECTIVE_FORECAST, PROSPECTIVE)` (the tier exists); the forecast is left open;
+< - N = last accepted draw + 1 and the deadline has passed: refuse to forecast; the status block says the draw will be caught up once its result is accepted (the owner's accepted position: a missed deadline costs that week's pre-draw standing, nothing else).
+< Exposure flags: Powerball 1587 and 1588 carry `HOLDOUT_EXPOSED_HX2` in their records and scores whatever their label (for the current cohort, development evidence; HX-2). One run root for `CATCH_UP` and `FINAL_NEXT_DRAW`: `results/real/weekly/contract_runs/`.
+---
+> The forecasting half decides each run's mode by a fixed rule before the run, so the contract vocabulary stays a pure table (E2R-R41) and the mode gates of 3.4 check the result:
+> - N's result is accepted and the variant's release date (4.3) is before N's draw date: run mode **`CATCH_UP`** (a new run mode), producible row `CATCH_UP / FORECAST -> (WF_FORECAST, CATCH_UP)` (a new evidence tier); an E2R-1 (9.1, E2R-R41) and R3 17.3.9 amendment, recorded in the register. A new mode is needed because E2R-R41 fixes the tier per run mode and MH-1 wants the labels kept apart in records;
+> - N's result is accepted and the release date is not before N's draw date: run mode `REAL_DEVELOPMENT`, tier `DEVELOPMENT_WF_EXPLORATORY` (MH-1: "ordinary walk-forward development evidence"); the target gate admits the post-holdout target with the opening record (3.4); these runs go to the development run root;
+> - N = last accepted draw + 1 and at least one hour remains before N's deadline: run mode `FINAL_NEXT_DRAW`, E2R-R41's reserved row `(WF_FORECAST, PROSPECTIVE)` unreserved as written (E2R-R44 amended; the row opens under the developed record); the forecast is left open;
+> - N = last accepted draw + 1 and less than one hour remains, or the deadline has passed: the forecasting half refuses to forecast and the status block says the draw will be caught up once its result is accepted (the owner's accepted position: a missed deadline costs that week's pre-draw standing, nothing else); when that catch-up line is later written it carries `prospective_status: MISSING_BATCH` (R3 10.5: a missed week is reported, never skipped silently). Should a set nevertheless straddle the deadline, the label is decided per target by the freeze line's time, all or nothing: a line after the deadline carries `deadline_met: false`; **the line's `deadline_met` governs every report**, the records' tier `PROSPECTIVE` is read together with it, and such a set is listed in the operational portfolio view and never counted as prospective evidence.
+> Exposure: Powerball 1587 and 1588 carry the exposure flag (5.4) in their score records and in the ledger whatever their label. Run root for `CATCH_UP` and `FINAL_NEXT_DRAW`: `results/real/weekly/contract_runs/`; its `.gitignore` lines (the run folders and the attempts ledger) are MHUP-B members; the forecast, witness and score ledgers are tracked, so a push of them is a witness.
+176c241
+< **Invariant:** at most one open forecast per active variant per game, and exactly one whenever the next target is still before its deadline; a newly released revision has none until the command has caught it up; a retired one has none ever again.
+---
+> **Invariant (a postcondition of a completed session):** at most one open forecast per active variant per game; exactly one when the session ended with the next target still at least an hour before its deadline; a newly released revision has none until the command has caught it up; a retired one has none ever again.
+178c243
+< ### 5.5 The forecast ledger: the timing proof (OFF-1; supersedes R3's push clauses for this project)
+---
+> ### 6.5 The forecast ledger and the witness ledger: the timing proof (OFF-1)
+180,183c245,250
+< - A local, create-only, digest-chained **forecast ledger** per game, `results/real/weekly/<GAME>/FORECAST_LEDGER_V1.jsonl`. When every active variant's run for target N is frozen (or recorded as failed or not runnable), the command appends one line: the target and its derived date, the run mode and tier, the freeze time (UTC and local offset), the deadline, the roster with every run record's digest and every registered but non-runnable method by status (R3 10.3), the environment digest, the master version and SHA-256 pinned, and the previous line's digest. A line is appended only after every record it names is frozen; the freeze-before-outcome rule (4.3) reads this line.
+< - **What the chain proves (the reviewer's wording, accepted):** that the records agree with each other; comparing it with an earlier trusted digest, kept separately, reveals later changes; by itself it proves neither when the records were made nor that the whole chain was never replaced. Optional witnesses: a GitHub push of the ledger, or an emailed copy of the newest line's digest. A line is proved to predate a draw only when a witness verifiably received its digest before the draw; the report says, per forecast, which witness exists; without one the label stays PROSPECTIVE (OFF-1) and the report says the timing rests on the local record.
+< - **Tests (R3-D20's "must be tested"):** a ledger line edited, removed or reordered breaks the chain; the command refuses to freeze a `FINAL_NEXT_DRAW` forecast after its deadline; the command refuses to score a target with no freeze line.
+< - **R3 clauses superseded for this project, on ratification:** 1.3 ("freeze and push the full batch remotely"), 10.1(6), the "COMMIT AND PUSH TO REMOTE" and "SAVE REMOTE REVISION/PUSH EVIDENCE" steps of 10.2, "remote publication evidence" in 11.5 item 4, and R3-D20's push requirement. The register records the supersession; R3's text is not edited (a later R3 edition folds it in).
+---
+> - A local, create-only, digest-chained **forecast ledger** per game, `results/real/weekly/<GAME>/FORECAST_LEDGER_V1.jsonl`. When every active variant has a DONE record for target N, the forecasting half appends one **freeze line**: the target and its derived date, the run mode and tier, the freeze time (UTC and local offset), the deadline and `deadline_met`, `prospective_status` where 6.4 sets it, the roster with every run record's digest, each failed variant marked `PREDICTION_FAILED`, and every registered but non-runnable method by status (R3 10.3), the environment digest, the master version and SHA-256 pinned, and the previous line's digest. A line is appended only after every record it names is DONE; the freeze-before-outcome rule (5.3) reads this line. **The line carries no witness status**, because a witness can only receive the line's digest after the line exists.
+> - **What the chain proves (the reviewer's wording, accepted):** that the records agree with each other; comparing it with an earlier trusted digest, kept separately, reveals later changes; by itself it proves neither when the records were made nor that the whole chain was never replaced.
+> - **The witness ledger** (append-only, `WITNESS_LEDGER_V1.jsonl`): after pushing the ledgers or emailing a line's digest, the owner records it with `Run_Evaluation.bat Method_Weekly_Score.py witness --game G --target N --kind github|email --ref <commit id or message id>`; the line holds the freeze line's digest, the kind, the reference an outsider can check, and the time the owner recorded it. The scoring half derives each prospective target's **publication status** (R3 10.5 and E2R-R40C, applied, not superseded): `PUBLISHED_BEFORE_DRAW` when a witness line exists whose reference, checked by an outsider, shows the digest received before the draw; otherwise `TIMELINESS_UNVERIFIED`. The status is written in the score ledger and the reports, never in the chained freeze line. Both statuses count in the PROSPECTIVE tables, with the status shown beside every figure and the count of each stated ("labelled unverified and counted", E2R-R40C). Under OFF-1 the witness is optional; a forecast frozen before its deadline is PROSPECTIVE by the local record, and the report says so.
+> - **R3 10.5's statuses, where each lives:** `OUTCOME_PENDING` / `OUTCOME_AVAILABLE` in the status block; `MISSING_BATCH` and `PREDICTION_FAILED` in freeze lines (6.4, 6.3); `PUBLISHED_BEFORE_DRAW` / `TIMELINESS_UNVERIFIED` in score lines and reports.
+> - **Tests (R3-D20's "must be tested"):** a ledger line edited, removed or reordered breaks the chain; the forecasting half refuses to freeze a `FINAL_NEXT_DRAW` set after its deadline, and within the hour before it; the scoring half refuses a target with no freeze line; a straddling set is labelled by its line; a witness line for an unknown freeze digest is refused.
+> - **R3 clauses superseded for this project, on ratification:** 1.3 ("freeze and push the full batch remotely before the actual target event"); 1.5's "externally verifiable pre-draw proof" (made optional); 10.1(6) ("pushed to the declared remote"); 10.2's "COMMIT AND PUSH TO REMOTE BEFORE DRAW" and "SAVE REMOTE REVISION/PUSH EVIDENCE" steps and its paragraph after the diagram ("archive remote ref/commit IDs"); 11.5 item 4's "remote publication evidence"; 17.3.9's `PROSPECTIVE` definition ("frozen and published before their draws" becomes "frozen before their deadline and recorded in the local forecast ledger; publication status recorded separately"); and R3-D20's "GitHub push evidence required". R3 10.5's statuses and E2R-R40C's "labelled unverified and counted" are applied as written. The register records the supersession; R3's text is not edited (a later R3 edition folds it in).
+185c252
+< ### 5.6 Scores and the league table (EFF-1)
+---
+> ### 6.6 Scores and the league table (EFF-1)
+187c254
+< - A local, append-only **score ledger** per game, `SCORE_LEDGER_V1.jsonl`: one line per scored (variant, target): the per-target quantities WF-1B already computes (TOP and WORST matches, Powerball match, prize division, rank positions), the outcome's source (master version and SHA-256), the label, any flag, and the scorer's version. This is R3 7.6's and 11.5's "outcome ledger" (finding A11). The scoring code reuses WF-1B's measure functions through a thin per-target driver; no measure, label or formula changes.
+---
+> - A local, append-only **score ledger** per game, `SCORE_LEDGER_V1.jsonl`: one line per scored (variant, target): the per-target quantities WF-1B already computes (TOP and WORST matches, Powerball match, prize division, rank positions), the outcome's source (the master version and SHA-256 that supplied it: R3 11.5's **outcome record** is that master row, which answers finding A11), the tier, `deadline_met`, `prospective_status` and the publication status where they apply, any exposure flag, and the scorer's version. This ledger is R3 11.5 item 6, the **evaluation record**. The scoring code reuses WF-1B's measure functions through a thin per-target driver; no measure, label or formula changes.
+189c256
+< - **Cadence (Q6, RECOMMENDED):** each session prints a short after-draw note (the scored forecasts and the new forecast) and writes the cumulative table to a dated file; the full report with N1 on request or monthly, each a new dated report with its own search-log row; earlier reports stay as published.
+---
+> - **Cadence (Q6, RECOMMENDED):** each session prints a short after-draw note (the scored forecasts and the new forecast) and writes the cumulative table to a dated file (no search-log row); the full report with N1 on request or monthly, each a new dated report with its own search-log row of type `WEEKLY_REPORT`; earlier reports stay as published.
+192c259
+< ### 5.7 FINAL and "developed" (Q8, RECOMMENDED)
+---
+> ### 6.7 FINAL and "developed" (Q8, RECOMMENDED)
+194c261
+< The weekly session **is** R3's FINAL_NEXT_DRAW protocol (R3 1.3 and 10) as amended by 5.5, and the owner's GOAL-1 declaration that the system is developed **is** R3's "explicit FINAL opening". The declaration is a create-only owner record, `source_data/DEVELOPED_<GAME>.json` (written by an owner-run command after Mode H's report, like the opening record), and the weekly command refuses without it. R3 10.1's other preconditions are met or are met by this package (ratified scoring formulas; frozen released variants; the full roster listed; refreshed and digested sources; L identified from the master; the ledger in place). Under OFF-1 the first PROSPECTIVE forecast also needs the supersession of 5.5 ratified first.
+---
+> The weekly session **is** R3's FINAL_NEXT_DRAW protocol (R3 1.3 and 10) as amended by 6.5, and the owner's GOAL-1 declaration that the system is developed **is** R3's "explicit FINAL opening". The declaration is a create-only owner record, `source_data/DEVELOPED_<GAME>.json`, written by an owner-run command (`Run_Evaluation.bat Method_Mode_H.py declare-developed --game G`) after Mode H's report, like the opening record; the weekly session and the `CATCH_UP` and `FINAL_NEXT_DRAW` modes refuse without it (3.4). R3 10.1's other preconditions are met or are met by this package (ratified scoring formulas; frozen released variants; the full roster listed; refreshed and digested sources; L identified from the master; the ledger in place). Under OFF-1 the first PROSPECTIVE forecast also needs the supersession of 6.5 ratified first.
+196c263
+< ## 6. Piece 5: the results update procedure (findings A6, A7, A8)
+---
+> ## 7. Piece 5: the results update procedure (findings A6, A7, A8) and the owner's checklist
+198,201c265,269
+< The updater's code is not changed by this design.
+< - **A6 (single source):** production uses Lotterywest's results-search page only (an earlier owner decision; TSC-1 retires the two-site checker). RECOMMENDED: record that R2-C03's "independent evidence" and the proposal's candidate-then-promotion step are met in production by the updater's checks (the overlap with the master must match exactly; consecutive numbers; the date rule), the reader's chain check, and the owner's reading of each update's summary (A7); the owner's private, by-hand check of The Lott stays outside the repository and is never automated.
+< - **A7 (accepting a version, and recovery):** a one-page owner checklist in package B. Normal: read the updater's summary (draws checked, added, warnings), then run the weekly command. **An interrupted update** (master replaced, ledger not appended): every tool refuses with "does not match the last ledger entry"; the recovery is: check that the SHA-256 of the newest file in `source_data/backups/` equals the last ledger row's `master_sha256`; if so, copy that backup over the master and rerun the update, which refetches and re-adds; if not, stop and send the output. **A stale lock** (`source_data/.results_master.lock`, lines 653-672): confirm no updater process is running, then delete the lock. Nothing else is ever edited by hand.
+< - **A8 (the update window):** the default window (this month plus five back) overlaps the master while sessions run weekly; after a long break the checklist says to use `--months-back` to reach the master's last draw (the updater refuses without an overlap, line 617).
+---
+> The updater's code is not changed by this design. MHUP-B carries a one-page owner checklist:
+> - **Normal week:** run the updater with its arguments; read its summary (draws checked, added, warnings); run the weekly session for each game; copy `source_data/` and `results/` to the second drive; once a month, restore one backup copy to a scratch folder and compare it (the restore test); optionally push the ledgers and record the witness (6.5). Backups cover the git-ignored run, attempts and score records, which exist nowhere else.
+> - **A6 (single source):** production uses Lotterywest's results-search page only (an earlier owner decision; TSC-1 retires the two-site checker). RECOMMENDED: record that R2-C03's "independent evidence" and the proposal's candidate-then-promotion step are met in production by the updater's checks (the overlap with the master must match exactly; consecutive numbers; the date rule), the reader's chain check, and the owner's reading of each update's summary; the owner's private, by-hand check of The Lott stays outside the repository and is never automated.
+> - **A7 (an interrupted update):** the updater's own message is "does not match the last ledger entry" (line 299); every other tool refuses with its chain error. Recovery: check that the SHA-256 of the newest file in `source_data/backups/` equals the last ledger row's `master_sha256`; if so, copy that backup over the master and rerun the update, which refetches and re-adds; if not, stop and send the output. **A stale lock** (`source_data/.results_master.lock`, lines 653-672): confirm no updater process is running, then delete the lock. **A grab from a refused or interrupted run** stays in `source_data/grabs/` as evidence; it is never deleted and never used. Nothing else is ever edited by hand.
+> - **A8 (the update window):** the default window (this month plus five back) overlaps the master while sessions run weekly; after a long break the checklist says to use `--months-back` to reach the master's last draw (the updater refuses without an overlap, lines 616-617).
+203c271
+< ## 7. Packages and schedule (Q9)
+---
+> ## 8. Packages and schedule (Q9)
+206,207c274,276
+< - **MHUP-A** (HIGH): sections 2, 3 (the study manifest, the opening command, the install-record tool and the baseline record) and 4 (the Mode H batch, the freeze rule, the Mode H families, the report ceiling); the vocabulary row `REAL_HOLDOUT`.
+< - **MHUP-B** (HIGH): section 5 (the vocabulary rows `CATCH_UP` and `FINAL_NEXT_DRAW`, the weekly command and wrapper, the ledgers, the deadline, the developed record, the league table) and the section 6 checklist.
+---
+> - **MHUP-A** (HIGH): sections 2 (E_1 revision 3, with ER-2r1 extended or arriving non-runnable), 3 (the version-2 rules, every file in the table, one data kind, the mode gates), 4 (the study manifest, opening and declare commands under `Method_Mode_H.py`; the install-record tool and the baseline record; the `.gitignore` lines) and 5 (the Mode H batch kind and roots, the freeze rule, the Mode H families, the report's ceiling and texts); `Run_Evaluation.bat`; the `REAL_HOLDOUT` row unreserved; the rulebook and deny-pattern additions.
+> - **REL-2** (small; only if ER-2r1 is not extended): deletes E_1's flag and appends revision 3's `SUPPORTED` entries.
+> - **MHUP-B** (HIGH): section 6 (the `CATCH_UP` mode and tier, `FINAL_NEXT_DRAW` unreserved, `Method_Weekly_Forecast.py`, `Method_Weekly_Score.py`, `Run_Weekly_Session.bat`, the three ledgers, the deadline, the developed record's use, the league table, its `.gitignore` lines) and section 7's checklist.
+213,218c282,287
+< | Tue 3 Nov | This design to the reviewer (EX_124) | You relay; the reviewer reviews |
+< | Wed 4 - Thu 5 Nov | Review rounds; your ratification and answers to Q2-Q4, Q6-Q9 | Claude; you |
+< | Thu 5 - Sat 7 Nov | MHUP-A code, tests, mutation checks, rehearsals; code review; Claude Code rehearsal (T016); install | Claude; the reviewer; you |
+< | Sun 8 - Wed 11 Nov | MHUP-B the same (T017) | Claude; the reviewer; you |
+< | Wed 11 - Fri 13 Nov | Approvals 1-4 per game; Mode H run and scored; your GOAL-1 decision | You |
+< | Fri 13 - Mon 16 Nov | First session, both games: catch-up of Oz Lotto 1704-1708 and Powerball 1587-1591; Oz Lotto 1709 frozen before 00:00 Tue 17 Nov | You |
+---
+> | Tue 3 Nov | This design to the reviewer as EX_124 (EX_123 was recorded but never sent) | You relay; the reviewer reviews |
+> | Wed 4 - Thu 5 Nov | Review rounds; your ratification and answers to Q2-Q4, Q6-Q10 | Claude; you |
+> | Thu 5 - Sun 8 Nov | MHUP-A code (including E_1 revision 3), tests, mutation checks, rehearsals; code review; Claude Code rehearsal (T016); install (REL-2 too, if needed) | Claude; the reviewer; you |
+> | Mon 9 - Thu 12 Nov | MHUP-B the same (T017); installed before Approval 1 | Claude; the reviewer; you |
+> | Thu 12 - Sat 14 Nov | Approvals 1-4 per game; Mode H run and scored; your GOAL-1 decision | You |
+> | Sat 14 - Mon 16 Nov | First session, both games: catch-up of Oz Lotto 1704-1708 and Powerball 1587-1591; Oz Lotto 1709 frozen before 00:00 Tue 17 Nov | You |
+221c290
+< Each review round that needs a recheck costs about half a day; the snapshot took four rounds. If the plan slips, the first prospective forecasts move a week and the catch-up covers the draws in between (FB-1). I will say so the day it happens.
+---
+> Each review round that needs a recheck costs about half a day (estimated); the snapshot took four rounds. E_1 revision 3 adds about half a day to MHUP-A, and REL-2 about half a day more if it is needed (estimated). If the plan slips, the first prospective forecasts move a week and the catch-up covers the draws in between (FB-1). I will say so the day it happens.
+223c292
+< ## 8. Decisions
+---
+> ## 9. Decisions, and the owner's questions Q1 to Q10
+225,228c294,311
+< - **DECIDED** (owner): MH-1, OFF-1, EFF-1, HX-1, HX-2, FB-1, GOAL-1, ORD-1, TSC-1 (register v0.23); and, on 2 November 2026 (stock-take record v0.7): the three-way split (forecasts frozen; scores kept, new scoring runs beside them; rankings as new dated reports); archive-and-index for a retired revision; the three labels; the status block; at most one open forecast per active variant per game, nothing scored twice, an unaccepted draw left open; Q1 preference A with B kept for review and C withdrawn; Q5's mechanism (local install records; a one-off record for the current cohort); the planning target.
+< - **RECOMMENDED** (for the owner, after review): the primary statement and register amendment for Mode H (section 1); the version-2 rules (2.2); the install-record rule and format (3.3); Q2 the combined master (3.5); the N1 seed reuse (4.4); Q3 the run modes and tiers (5.4); Q4 the deadline (5.4); Q6 the cadence (5.6); Q8 FINAL and the developed record (5.7); Q9 two packages (7); the R3 supersession list (5.5); the A6 reading and the A7 recovery steps (6).
+< - **OPEN, for the owner:** Q1 (A or B; the owner's preference is A); **Q7, the display rule after opening:** today nobody may display or compute with Powerball 1577 or later or Oz Lotto 1694 or later; after a game's holdout is opened and Mode H scored, those draws are ordinary history for training and scoring; RECOMMENDED: from then on the rule for that game becomes "no lottery-results searches, no results websites, and no draw outcome pasted into the chats except inside report text the owner chooses to share"; until the owner decides, the rule stays exactly as it is.
+< - **Not in scope:** result corrections (R3 10.3), WF-1C, a cross-batch report reusing frozen records and the retired index (roadmap 21b), Method A's diagnostics, any change to the updater or the two-site checker, the method-registry presentation (the method registry is the operational list of methods and their status; the ratification register is the record of decisions; the two are different things and stay so).
+---
+> | Q | The question | Status and where |
+> |---|---|---|
+> | Q1 | What does "frozen before the holdout is opened" mean: A, B or C? | OPEN for the review; the owner prefers A; C withdrawn (section 1) |
+> | Q2 | Combined master, or a separate release store? | RECOMMENDED combined, with the comparison (4.5); follows Q1 |
+> | Q3 | Which run modes and tiers label the weekly runs? | RECOMMENDED `CATCH_UP` (new), `REAL_DEVELOPMENT`, `FINAL_NEXT_DRAW` by rule (6.4), with request-level gates (3.4) |
+> | Q4 | The deadline for a prospective forecast | RECOMMENDED 00:00 local on the draw date, with an hour's margin (6.4) |
+> | Q5 | How "installed before that draw" is proved | DECIDED mechanism (owner, 2 Nov); format, validation and rule RECOMMENDED (4.3) |
+> | Q6 | The report cadence | RECOMMENDED weekly note; full report on request or monthly (6.6) |
+> | Q7 | The display rule for holdout draws after opening | OPEN; see below |
+> | Q8 | Is the weekly session R3's FINAL, and "developed" its opening? | RECOMMENDED yes, with the developed record (6.7) |
+> | Q9 | One package or two? | RECOMMENDED two, plus REL-2 if Q10 is no (8) |
+> | Q10 | Extend ER-2r1 to E_1 revision 3 (one package), or a separate REL-2? | RECOMMENDED extend (section 2) |
+> 
+> - **DECIDED** (owner): MH-1, OFF-1, EFF-1, HX-1, HX-2, FB-1, GOAL-1, ORD-1, TSC-1 (register v0.23); and, on 2 November 2026: the three-way split (forecasts frozen; scores kept, new scoring runs beside them; rankings as new dated reports); archive-and-index for a retired revision; the three labels; the status block; at most one open forecast per active variant per game, nothing scored twice, an unaccepted draw left open; Q1 preference A with B kept for review and C withdrawn; Q5's mechanism; the planning target.
+> - **RECOMMENDED** (for the owner, after review): the primary statement and the register amendments (below); E_1 revision 3 in MHUP-A (2); the version-2 rules, one data kind and the mode gates (3); the install-record format and rule (4.3); the `.gitignore` lines (4.2, 6.4); Q2 (4.5); the N1 seed reuse (5.4); the launchers (6.1); Q3, Q4 (6.4); the witness ledger (6.5); Q6 (6.6); Q8 (6.7); Q9, Q10 (8); the A6 reading and the A7 recovery steps (7).
+> - **OPEN, for the owner:** Q1 (A or B); **Q7, the display rule after opening:** today nobody may display or compute with Powerball 1577 or later or Oz Lotto 1694 or later. After a game's holdout is opened and Mode H scored, those draws are ordinary history for training and scoring, and the masters in every clone contain them (4.2). RECOMMENDED: from then on the rule for that game becomes "no lottery-results searches, no results websites, no opening of `source_data`, `results` or `transitory_data` by any chat or runner, and no draw outcome pasted into the chats except inside report text the owner chooses to share"; the documents to amend are the Claude Code rulebook (rules 4 and 5), H-1 section 5.1, H-2 section 5 and the holdout exposure record; until the owner decides, the rule stays exactly as it is.
+> - **Register amendments this design asks for, on ratification:** register v0.23's "all frozen before the holdout is opened" (section 1); E2R-R52's run-time ceiling and R3 6's "development caps remain" (3.2 rule 3); E2R-R44's "Mode H and FINAL stay shut" (5.1, 6.4); E2R-1 9.1 and E2R-R41 and R3 17.3.9 for `CATCH_UP` (6.4); the R3 clauses of 6.5; H-1 5.4's switch list (5.1) and launcher sentence (6.1); H-1 7.3 for E_1 revision 3 (2); ER-2r1 if extended (Q10); the Claude Code rulebook rule 7 and the owner's deny patterns for the new tools (6.1); the option C reason in the roadmap and the stock-take record (section 1).
+> - **Not in scope:** result corrections (R3 10.3); WF-1C; a cross-batch report reusing frozen records and the retired index (roadmap 21b); Method A's diagnostics; any change to the updater or the two-site checker; the coordinated path; the method-registry presentation (the method registry is the operational list of methods and their status; the ratification register is the record of decisions; they stay distinct).
+230c313
+< ## 9. Not tested, and what the code round must show
+---
+> ## 10. Not tested, and what the code round must show
+232c315
+< Nothing here is implemented or tested. The code round must show: the chain, prefix and interrupted-update tests (2.2); T-05 on a grown synthetic master; the install-record tool and the baseline record's validation; the Mode H batch refusing without a valid opening record, with a mismatched study manifest, with a changed environment, and a second time; the freeze-before-outcome function refusing before the batch is complete and before a freeze line exists; the scorer refusing a second attempt; the weekly command's ordering (an earlier outstanding draw is always scored before a later one is forecast), its refusal after the deadline, its double-scoring guard and its handling of an unaccepted result; the ledger chain tests; mutation checks for each rule; LF and CRLF rehearsals; Claude Code rehearsals on Windows (T016, T017). All tests on invented data; none reads a holdout result.
+---
+> Nothing here is implemented or tested. The code round must show: the chain, prefix, interrupted-update, one-data-kind and mode-gate tests (3); T-05 on a grown synthetic master; E_1 revision 3's label-for-label identity with the revision 2 reference fixture (2); the install-record tool, the baseline record's validation and the duplicate refusal (4.3); the Mode H batch refusing without a valid opening record, with a mismatched study manifest, with a changed environment, and a second time; the freeze-before-outcome function refusing before the batch is COMPLETE and before a freeze line exists; the scorer refusing a second routine attempt; the forecasting half's ordering (every variant DONE for N before N's freeze line; an earlier outstanding draw always finished before a later one), its refusal within the hour before and after the deadline, its labelling of a straddling set, its handling of a failed variant and of an unaccepted result, and its ignoring of unbound records; the scoring half's double-scoring guard and its refusal without a freeze line; the ledger chain and witness tests; the launchers' venv checks; mutation checks for each rule; LF and CRLF rehearsals; Claude Code rehearsals on Windows (T016, T017). All tests on invented data; none reads a holdout result.
+234c317
+< ## Appendix A. The reviewer's stock-take cautions, and where each lands
+---
+> ## Appendix A. The reviewer's cautions, and where each lands
+236c319
+< | Caution (Response 2 / direction check) | Where |
+---
+> | Caution (takeover notes; Response 2; direction check) | Where |
+238,249c321,337
+< | Steps must not score the same target twice; a result for N must be known to the scorer but not to the method forecasting N | 5.3; 2.2 rule 4 (the reader reads no row at or after the target) |
+< | "Find the last forecast" safe for a new revision, a retired one, missing results, a partial session | 5.3 derives state from the frozen records and the ledgers, per variant; 5.4 invariant |
+< | "Exactly one open forecast" is an aspiration, not yet demonstrated | 5.4 states the invariant precisely; 9 tests it |
+< | A catch-up forecast is not pre-draw, however strict its isolation; labels kept apart; Q5 dates conditional | 5.4; 3.3 |
+< | Re-scoring means a new dated report, not an edit; scores can be re-verified under a new identity | 5.3, 5.6 |
+< | Retirement: index, not move; both report views | 5.6; roadmap 21b |
+< | Mode H under A is a precommitted holdout evaluation, not pre-draw forecasting | 1, 4.4 |
+< | Mode H's second pass over the same draws would double count | 4.4 last bullet, 5.3 |
+< | The chain's evidential limits; the witness must verifiably receive the digest before the draw | 5.5 |
+< | Operator status block | 5.2 |
+< | Backups need a restore test; GitHub is not a backup of git-ignored records | 6 checklist (package B) |
+< | Method registry versus ratification register | 8, not in scope |
+---
+> | Flagged holdout draws stay valid and counted | 5.4 |
+> | Holdout outcomes inaccessible until the reviewed, owner-authorised procedure, which then permits scoring | 4.2, 4.4, 5.3 |
+> | "No statistically compelling departure", never proof of randomness | 5.4 |
+> | Steps must not score the same target twice; N known to the scorer, not to the method forecasting N | 6.3; 3.2 rule 4 |
+> | "Find the last forecast" safe for a new revision, a retired one, missing results, a partial session | 6.3 derives state from bound records and ledgers; 6.4 invariant |
+> | "Exactly one open forecast" is an aspiration, not yet demonstrated | 6.4 states it as a postcondition; 10 tests it |
+> | A catch-up forecast is not pre-draw, however strict its isolation; labels apart; Q5 conditional | 6.4; 4.3 |
+> | Re-scoring means a new dated report, not an edit; scores re-verified under a new identity | 5.4, 6.3, 6.6 |
+> | Retirement: index, not move; both report views | 6.6; roadmap 21b |
+> | Mode H under A is a precommitted holdout evaluation, not pre-draw forecasting | 1, 4.5, 5.4 |
+> | Option C's definedness for target-dependent variants | 1 (corrected reason) |
+> | Mode H's second pass over the same draws would double count | 5.4, 6.3 |
+> | The chain's evidential limits; the witness must verifiably receive the digest before the draw | 6.5 |
+> | Operator status block | 6.2 |
+> | Backups need a restore test; GitHub is not a backup of git-ignored records | 6.1, 7 |
+> | Method registry versus ratification register | 9, not in scope |
+> | Q5's install-date rule versus the promised catch-up labels | 4.3, 0, 2 |
+253,261c341,354
+< 1. Section 1 rewritten: options A, B and C; C withdrawn with the checked reason; the owner's preference A; the honest wording and the register amendment; Mode H described as a precommitted holdout evaluation throughout.
+< 2. Section 2: the NO_CHANGE warning made binding; the prefix check applied to every row; the interrupted-update case named; its test added.
+< 3. Section 3.3 new: install records (Q5), the baseline record, the rule.
+< 4. Section 4: the run root; the runner's data-source rule for real modes; "scored once" and "no double counting" stated; the report's words.
+< 5. Section 5 rewritten: two programs in order; the status block; outstanding draws strictly in order with the four cases; run modes decided by rule, with the new `CATCH_UP` mode and tier and `FINAL_NEXT_DRAW` unreserved; the deadline refusal; the invariant as "at most one"; the ledger's exact contents and the reviewer's wording on what the chain proves; the complete R3 supersession list; the score ledger as R3's outcome ledger; the developed record as the FINAL opening.
+< 6. Section 6: the recovery steps for an interrupted update and a stale lock.
+< 7. Section 7: the honest plan (13-15 November; the week of 9 November a stretch), two rehearsal task numbers.
+< 8. Section 8: the 2 November decisions moved to DECIDED; the method-registry note.
+< 9. Appendix A new: where each reviewer caution lands.
+---
+> 1. Section 1 rewritten: options A, B and C; C withdrawn with the corrected reason; the owner's preference A; the honest wording and the register amendment; Mode H described as a precommitted holdout evaluation throughout.
+> 2. Section 2 new: E_1 revision 3, found by the cold read; its release (Q10); the tests that change.
+> 3. Section 3: the complete inventory of version-1 pins and ceilings; the NO_CHANGE warning made binding; the prefix check on every row; the interrupted-update case; the target gate as an explicit amendment; one data kind for every real mode; request-level mode gates.
+> 4. Section 4: the install records (Q5) and the baseline record's 40 entries; the exposure after the first update and the `.gitignore` lines; when MHUP-B may install; the self-test acceptance; the R3 6.2 comparison.
+> 5. Section 5: Option F launch for the batch; roots, `load_plan` and the batch-id record; E2R-R41's reserved rows used as written, no new product kind, E2R-R44 named; no new switch; DONE and COMPLETE defined; Mode H families as WF with a tier field; tier-aware report texts; one exposure flag, kept out of the closed forecast schema; the corrective-scoring exception for Mode H.
+> 6. Section 6 rewritten: the firewall and the launchers (a forecasting half under `src/methods/`, a scoring half under `src/evaluation/`, one sequencing wrapper); the status block with R3 10.5's statuses; target-outer processing with bound records; run modes decided by rule, `CATCH_UP` new, `FINAL_NEXT_DRAW` unreserved; the deadline margin, the straddling set and `MISSING_BATCH`; the invariant as a postcondition; the freeze line's exact contents without a witness status; the witness ledger and the publication status by R3 10.5 and E2R-R40C; the complete R3 supersession list; the score ledger as R3's evaluation record and the outcome record named.
+> 7. Section 7: the recovery steps, the stale lock, the orphan grab, the backups and restore test.
+> 8. Section 8: the honest plan (13-15 November; the week of 9 November a stretch); E_1 revision 3 and REL-2; two rehearsal task numbers.
+> 9. Section 9: the Q1-Q10 table; the 2 November decisions moved to DECIDED; the register-amendment list; the Q7 document list.
+> 10. Terms section and Appendix A new.
+> 
+> ## Appendix C. The cold read
+> 
+> Before sending, a fresh helper with no knowledge of this chat was given the repository and the draft of this edition and asked to explain it back, check every code citation, and list conflicts, gaps and unexplained terms (`cold_read_findings_v0_1r1.md`). Claude verified its critical claims against the code, revised the draft, and asked the same helper for a focused recheck of the revision (`cold_read_recheck_v0_1r1.md`), whose eighteen further points are applied in this edition. The draft the helper first read (`..._v0_1r1_DRAFT_before_cold_read.md`) and the diff from it to this edition (`design_v0_1r1_draft_to_final.diff`) travel in EX_124. The findings that changed this edition most: E_1 revision 2's admission checks; the incomplete inventory of version-1 pins; the option C reason; the import firewall against a one-program session; the witness status, which cannot live in the chained line.
