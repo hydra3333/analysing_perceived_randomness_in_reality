@@ -138,7 +138,11 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            (Tuesday 17 November) and Powerball 1592 (Thursday 19 November); the week of 9 November is a
            stretch only, and if it slips the catch-up covers the missed draws (FB-1). Design v0.1 was
            written (exchange/EX_123_Claude.zip, commit c01717d) but NOT sent to ChatGPT; it is replaced
-           by v0.1r1 carrying the stock-take positions, which gets a cold read before it is sent:
+           by v0.1r1 carrying the stock-take positions, cold-read twice by a fresh helper on 3 November
+           2026 and sent to ChatGPT as EX_124 (reply EX_125). The cold read found that E_1 revision 2
+           refuses every new run mode in its own code, so E_1 needs a revision 3 (same arithmetic) before
+           it can take part in Mode H; the design asks you whether the ER-2r1 one-package exception
+           extends to it (Q10):
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
@@ -146,8 +150,12 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
              forecast uses only the draws before its target, and nothing is scored until all are
              frozen. Option B (reveal one result at a time) stays in the design as the alternative for
              ChatGPT's review; option C (all ten forecast from the development draws only) is
-             withdrawn, because no released method uses its target's draw number, so each variant
-             would make one forecast scored ten times. The register's phrase "all frozen before the
+             withdrawn: with the same training draws every variant would produce the same scores ten
+             times (the target's number enters only the tie-break and the record identity, so at most
+             the order of tied numbers could differ), so C would test one scoring, not the weekly
+             retraining. (Corrected 3 November 2026: the earlier wording "no released method uses its
+             target's draw number" was wrong as stated; the withdrawal stands.) The register's phrase
+             "all frozen before the
              holdout is opened" is amended to the wording above when the design is ratified;
            - the results update: the updater exists as code (your tool), but how it is used with
              Mode H is still to be designed. The critical gap: today every reader accepts only the
