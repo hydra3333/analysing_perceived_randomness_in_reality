@@ -221,9 +221,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 ## R-014  The owner's simplicity (KISS) review
 
-- Asked: by the owner in the ChatGPT reviewer chat (date not recorded here); raised by ChatGPT in the
-  stock-take round (Response 2) and recorded by Claude on 2 November 2026 so it is not lost; scope and
-  timing corrected on 3 November 2026 from ChatGPT's account of the owner's words (owner to confirm).
+- Asked: by the owner in the ChatGPT reviewer chat (date not recorded here): a KISS-related review after
+  final implementation. Raised by ChatGPT in the stock-take round (Response 2), recorded by Claude on
+  2 November 2026, scope and timing corrected the same evening from ChatGPT's account, and confirmed by the
+  owner on 2 November 2026.
 - Status: OPEN. Starts only when the owner explicitly asks; never automatically.
 - What: a comprehensive simplicity (KISS) assessment of the whole project's machinery: the method registry,
   the add-a-method and retire-a-method procedures, local experimentation without GitHub, the amount of
