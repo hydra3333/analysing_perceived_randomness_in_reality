@@ -1,0 +1,135 @@
+1c1
+< # Direction for the operational procedures, v0.1
+---
+> # Direction for the operational procedures, v0.2
+5,6c5,7
+< reviewer's Response 2, and as the owner accepted them on 2 November 2026. It says where we are heading and how
+< the finished system will behave. It is a direction statement, not a specification: the design documents and the
+---
+> reviewer's Response 2, and as the owner accepted them on 2 November 2026. v0.2 applies the reviewer's content
+> check of 3 November 2026 (findings 1-7; the change list is at the end). It says where we are heading and how the
+> finished system will behave. It is a direction statement, not a specification: the design documents and the
+8a10,19
+> **Status and authority:** owner-ratified operational direction, 2 November 2026; content checked by the ChatGPT
+> reviewer chat (author: the Claude web chat). This is not an implementation specification and not permission to
+> run any command, access the holdout or update results. The independently reviewed and owner-ratified designs,
+> the method and process safety gates, and the separate execution approvals remain binding. No real-data operation
+> is authorised by this document.
+> 
+> Codes such as MH-1, OFF-1 and HX-1 identify owner decisions already recorded in the ratification register; R3
+> and E2R name ratified specifications; Q1 and similar labels identify questions still being resolved in the
+> forthcoming Mode H design.
+> 
+15,19c26,33
+< - The software; the two results files (one per game, Powerball and Oz Lotto, never pooled); every method's
+<   forecast for every draw, in draw order, frozen when made; the score of every forecast once its draw is known;
+<   and the ranking reports. (ratified: R3; built for the development draws)
+< - The clock is the draw number within each game. Dates are used only to check incoming results and to decide
+<   whether a forecast was frozen before its draw. (ratified: R3 1.1)
+---
+> - The software; the two results files (one per game, Powerball and Oz Lotto, never pooled); for every method
+>   revision, its forecast for every draw it was eligible to forecast, in draw order, frozen when made; the score
+>   of every forecast once its draw is known; and the ranking reports. A forecast made later for an earlier draw
+>   is a new record and never acquires pre-draw standing. (ratified: R3, R3 10.4; built for the development
+>   draws)
+> - The clock is the draw number within each game: draw numbers define the scientific sequence and every
+>   training boundary. Dates serve the checks around it: validating incoming results, the timing evidence of a
+>   forecast, install eligibility and audit records. (ratified: R3 1.1)
+39c53,54
+< - PROSPECTIVE: the forecast was frozen before its draw.
+---
+> - PROSPECTIVE: the forecast was frozen before the ratified deadline for its draw (open: Q4; the deadline may be
+>   earlier than the draw itself).
+44,45c59,63
+< - Mode H results carry their own label. Powerball 1585, 1586 (Mode H) and 1587, 1588 (catch-up) also carry an
+<   exposure flag; they count fully. (ratified: HX-1, HX-2)
+---
+> - Mode H results carry their own label. Powerball 1585 and 1586 carry an exposure flag within Mode H. Powerball
+>   1587 and 1588 are post-holdout draws and carry the same flag when the catch-up pass evaluates them; their
+>   evidence label follows the method's install date, so for the current cohort (installed 31 October 2026) their
+>   results are development evidence, not CATCH-UP. All flagged draws remain valid and counted. (ratified: HX-1,
+>   HX-2, MH-1)
+48,49c66,68
+< - The exact rule for "installed before that draw" is to be settled in the design (open: Q5); the intended answer
+<   is a local install record, so that no Git history is needed (ratified principle: OFF-1).
+---
+> - "Installed before that draw" is established from create-only local install records, not Git history,
+>   including a one-off owner-confirmed record for the methods installed so far (owner decision, 2 November 2026;
+>   OFF-1). The record's exact format, verification and recovery rules remain for the design (open: Q5 detail).
+63,65c82,87
+< - Mode H is also the dress rehearsal of the weekly process: it uses the same engine and the same guarantees.
+< - Ten draws can only rule out large effects; the report will say so. Afterwards the ten draws become ordinary
+<   history. (agreed 2 Nov 2026; Q7 open on the display rule)
+---
+> - Mode H rehearses the forecasting, scoring and data-isolation mechanics that the weekly process will use.
+>   Under option A it is a precommitted holdout evaluation, not pre-draw forecasting: the outcomes are already in
+>   the system when the forecasts are made, held away from the methods by the N-1 reader. Its exact guarantees
+>   are settled in the design review and the owner's approval.
+> - Ten draws per game give limited statistical power; the report will say so. Afterwards the ten draws become
+>   ordinary history. (agreed 2 Nov 2026; Q7 open on the display rule)
+80,84c102,108
+<    freezes the forecast for the next draw and appends it to the forecast ledger. Nothing is scored twice; a
+<    draw whose result is not yet in is left open, never skipped and never guessed. (ratified: MH-1; mechanics
+<    open in the design)
+< 4. Exactly one open forecast per variant at any time, once that variant has caught up; a newly released
+<    revision has none until its walk-forward is done; a retired one has none ever again. (agreed 2 Nov 2026)
+---
+>    freezes the forecast for the next draw and appends it to the forecast ledger. No routine accepted score is
+>    ever produced twice for the same forecast (a separately identified scoring run to correct a fault or add a
+>    measure is the exception in section 2); a draw whose result is not yet in is left open, never skipped and
+>    never guessed. (ratified: MH-1; mechanics open in the design)
+> 4. Exactly one open forecast per active variant per game at any time, once that variant has caught up; a
+>    newly released revision has none until its walk-forward is done; a retired one has none ever again.
+>    (agreed 2 Nov 2026)
+116,117c140,142
+<   retired only when superseded, never for performing badly; poor performers stay visible (mark, never
+<   suppress).
+---
+>   never retired solely because it performs badly; retirement for supersession (ratified: E2R 12A.2) or another
+>   legitimate reason follows the method-registry and archive rules, and its evidence stays preserved and
+>   visible (mark, never suppress).
+124,126c149,151
+<   is proved to predate a draw only when an outside witness (a GitHub push, an emailed digest) received it before
+<   the draw; the witness is optional and the report says whether one exists. (ratified: OFF-1; wording agreed
+<   2 Nov 2026)
+---
+>   is proved to predate a draw only when an outside witness (a GitHub push, an emailed digest) verifiably
+>   received that line's digest before the draw; the witness is optional and the report says whether one exists.
+>   (ratified: OFF-1; wording agreed 2 Nov 2026)
+138,140c163,166
+< - Planning target: Mode H done and the weekly session installed by about 13-15 November 2026, so the first
+<   PROSPECTIVE forecasts are Oz Lotto 1709 (17 November) and Powerball 1592 (19 November); 9-12 November is a
+<   stretch only; if it slips, it slips a week, and the catch-up covers the missed draws (ratified: FB-1).
+---
+> - Planning target (owner-agreed, 2 November 2026; not a deadline): Mode H done and the weekly session installed
+>   by about 13-15 November 2026, so the first PROSPECTIVE forecasts are Oz Lotto 1709 (17 November) and
+>   Powerball 1592 (19 November); 9-12 November is a stretch only. Protection (ratified: FB-1): if it slips, it
+>   slips a week rather than any review or rehearsal being cut, and the catch-up covers the missed draws.
+144c170,171
+< Q1 A or B and the final wording; Q4 the prospective deadline; Q5 the install-date rule; Q6 the full report's
+---
+> Q1 A or B and the final wording; Q4 the prospective deadline; Q5 the install record's format, verification and
+> recovery rules (its mechanism is decided); Q6 the full report's
+149c176,195
+< *End of direction v0.1.*
+---
+> ## Changes from v0.1 (the reviewer's content check, findings 1-7)
+> 
+> 1. Powerball 1587 and 1588: the catch-up pass flags them; their evidence label follows the install date, so for
+>    the current cohort they are development evidence, not CATCH-UP (section 3).
+> 2. Q5: the local install record is the decided mechanism; only its format, verification and recovery remain
+>    open (sections 3 and 11).
+> 3. Mode H: rehearses the mechanics; under A a precommitted holdout evaluation, not pre-draw forecasting;
+>    "limited statistical power" (section 4).
+> 4. Qualifications: what dates are for (section 1); forecasts exist only for eligible revisions and later ones
+>    gain no pre-draw standing (section 1); PROSPECTIVE means before the ratified deadline (section 3); one open
+>    forecast per active variant per game (section 5); "nothing scored twice" means no duplicate routine
+>    accepted scoring (section 5).
+> 5. Retirement: never solely for performing badly; supersession or another legitimate reason under the registry
+>    and archive rules (section 8).
+> 6. A status-and-authority paragraph at the top; the witness proves timing only when it verifiably received the
+>    digest before the draw (section 9); the planning target and FB-1 labelled separately (section 10).
+> 7. A sentence explaining the codes (top).
+> No position ratified on 2 November 2026 is changed.
+> 
+> *End of direction v0.2.*

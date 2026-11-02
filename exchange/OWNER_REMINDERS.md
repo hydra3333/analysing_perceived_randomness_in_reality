@@ -221,12 +221,15 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 ## R-014  The owner's simplicity (KISS) review
 
-- Asked: raised by ChatGPT in the stock-take round (Response 2) as something the owner has asked for later;
-  recorded on 2 November 2026 so it is not lost.
-- Status: OPEN (not started; the owner decides when).
-- What: a review of where the project's machinery is heavier than it needs to be, in particular the
-  add-a-method and retire-a-method procedures. Not to be started during the Mode H work.
-- When: after the first weekly sessions are running, or whenever the owner asks.
+- Asked: by the owner in the ChatGPT reviewer chat (date not recorded here); raised by ChatGPT in the
+  stock-take round (Response 2) and recorded by Claude on 2 November 2026 so it is not lost; scope and
+  timing corrected on 3 November 2026 from ChatGPT's account of the owner's words (owner to confirm).
+- Status: OPEN. Starts only when the owner explicitly asks; never automatically.
+- What: a comprehensive simplicity (KISS) assessment of the whole project's machinery: the method registry,
+  the add-a-method and retire-a-method procedures, local experimentation without GitHub, the amount of
+  authentication and verification, and general operational simplicity. Not to be started during the Mode H
+  work.
+- When: after full implementation and the follow-on work (the method waves), and only when the owner asks.
 
 ## Standing reminders
 
