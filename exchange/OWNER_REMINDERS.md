@@ -209,8 +209,30 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   holdout is not extended) and FB-1 (if the
   week-of-9-November forecasts cannot be ready, slip a week rather than rush).
 
+## R-013  A status line for the direction document now in doc/
+
+- Asked: the owner, 2 November 2026, having committed doc/Direction_for_operational_procedures_v0_1.md
+  (the plain-English statement of where the project is heading, written from the stock-take round).
+- Status: OPEN.
+- What: the document sits in doc/ with no status line and has not been through a review round. ChatGPT is
+  reviewing it at the owner's request; Claude then gives it a status line (author, reviewer, status) in the
+  next document package, so its standing in doc/ is clear. The copy in exchange/ stays as the working copy.
+- When: the next document package (the register edition that records the Mode H design).
+
+## R-014  The owner's simplicity (KISS) review
+
+- Asked: raised by ChatGPT in the stock-take round (Response 2) as something the owner has asked for later;
+  recorded on 2 November 2026 so it is not lost.
+- Status: OPEN (not started; the owner decides when).
+- What: a review of where the project's machinery is heavier than it needs to be, in particular the
+  add-a-method and retire-a-method procedures. Not to be started during the Mode H work.
+- When: after the first weekly sessions are running, or whenever the owner asks.
+
 ## Standing reminders
 
+- The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in
+  exchange/STOCKTAKE_2026_11_02_v0_7.md; the plain-English direction is
+  doc/Direction_for_operational_procedures_v0_1.md. Read both before the Mode H design work.
 - Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and
   whenever asked.
 - Save every downloaded ZIP to E:\TEMP, never into the repository (the browser defaults to review/).

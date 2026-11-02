@@ -2,8 +2,10 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 1 November 2026 (evening), after both first reports, the PERF-1 install and the
-snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with your design inputs.
+Last updated: 2 November 2026 (night), after the stock-take round (you, the new Claude chat, ChatGPT
+and the previous Claude chat) and your ratification of its positions; item 10b DONE, Mode H next.
+Plain-English direction: doc/Direction_for_operational_procedures_v0_1.md (also in exchange/); the
+stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
 
 ## A few words used below
 
@@ -130,12 +132,23 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
            - a Git line-ending rule so files under results/ are never converted on your PC;
            - the findings of the two cold-read probes (1 November 2026: the results updater, and the
              performance plan), each settled in the documents or carried into the Mode H design.
-10c. NEXT - Mode H, the results update and the prospective mode (your goal: forecasts for the draws of
-           the week of 9 November 2026: Oz Lotto on Tuesday 10, Powerball on Thursday 12). Designed
-           together by the new Claude chat, straight after the snapshot is installed:
+10c. NEXT - Mode H, the results update and the prospective mode. Designed together by the new Claude
+           chat. Plan (your ratification, 2 November 2026): Mode H and the weekly session installed by
+           about 13-15 November, so the first forecasts frozen before a draw are Oz Lotto 1709
+           (Tuesday 17 November) and Powerball 1592 (Thursday 19 November); the week of 9 November is a
+           stretch only, and if it slips the catch-up covers the missed draws (FB-1). Design v0.1 was
+           written (exchange/EX_123_Claude.zip, commit c01717d) but NOT sent to ChatGPT; it is replaced
+           by v0.1r1 carrying the stock-take positions, which gets a cold read before it is sent:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
-             (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, all frozen
-             before the holdout is opened, then scored once; Powerball 1585 and 1586 flagged (HX-1);
+             (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
+             once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
+             option A: the study plan and the code are frozen before the holdout is opened, every
+             forecast uses only the draws before its target, and nothing is scored until all are
+             frozen. Option B (reveal one result at a time) stays in the design as the alternative for
+             ChatGPT's review; option C (all ten forecast from the development draws only) is
+             withdrawn, because no released method uses its target's draw number, so each variant
+             would make one forecast scored ten times. The register's phrase "all frozen before the
+             holdout is opened" is amended to the wording above when the design is ratified;
            - the results update: the updater exists as code (your tool), but how it is used with
              Mode H is still to be designed. The critical gap: today every reader accepts only the
              first (version-1) results file, so a version-2 reader is needed first (probe A1). The
@@ -143,11 +156,21 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
            - the prospective mode, your weekly session (MH-1): update, catch up missed draws in order,
              score the open forecast, freeze and publish the next one; PROSPECTIVE and CATCH-UP kept
              apart; Powerball 1587 and 1588 flagged when caught up (HX-2; flagged draws stay
-             fully valid and counted, no gaps);
+             fully valid and counted, no gaps). Also ratified on 2 November 2026: the weekly command
+             prints a status block per game (last accepted draw, last forecast, last scored draw,
+             backlog, next target and its deadline, active variants, each target's label); exactly one
+             open forecast per variant; nothing is ever scored twice; a draw whose result is not yet
+             accepted is left open, never skipped; whether a caught-up draw counts as CATCH-UP is
+             decided by a local install record written by each install (one record covers the methods
+             installed so far), not by Git history (OFF-1);
            - your other inputs: everything runs offline, GitHub only an optional witness (OFF-1; R3's
              push-based timing proof must be amended first); the weekly path is incremental (EFF-1);
-           - if it cannot be ready for the week of 9 November, it slips a week rather than being
-             rushed (FB-1); the catch-up covers the missed draws;
+           - how frozen records behave (ratified 2 November 2026): a forecast is never changed; an
+             accepted score is kept, and any new scoring run is added beside it, never over it; a
+             league table is a view and is meant to change, so adding or retiring a method produces a
+             new dated report while every earlier report stays as published. A retired revision's code
+             and tests are archived and its registry entry becomes RETIRED, but its forecasts and
+             scores stay where they are, with an index pointing at them;
            then you decide whether to declare the system developed.
 10d. NEXT - WF-1C, the workers change (your decision WORKERS-1, 31 October 2026), in its own design
            round carrying EX_101's and EX_105's obligations: the coordinator's limit becomes 1 up to the
@@ -178,6 +201,10 @@ snapshot's cold-read test; item 10 DONE, the snapshot NOW, Mode H next, with you
 19. LATER - Wave 10, your pilot-wave-inspired family, one at a time: E_57, E_60, E_58, E_59, E_61, E_62.
 20. LATER - Wave 11, outside data: E_54, E_48.
 21. LAST  - Combinations of methods: E_55, E_56.
+21b. LATER - After WF-1C, two efficiency items from the stock-take (ratified 2 November 2026, not
+           before Mode H): a report that ranks across batches by reusing the frozen run records, so
+           adding a method no longer needs every other method re-run; and the index for a retired
+           revision's records.
 22. FINAL - Deferred performance study, only after everything else here and under "Later" (all the
            implementation, holdout work and clean-up), and only when you activate it (reminder R-006):
            measure first, then decide whether anything is worth speeding up. Your proposal:
