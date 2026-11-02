@@ -1,0 +1,41 @@
+1c1
+< # Direction for the operational procedures, v0.2
+---
+> # Direction for the operational procedures, v0.2r1
+6c6,7
+< check of 3 November 2026 (findings 1-7; the change list is at the end). It says where we are heading and how the
+---
+> check of 3 November 2026 (findings 1-7), and v0.2r1 the two wording improvements of its focused recheck
+> (PASS; the change lists are at the end). It says where we are heading and how the
+100,102c101,105
+< 3. The command then: catches up any draw that has a result but no forecast, one draw at a time in order
+<    (forecast N from the draws before N, reveal N, score N); scores the open forecast whose draw is now known;
+<    freezes the forecast for the next draw and appends it to the forecast ledger. No routine accepted score is
+---
+> 3. The command then works through the outstanding draws in draw order. For each one whose result is
+>    accepted: if a forecast for it already exists, it scores that forecast; if not, it makes a catch-up forecast
+>    from the draws before it, freezes it, then scores it, with the right label. Only then does it move to the
+>    next draw. When no outstanding draw is left, it freezes the forecast for the next draw and appends it to
+>    the forecast ledger. No routine accepted score is
+147,148c150,152
+< - A forecast's timing rests on a local, create-only, digest-chained forecast ledger. The chain shows the records
+<   agree with each other and that nothing changed since it was last checked; it cannot prove the PC clock. A line
+---
+> - A forecast's timing rests on a local, create-only, digest-chained forecast ledger. The chain checks that the
+>   records agree with each other. Comparing it with an earlier trusted digest, kept separately, can reveal later
+>   changes. By itself it cannot prove when the records were made, nor that the whole chain was never replaced. A line
+195c199,210
+< *End of direction v0.2.*
+---
+> ## Changes from v0.2 (the reviewer's focused recheck: PASS, with two wording improvements that may be made
+> without another round)
+> 
+> 1. Section 9: the hash chain checks that the records agree with each other; only a comparison with an earlier
+>    trusted digest reveals later changes; by itself it cannot prove when records were made, nor that the whole
+>    chain was never replaced.
+> 2. Section 5, step 3: outstanding draws are processed strictly in draw order, scoring an existing forecast or
+>    making, freezing and scoring a catch-up forecast for each, before the next draw; then the next forecast is
+>    frozen.
+> No position is changed.
+> 
+> *End of direction v0.2r1.*
