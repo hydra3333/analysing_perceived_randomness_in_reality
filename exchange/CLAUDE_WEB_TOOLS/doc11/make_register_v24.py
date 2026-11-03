@@ -10,6 +10,7 @@ Every old string must occur exactly once; inserted text is ASCII. Input: the Git
 doc/RATIFICATION_REGISTER_v0_23.md (7502b755...c6bb). The new section's text is the file reg24_section.md beside this
 builder. STATUS selects the version line: CANDIDATE (for the reviewer's content check) or RATIFIED.
 Usage: python3 -I make_register_v24.py REGISTER_v0_23 SECTION_MD OUT_v0_24 CANDIDATE|RATIFIED [H1_SHA H1B_SHA]
+(RATIFIED needs the final H-1 v1r8 and blurb SHA-256s; the version line keeps @@DATE@@ for build_doc11.py to fill.)
 """
 import hashlib, sys
 
@@ -28,7 +29,7 @@ if status == 'CANDIDATE':
 elif status == 'RATIFIED':
     h1s, h1b = sys.argv[5:7]
     h1 = f'OWNER-RATIFIED with this register; installed with DOC-11; `{h1s}`; blurb `{h1b}`'
-    ver = '**Register version:** v0.24 OWNER-RATIFIED @@DATE@@ (content reviewed in @@EX@@)'
+    ver = '**Register version:** v0.24 OWNER-RATIFIED @@DATE@@ (the Claude handover package reviewed in the ChatGPT reviewer chat\'s Step 1.1 review, EX_133 and EX_134)'
 else:
     raise SystemExit('STATUS must be CANDIDATE or RATIFIED')
 NEW_SECTION = NEW_SECTION.replace('@@H1STATUS@@', h1)

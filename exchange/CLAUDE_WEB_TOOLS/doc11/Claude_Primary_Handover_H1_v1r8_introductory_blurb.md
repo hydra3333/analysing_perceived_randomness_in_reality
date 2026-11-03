@@ -26,7 +26,8 @@ gate. These points are binding (H-1 section 2A).
 
 **Who does what.**
 - **The project owner** (GitHub `hydra3333`) ratifies everything, runs every Windows install, and is the only one
-  who commits project files and pushes. Never write the owner's name in anything that may be committed: write
+  who commits project files (Claude pushes only its own `exchange/` and `CLAUDE_CODE_WORKING_FOLDER_TREE/` commits,
+  and none during the takeover). Never write the owner's name in anything that may be committed: write
   "the project owner" or "hydra3333".
 - **You (Claude):** design, specifications, all project code and its first tests, documents, and packages for the
   owner to install. You commit only inside `exchange/` and `CLAUDE_CODE_WORKING_FOLDER_TREE/`.
@@ -44,8 +45,10 @@ gate. These points are binding (H-1 section 2A).
    `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r5.md`, the direction document
    `doc/Direction_for_operational_procedures_v0_2r1.md`, `exchange/README.md`, `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`,
    `doc/METHOD_TEMPLATE/README.md`, `exchange/CLAUDE_WEB_TOOLS/README.md`, the owner's lists `exchange/OWNER_ROADMAP.md`
-   and `exchange/OWNER_REMINDERS.md`, and the newest `exchange/EX_*` files. Check that the hashes H-1 quotes match the
-   files (`git show HEAD:<path> | sha256sum`), and work through H-1 section 12.9 in your own cloud workspace.
+   and `exchange/OWNER_REMINDERS.md`, the newest `exchange/EX_*` files, and the rest of H-1 section 0's list (H-3 and
+   the review-disposition procedure). Check that the file hashes H-1 quotes match the files
+   (`git show HEAD:<path> | sha256sum`), except the master hashes of its section 7.5 (never open `source_data`) and
+   the computed digests of 7.3. If H-1's or the register's status line still reads CANDIDATE, stop and ask the owner.
 2. **Your first substantive reply to the owner** explains, in your own words and in plain English:
    - what is implemented, what is designed, what is ratified, and what is still unresolved;
    - the current project position and the immediate priorities;
@@ -55,10 +58,14 @@ gate. These points are binding (H-1 section 2A).
      further approval;
    - any discrepancies, uncertainties or questions (anything in H-1 that did not match the repository).
 3. **Do not begin implementing, installing, building packages or executing anything** merely because the handover
-   names it as the next task. The next task (the MHUP-A code package) waits for step 5.
+   names it as the next task. The next task (the MHUP-A code package) waits for step 5. Until then: no draft or
+   speculative code, no task file or package, no test-suite run (H-1 section 12.9's workspace and suite steps wait),
+   and no commit or push, even in `exchange/`.
 4. The owner passes your reply to the ChatGPT reviewer chat, which assesses your understanding and suggests
    targeted questions. **Answer those questions yourself, before you see the reviewer's suggested answers or
-   assessment**, so that any genuine misunderstanding shows. Material discrepancies are resolved before the
+   assessment**, so that any genuine misunderstanding shows: the owner relays the questions on their own and keeps
+   the reviewer's assessment and suggested answers until you have answered. After the owner authorises normal work,
+   you record the takeover exchanges in `exchange/` under the next free EX numbers. Material discrepancies are resolved before the
    takeover counts as successful.
 5. **Normal project work resumes only after that verification and the owner's explicit authorisation.**
 6. Keep the separation between ratified decisions, reviewed designs, implemented functionality and the owner's
@@ -77,8 +84,9 @@ gate. These points are binding (H-1 section 2A).
   session, which forecasts each next draw before its deadline and scores each draw once its result is in. It is
   built as two code packages, MHUP-A then MHUP-B, each with its own review, Windows rehearsal and install, and then
   four separate owner approvals per game before anything is opened or scored.
-- **Still open:** Q7 (whether the display restriction on holdout draws is relaxed after Mode H), and the owner's
-  choice at MHUP-A's approval about rerunning the Windows POC suite. Register v0.24 lists every future action and
+- **Still open:** Q7 (whether the display restriction on holdout draws is relaxed after Mode H; to be decided before
+  the first results update, Approval 2); the owner's choice at MHUP-A's approval about rerunning the Windows POC
+  suite; and the owner's confirmation of a backup of `results/` and `source_data/`. Register v0.24 lists every future action and
   when it falls due.
 - **After MHUP-1, in the owner's order:** WF-1C (the workers change), wave 3, an NL-means discussion, waves 4 to
   11 and the ensembles last.

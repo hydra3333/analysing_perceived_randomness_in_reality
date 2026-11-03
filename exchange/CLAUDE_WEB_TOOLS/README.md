@@ -103,3 +103,14 @@ The DOC-10 snapshot tools: build_doc10.py (package builder), e2e_doc10.sh (rehea
 ## previous_chat_working_log.md (added 1 November 2026)
 
 The previous chat's running notes, for reference only; the register, H-1 and the EX record prevail.
+
+## doc11/ (DOC-11, the Claude handover package; 3 November 2026)
+
+| Tool | What it does |
+|---|---|
+| `doc11/make_register_v24.py` + `doc11/reg24_section.md` | Register v0.24 from the v0.23 blob by counted edits; the new section is the .md file; CANDIDATE or RATIFIED. |
+| `doc11/make_h1_v1r8.py` | H-1 v1r8 from the v1r7 blob by counted edits (section 2A asserted byte-identical); CANDIDATE or RATIFIED. |
+| `doc11/Claude_Primary_Handover_H1_v1r8_introductory_blurb.md` | The new chat's starter text (the staged takeover HO-2 written in). |
+| `doc11/build_doc11.py` | `build_doc11.py WORKDIR OUTDIR BASE STATUS [DATE]`: builds H-1 first, then the register with H-1's hashes (RATIFIED), the overlay, the manifest, the verifier from `wf1/verifier_template.py` and `INSTALL_INSTRUCTIONS.md`. REPO is hard-coded at the top. |
+| `doc11/e2e_doc11.sh` | `e2e_doc11.sh REPO PKGDIR WORKDIR`: LF and CRLF happy paths and seven negatives in disposable clones. |
+| `doc11/make_zip.py` | Copy of `exchange/EX_019_Claude/make_zip.py` (deterministic zip with a member list). |

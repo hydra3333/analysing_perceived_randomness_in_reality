@@ -142,7 +142,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-007  EX_111 O01: cross-check the seed record's reader names
 
 - Asked: 1 November 2026 (the owner deferred EX_111's optional O01 to a later package).
-- Status: OPEN (optional; not a gate).
+- Status: OPEN (optional; not a gate). To be folded into MHUP-A (register v0.24, future action 1).
 - What: src/evaluation/seed_policies.py checks that the two source reads have different readers and
   that the fetcher differs from the verifier, but not that sources[0].read_by equals fetched_by and
   sources[1].read_by equals verified_by. The approved record already matches both. Remedy: add the two
@@ -152,7 +152,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-008  The install verifier's wording when an expected file is missing
 
 - Asked: noted by Claude on 1 November 2026, during the WF-1B rehearsals.
-- Status: OPEN (wording only; the check itself is correct and stops).
+- Status: OPEN (wording only; the check itself is correct and stops). To be folded into MHUP-A's verifier
+  (register v0.24, future action 1); DOC-11's verifier still has the old wording.
 - What: when an expected new file is missing, the verifier's STOP message speaks of "unexpected new
   paths", which points the reader the wrong way. Reword it to name the missing paths.
 - When: in the next install package's verifier.
@@ -168,7 +169,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-010  EX_113 O02: the test runner's failure-detail label
 
 - Asked: 1 November 2026 (the owner accepted WF1B_Install_v3 and deferred EX_113's optional O02).
-- Status: OPEN (optional; wording only).
+- Status: OPEN (optional; wording only). Comes with MHUP-A's runner (register v0.24, future action 1).
 - What: when a test module fails, WF1B_Install_v3's runner heads the printed details "invented test data
   only". Some older tests read the development masters, so the label should not promise that. Claude has
   already changed the runner template to "test failure output; inspect before sharing". Until then, a
@@ -213,7 +214,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 2 November 2026, having committed doc/Direction_for_operational_procedures_v0_1.md
   (the plain-English statement of where the project is heading, written from the stock-take round).
-- Status: OPEN.
+- Status: OPEN until DOC-11 is installed, then DONE: DOC-11 installs v0.2r1 in doc/ (its "Status and
+  authority" paragraph is the status line) and register v0.24 records it (DIR-1).
 - What: the document sits in doc/ with no status line and has not been through a review round. ChatGPT is
   reviewing it at the owner's request; Claude then gives it a status line (author, reviewer, status) in the
   next document package, so its standing in doc/ is clear. The copy in exchange/ stays as the working copy.
@@ -237,11 +239,34 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   work.
 - When: after full implementation and the follow-on work (the method waves), and only when the owner asks.
 
+## R-015  The owner's choices still to come for MHUP-1
+
+- Asked: recorded by Claude on 3 November 2026 from the ratified design (register v0.24, future actions).
+- Status: OPEN.
+- What: (a) Q7: whether, after a game's Mode H is scored, the display restriction on holdout draws is
+  relaxed (recommended: keep the restriction on raw draw values in the AI chats); until decided, nothing
+  changes. (b) At MHUP-A's approval: because Run_Experiment.bat gains interpreter options, either authorise
+  one rerun of the Windows POC suite after the install (with the owner-run byte-code checks) or accept it
+  unrun with the reason recorded. (c) Confirm the backup of results/ and source_data/ (asked 2 November 2026).
+- When: (b) and (c) at MHUP-A's approval; (a) before Approval 2, the first results update.
+
+## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
+
+- Asked: the owner, 3 November 2026.
+- Status: OPEN.
+- What: Claude is handed over first (DOC-11, the Step 1.1 review, the new chat's verified takeover, the
+  owner's go-ahead); the experienced ChatGPT reviewer stays throughout. A ChatGPT reviewer handover (a new
+  H-2 edition folding in register v0.24) is considered only after the new Claude chat has shown reliable
+  continuity. No simultaneous ChatGPT takeover is prepared.
+- When: raise the ChatGPT reviewer handover with the owner only after the new Claude chat has resumed
+  normal work reliably, or if the reviewer chat nears its own limit.
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in
-  exchange/STOCKTAKE_2026_11_02_v0_7.md; the plain-English direction is
-  doc/Direction_for_operational_procedures_v0_1.md. Read both before the Mode H design work.
+  exchange/STOCKTAKE_2026_11_02_v0_8.md; the plain-English direction is
+  exchange/Direction_for_operational_procedures_v0_2r1.md and the ratified MHUP-1 design is in
+  exchange/EX_132_Claude/ (both in doc/ once DOC-11 is installed).
 - Show the owner where the project is up to (exchange/OWNER_ROADMAP.md) at each milestone, and
   whenever asked.
 - Save every downloaded ZIP to E:\TEMP, never into the repository (the browser defaults to review/).
@@ -260,4 +285,4 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   (new HIGH design, the core of a HIGH code module, a BLOCKER-level review finding, an unexplained STOP)
   and Opus for everything else, including packaging, tests scaffolding, task files, installs, records and
   relays. Cold-read helpers can run on a cheaper model whatever the chat's model.
-  To be carried into the next H-1 edition.
+  Recorded as MC-1 in register v0.24 and carried in H-1 v1r8 section 2.

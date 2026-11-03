@@ -191,7 +191,7 @@ rep_between('### 12.8 Open items at the snapshot', '### 12.9 The first hour in a
 - **Waiting on the reviewer:** the Step 1.1 review of the complete Claude handover package (EX_133; reply EX_134), then, after the switch, its assessment of the new chat's first replies (HO-2).
 - **The ChatGPT reviewer handover:** not now (HO-2). H-2 v1r8 stays in force; its checkpoint facts (sections 0 and 6) are out of date, and register v0.24 prevails. A new H-2 edition is prepared only when the owner decides on a reviewer handover, after this Claude handover has proved itself.
 - **Waiting on the owner:** ratifying and installing DOC-11; confirming the backup of `results/` and `source_data/` (asked 2 November 2026); later, Q7 before Approval 2, and the Windows POC-suite choice at MHUP-A's approval (register v0.24, "Future actions recorded").
-- **The reminders** (`exchange/OWNER_REMINDERS.md`): R-001 the owner's Methods A and B (A installed as E_17's log-age variant; B is E_45 in wave 3); R-002 the NL-means discussion after wave 3; R-003 optional tidy-up of old EX copies in `review/`; R-004, R-005, R-009, R-011 DONE; R-006 the deferred performance study (FINAL, inactive); R-007 and R-010 (optional; folded into MHUP-A); R-008 (the verifier's wording; folded into MHUP-A); R-012 the cold-read probe findings (the document ones settled by DOC-10, A5 by TSC-1, and A1-A3, A6-A8 and A11 settled by the MHUP-1 design; the WF-1C ones still carried); R-013 the direction document in `doc/` (closed by DOC-11); R-014 the KISS review (KISS-1; only when the owner asks); R-015 the owner's two choices at MHUP-A's approval and Q7 (added with DOC-11).
+- **The reminders** (`exchange/OWNER_REMINDERS.md`): R-001 the owner's Methods A and B (A installed as E_17's log-age variant; B is E_45 in wave 3); R-002 the NL-means discussion after wave 3; R-003 optional tidy-up of old EX copies in `review/`; R-004, R-005, R-009, R-011 DONE; R-006 the deferred performance study (FINAL, inactive); R-007 and R-010 (optional; folded into MHUP-A); R-008 (the verifier's wording; folded into MHUP-A); R-012 the cold-read probe findings (the document ones settled by DOC-10, A5 by TSC-1, and A1-A3, A6-A8 and A11 settled by the MHUP-1 design; the WF-1C ones still carried); R-013 the direction document in `doc/` (closed by DOC-11); R-014 the KISS review (KISS-1; only when the owner asks); R-015 the owner's choices still to come (Q7 before Approval 2; the Windows POC suite and the backup at MHUP-A's approval); R-016 the staged handover and the later ChatGPT reviewer handover (both added 3 November 2026, in `exchange/`).
 - **The probe findings, where they landed:** A1 (version-1-only readers) -> design section 3; A2 (the opening record) -> 4.2; A3 (holdout added with later draws; the store) -> 4.4, 4.5 (combined master, Q2); A6 (single source) -> MHUP-C03, section 7; A7 (procedures: accepting a version, a stale lock, an interrupted update, grabs) -> section 7 and the checklist; A8 (the update window) -> section 7; A9 (Python 3.15) -> the self-test before Approval 2; A11 (R3 7.6's independent outcome ledger) -> the score ledger's outcome pins (6.6). B4, B7, B8, B10 and B11 stay with WF-1C or the performance study.
 - **WF-1C's obligations:** EX_101's four (memory headroom, which bytes must match across worker counts, failure semantics, the default on odd or unknown processor counts) and EX_105's B01 (atomic admission, no prefetch, fail closed on parent loss, no kill) and C02-C05 in full (EX_107).
 - **The R-2 obligations already set for MHUP-A and MHUP-B** (EX_131 section 4): synthetic demonstrations of the first-update admission, the old and new updater lock, failure-state restoration, the unfinished-set refusal, direct and nested byte-code discipline, the two-commit release order, and the stated Windows rehearsals and owner choices. The design's Appendix L lists every oracle and the only existing tests that change.
@@ -240,6 +240,45 @@ v1r8 refreshes v1r7 in place after the MHUP-1 design's ratification (owner, 3 No
 13. **Appendix A:** current identities (H-1 v1r7 the predecessor; H-2 v1r8 still in force; the design; the direction document; the stock-take record; register v0.23).
 
 """)
+
+# ---- cold-read takeover test fixes (3 Nov 2026), applied after the main edits; each old string must occur once
+FIX = [
+ ("in particular, check that DOC-11 is installed,",
+  "if this file's or register v0.24's status line still reads CANDIDATE, stop and ask the owner which handover is in force; in particular, check that DOC-11 is installed,"),
+ ("Material discrepancies are resolved before the takeover counts as successful, and normal work resumes only after the owner authorises it.",
+  "Material discrepancies are resolved before the takeover counts as successful, and normal work resumes only after the owner authorises it. **Until then:** read, check hashes and write; build, run and commit nothing: no draft or speculative code, task file or package in your workspace, no test suite run (section 12.9's suite and workspace steps wait for the owner's authorisation), and no commit or push, even in `exchange/`. **Keeping your answers blind:** the owner relays the reviewer's questions on their own (a paste, or an EX file holding only the questions); the reviewer's assessment and suggested answers stay with the owner until you have sent your answers, and only then come to you. Once the owner authorises normal work, you record every takeover exchange in `exchange/` under the next free EX numbers, as section 1.6 requires. The outgoing Claude chat stops committing once you start."),
+ ("**The owner has paused the code until the documents are updated** (3 November 2026).",
+  "**The code is paused** (owner, 3 November 2026) until the staged takeover is verified and the owner explicitly authorises normal work (section 0, item 4); DOC-11's install alone does not lift the pause. The planning dates of ST-5 have not been moved by the owner; HO-2 adds a review round and a takeover check, and FB-1 applies (slip rather than rush)."),
+ ("The design is ratified; the code is paused until DOC-11 is installed.",
+  "The design is ratified; the code is paused until the staged takeover is verified and the owner authorises normal work (section 0, item 4)."),
+ ("the owner's install by Appendix J's 19 steps (two commits).", "the owner's install by Appendix J's steps 0 to 19 (two commits)."),
+ ("| `src/Powerball_Experiment_Coordinator.py` | The coordinator; 11 protected functions AST-identical to v0.6 (`2e23d550...`) |",
+  "| `src/Powerball_Experiment_Coordinator.py` | The coordinator; 11 protected functions AST-identical to v0.6 (`2e23d550...` is the SHA-256 of the v0.6 fixture file, not of the current coordinator) |"),
+ ("At this edition the last committed number is EX_132; the Step 1.1 review of the Claude handover package is EX_133 and the reviewer's reply EX_134.",
+  "At this edition the last committed number is EX_132; the Step 1.1 review of the Claude handover package is planned as EX_133 with the reviewer's reply EX_134 (EX_132 offered EX_133 for an optional reply; if that number was used, the request took the next free one)."),
+ ("A speculative candidate built alongside the design is fine,",
+  "A speculative candidate built alongside the design is fine (but never during a takeover: section 0, item 4),"),
+ ("**DOC-10 (the snapshot) has one** (`VERIFY_DOC10_INSTALL.py`, pre/post/committed),",
+  "**DOC-10 (the snapshot) and DOC-11 have one each** (`VERIFY_DOC10_INSTALL.py`, `VERIFY_DOC11_INSTALL.py`; pre/post/committed),"),
+]
+FIX += [
+ ("and that the hashes in sections 4 and 7 and Appendix A match `git show HEAD:<path> | sha256sum`.\n2. Read,",
+  "and that the file hashes in sections 4 and 7 and Appendix A match `git show HEAD:<path> | sha256sum`, except the two master hashes in section 7.5 (never open `source_data/`) and the computed E_1 digests in section 7.3 (run outputs, not files).\n2. Read,"),
+ ("1. Clone, read section 0's list, and check the hashes in sections 4 and 7 and Appendix A.",
+  "1. Clone, read section 0's list, and check the file hashes in sections 4 and 7 and Appendix A (not the master hashes of 7.5 or the computed digests of 7.3; section 0, item 1)."),
+ ("2. Read `exchange/CLAUDE_WEB_TOOLS/README.md`; set up a workspace:",
+  "2. **After the owner has authorised normal work (section 0, item 4), not before:** read `exchange/CLAUDE_WEB_TOOLS/README.md`; set up a workspace:"),
+ ("Installed with DOC-11 |\n| `Direction_for_operational_procedures_v0_2r1.md`",
+  "Installed with DOC-11, byte-identical to EX_132's member, so its own header, section 1 and section 8 table still read as before ratification; register v0.24 records the ratification |\n| `Direction_for_operational_procedures_v0_2r1.md`"),
+ ("the design and the register prevail where it is looser. Installed with DOC-11 |",
+  "the design and the register prevail where it is looser or differs (register v0.24 lists four places: its sections 4, 5 step 4, 7 and 11). Installed with DOC-11 |"),
+ ("| H-2 v1r8 (the reviewer handover in force; a new edition only with a later reviewer handover, HO-2) |",
+  "| H-2 v1r8 (the reviewer handover in force; a new edition only with a later reviewer handover, HO-2; its \"DRAFT\" title and footer are historical, the register's status prevails) |"),
+ ("| Committed coordinator v0.6 (AST anchor) | `2e23d55049afa8cf336a14e60d7ee52f3ea5043fda442da4d6837f81f79c762b` (also",
+  "| Committed coordinator v0.6 (AST anchor; the SHA-256 of the v0.6 fixture file, not of today's coordinator) | `2e23d55049afa8cf336a14e60d7ee52f3ea5043fda442da4d6837f81f79c762b` (also"),
+]
+for _o, _n in FIX:
+    rep(_o, _n)
 
 for old, new in E:
     n = t.count(old)

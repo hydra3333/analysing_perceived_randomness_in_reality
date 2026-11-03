@@ -2,10 +2,10 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 2 November 2026 (night), after the stock-take round (you, the new Claude chat, ChatGPT
-and the previous Claude chat) and your ratification of its positions; item 10b DONE, Mode H next.
-Plain-English direction: doc/Direction_for_operational_procedures_v0_1.md (also in exchange/); the
-stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
+Last updated: 3 November 2026 (evening): the MHUP-1 design ratified (MHUP-R); DOC-11, the Claude handover
+package, prepared for ChatGPT's Step 1.1 review under your staged handover (HO-2); the code paused.
+Plain-English direction: exchange/Direction_for_operational_procedures_v0_2r1.md (into doc/ with DOC-11);
+the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
 ## A few words used below
 
@@ -178,7 +178,17 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            day). Design v0.1r4 went as EX_130; ChatGPT's EX_131 (3 November 2026): CONDITIONAL PASS -
            FIX AND PROCEED, one install-recovery safeguard (never restore while a process may be
            running), inserted as worded in v0.1r5 (EX_132, for the record; no further review round).
-           Next: your ratification of design v0.1r5 as a whole, then MHUP-A code (Fable for the core).
+           RATIFIED by you on 3 November 2026 (about 20:42; MHUP-R), with the design's recommendations
+           for Q2-Q6, Q8 and Q9; Q7 stays open. Then you paused the code until all the documents are
+           updated, and decided the staged AI handover (HO-2): Claude is handed over first, the
+           experienced ChatGPT reviewer stays throughout. NOW: DOC-11, the Claude handover package
+           (register v0.24, H-1 v1r8 and its blurb, the design and the direction document in doc/, six
+           review copies), tested by a fresh helper playing the new chat (20 gaps, fixed), then sent to
+           ChatGPT for the Step 1.1 review (EX_133, reply EX_134); every problem resolved; you ratify and
+           install DOC-11; you start the new Claude chat; ChatGPT checks its first replies and suggests
+           targeted questions, which the new chat answers blind; then, ONLY after that check and your
+           explicit go-ahead, MHUP-A code (Fable for the core). A ChatGPT reviewer handover is
+           considered later, separately. The planning dates above are unchanged; FB-1 applies.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
