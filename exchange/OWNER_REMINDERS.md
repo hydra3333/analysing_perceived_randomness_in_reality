@@ -218,6 +218,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   reviewing it at the owner's request; Claude then gives it a status line (author, reviewer, status) in the
   next document package, so its standing in doc/ is clear. The copy in exchange/ stays as the working copy.
 - When: the next document package (the register edition that records the Mode H design).
+- Progress (3 November 2026): the reviewer passed v0.2 and its two wording improvements made v0.2r1
+  (exchange/Direction_for_operational_procedures_v0_2r1.md, 3a9f6ac). The owner removed the v0.2 copy from
+  doc/ (6de0d99), so doc/ has no direction document for now. The owner wants a permanent copy in doc/,
+  because it is the direction to be referred to and checked against: the next document package installs
+  v0.2r1 (or its successor) in doc/ with its status line.
 
 ## R-014  The owner's simplicity (KISS) review
 

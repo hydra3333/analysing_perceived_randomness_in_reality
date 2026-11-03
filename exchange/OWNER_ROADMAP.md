@@ -141,8 +141,9 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            by v0.1r1 carrying the stock-take positions, cold-read twice by a fresh helper on 3 November
            2026 and sent to ChatGPT as EX_124 (reply EX_125). The cold read found that E_1 revision 2
            refuses every new run mode in its own code, so E_1 needs a revision 3 (same arithmetic) before
-           it can take part in Mode H; the design asks you whether the ER-2r1 one-package exception
-           extends to it (Q10):
+           it can take part in Mode H. Q10: you decided on 3 November 2026 to extend the ER-2r1
+           one-package exception to E_1 revision 3 (recorded as owner-decided, open to revisiting if
+           ChatGPT's review changes anything):
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
