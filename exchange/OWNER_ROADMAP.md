@@ -143,7 +143,17 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            refuses every new run mode in its own code, so E_1 needs a revision 3 (same arithmetic) before
            it can take part in Mode H. Q10: you decided on 3 November 2026 to extend the ER-2r1
            one-package exception to E_1 revision 3 (recorded as owner-decided, open to revisiting if
-           ChatGPT's review changes anything):
+           ChatGPT's review changes anything). ChatGPT's review EX_125 (3 November 2026): RECHECK, 5
+           BLOCKER, 9 CORRECTION, 3 OPTIONAL, all accepted by Claude; it provisionally favours option A.
+           Your decisions on 3 November 2026, after that review: Q1 = option A (Mode H as a precommitted
+           holdout evaluation: plan and code frozen before opening, every forecast from draws before its
+           target, nothing scored until all are frozen), the corrected design still to pass the recheck
+           before you ratify it as a whole; B02 = implement MH-1's order exactly (predict N, reveal N,
+           score N, then N+1) with a small orchestrator that alternates the two program halves per
+           target; C03 = Lotterywest's published results are official and trusted as they stand, so no
+           second-source check of a new draw is required in production (this supersedes, for production,
+           the earlier independent-evidence wording of R2-C03 and the proposal; to be recorded in
+           register v0.24). Next: design v0.1r2 as EX_126 (reply EX_127):
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
