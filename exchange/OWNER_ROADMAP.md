@@ -166,8 +166,14 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            helper (24 + 13 findings, all applied). One new point for you inside it: Run_Experiment.bat
            gains two interpreter options (-B, PYTHONPYCACHEPREFIX), so MHUP-A's approval asks you
            either to authorise one rerun of the Windows POC suite afterwards or to accept it unrun
-           with the reason recorded. Next: your ratification after ChatGPT's narrow check, then
-           MHUP-A code. The design:
+           with the reason recorded. ChatGPT's EX_129 (3 November 2026): RECHECK, narrowly; 2 BLOCKER
+           (B01 the first results update could add no draws or only some and then lock the study;
+           B02 the install barrier does not stop the updater, and a short launch window before the
+           new gate is only procedural), 2 CORRECTION (C01 an unfinished forecast set across a
+           roster change; C02 the byte-code folder detail), all accepted. Awaiting your decisions
+           D1-D3 (Claude's message of 3 November 2026), then design v0.1r4 as EX_130 (reply EX_131);
+           ChatGPT expects the next check to be brief. Then your ratification, then MHUP-A code.
+           The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
