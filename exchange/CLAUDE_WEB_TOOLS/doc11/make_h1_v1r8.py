@@ -277,6 +277,14 @@ FIX += [
  ("| Committed coordinator v0.6 (AST anchor) | `2e23d55049afa8cf336a14e60d7ee52f3ea5043fda442da4d6837f81f79c762b` (also",
   "| Committed coordinator v0.6 (AST anchor; the SHA-256 of the v0.6 fixture file, not of today's coordinator) | `2e23d55049afa8cf336a14e60d7ee52f3ea5043fda442da4d6837f81f79c762b` (also"),
 ]
+FIX += [
+ ("7. Work through section 12.9's first-hour checklist before your first reply (it reads and checks; it builds and runs nothing on the owner's machine).",
+  "7. Work through section 12.9's steps 1, 4 and 5 before your first reply (reading and hash checks only); its steps 2 and 3 (workspace and suite) wait for the owner's authorisation of normal work."),
+ ("**DOC-10 (the snapshot) and DOC-11 have one each** (`VERIFY_DOC10_INSTALL.py`, `VERIFY_DOC11_INSTALL.py`; pre/post/committed), because it also replaces files outside `doc/` and `review/`",
+  "**DOC-10 (the snapshot) and DOC-11 have one each** (`VERIFY_DOC10_INSTALL.py`, `VERIFY_DOC11_INSTALL.py`; pre/post/committed): DOC-10 because it also replaced files outside `doc/` and `review/`, DOC-11 because it carries the handover a new chat starts from"),
+ ("This proves the tools and the workspace before any change.",
+  "This proves the tools and the workspace before any change. The owner's authorisation of normal work does not by itself cover E2R-T12 (it starts worker processes): ask for that run context, as section 7.4 says, or run the suite without it and say so."),
+]
 for _o, _n in FIX:
     rep(_o, _n)
 

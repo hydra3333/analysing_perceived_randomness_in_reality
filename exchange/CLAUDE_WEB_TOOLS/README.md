@@ -70,7 +70,8 @@ Scripts that take their trees and output folders as arguments have no other hidd
 - **Python 3.15:** the rehearsals used Python 3.15.0b4 in a uv virtual environment (`pyvenv.cfg`: uv 0.11.32,
   uv-managed CPython 3.15), with numpy 2.5.4, scipy 1.18.1 and psutil installed. To recreate it (if pip and uv
   can reach the package index): `uv python install 3.15` then `uv venv --python 3.15 scratchpad/v315` and
-  `uv pip install --python scratchpad/v315/bin/python numpy scipy psutil`. The owner's Windows venv is Python
+  `uv pip install --python scratchpad/v315/bin/python numpy scipy psutil` (the minimum for the suite; H-1 section 12.3
+  lists all seven of the project's direct packages, from `install_upgrade_dependencies_into_venv.bat`). The owner's Windows venv is Python
   3.15.2; the Linux rehearsals are evidence, the Windows rehearsal (Claude Code) is the acceptance.
 
 ## Gotchas learned the hard way
