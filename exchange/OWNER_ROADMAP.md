@@ -153,7 +153,15 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            target; C03 = Lotterywest's published results are official and trusted as they stand, so no
            second-source check of a new draw is required in production (this supersedes, for production,
            the earlier independent-evidence wording of R2-C03 and the proposal; to be recorded in
-           register v0.24). Next: design v0.1r2 as EX_126 (reply EX_127):
+           register v0.24). Design v0.1r2 went as EX_126; ChatGPT's EX_127 (3 November 2026): RECHECK, 5
+           BLOCKER, 5 CORRECTION, 2 OPTIONAL, all accepted; it says one more narrow check should do.
+           Your decisions on 3 November 2026 after EX_127: B04 = the results updater gains one small
+           check, refusing to run while a game's holdout is open and Mode H not yet scored (a reviewed
+           change to your tool); B04 = the Mode H environment freeze checks the installed files
+           themselves (the Python program's hash and the SHA-256 that pip records for every installed
+           file), not only package names and versions. Q11 (may a hand-typed run become the official
+           forecast?) awaits your answer; recommended no. Next: design v0.1r3 as EX_128 (reply
+           EX_129):
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
