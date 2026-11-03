@@ -175,8 +175,10 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            holdout draw (a fourth small updater addition); D2 = an install holds the updater's own
            lock; D3 = you don't launch the coordinator's POC path, the report tool or the walk-forward
            driver during an install, and accept the few-seconds gate-copy window (extended the same
-           day). Design v0.1r4 went as EX_130 (reply EX_131); ChatGPT expects the check to be brief.
-           Then your ratification, then MHUP-A code.
+           day). Design v0.1r4 went as EX_130; ChatGPT's EX_131 (3 November 2026): CONDITIONAL PASS -
+           FIX AND PROCEED, one install-recovery safeguard (never restore while a process may be
+           running), inserted as worded in v0.1r5 (EX_132, for the record; no further review round).
+           Next: your ratification of design v0.1r5 as a whole, then MHUP-A code (Fable for the core).
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
