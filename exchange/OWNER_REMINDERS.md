@@ -254,4 +254,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   updates, explanations, paste blocks) goes ahead without asking. When a Fable task is finished, Claude
   says so, so the owner can switch back to Opus before the everyday work. Claude cannot see which model
   is selected, so it always flags and holds; a request mixing both kinds is split at the boundary.
+  Refinement (owner, 3 November 2026): Fable is to be saved for the really complex work, because the
+  owner's token allowance may otherwise run out before the end of a week; so at each step Claude says which
+  model it recommends (Opus 5.5 or Fable) and why in one line, recommending Fable only for the hard core
+  (new HIGH design, the core of a HIGH code module, a BLOCKER-level review finding, an unexplained STOP)
+  and Opus for everything else, including packaging, tests scaffolding, task files, installs, records and
+  relays. Cold-read helpers can run on a cheaper model whatever the chat's model.
   To be carried into the next H-1 edition.
