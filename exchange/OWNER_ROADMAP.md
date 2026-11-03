@@ -159,9 +159,15 @@ stock-take record: exchange/STOCKTAKE_2026_11_02_v0_7.md.
            check, refusing to run while a game's holdout is open and Mode H not yet scored (a reviewed
            change to your tool); B04 = the Mode H environment freeze checks the installed files
            themselves (the Python program's hash and the SHA-256 that pip records for every installed
-           file), not only package names and versions. Q11 (may a hand-typed run become the official
-           forecast?) awaits your answer; recommended no. Next: design v0.1r3 as EX_128 (reply
-           EX_129):
+           file), not only package names and versions. Q11 decided 3 November 2026: official runs only
+           through tickets written by the driver or the weekly forecasting half; hand-typed runs stay
+           available as your unofficial diagnostic route (never scored into a ledger). Design v0.1r3
+           went as EX_128 (reply EX_129): every EX_127 finding applied; two cold reads by a fresh
+           helper (24 + 13 findings, all applied). One new point for you inside it: Run_Experiment.bat
+           gains two interpreter options (-B, PYTHONPYCACHEPREFIX), so MHUP-A's approval asks you
+           either to authorise one rerun of the Windows POC suite afterwards or to accept it unrun
+           with the reason recorded. Next: your ratification after ChatGPT's narrow check, then
+           MHUP-A code. The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
              once; Powerball 1585 and 1586 flagged (HX-1). Your preference (2 November 2026) is
