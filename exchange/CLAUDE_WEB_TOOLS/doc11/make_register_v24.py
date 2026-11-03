@@ -29,7 +29,7 @@ if status == 'CANDIDATE':
 elif status == 'RATIFIED':
     h1s, h1b = sys.argv[5:7]
     h1 = f'OWNER-RATIFIED with this register; installed with DOC-11; `{h1s}`; blurb `{h1b}`'
-    ver = '**Register version:** v0.24 OWNER-RATIFIED @@DATE@@ (the Claude handover package reviewed in the ChatGPT reviewer chat\'s Step 1.1 review, EX_133 and EX_134)'
+    ver = '**Register version:** v0.24 OWNER-RATIFIED @@DATE@@ (the Claude handover package reviewed in the ChatGPT reviewer chat\'s Step 1.1 review, EX_133 to EX_136)'
 else:
     raise SystemExit('STATUS must be CANDIDATE or RATIFIED')
 NEW_SECTION = NEW_SECTION.replace('@@H1STATUS@@', h1)
@@ -41,7 +41,7 @@ EDITS = [
      "decisions ST-1 to ST-5 and its correction, the direction document (DIR-1), the owner's process decisions MC-1 "
      "and KISS-1, the MHUP-1 design reviews EX_123 to EX_132 with the owner's decisions MHUP-Q10, MHUP-Q1, MHUP-B02, "
      "MHUP-C03, MHUP-B04, MHUP-Q11 and MHUP-D1 to MHUP-D3, the ratification of the MHUP-1 design v0.1r5 (MHUP-R) and "
-     "the rules it amends, the staged AI handover (HO-2), and H-1 v1r8 with its introductory blurb; v0.23 OWNER-RATIFIED 1 November "
+     "the rules it amends, the staged AI handover (HO-2) with its Step 1.1 review, the owner's naming decision LW-1, and H-1 v1r8 with its introductory blurb; v0.23 OWNER-RATIFIED 1 November "
      "2026 (content reviewed in EX_117, EX_119 and EX_121), recording"),
     ('Register v0.23 is installed with the snapshot package, by the document-only procedure, in one commit identified after installation.',
      'Register v0.23 is installed with the snapshot package, by the document-only procedure, in one commit identified after installation. '

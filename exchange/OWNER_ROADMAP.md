@@ -184,7 +184,9 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            experienced ChatGPT reviewer stays throughout. NOW: DOC-11, the Claude handover package
            (register v0.24, H-1 v1r8 and its blurb, the design and the direction document in doc/, six
            review copies), tested by a fresh helper playing the new chat (20 gaps, fixed), then sent to
-           ChatGPT for the Step 1.1 review (EX_133, reply EX_134); every problem resolved; you ratify and
+           ChatGPT for the Step 1.1 review (EX_133); ChatGPT's RECHECK (EX_134: three wording
+           corrections, one editorial item) fixed in EX_135 with your naming decision LW-1
+           (Lotterywest-GOV); ChatGPT's recheck EX_136; every problem resolved; you ratify and
            install DOC-11; you start the new Claude chat; ChatGPT checks its first replies and suggests
            targeted questions, which the new chat answers blind; then, ONLY after that check and your
            explicit go-ahead, MHUP-A code (Fable for the core). A ChatGPT reviewer handover is

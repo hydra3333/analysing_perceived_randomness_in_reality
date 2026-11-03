@@ -2,9 +2,10 @@
 
 The project owner pastes the text below the line into a new Claude chat to start it. Nothing needs attaching:
 the repository is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `main` instead.
-Written by Claude, 3 November 2026, with H-1 v1r8, for the staged Claude handover the owner decided on
-3 November 2026 (HO-2; register v0.24). Use it only after the ChatGPT reviewer chat's review of the handover
-package (Step 1.1) is resolved and DOC-11 is installed. Keep it in step with the handover.
+Written by Claude, 3 November 2026 (corrected 4 November 2026 after the Step 1.1 review), with H-1 v1r8, for the
+staged Claude handover the owner decided on 3 November 2026 (HO-2; register v0.24). Use it only after the ChatGPT
+reviewer chat's review of the handover package (Step 1.1) is resolved and DOC-11 is installed. Keep it in step with
+the handover.
 
 ---
 
@@ -92,8 +93,12 @@ gate. These points are binding (H-1 section 2A).
   11 and the ensembles last.
 
 **Hard rules (binding; nothing overrides them).**
-- Never contact `oz.lotterywest.com` or automate The Lott. No API calls, no browser impersonation, no
-  bot-protection bypass, no new scraper. No lottery-results searches of any kind.
+- The one source of production draw results is **Lotterywest-GOV** (LW-1): Lotterywest-GOV means exclusively the
+  official Western Australian Government Lotterywest website, using HTTPS and the exact hostname
+  `www.lotterywest.wa.gov.au`. No other Lotterywest-branded website, hostname or third-party source is authorised
+  for retrieving production draw results. Never contact `oz.lotterywest.com` (a different Lotterywest-branded
+  site) or automate The Lott. No API calls, no browser impersonation, no bot-protection bypass, no new scraper.
+  No lottery-results searches of any kind.
 - Never display, paste or compute with an outcome for Powerball draw 1577 or later, or Oz Lotto draw 1694 or
   later: they are the sealed holdout.
 - The orphan marker (`transitory_data/poc_runs/UNRESOLVED_ORPHAN.json`): any entry blocks all launches, and only the

@@ -1,0 +1,8 @@
+RATIFIED dry run (date text '4 November 2026'), same builders and base a9e52db; not the final build:
+9d9fde67961d76fcc4823e97ac339c12e8b7e68ba309167652bd2c568f5c81ae  doc/RATIFICATION_REGISTER_v0_24.md
+09e579ba008da0fd55e14ebd9e05d4f9b6c6bef54445fec85ca7bb120632a801  doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md
+f1833da327210c899b5e0bf2e65888c8b8234654bf2272a021f017ac3bca2d19  doc/HANDOVER/Claude_Primary_Handover_H1_v1r8_introductory_blurb.md
+5:**Status:** OWNER-RATIFIED 4 November 2026 with register v0.24 (DOC-11); authoritative once installed. Nothing here grants any run, test, 
+3:**Register version:** v0.24 OWNER-RATIFIED 4 November 2026 (the Claude handover package reviewed in the ChatGPT reviewer chat's Step 1.1 review, EX_133 to EX_136), recording the DOC-10 ins
+OWNER-RATIFIED with this register; installed with DOC-11; `09e579ba008da0fd55e14ebd9e05d4f9b6c6bef54445fec85ca7bb120632a801`; blurb `f1833da327210c899b5e0bf2e65888c8b8234654bf2272a021f017ac3bca2d19`
+no @@ placeholders left: doc/RATIFICATION_REGISTER_v0_24.md:0 doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md:0 doc/HANDOVER/Claude_Primary_Handover_H1_v1r8_introductory_blurb.md:0 

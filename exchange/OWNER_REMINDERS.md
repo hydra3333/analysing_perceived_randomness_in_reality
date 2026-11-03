@@ -261,6 +261,18 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: raise the ChatGPT reviewer handover with the owner only after the new Claude chat has resumed
   normal work reliably, or if the reviewer chat nears its own limit.
 
+## R-017  The name Lotterywest-GOV (LW-1) in the documents not yet edited
+
+- Asked: the owner, 4 November 2026 (wording agreed with the ChatGPT reviewer chat).
+- Status: OPEN (wording only; the rule is unchanged).
+- What: "Lotterywest-GOV means exclusively the official Western Australian Government Lotterywest website,
+  using HTTPS and the exact hostname www.lotterywest.wa.gov.au. No other Lotterywest-branded website,
+  hostname or third-party source is authorised for retrieving production draw results." Register v0.24,
+  H-1 v1r8 and its blurb use it (DOC-11). The documents not edited now read "Lotterywest" as Lotterywest-GOV.
+- When: the Claude Code rulebook's rule 1 with MHUP-A's rulebook change (register v0.24, future action 1);
+  the design and the direction document at their next editions (future action 6); H-2 with the later
+  reviewer handover (R-016).
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in

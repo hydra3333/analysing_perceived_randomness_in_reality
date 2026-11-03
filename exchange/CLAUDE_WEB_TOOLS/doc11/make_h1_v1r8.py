@@ -285,6 +285,38 @@ FIX += [
  ("This proves the tools and the workspace before any change.",
   "This proves the tools and the workspace before any change. The owner's authorisation of normal work does not by itself cover E2R-T12 (it starts worker processes): ask for that run context, as section 7.4 says, or run the suite without it and say so."),
 ]
+# ---- Step 1.1 corrections (EX_134 C01-C03, O01) and the owner's naming decision LW-1 (4 Nov 2026)
+LW1 = ('**Lotterywest-GOV means exclusively the official Western Australian Government Lotterywest website, using HTTPS '
+       'and the exact hostname `www.lotterywest.wa.gov.au`. No other Lotterywest-branded website, hostname or third-party '
+       'source is authorised for retrieving production draw results.**')
+FIX += [
+ ("**Version:** v1r8, 3 November 2026 (Adelaide, UTC+10:30).",
+  "**Version:** v1r8, 3 November 2026 (Adelaide, UTC+10:30), corrected 4 November 2026 after the reviewer's Step 1.1 review (EX_134 C01 to C03 and O01) and for the owner's naming decision LW-1."),
+ # C01 + LW-1
+ ("- **Source:** Lotterywest's own results-search page on `www.lotterywest.wa.gov.au`, read by an honest, unmodified headless browser with >= 2 s pauses. **MHUP-C03 (owner, 3 November 2026):** its published results are official and trusted as they stand; no second-source check of a new draw in production; the updater v0.2 checks the browser's final URL is exactly `https://www.lotterywest.wa.gov.au` and has no fallback of any kind (design section 7).",
+  "- **Source: Lotterywest-GOV** (decision LW-1, owner, 4 November 2026): " + LW1 + " Where this project's earlier documents (the ratified design and the direction document among them) name \"Lotterywest\" as the results source, they mean Lotterywest-GOV; `oz.lotterywest.com` is a different Lotterywest-branded site and is never contacted. The updater reads Lotterywest-GOV's own results-search page with an honest, unmodified headless browser with >= 2 s pauses. **MHUP-C03 (owner, 3 November 2026):** Lotterywest-GOV's published results are official and trusted as they stand; no second-source check of a new draw in production. This single-source decision waives none of the updater's other checks: overlap with every draw already held, consecutive numbering, dates, the closed grammar, the ledger chain and provenance. **The updater v0.2 checks that the browser's final URL after page load uses HTTPS and has hostname exactly `www.lotterywest.wa.gov.au`; the path and query may identify the selected Lotterywest-GOV results-search page. No other origin, redirect destination, mirror, API or fallback is accepted. The browser can already have followed a redirect before this check, so the check is a refusal before parsing or writing, not proof that an untrusted host was never contacted** (design section 7, A6; EX_134 C01)."),
+ # C03
+ ("Powerball 1587 and 1588 are ordinary post-holdout draws the same chat saw, and when the catch-up (MH-1) scores them those two catch-up scores carry the same flag (flagged draws remain fully valid and counted, no gap; the flag is information only); until then",
+  "Powerball 1587 and 1588 are ordinary post-holdout draws the same chat saw. **The weekly chronological pass (MH-1's catch-up pass) evaluates Powerball 1587 and 1588 with their exposure flags, regardless of evidence classification. For variants released on 31 October 2026, those evaluations are development evidence, not the `CATCH_UP` tier; later revisions are classified by their own release records. The flag is independent of classification, and the draws remain fully scored and counted** (no gap; the flag is information only; EX_134 C03; register v0.24 keeps HX-2's own words as history and gives this reading); until then"),
+ # O01
+ ("DOC-10 because it also replaced files outside `doc/` and `review/`, DOC-11 because it carries the handover a new chat starts from (`README.md`, `.gitattributes`, the Claude Code rulebook); a small",
+  "DOC-10 because it changed files outside `doc/` and `review/` (`README.md`, `.gitattributes`, the Claude Code rulebook); DOC-11 because the owner wanted a checked handover installation (it adds only files under `doc/` and `review/`); a small"),
+ # C02 and LW-1 in the decisions summary
+ ("three labels PROSPECTIVE, CATCH-UP and development evidence; nothing scored twice;",
+  "three labels PROSPECTIVE, CATCH-UP and development evidence; no duplicate routine accepted score for a forecast under the same scoring contract (a newly identified scoring run for a corrected scorer or a new measure is permitted under ST-1, preserves the earlier accepted score and has its own identity and provenance; EX_134 C02; this permits no re-scoring of any real run now);"),
+ ("**MHUP-C03** (Lotterywest trusted; exact origin)",
+  "**MHUP-C03** (Lotterywest-GOV's results trusted as official; the exact HTTPS host checked; the other checks kept)"),
+ ("**Q7 is OPEN** (whether the display restriction on holdout draws is relaxed after Mode H; until decided, nothing changes).",
+  "**Q7 is OPEN** (whether the display restriction on holdout draws is relaxed after Mode H; until decided, nothing changes). **LW-1** (owner, 4 November 2026): the name Lotterywest-GOV for the one results source (section 5.1)."),
+ # EX numbers of the Step 1.1 review
+ ("risks of misunderstanding (EX_133; reply EX_134), and every problem it finds is resolved",
+  "risks of misunderstanding (EX_133; RECHECK EX_134; the corrections EX_135; the reviewer's recheck EX_136), and every problem it finds is resolved"),
+ ("At this edition the last committed number is EX_132; the Step 1.1 review of the Claude handover package is planned as EX_133 with the reviewer's reply EX_134 (EX_132 offered EX_133 for an optional reply; if that number was used, the request took the next free one).",
+  "The Step 1.1 review of the Claude handover package used EX_133 to EX_136 (the package, the reviewer's RECHECK, the corrections with LW-1, the reviewer's recheck); the DOC-11 install may be recorded under a later number."),
+ ("- **Waiting on the reviewer:** the Step 1.1 review of the complete Claude handover package (EX_133; reply EX_134), then, after the switch, its assessment of the new chat's first replies (HO-2).",
+  {'CANDIDATE': "- **Waiting on the reviewer:** the Step 1.1 review of the complete Claude handover package (EX_133; RECHECK EX_134; the corrections EX_135; the recheck EX_136), then, after the switch, its assessment of the new chat's first replies (HO-2).",
+   'RATIFIED': "- **Waiting on the reviewer:** after the switch, its assessment of the new chat's first replies (HO-2). The Step 1.1 review of this package is complete (EX_133 the package; EX_134 RECHECK, three corrections and one editorial item; EX_135 the corrections and the owner's naming decision LW-1; EX_136 the reviewer's recheck); the owner then ratified and installed DOC-11."}[status]),
+]
 for _o, _n in FIX:
     rep(_o, _n)
 
