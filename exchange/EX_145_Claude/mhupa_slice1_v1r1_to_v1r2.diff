@@ -1,0 +1,220 @@
+# MHUP-A review slice 1: the diff of src/ and tests/ (.py) from the EX_143 candidate (v1r1) to this candidate (v1r2).
+diff -ruN a/src/methods/_common/master_versions.py b/src/methods/_common/master_versions.py
+--- a/src/methods/_common/master_versions.py
++++ b/src/methods/_common/master_versions.py
+@@ -31,6 +31,7 @@
+ from dataclasses import dataclass
+ from datetime import datetime
+ import hashlib
++import io
+ import json
+ from pathlib import Path
+ import re
+@@ -93,19 +94,28 @@
+ 
+ def _records(raw: bytes) -> list[dict]:
+     """The ledger's physical lines as records: ASCII, a line ending on every line, no blank line, one CSV record per
+-    physical line (a quoted line break is a refusal), the exact header, every record with every column."""
++    physical line (a quoted line break is a refusal), the exact header, every record with every column, and every line
++    exactly as the updater's csv writer renders its fields (strict parsing, then a canonical round trip: an unclosed
++    or stray quote, or non-minimal quoting, refuses; EX_144 B03r1)."""
+     try:
+         text = raw.decode('ascii')
+     except UnicodeDecodeError:
+         raise LedgerRefused('ledger is not ASCII') from None
++    text = text.replace('\r\n', '\n')                       # CRLF (the updater's) or LF; a lone CR stays in its line
+     if not text.endswith('\n'):
+         raise LedgerRefused('ledger does not end with a line ending (truncated?)')
+-    physical = text[:-1].replace('\r\n', '\n').split('\n')
++    physical = text[:-1].split('\n')
+     if any(line.strip() == '' for line in physical):
+         raise LedgerRefused('ledger has a blank line')
+-    parsed = list(csv.reader(physical))
++    try:
++        parsed = list(csv.reader(physical, strict=True))
++    except csv.Error as exc:
++        raise LedgerRefused(f'ledger has a malformed CSV record: {exc}') from None
+     if len(parsed) != len(physical):
+         raise LedgerRefused('ledger has a record spanning more than one physical line')
++    for line, fields in zip(physical, parsed):
++        if _render(fields) != line:
++            raise LedgerRefused('ledger has a record that the updater\'s csv writer would not have rendered so')
+     if tuple(parsed[0]) != LEDGER_COLUMNS:
+         raise LedgerRefused('ledger header is not the updater\'s LEDGER_COLUMNS')
+     if len(parsed) == 1:
+@@ -118,6 +128,13 @@
+     return rows
+ 
+ 
++def _render(fields: list[str]) -> str:
++    """The one rendering of a record the updater's csv.DictWriter (the default dialect, minimal quoting) produces."""
++    out = io.StringIO()
++    csv.writer(out, lineterminator='').writerow(fields)
++    return out.getvalue()
++
++
+ def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
+     """The closed grammar (design 3.2 rule 1), applied in full to every ledger. Returns the rows, version 1 first.
+     Refuses on any break."""
+diff -ruN a/src/methods/_common/owner_records.py b/src/methods/_common/owner_records.py
+--- a/src/methods/_common/owner_records.py
++++ b/src/methods/_common/owner_records.py
+@@ -306,19 +306,22 @@
+ 
+ def read_jsonl(path: Path) -> tuple[list[dict], bool]:
+     """Every complete JSON line of a ledger as a dict; a final line without its newline is ignored and reported
+-    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse. A ledger that was never created
+-    reads as empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
++    (design 6.5's torn-last-line rule). Non-dict, undecodable or blank complete lines refuse (a newline-terminated
++    blank line is not a torn fragment; EX_144 B02r1). A ledger that was never created, or exists empty, reads as
++    empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
+     if absent(path):
+         return [], False
+     if not _plain_file(path):
+         raise RecordRefused(f'{path.name}: exists but is not a plain file')
+     raw = path.read_bytes()
+-    torn = bool(raw) and not raw.endswith(b'\n')
+-    body = raw.rsplit(b'\n', 1)[0] if torn else raw
++    if not raw:
++        return [], False                                  # an existing empty ledger: created, nothing written yet
++    torn = not raw.endswith(b'\n')
++    complete = raw[:raw.rfind(b'\n') + 1] if torn else raw    # every newline-terminated line; the fragment left out
+     out = []
+-    for line in body.split(b'\n'):
++    for line in complete.split(b'\n')[:-1]:
+         if not line:
+-            continue
++            raise RecordRefused(f'{path.name}: a blank complete line (never written by a ledger writer)')   # EX_144 B02r1
+         try:
+             rec = json.loads(line.decode('ascii'))
+         except (ValueError, UnicodeDecodeError):
+diff -ruN a/tests/mhupa_fixtures.py b/tests/mhupa_fixtures.py
+--- a/tests/mhupa_fixtures.py
++++ b/tests/mhupa_fixtures.py
+@@ -7,7 +7,7 @@
+ import json
+ from pathlib import Path
+ 
+-from ledger_fixture import LEDGER_COLUMNS, T0, init_row, utc_at, write_ledger      # noqa: F401  (re-exported)
++from ledger_fixture import LEDGER_COLUMNS, T0, init_row, ledger_bytes, utc_at, write_ledger      # noqa: F401  (re-exported)
+ from test_e6_beta_bernoulli import varied_row, write_varied_master
+ from _common.contract_records import canonical, record_digest
+ from _common.game_draws_reader import header_for
+diff -ruN a/tests/test_mhupa_gates.py b/tests/test_mhupa_gates.py
+--- a/tests/test_mhupa_gates.py
++++ b/tests/test_mhupa_gates.py
+@@ -28,7 +28,7 @@
+ import _common.contract_registry as REG
+ import _common.contract_runner as CR
+ import _common.contract_vocab as V
+-from _common.contract_records import record_digest, validate_run_request
++from _common.contract_records import canonical, record_digest, validate_run_request
+ from _common.contract_registry import InstalledRegistry
+ from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
+ from _common import owner_records as OR
+@@ -249,6 +249,16 @@
+         # the right ticket: admitted (c: plan pin, request pin and the ledger's current row all version 2)
+         X.open_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
+         CD.dispatch_gate(good)
++        # EX_144 B02r1: a blank complete line in the attempts ledger STOPs the run before anything is published
++        ledger_bytes = self.attempts(game).read_bytes()
++        for raw in (b'\n', ledger_bytes + b'\n', b'\n' + ledger_bytes):
++            self.attempts(game).write_bytes(raw)
++            self.refused(good, 'BINDING_NOT_RESOLVED')
++            with self.assertRaises(CD.DispatchRefused):
++                self.launch(good)
++        self.assertFalse(OR.mode_h_runs_root(self.proj).exists())
++        self.attempts(game).write_bytes(ledger_bytes)
++        CD.dispatch_gate(good)
+         # EX_142 B02: a batch attempts ledger that exists as a symlink is never read as 'no tickets'
+         real = self.attempts(game).with_name('elsewhere.jsonl')
+         self.attempts(game).rename(real)
+@@ -439,6 +449,16 @@
+         ledger.write_bytes(b'\xff\xfe not a ledger\n')
+         self.refused(req, 'BINDING_NOT_RESOLVED')                         # undecodable
+         ledger.unlink()
++        X.write_freeze_line(self.proj, game, target + 1)                  # a valid line for another target ...
++        valid = ledger.read_bytes()
++        for raw in (b'\n', valid + b'\n', b'\n' + valid):              # ... with a blank complete line: refused (EX_144 B02r1)
++            ledger.write_bytes(raw)
++            self.refused(req, 'BINDING_NOT_RESOLVED')
++        ledger.write_bytes(valid)
++        CD.dispatch_gate(req)                                             # the other target's line alone: admitted
++        ledger.write_bytes(b'')
++        CD.dispatch_gate(req)                                             # an existing empty ledger: admitted
++        ledger.unlink()
+         ledger.mkdir()
+         self.refused(req, 'BINDING_NOT_RESOLVED')                         # a folder of that name
+         ledger.rmdir()
+@@ -461,6 +481,11 @@
+         OR.session_attempts_path(self.proj, game, other).mkdir()
+         self.refused(req, 'BINDING_NOT_RESOLVED')
+         OR.session_attempts_path(self.proj, game, other).rmdir()
++        OR.session_attempts_path(self.proj, game, other).write_bytes(b'\n')          # blank-only (EX_144 B02r1)
++        self.refused(req, 'BINDING_NOT_RESOLVED')
++        OR.session_attempts_path(self.proj, game, other).write_bytes(real.read_bytes() + b'\n')
++        self.refused(req, 'BINDING_NOT_RESOLVED')
++        OR.session_attempts_path(self.proj, game, other).unlink()
+         real.unlink()
+         CD.dispatch_gate(req)
+         # (a) the master grows to version 3 after the session froze version 2: a request pinning the new current row
+@@ -584,6 +609,18 @@
+             self.assertEqual(OR.tickets(path, scope_kind='MODE_H_BATCH', scope_id=BATCH, game_id='POWERBALL'), [t])
+             with self.assertRaises(OR.RecordRefused):                     # another scope's ticket is refused, not ignored
+                 OR.tickets(path, scope_kind='WEEKLY_SESSION', scope_id=BATCH, game_id='POWERBALL')
++            # EX_144 B02r1: a blank complete line is never absence (and is not a torn fragment)
++            good = canonical(t)
++            for raw in (b'\n', good + b'\n', b'\n' + good, good + b'\n' + good, good + b'\n' + good + b'{"sch'):
++                path.write_bytes(raw)
++                with self.assertRaises(OR.RecordRefused, msg=raw):
++                    OR.read_jsonl(path)
++            path.write_bytes(b'')                                          # an existing empty ledger: created, nothing yet
++            self.assertEqual(OR.read_jsonl(path), ([], False))
++            path.write_bytes(good + b'{"sch')                              # the allowed unterminated final fragment
++            self.assertEqual(OR.read_jsonl(path), ([t], True))
++            path.unlink()                                                  # genuinely absent
++            self.assertEqual(OR.read_jsonl(path), ([], False))
+             with self.assertRaises(ValueError):
+                 OR.ticket('CLOSED', scope_kind='MODE_H_BATCH', scope_id=BATCH, game_id='POWERBALL', method_id='E_1',
+                           variant_id='V', method_revision='3', target_draw_number=1, run_id=RUN, utc='2026-11-14T10:00:00Z')
+diff -ruN a/tests/test_mhupa_master_versions.py b/tests/test_mhupa_master_versions.py
+--- a/tests/test_mhupa_master_versions.py
++++ b/tests/test_mhupa_master_versions.py
+@@ -133,6 +133,15 @@
+             MV.parse_ledger(raw.replace(b'fixture INIT', b'fixture \xe9', 1), 'POWERBALL')
+         MV.parse_ledger(raw, 'POWERBALL')                    # and the unbroken ledger still parses
+         MV.parse_ledger(raw.replace(b'\r\n', b'\n'), 'POWERBALL')   # LF line endings are accepted too
++        # EX_144 B03r1: the CSV lexical boundary. A note the updater's writer would quote (a comma) is accepted when
++        # quoted as the writer quotes it; an unclosed quote, a stray quote after a quoted field, a quote inside an
++        # unquoted field and unnecessary quoting are each refused, on the INIT row and on a later row.
++        MV.parse_ledger(raw.replace(b'fixture INIT', b'"from grab, verified"', 1), 'POWERBALL')
++        MV.parse_ledger(raw.replace(b'fixture UPDATE', b'"he said ""x"", then"', 1), 'POWERBALL')
++        for row_note in (b'fixture INIT', b'fixture UPDATE'):
++            for bad in (b'"unfinished note', b'"closed" stray', b'bad"quote', b'"needless"'):
++                with self.assertRaises(MV.LedgerRefused, msg=(row_note, bad)):
++                    MV.parse_ledger(raw.replace(row_note, bad, 1), 'POWERBALL')
+ 
+     def test_a_one_row_ledger_binds_the_whole_file_and_the_init_record(self):
+         """A version-1-only ledger: the whole master must hash to row 1 (today's check, unchanged), and the INIT
+@@ -155,6 +164,12 @@
+         X.write_ledger(self.ledger, [dict(self.rows[0], utc='fixture')])
+         with self.assertRaises(MV.LedgerRefused):
+             MV.load_verified_source(self.root, 'POWERBALL')
++        good_one_row = X.ledger_bytes([dict(self.rows[0])])
++        self.ledger.write_bytes(good_one_row.replace(b'fixture INIT\r\n', b'"unfinished note\r\n'))   # EX_144 B03r1
++        with self.assertRaises(MV.LedgerRefused):
++            MV.load_verified_source(self.root, 'POWERBALL')
++        self.ledger.write_bytes(good_one_row.replace(b'fixture INIT\r\n', b'"from grab, verified"\r\n'))
++        MV.load_verified_source(self.root, 'POWERBALL')                 # a writer-style quoted note is accepted
+         lines = v1.split(b'\n')
+         ev = json.loads(read(self.evidence))
+         for bad_master in (b'\n'.join(lines[:-2]) + b'\n', v1 + lines[-2] + b'\n',
+@@ -379,7 +394,7 @@
+         for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
+             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column
+         self.assertEqual(mv.count('csv.reader('), 1)                  # the one CSV parse is the ledger's physical lines
+-        self.assertIn('csv.reader(physical)', mv)
++        self.assertIn('csv.reader(physical', mv)
+ 
+ 
+ if __name__ == '__main__':

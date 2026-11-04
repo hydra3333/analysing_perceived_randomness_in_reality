@@ -28,7 +28,7 @@ import _common.contract_dispatch as CD
 import _common.contract_registry as REG
 import _common.contract_runner as CR
 import _common.contract_vocab as V
-from _common.contract_records import record_digest, validate_run_request
+from _common.contract_records import canonical, record_digest, validate_run_request
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common import owner_records as OR
@@ -249,6 +249,16 @@ class ModeHBinding(Project):
         # the right ticket: admitted (c: plan pin, request pin and the ledger's current row all version 2)
         X.open_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
         CD.dispatch_gate(good)
+        # EX_144 B02r1: a blank complete line in the attempts ledger STOPs the run before anything is published
+        ledger_bytes = self.attempts(game).read_bytes()
+        for raw in (b'\n', ledger_bytes + b'\n', b'\n' + ledger_bytes):
+            self.attempts(game).write_bytes(raw)
+            self.refused(good, 'BINDING_NOT_RESOLVED')
+            with self.assertRaises(CD.DispatchRefused):
+                self.launch(good)
+        self.assertFalse(OR.mode_h_runs_root(self.proj).exists())
+        self.attempts(game).write_bytes(ledger_bytes)
+        CD.dispatch_gate(good)
         # EX_142 B02: a batch attempts ledger that exists as a symlink is never read as 'no tickets'
         real = self.attempts(game).with_name('elsewhere.jsonl')
         self.attempts(game).rename(real)
@@ -439,6 +449,16 @@ class SessionBinding(Project):
         ledger.write_bytes(b'\xff\xfe not a ledger\n')
         self.refused(req, 'BINDING_NOT_RESOLVED')                         # undecodable
         ledger.unlink()
+        X.write_freeze_line(self.proj, game, target + 1)                  # a valid line for another target ...
+        valid = ledger.read_bytes()
+        for raw in (b'\n', valid + b'\n', b'\n' + valid):              # ... with a blank complete line: refused (EX_144 B02r1)
+            ledger.write_bytes(raw)
+            self.refused(req, 'BINDING_NOT_RESOLVED')
+        ledger.write_bytes(valid)
+        CD.dispatch_gate(req)                                             # the other target's line alone: admitted
+        ledger.write_bytes(b'')
+        CD.dispatch_gate(req)                                             # an existing empty ledger: admitted
+        ledger.unlink()
         ledger.mkdir()
         self.refused(req, 'BINDING_NOT_RESOLVED')                         # a folder of that name
         ledger.rmdir()
@@ -461,6 +481,11 @@ class SessionBinding(Project):
         OR.session_attempts_path(self.proj, game, other).mkdir()
         self.refused(req, 'BINDING_NOT_RESOLVED')
         OR.session_attempts_path(self.proj, game, other).rmdir()
+        OR.session_attempts_path(self.proj, game, other).write_bytes(b'\n')          # blank-only (EX_144 B02r1)
+        self.refused(req, 'BINDING_NOT_RESOLVED')
+        OR.session_attempts_path(self.proj, game, other).write_bytes(real.read_bytes() + b'\n')
+        self.refused(req, 'BINDING_NOT_RESOLVED')
+        OR.session_attempts_path(self.proj, game, other).unlink()
         real.unlink()
         CD.dispatch_gate(req)
         # (a) the master grows to version 3 after the session froze version 2: a request pinning the new current row
@@ -584,6 +609,18 @@ class TicketsAndRecords(unittest.TestCase):
             self.assertEqual(OR.tickets(path, scope_kind='MODE_H_BATCH', scope_id=BATCH, game_id='POWERBALL'), [t])
             with self.assertRaises(OR.RecordRefused):                     # another scope's ticket is refused, not ignored
                 OR.tickets(path, scope_kind='WEEKLY_SESSION', scope_id=BATCH, game_id='POWERBALL')
+            # EX_144 B02r1: a blank complete line is never absence (and is not a torn fragment)
+            good = canonical(t)
+            for raw in (b'\n', good + b'\n', b'\n' + good, good + b'\n' + good, good + b'\n' + good + b'{"sch'):
+                path.write_bytes(raw)
+                with self.assertRaises(OR.RecordRefused, msg=raw):
+                    OR.read_jsonl(path)
+            path.write_bytes(b'')                                          # an existing empty ledger: created, nothing yet
+            self.assertEqual(OR.read_jsonl(path), ([], False))
+            path.write_bytes(good + b'{"sch')                              # the allowed unterminated final fragment
+            self.assertEqual(OR.read_jsonl(path), ([t], True))
+            path.unlink()                                                  # genuinely absent
+            self.assertEqual(OR.read_jsonl(path), ([], False))
             with self.assertRaises(ValueError):
                 OR.ticket('CLOSED', scope_kind='MODE_H_BATCH', scope_id=BATCH, game_id='POWERBALL', method_id='E_1',
                           variant_id='V', method_revision='3', target_draw_number=1, run_id=RUN, utc='2026-11-14T10:00:00Z')

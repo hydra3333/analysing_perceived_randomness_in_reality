@@ -201,7 +201,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            grammar for every ledger - and C01-C03), your C01 decision (effective_date = the integrated
            package's preparation date; the release record alone dates a release), the fixes as
            candidate v1r1 (507 tests, both Pythons; 87 mutants, 80 caught, 7 equivalent, 0 survived)
-           sent as EX_143. NOW: ChatGPT's recheck of slice 1 (EX_144); then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
+           sent as EX_143; ChatGPT's EX_144 (B01 PASS, two narrow residuals: blank JSONL lines and
+           strict CSV quoting) fixed as candidate v1r2 and sent as EX_145 (507 tests, both Pythons; 90
+           mutants, 81 caught, 9 equivalent, 0 survived); the reviewer's slice 2 watchpoints are reminder
+           R-019. NOW: ChatGPT's recheck of slice 1 (EX_146); then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
            the records tool, process_check.py, the updater v0.2, the launchers, the freeze-before-
            outcome rule, the rulebook) and its review; then the integrated install package with its
            rehearsals and T016. Installing it, its Windows rehearsal and MHUP-B each wait for your

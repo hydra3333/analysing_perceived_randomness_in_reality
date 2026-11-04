@@ -133,6 +133,15 @@ class Grammar(unittest.TestCase):
             MV.parse_ledger(raw.replace(b'fixture INIT', b'fixture \xe9', 1), 'POWERBALL')
         MV.parse_ledger(raw, 'POWERBALL')                    # and the unbroken ledger still parses
         MV.parse_ledger(raw.replace(b'\r\n', b'\n'), 'POWERBALL')   # LF line endings are accepted too
+        # EX_144 B03r1: the CSV lexical boundary. A note the updater's writer would quote (a comma) is accepted when
+        # quoted as the writer quotes it; an unclosed quote, a stray quote after a quoted field, a quote inside an
+        # unquoted field and unnecessary quoting are each refused, on the INIT row and on a later row.
+        MV.parse_ledger(raw.replace(b'fixture INIT', b'"from grab, verified"', 1), 'POWERBALL')
+        MV.parse_ledger(raw.replace(b'fixture UPDATE', b'"he said ""x"", then"', 1), 'POWERBALL')
+        for row_note in (b'fixture INIT', b'fixture UPDATE'):
+            for bad in (b'"unfinished note', b'"closed" stray', b'bad"quote', b'"needless"'):
+                with self.assertRaises(MV.LedgerRefused, msg=(row_note, bad)):
+                    MV.parse_ledger(raw.replace(row_note, bad, 1), 'POWERBALL')
 
     def test_a_one_row_ledger_binds_the_whole_file_and_the_init_record(self):
         """A version-1-only ledger: the whole master must hash to row 1 (today's check, unchanged), and the INIT
@@ -155,6 +164,12 @@ class Grammar(unittest.TestCase):
         X.write_ledger(self.ledger, [dict(self.rows[0], utc='fixture')])
         with self.assertRaises(MV.LedgerRefused):
             MV.load_verified_source(self.root, 'POWERBALL')
+        good_one_row = X.ledger_bytes([dict(self.rows[0])])
+        self.ledger.write_bytes(good_one_row.replace(b'fixture INIT\r\n', b'"unfinished note\r\n'))   # EX_144 B03r1
+        with self.assertRaises(MV.LedgerRefused):
+            MV.load_verified_source(self.root, 'POWERBALL')
+        self.ledger.write_bytes(good_one_row.replace(b'fixture INIT\r\n', b'"from grab, verified"\r\n'))
+        MV.load_verified_source(self.root, 'POWERBALL')                 # a writer-style quoted note is accepted
         lines = v1.split(b'\n')
         ev = json.loads(read(self.evidence))
         for bad_master in (b'\n'.join(lines[:-2]) + b'\n', v1 + lines[-2] + b'\n',
@@ -379,7 +394,7 @@ class Static(unittest.TestCase):
         for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column
         self.assertEqual(mv.count('csv.reader('), 1)                  # the one CSV parse is the ledger's physical lines
-        self.assertIn('csv.reader(physical)', mv)
+        self.assertIn('csv.reader(physical', mv)
 
 
 if __name__ == '__main__':

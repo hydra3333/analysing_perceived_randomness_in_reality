@@ -7,7 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from ledger_fixture import LEDGER_COLUMNS, T0, init_row, utc_at, write_ledger      # noqa: F401  (re-exported)
+from ledger_fixture import LEDGER_COLUMNS, T0, init_row, ledger_bytes, utc_at, write_ledger      # noqa: F401  (re-exported)
 from test_e6_beta_bernoulli import varied_row, write_varied_master
 from _common.contract_records import canonical, record_digest
 from _common.game_draws_reader import header_for

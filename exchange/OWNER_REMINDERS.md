@@ -312,6 +312,26 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: register v0.25 records all of them (with MHUP-A's round); each "goes into" item at its document's
   next authorised edition.
 
+## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142, EX_144)
+
+- Asked: the ChatGPT reviewer, EX_144 sections 2 and 3 (5 November 2026), accepted by Claude in EX_145.
+- Status: OPEN until slice 2's code and tests carry them; checked again at the integrated package's review.
+- What:
+  (a) The admitted first update and the study version advance (design 4.1, 5.1). Slice 1's dispatch gate
+      checks only that a Mode H plan's frozen version equals the opening record's freeze_version + 1 and that
+      the request pins it. That is not proof of a complete admitted first update. Slice 2's plan writer
+      (Method_Walk_Forward.py --mode H), the updater v0.2's first-update admission (the UPDATE must reach at
+      least holdout_last), every Mode H `run` check and the scorer must enforce the complete-range rule and
+      read the study version advance record where one exists, each with synthetic negative oracles (a first
+      UPDATE stopping short; a plan at a version that is not v_a or v_a'; an advance record present).
+  (b) The freeze line's full shape (design 6.5). Slice 1's forecast_ledger_lines checks a known schema and a
+      whole-number target only. When slice 2 defines the FREEZE_LINE_V1 contract and its writer, the reader
+      must validate every required field before a line counts as present evidence or closure, and a known-
+      schema but malformed line must refuse, never count as valid unrelated evidence; oracles accordingly.
+  (c) The FINAL_NEXT_DRAW / CATCH_UP binding-rule mutant, equivalent in slice 1 because those modes are
+      unreachable, is re-run when slice 2 makes them producible.
+- When: slice 2's development; its handback names where each is tested.
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in

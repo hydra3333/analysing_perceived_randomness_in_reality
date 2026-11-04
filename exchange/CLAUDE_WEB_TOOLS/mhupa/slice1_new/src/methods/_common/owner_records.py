@@ -306,19 +306,22 @@ def mode_h_sealed(root: Path, game_id: str) -> bool:
 
 def read_jsonl(path: Path) -> tuple[list[dict], bool]:
     """Every complete JSON line of a ledger as a dict; a final line without its newline is ignored and reported
-    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse. A ledger that was never created
-    reads as empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
+    (design 6.5's torn-last-line rule). Non-dict, undecodable or blank complete lines refuse (a newline-terminated
+    blank line is not a torn fragment; EX_144 B02r1). A ledger that was never created, or exists empty, reads as
+    empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
     if absent(path):
         return [], False
     if not _plain_file(path):
         raise RecordRefused(f'{path.name}: exists but is not a plain file')
     raw = path.read_bytes()
-    torn = bool(raw) and not raw.endswith(b'\n')
-    body = raw.rsplit(b'\n', 1)[0] if torn else raw
+    if not raw:
+        return [], False                                  # an existing empty ledger: created, nothing written yet
+    torn = not raw.endswith(b'\n')
+    complete = raw[:raw.rfind(b'\n') + 1] if torn else raw    # every newline-terminated line; the fragment left out
     out = []
-    for line in body.split(b'\n'):
+    for line in complete.split(b'\n')[:-1]:
         if not line:
-            continue
+            raise RecordRefused(f'{path.name}: a blank complete line (never written by a ledger writer)')   # EX_144 B02r1
         try:
             rec = json.loads(line.decode('ascii'))
         except (ValueError, UnicodeDecodeError):

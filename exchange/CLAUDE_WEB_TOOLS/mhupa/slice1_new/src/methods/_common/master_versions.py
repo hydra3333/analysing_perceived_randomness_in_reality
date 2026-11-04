@@ -31,6 +31,7 @@ import csv
 from dataclasses import dataclass
 from datetime import datetime
 import hashlib
+import io
 import json
 from pathlib import Path
 import re
@@ -93,19 +94,28 @@ def _utc_instant(text: object, where: str) -> datetime:
 
 def _records(raw: bytes) -> list[dict]:
     """The ledger's physical lines as records: ASCII, a line ending on every line, no blank line, one CSV record per
-    physical line (a quoted line break is a refusal), the exact header, every record with every column."""
+    physical line (a quoted line break is a refusal), the exact header, every record with every column, and every line
+    exactly as the updater's csv writer renders its fields (strict parsing, then a canonical round trip: an unclosed
+    or stray quote, or non-minimal quoting, refuses; EX_144 B03r1)."""
     try:
         text = raw.decode('ascii')
     except UnicodeDecodeError:
         raise LedgerRefused('ledger is not ASCII') from None
+    text = text.replace('\r\n', '\n')                       # CRLF (the updater's) or LF; a lone CR stays in its line
     if not text.endswith('\n'):
         raise LedgerRefused('ledger does not end with a line ending (truncated?)')
-    physical = text[:-1].replace('\r\n', '\n').split('\n')
+    physical = text[:-1].split('\n')
     if any(line.strip() == '' for line in physical):
         raise LedgerRefused('ledger has a blank line')
-    parsed = list(csv.reader(physical))
+    try:
+        parsed = list(csv.reader(physical, strict=True))
+    except csv.Error as exc:
+        raise LedgerRefused(f'ledger has a malformed CSV record: {exc}') from None
     if len(parsed) != len(physical):
         raise LedgerRefused('ledger has a record spanning more than one physical line')
+    for line, fields in zip(physical, parsed):
+        if _render(fields) != line:
+            raise LedgerRefused('ledger has a record that the updater\'s csv writer would not have rendered so')
     if tuple(parsed[0]) != LEDGER_COLUMNS:
         raise LedgerRefused('ledger header is not the updater\'s LEDGER_COLUMNS')
     if len(parsed) == 1:
@@ -116,6 +126,13 @@ def _records(raw: bytes) -> list[dict]:
             raise LedgerRefused(f'ledger row {i}: wrong number of fields')
         rows.append(dict(zip(LEDGER_COLUMNS, fields)))
     return rows
+
+
+def _render(fields: list[str]) -> str:
+    """The one rendering of a record the updater's csv.DictWriter (the default dialect, minimal quoting) produces."""
+    out = io.StringIO()
+    csv.writer(out, lineterminator='').writerow(fields)
+    return out.getvalue()
 
 
 def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
