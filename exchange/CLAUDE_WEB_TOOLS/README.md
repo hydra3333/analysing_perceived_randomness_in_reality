@@ -115,3 +115,12 @@ The previous chat's running notes, for reference only; the register, H-1 and the
 | `doc11/build_doc11.py` | `build_doc11.py WORKDIR OUTDIR BASE STATUS [DATE]`: builds H-1 first, then the register with H-1's hashes (RATIFIED), the overlay, the manifest, the verifier from `wf1/verifier_template.py` and `INSTALL_INSTRUCTIONS.md`. REPO is hard-coded at the top. |
 | `doc11/e2e_doc11.sh` | `e2e_doc11.sh REPO PKGDIR WORKDIR`: LF and CRLF happy paths and seven negatives in disposable clones. |
 | `doc11/make_zip.py` | Copy of `exchange/EX_019_Claude/make_zip.py` (deterministic zip with a member list). |
+
+## ho2/ (the staged handover's tools, replacement Claude chat; 4 November 2026)
+
+| Tool | What it does |
+|---|---|
+| `ho2/hashcount.py` | Checks every 64-hex value H-1 quotes against the committed Git blobs (run from a clone; excludes H-1 7.3 and 7.5 by line number, so adjust for a new H-1 edition). |
+| `ho2/make_v03r1.py` | Made the direction v0.3r1 candidate from v0.3 by counted replacements (the pattern for later editions). |
+| `ho2/assemble_ex.py` | `assemble_ex.py DIR NNN BODY`: writes `DIR/EX_NNN_Claude.md` from a body with `@@CONTENTS@@` and `@@TABLE@@`, the member table with both hashes, CRLF, ASCII. Zip with `exchange/EX_019_Claude/make_zip.py DIR OUT MEMBERS flat`. |
+| `ho2/edit_lists.py` | Counted edits to `OWNER_ROADMAP.md` and `OWNER_REMINDERS.md` for EX_139/EX_140 (CRLF kept). |

@@ -1,0 +1,117 @@
+--- doc/Direction_for_operational_procedures_v0_3.md
++++ doc/Direction_for_operational_procedures_v0_3r1.md
+@@ -1,4 +1,4 @@
+-# Direction for the operational procedures, v0.3 (CANDIDATE)
++# Direction for the operational procedures, v0.3r1 (CANDIDATE)
+ 
+ Plain English. First written by the Claude web chat on 2 November 2026 from the owner's part (d) of the
+ stock-take record (STOCKTAKE_2026_11_02), as amended by Responses 3, 3b and 2 and accepted by the owner that
+@@ -7,9 +7,10 @@
+ ratified MHUP-1 design (MHUP-R, 3 November 2026), the owner's naming decision LW-1, and the owner's
+ decisions of 4 November 2026. It keeps the owner's objectives and says plainly where the ratified design
+ delivers them differently or later. It is a direction statement, not a specification: the design and the
+-ratification register hold the exact rules, and they prevail wherever this file is looser.
++ratification register hold the exact rules, and they prevail wherever this file is looser. **v0.3r1** (4 November
++2026) applies the reviewer's focused RECHECK of v0.3 (C01 to C03, O01, O02).
+ 
+-**Status and authority:** CANDIDATE v0.3, for the ChatGPT reviewer chat's content check and the owner's
++**Status and authority:** CANDIDATE v0.3r1, for the ChatGPT reviewer chat's focused recheck and the owner's
+ ratification; v0.2r1 (owner-ratified operational direction, DIR-1, 2 November 2026) stays in force until
+ then. This is not an implementation specification and not permission to run any command, access the holdout
+ or update results. The independently reviewed and owner-ratified designs, the method and process safety
+@@ -77,8 +78,10 @@
+ ## 4. Mode H, the one-time holdout test
+ 
+ - Every released variant forecasts each of the ten sealed holdout draws per game (Powerball 1577-1586,
+-  Oz Lotto 1694-1703), each from the draws before its target; every planned run finishes and is frozen; then
+-  the ten are scored once, and the study is sealed. (ratified: MHUP-Q1 option A, MHUP-R)
++  Oz Lotto 1694-1703), each from the draws before its target. Every planned pair reaches DONE, including a run
++  that fails and is counted as missing; every successfully published forecast is frozen create-only. Only once
++  the whole batch is complete are the ten targets scored once and the study sealed. (ratified: MHUP-Q1 option A,
++  MHUP-R; design 5.2)
+ - The statement Mode H supports: "a locked holdout study: the study plan, the code and the environment were
+   frozen before the holdout was opened; every forecast used only draws before its target; all planned attempts,
+   and every successfully published forecast, were frozen before any scoring process read a holdout outcome."
+@@ -121,8 +124,10 @@
+ 5. At most one open forecast per active variant per game at any time. A newly released revision joins at its
+    next session; its first weekly forecast is the first target frozen after its release. A retired one gets no
+    new forecasts. (ratified: MHUP-R, design 6.3, 6.4)
+-6. If a session is interrupted, running the same command again resumes it where its records left off; nothing
+-   accepted is redone. An interrupted session is always resolved (resumed and finished, or its lock cleared
++6. If a session is interrupted, running the same command again resumes it where its records left off, but only
++   when the project's checks admit a safe resume (no project process still running, the session's lock, an
++   unchanged code closure and a fresh resume token); otherwise it STOPs and the reviewed recovery procedure is
++   followed, so an interruption is never permission to retry. Nothing accepted is redone. An interrupted session is always resolved (resumed and finished, or its lock cleared
+    by the project's checking tool) before any code-changing install, and a session cannot be resumed once the
+    installed code has changed. (ratified: design 6.1, 6.3, Appendix J; owner, 4 Nov 2026)
+ 7. Copy `source_data/` and `results/` to the backup drive; once a month, restore one copy to a scratch folder and
+@@ -150,11 +155,14 @@
+   - from its release onward: the weekly session, from its first frozen target (ratified: MHUP-R, design 6.3);
+   - the draws between the holdout and its release: only by a separately identified development batch
+     (deferred: roadmap 21b; not yet designed);
+-  - the ten holdout draws: never in the weekly session, because Mode H is a one-time study of the cohort
+-    released before it; any later forecasts on them would need a separately reviewed extension (design 6.3;
+-    open: whether the owner wants this).
+-  Until 21b exists, a method released after Mode H has a gap in its record over those draws; every ranking
+-  shows each method's number of draws, and methods are compared on the draws they share.
++  - the ten holdout draws: never in the weekly session, and not by roadmap 21b either, because Mode H is a
++    one-time study of the cohort released before it (design 6.3). Forecasts by a later method for those draws
++    would need a later, separately reviewed extension, if the owner keeps that objective (open); they could
++    only ever be retrospective development evidence: never added to the sealed Mode H family, never given
++    pre-draw standing, and never counted as part of the original holdout cohort.
++  So a method released after Mode H has two gaps in its record: the post-holdout draws before its release
++  (until 21b exists) and the ten holdout draws (unless a later extension is approved). Every ranking shows each
++  method's number of draws, and methods are compared on the draws they share.
+ - Then a new dated ranking report over all current methods and the draws they share. The new method's history
+   before its release is development evidence; its CATCH-UP record starts at its release record's date; its
+   PROSPECTIVE record starts at its first forecast frozen before a deadline. An improved version is a new
+@@ -193,8 +201,11 @@
+ 
+ - Two code packages, each reviewed, rehearsed on Windows and installed by the owner: MHUP-A (the reader for a
+   grown results file, E_1 revision 3, the gates, the study plan and opening tools, Mode H, the updater's small
+-  change) and MHUP-B (the weekly session and the owner's one-page checklist). The updater is not run in any form
+-  before MHUP-A is installed and the first update is separately approved. (ratified: MHUP-R)
++  change) and MHUP-B (the weekly session and the owner's one-page checklist). (ratified: MHUP-R)
++- Before MHUP-A is installed, the updater is not run in any form. After its installation and before Approval 2,
++  the owner runs the required offline `--self-test` under Python 3.15. No real results update is permitted until
++  the owner grants Approval 2 for that game; a STOP is reported and no retry occurs without the owner's new
++  explicit instruction. (ratified: MHUP-R, design 4.4 step 3 and section 7; owner, 4 Nov 2026)
+ - Then, per game and each with the owner's separate approval, Mode H's four steps (section 4). Then the owner
+   decides whether to declare the system developed, which unlocks the weekly session. (ratified: GOAL-1, Q8)
+ - Planning target (owner-agreed, 2 November 2026; not a deadline): Mode H done and the weekly session installed
+@@ -206,9 +217,12 @@
+ 
+ - Open: Q7 (the display rule after Mode H; before the first update); whether a later method should ever
+   forecast the holdout draws (section 7).
+-- Deferred, each its own package and the owner's decision, after WF-1C (roadmap 21b): a report that ranks
+-  across batches by reusing frozen records; a back-history batch for a later method over post-holdout draws;
+-  the retired index.
++- Deferred, each its own package and the owner's decision, after WF-1C (roadmap 21b): a consolidated
++  owner-facing report that ranks across batches by reusing frozen records; a back-history batch for a later
++  method over the post-holdout draws before its release; the retired index. A consolidated report holds the
++  separate evidence families (development, Mode H, CATCH-UP, PROSPECTIVE) as separately labelled views, with
++  sample sizes, exposure windows and matched-draw comparisons; it does not pool them into one score, and no
++  combined statistic is specified here.
+ - The owner's simplicity (KISS) review, after full implementation, only when the owner asks (R-014); the
+   deferred performance study, last, only when the owner activates it (R-006).
+ 
+@@ -234,4 +248,18 @@
+ No owner objective is removed; where the ratified design delivers one differently or later, the section says
+ so.
+ 
+-*End of direction v0.3 (candidate).*
++## Changes in v0.3r1 (the reviewer's focused RECHECK of v0.3, 4 November 2026)
++
++1. C01, section 4: every planned pair reaches DONE, a failed run counted as missing; scoring only once the whole
++   batch is complete (design 5.2); the primary statement in the next bullet unchanged.
++2. C02, section 10: the updater is not run before MHUP-A is installed; the offline self-test under Python 3.15
++   after its installation and before Approval 2; no real update without Approval 2; a STOP is reported and no
++   retry occurs without the owner's explicit instruction.
++3. C03, section 7: roadmap 21b covers only the post-holdout draws before a method's release; the ten holdout
++   draws need a later, separately reviewed extension, and could only ever be retrospective development evidence.
++4. O01, section 11: a consolidated report keeps the evidence families separate; no pooled score.
++5. O02, section 5 step 6: a session resumes only when the checks admit a safe resume; otherwise STOP and the
++   reviewed recovery procedure.
++No other line changed.
++
++*End of direction v0.3r1 (candidate).*

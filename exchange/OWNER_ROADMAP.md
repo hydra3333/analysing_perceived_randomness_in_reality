@@ -2,9 +2,9 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 3 November 2026 (evening): the MHUP-1 design ratified (MHUP-R); DOC-11, the Claude handover
-package, prepared for ChatGPT's Step 1.1 review under your staged handover (HO-2); the code paused.
-Plain-English direction: exchange/Direction_for_operational_procedures_v0_2r1.md (into doc/ with DOC-11);
+Last updated: 4 November 2026 (afternoon): the staged Claude handover (HO-2) COMPLETE; the replacement Claude
+chat accepted and normal work authorised (option (a)); the direction document v0.3r1 installed at dfc2d13.
+Plain-English direction: doc/Direction_for_operational_procedures_v0_3r1.md (v0.2r1 kept as history);
 the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
 ## A few words used below
@@ -187,11 +187,15 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            ChatGPT for the Step 1.1 review (EX_133); ChatGPT's RECHECK (EX_134: three wording
            corrections, one editorial item) fixed in EX_135 with your naming decision LW-1
            (Lotterywest-GOV); ChatGPT's recheck EX_136 PASS; you ratified DOC-11 on 4 November 2026
-           and installed it at 3d4fa3c (verified from GitHub, EX_138). NEXT: you start the new Claude
-           chat with the blurb in doc/HANDOVER/; ChatGPT checks its first replies and suggests
-           targeted questions, which the new chat answers blind; then, ONLY after that check and your
-           explicit go-ahead, MHUP-A code (Fable for the core). A ChatGPT reviewer handover is
-           considered later, separately. The planning dates above are unchanged; FB-1 applies.
+           and installed it at 3d4fa3c (verified from GitHub, EX_138). DONE (4 November 2026): the new
+           Claude chat started; ChatGPT checked its first reply and asked Q1-Q9, answered blind, all
+           PASS; Q9 led to the direction document v0.3r1 (ChatGPT RECHECK, then PASS; ratified and
+           installed by you at dfc2d13); your decisions on retrying after a STOP, interrupted sessions
+           and Q9's E1-E4 (reminder R-018); you declared HO-2 complete and authorised normal work
+           (EX_139, EX_140). NOW: Claude's workspace and the Linux suite, then MHUP-A code (Fable for
+           the core), up to ChatGPT's code review; installing it, its Windows rehearsal and MHUP-B each
+           wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
+           planning dates above are unchanged; FB-1 applies.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
@@ -262,7 +266,11 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 21b. LATER - After WF-1C, two efficiency items from the stock-take (ratified 2 November 2026, not
            before Mode H): a report that ranks across batches by reusing the frozen run records, so
            adding a method no longer needs every other method re-run; and the index for a retired
-           revision's records.
+           revision's records. Added 4 November 2026 (your E1-E3, reminder R-018): the same design
+           gives you one consolidated report with development, Mode H, CATCH-UP and PROSPECTIVE kept
+           separate (no pooled score), checks how the WF-1B report recomputes its figures, and plans a
+           later method's back-history over the post-holdout draws; forecasts by a later method for the
+           ten holdout draws need their own reviewed design and count only as development evidence.
 22. FINAL - Deferred performance study, only after everything else here and under "Later" (all the
            implementation, holdout work and clean-up), and only when you activate it (reminder R-006):
            measure first, then decide whether anything is worth speeding up. Your proposal:
