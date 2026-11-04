@@ -95,14 +95,24 @@ class Grammar(unittest.TestCase):
                     'INIT not the development prefix')
         # each of these breaks ONE rule only (every other cross-row rule still holds), so a redundant check cannot
         # mask the rule under test (the slice's mutation checks plant exactly these defects)
-        self.broken(lambda r: r.__delitem__(slice(1, None)) or r.__setitem__(0, dict(r[0], last_draw=1575, draw_count=432)),
-                    'a one-row ledger whose INIT stops short of the development prefix')
+        self.broken(lambda r: r.__delitem__(slice(1, None)) or r.__setitem__(0, dict(r[0], last_draw=1575, draw_count=432,
+                                                                                      added_count=432, added_last=1575)),
+                    'a one-row ledger whose INIT stops short of the development prefix (its own fields consistent)')
         self.broken(lambda r: r.__setitem__(1, dict(r[1], added_first=1578, added_count=2)),
                     'UPDATE added range starts after the previous last draw (own range and counts consistent)')
         self.broken(lambda r: (r.__setitem__(1, dict(r[1], master_sha256=r[0]['master_sha256'])),
                                r.__setitem__(2, dict(r[2], backup_sha256=r[0]['master_sha256']))),
                     'UPDATE repeats the previous master_sha256 (the next backup agrees)')
-        # a wrong header, a truncated last line and an extra field
+        # EX_142 B03: the universally required fields are required of the INIT row too
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], utc='fixture')), 'INIT utc not an instant')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], utc='')), 'INIT utc missing')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], tool_version='')), 'INIT tool_version empty')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], tool_sha256='')), 'INIT tool_sha256 missing')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], added_count=432)), 'INIT added_count disagrees')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], grab_file='grab_1.csv')), 'INIT with a grab file')
+        self.broken(lambda r: r.__setitem__(0, dict(r[0], backup_sha256='0' * 64)), 'INIT with a backup')
+        # the physical shape: a wrong header, a renamed column, a truncated last line, an extra field, a blank line, a
+        # record spanning two physical lines, a non-ASCII byte (B03)
         X.write_ledger(self.ledger, [dict(r) for r in self.rows])
         raw = read(self.ledger)
         with self.assertRaises(MV.LedgerRefused):
@@ -113,7 +123,16 @@ class Grammar(unittest.TestCase):
             MV.parse_ledger(raw[:-3], 'POWERBALL')
         with self.assertRaises(MV.LedgerRefused):
             MV.parse_ledger(raw[:-2] + b',extra\r\n', 'POWERBALL')
+        with self.assertRaises(MV.LedgerRefused):                      # a blank physical line between rows
+            MV.parse_ledger(raw.replace(b'fixture INIT\r\n', b'fixture INIT\r\n\r\n', 1), 'POWERBALL')
+        with self.assertRaises(MV.LedgerRefused):                      # a blank line at the end
+            MV.parse_ledger(raw + b'\r\n', 'POWERBALL')
+        with self.assertRaises(MV.LedgerRefused):                      # a quoted field spanning two lines
+            MV.parse_ledger(raw.replace(b'fixture INIT\r\n', b'"fixture\r\nINIT"\r\n', 1), 'POWERBALL')
+        with self.assertRaises(MV.LedgerRefused):                      # not ASCII
+            MV.parse_ledger(raw.replace(b'fixture INIT', b'fixture \xe9', 1), 'POWERBALL')
         MV.parse_ledger(raw, 'POWERBALL')                    # and the unbroken ledger still parses
+        MV.parse_ledger(raw.replace(b'\r\n', b'\n'), 'POWERBALL')   # LF line endings are accepted too
 
     def test_a_one_row_ledger_binds_the_whole_file_and_the_init_record(self):
         """A version-1-only ledger: the whole master must hash to row 1 (today's check, unchanged), and the INIT
@@ -126,7 +145,31 @@ class Grammar(unittest.TestCase):
         self.master.write_bytes(v1)
         _raw, rows, _ev = MV.load_verified_source(self.root, 'POWERBALL')
         self.assertEqual([r.version for r in rows], [1])
+        # EX_142 B03: the full grammar and rule 2 apply to a one-row ledger: the old seven-column fixture header, a
+        # placeholder utc, a master one line short or one line long, and a wrong last draw each refuse
+        seven = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\r\n'
+                 f"1,fixture,INIT,{self.rows[0]['master_sha256']},1144,1576,433\r\n").encode('ascii')
+        self.ledger.write_bytes(seven)
+        with self.assertRaises(MV.LedgerRefused):
+            MV.load_verified_source(self.root, 'POWERBALL')
+        X.write_ledger(self.ledger, [dict(self.rows[0], utc='fixture')])
+        with self.assertRaises(MV.LedgerRefused):
+            MV.load_verified_source(self.root, 'POWERBALL')
+        lines = v1.split(b'\n')
         ev = json.loads(read(self.evidence))
+        for bad_master in (b'\n'.join(lines[:-2]) + b'\n', v1 + lines[-2] + b'\n',
+                           b'\n'.join(lines[:-2] + [b'1575' + lines[-2][4:]]) + b'\n'):
+            # the ledger and the INIT record are re-pinned to the bad bytes, so only rule 2's line rules can refuse
+            self.master.write_bytes(bad_master)
+            bad_sha = hashlib.sha256(bad_master).hexdigest()
+            X.write_ledger(self.ledger, [dict(self.rows[0], master_sha256=bad_sha)])
+            self.evidence.write_text(json.dumps(dict(ev, master_sha256=bad_sha)))
+            with self.assertRaises(MV.LedgerRefused):
+                MV.load_verified_source(self.root, 'POWERBALL')
+        self.master.write_bytes(v1)
+        X.write_ledger(self.ledger, [dict(self.rows[0])])
+        self.evidence.write_text(json.dumps(ev))
+        MV.load_verified_source(self.root, 'POWERBALL')
         ev['master_sha256'] = '0' * 64
         self.evidence.write_text(json.dumps(ev))
         with self.assertRaises(MV.LedgerRefused):                      # the INIT record disagrees with row 1
@@ -333,8 +376,10 @@ class Static(unittest.TestCase):
             'src/methods/_common/game_draws_reader.py', 'src/methods/_common/master_versions.py',
             'src/methods/_common/walk_forward.py', 'src/results_master_v0_1.py'])
         mv = (ROOT / 'src' / 'methods' / '_common' / 'master_versions.py').read_text(encoding='ascii')
-        for word in ('import numpy', 'Drawn_', 'csv.reader(', 'simple_rows'):
+        for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column
+        self.assertEqual(mv.count('csv.reader('), 1)                  # the one CSV parse is the ledger's physical lines
+        self.assertIn('csv.reader(physical)', mv)
 
 
 if __name__ == '__main__':

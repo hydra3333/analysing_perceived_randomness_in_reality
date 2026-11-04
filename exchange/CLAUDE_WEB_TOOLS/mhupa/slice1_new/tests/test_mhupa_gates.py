@@ -40,7 +40,7 @@ RUN = 'mg-' + 'c' * 32
 
 
 def e1_pins(game):
-    reg = InstalledRegistry()
+    reg = InstalledRegistry(REG.DATA_ROOT)          # the patched copy in a Project test, the installed data otherwise
     e = reg.active_entry(game, *C.E1)
     return e, reg.declaration(e['declaration_digest'])
 
@@ -134,15 +134,27 @@ class Project(unittest.TestCase):
     def opened(self, game):
         return X.write_opening_record(self.proj, game, freeze_version=1, freeze_sha=self.rows[game][0]['master_sha256'])
 
-    def plan_for(self, game, targets=None):
+    def plan_for(self, game, targets=None, *, pin=None, manifest_sha=None, batch=BATCH, **overrides):
+        """The game's one Mode H plan, frozen at version 2 (the admitted version: the opening record freezes 1) and tied
+        to the study manifest the opening record names, unless a defect is planted."""
         e, _d = e1_pins(game)
         p = get_profile(game)
         cohort = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
                    'declaration_digest': e['declaration_digest'], 'registry_entry_digest': record_digest(e)}]
-        return X.write_mode_h_plan(self.proj, game, BATCH, cohort, targets or list(range(p.holdout_first, p.holdout_last + 1)))
+        if manifest_sha is None:
+            manifest_sha = X.write_study_manifest(self.proj, game)
+        return X.write_mode_h_plan(self.proj, game, batch, cohort, targets or list(range(p.holdout_first, p.holdout_last + 1)),
+                                   pin=pin or self.v2(game), manifest_sha=manifest_sha, **overrides)
 
-    def holdout_request(self, game, target, plan, run_id=RUN):
-        v, sha = self.v2(game)
+    def regrow(self, game, extra_versions):
+        """Append further ledger versions to the game's synthetic master (versions 1 and 2 keep their bytes)."""
+        p = get_profile(game)
+        first = list(range(p.holdout_first, p.holdout_last + 2))
+        self.rows[game] = X.grow_master(self.proj, p, [first, *extra_versions])
+        return self.rows[game]
+
+    def holdout_request(self, game, target, plan, run_id=RUN, pin=None):
+        v, sha = pin or self.v2(game)
         return request(game, target, mode='REAL_HOLDOUT', run_id=run_id, binding=X.binding_for_plan(plan, run_id),
                        version=v, sha=sha)
 
@@ -196,6 +208,25 @@ class ModeHBinding(Project):
         good = self.holdout_request(game, p.holdout_first, plan)
         # a forged plan digest
         self.refused(dict(good, binding=dict(good['binding'], plan_digest='0' * 64)), 'BINDING_NOT_RESOLVED')
+        # a plan but no opening record: nothing bound to a Mode H plan runs before the holdout is opened
+        self.refused(good, 'HOLDOUT_NOT_OPENED')
+        self.opened(game)
+        # EX_142 B01: the plan must be tied to the study and frozen at the admitted version, and the request must pin
+        # exactly what the plan froze
+        bad_tie = self.plan_for(game, manifest_sha='1' * 64)
+        self.refused(self.holdout_request(game, p.holdout_first, bad_tie), 'PLAN_NOT_TIED_TO_STUDY')
+        v1 = (1, self.rows[game][0]['master_sha256'])
+        not_admitted = self.plan_for(game, pin=v1)
+        self.refused(self.holdout_request(game, p.holdout_first, not_admitted, pin=v1), 'PLAN_VERSION_NOT_ADMITTED')
+        for defect in ({'ledger_version': None}, {'master_sha256': None}, {'ledger_version': '2'}, {'master_sha256': 'zz'},
+                       {'study_manifest_sha256': None}):
+            broken = self.plan_for(game, **defect)
+            self.refused(self.holdout_request(game, p.holdout_first, broken), 'BINDING_NOT_RESOLVED')
+        plan = self.plan_for(game)
+        good = self.holdout_request(game, p.holdout_first, plan)
+        # (b) frozen 2 and current 2, but the request pins version 1 (an accepted version, the wrong one)
+        self.refused(self.holdout_request(game, p.holdout_first, plan, pin=v1), 'PIN_DISAGREES_WITH_PLAN')
+        self.refused(dict(good, master_sha256=self.rows[game][0]['master_sha256']), 'PIN_DISAGREES_WITH_PLAN')
         # a pair the plan does not list (another target)
         other = self.holdout_request(game, p.holdout_last + 1, plan)
         other['run_mode'], other['product_kind'] = 'REAL_HOLDOUT', 'WF_FORECAST'
@@ -203,7 +234,7 @@ class ModeHBinding(Project):
             CD.dispatch_gate(other)
         narrow = self.plan_for(game, targets=[p.holdout_first + 1])
         self.refused(self.holdout_request(game, p.holdout_first, narrow), 'PAIR_NOT_IN_PLAN')
-        plan = X.write_mode_h_plan(self.proj, game, BATCH, narrow['cohort'], list(range(p.holdout_first, p.holdout_last + 1)))
+        plan = self.plan_for(game)
         good = self.holdout_request(game, p.holdout_first, plan)
         # no ticket at all
         self.refused(good, 'NO_OPEN_TICKET')
@@ -215,11 +246,21 @@ class ModeHBinding(Project):
         X.open_ticket(self.attempts(game), dict(good, include_dates=not good['include_dates']),
                       scope_kind='MODE_H_BATCH', scope_id=BATCH)
         self.refused(good, 'NO_OPEN_TICKET')
-        # the right ticket, but the holdout is not opened
+        # the right ticket: admitted (c: plan pin, request pin and the ledger's current row all version 2)
         X.open_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
-        self.refused(good, 'HOLDOUT_NOT_OPENED')
-        self.opened(game)
-        CD.dispatch_gate(good)                                            # admitted now
+        CD.dispatch_gate(good)
+        # EX_142 B02: a batch attempts ledger that exists as a symlink is never read as 'no tickets'
+        real = self.attempts(game).with_name('elsewhere.jsonl')
+        self.attempts(game).rename(real)
+        try:
+            self.attempts(game).symlink_to(real)
+        except (OSError, NotImplementedError):
+            real.rename(self.attempts(game))
+        else:
+            self.refused(good, 'BINDING_NOT_RESOLVED')
+            self.attempts(game).unlink()
+            real.rename(self.attempts(game))
+        CD.dispatch_gate(good)
         # a run id a resume marked FAILED_TO_START is never reused
         X.failed_to_start_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
         self.refused(good, 'NO_OPEN_TICKET')
@@ -239,12 +280,27 @@ class ModeHBinding(Project):
             X.write_marker(self.proj, game, BATCH, marker)
             self.refused(t2, 'BATCH_CLOSED')
             (OR.mode_h_batch_folder(self.proj, game, BATCH) / f'{marker}.json').unlink()
+        # EX_142 B02: a marker that exists as a folder (not a plain file) refuses rather than counting either way
+        (OR.mode_h_batch_folder(self.proj, game, BATCH) / 'BATCH_COMPLETE.json').mkdir()
+        self.refused(t2, 'BINDING_NOT_RESOLVED')
+        (OR.mode_h_batch_folder(self.proj, game, BATCH) / 'BATCH_COMPLETE.json').rmdir()
         CD.dispatch_gate(t2)
+        # (a) the master grows to version 3 after the plan froze version 2: a request pinning the new current row
+        # disagrees with the plan (and one pinning the plan's version is STALE at the runner, tested below)
+        rows3 = self.regrow(game, [[p.holdout_last + 2]])
+        t3 = self.holdout_request(game, p.holdout_first + 1, plan, run_id='mg-' + '2' * 32, pin=(3, rows3[2]['master_sha256']))
+        X.open_ticket(self.attempts(game), t3, scope_kind='MODE_H_BATCH', scope_id=BATCH)
+        self.refused(t3, 'PIN_DISAGREES_WITH_PLAN')
+        CD.dispatch_gate(t2)                                              # the gate reads no ledger: still admitted
+        res = self.launch(t2)
+        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
+        self.assertIn('STALE_PIN', res.reason)
+        self.assertFalse((res.folder / 'forecast.json').exists())
         # a plan that is not the game's one plan (another batch id)
-        X.write_mode_h_plan(self.proj, game, 'wf-' + '9' * 32, plan['cohort'], plan['targets'])     # moves the batch-id record
+        self.plan_for(game, batch='wf-' + '9' * 32)                       # moves the batch-id record
         self.refused(t2, 'BINDING_NOT_RESOLVED')
 
-    def test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_stale(self):
+    def test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_refused(self):
         game, p = 'POWERBALL', POWERBALL
         self.opened(game)
         plan = self.plan_for(game)
@@ -256,15 +312,16 @@ class ModeHBinding(Project):
         with self.assertRaises(CD.DispatchRefused):
             self.launch(unbound)
         self.assertFalse(OR.mode_h_runs_root(self.proj).exists())        # nothing published
-        # a bound request pinning version 1 while the ledger's last row is version 2: admitted by the gate (it reads no
-        # ledger), refused at data admission as STALE_PIN, with a terminal record and no forecast
+        # a bound request pinning version 1 while the plan froze version 2: refused at the gate (EX_142 B01), before
+        # anything is read and with nothing published; the runner's own STALE_PIN rule (the pin must also be the
+        # ledger's current row) is exercised in test_refusals_one_per_rule with a regrown ledger
         stale = request(game, p.holdout_first, mode='REAL_HOLDOUT', binding=X.binding_for_plan(plan, RUN), version=1,
                         sha=self.rows[game][0]['master_sha256'])
         X.open_ticket(self.attempts(game), stale, scope_kind='MODE_H_BATCH', scope_id=BATCH)
-        res = self.launch(stale)
-        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
-        self.assertIn('STALE_PIN', res.reason)
-        self.assertFalse((res.folder / 'forecast.json').exists())
+        self.refused(stale, 'PIN_DISAGREES_WITH_PLAN')
+        with self.assertRaises(CD.DispatchRefused):
+            self.launch(stale)
+        self.assertFalse(OR.mode_h_runs_root(self.proj).exists())
 
     def test_the_plan_pin_is_the_ledgers_current_row(self):
         """walk_forward.ledger_pin (design 3.2): a new batch pins the current last row, both games."""
@@ -338,14 +395,15 @@ class DiagnosticRoute(Project):
 class SessionBinding(Project):
     """Design 3.4(b), the session binding, with synthetic session records (the writers arrive with MHUP-B)."""
 
-    def session(self, game, release_date):
+    def session(self, game, release_date, *, pin=None, roster=None, **overrides):
         e, _d = e1_pins(game)
-        roster = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
-                   'release_date': release_date}]
-        return X.write_session(self.proj, game, SESSION, roster)
+        if roster is None:
+            roster = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
+                       'release_date': release_date}]
+        return X.write_session(self.proj, game, SESSION, roster, pin=pin or self.v2(game), **overrides)
 
-    def dev_request(self, game, target, session, run_id=RUN):
-        v, sha = self.v2(game)
+    def dev_request(self, game, target, session, run_id=RUN, pin=None):
+        v, sha = pin or self.v2(game)
         return request(game, target, mode='REAL_DEVELOPMENT', run_id=run_id, binding=X.binding_for_session(session, run_id),
                        version=v, sha=sha)
 
@@ -355,6 +413,14 @@ class SessionBinding(Project):
         sess = self.session(game, release_date=p.derived_date(target).isoformat())   # released ON the draw date: development
         req = self.dev_request(game, target, sess)
         self.refused(dict(req, binding=dict(req['binding'], session_digest='0' * 64)), 'BINDING_NOT_RESOLVED')
+        # EX_142 B01: the request must pin exactly the version the session froze
+        v1 = (1, self.rows[game][0]['master_sha256'])
+        self.refused(self.dev_request(game, target, sess, pin=v1), 'PIN_DISAGREES_WITH_SESSION')
+        self.refused(dict(req, master_sha256=v1[1]), 'PIN_DISAGREES_WITH_SESSION')
+        for defect in ({'ledger_version': None}, {'master_sha256': None}, {'ledger_version': 0}, {'master_sha256': 'zz'}):
+            broken = self.session(game, release_date=p.derived_date(target).isoformat(), **defect)
+            self.refused(self.dev_request(game, target, broken), 'BINDING_NOT_RESOLVED')
+        sess = self.session(game, release_date=p.derived_date(target).isoformat())
         self.refused(req, 'NOT_DEVELOPED')
         X.write_developed_record(self.proj, game)
         self.refused(req, 'NO_OPEN_TICKET')
@@ -364,29 +430,79 @@ class SessionBinding(Project):
         # a freeze line for the target closes it
         X.write_freeze_line(self.proj, game, target)
         self.refused(req, 'TARGET_FROZEN')
-        OR.forecast_ledger_path(self.proj, game).unlink()
+        ledger = OR.forecast_ledger_path(self.proj, game)
+        # EX_142 B02: a forecast ledger that is present but invalid is never read as 'no freeze line'
+        ledger.write_bytes(b'{"schema": "SOMETHING_ELSE_V1", "target_draw_number": 1}\n')     # an unknown schema
+        self.refused(req, 'BINDING_NOT_RESOLVED')
+        ledger.write_bytes(b'{"schema": "FREEZE_LINE_V1", "target_draw_number": "' + str(target).encode() + b'"}\n')
+        self.refused(req, 'BINDING_NOT_RESOLVED')                         # a malformed target
+        ledger.write_bytes(b'\xff\xfe not a ledger\n')
+        self.refused(req, 'BINDING_NOT_RESOLVED')                         # undecodable
+        ledger.unlink()
+        ledger.mkdir()
+        self.refused(req, 'BINDING_NOT_RESOLVED')                         # a folder of that name
+        ledger.rmdir()
+        CD.dispatch_gate(req)                                             # genuinely absent: permitted
         # a DONE ticket for the pair in ANOTHER session's ledger
         other = 'e' * 32
         X.done_ticket(OR.session_attempts_path(self.proj, game, other), dict(req, run_id='mg-' + '3' * 32),
                       scope_kind='WEEKLY_SESSION', scope_id=other)
         self.refused(req, 'PAIR_ALREADY_DONE')
-        OR.session_attempts_path(self.proj, game, other).unlink()
+        # EX_142 B02: that earlier ledger existing as a symlink (or a folder) refuses rather than reading as absent
+        real = OR.session_attempts_path(self.proj, game, other).with_name('moved.jsonl')
+        OR.session_attempts_path(self.proj, game, other).rename(real)
+        try:
+            OR.session_attempts_path(self.proj, game, other).symlink_to(real)
+        except (OSError, NotImplementedError):
+            pass
+        else:
+            self.refused(req, 'BINDING_NOT_RESOLVED')
+            OR.session_attempts_path(self.proj, game, other).unlink()
+        OR.session_attempts_path(self.proj, game, other).mkdir()
+        self.refused(req, 'BINDING_NOT_RESOLVED')
+        OR.session_attempts_path(self.proj, game, other).rmdir()
+        real.unlink()
         CD.dispatch_gate(req)
+        # (a) the master grows to version 3 after the session froze version 2: a request pinning the new current row
+        # disagrees with the session; one pinning the session's version is STALE at the runner
+        rows3 = self.regrow(game, [[p.holdout_last + 2]])
+        self.refused(self.dev_request(game, target, sess, pin=(3, rows3[2]['master_sha256'])), 'PIN_DISAGREES_WITH_SESSION')
+        self.opened(game)                                                 # the developed state presumes an opened holdout
+        res = self.launch(req)
+        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
+        self.assertIn('STALE_PIN', res.reason)
+        self.regrow(game, [])                                             # back to version 2 for the rest
         # a variant released before the draw date may not publish a development record for it
         early = self.session(game, release_date=p.derived_date(target - 1).isoformat())   # one draw before: a forecast
         req2 = self.dev_request(game, target, early, run_id='mg-' + '4' * 32)
         X.open_ticket(path, req2, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
         self.refused(req2, 'MODE_DISAGREES_WITH_RELEASE')
         # a variant not in the roster
-        sess3 = X.write_session(self.proj, game, SESSION, [])
+        sess3 = self.session(game, release_date=None, roster=[])
         req3 = self.dev_request(game, target, sess3, run_id='mg-' + '5' * 32)
         X.open_ticket(path, req3, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
         self.refused(req3, 'NOT_IN_SESSION_ROSTER')
+        # EX_142 C01 condition 4: a registry entry's effective_date confers no release standing. The active entry is
+        # superseded by one dated long before the draw (an invented entry, in the patched registry copy); the mode rule
+        # still reads only the roster's release date: released before the draw refuses, released on the draw date admits.
+        e_now = e1_pins(game)[0]
+        early_entry = dict(C.entry(e1_pins(game)[1], 'SUPPORTED', seq=e_now['entry_sequence'] + 1, prev=e_now),
+                           method_revision=e_now['method_revision'], effective_date='2026-01-01')
+        C.append_entry(self.data, early_entry)
+        self.assertEqual(e1_pins(game)[0]['effective_date'], '2026-01-01')
+        for run_id, release, verdict in (('mg-' + '8' * 32, p.derived_date(target - 1), 'MODE_DISAGREES_WITH_RELEASE'),
+                                         ('mg-' + '9' * 32, p.derived_date(target), None)):
+            sess_e = self.session(game, release_date=release.isoformat())
+            req_e = self.dev_request(game, target, sess_e, run_id=run_id)
+            X.open_ticket(path, req_e, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
+            if verdict:
+                self.refused(req_e, verdict)
+            else:
+                CD.dispatch_gate(req_e)
         # the happy path publishes under the weekly root with the right pins
         sess4 = self.session(game, release_date=p.derived_date(target).isoformat())
         req4 = self.dev_request(game, target, sess4, run_id='mg-' + '6' * 32)
         X.open_ticket(path, req4, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
-        X.write_opening_record(self.proj, game, freeze_version=1, freeze_sha=self.rows[game][0]['master_sha256'])
         res = self.launch(req4)
         self.assertEqual(res.outcome, 'SUCCESS', res.reason)
         self.assertTrue(res.folder.is_relative_to(OR.weekly_runs_root(self.proj)))

@@ -68,7 +68,7 @@ def _verify_source(repo_root: Path, game_id: str, master_sha256: str, ledger_ver
     except (ValueError, UnicodeDecodeError) as exc:
         raise OutcomeRefused(f'the ledger does not bind the pinned master: {exc}') from None
     # Serve only the pinned version's own rows: the prefix that hashes to the pin.
-    return b''.join(raw.splitlines(keepends=True)[:1 + row.draw_count])
+    return MV.prefix_bytes(raw, row)
 
 
 def _number(text: str, high: int, what: str) -> int:

@@ -362,4 +362,86 @@ edit('tests/test_rel1_release.py', [
      "            self.assertEqual([(e['entry_sequence'], e['registry_status'], e['method_revision']) for e in e1],\n"
      "                             [(1, 'SUPPORTED', '1'), (2, 'SUPPORTED', '2'), (3, 'SUPPORTED', '3')])\n"),
 ])
+# ---------------------------------------------------------------- EX_142 B03: every synthetic fixture writes a ledger of the
+# production grammar through tests/ledger_fixture.py (the one-row leniency is withdrawn)
+edit('tests/test_t05_hardening.py', [
+    ("from _common.game_profiles import POWERBALL, OZLOTTO\n\nKINDS = ",
+     "from _common.game_profiles import POWERBALL, OZLOTTO\nfrom ledger_fixture import write_init_ledger\n\nKINDS = "),
+    ("    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\\n'\n"
+     "              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'\n"
+     "              f'{profile.holdout_first - profile.first_draw}\\n')\n"
+     "    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))\n"
+     "    evidence = {",
+     "    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)\n"
+     "    evidence = {"),
+])
+edit('tests/test_e6_beta_bernoulli.py', [
+    ("from _common.multigame_method_registry import method_status\nfrom E_006 import contract as E6\n",
+     "from _common.multigame_method_registry import method_status\nfrom E_006 import contract as E6\n"
+     "from ledger_fixture import write_init_ledger\n"),
+    ("    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\\n'\n"
+     "              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'\n"
+     "              f'{profile.holdout_first - profile.first_draw}\\n')\n"
+     "    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))\n"
+     "    (folder / FILES[2].format(g=game)).write_text(json.dumps({",
+     "    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)\n"
+     "    (folder / FILES[2].format(g=game)).write_text(json.dumps({"),
+])
+edit('tests/test_wf1b_outcome_reader.py', [
+    ("from test_e6_beta_bernoulli import FILES, varied_row, write_varied_master   # noqa: E402\n",
+     "from test_e6_beta_bernoulli import FILES, varied_row, write_varied_master   # noqa: E402\n"
+     "from ledger_fixture import write_init_ledger                              # noqa: E402\n"),
+    ("    led = root / 'source_data' / FILES[1].format(g=game)\n"
+     "    led.write_text('version,utc,action,master_sha256,first_draw,last_draw,draw_count\\n'\n"
+     "                   f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first - 1},{p.holdout_first - p.first_draw}\\n')\n",
+     "    write_init_ledger(root / 'source_data' / FILES[1].format(g=game), p, sha)      # the updater's grammar (MHUP-A)\n"),
+    # a version-1 master with lines beyond its last draw no longer passes the chain check at all (design 3.2 rule 2):
+    # the planted holdout row is refused before any parse; the corrupt-row rule is tested on a conforming master
+    ("    def test_rows_after_the_last_target_and_holdout_rows_are_never_decoded(self):\n"
+     "        \"\"\"A planted line beyond 1576 (in an invented master) is never parsed; nor is an undecodable non-grid row.\"\"\"\n"
+     "        p = get_profile('POWERBALL')\n"
+     "        planted = f'{p.holdout_first},2026-08-06,1,2,3,4,5,6,7,8\\n'.encode() + b'\\xff\\xfe\\n'\n"
+     "        sha = _master(self.root, 'POWERBALL', extra_lines=[planted], corrupt=p.first_draw + 10)\n"
+     "        got = R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,\n"
+     "                              targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])\n"
+     "        self.assertEqual(len(got), 3)\n",
+     "    def test_rows_after_the_last_target_and_holdout_rows_are_never_decoded(self):\n"
+     "        \"\"\"A planted line beyond 1576 (in an invented master) is refused by the version-2 chain check before any\n"
+     "        parse (MHUP-A, design 3.2 rule 2: version 1 has exactly its draw_count lines); an undecodable non-grid row\n"
+     "        is parsed only when its draw is asked for.\"\"\"\n"
+     "        p = get_profile('POWERBALL')\n"
+     "        planted = f'{p.holdout_first},2026-08-06,1,2,3,4,5,6,7,8\\n'.encode() + b'\\xff\\xfe\\n'\n"
+     "        sha = _master(self.root, 'POWERBALL', extra_lines=[planted], corrupt=p.first_draw + 10)\n"
+     "        with mock.patch.object(R, '_number', side_effect=AssertionError('parsed')):\n"
+     "            with self.assertRaises(R.OutcomeRefused):\n"
+     "                R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,\n"
+     "                                targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])\n"
+     "        sha = _master(self.root, 'POWERBALL', corrupt=p.first_draw + 10)\n"
+     "        got = R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,\n"
+     "                              targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])\n"
+     "        self.assertEqual(len(got), 3)\n"),
+])
+edit('tests/test_multigame_reader_contracts.py', [
+    ("from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST\n",
+     "from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST\n"
+     "sys.path.insert(0, str(ROOT / 'tests'))\n"
+     "from ledger_fixture import write_init_ledger\n"),
+    ("    \"\"\"A synthetic stand-in for an owner-attested master; no result values.\"\"\"\n",
+     "    \"\"\"A synthetic stand-in for an owner-attested master; no result values. The master has exactly the lines a\n"
+     "    version-1 ledger records (MHUP-A, design 3.2 rule 2): `size` real rows, then the target's line and one line per\n"
+     "    later draw up to holdout_first - 1, all deliberately undecodable (no CSV parser may ever consume them); when\n"
+     "    the target is the last development draw there is no later line and later_suffix is unused.\"\"\"\n"),
+    ("    lines.append(str(p.first_draw+size).encode('ascii')+b','+corrupt_suffix+b'\\n')\n"
+     "    if later_suffix is not None:\n"
+     "        lines.append(later_suffix+b'\\n')\n",
+     "    lines.append(str(p.first_draw+size).encode('ascii')+b','+corrupt_suffix+b'\\n')\n"
+     "    for later in range(p.first_draw+size+1, p.holdout_first):\n"
+     "        lines.append(str(later).encode('ascii')+b','+(later_suffix if later_suffix is not None else b'\\xff')+b'\\n')\n"),
+    ("    ledger=(\n"
+     "        'version,utc,action,master_sha256,first_draw,last_draw,draw_count\\n'\n"
+     "        f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first-1},{p.holdout_first-p.first_draw}\\n'\n"
+     "    )\n"
+     "    (d/f'{game}_results_master_ledger.csv').write_bytes(ledger.encode('ascii'))\n",
+     "    write_init_ledger(d/f'{game}_results_master_ledger.csv', p, sha)      # the updater's grammar (MHUP-A)\n"),
+])
 print('test edits applied')

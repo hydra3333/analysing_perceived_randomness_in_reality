@@ -19,10 +19,11 @@ of one game through the reader's trusted-file helper and checks, before any row 
    3.4, which are checked by the request validator, the dispatch gate and the runner, not here.
 
 LEDGER_COLUMNS is the module's own copy of the updater's columns; a test asserts equality with the owner's
-tool (the tool is never imported by project code). The grammar is applied in full whenever the ledger holds
-more than one row; a single-row (INIT) ledger is checked exactly as every reader checked it before this
-module (its fields and the INIT verification record), so every existing synthetic fixture and the committed
-version-1 records stay valid without a byte changed.
+tool (the tool is never imported by project code). The grammar is applied in full to every ledger, a one-row
+INIT ledger included (EX_142 B03): the exact header, every physical line a record (no blank line, no quoted
+line break), every universally required field, and the line-count and prefix rules of rule 2 for every row.
+The synthetic fixtures write ledgers of this grammar (tests/ledger_fixture.py); the committed version-1
+records were written by the updater with exactly these columns.
 """
 from __future__ import annotations
 
@@ -30,7 +31,6 @@ import csv
 from dataclasses import dataclass
 from datetime import datetime
 import hashlib
-import io
 import json
 from pathlib import Path
 import re
@@ -91,27 +91,42 @@ def _utc_instant(text: object, where: str) -> datetime:
     return t
 
 
-def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
-    """The closed grammar (design 3.2 rule 1). Returns the rows, version 1 first. Refuses on any break."""
-    p = get_profile(game_id)
+def _records(raw: bytes) -> list[dict]:
+    """The ledger's physical lines as records: ASCII, a line ending on every line, no blank line, one CSV record per
+    physical line (a quoted line break is a refusal), the exact header, every record with every column."""
     try:
         text = raw.decode('ascii')
     except UnicodeDecodeError:
         raise LedgerRefused('ledger is not ASCII') from None
     if not text.endswith('\n'):
         raise LedgerRefused('ledger does not end with a line ending (truncated?)')
-    rows = list(csv.DictReader(io.StringIO(text)))
-    if not rows:
-        raise LedgerRefused('ledger has no rows')
-    header = tuple(rows[0].keys())
-    if len(rows) > 1 and header != LEDGER_COLUMNS:
+    physical = text[:-1].replace('\r\n', '\n').split('\n')
+    if any(line.strip() == '' for line in physical):
+        raise LedgerRefused('ledger has a blank line')
+    parsed = list(csv.reader(physical))
+    if len(parsed) != len(physical):
+        raise LedgerRefused('ledger has a record spanning more than one physical line')
+    if tuple(parsed[0]) != LEDGER_COLUMNS:
         raise LedgerRefused('ledger header is not the updater\'s LEDGER_COLUMNS')
+    if len(parsed) == 1:
+        raise LedgerRefused('ledger has no rows')
+    rows = []
+    for i, fields in enumerate(parsed[1:], start=1):
+        if len(fields) != len(LEDGER_COLUMNS):
+            raise LedgerRefused(f'ledger row {i}: wrong number of fields')
+        rows.append(dict(zip(LEDGER_COLUMNS, fields)))
+    return rows
+
+
+def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
+    """The closed grammar (design 3.2 rule 1), applied in full to every ledger. Returns the rows, version 1 first.
+    Refuses on any break."""
+    p = get_profile(game_id)
+    rows = _records(raw)
     out: list[LedgerRow] = []
     previous_utc = None
     for i, row in enumerate(rows, start=1):
         where = f'ledger row {i}'
-        if None in row or any(v is None for v in row.values()):
-            raise LedgerRefused(f'{where}: wrong number of fields')
         version = _int_field(row, 'version', where)
         if version != i:
             raise LedgerRefused(f'{where}: version {version} out of order (expected {i})')
@@ -124,32 +139,32 @@ def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
             raise LedgerRefused(f'{where}: first_draw is not the era\'s first draw')
         if count != last - first + 1 or count < 1:
             raise LedgerRefused(f'{where}: draw_count disagrees with first_draw and last_draw')
+        # the universally required fields (every row, the INIT row included)
+        t = _utc_instant(row.get('utc'), where)
+        if not row.get('tool_version', '').strip():
+            raise LedgerRefused(f'{where}: tool_version is empty')
+        _sha_field(row, 'tool_sha256', where, required=True)
+        if not row.get('note', '').isascii():
+            raise LedgerRefused(f'{where}: note is not ASCII')
+        added = _int_field(row, 'added_count', where)
         if i == 1:
             if action != 'INIT':
                 raise LedgerRefused(f'{where}: the first row is not INIT')
             if last != p.holdout_first - 1 or count != p.holdout_first - p.first_draw:
                 raise LedgerRefused(f'{where}: the INIT row does not cover exactly the development prefix')
-            if len(rows) > 1:
-                previous_utc = _utc_instant(row.get('utc'), where)
-                added = _int_field(row, 'added_count', where)
-                if added != count or _int_field(row, 'added_first', where) != first or \
-                        _int_field(row, 'added_last', where) != last:
-                    raise LedgerRefused(f'{where}: the INIT row\'s added fields disagree with its counts')
+            if added != count or _int_field(row, 'added_first', where) != first or \
+                    _int_field(row, 'added_last', where) != last:
+                raise LedgerRefused(f'{where}: the INIT row\'s added fields disagree with its counts')
+            for f in ('grab_file', 'grab_sha256', 'backup_file', 'backup_sha256'):
+                if row.get(f) != '':
+                    raise LedgerRefused(f'{where}: the INIT row has {f}')
         else:
             prev = out[-1]
-            t = _utc_instant(row.get('utc'), where)
             if t < previous_utc:
                 raise LedgerRefused(f'{where}: utc decreases')
-            previous_utc = t
-            if not row.get('tool_version'):
-                raise LedgerRefused(f'{where}: tool_version is empty')
-            _sha_field(row, 'tool_sha256', where, required=True)
             _sha_field(row, 'grab_sha256', where, required=True)
             if not row.get('grab_file'):
                 raise LedgerRefused(f'{where}: grab_file is missing')
-            if not (row.get('note') or '').isascii():
-                raise LedgerRefused(f'{where}: note is not ASCII')
-            added = _int_field(row, 'added_count', where)
             if action == 'NO_CHANGE':
                 if sha != prev.master_sha256 or last != prev.last_draw or count != prev.draw_count or added != 0:
                     raise LedgerRefused(f'{where}: NO_CHANGE row differs from the row before it')
@@ -170,12 +185,24 @@ def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
                     raise LedgerRefused(f'{where}: UPDATE row repeats the previous master_sha256')
             else:
                 raise LedgerRefused(f'{where}: action {action!r} is not INIT, UPDATE or NO_CHANGE')
+        previous_utc = t
         out.append(LedgerRow(version, action, sha, first, last, count))
     return out
 
 
 def _lines_with_endings(raw: bytes) -> list[bytes]:
-    return raw.splitlines(keepends=True)
+    """The file's lines, each with its own ending, split on LF only (a CRLF line ends with LF; no other byte ends a
+    line, unlike str.splitlines); an unterminated tail is a line of its own and fails the ending check below."""
+    parts = raw.split(b'\n')
+    lines = [part + b'\n' for part in parts[:-1]]
+    if parts[-1]:
+        lines.append(parts[-1])
+    return lines
+
+
+def prefix_bytes(raw_master: bytes, row: LedgerRow) -> bytes:
+    """Version `row`'s own bytes: the header and its draw_count lines, as stored (rule 2's prefix)."""
+    return b''.join(_lines_with_endings(raw_master)[:1 + row.draw_count])
 
 
 def verify_master_against_ledger(raw_master: bytes, rows: list[LedgerRow], game_id: str) -> None:
@@ -188,11 +215,6 @@ def verify_master_against_ledger(raw_master: bytes, rows: list[LedgerRow], game_
     if hashlib.sha256(raw_master).hexdigest() != rows[-1].master_sha256:
         raise LedgerRefused('complete master bytes differ from the last ledger row\'s SHA-256 (edited outside the tool, or an '
                             'update was interrupted)')
-    if len(rows) == 1:
-        # A version-1-only ledger: the whole file IS the prefix, and the hash above has just bound it, exactly as
-        # every reader did before this module. The line-count rules below bind each version's rows once the
-        # ledger has grown (the updater verifies the counts itself at every run).
-        return
     for row in rows:
         n = 1 + row.draw_count
         if len(lines) < n:

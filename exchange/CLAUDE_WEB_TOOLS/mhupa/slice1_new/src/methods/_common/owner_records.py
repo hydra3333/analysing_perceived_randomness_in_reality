@@ -120,6 +120,13 @@ def _plain_file(path: Path) -> bool:
     return path.is_file() and not path.is_symlink()
 
 
+def absent(path: Path) -> bool:
+    """True only when nothing at all is at `path`: no file, no folder, no symlink (dangling or not). An optional record
+    or ledger is 'not yet created' only in this state; anything present that is not a plain file refuses (EX_142 B02:
+    present-but-invalid evidence is never read as absence)."""
+    return not path.exists() and not path.is_symlink()
+
+
 def _read_json(path: Path, what: str) -> dict:
     if not _plain_file(path):
         raise RecordRefused(f'{what}: no plain file at {path.name}')
@@ -190,7 +197,7 @@ def opening_record(root: Path, game_id: str) -> dict | None:
     """The game's valid opening record, with its study manifest present and matching, or None if there is no
     record at all. An invalid record, or a record whose manifest is missing or altered, refuses."""
     path = opening_record_path(root, game_id)
-    if not path.exists() and not path.is_symlink():
+    if absent(path):
         return None
     rec = validate_opening_record(_read_json(path, 'opening record'), game_id)
     manifest = study_manifest_path(root, game_id)
@@ -219,7 +226,7 @@ def validate_developed_record(rec: Mapping, game_id: str, what: str = 'developed
 
 def developed_record(root: Path, game_id: str) -> dict | None:
     path = developed_record_path(root, game_id)
-    if not path.exists() and not path.is_symlink():
+    if absent(path):
         return None
     return validate_developed_record(_read_json(path, 'developed record'), game_id)
 
@@ -228,7 +235,7 @@ def developed_record(root: Path, game_id: str) -> dict | None:
 
 def batch_id_record(root: Path, game_id: str) -> dict | None:
     path = batch_id_record_path(root, game_id)
-    if not path.exists() and not path.is_symlink():
+    if absent(path):
         return None
     rec = _read_canonical_json(path, 'batch-id record')
     if rec.get('schema') != BATCH_ID_SCHEMA or rec.get('game_id') != game_id:
@@ -251,7 +258,18 @@ def mode_h_plan(root: Path, game_id: str, batch_id: str) -> dict:
         raise RecordRefused('Mode H plan: wrong schema, batch or game')
     if type(plan.get('cohort')) is not list or type(plan.get('targets')) is not list:
         raise RecordRefused('Mode H plan: cohort or targets missing')
+    pin_of(plan, 'Mode H plan')
+    _sha(plan, 'study_manifest_sha256', 'Mode H plan')
     return plan
+
+
+def pin_of(rec: Mapping, what: str) -> tuple[int, str]:
+    """The master version a plan or session record froze: (`ledger_version`, `master_sha256`), both required and
+    well-formed (EX_142 B01). Every official publication must pin exactly this and the ledger's current last row."""
+    v = _need(rec, 'ledger_version', what)
+    if type(v) is not int or v < 1:
+        raise RecordRefused(f'{what}: ledger_version is not a positive whole number')
+    return v, _sha(rec, 'master_sha256', what)
 
 
 def plan_lists_pair(plan: Mapping, method_id: str, method_revision: str, variant_id: str, target: int) -> bool:
@@ -262,8 +280,18 @@ def plan_lists_pair(plan: Mapping, method_id: str, method_revision: str, variant
 
 
 def lifecycle_markers_present(root: Path, game_id: str, batch_id: str) -> list[str]:
+    """The batch's lifecycle markers that exist as plain files. A marker name that exists as anything else (a symlink,
+    a folder) refuses (EX_142 B02): it can neither close the batch nor stand as the seal."""
     folder = mode_h_batch_folder(root, game_id, batch_id)
-    return [m for m in LIFECYCLE_MARKERS if (folder / f'{m}.json').exists() or (folder / f'{m}.json').is_symlink()]
+    out = []
+    for m in LIFECYCLE_MARKERS:
+        path = folder / f'{m}.json'
+        if absent(path):
+            continue
+        if not _plain_file(path):
+            raise RecordRefused(f'lifecycle marker {m} exists but is not a plain file')
+        out.append(m)
+    return out
 
 
 def mode_h_sealed(root: Path, game_id: str) -> bool:
@@ -278,9 +306,12 @@ def mode_h_sealed(root: Path, game_id: str) -> bool:
 
 def read_jsonl(path: Path) -> tuple[list[dict], bool]:
     """Every complete JSON line of a ledger as a dict; a final line without its newline is ignored and reported
-    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse."""
-    if not _plain_file(path):
+    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse. A ledger that was never created
+    reads as empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
+    if absent(path):
         return [], False
+    if not _plain_file(path):
+        raise RecordRefused(f'{path.name}: exists but is not a plain file')
     raw = path.read_bytes()
     torn = bool(raw) and not raw.endswith(b'\n')
     body = raw.rsplit(b'\n', 1)[0] if torn else raw
@@ -368,6 +399,7 @@ def session_record(root: Path, game_id: str, session_id: str) -> dict:
         raise RecordRefused('session record: wrong schema, session or game')
     if type(rec.get('roster')) is not list:
         raise RecordRefused('session record: roster missing')
+    pin_of(rec, 'session record')
     return rec
 
 
@@ -393,10 +425,14 @@ def release_date_of(member: Mapping):
 
 
 def all_session_attempt_paths(root: Path, game_id: str) -> list[Path]:
+    """Every session attempts ledger of the game, by name. Nothing is filtered: a name of that shape that is not a plain
+    file refuses when it is read (EX_142 B02), so an invalid ledger can never read as 'no earlier DONE ticket'."""
     folder = weekly_root(root, game_id) / 'sessions'
-    if not folder.is_dir():
+    if absent(folder):
         return []
-    return sorted(p for p in folder.glob('SESSION_*_attempts.jsonl') if _plain_file(p))
+    if folder.is_symlink() or not folder.is_dir():
+        raise RecordRefused('the sessions folder exists but is not a plain folder')
+    return sorted(folder.glob('SESSION_*_attempts.jsonl'))
 
 
 def session_id_of_attempts_path(path: Path) -> str:
@@ -411,9 +447,24 @@ def pair_done_in_any_session(root: Path, game_id: str, pair: tuple) -> bool:
     return False
 
 
-def freeze_line_exists(root: Path, game_id: str, target: int) -> bool:
+FORECAST_LEDGER_SCHEMAS = frozenset((FREEZE_LINE_SCHEMA,))     # slice 2 adds the score, witness and amendment lines
+
+
+def forecast_ledger_lines(root: Path, game_id: str) -> list[dict]:
+    """Every complete line of the game's forecast ledger (6.5), each of a known schema with a whole-number target;
+    anything else refuses (EX_142 B02: an unknown or malformed line is never read as 'no freeze line')."""
     rows, _torn = read_jsonl(forecast_ledger_path(root, game_id))
-    return any(r.get('schema') == FREEZE_LINE_SCHEMA and r.get('target_draw_number') == target for r in rows)
+    for r in rows:
+        if r.get('schema') not in FORECAST_LEDGER_SCHEMAS:
+            raise RecordRefused('forecast ledger: a line of an unknown schema')
+        if type(r.get('target_draw_number')) is not int:
+            raise RecordRefused('forecast ledger: a line without a whole-number target')
+    return rows
+
+
+def freeze_line_exists(root: Path, game_id: str, target: int) -> bool:
+    return any(r['schema'] == FREEZE_LINE_SCHEMA and r['target_draw_number'] == target
+               for r in forecast_ledger_lines(root, game_id))
 
 
 def record_sha(rec: Mapping) -> str:

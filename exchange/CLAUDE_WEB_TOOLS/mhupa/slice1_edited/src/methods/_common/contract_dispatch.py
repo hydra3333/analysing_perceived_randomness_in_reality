@@ -12,13 +12,17 @@ MHUP-A adds two things, both at fixed roots no caller can choose (E2RC2-B01):
 - barrier P, src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt (Appendix J): while it exists every
   dispatch-gated run refuses, like the orphan marker;
 - publication admission for a bound request: a Mode H binding must name the game's one plan with its digest,
-  listing this exact pair, with an open ticket for this run id, no DONE ticket for the pair and no lifecycle
-  marker, and (REAL_HOLDOUT) the opening record; a session binding must name an existing session record with
-  its digest listing this variant, with an open ticket, no DONE ticket for the pair in any session's ledger of
-  the game, no freeze line for the target, the developed record, and a mode that agrees with the variant's
-  release date; the diagnostic binding admits REAL_DEVELOPMENT only and, for a holdout or later target, only
-  with the opening record and the game's seal. A request that needs a binding and has none refuses before
-  anything is read.
+  tied to the opening record's study manifest and frozen at the admitted version v_a, listing this exact pair,
+  with the request pinning exactly the plan's frozen (ledger_version, master_sha256), an open ticket for this
+  run id, no DONE ticket for the pair and no lifecycle marker; a session binding must name an existing session
+  record with its digest listing this variant, with the request pinning exactly the session's frozen version,
+  an open ticket, no DONE ticket for the pair in any session's ledger of the game, no freeze line for the
+  target, the developed record, and a mode that agrees with the variant's release date; the diagnostic binding
+  admits REAL_DEVELOPMENT only and, for a holdout or later target, only with the opening record and the game's
+  seal. The runner adds the second half of the pin rule after the reader: the pin must also be the ledger's
+  current last row (STALE_PIN). Every record the gate reads fails closed: a record, ledger or marker that exists
+  but is not a plain file, or a ledger line of an unknown shape, refuses rather than reading as absent (EX_142
+  B01, B02). A request that needs a binding and has none refuses before anything is read.
 """
 from __future__ import annotations
 
@@ -141,11 +145,27 @@ def _resolve_binding(request: Mapping, ident) -> None:
     def refuse(code, detail):
         raise DispatchRefused(refusal_text(*ident, f'{code}: {detail}'), code)
 
+    pin = (request['ledger_version'], request['master_sha256'])
     try:
         if kind == 'MODE_H_BATCH':
             plan = OR.mode_h_plan(root, game, b['batch_id'])
             if record_digest(plan) != b['plan_digest']:
                 refuse('BINDING_NOT_RESOLVED', 'the binding does not name the plan\'s digest')
+            # The plan is tied to the ratified study (design 4.1, 5.1): the game's opening record must exist, the plan
+            # must name the opening record's study manifest, and the plan's frozen version must be the admitted version
+            # v_a = freeze_version + 1 (the study version advance of 4.1, which may move v_a, arrives with slice 2).
+            opening = OR.opening_record(root, game)
+            if opening is None:
+                refuse('HOLDOUT_NOT_OPENED', 'a Mode H plan binding needs the game\'s opening record')
+            if plan['study_manifest_sha256'] != opening['study_manifest_sha256']:
+                refuse('PLAN_NOT_TIED_TO_STUDY', 'the plan does not name the opening record\'s study manifest')
+            plan_pin = OR.pin_of(plan, 'Mode H plan')
+            if plan_pin[0] != opening['freeze_version'] + 1:
+                refuse('PLAN_VERSION_NOT_ADMITTED', 'the plan\'s frozen version is not the admitted version v_a')
+            # EX_142 B01: the request pins exactly the version the plan froze (the runner separately requires that this
+            # is also the ledger's current last row, STALE_PIN).
+            if pin != plan_pin:
+                refuse('PIN_DISAGREES_WITH_PLAN', 'the request does not pin the master version the plan froze')
             if not OR.plan_lists_pair(plan, method, revision, variant, target):
                 refuse('PAIR_NOT_IN_PLAN', 'the plan does not list this method, revision, variant and target')
             markers = OR.lifecycle_markers_present(root, game, b['batch_id'])
@@ -157,12 +177,14 @@ def _resolve_binding(request: Mapping, ident) -> None:
                 refuse('PAIR_ALREADY_DONE', 'the pair has a DONE ticket; no second record')
             if not OR.open_ticket_for(rows, run_id=run_id, pair=pair, request_digest=record_digest(request)):
                 refuse('NO_OPEN_TICKET', 'no open ticket names this run id, pair and request')
-            if mode == 'REAL_HOLDOUT' and OR.opening_record(root, game) is None:
-                refuse('HOLDOUT_NOT_OPENED', 'no opening record for this game')
         elif kind == 'WEEKLY_SESSION':
             session = OR.session_record(root, game, b['session_id'])
             if record_digest(session) != b['session_digest']:
                 refuse('BINDING_NOT_RESOLVED', 'the binding does not name the session record\'s digest')
+            # EX_142 B01: the request pins exactly the version the session froze at open-session (design 6.1); the
+            # runner separately requires that this is also the ledger's current last row (STALE_PIN).
+            if pin != OR.pin_of(session, 'session record'):
+                refuse('PIN_DISAGREES_WITH_SESSION', 'the request does not pin the master version the session froze')
             member = OR.roster_entry(session, method, revision, variant)
             if member is None:
                 refuse('NOT_IN_SESSION_ROSTER', 'the session roster does not list this variant')

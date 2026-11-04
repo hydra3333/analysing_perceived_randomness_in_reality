@@ -136,3 +136,4 @@ The previous chat's running notes, for reference only; the register, H-1 and the
 | `mhupa/mhupa_slice1_mutations.py` | `mhupa_slice1_mutations.py TREE`: 67 planted defects, one per rule; TREE is a full clone with the overlay applied. |
 | `mhupa/run_all_but_t12.py` | Discovery run of every test module less T12 with per-module counts (for setting a runner's EXPECTED). |
 | `mhupa/assemble_ex141.py` | `assemble_ex141.py SCRATCHPAD REPO`: builds the review zip (overlay, tools, evidence), the diff and EX_141, and stages them into `exchange/`. |
+| `mhupa/assemble_ex143.py` | The same for EX_143 (slice 1 candidate v1r1 after EX_142), plus the v1-to-v1r1 diff; `slice1_new/` and `slice1_edited/` are the candidate's new and whole-file-replaced sources as of EX_143. |

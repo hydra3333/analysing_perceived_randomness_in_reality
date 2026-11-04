@@ -14,5 +14,5 @@ done
 find "$DEV" -name __pycache__ -type d -prune -exec rm -rf {} +
 echo "dev tree built at $DEV"
 python3 -I "$T/edit_tests_slice1.py" "$DEV"
-cp "$T/slice1_new/tests/mhupa_fixtures.py" "$T/slice1_new/tests/test_mhupa_master_versions.py" "$T/slice1_new/tests/test_mhupa_gates.py" "$T/slice1_new/tests/test_e1r3_revision3.py" "$DEV/tests/"
+cp "$T/slice1_new/tests/ledger_fixture.py" "$T/slice1_new/tests/mhupa_fixtures.py" "$T/slice1_new/tests/test_mhupa_master_versions.py" "$T/slice1_new/tests/test_mhupa_gates.py" "$T/slice1_new/tests/test_e1r3_revision3.py" "$DEV/tests/"
 cp "$T/slice1_new/tests/fixtures/e1_r2_reference_v1.json" "$DEV/tests/fixtures/"

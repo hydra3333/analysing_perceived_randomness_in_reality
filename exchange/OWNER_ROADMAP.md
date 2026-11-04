@@ -196,8 +196,12 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            Python 3.13 and 3.15); you chose two review slices then one integrated MHUP-A package;
            slice 1 (the version-2 master rules, E_1 revision 3, one data kind, the binding and ticket
            gates, barrier P) coded on Fable, 506 tests passing on both Pythons, 67 mutants (61 caught,
-           6 equivalent, 0 survived), sent to ChatGPT for code review as EX_141. NOW: ChatGPT's review
-           of slice 1 and any RECHECK; then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
+           6 equivalent, 0 survived), sent to ChatGPT for code review as EX_141; ChatGPT's RECHECK
+           (EX_142: three blockers - the frozen-pin binding, fail-closed evidence, the full ledger
+           grammar for every ledger - and C01-C03), your C01 decision (effective_date = the integrated
+           package's preparation date; the release record alone dates a release), the fixes as
+           candidate v1r1 (507 tests, both Pythons; 87 mutants, 80 caught, 7 equivalent, 0 survived)
+           sent as EX_143. NOW: ChatGPT's recheck of slice 1 (EX_144); then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
            the records tool, process_check.py, the updater v0.2, the launchers, the freeze-before-
            outcome rule, the rulebook) and its review; then the integrated install package with its
            rehearsals and T016. Installing it, its Windows rehearsal and MHUP-B each wait for your

@@ -58,7 +58,9 @@ MR.retire(tree, 'E_1', '2', R2_FILES, README)
 REASON = ('Revision 3 (MHUP-1 design v0.1r5 section 2; owner decisions MHUP-Q10 and MHUP-R, ratified 3 November 2026): '
           'the multi-game function takes the view data kind, never a run mode, so E_1 runs in Mode H and the weekly '
           'session under the shared target and mode gates; counting, ranking and tie order are unchanged. Revision 2 '
-          'is archived in archive/methods/E_001/r2/.')
+          'is archived in archive/methods/E_001/r2/. effective_date is the date this entry was prepared and frozen for '
+          'review in its package, not an installation or release date (owner decision, 4 November 2026, EX_142 C01): '
+          'the release date comes only from the create-only release record (design 4.3).')
 reg = InstalledRegistry(CD)
 for game in ('POWERBALL', 'OZLOTTO'):
     chain = reg.chain(game, 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1')

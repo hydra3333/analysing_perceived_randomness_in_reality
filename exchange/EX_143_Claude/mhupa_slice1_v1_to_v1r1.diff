@@ -1,0 +1,1087 @@
+# MHUP-A review slice 1: the diff of src/ and tests/ (.py) from the EX_141 candidate (v1) to this candidate (v1r1).
+# The two entry_0003.json files also changed (their registry_status_reason; digests in the members list).
+diff -ruN a/src/evaluation/outcome_reader.py b/src/evaluation/outcome_reader.py
+--- a/src/evaluation/outcome_reader.py
++++ b/src/evaluation/outcome_reader.py
+@@ -68,7 +68,7 @@
+     except (ValueError, UnicodeDecodeError) as exc:
+         raise OutcomeRefused(f'the ledger does not bind the pinned master: {exc}') from None
+     # Serve only the pinned version's own rows: the prefix that hashes to the pin.
+-    return b''.join(raw.splitlines(keepends=True)[:1 + row.draw_count])
++    return MV.prefix_bytes(raw, row)
+ 
+ 
+ def _number(text: str, high: int, what: str) -> int:
+diff -ruN a/src/methods/_common/contract_dispatch.py b/src/methods/_common/contract_dispatch.py
+--- a/src/methods/_common/contract_dispatch.py
++++ b/src/methods/_common/contract_dispatch.py
+@@ -12,13 +12,17 @@
+ - barrier P, src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt (Appendix J): while it exists every
+   dispatch-gated run refuses, like the orphan marker;
+ - publication admission for a bound request: a Mode H binding must name the game's one plan with its digest,
+-  listing this exact pair, with an open ticket for this run id, no DONE ticket for the pair and no lifecycle
+-  marker, and (REAL_HOLDOUT) the opening record; a session binding must name an existing session record with
+-  its digest listing this variant, with an open ticket, no DONE ticket for the pair in any session's ledger of
+-  the game, no freeze line for the target, the developed record, and a mode that agrees with the variant's
+-  release date; the diagnostic binding admits REAL_DEVELOPMENT only and, for a holdout or later target, only
+-  with the opening record and the game's seal. A request that needs a binding and has none refuses before
+-  anything is read.
++  tied to the opening record's study manifest and frozen at the admitted version v_a, listing this exact pair,
++  with the request pinning exactly the plan's frozen (ledger_version, master_sha256), an open ticket for this
++  run id, no DONE ticket for the pair and no lifecycle marker; a session binding must name an existing session
++  record with its digest listing this variant, with the request pinning exactly the session's frozen version,
++  an open ticket, no DONE ticket for the pair in any session's ledger of the game, no freeze line for the
++  target, the developed record, and a mode that agrees with the variant's release date; the diagnostic binding
++  admits REAL_DEVELOPMENT only and, for a holdout or later target, only with the opening record and the game's
++  seal. The runner adds the second half of the pin rule after the reader: the pin must also be the ledger's
++  current last row (STALE_PIN). Every record the gate reads fails closed: a record, ledger or marker that exists
++  but is not a plain file, or a ledger line of an unknown shape, refuses rather than reading as absent (EX_142
++  B01, B02). A request that needs a binding and has none refuses before anything is read.
+ """
+ from __future__ import annotations
+ 
+@@ -141,11 +145,27 @@
+     def refuse(code, detail):
+         raise DispatchRefused(refusal_text(*ident, f'{code}: {detail}'), code)
+ 
++    pin = (request['ledger_version'], request['master_sha256'])
+     try:
+         if kind == 'MODE_H_BATCH':
+             plan = OR.mode_h_plan(root, game, b['batch_id'])
+             if record_digest(plan) != b['plan_digest']:
+                 refuse('BINDING_NOT_RESOLVED', 'the binding does not name the plan\'s digest')
++            # The plan is tied to the ratified study (design 4.1, 5.1): the game's opening record must exist, the plan
++            # must name the opening record's study manifest, and the plan's frozen version must be the admitted version
++            # v_a = freeze_version + 1 (the study version advance of 4.1, which may move v_a, arrives with slice 2).
++            opening = OR.opening_record(root, game)
++            if opening is None:
++                refuse('HOLDOUT_NOT_OPENED', 'a Mode H plan binding needs the game\'s opening record')
++            if plan['study_manifest_sha256'] != opening['study_manifest_sha256']:
++                refuse('PLAN_NOT_TIED_TO_STUDY', 'the plan does not name the opening record\'s study manifest')
++            plan_pin = OR.pin_of(plan, 'Mode H plan')
++            if plan_pin[0] != opening['freeze_version'] + 1:
++                refuse('PLAN_VERSION_NOT_ADMITTED', 'the plan\'s frozen version is not the admitted version v_a')
++            # EX_142 B01: the request pins exactly the version the plan froze (the runner separately requires that this
++            # is also the ledger's current last row, STALE_PIN).
++            if pin != plan_pin:
++                refuse('PIN_DISAGREES_WITH_PLAN', 'the request does not pin the master version the plan froze')
+             if not OR.plan_lists_pair(plan, method, revision, variant, target):
+                 refuse('PAIR_NOT_IN_PLAN', 'the plan does not list this method, revision, variant and target')
+             markers = OR.lifecycle_markers_present(root, game, b['batch_id'])
+@@ -157,12 +177,14 @@
+                 refuse('PAIR_ALREADY_DONE', 'the pair has a DONE ticket; no second record')
+             if not OR.open_ticket_for(rows, run_id=run_id, pair=pair, request_digest=record_digest(request)):
+                 refuse('NO_OPEN_TICKET', 'no open ticket names this run id, pair and request')
+-            if mode == 'REAL_HOLDOUT' and OR.opening_record(root, game) is None:
+-                refuse('HOLDOUT_NOT_OPENED', 'no opening record for this game')
+         elif kind == 'WEEKLY_SESSION':
+             session = OR.session_record(root, game, b['session_id'])
+             if record_digest(session) != b['session_digest']:
+                 refuse('BINDING_NOT_RESOLVED', 'the binding does not name the session record\'s digest')
++            # EX_142 B01: the request pins exactly the version the session froze at open-session (design 6.1); the
++            # runner separately requires that this is also the ledger's current last row (STALE_PIN).
++            if pin != OR.pin_of(session, 'session record'):
++                refuse('PIN_DISAGREES_WITH_SESSION', 'the request does not pin the master version the session froze')
+             member = OR.roster_entry(session, method, revision, variant)
+             if member is None:
+                 refuse('NOT_IN_SESSION_ROSTER', 'the session roster does not list this variant')
+diff -ruN a/src/methods/_common/master_versions.py b/src/methods/_common/master_versions.py
+--- a/src/methods/_common/master_versions.py
++++ b/src/methods/_common/master_versions.py
+@@ -19,10 +19,11 @@
+    3.4, which are checked by the request validator, the dispatch gate and the runner, not here.
+ 
+ LEDGER_COLUMNS is the module's own copy of the updater's columns; a test asserts equality with the owner's
+-tool (the tool is never imported by project code). The grammar is applied in full whenever the ledger holds
+-more than one row; a single-row (INIT) ledger is checked exactly as every reader checked it before this
+-module (its fields and the INIT verification record), so every existing synthetic fixture and the committed
+-version-1 records stay valid without a byte changed.
++tool (the tool is never imported by project code). The grammar is applied in full to every ledger, a one-row
++INIT ledger included (EX_142 B03): the exact header, every physical line a record (no blank line, no quoted
++line break), every universally required field, and the line-count and prefix rules of rule 2 for every row.
++The synthetic fixtures write ledgers of this grammar (tests/ledger_fixture.py); the committed version-1
++records were written by the updater with exactly these columns.
+ """
+ from __future__ import annotations
+ 
+@@ -30,7 +31,6 @@
+ from dataclasses import dataclass
+ from datetime import datetime
+ import hashlib
+-import io
+ import json
+ from pathlib import Path
+ import re
+@@ -91,27 +91,42 @@
+     return t
+ 
+ 
+-def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
+-    """The closed grammar (design 3.2 rule 1). Returns the rows, version 1 first. Refuses on any break."""
+-    p = get_profile(game_id)
++def _records(raw: bytes) -> list[dict]:
++    """The ledger's physical lines as records: ASCII, a line ending on every line, no blank line, one CSV record per
++    physical line (a quoted line break is a refusal), the exact header, every record with every column."""
+     try:
+         text = raw.decode('ascii')
+     except UnicodeDecodeError:
+         raise LedgerRefused('ledger is not ASCII') from None
+     if not text.endswith('\n'):
+         raise LedgerRefused('ledger does not end with a line ending (truncated?)')
+-    rows = list(csv.DictReader(io.StringIO(text)))
+-    if not rows:
+-        raise LedgerRefused('ledger has no rows')
+-    header = tuple(rows[0].keys())
+-    if len(rows) > 1 and header != LEDGER_COLUMNS:
++    physical = text[:-1].replace('\r\n', '\n').split('\n')
++    if any(line.strip() == '' for line in physical):
++        raise LedgerRefused('ledger has a blank line')
++    parsed = list(csv.reader(physical))
++    if len(parsed) != len(physical):
++        raise LedgerRefused('ledger has a record spanning more than one physical line')
++    if tuple(parsed[0]) != LEDGER_COLUMNS:
+         raise LedgerRefused('ledger header is not the updater\'s LEDGER_COLUMNS')
++    if len(parsed) == 1:
++        raise LedgerRefused('ledger has no rows')
++    rows = []
++    for i, fields in enumerate(parsed[1:], start=1):
++        if len(fields) != len(LEDGER_COLUMNS):
++            raise LedgerRefused(f'ledger row {i}: wrong number of fields')
++        rows.append(dict(zip(LEDGER_COLUMNS, fields)))
++    return rows
++
++
++def parse_ledger(raw: bytes, game_id: str) -> list[LedgerRow]:
++    """The closed grammar (design 3.2 rule 1), applied in full to every ledger. Returns the rows, version 1 first.
++    Refuses on any break."""
++    p = get_profile(game_id)
++    rows = _records(raw)
+     out: list[LedgerRow] = []
+     previous_utc = None
+     for i, row in enumerate(rows, start=1):
+         where = f'ledger row {i}'
+-        if None in row or any(v is None for v in row.values()):
+-            raise LedgerRefused(f'{where}: wrong number of fields')
+         version = _int_field(row, 'version', where)
+         if version != i:
+             raise LedgerRefused(f'{where}: version {version} out of order (expected {i})')
+@@ -124,32 +139,32 @@
+             raise LedgerRefused(f'{where}: first_draw is not the era\'s first draw')
+         if count != last - first + 1 or count < 1:
+             raise LedgerRefused(f'{where}: draw_count disagrees with first_draw and last_draw')
++        # the universally required fields (every row, the INIT row included)
++        t = _utc_instant(row.get('utc'), where)
++        if not row.get('tool_version', '').strip():
++            raise LedgerRefused(f'{where}: tool_version is empty')
++        _sha_field(row, 'tool_sha256', where, required=True)
++        if not row.get('note', '').isascii():
++            raise LedgerRefused(f'{where}: note is not ASCII')
++        added = _int_field(row, 'added_count', where)
+         if i == 1:
+             if action != 'INIT':
+                 raise LedgerRefused(f'{where}: the first row is not INIT')
+             if last != p.holdout_first - 1 or count != p.holdout_first - p.first_draw:
+                 raise LedgerRefused(f'{where}: the INIT row does not cover exactly the development prefix')
+-            if len(rows) > 1:
+-                previous_utc = _utc_instant(row.get('utc'), where)
+-                added = _int_field(row, 'added_count', where)
+-                if added != count or _int_field(row, 'added_first', where) != first or \
+-                        _int_field(row, 'added_last', where) != last:
+-                    raise LedgerRefused(f'{where}: the INIT row\'s added fields disagree with its counts')
++            if added != count or _int_field(row, 'added_first', where) != first or \
++                    _int_field(row, 'added_last', where) != last:
++                raise LedgerRefused(f'{where}: the INIT row\'s added fields disagree with its counts')
++            for f in ('grab_file', 'grab_sha256', 'backup_file', 'backup_sha256'):
++                if row.get(f) != '':
++                    raise LedgerRefused(f'{where}: the INIT row has {f}')
+         else:
+             prev = out[-1]
+-            t = _utc_instant(row.get('utc'), where)
+             if t < previous_utc:
+                 raise LedgerRefused(f'{where}: utc decreases')
+-            previous_utc = t
+-            if not row.get('tool_version'):
+-                raise LedgerRefused(f'{where}: tool_version is empty')
+-            _sha_field(row, 'tool_sha256', where, required=True)
+             _sha_field(row, 'grab_sha256', where, required=True)
+             if not row.get('grab_file'):
+                 raise LedgerRefused(f'{where}: grab_file is missing')
+-            if not (row.get('note') or '').isascii():
+-                raise LedgerRefused(f'{where}: note is not ASCII')
+-            added = _int_field(row, 'added_count', where)
+             if action == 'NO_CHANGE':
+                 if sha != prev.master_sha256 or last != prev.last_draw or count != prev.draw_count or added != 0:
+                     raise LedgerRefused(f'{where}: NO_CHANGE row differs from the row before it')
+@@ -170,12 +185,24 @@
+                     raise LedgerRefused(f'{where}: UPDATE row repeats the previous master_sha256')
+             else:
+                 raise LedgerRefused(f'{where}: action {action!r} is not INIT, UPDATE or NO_CHANGE')
++        previous_utc = t
+         out.append(LedgerRow(version, action, sha, first, last, count))
+     return out
+ 
+ 
+ def _lines_with_endings(raw: bytes) -> list[bytes]:
+-    return raw.splitlines(keepends=True)
++    """The file's lines, each with its own ending, split on LF only (a CRLF line ends with LF; no other byte ends a
++    line, unlike str.splitlines); an unterminated tail is a line of its own and fails the ending check below."""
++    parts = raw.split(b'\n')
++    lines = [part + b'\n' for part in parts[:-1]]
++    if parts[-1]:
++        lines.append(parts[-1])
++    return lines
++
++
++def prefix_bytes(raw_master: bytes, row: LedgerRow) -> bytes:
++    """Version `row`'s own bytes: the header and its draw_count lines, as stored (rule 2's prefix)."""
++    return b''.join(_lines_with_endings(raw_master)[:1 + row.draw_count])
+ 
+ 
+ def verify_master_against_ledger(raw_master: bytes, rows: list[LedgerRow], game_id: str) -> None:
+@@ -188,11 +215,6 @@
+     if hashlib.sha256(raw_master).hexdigest() != rows[-1].master_sha256:
+         raise LedgerRefused('complete master bytes differ from the last ledger row\'s SHA-256 (edited outside the tool, or an '
+                             'update was interrupted)')
+-    if len(rows) == 1:
+-        # A version-1-only ledger: the whole file IS the prefix, and the hash above has just bound it, exactly as
+-        # every reader did before this module. The line-count rules below bind each version's rows once the
+-        # ledger has grown (the updater verifies the counts itself at every run).
+-        return
+     for row in rows:
+         n = 1 + row.draw_count
+         if len(lines) < n:
+diff -ruN a/src/methods/_common/owner_records.py b/src/methods/_common/owner_records.py
+--- a/src/methods/_common/owner_records.py
++++ b/src/methods/_common/owner_records.py
+@@ -120,6 +120,13 @@
+     return path.is_file() and not path.is_symlink()
+ 
+ 
++def absent(path: Path) -> bool:
++    """True only when nothing at all is at `path`: no file, no folder, no symlink (dangling or not). An optional record
++    or ledger is 'not yet created' only in this state; anything present that is not a plain file refuses (EX_142 B02:
++    present-but-invalid evidence is never read as absence)."""
++    return not path.exists() and not path.is_symlink()
++
++
+ def _read_json(path: Path, what: str) -> dict:
+     if not _plain_file(path):
+         raise RecordRefused(f'{what}: no plain file at {path.name}')
+@@ -190,7 +197,7 @@
+     """The game's valid opening record, with its study manifest present and matching, or None if there is no
+     record at all. An invalid record, or a record whose manifest is missing or altered, refuses."""
+     path = opening_record_path(root, game_id)
+-    if not path.exists() and not path.is_symlink():
++    if absent(path):
+         return None
+     rec = validate_opening_record(_read_json(path, 'opening record'), game_id)
+     manifest = study_manifest_path(root, game_id)
+@@ -219,7 +226,7 @@
+ 
+ def developed_record(root: Path, game_id: str) -> dict | None:
+     path = developed_record_path(root, game_id)
+-    if not path.exists() and not path.is_symlink():
++    if absent(path):
+         return None
+     return validate_developed_record(_read_json(path, 'developed record'), game_id)
+ 
+@@ -228,7 +235,7 @@
+ 
+ def batch_id_record(root: Path, game_id: str) -> dict | None:
+     path = batch_id_record_path(root, game_id)
+-    if not path.exists() and not path.is_symlink():
++    if absent(path):
+         return None
+     rec = _read_canonical_json(path, 'batch-id record')
+     if rec.get('schema') != BATCH_ID_SCHEMA or rec.get('game_id') != game_id:
+@@ -251,9 +258,20 @@
+         raise RecordRefused('Mode H plan: wrong schema, batch or game')
+     if type(plan.get('cohort')) is not list or type(plan.get('targets')) is not list:
+         raise RecordRefused('Mode H plan: cohort or targets missing')
++    pin_of(plan, 'Mode H plan')
++    _sha(plan, 'study_manifest_sha256', 'Mode H plan')
+     return plan
+ 
+ 
++def pin_of(rec: Mapping, what: str) -> tuple[int, str]:
++    """The master version a plan or session record froze: (`ledger_version`, `master_sha256`), both required and
++    well-formed (EX_142 B01). Every official publication must pin exactly this and the ledger's current last row."""
++    v = _need(rec, 'ledger_version', what)
++    if type(v) is not int or v < 1:
++        raise RecordRefused(f'{what}: ledger_version is not a positive whole number')
++    return v, _sha(rec, 'master_sha256', what)
++
++
+ def plan_lists_pair(plan: Mapping, method_id: str, method_revision: str, variant_id: str, target: int) -> bool:
+     members = plan.get('cohort') or []
+     return (target in plan.get('targets', []) and
+@@ -262,8 +280,18 @@
+ 
+ 
+ def lifecycle_markers_present(root: Path, game_id: str, batch_id: str) -> list[str]:
++    """The batch's lifecycle markers that exist as plain files. A marker name that exists as anything else (a symlink,
++    a folder) refuses (EX_142 B02): it can neither close the batch nor stand as the seal."""
+     folder = mode_h_batch_folder(root, game_id, batch_id)
+-    return [m for m in LIFECYCLE_MARKERS if (folder / f'{m}.json').exists() or (folder / f'{m}.json').is_symlink()]
++    out = []
++    for m in LIFECYCLE_MARKERS:
++        path = folder / f'{m}.json'
++        if absent(path):
++            continue
++        if not _plain_file(path):
++            raise RecordRefused(f'lifecycle marker {m} exists but is not a plain file')
++        out.append(m)
++    return out
+ 
+ 
+ def mode_h_sealed(root: Path, game_id: str) -> bool:
+@@ -278,9 +306,12 @@
+ 
+ def read_jsonl(path: Path) -> tuple[list[dict], bool]:
+     """Every complete JSON line of a ledger as a dict; a final line without its newline is ignored and reported
+-    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse."""
+-    if not _plain_file(path):
++    (design 6.5's torn-last-line rule). Non-dict or undecodable complete lines refuse. A ledger that was never created
++    reads as empty; a path that exists but is not a plain file (a symlink, a folder) refuses (EX_142 B02)."""
++    if absent(path):
+         return [], False
++    if not _plain_file(path):
++        raise RecordRefused(f'{path.name}: exists but is not a plain file')
+     raw = path.read_bytes()
+     torn = bool(raw) and not raw.endswith(b'\n')
+     body = raw.rsplit(b'\n', 1)[0] if torn else raw
+@@ -368,6 +399,7 @@
+         raise RecordRefused('session record: wrong schema, session or game')
+     if type(rec.get('roster')) is not list:
+         raise RecordRefused('session record: roster missing')
++    pin_of(rec, 'session record')
+     return rec
+ 
+ 
+@@ -393,10 +425,14 @@
+ 
+ 
+ def all_session_attempt_paths(root: Path, game_id: str) -> list[Path]:
++    """Every session attempts ledger of the game, by name. Nothing is filtered: a name of that shape that is not a plain
++    file refuses when it is read (EX_142 B02), so an invalid ledger can never read as 'no earlier DONE ticket'."""
+     folder = weekly_root(root, game_id) / 'sessions'
+-    if not folder.is_dir():
++    if absent(folder):
+         return []
+-    return sorted(p for p in folder.glob('SESSION_*_attempts.jsonl') if _plain_file(p))
++    if folder.is_symlink() or not folder.is_dir():
++        raise RecordRefused('the sessions folder exists but is not a plain folder')
++    return sorted(folder.glob('SESSION_*_attempts.jsonl'))
+ 
+ 
+ def session_id_of_attempts_path(path: Path) -> str:
+@@ -411,9 +447,24 @@
+     return False
+ 
+ 
+-def freeze_line_exists(root: Path, game_id: str, target: int) -> bool:
++FORECAST_LEDGER_SCHEMAS = frozenset((FREEZE_LINE_SCHEMA,))     # slice 2 adds the score, witness and amendment lines
++
++
++def forecast_ledger_lines(root: Path, game_id: str) -> list[dict]:
++    """Every complete line of the game's forecast ledger (6.5), each of a known schema with a whole-number target;
++    anything else refuses (EX_142 B02: an unknown or malformed line is never read as 'no freeze line')."""
+     rows, _torn = read_jsonl(forecast_ledger_path(root, game_id))
+-    return any(r.get('schema') == FREEZE_LINE_SCHEMA and r.get('target_draw_number') == target for r in rows)
++    for r in rows:
++        if r.get('schema') not in FORECAST_LEDGER_SCHEMAS:
++            raise RecordRefused('forecast ledger: a line of an unknown schema')
++        if type(r.get('target_draw_number')) is not int:
++            raise RecordRefused('forecast ledger: a line without a whole-number target')
++    return rows
++
++
++def freeze_line_exists(root: Path, game_id: str, target: int) -> bool:
++    return any(r['schema'] == FREEZE_LINE_SCHEMA and r['target_draw_number'] == target
++               for r in forecast_ledger_lines(root, game_id))
+ 
+ 
+ def record_sha(rec: Mapping) -> str:
+diff -ruN a/tests/ledger_fixture.py b/tests/ledger_fixture.py
+--- a/tests/ledger_fixture.py
++++ b/tests/ledger_fixture.py
+@@ -0,0 +1,49 @@
++"""The one ledger writer the synthetic fixtures share (MHUP-A, EX_142 B03): a master ledger of exactly the updater's
++grammar (design v0.1r5 section 3.2 rule 1), so that the production rules apply to every fixture in full. A one-row
++INIT ledger here has the exact LEDGER_COLUMNS header, a UTC instant, a tool version and digest, the added fields and
++an ASCII note; grown ledgers (tests/mhupa_fixtures.py) add UPDATE and NO_CHANGE rows with the same writer.
++
++Fixture values only: the tool digest is a fixed string, the instants are invented. No real draw is written."""
++from __future__ import annotations
++
++from datetime import datetime, timedelta, timezone
++from pathlib import Path
++
++LEDGER_COLUMNS = ('version', 'utc', 'action', 'master_sha256', 'first_draw', 'last_draw', 'draw_count',
++                  'added_count', 'added_first', 'added_last', 'grab_file', 'grab_sha256',
++                  'backup_file', 'backup_sha256', 'tool_version', 'tool_sha256', 'note')
++T0 = datetime(2026, 10, 21, 3, 0, 0, tzinfo=timezone.utc)
++FIXTURE_TOOL_SHA = '0' * 64
++
++
++def utc_at(i: int) -> str:
++    """An invented UTC instant, i hours after T0, in the updater's isoformat (+00:00)."""
++    return (T0 + timedelta(hours=i)).isoformat()
++
++
++def init_row(profile, master_sha256: str, *, note: str = 'fixture INIT') -> dict:
++    """The INIT row of a synthetic master that covers exactly the development prefix."""
++    count = profile.holdout_first - profile.first_draw
++    return {'version': 1, 'utc': utc_at(0), 'action': 'INIT', 'master_sha256': master_sha256,
++            'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1, 'draw_count': count,
++            'added_count': count, 'added_first': profile.first_draw, 'added_last': profile.holdout_first - 1,
++            'tool_version': '0.1', 'tool_sha256': FIXTURE_TOOL_SHA, 'note': note}
++
++
++def ledger_bytes(rows: list[dict], *, eol: str = '\r\n') -> bytes:
++    """The ledger file: the exact header, one record per physical line, every column, CRLF as the updater writes."""
++    lines = [','.join(LEDGER_COLUMNS)]
++    for r in rows:
++        fields = [str(r.get(c, '')) for c in LEDGER_COLUMNS]
++        assert all(',' not in f and '"' not in f and '\n' not in f for f in fields), 'fixture fields are plain'
++        lines.append(','.join(fields))
++    return (eol.join(lines) + eol).encode('ascii')
++
++
++def write_ledger(path: Path, rows: list[dict], *, eol: str = '\r\n') -> None:
++    Path(path).write_bytes(ledger_bytes(rows, eol=eol))
++
++
++def write_init_ledger(path: Path, profile, master_sha256: str) -> None:
++    """A one-row INIT ledger for a synthetic full-prefix master whose whole-file SHA-256 is `master_sha256`."""
++    write_ledger(path, [init_row(profile, master_sha256)])
+diff -ruN a/tests/mhupa_fixtures.py b/tests/mhupa_fixtures.py
+--- a/tests/mhupa_fixtures.py
++++ b/tests/mhupa_fixtures.py
+@@ -3,44 +3,28 @@
+ written. The prefix hashes below are computed independently of _common.master_versions (an R-4 oracle)."""
+ from __future__ import annotations
+ 
+-from datetime import datetime, timedelta, timezone
+ import hashlib
+ import json
+ from pathlib import Path
+ 
++from ledger_fixture import LEDGER_COLUMNS, T0, init_row, utc_at, write_ledger      # noqa: F401  (re-exported)
+ from test_e6_beta_bernoulli import varied_row, write_varied_master
+ from _common.contract_records import canonical, record_digest
+ from _common.game_draws_reader import header_for
+ from _common.game_profiles import get_profile
+ from _common import owner_records as OR
+ 
+-LEDGER_COLUMNS = ('version', 'utc', 'action', 'master_sha256', 'first_draw', 'last_draw', 'draw_count',
+-                  'added_count', 'added_first', 'added_last', 'grab_file', 'grab_sha256',
+-                  'backup_file', 'backup_sha256', 'tool_version', 'tool_sha256', 'note')
+-T0 = datetime(2026, 10, 21, 3, 0, 0, tzinfo=timezone.utc)
+-UTC_FMT = '%Y-%m-%dT%H:%M:%S.%fZ'
+ 
+ 
+ def sha(b: bytes) -> str:
+     return hashlib.sha256(b).hexdigest()
+ 
+ 
+-def utc_at(i: int) -> str:
+-    return (T0 + timedelta(hours=i)).isoformat()
+-
+-
+ def master_paths(root: Path, game: str):
+     f = Path(root) / 'source_data'
+     return f / f'{game}_results_master.csv', f / f'{game}_results_master_ledger.csv', f / f'{game}_results_master_init_verification.json'
+ 
+ 
+-def write_ledger(path: Path, rows: list[dict]) -> None:
+-    lines = [','.join(LEDGER_COLUMNS)]
+-    for r in rows:
+-        lines.append(','.join(str(r.get(c, '')) for c in LEDGER_COLUMNS))
+-    path.write_bytes(('\r\n'.join(lines) + '\r\n').encode('ascii'))
+-
+-
+ def grow_master(root: Path, profile, versions: list[list[int] | None], *, variant: int = 0, crlf: bool = False) -> list[dict]:
+     """Start from write_varied_master's version-1 master (last row holdout_first - 1) and append one ledger version per
+     entry of `versions`: a list of draw numbers to add (an UPDATE), or None (a NO_CHANGE). Rewrites the ledger with
+@@ -57,11 +41,7 @@
+         ev['master_sha256'] = sha(raw)
+         evidence.write_text(json.dumps(ev))
+     eol = b'\r\n' if crlf else b'\n'
+-    rows = [{'version': 1, 'utc': utc_at(0), 'action': 'INIT', 'master_sha256': sha(raw), 'first_draw': profile.first_draw,
+-             'last_draw': profile.holdout_first - 1, 'draw_count': profile.holdout_first - profile.first_draw,
+-             'added_count': profile.holdout_first - profile.first_draw, 'added_first': profile.first_draw,
+-             'added_last': profile.holdout_first - 1, 'tool_version': '0.1', 'tool_sha256': '0' * 64,
+-             'note': 'fixture INIT'}]
++    rows = [init_row(profile, sha(raw))]
+     for i, add in enumerate(versions, start=2):
+         prev = rows[-1]
+         if add is None:
+@@ -126,9 +106,14 @@
+     return rec
+ 
+ 
+-def write_mode_h_plan(root: Path, game: str, batch_id: str, cohort: list[dict], targets: list[int]) -> dict:
++def write_mode_h_plan(root: Path, game: str, batch_id: str, cohort: list[dict], targets: list[int], *,
++                      pin: tuple[int, str], manifest_sha: str, **overrides) -> dict:
++    """The game's one Mode H plan: frozen at `pin` = (ledger_version, master_sha256), the admitted version v_a, and tied
++    to the study manifest (design 4.1, 5.1; EX_142 B01). `overrides` plant defects."""
+     plan = {'schema': OR.MODE_H_PLAN_SCHEMA, 'batch_id': batch_id, 'game_id': game, 'cohort': cohort, 'targets': targets,
+-            'fixture': True}
++            'ledger_version': pin[0], 'master_sha256': pin[1], 'study_manifest_sha256': manifest_sha, 'fixture': True}
++    plan.update(overrides)
++    plan = {k: v for k, v in plan.items() if v is not None}
+     folder = OR.mode_h_batch_folder(root, game, batch_id)
+     folder.mkdir(parents=True, exist_ok=True)
+     (folder / 'plan.json').write_bytes(canonical(plan))
+@@ -139,8 +124,12 @@
+     return plan
+ 
+ 
+-def write_session(root: Path, game: str, session_id: str, roster: list[dict]) -> dict:
+-    rec = {'schema': OR.SESSION_SCHEMA, 'session_id': session_id, 'game_id': game, 'roster': roster, 'fixture': True}
++def write_session(root: Path, game: str, session_id: str, roster: list[dict], *, pin: tuple[int, str], **overrides) -> dict:
++    """A session record frozen at `pin` = the ledger's last row at open-session (design 6.1; EX_142 B01)."""
++    rec = {'schema': OR.SESSION_SCHEMA, 'session_id': session_id, 'game_id': game, 'roster': roster,
++           'ledger_version': pin[0], 'master_sha256': pin[1], 'fixture': True}
++    rec.update(overrides)
++    rec = {k: v for k, v in rec.items() if v is not None}
+     p = OR.session_record_path(root, game, session_id)
+     p.parent.mkdir(parents=True, exist_ok=True)
+     p.write_bytes(canonical(rec))
+diff -ruN a/tests/test_e1r3_revision3.py b/tests/test_e1r3_revision3.py
+--- a/tests/test_e1r3_revision3.py
++++ b/tests/test_e1r3_revision3.py
+@@ -126,8 +126,9 @@
+                     X.write_opening_record(proj, game, freeze_version=1, freeze_sha=rows[0]['master_sha256'])
+                     cohort = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': '3',
+                                'declaration_digest': e3['declaration_digest'], 'registry_entry_digest': record_digest(e3)}]
+-                    plan = X.write_mode_h_plan(proj, game, BATCH, cohort, list(range(p.holdout_first, p.holdout_last + 1)))
+                     v, sha = 2, rows[1]['master_sha256']
++                    plan = X.write_mode_h_plan(proj, game, BATCH, cohort, list(range(p.holdout_first, p.holdout_last + 1)),
++                                               pin=(v, sha), manifest_sha=X.write_study_manifest(proj, game))
+                     records = {}
+                     for t in (p.holdout_first, p.holdout_first + 4, p.holdout_last):
+                         rid_h, rid_d = f'mg-holdout-{t}-' + 'a' * 8, f'mg-devel-{t}-' + 'b' * 8
+@@ -216,6 +217,17 @@
+             self.assertIn('MHUP-Q10', reason)
+             self.assertIn('Revision 2 is archived', reason)
+             self.assertEqual(chain[2]['previous_entry_digest'], record_digest(chain[1]))
++            # EX_142 C01 (owner decision, 4 November 2026): effective_date is the preparation date, says so, and is no
++            # release date; the release record alone dates a release (design 4.3)
++            self.assertEqual(chain[2]['effective_date'], '2026-11-04')
++            self.assertIn('not an installation or release date', reason)
++
++    def test_effective_date_is_read_by_the_validator_only(self):
++        """EX_142 C01 condition 3: no gate, classifier or report reads a registry entry's effective_date; the one reader
++        under src/ is the registry validator's ISO-date format check."""
++        readers = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / 'src').rglob('*.py')
++                         if 'effective_date' in p.read_text(encoding='utf-8', errors='replace'))
++        self.assertEqual(readers, ['src/methods/_common/contract_records.py'])
+         # The archived revision-2 files and their README are checked, byte for byte, by test_code3_retirement (the
+         # one test file allowed to name the archive).
+ 
+diff -ruN a/tests/test_e6_beta_bernoulli.py b/tests/test_e6_beta_bernoulli.py
+--- a/tests/test_e6_beta_bernoulli.py
++++ b/tests/test_e6_beta_bernoulli.py
+@@ -30,6 +30,7 @@
+ from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
+ from _common.multigame_method_registry import method_status
+ from E_006 import contract as E6
++from ledger_fixture import write_init_ledger
+ from E_006.beta_bernoulli import VARIANTS, posterior_means, posterior_means_by_recursion
+ 
+ GAMES = (POWERBALL, OZLOTTO)
+@@ -63,10 +64,7 @@
+     raw = ('\n'.join(rows) + '\n').encode('ascii')
+     sha = hashlib.sha256(raw).hexdigest()
+     (folder / FILES[0].format(g=game)).write_bytes(raw)
+-    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
+-              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'
+-              f'{profile.holdout_first - profile.first_draw}\n')
+-    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))
++    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)
+     (folder / FILES[2].format(g=game)).write_text(json.dumps({
+         'master_sha256': sha, 'master_file': FILES[0].format(g=game), 'game': game,
+         'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1,
+diff -ruN a/tests/test_mhupa_gates.py b/tests/test_mhupa_gates.py
+--- a/tests/test_mhupa_gates.py
++++ b/tests/test_mhupa_gates.py
+@@ -40,7 +40,7 @@
+ 
+ 
+ def e1_pins(game):
+-    reg = InstalledRegistry()
++    reg = InstalledRegistry(REG.DATA_ROOT)          # the patched copy in a Project test, the installed data otherwise
+     e = reg.active_entry(game, *C.E1)
+     return e, reg.declaration(e['declaration_digest'])
+ 
+@@ -134,15 +134,27 @@
+     def opened(self, game):
+         return X.write_opening_record(self.proj, game, freeze_version=1, freeze_sha=self.rows[game][0]['master_sha256'])
+ 
+-    def plan_for(self, game, targets=None):
++    def plan_for(self, game, targets=None, *, pin=None, manifest_sha=None, batch=BATCH, **overrides):
++        """The game's one Mode H plan, frozen at version 2 (the admitted version: the opening record freezes 1) and tied
++        to the study manifest the opening record names, unless a defect is planted."""
+         e, _d = e1_pins(game)
+         p = get_profile(game)
+         cohort = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
+                    'declaration_digest': e['declaration_digest'], 'registry_entry_digest': record_digest(e)}]
+-        return X.write_mode_h_plan(self.proj, game, BATCH, cohort, targets or list(range(p.holdout_first, p.holdout_last + 1)))
++        if manifest_sha is None:
++            manifest_sha = X.write_study_manifest(self.proj, game)
++        return X.write_mode_h_plan(self.proj, game, batch, cohort, targets or list(range(p.holdout_first, p.holdout_last + 1)),
++                                   pin=pin or self.v2(game), manifest_sha=manifest_sha, **overrides)
+ 
+-    def holdout_request(self, game, target, plan, run_id=RUN):
+-        v, sha = self.v2(game)
++    def regrow(self, game, extra_versions):
++        """Append further ledger versions to the game's synthetic master (versions 1 and 2 keep their bytes)."""
++        p = get_profile(game)
++        first = list(range(p.holdout_first, p.holdout_last + 2))
++        self.rows[game] = X.grow_master(self.proj, p, [first, *extra_versions])
++        return self.rows[game]
++
++    def holdout_request(self, game, target, plan, run_id=RUN, pin=None):
++        v, sha = pin or self.v2(game)
+         return request(game, target, mode='REAL_HOLDOUT', run_id=run_id, binding=X.binding_for_plan(plan, run_id),
+                        version=v, sha=sha)
+ 
+@@ -196,6 +208,25 @@
+         good = self.holdout_request(game, p.holdout_first, plan)
+         # a forged plan digest
+         self.refused(dict(good, binding=dict(good['binding'], plan_digest='0' * 64)), 'BINDING_NOT_RESOLVED')
++        # a plan but no opening record: nothing bound to a Mode H plan runs before the holdout is opened
++        self.refused(good, 'HOLDOUT_NOT_OPENED')
++        self.opened(game)
++        # EX_142 B01: the plan must be tied to the study and frozen at the admitted version, and the request must pin
++        # exactly what the plan froze
++        bad_tie = self.plan_for(game, manifest_sha='1' * 64)
++        self.refused(self.holdout_request(game, p.holdout_first, bad_tie), 'PLAN_NOT_TIED_TO_STUDY')
++        v1 = (1, self.rows[game][0]['master_sha256'])
++        not_admitted = self.plan_for(game, pin=v1)
++        self.refused(self.holdout_request(game, p.holdout_first, not_admitted, pin=v1), 'PLAN_VERSION_NOT_ADMITTED')
++        for defect in ({'ledger_version': None}, {'master_sha256': None}, {'ledger_version': '2'}, {'master_sha256': 'zz'},
++                       {'study_manifest_sha256': None}):
++            broken = self.plan_for(game, **defect)
++            self.refused(self.holdout_request(game, p.holdout_first, broken), 'BINDING_NOT_RESOLVED')
++        plan = self.plan_for(game)
++        good = self.holdout_request(game, p.holdout_first, plan)
++        # (b) frozen 2 and current 2, but the request pins version 1 (an accepted version, the wrong one)
++        self.refused(self.holdout_request(game, p.holdout_first, plan, pin=v1), 'PIN_DISAGREES_WITH_PLAN')
++        self.refused(dict(good, master_sha256=self.rows[game][0]['master_sha256']), 'PIN_DISAGREES_WITH_PLAN')
+         # a pair the plan does not list (another target)
+         other = self.holdout_request(game, p.holdout_last + 1, plan)
+         other['run_mode'], other['product_kind'] = 'REAL_HOLDOUT', 'WF_FORECAST'
+@@ -203,7 +234,7 @@
+             CD.dispatch_gate(other)
+         narrow = self.plan_for(game, targets=[p.holdout_first + 1])
+         self.refused(self.holdout_request(game, p.holdout_first, narrow), 'PAIR_NOT_IN_PLAN')
+-        plan = X.write_mode_h_plan(self.proj, game, BATCH, narrow['cohort'], list(range(p.holdout_first, p.holdout_last + 1)))
++        plan = self.plan_for(game)
+         good = self.holdout_request(game, p.holdout_first, plan)
+         # no ticket at all
+         self.refused(good, 'NO_OPEN_TICKET')
+@@ -215,11 +246,21 @@
+         X.open_ticket(self.attempts(game), dict(good, include_dates=not good['include_dates']),
+                       scope_kind='MODE_H_BATCH', scope_id=BATCH)
+         self.refused(good, 'NO_OPEN_TICKET')
+-        # the right ticket, but the holdout is not opened
++        # the right ticket: admitted (c: plan pin, request pin and the ledger's current row all version 2)
+         X.open_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
+-        self.refused(good, 'HOLDOUT_NOT_OPENED')
+-        self.opened(game)
+-        CD.dispatch_gate(good)                                            # admitted now
++        CD.dispatch_gate(good)
++        # EX_142 B02: a batch attempts ledger that exists as a symlink is never read as 'no tickets'
++        real = self.attempts(game).with_name('elsewhere.jsonl')
++        self.attempts(game).rename(real)
++        try:
++            self.attempts(game).symlink_to(real)
++        except (OSError, NotImplementedError):
++            real.rename(self.attempts(game))
++        else:
++            self.refused(good, 'BINDING_NOT_RESOLVED')
++            self.attempts(game).unlink()
++            real.rename(self.attempts(game))
++        CD.dispatch_gate(good)
+         # a run id a resume marked FAILED_TO_START is never reused
+         X.failed_to_start_ticket(self.attempts(game), good, scope_kind='MODE_H_BATCH', scope_id=BATCH)
+         self.refused(good, 'NO_OPEN_TICKET')
+@@ -239,12 +280,27 @@
+             X.write_marker(self.proj, game, BATCH, marker)
+             self.refused(t2, 'BATCH_CLOSED')
+             (OR.mode_h_batch_folder(self.proj, game, BATCH) / f'{marker}.json').unlink()
++        # EX_142 B02: a marker that exists as a folder (not a plain file) refuses rather than counting either way
++        (OR.mode_h_batch_folder(self.proj, game, BATCH) / 'BATCH_COMPLETE.json').mkdir()
++        self.refused(t2, 'BINDING_NOT_RESOLVED')
++        (OR.mode_h_batch_folder(self.proj, game, BATCH) / 'BATCH_COMPLETE.json').rmdir()
+         CD.dispatch_gate(t2)
++        # (a) the master grows to version 3 after the plan froze version 2: a request pinning the new current row
++        # disagrees with the plan (and one pinning the plan's version is STALE at the runner, tested below)
++        rows3 = self.regrow(game, [[p.holdout_last + 2]])
++        t3 = self.holdout_request(game, p.holdout_first + 1, plan, run_id='mg-' + '2' * 32, pin=(3, rows3[2]['master_sha256']))
++        X.open_ticket(self.attempts(game), t3, scope_kind='MODE_H_BATCH', scope_id=BATCH)
++        self.refused(t3, 'PIN_DISAGREES_WITH_PLAN')
++        CD.dispatch_gate(t2)                                              # the gate reads no ledger: still admitted
++        res = self.launch(t2)
++        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
++        self.assertIn('STALE_PIN', res.reason)
++        self.assertFalse((res.folder / 'forecast.json').exists())
+         # a plan that is not the game's one plan (another batch id)
+-        X.write_mode_h_plan(self.proj, game, 'wf-' + '9' * 32, plan['cohort'], plan['targets'])     # moves the batch-id record
++        self.plan_for(game, batch='wf-' + '9' * 32)                       # moves the batch-id record
+         self.refused(t2, 'BINDING_NOT_RESOLVED')
+ 
+-    def test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_stale(self):
++    def test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_refused(self):
+         game, p = 'POWERBALL', POWERBALL
+         self.opened(game)
+         plan = self.plan_for(game)
+@@ -256,15 +312,16 @@
+         with self.assertRaises(CD.DispatchRefused):
+             self.launch(unbound)
+         self.assertFalse(OR.mode_h_runs_root(self.proj).exists())        # nothing published
+-        # a bound request pinning version 1 while the ledger's last row is version 2: admitted by the gate (it reads no
+-        # ledger), refused at data admission as STALE_PIN, with a terminal record and no forecast
++        # a bound request pinning version 1 while the plan froze version 2: refused at the gate (EX_142 B01), before
++        # anything is read and with nothing published; the runner's own STALE_PIN rule (the pin must also be the
++        # ledger's current row) is exercised in test_refusals_one_per_rule with a regrown ledger
+         stale = request(game, p.holdout_first, mode='REAL_HOLDOUT', binding=X.binding_for_plan(plan, RUN), version=1,
+                         sha=self.rows[game][0]['master_sha256'])
+         X.open_ticket(self.attempts(game), stale, scope_kind='MODE_H_BATCH', scope_id=BATCH)
+-        res = self.launch(stale)
+-        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
+-        self.assertIn('STALE_PIN', res.reason)
+-        self.assertFalse((res.folder / 'forecast.json').exists())
++        self.refused(stale, 'PIN_DISAGREES_WITH_PLAN')
++        with self.assertRaises(CD.DispatchRefused):
++            self.launch(stale)
++        self.assertFalse(OR.mode_h_runs_root(self.proj).exists())
+ 
+     def test_the_plan_pin_is_the_ledgers_current_row(self):
+         """walk_forward.ledger_pin (design 3.2): a new batch pins the current last row, both games."""
+@@ -338,14 +395,15 @@
+ class SessionBinding(Project):
+     """Design 3.4(b), the session binding, with synthetic session records (the writers arrive with MHUP-B)."""
+ 
+-    def session(self, game, release_date):
++    def session(self, game, release_date, *, pin=None, roster=None, **overrides):
+         e, _d = e1_pins(game)
+-        roster = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
+-                   'release_date': release_date}]
+-        return X.write_session(self.proj, game, SESSION, roster)
++        if roster is None:
++            roster = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': e['method_revision'],
++                       'release_date': release_date}]
++        return X.write_session(self.proj, game, SESSION, roster, pin=pin or self.v2(game), **overrides)
+ 
+-    def dev_request(self, game, target, session, run_id=RUN):
+-        v, sha = self.v2(game)
++    def dev_request(self, game, target, session, run_id=RUN, pin=None):
++        v, sha = pin or self.v2(game)
+         return request(game, target, mode='REAL_DEVELOPMENT', run_id=run_id, binding=X.binding_for_session(session, run_id),
+                        version=v, sha=sha)
+ 
+@@ -355,6 +413,14 @@
+         sess = self.session(game, release_date=p.derived_date(target).isoformat())   # released ON the draw date: development
+         req = self.dev_request(game, target, sess)
+         self.refused(dict(req, binding=dict(req['binding'], session_digest='0' * 64)), 'BINDING_NOT_RESOLVED')
++        # EX_142 B01: the request must pin exactly the version the session froze
++        v1 = (1, self.rows[game][0]['master_sha256'])
++        self.refused(self.dev_request(game, target, sess, pin=v1), 'PIN_DISAGREES_WITH_SESSION')
++        self.refused(dict(req, master_sha256=v1[1]), 'PIN_DISAGREES_WITH_SESSION')
++        for defect in ({'ledger_version': None}, {'master_sha256': None}, {'ledger_version': 0}, {'master_sha256': 'zz'}):
++            broken = self.session(game, release_date=p.derived_date(target).isoformat(), **defect)
++            self.refused(self.dev_request(game, target, broken), 'BINDING_NOT_RESOLVED')
++        sess = self.session(game, release_date=p.derived_date(target).isoformat())
+         self.refused(req, 'NOT_DEVELOPED')
+         X.write_developed_record(self.proj, game)
+         self.refused(req, 'NO_OPEN_TICKET')
+@@ -364,29 +430,79 @@
+         # a freeze line for the target closes it
+         X.write_freeze_line(self.proj, game, target)
+         self.refused(req, 'TARGET_FROZEN')
+-        OR.forecast_ledger_path(self.proj, game).unlink()
++        ledger = OR.forecast_ledger_path(self.proj, game)
++        # EX_142 B02: a forecast ledger that is present but invalid is never read as 'no freeze line'
++        ledger.write_bytes(b'{"schema": "SOMETHING_ELSE_V1", "target_draw_number": 1}\n')     # an unknown schema
++        self.refused(req, 'BINDING_NOT_RESOLVED')
++        ledger.write_bytes(b'{"schema": "FREEZE_LINE_V1", "target_draw_number": "' + str(target).encode() + b'"}\n')
++        self.refused(req, 'BINDING_NOT_RESOLVED')                         # a malformed target
++        ledger.write_bytes(b'\xff\xfe not a ledger\n')
++        self.refused(req, 'BINDING_NOT_RESOLVED')                         # undecodable
++        ledger.unlink()
++        ledger.mkdir()
++        self.refused(req, 'BINDING_NOT_RESOLVED')                         # a folder of that name
++        ledger.rmdir()
++        CD.dispatch_gate(req)                                             # genuinely absent: permitted
+         # a DONE ticket for the pair in ANOTHER session's ledger
+         other = 'e' * 32
+         X.done_ticket(OR.session_attempts_path(self.proj, game, other), dict(req, run_id='mg-' + '3' * 32),
+                       scope_kind='WEEKLY_SESSION', scope_id=other)
+         self.refused(req, 'PAIR_ALREADY_DONE')
+-        OR.session_attempts_path(self.proj, game, other).unlink()
++        # EX_142 B02: that earlier ledger existing as a symlink (or a folder) refuses rather than reading as absent
++        real = OR.session_attempts_path(self.proj, game, other).with_name('moved.jsonl')
++        OR.session_attempts_path(self.proj, game, other).rename(real)
++        try:
++            OR.session_attempts_path(self.proj, game, other).symlink_to(real)
++        except (OSError, NotImplementedError):
++            pass
++        else:
++            self.refused(req, 'BINDING_NOT_RESOLVED')
++            OR.session_attempts_path(self.proj, game, other).unlink()
++        OR.session_attempts_path(self.proj, game, other).mkdir()
++        self.refused(req, 'BINDING_NOT_RESOLVED')
++        OR.session_attempts_path(self.proj, game, other).rmdir()
++        real.unlink()
+         CD.dispatch_gate(req)
++        # (a) the master grows to version 3 after the session froze version 2: a request pinning the new current row
++        # disagrees with the session; one pinning the session's version is STALE at the runner
++        rows3 = self.regrow(game, [[p.holdout_last + 2]])
++        self.refused(self.dev_request(game, target, sess, pin=(3, rows3[2]['master_sha256'])), 'PIN_DISAGREES_WITH_SESSION')
++        self.opened(game)                                                 # the developed state presumes an opened holdout
++        res = self.launch(req)
++        self.assertEqual(res.outcome, 'VALIDATION_FAILURE')
++        self.assertIn('STALE_PIN', res.reason)
++        self.regrow(game, [])                                             # back to version 2 for the rest
+         # a variant released before the draw date may not publish a development record for it
+         early = self.session(game, release_date=p.derived_date(target - 1).isoformat())   # one draw before: a forecast
+         req2 = self.dev_request(game, target, early, run_id='mg-' + '4' * 32)
+         X.open_ticket(path, req2, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
+         self.refused(req2, 'MODE_DISAGREES_WITH_RELEASE')
+         # a variant not in the roster
+-        sess3 = X.write_session(self.proj, game, SESSION, [])
++        sess3 = self.session(game, release_date=None, roster=[])
+         req3 = self.dev_request(game, target, sess3, run_id='mg-' + '5' * 32)
+         X.open_ticket(path, req3, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
+         self.refused(req3, 'NOT_IN_SESSION_ROSTER')
++        # EX_142 C01 condition 4: a registry entry's effective_date confers no release standing. The active entry is
++        # superseded by one dated long before the draw (an invented entry, in the patched registry copy); the mode rule
++        # still reads only the roster's release date: released before the draw refuses, released on the draw date admits.
++        e_now = e1_pins(game)[0]
++        early_entry = dict(C.entry(e1_pins(game)[1], 'SUPPORTED', seq=e_now['entry_sequence'] + 1, prev=e_now),
++                           method_revision=e_now['method_revision'], effective_date='2026-01-01')
++        C.append_entry(self.data, early_entry)
++        self.assertEqual(e1_pins(game)[0]['effective_date'], '2026-01-01')
++        for run_id, release, verdict in (('mg-' + '8' * 32, p.derived_date(target - 1), 'MODE_DISAGREES_WITH_RELEASE'),
++                                         ('mg-' + '9' * 32, p.derived_date(target), None)):
++            sess_e = self.session(game, release_date=release.isoformat())
++            req_e = self.dev_request(game, target, sess_e, run_id=run_id)
++            X.open_ticket(path, req_e, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
++            if verdict:
++                self.refused(req_e, verdict)
++            else:
++                CD.dispatch_gate(req_e)
+         # the happy path publishes under the weekly root with the right pins
+         sess4 = self.session(game, release_date=p.derived_date(target).isoformat())
+         req4 = self.dev_request(game, target, sess4, run_id='mg-' + '6' * 32)
+         X.open_ticket(path, req4, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
+-        X.write_opening_record(self.proj, game, freeze_version=1, freeze_sha=self.rows[game][0]['master_sha256'])
+         res = self.launch(req4)
+         self.assertEqual(res.outcome, 'SUCCESS', res.reason)
+         self.assertTrue(res.folder.is_relative_to(OR.weekly_runs_root(self.proj)))
+diff -ruN a/tests/test_mhupa_master_versions.py b/tests/test_mhupa_master_versions.py
+--- a/tests/test_mhupa_master_versions.py
++++ b/tests/test_mhupa_master_versions.py
+@@ -95,14 +95,24 @@
+                     'INIT not the development prefix')
+         # each of these breaks ONE rule only (every other cross-row rule still holds), so a redundant check cannot
+         # mask the rule under test (the slice's mutation checks plant exactly these defects)
+-        self.broken(lambda r: r.__delitem__(slice(1, None)) or r.__setitem__(0, dict(r[0], last_draw=1575, draw_count=432)),
+-                    'a one-row ledger whose INIT stops short of the development prefix')
++        self.broken(lambda r: r.__delitem__(slice(1, None)) or r.__setitem__(0, dict(r[0], last_draw=1575, draw_count=432,
++                                                                                      added_count=432, added_last=1575)),
++                    'a one-row ledger whose INIT stops short of the development prefix (its own fields consistent)')
+         self.broken(lambda r: r.__setitem__(1, dict(r[1], added_first=1578, added_count=2)),
+                     'UPDATE added range starts after the previous last draw (own range and counts consistent)')
+         self.broken(lambda r: (r.__setitem__(1, dict(r[1], master_sha256=r[0]['master_sha256'])),
+                                r.__setitem__(2, dict(r[2], backup_sha256=r[0]['master_sha256']))),
+                     'UPDATE repeats the previous master_sha256 (the next backup agrees)')
+-        # a wrong header, a truncated last line and an extra field
++        # EX_142 B03: the universally required fields are required of the INIT row too
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], utc='fixture')), 'INIT utc not an instant')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], utc='')), 'INIT utc missing')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], tool_version='')), 'INIT tool_version empty')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], tool_sha256='')), 'INIT tool_sha256 missing')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], added_count=432)), 'INIT added_count disagrees')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], grab_file='grab_1.csv')), 'INIT with a grab file')
++        self.broken(lambda r: r.__setitem__(0, dict(r[0], backup_sha256='0' * 64)), 'INIT with a backup')
++        # the physical shape: a wrong header, a renamed column, a truncated last line, an extra field, a blank line, a
++        # record spanning two physical lines, a non-ASCII byte (B03)
+         X.write_ledger(self.ledger, [dict(r) for r in self.rows])
+         raw = read(self.ledger)
+         with self.assertRaises(MV.LedgerRefused):
+@@ -113,7 +123,16 @@
+             MV.parse_ledger(raw[:-3], 'POWERBALL')
+         with self.assertRaises(MV.LedgerRefused):
+             MV.parse_ledger(raw[:-2] + b',extra\r\n', 'POWERBALL')
++        with self.assertRaises(MV.LedgerRefused):                      # a blank physical line between rows
++            MV.parse_ledger(raw.replace(b'fixture INIT\r\n', b'fixture INIT\r\n\r\n', 1), 'POWERBALL')
++        with self.assertRaises(MV.LedgerRefused):                      # a blank line at the end
++            MV.parse_ledger(raw + b'\r\n', 'POWERBALL')
++        with self.assertRaises(MV.LedgerRefused):                      # a quoted field spanning two lines
++            MV.parse_ledger(raw.replace(b'fixture INIT\r\n', b'"fixture\r\nINIT"\r\n', 1), 'POWERBALL')
++        with self.assertRaises(MV.LedgerRefused):                      # not ASCII
++            MV.parse_ledger(raw.replace(b'fixture INIT', b'fixture \xe9', 1), 'POWERBALL')
+         MV.parse_ledger(raw, 'POWERBALL')                    # and the unbroken ledger still parses
++        MV.parse_ledger(raw.replace(b'\r\n', b'\n'), 'POWERBALL')   # LF line endings are accepted too
+ 
+     def test_a_one_row_ledger_binds_the_whole_file_and_the_init_record(self):
+         """A version-1-only ledger: the whole master must hash to row 1 (today's check, unchanged), and the INIT
+@@ -126,7 +145,31 @@
+         self.master.write_bytes(v1)
+         _raw, rows, _ev = MV.load_verified_source(self.root, 'POWERBALL')
+         self.assertEqual([r.version for r in rows], [1])
++        # EX_142 B03: the full grammar and rule 2 apply to a one-row ledger: the old seven-column fixture header, a
++        # placeholder utc, a master one line short or one line long, and a wrong last draw each refuse
++        seven = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\r\n'
++                 f"1,fixture,INIT,{self.rows[0]['master_sha256']},1144,1576,433\r\n").encode('ascii')
++        self.ledger.write_bytes(seven)
++        with self.assertRaises(MV.LedgerRefused):
++            MV.load_verified_source(self.root, 'POWERBALL')
++        X.write_ledger(self.ledger, [dict(self.rows[0], utc='fixture')])
++        with self.assertRaises(MV.LedgerRefused):
++            MV.load_verified_source(self.root, 'POWERBALL')
++        lines = v1.split(b'\n')
+         ev = json.loads(read(self.evidence))
++        for bad_master in (b'\n'.join(lines[:-2]) + b'\n', v1 + lines[-2] + b'\n',
++                           b'\n'.join(lines[:-2] + [b'1575' + lines[-2][4:]]) + b'\n'):
++            # the ledger and the INIT record are re-pinned to the bad bytes, so only rule 2's line rules can refuse
++            self.master.write_bytes(bad_master)
++            bad_sha = hashlib.sha256(bad_master).hexdigest()
++            X.write_ledger(self.ledger, [dict(self.rows[0], master_sha256=bad_sha)])
++            self.evidence.write_text(json.dumps(dict(ev, master_sha256=bad_sha)))
++            with self.assertRaises(MV.LedgerRefused):
++                MV.load_verified_source(self.root, 'POWERBALL')
++        self.master.write_bytes(v1)
++        X.write_ledger(self.ledger, [dict(self.rows[0])])
++        self.evidence.write_text(json.dumps(ev))
++        MV.load_verified_source(self.root, 'POWERBALL')
+         ev['master_sha256'] = '0' * 64
+         self.evidence.write_text(json.dumps(ev))
+         with self.assertRaises(MV.LedgerRefused):                      # the INIT record disagrees with row 1
+@@ -333,8 +376,10 @@
+             'src/methods/_common/game_draws_reader.py', 'src/methods/_common/master_versions.py',
+             'src/methods/_common/walk_forward.py', 'src/results_master_v0_1.py'])
+         mv = (ROOT / 'src' / 'methods' / '_common' / 'master_versions.py').read_text(encoding='ascii')
+-        for word in ('import numpy', 'Drawn_', 'csv.reader(', 'simple_rows'):
++        for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
+             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column
++        self.assertEqual(mv.count('csv.reader('), 1)                  # the one CSV parse is the ledger's physical lines
++        self.assertIn('csv.reader(physical)', mv)
+ 
+ 
+ if __name__ == '__main__':
+diff -ruN a/tests/test_multigame_reader_contracts.py b/tests/test_multigame_reader_contracts.py
+--- a/tests/test_multigame_reader_contracts.py
++++ b/tests/test_multigame_reader_contracts.py
+@@ -25,6 +25,8 @@
+ from E_001.e1_historical_appearance_frequency import canonical_bytes
+ from _common.game_profiles import POWERBALL, OZLOTTO
+ from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
++sys.path.insert(0, str(ROOT / 'tests'))
++from ledger_fixture import write_init_ledger
+ 
+ SHA = {'POWERBALL':'ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8',
+        'OZLOTTO':'4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f'}
+@@ -41,7 +43,10 @@
+ 
+ def fake_root(root, game='OZLOTTO', *, size=9, corrupt_suffix=b'\xff\x00 secret after N',
+               later_suffix=b'FAKE_AFTER_TARGET,\xff,garbage', date_shift=None):
+-    """A synthetic stand-in for an owner-attested master; no result values."""
++    """A synthetic stand-in for an owner-attested master; no result values. The master has exactly the lines a
++    version-1 ledger records (MHUP-A, design 3.2 rule 2): `size` real rows, then the target's line and one line per
++    later draw up to holdout_first - 1, all deliberately undecodable (no CSV parser may ever consume them); when
++    the target is the last development draw there is no later line and later_suffix is unused."""
+     p=OZLOTTO if game=='OZLOTTO' else POWERBALL
+     d=root/'source_data';d.mkdir(parents=True,exist_ok=True)
+     lines=[','.join(header_for(game)).encode('ascii')+b'\n']
+@@ -56,18 +61,14 @@
+         lines.append((','.join(map(str,seq))+'\n').encode('ascii'))
+     # No CSV parser may ever consume this suffix. Its first field is the target.
+     lines.append(str(p.first_draw+size).encode('ascii')+b','+corrupt_suffix+b'\n')
+-    if later_suffix is not None:
+-        lines.append(later_suffix+b'\n')
++    for later in range(p.first_draw+size+1, p.holdout_first):
++        lines.append(str(later).encode('ascii')+b','+(later_suffix if later_suffix is not None else b'\xff')+b'\n')
+     raw=b''.join(lines)
+     sha=hashlib.sha256(raw).hexdigest()
+     (d/f'{game}_results_master.csv').write_bytes(raw)
+     # Provenance records are fixtures only; the production owner-managed master
+     # tool has already validated the real INIT master at its pinned SHA.
+-    ledger=(
+-        'version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
+-        f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first-1},{p.holdout_first-p.first_draw}\n'
+-    )
+-    (d/f'{game}_results_master_ledger.csv').write_bytes(ledger.encode('ascii'))
++    write_init_ledger(d/f'{game}_results_master_ledger.csv', p, sha)      # the updater's grammar (MHUP-A)
+     evidence={'master_sha256':sha,'master_file':f'{game}_results_master.csv',
+               'game':game,'first_draw':p.first_draw,'last_draw':p.holdout_first-1,
+               'draw_count':p.holdout_first-p.first_draw,
+diff -ruN a/tests/test_t05_hardening.py b/tests/test_t05_hardening.py
+--- a/tests/test_t05_hardening.py
++++ b/tests/test_t05_hardening.py
+@@ -24,6 +24,7 @@
+ sys.path.insert(0, str(ROOT / 'src' / 'methods'))
+ from _common.game_draws_reader import DrawView, load_pinned_draw_view, header_for
+ from _common.game_profiles import POWERBALL, OZLOTTO
++from ledger_fixture import write_init_ledger
+ 
+ KINDS = ('UNORDERED_SET', 'OPERATOR_DRAWN_ORDER', 'PAIRED_DIAGNOSTIC')
+ FILES = ('{g}_results_master.csv', '{g}_results_master_ledger.csv',
+@@ -65,10 +66,7 @@
+     raw = ('\n'.join(rows) + '\n').encode('ascii')
+     sha = hashlib.sha256(raw).hexdigest()
+     (folder / FILES[0].format(g=game)).write_bytes(raw)
+-    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
+-              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'
+-              f'{profile.holdout_first - profile.first_draw}\n')
+-    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))
++    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)
+     evidence = {'master_sha256': sha, 'master_file': FILES[0].format(g=game), 'game': game,
+                 'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1,
+                 'draw_count': profile.holdout_first - profile.first_draw,
+diff -ruN a/tests/test_wf1b_outcome_reader.py b/tests/test_wf1b_outcome_reader.py
+--- a/tests/test_wf1b_outcome_reader.py
++++ b/tests/test_wf1b_outcome_reader.py
+@@ -15,6 +15,7 @@
+ from _common.game_profiles import get_profile                  # noqa: E402
+ from evaluation import outcome_reader as R                     # noqa: E402
+ from test_e6_beta_bernoulli import FILES, varied_row, write_varied_master   # noqa: E402
++from ledger_fixture import write_init_ledger                              # noqa: E402
+ 
+ 
+ def _master(root: Path, game: str, extra_lines=(), corrupt=None) -> str:
+@@ -32,9 +33,7 @@
+     raw += b''.join(extra_lines)
+     path.write_bytes(raw)
+     sha = hashlib.sha256(raw).hexdigest()
+-    led = root / 'source_data' / FILES[1].format(g=game)
+-    led.write_text('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
+-                   f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first - 1},{p.holdout_first - p.first_draw}\n')
++    write_init_ledger(root / 'source_data' / FILES[1].format(g=game), p, sha)      # the updater's grammar (MHUP-A)
+     ev = root / 'source_data' / FILES[2].format(g=game)
+     rec = json.loads(ev.read_text())
+     rec['master_sha256'] = sha
+@@ -82,10 +81,17 @@
+                 rd.assert_not_called()
+ 
+     def test_rows_after_the_last_target_and_holdout_rows_are_never_decoded(self):
+-        """A planted line beyond 1576 (in an invented master) is never parsed; nor is an undecodable non-grid row."""
++        """A planted line beyond 1576 (in an invented master) is refused by the version-2 chain check before any
++        parse (MHUP-A, design 3.2 rule 2: version 1 has exactly its draw_count lines); an undecodable non-grid row
++        is parsed only when its draw is asked for."""
+         p = get_profile('POWERBALL')
+         planted = f'{p.holdout_first},2026-08-06,1,2,3,4,5,6,7,8\n'.encode() + b'\xff\xfe\n'
+         sha = _master(self.root, 'POWERBALL', extra_lines=[planted], corrupt=p.first_draw + 10)
++        with mock.patch.object(R, '_number', side_effect=AssertionError('parsed')):
++            with self.assertRaises(R.OutcomeRefused):
++                R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,
++                                targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])
++        sha = _master(self.root, 'POWERBALL', corrupt=p.first_draw + 10)
+         got = R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,
+                               targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])
+         self.assertEqual(len(got), 3)

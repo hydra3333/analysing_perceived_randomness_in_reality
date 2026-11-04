@@ -126,8 +126,9 @@ class OneDataKind(unittest.TestCase):
                     X.write_opening_record(proj, game, freeze_version=1, freeze_sha=rows[0]['master_sha256'])
                     cohort = [{'method_id': 'E_1', 'variant_id': C.E1[1], 'method_revision': '3',
                                'declaration_digest': e3['declaration_digest'], 'registry_entry_digest': record_digest(e3)}]
-                    plan = X.write_mode_h_plan(proj, game, BATCH, cohort, list(range(p.holdout_first, p.holdout_last + 1)))
                     v, sha = 2, rows[1]['master_sha256']
+                    plan = X.write_mode_h_plan(proj, game, BATCH, cohort, list(range(p.holdout_first, p.holdout_last + 1)),
+                                               pin=(v, sha), manifest_sha=X.write_study_manifest(proj, game))
                     records = {}
                     for t in (p.holdout_first, p.holdout_first + 4, p.holdout_last):
                         rid_h, rid_d = f'mg-holdout-{t}-' + 'a' * 8, f'mg-devel-{t}-' + 'b' * 8
@@ -216,6 +217,17 @@ class RegistryAndArchive(unittest.TestCase):
             self.assertIn('MHUP-Q10', reason)
             self.assertIn('Revision 2 is archived', reason)
             self.assertEqual(chain[2]['previous_entry_digest'], record_digest(chain[1]))
+            # EX_142 C01 (owner decision, 4 November 2026): effective_date is the preparation date, says so, and is no
+            # release date; the release record alone dates a release (design 4.3)
+            self.assertEqual(chain[2]['effective_date'], '2026-11-04')
+            self.assertIn('not an installation or release date', reason)
+
+    def test_effective_date_is_read_by_the_validator_only(self):
+        """EX_142 C01 condition 3: no gate, classifier or report reads a registry entry's effective_date; the one reader
+        under src/ is the registry validator's ISO-date format check."""
+        readers = sorted(p.relative_to(ROOT).as_posix() for p in (ROOT / 'src').rglob('*.py')
+                         if 'effective_date' in p.read_text(encoding='utf-8', errors='replace'))
+        self.assertEqual(readers, ['src/methods/_common/contract_records.py'])
         # The archived revision-2 files and their README are checked, byte for byte, by test_code3_retirement (the
         # one test file allowed to name the archive).
 

@@ -3,42 +3,26 @@ gates read (design v0.1r5 sections 3, 4.2, 5.1, 5.2, 6.1). Everything here is IN
 written. The prefix hashes below are computed independently of _common.master_versions (an R-4 oracle)."""
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
 import hashlib
 import json
 from pathlib import Path
 
+from ledger_fixture import LEDGER_COLUMNS, T0, init_row, utc_at, write_ledger      # noqa: F401  (re-exported)
 from test_e6_beta_bernoulli import varied_row, write_varied_master
 from _common.contract_records import canonical, record_digest
 from _common.game_draws_reader import header_for
 from _common.game_profiles import get_profile
 from _common import owner_records as OR
 
-LEDGER_COLUMNS = ('version', 'utc', 'action', 'master_sha256', 'first_draw', 'last_draw', 'draw_count',
-                  'added_count', 'added_first', 'added_last', 'grab_file', 'grab_sha256',
-                  'backup_file', 'backup_sha256', 'tool_version', 'tool_sha256', 'note')
-T0 = datetime(2026, 10, 21, 3, 0, 0, tzinfo=timezone.utc)
-UTC_FMT = '%Y-%m-%dT%H:%M:%S.%fZ'
 
 
 def sha(b: bytes) -> str:
     return hashlib.sha256(b).hexdigest()
 
 
-def utc_at(i: int) -> str:
-    return (T0 + timedelta(hours=i)).isoformat()
-
-
 def master_paths(root: Path, game: str):
     f = Path(root) / 'source_data'
     return f / f'{game}_results_master.csv', f / f'{game}_results_master_ledger.csv', f / f'{game}_results_master_init_verification.json'
-
-
-def write_ledger(path: Path, rows: list[dict]) -> None:
-    lines = [','.join(LEDGER_COLUMNS)]
-    for r in rows:
-        lines.append(','.join(str(r.get(c, '')) for c in LEDGER_COLUMNS))
-    path.write_bytes(('\r\n'.join(lines) + '\r\n').encode('ascii'))
 
 
 def grow_master(root: Path, profile, versions: list[list[int] | None], *, variant: int = 0, crlf: bool = False) -> list[dict]:
@@ -57,11 +41,7 @@ def grow_master(root: Path, profile, versions: list[list[int] | None], *, varian
         ev['master_sha256'] = sha(raw)
         evidence.write_text(json.dumps(ev))
     eol = b'\r\n' if crlf else b'\n'
-    rows = [{'version': 1, 'utc': utc_at(0), 'action': 'INIT', 'master_sha256': sha(raw), 'first_draw': profile.first_draw,
-             'last_draw': profile.holdout_first - 1, 'draw_count': profile.holdout_first - profile.first_draw,
-             'added_count': profile.holdout_first - profile.first_draw, 'added_first': profile.first_draw,
-             'added_last': profile.holdout_first - 1, 'tool_version': '0.1', 'tool_sha256': '0' * 64,
-             'note': 'fixture INIT'}]
+    rows = [init_row(profile, sha(raw))]
     for i, add in enumerate(versions, start=2):
         prev = rows[-1]
         if add is None:
@@ -126,9 +106,14 @@ def write_developed_record(root: Path, game: str) -> dict:
     return rec
 
 
-def write_mode_h_plan(root: Path, game: str, batch_id: str, cohort: list[dict], targets: list[int]) -> dict:
+def write_mode_h_plan(root: Path, game: str, batch_id: str, cohort: list[dict], targets: list[int], *,
+                      pin: tuple[int, str], manifest_sha: str, **overrides) -> dict:
+    """The game's one Mode H plan: frozen at `pin` = (ledger_version, master_sha256), the admitted version v_a, and tied
+    to the study manifest (design 4.1, 5.1; EX_142 B01). `overrides` plant defects."""
     plan = {'schema': OR.MODE_H_PLAN_SCHEMA, 'batch_id': batch_id, 'game_id': game, 'cohort': cohort, 'targets': targets,
-            'fixture': True}
+            'ledger_version': pin[0], 'master_sha256': pin[1], 'study_manifest_sha256': manifest_sha, 'fixture': True}
+    plan.update(overrides)
+    plan = {k: v for k, v in plan.items() if v is not None}
     folder = OR.mode_h_batch_folder(root, game, batch_id)
     folder.mkdir(parents=True, exist_ok=True)
     (folder / 'plan.json').write_bytes(canonical(plan))
@@ -139,8 +124,12 @@ def write_mode_h_plan(root: Path, game: str, batch_id: str, cohort: list[dict], 
     return plan
 
 
-def write_session(root: Path, game: str, session_id: str, roster: list[dict]) -> dict:
-    rec = {'schema': OR.SESSION_SCHEMA, 'session_id': session_id, 'game_id': game, 'roster': roster, 'fixture': True}
+def write_session(root: Path, game: str, session_id: str, roster: list[dict], *, pin: tuple[int, str], **overrides) -> dict:
+    """A session record frozen at `pin` = the ledger's last row at open-session (design 6.1; EX_142 B01)."""
+    rec = {'schema': OR.SESSION_SCHEMA, 'session_id': session_id, 'game_id': game, 'roster': roster,
+           'ledger_version': pin[0], 'master_sha256': pin[1], 'fixture': True}
+    rec.update(overrides)
+    rec = {k: v for k, v in rec.items() if v is not None}
     p = OR.session_record_path(root, game, session_id)
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_bytes(canonical(rec))
