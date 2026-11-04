@@ -192,9 +192,16 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            PASS; Q9 led to the direction document v0.3r1 (ChatGPT RECHECK, then PASS; ratified and
            installed by you at dfc2d13); your decisions on retrying after a STOP, interrupted sessions
            and Q9's E1-E4 (reminder R-018); you declared HO-2 complete and authorised normal work
-           (EX_139, EX_140). NOW: Claude's workspace and the Linux suite, then MHUP-A code (Fable for
-           the core), up to ChatGPT's code review; installing it, its Windows rehearsal and MHUP-B each
-           wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
+           (EX_139, EX_140). DONE (4 November 2026): Claude's workspace proven (the whole suite on
+           Python 3.13 and 3.15); you chose two review slices then one integrated MHUP-A package;
+           slice 1 (the version-2 master rules, E_1 revision 3, one data kind, the binding and ticket
+           gates, barrier P) coded on Fable, 506 tests passing on both Pythons, 67 mutants (61 caught,
+           6 equivalent, 0 survived), sent to ChatGPT for code review as EX_141. NOW: ChatGPT's review
+           of slice 1 and any RECHECK; then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
+           the records tool, process_check.py, the updater v0.2, the launchers, the freeze-before-
+           outcome rule, the rulebook) and its review; then the integrated install package with its
+           rehearsals and T016. Installing it, its Windows rehearsal and MHUP-B each wait for your
+           separate go. A ChatGPT reviewer handover is considered later, separately. The
            planning dates above are unchanged; FB-1 applies.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game

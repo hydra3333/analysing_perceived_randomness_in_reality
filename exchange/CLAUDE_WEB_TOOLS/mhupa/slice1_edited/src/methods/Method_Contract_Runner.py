@@ -1,0 +1,143 @@
+"""Standalone E_2-readiness contract runner (E2R-CODE-2). Launched as: Run_Experiment.bat Method_Contract_Runner.py ...
+
+  pins  --game G --method M --variant V
+        Print what a request must pin for that method variant now (installed registry only).
+  run   --game G --method M --variant V --revision R --target N --view VIEW [--dates]
+        --mode SYNTHETIC_CONTRACT_TEST --declaration-digest D --registry-entry-digest E
+        --ledger-version N --master-sha256 S --workspace DIR [--binding OWNER_DIAGNOSTIC]
+        One run through the dispatch gate. Synthetic runs read only the invented masters of the given
+        workspace and publish under DIR/contract_runs/<game>/<method>/<variant>/<run_id>/. The pin is the
+        pair (ledger version, master SHA-256) of one ledger row (MHUP-A: any version the chain accepts).
+        --binding OWNER_DIAGNOSTIC is the owner's unofficial re-test route (design v0.1r5 3.4, decision
+        MHUP-Q11): a REAL_DEVELOPMENT run published under results/real/diagnostic/contract_runs/, which no
+        plan, freeze line or scorer ever reads. Official real-mode runs are bound and ticketed by the
+        walk-forward driver or the weekly forecasting program, never typed by hand.
+
+Every run is refused before any data is read unless the dispatch gate admits it (E2R-R57). Contract
+runs on the real development masters (--mode REAL_DEVELOPMENT, no --workspace) are allowed by the shared
+runner's code-level switch since WF-1A, for released variants and development targets only; they publish
+under results/real/development/contract_runs/<game>/<method>/<variant>/<run_id>/.
+No subprocess, timer, termination or coordinator is involved. Exit codes: 0 SUCCESS; 1 a run that
+ended in a non-SUCCESS terminal record; 2 refused, or invalid arguments.
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from contract_adapters import e_001
+from E_002 import contract as e_002
+from E_003 import contract as e_003
+from E_004 import contract as e_004
+from E_006 import contract as e_006
+from E_007 import contract as e_007
+from E_008 import contract as e_008
+from E_009 import contract as e_009
+from E_010 import contract as e_010
+from E_017 import contract as e_017
+from E_018 import contract as e_018
+from E_019 import contract as e_019
+
+# The methods this runner can dispatch. Being listed here is not permission: the dispatch gate decides.
+# A new contract method adds one line here and nothing else in this file (E_6 design note, D6-1).
+ADAPTERS = {'E_1': e_001, 'E_2': e_002, 'E_3': e_003, 'E_4': e_004, 'E_6': e_006, 'E_7': e_007, 'E_8': e_008,
+            'E_9': e_009, 'E_10': e_010, 'E_17': e_017, 'E_18': e_018, 'E_19': e_019}
+
+
+def build_request(args, run_id: str) -> dict:
+    from _common.contract_vocab import FORECAST, RUN_REQUEST, producible
+    return {'schema': RUN_REQUEST, 'game_id': args.game, 'method_id': args.method, 'variant_id': args.variant,
+            'method_revision': args.revision, 'target_draw_number': args.target,
+            'observation_view': args.view, 'include_dates': args.dates, 'run_mode': args.mode,
+            'product_kind': producible(args.mode, FORECAST)[0],
+            'declaration_digest': args.declaration_digest, 'registry_entry_digest': args.registry_entry_digest,
+            'run_id': run_id, 'master_file': f'{args.game}_results_master.csv', 'ledger_version': args.ledger_version,
+            'master_sha256': args.master_sha256, **({'binding': {'kind': args.binding}} if args.binding else {})}
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description='E_2-readiness contract runner')
+    sub = parser.add_subparsers(dest='command', required=True)
+    pins = sub.add_parser('pins')
+    run = sub.add_parser('run')
+    for p in (pins, run):
+        p.add_argument('--game', required=True)
+        p.add_argument('--method', required=True)
+        p.add_argument('--variant', required=True)
+    run.add_argument('--revision', required=True)
+    run.add_argument('--target', type=int, required=True)
+    run.add_argument('--view', required=True)
+    run.add_argument('--dates', action='store_true')
+    run.add_argument('--mode', required=True)
+    run.add_argument('--declaration-digest', required=True)
+    run.add_argument('--registry-entry-digest', required=True)
+    run.add_argument('--master-sha256', required=True)
+    run.add_argument('--ledger-version', type=int, required=True, help='the pinned ledger row (1 for the INIT master)')
+    run.add_argument('--binding', choices=['OWNER_DIAGNOSTIC'], default=None,
+                     help="the owner's unofficial diagnostic route (real mode only; MHUP-Q11)")
+    run.add_argument('--workspace', type=Path, default=None, help='synthetic runs only')
+    args = parser.parse_args(argv)
+
+    from _common.contract_dispatch import DispatchRefused, active_pins
+    if args.command == 'pins':
+        try:
+            for k, v in active_pins(args.game, args.method, args.variant).items():
+                print(f'{k}: {v}')
+        except ValueError as exc:
+            print(f'[CONTRACT] no registry chain: {exc}', file=sys.stderr)
+            return 2
+        return 0
+
+    from _common import contract_runner as CR
+    from _common.contract_publication import new_run_id
+    if args.mode == 'REAL_DEVELOPMENT':
+        if args.workspace is not None:
+            parser.error('--workspace is for synthetic runs only')
+        repo_root = CR.PROJECT_ROOT
+        if args.binding == 'OWNER_DIAGNOSTIC':
+            from _common import owner_records as OR
+            run_root = OR.diagnostic_runs_root(CR.PROJECT_ROOT)                             # MHUP-A (design 3.4)
+        else:
+            run_root = CR.PROJECT_ROOT / 'results' / 'real' / 'development' / 'contract_runs'   # WF-1A (design 5.4)
+    elif args.mode in ('REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'CATCH_UP'):
+        print(f'[CONTRACT] DISPATCH REFUSED: a {args.mode} run is official only when the walk-forward driver or the '
+              'weekly forecasting program binds and tickets it; this command line issues none. No data was read.',
+              file=sys.stderr)
+        return 2
+    else:
+        if args.binding is not None:
+            parser.error('--binding is for real runs only')
+        if args.workspace is None:
+            parser.error('a synthetic run needs --workspace')
+        try:
+            repo_root = CR.check_synthetic_workspace(args.workspace)
+        except ValueError as exc:
+            parser.error(str(exc))
+        run_root = repo_root / 'contract_runs'
+    adapter = ADAPTERS.get(args.method)
+    try:
+        request = build_request(args, new_run_id())
+    except ValueError as exc:
+        print(f'[CONTRACT] DISPATCH REFUSED: invalid run mode: {exc}. No data was read.', file=sys.stderr)
+        return 2
+    try:
+        if adapter is None:
+            # The same gate first, so an unregistered or unsupported method gets the standard refusal.
+            from _common.contract_dispatch import dispatch_gate, refusal_text
+            dispatch_gate(request)
+            raise DispatchRefused(refusal_text(args.game, args.method, args.variant, args.revision,
+                                               'NO_CONTRACT_WRAPPER: this runner has no wrapper for the method'),
+                                  'NO_CONTRACT_WRAPPER')
+        result = CR.run_contract_method(request, compute=adapter.compute, verify=adapter.verify,
+                                        repo_root=repo_root, run_root=run_root)
+    except (DispatchRefused, CR.RunRefused) as exc:
+        print(f'[CONTRACT] {exc.text}', file=sys.stderr, flush=True)
+        return 2
+    print(f'[CONTRACT] {result.outcome} run={request["run_id"]} reason={result.reason}', flush=True)
+    print(f'[CONTRACT] folder={result.folder}', flush=True)
+    return 0 if result.outcome == 'SUCCESS' else 1
+
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -124,3 +124,15 @@ The previous chat's running notes, for reference only; the register, H-1 and the
 | `ho2/make_v03r1.py` | Made the direction v0.3r1 candidate from v0.3 by counted replacements (the pattern for later editions). |
 | `ho2/assemble_ex.py` | `assemble_ex.py DIR NNN BODY`: writes `DIR/EX_NNN_Claude.md` from a body with `@@CONTENTS@@` and `@@TABLE@@`, the member table with both hashes, CRLF, ASCII. Zip with `exchange/EX_019_Claude/make_zip.py DIR OUT MEMBERS flat`. |
 | `ho2/edit_lists.py` | Counted edits to `OWNER_ROADMAP.md` and `OWNER_REMINDERS.md` for EX_139/EX_140 (CRLF kept). |
+
+## mhupa/ (MHUP-A slice 1 development tools, 4 November 2026; the package copies live in the EX_141 zip)
+
+| Tool | What it does |
+|---|---|
+| `mhupa/build_dev_slice1.sh` | `build_dev_slice1.sh BASE DEV TOOLS DATE`: rebuilds the slice-1 development tree from a base tree (`git archive` of `main`, data folders excluded) by the scripts below, the whole-file replacements in `slice1_edited/` and the new files in `slice1_new/`. |
+| `mhupa/make_e1r3.py` | Retires E_1 revision 2 through `package_tools.method_retirement.retire` and writes `r3.json` and `entry_0003.json` for both games. |
+| `mhupa/apply_slice1.py`, `mhupa/edit_tests_slice1.py` | The counted edits to the small source changes and to the seven existing tests that change (every old string must occur exactly once). |
+| `mhupa/make_e1_r2_reference.py` | `make_e1_r2_reference.py BASE OUT`: the frozen E_1 revision-2 reference fixture, computed from the base tree's code in a copy outside the repository, in a separate process. |
+| `mhupa/mhupa_slice1_mutations.py` | `mhupa_slice1_mutations.py TREE`: 67 planted defects, one per rule; TREE is a full clone with the overlay applied. |
+| `mhupa/run_all_but_t12.py` | Discovery run of every test module less T12 with per-module counts (for setting a runner's EXPECTED). |
+| `mhupa/assemble_ex141.py` | `assemble_ex141.py SCRATCHPAD REPO`: builds the review zip (overlay, tools, evidence), the diff and EX_141, and stages them into `exchange/`. |
