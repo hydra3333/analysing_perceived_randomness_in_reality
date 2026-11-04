@@ -312,9 +312,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: register v0.25 records all of them (with MHUP-A's round); each "goes into" item at its document's
   next authorised edition.
 
-## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142, EX_144)
+## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142-EX_146)
 
-- Asked: the ChatGPT reviewer, EX_144 sections 2 and 3 (5 November 2026), accepted by Claude in EX_145.
+- Asked: the ChatGPT reviewer, EX_144 sections 2 and 3 and EX_146 section 6 (5 November 2026), accepted by Claude.
 - Status: OPEN until slice 2's code and tests carry them; checked again at the integrated package's review.
 - What:
   (a) The admitted first update and the study version advance (design 4.1, 5.1). Slice 1's dispatch gate
@@ -330,7 +330,16 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       schema but malformed line must refuse, never count as valid unrelated evidence; oracles accordingly.
   (c) The FINAL_NEXT_DRAW / CATCH_UP binding-rule mutant, equivalent in slice 1 because those modes are
       unreachable, is re-run when slice 2 makes them producible.
-- When: slice 2's development; its handback names where each is tested.
+  (d) E_1 revision 3's effective_date (EX_146 item 4): set to the integrated package's actual preparation
+      date before its final review freezes the registry bytes and digests; never the admission or release
+      date. Test the real release-record producer and consumer paths once slice 2's writers exist, not only
+      slice 1's mocked dates.
+  (e) Integration evidence (EX_146 item 5): the updater's actually emitted ledger bytes, the Mode H plan and
+      opening outputs and the weekly writers' outputs reconciled with the strict readers and gates (a real
+      ledger refused by the strict grammar is a STOP, never a reason to relax it); fail-closed recovery,
+      install safety and end-to-end synthetic lifecycles, with the applicable EX_131 and Appendix L items.
+- When: slice 2's development; its handback names where each is tested. Slice 1 PASSED (EX_146, 5 November
+  2026); the integrated package needs its own integration review.
 
 ## Standing reminders
 
