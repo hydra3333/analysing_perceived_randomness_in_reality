@@ -214,8 +214,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 2 November 2026, having committed doc/Direction_for_operational_procedures_v0_1.md
   (the plain-English statement of where the project is heading, written from the stock-take round).
-- Status: OPEN until DOC-11 is installed, then DONE: DOC-11 installs v0.2r1 in doc/ (its "Status and
-  authority" paragraph is the status line) and register v0.24 records it (DIR-1).
+- Status: DONE (4 November 2026): DOC-11, installed by the owner at 3d4fa3c, put v0.2r1 in doc/ (its
+  "Status and authority" paragraph is the status line) and register v0.24 records it (DIR-1).
 - What: the document sits in doc/ with no status line and has not been through a review round. ChatGPT is
   reviewing it at the owner's request; Claude then gives it a status line (author, reviewer, status) in the
   next document package, so its standing in doc/ is clear. The copy in exchange/ stays as the working copy.
@@ -253,7 +253,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
 
 - Asked: the owner, 3 November 2026.
-- Status: OPEN.
+- Status: OPEN. Step 1 and Step 1.1 done (EX_133 to EX_136; owner-ratified 4 November 2026; DOC-11
+  installed at 3d4fa3c and verified from GitHub, EX_138). Next: Step 2, the owner starts the new Claude chat.
 - What: Claude is handed over first (DOC-11, the Step 1.1 review, the new chat's verified takeover, the
   owner's go-ahead); the experienced ChatGPT reviewer stays throughout. A ChatGPT reviewer handover (a new
   H-2 edition folding in register v0.24) is considered only after the new Claude chat has shown reliable

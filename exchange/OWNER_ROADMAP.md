@@ -186,8 +186,9 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            review copies), tested by a fresh helper playing the new chat (20 gaps, fixed), then sent to
            ChatGPT for the Step 1.1 review (EX_133); ChatGPT's RECHECK (EX_134: three wording
            corrections, one editorial item) fixed in EX_135 with your naming decision LW-1
-           (Lotterywest-GOV); ChatGPT's recheck EX_136; every problem resolved; you ratify and
-           install DOC-11; you start the new Claude chat; ChatGPT checks its first replies and suggests
+           (Lotterywest-GOV); ChatGPT's recheck EX_136 PASS; you ratified DOC-11 on 4 November 2026
+           and installed it at 3d4fa3c (verified from GitHub, EX_138). NEXT: you start the new Claude
+           chat with the blurb in doc/HANDOVER/; ChatGPT checks its first replies and suggests
            targeted questions, which the new chat answers blind; then, ONLY after that check and your
            explicit go-ahead, MHUP-A code (Fable for the core). A ChatGPT reviewer handover is
            considered later, separately. The planning dates above are unchanged; FB-1 applies.
