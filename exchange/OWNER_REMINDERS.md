@@ -315,7 +315,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142-EX_146)
 
 - Asked: the ChatGPT reviewer, EX_144 sections 2 and 3 and EX_146 section 6 (5 November 2026), accepted by Claude.
-- Status: OPEN until slice 2's code and tests carry them; checked again at the integrated package's review.
+- Status: (a), (d) and (e) CARRIED in slice 2 (EX_147, 5 November 2026: sections 4 and 5 name where each is tested;
+  the E_1 revision 3 effective_date is set at the integrated package's preparation; the first real-ledger
+  check, your T018 run, PASSED on 5 November 2026: the committed ledgers pass the full grammar); (b) and (c)
+  stay OPEN for MHUP-B (no weekly writer exists yet). Checked again at the
+  integrated package's review.
 - What:
   (a) The admitted first update and the study version advance (design 4.1, 5.1). Slice 1's dispatch gate
       checks only that a Mode H plan's frozen version equals the opening record's freeze_version + 1 and that
@@ -340,6 +344,25 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       install safety and end-to-end synthetic lifecycles, with the applicable EX_131 and Appendix L items.
 - When: slice 2's development; its handback names where each is tested. Slice 1 PASSED (EX_146, 5 November
   2026); the integrated package needs its own integration review.
+
+## R-020  MHUP-A integrated package: three things slice 2 found that the package or the owner must carry
+
+- Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
+- Status: OPEN until the integrated package is built and reviewed.
+- What:
+  (a) The package manifest's `release_entries` must name E_1 revision 3 for both games, so that the install's
+      release record (Appendix J step 16) releases it: the baseline record carries revision 2 as superseded and
+      the registry's released set equals the baseline's unretired entries plus revision 3 (a test asserts this).
+      Until that record exists, revision 3 has an install record only and is not released for CATCH-UP.
+  (b) The study manifest's environment freeze refuses any file under the venv's site-packages that no RECORD
+      lists (an orphan: a .pth file, a leftover of a hand install). If your venv holds one, Approval 1's
+      `manifest` command refuses and names it; that is the intended outcome, and the fix is a reviewed step,
+      never a hand deletion. The Windows branch of the inventory (python.exe, the DLLs, DLLs/ and Lib/) first
+      runs on your machine at T016, where a refusal is a STOP to send to Claude.
+  (c) Run_Experiment.bat changes (the byte-code lines of design 4.1): the design asks you, at MHUP-A's approval,
+      either to authorise one rerun of the Windows POC suite after the install or to accept it unrun with the
+      reason recorded (the change adds interpreter options, two variables and one refusal; no launch, handshake or
+      lifecycle logic). Claude will ask when the integrated package is ready.
 
 ## Standing reminders
 

@@ -205,13 +205,17 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            strict CSV quoting) fixed as candidate v1r2 and sent as EX_145 (507 tests, both Pythons; 90
            mutants, 81 caught, 9 equivalent, 0 survived); the reviewer's slice 2 watchpoints are reminder
            R-019. DONE (5 November 2026): ChatGPT's EX_146, slice 1 PASS (the review checkpoint only, not
-           the integrated package). NOW: your Claude Code run of inbox/TASK_T018.md (the whole suite on
-           Windows with the reviewed slice 1 code, in a task clone: shows your real committed ledgers pass
-           the stricter ledger rules; read-only, nothing installed); then slice 2 (Mode H batch kind and families, Method_Mode_H.py,
-           the records tool, process_check.py, the updater v0.2, the launchers, the freeze-before-
-           outcome rule, the rulebook) and its review; then the integrated install package with its
-           rehearsals and T016. Installing it, its Windows rehearsal and MHUP-B each wait for your
-           separate go. A ChatGPT reviewer handover is considered later, separately. The
+           the integrated package). DONE (5 November 2026): slice 2 coded and tested on Linux (the Mode H
+           batch kind and families, Method_Mode_H.py, the closure and environment freeze, the records tool,
+           process_check.py, the updater v0.2, the launchers, the freeze-before-outcome rule, the rulebook
+           v0.4; 561 tests on both Pythons; the slice 2 mutants) and sent for review as EX_147 (its
+           interpretations listed for the reviewer; reminder R-020 for what the integrated package carries).
+           DONE (5 November 2026): your Claude Code run of TASK_T018 (slice 1's 507 tests on Windows, in a
+           task clone, read-only): SUITE PASS, so your real committed ledgers pass the full ledger grammar.
+           NOW: ChatGPT's review of EX_147, and your Claude Code run of inbox/TASK_T019.md (slice 2's 561
+           tests on Windows, the same read-only way); then any RECHECK;
+           then the integrated install package with its rehearsals and T016. Installing it, its Windows
+           rehearsal and MHUP-B each wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
            planning dates above are unchanged; FB-1 applies.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
