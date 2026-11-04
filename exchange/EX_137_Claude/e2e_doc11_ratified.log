@@ -1,0 +1,31 @@
+base: d6601642fffbcf29f28768e6a1dde0cafd39269b
+== lf: DOC-11 happy path
+status before: ''
+PRE PASS: clean tree; 20 new paths absent; 0 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 20 expected new paths, 0 modified files and 0 staged deletions, all with the expected bytes.
+staged:      20 A 
+COMMITTED PASS: the last commit (1db4818) added exactly 20 files, modified 0 and deleted 0; all Git blobs match.
+status after: ''
+== crlf: DOC-11 happy path
+status before: ''
+PRE PASS: clean tree; 20 new paths absent; 0 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 20 expected new paths, 0 modified files and 0 staged deletions, all with the expected bytes.
+staged:      20 A 
+COMMITTED PASS: the last commit (6e3660c) added exactly 20 files, modified 0 and deleted 0; all Git blobs match.
+status after: ''
+== negatives (each must STOP)
+-- pre, an untracked file:
+VERIFICATION STOP: FAIL: working tree or index not clean:
+-- post, a new file with wrong bytes:
+VERIFICATION STOP: FAIL: wrong bytes: doc/RATIFICATION_REGISTER_v0_24.md
+-- post, a new file missing:
+VERIFICATION STOP: FAIL: unexpected new paths: doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r5.md
+-- post, a guarded file changed:
+VERIFICATION STOP: FAIL: unexpected modified paths: doc/HANDOVER/Claude_Primary_Handover_H1_v1r7.md
+-- post, an unexpected change:
+VERIFICATION STOP: FAIL: unexpected modified paths: src/evaluation/n1.py
+-- committed, a stray file committed too:
+VERIFICATION STOP: FAIL: the last commit did not change exactly the expected paths; differences (path, status): [('stray2.txt', 'A')]
+-- damaged package:
+VERIFICATION STOP: FAIL: package file damaged: doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md
+end
