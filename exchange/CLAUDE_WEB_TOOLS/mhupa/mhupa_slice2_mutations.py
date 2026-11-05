@@ -190,9 +190,8 @@ MUTANTS = [
      "        scores, ranks, _pt, _pv = RP.score_cells(game_id, members, collected, outcomes,\n"
      "                                                 exposure=None)", T_PI),
     ('scorer: the score ledger accepts lines of another schema', MH,
-     "    if len(scores) + len(ranks) != len(rows):\n        raise ModeHRefused('the Mode H score ledger holds a line of another schema')\n", '', T_PI,
-     'EQUIVALENT in the suite: no test plants a foreign line in the ledger (the ledger is written once by the scorer from '
-     'validated records; a hand edit is outside the pipeline test); defence in depth'),
+     "    if len(scores) + len(ranks) != len(rows):\n        raise ModeHRefused('the Mode H score ledger holds a line of another schema')\n", '', T_BL,
+     'EQUIVALENT since EX_148 B04: the bad-ledger test plants a line of another schema, and the byte-for-byte rebuild of _verify_ledger refuses it; this check names the fault first (defence in depth)'),
     ('manifest: the holdout already opened does not refuse', MH,
      "        if OR.opening_record(root, game_id) is not None:\n            raise ModeHRefused('the holdout is already opened; the manifest is written before the opening record')\n", '', T_MO),
     ('manifest: the ledger need not end at holdout_first - 1', MH,

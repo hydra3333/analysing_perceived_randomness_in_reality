@@ -10,7 +10,8 @@ for exactly that (game, method, revision, variant); a date that is not the day o
 release record whose install record is absent or later; two release records naming one entry.
 `released_variants` is the released, unretired set: every release record's entries, less every entry a record retires
 or marks superseded_by, and less every entry whose registry chain has moved on - its chain's active (newest) entry is
-another revision, or is not SUPPORTED (EX_148 B03 (a)). A registry entry's effective_date is never a release date.
+another revision, or is not SUPPORTED (EX_148 B03 (a)). A registry entry's own date field is never read here and is
+never a release date (EX_142 C01, condition 3).
 """
 from __future__ import annotations
 

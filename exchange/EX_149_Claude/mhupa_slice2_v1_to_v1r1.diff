@@ -1,0 +1,991 @@
+# MHUP-A review slice 2: the diff from candidate v1 (EX_147, MHUPA_Slice2_Review_v1) to candidate v1r1 (EX_149):
+# what the EX_148 corrections change.
+diff -ruN --binary a/src/evaluation/mode_h.py b/src/evaluation/mode_h.py
+--- a/src/evaluation/mode_h.py
++++ b/src/evaluation/mode_h.py
+@@ -4,7 +4,7 @@
+ the frozen forecasts and, in exactly one place and only under the freeze-before-outcome rule, the outcomes of the
+ ten holdout draws. Every record it writes is create-only.
+ 
+-- `manifest(game)`: the study manifest (4.1, Appendix H): cohort, targets, exposure flags, measures, families,
++- `manifest(game)`: the study manifest (4.1, Appendix H): cohort (exactly the validated released set, 4.3), targets, exposure flags, measures, families,
+   the N1 policy, the evaluator's version, v_f, the closure and environment inventories; one MODE_H_STUDY_MANIFEST
+   search-log row.
+ - `open_holdout(game, statement)`: the opening record (4.2), after the manifest exists with the digest it names;
+@@ -17,8 +17,10 @@
+   once through the outcome reader under `outcome_release_allowed`; the Mode H score ledger (create-only, one
+   line per scored pair and readout, plus the MR5 rank lines); SCORE_COMPLETE; the report from the accepted lines
+   (no outcome re-read); MODE_H_SEALED. Rerunning resumes the same attempt: SCORING_STARTED fixes the attempt id;
+-  an existing ledger is accepted as it stands; after SCORE_COMPLETE no outcome is read; an existing report must
+-  equal the bytes rebuilt from the lines. A second routine attempt after SCORE_COMPLETE is refused.
++  an existing ledger is accepted only if it is exactly the lines this scorer writes for the frozen forecasts
++  and the drawn numbers it records (EX_148 B04); after SCORE_COMPLETE no outcome is read; each of the three
++  report files, where it exists, must equal the bytes rebuilt from the lines, and a missing one is created
++  (EX_148 B02). A second routine attempt after SCORE_COMPLETE is refused.
+ """
+ from __future__ import annotations
+ 
+@@ -33,11 +35,13 @@
+ import _common.closure as CL
+ import _common.master_versions as MV
+ import _common.owner_records as OR
++import _common.release_records as RR
+ from _common.contract_records import canonical, record_digest, sha256_hex
+ from _common.contract_receipts import validate_score_record
+ from _common.game_profiles import get_profile
+ 
+ from . import collect as COL
++from . import divisions as DV
+ from . import report as RP
+ from . import report_writer as RW
+ from . import seed_policies as SP
+@@ -103,6 +107,7 @@
+         raise ModeHRefused(f'cohort: {exc}') from None
+     if not members:
+         raise ModeHRefused('the cohort is empty')
++    _check_release_authority(root, game_id, members, excluded)        # EX_148 B03: only released variants are frozen
+     not_runnable = list(excluded) + _not_runnable(game_id)
+     families = RP.load_families(game_id, p.holdout_first, p.holdout_last)
+     if not families:
+@@ -137,6 +142,26 @@
+     return rec
+ 
+ 
++def _check_release_authority(root: Path, game_id: str, members, excluded) -> None:
++    """The cohort the manifest freezes must be exactly the game's released, unretired set (design 4.3: an installed but
++    unreleased revision qualifies for nothing; EX_148 B03). Both sides are computed independently: the members from
++    the installed registry (active SUPPORTED, no development flag), the released set from the validated release records
++    and the registry chains (release_records.released_variants). Any difference, or any refusal of the records, refuses."""
++    try:
++        released = {k for k in RR.released_variants(root) if k[0] == game_id}
++    except (RR.Refused, ValueError, KeyError) as exc:
++        raise ModeHRefused(f'the release records refuse: {exc}') from None
++    cohort = {(game_id, m['method_id'], m['method_revision'], m['variant_id']) for m in members}
++    excluded_mv = {(e['method_id'], e['variant_id']) for e in excluded}
++    unreleased = sorted(cohort - released)
++    missing = sorted(k for k in released - cohort if (k[1], k[3]) not in excluded_mv)
++    if unreleased or missing:
++        fmt = lambda ks: ', '.join(f'{m} revision {r} {v}' for _g, m, r, v in ks[:4]) + (f' (+{len(ks) - 4})' if len(ks) > 4 else '')
++        raise ModeHRefused('the cohort is not the released set: ' + '; '.join(
++            ([f'SUPPORTED in the registry but not released: {fmt(unreleased)}'] if unreleased else []) +
++            ([f'released but not in the registry\'s runnable set: {fmt(missing)}'] if missing else [])))
++
++
+ def _not_runnable(game_id: str) -> list[dict]:
+     """Every registered method of the game that is not released, by name and status (mark, never suppress)."""
+     reg = WF._registry()
+@@ -252,10 +277,63 @@
+     if len(scores) + len(ranks) != len(rows):
+         raise ModeHRefused('the Mode H score ledger holds a line of another schema')
+     for r in scores:
+-        validate_score_record(r)
++        try:
++            validate_score_record(r)
++        except ValueError as exc:
++            raise ModeHRefused(f'the Mode H score ledger holds an invalid score record: {exc}') from None
+     return scores, ranks
+ 
+ 
++def _verify_ledger(game_id: str, members, collected: dict, raw: bytes, scores: list, ranks: list) -> None:
++    """EX_148 B04: before SCORE_COMPLETE (and again before the report), the ledger must be exactly the lines this
++    scorer writes for the frozen forecasts, given the drawn numbers the ledger itself records; it never reads an
++    outcome. Every drawn number of a draw must agree across its lines; the expected score and rank identities
++    (track or variant, draw, revision, forecast and receipt digests, evaluator version: every valid cell of the
++    frozen roster, from the collected forecasts) must appear exactly once each, nothing missing, duplicated or
++    foreign; and every line is rebuilt with report.score_cells from those drawn numbers and must be byte-identical,
++    in the same order. For Oz Lotto the supplementaries are never stored (R2 2.5), so each score line's
++    supplementary_matches is taken from the line and checked for range and against its division; every other field
++    is rebuilt."""
++    drawn = {}
++    for r in scores:
++        t = r.get('draw_number')
++        d = (tuple(r.get('drawn_main') or ()), r.get('drawn_powerball'))
++        if drawn.setdefault(t, d) != d:
++            raise ModeHRefused(f'the score ledger records two different drawn results for draw {t}')
++    key_s = lambda r: (r['track_id'], r['draw_number'], r['method_revision'], r['forecast_content_digest'],
++                       r['freeze_receipt_digest'], r['evaluator_version'])
++    key_r = lambda r: (r['method_id'], r['variant_id'], r['draw_number'], r['method_revision'],
++                       r['forecast_content_digest'], r['freeze_receipt_digest'], r['evaluator_version'])
++    expected_targets = sorted({k[2] for k, c in collected['cells'].items() if c['valid']})
++    if sorted(drawn) != expected_targets:
++        raise ModeHRefused('the score ledger does not cover exactly the targets of the frozen valid forecasts')
++    if game_id == 'POWERBALL':
++        outcomes = {t: (list(d[0]), d[1]) for t, d in drawn.items()}
++    else:                                          # placeholder supplementaries; their match counts are checked below
++        outcomes = {t: (list(d[0]), [x for x in range(1, 48) if x not in d[0]][:3]) for t, d in drawn.items()}
++    try:
++        exp_scores, exp_ranks, _pt, _pv = RP.score_cells(game_id, members, collected, outcomes,
++                                                         exposure=lambda t: OR.exposure_flag(game_id, t))
++    except (ValueError, KeyError, TypeError) as exc:
++        raise ModeHRefused(f'the score ledger\'s drawn numbers are not a valid draw: {exc}') from None
++    if sorted(map(key_s, scores)) != sorted(map(key_s, exp_scores)) or len(scores) != len(exp_scores):
++        raise ModeHRefused('the score ledger\'s score lines are not exactly the frozen roster\'s valid cells (a line '
++                           'missing, duplicated or foreign)')
++    if sorted(map(key_r, ranks)) != sorted(map(key_r, exp_ranks)) or len(ranks) != len(exp_ranks):
++        raise ModeHRefused('the score ledger\'s rank lines are not exactly the frozen roster\'s ranked cells')
++    if game_id != 'POWERBALL':
++        for got, exp in zip(scores, exp_scores):
++            s = got.get('supplementary_matches')
++            m = exp['main_matches']
++            if type(s) is not int or not 0 <= s <= min(3, 7 - m) or got.get('division') != DV.division(
++                    game_id, m, supplementary_matches=s):
++                raise ModeHRefused(f'draw {got.get("draw_number")}: supplementary_matches and division disagree')
++            exp['supplementary_matches'], exp['division'] = s, got['division']
++    if b''.join(canonical(r) for r in exp_scores + exp_ranks) != raw:
++        raise ModeHRefused('the score ledger differs from the lines the scorer writes for the frozen forecasts and '
++                           'the drawn numbers it records (a tampered or foreign line); nothing is completed')
++
++
+ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policies_on_file: int, environment: dict) -> dict:
+     """The one Mode H score attempt of a game, resumable (5.2). Returns what was written and the report paths."""
+ 
+@@ -359,7 +437,9 @@
+         CP.create_only(ledger_path, b''.join(canonical(r) for r in scores + ranks))
+         progress(f'outcomes read once; score ledger written: {len(scores)} score lines, {len(ranks)} rank lines')
+     scores, ranks = _ledger_lines(ledger_path)
+-    ledger_sha = sha256_hex(ledger_path.read_bytes())
++    raw_ledger = ledger_path.read_bytes()
++    _verify_ledger(game_id, members, collected, raw_ledger, scores, ranks)      # B04: before SCORE_COMPLETE
++    ledger_sha = sha256_hex(raw_ledger)
+     complete = OR.marker(root, game_id, batch_id, 'SCORE_COMPLETE')
+     if complete is None:
+         OR.write_marker(root, game_id, batch_id, 'SCORE_COMPLETE',
+@@ -382,17 +462,18 @@
+                         environment=environment)
+     base = RW.mode_h_base_name(res)
+     report_folder = RP.roots()['reports'] / game_id
+-    existing = report_folder / f'{base}.txt'
+-    if OR.absent(existing):
+-        paths = RW.write(res, contents, stamp='')
+-        progress('report written')
+-    else:
+-        for ext in ('txt', 'csv', 'json'):
+-            if (report_folder / f'{base}.{ext}').read_bytes() != contents[ext]:
+-                raise ModeHRefused(f'the existing report {base}.{ext} differs from the bytes rebuilt from the accepted '
+-                                   f'lines; nothing is written')
+-        paths = [report_folder / f'{base}.{ext}' for ext in ('txt', 'csv', 'json')]
+-        progress('report already written with these exact bytes; verified')
++    paths = [report_folder / f'{base}.{ext}' for ext in ('txt', 'csv', 'json')]
++    for p, ext in zip(paths, ('txt', 'csv', 'json')):          # EX_148 B02: every existing file verified first
++        if not OR.absent(p) and (not p.is_file() or p.is_symlink() or p.read_bytes() != contents[ext]):
++            raise ModeHRefused(f'the existing report {p.name} differs from the bytes rebuilt from the accepted lines; '
++                               f'nothing is written')
++    report_folder.mkdir(parents=True, exist_ok=True)
++    made = []
++    for p, ext in zip(paths, ('txt', 'csv', 'json')):          # then each missing file created, none overwritten
++        if OR.absent(p):
++            CP.create_only(p, contents[ext])
++            made.append(ext)
++    progress(f'report files: {", ".join(made) or "none"} written, {3 - len(made)} already present with these exact bytes')
+     OR.write_marker(root, game_id, batch_id, 'MODE_H_SEALED',
+                     {'schema': OR.MARKER_SCHEMAS['MODE_H_SEALED'], 'batch_id': batch_id, 'game_id': game_id,
+                      'attempt_id': attempt_id, 'plan_digest': record_digest(plan), 'score_ledger_sha256': ledger_sha,
+diff -ruN --binary a/src/methods/_common/release_records.py b/src/methods/_common/release_records.py
+--- a/src/methods/_common/release_records.py
++++ b/src/methods/_common/release_records.py
+@@ -0,0 +1,144 @@
++"""MHUP-A: the release records' one reader (design v0.1r5 section 4.3; EX_148 B03). Pure, read-only, standard library
++only, so the records tool (src/package_tools/install_records.py, which writes the records) and the Mode H study manifest
++(src/evaluation/mode_h.py, which must freeze only released variants) apply the same rule.
++
++Records live in src/methods/_common/contract_data/install_records/ as canonical JSON:
++  INSTALL_<PACKAGE>_V1.json (INSTALL_RECORD_V1) and RELEASE_<PACKAGE>_V1.json (RELEASE_RECORD_V1), plus the baseline
++  RELEASE_BASELINE_20261031_V1.json.
++`validate_records` refuses: a symlink, non-canonical bytes or an unknown schema; an entry without a registry chain entry
++for exactly that (game, method, revision, variant); a date that is not the day of writing (the baseline excepted); a
++release record whose install record is absent or later; two release records naming one entry.
++`released_variants` is the released, unretired set: every release record's entries, less every entry a record retires
++or marks superseded_by, and less every entry whose registry chain has moved on - its chain's active (newest) entry is
++another revision, or is not SUPPORTED (EX_148 B03 (a)). A registry entry's own date field is never read here and is
++never a release date (EX_142 C01, condition 3).
++"""
++from __future__ import annotations
++
++from datetime import date, datetime
++import hashlib
++import json
++from pathlib import Path
++
++INSTALL_SCHEMA = 'INSTALL_RECORD_V1'
++RELEASE_SCHEMA = 'RELEASE_RECORD_V1'
++BASELINE_NAME = 'RELEASE_BASELINE_20261031_V1.json'
++RECORDS_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'install_records'
++REGISTRY_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'registry'
++GAMES = ('POWERBALL', 'OZLOTTO')
++
++
++class Refused(Exception):
++    pass
++
++
++def canonical(rec) -> bytes:
++    return (json.dumps(rec, sort_keys=True, separators=(',', ':'), ensure_ascii=True) + '\n').encode('ascii')
++
++
++def sha256(raw: bytes) -> str:
++    return hashlib.sha256(raw).hexdigest()
++
++
++def records_dir(root: Path) -> Path:
++    return Path(root) / RECORDS_REL
++
++
++def _entry(e, where: str) -> tuple:
++    if type(e) is not dict or set(e) - {'superseded_by'} != {'game_id', 'method_id', 'method_revision', 'variant_id'} or \
++            e['game_id'] not in GAMES or not all(type(e[k]) is str and e[k] for k in ('method_id', 'method_revision', 'variant_id')):
++        raise Refused(f'{where}: an entry is not (game_id, method_id, method_revision, variant_id)')
++    return e['game_id'], e['method_id'], e['method_revision'], e['variant_id']
++
++
++def registry_chains(root: Path) -> dict:
++    """(game, method, variant) -> {'revisions': [every chain entry's revision], 'active': (revision, status) of the
++    newest entry by entry_sequence}, from the installed registry files (read-only)."""
++    out: dict = {}
++    for path in sorted((Path(root) / REGISTRY_REL).glob('*/*/*/entry_*.json')):
++        e = json.loads(path.read_bytes().decode('ascii'))
++        c = out.setdefault((e['game_id'], e['method_id'], e['variant_id']), {'revisions': [], 'seq': -1, 'active': None})
++        c['revisions'].append(e['method_revision'])
++        if e['entry_sequence'] > c['seq']:
++            c['seq'], c['active'] = e['entry_sequence'], (e['method_revision'], e['registry_status'])
++    return out
++
++
++def load_records(root: Path) -> dict:
++    folder = records_dir(root)
++    installs, releases = [], []
++    if folder.is_dir():
++        for path in sorted(folder.glob('*.json')):
++            if path.is_symlink():
++                raise Refused(f'{path.name} is a symlink')
++            raw = path.read_bytes()
++            rec = json.loads(raw.decode('ascii'))
++            if canonical(rec) != raw:
++                raise Refused(f'{path.name} is not its canonical bytes')
++            if rec.get('schema') == INSTALL_SCHEMA:
++                installs.append(rec)
++            elif rec.get('schema') == RELEASE_SCHEMA:
++                rec['_file'] = path.name
++                releases.append(rec)
++            else:
++                raise Refused(f'{path.name}: unknown schema')
++    return {'installs': installs, 'releases': releases}
++
++
++def validate_release(rec: dict, root: Path, *, is_baseline: bool) -> None:
++    chains = registry_chains(root)
++    for e in rec['entries'] + rec.get('retires', []):
++        g, m, rv, v = _entry(e, rec.get('package', 'release'))
++        if rv not in chains.get((g, m, v), {}).get('revisions', []):
++            raise Refused(f'release record {rec.get("package")}: {g} {m} revision {rv} {v} has no registry chain entry')
++    try:
++        d = date.fromisoformat(rec['local_date'])
++        written = datetime.strptime(rec['released_utc'][:10], '%Y-%m-%d').date()
++    except (KeyError, ValueError):
++        raise Refused('release record: dates missing or malformed') from None
++    if not is_baseline and abs((d - written).days) > 1:
++        raise Refused('release record: local_date is not the day it was written (a release record never carries an '
++                      'earlier date; the baseline is the one exception)')
++
++
++def validate_records(root: Path) -> dict:
++    recs = load_records(root)
++    seen: dict = {}
++    for r in recs['releases']:
++        is_baseline = r['_file'] == BASELINE_NAME
++        validate_release(r, root, is_baseline=is_baseline)
++        if not is_baseline:
++            installs = {sha256(canonical(i)): i for i in recs['installs']}
++            if r.get('install_record_sha256') not in installs:
++                raise Refused(f'{r["_file"]}: its install record is not present with that digest')
++            if r['released_utc'] < installs[r['install_record_sha256']]['post_pass_utc']:
++                raise Refused(f'{r["_file"]}: released before its install record was written')
++        for e in r['entries']:
++            key = _entry(e, r['_file'])
++            if key in seen:
++                raise Refused(f'{r["_file"]} and {seen[key]} both name {key}')
++            seen[key] = r['_file']
++    return recs
++
++
++def released_variants(root: Path) -> dict:
++    """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
++    record's entries, less every entry a record retires or marks superseded_by, and less every entry whose registry
++    chain has moved on (its active entry is another revision, or is not SUPPORTED). The Mode H cohort must equal this
++    set (mode_h.manifest) and the weekly roster (MHUP-B) is computed from it."""
++    recs = validate_records(root)
++    chains = registry_chains(root)
++    out: dict = {}
++    retired: set = set()
++    for r in recs['releases']:
++        for e in r['entries']:
++            key = _entry(e, r['_file'])
++            if e.get('superseded_by'):
++                retired.add(key)
++            out[key] = r['local_date']
++        for e in r.get('retires', []):
++            retired.add(_entry(e, r['_file']))
++    def current(k):
++        active = chains.get((k[0], k[1], k[3]), {}).get('active')
++        return active == (k[2], 'SUPPORTED')
++    return {k: v for k, v in out.items() if k not in retired and current(k)}
+diff -ruN --binary a/src/package_tools/install_records.py b/src/package_tools/install_records.py
+--- a/src/package_tools/install_records.py
++++ b/src/package_tools/install_records.py
+@@ -35,25 +35,20 @@
+ import subprocess
+ import sys
+ 
+-INSTALL_SCHEMA = 'INSTALL_RECORD_V1'
+-RELEASE_SCHEMA = 'RELEASE_RECORD_V1'
+-BASELINE_NAME = 'RELEASE_BASELINE_20261031_V1.json'
++sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'methods'))
++from _common import release_records as RR                    # noqa: E402  (the one reader of the records)
++
++INSTALL_SCHEMA, RELEASE_SCHEMA, BASELINE_NAME = RR.INSTALL_SCHEMA, RR.RELEASE_SCHEMA, RR.BASELINE_NAME
+ RECORDS_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'install_records'
+ BARRIER_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'INSTALL_IN_PROGRESS.txt'
+ PACKAGE = re.compile(r'[A-Za-z0-9_.-]+\Z')
+ GAMES = ('POWERBALL', 'OZLOTTO')
+ 
+ 
+-class Refused(Exception):
+-    pass
+-
+-
+-def canonical(rec) -> bytes:
+-    return (json.dumps(rec, sort_keys=True, separators=(',', ':'), ensure_ascii=True) + '\n').encode('ascii')
++Refused = RR.Refused
+ 
+ 
+-def sha256(raw: bytes) -> str:
+-    return hashlib.sha256(raw).hexdigest()
++canonical, sha256 = RR.canonical, RR.sha256
+ 
+ 
+ def now() -> tuple[str, str]:
+@@ -89,11 +84,7 @@
+     return rec
+ 
+ 
+-def _entry(e, where: str) -> tuple:
+-    if type(e) is not dict or set(e) - {'superseded_by'} != {'game_id', 'method_id', 'method_revision', 'variant_id'} or \
+-            e['game_id'] not in GAMES or not all(type(e[k]) is str and e[k] for k in ('method_id', 'method_revision', 'variant_id')):
+-        raise Refused(f'{where}: an entry is not (game_id, method_id, method_revision, variant_id)')
+-    return e['game_id'], e['method_id'], e['method_revision'], e['variant_id']
++_entry = RR._entry
+ 
+ 
+ # ---------------------------------------------------------------- the records
+@@ -181,89 +172,12 @@
+ 
+ # ---------------------------------------------------------------- validation and the released set
+ 
+-def _registry_chains(root: Path) -> dict:
+-    """(game, method, variant) -> [revisions of every chain entry], from the installed registry files (read-only)."""
+-    reg = root / 'src' / 'methods' / '_common' / 'contract_data' / 'registry'
+-    out: dict = {}
+-    for path in sorted(reg.glob('*/*/*/entry_*.json')):
+-        e = json.loads(path.read_bytes().decode('ascii'))
+-        out.setdefault((e['game_id'], e['method_id'], e['variant_id']), []).append(e['method_revision'])
+-    return out
+-
+-
+-def load_records(root: Path) -> dict:
+-    folder = records_dir(root)
+-    installs, releases = [], []
+-    if folder.is_dir():
+-        for path in sorted(folder.glob('*.json')):
+-            if path.is_symlink():
+-                raise Refused(f'{path.name} is a symlink')
+-            raw = path.read_bytes()
+-            rec = json.loads(raw.decode('ascii'))
+-            if canonical(rec) != raw:
+-                raise Refused(f'{path.name} is not its canonical bytes')
+-            if rec.get('schema') == INSTALL_SCHEMA:
+-                installs.append(rec)
+-            elif rec.get('schema') == RELEASE_SCHEMA:
+-                rec['_file'] = path.name
+-                releases.append(rec)
+-            else:
+-                raise Refused(f'{path.name}: unknown schema')
+-    return {'installs': installs, 'releases': releases}
+-
+-
+-def validate_release(rec: dict, root: Path, *, is_baseline: bool) -> None:
+-    chains = _registry_chains(root)
+-    for e in rec['entries'] + rec.get('retires', []):
+-        g, m, rv, v = _entry(e, rec.get('package', 'release'))
+-        if rv not in chains.get((g, m, v), []):
+-            raise Refused(f'release record {rec.get("package")}: {g} {m} revision {rv} {v} has no registry chain entry')
+-    try:
+-        d = date.fromisoformat(rec['local_date'])
+-        written = datetime.strptime(rec['released_utc'][:10], '%Y-%m-%d').date()
+-    except (KeyError, ValueError):
+-        raise Refused('release record: dates missing or malformed') from None
+-    if not is_baseline and abs((d - written).days) > 1:
+-        raise Refused('release record: local_date is not the day it was written (a release record never carries an '
+-                      'earlier date; the baseline is the one exception)')
+-
+-
+-def validate_records(root: Path) -> dict:
+-    recs = load_records(root)
+-    seen: dict = {}
+-    for r in recs['releases']:
+-        is_baseline = r['_file'] == BASELINE_NAME
+-        validate_release(r, root, is_baseline=is_baseline)
+-        if not is_baseline:
+-            installs = {sha256(canonical(i)): i for i in recs['installs']}
+-            if r.get('install_record_sha256') not in installs:
+-                raise Refused(f'{r["_file"]}: its install record is not present with that digest')
+-            if r['released_utc'] < installs[r['install_record_sha256']]['post_pass_utc']:
+-                raise Refused(f'{r["_file"]}: released before its install record was written')
+-        for e in r['entries']:
+-            key = _entry(e, r['_file'])
+-            if key in seen:
+-                raise Refused(f'{r["_file"]} and {seen[key]} both name {key}')
+-            seen[key] = r['_file']
+-    return recs
+-
+-
+-def released_variants(root: Path) -> dict:
+-    """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
+-    record's entries, less every entry a record retires or marks superseded_by, and less entries whose registry chain
+-    has moved on (a later revision active). The weekly roster (MHUP-B) is computed from this."""
+-    recs = validate_records(root)
+-    out: dict = {}
+-    retired: set = set()
+-    for r in recs['releases']:
+-        for e in r['entries']:
+-            key = _entry(e, r['_file'])
+-            if e.get('superseded_by'):
+-                retired.add(key)
+-            out[key] = r['local_date']
+-        for e in r.get('retires', []):
+-            retired.add(_entry(e, r['_file']))
+-    return {k: v for k, v in out.items() if k not in retired}
++# ---------------------------------------------------------------- validation and the released set: the one shared reader
++# (src/methods/_common/release_records.py, EX_148 B03), so the records tool and the Mode H manifest apply the same rule.
++
++load_records, validate_release, validate_records, released_variants = (
++    RR.load_records, RR.validate_release, RR.validate_records, RR.released_variants)
++_registry_chains = RR.registry_chains
+ 
+ 
+ # ---------------------------------------------------------------- command line
+diff -ruN --binary a/src/package_tools/process_check.py b/src/package_tools/process_check.py
+--- a/src/package_tools/process_check.py
++++ b/src/package_tools/process_check.py
+@@ -90,7 +90,10 @@
+ # ---------------------------------------------------------------- the process table (psutil, read-only)
+ 
+ def read_table() -> list[Proc]:
+-    """Every process with a Python name, with its details; a detail that cannot be read is recorded as an error."""
++    """Every process, read-only. A Python-named process gets all its details (one that cannot be read is recorded as
++    an error, and the rule then refuses); any other process gets only its name, parent and command line, so the
++    ancestor test of 6.1 (c) sees a non-Python parent such as the cmd.exe that runs a launcher (EX_148 C01). An
++    unreadable non-Python command line is simply absent: it can neither list nor clear anything by itself."""
+     import psutil
+     out = []
+     for p in psutil.process_iter(['pid', 'ppid', 'name']):
+@@ -98,16 +101,20 @@
+             name = p.info.get('name') or ''
+         except Exception:
+             name = ''
+-        if not _is_python_name(name):
+-            continue
+         proc = Proc(pid=p.info['pid'], ppid=p.info.get('ppid'), name=name, exe=None, cwd=None, cmdline=None, create_time=None)
+-        for attr in ('exe', 'cwd', 'cmdline', 'create_time'):
++        if _is_python_name(name):
++            for attr in ('exe', 'cwd', 'cmdline', 'create_time'):
++                try:
++                    setattr(proc, attr, getattr(p, attr)())
++                except psutil.NoSuchProcess:
++                    proc.error = 'exited during the read'
++                except (psutil.AccessDenied, psutil.ZombieProcess, OSError) as exc:
++                    proc.error = f'{attr}: {type(exc).__name__}'
++        else:
+             try:
+-                setattr(proc, attr, getattr(p, attr)())
+-            except psutil.NoSuchProcess:
+-                proc.error = 'exited during the read'
+-            except (psutil.AccessDenied, psutil.ZombieProcess, OSError) as exc:
+-                proc.error = f'{attr}: {type(exc).__name__}'
++                proc.cmdline = p.cmdline()
++            except Exception:                                   # access denied, exited: no command line to test
++                proc.cmdline = None
+         out.append(proc)
+     return out
+ 
+@@ -134,7 +141,7 @@
+     """The listed processes under the rule of 6.1 (reasons filled in). A process with an unreadable detail is
+     listed with its error (a refusal for the caller). `cmdline_filter` narrows to command lines naming a string
+     (clear-updater-lock: results_master)."""
+-    by_pid = {p.pid: p for p in table}
++    by_pid = {p.pid: p for p in table}            # every process: ancestors of any name are walked (6.1 (c))
+     rootn = _norm(str(root)).lower()
+     listed = []
+     for p in table:
+diff -ruN --binary a/tests/mhupa_slice2_fixtures.py b/tests/mhupa_slice2_fixtures.py
+--- a/tests/mhupa_slice2_fixtures.py
++++ b/tests/mhupa_slice2_fixtures.py
+@@ -20,6 +20,7 @@
+ import _common.contract_runner as CR
+ import _common.walk_forward as WF
+ from _common import closure as CL
++import _common.release_records as RR
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ SMALL_COHORT = ('E_6', 'E_7')
+@@ -101,6 +102,11 @@
+ 
+ 
+ _real_cohort = WF.cohort
++_real_released = RR.released_variants
++
++
++def _small_released(root):
++    return {k: v for k, v in _real_released(root).items() if k[1] in SMALL_COHORT}
+ 
+ 
+ def _small_cohort(game_id, adapters):
+@@ -119,9 +125,28 @@
+         stack.enter_context(mock.patch.object(CL.Environment, 'current', staticmethod(lambda: env)))
+         if small_cohort:
+             stack.enter_context(mock.patch.object(WF, 'cohort', _small_cohort))
++            stack.enter_context(mock.patch.object(RR, 'released_variants', _small_released))
+         yield
+ 
+ 
++def write_e1r3_release(proj: Path, *, games=('POWERBALL', 'OZLOTTO'), utc: str = '2026-11-20T10:00:00.000000Z') -> Path:
++    """The install and release records MHUP-A's own install writes (Appendix J steps 12 and 16): E_1 revision 3
++    released for the named games, dated by the release step. INVENTED dates; the shapes are the records tool's."""
++    folder = RR.records_dir(proj)
++    entries = [{'game_id': g, 'method_id': 'E_1', 'method_revision': '3', 'variant_id': 'FULL_HISTORY_RAW_COUNTS_V1'}
++               for g in games]
++    inst = {'schema': RR.INSTALL_SCHEMA, 'package': 'MHUPA_TEST', 'manifest_sha256': '0' * 64,
++            'post_pass_utc': utc.replace('10:00:00', '09:00:00'), 'local_date': utc[:10], 'registry_entries_added': [],
++            'release_entries_planned': entries, 'retires_planned': [], 'statement': 'test fixture'}
++    raw_inst = RR.canonical(inst)
++    (folder / 'INSTALL_MHUPA_TEST_V1.json').write_bytes(raw_inst)
++    rel = {'schema': RR.RELEASE_SCHEMA, 'package': 'MHUPA_TEST', 'entries': entries, 'retires': [], 'released_utc': utc,
++           'local_date': utc[:10], 'install_record_sha256': RR.sha256(raw_inst), 'statement': 'test fixture'}
++    path = folder / 'RELEASE_MHUPA_TEST_V1.json'
++    path.write_bytes(RR.canonical(rel))
++    return path
++
++
+ # ---------------------------------------------------------------- the updater as a module
+ 
+ def updater_module():
+diff -ruN --binary a/tests/test_mhupa_install_records.py b/tests/test_mhupa_install_records.py
+--- a/tests/test_mhupa_install_records.py
++++ b/tests/test_mhupa_install_records.py
+@@ -54,6 +54,8 @@
+         (self.root / 'src' / 'package_tools').mkdir(parents=True)
+         shutil.copy2(TOOL, self.root / 'src' / 'package_tools' / 'install_records.py')
+         shutil.copy2(ROOT / 'src' / 'package_tools' / 'process_check.py', self.root / 'src' / 'package_tools' / 'process_check.py')
++        for name in ('__init__.py', 'release_records.py'):                     # the one reader the tool imports
++            shutil.copy2(ROOT / 'src' / 'methods' / '_common' / name, self.root / 'src' / 'methods' / '_common' / name)
+         git(self.root, 'init', '-q')
+         git(self.root, 'add', '-A')
+         git(self.root, 'commit', '-q', '-m', 'base')
+@@ -262,6 +264,35 @@
+         self.assertIn('has no registry chain entry', out)
+         self.assertFalse((self.root / IR.RECORDS_REL / 'RELEASE_BAD_V1.json').exists())
+ 
++    def test_a_superseding_registry_entry_retires_the_old_revision(self):
++        """EX_148 B03 (a): a newer revision installed in the registry with no explicit retires item: the released set
++        drops the old revision (its chain has moved on) and does not gain the new one (no release record)."""
++        reg = self.root / DATA / 'registry' / 'OZLOTTO' / 'E_7' / 'BETA_SHRINK_W52_C52_V1'
++        e1 = json.loads((reg / 'entry_0001.json').read_bytes())
++        before = IR.released_variants(self.root)
++        self.assertIn(('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1'), before)
++        (reg / 'entry_0002.json').write_bytes(IR.canonical(dict(e1, entry_sequence=2, method_revision='2')))
++        after = IR.released_variants(self.root)
++        self.assertEqual(set(before) - set(after), {('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1')})
++        self.assertEqual(set(after) - set(before), set())
++        # a newer entry that keeps the revision but is no longer SUPPORTED also takes the variant out
++        (reg / 'entry_0002.json').write_bytes(IR.canonical(dict(e1, entry_sequence=2, registry_status='RETIRED')))
++        self.assertNotIn(('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1'), IR.released_variants(self.root))
++
++    def test_malformed_release_records_refuse(self):
++        """EX_148 B03 (c): a record whose entry has an unknown key, names an unknown game, or lacks its dates refuses."""
++        folder = self.root / IR.RECORDS_REL
++        base = json.loads((folder / IR.BASELINE_NAME).read_bytes())
++        for name, rec in (('an unknown key', dict(base, entries=[dict(base['entries'][0], extra='x')])),
++                          ('an unknown game', dict(base, entries=[dict(base['entries'][0], game_id='LOTTO')])),
++                          ('no dates', {k: v for k, v in base.items() if k not in ('local_date', 'released_utc')})):
++            with self.subTest(name):
++                (folder / IR.BASELINE_NAME).write_bytes(IR.canonical(rec))
++                with self.assertRaises(IR.Refused):
++                    IR.released_variants(self.root)
++        (folder / IR.BASELINE_NAME).write_bytes(IR.canonical(base))
++        self.assertEqual(len(IR.released_variants(self.root)), 78)
++
+     def test_release_date_is_the_day_of_writing(self):
+         # L-D2: 23:58 and 00:02 local: the date comes from the PC clock at the release step; across midnight UTC and
+         # local may differ by one day, never more; an earlier date is refused for every record but the baseline
+@@ -307,7 +338,7 @@
+             elif isinstance(node, ast.ImportFrom):
+                 names.add((node.module or '').split('.')[0])
+         self.assertTrue(names <= {'__future__', 'argparse', 'datetime', 'hashlib', 'json', 'os', 'pathlib', 're', 'subprocess',
+-                                  'sys', 'process_check'}, names)
++                                  'sys', 'process_check', '_common'}, names)
+         git_calls = [ast.unparse(n) for n in ast.walk(tree) if isinstance(n, ast.Call) and ast.unparse(n.func) == 'subprocess.run']
+         self.assertEqual(len(git_calls), 2)
+         for call in git_calls:
+diff -ruN --binary a/tests/test_mhupa_mode_h.py b/tests/test_mhupa_mode_h.py
+--- a/tests/test_mhupa_mode_h.py
++++ b/tests/test_mhupa_mode_h.py
+@@ -34,6 +34,7 @@
+ from evaluation import report_writer as RW
+ from evaluation import seed_policies as SP
+ from evaluation import n1 as N1
++from evaluation import divisions as DV
+ 
+ G = 'POWERBALL'
+ P = POWERBALL
+@@ -214,6 +215,67 @@
+                                    repo_root=self.proj, run_root=WF.roots('MODE_H_BATCH')['runs'])
+         self.assertEqual(self.run_folders(), [])
+ 
++    def test_the_cohort_must_be_exactly_the_released_set(self):
++        """EX_148 B03 (b), (c), (d): the full cohort (no small-cohort restriction), against the validated release records."""
++        self.stack.close()
++        self.stack = contextlib.ExitStack()
++        self.stack.enter_context(X.patched(self.proj, self.env, small_cohort=False))
++        # (b) E_1 revision 3 is SUPPORTED in the registry, but its release record (written by the install) is absent
++        with self.assertRaises(MH.ModeHRefused) as cm:
++            MH.manifest(G)
++        self.assertIn('SUPPORTED in the registry but not released: E_1 revision 3 FULL_HISTORY_RAW_COUNTS_V1', str(cm.exception))
++        self.assertIsNone(OR.study_manifest(self.proj, G))
++        self.assertEqual(self.search_rows(), [])
++        # (c) a conflicting release record (a second record naming baseline entries) refuses
++        rel = X.write_e1r3_release(self.proj)
++        folder = rel.parent
++        dup = folder / 'RELEASE_DUP_V1.json'
++        base = json.loads((folder / 'RELEASE_BASELINE_20261031_V1.json').read_bytes())
++        dup.write_bytes(X.RR.canonical(dict(base, package='DUP', install_record_sha256=json.loads(rel.read_bytes())['install_record_sha256'],
++                                            released_utc='2026-11-20T10:00:00.000000Z', local_date='2026-11-20')))
++        with self.assertRaises(MH.ModeHRefused) as cm:
++            MH.manifest(G)
++        self.assertIn('the release records refuse', str(cm.exception))
++        dup.unlink()
++        # a malformed release record refuses too
++        bad = folder / 'RELEASE_BAD_V1.json'
++        bad.write_bytes(b'{"schema": "RELEASE_RECORD_V1"}')
++        with self.assertRaises(MH.ModeHRefused) as cm:
++            MH.manifest(G)
++        self.assertIn('the release records refuse', str(cm.exception))
++        bad.unlink()
++        # a released variant missing from the runnable set (its registry entry made unsupported by a newer entry)
++        # is reported from the other side: released set and cohort differ
++        # the other direction: a released variant that the registry's runnable set lacks refuses too
++        real_cohort = WF.cohort
++        with mock.patch.object(WF, 'cohort', lambda g, a: (real_cohort(g, a)[0][1:], [])):
++            with self.assertRaises(MH.ModeHRefused) as cm:
++                MH.manifest(G)
++        self.assertIn('released but not in the registry\'s runnable set', str(cm.exception))
++        # (d) with MHUP-A's own release record present: the 39 baseline variants and E_1 revision 3, exactly
++        rec = MH.manifest(G)
++        self.assertEqual(len(rec['cohort']), 40)
++        self.assertEqual({(m['method_id'], m['method_revision']) for m in rec['cohort'] if m['method_id'] == 'E_1'},
++                         {('E_1', '3')})
++        released = {k for k in X.RR.released_variants(self.proj) if k[0] == G}
++        self.assertEqual(released, {(G, m['method_id'], m['method_revision'], m['variant_id']) for m in rec['cohort']})
++
++    def test_the_cohort_refuses_a_released_variant_the_registry_no_longer_runs(self):
++        """EX_148 B03 (a) at the manifest: a newer registry entry supersedes a released revision with no retires item;
++        the old revision drops out of the released set and the new one has no release record: refused."""
++        reg = self.proj / 'src' / 'methods' / '_common' / 'contract_data' / 'registry' / G / 'E_6' / 'BETA_BERNOULLI_FULL_MEMORY_V1'
++        e1 = json.loads((reg / 'entry_0001.json').read_bytes())
++        e2 = dict(e1, entry_sequence=2, method_revision='2', previous_entry_digest='0' * 64)
++        (reg / 'entry_0002.json').write_bytes(canonical(e2))
++        released = X.RR.released_variants(self.proj)
++        self.assertNotIn((G, 'E_6', '1', 'BETA_BERNOULLI_FULL_MEMORY_V1'), released)
++        self.assertNotIn((G, 'E_6', '2', 'BETA_BERNOULLI_FULL_MEMORY_V1'), released)
++        self.assertIn((G, 'E_6', '1', 'BETA_BERNOULLI_DECAY_74_75_V1'), released)
++        with self.assertRaises(MH.ModeHRefused) as cm:
++            with mock.patch.object(WF, 'cohort', lambda g, a: ([m for m in X._small_cohort(g, a)[0]], [])):
++                MH.manifest(G)
++        self.assertIn('not released: E_6 revision 1 BETA_BERNOULLI_FULL_MEMORY_V1', str(cm.exception))
++
+     def test_open_refuses_after_a_ledger_row_beyond_the_frozen_version(self):
+         MH.manifest(G)
+         X.first_update(self.proj, P)
+@@ -657,6 +719,111 @@
+         self.assertEqual(res['attempt_id'], rec['attempt_id'])
+         self.assertEqual(self.markers(bid)[-1], 'MODE_H_SEALED')
+ 
++    def _stop_before_score_complete(self):
++        """Run the score up to the ledger and stop before SCORE_COMPLETE is written; return the ledger path."""
++        real = OR.write_marker
++
++        def stop(root, game, b, name, rec):
++            if name == 'SCORE_COMPLETE':
++                raise RuntimeError('power cut before SCORE_COMPLETE')
++            return real(root, game, b, name, rec)
++        with mock.patch.object(OR, 'write_marker', stop):
++            with self.assertRaises(RuntimeError):
++                self.score()
++        started = OR.marker(self.proj, G, self.bid, 'SCORING_STARTED')
++        return WF.roots('MODE_H_BATCH')['scores'] / G / self.bid / started['attempt_id'] / MH.SCORE_LEDGER
++
++    def test_a_bad_ledger_never_completes(self):
++        """EX_148 B04: before SCORE_COMPLETE the existing ledger must be exactly the scorer's lines for the frozen
++        forecasts and the drawn numbers it records; every tamper refuses with no SCORE_COMPLETE, and no outcome is read."""
++        self.assertEqual(self.run_batch(), 0)
++        path = self._stop_before_score_complete()
++        good = path.read_bytes()
++        lines = good.split(b'\n')[:-1]
++        recs = [json.loads(x) for x in lines]
++        si = [i for i, r in enumerate(recs) if r['schema'] == 'POST_OUTCOME_SCORE_RECORD_V1']
++        ri = [i for i, r in enumerate(recs) if r['schema'] == RP.RANK_SCHEMA]
++
++        def with_lines(ls):
++            return b''.join(x + b'\n' for x in ls)
++
++        def edited(i, **kw):
++            r = dict(recs[i], **kw)
++            return lines[:i] + [canonical(r)[:-1]] + lines[i + 1:]
++        other = next(i for i in si if recs[i]['draw_number'] != recs[si[0]]['draw_number'])
++        cases = {
++            'one score line removed': lines[:si[3]] + lines[si[3] + 1:],
++            'one rank line removed': lines[:ri[2]] + lines[ri[2] + 1:],
++            'one line duplicated': lines[:si[3] + 1] + [lines[si[3]]] + lines[si[3] + 1:],
++            'a foreign valid-looking score line': lines + [canonical(dict(recs[si[0]], forecast_content_digest='e' * 64))[:-1]],
++            'a receipt binding changed': edited(si[1], freeze_receipt_digest='f' * 64),
++            'a match count changed': edited(si[0], main_matches=(recs[si[0]]['main_matches'] + 1) % 8),
++            'a drawn number disagreeing within a draw': edited(other, drawn_main=sorted(
++                recs[other]['drawn_main'][:-1] + [next(x for x in range(1, 36) if x not in recs[other]['drawn_main'])])),
++            'an invalid score record (drawn numbers not ascending)': edited(other, drawn_main=list(reversed(recs[other]['drawn_main']))),
++            'lines reordered': [lines[si[1]], lines[si[0]]] + lines[2:],
++            'a line of another schema': lines + [canonical({'schema': 'SOME_OTHER_RECORD_V1', 'draw_number': recs[si[0]]['draw_number']})[:-1]],
++        }
++        for name, ls in cases.items():
++            with self.subTest(name):
++                path.write_bytes(with_lines(ls))
++                with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
++                    with self.assertRaises(MH.ModeHRefused):
++                        self.score()
++                self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED'])
++        path.write_bytes(good)
++        with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
++            self.score()
++        self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
++        self.assertEqual(OR.marker(self.proj, G, self.bid, 'SCORE_COMPLETE')['score_ledger_sha256'], sha(good))
++
++    def test_the_report_resumes_file_by_file(self):
++        """EX_148 B02: a stop after the report's .txt, then after its .csv; each resume verifies what exists, creates only
++        what is missing, never overwrites, reads no outcome, and the seal follows all three."""
++        self.assertEqual(self.run_batch(), 0)
++        real = MH.CP.create_only
++
++        def stop_after(ext):
++            def create(p, raw):
++                real(p, raw)
++                if Path(p).name.startswith('mode_h_') and Path(p).suffix == '.' + ext:
++                    raise RuntimeError(f'power cut after the .{ext}')
++            return create
++        with mock.patch.object(MH.CP, 'create_only', stop_after('txt')):
++            with self.assertRaises(RuntimeError):
++                self.score()
++        started = OR.marker(self.proj, G, self.bid, 'SCORING_STARTED')
++        base = RW.mode_h_base_name({'game_id': G, 'first': 1577, 'last': 1586, 'attempt_id': started['attempt_id']})
++        folder = RP.roots()['reports'] / G
++        present = lambda: sorted(q.suffix for q in folder.iterdir() if q.name.startswith(base))
++        self.assertEqual(present(), ['.txt'])
++        txt = (folder / f'{base}.txt').read_bytes()
++        with mock.patch.object(MH.CP, 'create_only', stop_after('csv')), \
++                mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
++            with self.assertRaises(RuntimeError):
++                self.score()
++        self.assertEqual(present(), ['.csv', '.txt'])
++        self.assertEqual((folder / f'{base}.txt').read_bytes(), txt)
++        self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED', 'SCORE_COMPLETE'])
++        # a present file with other bytes refuses, nothing is written
++        csv_path = folder / f'{base}.csv'
++        good_csv = csv_path.read_bytes()
++        csv_path.write_bytes(good_csv + b'x')
++        with self.assertRaises(MH.ModeHRefused) as cm:
++            self.score()
++        self.assertIn(f'{base}.csv differs', str(cm.exception))
++        self.assertEqual(present(), ['.csv', '.txt'])
++        csv_path.write_bytes(good_csv)
++        with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
++            res = self.score()
++        self.assertEqual(present(), ['.csv', '.json', '.txt'])
++        self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
++        seal = OR.marker(self.proj, G, self.bid, 'MODE_H_SEALED')
++        self.assertEqual(seal['report_sha256'], sha(txt))
++        self.assertEqual(seal['report_manifest_sha256'], sha((folder / f'{base}.json').read_bytes()))
++        self.assertEqual(len(self.search_rows('MODE_H_REPORT')), 1)
++        self.assertEqual(res['attempt_id'], started['attempt_id'])
++
+     def test_closure_change_after_the_plan_stops_every_step(self):
+         target = self.proj / 'src' / 'methods' / '_common' / 'walk_forward.py'
+         original = target.read_bytes()
+@@ -686,6 +853,65 @@
+         self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
+ 
+ 
++class OzLottoStudy(unittest.TestCase):
++    """The whole study for Oz Lotto (no exposure flags; one family; the supplementaries never stored), and EX_148 B04's
++    Oz Lotto branch: a line's supplementary_matches must be in range and agree with its division."""
++
++    def test_oz_lotto_end_to_end_and_its_supplementary_check(self):
++        from _common.game_profiles import OZLOTTO
++        with tempfile.TemporaryDirectory() as td:
++            tmp = Path(td)
++            proj, env = X.project(tmp, OZLOTTO), X.fake_environment(tmp)
++            with X.patched(proj, env):
++                man = MH.manifest('OZLOTTO')
++                self.assertEqual(man['exposure'], {})
++                self.assertEqual(man['families'], ['MODEH_OZLOTTO_MR7_MAIN_V1'])
++                MH.open_holdout('OZLOTTO', OR.OPENING_STATEMENT)
++                X.first_update(proj, OZLOTTO)
++                plan = WF.make_mode_h_plan('OZLOTTO', X.small_adapters())
++                self.assertEqual(plan['targets'], list(range(1694, 1704)))
++                self.assertEqual(WF.run_batch('OZLOTTO', plan['batch_id'], X.small_adapters(), echo=lambda *_: None), 0)
++                policy = SP.approved_policy()
++                kw = dict(echo=None, n1_runner=N1.runner(policy), seed_line='x', n1_policies_on_file=SP.count_policies(),
++                          environment={})
++                real = OR.write_marker
++
++                def stop(root, game, b, name, rec):
++                    if name == 'SCORE_COMPLETE':
++                        raise RuntimeError('power cut before SCORE_COMPLETE')
++                    return real(root, game, b, name, rec)
++                with mock.patch.object(OR, 'write_marker', stop):
++                    with self.assertRaises(RuntimeError):
++                        MH.score('OZLOTTO', **kw)
++                started = OR.marker(proj, 'OZLOTTO', plan['batch_id'], 'SCORING_STARTED')
++                path = WF.roots('MODE_H_BATCH')['scores'] / 'OZLOTTO' / plan['batch_id'] / started['attempt_id'] / MH.SCORE_LEDGER
++                good = path.read_bytes()
++                lines = good.split(b'\n')[:-1]
++                recs = [json.loads(x) for x in lines]
++                i = next(k for k, r in enumerate(recs) if r['schema'] == 'POST_OUTCOME_SCORE_RECORD_V1')
++                self.assertNotIn('drawn_powerball', recs[i])
++                self.assertFalse(any('supplementar' in k and k != 'supplementary_matches' for k in recs[i]))   # never stored
++                d = recs[i]['division']
++                ran = []
++                for name, change in (('supplementary_matches out of range', {'supplementary_matches': 4}),
++                                     ('a division that disagrees with its match counts', {'division': 1 if d != 1 else 2})):
++                    with self.subTest(name):
++                        r = dict(recs[i], **change)
++                        path.write_bytes(b''.join(x + b'\n' for x in lines[:i] + [canonical(r)[:-1]] + lines[i + 1:]))
++                        with self.assertRaises(MH.ModeHRefused):
++                            MH.score('OZLOTTO', **kw)
++                        self.assertNotIn('SCORE_COMPLETE', OR.lifecycle_markers_present(proj, 'OZLOTTO', plan['batch_id']))
++                        ran.append(name)
++                self.assertEqual(len(ran), 2)
++                path.write_bytes(good)
++                with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
++                    res = MH.score('OZLOTTO', **kw)
++                self.assertEqual(OR.lifecycle_markers_present(proj, 'OZLOTTO', plan['batch_id'])[-1], 'MODE_H_SEALED')
++                text = res['paths'][0].read_text(encoding='ascii')
++                self.assertIn('Game: OZLOTTO', text)
++                self.assertIn('Exposure flags (information only; flagged draws are scored and counted like any other draw): none', text)
++
++
+ class OutcomeReaderRule(Base):
+     """The freeze-before-outcome rule, decided from the records alone (design 5.3; an always-review subject)."""
+ 
+diff -ruN --binary a/tests/test_mhupa_process_check.py b/tests/test_mhupa_process_check.py
+--- a/tests/test_mhupa_process_check.py
++++ b/tests/test_mhupa_process_check.py
+@@ -15,6 +15,7 @@
+ import tempfile
+ import unittest
+ from pathlib import Path
++from unittest import mock
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+ TOOL = ROOT / 'src' / 'package_tools' / 'process_check.py'
+@@ -126,6 +127,73 @@
+                 PC.main(['clear-session-lock', '--root', str(self.root)], table=[], exclude=set())
+ 
+ 
++class FakePsutil:
++    """A stand-in for psutil's read-only API: process_iter with info, and the per-process readers."""
++    class NoSuchProcess(Exception):
++        pass
++
++    class AccessDenied(Exception):
++        pass
++
++    class ZombieProcess(Exception):
++        pass
++
++    class _P:
++        def __init__(self, ps, pid, ppid, name, exe=None, cwd=None, cmdline=None, denied=()):
++            self.ps, self.info = ps, {'pid': pid, 'ppid': ppid, 'name': name}
++            self._d = {'exe': exe, 'cwd': cwd, 'cmdline': cmdline, 'create_time': 1.0}
++            self._denied = set(denied)
++
++        def _get(self, k):
++            if k in self._denied:
++                raise self.ps.AccessDenied(k)
++            return self._d[k]
++
++        def exe(self): return self._get('exe')
++        def cwd(self): return self._get('cwd')
++        def cmdline(self): return self._get('cmdline')
++        def create_time(self): return self._get('create_time')
++
++    def __init__(self, rows):
++        self.rows = [self._P(self, *r[:3], **r[3]) for r in rows]
++
++    def process_iter(self, attrs):
++        return list(self.rows)
++
++
++class RealTableReader(Harness):
++    """EX_148 C01: read_table reads every process, so a non-Python ancestor naming the root is seen (6.1 (c))."""
++
++    def test_a_cmd_parent_naming_the_root_is_seen(self):
++        bat = str(self.root / 'Run_Experiment.bat')
++        fake = FakePsutil([
++            (10, 1, 'explorer.exe', {'cmdline': ['explorer.exe']}),
++            (30, 10, 'cmd.exe', {'cmdline': ['cmd.exe', '/c', bat, 'E.py']}),
++            (31, 30, PYEXE, {'exe': '/opt/other/python3', 'cwd': str(self.elsewhere), 'cmdline': ['python', '-u', 'E.py']}),
++            (40, 10, 'secret.exe', {'denied': ('cmdline',)}),
++        ])
++        with mock.patch.dict(sys.modules, {'psutil': fake}):
++            table = PC.read_table()
++        by = {p.pid: p for p in table}
++        self.assertEqual(sorted(by), [10, 30, 31, 40])
++        self.assertEqual(by[30].cmdline[2], bat)
++        self.assertIsNone(by[40].cmdline)
++        self.assertIsNone(by[40].error)                                   # an unreadable non-Python line is not a refusal
++        self.assertIsNone(by[30].exe)                                     # only the command line of a non-Python process
++        self.assertEqual(self.check(table), 1)
++        self.assertIn('command line names the project root (ancestor 30)', '\n'.join(self.out))
++        self.assertFalse(any(l.strip().startswith('PID 30') for l in self.out))       # the cmd.exe itself is not listed
++        # the same child under a parent that does not name the root: CLEAN
++        fake.rows[1]._d['cmdline'] = ['cmd.exe', '/c', 'other.bat']
++        with mock.patch.dict(sys.modules, {'psutil': fake}):
++            self.assertEqual(self.check(PC.read_table()), 0)
++        # a Python process whose details cannot be read still refuses
++        fake.rows[2]._denied = {'cwd'}
++        with mock.patch.dict(sys.modules, {'psutil': fake}):
++            self.assertEqual(self.check(PC.read_table()), 1)
++        self.assertIn('unreadable: cwd: AccessDenied', '\n'.join(self.out))
++
++
+ class LocksAndRecords(Harness):
+ 
+     def test_session_lock_resume_token_and_clearance(self):
+diff -ruN --binary a/tests/test_wf1b_static.py b/tests/test_wf1b_static.py
+--- a/tests/test_wf1b_static.py
++++ b/tests/test_wf1b_static.py
+@@ -14,7 +14,8 @@
+                   '_common.walk_forward', '_common.game_profiles', '_common.game_draws_reader',
+                   '_common.master_versions',       # MHUP-A: the version-2 master rules (design 3.2, Appendix L)
+                   '_common.owner_records',         # MHUP-A slice 2: the value-free owner records, plans, tickets, markers
+-                  '_common.closure'}               # MHUP-A slice 2: the closure and environment inventories (4.1)
++                  '_common.closure',               # MHUP-A slice 2: the closure and environment inventories (4.1)
++                  '_common.release_records'}       # MHUP-A slice 2: the release records' one reader (4.3; EX_148 B03)
+ STDLIB_OK = {'__future__', 'argparse', 'csv', 'collections', 'decimal', 'fractions', 'functools', 'hashlib', 'io',
+              'json', 'math', 'pathlib', 'platform', 're', 'struct', 'sys', 'uuid', 'numpy', 'evaluation'}
+ 

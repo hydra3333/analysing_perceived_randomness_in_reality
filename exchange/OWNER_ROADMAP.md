@@ -214,8 +214,13 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            task clone, read-only): SUITE PASS, so your real committed ledgers pass the full ledger grammar.
            TASK_T019 STOPPED correctly at step 5 (5 November 2026): its commands named .bat and updater
            paths that .claude/settings.json denies; the clone tool v0.4 now reads them from a plan file.
-           NOW: ChatGPT's review of EX_147, and your Claude Code run of inbox/TASK_T020.md (slice 2's 561
-           tests on Windows, the same read-only way; replaces T019); then any RECHECK;
+           DONE (5 November 2026): your T020 run (slice 2 v1's 561 tests on Windows): PASS. ChatGPT's
+           EX_148: RECHECK (B01-B04, C01, (iii-b)); your decisions: B01 by design amendment A1 (the whole
+           score ledger published once), the corrective scoring run deferred to MHUP-B; corrected as
+           candidate v1r1 (569 tests, both Pythons) and sent as EX_149 with amendment A1.
+           NOW: attach exchange/EX_149_Claude.zip to the ChatGPT conversation for its recheck (EX_150),
+           and your Claude Code run of inbox/TASK_T021.md (v1r1's 569 tests on Windows); then amendment A1
+           for your final approval after ChatGPT's review; then any RECHECK;
            then the integrated install package with its rehearsals and T016. Installing it, its Windows
            rehearsal and MHUP-B each wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
            planning dates above are unchanged; FB-1 applies.
