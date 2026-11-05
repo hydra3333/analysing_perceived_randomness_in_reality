@@ -32,6 +32,11 @@ T_CLI = ['test_mhupa_method_mode_h_cli']
 T_PC = ['test_mhupa_process_check']
 T_IR = ['test_mhupa_install_records']
 T_G = ['test_mhupa_gates']
+T_RR = ['test_mhupa_mode_h.Pipeline.test_the_report_resumes_file_by_file']
+T_BL = ['test_mhupa_mode_h.Pipeline.test_a_bad_ledger_never_completes']
+T_OZ = ['test_mhupa_mode_h.OzLottoStudy']
+T_CO = ['test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_must_be_exactly_the_released_set']
+RL = 'src/methods/_common/release_records.py'
 
 MUTANTS = [
     # ---- the updater v0.2 (design 4.1 refusals (1), (2), admission (3); A6; 4.2 freeze fields), via its self-test
@@ -179,12 +184,10 @@ MUTANTS = [
      "        if 'SCORE_COMPLETE' in present:\n            raise ModeHRefused('SCORE_COMPLETE exists but the score ledger does not; nothing is re-read')\n", '', T_PI,
      'EQUIVALENT in the suite: with SCORE_COMPLETE present the outcome reader refuses every holdout target (5.3), so the read '
      'fails before any line is written; this check gives the owner the right message first (defence in depth)'),
-    ('scorer: an existing report with other bytes is overwritten', MH,
-     "            if (report_folder / f'{base}.{ext}').read_bytes() != contents[ext]:\n"
-     "                raise ModeHRefused(f'the existing report {base}.{ext} differs from the bytes rebuilt from the accepted '\n"
-     "                                   f'lines; nothing is written')\n", '', T_PI),
     ('scorer: the exposure flag not carried into the score lines', MH,
+     "        scores, ranks, _pt, _pv = RP.score_cells(game_id, members, collected, outcomes,\n"
      "                                                 exposure=lambda t: OR.exposure_flag(game_id, t))",
+     "        scores, ranks, _pt, _pv = RP.score_cells(game_id, members, collected, outcomes,\n"
      "                                                 exposure=None)", T_PI),
     ('scorer: the score ledger accepts lines of another schema', MH,
      "    if len(scores) + len(ranks) != len(rows):\n        raise ModeHRefused('the Mode H score ledger holds a line of another schema')\n", '', T_PI,
@@ -263,14 +266,64 @@ MUTANTS = [
      "                      'package commit and COMMITTED PASS')\n", '', T_IR),
     ('records: tracked changes tolerated', IR,
      "    if changes:\n        raise Refused('tracked files differ from HEAD; COMMITTED PASS cannot have been reached:\\n  ' + '\\n  '.join(changes))\n", '', T_IR),
-    ('records: two release records may name one entry', IR,
+    ('records: two release records may name one entry', RL,
      "            if key in seen:\n                raise Refused(f'{r[\"_file\"]} and {seen[key]} both name {key}')\n", '', T_IR),
-    ('records: an entry without a registry chain entry is accepted', IR,
-     "        if rv not in chains.get((g, m, v), []):\n            raise Refused(f'release record {rec.get(\"package\")}: {g} {m} revision {rv} {v} has no registry chain entry')\n", '', T_IR),
-    ('records: a release record may carry an earlier date', IR,
+    ('records: an entry without a registry chain entry is accepted', RL,
+     "        if rv not in chains.get((g, m, v), {}).get('revisions', []):", "        if False:", T_IR),
+    ('records: a release record may carry an earlier date', RL,
      "    if not is_baseline and abs((d - written).days) > 1:", "    if False:", T_IR),
-    ('records: superseded entries stay released', IR,
-     "            if e.get('superseded_by'):\n                retired.add(key)\n", '', T_IR),
+    ('records: superseded entries stay released', RL,
+     "            if e.get('superseded_by'):\n                retired.add(key)\n", '', T_IR,
+     'EQUIVALENT since EX_148 B03: the entry marked superseded_by is also dropped because its registry chain\'s active entry is the newer revision; the record-level mark is kept as the record\'s own statement (defence in depth)'),
+    # ---- EX_148 corrections (EX_149): B02 report resume, B04 ledger validation, B03 release authority, C01 ancestry
+    ('B02: existing report files not verified before the resume', MH,
+     "        if not OR.absent(p) and (not p.is_file() or p.is_symlink() or p.read_bytes() != contents[ext]):",
+     "        if False:", T_RR),
+    ('B02: a missing report file is not created on resume', MH,
+     "        if OR.absent(p):\n            CP.create_only(p, contents[ext])\n            made.append(ext)\n",
+     "        if False:\n            CP.create_only(p, contents[ext])\n            made.append(ext)\n", T_RR),
+    ('B04: the ledger not validated before SCORE_COMPLETE', MH,
+     "    _verify_ledger(game_id, members, collected, raw_ledger, scores, ranks)      # B04: before SCORE_COMPLETE\n", '', T_BL),
+    ('B04: the line-by-line rebuild not compared (identities only)', MH,
+     "    if b''.join(canonical(r) for r in exp_scores + exp_ranks) != raw:", "    if False:", T_BL),
+    ('B04: drawn numbers may disagree within a draw', MH,
+     "        if drawn.setdefault(t, d) != d:\n            raise ModeHRefused(f'the score ledger records two different drawn results for draw {t}')\n",
+     "        drawn.setdefault(t, d)\n", T_BL,
+     'EQUIVALENT: the rebuild uses the first drawn result of the draw, so a disagreeing line no longer matches its '
+     'rebuilt bytes and the final comparison refuses; this check names the fault first (defence in depth)'),
+    ('B04: score identities not compared (missing, duplicated, foreign lines)', MH,
+     "    if sorted(map(key_s, scores)) != sorted(map(key_s, exp_scores)) or len(scores) != len(exp_scores):",
+     "    if False:", T_BL,
+     'EQUIVALENT: a missing, duplicated or foreign line changes the ledger bytes and the final comparison refuses; '
+     'this check names the fault first (defence in depth)'),
+    ('B04: rank identities not compared', MH,
+     "    if sorted(map(key_r, ranks)) != sorted(map(key_r, exp_ranks)) or len(ranks) != len(exp_ranks):",
+     "    if False:", T_BL,
+     'EQUIVALENT: as for the score identities, the final byte comparison refuses (defence in depth)'),
+    ('B04: the covered targets not compared', MH,
+     "    if sorted(drawn) != expected_targets:", "    if False:", T_BL,
+     'EQUIVALENT: a target without lines, or a foreign target, changes the expected identities and the bytes; the '
+     'identity and byte comparisons refuse (defence in depth)'),
+    ('B04: Oz Lotto division not checked against the supplementary count', MH,
+     "            if type(s) is not int or not 0 <= s <= min(3, 7 - m) or got.get('division') != DV.division(\n"
+     "                    game_id, m, supplementary_matches=s):",
+     "            if type(s) is not int or not 0 <= s <= min(3, 7 - m):", T_OZ),
+    ('B04: an invalid score record escapes as an error, not a refusal', MH,
+     "        except ValueError as exc:\n            raise ModeHRefused(f'the Mode H score ledger holds an invalid score record: {exc}') from None\n",
+     "        except KeyError as exc:\n            raise ModeHRefused(f'the Mode H score ledger holds an invalid score record: {exc}') from None\n", T_BL),
+    ('B03: the manifest does not check release authority', MH,
+     "    _check_release_authority(root, game_id, members, excluded)        # EX_148 B03: only released variants are frozen\n",
+     '', T_CO),
+    ('B03: a released variant missing from the cohort is accepted', MH,
+     "    missing = sorted(k for k in released - cohort if (k[1], k[3]) not in excluded_mv)",
+     "    missing = []", T_CO),
+    ('B03: released_variants ignores the registry chain (superseded revisions stay released)', RL,
+     "    return {k: v for k, v in out.items() if k not in retired and current(k)}",
+     "    return {k: v for k, v in out.items() if k not in retired}", T_IR),
+    ('B03: the active entry is the oldest, not the newest', RL,
+     "        if e['entry_sequence'] > c['seq']:", "        if c['seq'] < 0:", T_IR),
+    ('C01: the process table holds Python processes only (no non-Python ancestors)', PC,
+     "        out.append(proc)\n    return out\n", "        if _is_python_name(name):\n            out.append(proc)\n    return out\n", T_PC),
 ]
 
 

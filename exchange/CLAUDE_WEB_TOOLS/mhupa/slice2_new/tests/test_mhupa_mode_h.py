@@ -34,6 +34,7 @@ from evaluation import report as RP
 from evaluation import report_writer as RW
 from evaluation import seed_policies as SP
 from evaluation import n1 as N1
+from evaluation import divisions as DV
 
 G = 'POWERBALL'
 P = POWERBALL
@@ -245,6 +246,12 @@ class ManifestAndOpening(Base):
         bad.unlink()
         # a released variant missing from the runnable set (its registry entry made unsupported by a newer entry)
         # is reported from the other side: released set and cohort differ
+        # the other direction: a released variant that the registry's runnable set lacks refuses too
+        real_cohort = WF.cohort
+        with mock.patch.object(WF, 'cohort', lambda g, a: (real_cohort(g, a)[0][1:], [])):
+            with self.assertRaises(MH.ModeHRefused) as cm:
+                MH.manifest(G)
+        self.assertIn('released but not in the registry\'s runnable set', str(cm.exception))
         # (d) with MHUP-A's own release record present: the 39 baseline variants and E_1 revision 3, exactly
         rec = MH.manifest(G)
         self.assertEqual(len(rec['cohort']), 40)
@@ -843,6 +850,65 @@ class Pipeline(Base):
         marker.unlink()
         self.score()
         self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
+
+
+class OzLottoStudy(unittest.TestCase):
+    """The whole study for Oz Lotto (no exposure flags; one family; the supplementaries never stored), and EX_148 B04's
+    Oz Lotto branch: a line's supplementary_matches must be in range and agree with its division."""
+
+    def test_oz_lotto_end_to_end_and_its_supplementary_check(self):
+        from _common.game_profiles import OZLOTTO
+        with tempfile.TemporaryDirectory() as td:
+            tmp = Path(td)
+            proj, env = X.project(tmp, OZLOTTO), X.fake_environment(tmp)
+            with X.patched(proj, env):
+                man = MH.manifest('OZLOTTO')
+                self.assertEqual(man['exposure'], {})
+                self.assertEqual(man['families'], ['MODEH_OZLOTTO_MR7_MAIN_V1'])
+                MH.open_holdout('OZLOTTO', OR.OPENING_STATEMENT)
+                X.first_update(proj, OZLOTTO)
+                plan = WF.make_mode_h_plan('OZLOTTO', X.small_adapters())
+                self.assertEqual(plan['targets'], list(range(1694, 1704)))
+                self.assertEqual(WF.run_batch('OZLOTTO', plan['batch_id'], X.small_adapters(), echo=lambda *_: None), 0)
+                policy = SP.approved_policy()
+                kw = dict(echo=None, n1_runner=N1.runner(policy), seed_line='x', n1_policies_on_file=SP.count_policies(),
+                          environment={})
+                real = OR.write_marker
+
+                def stop(root, game, b, name, rec):
+                    if name == 'SCORE_COMPLETE':
+                        raise RuntimeError('power cut before SCORE_COMPLETE')
+                    return real(root, game, b, name, rec)
+                with mock.patch.object(OR, 'write_marker', stop):
+                    with self.assertRaises(RuntimeError):
+                        MH.score('OZLOTTO', **kw)
+                started = OR.marker(proj, 'OZLOTTO', plan['batch_id'], 'SCORING_STARTED')
+                path = WF.roots('MODE_H_BATCH')['scores'] / 'OZLOTTO' / plan['batch_id'] / started['attempt_id'] / MH.SCORE_LEDGER
+                good = path.read_bytes()
+                lines = good.split(b'\n')[:-1]
+                recs = [json.loads(x) for x in lines]
+                i = next(k for k, r in enumerate(recs) if r['schema'] == 'POST_OUTCOME_SCORE_RECORD_V1')
+                self.assertNotIn('drawn_powerball', recs[i])
+                self.assertFalse(any('supplementar' in k and k != 'supplementary_matches' for k in recs[i]))   # never stored
+                d = recs[i]['division']
+                ran = []
+                for name, change in (('supplementary_matches out of range', {'supplementary_matches': 4}),
+                                     ('a division that disagrees with its match counts', {'division': 1 if d != 1 else 2})):
+                    with self.subTest(name):
+                        r = dict(recs[i], **change)
+                        path.write_bytes(b''.join(x + b'\n' for x in lines[:i] + [canonical(r)[:-1]] + lines[i + 1:]))
+                        with self.assertRaises(MH.ModeHRefused):
+                            MH.score('OZLOTTO', **kw)
+                        self.assertNotIn('SCORE_COMPLETE', OR.lifecycle_markers_present(proj, 'OZLOTTO', plan['batch_id']))
+                        ran.append(name)
+                self.assertEqual(len(ran), 2)
+                path.write_bytes(good)
+                with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
+                    res = MH.score('OZLOTTO', **kw)
+                self.assertEqual(OR.lifecycle_markers_present(proj, 'OZLOTTO', plan['batch_id'])[-1], 'MODE_H_SEALED')
+                text = res['paths'][0].read_text(encoding='ascii')
+                self.assertIn('Game: OZLOTTO', text)
+                self.assertIn('Exposure flags (information only; flagged draws are scored and counted like any other draw): none', text)
 
 
 class OutcomeReaderRule(Base):
