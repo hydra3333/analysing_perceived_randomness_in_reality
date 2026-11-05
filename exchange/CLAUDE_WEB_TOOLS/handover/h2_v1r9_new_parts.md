@@ -1,11 +1,11 @@
 @@HEADER@@
-# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (CANDIDATE 3, written by Claude)
+# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (OWNER-RATIFIED 6 November 2026; written by Claude)
 
-**Repository target:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md` (staged in `exchange/HANDOVER_2026_11_06/` until the
-owner installs it).
+**Repository location:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md` (installed with register v0.25 as DOC-12).
 
-**Status:** **CANDIDATE 3 - NOT OWNER-RATIFIED, NOT REVIEWER-WRITTEN.** H-2 v1r8 remains the operative reviewer handover until
-the owner ratifies this edition. Candidate 1 (6 November 2026, `2660e46`) was checked by the new reviewer in its takeover
+**Status:** **OWNER-RATIFIED 6 November 2026** ("Ratify H-2 v1r9 and register v0.25 candidate 3"). It supersedes H-2 v1r8 as the
+operative reviewer handover. It was written by Claude, not by a reviewer. Its text is candidate 3's, with only the title, this
+header and the closing lines changed to record the ratification. Candidate 1 (6 November 2026, `2660e46`) was checked by the new reviewer in its takeover
 (EX_153). Candidate 2 applied EX_153's TAKEOVER-C01 to C05 (EX_154). The reviewer's EX_155 passed C01 on RECHECK and found one
 wording correction, C06, and one editorial item, O02, both FIX AND PROCEED. Candidate 3 applies them (EX_156).
 
@@ -258,7 +258,7 @@ Your predecessor reviewed the draft favourably (EX_150) and confirmed that the r
 - **Authorship:** written by Claude, the author of the work under review, because the previous reviewer chat ended without a
   handover. Your own takeover check is therefore the first independent check of every fact here. The reviewer-rights text is
   unchanged and is not Claude's to change.
-- **Review status:** CANDIDATE 3, after your takeover check (EX_153), your RECHECK PASS of C01 (EX_155) and C06 and O02 applied
-  (EX_156). It awaits the owner's ratification and documentary installation. H-2 v1r8 remains operative until then.
+- **Review status:** reviewed in the new reviewer's takeover check (EX_153) and its RECHECK PASS of C01 (EX_155); C06 and O02
+  applied as candidate 3 (EX_156). **OWNER-RATIFIED 6 November 2026**, with register v0.25, and installed with it (DOC-12).
 
-**End of H-2 v1r9 CANDIDATE 3 - NOT OWNER-RATIFIED.**
+**End of H-2 v1r9 (OWNER-RATIFIED 6 November 2026).**
