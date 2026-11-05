@@ -1,0 +1,4 @@
+draw_W,draw_W_plus_1,W_P1,W_P2,W_P3,next_P1,next_P2,next_P3,min_signed_offset_delta_W_P1_to_next_P1,min_signed_offset_delta_W_P1_to_next_P2,min_signed_offset_delta_W_P1_to_next_P3
+1195,1196,0,0,1,0,0,1,,,
+1470,1471,0,0,1,0,0,1,,,
+1490,1491,0,0,1,0,0,1,,,

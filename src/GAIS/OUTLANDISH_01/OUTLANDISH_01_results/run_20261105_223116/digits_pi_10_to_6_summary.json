@@ -1,0 +1,39 @@
+{
+  "experiment": "OUTLANDISH_01_STAGE_A_POWERBALL",
+  "category_definition": {
+    "P1": "7 drawn-order main numbers + Powerball",
+    "P2": "7 drawn-order main numbers",
+    "P3": "any 6 distinct main numbers, any order + Powerball"
+  },
+  "ball_encoding": "FIXED2: every ball is exactly two decimal digits (03, 12, ...); each digit = one byte 0..9",
+  "constant_file": "digits_pi_10_to_6.bin",
+  "input_bytes": 1000000,
+  "file_actual_bytes": 1000000,
+  "draw_copy": "POWERBALL_preholdout_only.csv",
+  "draws_and_index_prep_seconds": 0.006747,
+  "scanned_prefix_sha256": "86c06a17c6758e900d3f7b929dfe30b6bc07fcd451f05a658e66620f1eab4ebc",
+  "draw_count": 433,
+  "first_draw": 1144,
+  "last_draw": 1576,
+  "holdout_cutoff_exclusive": 1577,
+  "implementation": "one-threaded NumPy vectorized chunk scan (all byte offsets)",
+  "chunk_bytes": 100000,
+  "chunks": 10,
+  "candidate_starts_examined": 589,
+  "match_counts": {
+    "P1": 0,
+    "P2": 0,
+    "P3": 0
+  },
+  "scan_elapsed_seconds": 0.023278,
+  "analysis_elapsed_seconds": 0.002046,
+  "scan_MB_per_second": 42.958,
+  "projected_scan_1e9_seconds": 23.28,
+  "projected_scan_1e12_seconds": 23278.5,
+  "projections_are": "rough linear scan-only estimates; not generation, disk capacity, or real large-file measurements",
+  "transition_statistics": {
+    "pairs": 432,
+    "pairs_both_have_any_match": 0,
+    "pairs_W_P1_and_next_any_match": 0
+  }
+}

@@ -1,0 +1,42 @@
+To answer this, we must first make an important distinction in physics:
+
+### Physical Measurements vs. Mathematical Constants of Nature
+Constants with physical units—like the speed of light ($c$), Planck’s constant ($h$), Newton's gravitational constant ($G$), or the electron charge ($e$)—**cannot** be calculated to $10^{12}$ digits. They must be measured in laboratories using physical detectors, which max out at **10 to 14 decimal places** of precision due to quantum sensor limits.
+
+However, modern theoretical physics (quantum field theory, general relativity, statistical thermodynamics, and chaos) is fundamentally governed by **dimensionless mathematical constants**. These can be derived from pure theory, and because fast-converging series exist for them, they **can be calculated to $10^{12}$ (1 trillion) digits and beyond**.
+
+In fact, **`y-cruncher` was created specifically for this purpose.** (The "y" in *y-cruncher* actually stands for the Greek letter $\gamma$, the Euler-Mascheroni constant)!
+
+---
+
+### The Top 10 Constants in Nature & Physics (Calculable to $10^{12}$ Digits)
+
+Here are the top 10 fundamental constants that govern physical laws and can be generated natively in `y-cruncher`:
+
+| # | Constant & Symbol | Value ($\approx$) | Physical Meaning / Role in Nature | `y-cruncher` Command |
+| :--- | :--- | :--- | :--- | :--- |
+| **1** | **Euler's Number ($e$)** | $2.71828...$ | **Radioactive Decay & Thermodynamics:** Governs Boltzmann thermal distributions ($e^{-E/kT}$), exponential radioactive decay, and wave damping in quantum mechanics. | `custom e -dec:1000000` |
+| **2** | **Natural Log of 2 ($\ln 2$)** | $0.69314...$ | **Information Physics & Entropy:** Governs Landauer’s Principle (the minimum physical energy needed to erase 1 bit of information: $kT \ln 2$), radioactive half-lives ($\tau = \ln 2 / \lambda$), and quantum spin-1/2 entropy. | `custom log:2 -dec:1000000` |
+| **3** | **Apéry's Constant ($\zeta(3)$)** | $1.20205...$ | **Quantum Electrodynamics (QED):** Appears directly in multi-loop Feynman diagrams when calculating the electron's anomalous magnetic dipole moment ($g-2$), and the Stefan-Boltzmann radiation law for fermions (neutrinos). | `custom zeta:3 -dec:1000000` |
+| **4** | **Euler-Mascheroni Constant ($\gamma$)** | $0.57721...$ | **Renormalization in Particle Physics:** Appears in Quantum Field Theory when removing infinities via dimensional regularization ($\overline{\text{MS}}$ scheme), and in cylindrical electromagnetic wave solutions (Bessel functions). | `custom gamma -dec:1000000` |
+| **5** | **Catalan's Constant ($G$)** | $0.91596...$ | **Statistical Mechanics & Phase Transitions:** Appears in the exact mathematical solutions of the 2D Ising model (ferromagnetism), quantum lattice dimer models, and thermodynamic phase transitions. | `custom catalan -dec:1000000` |
+| **6** | **Pythagoras' Constant ($\sqrt{2}$)** | $1.41421...$ | **Quantum Superposition:** Normalizes quantum states into equal superpositions (the Hadamard gate: $H = \frac{1}{\sqrt{2}}\begin{pmatrix}1&1\\1&-1\end{pmatrix}$); governs diagonal wave propagation and crystal lattice planes. | `custom sqrt:2 -dec:1000000` |
+| **7** | **Theodorus' Constant ($\sqrt{3}$)** | $1.73205...$ | **Condensed Matter & Electrical Physics:** Dictates hexagonal close-packed crystal geometries (graphene, quartz lattices), tetrahedral bonds in silicon, and 3-phase alternating current phase relations. | `custom sqrt:3 -dec:1000000` |
+| **8** | **The Lemniscate Constant ($\varpi$)** | $2.62205...$ | **Nonlinear Dynamics & General Relativity:** Governs large-amplitude physical pendulum motion (elliptic integrals), relativistic geodesics (orbits) around rotating black holes, and conformal field theories. | `custom lemniscate -dec:1000000` |
+| **9** | **Natural Log of 10 ($\ln 10$)** | $2.30258...$ | **Physical Scaling & Decay Rates:** Governs chemical activation energy barriers (Arrhenius equation), seismic energy release (Richter scale), and acoustic sound pressure decibel decay. | `custom log:10 -dec:1000000` |
+| **10** | **Square Root of 5 ($\sqrt{5}$)** | $2.23606...$ | **Quasicrystal Symmetries & KAM Theory:** The algebraic backbone of 5-fold Penrose tiling in quasicrystals and the Kolmogorov-Arnold-Moser (KAM) theorem governing orbital stability in solar systems. | `custom sqrt:5 -dec:1000000` |
+
+---
+
+### What About Chaos Theory Constants (e.g., Feigenbaum's $\delta$)?
+You might wonder about the **Feigenbaum constant** ($\delta \approx 4.66920...$), which governs the universal rate at which turbulent fluids and chaotic systems transition into chaos. 
+
+While it is one of the most important constants in nature, **it cannot be calculated to $10^{12}$ digits**. 
+* Unlike $\pi$, $e$, and $\zeta(3)$, which have hypergeometric series that converge exponentially via binary splitting ($O(N \log^2 N)$), Feigenbaum's $\delta$ requires root-finding across infinite-dimensional functional spaces. 
+* The current world record for $\delta$ is only a few tens of thousands of digits—nowhere near 1 trillion.
+
+### Summary
+Every single one of the 10 constants listed above can be computed by `y-cruncher`. If you are looking for deterministic, pseudo-random sequences rooted in the deep symmetries of physical reality (QED Feynman diagrams, quantum spin entropy, black hole orbits, and thermodynamic cooling), **$\zeta(3)$**, **$\gamma$**, **$\ln 2$**, and **$e$** are the premier candidates.
+
+me: 
+potentially interesting ... 1, 2, 4, 8
