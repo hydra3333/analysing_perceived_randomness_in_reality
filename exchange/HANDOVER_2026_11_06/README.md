@@ -10,10 +10,10 @@ None of them is owner-ratified or reviewed. They go into doc/HANDOVER/ in the ne
 | File | Bytes as stored | SHA-256 as stored | SHA-256 after CRLF->LF |
 |---|---|---|---|
 | `Claude_Primary_Handover_H1_v1r9_delta.md` | 19396 | `f3f78b2e75bae241321c49e5b517ef5cf424a46a26b77da0b8c28c51d00a09c5` | `a05e4b9c05df4633c340d61b84f0f48b9345f6eacacb29530e53fc9a2edaa9d5` |
-| `Claude_Primary_Handover_H1_v1r9_introductory_blurb.md` | 9428 | `ead74669df8f7191d79f731d5b6cfe15f9e91e4fd9d99d22ea0c015fd54aa2fb` | `d40ff56a2dc28315338c65040c405e3f39029f1b635c2b527717991008619f38` |
+| `Claude_Primary_Handover_H1_v1r9_introductory_blurb.md` | 9465 | `1ba881544c1f616d2b9aeaa0caacefce6324dd9a47b7f4c4adbd3617d6e043af` | `56d0ba6029e51b7a6fc6727fa1c7e8a660fed5832f6fec2a130f7b680e974f35` |
 | `ChatGPT_Reviewer_Handover_H2_v1r9.md` | 33869 | `7dbc1438134a82a7bbc36920b89d0b0a73d3d95bbdc0ac7905ee069ee0c0d686` | `7dbc1438134a82a7bbc36920b89d0b0a73d3d95bbdc0ac7905ee069ee0c0d686` |
 | `RATIFICATION_REGISTER_v0_25_CANDIDATE.md` | 269257 | `ba6c3fb7de5872cee5190e85873c7bc20f56e331a65c609c8e31e7fd55055d21` | `ba6c3fb7de5872cee5190e85873c7bc20f56e331a65c609c8e31e7fd55055d21` |
-| `ChatGPT_Reviewer_Handover_H2_v1r9_introductory_blurb.md` | 8797 | `5e33b0023022a7251d8184a2cb0697a7c3cdb650b626640b96739b6927d06902` | `2674bdb52e6c05402138719ccbd1bbf184edc16f69f8e2494c1e138f718643b1` |
+| `ChatGPT_Reviewer_Handover_H2_v1r9_introductory_blurb.md` | 9096 | `bd44901429b94552dd1a78494048c595912b7c913265052f6e5ca9a4b414172a` | `f29b2f30e445b0f52cd3acff3866294b8bda2a44629c95aca7266962dc70f97d` |
 
 ## How to use them
 
