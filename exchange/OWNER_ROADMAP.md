@@ -221,9 +221,11 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            DONE (5 November 2026): ChatGPT's EX_150: B02-B04 and C01 PASS, A1 favourable, one narrow new
            blocker B05 (the resumed scorer's plan and completion bindings); you RATIFIED A1; B05 corrected
            as candidate v1r2 (570 tests, both Pythons) and sent as EX_151.
-           NOW: attach exchange/EX_151_Claude.zip to the ChatGPT conversation for its focused recheck
-           (EX_152), and your Claude Code runs of inbox/TASK_T021.md (if not yet done) and TASK_T022.md
-           (v1r2's 570 tests on Windows); then any RECHECK;
+           DONE (5 November 2026): ChatGPT's EX_152: slice 2 PASS (candidate v1r2), A1 recorded as ratified;
+           the integrated MHUP-A install package may now be prepared for its own review.
+           NOW: your Claude Code runs of inbox/TASK_T021.md and TASK_T022.md (v1r1 and v1r2 on Windows; their
+           reports are still to come and are needed before integration); then the integrated install
+           package (slice 1 + slice 2, A1 cited) and its review;
            then the integrated install package with its rehearsals and T016. Installing it, its Windows
            rehearsal and MHUP-B each wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
            planning dates above are unchanged; FB-1 applies.

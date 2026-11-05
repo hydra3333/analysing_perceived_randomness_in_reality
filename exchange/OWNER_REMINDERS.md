@@ -348,7 +348,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-020  MHUP-A integrated package: three things slice 2 found that the package or the owner must carry
 
 - Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
-- Status: OPEN until the integrated package is built and reviewed.
+- Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026).
 - What:
   (a) The package manifest's `release_entries` must name E_1 revision 3 for both games, so that the install's
       release record (Appendix J step 16) releases it: the baseline record carries revision 2 as superseded and
