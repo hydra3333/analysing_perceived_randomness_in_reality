@@ -90,7 +90,10 @@ def _is_python_name(name: str) -> bool:
 # ---------------------------------------------------------------- the process table (psutil, read-only)
 
 def read_table() -> list[Proc]:
-    """Every process with a Python name, with its details; a detail that cannot be read is recorded as an error."""
+    """Every process, read-only. A Python-named process gets all its details (one that cannot be read is recorded as
+    an error, and the rule then refuses); any other process gets only its name, parent and command line, so the
+    ancestor test of 6.1 (c) sees a non-Python parent such as the cmd.exe that runs a launcher (EX_148 C01). An
+    unreadable non-Python command line is simply absent: it can neither list nor clear anything by itself."""
     import psutil
     out = []
     for p in psutil.process_iter(['pid', 'ppid', 'name']):
@@ -98,16 +101,20 @@ def read_table() -> list[Proc]:
             name = p.info.get('name') or ''
         except Exception:
             name = ''
-        if not _is_python_name(name):
-            continue
         proc = Proc(pid=p.info['pid'], ppid=p.info.get('ppid'), name=name, exe=None, cwd=None, cmdline=None, create_time=None)
-        for attr in ('exe', 'cwd', 'cmdline', 'create_time'):
+        if _is_python_name(name):
+            for attr in ('exe', 'cwd', 'cmdline', 'create_time'):
+                try:
+                    setattr(proc, attr, getattr(p, attr)())
+                except psutil.NoSuchProcess:
+                    proc.error = 'exited during the read'
+                except (psutil.AccessDenied, psutil.ZombieProcess, OSError) as exc:
+                    proc.error = f'{attr}: {type(exc).__name__}'
+        else:
             try:
-                setattr(proc, attr, getattr(p, attr)())
-            except psutil.NoSuchProcess:
-                proc.error = 'exited during the read'
-            except (psutil.AccessDenied, psutil.ZombieProcess, OSError) as exc:
-                proc.error = f'{attr}: {type(exc).__name__}'
+                proc.cmdline = p.cmdline()
+            except Exception:                                   # access denied, exited: no command line to test
+                proc.cmdline = None
         out.append(proc)
     return out
 
@@ -134,7 +141,7 @@ def project_processes(table: list[Proc], root: Path, venv_python: Path, base_pyt
     """The listed processes under the rule of 6.1 (reasons filled in). A process with an unreadable detail is
     listed with its error (a refusal for the caller). `cmdline_filter` narrows to command lines naming a string
     (clear-updater-lock: results_master)."""
-    by_pid = {p.pid: p for p in table}
+    by_pid = {p.pid: p for p in table}            # every process: ancestors of any name are walked (6.1 (c))
     rootn = _norm(str(root)).lower()
     listed = []
     for p in table:

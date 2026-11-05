@@ -54,6 +54,8 @@ class Repo(unittest.TestCase):
         (self.root / 'src' / 'package_tools').mkdir(parents=True)
         shutil.copy2(TOOL, self.root / 'src' / 'package_tools' / 'install_records.py')
         shutil.copy2(ROOT / 'src' / 'package_tools' / 'process_check.py', self.root / 'src' / 'package_tools' / 'process_check.py')
+        for name in ('__init__.py', 'release_records.py'):                     # the one reader the tool imports
+            shutil.copy2(ROOT / 'src' / 'methods' / '_common' / name, self.root / 'src' / 'methods' / '_common' / name)
         git(self.root, 'init', '-q')
         git(self.root, 'add', '-A')
         git(self.root, 'commit', '-q', '-m', 'base')
@@ -262,6 +264,35 @@ class Records(Repo):
         self.assertIn('has no registry chain entry', out)
         self.assertFalse((self.root / IR.RECORDS_REL / 'RELEASE_BAD_V1.json').exists())
 
+    def test_a_superseding_registry_entry_retires_the_old_revision(self):
+        """EX_148 B03 (a): a newer revision installed in the registry with no explicit retires item: the released set
+        drops the old revision (its chain has moved on) and does not gain the new one (no release record)."""
+        reg = self.root / DATA / 'registry' / 'OZLOTTO' / 'E_7' / 'BETA_SHRINK_W52_C52_V1'
+        e1 = json.loads((reg / 'entry_0001.json').read_bytes())
+        before = IR.released_variants(self.root)
+        self.assertIn(('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1'), before)
+        (reg / 'entry_0002.json').write_bytes(IR.canonical(dict(e1, entry_sequence=2, method_revision='2')))
+        after = IR.released_variants(self.root)
+        self.assertEqual(set(before) - set(after), {('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1')})
+        self.assertEqual(set(after) - set(before), set())
+        # a newer entry that keeps the revision but is no longer SUPPORTED also takes the variant out
+        (reg / 'entry_0002.json').write_bytes(IR.canonical(dict(e1, entry_sequence=2, registry_status='RETIRED')))
+        self.assertNotIn(('OZLOTTO', 'E_7', '1', 'BETA_SHRINK_W52_C52_V1'), IR.released_variants(self.root))
+
+    def test_malformed_release_records_refuse(self):
+        """EX_148 B03 (c): a record whose entry has an unknown key, names an unknown game, or lacks its dates refuses."""
+        folder = self.root / IR.RECORDS_REL
+        base = json.loads((folder / IR.BASELINE_NAME).read_bytes())
+        for name, rec in (('an unknown key', dict(base, entries=[dict(base['entries'][0], extra='x')])),
+                          ('an unknown game', dict(base, entries=[dict(base['entries'][0], game_id='LOTTO')])),
+                          ('no dates', {k: v for k, v in base.items() if k not in ('local_date', 'released_utc')})):
+            with self.subTest(name):
+                (folder / IR.BASELINE_NAME).write_bytes(IR.canonical(rec))
+                with self.assertRaises(IR.Refused):
+                    IR.released_variants(self.root)
+        (folder / IR.BASELINE_NAME).write_bytes(IR.canonical(base))
+        self.assertEqual(len(IR.released_variants(self.root)), 78)
+
     def test_release_date_is_the_day_of_writing(self):
         # L-D2: 23:58 and 00:02 local: the date comes from the PC clock at the release step; across midnight UTC and
         # local may differ by one day, never more; an earlier date is refused for every record but the baseline
@@ -307,7 +338,7 @@ class Statics(unittest.TestCase):
             elif isinstance(node, ast.ImportFrom):
                 names.add((node.module or '').split('.')[0])
         self.assertTrue(names <= {'__future__', 'argparse', 'datetime', 'hashlib', 'json', 'os', 'pathlib', 're', 'subprocess',
-                                  'sys', 'process_check'}, names)
+                                  'sys', 'process_check', '_common'}, names)
         git_calls = [ast.unparse(n) for n in ast.walk(tree) if isinstance(n, ast.Call) and ast.unparse(n.func) == 'subprocess.run']
         self.assertEqual(len(git_calls), 2)
         for call in git_calls:

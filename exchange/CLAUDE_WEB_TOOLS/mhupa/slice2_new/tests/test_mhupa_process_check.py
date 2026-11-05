@@ -15,6 +15,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 TOOL = ROOT / 'src' / 'package_tools' / 'process_check.py'
@@ -124,6 +125,73 @@ class MockedTables(Harness):
                 PC.main(['check-no-runs'], table=[], exclude=set())
             with self.assertRaises(SystemExit):
                 PC.main(['clear-session-lock', '--root', str(self.root)], table=[], exclude=set())
+
+
+class FakePsutil:
+    """A stand-in for psutil's read-only API: process_iter with info, and the per-process readers."""
+    class NoSuchProcess(Exception):
+        pass
+
+    class AccessDenied(Exception):
+        pass
+
+    class ZombieProcess(Exception):
+        pass
+
+    class _P:
+        def __init__(self, ps, pid, ppid, name, exe=None, cwd=None, cmdline=None, denied=()):
+            self.ps, self.info = ps, {'pid': pid, 'ppid': ppid, 'name': name}
+            self._d = {'exe': exe, 'cwd': cwd, 'cmdline': cmdline, 'create_time': 1.0}
+            self._denied = set(denied)
+
+        def _get(self, k):
+            if k in self._denied:
+                raise self.ps.AccessDenied(k)
+            return self._d[k]
+
+        def exe(self): return self._get('exe')
+        def cwd(self): return self._get('cwd')
+        def cmdline(self): return self._get('cmdline')
+        def create_time(self): return self._get('create_time')
+
+    def __init__(self, rows):
+        self.rows = [self._P(self, *r[:3], **r[3]) for r in rows]
+
+    def process_iter(self, attrs):
+        return list(self.rows)
+
+
+class RealTableReader(Harness):
+    """EX_148 C01: read_table reads every process, so a non-Python ancestor naming the root is seen (6.1 (c))."""
+
+    def test_a_cmd_parent_naming_the_root_is_seen(self):
+        bat = str(self.root / 'Run_Experiment.bat')
+        fake = FakePsutil([
+            (10, 1, 'explorer.exe', {'cmdline': ['explorer.exe']}),
+            (30, 10, 'cmd.exe', {'cmdline': ['cmd.exe', '/c', bat, 'E.py']}),
+            (31, 30, PYEXE, {'exe': '/opt/other/python3', 'cwd': str(self.elsewhere), 'cmdline': ['python', '-u', 'E.py']}),
+            (40, 10, 'secret.exe', {'denied': ('cmdline',)}),
+        ])
+        with mock.patch.dict(sys.modules, {'psutil': fake}):
+            table = PC.read_table()
+        by = {p.pid: p for p in table}
+        self.assertEqual(sorted(by), [10, 30, 31, 40])
+        self.assertEqual(by[30].cmdline[2], bat)
+        self.assertIsNone(by[40].cmdline)
+        self.assertIsNone(by[40].error)                                   # an unreadable non-Python line is not a refusal
+        self.assertIsNone(by[30].exe)                                     # only the command line of a non-Python process
+        self.assertEqual(self.check(table), 1)
+        self.assertIn('command line names the project root (ancestor 30)', '\n'.join(self.out))
+        self.assertFalse(any(l.strip().startswith('PID 30') for l in self.out))       # the cmd.exe itself is not listed
+        # the same child under a parent that does not name the root: CLEAN
+        fake.rows[1]._d['cmdline'] = ['cmd.exe', '/c', 'other.bat']
+        with mock.patch.dict(sys.modules, {'psutil': fake}):
+            self.assertEqual(self.check(PC.read_table()), 0)
+        # a Python process whose details cannot be read still refuses
+        fake.rows[2]._denied = {'cwd'}
+        with mock.patch.dict(sys.modules, {'psutil': fake}):
+            self.assertEqual(self.check(PC.read_table()), 1)
+        self.assertIn('unreadable: cwd: AccessDenied', '\n'.join(self.out))
 
 
 class LocksAndRecords(Harness):

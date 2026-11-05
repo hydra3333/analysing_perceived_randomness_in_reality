@@ -23,7 +23,8 @@ edit('tests/test_wf1b_static.py', [
     ("                  '_common.master_versions'}       # MHUP-A: the version-2 master rules (design 3.2, Appendix L)\n",
      "                  '_common.master_versions',       # MHUP-A: the version-2 master rules (design 3.2, Appendix L)\n"
      "                  '_common.owner_records',         # MHUP-A slice 2: the value-free owner records, plans, tickets, markers\n"
-     "                  '_common.closure'}               # MHUP-A slice 2: the closure and environment inventories (4.1)\n"),
+     "                  '_common.closure',               # MHUP-A slice 2: the closure and environment inventories (4.1)\n"
+     "                  '_common.release_records'}       # MHUP-A slice 2: the release records' one reader (4.3; EX_148 B03)\n"),
     # line 63: Method_Mode_H.py's module mode_h.py may import the outcome reader (design 6.1: the Mode H scorer)
     ("        users = [p.name for p in EVAL.glob('*.py') if any(n.endswith('outcome_reader') for n in imports(p))]\n"
      "        self.assertEqual(sorted(users), ['report.py'])\n",

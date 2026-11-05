@@ -214,6 +214,61 @@ class ManifestAndOpening(Base):
                                    repo_root=self.proj, run_root=WF.roots('MODE_H_BATCH')['runs'])
         self.assertEqual(self.run_folders(), [])
 
+    def test_the_cohort_must_be_exactly_the_released_set(self):
+        """EX_148 B03 (b), (c), (d): the full cohort (no small-cohort restriction), against the validated release records."""
+        self.stack.close()
+        self.stack = contextlib.ExitStack()
+        self.stack.enter_context(X.patched(self.proj, self.env, small_cohort=False))
+        # (b) E_1 revision 3 is SUPPORTED in the registry, but its release record (written by the install) is absent
+        with self.assertRaises(MH.ModeHRefused) as cm:
+            MH.manifest(G)
+        self.assertIn('SUPPORTED in the registry but not released: E_1 revision 3 FULL_HISTORY_RAW_COUNTS_V1', str(cm.exception))
+        self.assertIsNone(OR.study_manifest(self.proj, G))
+        self.assertEqual(self.search_rows(), [])
+        # (c) a conflicting release record (a second record naming baseline entries) refuses
+        rel = X.write_e1r3_release(self.proj)
+        folder = rel.parent
+        dup = folder / 'RELEASE_DUP_V1.json'
+        base = json.loads((folder / 'RELEASE_BASELINE_20261031_V1.json').read_bytes())
+        dup.write_bytes(X.RR.canonical(dict(base, package='DUP', install_record_sha256=json.loads(rel.read_bytes())['install_record_sha256'],
+                                            released_utc='2026-11-20T10:00:00.000000Z', local_date='2026-11-20')))
+        with self.assertRaises(MH.ModeHRefused) as cm:
+            MH.manifest(G)
+        self.assertIn('the release records refuse', str(cm.exception))
+        dup.unlink()
+        # a malformed release record refuses too
+        bad = folder / 'RELEASE_BAD_V1.json'
+        bad.write_bytes(b'{"schema": "RELEASE_RECORD_V1"}')
+        with self.assertRaises(MH.ModeHRefused) as cm:
+            MH.manifest(G)
+        self.assertIn('the release records refuse', str(cm.exception))
+        bad.unlink()
+        # a released variant missing from the runnable set (its registry entry made unsupported by a newer entry)
+        # is reported from the other side: released set and cohort differ
+        # (d) with MHUP-A's own release record present: the 39 baseline variants and E_1 revision 3, exactly
+        rec = MH.manifest(G)
+        self.assertEqual(len(rec['cohort']), 40)
+        self.assertEqual({(m['method_id'], m['method_revision']) for m in rec['cohort'] if m['method_id'] == 'E_1'},
+                         {('E_1', '3')})
+        released = {k for k in X.RR.released_variants(self.proj) if k[0] == G}
+        self.assertEqual(released, {(G, m['method_id'], m['method_revision'], m['variant_id']) for m in rec['cohort']})
+
+    def test_the_cohort_refuses_a_released_variant_the_registry_no_longer_runs(self):
+        """EX_148 B03 (a) at the manifest: a newer registry entry supersedes a released revision with no retires item;
+        the old revision drops out of the released set and the new one has no release record: refused."""
+        reg = self.proj / 'src' / 'methods' / '_common' / 'contract_data' / 'registry' / G / 'E_6' / 'BETA_BERNOULLI_FULL_MEMORY_V1'
+        e1 = json.loads((reg / 'entry_0001.json').read_bytes())
+        e2 = dict(e1, entry_sequence=2, method_revision='2', previous_entry_digest='0' * 64)
+        (reg / 'entry_0002.json').write_bytes(canonical(e2))
+        released = X.RR.released_variants(self.proj)
+        self.assertNotIn((G, 'E_6', '1', 'BETA_BERNOULLI_FULL_MEMORY_V1'), released)
+        self.assertNotIn((G, 'E_6', '2', 'BETA_BERNOULLI_FULL_MEMORY_V1'), released)
+        self.assertIn((G, 'E_6', '1', 'BETA_BERNOULLI_DECAY_74_75_V1'), released)
+        with self.assertRaises(MH.ModeHRefused) as cm:
+            with mock.patch.object(WF, 'cohort', lambda g, a: ([m for m in X._small_cohort(g, a)[0]], [])):
+                MH.manifest(G)
+        self.assertIn('not released: E_6 revision 1 BETA_BERNOULLI_FULL_MEMORY_V1', str(cm.exception))
+
     def test_open_refuses_after_a_ledger_row_beyond_the_frozen_version(self):
         MH.manifest(G)
         X.first_update(self.proj, P)
@@ -656,6 +711,110 @@ class Pipeline(Base):
         res = self.score()
         self.assertEqual(res['attempt_id'], rec['attempt_id'])
         self.assertEqual(self.markers(bid)[-1], 'MODE_H_SEALED')
+
+    def _stop_before_score_complete(self):
+        """Run the score up to the ledger and stop before SCORE_COMPLETE is written; return the ledger path."""
+        real = OR.write_marker
+
+        def stop(root, game, b, name, rec):
+            if name == 'SCORE_COMPLETE':
+                raise RuntimeError('power cut before SCORE_COMPLETE')
+            return real(root, game, b, name, rec)
+        with mock.patch.object(OR, 'write_marker', stop):
+            with self.assertRaises(RuntimeError):
+                self.score()
+        started = OR.marker(self.proj, G, self.bid, 'SCORING_STARTED')
+        return WF.roots('MODE_H_BATCH')['scores'] / G / self.bid / started['attempt_id'] / MH.SCORE_LEDGER
+
+    def test_a_bad_ledger_never_completes(self):
+        """EX_148 B04: before SCORE_COMPLETE the existing ledger must be exactly the scorer's lines for the frozen
+        forecasts and the drawn numbers it records; every tamper refuses with no SCORE_COMPLETE, and no outcome is read."""
+        self.assertEqual(self.run_batch(), 0)
+        path = self._stop_before_score_complete()
+        good = path.read_bytes()
+        lines = good.split(b'\n')[:-1]
+        recs = [json.loads(x) for x in lines]
+        si = [i for i, r in enumerate(recs) if r['schema'] == 'POST_OUTCOME_SCORE_RECORD_V1']
+        ri = [i for i, r in enumerate(recs) if r['schema'] == RP.RANK_SCHEMA]
+
+        def with_lines(ls):
+            return b''.join(x + b'\n' for x in ls)
+
+        def edited(i, **kw):
+            r = dict(recs[i], **kw)
+            return lines[:i] + [canonical(r)[:-1]] + lines[i + 1:]
+        other = next(i for i in si if recs[i]['draw_number'] != recs[si[0]]['draw_number'])
+        cases = {
+            'one score line removed': lines[:si[3]] + lines[si[3] + 1:],
+            'one rank line removed': lines[:ri[2]] + lines[ri[2] + 1:],
+            'one line duplicated': lines[:si[3] + 1] + [lines[si[3]]] + lines[si[3] + 1:],
+            'a foreign valid-looking score line': lines + [canonical(dict(recs[si[0]], forecast_content_digest='e' * 64))[:-1]],
+            'a receipt binding changed': edited(si[1], freeze_receipt_digest='f' * 64),
+            'a match count changed': edited(si[0], main_matches=(recs[si[0]]['main_matches'] + 1) % 8),
+            'a drawn number disagreeing within a draw': edited(other, drawn_main=sorted(
+                recs[other]['drawn_main'][:-1] + [next(x for x in range(1, 36) if x not in recs[other]['drawn_main'])])),
+            'an invalid score record (drawn numbers not ascending)': edited(other, drawn_main=list(reversed(recs[other]['drawn_main']))),
+            'lines reordered': [lines[si[1]], lines[si[0]]] + lines[2:],
+        }
+        for name, ls in cases.items():
+            with self.subTest(name):
+                path.write_bytes(with_lines(ls))
+                with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
+                    with self.assertRaises(MH.ModeHRefused):
+                        self.score()
+                self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED'])
+        path.write_bytes(good)
+        with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
+            self.score()
+        self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
+        self.assertEqual(OR.marker(self.proj, G, self.bid, 'SCORE_COMPLETE')['score_ledger_sha256'], sha(good))
+
+    def test_the_report_resumes_file_by_file(self):
+        """EX_148 B02: a stop after the report's .txt, then after its .csv; each resume verifies what exists, creates only
+        what is missing, never overwrites, reads no outcome, and the seal follows all three."""
+        self.assertEqual(self.run_batch(), 0)
+        real = MH.CP.create_only
+
+        def stop_after(ext):
+            def create(p, raw):
+                real(p, raw)
+                if Path(p).name.startswith('mode_h_') and Path(p).suffix == '.' + ext:
+                    raise RuntimeError(f'power cut after the .{ext}')
+            return create
+        with mock.patch.object(MH.CP, 'create_only', stop_after('txt')):
+            with self.assertRaises(RuntimeError):
+                self.score()
+        started = OR.marker(self.proj, G, self.bid, 'SCORING_STARTED')
+        base = RW.mode_h_base_name({'game_id': G, 'first': 1577, 'last': 1586, 'attempt_id': started['attempt_id']})
+        folder = RP.roots()['reports'] / G
+        present = lambda: sorted(q.suffix for q in folder.iterdir() if q.name.startswith(base))
+        self.assertEqual(present(), ['.txt'])
+        txt = (folder / f'{base}.txt').read_bytes()
+        with mock.patch.object(MH.CP, 'create_only', stop_after('csv')), \
+                mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
+            with self.assertRaises(RuntimeError):
+                self.score()
+        self.assertEqual(present(), ['.csv', '.txt'])
+        self.assertEqual((folder / f'{base}.txt').read_bytes(), txt)
+        self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED', 'SCORE_COMPLETE'])
+        # a present file with other bytes refuses, nothing is written
+        csv_path = folder / f'{base}.csv'
+        good_csv = csv_path.read_bytes()
+        csv_path.write_bytes(good_csv + b'x')
+        with self.assertRaises(MH.ModeHRefused) as cm:
+            self.score()
+        self.assertIn(f'{base}.csv differs', str(cm.exception))
+        self.assertEqual(present(), ['.csv', '.txt'])
+        csv_path.write_bytes(good_csv)
+        with mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read')):
+            res = self.score()
+        self.assertEqual(present(), ['.csv', '.json', '.txt'])
+        self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
+        seal = OR.marker(self.proj, G, self.bid, 'MODE_H_SEALED')
+        self.assertEqual(seal['report_sha256'], sha(txt))
+        self.assertEqual(seal['report_manifest_sha256'], sha((folder / f'{base}.json').read_bytes()))
+        self.assertEqual(len(self.search_rows('MODE_H_REPORT')), 1)
+        self.assertEqual(res['attempt_id'], started['attempt_id'])
 
     def test_closure_change_after_the_plan_stops_every_step(self):
         target = self.proj / 'src' / 'methods' / '_common' / 'walk_forward.py'
