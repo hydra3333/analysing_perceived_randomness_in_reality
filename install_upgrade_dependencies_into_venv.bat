@@ -5,7 +5,7 @@ rem Modes: INSTALL_UPGRADE (default: install anything missing AND upgrade), INST
 rem UPGRADE (same as INSTALL_UPGRADE), VERIFY (checks only; changes nothing).
 rem Any version change is listed; re-run compatibility/reproducibility checks before research use.
 rem selenium: owner-run private two-site results check (browser automation, no stealth).
-set "DIRECT_PACKAGES=requests beautifulsoup4 psutil numpy scipy threadpoolctl selenium"
+set "DIRECT_PACKAGES=requests beautifulsoup4 psutil numpy scipy threadpoolctl selenium pyahocorasick"
 set "ROOT=%~dp0"
 set "PY=%ROOT%.venv\Scripts\python.exe"
 set "VENV_ACTIVATE=%ROOT%.venv\Scripts\activate.bat"
