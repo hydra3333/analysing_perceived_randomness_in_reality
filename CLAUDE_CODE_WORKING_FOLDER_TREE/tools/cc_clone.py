@@ -8,7 +8,13 @@ Every command checks where it is before it does anything, and prints PASS or STO
   guard         check that scratch/<TASK>/r is a task clone with no remote and the refusing hook
   unzip         check a ZIP inside the clone by SHA-256 and extract it into scratch/<TASK>/p
   overlay       copy an extracted repo_overlay into the clone; new files only, except the tracked
-                files named with --replace (v0.2, 29 Oct 2026, for E2R-CODE-2's 3 replacements)
+                files named with --replace (v0.2, 29 Oct 2026, for E2R-CODE-2's 3 replacements), or
+                named in a plan file with --plan (v0.4, 5 Nov 2026): lines `REPLACE <path>` and
+                `REMOVE <path>` (a tracked file the candidate deletes; git rm in the clone only), so a
+                path the runner's permission list denies on a command line (a .bat, the updater) is
+                never typed; the plan file is a repository file read from the clone itself
+  verify-overlay  check, read-only, that every overlay file is in the clone with the same bytes and
+                every REMOVE path of the plan is gone from the clone and its index (v0.4)
   git           run one Git command in the clone (add, commit, status, log, diff, show, rev-parse,
                 ls-files, rm), with the guard before and after (rm: v0.3, 31 Oct 2026, for REL-1's
                 11 flag deletions; it acts only inside the task clone)
@@ -149,16 +155,47 @@ def cmd_unzip(a):
     print(f'UNZIP PASS: {sum(1 for n in names if not n.endswith("/"))} files extracted into {p}')
 
 
-def cmd_overlay(a):
-    r = guard(a.task, quiet=True)
+def read_plan(r, rel):
+    """The plan file (a repository file, read from the clone): (replace set, remove list). Every line is blank, a
+    `#` comment, `REPLACE <path>` or `REMOVE <path>`; paths are repository paths with /, never absolute, never `..`."""
+    relp = PurePosixPath(rel.replace('\\', '/'))
+    need(not relp.is_absolute() and '..' not in relp.parts, 'the plan path must be relative to the clone')
+    f = r / Path(*relp.parts)
+    need(f.is_file(), f'no plan file {f}')
+    replace, remove = set(), []
+    for n, line in enumerate(f.read_bytes().decode('ascii').replace('\r\n', '\n').split('\n'), 1):
+        line = line.strip()
+        if not line or line.startswith('#'):
+            continue
+        kind, _, path = line.partition(' ')
+        path = path.strip()
+        pp = PurePosixPath(path)
+        need(kind in ('REPLACE', 'REMOVE') and path and not pp.is_absolute() and '..' not in pp.parts and '\\' not in path,
+             f'plan line {n} is not REPLACE <path> or REMOVE <path>: {line!r}')
+        need(path not in replace and path not in remove, f'plan line {n} names {path} twice')
+        (replace.add(path) if kind == 'REPLACE' else remove.append(path))
+    print(f'plan {rel}: {len(replace)} REPLACE, {len(remove)} REMOVE; SHA-256 {hashlib.sha256(f.read_bytes()).hexdigest()}')
+    return replace, remove
+
+
+def overlay_files(a):
     src = Path(a.src).resolve()
     need(inside(src, task_dir(a.task) / 'p') and src.is_dir(), f'{src} is not an extracted folder of this task')
-    files = sorted(p for p in src.rglob('*') if p.is_file())
+    return src, sorted(p for p in src.rglob('*') if p.is_file())
+
+
+def cmd_overlay(a):
+    r = guard(a.task, quiet=True)
+    src, files = overlay_files(a)
     rels = {f.relative_to(src).as_posix() for f in files}
-    replace = set(a.replace or [])
+    need(not (a.replace and a.plan), 'give --replace or --plan, not both')
+    replace, remove = (read_plan(r, a.plan) if a.plan else (set(a.replace or []), []))
     for x in sorted(replace):
-        need(x in rels, f'--replace {x} is not in the overlay')
-        need(out(git(r, 'ls-files', '--error-unmatch', '--', x, check=False)) == x, f'--replace {x} is not a tracked file of the clone')
+        need(x in rels, f'replace {x} is not in the overlay')
+        need(out(git(r, 'ls-files', '--error-unmatch', '--', x, check=False)) == x, f'replace {x} is not a tracked file of the clone')
+    for x in remove:
+        need(x not in rels, f'remove {x} is also in the overlay')
+        need(out(git(r, 'ls-files', '--error-unmatch', '--', x, check=False)) == x, f'remove {x} is not a tracked file of the clone')
     for f in files:
         rel = f.relative_to(src).as_posix()
         if rel not in replace:
@@ -167,7 +204,24 @@ def cmd_overlay(a):
         dst = r / f.relative_to(src)
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(f, dst)
-    print(f'OVERLAY PASS: {len(files)} files copied into {r} ({len(files) - len(replace)} new, {len(replace)} replaced)')
+    for x in remove:
+        git(r, 'rm', '-q', '--', x)                       # inside the task clone only (guard above)
+    guard(a.task, quiet=True)
+    print(f'OVERLAY PASS: {len(files)} files copied into {r} ({len(files) - len(replace)} new, {len(replace)} replaced)'
+          + (f'; {len(remove)} tracked file(s) removed with git rm' if a.plan else ''))
+
+
+def cmd_verify_overlay(a):
+    r = guard(a.task, quiet=True)
+    src, files = overlay_files(a)
+    _replace, remove = read_plan(r, a.plan)
+    for f in files:
+        rel = f.relative_to(src).as_posix()
+        need((r / rel).is_file() and (r / rel).read_bytes() == f.read_bytes(), f'{rel} in the clone differs from the overlay')
+    for x in remove:
+        need(not (r / x).exists(), f'{x} still exists in the clone')
+        need(out(git(r, 'ls-files', '--', x, check=False)) == '', f'{x} is still in the clone\'s index')
+    print(f'VERIFY-OVERLAY PASS: {len(files)} overlay files identical in the clone; {len(remove)} removed file(s) absent')
 
 
 def cmd_git(a):
@@ -225,7 +279,7 @@ def cmd_commit_report(a):
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest='command', required=True)
-    for name in ('make', 'guard', 'unzip', 'overlay', 'git', 'remove', 'commit-report'):
+    for name in ('make', 'guard', 'unzip', 'overlay', 'verify-overlay', 'git', 'remove', 'commit-report'):
         sp = sub.add_parser(name)
         sp.add_argument('--task', required=True)
         if name == 'unzip':
@@ -234,6 +288,10 @@ def main():
         if name == 'overlay':
             sp.add_argument('--src', required=True)
             sp.add_argument('--replace', nargs='+', help='repository paths (with /) that the overlay may replace')
+            sp.add_argument('--plan', help='a plan file inside the clone (REPLACE/REMOVE lines), instead of --replace')
+        if name == 'verify-overlay':
+            sp.add_argument('--src', required=True)
+            sp.add_argument('--plan', required=True)
         if name == 'git':
             sp.add_argument('args', nargs=argparse.REMAINDER)
     a = ap.parse_args()
