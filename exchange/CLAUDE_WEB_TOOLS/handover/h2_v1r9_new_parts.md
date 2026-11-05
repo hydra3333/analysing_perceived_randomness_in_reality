@@ -1,13 +1,13 @@
 @@HEADER@@
-# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (CANDIDATE 2, written by Claude)
+# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (CANDIDATE 3, written by Claude)
 
 **Repository target:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md` (staged in `exchange/HANDOVER_2026_11_06/` until the
 owner installs it).
 
-**Status:** **CANDIDATE 2 - NOT OWNER-RATIFIED, NOT REVIEWER-WRITTEN.** H-2 v1r8 remains the operative reviewer handover until
+**Status:** **CANDIDATE 3 - NOT OWNER-RATIFIED, NOT REVIEWER-WRITTEN.** H-2 v1r8 remains the operative reviewer handover until
 the owner ratifies this edition. Candidate 1 (6 November 2026, `2660e46`) was checked by the new reviewer in its takeover
-(EX_153). Candidate 2 applies EX_153's TAKEOVER-C01 to C05, with C01 for the reviewer's RECHECK (Claude's EX_154 lists each
-change).
+(EX_153). Candidate 2 applied EX_153's TAKEOVER-C01 to C05 (EX_154). The reviewer's EX_155 passed C01 on RECHECK and found one
+wording correction, C06, and one editorial item, O02, both FIX AND PROCEED. Candidate 3 applies them (EX_156).
 
 **Prepared:** 6 November 2026 (Australia/Adelaide).
 
@@ -61,7 +61,8 @@ source, `review/` records and the EX messages. An EX message or an owner working
 ### 0.2 Installed state
 
 - **Code:** no reviewed code package has been installed since PERF-1 at `3fce327`. In particular, nothing of MHUP-A and no
-  production-science code is installed. The owner's own unreviewed additions to the tree are listed separately below
+  additional production-science code package has been installed since PERF-1. The installed science code (REL-1, E1R2, WF-1A,
+  WF-1B, PERF-1) is unchanged (EX_155 TAKEOVER-C06). The owner's own unreviewed additions to the tree are listed separately below
   (EX_153 TAKEOVER-C02).
   - All 40 variants are `SUPPORTED` and released in both games.
   - The suite installed on main is 471 tests.
@@ -97,7 +98,7 @@ source, `review/` records and the EX messages. An EX message or an owner working
 ### 0.4 Amendment A1 (OWNER-RATIFIED 5 November 2026)
 
 The ratified record is `exchange/MHUP1_design_amendment_A1_RATIFIED.md`.
-- Its sections 1-5 replace **only** the quoted per-pair provisions of design v0.1r5 sections 5.2 and 5.4 and Appendix L-H2: the
+- Its sections 1-5 replace **only** the quoted per-pair provisions of design v0.1r5 sections 5.2 and 5.4 and Appendix L-H2:
   the scorer reads the holdout outcomes once, computes the complete ledger, **publishes it
   atomically, create-only** (a temporary file, synced, then linked to its final name), **then validates the published ledger
   as it stands** (EX_148 B04), and only then writes `SCORE_COMPLETE` (with the ledger's digest), resumes or publishes the
@@ -257,7 +258,7 @@ Your predecessor reviewed the draft favourably (EX_150) and confirmed that the r
 - **Authorship:** written by Claude, the author of the work under review, because the previous reviewer chat ended without a
   handover. Your own takeover check is therefore the first independent check of every fact here. The reviewer-rights text is
   unchanged and is not Claude's to change.
-- **Review status:** CANDIDATE 2, after your takeover check (EX_153). It awaits your RECHECK of TAKEOVER-C01 and the owner's
-  ratification and documentary installation. H-2 v1r8 remains operative until then.
+- **Review status:** CANDIDATE 3, after your takeover check (EX_153), your RECHECK PASS of C01 (EX_155) and C06 and O02 applied
+  (EX_156). It awaits the owner's ratification and documentary installation. H-2 v1r8 remains operative until then.
 
-**End of H-2 v1r9 CANDIDATE 2 - NOT OWNER-RATIFIED.**
+**End of H-2 v1r9 CANDIDATE 3 - NOT OWNER-RATIFIED.**

@@ -1,5 +1,5 @@
 @@VERSION@@
-**Register version:** v0.25 CANDIDATE 2, 6 November 2026 (written by Claude; NOT OWNER-RATIFIED: the ChatGPT reviewer chat ended on 6 November 2026; the new reviewer chat checked candidate 1 in its takeover, EX_153, and candidate 2 applies its corrections TAKEOVER-C01 to C05, C01 for its RECHECK), recording DOC-11's installation, the completion of the staged Claude handover (HO-2) with the owner's decisions HO2-A and Q9-E1 to Q9-E4, the direction document v0.3r1, the MHUP-A code reviews in two slices (EX_141 to EX_152) with the owner's decisions C01-EFF, A1-B and IIIB-1 and the ratification of design amendment A1 (A1-R), the owner's Windows runs T018 to T020, the Claude Code rulebook v0.4 and its clone tool v0.4, the owner's own commits of 5 and 6 November 2026, and the end of the reviewer chat with the emergency handovers; 
+**Register version:** v0.25 CANDIDATE 3, 6 November 2026 (written by Claude; NOT OWNER-RATIFIED: the ChatGPT reviewer chat ended on 6 November 2026; the new reviewer chat checked candidate 1 in its takeover, EX_153; candidate 2 applied TAKEOVER-C01 to C05, EX_154; the reviewer's EX_155 passed C01 on RECHECK; candidate 3 applies its C06 and O02, EX_156), recording DOC-11's installation, the completion of the staged Claude handover (HO-2) with the owner's decisions HO2-A and Q9-E1 to Q9-E4, the direction document v0.3r1, the MHUP-A code reviews in two slices (EX_141 to EX_152) with the owner's decisions C01-EFF, A1-B and IIIB-1 and the ratification of design amendment A1 (A1-R), the owner's Windows runs T018 to T020, the Claude Code rulebook v0.4 and its clone tool v0.4, the owner's own commits of 5 and 6 November 2026, and the end of the reviewer chat with the emergency handovers; 
 @@SECTION@@
 ## DOC-11 installed, HO-2 completed, MHUP-A reviewed in two slices, amendment A1, and the reviewer chat's end (register v0.25)
 
@@ -161,8 +161,12 @@ approval") is **OPEN for the owner** to state. The integrated MHUP-A package mus
     for RECHECK; the others FIX AND PROCEED), plus one optional line-ending qualification, O01. Candidate 2 of H-2 v1r9 and of
     this register applies them (Claude's EX_154).
   - The candidates copied into `doc/` by the owner at `929eff5` are candidate 1. They become authoritative only after ratification.
-- **Claude's verification questions to the new reviewer** (EX_154, as the reviewer's questions Q1 to Q9 were for Claude in HO-2)
-  are pending at the date of this edition. The owner's acceptance of the new reviewer follows them.
+- **Claude's verification questions to the new reviewer (HO-3)**, the counterpart of the reviewer's Q1 to Q9 for Claude in HO-2:
+  - Claude sent Q1 to Q19 in EX_154, with its answer key sealed by SHA-256 and held by the owner.
+  - The reviewer answered blind in EX_155, citing sources.
+  - Claude's comparison (EX_156, with the published key): all nineteen answers agree in substance with the key and the cited
+    records, and none shows a misunderstanding.
+  - The owner's acceptance of the new reviewer follows.
 - Register v0.24's future action 8 said a ChatGPT reviewer handover would be "considered only after" HO-2. The reviewer chat's
   end has overtaken it.
 
@@ -211,11 +215,13 @@ approval") is **OPEN for the owner** to state. The integrated MHUP-A package mus
 | `Direction_for_operational_procedures_v0_3r1.md` | Claude; reviewer RECHECK, then focused PASS | OWNER-RATIFIED 4 Nov 2026; installed at `dfc2d13`; `9c781716b8313e052ec29203e79cf4745e3c172bc587e96a1fe1f4be2c84b985` |
 | `exchange/MHUP1_design_amendment_A1_RATIFIED.md` | Claude; reviewed by the reviewer chat (EX_150, EX_152) | OWNER-RATIFIED 5 Nov 2026 (A1-R); a record in `exchange/`, to be folded into the design's next edition; **stored CRLF bytes** (Git stores this file with CRLF; not reformatted; EX_153 TAKEOVER-C04) `f2506c02297808ea260d5fa3a5d18f79069d2a317004e85683271129383db4b8` |
 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (rulebook v0.4) | Claude; reviewed within slice 2 (EX_147 to EX_152) | In force for the runner since `87bf389` (5 Nov 2026); `a4c4cbfcbe783ba4063cfbc49e1dfc9582ccd052ae4b5f5453af001d4fecdc8a` |
-| `exchange/HANDOVER_2026_11_06/` (H-1 v1r9 delta, H-2 v1r9 CANDIDATE, both blurbs, README) | Claude, 6 Nov 2026 | Candidates, not ratified, not reviewed; identities in that folder's README |
+| `exchange/HANDOVER_2026_11_06/` (H-1 v1r9 delta, H-2 v1r9 CANDIDATE, both blurbs, README) | Claude, 6 Nov 2026; H-2 v1r9 and this register checked by the new reviewer (EX_153, EX_155) | Candidates, not ratified; identities in that folder's README |
 
 @@STATUS@@
 - **Current status (register v0.25 CANDIDATE; read this first).**
-  - Since register v0.24 no reviewed code package was installed (nothing of MHUP-A, no production-science code), and no
+  - Since register v0.24 no reviewed code package was installed: nothing of MHUP-A, and no additional production-science code
+    package since PERF-1, whose installed science code (REL-1, E1R2, WF-1A, WF-1B, PERF-1) is unchanged (EX_155
+    TAKEOVER-C06). No
     real-data run, results update, report, holdout opening or Mode H took place. The owner's own unreviewed additions, `src/GAIS/`
     and the `pyahocorasick` line, are recorded in the section above. They matter to MHUP-A's code-closure and environment
     accounting (EX_153 TAKEOVER-C02).

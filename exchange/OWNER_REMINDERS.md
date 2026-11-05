@@ -393,6 +393,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   corrections, all applied as candidate 2 in EX_154). Claude's verification questions Q1-Q19 went with EX_154; you hold
   Claude's sealed answer key. Next: the reviewer's EX_155, then Claude's comparison, then your acceptance. Replace the
   candidate 1 copies you placed in doc/ at 929eff5 with candidate 2, or remove them; they are not ratified.
+  Further progress (6 November 2026): EX_155 passed C01 on RECHECK and answered Q1-Q19 blind; Claude's EX_156 published the
+  key (its hash matches) and found all nineteen answers agreeing. C06 and O02 are applied as candidate 3. What is left: your
+  acceptance of the reviewer, then, when you wish, ratifying and installing H-2 v1r9 and register v0.25 candidate 3.
 - What: Claude, as the surviving team member, wrote the following on your instruction, in exchange/HANDOVER_2026_11_06/:
   - Claude's own handover delta H-1 v1r9 and its blurb;
   - the reviewer handover H-2 v1r9 (reconstructed from H-2 v1r8 and EX_141-EX_152, with the reviewer's rights carried

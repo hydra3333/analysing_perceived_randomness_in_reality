@@ -3,7 +3,7 @@
 The ChatGPT reviewer chat reached its conversation limit on 6 November 2026 without writing a handover. On the project owner's
 instruction, Claude (the surviving chat) wrote the files below, most critical first, committing each as it was finished.
 None of them is owner-ratified. The new reviewer checked candidate 1 in its takeover (EX_153). H-2 v1r9 and register v0.25
-are now candidate 2, with its corrections (EX_154). The copies the owner placed in doc/ at 929eff5 are candidate 1. They go into doc/HANDOVER/ in the next documentation package, with register v0.25
+are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK in EX_155). The copies the owner placed in doc/ at 929eff5 are candidate 1. They go into doc/HANDOVER/ in the next documentation package, with register v0.25
 (reminder R-022).
 
 ## Files
@@ -12,8 +12,8 @@ are now candidate 2, with its corrections (EX_154). The copies the owner placed 
 |---|---|---|---|
 | `Claude_Primary_Handover_H1_v1r9_delta.md` | 19396 | `f3f78b2e75bae241321c49e5b517ef5cf424a46a26b77da0b8c28c51d00a09c5` | `a05e4b9c05df4633c340d61b84f0f48b9345f6eacacb29530e53fc9a2edaa9d5` |
 | `Claude_Primary_Handover_H1_v1r9_introductory_blurb.md` | 9465 | `1ba881544c1f616d2b9aeaa0caacefce6324dd9a47b7f4c4adbd3617d6e043af` | `56d0ba6029e51b7a6fc6727fa1c7e8a660fed5832f6fec2a130f7b680e974f35` |
-| `ChatGPT_Reviewer_Handover_H2_v1r9.md` | 35778 | `3a4e2e5d4917a3cf4caf3d6c15431f3ca0b760ee40a52d4e6d5c81208b667dbe` | `3a4e2e5d4917a3cf4caf3d6c15431f3ca0b760ee40a52d4e6d5c81208b667dbe` |
-| `RATIFICATION_REGISTER_v0_25_CANDIDATE.md` | 271683 | `c676b1c1c4d930d1dcfe73181fcc5252215af27a1b2b07b0265c288793596a19` | `c676b1c1c4d930d1dcfe73181fcc5252215af27a1b2b07b0265c288793596a19` |
+| `ChatGPT_Reviewer_Handover_H2_v1r9.md` | 36053 | `95cc98a728b0642de9cde2b28142d53eb5e494d9a05676ce073fa1622f1b291a` | `95cc98a728b0642de9cde2b28142d53eb5e494d9a05676ce073fa1622f1b291a` |
+| `RATIFICATION_REGISTER_v0_25_CANDIDATE.md` | 272225 | `e36e451750b6ffae3e9bc3a7e79100fbbcd47a3ae2eff9d334ef52f0d57605a7` | `e36e451750b6ffae3e9bc3a7e79100fbbcd47a3ae2eff9d334ef52f0d57605a7` |
 | `ChatGPT_Reviewer_Handover_H2_v1r9_introductory_blurb.md` | 9096 | `bd44901429b94552dd1a78494048c595912b7c913265052f6e5ca9a4b414172a` | `f29b2f30e445b0f52cd3acff3866294b8bda2a44629c95aca7266962dc70f97d` |
 
 ## How to use them
