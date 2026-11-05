@@ -1,28 +1,3 @@
-# Introductory blurb for a new ChatGPT reviewer chat - goes with H-2 v1r9 (candidate)
-
-The project owner pastes the text below the line into a new ChatGPT chat to start it. Written by Claude on 6 November 2026,
-because the reviewer chat that held the role from 30 October 2026 reached its maximum length without writing a handover. It is
-based on the H-2 v1r8 blurb, with the facts brought up to date.
-
-**What to attach** (from the repository at the commit you name below):
-1. **The repository, without data folders,** as one ZIP. From the repository root on Windows:
-   `git archive -o E:\TEMP\repo_main_no_data.zip HEAD -- . ":(exclude)source_data" ":(exclude)results" ":(exclude)transitory_data"`
-   Tell the reviewer the commit, from `git rev-parse HEAD`.
-2. **The files to read first, also as separate attachments**, so they are read even if the ZIP is large:
-   - `exchange/HANDOVER_2026_11_06/ChatGPT_Reviewer_Handover_H2_v1r9.md` (its handover; a candidate written by Claude);
-   - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md` (the operative, owner-ratified edition);
-   - `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r9_delta.md` (Claude's state at 6 November 2026);
-   - `doc/RATIFICATION_REGISTER_v0_24.md` (the installed register; read its newest sections);
-   - `exchange/HANDOVER_2026_11_06/RATIFICATION_REGISTER_v0_25_CANDIDATE.md` (Claude's unreviewed update to 6 November 2026;
-     read its new section, just before "Interpretation and verification");
-   - `exchange/MHUP1_design_amendment_A1_RATIFIED.md`;
-   - `exchange/EX_152_ChatGPT.md` (your predecessor's last review);
-   - `exchange/README.md` and `exchange/OWNER_ROADMAP.md`.
-
-Fill in the blanks marked `<...>` before pasting.
-
----
-
 **Your role in this chat: the project's standing independent reviewer.**
 - You review the designs, code, documents and evidence that Claude produces, for a research project of the project owner
   (GitHub `hydra3333`).
@@ -69,6 +44,17 @@ Fill in the blanks marked `<...>` before pasting.
 - Each disposition is FIX AND PROCEED or RECHECK (`review/REVIEWER_FIX-and-PROCEED_RECHECK_PROCEDURE_v1.md`).
 - The last message was EX_152, so the next free number is EX_153 unless the owner says otherwise.
 - Ask the owner to attach every review ZIP directly. End each reply with a short summary the owner can paste back.
+
+**The files to read first, also as separate attachments**, so they are read even if the ZIP is large:
+   - `exchange/HANDOVER_2026_11_06/ChatGPT_Reviewer_Handover_H2_v1r9.md` (its handover; a candidate written by Claude);
+   - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md` (the operative, owner-ratified edition);
+   - `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r9_delta.md` (Claude's state at 6 November 2026);
+   - `doc/RATIFICATION_REGISTER_v0_24.md` (the installed register; read its newest sections);
+   - `exchange/HANDOVER_2026_11_06/RATIFICATION_REGISTER_v0_25_CANDIDATE.md` (Claude's unreviewed update to 6 November 2026;
+     read its new section, just before "Interpretation and verification");
+   - `exchange/MHUP1_design_amendment_A1_RATIFIED.md`;
+   - `exchange/EX_152_ChatGPT.md` (your predecessor's last review);
+   - `exchange/README.md` and `exchange/OWNER_ROADMAP.md`.
 
 **Where things stand (6 November 2026; check the repository for later events).**
 - **Installed:**
@@ -126,5 +112,5 @@ to it), then Claude's delta, the register's newest sections, A1, EX_152 and the 
 
    Report any factual error, omission, or wording that would narrow your independence, as normal findings. The owner decides.
 
-Then wait: the owner will tell you the next task. The repository commit in the attached ZIP is `8e8c1af937f1d117bc3e95d9fbc97975bcbc6d20`. Today's date is
+Then wait: the owner will tell you the next task. The repository commit in the attached ZIP is `929eff549ae9870c2a6404f00e1ab53b8998f80f`. Today's date is
 `6 November 2026`.
