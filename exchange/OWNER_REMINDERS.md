@@ -389,6 +389,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 6 November 2026 ("chatgpt has just permanently died ... without producing an updated handover doc").
 - Status: OPEN until a new ChatGPT reviewer chat has taken over and you have accepted its takeover check.
+  Progress (6 November 2026): the new reviewer accepted the role (EX_153; rights region verified; five documentation
+  corrections, all applied as candidate 2 in EX_154). Claude's verification questions Q1-Q19 went with EX_154; you hold
+  Claude's sealed answer key. Next: the reviewer's EX_155, then Claude's comparison, then your acceptance. Replace the
+  candidate 1 copies you placed in doc/ at 929eff5 with candidate 2, or remove them; they are not ratified.
 - What: Claude, as the surviving team member, wrote the following on your instruction, in exchange/HANDOVER_2026_11_06/:
   - Claude's own handover delta H-1 v1r9 and its blurb;
   - the reviewer handover H-2 v1r9 (reconstructed from H-2 v1r8 and EX_141-EX_152, with the reviewer's rights carried

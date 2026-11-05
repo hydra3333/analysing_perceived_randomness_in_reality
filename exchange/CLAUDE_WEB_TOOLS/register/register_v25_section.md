@@ -1,5 +1,5 @@
 @@VERSION@@
-**Register version:** v0.25 CANDIDATE 6 November 2026 (written by Claude; NOT OWNER-RATIFIED and NOT YET REVIEWED: the ChatGPT reviewer chat ended on 6 November 2026, and the new reviewer chat checks this edition with its takeover), recording DOC-11's installation, the completion of the staged Claude handover (HO-2) with the owner's decisions HO2-A and Q9-E1 to Q9-E4, the direction document v0.3r1, the MHUP-A code reviews in two slices (EX_141 to EX_152) with the owner's decisions C01-EFF, A1-B and IIIB-1 and the ratification of design amendment A1 (A1-R), the owner's Windows runs T018 to T020, the Claude Code rulebook v0.4 and its clone tool v0.4, the owner's own commits of 5 and 6 November 2026, and the end of the reviewer chat with the emergency handovers; 
+**Register version:** v0.25 CANDIDATE 2, 6 November 2026 (written by Claude; NOT OWNER-RATIFIED: the ChatGPT reviewer chat ended on 6 November 2026; the new reviewer chat checked candidate 1 in its takeover, EX_153, and candidate 2 applies its corrections TAKEOVER-C01 to C05, C01 for its RECHECK), recording DOC-11's installation, the completion of the staged Claude handover (HO-2) with the owner's decisions HO2-A and Q9-E1 to Q9-E4, the direction document v0.3r1, the MHUP-A code reviews in two slices (EX_141 to EX_152) with the owner's decisions C01-EFF, A1-B and IIIB-1 and the ratification of design amendment A1 (A1-R), the owner's Windows runs T018 to T020, the Claude Code rulebook v0.4 and its clone tool v0.4, the owner's own commits of 5 and 6 November 2026, and the end of the reviewer chat with the emergency handovers; 
 @@SECTION@@
 ## DOC-11 installed, HO-2 completed, MHUP-A reviewed in two slices, amendment A1, and the reviewer chat's end (register v0.25)
 
@@ -58,11 +58,11 @@ a review checkpoint only; it is not an install candidate.
 
 | EX (commit) | Content | Outcome |
 |---|---|---|
-| EX_141 (`32cc0e3`; zip `83c4a74dc21044895d53670d1723d9b7bc2b537f14d41ef676584d0c4fe7cae9`) | Candidate v1: 506 tests on Python 3.13 and 3.15.0b4; 67 mutants (61 caught, 6 equivalent) | |
+| EX_141 (`32cc0e3`; zip `83c4a74dc21044895d53670d1723d9b7bc2b537f14d41ef676584d0c4fe7cae9`) | Candidate v1: 506 tests in the suite, 505 run and passed on each of Python 3.13 and 3.15.0b4 (E2R-T12 excluded; EX_153 TAKEOVER-C03); 67 mutants (61 caught, 6 equivalent) | |
 | EX_142 (inside `exchange/EX_143_Claude/`) | Review | **RECHECK.** B01: the official request's pin was not bound to the frozen plan or session pin. B02: invalid weekly evidence could be read as absent evidence. B03: an INIT-only leniency was wider than the ratified closed ledger grammar. C01 to C03. |
-| EX_143 (`5573035`; zip `4ac92eb491b598dad9dcd17dccdc0d178171bfe73f92d12857f01f8178733c18`) | Candidate v1r1: 507 tests; 87 mutants (80 caught, 7 equivalent) | |
+| EX_143 (`5573035`; zip `4ac92eb491b598dad9dcd17dccdc0d178171bfe73f92d12857f01f8178733c18`) | Candidate v1r1: 507 tests in the suite, 506 run and passed on each Python (E2R-T12 excluded); 87 mutants (80 caught, 7 equivalent) | |
 | EX_144 (inside `exchange/EX_145_Claude/`) | Review | B01 PASS; two narrow residuals: blank JSONL lines; strict CSV quoting |
-| EX_145 (`3d825b3`; zip `03a8ce832839616e5f7b0e457b40419bcd58f14004e701a4e7f21310a91409f9`) | Candidate v1r2: 507 tests; 90 mutants (81 caught, 9 equivalent, 0 survived) | |
+| EX_145 (`3d825b3`; zip `03a8ce832839616e5f7b0e457b40419bcd58f14004e701a4e7f21310a91409f9`) | Candidate v1r2: 507 tests in the suite, 506 run and passed on each Python (E2R-T12 excluded; all 507 ran on Windows in T018); 90 mutants (81 caught, 9 equivalent, 0 survived) | |
 | EX_146 (`8aa16c3`) | Review | **slice 1 PASS** (review checkpoint only). Its watchpoints for slice 2 and the integrated package are carried as reminder R-019 (a) to (e). |
 
 - **C01-EFF** (owner, 4 November 2026; EX_142 C01, EX_143): E_1 revision 3's `effective_date` is the integrated package's actual
@@ -94,8 +94,12 @@ freeze-before-outcome rule, and the Claude Code rulebook v0.4):
     `exchange/MHUP1_design_amendment_A1_RATIFIED.md` (`c498103`; Git blob SHA-256
     `f2506c02297808ea260d5fa3a5d18f79069d2a317004e85683271129383db4b8`).
     - Its sections 1 to 5 replace **only** the quoted per-pair provisions of the design's sections 5.2 and 5.4 and Appendix
-      L-H2: the Mode H score ledger is written whole, validated in full, and published once, create-only. A resumed scorer is
-      bound to its frozen scoring plan and to a complete `SCORE_COMPLETE` record.
+      L-H2. In order: the scorer reads the holdout outcomes once and computes the complete ledger; publishes it atomically,
+      create-only; validates the published ledger as it stands; and only then writes `SCORE_COMPLETE` (with the ledger's
+      digest), resumes or publishes the report, and seals. The recovery states are those of A1 section 4: no ledger; the
+      complete ledger without `SCORE_COMPLETE`, where no outcome is read and a refused ledger is a STOP; and after
+      `SCORE_COMPLETE`. A resumed scorer is bound to its frozen scoring plan and to a complete `SCORE_COMPLETE` record
+      (EX_153 TAKEOVER-C01).
     - Section 6 is the MHUP-B route for a corrective scoring run. It authorises no implementation in MHUP-A.
     - Section 7 is explanatory.
     - EX_152 section 3 confirmed that the ratified text's sections 1 to 7 equal the reviewed draft.
@@ -149,11 +153,22 @@ approval") is **OPEN for the owner** to state. The integrated MHUP-A package mus
     `70e50dc3bc56d9800c046a773abb823b8cb659b4f23d7dba1f18f7bd31bc72db`.
 - **H-2 v1r8 stays the operative reviewer handover** until the owner ratifies a successor.
 - A new reviewer chat's first task is its takeover check of H-2 v1r9 and of this register (reminder R-022).
+- **The new reviewer's takeover (EX_153, 6 November 2026):**
+  - The new ChatGPT reviewer chat accepted the role on the operative H-2 v1r8.
+  - It verified that the reviewer-rights region and sections 1, 4 and 5 of H-2 v1r9 equal v1r8's (canonical LF).
+  - It found no narrowing of its independence.
+  - It found five documentation corrections, TAKEOVER-C01 to C05 (C01, the order of A1's ledger publication and validation,
+    for RECHECK; the others FIX AND PROCEED), plus one optional line-ending qualification, O01. Candidate 2 of H-2 v1r9 and of
+    this register applies them (Claude's EX_154).
+  - The candidates copied into `doc/` by the owner at `929eff5` are candidate 1. They become authoritative only after ratification.
+- **Claude's verification questions to the new reviewer** (EX_154, as the reviewer's questions Q1 to Q9 were for Claude in HO-2)
+  are pending at the date of this edition. The owner's acceptance of the new reviewer follows them.
 - Register v0.24's future action 8 said a ChatGPT reviewer handover would be "considered only after" HO-2. The reviewer chat's
   end has overtaken it.
 
 **Future actions (updating register v0.24's list; not authorisations).**
-1. **The new reviewer's takeover check** (R-022), and the owner's acceptance, before the integrated MHUP-A package is sent.
+1. **The new reviewer's takeover** (R-022): its check (EX_153), the corrections and its RECHECK of TAKEOVER-C01, its answers to Claude's
+   verification questions (EX_154), then the owner's acceptance, all before the integrated MHUP-A package is sent.
 2. **The owner's T021 and T022 reports.** A Windows failure is corrected before integration.
 3. **The integrated MHUP-A install package** (register v0.24 future actions 1 and 2, now with A1 cited). It contains:
    - the installer and the verifier (design Appendix J steps 0 to 19, including the verifier's `released` phase);
@@ -167,7 +182,9 @@ approval") is **OPEN for the owner** to state. The integrated MHUP-A package mus
    - EX_148 (ix): the verifier proves both commits, the barrier order, and that the records agree with the repository.
 
    Its review assesses the assembled behaviour; it is not inferred from the slice PASSes (EX_152 section 5).
-4. **MHUP-B** (register v0.24 future action 3), adding:
+4. **MHUP-B** (register v0.24 future action 3). It is installed either before Approval 1, or only after a game's Mode H is
+   sealed, and never while a holdout is opened and unsealed (design 4.4). The owner chooses the route, and the integrated install
+   plan states it (EX_153). It adds:
    - the full shape of `FREEZE_LINE_V1` (R-019 (b));
    - the `FINAL_NEXT_DRAW`/`CATCH_UP` binding mutant re-run (R-019 (c));
    - A1 section 6's corrective scoring route;
@@ -192,14 +209,16 @@ approval") is **OPEN for the owner** to state. The integrated MHUP-A package mus
 |---|---|---|
 | `RATIFICATION_REGISTER_v0_24.md` | Claude; checked by the reviewer chat (EX_133 to EX_136) | OWNER-RATIFIED 4 Nov 2026; installed at `3d4fa3c`; superseded by this register once ratified; `9d9fde67961d76fcc4823e97ac339c12e8b7e68ba309167652bd2c568f5c81ae` |
 | `Direction_for_operational_procedures_v0_3r1.md` | Claude; reviewer RECHECK, then focused PASS | OWNER-RATIFIED 4 Nov 2026; installed at `dfc2d13`; `9c781716b8313e052ec29203e79cf4745e3c172bc587e96a1fe1f4be2c84b985` |
-| `exchange/MHUP1_design_amendment_A1_RATIFIED.md` | Claude; reviewed by the reviewer chat (EX_150, EX_152) | OWNER-RATIFIED 5 Nov 2026 (A1-R); a record in `exchange/`, to be folded into the design's next edition; `f2506c02297808ea260d5fa3a5d18f79069d2a317004e85683271129383db4b8` |
+| `exchange/MHUP1_design_amendment_A1_RATIFIED.md` | Claude; reviewed by the reviewer chat (EX_150, EX_152) | OWNER-RATIFIED 5 Nov 2026 (A1-R); a record in `exchange/`, to be folded into the design's next edition; **stored CRLF bytes** (Git stores this file with CRLF; not reformatted; EX_153 TAKEOVER-C04) `f2506c02297808ea260d5fa3a5d18f79069d2a317004e85683271129383db4b8` |
 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (rulebook v0.4) | Claude; reviewed within slice 2 (EX_147 to EX_152) | In force for the runner since `87bf389` (5 Nov 2026); `a4c4cbfcbe783ba4063cfbc49e1dfc9582ccd052ae4b5f5453af001d4fecdc8a` |
 | `exchange/HANDOVER_2026_11_06/` (H-1 v1r9 delta, H-2 v1r9 CANDIDATE, both blurbs, README) | Claude, 6 Nov 2026 | Candidates, not ratified, not reviewed; identities in that folder's README |
 
 @@STATUS@@
 - **Current status (register v0.25 CANDIDATE; read this first).**
-  - Since register v0.24 no code was installed, and no real-data run, results update, report, holdout opening or Mode H took
-    place.
+  - Since register v0.24 no reviewed code package was installed (nothing of MHUP-A, no production-science code), and no
+    real-data run, results update, report, holdout opening or Mode H took place. The owner's own unreviewed additions, `src/GAIS/`
+    and the `pyahocorasick` line, are recorded in the section above. They matter to MHUP-A's code-closure and environment
+    accounting (EX_153 TAKEOVER-C02).
   - MHUP-A's two review slices have PASSED (EX_146, EX_152) and amendment A1 is ratified. Neither authorises an install or a
     run.
   - Next, in order:

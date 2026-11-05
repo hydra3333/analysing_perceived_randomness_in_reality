@@ -1,11 +1,13 @@
 @@HEADER@@
-# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (CANDIDATE, written by Claude)
+# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v1r9 (CANDIDATE 2, written by Claude)
 
 **Repository target:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md` (staged in `exchange/HANDOVER_2026_11_06/` until the
 owner installs it).
 
-**Status:** **CANDIDATE - NOT OWNER-RATIFIED, NOT REVIEWER-WRITTEN.** H-2 v1r8 remains the operative reviewer handover until the
-owner ratifies this edition. The new reviewer's takeover check comes first, and is a normal review of this text.
+**Status:** **CANDIDATE 2 - NOT OWNER-RATIFIED, NOT REVIEWER-WRITTEN.** H-2 v1r8 remains the operative reviewer handover until
+the owner ratifies this edition. Candidate 1 (6 November 2026, `2660e46`) was checked by the new reviewer in its takeover
+(EX_153). Candidate 2 applies EX_153's TAKEOVER-C01 to C05, with C01 for the reviewer's RECHECK (Claude's EX_154 lists each
+change).
 
 **Prepared:** 6 November 2026 (Australia/Adelaide).
 
@@ -36,8 +38,10 @@ at main 43dd069 is `4e2737c28a69ab73577fa6c39c87c04518e42ed1be47f240295e80802774
   section 3 that the protected text still calls "proposed", have been OWNER-RATIFIED since 27 October 2026. They bind as fully
   as R-1 to R-7.
 
-**Encoding:** UTF-8, because the protected region uses UTF-8 typography; everything outside it is ASCII. LF line endings, so the
-recorded hashes can be checked directly.
+**Encoding:** UTF-8, because the protected region uses UTF-8 typography; everything outside it is ASCII. Git stores this file with
+LF line endings, and every hash recorded for it is of that LF content. A Windows checkout or `git archive` with
+`core.autocrlf=true` gives CRLF copies (EX_153 TAKEOVER-O01). Check those after converting CRLF to LF, or with
+`git show HEAD:<path>`.
 
 **Reading rule:** this is an operational handover, not a second ratification register. For history, installation identities,
 decisions, evidence and SHA-256s, read the **latest owner-installed** `doc/RATIFICATION_REGISTER_v*.md` (v0.24), installed
@@ -54,9 +58,11 @@ source, `review/` records and the EX messages. An EX message or an owner working
   replaced, its successor starts from H-1 v1r8 plus the delta `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r9_delta.md`,
   and you check its first reply, as your predecessor did in HO-2.
 
-### 0.2 Installed state (unchanged in code since PERF-1)
+### 0.2 Installed state
 
-- **Code:** the last installed code package is still PERF-1 at `3fce327`.
+- **Code:** no reviewed code package has been installed since PERF-1 at `3fce327`. In particular, nothing of MHUP-A and no
+  production-science code is installed. The owner's own unreviewed additions to the tree are listed separately below
+  (EX_153 TAKEOVER-C02).
   - All 40 variants are `SUPPORTED` and released in both games.
   - The suite installed on main is 471 tests.
   - Three execution switches stay `False`; `ENABLE_CONTRACT_REAL_DEVELOPMENT` is `True` (WF-1A) for owner-authorised
@@ -92,7 +98,14 @@ source, `review/` records and the EX messages. An EX message or an owner working
 
 The ratified record is `exchange/MHUP1_design_amendment_A1_RATIFIED.md`.
 - Its sections 1-5 replace **only** the quoted per-pair provisions of design v0.1r5 sections 5.2 and 5.4 and Appendix L-H2: the
-  Mode H score ledger is written whole and published once, create-only, after full validation.
+  the scorer reads the holdout outcomes once, computes the complete ledger, **publishes it
+  atomically, create-only** (a temporary file, synced, then linked to its final name), **then validates the published ledger
+  as it stands** (EX_148 B04), and only then writes `SCORE_COMPLETE` (with the ledger's digest), resumes or publishes the
+  three report files, and writes `MODE_H_SEALED`. A resumed scorer is bound to the scoring plan `SCORING_STARTED` froze and to
+  a complete `SCORE_COMPLETE` record (B05). The recovery states are A1 section 4's: no ledger (crash before publication: the
+  rerun reads the outcomes again); the complete ledger without `SCORE_COMPLETE` (no outcome is read; the ledger is validated
+  and completed, or refused, and a refusal is a STOP); after `SCORE_COMPLETE` (no outcome read; the report is resumed; the
+  seal) (EX_153 TAKEOVER-C01).
 - Its section 6 states the **MHUP-B route** for a corrective scoring run after the seal. This route authorises no
   implementation in MHUP-A.
 - Its section 7 is explanatory.
@@ -163,8 +176,9 @@ Your predecessor reviewed the draft favourably (EX_150) and confirmed that the r
      without losing the owner's `.gitignore` lines; the `pyahocorasick` dependency line; and whether `src/GAIS/` stays inside
      the code closure (a question for the owner).
 5. **(iii-b), A1 section 6:** the corrective scoring route is MHUP-B's, under its own design review and owner approval.
-6. **Register v0.25** still has to record MHUP-A's round (EX_141-EX_152), A1, C01, the owner's R-018 decisions, the direction
-   document v0.3r1 and this reviewer change.
+6. **Register v0.25:** Claude has drafted a candidate that records MHUP-A's round (EX_141-EX_152), A1, C01, the owner's
+   decisions of 4 November 2026, the direction document v0.3r1 and this reviewer change (`exchange/HANDOVER_2026_11_06/`). It
+   becomes authoritative only after your review and the owner's ratification (EX_153 TAKEOVER-C05).
 
 ### 0.8 Exchange and working lists
 
@@ -211,12 +225,15 @@ Your predecessor reviewed the draft favourably (EX_150) and confirmed that the r
    - Construct small exact witnesses, test every exit, and ask for negative oracles that fail on the old candidate and pass on
      the new one.
 3. **Inspect the next owner gate.** The owner's sequence (`exchange/OWNER_ROADMAP.md` item 10c onward) is:
-   - (1) the owner's T021/T022 Windows reports;
-   - (2) your takeover check and the owner's acceptance;
+   - (1) your takeover check (EX_153), the corrections, Claude's verification questions (EX_154) and the owner's acceptance;
+   - (2) the owner's T021/T022 Windows reports;
    - (3) **the integrated MHUP-A install package**, for your full review (section 0.7);
    - then, each separately gated: its Windows rehearsal and install; Approval 1 (Mode H manifest) and the later approvals per
      game; MHUP-B (weekly writers, catch-up, `FREEZE_LINE_V1`, the A1 section 6 corrective route, R-018 (a), (d) and (h));
      WF-1C; wave 3 onward.
+   - MHUP-B's timing (design v0.1r5 section 4.4): it is installed either before Approval 1, or only after a game's Mode H is
+     sealed, and never while a holdout is opened and its Mode H unsealed. The owner chooses the route, and the integrated install
+     plan states it (EX_153). A planning list does not change that constraint.
 
    Do not infer permission for any install, real-data run, holdout opening, Mode H, results update or weekly session from a
    PASS, a ratified design or the latest installation.
@@ -240,7 +257,7 @@ Your predecessor reviewed the draft favourably (EX_150) and confirmed that the r
 - **Authorship:** written by Claude, the author of the work under review, because the previous reviewer chat ended without a
   handover. Your own takeover check is therefore the first independent check of every fact here. The reviewer-rights text is
   unchanged and is not Claude's to change.
-- **Review status:** a CANDIDATE awaiting your factual check and the owner's ratification and documentary installation. H-2
-  v1r8 remains operative until then.
+- **Review status:** CANDIDATE 2, after your takeover check (EX_153). It awaits your RECHECK of TAKEOVER-C01 and the owner's
+  ratification and documentary installation. H-2 v1r8 remains operative until then.
 
-**End of H-2 v1r9 CANDIDATE - NOT OWNER-RATIFIED.**
+**End of H-2 v1r9 CANDIDATE 2 - NOT OWNER-RATIFIED.**
