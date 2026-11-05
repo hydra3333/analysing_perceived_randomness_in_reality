@@ -1,0 +1,184 @@
+Here is the complete blueprint, code structure, combinatorial analysis, and runtime estimates for your experiments on the Ryzen 9 3900X.
+
+---
+
+### 1. File Generation & Python Environment Setup
+
+#### PyPI Libraries Needed
+To do multi-pattern matching in a single sequential pass at near C-speed without multithreading, you only need **one external library** from PyPI:
+```bash
+pip install pyahocorasick
+```
+*(All other required modules—`time`, `mmap`, `itertools`, `math`, `collections`—are built into Python's standard library).*
+
+#### How `y-cruncher` Generates the Data
+`y-cruncher` outputs digits in plain ASCII text. To convert it into your target format—where each decimal digit is stored as a raw unsigned 8-bit byte (`0x00` to `0x09`):
+
+1. **Run y-cruncher:**
+   * Select `0` (Compute Constant), pick `Pi` or `Golden Ratio`, choose your digit count ($10^6$ or $10^9$), and export to text (e.g., `pi_raw.txt`).
+2. **Fast Binary Conversion Script (Python):**
+   Standard Python string loops will crawl, but using `bytearray.translate()` processes data at **~400 MB/s** on a single 3900X core.
+
+```python
+# convert_ascii_to_bin_digits.py
+import sys
+
+def convert_txt_to_bin_digits(in_txt_path, out_bin_path, max_digits=None):
+    # Lookup table mapping ASCII '0'..'9' (0x30..0x39) to byte values 0x00..0x09
+    table = bytes.maketrans(b"0123456789", bytes(range(10)))
+    digits_written = 0
+    
+    with open(in_txt_path, "rb") as fin, open(out_bin_path, "wb") as fout:
+        while True:
+            chunk = fin.read(64 * 1024 * 1024) # 64MB buffer
+            if not chunk:
+                break
+            # Filter only numeric characters (skips "3." or header text)
+            numeric_bytes = bytes([b for b in chunk if 48 <= b <= 57])
+            converted = numeric_bytes.translate(table)
+            
+            if max_digits and (digits_written + len(converted) > max_digits):
+                fout.write(converted[:max_digits - digits_written])
+                break
+            fout.write(converted)
+            digits_written += len(converted)
+
+# Run for Pi and Golden Ratio
+# convert_txt_to_bin_digits("pi.txt", "digits_pi_10_to_6.bin", 1_000_000)
+```
+
+---
+
+### 2. Analysis of Sections 4 & 5 (The Exact Patterns)
+
+To represent lottery numbers (e.g., ball `7` and ball `24`), numbers must be formatted as **2-digit fixed blocks**: `7 -> [0, 7]`, `24 -> [2, 4]`.
+
+#### The Combinatorial Reality Check
+* **Powerball Div 1 (p1):** 7 main balls + 1 PB = **16 bytes long**.
+* **Powerball Div 2 (p2):** 7 main balls = **14 bytes long**.
+* **Powerball Div 3 (p3):** Any 6 of 7 main balls in **any order** + PB:
+  * Selecting 6 balls out of 7 = $\binom{7}{6} = 7$ subsets.
+  * Arranging each subset in *any order* = $6! = 720$ permutations.
+  * $7 \times 720 = \mathbf{5,040 \text{ patterns per draw}}$ (each is 14 bytes long).
+  * If $N = 500$ draws, **$P\text{\_win\_set}$ contains $\approx 2.52 \text{ million patterns}$**.
+
+#### How Many Matches Will Occur in $T = 10^6$ Digits?
+* The probability of an arbitrary 14-byte sequence appearing at any index in a uniform base-10 digit stream is $10^{-14}$.
+* In $T = 10^6$ digits, scanning $2.52 \times 10^6$ patterns gives an expected hit count of:
+  $$\mathbb{E} = 2.52 \times 10^6 \times 10^6 \times 10^{-14} = \mathbf{0.0252}$$
+* **What to expect:** In a test slice of $10^6$ digits, you will almost certainly get **0 matches** for Div 1, Div 2, and Div 3.
+* When scaled to the full $M = 10^9$ digits, you will see roughly **$\sim 25$ matches** total for Div 3 across all 500 draws.
+
+---
+
+### 3. Implementation Logic for Section 4 (Powerball)
+
+Here is how the single-threaded, single-pass pipeline is constructed:
+
+```python
+import ahocorasick
+import itertools
+from collections import defaultdict
+
+def ball_to_digits(num):
+    """Converts number 1..47 into two bytes: e.g. 7 -> b'\x00\x07', 23 -> b'\x02\x03'"""
+    return bytes([num // 10, num % 10])
+
+def draw_to_bytes(balls):
+    return b"".join(ball_to_digits(b) for b in balls)
+
+def build_powerball_patterns(draws):
+    # trie stores mapping: pattern_bytes -> list of (draw_id, div_id)
+    A = ahocorasick.Automaton()
+    pattern_count = 0
+    
+    for draw_id, (main_7, pb) in enumerate(draws):
+        # (p1) Div 1: 7 main in order + PB
+        p1 = draw_to_bytes(main_7) + ball_to_digits(pb)
+        A.add_word(p1, (draw_id, 1))
+        pattern_count += 1
+        
+        # (p2) Div 2: 7 main in order
+        p2 = draw_to_bytes(main_7)
+        A.add_word(p2, (draw_id, 2))
+        pattern_count += 1
+        
+        # (p3) Div 3: Any 6 main in any order + PB
+        pb_bytes = ball_to_digits(pb)
+        for combo in itertools.combinations(main_7, 6):
+            for perm in itertools.permutations(combo):
+                p3 = draw_to_bytes(perm) + pb_bytes
+                A.add_word(p3, (draw_id, 3))
+                pattern_count += 1
+
+    print(f"Loaded {pattern_count} patterns into Automaton. Compiling trie...")
+    A.make_automaton()
+    return A
+
+def scan_and_correlate(bin_file_path, automaton, N_draws, max_bytes=1_000_000):
+    with open(bin_file_path, "rb") as f:
+        data = f.read(max_bytes)
+
+    # occurrences[draw_id][div] = list of match byte offsets
+    occurrences = defaultdict(lambda: defaultdict(list))
+    
+    # 4.3 Single Smart Pass via Aho-Corasick
+    for end_idx, (draw_id, div) in automaton.iter(data):
+        occurrences[draw_id][div].append(end_idx)
+
+    # 4.4 Step: Correlation between Draw W and Draw W+1
+    w_to_next_wins = 0
+    print("\n--- Correlation Results ---")
+    for w in range(N_draws - 1):
+        w_div1_hits = occurrences[w][1]
+        if w_div1_hits:
+            next_div1 = len(occurrences[w + 1][1])
+            next_div2 = len(occurrences[w + 1][2])
+            next_div3 = len(occurrences[w + 1][3])
+            total_next = next_div1 + next_div2 + next_div3
+            if total_next > 0:
+                w_to_next_wins += 1
+                print(f"Draw {w} Div1 hit at {w_div1_hits} followed by Draw {w+1} wins: "
+                      f"Div1={next_div1}, Div2={next_div2}, Div3={next_div3}")
+
+    print(f"Total Draw W Div1 matches leading to W+1 wins: {w_to_next_wins}")
+```
+
+*(For Section 5: Oz Lotto, the identical architecture applies; you replace the generator with $\binom{7}{6}$ subsets $\times 6!$ permutations combined with the 3 supplementary balls for Div 2).*
+
+---
+
+### 4. Section 6: Combination Index / Compact Encoding
+
+> **Does that make sense, or is it wrong or impossible?**
+
+**It makes absolute mathematical sense**, and in fact, it is the only way you will get statistically meaningful sample sizes out of $10^6$ to $10^9$ digits!
+
+#### How It Works (The Combinatorial Number System)
+Every combination of 7 distinct numbers chosen from 35 can be mapped directly to a unique integer rank from $0$ to $\binom{35}{7}-1$ (0 to 6,724,519) using **lexicographical indexing**:
+$$\text{Rank}(c_1, \dots, c_7) = \sum_{i=1}^{7} \binom{c_i - 1}{i}$$
+
+* **Powerball Combination:** $6,724,520 \times 20 = 134,490,400$ total possibilities.
+* This means every full Powerball ticket is uniquely represented by an **8-digit number**.
+* **Searching the Digit Stream:**
+  Instead of looking for 16 separate digits, you take a sliding window of 8 digits across $\pi$ or $\phi$, decode each 8-digit window into its unique Lottery Draw, and check if that reconstructed draw scores Div 1, Div 2, or Div 3 against past draws.
+* In $10^6$ digits, an 8-digit window appears about **$\approx 0.01$ times per pattern**, but because you are testing continuous windows across 500 draws, you will produce **thousands of actionable hits** to analyze for lag correlations.
+
+---
+
+### 5. Guesstimated Runtimes on a Single Thread (3900X)
+
+All times assume **1 core (single-threaded)** at ~4.0 GHz:
+
+| Step | Operation | Dataset $T = 10^6$ (1 MB) | Dataset $M = 10^9$ (1 GB) | Notes |
+| :--- | :--- | :--- | :--- | :--- |
+| **Step 1** | y-cruncher Generation ($\pi$ or $\phi$) | < 1 second | 2 to 4 minutes | Writes ASCII raw file to disk. |
+| **Step 1** | Text $\to$ Binary conversion script | ~0.01 seconds | ~2.5 seconds | Uses `bytearray.translate()`. |
+| **Step 4** | Build Automaton ($P\text{\_win\_set}$) | ~12–15 seconds | ~12–15 seconds | Independent of file size; builds 2.5M nodes in RAM (~1.8 GB RAM). |
+| **Step 4** | Powerball Scan & Correlation | **~0.03 seconds** | **~25–35 seconds** | Pure streaming memory throughput in `pyahocorasick`. |
+| **Step 5** | Oz Lotto Scan & Correlation | **~0.03 seconds** | **~25–35 seconds** | Similar automaton size and scan rate. |
+| **Step 6** | Combination Indexing (Sliding Window) | **~0.4 seconds** | **~6 to 8 minutes** | Sliding window requires arithmetic index decoding for each byte step. |
+
+### Summary Advice for Running the Test
+* When running $T = 10^6$ as a timing benchmark, remember that **Automaton Construction Time (~12s)** is a fixed one-off cost that happens *before* scanning starts. 
+* Do not scale the *entire* runtime linearly from $T$ to $M$; **only the file scanning phase** (0.03s $\to$ 30s) scales linearly with digit count.

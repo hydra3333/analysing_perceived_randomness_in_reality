@@ -1,0 +1,77 @@
+Thanks. 
+I would like to try acouple of timing test experiments.
+
+1. First we need to generate the 2 data files, perhaps like this
+(i) digits_pi_10_to_6.bin
+(ii) digits_golden_ratio_10_to_6.bin
+using the y-cruncher approach you suggested.
+In the generated binary files, the leftmost digit and then digits proceeding left to right continuously
+with each digit being stored as an unsigned binary integer byte eg for 00 to 09.
+For the purpose of this test, in each file we could create M (default 10^9) digits which
+equates to a file size of M bytes without compression.
+Let's use a python 3.15.2 program and let me know which libraries need importing from pypi, if any.
+
+2. For test purposes of these tests let's parse only T digits (default 10^6) and guess
+that perhaps performance timing scales linearly when projecting parsing T digits to parsing M digits.
+
+3. Then use some of your ideas but not all since this is a very small scale test (eg no multi-threading).
+For each of (i) and then (ii) perhaps do something like the following
+
+
+Treat each game type separately.
+
+4. For powerball, having 7 winning numbers (1–35) and 1 Powerball (1–20) 
+- a separate program
+
+4.1 preparation
+- for a draw D we have a set of numbers to generate and find (set Gp)
+(p1) division 1 sequence of 7 winning numbers and then the powerball, drawn in order
+(p2) division 2 combination 7 winning numbers with no powerball, in drawn in order
+(p3) division 3 combination of [any 6 main winning numbers in any order, and then the powerball]
+- load all draws 0..N into memory
+- for every draw in memory, generate and keep winning number set Gp associated with draw D (also remember which div each belongs to for that draw D) 
+- consolidate all the Gp sets into full set P_win_set, retaining which div and draw number each is associated with
+
+4.2 load the digits file (S) to be searched into memory
+
+4.3 scan S sequentially, perhaps somehow in one smart pass for any match from P_win_set
+- at the end of the pass we should have a dataset showing for each draw 0..N where its div1 and div2 and div3 wins occur (if any)
+
+4.4 Then for draw W in draws 0..(N-1)
+we could look to see if there is any correlation of any kind between where draw W div1 has been found (if any)
+and where (separately) any draw W+1 div1 wins appear if any, div2 wins appear if any, div3 wins appear if any
+- regardless of correlation or not, if draw W has any associated draw W+1 wins then print the totals and stats of some kind
+
+
+5 for ozlotto similar method to 4 except that it is more complex ... the first 7 numbers drawn are the main winning numbers, and the last 3 numbers drawn are the supplementary number, numbers being (1–47) 
+- almost exactly the same process as for powerball
+- a separate program
+
+5.1 preparation
+- for a draw D we have a set of numbers to generate and find (set Go)
+(o1) division 1 sequence of 7 numbers winning drawn in order
+(o2) division 2 combination of [any 6 main winning numbers and any 1 of the supplementary numbers]
+(o3) division 3 combination of [any 6 main winning numbers]
+- load all draws 0..N into memory
+- for every draw in memory, generate and keep winning number set Go associated with draw D (also remember which div each belongs to for that draw D) 
+- consolidate all the Go sets into full set O_win_set, retaining which div and draw number each is associated with
+
+5.2 load the digits file (S) to be searched into memory
+
+5.3 scan S sequentially, perhaps somehow in one smart pass for any match from O_win_set
+- at the end of the pass we should have a dataset showing for each draw 0..N where its div1 and div2 and div3 wins occur (if any)
+
+5.4 Then for draw W in draws 0..(N-1)
+we could look to see if there is any correlation of any kind between where draw W div1 has been found (if any)
+and where (separately) any draw W+1 div1 wins appear if any, div2 wins appear if any, div3 wins appear if any
+- regardless of correlation or not, if draw W has any associated draw W+1 wins then print the totals and stats of some kind
+
+
+6. Then is it possible to somehow have separate programs for versions of Representation 2 Combination Index / Compact Encoding, or something meaningfully similar
+- along the lines of 4
+- along the lines of 5
+
+Does that make sense or is it wrong or impossible ?
+
+What guestimated runtimes may occur for each of 1, 4 ,5 ?
+
