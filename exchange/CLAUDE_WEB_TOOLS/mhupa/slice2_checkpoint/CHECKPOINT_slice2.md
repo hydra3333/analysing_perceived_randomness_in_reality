@@ -1,13 +1,7 @@
-# CHECKPOINT - MHUP-A slice 2, 5 November 2026 (before EX_151)
+# CHECKPOINT - MHUP-A slice 2, 5 November 2026
 
-EX_150 (reviewer): B02, B03, B04, C01 PASS; A1 favourable; new narrow blocker B05. The owner RATIFIED A1 the same day
-(exchange/MHUP1_design_amendment_A1_RATIFIED.md; reminder R-021 DONE). B05 is corrected in slice2_new (mode_h.py:
-plan_for, _resumed_scoring_plan, the fuller SCORE_COMPLETE check) with the test
-Pipeline.test_a_resume_binds_the_frozen_scoring_plan_and_completion (570 tests); four B05 mutants added (99-102).
-
-Running when written: both suites (S/suite_slice2r2_py31{3,5}.log) then mutants 99-102 and 50 alone
-(S/mutations_slice2r2_targeted_py313.txt). Then: python3 S/tools/assemble_ex151.py S R; fill t022_lf.md's
-@@SHA@@/@@SHA8@@ from exchange/EX_151_Claude/MHUPA_Slice2_Review_v1r2.zip (and its file count in "UNZIP PASS: n files"),
-write inbox/TASK_T022.md (CRLF) and inbox/TASK_T022_overlay_plan.txt, run check_task_commands.py; commit, push; paste
-block asking for EX_152 and reminding the owner to attach exchange/EX_151_Claude.zip. T021's report was not yet in the
-repository; do not claim it.
+State: candidate v1r2 sent as EX_151 (B05 corrected; 570 tests on both Pythons; 5 targeted mutants caught; A1 ratified
+and cited). TASK_T022 (v1r2 on Windows) is in the inbox; T021's report had not reached the repository.
+Next: read EX_152 and the owner's REPORT_T021/T022 when relayed. On PASS: the integrated MHUP-A install package
+(installer, verifier, LF/CRLF rehearsals, T016), with E_1 r3's effective_date set to the package's preparation date (C01),
+the package manifest's release_entries naming E_1 r3 (R-020), and A1 cited.
