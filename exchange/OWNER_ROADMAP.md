@@ -226,11 +226,14 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            the integrated MHUP-A install package may now be prepared for its own review.
            6 November 2026: the ChatGPT reviewer chat reached its limit without a handover; Claude wrote H-1 v1r9
            (a delta), H-2 v1r9 and both blurbs (exchange/HANDOVER_2026_11_06/; R-022).
+           DONE (6 November 2026): the new ChatGPT reviewer chat took over (EX_153-EX_156: takeover check, five
+           corrections, Claude's questions Q1-Q19 answered blind, all agreeing); you accepted it and ratified H-2 v1r9
+           and register v0.25 (RAT-25), installed as DOC-12 at 377e27a (verified from GitHub: DOC12 VERIFY PASS).
+           DONE (6 November 2026): your T022 run (slice 2 v1r2, the reviewed candidate, 570 tests on Windows, on main
+           with src/GAIS present): PASS, 4 allowed symlink skips, 24 minutes 37 seconds (REPORT_T022, 2eb9abb). T021
+           (v1r1) was withdrawn unrun: T022 covers the later candidate.
            NOW:
-           (1) your Claude Code runs of inbox/TASK_T021.md and TASK_T022.md (v1r1 and v1r2 on Windows). Their
-               reports are still to come and are needed before integration.
-           (2) Start a new ChatGPT reviewer chat with the H-2 v1r9 blurb, and accept its takeover check.
-           (3) The integrated install package (slice 1 + slice 2, A1 cited, rebased onto the current main;
+           (1) The integrated install package (slice 1 + slice 2, A1 cited, rebased onto the current main;
                reminder R-020 (a)-(f)), with its rehearsals and T016, and its review by the new reviewer.
            Installing it, its Windows rehearsal and MHUP-B each wait for your separate go. The planning dates
            above are unchanged; FB-1 applies.
