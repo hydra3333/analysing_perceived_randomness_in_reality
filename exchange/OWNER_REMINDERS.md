@@ -364,6 +364,15 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       reason recorded (the change adds interpreter options, two variables and one refusal; no launch, handshake or
       lifecycle logic). Claude will ask when the integrated package is ready.
 
+## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
+
+- Asked: Claude, EX_149 (5 November 2026), after your in-principle choice of EX_148 B01 route (B).
+- Status: OPEN until ChatGPT's review of A1 and then your explicit final approval; until then design 5.2 as
+  ratified stands and the slice 2 code implementing A1 is a candidate, not an installed rule.
+- What: exchange/EX_149_Claude/MHUP1_design_amendment_A1_draft.md (sections 1-5). Its section 6 records
+  your other decision: the corrective scoring run after the Mode H seal is MHUP-B's, by the route stated
+  there. When approved, the register records A1 and the integrated package carries it.
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in

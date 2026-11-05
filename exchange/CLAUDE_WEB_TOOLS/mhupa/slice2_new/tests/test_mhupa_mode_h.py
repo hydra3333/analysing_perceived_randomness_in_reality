@@ -762,6 +762,7 @@ class Pipeline(Base):
                 recs[other]['drawn_main'][:-1] + [next(x for x in range(1, 36) if x not in recs[other]['drawn_main'])])),
             'an invalid score record (drawn numbers not ascending)': edited(other, drawn_main=list(reversed(recs[other]['drawn_main']))),
             'lines reordered': [lines[si[1]], lines[si[0]]] + lines[2:],
+            'a line of another schema': lines + [canonical({'schema': 'SOME_OTHER_RECORD_V1', 'draw_number': recs[si[0]]['draw_number']})[:-1]],
         }
         for name, ls in cases.items():
             with self.subTest(name):

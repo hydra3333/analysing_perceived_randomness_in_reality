@@ -51,12 +51,15 @@ shutil.copy(S / 'MHUP1_design_amendment_A1_draft.md', pkg / 'MHUP1_design_amendm
 # 3. the evidence
 (pkg / 'evidence').mkdir()
 for src, dst in (('suite_slice2r1_py313.log', 'mhupa_slice2r1_suite_py313.txt'), ('suite_slice2r1_py315.log', 'mhupa_slice2r1_suite_py315.txt'),
-                 ('mutations_slice2r1_py313.txt', 'mhupa_slice2r1_mutations_py313.txt')):
+                 ('mutations_slice2r1_py313.txt', 'mhupa_slice2r1_mutations_py313.txt'),
+                 ('ex149_rerun_after_m54.txt', 'mhupa_slice2r1_rerun_after_m54.txt')):
     text = (S / src).read_text(encoding='utf-8')
     assert text.isascii(), src
     text = text.replace(str(S), '<scratchpad>')
     (pkg / 'evidence' / dst).write_text(text, encoding='ascii')
     assert ('SUITE PASS' in text) or ('0 survived' in text), src
+    if src.startswith('ex149_rerun'):
+        assert text.count('Ran 19 tests') == 2 and text.count('exit 0') == 2 and '0 survived' in text, src
 
 readme = f"""# {NAME} - MHUP-A review slice 2, candidate v1r1 after EX_148 (Claude, 5 November 2026)
 
@@ -111,7 +114,7 @@ tree_diff(lambda rel: BASE / rel, 'base', 'mhupa_slice2_src_tests.diff',
           + (listed.encode('ascii') + b'\n' if listed else b'#   (none)\n'))
 
 # 5b. the diff from slice 2 candidate v1 (EX_147) to this candidate: side a = base with v1's overlay on top
-tree_diff(lambda rel: (V1 / rel) if (V1 / rel).exists() else (BASE / rel), 'v1', 'mhupa_slice2_v1_to_v1r1.diff',
+tree_diff(lambda rel: None if rel in removed else ((V1 / rel) if (V1 / rel).exists() else (BASE / rel)), 'v1', 'mhupa_slice2_v1_to_v1r1.diff',
           b'# MHUP-A review slice 2: the diff from candidate v1 (EX_147, MHUPA_Slice2_Review_v1) to candidate v1r1 (EX_149):\n'
           b'# what the EX_148 corrections change.\n')
 
