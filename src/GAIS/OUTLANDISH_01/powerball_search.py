@@ -24,14 +24,14 @@ SAMPLE_POWERBALL_DRAWS = [
 ]
 
 
-def ball_to_digits(num: int) -> bytes:
-    """Converts a ball number (e.g. 7 or 24) to 2 unsigned decimal digit bytes."""
-    return bytes([num // 10, num % 10])
+def ball_to_digits_str(num: int) -> str:
+    """Converts a ball number (e.g. 7 or 24) to a 2-character string ('07' or '24')."""
+    return f"{num:02d}"
 
 
-def balls_to_bytes(balls) -> bytes:
-    """Converts a sequence of balls to contiguous 2-digit unsigned bytes."""
-    return b"".join(ball_to_digits(b) for b in balls)
+def balls_to_str(balls) -> str:
+    """Converts a sequence of balls to contiguous 2-digit characters."""
+    return "".join(ball_to_digits_str(b) for b in balls)
 
 
 # -------------------------------------------------------------
@@ -46,20 +46,20 @@ def build_winning_patterns(draws, any_order_div3=True):
     t0 = time.time()
 
     # Store in dict to handle pattern collisions between different draws:
-    # pattern_bytes -> list of (draw_index, div_id)
+    # pattern_str -> list of (draw_index, div_id)
     pattern_map = defaultdict(list)
     total_patterns_created = 0
 
     for draw_idx, (draw_num, main_balls, pb) in enumerate(draws):
-        pb_bytes = ball_to_digits(pb)
+        pb_str = ball_to_digits_str(pb)
 
-        # (p1) Div 1: 7 winning numbers drawn in order + Powerball (16 bytes)
-        p1 = balls_to_bytes(main_balls) + pb_bytes
+        # (p1) Div 1: 7 winning numbers drawn in order + Powerball (16 chars)
+        p1 = balls_to_str(main_balls) + pb_str
         pattern_map[p1].append((draw_idx, 1))
         total_patterns_created += 1
 
-        # (p2) Div 2: 7 winning numbers drawn in order (14 bytes)
-        p2 = balls_to_bytes(main_balls)
+        # (p2) Div 2: 7 winning numbers drawn in order (14 chars)
+        p2 = balls_to_str(main_balls)
         pattern_map[p2].append((draw_idx, 2))
         total_patterns_created += 1
 
@@ -68,13 +68,12 @@ def build_winning_patterns(draws, any_order_div3=True):
             # 7 combinations * 6! permutations = 5,040 patterns per draw
             for combo in itertools.combinations(main_balls, 6):
                 for perm in itertools.permutations(combo):
-                    p3 = balls_to_bytes(perm) + pb_bytes
+                    p3 = balls_to_str(perm) + pb_str
                     pattern_map[p3].append((draw_idx, 3))
                     total_patterns_created += 1
         else:
-            # Maintained in drawn order (7 patterns per draw)
             for combo in itertools.combinations(main_balls, 6):
-                p3 = balls_to_bytes(combo) + pb_bytes
+                p3 = balls_to_str(combo) + pb_str
                 pattern_map[p3].append((draw_idx, 3))
                 total_patterns_created += 1
 
@@ -85,8 +84,8 @@ def build_winning_patterns(draws, any_order_div3=True):
     t_compile = time.time()
     print("Compiling Aho-Corasick Automaton into memory...")
     automaton = ahocorasick.Automaton()
-    for pat_bytes, draw_div_list in pattern_map.items():
-        automaton.add_word(pat_bytes, draw_div_list)
+    for pat_str, draw_div_list in pattern_map.items():
+        automaton.add_word(pat_str, draw_div_list)
 
     automaton.make_automaton()
     compile_time = time.time() - t_compile
@@ -105,7 +104,11 @@ def scan_digit_stream(bin_file_path, automaton, max_bytes=1_000_000):
 
     print(f"Loading '{bin_file_path}' ({max_bytes:,} bytes) into memory...")
     with open(bin_file_path, "rb") as f:
-        stream_data = f.read(max_bytes)
+        stream_bytes = f.read(max_bytes)
+
+    # Fast 1:1 translation from bytes 0x00..0x09 to ASCII chars '0'..'9'
+    table = bytes.maketrans(bytes(range(10)), b"0123456789")
+    stream_str = stream_bytes.translate(table).decode("ascii")
 
     print(f"Scanning stream in one single sequential pass...")
     t0 = time.time()
@@ -115,13 +118,13 @@ def scan_digit_stream(bin_file_path, automaton, max_bytes=1_000_000):
     match_count = 0
 
     # Single pass search
-    for end_idx, draw_div_list in automaton.iter(stream_data):
+    for end_idx, draw_div_list in automaton.iter(stream_str):
         for draw_idx, div_id in draw_div_list:
             occurrences[draw_idx][div_id].append(end_idx)
             match_count += 1
 
     scan_time = time.time() - t0
-    print(f"Scan complete in {scan_time:.4f}s ({len(stream_data) / scan_time / 1e6:.1f} MB/s throughput)")
+    print(f"Scan complete in {scan_time:.4f}s ({len(stream_bytes) / scan_time / 1e6:.1f} MB/s throughput)")
     print(f"Total matches found: {match_count:,}")
     return occurrences, scan_time
 
@@ -166,7 +169,6 @@ def analyze_draw_correlations(draws, occurrences):
             if next_total > 0:
                 transition_successes += 1
         else:
-            # If no Div 1 was found (expected in 1M digits), report general co-occurrences
             if w_has_any and next_total > 0:
                 print(f"Draw {draw_w_num} (has wins) -> Draw {draw_next_num} also has wins (Div3: {len(next_div3)})")
 
@@ -183,7 +185,6 @@ def analyze_draw_correlations(draws, occurrences):
 # -------------------------------------------------------------
 if __name__ == "__main__":
     # 1. Build patterns
-    # (Note: any_order_div3=True creates all 5,040 permutations per draw)
     automaton, prep_time = build_winning_patterns(SAMPLE_POWERBALL_DRAWS, any_order_div3=True)
 
     # 2. Test against Pi
