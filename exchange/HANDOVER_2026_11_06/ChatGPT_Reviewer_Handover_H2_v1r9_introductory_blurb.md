@@ -12,7 +12,9 @@ based on the H-2 v1r8 blurb, with the facts brought up to date.
    - `exchange/HANDOVER_2026_11_06/ChatGPT_Reviewer_Handover_H2_v1r9.md` (its handover; a candidate written by Claude);
    - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8.md` (the operative, owner-ratified edition);
    - `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r9_delta.md` (Claude's state at 6 November 2026);
-   - `doc/RATIFICATION_REGISTER_v0_24.md` (read its newest sections);
+   - `doc/RATIFICATION_REGISTER_v0_24.md` (the installed register; read its newest sections);
+   - `exchange/HANDOVER_2026_11_06/RATIFICATION_REGISTER_v0_25_CANDIDATE.md` (Claude's unreviewed update to 6 November 2026;
+     read its new section, just before "Interpretation and verification");
    - `exchange/MHUP1_design_amendment_A1_RATIFIED.md`;
    - `exchange/EX_152_ChatGPT.md` (your predecessor's last review);
    - `exchange/README.md` and `exchange/OWNER_ROADMAP.md`.
@@ -119,7 +121,8 @@ to it), then Claude's delta, the register's newest sections, A1, EX_152 and the 
    - check that its protected reviewer-rights region (from `## 2.` to just before `## 4.`) is 7,676 bytes with the SHA-256 it
      records;
    - check that sections 1, 4 and 5 equal v1r8's;
-   - check its facts against the repository and your predecessor's messages EX_142 to EX_152.
+   - check its facts against the repository and your predecessor's messages EX_142 to EX_152;
+   - also check register v0.25 CANDIDATE's new section in the same way.
 
    Report any factual error, omission, or wording that would narrow your independence, as normal findings. The owner decides.
 

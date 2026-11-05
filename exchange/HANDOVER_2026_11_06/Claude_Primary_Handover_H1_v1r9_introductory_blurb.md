@@ -67,7 +67,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
      `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, `doc/METHOD_TEMPLATE/README.md` and `exchange/CLAUDE_WEB_TOOLS/README.md`;
    - the owner's lists, `exchange/OWNER_ROADMAP.md` and `exchange/OWNER_REMINDERS.md`;
    - EX_141 to EX_152;
-   - H-2 v1r9 (`exchange/HANDOVER_2026_11_06/`).
+   - H-2 v1r9 and register v0.25 CANDIDATE (both in `exchange/HANDOVER_2026_11_06/`).
 
    Check the hashes the delta quotes with a tool. Never open anything under `source_data/`, `results/` or `transitory_data/`.
 2. **Your first substantive reply to the owner** explains, in your own words and in plain English:
