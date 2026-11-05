@@ -20,6 +20,7 @@ import _common.contract_dispatch as CD
 import _common.contract_runner as CR
 import _common.walk_forward as WF
 from _common import closure as CL
+import _common.release_records as RR
 
 ROOT = Path(__file__).resolve().parents[1]
 SMALL_COHORT = ('E_6', 'E_7')
@@ -101,6 +102,11 @@ def small_adapters():
 
 
 _real_cohort = WF.cohort
+_real_released = RR.released_variants
+
+
+def _small_released(root):
+    return {k: v for k, v in _real_released(root).items() if k[1] in SMALL_COHORT}
 
 
 def _small_cohort(game_id, adapters):
@@ -119,7 +125,26 @@ def patched(proj: Path, env: CL.Environment, *, small_cohort: bool = True):
         stack.enter_context(mock.patch.object(CL.Environment, 'current', staticmethod(lambda: env)))
         if small_cohort:
             stack.enter_context(mock.patch.object(WF, 'cohort', _small_cohort))
+            stack.enter_context(mock.patch.object(RR, 'released_variants', _small_released))
         yield
+
+
+def write_e1r3_release(proj: Path, *, games=('POWERBALL', 'OZLOTTO'), utc: str = '2026-11-20T10:00:00.000000Z') -> Path:
+    """The install and release records MHUP-A's own install writes (Appendix J steps 12 and 16): E_1 revision 3
+    released for the named games, dated by the release step. INVENTED dates; the shapes are the records tool's."""
+    folder = RR.records_dir(proj)
+    entries = [{'game_id': g, 'method_id': 'E_1', 'method_revision': '3', 'variant_id': 'FULL_HISTORY_RAW_COUNTS_V1'}
+               for g in games]
+    inst = {'schema': RR.INSTALL_SCHEMA, 'package': 'MHUPA_TEST', 'manifest_sha256': '0' * 64,
+            'post_pass_utc': utc.replace('10:00:00', '09:00:00'), 'local_date': utc[:10], 'registry_entries_added': [],
+            'release_entries_planned': entries, 'retires_planned': [], 'statement': 'test fixture'}
+    raw_inst = RR.canonical(inst)
+    (folder / 'INSTALL_MHUPA_TEST_V1.json').write_bytes(raw_inst)
+    rel = {'schema': RR.RELEASE_SCHEMA, 'package': 'MHUPA_TEST', 'entries': entries, 'retires': [], 'released_utc': utc,
+           'local_date': utc[:10], 'install_record_sha256': RR.sha256(raw_inst), 'statement': 'test fixture'}
+    path = folder / 'RELEASE_MHUPA_TEST_V1.json'
+    path.write_bytes(RR.canonical(rel))
+    return path
 
 
 # ---------------------------------------------------------------- the updater as a module

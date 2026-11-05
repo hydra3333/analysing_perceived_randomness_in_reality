@@ -4,7 +4,7 @@ Evaluator side (it may import the outcome reader; no method code). Everything he
 the frozen forecasts and, in exactly one place and only under the freeze-before-outcome rule, the outcomes of the
 ten holdout draws. Every record it writes is create-only.
 
-- `manifest(game)`: the study manifest (4.1, Appendix H): cohort, targets, exposure flags, measures, families,
+- `manifest(game)`: the study manifest (4.1, Appendix H): cohort (exactly the validated released set, 4.3), targets, exposure flags, measures, families,
   the N1 policy, the evaluator's version, v_f, the closure and environment inventories; one MODE_H_STUDY_MANIFEST
   search-log row.
 - `open_holdout(game, statement)`: the opening record (4.2), after the manifest exists with the digest it names;
@@ -17,8 +17,10 @@ ten holdout draws. Every record it writes is create-only.
   once through the outcome reader under `outcome_release_allowed`; the Mode H score ledger (create-only, one
   line per scored pair and readout, plus the MR5 rank lines); SCORE_COMPLETE; the report from the accepted lines
   (no outcome re-read); MODE_H_SEALED. Rerunning resumes the same attempt: SCORING_STARTED fixes the attempt id;
-  an existing ledger is accepted as it stands; after SCORE_COMPLETE no outcome is read; an existing report must
-  equal the bytes rebuilt from the lines. A second routine attempt after SCORE_COMPLETE is refused.
+  an existing ledger is accepted only if it is exactly the lines this scorer writes for the frozen forecasts
+  and the drawn numbers it records (EX_148 B04); after SCORE_COMPLETE no outcome is read; each of the three
+  report files, where it exists, must equal the bytes rebuilt from the lines, and a missing one is created
+  (EX_148 B02). A second routine attempt after SCORE_COMPLETE is refused.
 """
 from __future__ import annotations
 
@@ -33,11 +35,13 @@ import _common.walk_forward as WF
 import _common.closure as CL
 import _common.master_versions as MV
 import _common.owner_records as OR
+import _common.release_records as RR
 from _common.contract_records import canonical, record_digest, sha256_hex
 from _common.contract_receipts import validate_score_record
 from _common.game_profiles import get_profile
 
 from . import collect as COL
+from . import divisions as DV
 from . import report as RP
 from . import report_writer as RW
 from . import seed_policies as SP
@@ -103,6 +107,7 @@ def manifest(game_id: str, *, env: CL.Environment | None = None) -> dict:
         raise ModeHRefused(f'cohort: {exc}') from None
     if not members:
         raise ModeHRefused('the cohort is empty')
+    _check_release_authority(root, game_id, members, excluded)        # EX_148 B03: only released variants are frozen
     not_runnable = list(excluded) + _not_runnable(game_id)
     families = RP.load_families(game_id, p.holdout_first, p.holdout_last)
     if not families:
@@ -135,6 +140,26 @@ def manifest(game_id: str, *, env: CL.Environment | None = None) -> dict:
                            'plan_digest': sha256_hex(raw), 'tool': TOOL, 'tool_version': MODE_H_VERSION,
                            'tool_sha256': RP.tool_sha256()})
     return rec
+
+
+def _check_release_authority(root: Path, game_id: str, members, excluded) -> None:
+    """The cohort the manifest freezes must be exactly the game's released, unretired set (design 4.3: an installed but
+    unreleased revision qualifies for nothing; EX_148 B03). Both sides are computed independently: the members from
+    the installed registry (active SUPPORTED, no development flag), the released set from the validated release records
+    and the registry chains (release_records.released_variants). Any difference, or any refusal of the records, refuses."""
+    try:
+        released = {k for k in RR.released_variants(root) if k[0] == game_id}
+    except (RR.Refused, ValueError, KeyError) as exc:
+        raise ModeHRefused(f'the release records refuse: {exc}') from None
+    cohort = {(game_id, m['method_id'], m['method_revision'], m['variant_id']) for m in members}
+    excluded_mv = {(e['method_id'], e['variant_id']) for e in excluded}
+    unreleased = sorted(cohort - released)
+    missing = sorted(k for k in released - cohort if (k[1], k[3]) not in excluded_mv)
+    if unreleased or missing:
+        fmt = lambda ks: ', '.join(f'{m} revision {r} {v}' for _g, m, r, v in ks[:4]) + (f' (+{len(ks) - 4})' if len(ks) > 4 else '')
+        raise ModeHRefused('the cohort is not the released set: ' + '; '.join(
+            ([f'SUPPORTED in the registry but not released: {fmt(unreleased)}'] if unreleased else []) +
+            ([f'released but not in the registry\'s runnable set: {fmt(missing)}'] if missing else [])))
 
 
 def _not_runnable(game_id: str) -> list[dict]:
@@ -252,8 +277,61 @@ def _ledger_lines(path: Path) -> tuple[list, list]:
     if len(scores) + len(ranks) != len(rows):
         raise ModeHRefused('the Mode H score ledger holds a line of another schema')
     for r in scores:
-        validate_score_record(r)
+        try:
+            validate_score_record(r)
+        except ValueError as exc:
+            raise ModeHRefused(f'the Mode H score ledger holds an invalid score record: {exc}') from None
     return scores, ranks
+
+
+def _verify_ledger(game_id: str, members, collected: dict, raw: bytes, scores: list, ranks: list) -> None:
+    """EX_148 B04: before SCORE_COMPLETE (and again before the report), the ledger must be exactly the lines this
+    scorer writes for the frozen forecasts, given the drawn numbers the ledger itself records; it never reads an
+    outcome. Every drawn number of a draw must agree across its lines; the expected score and rank identities
+    (track or variant, draw, revision, forecast and receipt digests, evaluator version: every valid cell of the
+    frozen roster, from the collected forecasts) must appear exactly once each, nothing missing, duplicated or
+    foreign; and every line is rebuilt with report.score_cells from those drawn numbers and must be byte-identical,
+    in the same order. For Oz Lotto the supplementaries are never stored (R2 2.5), so each score line's
+    supplementary_matches is taken from the line and checked for range and against its division; every other field
+    is rebuilt."""
+    drawn = {}
+    for r in scores:
+        t = r.get('draw_number')
+        d = (tuple(r.get('drawn_main') or ()), r.get('drawn_powerball'))
+        if drawn.setdefault(t, d) != d:
+            raise ModeHRefused(f'the score ledger records two different drawn results for draw {t}')
+    key_s = lambda r: (r['track_id'], r['draw_number'], r['method_revision'], r['forecast_content_digest'],
+                       r['freeze_receipt_digest'], r['evaluator_version'])
+    key_r = lambda r: (r['method_id'], r['variant_id'], r['draw_number'], r['method_revision'],
+                       r['forecast_content_digest'], r['freeze_receipt_digest'], r['evaluator_version'])
+    expected_targets = sorted({k[2] for k, c in collected['cells'].items() if c['valid']})
+    if sorted(drawn) != expected_targets:
+        raise ModeHRefused('the score ledger does not cover exactly the targets of the frozen valid forecasts')
+    if game_id == 'POWERBALL':
+        outcomes = {t: (list(d[0]), d[1]) for t, d in drawn.items()}
+    else:                                          # placeholder supplementaries; their match counts are checked below
+        outcomes = {t: (list(d[0]), [x for x in range(1, 48) if x not in d[0]][:3]) for t, d in drawn.items()}
+    try:
+        exp_scores, exp_ranks, _pt, _pv = RP.score_cells(game_id, members, collected, outcomes,
+                                                         exposure=lambda t: OR.exposure_flag(game_id, t))
+    except (ValueError, KeyError, TypeError) as exc:
+        raise ModeHRefused(f'the score ledger\'s drawn numbers are not a valid draw: {exc}') from None
+    if sorted(map(key_s, scores)) != sorted(map(key_s, exp_scores)) or len(scores) != len(exp_scores):
+        raise ModeHRefused('the score ledger\'s score lines are not exactly the frozen roster\'s valid cells (a line '
+                           'missing, duplicated or foreign)')
+    if sorted(map(key_r, ranks)) != sorted(map(key_r, exp_ranks)) or len(ranks) != len(exp_ranks):
+        raise ModeHRefused('the score ledger\'s rank lines are not exactly the frozen roster\'s ranked cells')
+    if game_id != 'POWERBALL':
+        for got, exp in zip(scores, exp_scores):
+            s = got.get('supplementary_matches')
+            m = exp['main_matches']
+            if type(s) is not int or not 0 <= s <= min(3, 7 - m) or got.get('division') != DV.division(
+                    game_id, m, supplementary_matches=s):
+                raise ModeHRefused(f'draw {got.get("draw_number")}: supplementary_matches and division disagree')
+            exp['supplementary_matches'], exp['division'] = s, got['division']
+    if b''.join(canonical(r) for r in exp_scores + exp_ranks) != raw:
+        raise ModeHRefused('the score ledger differs from the lines the scorer writes for the frozen forecasts and '
+                           'the drawn numbers it records (a tampered or foreign line); nothing is completed')
 
 
 def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policies_on_file: int, environment: dict) -> dict:
@@ -359,7 +437,9 @@ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policie
         CP.create_only(ledger_path, b''.join(canonical(r) for r in scores + ranks))
         progress(f'outcomes read once; score ledger written: {len(scores)} score lines, {len(ranks)} rank lines')
     scores, ranks = _ledger_lines(ledger_path)
-    ledger_sha = sha256_hex(ledger_path.read_bytes())
+    raw_ledger = ledger_path.read_bytes()
+    _verify_ledger(game_id, members, collected, raw_ledger, scores, ranks)      # B04: before SCORE_COMPLETE
+    ledger_sha = sha256_hex(raw_ledger)
     complete = OR.marker(root, game_id, batch_id, 'SCORE_COMPLETE')
     if complete is None:
         OR.write_marker(root, game_id, batch_id, 'SCORE_COMPLETE',
@@ -382,17 +462,18 @@ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policie
                         environment=environment)
     base = RW.mode_h_base_name(res)
     report_folder = RP.roots()['reports'] / game_id
-    existing = report_folder / f'{base}.txt'
-    if OR.absent(existing):
-        paths = RW.write(res, contents, stamp='')
-        progress('report written')
-    else:
-        for ext in ('txt', 'csv', 'json'):
-            if (report_folder / f'{base}.{ext}').read_bytes() != contents[ext]:
-                raise ModeHRefused(f'the existing report {base}.{ext} differs from the bytes rebuilt from the accepted '
-                                   f'lines; nothing is written')
-        paths = [report_folder / f'{base}.{ext}' for ext in ('txt', 'csv', 'json')]
-        progress('report already written with these exact bytes; verified')
+    paths = [report_folder / f'{base}.{ext}' for ext in ('txt', 'csv', 'json')]
+    for p, ext in zip(paths, ('txt', 'csv', 'json')):          # EX_148 B02: every existing file verified first
+        if not OR.absent(p) and (not p.is_file() or p.is_symlink() or p.read_bytes() != contents[ext]):
+            raise ModeHRefused(f'the existing report {p.name} differs from the bytes rebuilt from the accepted lines; '
+                               f'nothing is written')
+    report_folder.mkdir(parents=True, exist_ok=True)
+    made = []
+    for p, ext in zip(paths, ('txt', 'csv', 'json')):          # then each missing file created, none overwritten
+        if OR.absent(p):
+            CP.create_only(p, contents[ext])
+            made.append(ext)
+    progress(f'report files: {", ".join(made) or "none"} written, {3 - len(made)} already present with these exact bytes')
     OR.write_marker(root, game_id, batch_id, 'MODE_H_SEALED',
                     {'schema': OR.MARKER_SCHEMAS['MODE_H_SEALED'], 'batch_id': batch_id, 'game_id': game_id,
                      'attempt_id': attempt_id, 'plan_digest': record_digest(plan), 'score_ledger_sha256': ledger_sha,

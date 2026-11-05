@@ -35,25 +35,20 @@ import re
 import subprocess
 import sys
 
-INSTALL_SCHEMA = 'INSTALL_RECORD_V1'
-RELEASE_SCHEMA = 'RELEASE_RECORD_V1'
-BASELINE_NAME = 'RELEASE_BASELINE_20261031_V1.json'
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'methods'))
+from _common import release_records as RR                    # noqa: E402  (the one reader of the records)
+
+INSTALL_SCHEMA, RELEASE_SCHEMA, BASELINE_NAME = RR.INSTALL_SCHEMA, RR.RELEASE_SCHEMA, RR.BASELINE_NAME
 RECORDS_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'install_records'
 BARRIER_REL = Path('src') / 'methods' / '_common' / 'contract_data' / 'INSTALL_IN_PROGRESS.txt'
 PACKAGE = re.compile(r'[A-Za-z0-9_.-]+\Z')
 GAMES = ('POWERBALL', 'OZLOTTO')
 
 
-class Refused(Exception):
-    pass
+Refused = RR.Refused
 
 
-def canonical(rec) -> bytes:
-    return (json.dumps(rec, sort_keys=True, separators=(',', ':'), ensure_ascii=True) + '\n').encode('ascii')
-
-
-def sha256(raw: bytes) -> str:
-    return hashlib.sha256(raw).hexdigest()
+canonical, sha256 = RR.canonical, RR.sha256
 
 
 def now() -> tuple[str, str]:
@@ -89,11 +84,7 @@ def load_manifest(path: Path) -> dict:
     return rec
 
 
-def _entry(e, where: str) -> tuple:
-    if type(e) is not dict or set(e) - {'superseded_by'} != {'game_id', 'method_id', 'method_revision', 'variant_id'} or \
-            e['game_id'] not in GAMES or not all(type(e[k]) is str and e[k] for k in ('method_id', 'method_revision', 'variant_id')):
-        raise Refused(f'{where}: an entry is not (game_id, method_id, method_revision, variant_id)')
-    return e['game_id'], e['method_id'], e['method_revision'], e['variant_id']
+_entry = RR._entry
 
 
 # ---------------------------------------------------------------- the records
@@ -181,89 +172,12 @@ def release_record(root: Path, package: str, manifest_path: Path) -> Path:
 
 # ---------------------------------------------------------------- validation and the released set
 
-def _registry_chains(root: Path) -> dict:
-    """(game, method, variant) -> [revisions of every chain entry], from the installed registry files (read-only)."""
-    reg = root / 'src' / 'methods' / '_common' / 'contract_data' / 'registry'
-    out: dict = {}
-    for path in sorted(reg.glob('*/*/*/entry_*.json')):
-        e = json.loads(path.read_bytes().decode('ascii'))
-        out.setdefault((e['game_id'], e['method_id'], e['variant_id']), []).append(e['method_revision'])
-    return out
+# ---------------------------------------------------------------- validation and the released set: the one shared reader
+# (src/methods/_common/release_records.py, EX_148 B03), so the records tool and the Mode H manifest apply the same rule.
 
-
-def load_records(root: Path) -> dict:
-    folder = records_dir(root)
-    installs, releases = [], []
-    if folder.is_dir():
-        for path in sorted(folder.glob('*.json')):
-            if path.is_symlink():
-                raise Refused(f'{path.name} is a symlink')
-            raw = path.read_bytes()
-            rec = json.loads(raw.decode('ascii'))
-            if canonical(rec) != raw:
-                raise Refused(f'{path.name} is not its canonical bytes')
-            if rec.get('schema') == INSTALL_SCHEMA:
-                installs.append(rec)
-            elif rec.get('schema') == RELEASE_SCHEMA:
-                rec['_file'] = path.name
-                releases.append(rec)
-            else:
-                raise Refused(f'{path.name}: unknown schema')
-    return {'installs': installs, 'releases': releases}
-
-
-def validate_release(rec: dict, root: Path, *, is_baseline: bool) -> None:
-    chains = _registry_chains(root)
-    for e in rec['entries'] + rec.get('retires', []):
-        g, m, rv, v = _entry(e, rec.get('package', 'release'))
-        if rv not in chains.get((g, m, v), []):
-            raise Refused(f'release record {rec.get("package")}: {g} {m} revision {rv} {v} has no registry chain entry')
-    try:
-        d = date.fromisoformat(rec['local_date'])
-        written = datetime.strptime(rec['released_utc'][:10], '%Y-%m-%d').date()
-    except (KeyError, ValueError):
-        raise Refused('release record: dates missing or malformed') from None
-    if not is_baseline and abs((d - written).days) > 1:
-        raise Refused('release record: local_date is not the day it was written (a release record never carries an '
-                      'earlier date; the baseline is the one exception)')
-
-
-def validate_records(root: Path) -> dict:
-    recs = load_records(root)
-    seen: dict = {}
-    for r in recs['releases']:
-        is_baseline = r['_file'] == BASELINE_NAME
-        validate_release(r, root, is_baseline=is_baseline)
-        if not is_baseline:
-            installs = {sha256(canonical(i)): i for i in recs['installs']}
-            if r.get('install_record_sha256') not in installs:
-                raise Refused(f'{r["_file"]}: its install record is not present with that digest')
-            if r['released_utc'] < installs[r['install_record_sha256']]['post_pass_utc']:
-                raise Refused(f'{r["_file"]}: released before its install record was written')
-        for e in r['entries']:
-            key = _entry(e, r['_file'])
-            if key in seen:
-                raise Refused(f'{r["_file"]} and {seen[key]} both name {key}')
-            seen[key] = r['_file']
-    return recs
-
-
-def released_variants(root: Path) -> dict:
-    """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
-    record's entries, less every entry a record retires or marks superseded_by, and less entries whose registry chain
-    has moved on (a later revision active). The weekly roster (MHUP-B) is computed from this."""
-    recs = validate_records(root)
-    out: dict = {}
-    retired: set = set()
-    for r in recs['releases']:
-        for e in r['entries']:
-            key = _entry(e, r['_file'])
-            if e.get('superseded_by'):
-                retired.add(key)
-            out[key] = r['local_date']
-        for e in r.get('retires', []):
-            retired.add(_entry(e, r['_file']))
-    return {k: v for k, v in out.items() if k not in retired}
+load_records, validate_release, validate_records, released_variants = (
+    RR.load_records, RR.validate_release, RR.validate_records, RR.released_variants)
+_registry_chains = RR.registry_chains
 
 
 # ---------------------------------------------------------------- command line
