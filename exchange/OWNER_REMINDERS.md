@@ -253,7 +253,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
 
 - Asked: the owner, 3 November 2026.
-- Status: OPEN for the later ChatGPT reviewer handover only. The staged Claude handover is DONE (4 November
+- Status: OVERTAKEN (6 November 2026) for the ChatGPT reviewer handover: the reviewer chat ended without a
+  handover; see R-022. The staged Claude handover is DONE (4 November
   2026): DOC-11 installed at 3d4fa3c (EX_138); the replacement Claude chat's first reply, the reviewer's
   questions Q1-Q9 answered blind, all PASS; the owner declared HO-2 complete and authorised normal work
   (option (a)); recorded in EX_139 and EX_140. The current reviewer stays in role through at least MHUP-A's
@@ -345,7 +346,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: slice 2's development; its handback names where each is tested. Slice 1 PASSED (EX_146, 5 November
   2026); the integrated package needs its own integration review.
 
-## R-020  MHUP-A integrated package: three things slice 2 found that the package or the owner must carry
+## R-020  MHUP-A integrated package: what the package or the owner must carry (from slice 2; (d)-(f) added 6 November 2026)
 
 - Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
 - Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026).
@@ -363,6 +364,16 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       either to authorise one rerun of the Windows POC suite after the install or to accept it unrun with the
       reason recorded (the change adds interpreter options, two variables and one refusal; no launch, handshake or
       lifecycle logic). Claude will ask when the integrated package is ready.
+  (d) Added 6 November 2026. Rebase the candidate from its base (main at 2061055) onto the current main. The candidate's
+      `.gitignore` is a whole-file copy made from the old base; your new lines (the GAIS `.bin` files and
+      `src/GAIS/OUTLANDISH_01/ycruncher_digits/`) must survive.
+  (e) Added 6 November 2026. Your commit f1883df (5 November 2026) added `pyahocorasick` to `DIRECT_PACKAGES` in
+      install_upgrade_dependencies_into_venv.bat. If it is installed, the venv changes, and MHUP-A's environment freeze
+      records it at Approval 1. Claude will ask whether it is installed, and whether that dependency change is to be
+      recorded as approved.
+  (f) Added 6 November 2026. `src/GAIS/` (your thought experiments) now sits inside `src/`, which MHUP-A's code closure
+      covers. Claude will ask whether to move it out of `src/` before Approval 1, or have the closure leave it out by a
+      reviewed rule. This is a question for you, not a decision.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
@@ -373,6 +384,21 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - What: exchange/EX_149_Claude/MHUP1_design_amendment_A1_draft.md (sections 1-5). Its section 6 records
   your other decision: the corrective scoring run after the Mode H seal is MHUP-B's, by the route stated
   there. When approved, the register records A1 and the integrated package carries it.
+
+## R-022  The ChatGPT reviewer chat ended without a handover (6 November 2026): the new reviewer's takeover
+
+- Asked: the owner, 6 November 2026 ("chatgpt has just permanently died ... without producing an updated handover doc").
+- Status: OPEN until a new ChatGPT reviewer chat has taken over and you have accepted its takeover check.
+- What: Claude, as the surviving team member, wrote the following on your instruction, in exchange/HANDOVER_2026_11_06/:
+  - Claude's own handover delta H-1 v1r9 and its blurb;
+  - the reviewer handover H-2 v1r9 (reconstructed from H-2 v1r8 and EX_141-EX_152, with the reviewer's rights carried
+    unchanged);
+  - the reviewer's blurb.
+
+  H-2 v1r9 is not the reviewer's own work, so the new reviewer must verify it against the repository before it relies on it.
+  The new reviewer's first task is that takeover check. Its first review is the integrated MHUP-A install package.
+  The handovers go into doc/HANDOVER/ in the next documentation package, with register v0.25.
+- When: before the integrated MHUP-A package is sent for review.
 
 ## Standing reminders
 

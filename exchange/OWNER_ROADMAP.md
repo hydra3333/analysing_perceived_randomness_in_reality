@@ -2,8 +2,9 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 4 November 2026 (afternoon): the staged Claude handover (HO-2) COMPLETE; the replacement Claude
-chat accepted and normal work authorised (option (a)); the direction document v0.3r1 installed at dfc2d13.
+Last updated: 6 November 2026: the ChatGPT reviewer chat ended without a handover. Claude wrote the handovers for both
+chats (exchange/HANDOVER_2026_11_06/; reminder R-022). MHUP-A: slice 1 and slice 2 PASS, A1 ratified, nothing installed.
+(Earlier, 4 November 2026: HO-2 complete; the direction document v0.3r1 installed at dfc2d13.)
 Plain-English direction: doc/Direction_for_operational_procedures_v0_3r1.md (v0.2r1 kept as history);
 the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
@@ -223,12 +224,16 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            as candidate v1r2 (570 tests, both Pythons) and sent as EX_151.
            DONE (5 November 2026): ChatGPT's EX_152: slice 2 PASS (candidate v1r2), A1 recorded as ratified;
            the integrated MHUP-A install package may now be prepared for its own review.
-           NOW: your Claude Code runs of inbox/TASK_T021.md and TASK_T022.md (v1r1 and v1r2 on Windows; their
-           reports are still to come and are needed before integration); then the integrated install
-           package (slice 1 + slice 2, A1 cited) and its review;
-           then the integrated install package with its rehearsals and T016. Installing it, its Windows
-           rehearsal and MHUP-B each wait for your separate go. A ChatGPT reviewer handover is considered later, separately. The
-           planning dates above are unchanged; FB-1 applies.
+           6 November 2026: the ChatGPT reviewer chat reached its limit without a handover; Claude wrote H-1 v1r9
+           (a delta), H-2 v1r9 and both blurbs (exchange/HANDOVER_2026_11_06/; R-022).
+           NOW:
+           (1) your Claude Code runs of inbox/TASK_T021.md and TASK_T022.md (v1r1 and v1r2 on Windows). Their
+               reports are still to come and are needed before integration.
+           (2) Start a new ChatGPT reviewer chat with the H-2 v1r9 blurb, and accept its takeover check.
+           (3) The integrated install package (slice 1 + slice 2, A1 cited, rebased onto the current main;
+               reminder R-020 (a)-(f)), with its rehearsals and T016, and its review by the new reviewer.
+           Installing it, its Windows rehearsal and MHUP-B each wait for your separate go. The planning dates
+           above are unchanged; FB-1 applies.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored
