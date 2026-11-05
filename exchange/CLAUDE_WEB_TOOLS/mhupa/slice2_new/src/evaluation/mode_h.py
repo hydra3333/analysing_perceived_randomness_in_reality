@@ -334,6 +334,35 @@ def _verify_ledger(game_id: str, members, collected: dict, raw: bytes, scores: l
                            'the drawn numbers it records (a tampered or foreign line); nothing is completed')
 
 
+def _resumed_scoring_plan(path: Path, started: dict, expected: dict, game_id: str, batch_id: str) -> dict:
+    """EX_150 B05: on a resume, the scoring plan on disk must be the one SCORING_STARTED froze - canonical bytes whose
+    digest is the marker's scoring_plan_digest - and equal, field for field, to the plan rebuilt from the frozen
+    context (study plan, roster, cohort, grids, families, measures, declared tests, selected forecasts); its
+    search-log row must be this attempt's MODE_H_REPORT row naming that plan. Checked before any outcome read or write."""
+    if not path.is_file() or path.is_symlink():
+        raise ModeHRefused('the attempt\'s scoring plan is missing or not a plain file')
+    raw = path.read_bytes()
+    try:
+        rec = json.loads(raw.decode('ascii'))
+    except (ValueError, UnicodeDecodeError):
+        raise ModeHRefused('the scoring plan record is not valid JSON') from None
+    if type(rec) is not dict or canonical(rec) != raw:
+        raise ModeHRefused('the scoring plan record is not its canonical bytes')
+    if record_digest(rec) != started.get('scoring_plan_digest'):
+        raise ModeHRefused('the scoring plan is not the one SCORING_STARTED froze (its digest differs); nothing re-scored')
+    if {k: v for k, v in rec.items() if k != 'search_log_row'} != expected:
+        raise ModeHRefused('the scoring plan does not match the frozen study (plan, roster, cohort, grids, families, '
+                           'measures, tests or selected forecasts differ); nothing re-scored')
+    n, rows = rec.get('search_log_row'), RP.search_rows()
+    if type(n) is not int or not 1 <= n <= len(rows):
+        raise ModeHRefused('the scoring plan names no search-log row')
+    row = rows[n - 1]
+    if (row.get('row_type'), row.get('game_id'), row.get('batch_id'), row.get('attempt_id'), row.get('plan_digest')) != (
+            'MODE_H_REPORT', game_id, batch_id, expected['attempt_id'], record_digest(expected)):
+        raise ModeHRefused(f'search-log row {n} is not this attempt\'s MODE_H_REPORT row for this scoring plan')
+    return rec
+
+
 def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policies_on_file: int, environment: dict) -> dict:
     """The one Mode H score attempt of a game, resumable (5.2). Returns what was written and the report paths."""
 
@@ -384,6 +413,17 @@ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policie
     selected = sorted([k[0], k[1], k[2], c['forecast_content_digest'], c['freeze_receipt_digest']]
                       for k, c in collected['cells'].items() if c['valid'])
     tests = RP.declared_tests(game_id, len(tracks), len(members))
+
+    def plan_for(attempt: str) -> dict:
+        """The scoring plan of an attempt, from the frozen context alone (EX_150 B05: rebuilt on every resume)."""
+        return {'schema': RP.SCORING_PLAN_SCHEMA, 'attempt_id': attempt, 'game_id': game_id, 'mode': 'WF',
+                'evidence_tier': RW.MODE_H_TIER, 'batch_id': batch_id, 'window_first': first, 'window_last': last,
+                'plan_digest': record_digest(plan), 'cohort_digest': plan['cohort_digest'],
+                'study_manifest_sha256': plan['study_manifest_sha256'], 'roster_digest': roster,
+                'grid_digest': grid_digest, 'family_ids': [f['family_id'] for f in families],
+                'measures': RP.STAGE2, 'declared_tests': tests, 'selected_forecasts': selected,
+                'evaluator_version': RP.EVALUATOR_VERSION,
+                'receipt_selection_policy': 'EARLIEST_FROZEN_AT_UTC_EQUAL_CONTENT_DIGESTS'}
     started = OR.marker(root, game_id, batch_id, 'SCORING_STARTED')
     if started is not None:
         if started['roster_digest'] != roster:
@@ -392,20 +432,11 @@ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policie
             raise ModeHRefused('SCORING_STARTED names another plan')
         attempt_id = started['attempt_id']
         folder = RP.roots('MODE_H_BATCH')['scores'] / game_id / batch_id / attempt_id
-        sp_rec = json.loads((folder / 'scoring_plan.json').read_bytes().decode('ascii'))
-        if canonical(sp_rec) != (folder / 'scoring_plan.json').read_bytes():
-            raise ModeHRefused('the scoring plan record is not its canonical bytes')
+        sp_rec = _resumed_scoring_plan(folder / 'scoring_plan.json', started, plan_for(attempt_id), game_id, batch_id)
         progress(f'resuming attempt {attempt_id}')
     else:
         attempt_id = ATTEMPT + uuid.uuid4().hex
-        scoring_plan = {'schema': RP.SCORING_PLAN_SCHEMA, 'attempt_id': attempt_id, 'game_id': game_id, 'mode': 'WF',
-                        'evidence_tier': RW.MODE_H_TIER, 'batch_id': batch_id, 'window_first': first, 'window_last': last,
-                        'plan_digest': record_digest(plan), 'cohort_digest': plan['cohort_digest'],
-                        'study_manifest_sha256': plan['study_manifest_sha256'], 'roster_digest': roster,
-                        'grid_digest': grid_digest, 'family_ids': [f['family_id'] for f in families],
-                        'measures': RP.STAGE2, 'declared_tests': tests, 'selected_forecasts': selected,
-                        'evaluator_version': RP.EVALUATOR_VERSION,
-                        'receipt_selection_policy': 'EARLIEST_FROZEN_AT_UTC_EQUAL_CONTENT_DIGESTS'}
+        scoring_plan = plan_for(attempt_id)
         row = WF._append_search_row({'row_type': 'MODE_H_REPORT', 'utc': CP.utc_now(), 'game_id': game_id, 'mode': 'WF',
                                      'window_first': first, 'window_last': last, 'cohort_size': len(tracks),
                                      'cohort_digest': plan['cohort_digest'],
@@ -446,8 +477,10 @@ def score(game_id: str, *, echo=None, n1_runner=None, seed_line: str, n1_policie
                         {'schema': OR.MARKER_SCHEMAS['SCORE_COMPLETE'], 'batch_id': batch_id, 'game_id': game_id,
                          'attempt_id': attempt_id, 'plan_digest': record_digest(plan), 'score_ledger_sha256': ledger_sha,
                          'lines': len(scores) + len(ranks), 'utc': CP.utc_now()})
-    elif complete['score_ledger_sha256'] != ledger_sha or complete.get('attempt_id') != attempt_id:
-        raise ModeHRefused('SCORE_COMPLETE does not name this ledger and attempt')
+    elif (complete['score_ledger_sha256'], complete.get('attempt_id'), complete['plan_digest'], complete.get('lines'),
+          complete.get('game_id')) != (ledger_sha, attempt_id, record_digest(plan), len(scores) + len(ranks), game_id):
+        raise ModeHRefused('SCORE_COMPLETE does not name this game, attempt, plan, ledger digest and line count '
+                           '(EX_150 B05); nothing is written')
     # the report, from the accepted lines; no outcome read
     per_track, per_variant = RP.rebuild_from_ledgers(game_id, members, collected, scores, ranks)
     results, var_results, n1 = RP.measures_stage(game_id, per_track, per_variant, families, n1_runner, progress)

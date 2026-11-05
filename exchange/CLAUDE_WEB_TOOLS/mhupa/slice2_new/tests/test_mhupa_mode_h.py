@@ -824,6 +824,72 @@ class Pipeline(Base):
         self.assertEqual(len(self.search_rows('MODE_H_REPORT')), 1)
         self.assertEqual(res['attempt_id'], started['attempt_id'])
 
+    def test_a_resume_binds_the_frozen_scoring_plan_and_completion(self):
+        """EX_150 B05, on one started attempt: before publication, a scoring plan that is not the one SCORING_STARTED
+        froze, one altered with a matching forged digest, and one pointing at another search-log row each refuse with no
+        outcome read and no ledger; after SCORE_COMPLETE, a marker naming another plan or another line count refuses with
+        no report and no seal; restored, the same attempt completes deterministically."""
+        self.assertEqual(self.run_batch(), 0)
+        no_read = lambda: mock.patch.object(OREAD, 'read_outcomes', side_effect=AssertionError('an outcome was read'))
+        with mock.patch.object(OREAD, 'read_outcomes', side_effect=OSError('disk gone')):
+            with self.assertRaises(OSError):
+                self.score()
+        sm = OR.marker_path(self.proj, G, self.bid, 'SCORING_STARTED')
+        sm_good = sm.read_bytes()
+        started = json.loads(sm_good)
+        folder = WF.roots('MODE_H_BATCH')['scores'] / G / self.bid / started['attempt_id']
+        sp = folder / 'scoring_plan.json'
+        sp_good = sp.read_bytes()
+        plan_rec = json.loads(sp_good)
+        cases = [('another canonical plan under the frozen digest', dict(plan_rec, selected_forecasts=plan_rec['selected_forecasts'][1:]), False,
+                  'not the one SCORING_STARTED froze'),
+                 ('an altered plan with a matching forged digest', dict(plan_rec, selected_forecasts=plan_rec['selected_forecasts'][1:]), True,
+                  'does not match the frozen study'),
+                 ('another search-log row', dict(plan_rec, search_log_row=1), True, 'is not this attempt\'s MODE_H_REPORT row')]
+        for name, rec, forge_marker, msg in cases:
+            with self.subTest(name):
+                sp.write_bytes(canonical(rec))
+                if forge_marker:
+                    sm.write_bytes(canonical(dict(started, scoring_plan_digest=record_digest(rec))))
+                with no_read(), self.assertRaises(MH.ModeHRefused) as cm:
+                    self.score()
+                self.assertIn(msg, str(cm.exception))
+                self.assertFalse((folder / MH.SCORE_LEDGER).exists())
+                self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED'])
+                sp.write_bytes(sp_good)
+                sm.write_bytes(sm_good)
+        real = OR.write_marker
+
+        def crash_after_complete(root, game, b, name, rec):
+            raw = real(root, game, b, name, rec)
+            if name == 'SCORE_COMPLETE':
+                raise RuntimeError('power cut after SCORE_COMPLETE')
+            return raw
+        with mock.patch.object(OR, 'write_marker', crash_after_complete):
+            with self.assertRaises(RuntimeError):
+                self.score()
+        cm_path = OR.marker_path(self.proj, G, self.bid, 'SCORE_COMPLETE')
+        cm_good = cm_path.read_bytes()
+        complete = json.loads(cm_good)
+        reports = RP.roots()['reports'] / G
+        for name, change in (('another plan digest', {'plan_digest': 'f' * 64}), ('another line count', {'lines': complete['lines'] + 1})):
+            with self.subTest(name):
+                cm_path.write_bytes(canonical(dict(complete, **change)))
+                with no_read(), self.assertRaises(MH.ModeHRefused) as cm:
+                    self.score()
+                self.assertIn('SCORE_COMPLETE does not name this game, attempt, plan, ledger digest and line count', str(cm.exception))
+                self.assertEqual(self.markers(self.bid), ['BATCH_COMPLETE', 'SCORING_STARTED', 'SCORE_COMPLETE'])
+                self.assertFalse(reports.exists() and any(reports.iterdir()))
+        cm_path.write_bytes(cm_good)
+        ledger = (folder / MH.SCORE_LEDGER).read_bytes()
+        with no_read():
+            res = self.score()
+        self.assertEqual(res['attempt_id'], started['attempt_id'])
+        self.assertEqual(self.markers(self.bid)[-1], 'MODE_H_SEALED')
+        self.assertEqual((folder / MH.SCORE_LEDGER).read_bytes(), ledger)
+        self.assertEqual(sp.read_bytes(), sp_good)
+        self.assertEqual(len(self.search_rows('MODE_H_REPORT')), 1)
+
     def test_closure_change_after_the_plan_stops_every_step(self):
         target = self.proj / 'src' / 'methods' / '_common' / 'walk_forward.py'
         original = target.read_bytes()

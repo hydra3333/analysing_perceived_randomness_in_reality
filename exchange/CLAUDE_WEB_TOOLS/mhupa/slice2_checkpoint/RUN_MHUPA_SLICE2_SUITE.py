@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MHUPA_Slice2 (review slice 2 of the MHUP-A package): run all 569 current tests, module by module, and compare with the expected counts.
+"""MHUPA_Slice2 (review slice 2 of the MHUP-A package): run all 570 current tests, module by module, and compare with the expected counts.
 
 Claude, 5 November 2026 (from the slice 1 runner). Slice 2 adds six test modules: the updater v0.2 (syntax-tree identity and its offline
 self-test), the launchers and the byte-code-cache rule, the Mode H study end to end on a temporary project with an invented master
@@ -47,7 +47,7 @@ EXPECTED = [
     ('tests.test_e1r3_revision3', 8),
     ('tests.test_mhupa_updater_v0_2', 15),
     ('tests.test_mhupa_launchers', 10),
-    ('tests.test_mhupa_mode_h', 19),
+    ('tests.test_mhupa_mode_h', 20),
     ('tests.test_mhupa_process_check', 8),
     ('tests.test_mhupa_install_records', 8),
     ('tests.test_mhupa_method_mode_h_cli', 2),

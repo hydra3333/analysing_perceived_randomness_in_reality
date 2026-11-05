@@ -1,0 +1,39 @@
+# TASK_T022 overlay plan: MHUPA_Slice2_Review_v1r2 (EX_151) onto main.
+# Read by tools/cc_clone.py overlay --plan and verify-overlay --plan (v0.4), so that no path the runner's
+# permission list denies on a command line is ever typed. 33 REPLACE, 1 REMOVE; the other 37 overlay files are new.
+
+REPLACE .gitignore
+REPLACE Run_Experiment.bat
+REPLACE Run_Results_Updater.bat
+REPLACE src/evaluation/collect.py
+REPLACE src/evaluation/outcome_reader.py
+REPLACE src/evaluation/registry/FAMILY_REGISTRY_V1.json
+REPLACE src/evaluation/report.py
+REPLACE src/evaluation/report_writer.py
+REPLACE src/methods/E_001/multigame_e1.py
+REPLACE src/methods/E_001_Historical_Appearance_Frequency.py
+REPLACE src/methods/Method_Contract_Runner.py
+REPLACE src/methods/Method_Walk_Forward.py
+REPLACE src/methods/_common/contract_dispatch.py
+REPLACE src/methods/_common/contract_forecast.py
+REPLACE src/methods/_common/contract_receipts.py
+REPLACE src/methods/_common/contract_records.py
+REPLACE src/methods/_common/contract_runner.py
+REPLACE src/methods/_common/contract_task.py
+REPLACE src/methods/_common/contract_vocab.py
+REPLACE src/methods/_common/game_draws_reader.py
+REPLACE src/methods/_common/walk_forward.py
+REPLACE src/methods/contract_adapters/e_001.py
+REPLACE tests/test_code3_retirement.py
+REPLACE tests/test_e1r2_revision2.py
+REPLACE tests/test_e2r_dispatch.py
+REPLACE tests/test_e2r_runner.py
+REPLACE tests/test_e6_beta_bernoulli.py
+REPLACE tests/test_multigame_reader_contracts.py
+REPLACE tests/test_rel1_release.py
+REPLACE tests/test_t05_hardening.py
+REPLACE tests/test_wf1a_walk_forward.py
+REPLACE tests/test_wf1b_outcome_reader.py
+REPLACE tests/test_wf1b_static.py
+
+REMOVE src/results_master_v0_1.py

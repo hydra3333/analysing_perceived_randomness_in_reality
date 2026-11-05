@@ -36,6 +36,7 @@ T_RR = ['test_mhupa_mode_h.Pipeline.test_the_report_resumes_file_by_file']
 T_BL = ['test_mhupa_mode_h.Pipeline.test_a_bad_ledger_never_completes']
 T_OZ = ['test_mhupa_mode_h.OzLottoStudy']
 T_CO = ['test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_must_be_exactly_the_released_set']
+T_B5 = ['test_mhupa_mode_h.Pipeline.test_a_resume_binds_the_frozen_scoring_plan_and_completion']
 RL = 'src/methods/_common/release_records.py'
 
 MUTANTS = [
@@ -323,6 +324,18 @@ MUTANTS = [
      "        if e['entry_sequence'] > c['seq']:", "        if c['seq'] < 0:", T_IR),
     ('C01: the process table holds Python processes only (no non-Python ancestors)', PC,
      "        out.append(proc)\n    return out\n", "        if _is_python_name(name):\n            out.append(proc)\n    return out\n", T_PC),
+    # ---- EX_150 B05 (EX_151): the resumed scoring plan and an existing SCORE_COMPLETE bound to the frozen context
+    ('B05: the scoring plan digest frozen by SCORING_STARTED not compared', MH,
+     "    if record_digest(rec) != started.get('scoring_plan_digest'):", "    if False:", T_B5),
+    ('B05: the scoring plan not compared with the plan rebuilt from the frozen context', MH,
+     "    if {k: v for k, v in rec.items() if k != 'search_log_row'} != expected:", "    if False:", T_B5),
+    ('B05: the scoring plan\'s search-log row not checked', MH,
+     "    if (row.get('row_type'), row.get('game_id'), row.get('batch_id'), row.get('attempt_id'), row.get('plan_digest')) != (",
+     "    if False and (row.get('row_type'), row.get('game_id'), row.get('batch_id'), row.get('attempt_id'), row.get('plan_digest')) != (", T_B5),
+    ('B05: an existing SCORE_COMPLETE checked for its ledger and attempt only (v1r1)', MH,
+     "    elif (complete['score_ledger_sha256'], complete.get('attempt_id'), complete['plan_digest'], complete.get('lines'),\n"
+     "          complete.get('game_id')) != (ledger_sha, attempt_id, record_digest(plan), len(scores) + len(ranks), game_id):",
+     "    elif (complete['score_ledger_sha256'], complete.get('attempt_id')) != (ledger_sha, attempt_id):", T_B5),
 ]
 
 

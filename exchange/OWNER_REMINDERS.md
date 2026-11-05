@@ -367,8 +367,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
 - Asked: Claude, EX_149 (5 November 2026), after your in-principle choice of EX_148 B01 route (B).
-- Status: OPEN until ChatGPT's review of A1 and then your explicit final approval; until then design 5.2 as
-  ratified stands and the slice 2 code implementing A1 is a candidate, not an installed rule.
+- Status: DONE (5 November 2026): ChatGPT's EX_150 reviewed A1 favourably and you ratified it ("i hereby
+  authorise and ratify that A1"); the ratified record is exchange/MHUP1_design_amendment_A1_RATIFIED.md. Still to
+  do: the register and the design document record A1 in the next documentation package.
 - What: exchange/EX_149_Claude/MHUP1_design_amendment_A1_draft.md (sections 1-5). Its section 6 records
   your other decision: the corrective scoring run after the Mode H seal is MHUP-B's, by the route stated
   there. When approved, the register records A1 and the integrated package carries it.
