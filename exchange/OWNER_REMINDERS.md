@@ -424,12 +424,15 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - What:
   (a) Optional: clear the leftover junk from your local .git (about 900 MiB). Copy the .git folder first, then run
       git reflog expire --expire=now --all and git gc --prune=now.
+      DONE (6 November 2026, 11:27): the .git folder was copied to E:\TEMP\git_backup_before_gc; the local .git went from 982.94 MiB
+      to 48.64 MiB; fsck clean; the pull fast-forwarded to cf1c6d9. Keep the copy a few days, then delete it.
   (b) Old commit IDs cited in records before 6 November 2026, 11:25, are translated with commit-map.txt. Register v0.26 cites
       the folder.
   (c) Keep E:\TEMP\repo_before_cleanup.bundle (the only copy of the old history) until you decide otherwise. A second drive is
       advisable.
   (d) The follow-on handover to your OUTLANDISH (GAIS) ChatGPT chat: the GAIS move, the ignore rules, this clean-up, and a
-      recommended ignored folder for large generated files under GAIS/OUTLANDISH_01/. Claude writes it when you ask.
+      recommended ignored folder for large generated files under GAIS/OUTLANDISH_01/. Done by the owner with the ChatGPT
+      reviewer chat (6 November 2026); the OUTLANDISH chat's confirmation is awaited.
 - When: any time; none of it blocks the integrated MHUP-A package.
 
 ## Standing reminders
