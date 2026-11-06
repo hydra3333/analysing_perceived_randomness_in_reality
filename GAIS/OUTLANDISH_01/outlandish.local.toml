@@ -36,7 +36,7 @@ logs_dir = 'logs'
 
 [settings.generator]
 # y-cruncher task decomposition, not a strict operating-system thread limit.
-threads = 4
+threads = 12
 # Existing 10^10 safety guard remains: RAM >=5e9 refused until reviewed.
 mode = 'auto'
 memory_gib = 16
@@ -102,10 +102,10 @@ verified_utc = '2026-11-06T05:13:33Z'
 
 [state.active.gamma]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_gamma_10_to_6.bin'
-digits = 1000000
-sha256 = 'e067b10a587282928f78027e340f2ac53f17251fe554b32c1b5580c58b8f9b99'
-verified_utc = '2026-11-06T04:13:48Z'
+file = 'digits_gamma_10_to_9.bin'
+digits = 1000000000
+sha256 = '82a1ed270f9494fb01d214b1e34156d29f0b1d62b3c586d87740ea80302d919a'
+verified_utc = '2026-11-06T05:54:57Z'
 
 [state.active.lemniscate]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
@@ -143,4 +143,11 @@ file = 'digits_log2_10_to_6.bin'
 digits = 1000000
 sha256 = '976abdcf3118c383c32ff6b7111266ed248d79dafe26ea8600dff7adc02c23a6'
 verified_utc = '2026-11-06T04:13:46Z'
+
+[state.pending_retirement.gamma]
+# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
+file = 'digits_gamma_10_to_6.bin'
+digits = 1000000
+sha256 = 'e067b10a587282928f78027e340f2ac53f17251fe554b32c1b5580c58b8f9b99'
+verified_utc = '2026-11-06T04:13:48Z'
 # --- END OUTLANDISH GENERATED STATE ---

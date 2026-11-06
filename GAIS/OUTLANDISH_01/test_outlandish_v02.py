@@ -100,6 +100,17 @@ class V02SafeguardTests(unittest.TestCase):
         self.assertEqual(done.returncode, code, f'RC {done.returncode}, expected {code}\n{result}')
         return result
 
+    def set_auto_retirement(self, enabled: bool):
+        current = self.config.read_text(encoding='utf-8')
+        desired = 'delete_superseded = ' + ('true' if enabled else 'false')
+        if 'delete_superseded = true' in current:
+            current = current.replace('delete_superseded = true', desired)
+        elif 'delete_superseded = false' in current:
+            current = current.replace('delete_superseded = false', desired)
+        else:
+            raise AssertionError('synthetic test config lacks retirement setting')
+        self.config.write_text(current, encoding='utf-8')
+
     def _put(self, name: str, payload: bytes):
         self.digits.mkdir(parents=True, exist_ok=True)
         path = self.digits / name
@@ -218,12 +229,15 @@ class V02SafeguardTests(unittest.TestCase):
         self.assertIn('active=digits_e_33_digits.bin', self.run_it('outlandish_artifacts.py', 'status'))
 
     def test_verified_promotion_explicit_retire_and_recovery(self):
+        # Deliberately disable auto-retirement to exercise the manual path.
+        self.set_auto_retirement(False)
         p33 = self._put('digits_e_33_digits.bin', E40[:33])
         self._register('e', p33)
         p40 = self._put('digits_e_40_digits.bin', E40)
         self._register('e', p40)
         self.assertIn('pending_retire=digits_e_33_digits.bin', self.run_it('outlandish_artifacts.py', 'status'))
         self.assertTrue(p33.exists())
+        self.set_auto_retirement(True)
         self.run_it('outlandish_artifacts.py', 'retire', '--constant', 'e')
         self.assertTrue(p33.exists())
         self.run_it('outlandish_artifacts.py', 'retire', '--constant', 'e', '--apply', '--confirm-idle')
@@ -232,6 +246,7 @@ class V02SafeguardTests(unittest.TestCase):
         self.assertIn('pending_retire=NONE', self.run_it('outlandish_artifacts.py', 'status'))
         # Simulate interrupted delete after unlink, before durable TOML state update.
         p50 = self._put('digits_e_50_digits.bin', E40 + b'\x00'*10)
+        self.set_auto_retirement(False)
         self._register('e', p50)
         p40.unlink()
         self.assertIn('RECO', self.run_it('outlandish_artifacts.py', 'recover-retirement', '--constant', 'e'))
@@ -240,6 +255,7 @@ class V02SafeguardTests(unittest.TestCase):
         self.assertTrue(p50.exists())
 
     def test_promotion_after_partial_recovery_refused(self):
+        self.set_auto_retirement(False)
         p33 = self._put('digits_e_33_digits.bin', E40[:33])
         self._register('e', p33)
         p40 = self._put('digits_e_40_digits.bin', E40)
@@ -248,6 +264,100 @@ class V02SafeguardTests(unittest.TestCase):
         report = self._register('e', p50, code=2)
         self.assertIn('unresolved pending retirement', report)
         self.assertTrue(p50.exists())
+
+    def test_automatic_retirement_after_verified_promotion(self):
+        # The setting is TRUE by default in the synthetic TOML, as on the PC.
+        p33 = self._put('digits_e_33_digits.bin', E40[:33])
+        self._register('e', p33)
+        p40 = self._put('digits_e_40_digits.bin', E40)
+        output = self._register('e', p40)
+        self.assertIn('AUTO-RETIRED e:', output)
+        self.assertFalse(p33.exists())
+        self.assertTrue(p40.exists())
+        status = self.run_it('outlandish_artifacts.py', 'status')
+        self.assertIn('active=digits_e_40_digits.bin', status)
+        self.assertIn('pending_retire=NONE', status)
+        self.assertIn('AUDIT PASS', self.run_it('outlandish_artifacts.py', 'audit'))
+
+    def test_auto_retirement_disabled_preserves_old(self):
+        self.set_auto_retirement(False)
+        p33 = self._put('digits_e_33_digits.bin', E40[:33])
+        self._register('e', p33)
+        p40 = self._put('digits_e_40_digits.bin', E40)
+        output = self._register('e', p40)
+        self.assertIn('automatic deletion disabled in TOML', output)
+        self.assertTrue(p33.exists() and p40.exists())
+        self.assertIn('pending_retire=digits_e_33_digits.bin',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+
+    def test_failed_candidate_leaves_predecessor_untouched(self):
+        p33 = self._put('digits_e_33_digits.bin', E40[:33])
+        self._register('e', p33)
+        bad = self._put('digits_e_40_digits.bin', EPREFIX + b'\x09' + E40[33:])
+        output = self._register('e', bad, code=2)
+        self.assertIn('differs from existing verified active prefix', output)
+        self.assertTrue(p33.exists() and bad.exists())
+        self.assertIn('active=digits_e_33_digits.bin',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+        self.assertIn('pending_retire=NONE',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+
+    def test_auto_retirement_delete_failure_is_nonfatal(self):
+        # Inject unlink failure, then ensure promotion is durable and the
+        # predecessor remains recorded, not silently forgotten.
+        p33 = self._put('digits_e_33_digits.bin', E40[:33])
+        self._register('e', p33)
+        p40 = self._put('digits_e_40_digits.bin', E40)
+        from textwrap import dedent
+        injected = dedent('''            import pathlib
+            import outlandish_artifacts as a
+            old_unlink = pathlib.Path.unlink
+            def refuse_old(path, *args, **kwargs):
+                if path.name == 'digits_e_33_digits.bin':
+                    raise PermissionError('simulated file in use')
+                return old_unlink(path, *args, **kwargs)
+            pathlib.Path.unlink = refuse_old
+            a.promote_verified('e', a.digit_path('digits_e_40_digits.bin'), 40, HASH)
+        ''').replace('HASH', repr(hashlib.sha256(E40).hexdigest()))
+        done = subprocess.run([sys.executable, '-c', injected], cwd=self.work,
+                              capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertIn('AUTO-RETIRE incomplete', done.stdout + done.stderr)
+        self.assertTrue(p33.exists() and p40.exists())
+        self.assertIn('active=digits_e_40_digits.bin',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+        self.assertIn('pending_retire=digits_e_33_digits.bin',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+        self.run_it('outlandish_artifacts.py', 'retire', '--constant', 'e', '--apply', '--confirm-idle')
+        self.assertFalse(p33.exists())
+
+    def test_auto_retirement_interrupted_registry_write_recoverable(self):
+        p33 = self._put('digits_e_33_digits.bin', E40[:33])
+        self._register('e', p33)
+        p40 = self._put('digits_e_40_digits.bin', E40)
+        from textwrap import dedent
+        injected = dedent('''            import outlandish_artifacts as a
+            original = a.save_generated_state
+            calls = [0]
+            def fail_second(active, pending):
+                calls[0] += 1
+                if calls[0] == 2:
+                    raise OSError('simulated registry write failure')
+                return original(active, pending)
+            a.save_generated_state = fail_second
+            a.promote_verified('e', a.digit_path('digits_e_40_digits.bin'), 40, HASH)
+        ''').replace('HASH', repr(hashlib.sha256(E40).hexdigest()))
+        done = subprocess.run([sys.executable, '-c', injected], cwd=self.work,
+                              capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        self.assertIn('AUTO-RETIRE incomplete', done.stdout + done.stderr)
+        self.assertFalse(p33.exists())
+        self.assertTrue(p40.exists())
+        self.assertIn('pending_retire=digits_e_33_digits.bin',
+                      self.run_it('outlandish_artifacts.py', 'status'))
+        self.run_it('outlandish_artifacts.py', 'recover-retirement', '--constant', 'e',
+                    '--apply', '--confirm-idle')
+        self.assertIn('pending_retire=NONE', self.run_it('outlandish_artifacts.py', 'status'))
 
     def test_scanner_uses_active_prefix_not_arbitrary_binary(self):
         # Invented one-draw fixture, unrelated to the real pre-holdout dataset.

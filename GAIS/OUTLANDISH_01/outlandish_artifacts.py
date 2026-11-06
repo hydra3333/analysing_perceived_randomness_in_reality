@@ -290,11 +290,15 @@ def _candidate_valid(path: Path, constant: str, digits: int) -> str:
 
 
 def promote_verified(constant: str, file: Path, digits: int, sha256: str) -> None:
-    """Promote an already verified binary under exclusive lock; never deletes old.
+    """Verify and publish a larger active file, then optionally retire its predecessor.
 
-    All expensive I/O checks are deliberately repeated before promotion.
-    This lets a completed synthetic generator register and a manual import share
-    one interface. A failed promotion leaves the previous state untouched.
+    Promotion occurs under the shared lock. When retention enables automatic
+    deletion, the *already fully verified* former active file is unlinked only
+    AFTER the new registry state has been atomically published. The active file
+    is never a deletion target. An auto-retirement failure is nonfatal to an
+    otherwise successful promotion; the pending record is retained for manual
+    retirement/recovery. This protects a complete candidate from being treated
+    as a failed generation merely because predecessor cleanup had an issue.
     """
     with exclusive_lock():
         cfg = load_config()
@@ -309,10 +313,13 @@ def promote_verified(constant: str, file: Path, digits: int, sha256: str) -> Non
         if verified_hash != sha256:
             raise ArtifactPolicyError('candidate SHA-256 changed before promotion')
         prior = cfg.active.get(constant)
+        old = None
         if prior is not None:
             if digits <= prior['digits']:
                 raise ArtifactPolicyError('replacement must be strictly longer than current verified active')
             old = cfg.digit_file(prior['file'], require_existing=True)
+            if old == candidate:
+                raise ArtifactPolicyError('candidate is the previously active file')
             if _candidate_valid(old, constant, prior['digits']) != prior['sha256']:
                 raise ArtifactPolicyError('existing active binary fails independent re-verification')
             _compare_prefix(candidate, old)
@@ -323,9 +330,42 @@ def promote_verified(constant: str, file: Path, digits: int, sha256: str) -> Non
         if prior:
             pending[constant] = prior
         save_generated_state(active, pending)
-    print(f'PROMOTED {constant}: {digits:,} digits, {file.name}, SHA-256 {sha256}')
-    if prior:
-        print(f'PENDING RETIREMENT {constant}: {prior["file"]}; no deletion performed')
+        print(f'PROMOTED {constant}: {digits:,} digits, {file.name}, SHA-256 {sha256}', flush=True)
+        if prior:
+            if not cfg.retention['delete_superseded']:
+                print(f'PENDING RETIREMENT {constant}: {prior["file"]}; '
+                      'automatic deletion disabled in TOML', flush=True)
+            else:
+                # All candidate/prior content checks above ran with the same
+                # exclusive lock held. Reconfirm the published identity and
+                # path safety without re-reading enormous already-verified files.
+                try:
+                    current = load_config()
+                    if (current.active.get(constant) != active[constant] or
+                            current.pending.get(constant) != prior):
+                        raise ArtifactPolicyError('registry changed after publication')
+                    if (old is None or _unsafe_link(old) or not old.is_file() or
+                            old.stat().st_size != prior['digits'] or
+                            _unsafe_link(candidate) or not candidate.is_file() or
+                            candidate.stat().st_size != digits):
+                        raise ArtifactPolicyError('predecessor/successor path changed after verification')
+                    # Crash here leaves pending_retirement referring to the
+                    # missing file. The existing recover-retirement command
+                    # safely clears that marker after checking active SHA.
+                    old.unlink()
+                    remaining = dict(current.pending)
+                    del remaining[constant]
+                    save_generated_state(dict(current.active), remaining)
+                except Exception as exc:
+                    print(f'WARNING: {constant} promoted, but AUTO-RETIRE incomplete '
+                          f'for {prior["file"]}: {exc}. Check status; if the old '
+                          'file still exists use retire, otherwise preview '
+                          'recover-retirement. The new active binary is retained.',
+                          file=sys.stderr, flush=True)
+                else:
+                    print(f'AUTO-RETIRED {constant}: removed superseded '
+                          f'{old.name} ({prior["digits"]:,} bytes); '
+                          'active successor preserved', flush=True)
 
 
 def import_verified(constant: str, source: Path, digits: int, expected_sha256: str, apply: bool,
