@@ -6,6 +6,7 @@ lottery data, no third-party calculator and no primary-project paths are opened.
 """
 from __future__ import annotations
 import hashlib
+import json
 import os
 from pathlib import Path
 import shutil
@@ -19,6 +20,61 @@ FILES = ('outlandish_config.py', 'outlandish_artifacts.py',
          'outlandish_big_constants.py', 'outlandish_powerball_stage_a.py')
 EPREFIX = bytes(int(c) for c in '27182818284590452353602874713526')
 E40 = bytes(int(c) for c in '2718281828459045235360287471352662497757')
+def synthetic_test_toml(external_root: Path) -> str:
+    """Self-contained, empty registry and stable settings for every test.
+
+    Deliberately NEVER read or copy the actual user's outlandish.local.toml:
+    its [state.active] entries are real registry records and its user settings
+    may change independently of this regression suite.
+    """
+    # JSON's double-quoted escaping is also valid for a TOML basic string,
+    # including Windows backslashes and non-ASCII paths.
+    path_value = json.dumps(str(external_root), ensure_ascii=True)
+    return f"""# Synthetic OUTLANDISH_01 test configuration; NOT a production registry.
+[settings.storage]
+# USER COMMENT preserved
+# Absolute parent of ALL generated, potentially large files.
+main_root = {path_value}
+
+# Parent: main_root
+artifact_dir = 'large_artifacts'
+
+# Parent: artifact_dir
+digits_dir = 'digits'
+
+# Parent: artifact_dir
+scratch_dir = 'scratch'
+
+# Parent: artifact_dir
+staging_dir = 'staging'
+
+# Parent: artifact_dir
+results_dir = 'results'
+
+# Parent: artifact_dir
+logs_dir = 'logs'
+
+[settings.generator]
+threads = 4
+mode = 'auto'
+memory_gib = 16
+ycruncher_verify_output = false
+
+[settings.scanner]
+chunk_bytes = 4000000
+progress_seconds = 5
+
+[settings.retention]
+delete_superseded = true
+
+# Parent: settings.storage.digits_dir
+# --- BEGIN OUTLANDISH GENERATED STATE ---
+[state.active]
+
+[state.pending_retirement]
+# --- END OUTLANDISH GENERATED STATE ---
+"""
+
 
 
 class V02SafeguardTests(unittest.TestCase):
@@ -31,11 +87,8 @@ class V02SafeguardTests(unittest.TestCase):
         self.external = self.tmp / 'G External Data (simulated)'
         for item in FILES:
             shutil.copy2(HERE / item, self.work / item)
-        template = (HERE / 'outlandish.local.toml').read_text(encoding='utf-8')
-        template = template.replace(r'G:\OUTLANDISH_01', str(self.external))
-        assert 'G:\\OUTLANDISH_01' not in template
-        template = template.replace('# Absolute parent of ALL generated, potentially large files.',
-                                    '# USER COMMENT preserved\n# Absolute parent of ALL generated, potentially large files.')
+        # Never incorporate production settings or registered binary records.
+        template = synthetic_test_toml(self.external)
         self.config = self.work / 'outlandish.local.toml'
         self.config.write_text(template, encoding='utf-8')
         self.digits = self.external / 'large_artifacts' / 'digits'
@@ -60,6 +113,17 @@ class V02SafeguardTests(unittest.TestCase):
                            '--source', source, '--digits', str(path.stat().st_size),
                            '--expected-sha256', hashlib.sha256(path.read_bytes()).hexdigest(),
                            '--apply', '--confirm-idle', *(['--delete-source'] if delete else []), code=code)
+
+    def test_test_fixture_is_independent_of_real_toml(self):
+        # The root file can hold 5+ registered binaries or user-edited settings.
+        # All tests must instead use the fixed synthetic TOML above.
+        local_file = HERE / 'outlandish.local.toml'
+        original = local_file.read_bytes() if local_file.exists() else None
+        self.assertEqual(self.config.read_text(encoding='utf-8'),
+                         synthetic_test_toml(self.external))
+        self.assertNotIn('[state.active.pi]', self.config.read_text(encoding='utf-8'))
+        self.assertIn('0 active constants', self.run_it('outlandish_artifacts.py', 'validate'))
+        self.assertEqual(local_file.read_bytes() if local_file.exists() else None, original)
 
     def test_empty_registry_comment_preservation_and_paths(self):
         self.assertIn('0 active constants', self.run_it('outlandish_artifacts.py', 'validate'))
