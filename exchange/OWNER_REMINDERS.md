@@ -380,6 +380,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       DECIDED (owner, 6 November 2026, GAIS-1): "GAIS has been moved up alongside src" - a top-level GAIS/ folder, outside
       MHUP-A's code closure. The y-cruncher program is to be untracked by .gitignore and kept on disk. DONE once the
       owner's commit reaches GitHub and Claude has checked it. The integrated package then rebases onto that main.
+      DONE (6 November 2026): the owner's commit 6b99029 (now 9d28b9f after the history clean-up, R-023) moved GAIS to the top
+      level, and its .gitignore untracks y-cruncher.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
@@ -413,6 +415,22 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   The new reviewer's first task is that takeover check. Its first review is the integrated MHUP-A install package.
   The handovers go into doc/HANDOVER/ in the next documentation package, with register v0.25.
 - When: before the integrated MHUP-A package is sent for review.
+
+## R-023  The GAIS history clean-up (6 November 2026): what is left
+
+- Asked: the owner, 6 November 2026; done the same day (exchange/HISTORY_CLEANUP_2026_11_06/CLOSEOUT.md).
+- Status: OPEN for the optional items below only. The rewrite itself is DONE: main is 9d28b9f; 27 commits renumbered; the
+  crosswalk is commit-map.txt.
+- What:
+  (a) Optional: clear the leftover junk from your local .git (about 900 MiB). Copy the .git folder first, then run
+      git reflog expire --expire=now --all and git gc --prune=now.
+  (b) Old commit IDs cited in records before 6 November 2026, 11:25, are translated with commit-map.txt. Register v0.26 cites
+      the folder.
+  (c) Keep E:\TEMP\repo_before_cleanup.bundle (the only copy of the old history) until you decide otherwise. A second drive is
+      advisable.
+  (d) The follow-on handover to your OUTLANDISH (GAIS) ChatGPT chat: the GAIS move, the ignore rules, this clean-up, and a
+      recommended ignored folder for large generated files under GAIS/OUTLANDISH_01/. Claude writes it when you ask.
+- When: any time; none of it blocks the integrated MHUP-A package.
 
 ## Standing reminders
 
