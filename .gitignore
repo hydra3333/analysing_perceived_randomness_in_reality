@@ -240,6 +240,9 @@ results/real/development/wf_batches/**/attempts.jsonl
 # the report files in results/method_rankings/ and the search log are committed
 results/real/development/scores/
 
-# Constants files in the multi gigabyte range
-src/GAIS/**/*.bin
-src/GAIS/OUTLANDISH_01/ycruncher_digits/
+# GAIS - exclude large constants and generated binary/txt data
+/GAIS/**/*.bin
+# GAIS - generated decimal digits
+/GAIS/OUTLANDISH_01/ycruncher_digits/
+# GAIS - entire third-party y-cruncher distribution
+/GAIS/OUTLANDISH_01/y-cruncher v0.8.7.9547b/
