@@ -74,31 +74,31 @@ delete_superseded = true
 
 [state.active.pi]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_pi_10_to_6.bin'
-digits = 1000000
-sha256 = '86c06a17c6758e900d3f7b929dfe30b6bc07fcd451f05a658e66620f1eab4ebc'
-verified_utc = '2026-11-06T04:13:43Z'
+file = 'digits_pi_10_to_9.bin'
+digits = 1000000000
+sha256 = '2e633867ad0ed7d866bcc0b3defc29b7704d0808cf62bba1dee1935fc357316e'
+verified_utc = '2026-11-06T04:59:47Z'
 
 [state.active.phi]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_golden_ratio_10_to_6.bin'
-digits = 1000000
-sha256 = 'edf1d8d701a018408561fb42d25d8f22ffce0d2f857c2b552075ed763cecd449'
-verified_utc = '2026-11-06T04:13:44Z'
+file = 'digits_golden_ratio_10_to_9.bin'
+digits = 1000000000
+sha256 = '6be7059e971a6c710074682bfac76d415d1eff32c310bdb32c3c91283238d6d8'
+verified_utc = '2026-11-06T05:08:34Z'
 
 [state.active.e]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_e_10_to_6.bin'
-digits = 1000000
-sha256 = '8e51d39f83934ec9eaca70c5abaf280480ce3d038e6cced5bbf14f420c185b78'
-verified_utc = '2026-11-06T04:13:45Z'
+file = 'digits_e_10_to_9.bin'
+digits = 1000000000
+sha256 = '7371fbff9ebde7fc7eb6009ce1137c8ab865d4fcf03d8231d3a22a74afd56b29'
+verified_utc = '2026-11-06T05:09:52Z'
 
 [state.active.log2]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_log2_10_to_6.bin'
-digits = 1000000
-sha256 = '976abdcf3118c383c32ff6b7111266ed248d79dafe26ea8600dff7adc02c23a6'
-verified_utc = '2026-11-06T04:13:46Z'
+file = 'digits_log2_10_to_9.bin'
+digits = 1000000000
+sha256 = 'a9e86102914d564077c6fefcafc90dc27e9cad11af2bbc3159afebe1e4574f35'
+verified_utc = '2026-11-06T05:13:33Z'
 
 [state.active.gamma]
 # Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
@@ -115,4 +115,32 @@ sha256 = '2c7524c9a55f8f5aae5ac81a3e79e58f4a28fb3059b2ec251fee15ab4fb74d3f'
 verified_utc = '2026-11-06T04:45:40Z'
 
 [state.pending_retirement]
+
+[state.pending_retirement.pi]
+# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
+file = 'digits_pi_10_to_6.bin'
+digits = 1000000
+sha256 = '86c06a17c6758e900d3f7b929dfe30b6bc07fcd451f05a658e66620f1eab4ebc'
+verified_utc = '2026-11-06T04:13:43Z'
+
+[state.pending_retirement.phi]
+# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
+file = 'digits_golden_ratio_10_to_6.bin'
+digits = 1000000
+sha256 = 'edf1d8d701a018408561fb42d25d8f22ffce0d2f857c2b552075ed763cecd449'
+verified_utc = '2026-11-06T04:13:44Z'
+
+[state.pending_retirement.e]
+# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
+file = 'digits_e_10_to_6.bin'
+digits = 1000000
+sha256 = '8e51d39f83934ec9eaca70c5abaf280480ce3d038e6cced5bbf14f420c185b78'
+verified_utc = '2026-11-06T04:13:45Z'
+
+[state.pending_retirement.log2]
+# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
+file = 'digits_log2_10_to_6.bin'
+digits = 1000000
+sha256 = '976abdcf3118c383c32ff6b7111266ed248d79dafe26ea8600dff7adc02c23a6'
+verified_utc = '2026-11-06T04:13:46Z'
 # --- END OUTLANDISH GENERATED STATE ---
