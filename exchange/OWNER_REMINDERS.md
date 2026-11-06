@@ -371,9 +371,15 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       install_upgrade_dependencies_into_venv.bat. If it is installed, the venv changes, and MHUP-A's environment freeze
       records it at Approval 1. Claude will ask whether it is installed, and whether that dependency change is to be
       recorded as approved.
+      DECIDED (owner, 6 November 2026, DEP-1): "pyahocorasick i installed for an outlandish GAIS test and approved it. we
+      keep it." It is an approved dependency and installed in the venv, so MHUP-A's environment freeze records it at
+      Approval 1. Register v0.26 records DEP-1.
   (f) Added 6 November 2026. `src/GAIS/` (your thought experiments) now sits inside `src/`, which MHUP-A's code closure
       covers. Claude will ask whether to move it out of `src/` before Approval 1, or have the closure leave it out by a
       reviewed rule. This is a question for you, not a decision.
+      DECIDED (owner, 6 November 2026, GAIS-1): "GAIS has been moved up alongside src" - a top-level GAIS/ folder, outside
+      MHUP-A's code closure. The y-cruncher program is to be untracked by .gitignore and kept on disk. DONE once the
+      owner's commit reaches GitHub and Claude has checked it. The integrated package then rebases onto that main.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
