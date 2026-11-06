@@ -36,7 +36,7 @@ logs_dir = 'logs'
 
 [settings.generator]
 # y-cruncher task decomposition, not a strict operating-system thread limit.
-threads = 12
+threads = 4
 # Existing 10^10 safety guard remains: RAM >=5e9 refused until reviewed.
 mode = 'auto'
 memory_gib = 16
