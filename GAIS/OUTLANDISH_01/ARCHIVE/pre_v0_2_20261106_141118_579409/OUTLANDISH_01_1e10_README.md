@@ -1,4 +1,4 @@
-# OUTLANDISH_01 — 10^10 digit pipeline v2
+# OUTLANDISH_01 — 10^10 digit pipeline v2 + artifact safeguard v0.1
 
 Standalone, experimental Powerball search on pre-holdout draw copies. This software does not fetch lottery data, contact Lotterywest, change the main project registry, or touch project holdout/result sources.
 
@@ -15,14 +15,14 @@ Standalone, experimental Powerball search on pre-holdout draw copies. This softw
 
 Extract into your existing directory:
 
-`E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\src\GAIS\OUTLANDISH_01`
+`E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\GAIS\OUTLANDISH_01`
 
-Replace these two Python scripts with the supplied versions:
+After an independent review of this safeguard overlay and version check, update these programs:
 
 - `outlandish_big_constants.py` (new generation/conversion pipeline)
 - `outlandish_powerball_stage_a.py` (only new constant prefix identifiers; scan unchanged)
 
-Keep your existing `POWERBALL_preholdout_only.csv`, prior `.bin` files and `OUTLANDISH_01_results` intact. Activate your existing project virtual environment.
+Keep your existing `POWERBALL_preholdout_only.csv`, prior `.bin` files and `OUTLANDISH_01_results` intact until the separate explicit migration is reviewed. The new commands refuse to run with stranded digit binaries outside `large_artifacts/`. Activate your existing project virtual environment.
 
 ```
 python outlandish_big_constants.py self-test
@@ -57,9 +57,9 @@ Alternatively use `generate_1e10.cmd`, which runs the two commands *sequentially
 python outlandish_big_constants.py pipeline --constant pi --digits 10000000000 --threads 2 --run
 ```
 
-The output files are `digits_pi_10_to_10.bin` and `digits_golden_ratio_10_to_10.bin`, each **10,000,000,000 bytes** (10 GB decimal, about 9.31 GiB). At peak, also allow roughly 10 GB for uncompressed text, plus the disk-swap workspace, conversion temporary file, and OS/other application headroom. The generator checks only a lower bound for free disk, not y-cruncher's detailed storage needs.
+The output files are `large_artifacts/digits/digits_pi_10_to_10.bin` and `large_artifacts/digits/digits_golden_ratio_10_to_10.bin`, each **10,000,000,000 bytes** (10 GB decimal, about 9.31 GiB). At peak, also allow roughly 10 GB for uncompressed text, plus the disk-swap workspace, conversion temporary file, and OS/other application headroom. The generator checks only a lower bound for free disk, not y-cruncher's detailed storage needs.
 
-Each success leaves `ycruncher_digits\pi_10000000000_digits\` or `...\phi_10000000000_digits\` containing small y-cruncher stats/validation TXT files and `OUTLANDISH_01_verified.json`. The 10 GB plaintext file and the newly owned scratch folder are removed only after **CONVERSION PASS**, **VERIFY PASS**, identical SHA-256 hashes, and full reference-prefix comparison.
+Each success leaves `large_artifacts\intermediate\pi_10000000000_digits\` or `...\phi_10000000000_digits\` containing small y-cruncher stats/validation TXT files and `OUTLANDISH_01_verified.json`. The 10 GB plaintext file and the newly owned scratch folder are removed only after **CONVERSION PASS**, **VERIFY PASS**, identical SHA-256 hashes, and full reference-prefix comparison.
 
 If it fails at any stage, **leave the directory in place** for diagnosis: the script deliberately refuses to overwrite/re-use an existing output directory.
 
@@ -73,7 +73,7 @@ Or `scan_1e10.cmd`.
 
 - Uses the **433 eligible, pre-holdout-only Powerball draws** in the existing CSV, not fabricated examples.
 - Searches **all 10 billion digit-byte starting positions**, including odd alignments and chunk crossings, for P1/P2/P3 with FIXED2 ball representation.
-- Uses one scanner thread; prints time-gated progress and writes per-constant match/transition/summary files in a fresh results directory.
+- Uses one scanner thread; prints time-gated progress and writes per-constant match/transition/summary files in a fresh directory under `large_artifacts/large_results/`.
 - Based solely on your measured 10^9 performance (~27.6–27.9 s), linear scan-only extrapolation is ~4.6 min per constant. This does not predict y-cruncher disk-swap generation runtime, which could be much longer.
 
 ## Extra constants — your list items 1, 2, 4 and 8
@@ -111,3 +111,59 @@ To search another constant, explicitly name its `.bin` file to the existing scan
 ## Local synthetic test evidence
 
 `outlandish_big_constants.py self-test` passed for all six constants, including strict conversion/refusal cases. A separate synthetic mock-y-cruncher integration harness passed: successful end-to-end pipeline with cleanup for all six constants, requested 4 threads, true single-thread option, swap command preview, swap workspace cleanup, wrong-reference failure retaining plaintext, and wrong-digit-count failure retaining plaintext. The Powerball scanner's existing overlapping/chunk-crossing P1/P2/P3 self-test also passed. **No 10^10 real digit generation or 10^10 real scanner execution has been performed here.**
+
+## New artifact-safeguard v0.1 (2026-11-06)
+
+The root-level `.gitignore` rule `/GAIS/OUTLANDISH_01/large_artifacts/` was
+reported already updated by the owner. This overlay intentionally does not
+contain or modify `.gitignore`. Existing three GAIS exclusions remain.
+
+All generated digit binaries now default to `large_artifacts/digits/`;
+y-cruncher output and scratch to `large_artifacts/intermediate/`; Powerball
+scan reports to `large_artifacts/large_results/`. Paths are resolved relative
+to the scripts, not current working directory. Existing bare `--digits`
+filenames are resolved within `large_artifacts/digits/`. The independent
+pre-holdout development CSV is still a small local input in OUTLANDISH_01.
+
+**Before installing or running:** review the accompanying
+`ARTIFACT_SAFEGUARD_INSTALL_AND_REVIEW.md`; do not install blindly if local
+programs have changed since v2. No real lottery scans or digit generation
+were performed in developing this overlay.
+
+**Read-only inventory and artifact audit:**
+
+```bat
+python outlandish_artifacts.py inventory
+python outlandish_artifacts.py audit
+python outlandish_artifacts.py migrate
+```
+
+The inventory lists all visible `.py`, `.bat`, `.cmd`, `.ps1`, and `.sh` files
+under OUTLANDISH_01 and flags unreviewed entry points. It does not inspect
+archives or programs elsewhere. The artifact audit is strictly metadata-only.
+It returns nonzero if any known generated file is outside `large_artifacts/`,
+if any workspace file is >=10 MiB, or on unsafe links. This 10 MiB threshold
+is the initial proposed implementation value and can be revised by review.
+The narrow old tracked `Pi - Dec - Chudnovsky.txt` (<2 MiB) exception is
+intentional. Unknown large files are **not** moved automatically.
+
+**Explicit migration after closing any active writers** (moves only recognized
+`.bin` and finished digit text, verified SHA-256 and create-only):
+
+```bat
+python outlandish_artifacts.py migrate
+REM Review ALL proposed paths, hashes and unexpected unknown files first.
+python outlandish_artifacts.py migrate --apply --confirm-idle
+python outlandish_artifacts.py audit
+```
+
+The live programs run preflight and post-run audits (also on handled error
+paths) and refuse successful completion if violations remain. A power outage
+or killed process cannot guarantee an exit scan: run the audit again before
+restarting. The migration command itself is never implicitly executed by
+`generate`, `pipeline`, `convert`, `verify`, or `scan`. No Git rewrite is involved.
+
+The known Windows swap-mode administrator failure at 10^10 is **unchanged**;
+`generate_1e10.cmd` remains inappropriate until that separate calculation
+issue is resolved. The scanner remains single-threaded, FIXED2 and
+pre-holdout-only. No code here elevates permissions or changes holdout policy.

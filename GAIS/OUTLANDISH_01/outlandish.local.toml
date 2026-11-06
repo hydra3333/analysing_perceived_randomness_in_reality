@@ -1,0 +1,76 @@
+# OUTLANDISH_01 local settings + machine-maintained active-digit registry.
+# This file is MACHINE-SPECIFIC. Keep it out of Git.
+# Full-line, indented and trailing # comments are supported (TOML syntax).
+# Paths use single quotes to avoid escaping Windows backslashes.
+#
+# ================================================================
+# PART 1 — USER CONFIGURABLE
+# ================================================================
+
+[settings.storage]
+# Absolute parent of ALL generated, potentially large files.
+main_root = 'G:\OUTLANDISH_01'
+
+# Parent: main_root
+artifact_dir = 'large_artifacts'
+
+# Parent: artifact_dir
+# Verified active binary files only.
+digits_dir = 'digits'
+
+# Parent: artifact_dir
+# Calculator working files and source plaintext; safe to inspect after failures.
+scratch_dir = 'scratch'
+
+# Parent: artifact_dir
+# In-progress imports and not-yet-verified replacement binaries.
+staging_dir = 'staging'
+
+# Parent: artifact_dir
+# Scan result directories and bulk reports.
+results_dir = 'results'
+
+# Parent: artifact_dir
+# Small verification, performance and recovery records.
+logs_dir = 'logs'
+
+[settings.generator]
+# y-cruncher task decomposition, not a strict operating-system thread limit.
+threads = 4
+# Existing 10^10 safety guard remains: RAM >=5e9 refused until reviewed.
+mode = 'auto'
+memory_gib = 16
+# y-cruncher's own output verification (Python pipeline verification remains enabled).
+ycruncher_verify_output = false
+
+[settings.scanner]
+# One scanning thread; this controls I/O chunk size only.
+chunk_bytes = 4000000
+progress_seconds = 5
+
+[settings.retention]
+# Enables explicit, confirmed predecessor retirement; never authorizes
+# deletion on a generation/registration failure or merely from a config edit.
+delete_superseded = true
+
+# ================================================================
+# PART 2 — PROGRAM GENERATED — DO NOT EDIT
+# ================================================================
+# This area is replaced as one atomic update, preserving all text above.
+# Every [state.active.CONSTANT] file is a BASENAME ONLY.
+# Parent: main_root / artifact_dir / digits_dir
+# Example (commented; not a registered verified file):
+# [state.active.phi]
+# # Parent: settings.storage.digits_dir
+# file = 'digits_golden_ratio_10_to_9.bin'
+# digits = 1000000000
+# sha256 = '<verified SHA-256>'
+# verified_utc = '<timestamp>'
+#
+# Pending retirement entries are former active binaries. Their removal is
+# always an explicit operation requiring verified status and operator approval.
+# --- BEGIN OUTLANDISH GENERATED STATE ---
+[state.active]
+
+[state.pending_retirement]
+# --- END OUTLANDISH GENERATED STATE ---

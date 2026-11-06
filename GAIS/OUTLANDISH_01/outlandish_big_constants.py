@@ -20,6 +20,13 @@ import sys
 import tempfile
 import time
 
+from outlandish_config import load_config
+
+from outlandish_artifacts import (
+    WORKSPACE, require_artifact_path, guarded_call, artifact_directory,
+    promote_verified, active_digit_file,
+)
+
 CHUNK = 4 * 1024 * 1024
 WHITESPACE = b' \t\r\n'
 TABLE = bytes((v - 48) if 48 <= v <= 57 else 255 for v in range(256))
@@ -52,7 +59,7 @@ def get_exe(explicit: str | None) -> Path:
     if explicit:
         p = Path(explicit)
     else:
-        matches = sorted(Path.cwd().glob('y-cruncher*/y-cruncher.exe'))
+        matches = sorted(WORKSPACE.glob('y-cruncher*/y-cruncher.exe'))
         if len(matches) != 1:
             raise ValueError('expected one y-cruncher*/y-cruncher.exe beneath current folder; use --exe')
         p = matches[0]
@@ -67,11 +74,12 @@ def resolve_mode(mode: str, digits: int) -> str:
 
 
 def ycmd(exe: Path, const: str, digits: int, threads: int,
-         mode: str, memory_gib: int, scratch: Path | None) -> list[str]:
+         mode: str, memory_gib: int, scratch: Path | None,
+         ycruncher_verify_output: bool = False) -> list[str]:
     # Verified Windows convention: -dec gives digits AFTER the integer digit.
     cmd = [str(exe), 'custom', YCRUNCHER_CONSTANT[const],
            f'-dec:{digits - 1}', '-hex:0', '-od:1',
-           '-compress:0', '-verify:1', f'-mode:{mode}',
+           '-compress:0', '-verify:1' if ycruncher_verify_output else '-verify:0', f'-mode:{mode}',
            f'-TD:{threads}', '-PF:none' if threads == 1 else '-PF:taskqueue']
     if mode == 'swap':
         if scratch is None:
@@ -99,11 +107,12 @@ def expand_constants(const: str) -> tuple[str, ...]:
 
 def start_compute(args, const: str):
     exe = get_exe(args.exe)
-    root = args.output_root.resolve()
-    out = output_dir(root, const, args.digits)
+    root = artifact_directory('scratch')
+    out = require_artifact_path(output_dir(root, const, args.digits))
     mode = resolve_mode(args.mode, args.digits)
     scratch = out / '_outlandish_owned_swap' if mode == 'swap' else None
-    cmd = ycmd(exe, const, args.digits, args.threads, mode, args.memory_gib, scratch)
+    cmd = ycmd(exe, const, args.digits, args.threads, mode, args.memory_gib, scratch,
+               args.ycruncher_verify_output)
     print(f'[{const}] TARGET: {args.digits:,} digits INCLUDING integer digit.', flush=True)
     print(f'[{const}] OUTPUT FOLDER: {out}', flush=True)
     print(f'[{const}] MODE={mode.upper()} THREADS_REQUESTED={args.threads} '
@@ -111,15 +120,18 @@ def start_compute(args, const: str):
     if mode == 'swap':
         print(f'[{const}] DISK SWAP MODE: {args.memory_gib} GiB working memory; '
               f'scratch={scratch}; Windows may require elevation.', flush=True)
+    print(f'[{const}] Y-CRUNCHER OUTPUT VERIFICATION: '
+          f'{"ON" if args.ycruncher_verify_output else "OFF"} '
+          '(does not change independent Python pipeline checks)', flush=True)
     print(f'[{const}] COMMAND: {display_cmd(cmd)}', flush=True)
     if not args.run:
         print(f'[{const}] DRY RUN: nothing launched or modified.', flush=True)
         return None
     if out.exists() or out.is_symlink():
         raise FileExistsError(f'refusing existing output directory: {out}')
-    if root.exists() and root.is_symlink():
-        raise ValueError('refusing symlinked output root')
-    free = shutil.disk_usage(root if root.exists() else root.parent).free
+    root.mkdir(parents=True, exist_ok=True)
+    require_artifact_path(out)
+    free = shutil.disk_usage(root).free
     if free < args.digits * 2 + 2 * (1024 ** 3):
         raise ValueError(f'insufficient free space for text + binary + margin; '
                          f'free={free:,} bytes, minimum={args.digits * 2 + 2 * (1024 ** 3):,}')
@@ -168,20 +180,27 @@ def find_digit_text(out: Path, digits: int) -> Path:
 def pipeline(args) -> None:
     import json
     for const in expand_constants(args.constant):
-        destination = target_binary(const, args.digits, args.binary_root.resolve())
-        if destination.exists() or destination.is_symlink():
+        destination = require_artifact_path(target_binary(const, args.digits, artifact_directory('digits')))
+        staged_output = require_artifact_path(target_binary(const, args.digits, artifact_directory('staging')))
+        if destination.exists() or destination.is_symlink() or staged_output.exists() or staged_output.is_symlink():
             raise FileExistsError(f'refusing to overwrite existing binary: {destination}')
-        reference = args.reference
+        reference = require_artifact_path(args.reference) if args.reference is not None else None
         if reference is None:
-            candidate = (args.binary_root / target_binary(const, 1_000_000_000, Path('.')).name)
-            prior = (args.binary_root / target_binary(const, 1_000_000, Path('.')).name)
-            if candidate.is_file() and candidate.stat().st_size < args.digits:
-                reference = candidate
-            elif prior.is_file() and prior.stat().st_size < args.digits:
-                reference = prior
+            try:
+                previous, record = active_digit_file(const)
+            except ValueError as exc:
+                if 'no verified active binary' not in str(exc):
+                    raise
+            else:
+                if record['digits'] >= args.digits:
+                    raise ValueError(f'new {const} file must have MORE digits than registered active')
+                reference = previous
         if reference is None and args.digits >= 1_000_000_000:
-            raise ValueError(f'no prior .bin reference for {const}; generate a 1e6 smoke test first, '
-                             'or pass --reference explicitly. Cleanup requires a reference check at >=1e9.')
+            if args.run:
+                raise ValueError(f'no prior verified active .bin reference for {const}; '
+                                 'register/generate a verified smaller reference first. '
+                                 'Large generation requires a complete previous-prefix check.')
+            print(f'[{const}] DRY-RUN ONLY: no active reference yet; actual --run would refuse.', flush=True)
         if reference is not None:
             print(f'[{const}] REFERENCE (entire prefix checked): {reference}', flush=True)
         else:
@@ -194,10 +213,11 @@ def pipeline(args) -> None:
         out, generation_seconds, cmd, mode, scratch = result
         text_file = find_digit_text(out, args.digits)
         print(f'[{const}] Found digit text: {text_file.name}', flush=True)
-        opts = argparse.Namespace(input=[text_file], output=destination, reference=reference,
+        artifact_directory('staging', create=True)
+        opts = argparse.Namespace(input=[text_file], output=staged_output, reference=reference,
                                   constant=const, digits=args.digits, progress_seconds=args.progress_seconds)
         conversion_sha = convert(opts)
-        verification_sha = verify(argparse.Namespace(input_file=destination, reference=reference,
+        verification_sha = verify(argparse.Namespace(input_file=staged_output, reference=reference,
                                   constant=const, digits=args.digits, progress_seconds=args.progress_seconds))
         if conversion_sha != verification_sha:
             raise RuntimeError('conversion and re-read verification SHA-256 mismatch; text retained')
@@ -212,6 +232,7 @@ def pipeline(args) -> None:
             'generated_text_filename': text_file.name,
             'generated_text_bytes': text_file.stat().st_size,
             'threads_requested': args.threads, 'ycruncher_mode': mode,
+            'ycruncher_output_verification_enabled': args.ycruncher_verify_output,
             'ycruncher_command': cmd, 'verified_utc': datetime.now(timezone.utc).isoformat(),
             'cleanup_enabled': not args.keep_text,
         }
@@ -219,6 +240,13 @@ def pipeline(args) -> None:
         with report.open('x', encoding='utf-8') as h:
             json.dump(record, h, indent=2)
             h.write('\n')
+        # Verified source is in staging; create-only publish into digits (same
+        # configured volume). Promotion verifies the published file again and
+        # updates TOML atomically. Preserve sources if this fails.
+        artifact_directory('digits', create=True)
+        os.link(staged_output, destination)
+        promote_verified(const, destination, args.digits, verification_sha)
+        staged_output.unlink()
         if not args.keep_text:
             # Deletion is deliberately limited to the single selected source TXT
             # and the scratch folder freshly created under this run directory.
@@ -339,6 +367,8 @@ def convert(args):
                             next_report = now + args.progress_seconds
             if seen != args.digits:
                 raise ValueError(f'input has {seen:,} digits; expected {args.digits:,}')
+            dest.flush()
+            os.fsync(dest.fileno())
         # A hard link in the same NTFS filesystem is create-only; it cannot
         # overwrite a file created by a concurrent operator after the initial check.
         try:
@@ -447,19 +477,24 @@ def self_test():
 
 
 def main():
+    cfg = load_config()
     p = argparse.ArgumentParser(description=__doc__)
     sub = p.add_subparsers(dest='command', required=True)
     def add_generation_opts(g):
         g.add_argument('--digits', type=int, required=True,
                        help='total digits INCLUDING integer digit')
         g.add_argument('--constant', choices=CONSTANTS + ('both',), default='both')
-        g.add_argument('--threads', type=int, default=4,
+        g.add_argument('--threads', type=int, default=cfg.generator['threads'],
                        help='requested y-cruncher task-decomposition parallelism; default 4')
-        g.add_argument('--mode', choices=('auto', 'ram', 'swap'), default='auto',
+        g.add_argument('--mode', choices=('auto', 'ram', 'swap'), default=cfg.generator['mode'],
                        help='auto uses disk swap for >=5e9 digits; RAM below that')
-        g.add_argument('--memory-gib', type=int, default=16,
+        g.add_argument('--memory-gib', type=int, default=cfg.generator['memory_gib'],
                        help='y-cruncher memory setting in swap mode; default 16 GiB')
-        g.add_argument('--output-root', type=Path, default=Path('ycruncher_digits'))
+        g.add_argument('--ycruncher-verify-output',
+                       action=argparse.BooleanOptionalAction,
+                       default=cfg.generator['ycruncher_verify_output'],
+                       help='enable or disable y-cruncher base-conversion/output-digit '
+                            'verification (default OFF); Python pipeline checks remain enabled')
         g.add_argument('--exe', help='path to local y-cruncher executable')
         g.add_argument('--run', action='store_true',
                        help='launch y-cruncher; without this flag only preview')
@@ -467,7 +502,6 @@ def main():
     add_generation_opts(g)
     run = sub.add_parser('pipeline', help='generate, convert, verify, then cleanup text')
     add_generation_opts(run)
-    run.add_argument('--binary-root', type=Path, default=Path('.'))
     run.add_argument('--reference', type=Path,
                      help='trusted prefix binary; automatically use prior 1e9 then 1e6 if present')
     run.add_argument('--keep-text', action='store_true',
@@ -497,19 +531,30 @@ def main():
             p.error('--threads must be between 1 and 128')
         if not (1 <= a.memory_gib <= 1024):
             p.error('--memory-gib must be between 1 and 1024')
-        if a.mode == 'ram' and a.digits >= 5_000_000_000:
-            p.error('>=5e9 digit RAM-only runs are not permitted on this 32GiB workflow; use --mode swap')
+        if a.mode == 'ram' and a.digits >= 5_000_000_000 and a.run:
+            p.error('>=5e9 RAM-only calculation is blocked pending measured safe-memory review; '
+                    'dry-run preview is allowed')
     if a.command in {'convert', 'verify', 'pipeline'} and a.progress_seconds <= 0:
         p.error('--progress-seconds must be positive')
+    # Explicit output/large-input paths must be in the shared artifact area.
     if a.command == 'generate':
         generate(a)
     elif a.command == 'pipeline':
         pipeline(a)
     elif a.command == 'inspect':
+        # Prevent accidentally inspecting the separate primary project's files.
+        require_artifact_path(a.folder / '_unused_inspect_entry_')
         inspect_folder(a.folder)
     elif a.command == 'convert':
+        a.input = [require_artifact_path(x) for x in a.input]
+        a.output = require_artifact_path(a.output)
+        if a.reference is not None:
+            a.reference = require_artifact_path(a.reference)
         convert(a)
     elif a.command == 'verify':
+        a.input_file = require_artifact_path(a.input_file)
+        if a.reference is not None:
+            a.reference = require_artifact_path(a.reference)
         verify(a)
     else:
         self_test()
@@ -517,7 +562,7 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
+        guarded_call(main, hold_lock=True)
     except (ValueError, FileNotFoundError, OSError, RuntimeError) as exc:
         print(f'ERROR: {exc}', file=sys.stderr)
         raise SystemExit(2)

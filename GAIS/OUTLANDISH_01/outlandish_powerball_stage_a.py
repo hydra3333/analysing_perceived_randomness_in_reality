@@ -23,6 +23,12 @@ from itertools import combinations
 from pathlib import Path
 from tempfile import NamedTemporaryFile, TemporaryDirectory
 
+from outlandish_artifacts import (
+    WORKSPACE, require_artifact_path, guarded_call,
+    active_digit_file, artifact_directory,
+)
+from outlandish_config import load_config
+
 try:
     import numpy as np
 except ImportError as exc:
@@ -31,7 +37,7 @@ except ImportError as exc:
 CUTOFF = 1577          # Restricted: this draw and everything after it.
 EXPECTED_HEADER = ('Draw_Number', 'Date', *(f'Drawn_{i}' for i in range(1, 8)), 'Powerball')
 DEFAULT_DRAWS = 'POWERBALL_preholdout_only.csv'
-DEFAULT_DIGITS = ('digits_pi_10_to_6.bin', 'digits_golden_ratio_10_to_6.bin')
+DEFAULT_CONSTANTS = ('pi', 'phi')
 P1, P2, P3 = 1, 2, 3
 PATTERN_DIGITS = {P1: 16, P2: 14, P3: 14}
 FORMAT = 'FIXED2: every ball is exactly two decimal digits (03, 12, ...); each digit = one byte 0..9'
@@ -80,6 +86,14 @@ def prepare_preholdout(source: Path, destination: Path) -> None:
     At first draw >= CUTOFF, read ONLY its leading Draw_Number, then stop.
     Output is independent of the authoritative project data and is not committed.
     """
+    # Only the explicit owner-only prepare command may read outside this workspace.
+    # Its output copy is restricted to the standalone workspace.
+    try:
+        Path(os.path.abspath(os.fspath(destination))).relative_to(WORKSPACE)
+    except ValueError as exc:
+        raise ValueError(f'pre-holdout development copy must remain under {WORKSPACE}') from exc
+    if destination.is_symlink():
+        raise ValueError('refusing symlinked draw-copy output')
     if source.resolve() == destination.resolve():
         raise ValueError('source and destination must differ')
     if source.is_symlink() or not source.is_file():
@@ -451,13 +465,16 @@ def main(argv=None):
     prep = sub.add_parser('prepare', help='owner-only: extract safe development CSV; stop before holdout')
     prep.add_argument('--source', required=True, type=Path,
                       help='authoritative master location, on owner PC only')
-    prep.add_argument('--output', type=Path, default=Path(DEFAULT_DRAWS))
+    prep.add_argument('--output', type=Path, default=WORKSPACE / DEFAULT_DRAWS)
     scan = sub.add_parser('scan', help='scan pi and golden-ratio digit files')
-    scan.add_argument('--draws', type=Path, default=Path(DEFAULT_DRAWS))
-    scan.add_argument('--digits', nargs='+', type=Path, default=[Path(x) for x in DEFAULT_DIGITS])
-    scan.add_argument('--output-dir', type=Path, default=Path('OUTLANDISH_01_results'))
-    scan.add_argument('--chunk-bytes', type=int, default=100_000)
-    scan.add_argument('--progress-seconds', type=float, default=5)
+    scan.add_argument('--draws', type=Path, default=WORKSPACE / DEFAULT_DRAWS)
+    scan.add_argument('--constants', nargs='+', choices=('pi','phi','e','log2','gamma','lemniscate'),
+                      default=list(DEFAULT_CONSTANTS), help='registered active constants to scan (default pi phi)')
+    scan.add_argument('--prefix-digits', type=int, default=None,
+                      help='scan first N digits of EACH active binary; defaults to entire active file')
+    scan.add_argument('--output-dir', type=Path, default=None)
+    scan.add_argument('--chunk-bytes', type=int, default=load_config().scanner['chunk_bytes'])
+    scan.add_argument('--progress-seconds', type=float, default=load_config().scanner['progress_seconds'])
     scan.add_argument('--max-bytes', type=int, default=None,
                       help='optional shorter benchmark; default entire provided file')
     sub.add_parser('self-test', help='invented data only; never accesses project data')
@@ -470,6 +487,22 @@ def main(argv=None):
     elif args.cmd == 'sizes':
         format_sizes()
     elif args.cmd == 'scan':
+        if len(set(args.constants)) != len(args.constants):
+            parser.error('duplicate --constants not permitted')
+        if args.prefix_digits is not None:
+            if args.max_bytes is not None:
+                parser.error('use only one of --prefix-digits and --max-bytes')
+            args.max_bytes = args.prefix_digits
+        required = args.max_bytes or 0
+        registered = [active_digit_file(name, required) for name in args.constants]
+        args.digits = [entry[0] for entry in registered]
+        active_records = {str(path): item for path, item in registered}
+        args.output_dir = (require_artifact_path(args.output_dir / '_unused_output_name_').parent
+                           if args.output_dir is not None else artifact_directory('results', create=True))
+        if len(set(args.digits)) != len(args.digits):
+            parser.error('--digits contains a duplicate input')
+        if len(set(file.stem for file in args.digits)) != len(args.digits):
+            parser.error('input digit basenames collide in output reports')
         if args.chunk_bytes < 32 or args.chunk_bytes > 64_000_000:
             parser.error('--chunk-bytes must be in range 32..64,000,000')
         if args.progress_seconds <= 0:
@@ -505,6 +538,13 @@ def main(argv=None):
             report, _ = scan_one(file, draws, indexes, run_dir,
                                  args.chunk_bytes, args.progress_seconds,
                                  show_every, args.max_bytes, str(args.draws), prep_seconds)
+            active_record = active_records[str(file)]
+            report['registered_active_file'] = active_record['file']
+            report['registered_active_digits'] = active_record['digits']
+            report['registered_active_sha256'] = active_record['sha256']
+            report['scanned_is_full_active_file'] = report['input_bytes'] == active_record['digits']
+            if report['scanned_is_full_active_file'] and report['scanned_prefix_sha256'] != active_record['sha256']:
+                raise ValueError(f'active-file SHA mismatch after full scan: {file}; existing report retained')
             all_results.append(report)
         (run_dir / 'run_summary.json').write_text(json.dumps({
             'draw_copy': str(args.draws),
@@ -523,7 +563,7 @@ def main(argv=None):
 
 if __name__ == '__main__':
     try:
-        raise SystemExit(main())
+        raise SystemExit(guarded_call(main, hold_lock=True))
     except (ValueError, FileNotFoundError, OSError, csv.Error) as exc:
         print(f'ERROR: {exc}', file=sys.stderr)
         raise SystemExit(2)

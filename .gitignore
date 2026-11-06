@@ -246,3 +246,13 @@ results/real/development/scores/
 /GAIS/OUTLANDISH_01/ycruncher_digits/
 # GAIS - entire third-party y-cruncher distribution
 /GAIS/OUTLANDISH_01/y-cruncher v0.8.7.9547b/
+# GAIS - large files go here and will be ignored
+/GAIS/OUTLANDISH_01/large_artifacts/
+# keep OUTLANDISH_01 local machine settings
+#/GAIS/OUTLANDISH_01/outlandish.local.toml*
+# OUTLANDISH_01: track the main TOML configuration.
+# Ignore transient locking, backup and update files.
+/GAIS/OUTLANDISH_01/outlandish.local.toml.lock
+/GAIS/OUTLANDISH_01/outlandish.local.toml.bak
+/GAIS/OUTLANDISH_01/.outlandish_config_new_*
+/GAIS/OUTLANDISH_01/.outlandish_config_bak_*

@@ -1,19 +1,23 @@
 @echo off
+rem OUTLANDISH_01 v0.2: preview by default. Explicit RUN required for generation.
+rem IMPORTANT: >=5e9 defaults to Windows swap mode; known to require elevation.
+rem No unreviewed RAM-only override is made by this convenience wrapper.
 setlocal
-set "THREADS=4"
 pushd "%~dp0" || exit /b 1
-python outlandish_big_constants.py pipeline --constant pi --digits 10000000000 --threads %THREADS% --run
-if errorlevel 1 (
- echo STOP: Pi pipeline failed. Inspect its output; no Phi generation attempted.
- popd
- exit /b 1
+python outlandish_artifacts.py audit
+if errorlevel 1 (popd & exit /b 2)
+if /I "%~1"=="RUN" (
+  set "RUN_FLAG=--run"
+) else (
+  set "RUN_FLAG="
+  echo PREVIEW ONLY. To explicitly launch after resolving the memory issue:
+  echo     generate_1e10.cmd RUN
 )
-python outlandish_big_constants.py pipeline --constant phi --digits 10000000000 --threads %THREADS% --run
-if errorlevel 1 (
- echo STOP: Golden-ratio pipeline failed. Inspect output before retrying.
- popd
- exit /b 1
-)
+python outlandish_big_constants.py pipeline --constant pi --digits 10000000000 %RUN_FLAG%
+if errorlevel 1 (echo Pi pipeline failed; no phi attempted. & popd & exit /b 2)
+python outlandish_big_constants.py pipeline --constant phi --digits 10000000000 %RUN_FLAG%
+if errorlevel 1 (echo Phi pipeline failed. & popd & exit /b 2)
+python outlandish_artifacts.py audit
+if errorlevel 1 (popd & exit /b 2)
 popd
-echo Both pipelines completed and verified.
 exit /b 0
