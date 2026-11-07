@@ -6,21 +6,21 @@
   <MappedFolders>
     <MappedFolder>
       <HostFolder>C:\software</HostFolder>
-      <SandboxFolder>C:\host_software</SandboxFolder>
-      <ReadOnly>true</ReadOnly>
-    </MappedFolder>
-    <MappedFolder>
-      <HostFolder>T:\OUTLANDISH_01_SANDBOX\SANDBOX</HostFolder>
-      <SandboxFolder>C:\Users\WDAGUtilityAccount\Desktop\WindowsSandbox</SandboxFolder>
+      <SandboxFolder>C:\HOST_SOFTWARE</SandboxFolder>
       <ReadOnly>true</ReadOnly>
     </MappedFolder>
     <MappedFolder>
       <HostFolder>T:\OUTLANDISH_01_SANDBOX</HostFolder>
-      <SandboxFolder>C:\HOST_OUTLANDISH_01</SandboxFolder>
+      <SandboxFolder>C:\HOST_OUTLANDISH_SOURCE</SandboxFolder>
+      <ReadOnly>true</ReadOnly>
+    </MappedFolder>
+    <MappedFolder>
+      <HostFolder>T:\OUTLANDISH_01_SANDBOX_DATA</HostFolder>
+      <SandboxFolder>C:\HOST_OUTLANDISH_DATA</SandboxFolder>
       <ReadOnly>false</ReadOnly>
     </MappedFolder>
   </MappedFolders>
   <LogonCommand>
-    <Command>C:\Users\WDAGUtilityAccount\Desktop\WindowsSandbox\OUTLANDISH_01_Setup.bat</Command>
+    <Command>C:\HOST_OUTLANDISH_SOURCE\SANDBOX\OUTLANDISH_01_Setup.bat</Command>
   </LogonCommand>
 </Configuration>
