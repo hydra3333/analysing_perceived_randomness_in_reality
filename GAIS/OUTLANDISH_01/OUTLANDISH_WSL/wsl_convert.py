@@ -29,9 +29,18 @@ def report_evidence(report: Path, constant: str, digits: int) -> dict:
         raise ValueError('oversized report')
     data = report.read_bytes()
     body = data.decode('utf-8', errors='replace')
-    if not re.search(r'^\s*Verify Output:\s*Enabled\s*$', body, re.M):
-        raise ValueError('y-cruncher report must say Verify Output: Enabled')
-    if not re.search(r'Spot Check:\s*Good through\s+[\d,]+', body):
+    # The *saved validation report* differs from the interactive/console
+    # configuration screen: it normally lists completed verification stages,
+    # not the literal menu line "Verify Output: Enabled".  Require both
+    # verification stages and a positive spot-check instead of that menu line.
+    # Fail closed if an explicit disabled setting appears in the report.
+    if re.search(r'^\s*Verify Output:\s*Disabled\s*$', body, re.M | re.I):
+        raise ValueError('y-cruncher report explicitly disables output verification')
+    for phase in ('Verifying Base Conversion', 'Verifying Decimal Output'):
+        if not re.search(r'\b' + re.escape(phase) + r'\b', body, re.I):
+            raise ValueError(f'missing completed y-cruncher verification stage: {phase}')
+    spot = re.search(r'Spot Check:\s*Good through\s+([\d,]+)', body, re.I)
+    if not spot or int(spot.group(1).replace(',', '')) <= 0:
         raise ValueError('missing positive y-cruncher spot-check evidence')
     if not re.search(r'^\s*Constant:\s*' + re.escape(REPORT_NAMES[constant]) + r'\s*$', body, re.M|re.I):
         raise ValueError('report constant mismatch')

@@ -11,6 +11,6 @@ call "%ROOT%activate_venv.bat"
 if errorlevel 1 (endlocal & exit /b 3)
 "%PY%" -c "import numpy; print('NumPy',numpy.__version__)"
 if errorlevel 1 (endlocal & exit /b 4)
-"%PY%" -m unittest discover -s "%~dp0" -p "test_wsl_packed.py" -v
+"%PY%" -m unittest discover -s "%~dp0." -p "test_wsl_packed.py" -v
 set "RC=%ERRORLEVEL%"
 endlocal & exit /b %RC%
