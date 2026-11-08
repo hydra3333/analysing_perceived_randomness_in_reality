@@ -3,7 +3,8 @@
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
 Last updated: 8 November 2026 (evening): the integrated MHUP-A package started on your "go" (the reviewed code rebuilt on
-the current main passes the full suite on both Pythons; the package itself is next). The Claude chat is being handed over
+the current main had one expected date-pinning failure in a preliminary 570-test run on each Python; the final suite
+runs on the date-frozen package; the package itself is next). The Claude chat is being handed over
 to a fresh chat: read exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md. Earlier on 6 November: the
 new ChatGPT reviewer took over; H-2 v1r9 and register v0.25 ratified (DOC-12); T022 PASS; the history clean-up.
 Plain-English direction: doc/Direction_for_operational_procedures_v0_3r1.md (v0.2r1 kept as history);
@@ -236,12 +237,15 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            DONE (6 November 2026): GAIS moved out of src/ (GAIS-1); pyahocorasick approved (DEP-1); the Git history
            clean-up (27 commits renumbered; exchange/HISTORY_CLEANUP_2026_11_06/).
            DONE (8 November 2026): your "go" for the integrated package; the reviewed code rebuilt on main 009c985
-           passes all 570 tests on Python 3.13 and 3.15 (one test now takes the package date, C01-EFF).
+           ran all 570 tests on Linux Python 3.13 and 3.15 with one expected failure each (the test pinning E_1 r3's
+           date; the build now sets it); the full suite on the final date-frozen package is still to run. The reviewer
+           checked Claude's handover (EX_157: three corrections, applied as v1r10r1 in EX_158).
            NOW:
            (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
                (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;
-               the Linux rehearsals; your decision on R-020 (g) (who runs T016); T016; then the review message
-               EX_157 to the new reviewer. The work list is exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md.
+               your decision on R-020 (g) (who runs T016); then the date frozen and the final candidate built; then all
+               the evidence on that candidate (full suites, mutations, Linux LF/CRLF rehearsals, T016); then the review
+               message at the next free EX number. The work list is the handover delta's section 7.
            The target dates of ST-5 (13-15 November) are now unlikely; FB-1 applies (nothing is cut).
            Installing it, its Windows rehearsal and MHUP-B each wait for your separate go. The planning dates
            above are unchanged; FB-1 applies.

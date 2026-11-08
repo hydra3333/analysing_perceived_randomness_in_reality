@@ -350,8 +350,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
 - Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026; the owner's "go"
-  for the integrated package, 8 November 2026; the rebuild on main 009c985 passes the full suite on both Pythons; the package
-  itself is not yet built: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md).
+  for the integrated package, 8 November 2026; the rebuild on main 009c985 ran 570 tests on each Python with one expected
+  date-pinning failure, now fixed in the build, the final suite still to run on the frozen package; the package itself is not
+  yet built: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md).
 - What:
   (a) The package manifest's `release_entries` must name E_1 revision 3 for both games, so that the install's
       release record (Appendix J step 16) releases it: the baseline record carries revision 2 as superseded and
@@ -389,6 +390,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       (i) rulebook v0.5 allows those two tools only inside a task clone, only from the package's staging folder, only under a task
       file (reviewed with the package), or (ii) you run T016's steps yourself, with Claude Code only preparing the clone. Claude
       recommends (i), because it keeps the rehearsal in a clone that cannot push; the reviewer should see the rule change.
+      The reviewer (EX_157 section 3) also prefers (i), with conditions: explicit owner approval; only those two tools, only
+      in T016's synthetic clone, from the staging folder; every other safeguard unchanged; the settings denials not bypassed;
+      check_task_commands.py passing; no change to the main repository; T016 still needs its own go. OPEN: your choice is
+      needed before the rulebook change or the T016 task file is written.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 

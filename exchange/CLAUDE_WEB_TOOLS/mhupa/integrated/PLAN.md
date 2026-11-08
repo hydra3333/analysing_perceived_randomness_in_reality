@@ -71,22 +71,24 @@ instructions against Appendix J.
 
 ## Handover pointer
 
-If you are a new Claude chat: read `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md` first (section 7 is
+If you are a new Claude chat: read `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10r1_delta.md` first (section 7 is
 this plan in order, with the model split and the T016/rulebook question, R-020 (g)). The previous chat's scratch trees are gone;
 rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
 
 ## Checkpoint log
 
 - 2026-11-08 18:15 Adelaide: rebuild done and checked (above); suites started.
-- 2026-11-08 18:45 Adelaide: **the full suite on the rebuilt tree, on Python 3.13.18 and 3.15.0b4: 570 ran, 569 passed, 0 skips.**
+- 2026-11-08 18:45 Adelaide: **PRELIMINARY: the full suite on the rebuilt tree, on Linux Python 3.13.18 and 3.15.0b4: 570 ran, 569
+  passed, 0 skips.** (Final evidence is produced on the date-frozen candidate; EX_157 C01.)
   - **The one failure on each Python:** `test_e1r3_revision3`, which pins E_1 r3's `effective_date` to the candidates'
     2026-11-04. This is the C01-EFF consequence, not a code fault.
   - **The fix:** `integrated/build_dev_integrated.sh` wraps `build_dev_slice2.sh` and makes one counted edit setting that
     test's expected date to DATE. The test keeps checking the exact date.
   - **Recheck:** with the fix, that module passes on both Pythons (8/8). The other 562 tests are unaffected by the edit.
   - **Evidence:** `integrated/evidence/suite_rebuild_009c985_py313.txt` and `_py315.txt` (before the fix).
-  - **Still to come:** the full suite and the mutation chain are rerun on the final frozen tree.
-- **Step 6 gate list** (from `contract_dispatch.py`'s import closure, restricted to files the package changes or adds): 11 files.
+  - **Still to come:** the full 570-test suite and both mutation chains on the final frozen tree; nothing else counts as evidence.
+- **Step 6 gate list** (from `contract_dispatch.py`'s import closure, restricted to files the package changes or adds): **10 files**
+  (an earlier line here said 11; EX_157 C02). The builder must recompute the closure and assert it equals this list.
   - Changed: `contract_dispatch.py`, `contract_forecast.py`, `contract_receipts.py`, `contract_records.py`,
     `contract_runner.py`, `contract_task.py`, `contract_vocab.py`, `game_draws_reader.py`.
   - New: `master_versions.py`, `owner_records.py`.
@@ -100,3 +102,8 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   The verifier and copy fields are added beside them.
 - **Next:** `integrated/build_mhupa_pkg.py`, which builds the manifest, the copy tool, the verifier (from
   `wf1/verifier_template.py`, adding the `released` phase) and the owner's instructions.
+- 2026-11-08 19:30 Adelaide: the reviewer's EX_157 checked the v1r10 handover: C01 (suite status overstated), C02 (gate count),
+  C03 (order: freeze the date and assemble first, then all final evidence on that candidate; the R-020 (g) decision before the
+  rulebook change), O01-O04. All applied (v1r10r1; EX_158). **The order of work in the handover's section 7 replaces the list in
+  "What the integrated package needs" above where they differ.** The integrated package's review message takes the next free EX
+  number, not EX_157.

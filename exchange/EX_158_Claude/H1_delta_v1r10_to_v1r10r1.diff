@@ -1,0 +1,168 @@
+--- v1r10/delta
++++ v1r10r1/delta
+@@ -1,7 +1,8 @@
+-# Claude primary handover H-1 v1r10 (DELTA on H-1 v1r8) - the state at 8 November 2026, evening
++# Claude primary handover H-1 v1r10r1 (DELTA on H-1 v1r8) - the state at 8 November 2026, evening
+ 
+ Written by the Claude web chat (primary designer and coder), 8 November 2026, at the project owner's request, because this chat
+-has become very long and may end. **It supersedes the 6 November delta (`Claude_Primary_Handover_H1_v1r9_delta.md`), which
++has become very long and may end. **r1 (same evening) applies the reviewer's focused documentary check EX_157: corrections C01-C03
++and optional O01-O04; the exact changes are in EX_158.** It supersedes v1r10 and the 6 November delta (`Claude_Primary_Handover_H1_v1r9_delta.md`), which
+ stays beside it as history.** It is a working document, not reviewed and not ratified; the ratified handover is still
+ `doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md`. Read H-1 v1r8 in full first (its sections 2, 2A and 12 are the rules and the
+ working knowledge), then this file. Where this delta and a ratified record disagree, the record wins: register v0.25,
+@@ -14,9 +15,11 @@
+ ## 0. Read this first: the two things that trip a new chat
+ 
+ 1. **Commit IDs changed on 6 November 2026.** A history clean-up renumbered the 27 commits of 5-6 November 2026 (section 4.5).
+-   Every record written before 11:25 on 6 November cites the OLD IDs, including H-1 v1r8's successor documents, register v0.25,
++   Any record that cites one of those 27 commits uses its OLD ID (commits outside the 27 were not renumbered); such records include H-1 v1r8's successor documents, register v0.25,
+    H-2 v1r9, EX_153-EX_156 and the T022 report. `git show <old id>` fails on them. Translate with
+-   `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt` (old in column 1, new in column 2). The short forms:
++   `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt` (old in column 1, new in column 2), which is authoritative and has all 27.
++   A selection, 24 of the 27, in short form (the other three are the owner's GAIS commits 442597a -> 129cf32, 456cefd -> a8dc010,
++   ece780a -> 8e2c214):
+ 
+    | old | new | old | new | old | new |
+    |---|---|---|---|---|---|
+@@ -41,10 +44,12 @@
+ nothing of it is installed.** Design amendment A1 is ratified. A **new ChatGPT reviewer chat** took over on 6 November after the
+ previous one ended; the owner accepted it and ratified **H-2 v1r9 and register v0.25** (installed as DOC-12). The owner moved his
+ GAIS experiments out of `src/` and a history clean-up removed 153 MB of accidentally committed binaries. On 8 November the owner
+-said "go" for the **one integrated MHUP-A install package**, and the first step is done: the reviewed code rebuilt on the current
+-`main` passes the full suite on both Pythons. The package itself (manifest, copy tool, verifier with a `released` phase, the
+-owner's Appendix J instructions, LF/CRLF rehearsals, the Windows rehearsal T016, and the review message EX_157) is **not yet
+-built**. Section 7 is the exact work list.
++said "go" for the **one integrated MHUP-A install package**, and the first step is done: the reviewed code was rebuilt on the current
++`main`, and the pre-correction run of all 570 tests on each Python had exactly one expected failure (the test that pins
++E_1 r3's date; the build now sets it); **the full 570-test suite on the final, date-frozen package is still to be run**
++(EX_157 C01). The package itself (manifest, copy tool, verifier with a `released` phase, the
++owner's Appendix J instructions, LF/CRLF rehearsals, the Windows rehearsal T016, and the review message, whose number is the
++next free one: EX_157 is now the reviewer's check of this handover) is **not yet built**. Section 7 is the exact work list.
+ 
+ ## 2. Roles, chats and models (changes since H-1 v1r8)
+ 
+@@ -125,10 +130,13 @@
+ - The development tree was rebuilt on `009c985` with the committed tools: identical to the reviewed v1r2 overlay in 66 of 70
+   files; the four differences are `.gitignore` (the MHUP-A block now appended after the owner's new lines) and the three files
+   carrying E_1 revision 3's date (C01-EFF).
+-- **Full suite on the rebuilt tree, Python 3.13.18 and 3.15.0b4: 570 ran, 569 passed, 0 skips, on each.** The one failure is
+-  `test_e1r3_revision3`, which pins the `effective_date` to the candidates' 2026-11-04. `integrated/build_dev_integrated.sh` sets
+-  that test's date to the package date by a counted edit; the module then passes 8/8 on both Pythons. Evidence:
+-  `exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/evidence/`.
++- **Pre-correction suite on the rebuilt tree, Linux, Python 3.13.18 and 3.15.0b4: 570 ran, 569 passed, 0 skips, on each.** The one
++  failure on each is `test_e1r3_revision3`, which pins the `effective_date` to the candidates' 2026-11-04, an expected consequence
++  of C01-EFF. `integrated/build_dev_integrated.sh` sets that test's date to the package date by a counted edit; **only that module
++  (8 tests) was rerun** after the correction, passing on both Pythons. **The full 570-test suite on the final, date-frozen package
++  has not yet been run**; it is part of the final evidence (section 7, item 6). The original logs are kept unaltered:
++  `exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/evidence/` (labelled preliminary). These Linux runs are on 3.15.0b4; the owner's
++  Windows evidence (T022, Python 3.15.2) is separate.
+ - Commits `4bae8f4` (PLAN.md) and `1fe7b02` (checkpoint).
+ 
+ ## 5. Where everything is (all committed; paths from the repository root)
+@@ -143,7 +151,8 @@
+ | Earlier package templates to adapt | `exchange/CLAUDE_WEB_TOOLS/wf1/verifier_template.py` (pre/post/committed), `wf1/suite_template.py`, `wf1b/build_wf1b_pkg.py`, `wf1b/e2e_wf1b.sh` (LF/CRLF rehearsal with negatives), `wf1b/make_t01N.py` (task-file generators) |
+ | Claude Code | `CLAUDE_CODE_WORKING_FOLDER_TREE/tools/cc_clone.py` v0.4 (`make`, `unzip`, `overlay --plan`, `verify-overlay`, `git`, `remove`, `commit-report`); rulebook `CLAUDE.md` v0.4; task files and plan files in `inbox/`; reports in `outbox/`; **always** run `python3 -I exchange/CLAUDE_WEB_TOOLS/check_task_commands.py <repo> <task>` before sending a task |
+ | The ratified records | `doc/RATIFICATION_REGISTER_v0_25.md` (newest ratified register; its new section is just before "Interpretation and verification"); `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md`; `exchange/MHUP1_design_amendment_A1_RATIFIED.md`; the design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r5.md` (Appendix J = the install procedure) |
+-| The exchange | newest message EX_156 (Claude); **next free number EX_157**; the reviewer's last review was EX_155 |
++| The exchange | newest messages: EX_157 (the reviewer's check of this handover) and EX_158 (Claude's corrections); **use the next
++free number** for anything new; the integrated package's review message is not EX_157 |
+ | Owner lists | `exchange/OWNER_ROADMAP.md` (NOW line), `exchange/OWNER_REMINDERS.md` (R-019, R-020 (a)-(g), R-023 open) |
+ | History clean-up | `exchange/HISTORY_CLEANUP_2026_11_06/` (CLOSEOUT.md, commit-map.txt) |
+ | DOC-12 | `exchange/DOC12/` (installer script, README, diffs) |
+@@ -181,52 +190,61 @@
+ 
+ ## 7. The work list for the integrated MHUP-A package, in order (the detail is `integrated/PLAN.md`)
+ 
+-Model guidance per MC-1 is given in brackets; the owner may switch the chat at any time.
++Model guidance per MC-1 is given in brackets; the owner may switch the chat at any time. **The order follows EX_157 C03: every
++piece of final evidence (suites, mutations, LF/CRLF rehearsals, T016) is produced on the date-frozen final candidate, after the
++owner's R-020 (g) decision; anything run earlier is preliminary and labelled so.**
+ 
+ 1. **Rebuild the trees** [any model]: `git archive HEAD | tar -x -C BASE` (main at or after `1fe7b02`), then
+    `build_dev_integrated.sh BASE DEV exchange/CLAUDE_WEB_TOOLS/mhupa <DATE>`. Python 3.15 venv: H-1 v1r8 section 12.3 (`uv`;
+    install the `DIRECT_PACKAGES` of `install_upgrade_dependencies_into_venv.bat`, which now include `pyahocorasick`; nothing of
+-   the project imports it, so the suite does not need it). Run the full suite on both Pythons; expect 570/570.
++   the project imports it, so the suite does not need it). A preliminary full-suite run on both Pythons is worth doing (expect
++   570/570 with the date fix), but the evidence that counts is item 6's.
+ 2. **The package builder** `integrated/build_mhupa_pkg.py` [Opus]: from BASE and DEV it writes `repo_overlay/`
+    (the 70 files, LF), the **package manifest** (JSON: `package` = `MHUP_A`; `base_commit`; `new`, `modified`, `deleted`
+-   paths with LF SHA-256; `gate_files` = the 11 of section 7a; `release_entries` and `retires` and
++   paths with LF SHA-256; `gate_files` = the 10 of section 7a; `release_entries` and `retires` and
+    `registry_entries_added` in the shape `install_records.load_manifest` reads; the SHA-256 of the package's
+    `process_check.py`), the **copy tool** (`copy --part gate|rest --manifest M --repo R`, standard library, refuses any path
+    not listed, checks each written file), the **verifier** (from `wf1/verifier_template.py`: `pre`, `post`, `committed`, plus a
+    new **`released`** phase), the suite runner, and `INSTALL_INSTRUCTIONS.md` = Appendix J steps 0-19 as exact CMD lines.
+-   - 7a. **The step 6 gate files** (computed from `contract_dispatch.py`'s import closure, package-changed only; all under
+-     `src/methods/_common/`): changed `contract_dispatch.py`, `contract_forecast.py`, `contract_receipts.py`,
+-     `contract_records.py`, `contract_runner.py`, `contract_task.py`, `contract_vocab.py`, `game_draws_reader.py`; new
+-     `master_versions.py`, `owner_records.py`.
++   - 7a. **The step 6 gate files: ten** (computed from `contract_dispatch.py`'s import closure, restricted to files the package
++     changes or adds; all under `src/methods/_common/`; EX_157 C02 corrected an earlier count of eleven). Eight changed: `contract_dispatch.py`, `contract_forecast.py`, `contract_receipts.py`,
++     `contract_records.py`, `contract_runner.py`, `contract_task.py`, `contract_vocab.py`, `game_draws_reader.py`. Two new:
++     `master_versions.py`, `owner_records.py`. The builder recomputes this closure and asserts it equals the manifest's list.
+    - 7b. The tools the instructions call, all run from the **staging folder** with the venv's Python `-I -B
+      -X pycache_prefix=<never-existing folder>`: `process_check.py check-no-runs --root R --install MANIFEST`,
+      `take-install-lock --root R --package MHUP_A`, `release-install-lock --root R --package MHUP_A`;
+      `install_records.py install-record|release-record --root R --package MHUP_A --manifest MANIFEST`.
+-3. **The `released` phase and the two-commit proof** [Fable]: the release commit's only parent is the package commit; it adds
++3. **The `released` phase and the two-commit proof** [Fable], and the verifier's negatives: the release commit's only parent is the package commit; it adds
+    exactly `RELEASE_MHUP_A_V1.json`; the record names E_1 r3 for both games, the install record's digest, a local date not before
+    the install record's; E and P absent; U's content; the records agree with the repository (EX_148 (ix)). Plus the verifier's
+    own negatives (missing or wrong-byte file at POST; a wrong install record; an extra file in the release commit; the wrong
+    parent) and a **cold read** of the instructions against Appendix J by a fresh helper.
+-4. **Rehearsals on Linux** [Opus]: LF and CRLF clones of a frozen mirror, end to end (steps 0-18; step 19 omitted), each negative
+-   STOPping; the mutation chains (both tools) on the final tree.
+-5. **The rulebook v0.5 and the deny lines** [Opus]: rule 7 gains `create_venv.bat` and the MHUP-A programs it already names; rule 1
+-   names Lotterywest-GOV (R-017); the owner's `.claude/settings.json` deny lines are the owner's edit (register v0.24 future
+-   action 1).
+-6. **T016, the Windows rehearsal, needs an owner decision first (R-020 (g)).** Appendix J's steps 2, 3, 12, 16 and 18 run
++4. **The owner's R-020 (g) decision** (below), obtained **before** the rulebook change or the T016 task file is written.
++5. **The rulebook v0.5 and the deny lines** [Opus], written to the owner's choice: rule 7 gains `create_venv.bat` and (under
++   option (i)) the narrow T016 allowance; rule 1 names Lotterywest-GOV (R-017); the owner's `.claude/settings.json` deny lines
++   are the owner's edit (register v0.24 future action 1).
++6. **Freeze the date (C01-EFF), build the final candidate, and produce ALL final evidence on it** [Opus; Fable for an
++   unexplained failure]: the full 570-test suite on both Pythons; both mutation chains; LF and CRLF end-to-end rehearsals on a
++   frozen mirror (steps 0-18; step 19 omitted), each negative STOPping; then T016 on Windows under the owner's go. Any change
++   to the package after this point means a new candidate and the evidence is redone.
++   **About T016 (R-020 (g)):** Appendix J's steps 2, 3, 12, 16 and 18 run
+    `process_check.py` and `install_records.py`, and **rulebook v0.4 rule 7 forbids the runner from running either in any
+    command.** Options: (i) rulebook v0.5 allows those two tools **only inside a task clone, only from the package's staging
+    folder, only under a task file**, reviewed with the package; or (ii) the owner runs T016's steps himself, Claude Code only
+    preparing the clone. Also: `Bash(git -C *)`, `git add*`, `git commit*` and `git rm*` are denied, so every Git step in the clone
+    goes through `cc_clone.py git`; `*results_master*` is denied, so the updater file is copied by the copy tool from the
+-   manifest, never named on a command line; `check_task_commands.py` checks all of it.
+-7. **Freeze the date** (C01-EFF), rebuild, rerun suite and mutations, assemble.
+-8. **EX_157 to the reviewer** [Opus], with: the ZIP and manifests; base and target identities; the test and mutant inventories
++   manifest, never named on a command line; `check_task_commands.py` checks all of it. The reviewer (EX_157 section 3) prefers
++   (i) under conditions: explicit owner approval; only those two tools, only in T016's synthetic clone, from the staging folder;
++   every other safeguard unchanged; the settings denials not bypassed; `check_task_commands.py` passing; no change to the main
++   repository; T016 still needs its own owner go. If (i) cannot be done cleanly, choose (ii).
++7. **The review message, at the next free EX number** [Opus], with: the ZIP and manifests; base and target identities; the test and mutant inventories
+    with logs; T022 and T016 evidence; DEP-1 and GAIS-1; A1 cited; MHUP-B's timing route stated; and **an explicit statement of
+    which offline tests the owner authorises the reviewer to execute** (EX_155 Q15 asked for it). Expect a full R-2/R-4 review,
+-   possibly with the reviewer's own reproduction.
+-9. **After PASS:** the owner's go for T016 (if not before), then the install by Appendix J (two commits), Claude's verification
+-   from GitHub, register v0.26 and the full H-1 v1r10 and H-2 v1r10 editions in a documentation package.
+-10. **Then:** MHUP-B (design section 6; the A1 s.6 route; `FREEZE_LINE_V1`; R-018), WF-1C, the method waves (the roadmap).
++   possibly with the reviewer's own reproduction. If T016 has to follow the review instead, say so: the review is then
++   provisional as to Windows, and a follow-up evidence RECHECK comes before any install.
++8. **After PASS and the owner's separate approval:** the install by Appendix J (two commits), Claude's verification from GitHub,
++   register v0.26 and the full H-1 and H-2 editions in a documentation package.
++9. **Then:** MHUP-B (design section 6; the A1 s.6 route; `FREEZE_LINE_V1`; R-018), WF-1C, the method waves (the roadmap).
+ 
+ **Planning dates:** ST-5's target (Mode H and the weekly session installed by about 13-15 November 2026) is now unlikely; FB-1
+ applies (the schedule slips, no review or rehearsal is cut). Say so to the owner when the package goes to review.
+@@ -264,8 +282,9 @@
+ 
+ ## 10. Integrity
+ 
+-Every fact above was checked against the repository at `1fe7b02` (8 November 2026) or taken from the records named. T016 is not
+-run; the integrated package is not built; nothing is installed. The previous chat's unfinished thought is nowhere else: what is
++Every fact above was checked against the repository at `1fe7b02` (8 November 2026) or taken from the records named, and the
++reviewer checked v1r10 against the repository at `b38bd0a` (EX_157: crosswalk, A1 order and boundaries PASS; C01-C03 applied
++here). T016 is not run; the final full suite is not run; the integrated package is not built; nothing is installed. The previous chat's unfinished thought is nowhere else: what is
+ not in this file, in `integrated/PLAN.md`, in the reminders or in the roadmap does not exist.
+ 
+-End of H-1 v1r10 delta.
++End of H-1 v1r10r1 delta.
