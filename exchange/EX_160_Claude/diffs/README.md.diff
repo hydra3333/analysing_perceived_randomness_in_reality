@@ -1,0 +1,19 @@
+--- HEAD/README.md
++++ DOC13/README.md
+@@ -34,12 +34,14 @@
+ | `archive/` | Retired method revisions, kept complete. |
+ | `source_data/`, `results/`, `transitory_data/` | Data and run records. Some of their contents are restricted by the rules above. |
+ | `CLAUDE_CODE_WORKING_FOLDER_TREE/` | Claude Code's task files, reports and tools; its rulebook is the `CLAUDE.md` there. |
+-| Root `.bat` files | The owner's launchers; each checks and uses the project's own Python environment (`.venv`). |
++| Root `.bat` files | The owner's launchers, each of which checks and uses the project's own Python environment (`.venv`), and two venv tools: `create_venv.bat` (creates `.venv` only if it does not exist) and `install_upgrade_dependencies_into_venv.bat`. |
++| `GAIS/` | The owner's separate "outlandish" thought experiments (OUTLANDISH_01 and others). Not part of the reviewed research system: outside `src/` and outside the code that Mode H freezes. Large generated files go in the ignored `GAIS/OUTLANDISH_01/large_artifacts/` folder. |
+ 
+ ## Where to start reading
+ 
+ 1. `exchange/OWNER_ROADMAP.md`: where the project is up to, in plain English.
+ 2. The latest `doc/RATIFICATION_REGISTER_v0_NN.md`: every decision and install.
+-3. The latest handovers in `doc/HANDOVER/` (H-1 for the Claude chat, H-2 for the reviewer).
++3. The latest handovers in `doc/HANDOVER/` (H-1 for the Claude chat, H-2 for the reviewer): the newest full edition of each,
++   then any later working supplement (`..._delta.md`) that brings it up to date.
+ 
+ Licence: see `LICENSE`.

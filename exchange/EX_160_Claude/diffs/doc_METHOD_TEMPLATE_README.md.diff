@@ -1,0 +1,84 @@
+--- HEAD/doc/METHOD_TEMPLATE/README.md
++++ DOC13/doc/METHOD_TEMPLATE/README.md
+@@ -1,7 +1,10 @@
+-# New-method template (draft 4)
++# New-method template (draft 5)
+ 
+ **What this is:** the files and the step-by-step checklist for adding a new method to the project, taken from E_6 (the first method built on the E_2-readiness contract) with its specifics stripped out.
+-**Status:** DRAFT 3, 30 October 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7); draft 4 (1 November 2026) adds what the releases (REL-1), the walk-forward driver and batches (WF-1A), CODE-3 with E_1 revision 2, the scorer (WF-1B) and its Windows rehearsals taught, and is reviewed with the snapshot documents. The code skeletons are unchanged from draft 2.
++**Status:** DRAFT 5, 8 November 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7); draft 4 (1 November 2026) adds what the releases (REL-1), the walk-forward driver and batches (WF-1A), CODE-3 with E_1 revision 2, the scorer (WF-1B) and its Windows rehearsals taught, and is reviewed with the snapshot documents; draft 5 (8 November 2026) corrects this status line (it said DRAFT 3 in draft 4;
++reminder R-018 (c)) and adds what MHUP-A changes for a new method once MHUP-A is installed: release records, the release date,
++rosters that change only through an install, and the run-mode lesson of E_1 revision 3 (steps 11 to 13 and "Things that
++bite"). Until MHUP-A is installed the draft 4 rules apply unchanged. The code skeletons are unchanged from draft 2.
+ **Kept up to date** (owner, 30 October 2026): whenever a method's design, review, code or install shows something this template should say or do differently, in Claude's assessment or the reviewer's, Claude proposes the update in the next package, and it is reviewed like any other document. Each method's handback says whether it found anything for the template.
+ **Authority:** none. The rules are in E2R-1 v0.3r3, R2, R3 and the current ratification register; where this file differs from them, they win. Using the template authorises no run.
+ 
+@@ -10,7 +13,8 @@
+ ## How the pieces fit
+ 
+ A method needs only its own pieces. The shared contract does the rest:
+-- **The release rule:** a method runs only if an active `SUPPORTED` registry entry is pinned by the request, and there is no `IN_DEVELOPMENT.txt`. A refusal reads no data.
++- **The release rule:** a method runs only if an active `SUPPORTED` registry entry is pinned by the request, and there is no `IN_DEVELOPMENT.txt`. A refusal reads no data. Once MHUP-A is installed, a variant is also *released* (eligible for CATCH-UP and the weekly roster) only from the date of a create-only release record naming it (step 12).
++- **Run modes are the contract's business, not the method's:** the method sees one prefix-only view and its data kind; it never reads or checks a run mode. The dispatch gate decides which modes may run (step 4).
+ - **The prefix-only view:** the method sees only draws before the target.
+ - **Ranking, ties and readout:** the contract ranks the scores, applies `TIE_SHA256_V1`, and reads TOP and WORST from the one frozen ranking.
+ - **Record validation:** every record is checked by recomputation.
+@@ -63,6 +67,10 @@
+ - **Scores only** (E_3, E_4, E_9, E_10, E_2, E_17, E_18, E_19): if the values are not chances (a curve can leave [0, 1]; a difference of rates is not a chance), declare `probability_kind` `NONE`, return no `ProbabilityVector`, and say why in the specification and the registry texts. Converting scores into chances by an invented transformation is not "marking"; publishing the scores themselves is.
+ - **Too little history:** if the eligible draws are fewer than the declared `minimum_history_draws`, return an empty `MethodOutput` (no barrels). The contract then records `INSUFFICIENT_HISTORY`: published, no ticket. `verify()` must accept that record when it recomputes the same shortage, and refuse it otherwise.
+ - **`verify()`** must recompute independently and refuse any difference. It is the last check before publication.
++- **Never branch on the run mode** (MHUP-1 design v0.1r5 section 2). E_1 revision 2 refused every run mode it did not know, so the
++  new modes (Mode H, `CATCH_UP`, the weekly session) needed a whole new revision 3 with identical arithmetic. If anything must
++  differ by the kind of data, take the view's data kind (`SYNTHETIC_CONTRACT_TEST` or `REAL_HISTORICAL_DEVELOPMENT`) and treat
++  every real mode alike.
+ 
+ **5. Keep `IN_DEVELOPMENT.txt`.** It makes the method non-runnable until its release package removes it.
+ 
+@@ -103,15 +111,28 @@
+ 
+ **11. The install package** (code-package discipline: H-1 section 1.6). It contains:
+ - the overlay;
+-- a verifier with PRE, POST and COMMITTED, listing each replaced file with its base bytes;
++- a package manifest (once MHUP-A is installed, also the `release_entries` and `retires` the records tool reads; empty for a
++  package that installs a method non-runnable);
++- a verifier with PRE, POST and COMMITTED, listing each replaced file with its base bytes (a package that releases variants also
++  has a `released` phase: step 12);
+ - the suite runner, with each module's expected count;
+ - the exact diffs, the mutation tool and its output;
+ - install run-throughs in LF and CRLF clones of the current `main`, on both Pythons.
+ 
+-The package installs the method non-runnable. Before the owner installs it, Claude Code rehearses it on the owner's Windows PC in a disposable task clone (a `TASK_T0NN` file). Check every command in a task file against `.claude\settings.json`'s refused patterns before sending it (it refuses, for example, any command containing `.bat`; the tool is `exchange/CLAUDE_WEB_TOOLS/cc/check_task_vs_deny.py`).
++The package installs the method non-runnable. Before the owner installs it, Claude Code rehearses it on the owner's Windows PC in a disposable task clone (a `TASK_T0NN` file). Check every command in a task file against `.claude\settings.json`'s refused patterns before sending it (it refuses, for example, any command containing `.bat`; the tools are `exchange/CLAUDE_WEB_TOOLS/check_task_commands.py`, which also reads plan files, and the older `exchange/CLAUDE_WEB_TOOLS/cc/check_task_vs_deny.py`).
+ 
+ **12. Release** (a separate, small, reviewed package; the owner's two deliberate actions, E2R-R58).
+ - **The first release:** delete `IN_DEVELOPMENT.txt`, and append `entry_0002.json` with `SUPPORTED` for each variant being released.
++- **Once MHUP-A is installed** (design 4.3 and Appendix J; MHUP-A's own install is the worked example): the install writes a
++  create-only **install record** `INSTALL_<PACKAGE>_V1.json` (code arrival; it qualifies nothing) before the package commit, and,
++  after COMMITTED PASS and with the barriers removed, a create-only **release record** `RELEASE_<PACKAGE>_V1.json` naming the
++  released (game, method, revision, variant) entries and any retirements, committed alone as a second commit. The release
++  record's local date is the variant's release date (MH-1: a catch-up forecast for a draw counts as CATCH-UP only if the
++  variant was released before that draw's date). A registry entry's `effective_date` is the package's preparation date and
++  never a release date (owner decision C01-EFF).
++- **Rosters change only through an install,** and a roster-changing install refuses while any weekly forecast set is unfinished
++  (the owner runs the weekly session first). A newly released variant joins the weekly session roster at its next session;
++  its back-history is a separate, optional walk-forward batch.
+ - **Later variants of the same revision:** registry entries only.
+ - **Real development data:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` has been True since WF-1A's install (31 October 2026, WF1-3); the other switches stay False and the allowlist stays empty. A released variant meets real past draws only through the walk-forward driver's batches, and the holdout never.
+ - **The pattern:** REL-1 released the 39 variants of E_2, E_3, E_4, E_6 to E_10 and E_17 to E_19 together, in both games: one `entry_0002.json` (`SUPPORTED`) per game and variant, and the 11 flags deleted.
+@@ -119,6 +140,9 @@
+ **13. After release: walk-forward batches and scoring** (WF-1A, WF-1B).
+ - **Batches hold the full cohort** (owner, ER-6 declined): a newly released method joins the next batch plan, which freezes every released variant and the target range; the plan's search-log row is written before any run.
+ - **Each variant becomes two tracks** (its TOP and WORST readouts) in the ranking report, which scores the frozen forecasts after the plan and the scoring plan are written. The report's families count the tracks (M), so adding methods raises the multiple-testing correction: say so in the specification.
++- **Mode H is a fixed cohort.** Only the variants released when the Mode H study manifest is frozen take part in Mode H. A
++  later method's forecasts for the holdout draws come only through a separately designed, reviewed and owner-approved process,
++  as development evidence, never as part of the sealed study (owner decision Q9-E1).
+ - **Any change after release is a new revision:** CODE-3 archives the old revision complete under `archive/methods/E_<nnn>/r<k>/` (E_1 revision 2 is the worked example), and the next batch runs the new one.
+ - **A method that uses random numbers** needs a seed policy first: a pre-announced NIST Randomness Beacon pulse, fetched by the owner after it is published, checked independently and approved (decisions D-9 to D-11; WF-1B's `src/evaluation/seed_policies/` records are the pattern).
+ 
+@@ -142,3 +166,6 @@
+ - **Exact arithmetic can be slow at full size** (PERF-1). Exactness is still the rule, but an exact routine that is fast on a test's few dozen draws can take hours at full size (WF-1B's exact Monte Carlo interval did). Time every exact routine at the real sizes (all targets, R = 10,000) on invented data before the code review, and profile first if anything is slow.
+ - **Record files must keep their bytes.** Frozen plans and records are checked byte for byte. On the owner's PC Git converts text files to CRLF when it rewrites them (`core.autocrlf=true`), which can make a committed record look altered (the first Powerball report was refused this way). New record types must be covered by `.gitattributes` (`-text`).
+ - **Keep data values out of progress and log lines.** Print stage names and counts only; a static test checks it (PERF-1).
++- **A run-mode check in a method is a future revision** (E_1 revision 2 to 3). Keep the method mode-neutral (step 4).
++- **Some words are checked as text in source files.** Besides the folder guard's list (step 9), a test refuses the token
++  `effective_date` in unexpected source text (MHUP-A slice 1): keep such tokens out of comments and docstrings.

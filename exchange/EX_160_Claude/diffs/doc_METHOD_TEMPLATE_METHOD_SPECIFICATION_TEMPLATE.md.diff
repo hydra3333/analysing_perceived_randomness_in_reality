@@ -1,0 +1,11 @@
+--- HEAD/doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md
++++ DOC13/doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md
+@@ -69,7 +69,7 @@
+ 
+ ## 10. Release
+ 
+-**FILL IN:** installed non-runnable; which variants each release package makes `SUPPORTED`; that the method then joins the next full-cohort walk-forward batch and the ranking report (README step 13), and what that adds to the report's families.
++**FILL IN:** installed non-runnable; which variants each release package makes `SUPPORTED`; that the method then joins the next full-cohort walk-forward batch and the ranking report (README step 13), and what that adds to the report's families. Once MHUP-A is installed, also: the release package's `release_entries` (its release record dates the release), that the method joins the weekly session roster at its next session, and that it is not part of any Mode H study frozen before its release (README steps 12 and 13). State that the method never checks a run mode (README step 4).
+ 
+ ## 11. Tests and planted defects
+ 
