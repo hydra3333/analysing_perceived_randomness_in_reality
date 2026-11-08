@@ -72,3 +72,25 @@ instructions against Appendix J.
 ## Checkpoint log
 
 - 2026-11-08 18:15 Adelaide: rebuild done and checked (above); suites started.
+- 2026-11-08 18:45 Adelaide: **the full suite on the rebuilt tree, on Python 3.13.18 and 3.15.0b4: 570 ran, 569 passed, 0 skips.**
+  - **The one failure on each Python:** `test_e1r3_revision3`, which pins E_1 r3's `effective_date` to the candidates'
+    2026-11-04. This is the C01-EFF consequence, not a code fault.
+  - **The fix:** `integrated/build_dev_integrated.sh` wraps `build_dev_slice2.sh` and makes one counted edit setting that
+    test's expected date to DATE. The test keeps checking the exact date.
+  - **Recheck:** with the fix, that module passes on both Pythons (8/8). The other 562 tests are unaffected by the edit.
+  - **Evidence:** `integrated/evidence/suite_rebuild_009c985_py313.txt` and `_py315.txt` (before the fix).
+  - **Still to come:** the full suite and the mutation chain are rerun on the final frozen tree.
+- **Step 6 gate list** (from `contract_dispatch.py`'s import closure, restricted to files the package changes or adds): 11 files.
+  - Changed: `contract_dispatch.py`, `contract_forecast.py`, `contract_receipts.py`, `contract_records.py`,
+    `contract_runner.py`, `contract_task.py`, `contract_vocab.py`, `game_draws_reader.py`.
+  - New: `master_versions.py`, `owner_records.py`.
+  - All under `src/methods/_common/`.
+- **The manifest schema** the tools already read (`install_records.load_manifest`, `process_check.load_install_manifest`):
+  - `package` = `MHUP_A`;
+  - `release_entries` (E_1 r3 for both games);
+  - `retires` (empty);
+  - `registry_entries_added` (the two `entry_0003.json`).
+
+  The verifier and copy fields are added beside them.
+- **Next:** `integrated/build_mhupa_pkg.py`, which builds the manifest, the copy tool, the verifier (from
+  `wf1/verifier_template.py`, adding the `released` phase) and the owner's instructions.
