@@ -22,3 +22,20 @@ METHOD_SPECIFICATION_TEMPLATE.md:
 - section 9: the switches as they now stand;
 - section 10: joining the walk-forward batches and the report's families;
 - section 11: Windows-safe tests.
+
+## Draft 5 (8 November 2026; Claude; checked by the reviewer, EX_161; OWNER-RATIFIED with DOC-13, RAT-27)
+
+README.md:
+- the status line says DRAFT 5 (draft 4's said DRAFT 3; reminder R-018 (c));
+- "How the pieces fit": the release record and the release date once MHUP-A is installed; run modes are the contract's business;
+- step 4: never branch on the run mode (E_1 revision 3's lesson);
+- step 11: the package manifest's `release_entries` and `retires`; the `released` verifier phase; the task-command checkers;
+- step 12: install and release records, the release date, the effective date, rosters that change only through an install;
+  later variants of a revision are released only through the same package route (EX_161 C03);
+- step 13: Mode H is a fixed cohort (Q9-E1);
+- "Things that bite": a run-mode check is a future revision; text-checked tokens such as `effective_date`.
+
+METHOD_SPECIFICATION_TEMPLATE.md:
+- section 10: release entries, the weekly roster, Mode H, and no run-mode check.
+
+The code skeletons are unchanged. Until MHUP-A is installed the draft 4 rules apply.
