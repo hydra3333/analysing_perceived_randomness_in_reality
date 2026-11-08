@@ -450,8 +450,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-024  The handover documents of 8 November 2026 and the documentation round after them
 
 - Asked: the owner, 8 November 2026.
-- Status: RATIFIED (RAT-27, 8 November 2026, after the reviewer's EX_161 corrections were applied in EX_162); OPEN only until you
-  install DOC-13 with exchange/DOC13/README.md and Claude verifies it from GitHub.
+- Status: DONE for DOC-13: RATIFIED (RAT-27), installed at 52b6de8, verified by Claude from GitHub (DOC13 VERIFY PASS); the
+  reviewer's check of EX_162: PASS, no EX_163 needed. OPEN only for H-1 v1r10r2 (the pointers after DOC-13): your ratification
+  and its install (exchange/HANDOVER_2026_11_06/install_h1_v1r10r2.py). Register v0.27 records RAT-28 when it comes.
 - Done: H-1 v1r10r1 delta and blurb (EX_157 check, EX_158 corrections, EX_159 PASS) RATIFIED by you as working supplements to
   H-1 v1r8 (RAT-26, 8 November 2026) and installed in doc/HANDOVER/ (b866e42).
 - To do (Claude, then the reviewer, then you): H-2 v1r10 delta and blurb (the reviewer's insurance); the root README (GAIS/,
