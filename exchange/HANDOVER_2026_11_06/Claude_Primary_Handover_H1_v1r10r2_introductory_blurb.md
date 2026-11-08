@@ -1,4 +1,4 @@
-# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v1r8 plus the v1r10r2 delta
+# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v1r8 plus the v1r10r2 delta (ratified, RAT-28)
 
 The project owner pastes the text below the line into a new Claude chat to start it. Nothing needs attaching: the repository
 is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `main` made with

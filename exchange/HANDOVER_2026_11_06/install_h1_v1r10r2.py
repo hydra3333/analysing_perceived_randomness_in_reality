@@ -6,8 +6,8 @@ Claude, 8 November 2026."""
 import hashlib, subprocess, sys
 from pathlib import Path
 SRC = 'exchange/HANDOVER_2026_11_06/'
-FILES = {'doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r2_delta.md': 'b68c25f779d0a3f8a8522f77bd5954d5bc0fc3ac231dd9c596deada89d69d470',
-         'doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md': '45f8b97b6177aebc2b4c302126a6240b6c4aec9841f7cd8bfa7abcfbacd72f8c'}
+FILES = {'doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r2_delta.md': '985f264849ec056ab296f6f0094b82680fafc13fec475741bbffe1434a0f274d',
+         'doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md': '0ece9e233c61ba3b21ac824ca17d747c7bde11f7f9c6c99f715970e013028f27'}
 MOVES = [('doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r1_delta.md', 'doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r10r1_delta.md'),
          ('doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r1_introductory_blurb.md', 'doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r10r1_introductory_blurb.md')]
 def stop(m): print('STOP:', m); sys.exit(1)

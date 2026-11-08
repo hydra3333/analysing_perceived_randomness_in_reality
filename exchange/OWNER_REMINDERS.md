@@ -451,8 +451,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 8 November 2026.
 - Status: DONE for DOC-13: RATIFIED (RAT-27), installed at 52b6de8, verified by Claude from GitHub (DOC13 VERIFY PASS); the
-  reviewer's check of EX_162: PASS, no EX_163 needed. OPEN only for H-1 v1r10r2 (the pointers after DOC-13): your ratification
-  and its install (exchange/HANDOVER_2026_11_06/install_h1_v1r10r2.py). Register v0.27 records RAT-28 when it comes.
+  reviewer's check of EX_162: PASS, no EX_163 needed. H-1 v1r10r2 (the pointers after DOC-13, and the model guidance for the
+  new chat) RATIFIED by you (RAT-28, 8 November 2026, about 20:49); OPEN only until you install it
+  (exchange/HANDOVER_2026_11_06/install_h1_v1r10r2.py) and it is verified. Register v0.27 records RAT-28.
 - Done: H-1 v1r10r1 delta and blurb (EX_157 check, EX_158 corrections, EX_159 PASS) RATIFIED by you as working supplements to
   H-1 v1r8 (RAT-26, 8 November 2026) and installed in doc/HANDOVER/ (b866e42).
 - To do (Claude, then the reviewer, then you): H-2 v1r10 delta and blurb (the reviewer's insurance); the root README (GAIS/,

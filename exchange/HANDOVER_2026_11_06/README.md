@@ -1,7 +1,7 @@
 # HANDOVER_2026_11_06 - handovers (Claude, 6 and 8 November 2026)
 
 **Read on 8 November 2026 or later:** start with `Claude_Primary_Handover_H1_v1r10r2_delta.md` and its blurb (r2: pointers after
-DOC-13; installed in doc/HANDOVER/). Before r2 the current files were `Claude_Primary_Handover_H1_v1r10r1_delta.md` and its blurb (r1 applies the
+DOC-13 and model guidance; RATIFIED by the owner, RAT-28, 8 November 2026; installed in doc/HANDOVER/). Before r2 the current files were `Claude_Primary_Handover_H1_v1r10r1_delta.md` and its blurb (r1 applies the
 reviewer's EX_157 corrections; EX_158; the reviewer's recheck EX_159 PASS; **ratified by the owner as working supplements to
 H-1 v1r8, RAT-26, 8 November 2026**, and installed in doc/HANDOVER/ at b866e42). They supersede v1r10 and the 6 November v1r9 delta and blurb, which stay as history. H-2 v1r9 and register v0.25 were ratified by the owner on 6 November 2026
 (RAT-25) and installed in `doc/` (DOC-12); the copies here are the candidate history.
@@ -16,8 +16,8 @@ are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK
 
 | File | Bytes as stored | SHA-256 as stored | SHA-256 after CRLF->LF |
 |---|---|---|---|
-| `Claude_Primary_Handover_H1_v1r10r2_delta.md` | 30963 | `572d9b7adb7a2a5530ab4fe732239a2956b4d392101fa28e56e5fd7e081bdc6b` | `b68c25f779d0a3f8a8522f77bd5954d5bc0fc3ac231dd9c596deada89d69d470` |
-| `Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md` | 10927 | `8c47d2ef7e65e09ffb32b3bf4a53ac5b92e0371c2b7122318f748aa4e7cbece0` | `45f8b97b6177aebc2b4c302126a6240b6c4aec9841f7cd8bfa7abcfbacd72f8c` |
+| `Claude_Primary_Handover_H1_v1r10r2_delta.md` | 31130 | `15ab05b3048d9d5ec77c567f4e1ff3dabfd47d508eabb60f850879189ca08edc` | `985f264849ec056ab296f6f0094b82680fafc13fec475741bbffe1434a0f274d` |
+| `Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md` | 10946 | `68c4f257b5ce8680214c24937feaca59ef5464c8535faf8bd6b4b385694d47ee` | `0ece9e233c61ba3b21ac824ca17d747c7bde11f7f9c6c99f715970e013028f27` |
 | `ChatGPT_Reviewer_Handover_H2_v1r10_delta.md` | 8677 | `2e9895819d11ff4afe983231f553e080b090202580fbde5904818b550f98f7a5` | `35a5c70a4c02793caae27e21bfbdc53baf5777b16b89efa34c4458cc4fb49fe2` |
 | `ChatGPT_Reviewer_Handover_H2_v1r10_introductory_blurb.md` | 9361 | `b0e3190fd78a5847314d1cd558d487a0ec026a02282800e27e0563a0d84a5ce1` | `f30dd7792215107d4e2c310a4e11c1ec1051e0b56d353a6909e4ad1e6034ad37` |
 | `Claude_Primary_Handover_H1_v1r10r1_delta.md` | 28536 | `6e5b8507d9736a3ab0273adaaf1678c8e26a95c8f470452332cd0603457f6f1a` | `e9cede8470aff5d05af1785702321be2b25b5c912a35e9ce636929efd2157c2f` |

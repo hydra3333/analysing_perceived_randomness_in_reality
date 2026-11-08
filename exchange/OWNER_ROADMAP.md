@@ -244,7 +244,7 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            documentation round (register v0.26, H-2 v1r10 delta, design v0.1r6 with A1 folded in, template draft 5,
            README, superseded editions moved): the reviewer's check EX_161 (three corrections, applied in EX_162);
            RATIFIED by you (RAT-27); installed at 52b6de8 and verified. Claude's handover H-1 v1r10r2 (pointers after
-           DOC-13) for your ratification and install.
+           DOC-13; model guidance) RATIFIED by you (RAT-28); a new Claude chat starts from it on 10 November 2026.
            NOW:
            (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
                (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;
