@@ -1,7 +1,7 @@
 # MHUP-A integrated install package - plan and checkpoint (Claude)
 
 Started on 8 November 2026 after the owner's "go". If this chat ends, a new Claude chat continues from this file, from H-1 v1r8
-plus the H-1 v1r9 delta, and from register v0.25. US-ASCII, CRLF. The owner is named only as "the project owner".
+plus the ratified H-1 v1r10r1 delta (RAT-26), and from register v0.25. US-ASCII, CRLF. The owner is named only as "the project owner".
 
 ## Where things stand
 
@@ -57,7 +57,7 @@ logs (see the checkpoint lines below).
    POST; a wrong install record; a release commit with an extra file; the wrong parent.
 7. **Rulebook rule 7 additions:** `create_venv.bat` (it changes the venv the freeze records), and the owner's settings deny lines
    for the MHUP-A programs.
-8. **The review message (EX_157)** to the new reviewer, with:
+8. **The review message (at the next free EX number; not EX_157, which is the reviewer's handover check)** to the reviewer, with:
    - the assembled ZIP and manifests;
    - base and target identities;
    - the test and mutant inventories;
@@ -107,3 +107,8 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   rulebook change), O01-O04. All applied (v1r10r1; EX_158). **The order of work in the handover's section 7 replaces the list in
   "What the integrated package needs" above where they differ.** The integrated package's review message takes the next free EX
   number, not EX_157.
+- 2026-11-08 19:45 Adelaide: the reviewer's EX_159: focused recheck of EX_158, **PASS** (C01-C03, O01-O04 resolved), with one
+  non-blocking editorial point O05 (stale pointers; tidied here and in the handover README; the delta's own "section 7, item 8"
+  in its section 2 should read "item 7", left for the next full H-1 edition). **RAT-26 (owner, 8 November 2026, about 19:43):
+  H-1 v1r10r1 delta and blurb ratified as working supplements to H-1 v1r8**; installed by the owner in `doc/HANDOVER/` at
+  `b866e42` (v1r10 copies removed). R-020 (g) remains OPEN.

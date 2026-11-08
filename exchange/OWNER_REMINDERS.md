@@ -447,6 +447,20 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       reviewer chat (6 November 2026); the OUTLANDISH chat's confirmation is awaited.
 - When: any time; none of it blocks the integrated MHUP-A package.
 
+## R-024  The handover documents of 8 November 2026 and the documentation round after them
+
+- Asked: the owner, 8 November 2026.
+- Status: OPEN until the documentation bundle (DOC-13) is reviewed and installed.
+- Done: H-1 v1r10r1 delta and blurb (EX_157 check, EX_158 corrections, EX_159 PASS) RATIFIED by you as working supplements to
+  H-1 v1r8 (RAT-26, 8 November 2026) and installed in doc/HANDOVER/ (b866e42).
+- To do (Claude, then the reviewer, then you): H-2 v1r10 delta and blurb (the reviewer's insurance); the root README (GAIS/,
+  create_venv.bat); the new-method template draft 5 (status line, release records after MHUP-A, data kind not run mode); the
+  design v0.1r6 (A1 folded in, Lotterywest-GOV, status lines); an optional move of superseded editions into doc/superseded/;
+  register v0.26 recording all of it; one DOC-13 install for you. Rulebook v0.5 waits for your R-020 (g).
+- Left for later on purpose (the register prevails meanwhile): Architecture v0.10 (with MHUP-B), R3 v0.6, the E2R contract
+  spec, Proposal v0.7 (each when next edited), the holdout exposure record (after Q7), the next full H-1 and H-2 editions
+  (after MHUP-A).
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in

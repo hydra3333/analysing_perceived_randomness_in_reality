@@ -1,7 +1,8 @@
 # HANDOVER_2026_11_06 - handovers (Claude, 6 and 8 November 2026)
 
 **Read on 8 November 2026 or later:** start with `Claude_Primary_Handover_H1_v1r10r1_delta.md` and its blurb (r1 applies the
-reviewer's EX_157 corrections; EX_158). They supersede v1r10 and the 6 November v1r9 delta and blurb, which stay as history. H-2 v1r9 and register v0.25 were ratified by the owner on 6 November 2026
+reviewer's EX_157 corrections; EX_158; the reviewer's recheck EX_159 PASS; **ratified by the owner as working supplements to
+H-1 v1r8, RAT-26, 8 November 2026**, and installed in doc/HANDOVER/ at b866e42). They supersede v1r10 and the 6 November v1r9 delta and blurb, which stay as history. H-2 v1r9 and register v0.25 were ratified by the owner on 6 November 2026
 (RAT-25) and installed in `doc/` (DOC-12); the copies here are the candidate history.
 
 The ChatGPT reviewer chat reached its conversation limit on 6 November 2026 without writing a handover. On the project owner's
@@ -30,8 +31,8 @@ are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK
   v1r10r1 delta.
 - **A new ChatGPT reviewer chat** (only if the current one, in place since 6 November 2026, has to be replaced): attach the
   files the H-2 v1r9 blurb lists (use the installed doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md and
-  doc/RATIFICATION_REGISTER_v0_25.md, both ratified, plus the H-1 v1r10 delta) and paste the text below its line, updating its
-  "where things stand" from the v1r10 delta first.
+  doc/RATIFICATION_REGISTER_v0_25.md, both ratified, plus the H-1 v1r10r1 delta) and paste the text below its line, updating its
+  "where things stand" from the v1r10r1 delta first. (Or use H-2 v1r10's delta and blurb once they exist.)
 - **If both chats are new:** start the reviewer first, accept its takeover check, then start Claude, so that the reviewer can
   check Claude's first reply.
 
