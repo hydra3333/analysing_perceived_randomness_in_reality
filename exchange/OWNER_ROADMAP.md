@@ -240,6 +240,9 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            ran all 570 tests on Linux Python 3.13 and 3.15 with one expected failure each (the test pinning E_1 r3's
            date; the build now sets it); the full suite on the final date-frozen package is still to run. The reviewer
            checked Claude's handover (EX_157: three corrections, applied as v1r10r1 in EX_158).
+           DONE (8 November 2026): RAT-26, the Claude handover H-1 v1r10r1 ratified (EX_157-EX_159); DOC-13, the
+           documentation round (register v0.26, H-2 v1r10 delta, design v0.1r6 with A1 folded in, template draft 5,
+           README, superseded editions moved), sent for the reviewer's check as EX_160.
            NOW:
            (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
                (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;

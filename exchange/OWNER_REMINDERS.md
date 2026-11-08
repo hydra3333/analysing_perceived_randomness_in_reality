@@ -450,7 +450,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-024  The handover documents of 8 November 2026 and the documentation round after them
 
 - Asked: the owner, 8 November 2026.
-- Status: OPEN until the documentation bundle (DOC-13) is reviewed and installed.
+- Status: OPEN until the documentation bundle (DOC-13) is reviewed and installed. DOC-13 was sent for the reviewer's check as
+  EX_160 (8 November 2026); after its reply (EX_161) and your ratification, Claude prepares the install.
 - Done: H-1 v1r10r1 delta and blurb (EX_157 check, EX_158 corrections, EX_159 PASS) RATIFIED by you as working supplements to
   H-1 v1r8 (RAT-26, 8 November 2026) and installed in doc/HANDOVER/ (b866e42).
 - To do (Claude, then the reviewer, then you): H-2 v1r10 delta and blurb (the reviewer's insurance); the root README (GAIS/,
