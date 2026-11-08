@@ -4,7 +4,8 @@ Written by the Claude web chat (primary designer and coder), 8 November 2026, at
 has become very long and may end. **r1 (same evening) applies the reviewer's focused documentary check EX_157: corrections C01-C03
 and optional O01-O04; the exact changes are in EX_158; r1 was ratified as a working supplement to H-1 v1r8 (RAT-26). r2 (later
 the same evening) only updates the pointers after DOC-13 (section 4.8; the newest register, the design's edition, the exchange
-row, the section 2 pointer of EX_159 O05); nothing else changes.** It supersedes v1r10 and the 6 November delta (`Claude_Primary_Handover_H1_v1r9_delta.md`), which
+row, the section 2 pointer of EX_159 O05) and adds the model guidance for the new chat (section 9, item 5); nothing else
+changes. r2 was OWNER-RATIFIED on 8 November 2026 (RAT-28) as a working supplement to H-1 v1r8, replacing r1.** It supersedes v1r10 and the 6 November delta (`Claude_Primary_Handover_H1_v1r9_delta.md`), which
 stays beside it as history.** It is a working document, not reviewed and not ratified; the ratified handover is still
 `doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md`. Read H-1 v1r8 in full first (its sections 2, 2A and 12 are the rules and the
 working knowledge), then this file. Where this delta and a ratified record disagree, the record wins: register v0.25,
