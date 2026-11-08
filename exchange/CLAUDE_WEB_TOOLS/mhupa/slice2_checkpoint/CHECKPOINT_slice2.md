@@ -1,5 +1,8 @@
 # CHECKPOINT - MHUP-A slice 2, 5 November 2026 (status line updated 6 November 2026)
 
+UPDATE 8 November 2026: superseded as a checkpoint by exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md and the handover
+exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md. Slice 2 is closed (EX_152 PASS, T022 PASS).
+
 UPDATE 6 November 2026:
 - EX_152 = slice 2 PASS (v1r2). A1 is ratified. Nothing is installed. T021 and T022 are still pending.
 - The ChatGPT reviewer chat ended. For the handovers, read exchange/HANDOVER_2026_11_06/: H-1 v1r9 delta (its sections 5 and 7

@@ -349,7 +349,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-020  MHUP-A integrated package: what the package or the owner must carry (from slice 2; (d)-(f) added 6 November 2026)
 
 - Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
-- Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026).
+- Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026; the owner's "go"
+  for the integrated package, 8 November 2026; the rebuild on main 009c985 passes the full suite on both Pythons; the package
+  itself is not yet built: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md).
 - What:
   (a) The package manifest's `release_entries` must name E_1 revision 3 for both games, so that the install's
       release record (Appendix J step 16) releases it: the baseline record carries revision 2 as superseded and
@@ -382,6 +384,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       owner's commit reaches GitHub and Claude has checked it. The integrated package then rebases onto that main.
       DONE (6 November 2026): the owner's commit 6b99029 (now 9d28b9f after the history clean-up, R-023) moved GAIS to the top
       level, and its .gitignore untracks y-cruncher.
+  (g) Added 8 November 2026: **a decision for you before T016.** Appendix J's steps 2, 3, 12, 16 and 18 run process_check.py and
+      install_records.py, and Claude Code's rulebook v0.4 rule 7 forbids the runner from running either in any command. Either
+      (i) rulebook v0.5 allows those two tools only inside a task clone, only from the package's staging folder, only under a task
+      file (reviewed with the package), or (ii) you run T016's steps yourself, with Claude Code only preparing the clone. Claude
+      recommends (i), because it keeps the rehearsal in a clone that cannot push; the reviewer should see the rule change.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
@@ -419,8 +426,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-023  The GAIS history clean-up (6 November 2026): what is left
 
 - Asked: the owner, 6 November 2026; done the same day (exchange/HISTORY_CLEANUP_2026_11_06/CLOSEOUT.md).
-- Status: OPEN for the optional items below only. The rewrite itself is DONE: main is 9d28b9f; 27 commits renumbered; the
-  crosswalk is commit-map.txt.
+- Status: OPEN for (b) and the OUTLANDISH chat's confirmation of (d) only. The rewrite is DONE (main 9d28b9f; 27 commits
+  renumbered; crosswalk commit-map.txt); (a) DONE; (c) is standing advice.
 - What:
   (a) Optional: clear the leftover junk from your local .git (about 900 MiB). Copy the .git folder first, then run
       git reflog expire --expire=now --all and git gc --prune=now.

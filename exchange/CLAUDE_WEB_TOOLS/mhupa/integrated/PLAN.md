@@ -69,6 +69,12 @@ logs (see the checkpoint lines below).
 Tuesday 10 November reset) for the `released` phase, the two-commit and barrier-order proofs, and a cold read of the install
 instructions against Appendix J.
 
+## Handover pointer
+
+If you are a new Claude chat: read `exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md` first (section 7 is
+this plan in order, with the model split and the T016/rulebook question, R-020 (g)). The previous chat's scratch trees are gone;
+rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
+
 ## Checkpoint log
 
 - 2026-11-08 18:15 Adelaide: rebuild done and checked (above); suites started.

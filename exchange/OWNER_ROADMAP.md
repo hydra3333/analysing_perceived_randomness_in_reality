@@ -2,9 +2,10 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 6 November 2026: the ChatGPT reviewer chat ended without a handover. Claude wrote the handovers for both
-chats (exchange/HANDOVER_2026_11_06/; reminder R-022). MHUP-A: slice 1 and slice 2 PASS, A1 ratified, nothing installed.
-(Earlier, 4 November 2026: HO-2 complete; the direction document v0.3r1 installed at dfc2d13.)
+Last updated: 8 November 2026 (evening): the integrated MHUP-A package started on your "go" (the reviewed code rebuilt on
+the current main passes the full suite on both Pythons; the package itself is next). The Claude chat is being handed over
+to a fresh chat: read exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md. Earlier on 6 November: the
+new ChatGPT reviewer took over; H-2 v1r9 and register v0.25 ratified (DOC-12); T022 PASS; the history clean-up.
 Plain-English direction: doc/Direction_for_operational_procedures_v0_3r1.md (v0.2r1 kept as history);
 the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
@@ -232,9 +233,16 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            DONE (6 November 2026): your T022 run (slice 2 v1r2, the reviewed candidate, 570 tests on Windows, on main
            with src/GAIS present): PASS, 4 allowed symlink skips, 24 minutes 37 seconds (REPORT_T022, 2eb9abb). T021
            (v1r1) was withdrawn unrun: T022 covers the later candidate.
+           DONE (6 November 2026): GAIS moved out of src/ (GAIS-1); pyahocorasick approved (DEP-1); the Git history
+           clean-up (27 commits renumbered; exchange/HISTORY_CLEANUP_2026_11_06/).
+           DONE (8 November 2026): your "go" for the integrated package; the reviewed code rebuilt on main 009c985
+           passes all 570 tests on Python 3.13 and 3.15 (one test now takes the package date, C01-EFF).
            NOW:
-           (1) The integrated install package (slice 1 + slice 2, A1 cited, rebased onto the current main;
-               reminder R-020 (a)-(f)), with its rehearsals and T016, and its review by the new reviewer.
+           (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
+               (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;
+               the Linux rehearsals; your decision on R-020 (g) (who runs T016); T016; then the review message
+               EX_157 to the new reviewer. The work list is exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md.
+           The target dates of ST-5 (13-15 November) are now unlikely; FB-1 applies (nothing is cut).
            Installing it, its Windows rehearsal and MHUP-B each wait for your separate go. The planning dates
            above are unchanged; FB-1 applies.
            The design:
