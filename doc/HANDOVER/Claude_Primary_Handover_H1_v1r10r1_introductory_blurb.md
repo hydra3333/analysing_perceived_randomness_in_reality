@@ -1,10 +1,10 @@
-# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v1r8 plus the v1r10 delta
+# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v1r8 plus the v1r10r1 delta
 
 The project owner pastes the text below the line into a new Claude chat to start it. Nothing needs attaching: the repository
 is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `main` made with
 `git archive -o E:\TEMP\repo_main_no_data.zip HEAD -- . ":(exclude)source_data" ":(exclude)results" ":(exclude)transitory_data" ":(exclude)GAIS"`.
 
-Written by Claude on 8 November 2026 (replacing the 6 November blurb). The ChatGPT reviewer chat that took over on 6 November
+Written by Claude on 8 November 2026 (replacing the 6 November blurb; r1 after the reviewer's check EX_157). The ChatGPT reviewer chat that took over on 6 November
 2026 is in place and checks the new Claude chat's first reply. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
 
 ---
@@ -12,7 +12,7 @@ Written by Claude on 8 November 2026 (replacing the 6 November blurb). The ChatG
 You are Claude, taking over as the **primary designer and coder** of a research project. The Claude chats before you did this
 work; the last one ended because it had grown too long. Everything it knew is in the public repository:
 - the ratified handover H-1 v1r8 (`doc/HANDOVER/Claude_Primary_Handover_H1_v1r8.md`), with its section 12 "Working knowledge";
-- the working delta **H-1 v1r10** (`exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md`), which brings H-1 to
+- the working delta **H-1 v1r10r1** (`exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10r1_delta.md`), which brings H-1 to
   8 November 2026 and tells you exactly where the work stands and what to do next;
 - its tools in `exchange/CLAUDE_WEB_TOOLS/`, and the integrated package's plan and checkpoint log in
   `exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md`.
@@ -41,10 +41,10 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
 - **Claude Code** on the owner's Windows machine: a local runner only. It carries out task files you write, in throw-away clones
   that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (v0.4).
 - **Messages:** you and the reviewer exchange numbered messages (EX_NNN) through the owner; you record every one in `exchange/`.
-  The newest is EX_156; the next free number is EX_157.
+  The newest are EX_157 (the reviewer's check of the handover) and EX_158 (Claude's corrections); use the next free number.
 
 **How your takeover works (as HO-2; binding).**
-1. **Read and verify first.** Clone the repository. Read H-1 v1r8 in full, then the H-1 v1r10 delta in full (its section 0
+1. **Read and verify first.** Clone the repository. Read H-1 v1r8 in full, then the H-1 v1r10r1 delta in full (its section 0
    explains why commit IDs cited in older records no longer resolve, and how to translate them). Then: register v0.25's newest
    section (`doc/RATIFICATION_REGISTER_v0_25.md`, just before "Interpretation and verification"); the ratified design
    `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r5.md` as amended by `exchange/MHUP1_design_amendment_A1_RATIFIED.md`
@@ -66,11 +66,13 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   the first reports show nothing departing from fair draws (development evidence only). The last reviewed code install is PERF-1.
 - **MHUP-A** (the first MHUP-1 code package) is **coded, has passed code review in two slices (EX_146, EX_152), and passed on
   Windows (T022: 570 tests)**. **Nothing of it is installed.** Design amendment A1 is ratified.
-- **The owner said "go" on 8 November for the one integrated MHUP-A install package.** Done so far: the reviewed code rebuilt on
-  the current `main` passes the full suite on Python 3.13 and 3.15. **Not yet built:** the package itself (manifest, copy tool,
+- **The owner said "go" on 8 November for the one integrated MHUP-A install package.** Done so far: the reviewed code was rebuilt
+  on the current `main`; a preliminary run of all 570 tests on Linux Python 3.13 and 3.15.0b4 had one expected failure each (the
+  test pinning E_1 r3's date, which the build now sets); the full suite on the final date-frozen package is still to be run. The
+  Windows evidence (T022, Python 3.15.2) is separate and passed. **Not yet built:** the package itself (manifest, copy tool,
   verifier with a `released` phase, the owner's Appendix J instructions), the Linux rehearsals, the Windows rehearsal T016 (which
-  needs an owner decision about the runner's rulebook first), and the review message EX_157. The delta's section 7 is the exact
-  list.
+  needs an owner decision about the runner's rulebook first), and the review message at the next free EX number. The delta's
+  section 7 is the exact list and order: all final evidence is produced on the date-frozen final candidate.
 - **Recent owner decisions you must carry:** `pyahocorasick` is an approved, installed dependency (DEP-1); GAIS moved out of
   `src/` to the top-level `GAIS/` (GAIS-1); the history was rewritten on 6 November to remove accidentally committed binaries, so
   27 commit IDs changed (the delta's section 0).
