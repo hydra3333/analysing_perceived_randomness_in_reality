@@ -16,8 +16,8 @@ are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK
 
 | File | Bytes as stored | SHA-256 as stored | SHA-256 after CRLF->LF |
 |---|---|---|---|
-| `Claude_Primary_Handover_H1_v1r10r2_delta.md` | 30512 | `53da4363450c8eca15feb3c3248df85e1f289b8e68dc26801ef889d458d60a5d` | `2a831ae8328a53a6563961d74ef26343d2e7e5b9b50d526ad6c593692038baa2` |
-| `Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md` | 9773 | `8b2f50c1196b41d5b42285176ade2578d14c54d141dd8acc5c80daa8d86478fd` | `aa1729ea3b4f38f46edb53d11c2ba5f0cc07ac2bfc69ed0704d7780a50538178` |
+| `Claude_Primary_Handover_H1_v1r10r2_delta.md` | 30963 | `572d9b7adb7a2a5530ab4fe732239a2956b4d392101fa28e56e5fd7e081bdc6b` | `b68c25f779d0a3f8a8522f77bd5954d5bc0fc3ac231dd9c596deada89d69d470` |
+| `Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md` | 10927 | `8c47d2ef7e65e09ffb32b3bf4a53ac5b92e0371c2b7122318f748aa4e7cbece0` | `45f8b97b6177aebc2b4c302126a6240b6c4aec9841f7cd8bfa7abcfbacd72f8c` |
 | `ChatGPT_Reviewer_Handover_H2_v1r10_delta.md` | 8677 | `2e9895819d11ff4afe983231f553e080b090202580fbde5904818b550f98f7a5` | `35a5c70a4c02793caae27e21bfbdc53baf5777b16b89efa34c4458cc4fb49fe2` |
 | `ChatGPT_Reviewer_Handover_H2_v1r10_introductory_blurb.md` | 9361 | `b0e3190fd78a5847314d1cd558d487a0ec026a02282800e27e0563a0d84a5ce1` | `f30dd7792215107d4e2c310a4e11c1ec1051e0b56d353a6909e4ad1e6034ad37` |
 | `Claude_Primary_Handover_H1_v1r10r1_delta.md` | 28536 | `6e5b8507d9736a3ab0273adaaf1678c8e26a95c8f470452332cd0603457f6f1a` | `e9cede8470aff5d05af1785702321be2b25b5c912a35e9ce636929efd2157c2f` |

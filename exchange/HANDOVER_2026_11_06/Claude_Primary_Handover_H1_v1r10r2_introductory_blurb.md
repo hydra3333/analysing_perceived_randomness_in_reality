@@ -8,6 +8,17 @@ Written by Claude on 8 November 2026 (replacing the 6 November blurb; r1 after t
 register and the design's current edition). The ChatGPT reviewer chat that took over on 6 November
 2026 is in place and checks the new Claude chat's first reply. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
 
+**Note for the owner: which model, when** (the previous chat's recommendation, 8 November 2026):
+1. **Start the new chat on Opus 5.5.** The takeover (reading, the first reply, answering the reviewer's questions blind) is
+   reading and explaining, which Opus does well and cheaply.
+2. **Stay on Opus** after you authorise normal work, for the first steps of the H-1 v1r10r2 delta's section 7: rebuilding the
+   development trees and the first suite runs (item 1) and the package builder, manifest, copy tool and instructions (item 2).
+3. **Switch to Fable (High)** when the chat reaches item 3: the verifier's `released` phase and the two-commit and barrier-order
+   proofs, and the fresh-helper cold read of the install instructions against Appendix J. Also switch for any BLOCKER-level review
+   finding or any unexplained STOP or test failure. The new chat should say "Suggest switching to Fable (High) for this" at those
+   points and wait for your "go"; when the Fable work is done it should say so, so you can switch back.
+4. **Your decision R-020 (g)** (who runs the Windows rehearsal T016) is needed before item 5; the chat will ask.
+
 ---
 
 You are Claude, taking over as the **primary designer and coder** of a research project. The Claude chats before you did this

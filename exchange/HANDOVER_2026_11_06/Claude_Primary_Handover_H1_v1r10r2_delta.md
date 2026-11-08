@@ -298,6 +298,10 @@ applies (the schedule slips, no review or rehearsal is cut). Say so to the owner
 3. Do not build, run tests, write task files or commit until the owner has your reply checked by the reviewer and says go
    (the reviewer may ask questions; answer blind).
 4. Then rebuild (section 7, item 1) and continue the work list from where `integrated/PLAN.md`'s checkpoint log stops.
+5. **Models (the owner plans to start the new chat on Opus):** stay on Opus for the takeover and for section 7 items 1 and 2; at
+   item 3 (the `released` phase, the two-commit and barrier-order proofs, the cold read), and for any BLOCKER-level finding or
+   unexplained STOP, say "Suggest switching to Fable (High) for this" and wait for the owner's "go"; say when the Fable work is
+   done. Ask for the owner's R-020 (g) decision before item 5.
 
 ## 10. Integrity
 
