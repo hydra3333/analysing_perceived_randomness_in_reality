@@ -1,5 +1,5 @@
 @@VERSION@@
-**Register version:** v0.26 CANDIDATE, 8 November 2026 (written by Claude; for the ChatGPT reviewer chat's check and the owner's ratification with DOC-13), recording DOC-12's installation, T022 and T021, the owner's decisions DEP-1 and GAIS-1, the Git history clean-up and its commit-ID crosswalk, the owner's later own commits, the integrated MHUP-A package's start, the Claude handover H-1 v1r10r1 (EX_157 to EX_159; RAT-26), and the DOC-13 documents (H-2 v1r10 delta, design v0.1r6, the new-method template draft 5, the repository README, and the move of superseded editions); @@SECTION@@
+**Register version:** v0.26 OWNER-RATIFIED 8 November 2026 (written by Claude; checked by the ChatGPT reviewer chat, EX_160 and EX_161, whose three corrections were applied; ratified by the owner with DOC-13, RAT-27), recording DOC-12's installation, T022 and T021, the owner's decisions DEP-1 and GAIS-1, the Git history clean-up and its commit-ID crosswalk, the owner's later own commits, the integrated MHUP-A package's start, the Claude handover H-1 v1r10r1 (EX_157 to EX_159; RAT-26), and the DOC-13 documents (H-2 v1r10 delta, design v0.1r6, the new-method template draft 5, the repository README, and the move of superseded editions); @@SECTION@@
 ## DOC-12, T022, the history clean-up, the integrated package started, the Claude handover of 8 November, and DOC-13 (register v0.26)
 
 Paths in this section are from the repository root. In this section, "this register" means register v0.26. Every commit named
@@ -66,9 +66,17 @@ and four optional points; Claude applied all as **H-1 v1r10r1** (EX_158); the re
 editorial point (O05, stale pointers, tidied in the working files). **RAT-26 (owner, 8 November 2026, about 19:43):** the H-1
 v1r10r1 delta and blurb ratified as working supplements to H-1 v1r8; installed by the owner in `doc/HANDOVER/` at `b866e42`.
 
-**DOC-13 (this register's package; candidates for the reviewer's check and the owner's ratification).**
+**DOC-13 (this register's package).** Sent for the reviewer's documentary check as EX_160. **EX_161:** P01-P03 PASS (ZIP
+integrity, every diff reversed, both builders reproduced byte for byte, A1's integration exact) with three corrections, all
+applied (EX_162): C01 the replacement-reviewer blurb's old reading route and hard-coded EX numbers replaced by the current route
+and "check `exchange/` for the highest number"; C02 H-2 v1r4 stays in `doc/HANDOVER/` (H-2 v1r8 section 6 item 2 sends readers to
+its sections 7 and 8.2), so 34 moves, not 35; C03 the template's "later variants: registry entries only" clarified: after MHUP-A
+every release goes through the package route with its records; and optional O01 (EX numbers) and O02 (line endings), applied.
+**RAT-27 (owner, 8 November 2026, about 20:05):** "if you agree with them then after your changes/updates then consider them also
+ratified, except for R-020 (g)": DOC-13 ratified as corrected (the reviewer's focused recheck of the corrections was offered and
+not waited for, by the owner's choice; EX_162 records the exact changes). The ratified documents:
 - **H-2 v1r10 delta and blurb:** the reviewer's insurance: a working supplement to the ratified H-2 v1r9, written by Claude from
-  the records (the reviewer-rights region is not touched).
+  the records (the reviewer-rights region is not touched); the blurb's reading route corrected (C01).
 - **The design v0.1r6** (`Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r6.md`): v0.1r5 with amendment A1 folded in
   (the three passages A1 section 1 quotes, in 5.2, 5.4 and L-H2), the results source named Lotterywest-GOV where it means the
   source (LW-1), a new version line, and section 8's rulebook tool list brought to register v0.24's future action 1. Nothing else.
@@ -78,8 +86,9 @@ v1r10r1 delta and blurb ratified as working supplements to H-1 v1r8; installed b
   installed (release records and the release date, rosters that change only through an install, Mode H's fixed cohort) and the
   rule that a method never checks a run mode (E_1 revision 3's lesson). The code skeletons are unchanged.
 - **The repository README:** a `GAIS/` row; the two venv tools among the root `.bat` files; where the handover deltas fit.
-- **The move of superseded editions** (`exchange/DOC13/MOVES.txt`, 35 files): older editions that no current reading document
-  names, moved into `doc/superseded/`, `doc/HANDOVER/superseded/` and `doc/contracts/superseded/`. Content unchanged; every hash
+- **The move of superseded editions** (`exchange/DOC13/MOVES.txt`, 34 files): older editions that no current reading document
+  names or sends a reader to (H-2 v1r4 stays: C02), moved into `doc/superseded/`, `doc/HANDOVER/superseded/` and
+  `doc/contracts/superseded/`. Content unchanged; every hash
   still holds; earlier registers' path citations of those files are read with the move list. Older registers that current
   documents cite by name stay in `doc/`.
 - **Not in DOC-13, on purpose:** the Claude Code rulebook v0.5 (it waits for R-020 (g)); Architecture v0.10 (with MHUP-B); R3,
@@ -96,27 +105,28 @@ v1r10r1 delta and blurb ratified as working supplements to H-1 v1r8; installed b
 **Out-of-date statements (register v0.26).** This register prevails, and the files are not edited:
 - **Register v0.25 and records written before the rewrite:** commit IDs of the 27 renumbered commits: read with `commit-map.txt`.
 - **Register v0.25, "T021 and T022 PENDING" and R-020 (e) and (f) as open:** settled above.
-- **H-2 v1r9 sections 0 and 6:** read with the H-2 v1r10 delta (once ratified).
+- **H-2 v1r9 sections 0 and 6:** read with the H-2 v1r10 delta (RAT-27).
 - **H-1 v1r10r1 section 2:** its pointer "section 7, item 8" means section 7, item 7 (EX_159 O05; for the next full H-1 edition).
-- **Design v0.1r5:** superseded by v0.1r6 once ratified; until then v0.1r5 with A1 governs, as before.
-- **The template draft 4:** superseded by draft 5 once ratified.
+- **Design v0.1r5:** superseded by v0.1r6 (RAT-27); A1 stays the ratified record of the amendment. v0.1r5 stays in `doc/` because
+  ratified records cite it by name.
+- **The template draft 4:** superseded by draft 5 (RAT-27).
 
 | Document (path) | Author / check | Status and Git-content SHA-256 (LF) |
 |---|---|---|
-| `doc/RATIFICATION_REGISTER_v0_25.md` | Claude; checked by the reviewer (EX_153, EX_155) | OWNER-RATIFIED 6 Nov 2026 (RAT-25); installed at `fafa1ba`; superseded by this register once ratified; `2ef9d17cfbc76c556e00d659677e411686c60aab263e1b0f0ef002930ee6d874` |
+| `doc/RATIFICATION_REGISTER_v0_25.md` | Claude; checked by the reviewer (EX_153, EX_155) | OWNER-RATIFIED 6 Nov 2026 (RAT-25); installed at `fafa1ba`; superseded by this register; `2ef9d17cfbc76c556e00d659677e411686c60aab263e1b0f0ef002930ee6d874` |
 | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r1_delta.md` | Claude; checked by the reviewer (EX_157, EX_159) | OWNER-RATIFIED 8 Nov 2026 (RAT-26) as a working supplement to H-1 v1r8; installed at `b866e42`; `e9cede8470aff5d05af1785702321be2b25b5c912a35e9ce636929efd2157c2f` |
 | `doc/HANDOVER/Claude_Primary_Handover_H1_v1r10r1_introductory_blurb.md` | as above | as above; `f3c6bea057c29cf66c053bf2e55b40919d26715d3da1cdf8379c1eaf29122d41` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r10_delta.md` | Claude, from the records | DOC-13 candidate; `6421fc5a865c61646478843e45e23d569ce8e8db5bfcf1e5b882be13af5a6b78` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r10_introductory_blurb.md` | Claude | DOC-13 candidate; `a427d7c36f3f601e1ebff51256f62c558e6677b7746d4bfe501ad60416433f94` |
-| `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r6.md` | Claude, counted edits from v0.1r5 (`e5fb491c...`) | DOC-13 candidate; `eb0e8070e53ebc9299273f6e4ddf1bb244f4847b922ab232e34b7c7bd71884f4` |
-| `doc/METHOD_TEMPLATE/README.md` (draft 5) | Claude | DOC-13 candidate; `b32eb0f55710cc855a84321a79c00c22635dce3e0cd75ab476d890529d82c487` |
-| `doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md` (draft 5) | Claude | DOC-13 candidate; `54d15e8f1fe42bdc51b87a57cfc1869bb3693465d5a88ec84cc3e543ddc33661` |
-| `doc/METHOD_TEMPLATE/CHANGES.md` (draft 5) | Claude | DOC-13 candidate; `a955cc2e769cd227da7fcf75f03823bae64e1eba133033076dd4c1c8e8c3419f` |
-| `README.md` (repository root) | Claude | DOC-13 candidate; `030de52691b04e84f8e03f3926c0cfbbf50bddc95517402ff6e9d6953d222d05` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r10_delta.md` | Claude, from the records | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `35a5c70a4c02793caae27e21bfbdc53baf5777b16b89efa34c4458cc4fb49fe2` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r10_introductory_blurb.md` | Claude | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `f30dd7792215107d4e2c310a4e11c1ec1051e0b56d353a6909e4ad1e6034ad37` |
+| `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r6.md` | Claude, counted edits from v0.1r5 (`e5fb491c...`) | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `7332dd6c1b3f6d9ef858b1881333ded56782bc595b7f894f04a75255909beb9d` |
+| `doc/METHOD_TEMPLATE/README.md` (draft 5) | Claude | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `9adfd6f17ac22675cb562c8b970650292b7009af25e0b2bdfb951b6018595841` |
+| `doc/METHOD_TEMPLATE/METHOD_SPECIFICATION_TEMPLATE.md` (draft 5) | Claude | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `54d15e8f1fe42bdc51b87a57cfc1869bb3693465d5a88ec84cc3e543ddc33661` |
+| `doc/METHOD_TEMPLATE/CHANGES.md` (draft 5) | Claude | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `25d5a3638f9eae62b5a2b27821ed4d90bf6059f3b579b4577ab864229fe0de73` |
+| `README.md` (repository root) | Claude | OWNER-RATIFIED 8 Nov 2026 (RAT-27), installed with DOC-13; `030de52691b04e84f8e03f3926c0cfbbf50bddc95517402ff6e9d6953d222d05` |
 | `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt` | git-filter-repo's own map | The crosswalk for the 27 renumbered commits; `52b27bb30b32e07cbaab14b2553d318d5071d26421bc40a222859b6302974d1c` |
 
 @@STATUS@@
-- **Current status (register v0.26 CANDIDATE; read this first).**
+- **Current status (register v0.26; read this first).**
   - Since register v0.25 no reviewed code package was installed and no real-data run, results update, report, holdout opening or
     Mode H took place. MHUP-A is reviewed in slices and passed on Windows (T022) but is not installed; its integrated package is
     being built (preliminary evidence only so far).

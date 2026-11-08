@@ -242,7 +242,8 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            checked Claude's handover (EX_157: three corrections, applied as v1r10r1 in EX_158).
            DONE (8 November 2026): RAT-26, the Claude handover H-1 v1r10r1 ratified (EX_157-EX_159); DOC-13, the
            documentation round (register v0.26, H-2 v1r10 delta, design v0.1r6 with A1 folded in, template draft 5,
-           README, superseded editions moved), sent for the reviewer's check as EX_160.
+           README, superseded editions moved): the reviewer's check EX_161 (three corrections, applied in EX_162);
+           RATIFIED by you (RAT-27); your install: exchange/DOC13/README.md.
            NOW:
            (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
                (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;

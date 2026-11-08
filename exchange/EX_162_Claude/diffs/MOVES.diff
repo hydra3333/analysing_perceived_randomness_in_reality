@@ -1,0 +1,18 @@
+--- EX_160/MOVES.txt
++++ EX_162/MOVES.txt
+@@ -1,13 +1,13 @@
+ # DOC-13: superseded editions moved into superseded/ folders (git mv; content unchanged, so every hash in every record holds).
+ # Only editions that no current reading document (H-1 v1r8, H-1 v1r10r1, H-2 v1r9, H-2 v1r10, design v0.1r6, the README, the
+-# template) cites by file name or by edition name. Format: FROM -> TO
++# template) cites by file name or by edition name, nor sends a reader to through a reading chain (EX_161 C02: H-2 v1r4 stays,
++# because H-2 v1r8 section 6 item 2 sends readers to its sections 7 and 8.2). Format: FROM -> TO
+ doc/HANDOVER/Claude_Primary_Handover_H1_v1r1.md -> doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r1.md
+ doc/HANDOVER/Claude_Primary_Handover_H1_v1r2.md -> doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r2.md
+ doc/HANDOVER/Claude_Primary_Handover_H1_v1r6_introductory_blurb.md -> doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r6_introductory_blurb.md
+ doc/HANDOVER/Claude_Primary_Handover_H1_v1r7_introductory_blurb.md -> doc/HANDOVER/superseded/Claude_Primary_Handover_H1_v1r7_introductory_blurb.md
+ doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r2.md -> doc/HANDOVER/superseded/ChatGPT_Reviewer_Handover_H2_v1r2.md
+ doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r3.md -> doc/HANDOVER/superseded/ChatGPT_Reviewer_Handover_H2_v1r3.md
+-doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r4.md -> doc/HANDOVER/superseded/ChatGPT_Reviewer_Handover_H2_v1r4.md
+ doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r7_introductory_blurb.md -> doc/HANDOVER/superseded/ChatGPT_Reviewer_Handover_H2_v1r7_introductory_blurb.md
+ doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r8_introductory_blurb.md -> doc/HANDOVER/superseded/ChatGPT_Reviewer_Handover_H2_v1r8_introductory_blurb.md
+ doc/HOLDOUT_EXPOSURE_RECORD_v0_1.md -> doc/superseded/HOLDOUT_EXPOSURE_RECORD_v0_1.md

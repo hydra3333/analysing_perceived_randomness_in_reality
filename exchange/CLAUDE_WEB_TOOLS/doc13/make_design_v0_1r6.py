@@ -23,7 +23,7 @@ EDITS = [
     ('# Mode H, the results update and the prospective mode - design v0.1r5\n',
      '# Mode H, the results update and the prospective mode - design v0.1r6\n'),
     ('**Version:** v0.1r5, 3 November 2026 (Adelaide, UTC+10:30). FOR THE OWNER\'S RATIFICATION:',
-     '**Version:** v0.1r6, 8 November 2026 (Adelaide). v0.1r5 as RATIFIED by the owner on 3 November 2026 (MHUP-R; register v0.24), '
+     '**Version:** v0.1r6, 8 November 2026 (Adelaide), OWNER-RATIFIED 8 November 2026 with DOC-13 (RAT-27) after the reviewer\'s check (EX_160, EX_161). v0.1r5 as RATIFIED by the owner on 3 November 2026 (MHUP-R; register v0.24), '
      'with **amendment A1** (RATIFIED 5 November 2026; `exchange/MHUP1_design_amendment_A1_RATIFIED.md`) folded into 5.2, 5.4 and '
      'Appendix L item L-H2, the results source named **Lotterywest-GOV** (LW-1, 4 November 2026), and the rulebook tool list of '
      'section 8 brought to register v0.24\'s future action 1. Nothing else is changed; text elsewhere that reads as before '

@@ -1,0 +1,23 @@
+--- EX_160/doc/METHOD_TEMPLATE/README.md
++++ EX_162/doc/METHOD_TEMPLATE/README.md
+@@ -1,7 +1,7 @@
+ # New-method template (draft 5)
+ 
+ **What this is:** the files and the step-by-step checklist for adding a new method to the project, taken from E_6 (the first method built on the E_2-readiness contract) with its specifics stripped out.
+-**Status:** DRAFT 5, 8 November 2026, by Claude. Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7); draft 4 (1 November 2026) adds what the releases (REL-1), the walk-forward driver and batches (WF-1A), CODE-3 with E_1 revision 2, the scorer (WF-1B) and its Windows rehearsals taught, and is reviewed with the snapshot documents; draft 5 (8 November 2026) corrects this status line (it said DRAFT 3 in draft 4;
++**Status:** DRAFT 5, 8 November 2026, by Claude; checked by the reviewer (EX_160, EX_161) and OWNER-RATIFIED with DOC-13 (RAT-27). Draft 1 was written with E_6; draft 2 added what E_3 and E_4 taught (a shared helper, scores only, a minimum history) and what the design of wave 1 (E_7, E_8, E_9, E_10) found; draft 3 adds what wave 2 (E_2, E_17, E_18, E_19) found in its design reviews and code (owner decision W2-7); draft 4 (1 November 2026) adds what the releases (REL-1), the walk-forward driver and batches (WF-1A), CODE-3 with E_1 revision 2, the scorer (WF-1B) and its Windows rehearsals taught, and is reviewed with the snapshot documents; draft 5 (8 November 2026) corrects this status line (it said DRAFT 3 in draft 4;
+ reminder R-018 (c)) and adds what MHUP-A changes for a new method once MHUP-A is installed: release records, the release date,
+ rosters that change only through an install, and the run-mode lesson of E_1 revision 3 (steps 11 to 13 and "Things that
+ bite"). Until MHUP-A is installed the draft 4 rules apply unchanged. The code skeletons are unchanged from draft 2.
+@@ -133,7 +133,10 @@
+ - **Rosters change only through an install,** and a roster-changing install refuses while any weekly forecast set is unfinished
+   (the owner runs the weekly session first). A newly released variant joins the weekly session roster at its next session;
+   its back-history is a separate, optional walk-forward batch.
+-- **Later variants of the same revision:** registry entries only.
++- **Later variants of the same revision:** they may need no new arithmetic or adapter code, only registry entries and
++  declarations; but releasing them is never "registry entries only" once MHUP-A is installed: each release goes through the
++  normal reviewed package, with its install and release records, the two-commit order and the roster gate (EX_161 C03). Before
++  MHUP-A is installed, the REL-1 route applies.
+ - **Real development data:** `ENABLE_CONTRACT_REAL_DEVELOPMENT` has been True since WF-1A's install (31 October 2026, WF1-3); the other switches stay False and the allowlist stays empty. A released variant meets real past draws only through the walk-forward driver's batches, and the holdout never.
+ - **The pattern:** REL-1 released the 39 variants of E_2, E_3, E_4, E_6 to E_10 and E_17 to E_19 together, in both games: one `entry_0002.json` (`SUPPORTED`) per game and variant, and the 11 flags deleted.
+ 

@@ -1,13 +1,13 @@
 # ChatGPT reviewer handover H-2 v1r10 (DELTA on H-2 v1r9) - the state at 8 November 2026, evening
 
 Written by Claude (primary designer and coder) on the project owner's instruction, 8 November 2026, as insurance in case the
-reviewer chat that took over on 6 November 2026 has to be replaced. **Not reviewer-written; a candidate for the reviewer's check
-and the owner's ratification as a working supplement to the ratified H-2 v1r9** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md`).
+reviewer chat that took over on 6 November 2026 has to be replaced. **Not reviewer-written. Checked by the reviewer
+(EX_161) and OWNER-RATIFIED on 8 November 2026 (RAT-27) as a working supplement to the ratified H-2 v1r9** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md`).
 Read H-2 v1r9 in full first; its reviewer-rights region (sections 2 and 3) is unchanged and is not touched by this delta. Where
 this delta and a ratified record disagree, the record wins: register v0.25 (and v0.26 once ratified), the design v0.1r5 as
 amended by A1, and the owner's decisions in `exchange/`.
 
-US-ASCII, CRLF. The owner is named only as "the project owner" or "hydra3333". Every fact below should be verified against the
+US-ASCII; LF in the repository's `doc/` copy, CRLF in `exchange/` and when relayed. The owner is named only as "the project owner" or "hydra3333". Every fact below should be verified against the
 repository before it is relied on (R-9).
 
 ## 0. Two things to know first
@@ -17,9 +17,8 @@ repository before it is relied on (R-9).
    those 27 uses its old ID, including H-2 v1r9 itself (for example its `43dd069`, `2660e46`), register v0.25 and EX_153-EX_156.
    Translate with `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt` (all 27; old in column 1). The H-1 v1r10r1 delta's
    section 0 has a 24-pair selection.
-2. **Exchange numbers.** The newest messages are EX_157 (your predecessor's check of Claude's handover), EX_158 (Claude's
-   corrections) and EX_159 (your predecessor's recheck, PASS). The integrated MHUP-A package's review request will take the next
-   free number.
+2. **Exchange numbers.** When this delta was written the newest messages were EX_157 to EX_161 (the handover and DOC-13
+   checks). Always check `exchange/` for the highest number in use and take the next one.
 
 ## 1. What your predecessor did after H-2 v1r9 was written (6-8 November 2026)
 
@@ -87,7 +86,8 @@ T022/T016 outputs, the owner's dependency and GAIS decisions, and explicit autho
 ## 4. Change control
 
 Written by Claude from the records; your predecessor's own words are in its messages (EX_153, EX_155, EX_157, EX_159 and the
-clean-up documents). No reviewer right, safeguard or procedure is changed. Status: CANDIDATE, for the reviewer's check and the
-owner's ratification as a working supplement to H-2 v1r9; the next full H-2 edition folds it in after MHUP-A.
+clean-up documents). No reviewer right, safeguard or procedure is changed. Status: checked by the reviewer (EX_161: C01 applied to
+the blurb), OWNER-RATIFIED 8 November 2026 (RAT-27) as a working supplement to H-2 v1r9; the next full H-2 edition folds it in
+after MHUP-A.
 
 End of H-2 v1r10 delta.
