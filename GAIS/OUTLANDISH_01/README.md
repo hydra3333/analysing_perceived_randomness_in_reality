@@ -1,3 +1,8 @@
+<!-- OUTLANDISH_CURRENT_HANDOVER_2026_11_09 -->
+> **Current project checkpoint — 9 November 2026.** The README below describes the **legacy numeric-byte** code and commands, not the currently selected generation pipeline. Four of six verified **10^10-digit high-first packed-BCD** constant files are complete. The old-i5 elevated native-Windows gamma -> lemniscate full 1e6+1e6 end-to-end test PASSED; the owner has **paused before the 10^10 production launch**. No scientific scans or new matching-spec work are authorised yet. **Read `OUTLANDISH_01_Parent_Handover_Document_Route_2026-11-09.md`, `OUTLANDISH_01_ChatGPT_Successor_Blurb_2026-11-09.md`, and `OUTLANDISH_01_Consolidated_Handover_v7.md` first.** Later matching/reporting and experimental science remain under THIS parent `GAIS/OUTLANDISH_01` folder; `OUTLANDISH_WSL` is a generation-development child. The 9-Nov ratified matching/reporting v0.2 is frozen until all six final binaries are verified. Original README text is retained below for historical code-lineage use, not current unattended production instructions.
+
+---
+
 # OUTLANDISH_01 — mathematical-constant digit experiments
 
 **Version:** v0.2r4 (automatic superseded-binary retirement)  

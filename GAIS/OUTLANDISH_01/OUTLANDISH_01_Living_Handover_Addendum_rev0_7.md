@@ -1,0 +1,296 @@
+# OUTLANDISH_01 — Living Handover Addendum, revision 0.7 — proposed
+
+**Prepared:** 9 November 2026 (Adelaide). **GitHub-verified source baseline `06c26a66bfcca12d02e36c49a0b476732d6d3a13`; proposed for owner acceptance; not yet installed/committed.**  
+**Prior canonical rev0.6 preserved verbatim in full below**; source UTF-8 SHA-256: `211cb4cc56855146c82791061ed9b614c17002824afcf9a04d24953ef9024b97`.  
+**Relationship:** v6 is the last explicitly owner-approved baseline; GitHub-matched verbatim v6 and rev0.6 are included in proposed v7. This rev0.7 is an additive post-v6 update, staged for the existing WSL canonical filename only after exact rev0.6 archival. No authorisation to execute production or matching follows from this document.
+
+## New revision 0.7 entry — 9 November 2026
+
+1. **OWNER-REPORTED COMPLETION:** Four `10^10`/5,000,000,000-byte high-first packed constants now complete and full-SHA-verified: phi `dd80be0c3fdb330fe4e1780c2d53bf03bde297a5dea83b5785cd3349838ad36d`; e `522f088b013432f775098df863b851ad87a4f5d0f0296b54cb00d6f13f72720f`; pi `62ab5b9a511eb0fcf5d09717df9ee51f8bd29ea09acf379e6f1045c537ababe2`; log2 `6993b8b6c6f46ae13b5e213aae0d46e784c8acae510f10e6862aecde83a15694`. Receipts, reports and full hashes reported; no new packed-registry installation asserted. This extends, not overwrites, prior phi-specific rev0.6 evidence.
+2. **OWNER-REPORTED HARDWARE RISK:** Ryzen 3900X has unexpectedly powered off on heavy runs, including gamma. The owner selected the older Windows 10/i5-4670 4-core, 8-GiB host with own G: and T: to finish gamma and lemniscate. It has **no E:**; later manually copy verified results and evidence to Ryzen G: and independently hash there. No hardware cause diagnosed; no more high-risk Ryzen heavy runs by default. Preserve any Ryzen gamma partial checkpoint until inspected.
+3. **CLAUDE RESEARCH + OWNER-REPORTED ACL EVIDENCE:** y-cruncher v0.8.7.9547 Windows Swap Mode creates protected `swap/ycs-*/*.sf` with Everyone delete only and Administrators Full Control. Native `RawFile::rename()` returned errno 13 under ordinary `u` despite temporary `SeManageVolumePrivilege`; an elevated Administrator y-cruncher run passed; user removed extra `SeManageVolumePrivilege` grant. `SeLockMemoryPrivilege` warning was nonfatal. No more ACL/privilege tweaks. Native generation must run elevated, swap files left to y-cruncher while active; owned source+swap deleted only after full verification/publish.
+4. **OWNER DECISION — ONE UNATTENDED ELEVATED BAT:** Run gamma then lemniscate sequentially, 10^10 total digits including integer each, native Windows y-cruncher `-verify:1 -mode:swap -TD:4 -PF:taskqueue -M:3g`; G: final packed/receipt/report/log, T: temporary source/swap. Stop on failure (no retry, no unsafe cleanup), verify all 5GB final bytes via independent full reread + SHA-256, publish create-only, remove per-constant large owned scratch after successful publication, print final paths/hashes. Owner accepts that crashed runs may be unrecoverable; no elaborate automatic resume requested.
+5. **SOURCE-INSPECTED + LIVE TEST:** Candidate native Windows automation v0.1r3 ZIP SHA-256 `48539fdfc828dc47382fa79be547e76c9186c589e8e2caa0a3e65e14262948f4` is installed on i5 G: scripts, **not confirmed tracked in E:/Git**. Earlier report validator incorrectly rejected saved `Lemniscate Constant` despite y-cruncher success; v0.1r2 fixed both checks. v0.1r3 permits **test-only** exact output-name re-run/overwrite while keeping production create-only. Actual complete gamma+lemniscate **1,000,000-digit** end-to-end rerun 9 Nov 17:42 Adelaide PASS `OUTLANDISH_TEST_EXIT=0`: gamma 500,000 B, SHA `dc433aa3611be9d7255d1b24a259d3260c259cc1f9e54235a4ea1cb4f980b8ba`, wall 10.683s; lemniscate 500,000 B, SHA `cc896963f40c4dda5b4ec81616ef30680a68f5c03ca9bce21cdf613cfb4a3690`, wall 2.645s. Real y-cruncher verification, exact half-perimeter streaming transform, BCD conversion, complete persisted reread, archive+hard-link publication, owned temp cleanup all passed. Test results isolated in G: `large_artifacts/test_only/`. **No 10^10 Windows production output yet.**
+6. **OWNER DECISION — SCIENTIFIC FREEZE:** Consolidated matching/reporting specification v0.2 was **RATIFIED 9 Nov** after Claude's single review and C1–C20 corrections. It remains *frozen*: do not perform new matching/scanning or work on matching spec until all six complete and qualified binaries exist. Then separate Q1–Q5 qualification/implementation; REAL/NULL segregation and original P1/P2/P3, Oz O1/O2/O3, W→W+1 definitions remain. The available `..._v0_2_RATIFIED.md` file's interior retains pre-ratification status words; preserve as provenance/record discrepancy until a scoped clerical Git change is approved.
+7. **CURRENT OWNER PAUSE:** The 9-Nov assistant previously recommended `RUN_PRODUCTION_AS_ADMIN.bat`, but the owner **paused before execution** to update handovers. No authority to start production is granted by this doc. Current script only checks 100 GB free on T: and 10 GB on G:, which are **not** y-cruncher's proven 10^10 disk/checkpoint requirements; perform actual per-constant full-scale estimates before unattended launch. Check free disk, Windows sleep/restart, elevation, paths and ownership. Output final names `digits_gamma_10_to_10.packed.bin`, `digits_lemniscate_10_to_10.packed.bin`, each 5,000,000,000 B plus receipt and reports.
+8. **FOLDER AUTHORITY:** `GAIS/OUTLANDISH_01` is main research/home for matching, reporting and integration; `GAIS/OUTLANDISH_01/OUTLANDISH_WSL` is existing code/doc development for digit generation (including a possible future reviewed native Windows source mirror). Do not leave the long-term scientific implementation stranded in the child generation folder. Preserve old WSL, original native science and historic docs unchanged. E: source/commit on Ryzen; i5 has only G:/T:.
+9. **GITHUB-VERIFIED SOURCE LIMIT:** GitHub `main` at `06c26a66bfcca12d02e36c49a0b476732d6d3a13` was read via connected GitHub access. v6 and rev0.6 Git blobs precisely match owner-provided files, and the current subtree contains no later Claude handover; `OUTLANDISH_WSL/doc` has independent Claude matching-engine review/response, not ratification. The ratified 9-Nov matching spec v0.2 is supplied separately, unchanged, because it was not yet tracked under `GAIS/OUTLANDISH_01` at that commit. The live Ryzen/i5 disks and any later remote/local Git changes remain uninspected; recheck before install. No Git write was performed.
+
+---
+
+# Prior living addendum rev0.6 — verbatim retained history
+
+# OUTLANDISH_01 — Living Handover Addendum
+
+**Internal revision:** **0.6**  
+**Updated:** 8 November 2026 (Australia/Adelaide)  
+**Current consolidated baseline:** `OUTLANDISH_01_Consolidated_Handover_v6.md`, owner approved on 8 November 2026.  
+**Status:** ACTIVE — owner-reported first full 10^10-digit phi dataset **COMPLETED and published** on G: (verified y-cruncher production generation; 5,000,000,000-byte packed conversion; 12-sample Windows check; complete persisted-file SHA-256 matched the conversion receipt during a full scanner pass; create-only same-volume publication into `digits/`; mandatory deletion of the 10,000,000,001-byte decimal input). The owner subsequently checked the seven expected presence/absence paths. **This is a produced and integrity-checked binary, but it is not yet admitted to any new packed-format registry.** Scientific matching results from the full scan (P1/P2/P3 = 0/0/227) are **unqualified diagnostic results** due to the unresolved shared-prefix discrepancy; **all further scientific scanning remains deferred** until six files are complete and the scanner's source/known-hit tests pass. The Kagari CPU-affinity nonconfinement remains unresolved.
+**Scope:** This is an incremental delta, **not** a replacement for v6, live source code, actual runtime logs, receipts, G: registry, or other on-disk evidence. The previous post-v6 addendum rev0.5 is historical and preserved separately. Rev0.1 was the initially empty post-v6 template.
+
+## 1. Executive checkpoint and immediately applicable instructions
+
+1. **OWNER DECISION — Final format:** Focus production and research on nibble-packed `OUTLANDISH_PACKED_BCD_HIGH_FIRST_V1` only. The legacy one-decimal-digit-per-byte files and byte-oriented production workflow may be retired. Preserve valuable historical code, matching/reporting definitions, tests and evidence as references; do not rewrite functioning generation or packed-scanning code merely to tidy the project.
+2. **OWNER DECISION — Correctness assurance:** **Every production generation uses y-cruncher `-verify:1`.** `-verify:0` remains permissible solely for clearly marked, throwaway performance benchmarks; their output is ineligible for conversion, production registry, scientific matching and parent-project handoff. The owner explicitly accepts the residual risk of **not** performing a second, computationally independent mathematical verification. This does **not** waive converter digit validation, output receipts/hashes, persisted-file integrity checks, or safe registration.
+3. **OWNER DECISION — No legacy-prefix comparison:** The owner explicitly waived the formerly proposed complete first-10^9-digit comparison between new packed files and the six original byte-format files. The old G: byte-format binaries are approved for **eventual deletion**, including before a packed replacement exists, subject to careful inspection of exact paths, live registry references, ongoing readers, locks, and recovery requirements. **No deletion or registry change has been performed by this chat.** Do not silently leave six active TOML entries pointing to deleted files. No cross-format comparison utility is required merely to enable retirement.
+4. **OWNER DECISION — Tuning sufficiently complete:** Stop general-purpose `benchio`/Bytes-per-Seek optimisation unless a concrete production problem justifies reopening it. Initial production baseline: static Linux y-cruncher v0.8.7 Build 9547; Debian ext4 backed by T: HDD; swap mode; `-M:12g`, `-TD:4 -PF:taskqueue`, logical Bytes/Seek **1 MiB**, verification ON; no WSL memory-limit change. Initial RAM/disk **capacity checks** remain necessary but are **not** a mandate for a new optimisation campaign.
+5. **COMPLETED GENERATION — 10^10 phi:** Launched 8 Nov 2026 at **00:53:58 Adelaide time** (2026-11-07 14:23:58 UTC), under `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975`. Produced a y-cruncher verified-generation result for **10,000,000,000 total digits including integer** (`-dec:9999999999`). y-cruncher end time **02:17:00 local**, start-to-end **4,981.736 s (83.029 min)**, shell `real` **83m06.072s**, **EXIT=0** and `GENERATION_EXIT=0`; both base-conversion and decimal-output verification stages completed; spot check good through 7.5 billion. Terminal named saved validation report `Golden Ratio - 20261108-021703.txt`. The source/report were later inspected and the resulting packed file was produced, full-read/digest-checked and published; the **packed registry has not been implemented** (E-07 through E-12).
+6. **CRITICAL NEW OBSERVATION — CPU affinity:** The wrapper inherited the requested `taskset -c 0,2,4,6` mask, but **all nine threads of the actual Kagari calculation process** were permitted logical CPUs **0–23**. The intended four-physical-core OS scheduling restriction was **NOT enforced** in this run. `-TD:4` requests four tasks; it is not equivalent to a four-core hard limit. The thread state and lifetime CPU percentages **do not prove** how many cores were simultaneously busy. The owner, informed of this unexpected condition and previous hard-power-off risk, **chose to let this particular run continue**; it subsequently completed successfully. This is **not blanket approval** to disregard the original four-physical-core limit on future runs. The observed scheduling confinement problem remains unresolved; consider a minimal reliable restriction **before later large launches**, with separately agreed intervention.
+7. **OWNER DECISION — Final size:** After observing 83 minutes for verified 10^10 phi, the owner judged six 10^11-digit computations not worth the expected additional cost for this speculative project. **The agreed target is now six 10^10-digit packed constants**, one at a time. This is a value/cost decision, not a claim that 10^11 runtime can be forecast linearly. The successful 10^10 phi run was production-intended; its large decimal source was subsequently deleted after successful packed-file verification and publication, as required.
+8. **PRODUCTION FILE PUBLISHED — phi (1 of 6):** `wsl_convert.py` produced the 5,000,000,000-byte high-nibble-first packed file on G: staging in 159.875 s (exit 0), streamed SHA-256 `dd80be0c3fdb330fe4e1780c2d53bf03bde297a5dea83b5785cd3349838ad36d`; the Windows 12-sample verifier passed. A complete read of the file by the packed Powerball scanner matched the same digest, and a metadata-evidence check passed; the scan's **matching outputs are NOT yet scientifically accepted**. A checked create-only G: hard-link publication moved the binary and 2,848-byte receipt into `G:\OUTLANDISH_01\large_artifacts\digits\` without a 5 GB copy, staging names were removed, and the exact 10,000,000,001-byte decimal source on T: was deleted. Owner's final read-only inventory confirmed all these states (E-11/E-12). No new packed registry entry exists.
+9. **OWNER DECISION — SCANNER QUALIFICATION GATE:** Suspend **acceptance and further execution of** scientific matching/scanning until **all six 10^10 packed binaries are generated, independently full-hash-verified, published and large intermediate sources cleaned up**. Then review the scanner source, run independently constructed synthetic packed fixtures with **at least two known hits per category P1, P2, P3**, negative, odd/even offset and chunk-boundary cases, and reconcile shared-prefix matches with earlier baselines. Only after this qualification should the six full scientific scans run. Reported differences in early match counts are a **suspected discrepancy**, not yet a proven defect.
+10. **IMMEDIATE NEXT:** Preserve evidence of the completed φ file; choose and preview the second of the six constants for 10^10 verified generation, with per-constant capacity checks and the unresolved affinity risk explicitly handled before its execution. Reuse G: `staging/` to `digits/` and mandatory exact-path decimal-source cleanup on success. For future binaries, prefer a simple standalone complete-file SHA-256 check against the conversion receipt; this avoids running the **scientifically unqualified** scanner for the sake of a digest. No further scientific scans until the separate qualification gate is satisfied.
+
+## 2. Owner decisions since v6 — details and qualifications
+
+### D-01. Production verification; independently recomputing constants waived
+
+**OWNER DECISION, 8 Nov:** All production computations at 10^10 and any eventual 10^11 use `-verify:1`. The owner accepted the residual risk of not doing a separate independent mathematical computation. Existing `wsl_convert.py` validation/report acceptance must remain unchanged. `-verify:0` continues to be restricted to explicitly labelled nonproduction speed tests. The decision avoids redundant second calculations, **not** the normal verified-generation and packed-integrity chain.
+
+### D-02. Packed-only end state; legacy file retirement and comparison waiver
+
+**OWNER DECISION, 8 Nov:** Nibble-packed data replace the old numeric-byte format as the sole active production/research target. The owner explicitly waived any byte-versus-packed full-prefix comparison and authorised deletion of legacy byte-format files. Before any destructive action, inspect the actual G: paths, existing `outlandish.local.toml` state and any active reader/lock; establish a consistent retirement/de-registration/recovery procedure. Never infer that the uploaded historical TOML exactly matches live state. Existing G: files have **not** been deleted based on the supplied evidence. The historical native-Windows code/docs remain scientific and engineering reference material.
+
+### D-03. End targeted tuning; proceed with meaningful production data
+
+**OWNER DECISION, 8 Nov:** The previously completed 300m, 1e9, 3e9 and 1-MiB/seek `benchio` tests are sufficient for initial production choices. Keep the current 1 MiB logical Bytes/Seek baseline (not claimed optimal), ~12 GiB y-cruncher cap, and intended four-physical-core limit. Per-constant resource estimation and capacity precautions are sensible. The earlier proposal to produce one or two 10^10 files and then decide between six 10^10 and six 10^11 was **superseded by D-05** after the first complete φ run. Six 10^10 packed files are now the fixed production target.
+
+### D-04. Proceed with the present run despite effective affinity anomaly
+
+**OWNER DECISION during live 10^10 phi run, 8 Nov:** After seeing `/proc/353/task/*/status` report all nine Kagari threads permitted CPUs `0-23`, and after being advised to interrupt, the owner stated: **“I am going to let it run and if it crashes so be it.”** Record as an informed **run-specific** continuation decision. Do not relabel this as verified four-core compliance or as general relaxation of the four-core safety limit. The computational result remains eligible for assessment only if the process exits successfully and its verification evidence passes; exposure to an affinity anomaly neither automatically proves digit corruption nor supplies assurance against it.
+
+### D-05. Final target: six 10^10-digit production files; do not pursue 10^11
+
+**OWNER DECISION, 8 Nov:** Based on the successful verified 10^10 phi run (~83 minutes), the owner decided that the time, space and effort of six 10^11-digit runs would not be warranted for this speculative programme. **Commit to six 10^10-digit packed files**, generated, independently full-hash-verified and published one at a time, with scientific scanning deferred to a separately qualified phase; do not conduct further 10^11 tuning or capacity work by default. The rough '10x time' comparison was the owner's planning heuristic, **not a measured linear scaling law**. This decision supersedes the earlier D-03/v6 conditional choice of six at 10^11 versus 10^10. Continue with `-verify:1`, existing 12 GiB and TD4/1 MiB settings as the working baseline, with per-constant capacity checks. The unresolved actual CPU-affinity nonconfinement is not thereby erased.
+
+### D-06. Defer scientific scanning; qualify implementation with synthetic known-hit fixtures
+
+**OWNER DECISION, 8 Nov:** The owner reported that initial matching counts during scanning of the new 10^10 phi packed data appeared inconsistent with historical scanning on smaller files. The exact observed values, input provenance and comparison conditions have **not** yet been supplied, so this is an **unresolved anomaly requiring investigation**, not a confirmed scanner defect. The owner explicitly deferred scientific scanning until **all six 10^10 packed files have been produced, full-hash-verified, durably published and intermediate source text cleaned up**. Before any full scientific scan, inspect/review source code (including nibble unpacking, start/end offset conventions, all alignment cases, overlapping P1/P2/P3 classification, drawn-order versus any-order logic, historical-draw selection, chunk boundaries and reporting). Run artificial fixtures with at least **two deliberately placed, independently expected hits in each currently implemented category** P1, P2 and P3, including odd/even offsets and cross-chunk cases, plus negative controls and exact expected counts/offsets. Compare the common digit prefix against historical runs under demonstrably equivalent data, definitions and filters; investigate any discrepancy before accepting scientific results. This postpones the *scientific scan*, **not persisted-file SHA-256 assurance**. For future files, use a standalone full-file SHA-256 check from G: without invoking the scientifically unqualified scanner. For the already completed φ file, the scanner performed the full persisted-file digest comparison and its saved summary was checked; **no separate standalone `sha256sum` was run** (E-11). Retain suspect/partial scan outputs as diagnostic-only until reconciled; do not claim scientific PASS from them.
+
+## 3. Experimental findings — first 10^10 phi run (generation, packing and publication completed)
+
+### E-01. Preflight, launcher preview and launch configuration
+
+**OWNER-REPORTED OUTPUT, 8 Nov:** In Debian under WSL2, from E:-mounted `GAIS/OUTLANDISH_01/OUTLANDISH_WSL`:
+
+| Preflight item | Owner-reported result |
+|---|---|
+| y-cruncher process before launch | No matching process |
+| Debian RAM | `free -h`: 15 GiB total, about 15 GiB initially available |
+| Debian OS swap | 4.0 GiB, 0 B used |
+| ext4 `/` | `/dev/sdd`: 1007 GiB capacity, 955 GiB available before run |
+| Windows T: mount | 5.5 TiB total, 2.6 TiB available at preflight |
+| Windows G: mount | 5.5 TiB total, 3.5 TiB available at preflight |
+| Existing work directory | `/home/u/outlandish-work`: 268 KiB before run |
+| Executable | `/home/u/outlandish-test/y-cruncher v0.8.7.9547-static/y-cruncher` |
+| Bash syntax | `bash -n wsl_generate.sh`: PASS |
+| Preview | `PREVIEW ONLY`, no computation or directories created; `VERIFY_OUTPUT=ON`, `RUN_CLASS=VERIFIED_GENERATION` |
+
+The owner then ran:
+
+```bash
+time taskset -c 0,2,4,6 bash wsl_generate.sh \
+  --constant phi \
+  --digits 10000000000 \
+  --mode swap \
+  --memory 12g \
+  --td 4 \
+  --run \
+  --ack-large-run 10000000000
+
+echo "GENERATION_EXIT=$?"
+```
+
+The exact **actual** attempt was `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975`. This is not the earlier preview-only timestamp/attempt directory. The launched command contained `custom goldenratio -dec:9999999999 -hex:0 -od:1 -compress:0 -verify:1 -mode:swap -TD:4 -PF:taskqueue -M:12g -swap:raid0 <attempt>/swap`.
+
+### E-02. y-cruncher reported resource estimates and actual initial allocation
+
+**OWNER-REPORTED OUTPUT (run start):**
+
+| Value | Reported |
+|---|---:|
+| Decimal digits | 9,999,999,999 places, hence 10,000,000,000 total incl. integer |
+| Verify Output | Enabled (`-verify:1`) |
+| Mode/framework | Swap; Task Queue 4 / ? / 24 (all cores) — topology/task report, **not proof of physical-core use** |
+| Far-memory tuning | **1.00 MiB/seek, no parallelism** |
+| Logical memory needed | **12.0 GiB** POSIX mmap |
+| Working memory at computation start | **11.9 GiB** |
+| Additional twiddle tables | 13.9 MiB |
+| I/O buffers | 64.0 MiB |
+| Logical disk requirement | **37.0 GiB**, plus **9.31 GiB for output** |
+| Largest checkpoint | **21.4 GiB** |
+| Warning | Cannot set thread priority without elevated privileges; previously observed as nonfatal |
+
+These resource figures are y-cruncher's reported requirements/allocations, **not** measured peak physical disk traffic, a complete run high-water mark or proof of end-to-end success. The output estimate corrects a much earlier approximate 17 GiB menu allowance for a different preflight. The exact intended decimal source is approximately 10,000,000,001 bytes if written as one integer digit, point, and 9,999,999,999 fractional digits (subject to the actual output contract).
+
+### E-03. Actual child process affinity anomaly — confirmed
+
+**OWNER-REPORTED LIVE OBSERVATIONS:**
+
+- `pgrep` showed wrapper process PID **350**, shell PID **352**, and actual `Binaries/19-ZN2 ~ Kagari` computation PID **353**. **PIDs are ephemeral diagnostic identifiers, not reusable commands or permanent process identity.**
+- Initial inspection mistakenly targeted wrapper PID 350 and showed one thread allowed `0,2,4,6`. **This does not establish the real computation's affinity.**
+- Corrected inspection, when PID 353 was at approximately **12m05s elapsed**, found **nine calculation threads and `9 0-23`** in their `Cpus_allowed_list` values. Therefore all were allowed all 24 logical CPUs; the mask requested at launcher level was absent for the real worker process.
+- A later `ps -L -p 353 -o tid,psr,pcpu,stat,comm` snapshot reported nine threads with `PSR` values **5, 8, 11, 7, 14, 16, 19, 9, 17** (all outside or partly outside the selected mask) and lifetime `%CPU` values approximately **3.9, 1.9, 1.0, 1.3, 1.3, 1.7, 1.2, 0.0, 0.0**. The displayed scheduling states were mostly `S`, with one `D` (uninterruptible kernel wait). These observations establish that execution was **not confined** to logical CPUs 0,2,4,6; **they do not establish simultaneous 9-core work**, and neither `PSR` nor lifetime `%CPU` is a concurrency ceiling measurement.
+- **Mechanism unresolved:** The separate Kagari executable or its runtime may reset thread affinity, but the evidence does not establish which component changed the mask. Do not report a proven cause.
+
+**UNRESOLVED FOR FUTURE RUNS:** Select and validate a robust CPU-confinement mechanism for the actual child and all threads, while respecting the owner's existing four-physical-core ceiling. No code adjustment, cgroup configuration or process-affinity change has yet been applied by this chat.
+
+### E-04. Live resource snapshots — no capacity failure apparent
+
+**OWNER-REPORTED LIVE OBSERVATIONS:**
+
+| Measure | Initial monitoring snapshot | Later corrected-affinity snapshot / subsequent check |
+|---|---:|---:|
+| Debian RAM | ~12 GiB used, 3.0 GiB available | ~12 GiB used, 3.0 GiB available |
+| Debian OS swap | **0 B used** | **0 B used** |
+| ext4 `/` used | **6.0 GiB** | **22 GiB** (935 GiB available) |
+| Calculation PID 353 RSS | Not collected on initial wrapper-only inspection | **12,598,144 KiB** (`ps` RSS) |
+
+The later lightweight snapshot reconfirmed ~12 GiB used, ~3.0 GiB available and 0 B OS swap. These are **snapshots, not peak measurements or proof that all later phases will fit**. Growth from 6 to 22 GiB ext4 used is expected for an active disk-backed calculation but does not by itself establish the eventual peak or the exact remaining scratch size. These were intermediate observations; final y-cruncher exit and verification results were subsequently supplied in E-05.
+
+
+### E-05. First verified 10^10 phi run — completed successfully (historical generation-stage evidence, 8 Nov 2026)
+
+**OWNER-REPORTED TERMINAL OUTPUT (not an assistant-executed test):** The exact attempt described in E-01 completed with **`EXIT=0`** from the `wsl_generate.sh` wrapper and **`GENERATION_EXIT=0`** in the calling terminal. y-cruncher reported **`Verify Output: Enabled`**, and printed completed **`Verifying Base Conversion`** and **`Verifying Decimal Output`** phases. Its internal `Spot Check: Good through 7,500,000,000` is positive but by itself does not prove all 10^10 digits; the verification-enabled run is the accepted generation-assurance level, with independent mathematical recomputation expressly waived by the owner. The validation file reported is `Golden Ratio - 20261108-021703.txt`; its bytes and existence have not yet been inspected in this chat. At that stage no packed `.bin` had yet been demonstrated; later evidence of packing and G: publication is in E-09/E-12, while packed-format registration remains pending.
+
+| Measurement (owner's output) | Actual result |
+|---|---:|
+| Total decimal digits including integer | **10,000,000,000** (`-dec:9999999999`) |
+| Golden Ratio computational stage | 1713.867 s (28.564 min) |
+| InvSqrt(5) within computational stage | 1434.397 s (23.907 min) |
+| Small Multiply / Accumulate / Shift | 97.351 / 91.558 / 89.356 s |
+| Processing hexadecimal digits | 27.066 s |
+| Base converting | **1806.782 s** (30.113 min) |
+| Writing decimal digits | 246.445 s (4.107 min) |
+| Verifying base conversion | **1073.155 s** (17.886 min) |
+| Verifying decimal output | **99.045 s** (1.651 min) |
+| Combined reported verification phases | **1172.200 s** (~19.537 min; 23.53% of start-to-end wall) |
+| `Total Computation Time` (y-cruncher's separately defined metric) | 3520.682 s (58.678 min) |
+| y-cruncher start-to-end wall | **4981.736 s (83.029 min)** |
+| Shell `real` / `user` / `sys` | **83m06.072s / 10m55.058s / 0m26.366s** |
+| Start / end (local, Adelaide) | **8 Nov 2026 00:53:58 / 02:17:00** |
+| CPU utilization / multi-core efficiency (y-cruncher's labels) | 14.59% + 0.21% kernel / 0.61% + 0.01% kernel |
+| Reported validation filename | `Golden Ratio - 20261108-021703.txt` |
+| Wrapper / shell exit | **`EXIT=0`; `GENERATION_EXIT=0`** |
+
+**Interpretation and qualifications:** This single run establishes a practical verified phi 10^10 baseline using 12 GiB memory cap, TD4/taskqueue, 1 MiB/seek, native ext4 scratch and verification ON. The owner expressed a preference to **keep the present tuning** rather than undertake further optimisation. Base conversion and verification are major real costs. Do not equate `Total Computation Time` to wall time or apply phi's time to other constants or 10^11 by linear scaling. The earlier **CPU-affinity anomaly remains open**: successful completion does not prove four-physical-core confinement. The console's initial y-cruncher launcher identification showed Build 9547-gcc while the final calculation report identified Build 9547-icx; the selected `Kagari` compute binary and 9547 build remained consistent, so the different compiler suffixes are recorded as an observation, not asserted to be a failure. **At that historical checkpoint** there was no post-run file inventory or packing evidence; these were supplied subsequently in E-07/E-12. The packed registry remains outstanding.
+
+### E-06. Historical immediate post-run plan (now superseded by E-09/E-10)
+
+Read-only inspect the actual `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975` directory; list exact `.txt` decimal source and validation report; check their sizes and the saved report's verification lines; list/measure residual `swap/`; check ext4/T:/G: capacity. Do not delete, move or regenerate the source. After file identity and destination checks, preview current `wsl_convert.py` conversion into a **new** T:-staging `.packed.bin`, specifying `--keep-text` and the correct 10^10 digit count. Only execute conversion after checking its preview. Then run Windows sampled packed verification and a **full 10^10-digit packed Powerball scan** whose independently read digest matches the conversion receipt. Once packed data have passed and durable placement is agreed, remove only explicitly inspected, unneeded intermediates and retain small logs/verification evidence. Existing G: byte-format retirement and packed registry/promotions remain separate operations.
+
+### E-07. Owner-supplied post-run filesystem inventory (8 Nov 2026)
+
+**OWNER-REPORTED TERMINAL OUTPUT:** `pgrep -af '[y]-cruncher|[K]agari'` had no matching processes. The exact run directory `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975` contained:
+
+| Entry | Size / evidence |
+|---|---:|
+| `Golden Ratio - Dec - Newton.txt` | **10,000,000,001 bytes** (10^10 decimal digits + decimal point) |
+| `Golden Ratio - 20261108-021703.txt` | **14,252 bytes**, saved validation report |
+| `run.log` | **27,659 bytes** |
+| `swap/` | **8.0 KiB**; only small `ycs-0-0/` structure listed, no substantive residual swap data shown |
+| Work directory as a whole | **9.4 GiB** |
+| ext4 `/dev/sdd` | 1007 GiB total, **946 GiB available**, 11 GiB used |
+| Host T: mount | **2.6 TiB available** |
+| Host G: mount | **3.5 TiB available** |
+
+Saved report contained the expected constant name, 9,999,999,999 decimal places, positive 7.5e9 spot-check and the `Verifying Base Conversion` and `Verifying Decimal Output` phase labels. This inspection is consistent with a verified-generation output; converter's own report-validation gate remains binding. **No packed file or receipt was reported yet.**
+
+### E-08. Historical G: staging plan (G: path and scanner prerequisite superseded by later owner decisions)
+
+The owner requires each constant's **5,000,000,000-byte** packed output to be created successfully under the designated G: production root, with minimal redevelopment and prompt cleanup of verified large intermediates. Direct conversion into a new isolated **G: packed staging subdirectory** was recommended (proposed folder `G:\OUTLANDISH_01\large_artifacts\packed_v1\staging\`, to be confirmed on disk) to avoid a redundant 5 GB T: copy. Existing `wsl_convert.py` insists on pre-existing `output-root/staging`, uses create-only hard-link publication and produces a nearby `*.wsl-receipt.json` with **`PACKED_STAGING_ONLY_NO_LEGACY_REGISTRY`** scope; success at G: cannot be assumed until tested. Keep the source decimal text with `--keep-text` until a sample verification and full packed scan independently confirm the stored file/digest. Then perform **exact-path** cleanup of the decimal source, not a wildcard deletion. Real packed registration/atomic promotion remains to be implemented or separately addressed; do not claim that a staged file is registered merely because it is on G:. Legacy byte-format data and the still-active old registry must be retired coherently in a separately controlled operation.
+
+### E-09. First 10^10 phi packed conversion and sampled check (owner-reported PASS)
+
+**OWNER-REPORTED OUTPUT, 8 Nov 2026:** The owner first tested G: staging hard-link creation/publication with tiny disposable files and obtained **G: HARD-LINK TEST PASS**; test files were removed. `wsl_convert.py` preview confirmed the correct `G:\OUTLANDISH_01\large_artifacts\staging` destination, exact 5,000,000,000-byte packed size, source/report identity and `--keep-text`. Actual conversion then completed with:
+
+- Input: `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975/Golden Ratio - Dec - Newton.txt` (10,000,000,001 bytes).
+- Output: `/mnt/g/OUTLANDISH_01/large_artifacts/staging/digits_golden_ratio_10_to_10.packed.bin` (5,000,000,000 bytes reported).
+- Receipt: same output name plus `.wsl-receipt.json` in staging.
+- **Streamed packed SHA-256:** `dd80be0c3fdb330fe4e1780c2d53bf03bde297a5dea83b5785cd3349838ad36d`.
+- Converter reported `PACKED CONVERSION PASS`, elapsed **159.875 s**, shell `real` **2m39.957s**, `CONVERSION_EXIT=0`, and **no complete persisted-file readback**.
+- Windows `WSL_Verify_Packed.bat` reported **`PACKED STAGING SAMPLE VERIFICATION PASS`**, 12 samples, correct declared length, `full_file_sha_independently_recomputed=false`, `no_registration=true`, and `VERIFIER_EXIT=0`.
+
+Neither check establishes that the *entire persisted packed file on G:* matches the receipt. This remains pending. Owner previously approved mandatory deletion of the exact large decimal source **after full-file integrity confirmation and durable publication**, with small logs/reports/receipts retained. Reruns may intentionally replace an existing published binary, but do **not delete the old target in advance** of having a complete validated replacement ready; use a reviewed same-volume replacement approach. The established directory names are `staging`, `digits`, `results`, `logs`, `scratch` under `G:\OUTLANDISH_01\large_artifacts`; the proposed separate `packed_v1/` subtree was withdrawn.
+
+### E-10. Scientific scan discrepancy reported; scan counts not accepted (later full scan completion in E-11)
+
+**OWNER-REPORTED OBSERVATION, 8 Nov 2026:** While attempting the new packed Powerball scan, the owner noticed that initial match results appeared different from earlier results obtained on shorter constant files for what should be the shared starting digits. At the time of the initial concern, the owner had not supplied the exact differing counts, offsets, or comparison conditions; a completed `SCAN PASS` was **subsequently supplied** (E-11). Therefore neither a scanner defect nor the source of the difference is established. The scan subsequently completed (E-11); its output remains **diagnostic only**. The scientific scanner is not a prerequisite for independent complete-file digest checking or completion of the six production binaries. Qualification and reconciliation are deferred as specified in D-06.
+
+### E-11. Full φ packed scanner pass and saved metadata verification — integrity accepted; scientific counts unqualified
+
+**OWNER-REPORTED OUTPUT, 8 Nov 2026:** Despite the decision to defer future scientific scanning, the already initiated `WSL_Scan_Packed_Powerball.bat` completed scanning the full 10,000,000,000-digit φ packed file on G: staging. It printed `SCAN PASS`, `SCAN_EXIT=0`, and results directory:
+
+`G:\OUTLANDISH_01\large_artifacts\results\packed_run_20261108T012705Z_43564c3c`
+
+Its progress ended at P1/P2/P3 **0/0/227**. These results are **NOT scientifically qualified**; preserve the exact results and scanner implementation for later discrepancy investigation, but do not interpret the match counts as validated.
+
+**OWNER-REPORTED METADATA CHECK, 8 Nov:** A subsequently executed Python read-only check loaded the staged conversion receipt and the scan `summary.json`, checked identity (`phi`, 10^10 digits), packed byte length 5,000,000,000, and the complete scanned-file digest, and printed:
+
+```text
+FULL-FILE INTEGRITY EVIDENCE: PASS
+PRODUCTION DESTINATION: AVAILABLE
+MATCH COUNTS (UNQUALIFIED): {'P1': 0, 'P2': 0, 'P3': 227}
+READY FOR CREATE-ONLY PUBLICATION
+```
+
+The checked fields were `scanned_full == true`, `scanned_digits == 10000000000`, `digest_compared_to_conversion_receipt == true`, and `scanned_packed_sha256 == dd80be0c3fdb330fe4e1780c2d53bf03bde297a5dea83b5785cd3349838ad36d`, equal to the receipt's `binary_sha256_streamed`. This is evidence that a full read of the persisted file produced the expected SHA-256, even though the **scientific matching logic itself is under review**. **No separate standalone `sha256sum` invocation has been supplied or performed.** Do not retroactively claim one or suppress the originally reported prefix-result anomaly.
+
+### E-12. Production publication and mandatory decimal-source cleanup — owner-verified final layout
+
+**OWNER-REPORTED ACTION, 8 Nov 2026:** After E-11, the owner executed a targeted Python publication/cleanup script which checked the staged file, receipt, decimal source, report, log and scan summary; checked byte counts, names and digest identity, and report SHA-256 against the receipt; refused existing final targets; used `os.link()` to create G: production names for binary and receipt; verified same-file identities and byte count; unlinked staging names; and deleted **only the exact 10,000,000,001-byte decimal source**. The script also attempted to remove empty `swap/ycs-0-0` and `swap` directories while retaining small reports/logs. Its complete execution transcript was not supplied, so the following **independent read-only filesystem inventory from the owner's Debian terminal** is the decisive observed final state:
+
+| Path / entry | Owner-reported final state |
+|---|---|
+| `/mnt/g/OUTLANDISH_01/large_artifacts/digits/digits_golden_ratio_10_to_10.packed.bin` | **PRESENT, 5,000,000,000 bytes** |
+| Same path plus `.wsl-receipt.json` | **PRESENT, 2,848 bytes** |
+| `staging/digits_golden_ratio_10_to_10.packed.bin` | **ABSENT** |
+| Same staging name plus `.wsl-receipt.json` | **ABSENT** |
+| `/home/u/outlandish-work/phi_10000000000_20261107T142358Z_3975/Golden Ratio - Dec - Newton.txt` | **ABSENT — mandatory large-source cleanup achieved** |
+| Same run directory: `Golden Ratio - 20261108-021703.txt` | **PRESENT, 14,252 bytes** |
+| Same run directory: `run.log` | **PRESENT, 27,659 bytes** |
+
+**ACCEPTED OUTCOME:** One of six 10^10-digit constant binary files has been generated with y-cruncher `-verify:1`, nibble-packed, persisted-data integrity-checked, and placed in the agreed G: production `digits/` directory with its receipt. No unnecessary extra full-file copying was required by the same-volume hard-link move. **This is filesystem publication, not an entry in a new packed-format registry.** The old byte-format registry/files have not been shown retired, and the scientific scanner remains unqualified. The `*.wsl-receipt.json` retains its original conversion/staging semantics even after being moved beside the production file; a later registry/workflow must not silently treat this as a different document type. No post-publication independent byte-by-byte hash re-read has been made; the verified G: file was renamed via hard-link identity.
+
+**OWNER INTENT FOR NEXT FILES:** Repeat verified 10^10-digit production one constant at a time, create packed output directly on G: staging, validate the entire persisted file via a simple standalone SHA-256 comparison rather than executing the unqualified scientific scanner, publish safely under G: `digits/`, then **mandatorily delete the exact large decimal source** while preserving reports, logs, receipts and integrity evidence. Intentional reruns may replace existing final files only with a validated replacement ready; do not delete old target before successful validation. Avoid large redevelopment; qualify the scanner after all six files exist.
+
+## 4. Source, test, documentation and production-state changes since v6
+
+- **SOURCE / TEST:** No Python, Bash, BAT, converter, scanner, registry or test-file modification has been reported or performed in this chat since v6. A completed full φ scan produced provisional results and matched the full-file receipt digest; scanner source re-review and synthetic fixture tests are required *before* scientific **acceptance or further scans**.
+- **PRODUCTION G:** The 5,000,000,000-byte phi packed file and 2,848-byte receipt are **present under G: `digits/`**; their former `staging/` names are absent. The large decimal source is confirmed absent; small log and validation report remain. This is verified filesystem publication **without an active packed registry entry**. Legacy byte retirement remains pending.
+- **DOCUMENTATION:** This file is now living addendum rev0.6. The approved v6 consolidated handover is retained unchanged as the baseline; where it still directs legacy prefix comparisons or treats 10^10 generation as unstarted, this addendum records the later controlling owner decisions and actual launch evidence.
+
+## 5. Risks, anomalies, follow-ups and completion checkpoints
+
+| Topic | Current state | Next handling |
+|---|---|---|
+| Phi y-cruncher generation | **PASS**: 10^10 digits, verification enabled, EXIT=0; original decimal text subsequently deleted | Preserve small `run.log` and validation report |
+| Phi nibble conversion | **PASS**, 5,000,000,000 bytes, streamed digest and receipt, 159.875 s; final file present in `digits/` | Preserve binary, receipt and evidence; packed registry remains pending |
+| Windows staged sample verification | **PASS**: 12 samples, VERIFIER_EXIT=0 | Does not substitute for full stored-file hash |
+| Phi full-file integrity on G: | **PASS via full scientific-scanner I/O and recorded digest check**; standalone `sha256sum` **NOT** separately run | For remaining constants use standalone `sha256sum` or equivalent complete read; scientific counts still unqualified |
+| Phi published production in `digits/` | **CONFIRMED**, 5,000,000,000-byte binary and 2,848-byte receipt; staged names absent | New packed registry still pending; retain provenance |
+| Decimal-source deletion | **DONE**, owner confirmed 10,000,000,001-byte phi source absent; small report and log retained | Require same targeted cleanup for each new verified production file |
+| Scientific scanning / matching results | **0/0/227 from completed φ scan, UNQUALIFIED**; possible shared-prefix discrepancy | Defer further scans; after six files finished, source-review and test ≥2 constructed known hits per P1/P2/P3 plus negatives/boundaries, reconcile earlier baselines, then scan six |
+| CPU affinity | **CONFIRMED NONCONFINEMENT** on Kagari threads (0–23 permitted), notwithstanding `taskset 0,2,4,6`; completed successfully | Preserve as an unresolved safety/configuration risk for later production runs; do not claim enforced four-core limit |
+| OS memory and swap | Samples around 12 GiB RAM used, 3 GiB available, Linux OS swap 0 B | Continue capacity checks for other constants; no general retuning or larger WSL limit approved |
+| Legacy byte files | Owner approves retirement and waives old-format prefix comparison | Exact-path, registry-coherent cleanup; do not silently leave active entries referencing deleted files |
+| Scale | **One published (φ) / six 10^10-digit files**, not 10^11 | Next: preview a second constant (proposed `e`), check its capacity and unresolved affinity risk, then owner-authorised verified production; scientific scans deferred |
+
+## 6. Addendum revision history
+
+| Revision | Date | Entry |
+|---|---|---|
+| 0.1 | 2026-11-08 | Created clean post-v6 incremental template; no new findings at that time. |
+| 0.2 | 2026-11-08 | Added decisions on production `-verify:1`, independent computation waiver, nibble-only production, legacy-prefix comparison waiver and retirement, tuning closure, first 10^10 phi launch, actual resource observations, **Kagari 9-thread `0-23` CPU-affinity anomaly**, and owner decision to let the then-in-progress run continue. |
+| 0.3 | 2026-11-08 | Recorded the **verified 10^10 phi generation completion**: end-to-end 4981.736 s (83.029 min), shell `real` 83m06.072s, both verification phases completed, `EXIT=0` and `GENERATION_EXIT=0`, phase breakdown, final validation-report filename and accepted continuing tuning baseline. Affinity nonconfinement remains unresolved; packed conversion, stored digest/scanner verification, promotion and cleanup still pending. |
+| **0.4** | **2026-11-08** | Recorded owner commitment to **six 10^10 packed constants** (dropping 10^11), inspected phi source/report/log/swap exact sizes, capacity and no running y-cruncher; established planned direct G: isolated packed staging and delete-source-only-after-full-scanner-hash workflow. Packed conversion and formal registration not yet done. |
+| **0.5** | **2026-11-08** | Recorded actual phi 10^10 packed conversion on G: staging, SHA-256 and Windows sample-verifier PASS, and the owner-reported early match discrepancy. Owner deferred all scientific scanning until six packed files are independently full-hash-verified and scanner source/known-hit synthetic fixtures are qualified. Replaced full-scanner-dependent stored-file integrity requirement with standalone SHA-256 readback. Mandatory source cleanup and safe G: publication remain pending. |
+| **0.6** | **2026-11-08** | Recorded completed full φ Powerball scan (`SCAN_EXIT=0`), full persisted-file digest match and metadata check while retaining **unqualified** scientific counts 0/0/227; safe same-G hard-link publication into `digits/`; owner-observed final 5,000,000,000-byte file, 2,848-byte receipt, absent staging names and deleted 10,000,000,001-byte decimal source; small report and log retained. Explicitly distinguishes scanner-based full hash from unperformed standalone `sha256sum`, and notes no packed-registry entry. Next: second constant preview/capacity/affinity decision. |
+
+## Recording rules for subsequent revisions
+
+- Keep evidence types clear: **OWNER DECISION**, **OWNER-REPORTED OUTPUT**, **SOURCE-INSPECTED**, **PROPOSED**, **UNKNOWN**. A terminal message from the owner's machine is evidence **reported by the owner**, not an assistant-executed test.
+- Do not conflate running, process exit 0, y-cruncher verification PASS, successful packed conversion, complete persisted packed-file hash match, registry promotion or scientific validation. Each has separate evidence requirements.
+- Preserve exact run paths, output reports, settings, actual data sizes and warnings; include significant failures/anomalies without retroactively replacing them with later success.
+- Future changes to this living document keep the filename `OUTLANDISH_01_Living_Handover_Addendum.md`, increment internal revision, and append a dated revision-history entry. The next consolidation merges the accumulated deltas into a successor baseline before resetting the addendum.
+- This document does not itself authorise further large runs, destructive G: operations, code changes or parent-project integration changes. Execution approval remains with the owner.

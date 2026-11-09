@@ -1,3 +1,8 @@
+<!-- OUTLANDISH_CURRENT_HANDOVER_2026_11_09 -->
+> **Current generation checkpoint — 9 November 2026.** This README below documents the older 7-Nov WSL packed-code candidate and is retained as historical implementation documentation. Four 10^10-digit packed files have been completed on Ryzen/WSL; two remain. Due to Ryzen shutdowns, final gamma and lemniscate are now planned via one **elevated native-Windows BAT on an i5-4670** (its G:/T:, no E:). Its two-constant 1e6+1e6 full end-to-end test PASSED; full 10^10 production has **not started**. Read `OUTLANDISH_01_Generation_Workflow_Update_2026-11-09.md` and the parent `../OUTLANDISH_01_Consolidated_Handover_v7.md` first. The child is for generation; return to `GAIS/OUTLANDISH_01` for matching, null-world evaluation and eventual parent-project method design. No generation or scan is authorised by this banner. Original README follows intact.
+
+---
+
 # OUTLANDISH_WSL — packed-decimal WSL integration candidate v0.2
 
 **7 November 2026 — DEVELOPMENT CANDIDATE, NOT INSTALLED OR PRODUCTION-RATIFIED.**
