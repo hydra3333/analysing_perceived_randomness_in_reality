@@ -1,0 +1,112 @@
+REHEARSAL (PRELIMINARY, DRAFT package): positive path, lf clone, Python /home/claude/work/v313/bin/python; base c48ac3c; HEAD c48ac3c; step 10 OMITTED
+--- step 0 (rehearsal form: no pull; clean tree): clean
+--- step 1 PRE
+    HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+    barriers: U absent; E absent; P absent (as this phase requires)
+    staged process_check.py SHA-256 21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836 matches the manifest
+    changes since the base outside exchange/ (information): 0
+    PRE PASS: package intact; clean tree; 37 new paths absent; 34 files to replace and 1 to delete at their base version. Nothing was changed.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 2 install check
+    CLEAN
+    (exit 0)
+--- step 3 take U
+    CLEAN; install lock taken for MHUP_A
+    (exit 0)
+--- step 4 create E
+    BARRIER PASS: E created (src/methods/E_001/IN_DEVELOPMENT.txt)
+    (exit 0)
+--- step 4 create P
+    BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+    (exit 0)
+--- step 5 install check
+    CLEAN
+    (exit 0)
+--- step 6 copy gate
+    COPY PASS: part gate: 10 files written and read back
+    (exit 0)
+--- step 7 install check
+    CLEAN
+    (exit 0)
+--- step 8 copy rest
+    COPY PASS: part rest: 61 files written and read back, 1 deleted
+    (exit 0)
+--- step 9 POST
+    HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    POST PASS: exactly the 37 expected new paths, 34 modified files and 1 deletion, all with the expected bytes.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 10 suite: OMITTED in this run
+--- step 11 install check
+    CLEAN
+    (exit 0)
+--- step 12 install record
+    INSTALL RECORD PASS: /home/claude/work/pos2_lf/repo/src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+    (exit 0)
+--- step 12 stage
+
+    (exit 0)
+--- step 12 STAGED
+    HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    STAGED PASS: the index holds exactly the package commit (73 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 12 commit
+
+    (exit 0)
+--- step 13 COMMITTED
+    HEAD: a3b116c83d575fa1d6a7df96448450cf5176e8e5 (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    COMMITTED PASS: the package commit (a3b116c) added exactly 37 files and the install record, modified 34 and deleted 1; all Git blobs match; the install record names this package and manifest; barriers U, E and P in place
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 14 install check
+    CLEAN
+    (exit 0)
+--- step 15 remove E
+    BARRIER PASS: E removed (src/methods/E_001/IN_DEVELOPMENT.txt)
+    (exit 0)
+--- step 15 remove P
+    BARRIER PASS: P removed (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+    (exit 0)
+--- step 16 release record
+    RELEASE RECORD PASS: /home/claude/work/pos2_lf/repo/src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+    (exit 0)
+--- step 17 stage
+
+    (exit 0)
+--- step 17 STAGED
+    HEAD: a3b116c83d575fa1d6a7df96448450cf5176e8e5 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    STAGED PASS: the index holds exactly the release commit (1 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 17 commit
+
+    (exit 0)
+--- step 17 RELEASED
+    HEAD: 9664d9505ae410927c84be3c06a9cfee85ea231a (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (9664d95) has one parent, the package commit (a3b116c), and adds exactly the release record; the record is canonical, names 2 released entries and the committed insta
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step (rehearsal only) the project reader validates the records
+    RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+    (exit 0)
+--- step 18 RELEASED again
+    HEAD: 9664d9505ae410927c84be3c06a9cfee85ea231a (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (9664d95) has one parent, the package commit (a3b116c), and adds exactly the release record; the record is canonical, names 2 released entries and the committed insta
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 18 release U
+    CLEAN; install lock released for MHUP_A
+    (exit 0)
+end state: barriers {'U': None, 'E': False, 'P': False}; no_pycache_ever exists: False; __pycache__ in staging: 0; status lines: 0
+9664d95 MHUP-A rehearsal: release commit
+a3b116c MHUP-A rehearsal: package commit
+c48ac3c OUTLANDISH pre-PARKING analysis ideas and spec
+REHEARSAL PASS (lf; step 10 OMITTED; step 19 omitted)

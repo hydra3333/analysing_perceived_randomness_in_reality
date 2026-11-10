@@ -1,0 +1,103 @@
+REHEARSAL (PRELIMINARY, DRAFT package): positive path, crlf clone, Python /home/claude/work/v315/bin/python; base c48ac3c; HEAD c48ac3c; step 10 INCLUDED (the suite runs with U, E and P in place)
+--- step 0 (rehearsal form: no pull; clean tree): clean
+--- step 1 PRE
+    HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+    barriers: U absent; E absent; P absent (as this phase requires)
+    staged process_check.py SHA-256 21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836 matches the manifest
+    changes since the base outside exchange/ (information): 0
+    PRE PASS: package intact; clean tree; 37 new paths absent; 34 files to replace and 1 to delete at their base version. Nothing was changed.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 2 install check
+    CLEAN
+    (exit 0)
+--- step 3 take U
+    CLEAN; install lock taken for MHUP_A
+    (exit 0)
+--- step 4 create E
+    BARRIER PASS: E created (src/methods/E_001/IN_DEVELOPMENT.txt)
+    (exit 0)
+--- step 4 create P
+    BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+    (exit 0)
+--- step 5 install check
+    CLEAN
+    (exit 0)
+--- step 6 copy gate
+    COPY PASS: part gate: 10 files written and read back
+    (exit 0)
+--- step 7 install check
+    CLEAN
+    (exit 0)
+--- step 8 copy rest
+    COPY PASS: part rest: 61 files written and read back, 1 deleted
+    (exit 0)
+--- step 9 POST
+    HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    POST PASS: exactly the 37 expected new paths, 34 modified files and 1 deletion, all with the expected bytes.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 10 suite
+        |                        ', '.join(inconsistent))
+        | _common.walk_forward.BatchRefused: SUPPORTED but still flagged IN_DEVELOPMENT (inconsistent installed state): E_1 FULL_HISTORY_RAW_COUNTS_V1
+        | ======================================================================
+        | ERROR: setUpClass (tests.test_wf1b_report.N1Display)
+        | ----------------------------------------------------------------------
+        | Traceback (most recent call last):
+        |   File "/home/claude/work/pos_crlf/repo/tests/test_wf1b_report.py", line 53, in setUpClass
+        |     cls.plan = WF.make_plan(cls.GAME, cls.FIRST, cls.LAST, cls.adapters)
+        |                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        |   File "/home/claude/work/pos_crlf/repo/src/methods/_common/walk_forward.py", line 209, in make_plan
+        |     members, excluded = cohort(game_id, adapters)
+        |                         ~~~~~~^^^^^^^^^^^^^^^^^^^
+        |   File "/home/claude/work/pos_crlf/repo/src/methods/_common/walk_forward.py", line 172, in cohort
+        |     raise BatchRefused('SUPPORTED but still flagged IN_DEVELOPMENT (inconsistent installed state): ' +
+        |                        ', '.join(inconsistent))
+        | _common.walk_forward.BatchRefused: SUPPORTED but still flagged IN_DEVELOPMENT (inconsistent installed state): E_1 FULL_HISTORY_RAW_COUNTS_V1
+        | ======================================================================
+        | ERROR: setUpClass (tests.test_wf1b_report.Order)
+        | ----------------------------------------------------------------------
+        | Traceback (most recent call last):
+        |   File "/home/claude/work/pos_crlf/repo/tests/test_wf1b_report.py", line 53, in setUpClass
+        |     cls.plan = WF.make_plan(cls.GAME, cls.FIRST, cls.LAST, cls.adapters)
+        |                ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        |   File "/home/claude/work/pos_crlf/repo/src/methods/_common/walk_forward.py", line 209, in make_plan
+        |     members, excluded = cohort(game_id, adapters)
+        |                         ~~~~~~^^^^^^^^^^^^^^^^^^^
+        |   File "/home/claude/work/pos_crlf/repo/src/methods/_common/walk_forward.py", line 172, in cohort
+        |     raise BatchRefused('SUPPORTED but still flagged IN_DEVELOPMENT (inconsistent installed state): ' +
+        |                        ', '.join(inconsistent))
+        | _common.walk_forward.BatchRefused: SUPPORTED but still flagged IN_DEVELOPMENT (inconsistent installed state): E_1 FULL_HISTORY_RAW_COUNTS_V1
+        | ======================================================================
+        | ERROR: setUpClass (tests.test_wf1b_report.Records)
+        | ----------------------------------------------------------------------
+        | Traceback (most recent call last):
+        |   File "/home/claude/work/pos_crlf/repo/tests/test_wf1b_report.py", line 53, in setUpClass
+    tests.test_wf1b_seed_policy                          ran  11 (expected 11)  skipped 0  OK  (0.2 s)
+    tests.test_wf1b_static                               ran   4 (expected  4)  skipped 0  OK  (0.3 s)
+    total ran 560 (expected 570); skips 0; elapsed 234 s
+    SUITE STOP:
+      tests.test_code3_retirement: exit 1, ran 12 expected 12, "FAILED (failures=1)"
+      tests.test_e1_standalone: exit 1, ran 13 expected 13, "FAILED (errors=13)"
+      tests.test_e1r2_revision2: exit 1, ran 13 expected 13, "FAILED (failures=8, errors=6)"
+      tests.test_e1r3_revision3: exit 1, ran 8 expected 8, "FAILED (errors=3)"
+      tests.test_e2r_dispatch: exit 1, ran 18 expected 18, "FAILED (failures=14, errors=5)"
+      tests.test_e2r_runner: exit 1, ran 34 expected 34, "FAILED (failures=1, errors=29)"
+      tests.test_e3_e4_polynomial: exit 1, ran 13 expected 13, "FAILED (errors=31)"
+      tests.test_e6_beta_bernoulli: exit 1, ran 20 expected 20, "FAILED (failures=1, errors=13)"
+      tests.test_mhupa_gates: exit 1, ran 12 expected 12, "FAILED (failures=4, errors=3)"
+      tests.test_mhupa_method_mode_h_cli: exit 1, ran 2 expected 2, "FAILED (failures=1)"
+      tests.test_mhupa_mode_h: exit 1, ran 20 expected 20, "FAILED (failures=3, errors=17)"
+      tests.test_multigame_console_and_synthetic_scorer: exit 1, ran 7 expected 7, "FAILED (errors=4)"
+      tests.test_multigame_exit_receipt: exit 1, ran 18 expected 18, "FAILED (failures=1, errors=18)"
+      tests.test_multigame_launch_and_manifest: exit 1, ran 11 expected 11, "FAILED (failures=2, errors=5)"
+      tests.test_multigame_science_allowlist: exit 1, ran 6 expected 6, "FAILED (failures=2, errors=5)"
+      tests.test_multigame_windows_lifecycle_review: exit 1, ran 6 expected 6, "FAILED (errors=1)"
+      tests.test_rel1_release: exit 1, ran 5 expected 5, "FAILED (failures=1, errors=79)"
+      tests.test_wave1_frequency: exit 1, ran 18 expected 18, "FAILED (errors=31)"
+      tests.test_wave2_recurrence: exit 1, ran 19 expected 19, "FAILED (errors=31)"
+      tests.test_wf1a_walk_forward: exit 1, ran 22 expected 22, "FAILED (errors=17)"
+      tests.test_wf1b_report: exit 1, ran 0 expected 10, "FAILED (errors=6)"
+    (exit 1)
+REHEARSAL STOP at step 10 suite; nothing after it was run; barrier state {'U': 'MHUP_A', 'E': True, 'P': True}

@@ -1,0 +1,27 @@
+MHUP-A integrated package build (DRAFT), base c48ac3c393d2eab30014e6200d427b76d90f47ac, E_1 r3 effective_date 2026-11-10
+changed: 37 new, 34 modified, 1 deleted (src/results_master_v0_1.py)
+import closure of src/methods/_common/contract_dispatch.py: 15 project files; of them changed by the package (the step 6 gate files): 10
+  gate  src/methods/_common/contract_dispatch.py
+  gate  src/methods/_common/contract_forecast.py
+  gate  src/methods/_common/contract_receipts.py
+  gate  src/methods/_common/contract_records.py
+  gate  src/methods/_common/contract_runner.py
+  gate  src/methods/_common/contract_task.py
+  gate  src/methods/_common/contract_vocab.py
+  gate  src/methods/_common/game_draws_reader.py
+  gate  src/methods/_common/master_versions.py
+  gate  src/methods/_common/owner_records.py
+rest (step 8): 61 files plus the deletion
+release_entries: [{"game_id": "POWERBALL", "method_id": "E_1", "method_revision": "3", "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"}, {"game_id": "OZLOTTO", "method_id": "E_1", "method_revision": "3", "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"}]
+registry_entries_added: ['src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json', 'src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json']
+tests: 570 in 45 modules (counted by the unittest loader, nothing run)
+PACKAGE_MANIFEST_MHUP_A.json SHA-256 149fbe7af99d258b2c7d392b54a8512fc82a82fc1fa44f3601efac835a8925ad
+INSTALL_INSTRUCTIONS.md  b4d2816fd79b831a4a4be4f4876cf5851996131d3e905deb37c8f5d372f81a02
+INSTALL_MANIFEST_SHA256.txt  bd62f35e62f69c90388a69f0390f66edab20cb8cfa83c0264804070c2cc0e25d
+MHUPA_COPY.py  57794721d626da5c1de294451971fc6d8a6322a8620c9e6d45add5382aea11d4
+PACKAGE_MANIFEST_MHUP_A.json  149fbe7af99d258b2c7d392b54a8512fc82a82fc1fa44f3601efac835a8925ad
+RUN_MHUP_A_SUITE.py  b83779308a60c44271d832174db6e37fff521c754cda24f48884a8aff3abd525
+STAGE_PACKAGE_COMMIT.txt  836c21c28a5c94b79b4106b73d79748ed609cde32d8af2ca1c73f4f7e00df52d
+STAGE_RELEASE_COMMIT.txt  8431987dda7c8b211cb87ff36ad0316f14870c6383ce00399ab93453ad4b75f5
+VERIFY_MHUP_A.py  d339726bce989aa863644d2ce9a58243b5034a09d460f4f595085c088647af00
+BUILD PASS (DRAFT): /home/claude/work/PKG/MHUPA_Install_v1

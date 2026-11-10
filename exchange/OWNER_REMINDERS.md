@@ -461,7 +461,11 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   (even .gitignore) means a re-freeze and new evidence; F8 E2R-T12 approval is for Claude's cloud suites only; F9 T017 needs
   its own decision. N1 (your decision, with the reviewer): add `src/methods/_common/contract_data/install_records/** -text`
   to .gitattributes in the package, because the records refuse after Git rewrites them with CRLF (reproduced). N2 fixed in
-  the draft. N3: the synthetic root keeps empty source_data/ and results/ folders.
+  the draft. N3: the synthetic root keeps empty source_data/ and results/ folders. Added 11 November 2026 (item 3): N4 (two
+  tests fail on line endings in a fresh Windows-style clone; two more -text lines proposed) and N5 (Appendix J step 10: the
+  suite does not pass with the barriers in place; your decision with the reviewer; option A recommended): see
+  exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEM_3_CHECKPOINT_2026_11_11.md. Your KISS steer of 10 November 2026 (lean
+  production system; development rigour kept; nothing ratified relaxed; candidates flagged for R-014) is noted there too.
 - When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
 - Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 

@@ -151,3 +151,10 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   T022 could not see it (the overlay is copied in LF); T017 or any fresh Windows clone after the install would. Same class as
   N1; proposed separately (D02): either -text for those two paths or CRLF-tolerant tests; the reviewer and the owner decide.
   Evidence: evidence_2026_11_10/N4_PRELIMINARY_suite_fresh_autocrlf_clone_py315.txt.
+- 2026-11-11 about 02:30 Adelaide (Fable 5.2): **item 3 built; checkpoint `ITEM_3_CHECKPOINT_2026_11_11.md`.** The verifier's
+  `released` and `staged` phases, barrier state in every phase, barrier order enforced by the copy tool, STOP-aware
+  `rehearse_mhupa.py` (88 negatives, 0 failed; positive steps 0-18 PASS on LF and CRLF with step 10 omitted), a cold read
+  (17 findings; tooling ones fixed). **N5 (BLOCKER for Appendix J step 10): the reviewed suite fails with U, E and P in place
+  (21 modules); a barrier-free byte copy passes 570/570; option A (suite on a barrier-free copy) recommended; undecided.**
+  N4 (two line-ending-sensitive tests) proposed, not applied. F2 oracle matrix written. Next: the reviewer and the owner on
+  N5, N4 and F2; then rulebook v0.5 and the T016 task (Opus). Item 3's Fable work is finished.

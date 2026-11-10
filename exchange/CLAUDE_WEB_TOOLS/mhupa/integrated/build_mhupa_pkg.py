@@ -20,8 +20,8 @@ It asserts, and STOPs on any difference:
 It writes: repo_overlay/, PACKAGE_MANIFEST_MHUP_A.json (the one manifest: install_records.py and process_check.py
 read it; the copy tool and the verifier read it), MHUPA_COPY.py, VERIFY_MHUP_A.py, RUN_MHUP_A_SUITE.py,
 STAGE_PACKAGE_COMMIT.txt, STAGE_RELEASE_COMMIT.txt, INSTALL_MANIFEST_SHA256.txt, INSTALL_INSTRUCTIONS.md (DRAFT) and
-BUILD_REPORT.txt. Item 3 (the verifier's `released` phase, the two-commit and barrier-order proofs) is NOT built
-here: the verifier's `released` phase is a refusing stub, and the package says DRAFT throughout.
+BUILD_REPORT.txt. Since item 3 the verifier has its `released` phase and the copy tool enforces the barrier order; the
+package still says DRAFT throughout (nothing is reviewed, frozen or installation-ready).
 """
 import ast, hashlib, json, os, re, shutil, subprocess, sys
 from pathlib import Path
@@ -44,6 +44,10 @@ BARRIERS = {'E': 'src/methods/E_001/IN_DEVELOPMENT.txt',
             'U': 'source_data/.results_master.lock'}
 RECORDS = 'src/methods/_common/contract_data/install_records'
 N1_LINE = RECORDS + '/** -text'
+BASELINE_RECORD = f'{RECORDS}/RELEASE_BASELINE_20261031_V1.json'
+RELEASED_PER_GAME = 40                       # R-020 (a): the 39 baseline variants plus E_1 revision 3, in each game
+BARRIER_TEXT = ("MHUP_A install barrier {name} (design Appendix J). Removed only by the install steps or Claude's "
+                "reviewed restore steps.\n")
 INSTALL_RECORD = f'{RECORDS}/INSTALL_{PACKAGE}_V1.json'
 RELEASE_RECORD = f'{RECORDS}/RELEASE_{PACKAGE}_V1.json'
 E1R3_ENTRIES = ['src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json',
@@ -221,6 +225,20 @@ def main():
     need(f"self.assertEqual(chain[2]['effective_date'], '{date}')" in
          (dev / 'tests/test_e1r3_revision3.py').read_text(encoding='utf-8'), 'the pinned test does not carry DATE')
 
+    # the released set after the release record (R-020 (a)), computed from the baseline record the package carries
+    need(BASELINE_RECORD in new, 'the baseline release record is not a new package file')
+    baseline = json.loads((dev / BASELINE_RECORD).read_text(encoding='ascii'))
+    released = {}
+    for g in ('POWERBALL', 'OZLOTTO'):
+        kept = [e for e in baseline['entries'] if e['game_id'] == g and 'superseded_by' not in e]
+        mine = [e for e in entries if e['game_id'] == g]
+        for e in mine:
+            sup = [b for b in baseline['entries'] if (b['game_id'], b['method_id'], b['variant_id']) ==
+                   (g, e['method_id'], e['variant_id']) and b.get('superseded_by') == e['method_revision']]
+            need(len(sup) == 1, f'{g}: the baseline does not mark exactly one entry superseded by {e}')
+        released[g] = len(kept) + len(mine)
+        need(released[g] == RELEASED_PER_GAME, f'{g}: released set after release would be {released[g]}, not {RELEASED_PER_GAME}')
+
     counts = test_counts(dev, sys.executable)
 
     # ---- write
@@ -233,7 +251,7 @@ def main():
         'schema': 'MHUP_PACKAGE_MANIFEST_V1',
         'package': PACKAGE,
         'package_folder': PKG_NAME,
-        'status': 'DRAFT (item 2 scaffold; not for installation)',
+        'status': 'DRAFT (items 2 and 3; not reviewed; not for installation)',
         'base_commit': base_commit,
         'e1_r3_effective_date': date,
         'new': {p: lfsha(dev, p) for p in new},
@@ -246,6 +264,9 @@ def main():
         'registry_entries_added': added,
         'tool_sha256': {t: lfsha(dev, t) for t in TOOLS_IN_OVERLAY},
         'barriers': BARRIERS,
+        'barrier_text': BARRIER_TEXT,
+        'baseline_record': BASELINE_RECORD,
+        'expected_released_per_game': released,
         'install_record': INSTALL_RECORD,
         'release_record': RELEASE_RECORD,
         'note': ('Hashes are SHA-256 of LF-normalised bytes, equal to the Git blobs. release_entries, retires and '
@@ -256,7 +277,8 @@ def main():
     (pkg / 'PACKAGE_MANIFEST_MHUP_A.json').write_bytes(mbytes)
     msha = sha(mbytes)
 
-    copy_src = (HERE / 'mhupa_copy_tool.py').read_bytes()
+    copy_src = (HERE / 'mhupa_copy_tool.py').read_text(encoding='ascii').replace('@@MANIFEST_SHA256@@', msha).encode('ascii')
+    need(b'@@' not in copy_src, 'unfilled placeholder in the copy tool')
     (pkg / 'MHUPA_COPY.py').write_bytes(copy_src)
     ver = (HERE / 'mhupa_verifier_template.py').read_text(encoding='ascii')
     ver = ver.replace('@@MANIFEST_SHA256@@', msha).replace('@@COPY_SHA256@@', sha(copy_src))
@@ -284,7 +306,7 @@ def main():
     need('@@' not in ins, 'unfilled placeholder in the instructions: ' + repr(re.findall(r'@@\w+@@', ins)))
     (pkg / 'INSTALL_INSTRUCTIONS.md').write_bytes(ins.replace('\r\n', '\n').replace('\n', '\r\n').encode('ascii'))
 
-    report = [f'MHUP-A integrated package build (DRAFT, item 2), base {base_commit}, E_1 r3 effective_date {date}',
+    report = [f'MHUP-A integrated package build (DRAFT), base {base_commit}, E_1 r3 effective_date {date}',
               f'changed: {len(new)} new, {len(modified)} modified, {len(deleted)} deleted ({deleted[0]})',
               f'import closure of {GATE_ROOT_MODULE}: {len(closure)} project files; of them changed by the package '
               f'(the step 6 gate files): {len(gate)}', *[f'  gate  {g}' for g in gate],
@@ -295,7 +317,7 @@ def main():
               *[f'{f.relative_to(pkg).as_posix()}  {sha(f.read_bytes())}' for f in sorted(pkg.iterdir()) if f.is_file()]]
     (pkg / 'BUILD_REPORT.txt').write_bytes(('\n'.join(report) + '\n').encode('ascii'))
     print('\n'.join(report))
-    print(f'BUILD PASS (DRAFT, item 2): {pkg}')
+    print(f'BUILD PASS (DRAFT): {pkg}')
 
 
 if __name__ == '__main__':

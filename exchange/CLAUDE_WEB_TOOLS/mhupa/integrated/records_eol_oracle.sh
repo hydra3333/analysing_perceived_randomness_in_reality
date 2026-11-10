@@ -42,6 +42,7 @@ must G -C "$A" commit -q -m "SYNTHETIC ROOT (local only)"
 unset_before=$(cd "$A" && git ls-files | git check-attr --stdin text | grep -c ': text: unset$')
 # the package steps that create and commit the records (barriers and copies as Appendix J; the suite and the process
 # checks are not this oracle's subject)
+must "$PY" -I -B "$PKG/repo_overlay/src/package_tools/process_check.py" take-install-lock --root "$A" --package MHUP_A >/dev/null
 must "$PY" -I -B "$COPY" barrier --create E --repo "$A" >/dev/null
 must "$PY" -I -B "$COPY" barrier --create P --repo "$A" >/dev/null
 must "$PY" -I -B "$COPY" copy --part gate --repo "$A" >/dev/null
