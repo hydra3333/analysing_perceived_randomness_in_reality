@@ -1,7 +1,7 @@
 # MHUP-A integrated install package - plan and checkpoint (Claude)
 
 Started on 8 November 2026 after the owner's "go". If this chat ends, a new Claude chat continues from this file, from H-1 v1r8
-plus the ratified H-1 v1r10r2 delta (RAT-28), and from register v0.26. US-ASCII, CRLF. The owner is named only as "the project owner".
+plus the H-1 v1r10r3 delta (RAT-29), and from register v0.26. US-ASCII, CRLF. The owner is named only as "the project owner".
 
 ## Where things stand
 
@@ -114,3 +114,6 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   `b866e42` (v1r10 copies removed). R-020 (g) remains OPEN.
 - 2026-11-08 20:50 Adelaide: DOC-13 ratified (RAT-27) and installed at 52b6de8 (verified); H-1 v1r10r2 ratified (RAT-28). The owner
   starts a new Claude chat on Tuesday 10 November 2026 from the H-1 v1r10r2 blurb; this plan continues there unchanged.
+- 2026-11-10 18:30 Adelaide: **R-020 (g) DECIDED by the owner: option (i)** (the narrow rulebook v0.5 allowance for T016, with
+  the reviewer's EX_157 section 3 conditions). Nothing else changed since 8 November. Next: item 2 (the package builder), Opus,
+  in a fresh Claude chat started from the H-1 v1r10r3 blurb.

@@ -1,6 +1,8 @@
 # HANDOVER_2026_11_06 - handovers (Claude, 6 and 8 November 2026)
 
-**Read on 8 November 2026 or later:** start with `Claude_Primary_Handover_H1_v1r10r2_delta.md` and its blurb (r2: pointers after
+**Read on 10 November 2026 or later:** start with `Claude_Primary_Handover_H1_v1r10r3_delta.md` and its blurb (r3: the owner's
+R-020 (g) decision, option (i), and the state on 10 November; RAT-29; installed in doc/HANDOVER/ by install_h1_v1r10r3.py).
+Before r3: `Claude_Primary_Handover_H1_v1r10r2_delta.md` and its blurb (r2: pointers after
 DOC-13 and model guidance; RATIFIED by the owner, RAT-28, 8 November 2026; installed in doc/HANDOVER/). Before r2 the current files were `Claude_Primary_Handover_H1_v1r10r1_delta.md` and its blurb (r1 applies the
 reviewer's EX_157 corrections; EX_158; the reviewer's recheck EX_159 PASS; **ratified by the owner as working supplements to
 H-1 v1r8, RAT-26, 8 November 2026**, and installed in doc/HANDOVER/ at b866e42). They supersede v1r10 and the 6 November v1r9 delta and blurb, which stay as history. H-2 v1r9 and register v0.25 were ratified by the owner on 6 November 2026
@@ -16,6 +18,8 @@ are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK
 
 | File | Bytes as stored | SHA-256 as stored | SHA-256 after CRLF->LF |
 |---|---|---|---|
+| `Claude_Primary_Handover_H1_v1r10r3_delta.md` | 32688 | `18391973a7a25f6d379e7b439c1d1b99bcf6ea1104e553d4eacda9701e6c2aba` | `40429eb5cb5b55d137dfb51e364aff52b37765f9e623cd9d2644a236d350fd01` |
+| `Claude_Primary_Handover_H1_v1r10r3_introductory_blurb.md` | 11525 | `5042f83700c73e898ba62ba77de2a1e320cb70a1e4b64456a1863a345d337304` | `dcc67bf84c27ff830a5d286f446e244b93bbadd3e3ef95f88fb9d3b7e8e2801e` |
 | `Claude_Primary_Handover_H1_v1r10r2_delta.md` | 31130 | `15ab05b3048d9d5ec77c567f4e1ff3dabfd47d508eabb60f850879189ca08edc` | `985f264849ec056ab296f6f0094b82680fafc13fec475741bbffe1434a0f274d` |
 | `Claude_Primary_Handover_H1_v1r10r2_introductory_blurb.md` | 10946 | `68c4f257b5ce8680214c24937feaca59ef5464c8535faf8bd6b4b385694d47ee` | `0ece9e233c61ba3b21ac824ca17d747c7bde11f7f9c6c99f715970e013028f27` |
 | `ChatGPT_Reviewer_Handover_H2_v1r10_delta.md` | 8677 | `2e9895819d11ff4afe983231f553e080b090202580fbde5904818b550f98f7a5` | `35a5c70a4c02793caae27e21bfbdc53baf5777b16b89efa34c4458cc4fb49fe2` |
@@ -32,8 +36,8 @@ are now candidate 3, with its corrections (EX_154, EX_156; C01 passed on RECHECK
 
 ## How to use them
 
-- **A new Claude chat:** paste the text below the line in the **H-1 v1r10r2** blurb. It reads H-1 v1r8 (doc/HANDOVER/), then the
-  v1r10r2 delta.
+- **A new Claude chat:** paste the text below the line in the **H-1 v1r10r3** blurb. It reads H-1 v1r8 (doc/HANDOVER/), then the
+  v1r10r3 delta.
 - **A new ChatGPT reviewer chat** (only if the current one, in place since 6 November 2026, has to be replaced): attach the
   files the H-2 v1r9 blurb lists (use the installed doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r9.md and
   doc/RATIFICATION_REGISTER_v0_25.md, both ratified, plus the H-1 v1r10r1 delta) and paste the text below its line, updating its

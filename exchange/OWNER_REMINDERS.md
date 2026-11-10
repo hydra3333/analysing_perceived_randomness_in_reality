@@ -392,8 +392,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       recommends (i), because it keeps the rehearsal in a clone that cannot push; the reviewer should see the rule change.
       The reviewer (EX_157 section 3) also prefers (i), with conditions: explicit owner approval; only those two tools, only
       in T016's synthetic clone, from the staging folder; every other safeguard unchanged; the settings denials not bypassed;
-      check_task_commands.py passing; no change to the main repository; T016 still needs its own go. OPEN: your choice is
-      needed before the rulebook change or the T016 task file is written.
+      check_task_commands.py passing; no change to the main repository; T016 still needs its own go.
+      DECIDED (owner, 10 November 2026, about 18:30: "yes to your recommendation"): option (i), with those conditions. Claude
+      writes rulebook v0.5 to it with the integrated package (reviewed with it); T016 still needs your separate go.
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
@@ -454,6 +455,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   reviewer's check of EX_162: PASS, no EX_163 needed. H-1 v1r10r2 (the pointers after DOC-13, and the model guidance for the
   new chat) RATIFIED by you (RAT-28, 8 November 2026, about 20:49); OPEN only until you install it
   (exchange/HANDOVER_2026_11_06/install_h1_v1r10r2.py) and it is verified. Register v0.27 records RAT-28.
+  DONE (10 November 2026): installed at 06c26a6, verified (H1 VERIFY PASS). H-1 v1r10r3 (10 November 2026, RAT-29, at your
+  instruction): records R-020 (g) option (i) and the state on 10 November; install with install_h1_v1r10r3.py.
 - Done: H-1 v1r10r1 delta and blurb (EX_157 check, EX_158 corrections, EX_159 PASS) RATIFIED by you as working supplements to
   H-1 v1r8 (RAT-26, 8 November 2026) and installed in doc/HANDOVER/ (b866e42).
 - To do (Claude, then the reviewer, then you): H-2 v1r10 delta and blurb (the reviewer's insurance); the root README (GAIS/,
