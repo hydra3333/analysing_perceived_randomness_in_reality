@@ -131,3 +131,23 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   reviewer and the owner). N2 (`--no-renames` at step 12) fixed in the draft; N3 (synthetic root needs empty
   `source_data/` and `results/`). Full report: `ITEMS_1_2_REPORT_2026_11_10.md`. **Next: item 3 on Fable, after the owner's
   go.**
+- 2026-11-10 23:24 Adelaide: the owner's decisions after the reviewer's focused review of items 1-2
+  (`exchange/HO2_2026_11_10/MHUPA_Owner_Decisions_After_Items1_2_Review_2026_11_10.md`; the review beside it): D01 item 3
+  AUTHORISED on Fable (High); D02 N1 approved in principle for the draft; D03 F1 timing approved in principle (not for
+  execution); D04 Route A; D05 F2 NOT approved as submitted (F2-C01 the real Windows inventory at T016, F2-C02 both process
+  oracles exactly, F2-C03 a full oracle matrix); D06 F4 accepted in principle; D07 S1 (the smoke script continued past the
+  refusing `released` stub) to be corrected; D08 F5-F9 carried. No T016, rulebook install, settings edit or MHUP-A install.
+- 2026-11-10 about 23:50 Adelaide (Opus 5.5, the packaging part before the switch to Fable): **N1 applied to the draft.**
+  `build_dev_integrated.sh` appends `src/methods/_common/contract_data/install_records/** -text` to `.gitattributes` (and now
+  refuses relative paths); the builder expects 37 new, 34 modified, 1 deleted (71 overlay files + 1 deletion = 72 changed
+  paths; the staging list 73 with the install record). `records_eol_oracle.sh`: N1 ORACLE PASS (written and committed;
+  fresh clone; re-checkout; full index reset; later ff pull: worktree = blob, LF, RECORDS PASS; the override negative STOPs;
+  only the 3 records gain -text). Scope scan: no other unprotected byte-canonical file in the package. Next: item 3 on Fable.
+- 2026-11-11 about 00:30 Adelaide (Opus 5.5): **new finding N4 (PRELIMINARY; not applied).** The full suite in a FRESH
+  core.autocrlf=true clone of the installed draft tree (every text file CRLF, as a Windows clone after the install): 568/570;
+  two tests fail on line endings, not on logic: `test_mhupa_process_check.Statics.test_imports_and_no_terminating_call`
+  (asserts no CR in src/package_tools/process_check.py) and `test_mhupa_updater_v0_2.UpdaterV02Identity.
+  test_reference_is_the_base_v0_1_and_v0_1_is_gone` (raw-byte SHA-256 of tests/fixtures/results_master_v0_1_reference.py.txt).
+  T022 could not see it (the overlay is copied in LF); T017 or any fresh Windows clone after the install would. Same class as
+  N1; proposed separately (D02): either -text for those two paths or CRLF-tolerant tests; the reviewer and the owner decide.
+  Evidence: evidence_2026_11_10/N4_PRELIMINARY_suite_fresh_autocrlf_clone_py315.txt.

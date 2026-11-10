@@ -1,0 +1,26 @@
+N1 scope scan (Claude, 10 November 2026): code in the draft tree that compares a file's raw bytes with a canonical form,
+and where each such file lives. Protected = covered by a -text rule in .gitattributes, or CRLF-normalised by the reader.
+
+src/Powerball_Experiment_Coordinator.py:721:    if raw != canonical_bytes(obj):
+src/coordinator_private/multigame_coordinator_exit_receipt.py:57:        if type(obj) is not dict or raw != _canonical(obj):
+src/evaluation/mode_h.py:332:    if b''.join(canonical(r) for r in exp_scores + exp_ranks) != raw:
+src/evaluation/mode_h.py:349:    if type(rec) is not dict or canonical(rec) != raw:
+src/evaluation/mode_h.py:350:        raise ModeHRefused('the scoring plan record is not its canonical bytes')
+src/methods/E_001/e1_standalone_contract.py:119:    if not isinstance(obj, dict) or raw != canonical_json(obj):
+src/methods/_common/walk_forward.py:371:            canonical(plan) != path.read_bytes() or
+src/methods/_common/release_records.py:76:            if canonical(rec) != raw:
+src/methods/_common/release_records.py:77:                raise Refused(f'{path.name} is not its canonical bytes')
+src/methods/_common/owner_records.py:145:    if canonical(rec) != path.read_bytes():
+src/methods/_common/contract_registry.py:36:    if canonical(rec) != raw:
+src/methods/_common/contract_registry.py:127:    if record_digest(rec) != digest or canonical(rec) != raw:
+
+Where the files those readers check live (from each module's own path constants and docstrings):
+- src/methods/_common/release_records.py:76      src/methods/_common/contract_data/install_records/*.json -> UNPROTECTED before N1; protected by the N1 line
+- src/methods/_common/contract_registry.py:36    src/methods/_common/contract_data/{declarations,registry}/  -> the reader normalises CRLF to LF first (its own comment)
+- src/methods/_common/contract_registry.py:127   in-memory copies (no file)
+- src/methods/_common/owner_records.py:145       source_data/ and results/real/... records -> protected (source_data/** and results/** -text)
+- src/evaluation/mode_h.py:332, 349              results/real/holdout/... ledgers and plans -> protected (results/** -text)
+- src/methods/_common/walk_forward.py:371        results/real/.../wf_batches/... plan.json -> protected (results/** -text)
+- src/methods/E_001/e1_standalone_contract.py:119, src/Powerball_Experiment_Coordinator.py:721,
+  src/coordinator_private/multigame_coordinator_exit_receipt.py:57   pre-existing, unchanged by MHUP-A, run records under results/ and transitory_data/ (not committed)
+Conclusion: within the package, only the install/release records were unprotected; no wider change is proposed.

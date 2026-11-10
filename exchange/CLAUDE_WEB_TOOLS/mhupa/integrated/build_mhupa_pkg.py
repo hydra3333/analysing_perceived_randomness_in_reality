@@ -10,7 +10,8 @@ Usage:
     BASE_COMMIT  the full 40-hex commit BASE was archived from
     DATE         E_1 revision 3's effective_date (C01-EFF); must equal what DEV carries
 It asserts, and STOPs on any difference:
-  - the changed set (new, modified, deleted) is exactly 37 + 33 + 1 = 71 paths, the reviewed overlay's shape;
+  - the changed set (new, modified, deleted) is exactly 37 + 34 + 1 = 72 paths: the reviewed overlay's 37 + 33 + 1, plus
+    .gitattributes with the N1 line (owner decision D02), whose presence it also asserts;
   - the step 6 gate files, computed from the static import closure of contract_dispatch.py (every import, including
     those inside functions, followed through src/methods and src; restricted to files the package changes or adds),
     equal GATE_FILES exactly (EX_157 C02: eight changed, two new);
@@ -28,7 +29,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PKG_NAME = 'MHUPA_Install_v1'
 PACKAGE = 'MHUP_A'
-EXPECT_COUNTS = {'new': 37, 'modified': 33, 'deleted': 1}
+EXPECT_COUNTS = {'new': 37, 'modified': 34, 'deleted': 1}   # 34 since N1 (.gitattributes)
 GATE_FILES = sorted([
     'src/methods/_common/contract_dispatch.py', 'src/methods/_common/contract_forecast.py',
     'src/methods/_common/contract_receipts.py', 'src/methods/_common/contract_records.py',
@@ -42,6 +43,7 @@ BARRIERS = {'E': 'src/methods/E_001/IN_DEVELOPMENT.txt',
             'P': 'src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt',
             'U': 'source_data/.results_master.lock'}
 RECORDS = 'src/methods/_common/contract_data/install_records'
+N1_LINE = RECORDS + '/** -text'
 INSTALL_RECORD = f'{RECORDS}/INSTALL_{PACKAGE}_V1.json'
 RELEASE_RECORD = f'{RECORDS}/RELEASE_{PACKAGE}_V1.json'
 E1R3_ENTRIES = ['src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json',
@@ -183,6 +185,8 @@ def main():
     got = {'new': len(new), 'modified': len(modified), 'deleted': len(deleted)}
     need(got == EXPECT_COUNTS, f'changed set {got} differs from the reviewed shape {EXPECT_COUNTS}')
     need(deleted == ['src/results_master_v0_1.py'], f'unexpected deletion set {deleted}')
+    need('.gitattributes' in modified and N1_LINE in (dev / '.gitattributes').read_text(encoding='ascii').splitlines(),
+         '.gitattributes does not carry the N1 line')
     for p in [INSTALL_RECORD, RELEASE_RECORD, *BARRIERS.values()]:
         need(p not in new and p not in modified and not (dev / p).exists(), f'{p} must not be a package file')
     for p in new + modified:

@@ -1,0 +1,78 @@
+=== A: written by the tools, then git add and commit (autocrlf=true)
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree = blob (685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2) CR=0
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree = blob (a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd) CR=0
+  bytes: RELEASE_MHUP_A_V1.json worktree = blob (a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7) CR=0
+  validate: RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+  -> as expected (PASS)
+=== B: fresh clone (autocrlf=true)
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree = blob (685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2) CR=0
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree = blob (a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd) CR=0
+  bytes: RELEASE_MHUP_A_V1.json worktree = blob (a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7) CR=0
+  validate: RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+  -> as expected (PASS)
+=== B: records deleted and checked out again
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree = blob (685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2) CR=0
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree = blob (a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd) CR=0
+  bytes: RELEASE_MHUP_A_V1.json worktree = blob (a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7) CR=0
+  validate: RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+  -> as expected (PASS)
+=== B: whole index dropped and reset --hard
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree = blob (685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2) CR=0
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree = blob (a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd) CR=0
+  bytes: RELEASE_MHUP_A_V1.json worktree = blob (a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7) CR=0
+  validate: RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+  -> as expected (PASS)
+warning: in the working copy of 'README_LATER.txt', LF will be replaced by CRLF the next time Git touches it
+=== B: after a later fast-forward pull
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree = blob (685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2) CR=0
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree = blob (a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd) CR=0
+  bytes: RELEASE_MHUP_A_V1.json worktree = blob (a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7) CR=0
+  validate: RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+  -> as expected (PASS)
+=== C: NEGATIVE, attribute overridden to text, records rewritten
+  attr: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: set
+  attr: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: set
+  attr: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: set
+  eol:  i/lf    w/crlf  attr/text             	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+  eol:  i/lf    w/crlf  attr/text             	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+  eol:  i/lf    w/crlf  attr/text             	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+  bytes: INSTALL_MHUP_A_V1.json worktree 57da9977fb2539524b3d872d4f1d0f3d519a4c0591bfeac89f242ba208e2e27f != blob 685458ec0e2217437cc1dbafa799d85a92d51b456c4aa8c8a1c85cc87f284bd2 CR=1
+  bytes: RELEASE_BASELINE_20261031_V1.json worktree d62964b39131b927b503231aaca708be520f8cb6f9a76c5ee7ff0d826cf524b7 != blob a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd CR=1
+  bytes: RELEASE_MHUP_A_V1.json worktree 3d5d088584fb7d0a2c82dd169bb09919b3fe651cffdfe9ed523e7048aca2c301 != blob a279ce6e76707ca4e7b53017757cf51aa1d0ab4f91064b83e1a16873c596a4c7 CR=1
+  validate: VALIDATE STOP: INSTALL_MHUP_A_V1.json is not its canonical bytes
+  -> as expected (STOP)
+=== scope: tracked files with text unset: before the package 0, after 3 (expected +3)
+  unset outside source_data, results: src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json: text: unset
+  unset outside source_data, results: src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json: text: unset
+  unset outside source_data, results: src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json: text: unset
+N1 ORACLE PASS
