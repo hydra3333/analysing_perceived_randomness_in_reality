@@ -496,8 +496,31 @@ def step10(mirror, pkg, work, python):
         return run
     inject('a test changing a code or test file in the copy: STOP', 8, 'differs from the live file', run_suite=edits_copy)
 
+    # N5-C01: a temporary copy that cannot be removed is a STOP (simulated: the removal leaves the folder in place,
+    # as a file locked by another program would on Windows); the harness then removes the leftover itself
     for k, v in orig.items():
         setattr(R, k, v)
+    real_rmtree = R.shutil.rmtree
+    R.shutil.rmtree = lambda path, ignore_errors=False: None
+    try:
+        r = fresh(10)
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            res = R.shadow_mode(r)
+    finally:
+        R.shutil.rmtree = real_rmtree
+    out = buf.getvalue()
+    left = [p for p in tmp.glob('MHUPA_step10_*') if p.name not in start_left]
+    n += 1
+    st = state(ctx, r)
+    st['U'] = st['U'] == 'MHUP_A'
+    good = res is False and 'could not be removed completely' in out and st == barred and len(left) == 1
+    bad += not good
+    print(f'[{n:02d}] ' + ('STOPPED as required' if good else 'NEGATIVE FAILED') + ': the temporary copy cannot be removed\n'
+          f'       -> {next((ln for ln in out.splitlines() if "could not be removed" in ln), "")[:200]}\n'
+          f'       barriers after: {st}; leftover copies seen: {len(left)} (removed by the harness)', flush=True)
+    for p in left:
+        shutil.rmtree(p)
     print(f'\nSTEP 10 NEGATIVES: {n} checks, {bad} failed')
     print('STEP 10 NEGATIVES PASS' if not bad else 'STEP 10 NEGATIVES STOP')
     return 1 if bad else 0

@@ -185,9 +185,12 @@ rerun (not the install-record line: the record exists and is kept).
 "%PY%" -I -B "%VER%" --repo "%REPO%" --phase committed
 ```
 Expect: `COMMITTED PASS: ...`.
-If it STOPs: do not push; E, P and U stay (the code is committed but not released); send the output. Claude writes the
-fix (a further small package commit, or a reviewed revert commit) together with the matching verifier; COMMITTED is
-rerun, then steps 14 to 19.
+If it STOPs: do not push; E, P and U stay (the code is committed but not released); send the output and do not
+continue. Recovery is not part of these steps: Claude proposes one for that exact state, the reviewer checks it and you
+approve it. The normal route is abandon and rebuild: a fresh install check showing `CLEAN` before any change, then
+reviewed `git revert` commits (nothing is reset, rewritten or deleted; every commit and record stays in the history),
+then E and P removed after another `CLEAN`, U released last, and a new package built and reviewed on the resulting
+commit.
 
 ## Step 14 - install check
 
@@ -226,8 +229,10 @@ Expect: `STAGED PASS: the index holds exactly the release commit (1 paths) ...`;
 ```
 Expect: `RELEASED PASS: two commits proved: ...`.
 If either STOPs: do NOT run step 18 (U stays held) and do not push; re-create P
-(`"%PY%" -I -B "%COPYTOOL%" barrier --create P --repo "%REPO%"`); send the output; after Claude's fix, remove P and
-rerun from this step (if the release commit was already made, only the second block).
+(`"%PY%" -I -B "%COPYTOOL%" barrier --create P --repo "%REPO%"`); send the output. If the release commit was NOT made
+(the first block stopped), Claude's fix is applied, P removed, and this step rerun. If the release commit WAS made,
+do not continue: the recovery is as step 13's (abandon and rebuild, approved for that exact state; the release record
+stays in the history).
 
 ## Step 18 - release U
 

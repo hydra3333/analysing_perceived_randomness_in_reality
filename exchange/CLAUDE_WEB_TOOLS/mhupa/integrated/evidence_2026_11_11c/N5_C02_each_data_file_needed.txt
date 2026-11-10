@@ -1,0 +1,14 @@
+N5-C02 (Claude, 11 November 2026; PRELIMINARY): which data files the step 10 copy needs.
+A copy of the installed draft tree with only the six files below in source_data/; tests.test_multigame_reader_contracts
+(the one module that failed in a whole-suite run with no data at all) run with each file removed in turn. Python 3.13.18, Linux.
+
+all six present: OK
+without OZLOTTO_results_master.csv: FAILED (errors=9)
+without OZLOTTO_results_master_init_verification.json: FAILED (errors=8)
+without OZLOTTO_results_master_ledger.csv: FAILED (errors=8)
+without POWERBALL_results_master.csv: FAILED (errors=2)
+without POWERBALL_results_master_init_verification.json: FAILED (errors=1)
+without POWERBALL_results_master_ledger.csv: FAILED (errors=1)
+
+Whole suite with no data at all (evidence_2026_11_11b/N5_data_needs_suite_with_no_data_py313.txt), failing modules:
+  tests.test_multigame_reader_contracts: exit 1, ran 10 expected 10, "FAILED (errors=11)"

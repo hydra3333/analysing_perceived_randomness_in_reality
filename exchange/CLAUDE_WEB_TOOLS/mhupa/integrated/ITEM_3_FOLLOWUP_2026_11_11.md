@@ -11,7 +11,7 @@ Base `main` `c48ac3c`; working date 2026-11-10. Draft manifest SHA-256: see `evi
 |---|---|---|
 | **N5 option A:** step 10 runs the suite on a barrier-free byte copy; the live tree stays barred | the package's suite runner, `--shadow` (install-time tool only) | no production code, no reviewed test changed |
 | **N4:** `-text` for `src/package_tools/process_check.py` and `tests/fixtures/results_master_v0_1_reference.py.txt` | `.gitattributes` (already a package file since N1) | owner-approved |
-| **N4b (needs your yes):** `-text` for `src/results_master_v0_2.py` | `.gitattributes` | the same updater test has a third raw-bytes assertion (no CR in the new updater), hidden until the first two were fixed; a search of every test finds no other |
+| **N4b (owner-approved, 11 November 2026, 09:32):** `-text` for `src/results_master_v0_2.py` | `.gitattributes` | the same updater test has a third raw-bytes assertion (no CR in the new updater), hidden until the first two were fixed; a search of every test finds no other |
 | **Reviewer's point A:** the release-record tool refuses, before writing the permanent record, unless U is held by this package and no released method still has its IN_DEVELOPMENT flag (E) | `src/package_tools/install_records.py`; one new test in `tests/test_mhupa_install_records.py` (suite 570 -> 571) | a change to reviewed code, for the reviewer |
 
 All are made by counted edits in `apply_item3_changes.py`, which `build_dev_integrated.sh` runs last. The package shape is
@@ -131,3 +131,58 @@ unchanged: 37 new, 34 modified, 1 deleted.
 2. **Point B:** the abandon-and-rebuild recovery (recommended), reviewer first.
 3. **F2 rows 8 and 9:** your view on running them yourself at T016 time; reviewer first.
 Then, on Opus: rulebook v0.5 and the T016 task for their focused review (Route A).
+
+## 6. After the reviewer's follow-up on fadd2b9 (11 November 2026, owner away; Opus 5.5)
+
+Review: `exchange/HO2_2026_11_10/MHUPA_ChatGPT_N4b_N5_F2_Followup_2026_11_11.md`. Evidence: `evidence_2026_11_11c/`.
+
+**N5-C01 (done): a temporary copy that cannot be removed is a STOP.**
+- The step 10 runner now ends with `SUITE STOP: the temporary copy could not be removed completely` (or "failed the removal
+  check"), and step 10 has not passed. U, E and P stay.
+- It removes only the one folder it made, after the name and location check.
+- New negative (step 10 negatives now 10 checks, 0 failed): the removal is made to leave the folder in place, as a locked
+  file would on Windows; the runner STOPs, the barriers are intact, and the harness removes the leftover.
+
+**N5-C02 (confirmed): exactly six data files, and no reach into the live tree.**
+- Each of the six files is needed: removing any one of them makes `test_multigame_reader_contracts` fail
+  (`N5_C02_each_data_file_needed.txt`). The whole suite with no data at all fails only that module.
+- Imports: the escape check stays. Writes: the before/after listing of the live tree, ignored files included, stays.
+- **A Windows defect found and fixed here.** On the owner's PC the venv is `.venv` inside the repository, so Python's own
+  import path includes the venv's `site-packages`. The escape check refused anything on the import path inside the live
+  tree, so it would have STOPped every time on Windows (it passed here only because the test venv sat outside the clone).
+  Now the project's own `.venv` is allowed: it holds the interpreter and installed packages, not project code. Proven by
+  running the step 10 runner with a venv inside the tree (`N5_C02_venv_inside_tree_shadow_py315.txt`).
+
+**REC-C01 (done in the draft instructions): a fix after step 13 or 17.**
+- Step 13's and step 17's STOP texts now say: do not push and do not continue; the recovery is proposed by Claude for that
+  exact state, checked by the reviewer and approved by the owner.
+- The normal route: a fresh install check showing `CLEAN` before any change; reviewed `git revert` commits (nothing reset,
+  rewritten or deleted; every commit and record, including a release record already committed, stays in the history); E and
+  P removed after another `CLEAN`; U released last; a new package built and reviewed on the resulting commit.
+- Before the release commit exists, step 17 keeps its ordinary fix-and-rerun.
+
+**F2-C04 (noted, for the rulebook v0.5 and T016 round).** Running T016 in a full clone means the runner reaches the six master
+files through two programs, not only through the accepted tests: the package's suite runner copies them (bytes only, not
+parsed or displayed) for step 10, and `process_check.py` tests whether lock files exist and reads the lock text.
+Rulebook v0.5 and the T016 task must say so exactly. Nothing is drafted yet.
+
+**Where the draft instructions differ from the ratified Appendix J** (each needs the reviewer and the owner's ratification
+before it supersedes the table):
+
+| Step | Ratified table | Draft | Kind |
+|---|---|---|---|
+| 10 | the suite with P present | the suite on a barrier-free copy; the live tree barred throughout | N5: needs the amendment in section 2 |
+| 10 (negative tests) | "the suite fails if P is absent at step 10" | the step 10 runner's own STOPs (section 2) | N5: amendment |
+| 13 STOP | "Claude writes the fix (a further small package commit, or a reviewed revert commit), COMMITTED is rerun, then steps 14-19" | abandon and rebuild, approved for the exact state | REC-C01: amendment |
+| 17 STOP after the release commit | "after the fix, delete P and rerun from step 17" | abandon and rebuild | REC-C01: amendment |
+| 12 and 17 | stage; `git status`; commit | stage; the verifier's `staged` check; commit only if it passes | stricter, added |
+| 15 | delete E, then P | removing E refuses unless COMMITTED passes at that moment | stricter, added |
+| 16 | the record tool's refusals as listed | also refuses unless U is held by this package and E is gone | stricter (reviewer's A) |
+| 18 | release U | release U only if RELEASED passes at that moment | stricter, added |
+| 0 | `git status`; `git pull` | 0a (names for the window, repeatable), then status, then pull | presentation |
+
+Two wording points in design 4.3, also for the amendment: the baseline holds "40 entries" per game (80 in all); and
+`post_pass_utc` in the install record is the time of step 12, not of the POST check.
+
+**Evidence (PRELIMINARY; all on the rebuilt draft):** listed in `evidence_2026_11_11c/`; results in the report to the owner.
+

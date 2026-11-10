@@ -23,11 +23,13 @@ Two modes:
                             only the files listed in DATA_FILES below; each copy compared byte for byte with LIVE, and
                             each package file also with the manifest;
                          3. an escape check: under the suite's own environment, the project's key modules import from
-                            the copy, and nothing on the import path is inside LIVE;
+                            the copy, and nothing on the import path is inside LIVE except LIVE's own .venv (the
+                            interpreter and installed packages, as on the owner's PC);
                          4. the suite on the copy;
                          5. again, also after any failure: the copy's code and test files still equal LIVE's; POST on
                             LIVE passes again; LIVE gained no file, ignored or not;
-                         then the temporary folder is removed (only that folder; checked before removal).
+                         then the temporary folder is removed (only that folder; checked before removal); a copy
+                         that cannot be removed is a STOP too (N5-C01).
 Usage: python -I RUN_MHUP_A_SUITE.py --repo REPO [--shadow]
 """
 import argparse, hashlib, json, os, platform, re, shutil, subprocess, sys, tempfile, time
@@ -201,19 +203,29 @@ def escape_check(shadow, live):
     for name, f in got['modules'].items():
         if not inside(f, shadow) or inside(f, live):
             raise Stop(f'{name} imports from outside the copy: {f}')
-    for p in got['sys.path']:
-        if p and inside(p, live):
+    venv = live / '.venv'               # the project venv lives inside the live tree on the owner's PC: its interpreter
+    for p in got['sys.path']:           # and installed packages are not project code, so they are allowed
+        if p and inside(p, live) and not inside(p, venv):
             raise Stop(f'the suite\'s sys.path includes the live tree: {p}')
-    print(f'escape check: {len(got["modules"])} key modules import from the copy; nothing on the import path is in the live tree')
+    print(f'escape check: {len(got["modules"])} key modules import from the copy; nothing on the import path is in the live '
+          f'tree except its own .venv (interpreter and installed packages)')
 
 
 def remove_shadow(shadow, live):
+    """Remove the temporary copy, and only it. Returns True when it is gone; a copy left behind is a STOP (N5-C01)."""
+    if shadow is None:
+        return True
     tmp = Path(tempfile.gettempdir()).resolve()
-    if shadow and shadow.name.startswith(PREFIX) and inside(shadow, tmp) and not inside(shadow, live) and shadow != tmp:
-        shutil.rmtree(shadow, ignore_errors=True)
-        print(f'temporary copy removed: {shadow}' + (' (could not remove all of it)' if shadow.exists() else ''))
-    elif shadow:
-        print(f'temporary copy NOT removed (failed the removal check): {shadow}')
+    if not (shadow.name.startswith(PREFIX) and inside(shadow, tmp) and not inside(shadow, live) and shadow != tmp):
+        print(f'SUITE STOP: the temporary copy was NOT removed (it failed the removal check): {shadow}')
+        return False
+    shutil.rmtree(shadow, ignore_errors=True)
+    if shadow.exists():
+        print(f'SUITE STOP: the temporary copy could not be removed completely: {shadow} (delete that folder by hand '
+              f'once nothing uses it; it is outside the repository and holds only copies)')
+        return False
+    print(f'temporary copy removed: {shadow}')
+    return True
 
 
 def shadow_mode(live):
@@ -248,7 +260,7 @@ def shadow_mode(live):
         except Stop as exc:
             print('SUITE STOP:', exc)
             ok = False
-        remove_shadow(shadow, live)
+        ok = remove_shadow(shadow, live) and ok
     return ok
 
 

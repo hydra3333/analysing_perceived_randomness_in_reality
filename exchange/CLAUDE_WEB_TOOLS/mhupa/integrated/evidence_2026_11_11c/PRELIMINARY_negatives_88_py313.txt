@@ -1,0 +1,193 @@
+NEGATIVES (PRELIMINARY, DRAFT package) on a synthetic root; each must STOP; nothing continues past a STOP.
+
+A. The package and PRE (step 1)
+[01] STOPPED as required: a damaged package file: PRE
+       -> VERIFICATION STOP: FAIL: package file missing or damaged: src/methods/_common/contract_dispatch.py
+[02] STOPPED as required: an untracked file: PRE
+       -> VERIFICATION STOP: FAIL: working tree or index not clean:
+[03] STOPPED as required: an updater lock already present: PRE
+       -> VERIFICATION STOP: FAIL: barrier U: an updater lock exists; before step 3 no lock at all is allowed (send the output)
+[04] PASSED as required: F1: a descendant with only rulebook and settings commits: PRE passes
+       -> PRE PASS: package intact; clean tree; 37 new paths absent; 34 files to replace and 1 to delete at their base version. Nothing was changed.
+[05] STOPPED as required: F1: a later commit that changes a package path (.gitignore): PRE
+       -> VERIFICATION STOP: FAIL: file to be replaced is not its base version in Git: .gitignore
+[06] STOPPED as required: F1: a later commit under src/: PRE
+       -> VERIFICATION STOP: FAIL: src/ or tests/ changed since the base commit: src/later_module.py
+
+B. The barrier order, enforced by the copy tool (steps 3 to 8, 15)
+[07] STOPPED as required: create E before U is taken
+       -> COPY STOP: barrier U (the updater lock) is not held: take-install-lock comes first (Appendix J step 3)
+[08] STOPPED as required: copy the gate files with no barrier at all
+       -> COPY STOP: barrier U (the updater lock) is not held: take-install-lock comes first (Appendix J step 3)
+[09] STOPPED as required: create P before E
+       -> COPY STOP: barrier P follows barrier E (step 4); it is re-created without E only after the package commit (the STOP handling of steps 16 and 17)
+[10] STOPPED as required: copy the gate files with U only
+       -> COPY STOP: barrier E is absent: no file is copied without U, E and P in place (Appendix J step 4)
+[11] STOPPED as required: copy the gate files with U and E but no P
+       -> COPY STOP: barrier P is absent: no file is copied without U, E and P in place (Appendix J step 4)
+[12] STOPPED as required: copy the rest before the gate files
+       -> COPY STOP: the gate files are not in place (step 6 comes before step 8): src/methods/_common/contract_dispatch.py
+[13] STOPPED as required: remove E before the package commit
+       -> COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now: VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+[14] STOPPED as required: copy the gate files while U names another package
+       -> COPY STOP: barrier U (the updater lock) is not this package's install lock
+[15] STOPPED as required: copy the gate files with a foreign P
+       -> COPY STOP: barrier P exists but does not hold this package's text: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[16] STOPPED as required: copy the gate files a second time
+       -> COPY STOP: file to be replaced is not at its base bytes: src/methods/_common/contract_dispatch.py
+[17] STOPPED as required: restore-removal of E while package files are in place
+       -> COPY STOP: restore: a package file is still present: src/methods/_common/master_versions.py
+[18] STOPPED as required: remove P before E (step 15 order)
+       -> COPY STOP: barrier P is removed after E (step 15); E is still present
+[19] STOPPED as required: remove E when COMMITTED would not pass now (a stray file)
+       -> COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now: VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+[20] PASSED as required: restore-removal of E with nothing copied: passes
+       -> BARRIER PASS: E removed (src/methods/E_001/IN_DEVELOPMENT.txt) (restore)
+[21] PASSED as required: restore-removal of P with nothing copied: passes
+       -> BARRIER PASS: P removed (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt) (restore)
+
+C. POST (step 9)
+[22] STOPPED as required: a missing new file: POST names it MISSING (R-008)
+       -> VERIFICATION STOP: FAIL: new paths differ; MISSING (expected, not seen): src/methods/_common/owner_records.py; UNEXPECTED (seen, not expected): none
+[23] STOPPED as required: an extra file: POST names it UNEXPECTED
+       -> VERIFICATION STOP: FAIL: new paths differ; MISSING (expected, not seen): none; UNEXPECTED (seen, not expected): src/extra.py
+[24] STOPPED as required: one wrong byte: POST
+       -> VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_dispatch.py
+[25] STOPPED as required: P missing at POST
+       -> VERIFICATION STOP: FAIL: barrier P is absent or not this package's: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+
+D. The package commit and COMMITTED (steps 12 and 13)
+[26] STOPPED as required: an extra staged file before the package commit: STAGED
+       -> VERIFICATION STOP: FAIL: the index is not exactly the package commit; MISSING or wrongly staged: none; UNEXPECTED: A extra.txt
+[27] STOPPED as required: a package file left unstaged before the package commit: STAGED
+       -> VERIFICATION STOP: FAIL: the index is not exactly the package commit; MISSING or wrongly staged: src/methods/_common/contract_dispatch.py; UNEXPECTED: none
+[28] STOPPED as required: a wrong install record (it names another manifest): COMMITTED
+       -> VERIFICATION STOP: FAIL: the install record names another manifest
+[29] STOPPED as required: an extra file in the package commit: COMMITTED
+       -> VERIFICATION STOP: FAIL: the package commit did not change exactly the expected paths; differences (path, status): [('extra.txt', 'A')]
+[30] STOPPED as required: the package commit without the install record: COMMITTED
+       -> VERIFICATION STOP: FAIL: the package commit did not change exactly the expected paths; differences (path, status): [('src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json', 'A')]
+[31] STOPPED as required: E missing at COMMITTED
+       -> VERIFICATION STOP: FAIL: barrier E is absent or not this package's: src/methods/E_001/IN_DEVELOPMENT.txt
+[32] STOPPED as required: U not held at COMMITTED
+       -> VERIFICATION STOP: FAIL: barrier U (the install lock) is not held; it is taken at step 3 and released only at step 18
+
+E. The release record (step 16)
+[33] STOPPED as required: the release record while P still exists
+       -> RELEASE RECORD STOP: the install barrier P still exists; the release record follows COMMITTED PASS and the removal of E and P (Appendix J step 16)
+[34] STATE as required: after that STOP: P present, U held, nothing released
+       -> {'U': True, 'E': False, 'P': True}
+[35] STOPPED as required: the release record while a tracked file differs from HEAD
+       -> RELEASE RECORD STOP: tracked files differ from HEAD; COMMITTED PASS cannot have been reached:
+[36] PASSED as required:    handling: P can be re-created although a tracked file differs
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[37] STATE as required:    end state: P re-created, E absent, U held
+       -> {'U': True, 'E': False, 'P': True}
+[38] STOPPED as required: an extra staged file before the release commit: STAGED
+       -> VERIFICATION STOP: FAIL: the index is not exactly the release commit; MISSING or wrongly staged: none; UNEXPECTED: A extra.txt
+[39] STOPPED as required: the released phase before any release commit
+       -> VERIFICATION STOP: FAIL: barrier E exists: src/methods/E_001/IN_DEVELOPMENT.txt
+
+F. The release commit and RELEASED (step 17): each STOP is followed by its Appendix J handling
+   (re-create P; U stays held; step 18 is NOT run), and the end state is checked
+[40] STOPPED as required: an extra file in the release commit: RELEASED
+       -> VERIFICATION STOP: FAIL: the release commit did not add exactly the release record; it changed (path, status): [('extra.txt', 'A'), ('src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json', 'A')]
+[41] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[42] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[43] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[44] STOPPED as required: the wrong parent (a commit between the package commit and the release commit): RELEASED
+       -> VERIFICATION STOP: FAIL: the release commit's only parent is not the package commit: the package commit's parent has src/ or tests/ changes since the base: src/evaluation/Method_Mode_H.py, src/evaluation/collect.py, src/evaluation
+[45] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[46] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[47] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[48] STOPPED as required: the release commit is a merge (two parents): RELEASED
+       -> VERIFICATION STOP: FAIL: the release commit has 2 parents, expected exactly 1 (the package commit)
+[49] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[50] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[51] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[52] STOPPED as required: a release record naming one game only: RELEASED
+       -> VERIFICATION STOP: FAIL: the release record's entries are not exactly the manifest's release entries
+[53] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[54] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[55] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[56] STOPPED as required: a release record naming another install record: RELEASED
+       -> VERIFICATION STOP: FAIL: the release record does not name the committed install record's SHA-256
+[57] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[58] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[59] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[60] STOPPED as required: a release record dated before the install record: RELEASED
+       -> VERIFICATION STOP: FAIL: the release record's local date is before the install record's
+[61] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[62] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[63] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[64] STOPPED as required: a release record timed before the install record: RELEASED
+       -> VERIFICATION STOP: FAIL: the recorded order is not: install lock U taken, then the install record, then the release record (2026-11-10T23:24:08.602341Z, 2026-11-10T23:24:09.711440Z, 2026-01-01T00:00:00.000000Z)
+[65] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[66] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[67] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[68] STOPPED as required: a release record with a retirement the manifest lacks: RELEASED
+       -> VERIFICATION STOP: FAIL: the release record's retirements are not the manifest's
+[69] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[70] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[71] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[72] STOPPED as required: a release record that is not canonical bytes: RELEASED
+       -> VERIFICATION STOP: FAIL: the release record is not its canonical bytes
+[73] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[74] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[75] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[76] STOPPED as required: the release record converted to CRLF in the working tree (N1): RELEASED
+       -> VERIFICATION STOP: FAIL: the release record on disk is not the committed bytes (line endings converted?)
+[77] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[78] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[79] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[80] STOPPED as required: an untracked file after the release commit: RELEASED
+       -> VERIFICATION STOP: FAIL: working tree or index not clean after the release commit:
+[81] PASSED as required:    handling: re-create P
+       -> BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+[82] STATE as required:    end state: P re-created, E absent, U held; step 18 not run
+       -> {'U': True, 'E': False, 'P': True}
+[83] STOPPED as required:    and with P back, RELEASED cannot pass until the fix
+       -> VERIFICATION STOP: FAIL: barrier P exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+[84] STOPPED as required: U released early (step 18 before RELEASED): RELEASED
+       -> VERIFICATION STOP: FAIL: barrier U (the install lock) is not held; it is taken at step 3 and released only at step 18
+[85] STOPPED as required: U naming another package: RELEASED
+       -> VERIFICATION STOP: FAIL: barrier U is not this package's install lock
+[86] STOPPED as required:    and step 18 refuses to remove a lock that is not this package's
+       -> REFUSED: the updater lock does not name this package; nothing removed
+[87] PASSED as required: control: the unaltered state passes RELEASED
+       -> RELEASED PASS: two commits proved: the release commit (449ba4c) has one parent, the package commit (c37526c), and adds exactly the release record; the record is canonical, names 2 released entries and the committed install record;
+[88] PASSED as required: control: and the project's own reader validates the records
+       -> RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+
+NEGATIVES: 88 checks, 0 failed
+NEGATIVES PASS

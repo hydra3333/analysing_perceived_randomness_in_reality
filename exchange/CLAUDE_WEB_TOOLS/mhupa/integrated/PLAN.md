@@ -165,3 +165,9 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   CRLF/3.15; 571/571 in a fresh autocrlf clone; 88 + 9 negatives, 0 failed; N1 oracle PASS. Proposed: abandon-and-rebuild
   recovery for a fix after step 13/17; corrected F2 rows 8-9. Next: the owner on N4b, B, rows 8-9; then rulebook v0.5 and
   the T016 task (Route A).
+- 2026-11-11 afternoon (Opus 5.5; owner away, draft work only): the reviewer's follow-up on fadd2b9 addressed (section 6 of
+  `ITEM_3_FOLLOWUP_2026_11_11.md`): N4b owner-approved (09:32); N5-C01 cleanup failure is a STOP (10 step-10 negatives, 0
+  failed); N5-C02 each of the six data files needed; a Windows defect fixed (the escape check now allows the project's own
+  .venv inside the tree; proven with a venv inside the clone, 571/571); REC-C01 STOP texts for steps 13 and 17; the
+  Appendix J deviations tabled. Final draft evidence `evidence_2026_11_11c/`: positive 0-18 WITH step 10 PASS on LF/3.13 and
+  CRLF/3.15; 88 negatives 0 failed. Next: the owner and reviewer; rulebook v0.5 and T016 not started.
