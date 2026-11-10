@@ -246,6 +246,12 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            RATIFIED by you (RAT-27); installed at 52b6de8 and verified. Claude's handover H-1 v1r10r2 (pointers after
            DOC-13; model guidance) RATIFIED by you (RAT-28), installed at 06c26a6. 10 November 2026: R-020 (g) decided,
            option (i); H-1 v1r10r3 records it (RAT-29); a fresh Claude chat continues from it.
+           DONE (10 November 2026): the new Claude chat's takeover (HO-2) checked by the reviewer and accepted by you;
+           items 1 and 2 done as PRELIMINARY/DRAFT: the trees rebuilt on main c48ac3c (570/570 on both Linux Pythons),
+           the package builder with the gate closure computed (10 files), a draft package smoke-tested on a synthetic
+           root (LF and CRLF) with 11 negatives; one new defect found and reproduced (N1: the install records break on
+           a CRLF checkout; a one-line .gitattributes fix proposed). Report: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/
+           ITEMS_1_2_REPORT_2026_11_10.md. Next: item 3 on Fable, after your go.
            NOW:
            (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
                (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;

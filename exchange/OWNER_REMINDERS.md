@@ -395,6 +395,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       check_task_commands.py passing; no change to the main repository; T016 still needs its own go.
       DECIDED (owner, 10 November 2026, about 18:30: "yes to your recommendation"): option (i), with those conditions. Claude
       writes rulebook v0.5 to it with the integrated package (reviewed with it); T016 still needs your separate go.
+      Refined (owner, HO-2 closure, 10 November 2026): Route A: rulebook v0.5 and the T016 task reviewed and installed before
+      T016 runs; option (i) does not override rulebook rules 2.5 or 9 (R-025 F2, F3).
 
 ## R-021  MHUP-1 design amendment A1 (the Mode H score ledger published whole, once): your final approval
 
@@ -447,6 +449,21 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       recommended ignored folder for large generated files under GAIS/OUTLANDISH_01/. Done by the owner with the ChatGPT
       reviewer chat (6 November 2026); the OUTLANDISH chat's confirmation is awaited.
 - When: any time; none of it blocks the integrated MHUP-A package.
+
+## R-025  The integrated MHUP-A package: F1-F9 (predecessor's cross-check) and Claude's new findings N1-N3
+
+- Asked: the owner's HO-2 closure and GO, 10 November 2026 (exchange/HO2_2026_11_10/); N1-N3 found by Claude in items 1-2.
+- Status: OPEN until each is resolved in the package, the rulebook v0.5 / T016 review or the install plan.
+- What: F1 settings-deny timing (proposal: your deny lines after T016, before step 0, as your own commit); F2 T016's synthetic
+  root and the one owner-run live-child check; F3 Route A (rulebook v0.5 and the T016 task reviewed and installed before
+  T016); F4 pathspec staging and the task-clone step 0; F5 wording; F6 the freeze runs per game from Approval 1: change
+  nothing in the closure or the venv between a game's Approval 1 and its seal; F7 after the freeze, changing a package path
+  (even .gitignore) means a re-freeze and new evidence; F8 E2R-T12 approval is for Claude's cloud suites only; F9 T017 needs
+  its own decision. N1 (your decision, with the reviewer): add `src/methods/_common/contract_data/install_records/** -text`
+  to .gitattributes in the package, because the records refuse after Git rewrites them with CRLF (reproduced). N2 fixed in
+  the draft. N3: the synthetic root keeps empty source_data/ and results/ folders.
+- When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
+- Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 
 ## R-024  The handover documents of 8 November 2026 and the documentation round after them
 

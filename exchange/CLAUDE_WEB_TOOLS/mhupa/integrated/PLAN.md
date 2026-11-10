@@ -117,3 +117,17 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
 - 2026-11-10 18:30 Adelaide: **R-020 (g) DECIDED by the owner: option (i)** (the narrow rulebook v0.5 allowance for T016, with
   the reviewer's EX_157 section 3 conditions). Nothing else changed since 8 November. Next: item 2 (the package builder), Opus,
   in a fresh Claude chat started from the H-1 v1r10r3 blurb.
+- 2026-11-10 20:38 Adelaide: **HO-2 closed** (the owner's GO, `exchange/HO2_2026_11_10/`): the new Claude chat (Opus 5.5)
+  accepted; items 1 and 2 authorised; E2R-T12 approved for this cloud context only; Route A favoured; the predecessor's F1-F9
+  are design inputs. Item 3 is NOT authorised yet.
+- 2026-11-10 about 23:30 Adelaide (Opus 5.5): **items 1 and 2 done, PRELIMINARY/DRAFT.** Base `c48ac3c` (main unchanged
+  since). DEV equals the reviewed overlay's 70 paths (65 identical; `.gitignore`, the three date files and the pinned test
+  differ only as expected). Preliminary suites 570/570 PASS, 0 skips, on Linux Python 3.13.18 and 3.15.0b4 (working date
+  2026-11-10). The builder `build_mhupa_pkg.py` and its templates: the gate closure computed (15 files, 10 changed: exactly
+  the list), 570 tests in 45 modules counted by the loader, the draft package `MHUPA_Install_v1` (manifest SHA-256
+  `fa034f33...7df1`), the verifier's `released` phase a refusing stub. Smoke steps 0-18 PASS on a synthetic root, LF and
+  CRLF; 11/11 negatives STOP. **New finding N1:** the install/release records refuse after Git rewrites them with CRLF
+  (reproduced); proposed fix: `.gitattributes` `src/methods/_common/contract_data/install_records/** -text` (needs the
+  reviewer and the owner). N2 (`--no-renames` at step 12) fixed in the draft; N3 (synthetic root needs empty
+  `source_data/` and `results/`). Full report: `ITEMS_1_2_REPORT_2026_11_10.md`. **Next: item 3 on Fable, after the owner's
+  go.**

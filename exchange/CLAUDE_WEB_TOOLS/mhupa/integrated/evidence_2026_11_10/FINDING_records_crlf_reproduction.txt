@@ -1,0 +1,8 @@
+Reproduction (10 Nov 2026, Claude): MHUP-A install records on a core.autocrlf=true checkout
+as written by the tools:
+RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+after git rm-and-checkout (as a fresh clone, pull or rebase writes them):
+i/lf    w/crlf  attr/                 	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+i/lf    w/crlf  attr/                 	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+i/lf    w/crlf  attr/                 	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+VALIDATE STOP: INSTALL_MHUP_A_V1.json is not its canonical bytes

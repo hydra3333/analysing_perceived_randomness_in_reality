@@ -1,0 +1,13 @@
+STOPPED as required: damaged package file, copy gate -> COPY STOP: package file missing or damaged: src/methods/_common/contract_vocab.py
+    repo unchanged: 0 status lines
+STOPPED as required: damaged package file, PRE -> VERIFICATION STOP: FAIL: package file missing or damaged: src/methods/_common/contract_vocab.py
+STOPPED as required: untracked file at PRE -> VERIFICATION STOP: FAIL: working tree or index not clean:
+STOPPED as required: missing new file at POST (R-008 wording) -> VERIFICATION STOP: FAIL: new paths differ; MISSING (expected, not seen): src/methods/_common/owner_records.py; UNEXPECTED (seen, not expected): none
+STOPPED as required: extra file at POST -> VERIFICATION STOP: FAIL: new paths differ; MISSING (expected, not seen): none; UNEXPECTED (seen, not expected): src/methods/_common/extra.py
+STOPPED as required: wrong bytes at POST -> VERIFICATION STOP: FAIL: wrong bytes: src/methods/_common/contract_task.py
+STOPPED as required: copy gate twice (targets no longer at base) -> COPY STOP: file to be replaced is not at its base bytes: src/methods/_common/contract_dispatch.py
+STOPPED as required: remove barrier P with foreign content -> COPY STOP: barrier P does not hold this package's text; nothing removed: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+    foreign P still present: yes
+STOPPED as required: create barrier P when present -> COPY STOP: barrier P already exists: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+STOPPED as required: path traversal in manifest (copy) -> COPY STOP: the manifest's gate_files and rest_files do not partition its new and modified files
+STOPPED as required: altered manifest (verifier) -> VERIFICATION STOP: FAIL: the package manifest is not the one this verifier was built with

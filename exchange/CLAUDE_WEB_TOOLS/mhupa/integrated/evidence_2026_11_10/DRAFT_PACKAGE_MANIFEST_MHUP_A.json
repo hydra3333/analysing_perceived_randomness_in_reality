@@ -1,0 +1,290 @@
+{
+ "barriers": {
+  "E": "src/methods/E_001/IN_DEVELOPMENT.txt",
+  "P": "src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt",
+  "U": "source_data/.results_master.lock"
+ },
+ "base_commit": "c48ac3c393d2eab30014e6200d427b76d90f47ac",
+ "deleted": {
+  "src/results_master_v0_1.py": "3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619"
+ },
+ "e1_r3_effective_date": "2026-11-10",
+ "gate_files": [
+  "src/methods/_common/contract_dispatch.py",
+  "src/methods/_common/contract_forecast.py",
+  "src/methods/_common/contract_receipts.py",
+  "src/methods/_common/contract_records.py",
+  "src/methods/_common/contract_runner.py",
+  "src/methods/_common/contract_task.py",
+  "src/methods/_common/contract_vocab.py",
+  "src/methods/_common/game_draws_reader.py",
+  "src/methods/_common/master_versions.py",
+  "src/methods/_common/owner_records.py"
+ ],
+ "install_record": "src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json",
+ "modified": {
+  ".gitignore": [
+   "15528e935aceba9f7eb3847a6ba0fd2ca19eb1eee835fff738f5582b6c7af745",
+   "3819b82f0a7ad05944cc89554eaa568cd9ba12134a7c6bf05c13ad9d09b522da"
+  ],
+  "Run_Experiment.bat": [
+   "dfd324d645cbbe5d528883f7a0309d5f5f3cbea47c4a49ddffaf6b0bdc7f0c5d",
+   "746bfded6856a9b22e5177cd291651a148a66f0603a9f116cb5b40d02e226667"
+  ],
+  "Run_Results_Updater.bat": [
+   "c01ac19ed4a04ad133f28f4873dfe8c161bac811237b2176e70717f63bb80230",
+   "489d2759d0b826a0adb6d6e419de9fc0bf0f6142e6c3794eaf47dcd2deea556a"
+  ],
+  "src/evaluation/collect.py": [
+   "ea9214ebc7320a2a197e7164b97474085e116ef46cdc735c82f821a3f9486c02",
+   "6618f0c119796621da98c95d15521a5a17a1b77b1f7d7471a3045e3306f13287"
+  ],
+  "src/evaluation/outcome_reader.py": [
+   "8852361b271c45998867b4c18441b7287651744e73d897d03e6e18e1d8b0a8d7",
+   "cd3424261d8798228b874734e82dd9dd1d0520a529d1b1a5c40e82865fcb8485"
+  ],
+  "src/evaluation/registry/FAMILY_REGISTRY_V1.json": [
+   "97299f32475e3e7311adc421f3dedf09f9a9c88aca2f8906adf4944904b341ac",
+   "b185308a6c6607094414cf18802728d440f79fecbdfdfd4689e2467c54f4eefb"
+  ],
+  "src/evaluation/report.py": [
+   "b1ce781436268332daa0bf5f6037564f7774a70ab5d68de71b16811de29da82b",
+   "866bc9721b678d8828d8551af8a1e78b238ec934662899541aadae4d92cbe18a"
+  ],
+  "src/evaluation/report_writer.py": [
+   "914c8e4f883c8d4c975da6be0075afb6f4c700367d03d57be1a7e98c3e678db4",
+   "fb2507e880cb4ad957c496b8428747bf74c38bd1d35fba9c921bfedfa397f11f"
+  ],
+  "src/methods/E_001/multigame_e1.py": [
+   "a07dac7558eb5bbc79bbf803b95d133c3248bdb2fa623e98f2fd6824d7a91019",
+   "d766416f3144ebd80dbcd11b538dcbdf97c93e83f8c4ad907baef24c4a10762b"
+  ],
+  "src/methods/E_001_Historical_Appearance_Frequency.py": [
+   "547c833cbe0ca0e9e3e7c6ffafccb54f54b5e60f25393bc4027ccad196378ce8",
+   "bb124469d4c6c651a4db38e0b0c339c752246800a63ff7550e17094340060fb8"
+  ],
+  "src/methods/Method_Contract_Runner.py": [
+   "fcbf02d851464e62d5019a1767bffd1b72ecb0f25e074f67c4887bea15368990",
+   "941b9058ddbc6f432de4e51469cd82a52b72669cb1dd398cce6e4f999086baf5"
+  ],
+  "src/methods/Method_Walk_Forward.py": [
+   "1a1edd445566a2e9537a1636ede00ddcef6fca18cbaa021785cd35264faa7856",
+   "925ea6a014d7fb33e68e0739e29d37b1cd7e74b3905b2c453557f3d0d480301c"
+  ],
+  "src/methods/_common/contract_dispatch.py": [
+   "7f026bc8ff6a0a13120031371acee455734d12a79cbe923f988ba12c6a92a322",
+   "3c7bb22c7de8a76dae47f199393f87d93b34adc230bcf9f1a27311b3b819de4f"
+  ],
+  "src/methods/_common/contract_forecast.py": [
+   "be88a1d640098a6990f14090108524e1d7437a425e1b6254672164b6fc7f8121",
+   "9c1498207a3b401406f27b18948b62ea0109285eb0afd4ed103fc54a5df1d16d"
+  ],
+  "src/methods/_common/contract_receipts.py": [
+   "e6d159e65dcf8269ea5576a7338d3ebcbf2d5dc0c06b06f1517189cc215908fd",
+   "1f6d2aaa08b93f4b15732081690036745ff26c0ecaff6042a7095b3850a014ed"
+  ],
+  "src/methods/_common/contract_records.py": [
+   "1596d60a3de8853e4249afba9471ab5c1958c39fda5c3d989bfc650ee256b1d3",
+   "40f058208cd3dd7062ebee7fb058a2acdbe66326a6925fff3344f1c2a5e0bce9"
+  ],
+  "src/methods/_common/contract_runner.py": [
+   "c023fdc90d2ae0552558371489c39d3b583ef5c707d96394a77c2403b8dc4683",
+   "f86c81306a35bef4ea3bb3fdd357ff939d16b245f6f34ca63a2bacb49476a113"
+  ],
+  "src/methods/_common/contract_task.py": [
+   "e58c0ab288b3292d3eeaf49e7cf9170b0341ff53d23cbde839b8cdbd716a31b3",
+   "e68094199281c0722f3963514edb4f32c669d5342aa4d50ae88b51dceb0b36eb"
+  ],
+  "src/methods/_common/contract_vocab.py": [
+   "6e30b5be8d024fa647a2406e38b44cdf3b3c0c84f0468d84e168e9fde40d4ec8",
+   "f0e04f4720ba98ada37991d15796020dc13f56ed5cd83c877680c6e448df91a3"
+  ],
+  "src/methods/_common/game_draws_reader.py": [
+   "de4631572160214464e0ecdf9b0f6564b193fe244859a3d2d86f703299819ee5",
+   "1de081f9c0832b3c21646383d4563572791e52ecffc987a470b818920b8e045c"
+  ],
+  "src/methods/_common/walk_forward.py": [
+   "c11cf709e8a5bf6fb87b7467c94b56a82e16355e0a1bb7265efb4b4ac45922a7",
+   "a3f9cfa3800aa99a0c9fcf2609cee2360c6b87c375ce8411bad47d2820fd9329"
+  ],
+  "src/methods/contract_adapters/e_001.py": [
+   "5f83f3d7e7d5b7859d612daa69640bd2478e372e680f00fa00dc20fa7f3cfd02",
+   "ac21616499291d07d2421199e0b46067c33fcca7baf539528fec9ff802bf4bab"
+  ],
+  "tests/test_code3_retirement.py": [
+   "1c666664109e69e90c5527cd2f49540cd69e35bafcb902e3fe364b914a8fad56",
+   "cfc9100f135000cb1b09acdfde7983b33761bd79b2987c8bfc1ec8da1d48b2d0"
+  ],
+  "tests/test_e1r2_revision2.py": [
+   "6fd3ed164c66a82deba1303c4944c3d72f35e6fb7bd6b62a3dd637c86eef3b78",
+   "42f49ecbb4574518cda137a8b219d74e8e5a0d85dfeb3af5503da6e2290e089d"
+  ],
+  "tests/test_e2r_dispatch.py": [
+   "8e5eba4f643fa8519c48f3367683373b2bbd6f39dd6ba424cd5b2868f3eb7095",
+   "4a201243ddd57ee3a93912b32c956ae1ffb7448f5cca96f9ec549b7054381838"
+  ],
+  "tests/test_e2r_runner.py": [
+   "1d5bb75209d69c40f05bc97a928f797dd7cfe46eefcd17c50261aa1fe2993ce4",
+   "06c745de435dfc3c52bad1ac6f7ee0a4cfe274d0eabd5de0e129d4423c5c08a2"
+  ],
+  "tests/test_e6_beta_bernoulli.py": [
+   "122a11bd000a6467c713cf9277bd158856aff7e0ad14d03a83339e374f15a21c",
+   "92764ba2bfa2540e02c6ce3d3291d810f172eb0c4cf636eca8030bd554cd640b"
+  ],
+  "tests/test_multigame_reader_contracts.py": [
+   "0caddb25d876f57311c6d64201e61274cb21a42925e81dfddeac99834a872a8f",
+   "50cc05b4ec4b484a3dad7824c646e4fdd57a96efe9afaaaefd27b530347be5dc"
+  ],
+  "tests/test_rel1_release.py": [
+   "4b49fee9a63f071a3e6bfa804a6f2ae73eb2758d6bb5277c8ffbfe2f711b3bb5",
+   "14002f460520159c9b03e79d3a62bcd98ab0e09718daa8ab528e46fddf7c1c24"
+  ],
+  "tests/test_t05_hardening.py": [
+   "b435f57cdaf40092baa72fece56cc528e4263b8cf9be2286f3ec97cc50e2b8ad",
+   "7fa936da2ee209fd0819c649a6d013299c3cc526ddc71f8ead0a059f839f8a99"
+  ],
+  "tests/test_wf1a_walk_forward.py": [
+   "3cc30ba74c826c58cafdc136ab964392f426dcdcb38bc558a3f9c1c5b001710f",
+   "5c060b0e820d2783aae654ff7e90f4535f7ab8506a4245d96090b9e09d62c361"
+  ],
+  "tests/test_wf1b_outcome_reader.py": [
+   "9e09654e7f20d66bb42c808cca938bbeddca8b51e83931995e5cd05e1b60fb1b",
+   "1631a31f61e902af537521a5d3861c5a777d8d08a4c9fde0ba6f7e9800c6e176"
+  ],
+  "tests/test_wf1b_static.py": [
+   "a45c47f1a58d355692c1e5672b398325352ef728e8bb3880c0273ec114974ca8",
+   "0c728cb8638df2eac32af13a4bd306c6934b5827d328eba0b18f8fee6d848fa6"
+  ]
+ },
+ "new": {
+  "Run_Evaluation.bat": "80b6c77d5858db4469367487bc5a220f5229d66749c30e0802a8b99ac06f8f45",
+  "archive/methods/E_001/r2/E_001/__init__.py": "cd73a76370e0aa1934c1de0ec9b8a831bbea9556b9fcfddac103e6c5c28c8460",
+  "archive/methods/E_001/r2/E_001/e1_common_reader_bridge.py": "2bfa693485cb2f417f4a0f24bd57a9b090c0f154bed8fa53299f4ed0cd9054db",
+  "archive/methods/E_001/r2/E_001/e1_historical_appearance_frequency.py": "2c727d3b20584cd9a30c89863b6b51c72a1e0c373b48751e3da27d55f514f250",
+  "archive/methods/E_001/r2/E_001/e1_standalone_contract.py": "d9ef642c2949b1b2a10232d614ba1306365abaefe65338b5c0aa9e3d9f285e50",
+  "archive/methods/E_001/r2/E_001/e1_training_view.py": "e75e13729ffcdb5f14c4d7f762d8b31e590adbb1498142f9731eaf452394cad8",
+  "archive/methods/E_001/r2/E_001/multigame_e1.py": "a07dac7558eb5bbc79bbf803b95d133c3248bdb2fa623e98f2fd6824d7a91019",
+  "archive/methods/E_001/r2/E_001_Historical_Appearance_Frequency.py": "547c833cbe0ca0e9e3e7c6ffafccb54f54b5e60f25393bc4027ccad196378ce8",
+  "archive/methods/E_001/r2/README.md": "3b2c18249e4709f0d0e5f03564900dfe5d9f7e6dfa29ca59c3ae7b4eb6469fa6",
+  "src/evaluation/Method_Mode_H.py": "2214c09c05ea7aeb28acf296512a7631c95f5e0c5001735d5bedf62b7d35ddd6",
+  "src/evaluation/mode_h.py": "c9ce5b741a784016514ba9295fa0993022682793e5706e0002c6e7a9b19a4211",
+  "src/methods/_common/closure.py": "e8d5114a486927292e227f599dd57de8149ff69de708dd68124759ea0f7951fc",
+  "src/methods/_common/contract_data/declarations/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json": "b8bce0fa40511d16c344a6030d690cea56f04133bc13c571cde2743c79c4cf1d",
+  "src/methods/_common/contract_data/declarations/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json": "3253a661aab68c392f5751da53f5fb06f67387543f4af3a5066be9b5f59b0606",
+  "src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json": "a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd",
+  "src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "bd210d308b8d15659375ca19303a26751c10721937d70f5ec53a347fc9a7fe24",
+  "src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "b9aa15702d41867e1bc762d60f12ab308d14f8cc3b8cb8e0aa0c9969acf95c02",
+  "src/methods/_common/master_versions.py": "57ba431edc56b350deadb60919310615c1598e1f241644890ab823b864f3e7ab",
+  "src/methods/_common/owner_records.py": "0d8d1e20f5a2ca2de4286d26c0bbaefb77e1bbcda01caf6059c31078ed04a403",
+  "src/methods/_common/release_records.py": "81c7c62d535b7344e252eb5d02157acb41c0b2cfef61654138169ea3792c6b8d",
+  "src/package_tools/install_records.py": "865702bd6581e3254a872b076388b136e3612e7dfedc1277b247f8effc914acf",
+  "src/package_tools/process_check.py": "21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836",
+  "src/results_master_v0_2.py": "b71f4ffa14ea9f8b6c3e404c0ba46f6abe313ead3178bba553ed9b4ad5e2a43f",
+  "tests/fixtures/e1_r2_reference_v1.json": "3d013c9485175686bfe010a935c88692d206c4e059091b5778f7274a13a4ae90",
+  "tests/fixtures/results_master_v0_1_reference.py.txt": "3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619",
+  "tests/ledger_fixture.py": "48ee5f1ee332386233a6964c9db951168223f7c622c4178eed0793b8b0c9836f",
+  "tests/mhupa_fixtures.py": "5b66e7eae48a08932bb57f7c4b3f6238fed3ae2c7571c8441cb3839c235d5662",
+  "tests/mhupa_slice2_fixtures.py": "5a49b9b583ae736bff057cb86004f6487d1ad640832179cb20659cdc5fcfb57c",
+  "tests/test_e1r3_revision3.py": "e0615a6947491c41f59ec812f9cf44897febe8e71be3f6e590c0afdae11b7f47",
+  "tests/test_mhupa_gates.py": "91a557c364d05b8c428dd0fd2e4d45860a8ff5d0c0a866094084ec82641cebb9",
+  "tests/test_mhupa_install_records.py": "088c8d69b8c22730aa44d6be78815f05ec8b43e25ca0beb840bab0ad1582d256",
+  "tests/test_mhupa_launchers.py": "9c5b1adb7ee8accbecd7cc4a0b4d5a00b1ea78909a960e2cd4d6541e2fb76bfb",
+  "tests/test_mhupa_master_versions.py": "c26549cd59c6bf795afd98a3f481d237d2eaf0912f6c2970be446df11ad548c3",
+  "tests/test_mhupa_method_mode_h_cli.py": "61c4a601f809a4951c335eff2477d872b2bae719de080b9f009ec9bef96a8ab3",
+  "tests/test_mhupa_mode_h.py": "fab6d77c40b7442d31cdf9126485594c26bc983f2dbc0120611001287860977a",
+  "tests/test_mhupa_process_check.py": "d8d9af6802c9ee1e288b2ae81dddaa6510db6f0bdcd3a94ac039d7106f76175a",
+  "tests/test_mhupa_updater_v0_2.py": "5e95f578d20f6b1786102b11fe03cfa2b63af48953e477e74be53cee149c7f8c"
+ },
+ "note": "Hashes are SHA-256 of LF-normalised bytes, equal to the Git blobs. release_entries, retires and registry_entries_added are read by src/package_tools/install_records.py and process_check.py.",
+ "package": "MHUP_A",
+ "package_folder": "MHUPA_Install_v1",
+ "registry_entries_added": [
+  "src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json",
+  "src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json"
+ ],
+ "release_entries": [
+  {
+   "game_id": "POWERBALL",
+   "method_id": "E_1",
+   "method_revision": "3",
+   "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"
+  },
+  {
+   "game_id": "OZLOTTO",
+   "method_id": "E_1",
+   "method_revision": "3",
+   "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"
+  }
+ ],
+ "release_record": "src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json",
+ "rest_files": [
+  ".gitignore",
+  "Run_Evaluation.bat",
+  "Run_Experiment.bat",
+  "Run_Results_Updater.bat",
+  "archive/methods/E_001/r2/E_001/__init__.py",
+  "archive/methods/E_001/r2/E_001/e1_common_reader_bridge.py",
+  "archive/methods/E_001/r2/E_001/e1_historical_appearance_frequency.py",
+  "archive/methods/E_001/r2/E_001/e1_standalone_contract.py",
+  "archive/methods/E_001/r2/E_001/e1_training_view.py",
+  "archive/methods/E_001/r2/E_001/multigame_e1.py",
+  "archive/methods/E_001/r2/E_001_Historical_Appearance_Frequency.py",
+  "archive/methods/E_001/r2/README.md",
+  "src/evaluation/Method_Mode_H.py",
+  "src/evaluation/collect.py",
+  "src/evaluation/mode_h.py",
+  "src/evaluation/outcome_reader.py",
+  "src/evaluation/registry/FAMILY_REGISTRY_V1.json",
+  "src/evaluation/report.py",
+  "src/evaluation/report_writer.py",
+  "src/methods/E_001/multigame_e1.py",
+  "src/methods/E_001_Historical_Appearance_Frequency.py",
+  "src/methods/Method_Contract_Runner.py",
+  "src/methods/Method_Walk_Forward.py",
+  "src/methods/_common/closure.py",
+  "src/methods/_common/contract_data/declarations/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json",
+  "src/methods/_common/contract_data/declarations/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json",
+  "src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json",
+  "src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json",
+  "src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json",
+  "src/methods/_common/release_records.py",
+  "src/methods/_common/walk_forward.py",
+  "src/methods/contract_adapters/e_001.py",
+  "src/package_tools/install_records.py",
+  "src/package_tools/process_check.py",
+  "src/results_master_v0_2.py",
+  "tests/fixtures/e1_r2_reference_v1.json",
+  "tests/fixtures/results_master_v0_1_reference.py.txt",
+  "tests/ledger_fixture.py",
+  "tests/mhupa_fixtures.py",
+  "tests/mhupa_slice2_fixtures.py",
+  "tests/test_code3_retirement.py",
+  "tests/test_e1r2_revision2.py",
+  "tests/test_e1r3_revision3.py",
+  "tests/test_e2r_dispatch.py",
+  "tests/test_e2r_runner.py",
+  "tests/test_e6_beta_bernoulli.py",
+  "tests/test_mhupa_gates.py",
+  "tests/test_mhupa_install_records.py",
+  "tests/test_mhupa_launchers.py",
+  "tests/test_mhupa_master_versions.py",
+  "tests/test_mhupa_method_mode_h_cli.py",
+  "tests/test_mhupa_mode_h.py",
+  "tests/test_mhupa_process_check.py",
+  "tests/test_mhupa_updater_v0_2.py",
+  "tests/test_multigame_reader_contracts.py",
+  "tests/test_rel1_release.py",
+  "tests/test_t05_hardening.py",
+  "tests/test_wf1a_walk_forward.py",
+  "tests/test_wf1b_outcome_reader.py",
+  "tests/test_wf1b_static.py"
+ ],
+ "retires": [],
+ "schema": "MHUP_PACKAGE_MANIFEST_V1",
+ "status": "DRAFT (item 2 scaffold; not for installation)",
+ "tool_sha256": {
+  "src/methods/_common/release_records.py": "81c7c62d535b7344e252eb5d02157acb41c0b2cfef61654138169ea3792c6b8d",
+  "src/package_tools/install_records.py": "865702bd6581e3254a872b076388b136e3612e7dfedc1277b247f8effc914acf",
+  "src/package_tools/process_check.py": "21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836"
+ }
+}
