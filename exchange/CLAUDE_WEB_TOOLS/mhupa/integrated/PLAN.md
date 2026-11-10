@@ -158,3 +158,10 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   (21 modules); a barrier-free byte copy passes 570/570; option A (suite on a barrier-free copy) recommended; undecided.**
   N4 (two line-ending-sensitive tests) proposed, not applied. F2 oracle matrix written. Next: the reviewer and the owner on
   N5, N4 and F2; then rulebook v0.5 and the T016 task (Opus). Item 3's Fable work is finished.
+- 2026-11-11 about 10:30 Adelaide (Opus 5.5): owner's yes (08:21) to N5 option A in principle and N4. Done in the DRAFT
+  (`ITEM_3_FOLLOWUP_2026_11_11.md`): step 10 `--shadow` runner (barrier-free byte copy; only the six development master files
+  as data, found by a no-data run); N4 plus N4b (a third -text line, awaiting the owner's yes); the release-record guard (U
+  held, E absent; suite 571). Evidence `evidence_2026_11_11b/`: full positive 0-18 WITH step 10 PASS on LF/3.13 and
+  CRLF/3.15; 571/571 in a fresh autocrlf clone; 88 + 9 negatives, 0 failed; N1 oracle PASS. Proposed: abandon-and-rebuild
+  recovery for a fix after step 13/17; corrected F2 rows 8-9. Next: the owner on N4b, B, rows 8-9; then rulebook v0.5 and
+  the T016 task (Route A).

@@ -1,0 +1,30 @@
+[01] STOPPED as required: live P missing: the runner refuses before copying
+       -> SUITE STOP: POST on the live tree does not pass before the suite: VERIFICATION STOP: FAIL: barrier P is absent or not this package's: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt | HEAD: c48ac3c393d2eab30014e6200d427b
+       barriers after: {'U': True, 'E': True, 'P': False}; temporary copies left: none
+[02] STOPPED as required: live P foreign: the runner refuses before copying
+       -> SUITE STOP: POST on the live tree does not pass before the suite: VERIFICATION STOP: FAIL: barrier P is absent or not this package's: src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt | HEAD: c48ac3c393d2eab30014e6200d427b
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[03] STOPPED as required: live U names another package: refused
+       -> SUITE STOP: POST on the live tree does not pass before the suite: VERIFICATION STOP: FAIL: barrier U is not this package's install lock | HEAD: c48ac3c393d2eab30014e6200d427b76d90f47ac (descends from base c48ac3c)
+       barriers after: {'U': False, 'E': True, 'P': True}; temporary copies left: none
+[04] STOPPED as required: a changed code file in the copy: refused before the suite
+       -> SUITE STOP: the copy of src/methods/_common/contract_dispatch.py differs from the live file
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[05] STOPPED as required: the import path reaching into the live tree: refused before the suite
+       -> SUITE STOP: the suite's import path includes the live tree: /home/claude/work/s10/case_05/src/methods
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[06] STOPPED as required: a failing suite: STOP; the live tree still barred and checked again
+       -> SUITE STOP: (injected) one module failed
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[07] STOPPED as required: a test writing an untracked file into the live tree: STOP (POST sees it)
+       -> SUITE STOP: POST on the live tree does not pass after the suite: VERIFICATION STOP: FAIL: new paths differ; MISSING (expected, not seen): none; UNEXPECTED (seen, not expected): transitory_data/escape_probe.txt | HEAD: c48ac3c393d2
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[08] STOPPED as required: a test writing into a Git-ignored path of the live tree: STOP (the before/after listing sees it)
+       -> SUITE STOP: the live tree gained or lost untracked or ignored files during the suite: !! source_data/grabs/escape_probe.txt
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+[09] STOPPED as required: a test changing a code or test file in the copy: STOP
+       -> SUITE STOP: the copy of tests/test_e2r_prefix.py differs from the live file
+       barriers after: {'U': True, 'E': True, 'P': True}; temporary copies left: none
+
+STEP 10 NEGATIVES: 9 checks, 0 failed
+STEP 10 NEGATIVES PASS

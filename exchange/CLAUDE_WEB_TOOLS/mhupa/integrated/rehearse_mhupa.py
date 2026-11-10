@@ -43,7 +43,7 @@ class Ctx:
             'mkE': cp + ['barrier', '--create', 'E', '--repo', r], 'mkP': cp + ['barrier', '--create', 'P', '--repo', r],
             'gate': cp + ['copy', '--part', 'gate', '--repo', r], 'rest': cp + ['copy', '--part', 'rest', '--repo', r],
             'post': ver + ['post'],
-            'suite': [self.python, '-I', str(self.pkg / 'RUN_MHUP_A_SUITE.py'), '--repo', r],
+            'suite': [self.python, '-I', str(self.pkg / 'RUN_MHUP_A_SUITE.py'), '--repo', r, '--shadow'],
             'irec': ir + ['install-record', '--root', r, '--package', 'MHUP_A', '--manifest', man],
             'add1': g + ['add', f'--pathspec-from-file={self.pkg / "STAGE_PACKAGE_COMMIT.txt"}'],
             'commit1': g + ['commit', '-q', '-m', 'MHUP-A rehearsal: package commit'],
@@ -391,10 +391,124 @@ def negatives(mirror, pkg, work, python):
     return 1 if N.bad else 0
 
 
+# ------------------------------------------------------------------ step 10 (N5): the barrier-free copy's negatives
+
+def step10(mirror, pkg, work, python):
+    """On a FULL clone brought to the state after step 9: the real runner's refusals from the command line, and the
+    failures that need an injection, through the runner imported as a module (subprocess-free stubs only)."""
+    import importlib.util, io, contextlib, tempfile
+    work = Path(work)
+    shutil.rmtree(work, ignore_errors=True)
+    work.mkdir(parents=True)
+    ctx = Ctx(pkg, work, python)
+    base = work / 'post9'
+    clone(mirror, base, 'lf', synthetic=False)
+    ok, label = forward(ctx, base, upto='9 POST', skip=('suite',))
+    if not ok:
+        raise SystemExit(f'could not reach step 9: {label}')
+    n = bad = 0
+    tmp = Path(tempfile.gettempdir())
+    leftovers = lambda: sorted(p.name for p in tmp.glob('MHUPA_step10_*'))
+    start_left = leftovers()
+
+    def fresh(i):
+        d = work / f'case_{i:02d}'
+        shutil.copytree(base, d, symlinks=True)
+        return d
+
+    def judge(label, ok_stop, out, repo, want_state):
+        nonlocal n, bad
+        n += 1
+        st = state(ctx, repo)
+        st['U'] = st['U'] == 'MHUP_A'
+        clean = leftovers() == start_left
+        good = ok_stop and st == want_state and clean
+        bad += not good
+        line = next((ln for ln in out.splitlines() if 'STOP' in ln), out.strip().splitlines()[-1] if out.strip() else '')
+        print(f'[{n:02d}] ' + ('STOPPED as required' if good else 'NEGATIVE FAILED') + f': {label}\n       -> {line[:230]}\n'
+              f'       barriers after: {st}; temporary copies left: {"none" if clean else leftovers()}', flush=True)
+
+    cli = lambda r: [python, '-I', str(ctx.pkg / 'RUN_MHUP_A_SUITE.py'), '--repo', str(r), '--shadow']
+    barred = {'U': True, 'E': True, 'P': True}
+    r = fresh(1); (r / ctx.m['barriers']['P']).unlink()
+    rc, out = sh(cli(r)); judge('live P missing: the runner refuses before copying', rc != 0 and 'POST on the live tree does not pass before' in out, out, r, {'U': True, 'E': True, 'P': False})
+    r = fresh(2); (r / ctx.m['barriers']['P']).write_text('not ours\n')
+    rc, out = sh(cli(r)); judge('live P foreign: the runner refuses before copying', rc != 0 and 'barrier P is absent or not this package' in out, out, r, barred)
+    r = fresh(3); (r / ctx.m['barriers']['U']).write_text('INSTALL OTHER 2026-11-11T00:00:00.000000Z')
+    rc, out = sh(cli(r)); judge('live U names another package: refused', rc != 0 and "not this package's install lock" in out, out, r, {'U': False, 'E': True, 'P': True})
+
+    spec = importlib.util.spec_from_file_location('mhupa_suite_runner', ctx.pkg / 'RUN_MHUP_A_SUITE.py')
+    R = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(R)
+    orig = {k: getattr(R, k) for k in ('copy_into', 'suite_env', 'run_suite')}
+
+    def inject(label, i, check, **patches):
+        r = fresh(i)
+        for k, v in orig.items():
+            setattr(R, k, v)
+        for k, v in patches.items():
+            setattr(R, k, v(r))          # each patch is made for this case's live tree
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            res = R.shadow_mode(r)
+        out = buf.getvalue()
+        judge(label, res is False and check in out, out, r, barred)
+
+    def corrupt(live, shadow, paths):
+        orig['copy_into'](live, shadow, paths)
+        with open(shadow / 'src' / 'methods' / '_common' / 'contract_dispatch.py', 'ab') as fh:
+            fh.write(b'# changed\n')
+    inject('a changed code file in the copy: refused before the suite', 4, 'differs from the live file', copy_into=lambda live: corrupt)
+
+    def leaky_env(live):
+        def env_for(repo):
+            env = orig['suite_env'](repo)
+            env['PYTHONPATH'] = os.pathsep.join([str(live / 'src' / 'methods'), env['PYTHONPATH']])
+            return env
+        return env_for
+    inject('the import path reaching into the live tree: refused before the suite', 5, "import path includes the live tree", suite_env=leaky_env)
+
+    def failing(live):
+        def run(repo, expected=None):
+            print('SUITE STOP: (injected) one module failed')
+            return False
+        return run
+    inject('a failing suite: STOP; the live tree still barred and checked again', 6, 'live tree after the suite: POST PASS', run_suite=failing)
+
+    def escaping(rel):
+        def factory(live):
+            def run(repo, expected=None):
+                (live / rel).parent.mkdir(parents=True, exist_ok=True)
+                (live / rel).write_text('a test wrote into the live tree')
+                return True
+            return run
+        return factory
+    inject('a test writing an untracked file into the live tree: STOP (POST sees it)', 7,
+           'UNEXPECTED (seen, not expected): transitory_data/escape_probe.txt', run_suite=escaping('transitory_data/escape_probe.txt'))
+    inject('a test writing into a Git-ignored path of the live tree: STOP (the before/after listing sees it)', 9,
+           'the live tree gained or lost', run_suite=escaping('source_data/grabs/escape_probe.txt'))
+
+    def edits_copy(live):
+        def run(repo, expected=None):
+            with open(repo / 'tests' / 'test_e2r_prefix.py', 'ab') as fh:
+                fh.write(b'# changed by a test\n')
+            return True
+        return run
+    inject('a test changing a code or test file in the copy: STOP', 8, 'differs from the live file', run_suite=edits_copy)
+
+    for k, v in orig.items():
+        setattr(R, k, v)
+    print(f'\nSTEP 10 NEGATIVES: {n} checks, {bad} failed')
+    print('STEP 10 NEGATIVES PASS' if not bad else 'STEP 10 NEGATIVES STOP')
+    return 1 if bad else 0
+
+
 if __name__ == '__main__':
     a = sys.argv[1:]
     if len(a) >= 6 and a[0] == 'positive' and a[5] in ('lf', 'crlf'):
         sys.exit(positive(a[1], a[2], a[3], a[4], a[5], '--suite' in a[6:]))
+    if len(a) == 5 and a[0] == 'step10':
+        sys.exit(step10(a[1], a[2], a[3], a[4]))
     if len(a) == 5 and a[0] == 'negatives':
         sys.exit(negatives(a[1], a[2], a[3], a[4]))
     print(__doc__)

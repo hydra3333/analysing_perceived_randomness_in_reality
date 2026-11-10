@@ -147,13 +147,16 @@ If it STOPs: as step 6.
 ## Steps 9 and 10 - POST, then the suite (one line; the suite starts only if POST passes; do not skip it)
 
 ```
-"%PY%" -I -B "%VER%" --repo "%REPO%" --phase post && "%PY%" -I "%PKG%\RUN_MHUP_A_SUITE.py" --repo "%REPO%"
+"%PY%" -I -B "%VER%" --repo "%REPO%" --phase post && "%PY%" -I "%PKG%\RUN_MHUP_A_SUITE.py" --repo "%REPO%" --shadow
 ```
-Expect: `POST PASS: ...`, then module lines and `SUITE PASS: all @@N_TESTS@@ tests ran and passed; ...` (at most the four
-symlink skips). Do not click inside the window while it runs (a click can pause the output; Esc releases it).
-If it STOPs: as step 6. Do not commit.
-**OPEN (finding N5, for the reviewer and the owner): with U, E and P in place the suite as reviewed does NOT pass,
-because many accepted tests exercise the installed tree through the real gate. How step 10 is run is undecided.**
+Expect: `POST PASS: ...`; then the suite runner checks POST again, makes a barrier-free copy of the installed files in a
+temporary folder (your repository stays barred: U, E and P stay in place), runs the module lines there, checks your
+repository again, removes the copy, and ends with `SUITE PASS: all @@N_TESTS@@ tests ran and passed; ...` (at most the four
+symlink skips). About 25 minutes. Do not click inside the window while it runs (a click can pause the output; Esc
+releases it).
+If it STOPs: as step 6. Do not commit. (Why a copy: with the barriers in place the installed tree refuses every run, which
+is the point of the barriers, so the tests run on an exact copy without them: N5, decided in principle on 11 November
+2026; the matching amendment of Appendix J step 10 is for ratification with the package.)
 
 ## Step 11 - install check
 
@@ -247,5 +250,4 @@ Then tell Claude, who verifies the install from GitHub.
 - Claude's reviewed restore steps for a STOP from step 6 on, as exact commands (the copy tool already has the
   `--remove ... --restore` form they end with).
 - The final package identity: the frozen date, the base commit and the zip's SHA-256.
-- How step 10 is run (finding N5).
 - Git 2.26 or later is assumed (`git add --pathspec-from-file`).

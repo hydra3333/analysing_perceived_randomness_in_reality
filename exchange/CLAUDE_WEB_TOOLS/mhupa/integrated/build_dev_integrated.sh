@@ -35,4 +35,5 @@ s += (b'# MHUP-A install and release records: canonical JSON checked byte for by
 open(p, 'wb').write(s)
 print('appended the install_records -text line to .gitattributes (N1)')
 EOF
+python3 -I "$T/integrated/apply_item3_changes.py" "$DEV"
 echo "integrated dev tree built at $DEV (E_1 r3 effective_date $DATE)"

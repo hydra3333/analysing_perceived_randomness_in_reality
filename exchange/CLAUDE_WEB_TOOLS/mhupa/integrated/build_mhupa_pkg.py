@@ -29,7 +29,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 PKG_NAME = 'MHUPA_Install_v1'
 PACKAGE = 'MHUP_A'
-EXPECT_COUNTS = {'new': 37, 'modified': 34, 'deleted': 1}   # 34 since N1 (.gitattributes)
+EXPECT_COUNTS = {'new': 37, 'modified': 34, 'deleted': 1}   # 34 since N1 (.gitattributes); N4 and A change files already counted
 GATE_FILES = sorted([
     'src/methods/_common/contract_dispatch.py', 'src/methods/_common/contract_forecast.py',
     'src/methods/_common/contract_receipts.py', 'src/methods/_common/contract_records.py',
@@ -45,6 +45,11 @@ BARRIERS = {'E': 'src/methods/E_001/IN_DEVELOPMENT.txt',
 RECORDS = 'src/methods/_common/contract_data/install_records'
 N1_LINE = RECORDS + '/** -text'
 BASELINE_RECORD = f'{RECORDS}/RELEASE_BASELINE_20261031_V1.json'
+# The only data files the step 10 copy receives (N5): the development masters, ledgers and INIT records, which
+# tests/test_multigame_reader_contracts.py reads through the project's reader. Found by running the whole suite on a
+# copy with no data at all: only that module needs data (11 November 2026).
+STEP10_DATA = [f'source_data/{g}_results_master{s}' for g in ('POWERBALL', 'OZLOTTO')
+               for s in ('.csv', '_ledger.csv', '_init_verification.json')]
 RELEASED_PER_GAME = 40                       # R-020 (a): the 39 baseline variants plus E_1 revision 3, in each game
 BARRIER_TEXT = ("MHUP_A install barrier {name} (design Appendix J). Removed only by the install steps or Claude's "
                 "reviewed restore steps.\n")
@@ -286,6 +291,7 @@ def main():
     (pkg / 'VERIFY_MHUP_A.py').write_bytes(ver.encode('ascii'))
     suite = (HERE / 'mhupa_suite_template.py').read_text(encoding='ascii')
     suite = suite.replace('@@EXPECTED@@', '\n'.join(f'    ({m!r}, {n}),' for m, n in counts))
+    suite = suite.replace('@@DATA_FILES@@', ', '.join(repr(p) for p in STEP10_DATA))
     need('@@' not in suite, 'unfilled placeholder in the suite runner')
     (pkg / 'RUN_MHUP_A_SUITE.py').write_bytes(suite.encode('ascii'))
     stage1 = sorted([*new, *modified, *deleted, INSTALL_RECORD])

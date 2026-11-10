@@ -82,9 +82,9 @@ printf '%s/** text\n' "$REC" > "$W/C/.git/info/attributes"
 rm "$W/C"/$REC/*.json; must git -C "$W/C" checkout -- $REC
 records_check "$W/C" "C: NEGATIVE, attribute overridden to text, records rewritten" STOP
 
-# 6. scope: the set of unconverted (-text) files grows by exactly the three records
-echo "=== scope: tracked files with text unset: before the package $unset_before, after $unset_after (expected +3)"
-[ $((unset_after - unset_before)) -eq 3 ] || { echo "  -> UNEXPECTED"; fail=1; }
+# 6. scope: the set of unconverted (-text) files grows by exactly the three records and the three N4 files
+echo "=== scope: tracked files with text unset: before the package $unset_before, after $unset_after (expected +6: the 3 records (N1) and the 3 N4 files)"
+[ $((unset_after - unset_before)) -eq 6 ] || { echo "  -> UNEXPECTED"; fail=1; }
 (cd "$A" && git ls-files | git check-attr --stdin text | grep ': text: unset$' | grep -v '^source_data/\|^results/' | sed 's/^/  unset outside source_data, results: /')
 
 [ $fail -eq 0 ] && echo "N1 ORACLE PASS" || { echo "N1 ORACLE STOP"; exit 1; }
