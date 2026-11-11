@@ -1,10 +1,12 @@
 # T016 owner sheet - F2 rows 8 and 9, run by the project owner at the real project root (DRAFT)
 
-**DRAFT for review (Claude web chat, 11 November 2026). Not for use: no go has been given.** These two checks need the
+**DRAFT r2 for RECHECK (Claude web chat, 11 November 2026; the reviewer's T016-C01 applied). Not for use: no go has
+been given.** These two checks need the
 real project root and, for row 9, a launcher, so Claude Code may not run them (rulebook rules 2.5, 2.7 and 2.9; section
 2A keeps that). They are your own checks, run only after your separate approval for them, in CMD windows (not
-PowerShell). Neither reads any lottery data; neither terminates anything; row 9 starts the existing engineering-only
-sleep probe, which ends by itself.
+PowerShell). No drawn outcome value is requested or printed; row 8 can read weekly ticket and forecast ledger metadata
+if those files exist (before MHUP-B they do not; details below). Neither terminates anything; row 9 starts the existing
+engineering-only sleep probe, which ends by itself.
 
 **When.** After T016 has PASSed and before the live install's step 0, with the frozen package extracted to
 `E:\TEMP\MHUPA_Install_v1` (the same zip, its SHA-256 checked as the install instructions say). Rows 8 and 9 can be run
@@ -27,7 +29,11 @@ cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
   ledgers `results\real\weekly\<GAME>\sessions\SESSION_*_attempts.jsonl` and `FORECAST_LEDGER_V1.jsonl` (they do not
   exist before MHUP-B, so in practice nothing is read). **Writes:** nothing. **Prints:** `CLEAN`, or one line per listed
   process (PID, start time, parent chain, executable, folder, command line) and `REFUSED`; no draw value.
-- **If REFUSED:** send the whole output to Claude. A known false positive is a VS Code Python helper started at the
+- **Before you forward any output:** a listed process shows its full command line. Look through it for anything private
+  (a password, a token, a private path) and blank only that part; keep the PID, start time, executable, folder and the
+  `REFUSED`/`CLEAN` line.
+- **If REFUSED:** send the whole output to Claude (after that look-through). A refusal naming a real process is
+  evidence to investigate, never a reason to end that process. A known false positive is a VS Code Python helper started at the
   root; you may close it through VS Code and run the line again. Nothing is ever terminated by the tool.
 
 ## Row 9 - a live launcher child is listed, and CLEAN returns after it ends by itself

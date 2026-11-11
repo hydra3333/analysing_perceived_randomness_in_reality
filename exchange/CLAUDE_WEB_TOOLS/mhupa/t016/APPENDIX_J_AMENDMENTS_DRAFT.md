@@ -1,7 +1,8 @@
 # Proposed amendments to design v0.1r6 Appendix J and section 4.3 (MHUP-A install) - DRAFT for ratification
 
-**DRAFT (Claude web chat, 11 November 2026).** For the reviewer's focused check and then the project owner's
-ratification. Nothing here supersedes the ratified text until the owner ratifies it. The design file itself is not
+**DRAFT r2 for RECHECK (Claude web chat, 11 November 2026; the reviewer's J-REVIEW notes of the same day applied).**
+For the reviewer's RECHECK and then the project owner's ratification. J-1 and J-2 change the normal path (step 10).
+J-3 and J-4 do not: they apply only after a STOP at step 13 or step 17 and can be ratified separately. Nothing here supersedes the ratified text until the owner ratifies it. The design file itself is not
 edited now; on ratification the amendments are recorded in the register and carried into the design at its next
 edition. Each item gives the ratified text, the proposed text and the reason.
 
@@ -26,6 +27,11 @@ edition. Each item gives the ratified text, the proposed text and the reason.
   differs from the live tree or the import path reaches into the live tree (the live tree's own `.venv` excepted);
   STOPs if the live tree gains any file during the suite, ignored or not; and STOPs if its temporary folder cannot be
   removed; P's own refusals are tested in `test_mhupa_gates` and `test_e2r_dispatch`."
+
+**Exceptional recovery only (J-3 and J-4).** Neither is part of the normal path, and neither is ever a runner action or
+automatic: each case is proposed by Claude for that exact state, reviewed, and approved by the owner before any change.
+A fresh install check showing `CLEAN` comes before any code or Git change; nothing is reset, rewritten or deleted; U
+stays held until the very end.
 
 **J-3. Step 13, STOP handling** (reviewer's point B and REC-C01).
 - Ratified: "stop; do not push; E, P and U stay (fail closed: the code is committed but not released); Claude writes the
@@ -59,7 +65,7 @@ edition. Each item gives the ratified text, the proposed text and the reason.
 variants and E_1 revision 2 for each game.
 
 **C-2.** The install record's time: "the UTC time and local date of the POST PASS" -> "the UTC time and local date at
-which it is written (step 12, after POST PASS and the suite)". The field keeps its name `post_pass_utc`; the verifier
+which it is written (step 12, after POST PASS and the suite)". The field keeps its name `post_pass_utc` and the record its schema for this package (no migration); the verifier
 checks that it is not earlier than the
 taking of U and not later than the release record.
 

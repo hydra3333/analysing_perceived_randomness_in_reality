@@ -1,9 +1,28 @@
-# Rulebook v0.5 and TASK_T016 - drafts for focused review (Route A) - cover note
+# Rulebook v0.5 and TASK_T016 - drafts for focused review (Route A) - cover note (r2, for RECHECK)
 
 By the Claude web chat (Opus 5.5), 11 November 2026, under the owner's authorisation of 12:13 ("drafting only"). Not an
 EX message. US-ASCII, CRLF. **Nothing here is installed, run or frozen:** the live rulebook is still v0.4, the inbox has
 no T016, `.claude/settings.json` is unchanged, the package is a draft (base `c48ac3c`, working date 2026-11-10, manifest
 `ab71cf22...`), and no install has started.
+
+## 0. Revision r2 (11 November 2026, evening): the reviewer's focused review of 5e1a704
+
+Review recorded byte for byte: `exchange/HO2_2026_11_10/MHUPA_T016_Rulebook_v05_ChatGPT_Focused_Review_2026_11_11.md`. The
+reviewer accepted the five approaches of section 6 in principle. The corrections, all wording or task-text only:
+
+| Finding | Where | Change |
+|---|---|---|
+| T016-C01 | owner sheet | the blanket "neither reads any lottery data" replaced: no drawn outcome value is requested or printed; row 8 can read weekly ticket and forecast ledger metadata if present. Before forwarding output, blank only private parts of command lines; a REFUSED names evidence to investigate, never a process to end |
+| T016-C02 | rulebook 2A new A6; task | record each step's command, exit code and output as it ends; on a STOP, note the step and the barrier/record state the outputs showed; never inspect or recover the clone; the report lists them (the clean-up-before-report order is kept) |
+| T016-C03 | rulebook 2A, A4 | "no project program is ever run against the main repository's root"; the main venv's python.exe is only the interpreter; the main repository's own process_check.py and install_records.py are never run |
+| T016-C04 | rulebook 2A, A5; task steps 10, 19, 27 | an EXPECTED REFUSAL passes only on a non-zero exit code AND a line that begins with the given text AND no traceback; each step names the later steps that prove nothing changed (10: steps 11 and 17; 19: steps 23 and 25; 27: steps 30 and 32) |
+| T016-C05 | task header | the freeze list: pinned ZIP and SHA-256, frozen counts, the task's commit named in the go, `check_task_commands.py` rerun on the final file against the then-current settings; F1 stays after T016 |
+| J-REVIEW | Appendix J amendments | J-1/J-2 (normal path) separated from J-3/J-4 (exceptional recovery only: never a runner action or automatic; per case, reviewed and owner-approved; CLEAN before any change; U held to the end); `post_pass_utc` keeps its name and schema (no migration) |
+
+Re-checked: `check_task_commands.py` on the r2 task: PASS (47 command lines). The dry run now judges the three refusals
+exactly as A5 says (anchored text, non-zero exit, no traceback): all three PASS
+(`evidence/PRELIMINARY_T016_dryrun_r2_lf_py315_refusals_anchored_no_step10.txt`; LF clone; step 10 omitted because no
+tool changed since the full run of section 4). No production mechanism was added.
 
 ## 1. The files (all in `exchange/CLAUDE_WEB_TOOLS/mhupa/t016/`)
 

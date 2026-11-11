@@ -1,6 +1,6 @@
 # TASK_T016 - MHUP-A install rehearsal in a task clone (Appendix J steps 0 to 18), with F2 rows 5, 6, 7 and 10
 
-**DRAFT for review (11 November 2026). Not for use: not reviewed, not installed in the inbox, no go given.** The placeholders `<EX_FOLDER>` and `<ZIP_SHA256>`, and the counts marked "draft count", are fixed when the package is frozen. Before T016 runs: rulebook v0.5 (section 2A) is reviewed and installed, this file is reviewed and committed to `inbox\`, `check_task_commands.py` passes on it, and the project owner gives T016 its own go.
+**DRAFT r2 for RECHECK (11 November 2026; the reviewer's T016-C02, C04 and C05 applied). Not for use: not installed in the inbox, no go given.** At the package freeze: `<EX_FOLDER>` and `<ZIP_SHA256>` are replaced by the pinned ZIP and its SHA-256, the counts marked "draft count" by the frozen ones, and `<date of the go>` is filled in; then `check_task_commands.py` is rerun on the final file against the settings as they are then (the F1 deny lines come only after T016: they would deny 13 of these commands). Before T016 runs: rulebook v0.5 (section 2A) is ratified and installed, this file is committed to `inbox\` (its commit named in the go), and the project owner gives T016 its own go.
 
 **Task ID:** T016. **Date:** <date of the go>. **Author:** the Claude web chat. Rulebook v0.5, section 2A, is the allowance this task runs under.
 
@@ -24,7 +24,7 @@
 | MAN (its manifest) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\PACKAGE_MANIFEST_MHUP_A.json` |
 | E (the harness scratch folder of step 42) | `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\e` |
 
-The commands below are written out in full. Run each from MAIN. A step passes only with its expected output and exit code 0, except the three steps marked **EXPECTED REFUSAL**, which pass only as rulebook section 2A, A5 says (a non-zero exit code and the refusal text given). On anything else: **STOP**, record the output, and go to step 43 (clean-up). Never rerun, skip or reorder a step, and never repair anything in the clone. "Step N" alone means this task's step N; "Appendix J step N" means the step of the install instructions it rehearses.
+The commands below are written out in full. Run each from MAIN. A step passes only with its expected output and exit code 0, except the three steps marked **EXPECTED REFUSAL**, which pass only as rulebook section 2A, A5 says (a non-zero exit code, a line beginning with the refusal text given, and no traceback). On anything else: **STOP**, record the output, and go to step 43 (clean-up). Never rerun, skip or reorder a step, and never repair, inspect or recover anything in the clone. **Record as you go** (rulebook section 2A, A6): step 43 removes `scratch\T016` before the report is written, so save each step's exact command, exit code and full output as soon as it ends; on a STOP, also note which step stopped and what it and the steps before it printed about the barriers U, E and P and the records. "Step N" alone means this task's step N; "Appendix J step N" means the step of the install instructions it rehearses.
 
 ## Steps
 
@@ -87,7 +87,7 @@ Expected: `CLEAN; install lock taken for MHUP_A`.
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -B -X "pycache_prefix=E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r\transitory_data\no_pycache_ever" "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\repo_overlay\src\package_tools\process_check.py" take-install-lock --root "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r" --package MHUP_A
 ```
-Expected: a non-zero exit code and a line starting `REFUSED: the updater lock already names an install (INSTALL MHUP_A ` (then the time of step 9) and ending `an earlier install did not finish`. The lock is not changed. Exit code 0, or any other text: STOP.
+Expected (all three, section 2A, A5): a non-zero exit code; a line that **begins with** `REFUSED: the updater lock already names an install (INSTALL MHUP_A ` (followed by the time of step 9 and `an earlier install did not finish`); no `Traceback`. Anything else: STOP. That the lock is unchanged is checked by steps 11 and 17 (they need U held by this package).
 
 **11. Appendix J step 4: create barrier E.**
 ```
@@ -141,7 +141,7 @@ Expected: the runner's POST and copy lines, one line per module, its checks afte
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -B "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\MHUPA_COPY.py" barrier --remove E --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r"
 ```
-Expected: a non-zero exit code and output containing `COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now`. E stays. Exit code 0, or any other text: STOP.
+Expected (all three, section 2A, A5): a non-zero exit code; a line that **begins with** `COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now`; no `Traceback`. Anything else: STOP. That E is still in place is checked by steps 23 and 25 (`E present`).
 
 **20. Appendix J step 11: install check.**
 ```
@@ -189,7 +189,7 @@ Expected: `CLEAN` (and nothing listed).
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -B -X "pycache_prefix=E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r\transitory_data\no_pycache_ever" "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\repo_overlay\src\package_tools\install_records.py" release-record --root "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r" --package MHUP_A --manifest "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\PACKAGE_MANIFEST_MHUP_A.json"
 ```
-Expected: a non-zero exit code and `RELEASE RECORD STOP: the install barrier P still exists; the release record follows COMMITTED PASS and the removal of E and P (Appendix J step 16)`. No record is written (step 30 would STOP if one had been). Exit code 0, or any other text: STOP.
+Expected (all three, section 2A, A5): a non-zero exit code; a line that **begins with** `RELEASE RECORD STOP: the install barrier P still exists; the release record follows COMMITTED PASS and the removal of E and P`; no `Traceback`. Anything else: STOP. That no record was written is checked by step 30 (the record is create-only: it STOPs if one exists) and step 32 (the release commit holds exactly 1 path).
 
 **28. Appendix J step 15: remove E** (it re-runs the COMMITTED check first).
 ```
@@ -295,6 +295,7 @@ Expected: `REMOVE PASS`. If it STOPs, leave the folder as it is, say so in the r
 **44. Write** `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\outbox\REPORT_T016.md` in the format of `outbox\README.md`, with every step's command, exit code and full output. Also record:
 - the wall-clock time of step 18;
 - for each EXPECTED REFUSAL step (10, 19 and 27), its exit code and its refusal line, in the step table's Result column;
+- on a STOP: the step that stopped, its output, and the barrier and record state the outputs up to it showed (from your notes; the clone is gone);
 - whether the main repository's `git status --short` after step 43 is the same as in step 2 (run it again and include it).
 
 ## Finish

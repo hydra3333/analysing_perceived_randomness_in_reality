@@ -57,7 +57,7 @@ def main():
         ('B1 PRE', VER + ['pre'], 0, 'PRE PASS'),
         ('B2 install check', check, 0, 'CLEAN'),
         ('B3 take U', PC + ['take-install-lock', '--root', R, '--package', 'MHUP_A'], 0, 'CLEAN; install lock taken'),
-        ('B3x EXPECTED REFUSAL: take U again', PC + ['take-install-lock', '--root', R, '--package', 'MHUP_A'], 'nonzero', 'REFUSED: the updater lock already names an install'),
+        ('B3x EXPECTED REFUSAL: take U again', PC + ['take-install-lock', '--root', R, '--package', 'MHUP_A'], 'nonzero', 'REFUSED: the updater lock already names an install (INSTALL MHUP_A '),
         ('B4a create E', CP + ['barrier', '--create', 'E', '--repo', R], 0, 'BARRIER PASS: E created'),
         ('B4b create P', CP + ['barrier', '--create', 'P', '--repo', R], 0, 'BARRIER PASS: P created'),
         ('B5 install check', check, 0, 'CLEAN'),
@@ -69,7 +69,7 @@ def main():
     if suite:
         steps.append(('B10 suite --shadow', [py, '-I', str(pkg / 'RUN_MHUP_A_SUITE.py'), '--repo', R, '--shadow'], 0, 'SUITE PASS'))
     steps += [
-        ('B10x EXPECTED REFUSAL: remove E before the package commit', CP + ['barrier', '--remove', 'E', '--repo', R], 'nonzero', 'does not pass now'),
+        ('B10x EXPECTED REFUSAL: remove E before the package commit', CP + ['barrier', '--remove', 'E', '--repo', R], 'nonzero', "COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now"),
         ('B11 install check', check, 0, 'CLEAN'),
         ('B12a install record', IR + ['install-record', '--root', R, '--package', 'MHUP_A', '--manifest', man], 0, 'INSTALL RECORD PASS'),
         ('B12b stage', G + ['add', f'--pathspec-from-file={pkg / "STAGE_PACKAGE_COMMIT.txt"}'], 0, ''),
@@ -77,7 +77,7 @@ def main():
         ('B12d commit', G + ['commit', '-q', '-m', 'T016 rehearsal: MHUP-A package commit (Appendix J step 12)'], 0, ''),
         ('B13 COMMITTED', VER + ['committed'], 0, 'COMMITTED PASS'),
         ('B14 install check', check, 0, 'CLEAN'),
-        ('B14x EXPECTED REFUSAL: release record before step 15', IR + ['release-record', '--root', R, '--package', 'MHUP_A', '--manifest', man], 'nonzero', 'RELEASE RECORD STOP: the install barrier P still exists'),
+        ('B14x EXPECTED REFUSAL: release record before step 15', IR + ['release-record', '--root', R, '--package', 'MHUP_A', '--manifest', man], 'nonzero', 'RELEASE RECORD STOP: the install barrier P still exists; the release record follows COMMITTED PASS and the removal of E and P'),
         ('B15a remove E', CP + ['barrier', '--remove', 'E', '--repo', R], 0, 'BARRIER PASS: E removed'),
         ('B15b remove P', CP + ['barrier', '--remove', 'P', '--repo', R], 0, 'BARRIER PASS: P removed'),
         ('B16 release record', IR + ['release-record', '--root', R, '--package', 'MHUP_A', '--manifest', man], 0, 'RELEASE RECORD PASS'),
@@ -101,7 +101,10 @@ def main():
         rc, out = sh(cmd)
         keep = [ln for ln in out.splitlines() if not ln.startswith('warning: in the working copy')]
         print(f'--- {label} (exit {rc})\n' + '\n'.join('    ' + ln[:240] for ln in keep[-40:]), flush=True)
-        ok = (rc == 0 if want_rc == 0 else rc != 0) and want in out
+        if want_rc == 0:
+            ok = rc == 0 and want in out
+        else:                                        # rulebook v0.5 section 2A, A5: anchored text, no traceback
+            ok = rc != 0 and any(ln.startswith(want) for ln in out.splitlines()) and 'Traceback' not in out
         if label == 'B0a status' and out.strip():
             ok = False
         if label == 'C3a status' and out.strip():
