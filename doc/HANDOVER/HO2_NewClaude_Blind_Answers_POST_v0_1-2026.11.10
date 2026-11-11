@@ -1,0 +1,29 @@
+Before answering I'll check a few facts against the repository, read-only: the gate closure, the command checker and the settings denials.
+
+I've answered Q1 to Q9 blind, in `HO2_NewClaude_Blind_Answers_v0_1.md` (US-ASCII, CRLF). I worked read-only. I built, ran and committed nothing, and opened no data folder.
+
+Two points are worth your attention:
+
+- **One new uncertainty (Q6).** Register v0.24 has you adding deny lines to `.claude/settings.json` for MHUP-A's tools. If a deny line naming `process_check` or `install_records` is already in place when T016 runs, it blocks T016's install steps, and your option (i) conditions forbid getting around a denial. No such line exists today. So the order of your deny-line edit relative to T016, or how those lines are worded, needs settling openly when I write rulebook v0.5. I've raised it as a question for you and the reviewer, not decided it.
+- **One read-only check (Q7).** I read the import statements in the reviewed code without running anything, compared against the current `main`. The dispatch gate's changed-file closure is exactly the ten files the records list. This is preliminary; the package builder must recompute it on the final tree.
+
+**Model:** Opus is still right for this. It's reading and explaining.
+
+**Next:**
+1. **You:** upload the answers file to the reviewer chat, with the block below.
+2. **The reviewer:** compares my answers with its private key and sends its assessment.
+3. **You:** relay the assessment to me. If you're satisfied, say "go" for normal work, and I start item 1 (rebuild on the current `main`) on Opus.
+
+**Paste block for the ChatGPT reviewer chat:**
+```
+Claude's blind answers to HO2_NewClaude_Blind_Questions_v0_1.md are
+attached: HO2_NewClaude_Blind_Answers_v0_1.md (US-ASCII, CRLF)
+SHA-256 as stored 14b495be38d3d1ddd349dc53cc25fe60d48a1409c0c8926e5fa4ce91c81ccebf
+SHA-256 after CRLF->LF e5e30914983e46fb246dbf4c59794addb893982cb4eabb78672a93e50627cb58
+Checkpoint main c48ac3c393d2eab30014e6200d427b76d90f47ac. Claude did not
+see your key or assessment. Please compare and give your assessment.
+Claude flags one new point in Q6: owner deny lines for process_check /
+install_records (register v0.24 future action 1) would block T016
+under option (i); their order or wording vs T016 needs settling with
+rulebook v0.5. Nothing was built, run, committed or opened.
+```
