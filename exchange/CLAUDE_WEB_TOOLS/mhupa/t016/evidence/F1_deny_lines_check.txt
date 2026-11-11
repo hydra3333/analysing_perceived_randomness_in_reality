@@ -1,0 +1,37 @@
+check_task_commands.py on TASK_T016_DRAFT.md, current .claude/settings.json:
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md: 47 command line(s) checked
+PASS: no command line matches a Bash deny pattern
+
+The same with the five proposed F1 deny lines added (a copy of the settings; the real file is unchanged):
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:76: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:82: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:88: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:106: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:118: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:148: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:154: denied by ['*install_records*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:184: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:190: denied by ['*install_records*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:208: denied by ['*install_records*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:244: denied by ['*process_check*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:250: denied by ['*process_check*', '*install_records*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md:256: denied by ['*install_records*']
+exchange/CLAUDE_WEB_TOOLS/mhupa/t016/TASK_T016_DRAFT.md: 47 command line(s) checked
+STOP: denied command lines found
+
+Every inbox task with the F1 lines (compare: the same lines without them):
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T011.md:97: denied by ['del *']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T012.md:79: denied by ['*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T012.md:96: denied by ['*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:56: denied by ['*Run_Experiment*', '*Run_Results_Updater*', '*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:62: denied by ['*results_master*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:74: denied by ['*Run_Results_Updater*', '*results_master*', '*.bat*', '*Run_Evaluation*', '*Method_Mode_H*', '*process_check*']
+STOP: denied command lines found
+--- without F1:
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T011.md:97: denied by ['del *']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T012.md:79: denied by ['*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T012.md:96: denied by ['*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:56: denied by ['*Run_Experiment*', '*Run_Results_Updater*', '*.bat*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:62: denied by ['*results_master*']
+CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T019.md:74: denied by ['*Run_Results_Updater*', '*results_master*', '*.bat*']
+STOP: denied command lines found

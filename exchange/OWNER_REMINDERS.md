@@ -466,6 +466,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   suite does not pass with the barriers in place; your decision with the reviewer; option A recommended): see
   exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEM_3_CHECKPOINT_2026_11_11.md. Your KISS steer of 10 November 2026 (lean
   production system; development rigour kept; nothing ratified relaxed; candidates flagged for R-014) is noted there too.
+  Added 11 November 2026 (your drafting go of 12:13): the rulebook v0.5 and TASK_T016 drafts, the owner sheet for F2 rows
+  8 and 9, the proposed Appendix J amendments and the F1 deny lines, for the reviewer's focused check (nothing installed or
+  run): exchange/CLAUDE_WEB_TOOLS/mhupa/t016/COVER_NOTE_T016_RULEBOOK_v0_5.md.
 - When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
 - Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 
