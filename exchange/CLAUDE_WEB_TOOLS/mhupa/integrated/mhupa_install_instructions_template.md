@@ -1,8 +1,8 @@
-# MHUP-A install instructions (design v0.1r6 Appendix J, steps 0 to 19) - DRAFT, NOT FOR USE
+# MHUP-A install instructions (design v0.1r6 Appendix J as amended 11 November 2026, steps 0 to 19)
 
-**DRAFT (items 2 and 3 of the integrated package work list). Do not run any of this.** It is not reviewed, the package
-is not frozen, and no install is authorised. It exists so that the reviewer can check the steps against Appendix J
-before the final package is frozen. Written by Claude for the project owner.
+**Frozen package. Run none of this until the project owner gives the live install its own go** (after T016 PASS, the
+F1 settings lines, and F2 rows 8 and 9). Written by Claude for the project owner; Appendix J's amendments J-1 to J-4
+were ratified on 11 November 2026.
 
 - Package: `@@PKG@@`; manifest `PACKAGE_MANIFEST_MHUP_A.json`, SHA-256 `@@MANIFEST_SHA256@@`.
 - Base commit: `@@BASE@@` (`@@BASE7@@`). E_1 revision 3's `effective_date`: `@@DATE@@` (C01-EFF).
@@ -125,7 +125,8 @@ If it STOPs: let the listed process end; rerun this step.
 ```
 Expect: `COPY PASS: part gate: @@N_GATE@@ files written and read back`.
 If it STOPs: from here on the restore rule applies: keep every copied file and E, P and U; send the output; Claude
-gives the install check to repeat until `CLEAN`, then the reviewed restore steps.
+gives the install check to repeat until `CLEAN`, then restore steps written for the exact state your output shows; the
+reviewer checks them and you approve them before you run any of them.
 
 ## Step 7 - install check, after the gate copy
 
@@ -155,8 +156,8 @@ repository again, removes the copy, and ends with `SUITE PASS: all @@N_TESTS@@ t
 symlink skips). About 25 minutes. Do not click inside the window while it runs (a click can pause the output; Esc
 releases it).
 If it STOPs: as step 6. Do not commit. (Why a copy: with the barriers in place the installed tree refuses every run, which
-is the point of the barriers, so the tests run on an exact copy without them: N5, decided in principle on 11 November
-2026; the matching amendment of Appendix J step 10 is for ratification with the package.)
+is the point of the barriers, so the tests run on an exact copy without them: N5, Appendix J step 10 as amended (J-1),
+ratified on 11 November 2026.)
 
 ## Step 11 - install check
 
@@ -250,9 +251,10 @@ git push
 ```
 Then tell Claude, who verifies the install from GitHub.
 
-## Not yet in this draft
+## Notes
 
-- Claude's reviewed restore steps for a STOP from step 6 on, as exact commands (the copy tool already has the
-  `--remove ... --restore` form they end with).
-- The final package identity: the frozen date, the base commit and the zip's SHA-256.
+- Restore after a STOP from step 6 on is written per case, for the state the output shows, reviewed, and approved by you
+  (owner decision, 11 November 2026); there is no prewritten restore script. The copy tool's `--remove ... --restore`
+  form is what such steps end with.
+- The zip's SHA-256 is in Claude's EX message (a file cannot carry its own zip's hash).
 - Git 2.26 or later is assumed (`git add --pathspec-from-file`).

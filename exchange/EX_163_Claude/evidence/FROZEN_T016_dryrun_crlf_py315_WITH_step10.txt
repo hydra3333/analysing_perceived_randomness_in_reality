@@ -1,0 +1,170 @@
+T016 DRY RUN (DRAFT package; Linux; crlf; /home/claude/work/v315/bin/python); step 10 INCLUDED
+--- B0a status (exit 0)
+
+--- B0b HEAD (exit 0)
+    04c2c0e3bb4f98f1753436368d644972b85d75fa
+--- B1 PRE (exit 0)
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U absent; E absent; P absent (as this phase requires)
+    staged process_check.py SHA-256 21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836 matches the manifest
+    changes since the base outside exchange/ (information): 10
+      doc/HANDOVER/HO2_Closure_Owner_GO_Items1-2_For_NewClaude_v0_1.md
+      doc/HANDOVER/HO2_Experienced_Claude_Third_Crosscheck_Forwarding_Blurb_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Assessment_AnswerKey_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_Independent_Assessment_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_POST_v0_1-2026.11.10
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_SuggestedKey_Comparison_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_v0_1-2026.11.10.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Questions_v0_1.md
+      doc/HANDOVER/HO2_Predecessor_Claude_Third_Crosscheck_v0_2.md
+      doc/HANDOVER/HO2_Predecessor_Third_Crosscheck_ChatGPT_Review_v0_1-FINAL.md
+    PRE PASS: package intact; clean tree; 37 new paths absent; 34 files to replace and 1 to delete at their base version. Nothing was changed.
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B2 install check (exit 0)
+    CLEAN
+--- B3 take U (exit 0)
+    CLEAN; install lock taken for MHUP_A
+--- B3x EXPECTED REFUSAL: take U again (exit 1)
+    REFUSED: the updater lock already names an install (INSTALL MHUP_A 2026-11-11T09:55:46.014891Z); an earlier install did not finish
+--- B4a create E (exit 0)
+    BARRIER PASS: E created (src/methods/E_001/IN_DEVELOPMENT.txt)
+--- B4b create P (exit 0)
+    BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+--- B5 install check (exit 0)
+    CLEAN
+--- B6 copy gate (exit 0)
+    COPY PASS: part gate: 10 files written and read back
+--- B7 install check (exit 0)
+    CLEAN
+--- B8 copy rest (exit 0)
+    COPY PASS: part rest: 61 files written and read back, 1 deleted
+--- B9 POST (exit 0)
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    POST PASS: exactly the 37 expected new paths, 34 modified files and 1 deletion, all with the expected bytes.
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B10 suite --shadow (exit 0)
+    tests.test_mhupa_gates                               ran  12 (expected 12)  skipped 0  OK  (11.8 s)
+    tests.test_mhupa_install_records                     ran   9 (expected  9)  skipped 0  OK  (5.3 s)
+    tests.test_mhupa_launchers                           ran  10 (expected 10)  skipped 0  OK  (0.5 s)
+    tests.test_mhupa_master_versions                     ran  15 (expected 15)  skipped 0  OK  (0.8 s)
+    tests.test_mhupa_method_mode_h_cli                   ran   2 (expected  2)  skipped 0  OK  (25.1 s)
+    tests.test_mhupa_mode_h                              ran  20 (expected 20)  skipped 0  OK  (346.7 s)
+    tests.test_mhupa_process_check                       ran   8 (expected  8)  skipped 0  OK  (0.3 s)
+    tests.test_mhupa_updater_v0_2                        ran  15 (expected 15)  skipped 0  OK  (7.3 s)
+    tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK  (0.5 s)
+    tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK  (1.7 s)
+    tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK  (1.6 s)
+    tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK  (0.3 s)
+    tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK  (1.3 s)
+    tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK  (0.2 s)
+    tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK  (1.4 s)
+    tests.test_occurrence_counts                         ran   8 (expected  8)  skipped 0  OK  (0.3 s)
+    tests.test_perf1_numerics                            ran   7 (expected  7)  skipped 0  OK  (45.3 s)
+    tests.test_polynomial_fits                           ran  19 (expected 19)  skipped 0  OK  (0.8 s)
+    tests.test_recurrence_gaps                           ran  12 (expected 12)  skipped 0  OK  (0.6 s)
+    tests.test_rel1_release                              ran   5 (expected  5)  skipped 0  OK  (18.8 s)
+    tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK  (1.2 s)
+    tests.test_wave1_frequency                           ran  18 (expected 18)  skipped 0  OK  (14.6 s)
+    tests.test_wave2_recurrence                          ran  19 (expected 19)  skipped 0  OK  (31.0 s)
+    tests.test_wf1a_walk_forward                         ran  22 (expected 22)  skipped 0  OK  (31.1 s)
+    tests.test_wf1b_crossplatform                        ran   1 (expected  1)  skipped 0  OK  (15.5 s)
+    tests.test_wf1b_divisions                            ran  17 (expected 17)  skipped 0  OK  (0.2 s)
+    tests.test_wf1b_measures                             ran  33 (expected 33)  skipped 0  OK  (5.9 s)
+    tests.test_wf1b_n1_generator                         ran   8 (expected  8)  skipped 0  OK  (0.6 s)
+    tests.test_wf1b_n1_replay                            ran   3 (expected  3)  skipped 0  OK  (9.7 s)
+    tests.test_wf1b_numerics                             ran  21 (expected 21)  skipped 0  OK  (3.1 s)
+    tests.test_wf1b_outcome_reader                       ran   6 (expected  6)  skipped 0  OK  (0.5 s)
+    tests.test_wf1b_report                               ran  10 (expected 10)  skipped 0  OK  (78.2 s)
+    tests.test_wf1b_seed_policy                          ran  11 (expected 11)  skipped 0  OK  (0.2 s)
+    tests.test_wf1b_static                               ran   4 (expected  4)  skipped 0  OK  (0.3 s)
+    total ran 571 (expected 571); skips 0; elapsed 730 s
+    after the suite: the copy's code and test files still equal the live tree
+    live tree after the suite: POST PASS (U held by this package; E and P present; exactly the package's changes)
+    after the suite: the live tree gained no file
+    temporary copy removed: /tmp/MHUPA_step10_yhopnaid
+    SUITE PASS: all 571 tests ran and passed; only the allowed symlink skips, if any; on a barrier-free copy, the live tree barred throughout.
+--- B10x EXPECTED REFUSAL: remove E before the package commit (exit 1)
+    COPY STOP: barrier E is removed only after COMMITTED PASS (step 15), and the verifier's committed phase does not pass now: VERIFICATION STOP: FAIL: working tree or index not clean after commit:
+--- B11 install check (exit 0)
+    CLEAN
+--- B12a install record (exit 0)
+    INSTALL RECORD PASS: /home/claude/work/freeze/w_t016/CLAUDE_CODE_WORKING_FOLDER_TREE/scratch/T016/r/src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+--- B12b stage (exit 0)
+
+--- B12c STAGED (exit 0)
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    STAGED PASS: the index holds exactly the package commit (73 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B12d commit (exit 0)
+
+--- B13 COMMITTED (exit 0)
+    HEAD: dc795aed981b853bfe4d939b3edc2e36e9c36395 (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    COMMITTED PASS: the package commit (dc795ae) added exactly 37 files and the install record, modified 34 and deleted 1; all Git blobs match; the install record names this package and manifest; barriers U, E and P in place.
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B14 install check (exit 0)
+    CLEAN
+--- B14x EXPECTED REFUSAL: release record before step 15 (exit 1)
+    RELEASE RECORD STOP: the install barrier P still exists; the release record follows COMMITTED PASS and the removal of E and P (Appendix J step 16)
+--- B15a remove E (exit 0)
+    BARRIER PASS: E removed (src/methods/E_001/IN_DEVELOPMENT.txt)
+--- B15b remove P (exit 0)
+    BARRIER PASS: P removed (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+--- B16 release record (exit 0)
+    RELEASE RECORD PASS: /home/claude/work/freeze/w_t016/CLAUDE_CODE_WORKING_FOLDER_TREE/scratch/T016/r/src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+--- B17a stage (exit 0)
+
+--- B17b STAGED (exit 0)
+    HEAD: dc795aed981b853bfe4d939b3edc2e36e9c36395 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    STAGED PASS: the index holds exactly the release commit (1 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B17c commit (exit 0)
+
+--- B17d RELEASED (exit 0)
+    HEAD: 2247ecc1ee0ecb6c71de2d1efc798cd66e1d5c02 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (2247ecc) has one parent, the package commit (dc795ae), and adds exactly the release record; the record is canonical, names 2 released entries and the committed install record; order U, 
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B18a RELEASED again (exit 0)
+    HEAD: 2247ecc1ee0ecb6c71de2d1efc798cd66e1d5c02 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (2247ecc) has one parent, the package commit (dc795ae), and adds exactly the release record; the record is canonical, names 2 released entries and the committed install record; order U, 
+    Read-only: no project code imported, nothing run, nothing changed.
+--- B18b release U (exit 0)
+    CLEAN; install lock released for MHUP_A
+--- C1 N1 attributes and line ends (exit 0)
+    i/lf    w/lf    attr/                 	.gitattributes
+    i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+    i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+    i/lf    w/lf    attr/-text            	src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+    i/lf    w/lf    attr/-text            	src/package_tools/process_check.py
+    i/lf    w/lf    attr/-text            	src/results_master_v0_2.py
+    i/lf    w/lf    attr/-text            	tests/fixtures/results_master_v0_1_reference.py.txt
+--- C2 records validate (exit 0)
+    RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+--- C3a status (exit 0)
+
+--- C3b log (exit 0)
+    T016 rehearsal: MHUP-A release commit (Appendix J step 17)
+    T016 rehearsal: MHUP-A package commit (Appendix J step 12)
+    doc/HANDOVER: HO-2 handover records
+--- C4 byte-code folder (exit 0)
+    NO_PYCACHE_EVER ABSENT
+--- D1 row 6 inventory (exit 0)
+    closure module: /home/claude/work/freeze/w_t016/CLAUDE_CODE_WORKING_FOLDER_TREE/scratch/T016/r/src/methods/_common/closure.py
+    venv: /home/claude/work/vplain
+    base: /root/.local/share/uv/python/cpython-3.15.0b4-linux-x86_64-gnu
+    Python 3.15.0b4 (CPython); Linux-6.18.44-fc-v378-x86_64-with-glibc2.39
+    interpreter files 2; base-tree files 1443; Scripts files 11; distributions 2 with 489 recorded files
+    environment digest 56bf8c2edb299159a892eb3ab7ccaa00c63fae5069cb369b4a7e8de900f097ca
+    ENV INVENTORY PASS
+--- D2 row 7 orphan (exit 0)
+    closure module: /home/claude/work/freeze/w_t016/CLAUDE_CODE_WORKING_FOLDER_TREE/scratch/T016/r/src/methods/_common/closure.py
+    copied idna-3.20.dist-info: 19 files, 342511 bytes, into /home/claude/work/freeze/w_t016/CLAUDE_CODE_WORKING_FOLDER_TREE/scratch/T016/e (the venv's layout)
+    control PASS: 1 distribution, no orphan
+    refused: 1 file(s) under site-packages that no RECORD lists, the first: T016_PLANTED_ORPHAN.txt
+    ORPHAN CHECK PASS: the planted file was refused by name
+DRY RUN PASS

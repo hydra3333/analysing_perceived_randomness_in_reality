@@ -36,7 +36,7 @@ s += (b'# Two files whose raw bytes tests check (a no-CR assertion; a reference 
       b'tests/fixtures/results_master_v0_1_reference.py.txt -text\n'
       b'src/results_master_v0_2.py -text\n')      # N4b: the same test's third assertion; awaits the owner's yes
 ga.write_bytes(s)
-print('appended the N4 lines (two approved, one N4b awaiting the owner) to .gitattributes')
+print('appended the N4 and N4b lines (owner-approved, 11 November 2026) to .gitattributes')
 
 # ---- A: the release-record guard
 edit('src/package_tools/install_records.py', [

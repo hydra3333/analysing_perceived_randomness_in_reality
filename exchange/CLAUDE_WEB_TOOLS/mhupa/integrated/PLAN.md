@@ -171,3 +171,7 @@ rebuild with `build_dev_integrated.sh` (section 7, item 1 there).
   .venv inside the tree; proven with a venv inside the clone, 571/571); REC-C01 STOP texts for steps 13 and 17; the
   Appendix J deviations tabled. Final draft evidence `evidence_2026_11_11c/`: positive 0-18 WITH step 10 PASS on LF/3.13 and
   CRLF/3.15; 88 negatives 0 failed. Next: the owner and reviewer; rulebook v0.5 and T016 not started.
+- 2026-11-11 evening (Opus 5.5): rulebook v0.5, T016 and Appendix J J-1..J-4 reviewed (R-2 PASS) and ratified by the owner
+  (restore after a STOP from step 6: per case). Gate A go (19:41): package FROZEN on base c48ac3c with E_1 r3 effective_date
+  2026-11-11; zip by freeze_zip.py (reproducible); only the date, labels and the restore wording changed from the reviewed
+  draft; final T016 and evidence in exchange/EX_163_Claude/. Next: the reviewer's short check; gate B under the owner's go.

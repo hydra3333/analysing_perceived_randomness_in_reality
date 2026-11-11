@@ -1,0 +1,34 @@
+--- TASK_T016_PREFREEZE.md	2026-11-11 19:32:35.322796826 +1030
++++ TASK_T016.md	2026-11-11 19:43:26.526046148 +1030
+@@ -1,8 +1,8 @@
+ # TASK_T016 - MHUP-A install rehearsal in a task clone (Appendix J steps 0 to 18), with F2 rows 5, 6, 7 and 10
+ 
+-**PRE-FREEZE TEMPLATE (design reviewed, R-2 PASS, and accepted in principle by the project owner, 11 November 2026). Not for use until the freeze completes it.** At the package freeze: `<EX_FOLDER>` and `<ZIP_SHA256>` are replaced by the pinned ZIP and its SHA-256, the counts marked "draft count" by the frozen ones, and `<date of the go>` is filled in; then `check_task_commands.py` is rerun on the final file against the settings as they are then (the F1 deny lines come only after T016: they would deny 13 of these commands). Before T016 runs: rulebook v0.5 (section 2A) is ratified and installed, this file is committed to `inbox\` (its commit named in the go), and the project owner gives T016 its own go.
++**Final (package frozen 11 November 2026, gate A).** The package is `exchange/EX_163_Claude/MHUPA_Install_v1.zip`, SHA-256 `9d8b74657880917bf8a367b083c5e5926bc6803ee989f74c934afdf98156cf76`. Before T016 runs: rulebook v0.5 (section 2A) is installed together with this file (gate B), and the project owner gives T016 its own go, naming that commit. `check_task_commands.py` was run on this file against the settings in force at the freeze (PASS); the F1 deny lines come only after T016 (they would deny 13 of these commands).
+ 
+-**Task ID:** T016. **Date:** <date of the go>. **Author:** the Claude web chat. Rulebook v0.5, section 2A, is the allowance this task runs under.
++**Task ID:** T016. **Date:** 11 November 2026 (written at the package freeze). **Author:** the Claude web chat. Rulebook v0.5, section 2A, is the allowance this task runs under.
+ 
+ **Purpose.** Rehearse the whole MHUP-A installation on the owner's Windows machine, exactly as `INSTALL_INSTRUCTIONS.md` gives it, but in a disposable task clone that cannot push: the package's own tools (process check, copy tool, verifier, suite runner, records tool) run from the extracted package against the clone; the two install commits are made in the clone only. Step 0 is replaced by a clean-tree and HEAD check (the clone is fresh, so there is no pull); step 19 (the push) is omitted. Three EXPECTED REFUSAL steps check on Windows that the tools refuse out-of-order actions. After the install, the task checks the line ends and attributes of the six byte-checked files on Windows Git (F2 row 5), that the byte-code folder was never made (row 10), and the environment inventory on the real interpreter, with a planted-orphan refusal in a scratch copy (rows 6 and 7).
+ 
+@@ -49,9 +49,9 @@
+ 
+ **4. Check and extract the package** (from the clone's own copy).
+ ```
+-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" unzip --task T016 --zip exchange/<EX_FOLDER>/MHUPA_Install_v1.zip --sha256 <ZIP_SHA256>
++"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" unzip --task T016 --zip exchange/EX_163_Claude/MHUPA_Install_v1.zip --sha256 9d8b74657880917bf8a367b083c5e5926bc6803ee989f74c934afdf98156cf76
+ ```
+-Expected: `ZIP SHA-256: <ZIP_SHA256>`, then `UNZIP PASS: 80 files extracted ...` (draft count; fixed at the freeze).
++Expected: `ZIP SHA-256: 9d8b74657880917bf8a367b083c5e5926bc6803ee989f74c934afdf98156cf76`, then `UNZIP PASS: 80 files extracted into ...`.
+ 
+ **5. Appendix J step 0, task-clone form: the clone is clean** (no pull: the clone is fresh).
+ ```
+@@ -135,7 +135,7 @@
+ ```
+ "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\p\MHUPA_Install_v1\RUN_MHUP_A_SUITE.py" --repo "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T016\r" --shadow
+ ```
+-Expected: the runner's POST and copy lines, one line per module, its checks after the suite, the removal of its temporary folder, and finally `SUITE PASS: all 571 tests ran and passed; ...` (draft count; at most the four allowed symlink skips; the runner decides). E2R-T12 runs here (owner options). Record the whole output as printed, with each module's time; if it prints failure detail, copy it exactly (it carries test names and messages only; section 2A, A3 says what to do with a line that appears to contain a draw's numbers).
++Expected: the runner's POST and copy lines, one line per module, its checks after the suite, the removal of its temporary folder, and finally `SUITE PASS: all 571 tests ran and passed; ...` (at most the four allowed symlink skips; the runner decides). E2R-T12 runs here (owner options). Record the whole output as printed, with each module's time; if it prints failure detail, copy it exactly (it carries test names and messages only; section 2A, A3 says what to do with a line that appears to contain a draw's numbers).
+ 
+ **19. EXPECTED REFUSAL (section 2A, A5): remove E before the package commit.**
+ ```

@@ -1,0 +1,178 @@
+REHEARSAL (PRELIMINARY, DRAFT package): positive path, crlf clone, Python /home/claude/work/v315/bin/python; base c48ac3c; HEAD 04c2c0e; step 10 INCLUDED (the suite runs with U, E and P in place)
+--- step 0 (rehearsal form: no pull; clean tree): clean
+--- step 1 PRE
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U absent; E absent; P absent (as this phase requires)
+    staged process_check.py SHA-256 21922bec1e4438d609106553adadda2ea9c6babef5a4e73d00a29f58a0796836 matches the manifest
+    changes since the base outside exchange/ (information): 10
+      doc/HANDOVER/HO2_Closure_Owner_GO_Items1-2_For_NewClaude_v0_1.md
+      doc/HANDOVER/HO2_Experienced_Claude_Third_Crosscheck_Forwarding_Blurb_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Assessment_AnswerKey_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_Independent_Assessment_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_POST_v0_1-2026.11.10
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_SuggestedKey_Comparison_v0_1.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Answers_v0_1-2026.11.10.md
+      doc/HANDOVER/HO2_NewClaude_Blind_Questions_v0_1.md
+      doc/HANDOVER/HO2_Predecessor_Claude_Third_Crosscheck_v0_2.md
+      doc/HANDOVER/HO2_Predecessor_Third_Crosscheck_ChatGPT_Review_v0_1-FINAL.md
+    PRE PASS: package intact; clean tree; 37 new paths absent; 34 files to replace and 1 to delete at their base version. Nothing was changed.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 2 install check
+    CLEAN
+    (exit 0)
+--- step 3 take U
+    CLEAN; install lock taken for MHUP_A
+    (exit 0)
+--- step 4 create E
+    BARRIER PASS: E created (src/methods/E_001/IN_DEVELOPMENT.txt)
+    (exit 0)
+--- step 4 create P
+    BARRIER PASS: P created (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+    (exit 0)
+--- step 5 install check
+    CLEAN
+    (exit 0)
+--- step 6 copy gate
+    COPY PASS: part gate: 10 files written and read back
+    (exit 0)
+--- step 7 install check
+    CLEAN
+    (exit 0)
+--- step 8 copy rest
+    COPY PASS: part rest: 61 files written and read back, 1 deleted
+    (exit 0)
+--- step 9 POST
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    POST PASS: exactly the 37 expected new paths, 34 modified files and 1 deletion, all with the expected bytes.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 10 suite
+    environment: Linux 6.18.44-fc-v378 Python 3.15.0b4 /home/claude/work/v315/bin/python
+    live tree before the suite: POST PASS (U held by this package; E and P present; exactly the package's changes)
+    barrier-free copy at /tmp/MHUPA_step10_a5x_wum5: 2502 code and test files, 6 data files, each equal to the live tree byte for byte; no barrier copied
+    escape check: 10 key modules import from the copy; nothing on the import path is in the live tree except its own .venv (interpreter and installed packages)
+    tests.test_code3_retirement                          ran  12 (expected 12)  skipped 0  OK  (2.5 s)
+    tests.test_e1_align                                  ran   5 (expected  5)  skipped 0  OK  (0.3 s)
+    tests.test_e1_standalone                             ran  13 (expected 13)  skipped 0  OK  (0.9 s)
+    tests.test_e1r2_revision2                            ran  13 (expected 13)  skipped 0  OK  (8.2 s)
+    tests.test_e1r3_revision3                            ran   8 (expected  8)  skipped 0  OK  (5.6 s)
+    tests.test_e2r_contract                              ran  53 (expected 53)  skipped 0  OK  (3.0 s)
+    tests.test_e2r_dispatch                              ran  18 (expected 18)  skipped 0  OK  (9.6 s)
+    tests.test_e2r_prefix                                ran   1 (expected  1)  skipped 0  OK  (1.6 s)
+    tests.test_e2r_runner                                ran  34 (expected 34)  skipped 0  OK  (8.1 s)
+    tests.test_e3_e4_polynomial                          ran  13 (expected 13)  skipped 0  OK  (24.9 s)
+    tests.test_e6_beta_bernoulli                         ran  20 (expected 20)  skipped 0  OK  (6.5 s)
+    tests.test_mhupa_gates                               ran  12 (expected 12)  skipped 0  OK  (9.8 s)
+    tests.test_mhupa_install_records                     ran   9 (expected  9)  skipped 0  OK  (5.3 s)
+    tests.test_mhupa_launchers                           ran  10 (expected 10)  skipped 0  OK  (0.5 s)
+    tests.test_mhupa_master_versions                     ran  15 (expected 15)  skipped 0  OK  (0.8 s)
+    tests.test_mhupa_method_mode_h_cli                   ran   2 (expected  2)  skipped 0  OK  (24.9 s)
+    tests.test_mhupa_mode_h                              ran  20 (expected 20)  skipped 0  OK  (348.1 s)
+    tests.test_mhupa_process_check                       ran   8 (expected  8)  skipped 0  OK  (0.3 s)
+    tests.test_mhupa_updater_v0_2                        ran  15 (expected 15)  skipped 0  OK  (7.2 s)
+    tests.test_multigame_console_and_synthetic_scorer    ran   7 (expected  7)  skipped 0  OK  (0.5 s)
+    tests.test_multigame_exit_receipt                    ran  18 (expected 18)  skipped 0  OK  (1.6 s)
+    tests.test_multigame_launch_and_manifest             ran  11 (expected 11)  skipped 0  OK  (1.6 s)
+    tests.test_multigame_reader_contracts                ran  10 (expected 10)  skipped 0  OK  (0.3 s)
+    tests.test_multigame_science_allowlist               ran   6 (expected  6)  skipped 0  OK  (1.2 s)
+    tests.test_multigame_static_and_timing               ran   6 (expected  6)  skipped 0  OK  (0.2 s)
+    tests.test_multigame_windows_lifecycle_review        ran   6 (expected  6)  skipped 0  OK  (1.3 s)
+    tests.test_occurrence_counts                         ran   8 (expected  8)  skipped 0  OK  (0.3 s)
+    tests.test_perf1_numerics                            ran   7 (expected  7)  skipped 0  OK  (44.7 s)
+    tests.test_polynomial_fits                           ran  19 (expected 19)  skipped 0  OK  (0.8 s)
+    tests.test_recurrence_gaps                           ran  12 (expected 12)  skipped 0  OK  (0.6 s)
+    tests.test_rel1_release                              ran   5 (expected  5)  skipped 0  OK  (17.9 s)
+    tests.test_t05_hardening                             ran   2 (expected  2)  skipped 0  OK  (1.3 s)
+    tests.test_wave1_frequency                           ran  18 (expected 18)  skipped 0  OK  (13.8 s)
+    tests.test_wave2_recurrence                          ran  19 (expected 19)  skipped 0  OK  (30.5 s)
+    tests.test_wf1a_walk_forward                         ran  22 (expected 22)  skipped 0  OK  (31.2 s)
+    tests.test_wf1b_crossplatform                        ran   1 (expected  1)  skipped 0  OK  (16.0 s)
+    tests.test_wf1b_divisions                            ran  17 (expected 17)  skipped 0  OK  (0.2 s)
+    tests.test_wf1b_measures                             ran  33 (expected 33)  skipped 0  OK  (5.8 s)
+    tests.test_wf1b_n1_generator                         ran   8 (expected  8)  skipped 0  OK  (0.6 s)
+    tests.test_wf1b_n1_replay                            ran   3 (expected  3)  skipped 0  OK  (9.9 s)
+    tests.test_wf1b_numerics                             ran  21 (expected 21)  skipped 0  OK  (3.2 s)
+    tests.test_wf1b_outcome_reader                       ran   6 (expected  6)  skipped 0  OK  (0.5 s)
+    tests.test_wf1b_report                               ran  10 (expected 10)  skipped 0  OK  (76.6 s)
+    tests.test_wf1b_seed_policy                          ran  11 (expected 11)  skipped 0  OK  (0.2 s)
+    tests.test_wf1b_static                               ran   4 (expected  4)  skipped 0  OK  (0.4 s)
+    total ran 571 (expected 571); skips 0; elapsed 730 s
+    after the suite: the copy's code and test files still equal the live tree
+    live tree after the suite: POST PASS (U held by this package; E and P present; exactly the package's changes)
+    after the suite: the live tree gained no file
+    temporary copy removed: /tmp/MHUPA_step10_a5x_wum5
+    SUITE PASS: all 571 tests ran and passed; only the allowed symlink skips, if any; on a barrier-free copy, the live tree barred throughout.
+    (exit 0)
+--- step 11 install check
+    CLEAN
+    (exit 0)
+--- step 12 install record
+    INSTALL RECORD PASS: /home/claude/work/freeze/w_pos_crlf/repo/src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json
+    (exit 0)
+--- step 12 stage
+
+    (exit 0)
+--- step 12 STAGED
+    HEAD: 04c2c0e3bb4f98f1753436368d644972b85d75fa (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    STAGED PASS: the index holds exactly the package commit (73 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 12 commit
+
+    (exit 0)
+--- step 13 COMMITTED
+    HEAD: 365c73e659843545bc4edf8918164a8d514ee530 (descends from base c48ac3c)
+    barriers: U held by this package; E present; P present (as this phase requires)
+    COMMITTED PASS: the package commit (365c73e) added exactly 37 files and the install record, modified 34 and deleted 1; all Git blobs match; the install record names this package and manifest; barriers U, E and P in place
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 14 install check
+    CLEAN
+    (exit 0)
+--- step 15 remove E
+    BARRIER PASS: E removed (src/methods/E_001/IN_DEVELOPMENT.txt)
+    (exit 0)
+--- step 15 remove P
+    BARRIER PASS: P removed (src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt)
+    (exit 0)
+--- step 16 release record
+    RELEASE RECORD PASS: /home/claude/work/freeze/w_pos_crlf/repo/src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json
+    (exit 0)
+--- step 17 stage
+
+    (exit 0)
+--- step 17 STAGED
+    HEAD: 365c73e659843545bc4edf8918164a8d514ee530 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    STAGED PASS: the index holds exactly the release commit (1 paths) and nothing else is changed. Commit now.
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 17 commit
+
+    (exit 0)
+--- step 17 RELEASED
+    HEAD: 5a16e87af2b4d839b9bf1241e21518f2d42cb5b7 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (5a16e87) has one parent, the package commit (365c73e), and adds exactly the release record; the record is canonical, names 2 released entries and the committed insta
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step (rehearsal only) the project reader validates the records
+    RECORDS PASS: 1 install record(s), 2 release record(s), 80 released unretired entries
+    (exit 0)
+--- step 18 RELEASED again
+    HEAD: 5a16e87af2b4d839b9bf1241e21518f2d42cb5b7 (descends from base c48ac3c)
+    barriers: U held by this package; E absent; P absent (as this phase requires)
+    RELEASED PASS: two commits proved: the release commit (5a16e87) has one parent, the package commit (365c73e), and adds exactly the release record; the record is canonical, names 2 released entries and the committed insta
+    Read-only: no project code imported, nothing run, nothing changed.
+    (exit 0)
+--- step 18 release U
+    CLEAN; install lock released for MHUP_A
+    (exit 0)
+end state: barriers {'U': None, 'E': False, 'P': False}; no_pycache_ever exists: False; __pycache__ in staging: 0; status lines: 0
+5a16e87 MHUP-A rehearsal: release commit
+365c73e MHUP-A rehearsal: package commit
+04c2c0e doc/HANDOVER: HO-2 handover records
+REHEARSAL PASS (crlf; step 10 included; step 19 omitted)

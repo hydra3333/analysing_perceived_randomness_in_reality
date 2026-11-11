@@ -1,0 +1,228 @@
+diff -ru PKG/MHUPA_Install_v1/BUILD_REPORT.txt freeze/OUT/MHUPA_Install_v1/BUILD_REPORT.txt
+--- PKG/MHUPA_Install_v1/BUILD_REPORT.txt	2026-11-11 10:06:33.352057877 +1030
++++ freeze/OUT/MHUPA_Install_v1/BUILD_REPORT.txt	2026-11-11 19:42:34.642589297 +1030
+@@ -1,4 +1,4 @@
+-MHUP-A integrated package build (DRAFT), base c48ac3c393d2eab30014e6200d427b76d90f47ac, E_1 r3 effective_date 2026-11-10
++MHUP-A integrated package build (FROZEN), base c48ac3c393d2eab30014e6200d427b76d90f47ac, E_1 r3 effective_date 2026-11-11
+ changed: 37 new, 34 modified, 1 deleted (src/results_master_v0_1.py)
+ import closure of src/methods/_common/contract_dispatch.py: 15 project files; of them changed by the package (the step 6 gate files): 10
+   gate  src/methods/_common/contract_dispatch.py
+@@ -15,12 +15,12 @@
+ release_entries: [{"game_id": "POWERBALL", "method_id": "E_1", "method_revision": "3", "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"}, {"game_id": "OZLOTTO", "method_id": "E_1", "method_revision": "3", "variant_id": "FULL_HISTORY_RAW_COUNTS_V1"}]
+ registry_entries_added: ['src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json', 'src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json']
+ tests: 571 in 45 modules (counted by the unittest loader, nothing run)
+-PACKAGE_MANIFEST_MHUP_A.json SHA-256 ab71cf22d34e6f972aa995c76a6a19d1db6a42dfb30f324ed4acacc9409b3dc4
+-INSTALL_INSTRUCTIONS.md  9872e79a4d6ff8944c6c27b94325cdc1fc75140273fc151a41100ae93be9eb03
+-INSTALL_MANIFEST_SHA256.txt  ffea159e6b55af4714d0cf4906957298f4eab6045f6bbec91fd1b835642d903d
+-MHUPA_COPY.py  8698e9b6d9e5fbbddce33853e5f6124403e2613e117f2e69d22f343a2b66b114
+-PACKAGE_MANIFEST_MHUP_A.json  ab71cf22d34e6f972aa995c76a6a19d1db6a42dfb30f324ed4acacc9409b3dc4
++PACKAGE_MANIFEST_MHUP_A.json SHA-256 8ad51e769dfb03592241fe1965b493fb605176620c8c93bd3f8a8b3de8a324b5
++INSTALL_INSTRUCTIONS.md  0e9408896531d121dfa30de16ba50fe23b9ed49dd97639ec152f53b17a3529bd
++INSTALL_MANIFEST_SHA256.txt  81cca9fd165fbcb14284f5f9dae33d270e81e8376aa18af04ff5148dceb89608
++MHUPA_COPY.py  de2dab5c4bbd25df8f341e09da6620c42c444136e272736551bab6e6d4ebcd2d
++PACKAGE_MANIFEST_MHUP_A.json  8ad51e769dfb03592241fe1965b493fb605176620c8c93bd3f8a8b3de8a324b5
+ RUN_MHUP_A_SUITE.py  273516a760c904a991a57b7ed98c2a696dfd10f04fe3af2a4960dc6e78a6179f
+ STAGE_PACKAGE_COMMIT.txt  836c21c28a5c94b79b4106b73d79748ed609cde32d8af2ca1c73f4f7e00df52d
+ STAGE_RELEASE_COMMIT.txt  8431987dda7c8b211cb87ff36ad0316f14870c6383ce00399ab93453ad4b75f5
+-VERIFY_MHUP_A.py  790d9587c78ca863dfe04d0382c9ab2f9e8d8099328c48630c2f40360c3dbfcd
++VERIFY_MHUP_A.py  2a6a2a42a325a15d6ee753ef1dd7ed45408425f783b73e04f1f99e16ab872ef8
+diff -ru PKG/MHUPA_Install_v1/INSTALL_INSTRUCTIONS.md freeze/OUT/MHUPA_Install_v1/INSTALL_INSTRUCTIONS.md
+--- PKG/MHUPA_Install_v1/INSTALL_INSTRUCTIONS.md	2026-11-11 10:06:33.351598805 +1030
++++ freeze/OUT/MHUPA_Install_v1/INSTALL_INSTRUCTIONS.md	2026-11-11 19:42:34.642243055 +1030
+@@ -1,11 +1,11 @@
+-# MHUP-A install instructions (design v0.1r6 Appendix J, steps 0 to 19) - DRAFT, NOT FOR USE
++# MHUP-A install instructions (design v0.1r6 Appendix J as amended 11 November 2026, steps 0 to 19)
+ 
+-**DRAFT (items 2 and 3 of the integrated package work list). Do not run any of this.** It is not reviewed, the package
+-is not frozen, and no install is authorised. It exists so that the reviewer can check the steps against Appendix J
+-before the final package is frozen. Written by Claude for the project owner.
++**Frozen package. Run none of this until the project owner gives the live install its own go** (after T016 PASS, the
++F1 settings lines, and F2 rows 8 and 9). Written by Claude for the project owner; Appendix J's amendments J-1 to J-4
++were ratified on 11 November 2026.
+ 
+-- Package: `MHUPA_Install_v1`; manifest `PACKAGE_MANIFEST_MHUP_A.json`, SHA-256 `ab71cf22d34e6f972aa995c76a6a19d1db6a42dfb30f324ed4acacc9409b3dc4`.
+-- Base commit: `c48ac3c393d2eab30014e6200d427b76d90f47ac` (`c48ac3c`). E_1 revision 3's `effective_date`: `2026-11-10` (C01-EFF).
++- Package: `MHUPA_Install_v1`; manifest `PACKAGE_MANIFEST_MHUP_A.json`, SHA-256 `8ad51e769dfb03592241fe1965b493fb605176620c8c93bd3f8a8b3de8a324b5`.
++- Base commit: `c48ac3c393d2eab30014e6200d427b76d90f47ac` (`c48ac3c`). E_1 revision 3's `effective_date`: `2026-11-11` (C01-EFF).
+ - The package: 37 new files, 34 replaced files and 1 deletion (`src/results_master_v0_1.py`,
+   replaced by v0.2). Step 6 copies 10 gate files; step 8 copies the other 61 and makes the deletion.
+ - The suite: 571 tests in 45 modules (about 25 minutes). It includes E2R-T12, which starts up to six
+@@ -125,7 +125,8 @@
+ ```
+ Expect: `COPY PASS: part gate: 10 files written and read back`.
+ If it STOPs: from here on the restore rule applies: keep every copied file and E, P and U; send the output; Claude
+-gives the install check to repeat until `CLEAN`, then the reviewed restore steps.
++gives the install check to repeat until `CLEAN`, then restore steps written for the exact state your output shows; the
++reviewer checks them and you approve them before you run any of them.
+ 
+ ## Step 7 - install check, after the gate copy
+ 
+@@ -155,8 +156,8 @@
+ symlink skips). About 25 minutes. Do not click inside the window while it runs (a click can pause the output; Esc
+ releases it).
+ If it STOPs: as step 6. Do not commit. (Why a copy: with the barriers in place the installed tree refuses every run, which
+-is the point of the barriers, so the tests run on an exact copy without them: N5, decided in principle on 11 November
+-2026; the matching amendment of Appendix J step 10 is for ratification with the package.)
++is the point of the barriers, so the tests run on an exact copy without them: N5, Appendix J step 10 as amended (J-1),
++ratified on 11 November 2026.)
+ 
+ ## Step 11 - install check
+ 
+@@ -250,9 +251,10 @@
+ ```
+ Then tell Claude, who verifies the install from GitHub.
+ 
+-## Not yet in this draft
++## Notes
+ 
+-- Claude's reviewed restore steps for a STOP from step 6 on, as exact commands (the copy tool already has the
+-  `--remove ... --restore` form they end with).
+-- The final package identity: the frozen date, the base commit and the zip's SHA-256.
++- Restore after a STOP from step 6 on is written per case, for the state the output shows, reviewed, and approved by you
++  (owner decision, 11 November 2026); there is no prewritten restore script. The copy tool's `--remove ... --restore`
++  form is what such steps end with.
++- The zip's SHA-256 is in Claude's EX message (a file cannot carry its own zip's hash).
+ - Git 2.26 or later is assumed (`git add --pathspec-from-file`).
+diff -ru PKG/MHUPA_Install_v1/INSTALL_MANIFEST_SHA256.txt freeze/OUT/MHUPA_Install_v1/INSTALL_MANIFEST_SHA256.txt
+--- PKG/MHUPA_Install_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-11 10:06:33.351161050 +1030
++++ freeze/OUT/MHUPA_Install_v1/INSTALL_MANIFEST_SHA256.txt	2026-11-11 19:42:34.641984481 +1030
+@@ -10,7 +10,7 @@
+ A e75e13729ffcdb5f14c4d7f762d8b31e590adbb1498142f9731eaf452394cad8  archive/methods/E_001/r2/E_001/e1_training_view.py
+ A a07dac7558eb5bbc79bbf803b95d133c3248bdb2fa623e98f2fd6824d7a91019  archive/methods/E_001/r2/E_001/multigame_e1.py
+ A 547c833cbe0ca0e9e3e7c6ffafccb54f54b5e60f25393bc4027ccad196378ce8  archive/methods/E_001/r2/E_001_Historical_Appearance_Frequency.py
+-A 3b2c18249e4709f0d0e5f03564900dfe5d9f7e6dfa29ca59c3ae7b4eb6469fa6  archive/methods/E_001/r2/README.md
++A baa010ae6ee3cd5a653229ffbf40e4b97f81bd874f783c70082bfe38a547f6d6  archive/methods/E_001/r2/README.md
+ A 2214c09c05ea7aeb28acf296512a7631c95f5e0c5001735d5bedf62b7d35ddd6  src/evaluation/Method_Mode_H.py
+ M 6618f0c119796621da98c95d15521a5a17a1b77b1f7d7471a3045e3306f13287  src/evaluation/collect.py
+ A c9ce5b741a784016514ba9295fa0993022682793e5706e0002c6e7a9b19a4211  src/evaluation/mode_h.py
+@@ -26,8 +26,8 @@
+ A b8bce0fa40511d16c344a6030d690cea56f04133bc13c571cde2743c79c4cf1d  src/methods/_common/contract_data/declarations/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json
+ A 3253a661aab68c392f5751da53f5fb06f67387543f4af3a5066be9b5f59b0606  src/methods/_common/contract_data/declarations/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json
+ A a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd  src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json
+-A bd210d308b8d15659375ca19303a26751c10721937d70f5ec53a347fc9a7fe24  src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
+-A b9aa15702d41867e1bc762d60f12ab308d14f8cc3b8cb8e0aa0c9969acf95c02  src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
++A 01485f26d37524878b30994c3fd62e52aa31db9280e3aa2860ecf194b4be7e6d  src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
++A ef151c859de8bee0a56ed9087cbe1e23f38698d4a06a9b7bb55d44abd3dd9eff  src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
+ M 3c7bb22c7de8a76dae47f199393f87d93b34adc230bcf9f1a27311b3b819de4f  src/methods/_common/contract_dispatch.py
+ M 9c1498207a3b401406f27b18948b62ea0109285eb0afd4ed103fc54a5df1d16d  src/methods/_common/contract_forecast.py
+ M 1f6d2aaa08b93f4b15732081690036745ff26c0ecaff6042a7095b3850a014ed  src/methods/_common/contract_receipts.py
+@@ -52,7 +52,7 @@
+ A 5a49b9b583ae736bff057cb86004f6487d1ad640832179cb20659cdc5fcfb57c  tests/mhupa_slice2_fixtures.py
+ M cfc9100f135000cb1b09acdfde7983b33761bd79b2987c8bfc1ec8da1d48b2d0  tests/test_code3_retirement.py
+ M 42f49ecbb4574518cda137a8b219d74e8e5a0d85dfeb3af5503da6e2290e089d  tests/test_e1r2_revision2.py
+-A e0615a6947491c41f59ec812f9cf44897febe8e71be3f6e590c0afdae11b7f47  tests/test_e1r3_revision3.py
++A f45ee5ef7274484722d28edf8ddee4a20525a076a2eb083815cf41ef802dec82  tests/test_e1r3_revision3.py
+ M 4a201243ddd57ee3a93912b32c956ae1ffb7448f5cca96f9ec549b7054381838  tests/test_e2r_dispatch.py
+ M 06c745de435dfc3c52bad1ac6f7ee0a4cfe274d0eabd5de0e129d4423c5c08a2  tests/test_e2r_runner.py
+ M 92764ba2bfa2540e02c6ce3d3291d810f172eb0c4cf636eca8030bd554cd640b  tests/test_e6_beta_bernoulli.py
+diff -ru PKG/MHUPA_Install_v1/MHUPA_COPY.py freeze/OUT/MHUPA_Install_v1/MHUPA_COPY.py
+--- PKG/MHUPA_Install_v1/MHUPA_COPY.py	2026-11-11 10:06:33.350652084 +1030
++++ freeze/OUT/MHUPA_Install_v1/MHUPA_COPY.py	2026-11-11 19:42:34.641662158 +1030
+@@ -33,7 +33,7 @@
+ HERE = Path(__file__).resolve().parent
+ MANIFEST = HERE / 'PACKAGE_MANIFEST_MHUP_A.json'
+ OVERLAY = HERE / 'repo_overlay'
+-MANIFEST_SHA256 = 'ab71cf22d34e6f972aa995c76a6a19d1db6a42dfb30f324ed4acacc9409b3dc4'      # the manifest this copy of the tool was built with
++MANIFEST_SHA256 = '8ad51e769dfb03592241fe1965b493fb605176620c8c93bd3f8a8b3de8a324b5'      # the manifest this copy of the tool was built with
+ INSTALL_LOCK = re.compile(r'INSTALL (?P<package>[A-Za-z0-9_.-]+) (?P<utc>\S+)\Z')   # process_check.py's own format
+ GIT_ENV = dict(os.environ, GIT_OPTIONAL_LOCKS='0')
+ 
+diff -ru PKG/MHUPA_Install_v1/PACKAGE_MANIFEST_MHUP_A.json freeze/OUT/MHUPA_Install_v1/PACKAGE_MANIFEST_MHUP_A.json
+--- PKG/MHUPA_Install_v1/PACKAGE_MANIFEST_MHUP_A.json	2026-11-11 10:06:33.350234721 +1030
++++ freeze/OUT/MHUPA_Install_v1/PACKAGE_MANIFEST_MHUP_A.json	2026-11-11 19:42:34.641551254 +1030
+@@ -10,7 +10,7 @@
+  "deleted": {
+   "src/results_master_v0_1.py": "3436da9f560172606f4b9e010cd85a806b58e55597685f2ab7f65c3e17523619"
+  },
+- "e1_r3_effective_date": "2026-11-10",
++ "e1_r3_effective_date": "2026-11-11",
+  "expected_released_per_game": {
+   "OZLOTTO": 40,
+   "POWERBALL": 40
+@@ -175,15 +175,15 @@
+   "archive/methods/E_001/r2/E_001/e1_training_view.py": "e75e13729ffcdb5f14c4d7f762d8b31e590adbb1498142f9731eaf452394cad8",
+   "archive/methods/E_001/r2/E_001/multigame_e1.py": "a07dac7558eb5bbc79bbf803b95d133c3248bdb2fa623e98f2fd6824d7a91019",
+   "archive/methods/E_001/r2/E_001_Historical_Appearance_Frequency.py": "547c833cbe0ca0e9e3e7c6ffafccb54f54b5e60f25393bc4027ccad196378ce8",
+-  "archive/methods/E_001/r2/README.md": "3b2c18249e4709f0d0e5f03564900dfe5d9f7e6dfa29ca59c3ae7b4eb6469fa6",
++  "archive/methods/E_001/r2/README.md": "baa010ae6ee3cd5a653229ffbf40e4b97f81bd874f783c70082bfe38a547f6d6",
+   "src/evaluation/Method_Mode_H.py": "2214c09c05ea7aeb28acf296512a7631c95f5e0c5001735d5bedf62b7d35ddd6",
+   "src/evaluation/mode_h.py": "c9ce5b741a784016514ba9295fa0993022682793e5706e0002c6e7a9b19a4211",
+   "src/methods/_common/closure.py": "e8d5114a486927292e227f599dd57de8149ff69de708dd68124759ea0f7951fc",
+   "src/methods/_common/contract_data/declarations/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json": "b8bce0fa40511d16c344a6030d690cea56f04133bc13c571cde2743c79c4cf1d",
+   "src/methods/_common/contract_data/declarations/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/r3.json": "3253a661aab68c392f5751da53f5fb06f67387543f4af3a5066be9b5f59b0606",
+   "src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json": "a480cbe125a574344fc9c47f47576c49d22d42d77e1abcf1636d8340090126cd",
+-  "src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "bd210d308b8d15659375ca19303a26751c10721937d70f5ec53a347fc9a7fe24",
+-  "src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "b9aa15702d41867e1bc762d60f12ab308d14f8cc3b8cb8e0aa0c9969acf95c02",
++  "src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "01485f26d37524878b30994c3fd62e52aa31db9280e3aa2860ecf194b4be7e6d",
++  "src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json": "ef151c859de8bee0a56ed9087cbe1e23f38698d4a06a9b7bb55d44abd3dd9eff",
+   "src/methods/_common/master_versions.py": "57ba431edc56b350deadb60919310615c1598e1f241644890ab823b864f3e7ab",
+   "src/methods/_common/owner_records.py": "0d8d1e20f5a2ca2de4286d26c0bbaefb77e1bbcda01caf6059c31078ed04a403",
+   "src/methods/_common/release_records.py": "81c7c62d535b7344e252eb5d02157acb41c0b2cfef61654138169ea3792c6b8d",
+@@ -195,7 +195,7 @@
+   "tests/ledger_fixture.py": "48ee5f1ee332386233a6964c9db951168223f7c622c4178eed0793b8b0c9836f",
+   "tests/mhupa_fixtures.py": "5b66e7eae48a08932bb57f7c4b3f6238fed3ae2c7571c8441cb3839c235d5662",
+   "tests/mhupa_slice2_fixtures.py": "5a49b9b583ae736bff057cb86004f6487d1ad640832179cb20659cdc5fcfb57c",
+-  "tests/test_e1r3_revision3.py": "e0615a6947491c41f59ec812f9cf44897febe8e71be3f6e590c0afdae11b7f47",
++  "tests/test_e1r3_revision3.py": "f45ee5ef7274484722d28edf8ddee4a20525a076a2eb083815cf41ef802dec82",
+   "tests/test_mhupa_gates.py": "91a557c364d05b8c428dd0fd2e4d45860a8ff5d0c0a866094084ec82641cebb9",
+   "tests/test_mhupa_install_records.py": "ea2ecb821fae417f0933edd694d8338c283670b728dbed9ed8df0aea1a3a3a8e",
+   "tests/test_mhupa_launchers.py": "9c5b1adb7ee8accbecd7cc4a0b4d5a00b1ea78909a960e2cd4d6541e2fb76bfb",
+@@ -292,7 +292,7 @@
+  ],
+  "retires": [],
+  "schema": "MHUP_PACKAGE_MANIFEST_V1",
+- "status": "DRAFT (items 2 and 3; not reviewed; not for installation)",
++ "status": "FROZEN 2026-11-11 (owner gate A; installation only under the owner's separate go)",
+  "tool_sha256": {
+   "src/methods/_common/release_records.py": "81c7c62d535b7344e252eb5d02157acb41c0b2cfef61654138169ea3792c6b8d",
+   "src/package_tools/install_records.py": "e59ca818f388f34d7af173257a7f4ff45d776cdbfe10b449d423f7d2cf8af2c4",
+diff -ru PKG/MHUPA_Install_v1/VERIFY_MHUP_A.py freeze/OUT/MHUPA_Install_v1/VERIFY_MHUP_A.py
+--- PKG/MHUPA_Install_v1/VERIFY_MHUP_A.py	2026-11-11 10:06:33.350930145 +1030
++++ freeze/OUT/MHUPA_Install_v1/VERIFY_MHUP_A.py	2026-11-11 19:42:34.641793760 +1030
+@@ -45,8 +45,8 @@
+ from datetime import date, datetime
+ from pathlib import Path
+ 
+-MANIFEST_SHA256 = 'ab71cf22d34e6f972aa995c76a6a19d1db6a42dfb30f324ed4acacc9409b3dc4'
+-COPY_SHA256 = '8698e9b6d9e5fbbddce33853e5f6124403e2613e117f2e69d22f343a2b66b114'
++MANIFEST_SHA256 = '8ad51e769dfb03592241fe1965b493fb605176620c8c93bd3f8a8b3de8a324b5'
++COPY_SHA256 = 'de2dab5c4bbd25df8f341e09da6620c42c444136e272736551bab6e6d4ebcd2d'
+ INSTALL_SCHEMA, RELEASE_SCHEMA = 'INSTALL_RECORD_V1', 'RELEASE_RECORD_V1'
+ INSTALL_KEYS = {'schema', 'package', 'manifest_sha256', 'post_pass_utc', 'local_date', 'registry_entries_added',
+                 'release_entries_planned', 'retires_planned', 'statement'}
+diff -ru PKG/MHUPA_Install_v1/repo_overlay/archive/methods/E_001/r2/README.md freeze/OUT/MHUPA_Install_v1/repo_overlay/archive/methods/E_001/r2/README.md
+--- PKG/MHUPA_Install_v1/repo_overlay/archive/methods/E_001/r2/README.md	2026-11-11 10:06:33.342103755 +1030
++++ freeze/OUT/MHUPA_Install_v1/repo_overlay/archive/methods/E_001/r2/README.md	2026-11-11 19:42:34.633787926 +1030
+@@ -1,7 +1,7 @@
+ # E_1 revision 2 (archived)
+ 
+ - **Method:** E_1, Historical Appearance Frequency, revision 2; variants: `FULL_HISTORY_RAW_COUNTS_V1`; games: POWERBALL, OZLOTTO.
+-- **Prepared:** 2026-11-10 (the date this archive was prepared by its package).
++- **Prepared:** 2026-11-11 (the date this archive was prepared by its package).
+ - **Retired:** when the owner installs that package. The installation date and commit are recorded in the ratification register, not here.
+ - **Superseded by:** revision 3.
+ - **Why retired:** revision 2's multi-game function (`E_001/multigame_e1.py`) refused, in its own code, every run mode other than SYNTHETIC_CONTRACT_TEST and REAL_DEVELOPMENT and every target beyond the development prefix, so E_1 could take part in neither Mode H nor the weekly session; revision 3 takes the view data kind instead of a run mode and leaves the target ceiling to the shared target and mode gates, with the same counting, ranking and tie order (MHUP-1 design v0.1r5 section 2; owner decision MHUP-Q10, 3 November 2026). The legacy runner's release check names revision 3 at the same time. Revision 3 reuses all seven paths: five files unchanged, and `E_001/multigame_e1.py` and `E_001_Historical_Appearance_Frequency.py` changed.
+diff -ru PKG/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json freeze/OUT/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
+--- PKG/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json	2026-11-11 10:06:33.343439879 +1030
++++ freeze/OUT/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/OZLOTTO/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json	2026-11-11 19:42:34.634916817 +1030
+@@ -1 +1 @@
+-{"declaration_digest":"b8bce0fa40511d16c344a6030d690cea56f04133bc13c571cde2743c79c4cf1d","effective_date":"2026-11-10","entry_sequence":3,"game_id":"OZLOTTO","method_id":"E_1","method_name":"Historical Appearance Frequency","method_revision":"3","one_liner":"Ranks every number by how many times it was drawn in all earlier draws of the current era.","previous_entry_digest":"552a29cf63683980200f81f67e4349010f90c93a40fc315dd60fa840dc1635c6","registry_status":"SUPPORTED","registry_status_reason":"Revision 3 (MHUP-1 design v0.1r5 section 2; owner decisions MHUP-Q10 and MHUP-R, ratified 3 November 2026): the multi-game function takes the view data kind, never a run mode, so E_1 runs in Mode H and the weekly session under the shared target and mode gates; counting, ranking and tie order are unchanged. Revision 2 is archived in archive/methods/E_001/r2/. effective_date is the date this entry was prepared and frozen for review in its package, not an installation or release date (owner decision, 4 November 2026, EX_142 C01): the release date comes only from the create-only release record (design 4.3).","schema":"REGISTRY_ENTRY_V1","short_explanation":"E_1 counts how often each number appeared in every draw before the target draw, within the current era of the game, and ranks the numbers from most to least often drawn. Numbers with equal counts are put in a fixed order by the project tie rule (TIE_SHA256_V1). Its top pick is the highest-ranked numbers and its inverse pick the lowest-ranked. It uses only which numbers were drawn, not the order they came out in or the dates. It is a baseline: if the draws are fair, it is not expected to beat chance.","text_provenance":{"author":"Claude (primary designer and coder)","date":"2026-10-28","source_reference":"R2 v0.5 section 7.1; E2R-1 v0.3r3 E2R-R21A (owner decision D-3)","text_version":"v1"},"variant_id":"FULL_HISTORY_RAW_COUNTS_V1"}
++{"declaration_digest":"b8bce0fa40511d16c344a6030d690cea56f04133bc13c571cde2743c79c4cf1d","effective_date":"2026-11-11","entry_sequence":3,"game_id":"OZLOTTO","method_id":"E_1","method_name":"Historical Appearance Frequency","method_revision":"3","one_liner":"Ranks every number by how many times it was drawn in all earlier draws of the current era.","previous_entry_digest":"552a29cf63683980200f81f67e4349010f90c93a40fc315dd60fa840dc1635c6","registry_status":"SUPPORTED","registry_status_reason":"Revision 3 (MHUP-1 design v0.1r5 section 2; owner decisions MHUP-Q10 and MHUP-R, ratified 3 November 2026): the multi-game function takes the view data kind, never a run mode, so E_1 runs in Mode H and the weekly session under the shared target and mode gates; counting, ranking and tie order are unchanged. Revision 2 is archived in archive/methods/E_001/r2/. effective_date is the date this entry was prepared and frozen for review in its package, not an installation or release date (owner decision, 4 November 2026, EX_142 C01): the release date comes only from the create-only release record (design 4.3).","schema":"REGISTRY_ENTRY_V1","short_explanation":"E_1 counts how often each number appeared in every draw before the target draw, within the current era of the game, and ranks the numbers from most to least often drawn. Numbers with equal counts are put in a fixed order by the project tie rule (TIE_SHA256_V1). Its top pick is the highest-ranked numbers and its inverse pick the lowest-ranked. It uses only which numbers were drawn, not the order they came out in or the dates. It is a baseline: if the draws are fair, it is not expected to beat chance.","text_provenance":{"author":"Claude (primary designer and coder)","date":"2026-10-28","source_reference":"R2 v0.5 section 7.1; E2R-1 v0.3r3 E2R-R21A (owner decision D-3)","text_version":"v1"},"variant_id":"FULL_HISTORY_RAW_COUNTS_V1"}
+diff -ru PKG/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json freeze/OUT/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json
+--- PKG/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json	2026-11-11 10:06:33.343539742 +1030
++++ freeze/OUT/MHUPA_Install_v1/repo_overlay/src/methods/_common/contract_data/registry/POWERBALL/E_1/FULL_HISTORY_RAW_COUNTS_V1/entry_0003.json	2026-11-11 19:42:34.634997968 +1030
+@@ -1 +1 @@
+-{"declaration_digest":"3253a661aab68c392f5751da53f5fb06f67387543f4af3a5066be9b5f59b0606","effective_date":"2026-11-10","entry_sequence":3,"game_id":"POWERBALL","method_id":"E_1","method_name":"Historical Appearance Frequency","method_revision":"3","one_liner":"Ranks every number by how many times it was drawn in all earlier draws of the current era.","previous_entry_digest":"c28ab7c343460f2a869b42530aada5c7ff511b45f5365d8a14c95e2be9232902","registry_status":"SUPPORTED","registry_status_reason":"Revision 3 (MHUP-1 design v0.1r5 section 2; owner decisions MHUP-Q10 and MHUP-R, ratified 3 November 2026): the multi-game function takes the view data kind, never a run mode, so E_1 runs in Mode H and the weekly session under the shared target and mode gates; counting, ranking and tie order are unchanged. Revision 2 is archived in archive/methods/E_001/r2/. effective_date is the date this entry was prepared and frozen for review in its package, not an installation or release date (owner decision, 4 November 2026, EX_142 C01): the release date comes only from the create-only release record (design 4.3).","schema":"REGISTRY_ENTRY_V1","short_explanation":"E_1 counts how often each number appeared in every draw before the target draw, within the current era of the game, and ranks the numbers from most to least often drawn. Numbers with equal counts are put in a fixed order by the project tie rule (TIE_SHA256_V1). Its top pick is the highest-ranked numbers and its inverse pick the lowest-ranked. It uses only which numbers were drawn, not the order they came out in or the dates. It is a baseline: if the draws are fair, it is not expected to beat chance.","text_provenance":{"author":"Claude (primary designer and coder)","date":"2026-10-28","source_reference":"R2 v0.5 section 7.1; E2R-1 v0.3r3 E2R-R21A (owner decision D-3)","text_version":"v1"},"variant_id":"FULL_HISTORY_RAW_COUNTS_V1"}
++{"declaration_digest":"3253a661aab68c392f5751da53f5fb06f67387543f4af3a5066be9b5f59b0606","effective_date":"2026-11-11","entry_sequence":3,"game_id":"POWERBALL","method_id":"E_1","method_name":"Historical Appearance Frequency","method_revision":"3","one_liner":"Ranks every number by how many times it was drawn in all earlier draws of the current era.","previous_entry_digest":"c28ab7c343460f2a869b42530aada5c7ff511b45f5365d8a14c95e2be9232902","registry_status":"SUPPORTED","registry_status_reason":"Revision 3 (MHUP-1 design v0.1r5 section 2; owner decisions MHUP-Q10 and MHUP-R, ratified 3 November 2026): the multi-game function takes the view data kind, never a run mode, so E_1 runs in Mode H and the weekly session under the shared target and mode gates; counting, ranking and tie order are unchanged. Revision 2 is archived in archive/methods/E_001/r2/. effective_date is the date this entry was prepared and frozen for review in its package, not an installation or release date (owner decision, 4 November 2026, EX_142 C01): the release date comes only from the create-only release record (design 4.3).","schema":"REGISTRY_ENTRY_V1","short_explanation":"E_1 counts how often each number appeared in every draw before the target draw, within the current era of the game, and ranks the numbers from most to least often drawn. Numbers with equal counts are put in a fixed order by the project tie rule (TIE_SHA256_V1). Its top pick is the highest-ranked numbers and its inverse pick the lowest-ranked. It uses only which numbers were drawn, not the order they came out in or the dates. It is a baseline: if the draws are fair, it is not expected to beat chance.","text_provenance":{"author":"Claude (primary designer and coder)","date":"2026-10-28","source_reference":"R2 v0.5 section 7.1; E2R-1 v0.3r3 E2R-R21A (owner decision D-3)","text_version":"v1"},"variant_id":"FULL_HISTORY_RAW_COUNTS_V1"}
+diff -ru PKG/MHUPA_Install_v1/repo_overlay/tests/test_e1r3_revision3.py freeze/OUT/MHUPA_Install_v1/repo_overlay/tests/test_e1r3_revision3.py
+--- PKG/MHUPA_Install_v1/repo_overlay/tests/test_e1r3_revision3.py	2026-11-11 10:06:33.345205158 +1030
++++ freeze/OUT/MHUPA_Install_v1/repo_overlay/tests/test_e1r3_revision3.py	2026-11-11 19:42:34.636231143 +1030
+@@ -219,7 +219,7 @@
+             self.assertEqual(chain[2]['previous_entry_digest'], record_digest(chain[1]))
+             # EX_142 C01 (owner decision, 4 November 2026): effective_date is the preparation date, says so, and is no
+             # release date; the release record alone dates a release (design 4.3)
+-            self.assertEqual(chain[2]['effective_date'], '2026-11-10')
++            self.assertEqual(chain[2]['effective_date'], '2026-11-11')
+             self.assertIn('not an installation or release date', reason)
+ 
+     def test_effective_date_is_read_by_the_validator_only(self):

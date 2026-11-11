@@ -19,9 +19,10 @@ It asserts, and STOPs on any difference:
   - the release entries derive from the two new entry_0003.json files (E_1 revision 3, both games; R-020 (a)).
 It writes: repo_overlay/, PACKAGE_MANIFEST_MHUP_A.json (the one manifest: install_records.py and process_check.py
 read it; the copy tool and the verifier read it), MHUPA_COPY.py, VERIFY_MHUP_A.py, RUN_MHUP_A_SUITE.py,
-STAGE_PACKAGE_COMMIT.txt, STAGE_RELEASE_COMMIT.txt, INSTALL_MANIFEST_SHA256.txt, INSTALL_INSTRUCTIONS.md (DRAFT) and
+STAGE_PACKAGE_COMMIT.txt, STAGE_RELEASE_COMMIT.txt, INSTALL_MANIFEST_SHA256.txt, INSTALL_INSTRUCTIONS.md and
 BUILD_REPORT.txt. Since item 3 the verifier has its `released` phase and the copy tool enforces the barrier order; the
-package still says DRAFT throughout (nothing is reviewed, frozen or installation-ready).
+manifest's status says FROZEN with DATE (the freeze of 11 November 2026, owner's gate A go); the tools' own
+docstrings keep their development history and are unchanged by the freeze.
 """
 import ast, hashlib, json, os, re, shutil, subprocess, sys
 from pathlib import Path
@@ -256,7 +257,7 @@ def main():
         'schema': 'MHUP_PACKAGE_MANIFEST_V1',
         'package': PACKAGE,
         'package_folder': PKG_NAME,
-        'status': 'DRAFT (items 2 and 3; not reviewed; not for installation)',
+        'status': f'FROZEN {date} (owner gate A; installation only under the owner\'s separate go)',
         'base_commit': base_commit,
         'e1_r3_effective_date': date,
         'new': {p: lfsha(dev, p) for p in new},
@@ -312,7 +313,7 @@ def main():
     need('@@' not in ins, 'unfilled placeholder in the instructions: ' + repr(re.findall(r'@@\w+@@', ins)))
     (pkg / 'INSTALL_INSTRUCTIONS.md').write_bytes(ins.replace('\r\n', '\n').replace('\n', '\r\n').encode('ascii'))
 
-    report = [f'MHUP-A integrated package build (DRAFT), base {base_commit}, E_1 r3 effective_date {date}',
+    report = [f'MHUP-A integrated package build (FROZEN), base {base_commit}, E_1 r3 effective_date {date}',
               f'changed: {len(new)} new, {len(modified)} modified, {len(deleted)} deleted ({deleted[0]})',
               f'import closure of {GATE_ROOT_MODULE}: {len(closure)} project files; of them changed by the package '
               f'(the step 6 gate files): {len(gate)}', *[f'  gate  {g}' for g in gate],
@@ -323,7 +324,7 @@ def main():
               *[f'{f.relative_to(pkg).as_posix()}  {sha(f.read_bytes())}' for f in sorted(pkg.iterdir()) if f.is_file()]]
     (pkg / 'BUILD_REPORT.txt').write_bytes(('\n'.join(report) + '\n').encode('ascii'))
     print('\n'.join(report))
-    print(f'BUILD PASS (DRAFT): {pkg}')
+    print(f'BUILD PASS (FROZEN): {pkg}')
 
 
 if __name__ == '__main__':
