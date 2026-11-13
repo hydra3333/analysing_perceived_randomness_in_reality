@@ -62,8 +62,8 @@ the next package, with no second suite run added to the live procedure; (3) MHUP
 assessment first, no substantial design or coding before the owner authorises it; (4) KISS-1 stays deferred, with its agreed
 scope (including method-registry usability and operational simplification), until the owner starts it.
 
-**DOC-14 (this register's package).** Register v0.27 and design v0.1r7, written by Claude from the records; for the owner's
-approval as documentation of decisions already ratified (not a new ratification). Design v0.1r7 is v0.1r6 with only RAT-28's
+**DOC-14 (this register's package).** Register v0.27 and design v0.1r7, written by Claude from the records; approved by the
+owner on 13 November 2026 as documentation of decisions already ratified (not a new ratification). Design v0.1r7 is v0.1r6 with only RAT-28's
 amendments in their ratified wording, by counted edits (`exchange/CLAUDE_WEB_TOOLS/doc14/make_design_v0_1r7.py`).
 
 **Future actions (updating register v0.26's list; not authorisations).**
@@ -82,7 +82,7 @@ amendments in their ratified wording, by counted edits (`exchange/CLAUDE_WEB_TOO
 | Document (path) | Author / check | Status and Git-content SHA-256 |
 |---|---|---|
 | `doc/RATIFICATION_REGISTER_v0_26.md` | Claude; checked by the reviewer (EX_160, EX_161) | OWNER-RATIFIED 8 Nov 2026 (RAT-27); superseded by this register; `366e966d6584d86681891eb84fe5363ae94ecac00f2943daab8fbc01ca125414` |
-| `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md` | Claude, counted edits from v0.1r6 (`7332dd6c...`) | DOC-14, for the owner's approval; records RAT-28; `@@DESIGN_SHA@@` |
+| `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md` | Claude, counted edits from v0.1r6 (`7332dd6c...`) | DOC-14, OWNER-APPROVED 13 Nov 2026; records RAT-28; `@@DESIGN_SHA@@` |
 | `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (rulebook v0.5) | Claude; checked by the reviewer (R-2 PASS of `19e45ff`) | OWNER-RATIFIED 11 Nov 2026 (RAT-28); installed at `760e0c6`; `fa7a5fe229be832880cda4704ed9e7d27af2f4b9462464f7af262e540acd5200` |
 | `exchange/CLAUDE_WEB_TOOLS/mhupa/t016/final/APPENDIX_J_AMENDMENTS_RATIFIED.md` | Claude; as above | OWNER-RATIFIED 11 Nov 2026 (RAT-28); `6bdeb16405cf29b2bbef9fc5c3e1915741ac5ede6a0108869b0a7bda547301e9` |
 | `exchange/EX_163_Claude/MHUPA_Install_v1.zip` | Claude; checked by the reviewer (EX_164) | The frozen MHUP-A package, installed 13 Nov 2026; `9d8b74657880917bf8a367b083c5e5926bc6803ee989f74c934afdf98156cf76` |

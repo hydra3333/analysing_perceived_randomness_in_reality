@@ -9,7 +9,7 @@ ratification. Nothing is installed. US-ASCII, CRLF.
 | File | What it is | SHA-256 (LF) |
 |---|---|---|
 | `Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md` | design v0.1r6 with only RAT-28's amendments, by 10 counted edits (`make_design_v0_1r7.py`, which checks the installed v0.1r6 bytes first) | `c115b289432756b50ff76549be6f44282ca30cd9a94524e6c3271965a085b8de` |
-| `RATIFICATION_REGISTER_v0_27.md` | register v0.26 with 3 counted insertions only (`make_register_v27.py`): the version line, the new section (`register_v27_section.md`), and a current-status bullet; nothing of v0.26 changed | `364829394bf7138bdce1452ccc5eb556bf138d83e6d49e9c67c35f026cb48d06` |
+| `RATIFICATION_REGISTER_v0_27.md` | register v0.26 with 3 counted insertions only (`make_register_v27.py`): the version line, the new section (`register_v27_section.md`), and a current-status bullet; nothing of v0.26 changed | `fee014c148c2cca10f12e4418d17a04b20d932645f3c0162b1f32e43285d70aa` |
 
 Every changed line: `DESIGN_v0_1r6_TO_v0_1r7.diff` and `REGISTER_v0_26_TO_v0_27.diff`.
 
@@ -30,9 +30,8 @@ Every changed line: `DESIGN_v0_1r6_TO_v0_1r7.diff` and `REGISTER_v0_26_TO_v0_27.
 One new section: the integrated package's development and the owner's decisions in it; **RAT-28** (rulebook v0.5 and the
 Appendix J amendments, 11 November 2026); the freeze (EX_163, EX_164) and gates B to F with their commits; T016; the live
 install and its verification; the post-install test fix (EX_165, EX_166, T023, `87c4219`); the owner's decisions of
-13 November 2026; DOC-14 itself; future actions; out-of-date statements; a table of document hashes. The register's
-version line says "FOR THE OWNER'S APPROVAL"; on your approval I change only those words to "OWNER-APPROVED <date>" and give you
-the new SHA-256.
+13 November 2026; DOC-14 itself; future actions; out-of-date statements; a table of document hashes. The owner approved DOC-14 on 13 November 2026 (21:46, by asking for the install); the register's version line, its DOC-14
+paragraph and its table row then changed from "for the owner's approval" to "OWNER-APPROVED", and nothing else.
 
 ## 4. Installing, after your approval (your own commit; `doc/` is yours)
 

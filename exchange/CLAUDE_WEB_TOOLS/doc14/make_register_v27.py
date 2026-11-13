@@ -22,7 +22,7 @@ section = section.replace('@@DESIGN_SHA@@', dsha)
 
 EDITS = [
     ('version', '**Register version:** v0.26 OWNER-RATIFIED 8 November 2026',
-     '**Register version:** v0.27, 13 November 2026, FOR THE OWNER\'S APPROVAL as DOC-14 (written by Claude from the records; '
+     '**Register version:** v0.27, 13 November 2026, OWNER-APPROVED 13 November 2026 as DOC-14 (written by Claude from the records; '
      'documentation of decisions already ratified, not a new ratification), recording the integrated MHUP-A package from its '
      'start to its install and closure on 13 November 2026, rulebook v0.5 and the Appendix J amendments (RAT-28), design '
      'v0.1r7, the post-install test fix and the owner\'s decisions of 13 November 2026; v0.26 OWNER-RATIFIED 8 November 2026'),
