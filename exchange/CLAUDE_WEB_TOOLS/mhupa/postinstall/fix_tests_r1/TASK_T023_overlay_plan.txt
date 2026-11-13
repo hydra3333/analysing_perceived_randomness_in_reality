@@ -1,0 +1,3 @@
+# TASK_T023: the reviewed post-install test fix r1 (EX_165): two tracked test files replaced in the task clone only
+REPLACE tests/mhupa_slice2_fixtures.py
+REPLACE tests/test_mhupa_install_records.py
