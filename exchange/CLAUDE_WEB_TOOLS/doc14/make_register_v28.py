@@ -13,7 +13,7 @@ section = open(sec, 'rb').read().decode('ascii')
 assert '\r' not in section
 EDITS = [
     ('version', '**Register version:** v0.27, 13 November 2026, OWNER-APPROVED',
-     '**Register version:** v0.28, 13 November 2026, FOR THE OWNER\'S APPROVAL (written by Claude; a correction, not a new '
+     '**Register version:** v0.28, 13 November 2026, OWNER-APPROVED 13 November 2026 (written by Claude; a correction, not a new '
      'decision): register v0.27\'s "RAT-28" for the ratification of 11 November 2026 is read as RAT-30, and the ratifications '
      'RAT-28 (H-1 v1r10r2, 8 November 2026) and RAT-29 (H-1 v1r10r3, 10 November 2026) are recorded; v0.27, 13 November 2026, '
      'OWNER-APPROVED'),
