@@ -1,0 +1,27 @@
+MODE H DRESS REHEARSAL (invented data; installed code; full cohort; first update 5 draws past the holdout)
+[POWERBALL] manifest: cohort 40 variants of 12 methods; targets 1577-1586; families ['MODEH_POWERBALL_MR7_MAIN_V1', 'MODEH_POWERBALL_MR7_PB_V1']; exposure flags ['1585', '1586']; closure 497 files; freeze version 1
+[POWERBALL] invented first update: version 2 (UPDATE), last draw 1591 (holdout_last + 5)
+[POWERBALL] plan: 40 variants x 10 targets = 400 pairs
+[POWERBALL] run: exit 0 in 63 s; last line: [WALK-FORWARD] COMPLETE: 400 run(s) in this invocation; every pair of the plan is done
+[POWERBALL] tickets: {'OPEN': 400, 'DONE': 400}; DONE terminal classes: {'SUCCESS PUBLISHED': 400}
+[POWERBALL] score: 800 score lines, 400 rank lines in 56 s; markers ['BATCH_COMPLETE', 'SCORING_STARTED', 'SCORE_COMPLETE', 'MODE_H_SEALED']
+[POWERBALL] report files: mode_h_POWERBALL_1577-1586_mh-87316288b54c4abc90ae9acf010cfb53.txt (750166 bytes), mode_h_POWERBALL_1577-1586_mh-87316288b54c4abc90ae9acf010cfb53.csv (727857 bytes), mode_h_POWERBALL_1577-1586_mh-87316288b54c4abc90ae9acf010cfb53.json (37758 bytes)
+[POWERBALL] drawn numbers in a report file (invented draws; must be none): none
+[POWERBALL] a second plan: refused (this game already has its one Mode H plan (the batch-id record exists); a second plan is n)
+[POWERBALL] a second score: refused (the Mode H study is sealed; a corrective scoring run is a separately identified run under )
+[POWERBALL] a rerun of the batch after the seal: exit 2 ([WALK-FORWARD] REFUSED before any run: the batch is closed: lifecycle marker(s) present: BATCH_COMPL)
+[POWERBALL] PASS in 119 s
+[OZLOTTO] manifest: cohort 40 variants of 12 methods; targets 1694-1703; families ['MODEH_OZLOTTO_MR7_MAIN_V1']; exposure flags []; closure 497 files; freeze version 1
+[OZLOTTO] invented first update: version 2 (UPDATE), last draw 1708 (holdout_last + 5)
+[OZLOTTO] plan: 40 variants x 10 targets = 400 pairs
+[OZLOTTO] run: exit 0 in 52 s; last line: [WALK-FORWARD] COMPLETE: 400 run(s) in this invocation; every pair of the plan is done
+[OZLOTTO] tickets: {'OPEN': 400, 'DONE': 400}; DONE terminal classes: {'SUCCESS PUBLISHED': 400}
+[OZLOTTO] score: 800 score lines, 400 rank lines in 40 s; markers ['BATCH_COMPLETE', 'SCORING_STARTED', 'SCORE_COMPLETE', 'MODE_H_SEALED']
+[OZLOTTO] report files: mode_h_OZLOTTO_1694-1703_mh-4ee0dba20cea4a948957775da9c7c801.txt (585286 bytes), mode_h_OZLOTTO_1694-1703_mh-4ee0dba20cea4a948957775da9c7c801.csv (553986 bytes), mode_h_OZLOTTO_1694-1703_mh-4ee0dba20cea4a948957775da9c7c801.json (27567 bytes)
+[OZLOTTO] drawn numbers in a report file (invented draws; must be none): none
+[OZLOTTO] a second plan: refused (this game already has its one Mode H plan (the batch-id record exists); a second plan is n)
+[OZLOTTO] a second score: refused (the Mode H study is sealed; a corrective scoring run is a separately identified run under )
+[OZLOTTO] a rerun of the batch after the seal: exit 2 ([WALK-FORWARD] REFUSED before any run: the batch is closed: lifecycle marker(s) present: BATCH_COMPL)
+[OZLOTTO] PASS in 93 s
+DRESS REHEARSAL PASS
+rc=0

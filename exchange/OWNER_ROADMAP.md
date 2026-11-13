@@ -266,6 +266,9 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            (1) The Approval 1 readiness sheet (Approvals 1-4 per game, what cannot be undone, the scientific scope and
                limits, exact commands, the freeze, STOP handling, prerequisites, exposure), with the POC rerun
                instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.
+               DRAFTED (14 November 2026): exchange/CLAUDE_WEB_TOOLS/modeh_readiness/
+               APPROVAL_1_READINESS_SHEET_DRAFT.md and OWNER_POC_RERUN_R015b_DRAFT.md (r2), with a full-cohort dress
+               rehearsal on invented data (PASS). WAITING for ChatGPT's review, then your decisions D1-D7.
            (2) MHUP-B: design only on your authorisation, never touching the frozen Mode H code; installed only after
                both games are sealed; its rehearsals add a full-suite run after step 18.
            (3) KISS-1 stays deferred until you start it.

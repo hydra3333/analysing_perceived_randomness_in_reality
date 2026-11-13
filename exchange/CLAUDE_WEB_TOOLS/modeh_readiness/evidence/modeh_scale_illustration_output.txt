@@ -1,0 +1,21 @@
+POWERBALL main numbers (7 picked of 35; 7 drawn): fair expectation 14.00 over 10 draws (1.400 per draw, SD 0.960)
+    one pre-chosen track, 5% one-sided: at least 20 (exact tail 3.80e-02); that is 1.43 times the fair expectation
+    best of 80 tracks, 5% family-wise (Bonferroni): at least 25 (exact tail 4.83e-04); that is 1.79 times the fair expectation
+    3 sigma one-sided (0.00135): at least 25 (exact tail 4.83e-04); that is 1.79 times the fair expectation
+    if the 80 tracks were independent and fair, P(at least one reaches the one-track 5% line) = 0.95
+    draws needed for one pre-chosen track to show a 5% lift (5% one-sided, 80% power, normal approx.): about 1,164
+    draws needed for one pre-chosen track to show a 10% lift (5% one-sided, 80% power, normal approx.): about 291
+OZLOTTO main numbers (7 picked of 47; 7 drawn): fair expectation 10.43 over 10 draws (1.043 per draw, SD 0.878)
+    one pre-chosen track, 5% one-sided: at least 16 (exact tail 3.82e-02); that is 1.53 times the fair expectation
+    best of 80 tracks, 5% family-wise (Bonferroni): at least 21 (exact tail 3.71e-04); that is 2.01 times the fair expectation
+    3 sigma one-sided (0.00135): at least 20 (exact tail 1.11e-03); that is 1.92 times the fair expectation
+    if the 80 tracks were independent and fair, P(at least one reaches the one-track 5% line) = 0.96
+    draws needed for one pre-chosen track to show a 5% lift (5% one-sided, 80% power, normal approx.): about 1,756
+    draws needed for one pre-chosen track to show a 10% lift (5% one-sided, 80% power, normal approx.): about 439
+POWERBALL number (1 picked of 20): fair expectation 0.50 over 10 draws (0.050 per draw, SD 0.218)
+    one pre-chosen track, 5% one-sided: at least 3 (exact tail 1.15e-02); that is 6.00 times the fair expectation
+    best of 80 tracks, 5% family-wise (Bonferroni): at least 5 (exact tail 6.37e-05); that is 10.00 times the fair expectation
+    3 sigma one-sided (0.00135): at least 4 (exact tail 1.03e-03); that is 8.00 times the fair expectation
+    if the 80 tracks were independent and fair, P(at least one reaches the one-track 5% line) = 0.60
+    draws needed for one pre-chosen track to show a 5% lift (5% one-sided, 80% power, normal approx.): about 47,007
+    draws needed for one pre-chosen track to show a 10% lift (5% one-sided, 80% power, normal approx.): about 11,752
