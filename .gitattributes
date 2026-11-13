@@ -3,3 +3,9 @@
 source_data/** -text
 # Run records, batch plans and the search log: checked byte for byte by the project tools, so never converted
 results/** -text
+# MHUP-A install and release records: canonical JSON checked byte for byte by release_records.py, so never converted (N1)
+src/methods/_common/contract_data/install_records/** -text
+# Two files whose raw bytes tests check (a no-CR assertion; a reference SHA-256): never converted (N4)
+src/package_tools/process_check.py -text
+tests/fixtures/results_master_v0_1_reference.py.txt -text
+src/results_master_v0_2.py -text

@@ -70,7 +70,13 @@ RUN_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'I
                        'SYNTHETIC_CONTRACT_TEST', 'SYNTHETIC_NULL', 'SYNTHETIC_PLANTED',
                        'SYNTHETIC_IDENTIFIABILITY', 'BENCHMARK_REAL', 'BENCHMARK_SYNTHETIC'))
 SYNTHETIC_MODES = frozenset(m for m in RUN_MODES if m.startswith('SYNTHETIC_'))
-RESERVED_MODES = frozenset(('REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC'))  # E2R-R44, R44A
+# E2R-R44, R44A. REAL_HOLDOUT was unreserved by MHUP-R (design v0.1r5 section 5.1): it opens only for a ticketed
+# request bound to the game's one Mode H plan, with the opening record present (the dispatch gate decides).
+RESERVED_MODES = frozenset(('FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC'))
+REAL_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW'))   # every mode that reads a real master
+# The binding a real-mode request above the development prefix must carry (design 3.4): the Mode H plan, a weekly
+# session, or the owner's unofficial diagnostic route.
+BINDING_KINDS = frozenset(('MODE_H_BATCH', 'WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'))
 BENCHMARK_MODES = frozenset(('BENCHMARK_REAL', 'BENCHMARK_SYNTHETIC'))                  # E2R-R41A
 PRODUCT_KINDS = frozenset(('WF_FORECAST', 'DIAGNOSTIC_OUTPUT', 'SYNTHETIC_TEST_OUTPUT',
                            'IS_DIAGNOSTIC_ENTRY', 'BENCHMARK_TIMING'))
@@ -92,6 +98,8 @@ def producible(run_mode: str, schema: str) -> tuple[str, str]:
     if schema == FORECAST:
         if run_mode == 'REAL_DEVELOPMENT':
             return 'WF_FORECAST', 'DEVELOPMENT_WF_EXPLORATORY'
+        if run_mode == 'REAL_HOLDOUT':
+            return 'WF_FORECAST', 'HOLDOUT_MODE_H'           # E2R-R41's row, unreserved as written (MHUP-R)
         if run_mode in SYNTHETIC_MODES:
             return 'SYNTHETIC_TEST_OUTPUT', 'NOT_EVIDENCE'
     elif schema == DIAGNOSTIC:

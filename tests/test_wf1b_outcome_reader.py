@@ -15,6 +15,7 @@ sys.path[:0] = [str(HERE.parent / 'src'), str(HERE.parent / 'src' / 'methods'), 
 from _common.game_profiles import get_profile                  # noqa: E402
 from evaluation import outcome_reader as R                     # noqa: E402
 from test_e6_beta_bernoulli import FILES, varied_row, write_varied_master   # noqa: E402
+from ledger_fixture import write_init_ledger                              # noqa: E402
 
 
 def _master(root: Path, game: str, extra_lines=(), corrupt=None) -> str:
@@ -32,9 +33,7 @@ def _master(root: Path, game: str, extra_lines=(), corrupt=None) -> str:
     raw += b''.join(extra_lines)
     path.write_bytes(raw)
     sha = hashlib.sha256(raw).hexdigest()
-    led = root / 'source_data' / FILES[1].format(g=game)
-    led.write_text('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
-                   f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first - 1},{p.holdout_first - p.first_draw}\n')
+    write_init_ledger(root / 'source_data' / FILES[1].format(g=game), p, sha)      # the updater's grammar (MHUP-A)
     ev = root / 'source_data' / FILES[2].format(g=game)
     rec = json.loads(ev.read_text())
     rec['master_sha256'] = sha
@@ -82,10 +81,17 @@ class Reading(unittest.TestCase):
                 rd.assert_not_called()
 
     def test_rows_after_the_last_target_and_holdout_rows_are_never_decoded(self):
-        """A planted line beyond 1576 (in an invented master) is never parsed; nor is an undecodable non-grid row."""
+        """A planted line beyond 1576 (in an invented master) is refused by the version-2 chain check before any
+        parse (MHUP-A, design 3.2 rule 2: version 1 has exactly its draw_count lines); an undecodable non-grid row
+        is parsed only when its draw is asked for."""
         p = get_profile('POWERBALL')
         planted = f'{p.holdout_first},2026-08-06,1,2,3,4,5,6,7,8\n'.encode() + b'\xff\xfe\n'
         sha = _master(self.root, 'POWERBALL', extra_lines=[planted], corrupt=p.first_draw + 10)
+        with mock.patch.object(R, '_number', side_effect=AssertionError('parsed')):
+            with self.assertRaises(R.OutcomeRefused):
+                R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,
+                                targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])
+        sha = _master(self.root, 'POWERBALL', corrupt=p.first_draw + 10)
         got = R.read_outcomes(repo_root=self.root, game_id='POWERBALL', master_sha256=sha,
                               targets=[p.first_draw + 9, p.first_draw + 11, p.holdout_first - 1])
         self.assertEqual(len(got), 3)

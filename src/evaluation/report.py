@@ -66,9 +66,9 @@ def frac(x) -> str | None:
     return None if x is None else str(Fraction(x))
 
 
-def roots() -> dict:
+def roots(kind: str = 'WF_BATCH') -> dict:
     project = Path(CR.PROJECT_ROOT)
-    return {'project': project, 'scores': project / 'results' / 'real' / 'development' / 'scores',
+    return {'project': project, 'scores': WF.roots(kind)['scores'],
             'reports': project / 'results' / 'method_rankings', 'search_log': WF.roots()['search_log']}
 
 
@@ -123,11 +123,14 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None,
     if first < p.first_draw:
         raise ReportRefused(f'first must be at least {p.first_draw} (S >= E(G), R3 17.3.6)')
     if last > p.holdout_first - 1:
-        raise ReportRefused(f'last must be at most {p.holdout_first - 1} in this phase (R3 17.3.6; MRT-14)')
+        raise ReportRefused(f'last must be at most {p.holdout_first - 1} for a development report (R3 17.3.6; MRT-14); '
+                            f'the Mode H batch is scored once by Method_Mode_H.py score (design 5.4)')
     try:
         plan = WF.load_plan(game_id, batch_id)
     except WF.BatchRefused as exc:
         raise ReportRefused(f'unknown or altered batch: {exc}') from None
+    if WF.kind_of(plan) != 'WF_BATCH':
+        raise ReportRefused('this tool reports development batches only; the Mode H batch is scored by Method_Mode_H.py')
     if first < plan['window_first'] - (1 if plan['window_first'] == p.first_draw + 1 else 0) or last > plan['window_last']:
         raise ReportRefused(f"the window [{first}, {last}] is outside the batch's window "
                             f"[{plan['window_first']}, {plan['window_last']}]")
@@ -173,10 +176,31 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None,
 
     # ---------------------------------------------------------------- step 6: the outcomes of valid grid targets only
     targets = sorted({k[2] for k, c in collected['cells'].items() if c['valid']})
-    outcomes = OR.read_outcomes(repo_root=roots()['project'], game_id=game_id,
-                                master_sha256=plan['master_sha256'], targets=targets) if targets else {}
+    outcomes = OR.read_outcomes(repo_root=roots()['project'], game_id=game_id, master_sha256=plan['master_sha256'],
+                                targets=targets, ledger_version=plan['ledger_version']) if targets else {}
 
     # ---------------------------------------------------------------- step 7: the ledgers (create-only)
+    scores, ranks, per_track, per_variant = score_cells(game_id, members, collected, outcomes)
+    CP.create_only(folder / 'score_ledger.jsonl', b''.join(canonical(s) for s in scores))   # each ends with \n
+    CP.create_only(folder / 'rank_ledger.jsonl', b''.join(canonical(r) for r in ranks))
+    progress(f'ledgers written: {len(scores)} score records, {len(ranks)} rank records')
+
+    # ---------------------------------------------------------------- step 8: measures (N1 optional)
+    results, var_results, n1 = measures_stage(game_id, per_track, per_variant, families, n1_runner, progress)
+    progress('measures done; writing the report')
+    return {'plan': plan, 'families': families, 'collected': collected, 'per_track': per_track,
+            'per_variant': per_variant, 'results': results, 'var_results': var_results, 'n1': n1,
+            'attempt_id': attempt_id, 'search_log_row': row, 'scoring_plan': scoring_plan_record,
+            'scoring_plan_digest': sp_digest, 'scores_folder': folder, 'declared_tests': tests,
+            'grid_digest': grid_digest, 'first': first, 'last': last, 'game_id': game_id}
+
+
+# ---------------------------------------------------------------- shared by the development report and the Mode H scorer
+
+def score_cells(game_id: str, members, collected: dict, outcomes: dict, exposure=None):
+    """Step 7's arithmetic: (score records, rank records, per_track, per_variant) for every valid cell, from the
+    collected forecasts and the outcomes of their targets. `exposure(target)` may return a flag for a target (the
+    Mode H exposure flag, design 5.4; None for development reports), carried in the score records."""
     scores, ranks = [], []
     per_track, per_variant = {}, {}
     for mem in members:
@@ -195,6 +219,9 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None,
                        'freeze_receipt_digest': c['freeze_receipt_digest'], 'drawn_main': list(dmain),
                        **({'drawn_powerball': extra} if game_id == 'POWERBALL' else {}),
                        **mr, 'evaluator_version': EVALUATOR_VERSION}
+                flag = exposure(t) if exposure is not None else None
+                if flag is not None:
+                    rec['exposure_flag'] = flag
                 validate_score_record(rec)
                 scores.append(rec)
                 rows.append({'draw_number': t, **mr})
@@ -229,11 +256,64 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None,
              s['freeze_receipt_digest'], s['evaluator_version']) for s in scores]
     if len(set(keys)) != len(keys):                                  # E2R-R45A create-only key, within the ledger
         raise RuntimeError('duplicate score-record key inside one ledger')
-    CP.create_only(folder / 'score_ledger.jsonl', b''.join(canonical(s) for s in scores))   # each ends with \n
-    CP.create_only(folder / 'rank_ledger.jsonl', b''.join(canonical(r) for r in ranks))
-    progress(f'ledgers written: {len(scores)} score records, {len(ranks)} rank records')
+    return scores, ranks, per_track, per_variant
 
-    # ---------------------------------------------------------------- step 8: measures (N1 optional)
+
+def rebuild_from_ledgers(game_id: str, members, collected: dict, scores, ranks) -> tuple[dict, dict]:
+    """(per_track, per_variant) from accepted score and rank records and the collected forecasts, reading no outcome:
+    what the Mode H scorer uses after SCORE_COMPLETE (design 5.2), and what makes the resumed and the uninterrupted
+    paths give the same report. The records' match fields and MR5 fields are taken as written."""
+    by_score = {(r['track_id'], r['draw_number']): r for r in scores}
+    by_rank = {(r['method_id'], r['variant_id'], r['draw_number']): r for r in ranks}
+    per_track, per_variant = {}, {}
+    rank_fields = tuple(k for k in (ranks[0] if ranks else {}) if k not in (
+        'schema', 'game_id', 'draw_number', 'method_id', 'variant_id', 'mode', 'method_revision',
+        'forecast_content_digest', 'freeze_receipt_digest', 'evaluator_version'))
+    for mem in members:
+        key = (mem['method_id'], mem['variant_id'])
+        for ro in COL.READOUTS:
+            valid, invalid = COL.track_cells(collected, *key, ro)
+            tid = track_id(game_id, *key, ro, 'WF')
+            rows, entries = [], {}
+            for t in valid:
+                rec = by_score.get((tid, t))
+                if rec is None:
+                    raise RuntimeError(f'no accepted score record for {tid} draw {t}')
+                mr = {k: rec[k] for k in rec if k in ('main_matches', 'powerball_match', 'supplementary_matches', 'division')}
+                rows.append({'draw_number': t, **mr})
+                entries[t] = collected['cells'][(*key, t)]['entries'][ro]
+            per_track[(*key, ro)] = {'targets': rows, 'status': COL.track_status(valid, invalid),
+                                     'invalid': dict(invalid), 'track_id': tid, 'entries': entries}
+        rrows, rinvalid, rgroups = [], Counter(), {}
+        for t in collected['grids'][key]:
+            c = collected['cells'][(*key, t)]
+            groups = c.get('ranked_groups') or {}
+            if not c['valid']:
+                rinvalid[c['reason']] += 1
+                continue
+            if groups.get('MAIN') is None or (game_id == 'POWERBALL' and groups.get('POWERBALL') is None):
+                rinvalid['RANKING_UNAVAILABLE'] += 1
+                continue
+            rec = by_rank.get((*key, t))
+            if rec is None:
+                raise RuntimeError(f'no accepted rank record for {key} draw {t}')
+            rrows.append({'draw_number': t, **{k: _unfrac(rec[k]) for k in rank_fields}})
+            rgroups[t] = groups
+        per_variant[key] = {'targets': rrows, 'status': COL.track_status(rrows, rinvalid), 'invalid': dict(rinvalid),
+                            'groups': rgroups}
+    return per_track, per_variant
+
+
+def _unfrac(text):
+    """The inverse of `frac` for the rank records' exact rationals: 'a/b' or 'a' -> Fraction (an int stays int)."""
+    if text is None:
+        return None
+    f = Fraction(text)
+    return f.numerator if f.denominator == 1 else f
+
+
+def measures_stage(game_id: str, per_track: dict, per_variant: dict, families, n1_runner, progress):
+    """Step 8: the measures of every track and variant, with N1 when a runner is given."""
     if n1_runner is not None:
         progress('N1: simulating the fair-draw histories and the Monte Carlo figures')
     n1 = n1_runner(game_id, per_track, per_variant, families) if n1_runner is not None else None
@@ -254,9 +334,4 @@ def run_report(game_id: str, batch_id: str, first: int, last: int, *, echo=None,
         if n1 is not None:
             kw['n1'] = n1['mr5'].get(key)
         var_results[key] = MS.mr5(game_id, vr['targets'], vr['status'], **kw)
-    progress('measures done; writing the report')
-    return {'plan': plan, 'families': families, 'collected': collected, 'per_track': per_track,
-            'per_variant': per_variant, 'results': results, 'var_results': var_results, 'n1': n1,
-            'attempt_id': attempt_id, 'search_log_row': row, 'scoring_plan': scoring_plan_record,
-            'scoring_plan_digest': sp_digest, 'scores_folder': folder, 'declared_tests': tests,
-            'grid_digest': grid_digest, 'first': first, 'last': last, 'game_id': game_id}
+    return results, var_results, n1

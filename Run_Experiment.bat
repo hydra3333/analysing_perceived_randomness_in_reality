@@ -28,8 +28,11 @@ goto :verify_python
 for %%I in ("%VIRTUAL_ENV%\.") do set "ACTIVE_ENV=%%~fI"
 if /I not "%ACTIVE_ENV%"=="%EXPECTED_ENV%" goto :wrong_venv
 :verify_python
+set "PYTHONDONTWRITEBYTECODE=1"
 "%PY%" -c "import sys,pathlib;sys.exit(0 if pathlib.Path(sys.prefix).resolve()==pathlib.Path(sys.argv[1]).resolve() else 12)" "%EXPECTED_ENV%"
 if errorlevel 1 goto :prefix_failed
+set "PYTHONPYCACHEPREFIX=%ROOT%transitory_data\no_pycache_ever"
+if exist "%PYTHONPYCACHEPREFIX%" goto :pycache_present
 rem Pin numerical library threads before the experiment imports NumPy / SciPy.
 set "OMP_NUM_THREADS=1"
 set "OPENBLAS_NUM_THREADS=1"
@@ -38,7 +41,7 @@ set "NUMEXPR_NUM_THREADS=1"
 pushd "%ROOT%src\methods"
 if errorlevel 1 goto :pushd_failed
 rem Interpreter option -u keeps console progress unbuffered when piped.
-"%PY%" -u %*
+"%PY%" -B -u %*
 set "RC=%ERRORLEVEL%"
 popd
 goto :finish
@@ -69,6 +72,10 @@ goto :finish
 :prefix_failed
 echo [RUN-EXPERIMENT] ERROR: Project Python does not report the expected sys.prefix. >&2
 set "RC=8"
+goto :finish
+:pycache_present
+echo [RUN-EXPERIMENT] ERROR: transitory_data\no_pycache_ever exists; refusing to run. >&2
+set "RC=10"
 goto :finish
 :pushd_failed
 echo [RUN-EXPERIMENT] ERROR: Could not enter src\methods. >&2

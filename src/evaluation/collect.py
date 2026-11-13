@@ -66,7 +66,7 @@ def collect(plan: dict, first: int, last: int) -> dict:
     reason the cell is invalid. Returns {'cells': {...}, 'grids': {...}}; reads no outcome."""
     attempts, _bad = WF._attempts(plan)
     reg = WF._registry()
-    runs = WF.roots()['runs']
+    runs = WF.roots(WF.kind_of(plan))['runs']               # the batch kind's run root (MHUP-A)
     cells, grids = {}, {}
     for mem in plan['cohort']:
         key = (mem['method_id'], mem['variant_id'])

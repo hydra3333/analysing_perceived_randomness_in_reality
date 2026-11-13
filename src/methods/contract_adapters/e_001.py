@@ -4,15 +4,16 @@ Reviewer's E2RC-C04, option (a): E_1's reviewed scientific functions are not tou
 calls E_1's own multi-game function, E_001.multigame_e1.forecast, unchanged, and turns its counts
 into a contract MethodOutput. Then verify() recomputes E_1's own result and requires the contract
 record to equal it label for label (scores, ranking, TOP, WORST) before anything is published, so a
-published record can never differ from what E_1 itself computes. Since E_1 revision 2 (owner decision
-WF1-13), E_1's function accepts SYNTHETIC_CONTRACT_TEST and REAL_DEVELOPMENT data, with revision 1's counting.
+published record can never differ from what E_1 itself computes. Since E_1 revision 3 (MHUP-R, design v0.1r5
+section 2), E_1's function takes the view data kind (SYNTHETIC_CONTRACT_TEST or REAL_HISTORICAL_DEVELOPMENT) and
+never a run mode, with revision 1's counting, ranking and tie order.
 The wrapper reads only the DrawView and the MethodTask it is given.
 """
 from __future__ import annotations
 
 from E_001.multigame_e1 import forecast as e1_forecast
 from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
-from _common.contract_task import permitted_view_digest
+from _common.contract_task import permitted_view_digest, view_data_kind
 from _common.game_profiles import get_profile
 
 METHOD_ID = 'E_1'
@@ -24,7 +25,7 @@ def _e1_result(task, view) -> dict:
     rows = [{'draw': r['draw'], 'MAIN': r['main'], **({'POWERBALL': [r['powerball']]} if 'powerball' in r else {})}
             for r in view.simple_rows()]
     return e1_forecast(get_profile(task.game_id), rows, permitted_view_digest(view, task.run_mode),
-                       task.target_draw_number, data_kind=task.run_mode)
+                       task.target_draw_number, data_kind=view_data_kind(task.run_mode))
 
 
 def compute(task, view) -> MethodOutput:

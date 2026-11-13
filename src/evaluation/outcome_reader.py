@@ -5,15 +5,18 @@ called only by the report tool, and only after the search-log row and the scorin
 
 Checks first, before any row is decoded (the same checks as the installed reader, `game_draws_reader`, whose file
 helper is reused without editing the reader):
-- every requested target is a whole number in [E(G) + 1, holdout_first - 1] (the development prefix); otherwise
-  the whole request is refused and nothing is read;
-- the ledger is the single version-1 INIT line for this game, binding the plan's master SHA-256;
-- the complete master's SHA-256 equals that pin; the INIT verification record matches it;
+- every requested target is a whole number in [E(G) + 1, holdout_first - 1] (the development prefix), or a
+  holdout draw the freeze-before-outcome rule releases to the Mode H scorer (MHUP-A, design 5.3:
+  `outcome_release_allowed`); otherwise the whole request is refused and nothing is read;
+- the ledger passes the version-2 chain and prefix rules (MHUP-A, _common.master_versions), and the plan's pin
+  (ledger_version, master_sha256) is one of its rows; the INIT verification record matches row 1;
 - every file is a trusted single-link regular file.
 
 Then it reads the master line by line, from the first draw, and stops after the last requested target. Each line's
 draw number is taken from its RAW FIRST FIELD only; a line is decoded only when its number is a requested target.
-No line at or after the holdout's first draw is ever decoded (it stops before it, and refuses targets there).
+No line at or after the holdout's first draw is ever decoded unless the freeze-before-outcome rule released that
+draw (then only the released, requested holdout draws are decoded); a draw after the holdout is never decoded in
+this package (the weekly freeze-line rule arrives with MHUP-B).
 
 Outcomes are returned only for the requested targets. For Oz Lotto, the three supplementary numbers are returned
 only so that the caller can compute `supplementary_matches` and the division (R2 2.5; R3 17.8); the caller never
@@ -30,57 +33,76 @@ from pathlib import Path
 
 from _common.game_draws_reader import _trusted_file_bytes, header_for
 from _common.game_profiles import get_profile
+import _common.master_versions as MV
 
 _DIGIT = re.compile(rb'(0|[1-9][0-9]*)\Z', re.ASCII)
 _SHA = re.compile(r'[a-f0-9]{64}\Z', re.ASCII)
-_SOURCE = 'LOTTERYWEST_GOV_RESULTS_SEARCH'
 
 
 class OutcomeRefused(Exception):
     """The request or the source failed a check; nothing was returned."""
 
 
-def _check_targets(game_id: str, targets) -> list[int]:
+def outcome_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
+    """The freeze-before-outcome rule (design 5.3; an always-review subject). Orchestration-only, fixed evidence paths
+    under the project root, no caller-chosen inputs beyond the root the report already fixes (E2RC2-B01, B02).
+    Decides whether the outcome of `target` may be served to the Mode H scorer; says nothing about its existence.
+    For a holdout draw: only when the game's one Mode H batch has its BATCH_COMPLETE and SCORING_STARTED markers,
+    SCORING_STARTED's roster digest equals the exact roster of the plan (every planned pair with its DONE ticket, by
+    identity, computed here from the records), the target is one of the plan's, and SCORE_COMPLETE does not yet
+    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout: never in this package (the weekly
+    freeze-line rule is MHUP-B's). Anything invalid or absent refuses (False)."""
+    import _common.owner_records as OR
+    p = get_profile(game_id)
+    if type(target) is not int or target > p.holdout_last or target < p.holdout_first:
+        return False
+    try:
+        rec = OR.batch_id_record(repo_root, game_id)
+        if rec is None:
+            return False
+        plan = OR.mode_h_plan(repo_root, game_id, rec['batch_id'])
+        if target not in plan['targets']:
+            return False
+        present = OR.lifecycle_markers_present(repo_root, game_id, rec['batch_id'])
+        if 'BATCH_COMPLETE' not in present or 'SCORING_STARTED' not in present or 'SCORE_COMPLETE' in present:
+            return False
+        started = OR.marker(repo_root, game_id, rec['batch_id'], 'SCORING_STARTED')
+        return started['roster_digest'] == OR.roster_digest(repo_root, game_id, plan)
+    except OR.RecordRefused:
+        return False
+
+
+def _check_targets(game_id: str, targets, repo_root: Path | None = None) -> list[int]:
     p = get_profile(game_id)
     out = sorted(set(targets))
     if not out:
         raise OutcomeRefused('no target requested')
     for t in out:
-        if type(t) is not int or not (p.first_draw + 1 <= t <= p.holdout_first - 1):
-            raise OutcomeRefused(f'target {t!r} is outside the development prefix '
-                                 f'[{p.first_draw + 1}, {p.holdout_first - 1}]')
+        if type(t) is not int or t < p.first_draw + 1 or t > p.holdout_last:
+            raise OutcomeRefused(f'target {t!r} is outside [{p.first_draw + 1}, {p.holdout_last}]')
+        if t >= p.holdout_first and (repo_root is None or not outcome_release_allowed(repo_root, game_id, t)):
+            raise OutcomeRefused(f'target {t} is a holdout draw not released by the freeze-before-outcome rule '
+                                 f'(design 5.3)')
     return out
 
 
-def _verify_source(repo_root: Path, game_id: str, master_sha256: str) -> bytes:
-    p = get_profile(game_id)
+def _verify_source(repo_root: Path, game_id: str, master_sha256: str, ledger_version: int = 1) -> bytes:
+    """MHUP-A (design 3.2 rule 5): the same chain and pin rules as the reader. The pinned version's bytes are an
+    exact prefix of the current master, so the outcome of a draw at or below last_draw(v) is read from that prefix.
+    Until the Mode H scorer's freeze-before-outcome rule (design 5.3) is installed, every target at or above the
+    holdout's first draw is still refused by _check_targets, whatever the version."""
     if type(master_sha256) is not str or not _SHA.fullmatch(master_sha256):
         raise OutcomeRefused('invalid master pin')
-    folder = repo_root / 'source_data'
-    name = f'{game_id}_results_master.csv'
+    ledger_path, master_path, evidence_path = MV.source_paths(repo_root, game_id)
     try:
-        ledger = list(csv.DictReader(io.StringIO(
-            _trusted_file_bytes(folder / f'{game_id}_results_master_ledger.csv').decode('ascii'))))
-        if (len(ledger) != 1 or ledger[0].get('version') != '1' or ledger[0].get('action') != 'INIT' or
-                ledger[0].get('master_sha256') != master_sha256 or
-                ledger[0].get('first_draw') != str(p.first_draw) or
-                ledger[0].get('last_draw') != str(p.holdout_first - 1) or
-                ledger[0].get('draw_count') != str(p.holdout_first - p.first_draw)):
-            raise OutcomeRefused('the ledger does not bind the pinned version-1 development master')
-        raw = _trusted_file_bytes(folder / name)
-        if hashlib.sha256(raw).hexdigest() != master_sha256:
-            raise OutcomeRefused('the complete master bytes differ from the pinned SHA-256')
-        ev = json.loads(_trusted_file_bytes(folder / f'{game_id}_results_master_init_verification.json'))
+        ledger_raw = _trusted_file_bytes(ledger_path)
+        raw = _trusted_file_bytes(master_path)
+        rows = MV.check_source(ledger_raw, raw, _trusted_file_bytes(evidence_path), game_id)
+        row = MV.resolve_pin(rows, ledger_version, master_sha256)
     except (ValueError, UnicodeDecodeError) as exc:
-        if isinstance(exc, OutcomeRefused):
-            raise
-        raise OutcomeRefused(f'source check failed: {exc}') from None
-    if (type(ev) is not dict or ev.get('master_sha256') != master_sha256 or ev.get('master_file') != name or
-            ev.get('game') != game_id or ev.get('first_draw') != p.first_draw or
-            ev.get('last_draw') != p.holdout_first - 1 or ev.get('draw_count') != p.holdout_first - p.first_draw or
-            ev.get('source') != _SOURCE):
-        raise OutcomeRefused('the INIT verification record does not match the pinned master')
-    return raw
+        raise OutcomeRefused(f'the ledger does not bind the pinned master: {exc}') from None
+    # Serve only the pinned version's own rows: the prefix that hashes to the pin.
+    return MV.prefix_bytes(raw, row)
 
 
 def _number(text: str, high: int, what: str) -> int:
@@ -92,17 +114,17 @@ def _number(text: str, high: int, what: str) -> int:
     return v
 
 
-def read_outcomes(*, repo_root: Path, game_id: str, master_sha256: str, targets) -> dict:
+def read_outcomes(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1) -> dict:
     """{target: (drawn_main, drawn_powerball)} for Powerball, or {target: (drawn_main, drawn_supplementaries)} for
     Oz Lotto, both as ascending tuples, for exactly the requested targets. Refuses (OutcomeRefused) before
-    decoding any row if a target or a source check fails."""
+    decoding any row if a target or a source check fails. `ledger_version` is the pinned version (MHUP-A)."""
     if not isinstance(repo_root, Path):
         raise OutcomeRefused('invalid repository root')
     p = get_profile(game_id)
-    wanted = _check_targets(game_id, targets)
-    raw = _verify_source(repo_root, game_id, master_sha256)
+    wanted = _check_targets(game_id, targets, repo_root)
+    raw = _verify_source(repo_root, game_id, master_sha256, ledger_version)
     want = set(wanted)
-    last = wanted[-1]                               # < holdout_first, by _check_targets
+    last = wanted[-1]                               # <= holdout_last; in the holdout only if released (5.3)
     high = 35 if game_id == 'POWERBALL' else 47
     width = len(header_for(game_id))
     stream = io.BytesIO(raw)
@@ -117,8 +139,8 @@ def read_outcomes(*, repo_root: Path, game_id: str, master_sha256: str, targets)
         number = p.first_draw + i
         if number not in want:
             continue                                 # never decoded
-        if number >= p.holdout_first:                # unreachable by construction; kept as a second guard
-            raise OutcomeRefused('holdout row reached')
+        if number >= p.holdout_first and not outcome_release_allowed(repo_root, game_id, number):
+            raise OutcomeRefused('holdout row reached without release')     # a second guard; unreachable by construction
         try:
             row = next(csv.reader([line.decode('ascii', errors='strict')], strict=True))
         except (UnicodeDecodeError, csv.Error, StopIteration):

@@ -390,14 +390,16 @@ class NotRealCapable(Base):
         self.assertEqual(self.run_batch(plan), 0)
         self.assertEqual(len(self.run_folders()), 9)
 
-    def test_e1_revision_2_admits_real_development(self):
-        """E_1 revision 1's function refused real data; revision 2's admits it and still refuses a holdout run."""
+    def test_e1_revision_3_takes_view_kinds(self):
+        """E_1 revision 3 (MHUP-A) takes the view data kind, never a run mode: the real view kind is admitted, a run
+        mode name is refused (the adapter maps every real mode to the one real view kind)."""
         from E_001.multigame_e1 import forecast
         rows = [{'draw': POWERBALL.first_draw, 'MAIN': [1, 2, 3, 4, 5, 6, 7], 'POWERBALL': [1]}]
         forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='SYNTHETIC_CONTRACT_TEST')
-        forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_DEVELOPMENT')
-        with self.assertRaises(ValueError):
-            forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_HOLDOUT')
+        forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind='REAL_HISTORICAL_DEVELOPMENT')
+        for mode in ('REAL_DEVELOPMENT', 'REAL_HOLDOUT'):
+            with self.assertRaises(ValueError):
+                forecast(POWERBALL, rows, '0' * 64, POWERBALL.first_draw + 1, data_kind=mode)
 
 
 class Classification(unittest.TestCase):
@@ -437,7 +439,8 @@ class StaticAndInstalled(unittest.TestCase):
             mods = {(n.module or '') for n in ast.walk(tree) if isinstance(n, ast.ImportFrom)}
             self.assertFalse(any('evaluation' in m for m in mods), rel)
         wf = (ROOT / 'src/methods/_common/walk_forward.py').read_text('utf-8')
-        self.assertEqual(wf.count('_trusted_file_bytes('), 1)            # the ledger line only
+        self.assertEqual(wf.count('_trusted_file_bytes('), 0)            # MHUP-A: the ledger pin is master_versions'
+        self.assertEqual(wf.count('MV.current_pin('), 1)                  # one read of the ledger and master bytes
         self.assertNotIn('source_data', (ROOT / 'src/methods/Method_Walk_Forward.py').read_text('utf-8'))
 
 

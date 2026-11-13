@@ -1,8 +1,8 @@
 """WF-1A: the walk-forward driver's logic (releases and WF-1 design v0.1r1 section 5; owner-ratified 31 October 2026).
 
 Orchestration only: it imports no method code (the caller passes the runner's ADAPTERS) and no evaluation code,
-and it reads no draw. It reads the installed registry, the method folders' development flags, and one line of
-the game's master ledger (the version-1 INIT line, for the master pin). Every run is one ordinary standalone
+and it reads no draw. It reads the installed registry, the method folders' development flags, and the game's master
+ledger (its current last row is the master pin, under MHUP-A's version-2 rules). Every run is one ordinary standalone
 contract run through the unchanged `run_contract_method`, so every refusal of the runner, the dispatch gate and
 the reader applies unchanged. The STOP rule (design 5.3, EX_078 WF1-R3-B01) classifies each run by its terminal
 reason and fails closed. Nothing here deletes, moves, rewrites, retries automatically, kills or recovers anything.
@@ -12,6 +12,16 @@ choose (a test harness patches it in-process, as the existing tests do):
   <project>/results/real/development/wf_batches/<GAME>/<batch_id>/   plan.json, segment_*.json
   <project>/results/real/development/contract_runs/                   the runs (the runner's real run root)
   <project>/results/audit/SEARCH_LOG.csv                              one WF_BATCH row per plan (R3 7.4)
+
+MHUP-A adds the Mode H batch kind (design v0.1r5 sections 5.1, 5.2): `make_mode_h_plan` freezes the game's one
+plan from the study manifest, at the admitted master version, under the opening record, with the closure and
+environment re-checked; its runs are REAL_HOLDOUT, bound to the plan (3.4), each under an OPEN ticket before and
+a DONE ticket after (TICKET_V1 lines in the batch's attempts ledger, the lines the dispatch gate reads); a resume
+marks every open ticket of a run that never completed FAILED_TO_START before any new ticket; when every planned
+pair is DONE the driver writes the BATCH_COMPLETE marker. Its roots:
+  <project>/results/real/holdout/wf_batches/<GAME>/<batch_id>/       plan.json, attempts.jsonl, the markers
+  <project>/results/real/holdout/contract_runs/                       the runs
+  <project>/results/real/holdout/<GAME>/MODE_H_BATCH_ID.json          the game's one plan (create-only)
 """
 from __future__ import annotations
 
@@ -37,9 +47,12 @@ from _common.contract_records import canonical, record_digest, sha256_hex
 from _common.contract_registry import InstalledRegistry
 from _common.game_draws_reader import _trusted_file_bytes
 from _common.game_profiles import get_profile
+from _common import owner_records as OR
 
-DRIVER_VERSION = 'WF1A_DRIVER_V1'
+DRIVER_VERSION = 'WF1A_DRIVER_V2'            # MHUP-A: the Mode H batch kind
 PLAN_SCHEMA = 'WF_BATCH_PLAN_V1'
+MODE_H_PLAN_SCHEMA = OR.MODE_H_PLAN_SCHEMA
+KINDS = ('WF_BATCH', 'MODE_H_BATCH')
 SEGMENT_SCHEMA = 'WF_BATCH_SEGMENT_V1'
 BATCH_ID = re.compile(r'wf-[0-9a-f]{32}\Z', re.ASCII)
 VIEW = 'UNORDERED_SET'
@@ -63,11 +76,22 @@ class BatchRefused(Exception):
     """Refused before any run (and, at plan time, before anything is written)."""
 
 
-def roots() -> dict:
+def roots(kind: str = 'WF_BATCH') -> dict:
+    """The fixed roots of one batch kind (kind-aware since MHUP-A, design 5.1)."""
     project = Path(CR.PROJECT_ROOT)
+    log = project / 'results' / 'audit' / 'SEARCH_LOG.csv'
+    if kind == 'MODE_H_BATCH':
+        return {'project': project, 'batches': project / 'results' / 'real' / 'holdout' / 'wf_batches',
+                'runs': OR.mode_h_runs_root(project), 'scores': OR.mode_h_scores_root(project), 'search_log': log}
+    if kind != 'WF_BATCH':
+        raise ValueError(f'unknown batch kind {kind!r}')
     dev = project / 'results' / 'real' / 'development'
-    return {'project': project, 'batches': dev / 'wf_batches', 'runs': dev / 'contract_runs',
-            'search_log': project / 'results' / 'audit' / 'SEARCH_LOG.csv'}
+    return {'project': project, 'batches': dev / 'wf_batches', 'runs': dev / 'contract_runs', 'scores': dev / 'scores',
+            'search_log': log}
+
+
+def kind_of(plan: Mapping) -> str:
+    return 'MODE_H_BATCH' if plan.get('schema') == MODE_H_PLAN_SCHEMA else 'WF_BATCH'
 
 
 def utc_now() -> str:
@@ -95,18 +119,15 @@ def _marker_present() -> bool:
     return m.exists() or m.is_symlink()
 
 
-def ledger_pin(game_id: str) -> str:
-    """The master SHA-256 from the game's version-1 INIT ledger line (the same shape the reader requires).
-    Reads only the ledger file, through the reader's trusted-file helper."""
-    p = get_profile(game_id)
-    raw = _trusted_file_bytes(roots()['project'] / 'source_data' / f'{game_id}_results_master_ledger.csv')
-    rows = list(csv.DictReader(io.StringIO(raw.decode('ascii'))))
-    if (len(rows) != 1 or rows[0].get('version') != '1' or rows[0].get('action') != 'INIT' or
-            rows[0].get('first_draw') != str(p.first_draw) or rows[0].get('last_draw') != str(p.holdout_first - 1) or
-            rows[0].get('draw_count') != str(p.holdout_first - p.first_draw) or
-            not V.SHA256.fullmatch(rows[0].get('master_sha256') or '')):
-        raise BatchRefused(f'{game_id}: the master ledger is not the version-1 INIT line the reader requires')
-    return rows[0]['master_sha256']
+def ledger_pin(game_id: str) -> tuple[int, str]:
+    """(version, master SHA-256) of the game's current last ledger row, after the version-2 chain and prefix checks
+    (MHUP-A, design 3.2): the pin every run of a new batch carries. Reads the ledger and the master's bytes through the
+    reader's trusted-file helper; no draw is decoded."""
+    from _common import master_versions as MV
+    try:
+        return MV.current_pin(roots()['project'], game_id)
+    except MV.LedgerRefused as exc:
+        raise BatchRefused(f'{game_id}: the master ledger does not pass the version-2 rules: {exc}') from None
 
 
 def _registry() -> InstalledRegistry:
@@ -118,9 +139,11 @@ def _flag(method_id: str) -> Path:
     return Path(CD.METHODS_ROOT) / CD.method_folder(method_id) / CD.FLAG_NAME
 
 
-def cohort(game_id: str, adapters: Mapping) -> list[dict]:
+def cohort(game_id: str, adapters: Mapping | None) -> list[dict]:
     """Every (method, variant) with an active SUPPORTED entry for the game, no development flag, and an adapter,
     in method-number then variant order (design 5.2, O01). A SUPPORTED entry whose flag is present is refused.
+    `adapters=None` (the study manifest, evaluator side) lists every released variant without the adapter check; the
+    Mode H plan then requires its own cohort, with adapters, to equal the manifest's.
     Returns (members, excluded): released variants that cannot run on real data (NOT_REAL_CAPABLE) are listed with
     their reason, not run."""
     reg = _registry()
@@ -134,7 +157,7 @@ def cohort(game_id: str, adapters: Mapping) -> list[dict]:
         if _flag(m).exists():
             inconsistent.append(f'{m} {v}')
             continue
-        if m not in adapters:
+        if adapters is not None and m not in adapters:
             continue
         if m in NOT_REAL_CAPABLE:
             excluded.append({'method_id': m, 'variant_id': v, 'reason': NOT_REAL_CAPABLE[m]})
@@ -186,13 +209,13 @@ def make_plan(game_id: str, first: int, last: int, adapters: Mapping) -> dict:
     members, excluded = cohort(game_id, adapters)
     if not members:
         raise BatchRefused('the cohort is empty: no released variant with a runner adapter')
-    pin = ledger_pin(game_id)
+    version, pin = ledger_pin(game_id)
     batch_id = 'wf-' + uuid.uuid4().hex
     plan = {'schema': PLAN_SCHEMA, 'batch_id': batch_id, 'game_id': game_id, 'profile_version': p.version,
             'window_first': first, 'window_last': last, 'created_utc': utc_now(), 'driver_version': DRIVER_VERSION,
             'run_mode': 'REAL_DEVELOPMENT', 'product_kind': V.producible('REAL_DEVELOPMENT', V.FORECAST)[0],
             'observation_view': VIEW, 'include_dates': False, 'master_file': f'{game_id}_results_master.csv',
-            'ledger_version': 1, 'master_sha256': pin, 'cohort': members, 'not_in_cohort': excluded,
+            'ledger_version': version, 'master_sha256': pin, 'cohort': members, 'not_in_cohort': excluded,
             'cohort_digest': sha256_hex(canonical({'cohort': members}))}
     folder = roots()['batches'] / game_id / batch_id
     folder.mkdir(parents=True, exist_ok=False)
@@ -205,35 +228,177 @@ def make_plan(game_id: str, first: int, last: int, adapters: Mapping) -> dict:
     return plan
 
 
-def load_plan(game_id: str, batch_id: str) -> dict:
-    if not isinstance(batch_id, str) or not BATCH_ID.fullmatch(batch_id):
-        raise BatchRefused('invalid batch ID')
-    get_profile(game_id)
-    path = roots()['batches'] / game_id / batch_id / 'plan.json'
-    if not path.is_file() or path.is_symlink():
-        raise BatchRefused(f'no plan for batch {batch_id} in {game_id}')
-    plan = json.loads(path.read_bytes().decode('ascii'))
-    if (plan.get('schema') != PLAN_SCHEMA or plan.get('batch_id') != batch_id or plan.get('game_id') != game_id or
-            canonical(plan) != path.read_bytes() or
-            plan.get('cohort_digest') != sha256_hex(canonical({'cohort': plan.get('cohort')}))):
-        raise BatchRefused('the plan file is not a valid, unaltered WF_BATCH_PLAN_V1')
-    if record_digest(plan) not in _logged_plan_digests(batch_id):
-        raise BatchRefused('the plan does not match its WF_BATCH search-log row (altered after it was made?)')
+# ---------------------------------------------------------------- the Mode H batch kind (MHUP-A, design 4.1, 5.1, 5.2)
+
+def _study(game_id: str) -> dict:
+    """The opened study a Mode H step stands on: the opening record (its manifest present with the digest it names),
+    the study manifest, the advance record if any, and the verified ledger rows. Reads no draw."""
+    from _common import master_versions as MV
+    root = roots('MODE_H_BATCH')['project']
+    try:
+        opening = OR.opening_record(root, game_id)
+        if opening is None:
+            raise BatchRefused('the holdout is not opened: no opening record')
+        manifest = OR.study_manifest(root, game_id)
+        if manifest is None:
+            raise BatchRefused('no study manifest')
+        if manifest['freeze_version'] != opening['freeze_version'] or \
+                manifest['freeze_master_sha256'] != opening['freeze_master_sha256']:
+            raise BatchRefused('the study manifest and the opening record disagree on the frozen master version')
+        advance = OR.advance_record(root, game_id)
+        _raw, rows, _ev = MV.load_verified_source(root, game_id)
+        if (rows[opening['freeze_version'] - 1].master_sha256 != opening['freeze_master_sha256']
+                if opening['freeze_version'] <= len(rows) else True):
+            raise BatchRefused('the ledger does not hold the frozen version the opening record names')
+        admitted = OR.admitted_version(opening, advance, rows)
+    except OR.RecordRefused as exc:
+        raise BatchRefused(f'owner record refused: {exc}') from None
+    except MV.LedgerRefused as exc:
+        raise BatchRefused(f'the master ledger does not pass the version-2 rules: {exc}') from None
+    return {'root': root, 'opening': opening, 'manifest': manifest, 'advance': advance, 'rows': rows,
+            'admitted': admitted}
+
+
+def _check_frozen(game_id: str, study: Mapping) -> None:
+    """The closure and the environment equal the manifest's (4.1), and the ledger's last row is the admitted version
+    with every holdout draw in it (the complete first update; an advance record may move the admitted version)."""
+    from _common import closure as CL
+    p = get_profile(game_id)
+    try:
+        CL.check(study['root'], study['manifest'])
+    except CL.ClosureRefused as exc:
+        raise BatchRefused(f'the frozen closure or environment differs: {exc}') from None
+    last = study['rows'][-1]
+    if last.version != study['admitted']:
+        raise BatchRefused(f'the ledger\'s last row is version {last.version}; the admitted version is '
+                           f'{study["admitted"]} (rows beyond it need a study version advance, design 4.1)')
+    if last.last_draw < p.holdout_last:
+        raise BatchRefused(f'the admitted version ends at draw {last.last_draw}, before the holdout\'s last draw '
+                           f'{p.holdout_last}: the first update did not bring in every holdout draw (4.1 admission (3))')
+
+
+def _admitted_pin(plan: Mapping) -> tuple[int, str]:
+    """The pin a Mode H run carries: the plan's frozen (version, master_sha256), or, when a study version advance
+    stands beside the plan, the advance's admitted version (the dispatch gate accepts either; the runner requires the
+    ledger's current last row)."""
+    advance = OR.advance_record(roots('MODE_H_BATCH')['project'], plan['game_id'])
+    if advance is None:
+        return plan['ledger_version'], plan['master_sha256']
+    row = advance['rows_beyond_admitted'][-1]
+    return row['version'], row['master_sha256']
+
+
+def mode_h_checks(plan: Mapping) -> None:
+    """Every Mode H run invocation (5.1): the study stands, the frozen closure and environment are unchanged, the
+    ledger's last row is the admitted version, the plan is the game's one plan and no lifecycle marker exists."""
+    game_id = plan['game_id']
+    study = _study(game_id)
+    _check_frozen(game_id, study)
+    if plan['study_manifest_sha256'] != study['opening']['study_manifest_sha256']:
+        raise BatchRefused('the plan does not name the opening record\'s study manifest')
+    if (plan['ledger_version'], plan['master_sha256']) != (study['opening']['freeze_version'] + 1,
+                                                           study['rows'][study['opening']['freeze_version']].master_sha256):
+        raise BatchRefused('the plan\'s frozen version is not the admitted version v_a')
+    markers = OR.lifecycle_markers_present(study['root'], game_id, plan['batch_id'])
+    if markers:
+        raise BatchRefused(f'the batch is closed: lifecycle marker(s) present: {", ".join(markers)}')
+
+
+def make_mode_h_plan(game_id: str, adapters: Mapping) -> dict:
+    """Design 5.1: the game's one Mode H plan, frozen from the study manifest at the admitted version, create-only,
+    with the batch-id record and one MODE_H_BATCH search-log row. Refuses a second plan."""
+    p = get_profile(game_id)
+    if _marker_present():
+        raise BatchRefused('UNRESOLVED_ORPHAN_MARKER: no experiment is permitted')
+    study = _study(game_id)
+    root, manifest = study['root'], study['manifest']
+    try:
+        if OR.batch_id_record(root, game_id) is not None:
+            raise BatchRefused('this game already has its one Mode H plan (the batch-id record exists); a second plan is '
+                               'not provided')
+    except OR.RecordRefused as exc:
+        raise BatchRefused(f'batch-id record refused: {exc}') from None
+    _check_frozen(game_id, study)
+    if study['advance'] is not None:
+        raise BatchRefused('a study version advance exists before the plan; the plan must be frozen at v_a')
+    members, excluded = cohort(game_id, adapters)
+    ids = lambda ms: sorted((m['method_id'], m['variant_id'], m['method_revision'], m['declaration_digest'],
+                             m['registry_entry_digest']) for m in ms)
+    if ids(members) != ids(manifest['cohort']):
+        raise BatchRefused('the released cohort differs from the study manifest\'s cohort')
+    members = [dict(m) for m in manifest['cohort']]                      # the manifest's cohort, no other choice
+    admitted = study['admitted']
+    pin = study['rows'][admitted - 1].master_sha256
+    batch_id = 'wf-' + uuid.uuid4().hex
+    targets = list(manifest['targets'])
+    plan = {'schema': MODE_H_PLAN_SCHEMA, 'batch_id': batch_id, 'game_id': game_id, 'profile_version': p.version,
+            'window_first': targets[0], 'window_last': targets[-1], 'targets': targets, 'created_utc': utc_now(),
+            'driver_version': DRIVER_VERSION, 'run_mode': 'REAL_HOLDOUT',
+            'product_kind': V.producible('REAL_HOLDOUT', V.FORECAST)[0], 'observation_view': VIEW,
+            'include_dates': False, 'master_file': f'{game_id}_results_master.csv', 'ledger_version': admitted,
+            'master_sha256': pin, 'study_manifest_sha256': study['opening']['study_manifest_sha256'],
+            'cohort': members, 'not_in_cohort': list(manifest['not_runnable']) + excluded,
+            'cohort_digest': sha256_hex(canonical({'cohort': members}))}
+    folder = roots('MODE_H_BATCH')['batches'] / game_id / batch_id
+    folder.mkdir(parents=True, exist_ok=False)
+    CP.create_only(folder / 'plan.json', canonical(plan))
+    OR.write_record(OR.batch_id_record_path(root, game_id),
+                    {'schema': OR.BATCH_ID_SCHEMA, 'game_id': game_id, 'batch_id': batch_id,
+                     'plan_digest': record_digest(plan), 'created_utc': plan['created_utc']})
+    _append_search_row({'row_type': 'MODE_H_BATCH', 'utc': plan['created_utc'], 'game_id': game_id, 'mode': 'WF',
+                        'window_first': targets[0], 'window_last': targets[-1], 'cohort_size': len(members),
+                        'cohort_digest': plan['cohort_digest'], 'batch_id': batch_id,
+                        'plan_digest': record_digest(plan), 'tool': 'Method_Walk_Forward.py',
+                        'tool_version': DRIVER_VERSION, 'tool_sha256': tool_sha256()})
     return plan
 
 
-def _logged_plan_digests(batch_id: str) -> set:
+def load_plan(game_id: str, batch_id: str) -> dict:
+    """The plan of a batch of either kind: a development batch under its root, or the game's one Mode H batch (the
+    batch-id record must name it), each unaltered and matching its own search-log row type."""
+    if not isinstance(batch_id, str) or not BATCH_ID.fullmatch(batch_id):
+        raise BatchRefused('invalid batch ID')
+    get_profile(game_id)
+    kind, schema, row_type = 'WF_BATCH', PLAN_SCHEMA, 'WF_BATCH'
+    path = roots(kind)['batches'] / game_id / batch_id / 'plan.json'
+    if not path.exists() and not path.is_symlink():
+        kind, schema, row_type = 'MODE_H_BATCH', MODE_H_PLAN_SCHEMA, 'MODE_H_BATCH'
+        path = roots(kind)['batches'] / game_id / batch_id / 'plan.json'
+    if not path.is_file() or path.is_symlink():
+        raise BatchRefused(f'no plan for batch {batch_id} in {game_id}')
+    plan = json.loads(path.read_bytes().decode('ascii'))
+    if (plan.get('schema') != schema or plan.get('batch_id') != batch_id or plan.get('game_id') != game_id or
+            canonical(plan) != path.read_bytes() or
+            plan.get('cohort_digest') != sha256_hex(canonical({'cohort': plan.get('cohort')}))):
+        raise BatchRefused(f'the plan file is not a valid, unaltered {schema}')
+    if record_digest(plan) not in _logged_plan_digests(batch_id, row_type):
+        raise BatchRefused(f'the plan does not match its {row_type} search-log row (altered after it was made?)')
+    if kind == 'MODE_H_BATCH':
+        try:
+            OR.mode_h_plan(roots(kind)['project'], game_id, batch_id)      # the batch-id record names it; pin fields
+        except OR.RecordRefused as exc:
+            raise BatchRefused(f'not the game\'s one Mode H plan: {exc}') from None
+        if plan.get('targets') != list(range(plan['window_first'], plan['window_last'] + 1)):
+            raise BatchRefused('the Mode H plan\'s targets are not its window')
+    return plan
+
+
+def _logged_plan_digests(batch_id: str, row_type: str = 'WF_BATCH') -> set:
     path = roots()['search_log']
     if not path.is_file() or path.is_symlink():
         return set()
     rows = list(csv.DictReader(io.StringIO(path.read_bytes().decode('ascii'))))
-    return {r.get('plan_digest') for r in rows if r.get('row_type') == 'WF_BATCH' and r.get('batch_id') == batch_id}
+    return {r.get('plan_digest') for r in rows if r.get('row_type') == row_type and r.get('batch_id') == batch_id}
 
 
 def start_checks(plan: Mapping, adapters: Mapping) -> None:
-    """Design 5.3, at the start of every run invocation: registry and flag reads only, before any run."""
+    """Design 5.3, at the start of every run invocation: registry and flag reads only, before any run. For a Mode H
+    batch, also design 4.1 and 5.1: the opening record and the study manifest valid and agreeing, the closure and the
+    environment equal to the manifest's, the ledger's last row the admitted version, and no lifecycle marker."""
     if _marker_present():
         raise BatchRefused('UNRESOLVED_ORPHAN_MARKER: no experiment is permitted')
+    if kind_of(plan) == 'MODE_H_BATCH':
+        mode_h_checks(plan)
     reg = _registry()
     for mem in plan['cohort']:
         ident = f"{mem['method_id']} {mem['variant_id']}"
@@ -252,13 +417,19 @@ def start_checks(plan: Mapping, adapters: Mapping) -> None:
 
 def request_for(plan: Mapping, mem: Mapping, target: int, run_id: str) -> dict:
     """The exact RUN_REQUEST_V1 this plan issues for one pair and one attempt (run ID)."""
-    return {'schema': V.RUN_REQUEST, 'game_id': plan['game_id'], 'method_id': mem['method_id'],
-            'variant_id': mem['variant_id'], 'method_revision': mem['method_revision'], 'target_draw_number': target,
-            'observation_view': plan['observation_view'], 'include_dates': plan['include_dates'],
-            'run_mode': plan['run_mode'], 'product_kind': plan['product_kind'],
-            'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
-            'run_id': run_id, 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
-            'master_sha256': plan['master_sha256']}
+    req = {'schema': V.RUN_REQUEST, 'game_id': plan['game_id'], 'method_id': mem['method_id'],
+           'variant_id': mem['variant_id'], 'method_revision': mem['method_revision'], 'target_draw_number': target,
+           'observation_view': plan['observation_view'], 'include_dates': plan['include_dates'],
+           'run_mode': plan['run_mode'], 'product_kind': plan['product_kind'],
+           'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
+           'run_id': run_id, 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
+           'master_sha256': plan['master_sha256']}
+    if kind_of(plan) == 'MODE_H_BATCH':
+        version, sha = _admitted_pin(plan)
+        req.update(ledger_version=version, master_sha256=sha,
+                   binding={'kind': 'MODE_H_BATCH', 'batch_id': plan['batch_id'], 'plan_digest': record_digest(plan),
+                            'run_id': run_id})
+    return req
 
 
 # ---------------------------------------------------------------- attempts bound to the batch (EX_083 WF1A-R2-B01)
@@ -274,22 +445,102 @@ ATTEMPT_SCHEMA = 'WF_BATCH_ATTEMPT_V1'
 
 
 def _attempts_path(plan: Mapping) -> Path:
-    return roots()['batches'] / plan['game_id'] / plan['batch_id'] / 'attempts.jsonl'
+    return roots(kind_of(plan))['batches'] / plan['game_id'] / plan['batch_id'] / 'attempts.jsonl'
 
 
-def _append_attempt(plan: Mapping, req: Mapping) -> None:
-    line = canonical({'schema': ATTEMPT_SCHEMA, 'batch_id': plan['batch_id'], 'method_id': req['method_id'],
-                      'variant_id': req['variant_id'], 'target_draw_number': req['target_draw_number'],
-                      'run_id': req['run_id'], 'request_digest': record_digest(req)})   # ends with its newline
-    with open(_attempts_path(plan), 'ab') as fh:
+def _append_line(path: Path, line: bytes) -> None:
+    with open(path, 'ab') as fh:
         fh.write(line)
         fh.flush()
         os.fsync(fh.fileno())
 
 
+def _append_attempt(plan: Mapping, req: Mapping) -> None:
+    """Before a run: a WF_BATCH_ATTEMPT_V1 line (development batch) or an OPEN ticket (Mode H batch, design 3.4), each
+    naming the fresh run ID and the digest of the exact request about to be issued."""
+    if kind_of(plan) == 'MODE_H_BATCH':
+        t = OR.ticket('OPEN', scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'], game_id=plan['game_id'],
+                      method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
+                      target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
+                      request_digest=record_digest(req))
+        _append_line(_attempts_path(plan), canonical(t))
+        return
+    line = canonical({'schema': ATTEMPT_SCHEMA, 'batch_id': plan['batch_id'], 'method_id': req['method_id'],
+                      'variant_id': req['variant_id'], 'target_draw_number': req['target_draw_number'],
+                      'run_id': req['run_id'], 'request_digest': record_digest(req)})   # ends with its newline
+    _append_line(_attempts_path(plan), line)
+
+
+def _append_closing_ticket(plan: Mapping, req: Mapping, kind: str, terminal_class: str | None) -> None:
+    """After a Mode H run: DONE (the run folder proves a CONTINUE-class run) or FAILED_TO_START (a resume found an
+    open ticket whose run never completed; the run ID is never reused)."""
+    t = OR.ticket(kind, scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'], game_id=plan['game_id'],
+                  method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
+                  target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
+                  terminal_class=terminal_class)
+    _append_line(_attempts_path(plan), canonical(t))
+
+
+def _mode_h_tickets(plan: Mapping) -> list[dict]:
+    try:
+        return OR.tickets(_attempts_path(plan), scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'],
+                          game_id=plan['game_id'])
+    except OR.RecordRefused as exc:
+        raise BatchRefused(f'the batch\'s attempts ledger is invalid: {exc}') from None
+
+
+def _mode_h_attempts(plan: Mapping) -> tuple[dict, int]:
+    """(method, variant, target) -> [run IDs] of this batch's OPEN tickets whose request digest is the plan's own
+    request for that pair and run ID (the other ticket kinds close them; the folder decides what a run proved)."""
+    members = {(m['method_id'], m['variant_id']): m for m in plan['cohort']}
+    out, bad = {}, 0
+    for t in _mode_h_tickets(plan):
+        if t['kind'] != 'OPEN':
+            continue
+        mem = members.get((t['method_id'], t['variant_id']))
+        target = t['target_draw_number']
+        if (mem is None or mem['method_revision'] != t['method_revision'] or target not in plan['targets'] or
+                t['request_digest'] != record_digest(request_for(plan, mem, target, t['run_id']))):
+            bad += 1
+            continue
+        out.setdefault((t['method_id'], t['variant_id'], target), []).append(t['run_id'])
+    return out, bad
+
+
+def resume_open_tickets(plan: Mapping) -> dict:
+    """Design 5.2, before any new ticket: every OPEN ticket of this batch not yet closed by a DONE or FAILED_TO_START
+    for its run ID gets one: DONE if its run folder proves a CONTINUE-class run, FAILED_TO_START otherwise.
+    Returns the counts written."""
+    if kind_of(plan) != 'MODE_H_BATCH':
+        return {}
+    tickets = _mode_h_tickets(plan)
+    closed = {t['run_id'] for t in tickets if t['kind'] in ('DONE', 'FAILED_TO_START')}
+    attempts, _bad = _mode_h_attempts(plan)
+    reg = _registry()
+    counts = {'DONE': 0, 'FAILED_TO_START': 0}
+    for mem in plan['cohort']:
+        decl = reg.declaration(mem['declaration_digest'])
+        for target in plan['targets']:
+            for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ()):
+                if rid in closed:
+                    continue
+                state, why = attempt_state(plan, mem, target, rid, decl)
+                req = request_for(plan, mem, target, rid)
+                if state == 'DONE':
+                    _append_closing_ticket(plan, req, 'DONE', why.split(' (', 1)[0])
+                    counts['DONE'] += 1
+                else:
+                    _append_closing_ticket(plan, req, 'FAILED_TO_START', None)
+                    counts['FAILED_TO_START'] += 1
+                closed.add(rid)
+    return counts
+
+
 def _attempts(plan: Mapping) -> tuple[dict, int]:
     """(method, variant, target) -> [run IDs] of this batch's well-formed attempt lines whose request digest is the
     plan's own request for that pair and run ID; and the number of lines ignored as malformed or foreign."""
+    if kind_of(plan) == 'MODE_H_BATCH':
+        return _mode_h_attempts(plan)
     path = _attempts_path(plan)
     out, bad = {}, 0
     if not path.is_file() or path.is_symlink():
@@ -331,7 +582,7 @@ def attempt_state(plan: Mapping, mem: Mapping, target: int, run_id: str, declara
     """('DONE', reason) only if this attempt's run folder proves the planned run happened and ended in a CONTINUE
     class; otherwise ('NOT_DONE', why). The checks repeat read_run's record checks with the installed declaration."""
     req = request_for(plan, mem, target, run_id)
-    folder = roots()['runs'] / plan['game_id'] / mem['method_id'] / mem['variant_id'] / run_id
+    folder = roots(kind_of(plan))['runs'] / plan['game_id'] / mem['method_id'] / mem['variant_id'] / run_id
     if not folder.is_dir() or folder.is_symlink():
         return 'NOT_DONE', 'no run folder'
     term = _canonical_json(folder / CP.FILES['terminal'])
@@ -357,7 +608,7 @@ def attempt_state(plan: Mapping, mem: Mapping, target: int, run_id: str, declara
     ok, why = consumable(forecast, receipt, term, gates_pass=True, declaration=declaration)
     if not ok:
         return 'NOT_DONE', f'forecast not consumable: {why}'
-    for k in ('master_sha256', 'run_mode', 'product_kind', 'registry_entry_digest', 'run_id'):
+    for k in ('master_sha256', 'ledger_version', 'run_mode', 'product_kind', 'registry_entry_digest', 'run_id'):
         if receipt[k] != req[k]:
             return 'NOT_DONE', f'receipt {k} differs from the planned request'
     if receipt['execution_path'] != 'STANDALONE' or receipt['master_file'] != req['master_file']:
@@ -401,7 +652,7 @@ def _loop(plan: Mapping, todo, adapters: Mapping, runs: list):
         try:
             res = CR.run_contract_method(req, compute=adapters[mem['method_id']].compute,
                                          verify=adapters[mem['method_id']].verify,
-                                         repo_root=Path(CR.PROJECT_ROOT), run_root=roots()['runs'])
+                                         repo_root=Path(CR.PROJECT_ROOT), run_root=roots(kind_of(plan))['runs'])
         except (CR.RunRefused, DispatchRefused) as exc:
             return f'{ident}: REFUSED: {exc.text}'
         except BaseException as exc:                       # including KeyboardInterrupt before a run folder exists
@@ -412,6 +663,8 @@ def _loop(plan: Mapping, todo, adapters: Mapping, runs: list):
         runs.append({'run_id': req['run_id'], 'method_id': mem['method_id'], 'variant_id': mem['variant_id'],
                      'target': target, 'outcome': res.outcome, 'reason_prefix': reason_prefix(res.reason),
                      'class': cls})
+        if cls == 'CONTINUE' and kind_of(plan) == 'MODE_H_BATCH':
+            _append_closing_ticket(plan, req, 'DONE', f'{res.outcome} {reason_prefix(res.reason)}')
         if cls == 'STOP':
             return f'{ident}: {res.outcome}: {res.reason}'
     return None
@@ -422,6 +675,10 @@ def run_batch(game_id: str, batch_id: str, adapters: Mapping, *, echo=print) -> 
     try:
         plan = load_plan(game_id, batch_id)
         start_checks(plan, adapters)
+        resumed = resume_open_tickets(plan)
+        if any(resumed.values()):
+            echo(f'[WALK-FORWARD] resume: open tickets closed: {resumed["DONE"]} DONE, '
+                 f'{resumed["FAILED_TO_START"]} FAILED_TO_START (run IDs never reused)')
         todo = pending(plan)
     except BatchRefused as exc:
         echo(f'[WALK-FORWARD] REFUSED before any run: {exc}')
@@ -437,7 +694,7 @@ def run_batch(game_id: str, batch_id: str, adapters: Mapping, *, echo=print) -> 
            'runs': runs, 'driver_version': DRIVER_VERSION}
     name = f"segment_{seg['ended_utc'].replace(':', '').replace('-', '').replace('.', '')}_{uuid.uuid4().hex[:8]}.json"
     try:
-        CP.create_only(roots()['batches'] / game_id / batch_id / name, canonical(seg))
+        CP.create_only(roots(kind_of(plan))['batches'] / game_id / batch_id / name, canonical(seg))
     except BaseException as exc:
         echo(f'[WALK-FORWARD] the segment record could not be written ({type(exc).__name__}: {exc}); its content:')
         echo(json.dumps(seg, sort_keys=True))
@@ -448,6 +705,14 @@ def run_batch(game_id: str, batch_id: str, adapters: Mapping, *, echo=print) -> 
     if left:
         echo(f'[WALK-FORWARD] STOP: {left} pair(s) still pending after a complete pass')
         return 1
+    if kind_of(plan) == 'MODE_H_BATCH':
+        root = roots('MODE_H_BATCH')['project']
+        if 'BATCH_COMPLETE' not in OR.lifecycle_markers_present(root, game_id, batch_id):
+            OR.write_marker(root, game_id, batch_id, 'BATCH_COMPLETE',
+                            {'schema': OR.MARKER_SCHEMAS['BATCH_COMPLETE'], 'batch_id': batch_id, 'game_id': game_id,
+                             'plan_digest': record_digest(plan), 'pairs': len(plan['cohort']) * len(plan['targets']),
+                             'utc': utc_now()})
+            echo('[WALK-FORWARD] BATCH_COMPLETE written: every planned pair has its DONE ticket (design 5.2)')
     echo(f'[WALK-FORWARD] COMPLETE: {len(runs)} run(s) in this invocation; every pair of the plan is done')
     return 0
 
@@ -473,4 +738,6 @@ def status(game_id: str, batch_id: str) -> dict:
         n = plan['window_last'] - plan['window_first'] + 1
         out[f"{mem['method_id']} {mem['variant_id']}"] = {'done': done, 'pending': n - done, 'attempts': made,
                                                            'attempt_states': why}
+    if kind_of(plan) == 'MODE_H_BATCH':
+        out['lifecycle_markers'] = OR.lifecycle_markers_present(roots('MODE_H_BATCH')['project'], game_id, batch_id)
     return out

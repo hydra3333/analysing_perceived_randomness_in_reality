@@ -11,7 +11,11 @@ EVAL = ROOT / 'src' / 'evaluation'
 METHODS = ROOT / 'src' / 'methods'
 ALLOWED_COMMON = {'_common.contract_publication', '_common.contract_runner', '_common.contract_vocab',
                   '_common.contract_receipts', '_common.contract_records', '_common.contract_registry',
-                  '_common.walk_forward', '_common.game_profiles', '_common.game_draws_reader'}
+                  '_common.walk_forward', '_common.game_profiles', '_common.game_draws_reader',
+                  '_common.master_versions',       # MHUP-A: the version-2 master rules (design 3.2, Appendix L)
+                  '_common.owner_records',         # MHUP-A slice 2: the value-free owner records, plans, tickets, markers
+                  '_common.closure',               # MHUP-A slice 2: the closure and environment inventories (4.1)
+                  '_common.release_records'}       # MHUP-A slice 2: the release records' one reader (4.3; EX_148 B03)
 STDLIB_OK = {'__future__', 'argparse', 'csv', 'collections', 'decimal', 'fractions', 'functools', 'hashlib', 'io',
              'json', 'math', 'pathlib', 'platform', 're', 'struct', 'sys', 'uuid', 'numpy', 'evaluation'}
 
@@ -60,7 +64,7 @@ class Static(unittest.TestCase):
                 self.assertNotIn('_trusted_file_bytes', text, p.name)
                 self.assertNotIn('ledger_pin', text, p.name)
         users = [p.name for p in EVAL.glob('*.py') if any(n.endswith('outcome_reader') for n in imports(p))]
-        self.assertEqual(sorted(users), ['report.py'])
+        self.assertEqual(sorted(users), ['mode_h.py', 'report.py'])     # MHUP-A: the Mode H scorer (design 5.3, 6.1)
 
     def test_sources_are_ascii(self):
         for p in list(EVAL.glob('*.py')) + list((EVAL / 'registry').glob('*.json')):

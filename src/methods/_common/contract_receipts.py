@@ -65,7 +65,7 @@ def _common_receipt(r: Mapping, record: Mapping, where: str) -> None:
     p, _ = profile_and_barrels(r['game_id'])
     if r['master_file'] != f'{p.game_id}_results_master.csv':
         raise ValueError(f'{where}: unapproved master file')
-    _int(r['ledger_version'], f'{where}.ledger_version', low=1, high=1)
+    _int(r['ledger_version'], f'{where}.ledger_version', low=1)       # any version the ledger chain accepts (MHUP-A)
     for f in ('master_sha256', 'ledger_sha256', 'init_record_sha256', 'registry_entry_digest'):
         _match(V.SHA256, r[f], f'{where}.{f}')
     env = r['environment_identity']
@@ -191,6 +191,9 @@ _SCORE_FIELDS_PB = ('schema', 'game_id', 'draw_number', 'track_id', 'mode', 'met
 _SCORE_FIELDS_OZ = ('schema', 'game_id', 'draw_number', 'track_id', 'mode', 'method_revision',
                     'forecast_content_digest', 'freeze_receipt_digest', 'drawn_main',
                     'main_matches', 'supplementary_matches', 'division', 'evaluator_version')
+# MHUP-A (design 5.4): a Mode H score record for an exposed draw carries the owner's exposure flag
+# ({'record': HOLDOUT_EXPOSURE_RECORD_v0_3, 'decision': HX-1}); flagged draws are scored and counted like any other.
+_SCORE_OPTIONAL = ('exposure_flag',)
 
 
 def track_id(game_id: str, method_id: str, variant_id: str, readout: str, mode: str) -> str:
@@ -209,8 +212,13 @@ def validate_score_record(s: object) -> dict:
     _schema(s, V.SCORE, where)
     game = s.get('game_id') if type(s) is dict else None
     p, barrels = profile_and_barrels(game)
-    _keys(s, _SCORE_FIELDS_PB if game == 'POWERBALL' else _SCORE_FIELDS_OZ, where)
+    _keys(s, _SCORE_FIELDS_PB if game == 'POWERBALL' else _SCORE_FIELDS_OZ, where, optional=_SCORE_OPTIONAL)
     check_json_value(s, where)
+    if 'exposure_flag' in s:                      # MHUP-A (design 5.4): the owner's exposure flag, information only
+        f = s['exposure_flag']
+        if (type(f) is not dict or set(f) != {'record', 'decision'} or
+                any(type(v) is not str or not v for v in f.values())):
+            raise ValueError(f'{where}: exposure_flag must name its record and decision')
     _int(s['draw_number'], f'{where}.draw_number', low=p.first_draw)
     parts = s['track_id'].split(':') if type(s['track_id']) is str else []
     if len(parts) != 5 or track_id(*parts) != s['track_id'] or parts[0] != game:

@@ -4,9 +4,14 @@
         Print what a request must pin for that method variant now (installed registry only).
   run   --game G --method M --variant V --revision R --target N --view VIEW [--dates]
         --mode SYNTHETIC_CONTRACT_TEST --declaration-digest D --registry-entry-digest E
-        --master-sha256 S --workspace DIR
+        --ledger-version N --master-sha256 S --workspace DIR [--binding OWNER_DIAGNOSTIC]
         One run through the dispatch gate. Synthetic runs read only the invented masters of the given
-        workspace and publish under DIR/contract_runs/<game>/<method>/<variant>/<run_id>/.
+        workspace and publish under DIR/contract_runs/<game>/<method>/<variant>/<run_id>/. The pin is the
+        pair (ledger version, master SHA-256) of one ledger row (MHUP-A: any version the chain accepts).
+        --binding OWNER_DIAGNOSTIC is the owner's unofficial re-test route (design v0.1r5 3.4, decision
+        MHUP-Q11): a REAL_DEVELOPMENT run published under results/real/diagnostic/contract_runs/, which no
+        plan, freeze line or scorer ever reads. Official real-mode runs are bound and ticketed by the
+        walk-forward driver or the weekly forecasting program, never typed by hand.
 
 Every run is refused before any data is read unless the dispatch gate admits it (E2R-R57). Contract
 runs on the real development masters (--mode REAL_DEVELOPMENT, no --workspace) are allowed by the shared
@@ -47,8 +52,8 @@ def build_request(args, run_id: str) -> dict:
             'observation_view': args.view, 'include_dates': args.dates, 'run_mode': args.mode,
             'product_kind': producible(args.mode, FORECAST)[0],
             'declaration_digest': args.declaration_digest, 'registry_entry_digest': args.registry_entry_digest,
-            'run_id': run_id, 'master_file': f'{args.game}_results_master.csv', 'ledger_version': 1,
-            'master_sha256': args.master_sha256}
+            'run_id': run_id, 'master_file': f'{args.game}_results_master.csv', 'ledger_version': args.ledger_version,
+            'master_sha256': args.master_sha256, **({'binding': {'kind': args.binding}} if args.binding else {})}
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -68,6 +73,9 @@ def main(argv: list[str] | None = None) -> int:
     run.add_argument('--declaration-digest', required=True)
     run.add_argument('--registry-entry-digest', required=True)
     run.add_argument('--master-sha256', required=True)
+    run.add_argument('--ledger-version', type=int, required=True, help='the pinned ledger row (1 for the INIT master)')
+    run.add_argument('--binding', choices=['OWNER_DIAGNOSTIC'], default=None,
+                     help="the owner's unofficial diagnostic route (real mode only; MHUP-Q11)")
     run.add_argument('--workspace', type=Path, default=None, help='synthetic runs only')
     args = parser.parse_args(argv)
 
@@ -87,8 +95,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.workspace is not None:
             parser.error('--workspace is for synthetic runs only')
         repo_root = CR.PROJECT_ROOT
-        run_root = CR.PROJECT_ROOT / 'results' / 'real' / 'development' / 'contract_runs'   # WF-1A (design 5.4)
+        if args.binding == 'OWNER_DIAGNOSTIC':
+            from _common import owner_records as OR
+            run_root = OR.diagnostic_runs_root(CR.PROJECT_ROOT)                             # MHUP-A (design 3.4)
+        else:
+            run_root = CR.PROJECT_ROOT / 'results' / 'real' / 'development' / 'contract_runs'   # WF-1A (design 5.4)
+    elif args.mode in ('REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'CATCH_UP'):
+        print(f'[CONTRACT] DISPATCH REFUSED: a {args.mode} run is official only when the walk-forward driver or the '
+              'weekly forecasting program binds and tickets it; this command line issues none. No data was read.',
+              file=sys.stderr)
+        return 2
     else:
+        if args.binding is not None:
+            parser.error('--binding is for real runs only')
         if args.workspace is None:
             parser.error('a synthetic run needs --workspace')
         try:

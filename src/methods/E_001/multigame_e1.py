@@ -27,11 +27,13 @@ def _digest(view_sha256: str, target: int, barrel_id: str, label: int) -> str:
 
 def forecast(profile: GameProfile, records: Sequence[Mapping], digest: str, target: int,
              *, data_kind: str) -> dict:
-    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_DEVELOPMENT'):
-        # Revision 2 (owner decision WF1-13): synthetic contract tests and real development runs only.
-        raise ValueError('multi-game E_1 real execution not authorised')
-    if not profile.historical_development_target_allowed(target):
-        raise ValueError('historical target outside development boundary')
+    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_HISTORICAL_DEVELOPMENT'):
+        # Revision 3 (MHUP-R, design v0.1r5 section 2; owner decision MHUP-Q10): the method takes the VIEW data kind,
+        # never a run mode. Every real run mode maps to the one real view kind (design 3.3); the target ceiling is
+        # the shared target gate and mode gates of design section 3, not the method's own check.
+        raise ValueError('multi-game E_1: unknown view data kind')
+    if type(target) is not int or target <= profile.first_draw:
+        raise ValueError('target has no history')
     if len(records) != target - profile.first_draw:
         raise ValueError('incomplete training view')
     barrel_outputs = {}

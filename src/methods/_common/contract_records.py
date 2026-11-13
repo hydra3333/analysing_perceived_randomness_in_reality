@@ -10,6 +10,7 @@ from __future__ import annotations
 from datetime import date
 import hashlib
 import math
+import re
 from collections.abc import Mapping, Sequence
 
 from _common.canonical_encoding import canonical_bytes, length32_tuple
@@ -319,21 +320,87 @@ def validate_entry_declaration_pair(entry: Mapping, declaration: Mapping | None)
 _REQUEST_FIELDS = ('schema', 'game_id', 'method_id', 'variant_id', 'method_revision', 'target_draw_number',
                    'observation_view', 'include_dates', 'run_mode', 'product_kind', 'declaration_digest',
                    'registry_entry_digest', 'run_id', 'master_file', 'ledger_version', 'master_sha256')
+_REQUEST_OPTIONAL = ('binding',)      # MHUP-A: present exactly when the mode and target need one (design 3.4)
+_BINDING_FIELDS = {'MODE_H_BATCH': ('kind', 'batch_id', 'plan_digest', 'run_id'),
+                   'WEEKLY_SESSION': ('kind', 'session_id', 'session_digest', 'run_id'),
+                   'OWNER_DIAGNOSTIC': ('kind',)}
+BATCH_ID = re.compile(r'wf-[0-9a-f]{32}\Z', re.ASCII)
+SESSION_ID = re.compile(r'[0-9a-f]{32}\Z', re.ASCII)
+
+
+def validate_binding(b: object, run_id: str, where: str = 'run request.binding') -> dict:
+    """One of the three binding shapes of design 3.4(a). A binding names the run id of its own request."""
+    if type(b) is not dict or b.get('kind') not in V.BINDING_KINDS:
+        raise ValueError(f'{where}: kind must be one of {sorted(V.BINDING_KINDS)}')
+    kind = b['kind']
+    _keys(b, _BINDING_FIELDS[kind], where)
+    if kind == 'MODE_H_BATCH':
+        _match(BATCH_ID, b['batch_id'], f'{where}.batch_id')
+        _match(V.SHA256, b['plan_digest'], f'{where}.plan_digest')
+    elif kind == 'WEEKLY_SESSION':
+        _match(SESSION_ID, b['session_id'], f'{where}.session_id')
+        _match(V.SHA256, b['session_digest'], f'{where}.session_digest')
+    if kind != 'OWNER_DIAGNOSTIC' and b['run_id'] != run_id:
+        raise ValueError(f'{where}: the binding names another run id')
+    return b
+
+
+def binding_kind(request: Mapping) -> str | None:
+    b = request.get('binding')
+    return b['kind'] if type(b) is dict else None
+
+
+def _check_mode_target_binding(r: Mapping, p, where: str) -> None:
+    """Design 3.4(a): which modes may name which targets, and which binding each needs. The pin-dependent half
+    (target <= last_draw(v) + 1; FINAL_NEXT_DRAW only for last_draw(v) + 1) is checked where the pin is read."""
+    mode, target = r['run_mode'], r['target_draw_number']
+    kind = binding_kind(r)
+    if 'binding' in r:
+        validate_binding(r['binding'], r['run_id'], f'{where}.binding')
+    if target <= p.first_draw:
+        raise ValueError(f'{where}: the era\'s first draw has no history to forecast from')
+    in_prefix = p.historical_development_target_allowed(target)
+    in_holdout = p.holdout_first <= target <= p.holdout_last
+    if mode in V.SYNTHETIC_MODES or mode in V.BENCHMARK_MODES or mode == 'IN_SAMPLE_DIAGNOSTIC':
+        if not in_prefix:
+            raise ValueError(f'{where}: target is outside the authorised development prefix (E2R-R52)')
+        if kind is not None:
+            raise ValueError(f'{where}: a {mode} request carries no binding')
+    elif mode == 'REAL_DEVELOPMENT':
+        if in_prefix:
+            if kind not in (None, 'OWNER_DIAGNOSTIC'):
+                raise ValueError(f'{where}: a development run within the prefix carries no session or Mode H binding')
+        elif kind == 'WEEKLY_SESSION':
+            if target <= p.holdout_last:
+                raise ValueError(f'{where}: a session-bound development run must target a draw after the holdout')
+        elif kind != 'OWNER_DIAGNOSTIC':
+            raise ValueError(f'{where}: a REAL_DEVELOPMENT target above the development prefix needs a session or '
+                             f'diagnostic binding (design 3.4)')
+    elif mode == 'REAL_HOLDOUT':
+        if not in_holdout:
+            raise ValueError(f'{where}: REAL_HOLDOUT targets only the holdout draws {p.holdout_first}-{p.holdout_last}')
+        if kind != 'MODE_H_BATCH':
+            raise ValueError(f'{where}: a REAL_HOLDOUT request must be bound to the Mode H plan')
+    elif mode in ('FINAL_NEXT_DRAW', 'CATCH_UP'):
+        if target <= p.holdout_last:
+            raise ValueError(f'{where}: {mode} targets only draws after the holdout')
+        if kind != 'WEEKLY_SESSION':
+            raise ValueError(f'{where}: a {mode} request must be bound to a weekly session')
+    else:
+        raise ValueError(f'{where}: no target rule for run mode {mode}')
 
 
 def validate_run_request(r: object) -> dict:
     where = 'run request'
     _schema(r, V.RUN_REQUEST, where)
-    _keys(r, _REQUEST_FIELDS, where)
+    _keys(r, _REQUEST_FIELDS, where, _REQUEST_OPTIONAL)
     check_json_value(r, where)
     p, _ = profile_and_barrels(r['game_id'])
     _match(V.METHOD_ID, r['method_id'], f'{where}.method_id')
     if _match(V.VARIANT_ID, r['variant_id'], f'{where}.variant_id') == V.NOT_YET_SPECIFIED:
         raise ValueError(f'{where}: a method with no specification cannot be requested')
     _match(V.REVISION, r['method_revision'], f'{where}.method_revision')
-    target = _int(r['target_draw_number'], f'{where}.target_draw_number')
-    if not p.historical_development_target_allowed(target):
-        raise ValueError(f'{where}: target is outside the authorised development prefix (E2R-R52)')
+    _int(r['target_draw_number'], f'{where}.target_draw_number')
     _in(r['observation_view'], V.OBSERVATION_VIEWS, f'{where}.observation_view')
     _bool(r['include_dates'], f'{where}.include_dates')
     mode = _in(r['run_mode'], V.RUN_MODES, f'{where}.run_mode')
@@ -349,9 +416,10 @@ def validate_run_request(r: object) -> dict:
     _match(V.SHA256, r['declaration_digest'], f'{where}.declaration_digest')
     _match(V.SHA256, r['registry_entry_digest'], f'{where}.registry_entry_digest')
     _match(V.RUN_ID, r['run_id'], f'{where}.run_id')
+    _check_mode_target_binding(r, p, where)
     if r['master_file'] != f'{p.game_id}_results_master.csv':
         raise ValueError(f'{where}: unapproved master file')
-    _int(r['ledger_version'], f'{where}.ledger_version', low=1, high=1)
+    _int(r['ledger_version'], f'{where}.ledger_version', low=1)       # any version the ledger chain accepts (MHUP-A)
     _match(V.SHA256, r['master_sha256'], f'{where}.master_sha256')
     return r
 

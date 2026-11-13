@@ -43,7 +43,10 @@ class MethodTask:
 
 
 def view_data_kind(run_mode: str) -> str:
-    return REAL_VIEW_DATA_KIND if run_mode == 'REAL_DEVELOPMENT' else run_mode
+    """One data kind for every real mode (design 3.3): the view a method sees, and so its permitted-view digest and
+    every tie-break, depend on the prefix, the configuration and the software only, never on the run mode. A
+    synthetic mode keeps its own name, as before."""
+    return REAL_VIEW_DATA_KIND if run_mode in V.REAL_MODES or run_mode == 'CATCH_UP' else run_mode
 
 
 def permitted_view_digest(view, run_mode: str) -> str:

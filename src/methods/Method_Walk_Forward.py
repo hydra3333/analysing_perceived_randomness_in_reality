@@ -3,6 +3,9 @@
   plan   --game G --first S --last L    Freeze a batch plan for every released variant of game G over targets
                                         S..L (S >= the era's first draw + 1; L below the holdout), append one
                                         WF_BATCH search-log row, and print the batch ID.
+  plan   --mode H --game G              MHUP-A (design 5.1): freeze the game's one Mode H plan from the study
+                                        manifest, at the admitted master version, under the opening record; one
+                                        MODE_H_BATCH search-log row; refused a second time. No --first/--last.
   run    --game G --batch ID            Run the plan: one standalone contract run per (variant, target), in order;
                                         re-running the same command resumes. Stops at once on any refusal, data-
                                         admission failure, interruption or unrecognised outcome (the STOP rule).
@@ -26,8 +29,9 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest='command', required=True)
     plan = sub.add_parser('plan')
     plan.add_argument('--game', required=True)
-    plan.add_argument('--first', type=int, required=True)
-    plan.add_argument('--last', type=int, required=True)
+    plan.add_argument('--mode', choices=('WF', 'H'), default='WF')
+    plan.add_argument('--first', type=int)
+    plan.add_argument('--last', type=int)
     for name in ('run', 'status'):
         p = sub.add_parser(name)
         p.add_argument('--game', required=True)
@@ -37,6 +41,18 @@ def main(argv: list[str] | None = None) -> int:
     import _common.walk_forward as WF
     try:
         if args.command == 'plan':
+            if args.mode == 'H':
+                if args.first is not None or args.last is not None:
+                    parser.error('a Mode H plan takes its targets from the study manifest: no --first or --last')
+                made = WF.make_mode_h_plan(args.game, ADAPTERS)
+                print(f"[WALK-FORWARD] MODE H PLAN {made['batch_id']}: {args.game} targets {made['window_first']}-"
+                      f"{made['window_last']}, {len(made['cohort'])} variants, master version {made['ledger_version']} "
+                      f"{made['master_sha256'][:12]}...", flush=True)
+                print(f"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} "
+                      f"--batch {made['batch_id']}", flush=True)
+                return 0
+            if args.first is None or args.last is None:
+                parser.error('a development plan needs --first and --last')
             made = WF.make_plan(args.game, args.first, args.last, ADAPTERS)
             print(f"[WALK-FORWARD] PLAN {made['batch_id']}: {args.game} targets {args.first}-{args.last}, "
                   f"{len(made['cohort'])} variants, master {made['master_sha256'][:12]}...", flush=True)

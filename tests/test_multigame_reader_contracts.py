@@ -25,6 +25,8 @@ from E_001.e1_common_reader_bridge import prepared_e1_forecast
 from E_001.e1_historical_appearance_frequency import canonical_bytes
 from _common.game_profiles import POWERBALL, OZLOTTO
 from _common.multigame_result_registry import _COORDINATED_SCIENCE_ALLOWLIST
+sys.path.insert(0, str(ROOT / 'tests'))
+from ledger_fixture import write_init_ledger
 
 SHA = {'POWERBALL':'ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8',
        'OZLOTTO':'4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f'}
@@ -41,7 +43,10 @@ def pin(game, target, *, method='E_1', variant='FULL_HISTORY_RAW_COUNTS_V1',
 
 def fake_root(root, game='OZLOTTO', *, size=9, corrupt_suffix=b'\xff\x00 secret after N',
               later_suffix=b'FAKE_AFTER_TARGET,\xff,garbage', date_shift=None):
-    """A synthetic stand-in for an owner-attested master; no result values."""
+    """A synthetic stand-in for an owner-attested master; no result values. The master has exactly the lines a
+    version-1 ledger records (MHUP-A, design 3.2 rule 2): `size` real rows, then the target's line and one line per
+    later draw up to holdout_first - 1, all deliberately undecodable (no CSV parser may ever consume them); when
+    the target is the last development draw there is no later line and later_suffix is unused."""
     p=OZLOTTO if game=='OZLOTTO' else POWERBALL
     d=root/'source_data';d.mkdir(parents=True,exist_ok=True)
     lines=[','.join(header_for(game)).encode('ascii')+b'\n']
@@ -56,18 +61,14 @@ def fake_root(root, game='OZLOTTO', *, size=9, corrupt_suffix=b'\xff\x00 secret 
         lines.append((','.join(map(str,seq))+'\n').encode('ascii'))
     # No CSV parser may ever consume this suffix. Its first field is the target.
     lines.append(str(p.first_draw+size).encode('ascii')+b','+corrupt_suffix+b'\n')
-    if later_suffix is not None:
-        lines.append(later_suffix+b'\n')
+    for later in range(p.first_draw+size+1, p.holdout_first):
+        lines.append(str(later).encode('ascii')+b','+(later_suffix if later_suffix is not None else b'\xff')+b'\n')
     raw=b''.join(lines)
     sha=hashlib.sha256(raw).hexdigest()
     (d/f'{game}_results_master.csv').write_bytes(raw)
     # Provenance records are fixtures only; the production owner-managed master
     # tool has already validated the real INIT master at its pinned SHA.
-    ledger=(
-        'version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
-        f'1,fixture,INIT,{sha},{p.first_draw},{p.holdout_first-1},{p.holdout_first-p.first_draw}\n'
-    )
-    (d/f'{game}_results_master_ledger.csv').write_bytes(ledger.encode('ascii'))
+    write_init_ledger(d/f'{game}_results_master_ledger.csv', p, sha)      # the updater's grammar (MHUP-A)
     evidence={'master_sha256':sha,'master_file':f'{game}_results_master.csv',
               'game':game,'first_draw':p.first_draw,'last_draw':p.holdout_first-1,
               'draw_count':p.holdout_first-p.first_draw,

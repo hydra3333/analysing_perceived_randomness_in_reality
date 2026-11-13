@@ -1,10 +1,10 @@
-"""Package 2 v0.11: ledger-pinned, prefix-only development observation reader.
+"""Package 2 v0.11: ledger-pinned, prefix-only observation reader (MHUP-A: any ledger version the chain accepts).
 
-Scientific caller receives DrawView only. The accepted owner-maintained INIT master
-and ledger are the structural authority; this module *hashes* all source bytes
-for provenance but parses only rows strictly below target N. No network,
-scoring, process management or master mutation. This is REVIEW code, not an
-approved scientific-run entry point.
+Scientific caller receives DrawView only. The accepted owner-maintained master
+and its ledger are the structural authority (checked by _common.master_versions);
+this module *hashes* all source bytes for provenance but parses only rows
+strictly below target N. No network, scoring, process management or master
+mutation. This is REVIEW code, not an approved scientific-run entry point.
 """
 from __future__ import annotations
 
@@ -212,8 +212,9 @@ def _parse_prefix(raw: bytes, game_id: str, target: int, *, include_dates: bool)
 def load_pinned_draw_view(*, repo_root: Path, run_manifest: dict) -> DrawView:
     """Orchestration-only entry point, never imported by a method implementation.
 
-    Manifest pins the current Phase-1 version-1 INIT master. No caller may
-    supply a source path, alternative master, or raw future/outcome records.
+    The manifest pins one version of the master by (ledger_version, master_sha256); since MHUP-A any
+    version the ledger chain accepts (design v0.1r5 section 3.2). No caller may supply a source path,
+    alternative master, or raw future/outcome records.
     """
     if not isinstance(repo_root, Path) or type(run_manifest) is not dict:
         raise ValueError('invalid source root or manifest')
@@ -234,36 +235,36 @@ def load_pinned_draw_view(*, repo_root: Path, run_manifest: dict) -> DrawView:
     legacy_exception = (game_id == 'POWERBALL' and target == 1577 and
                         method == 'E_1' and variant == _E1_VARIANT and
                         kind == 'UNORDERED_SET' and not dates)
-    if not (p.historical_development_target_allowed(target) or legacy_exception):
-        raise ValueError('target is outside authorised development prefix')
     name = f'{game_id}_results_master.csv'
     sha = run_manifest['master_sha256']
     if (run_manifest['master_file'] != name or type(sha) is not str or
             not _SHA.fullmatch(sha) or type(run_manifest['ledger_version']) is not int or
-            run_manifest['ledger_version'] != 1):
+            run_manifest['ledger_version'] < 1):
         raise ValueError('unapproved source identity')
-    folder = repo_root / 'source_data'
-    ledger_name = f'{game_id}_results_master_ledger.csv'
-    ledger_bytes = _trusted_file_bytes(folder / ledger_name)
-    ledger = list(csv.DictReader(io.StringIO(ledger_bytes.decode('ascii'))))
-    if (len(ledger) != 1 or ledger[0].get('version') != '1' or
-            ledger[0].get('action') != 'INIT' or ledger[0].get('master_sha256') != sha or
-            ledger[0].get('first_draw') != str(p.first_draw) or
-            ledger[0].get('last_draw') != str(p.holdout_first - 1) or
-            ledger[0].get('draw_count') != str(p.holdout_first - p.first_draw)):
-        raise ValueError('ledger does not bind approved version-1 development master')
-    raw = _trusted_file_bytes(folder / name)
-    if hashlib.sha256(raw).hexdigest() != sha:
-        raise ValueError('complete master bytes differ from pinned ledger SHA-256')
+    # MHUP-A (design v0.1r5 section 3.2): the version-2 rules. The ledger chain is checked in full, every row's
+    # master_sha256 is verified as a prefix of the current master, and the run's pin (ledger_version, master_sha256)
+    # must be a row that passed. The INIT verification record is checked against row 1 as before. None of this
+    # reaches the DrawView: version, ledger and whole-file identity stay orchestration-only (the B1 rule).
+    from _common import master_versions as MV
+    try:
+        raw, rows, _evidence = MV.load_verified_source(repo_root, game_id)
+        row = MV.resolve_pin(rows, run_manifest['ledger_version'], sha)
+    except MV.LedgerRefused as exc:
+        raise ValueError(f'ledger does not bind the pinned master: {exc}') from None
+    # The target gate (rule 3): up to last_draw(v) + 1 of the pinned version; at or above the holdout's first draw
+    # only with the game's valid opening record (design 4.2), apart from the legacy forecast-only exception. The mode
+    # gates of 3.4 are the request validator's, the dispatch gate's and the runner's, and are applied before this.
+    if not legacy_exception:
+        if not MV.target_admissible(game_id, target, row):
+            raise ValueError('target is outside the pinned version (at most its last draw plus one)')
+        if target >= p.holdout_first:
+            from _common import owner_records as OR
+            try:
+                if OR.opening_record(repo_root, game_id) is None:
+                    raise ValueError('a holdout or later target needs the game\'s opening record')
+            except OR.RecordRefused as exc:
+                raise ValueError(f'opening record refused: {exc}') from None
     evidence_name = f'{game_id}_results_master_init_verification.json'
-    evidence = json.loads(_trusted_file_bytes(folder / evidence_name))
-    if (type(evidence) is not dict or evidence.get('master_sha256') != sha or
-            evidence.get('master_file') != name or evidence.get('game') != game_id or
-            evidence.get('first_draw') != p.first_draw or
-            evidence.get('last_draw') != p.holdout_first - 1 or
-            evidence.get('draw_count') != p.holdout_first - p.first_draw or
-            evidence.get('source') != 'LOTTERYWEST_GOV_RESULTS_SEARCH'):
-        raise ValueError('INIT verification does not match the pinned source')
     nums, d, drawn, sorted_main, pb = _parse_prefix(raw, game_id, target, include_dates=dates)
     # Outcome-independent method-facing evidence only. Whole-master SHA and
     # INIT/ledger verification remain confined to this orchestration loader

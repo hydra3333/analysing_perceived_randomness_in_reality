@@ -53,9 +53,10 @@ class InstalledChains(unittest.TestCase):
             for i in range(2, 63):
                 self.assertEqual(len(reg.chain(g, f'E_{i}', 'NOT_YET_SPECIFIED')), 1)
             e1 = reg.chain(g, 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1')
-            # E_1's chain gained revision 2 (CODE-3 and E_1 revision 2 package); REL-1 itself left it unchanged.
+            # E_1's chain gained revision 2 (CODE-3 and E_1 revision 2 package) and revision 3 (MHUP-A); REL-1
+            # itself left it unchanged.
             self.assertEqual([(e['entry_sequence'], e['registry_status'], e['method_revision']) for e in e1],
-                             [(1, 'SUPPORTED', '1'), (2, 'SUPPORTED', '2')])
+                             [(1, 'SUPPORTED', '1'), (2, 'SUPPORTED', '2'), (3, 'SUPPORTED', '3')])
         sup = {(g, m, v) for (g, m, v) in reg.chain_keys() if reg.active_entry(g, m, v)['registry_status'] == 'SUPPORTED'}
         self.assertEqual(len(sup), 80)
 

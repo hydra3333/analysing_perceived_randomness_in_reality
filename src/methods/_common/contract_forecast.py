@@ -273,7 +273,18 @@ def _validate_header(rec: Mapping, declaration: Mapping, schema: str, where: str
     if rec['declaration_digest'] != record_digest(declaration):
         raise ValueError(f'{where}: declaration_digest does not match')
     target = _int(rec['target_draw_number'], f'{where}.target_draw_number')
-    if not p.historical_development_target_allowed(target):
+    # MHUP-A (design 3.2 rule 3): a record's target must be one its run mode may name. Synthetic and in-sample
+    # records stay within the development prefix; a REAL_HOLDOUT record names a holdout draw; a REAL_DEVELOPMENT
+    # record names any draw after the era's first (above the prefix it is session-bound or diagnostic, which the
+    # dispatch gate and the scorer establish from the records, not from the forecast itself).
+    mode = rec['run_mode']
+    if mode == 'REAL_HOLDOUT':
+        if not (p.holdout_first <= target <= p.holdout_last):
+            raise ValueError(f'{where}: a REAL_HOLDOUT record must name a holdout draw')
+    elif mode in V.REAL_MODES:
+        if target <= p.first_draw:
+            raise ValueError(f'{where}: target has no history')
+    elif not p.historical_development_target_allowed(target):
         raise ValueError(f'{where}: target outside the development prefix')
     if rec['draw_key'] != p.draw_key(target) or rec['training_last_draw_number'] != target - 1:
         raise ValueError(f'{where}: draw_key or training_last_draw_number inconsistent')

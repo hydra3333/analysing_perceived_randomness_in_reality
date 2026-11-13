@@ -21,6 +21,7 @@ from package_tools import method_retirement as MR
 
 ROOT = Path(__file__).resolve().parents[1]
 ARCHIVE = ROOT / 'archive' / 'methods' / 'E_001' / 'r1'
+ARCHIVE_R2 = ROOT / 'archive' / 'methods' / 'E_001' / 'r2'
 R1_FILES = ['E_001/__init__.py', 'E_001/e1_common_reader_bridge.py', 'E_001/e1_historical_appearance_frequency.py',
             'E_001/e1_standalone_contract.py', 'E_001/e1_training_view.py', 'E_001/multigame_e1.py',
             'E_001_Historical_Appearance_Frequency.py']
@@ -35,6 +36,25 @@ R2_CHANGES = {
         "        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '1')\n",
         "        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '2')\n")],
 }
+# Revision 3's only code changes (MHUP-1 design v0.1r5 section 2): r2 text -> r3 text, each occurring once.
+R3_CHANGES = {
+    'E_001/multigame_e1.py': [(
+        "    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_DEVELOPMENT'):\n"
+        "        # Revision 2 (owner decision WF1-13): synthetic contract tests and real development runs only.\n"
+        "        raise ValueError('multi-game E_1 real execution not authorised')\n"
+        "    if not profile.historical_development_target_allowed(target):\n"
+        "        raise ValueError('historical target outside development boundary')\n",
+        "    if data_kind not in ('SYNTHETIC_CONTRACT_TEST', 'REAL_HISTORICAL_DEVELOPMENT'):\n"
+        "        # Revision 3 (MHUP-R, design v0.1r5 section 2; owner decision MHUP-Q10): the method takes the VIEW data kind,\n"
+        "        # never a run mode. Every real run mode maps to the one real view kind (design 3.3); the target ceiling is\n"
+        "        # the shared target gate and mode gates of design section 3, not the method's own check.\n"
+        "        raise ValueError('multi-game E_1: unknown view data kind')\n"
+        "    if type(target) is not int or target <= profile.first_draw:\n"
+        "        raise ValueError('target has no history')\n")],
+    'E_001_Historical_Appearance_Frequency.py': [(
+        "        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '2')\n",
+        "        legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '3')\n")],
+}
 # The only files that may name the archive's folders: they compare archived bytes, or are the tooling itself.
 BYTE_COMPARISON_FILES = [ROOT / 'src' / 'package_tools' / 'method_retirement.py',
                          ROOT / 'tests' / 'test_code3_retirement.py']
@@ -44,16 +64,26 @@ IMPORT_INVENTORY = [
     '_common.canonical_encoding', '_common.game_profiles', '_common.game_draws_reader', '_common.contract_vocab',
     '_common.contract_records', '_common.contract_registry', '_common.contract_dispatch', '_common.contract_task',
     '_common.contract_forecast', '_common.contract_receipts', '_common.contract_publication',
-    '_common.contract_runner', '_common.walk_forward', '_common.occurrence_counts', '_common.polynomial_fits',
+    '_common.contract_runner', '_common.walk_forward', '_common.master_versions', '_common.owner_records',
+    '_common.occurrence_counts', '_common.polynomial_fits',
     '_common.recurrence_gaps', 'E_001.e1_historical_appearance_frequency', 'E_001.multigame_e1',
     'E_001.e1_training_view', 'E_001.e1_common_reader_bridge', 'E_001.e1_standalone_contract',
     'contract_adapters.e_001', 'package_tools.method_retirement',
 ]
 
 
-def r1_bytes_from_live(rel: str) -> bytes:
-    """Revision 1's bytes, rebuilt from the live revision-2 file by reversing the two known edits."""
+def r2_bytes_from_live(rel: str) -> bytes:
+    """Revision 2's bytes, rebuilt from the live revision-3 file by reversing revision 3's known edits."""
     text = (ROOT / 'src' / 'methods' / rel).read_bytes().replace(b'\r\n', b'\n').decode('ascii')
+    for r2, r3 in R3_CHANGES.get(rel, []):
+        assert text.count(r3) == 1, rel
+        text = text.replace(r3, r2)
+    return text.encode('ascii')
+
+
+def r1_bytes_from_live(rel: str) -> bytes:
+    """Revision 1's bytes, rebuilt from the live revision-3 file by reversing revision 3's and then revision 2's edits."""
+    text = r2_bytes_from_live(rel).decode('ascii')
     for r1, r2 in R2_CHANGES.get(rel, []):
         assert text.count(r2) == 1, rel
         text = text.replace(r2, r1)
@@ -66,11 +96,25 @@ class InstalledArchive(unittest.TestCase):
     def test_archive_holds_revision_1_complete(self):
         baseline = {rel: r1_bytes_from_live(rel) for rel in R1_FILES}
         self.assertEqual(MR.check_archive(ROOT, 'E_1', '1', R1_FILES, baseline, normalise_eol=True), [])
-        for rel in R1_FILES:                                  # the live paths hold revision 2 (all reused, ER-3)
+        for rel in R1_FILES:                                  # the live paths hold revision 3 (all reused, ER-3)
             self.assertTrue((ROOT / 'src' / 'methods' / rel).is_file(), rel)
         changed = [rel for rel in R1_FILES if (ARCHIVE / rel).read_bytes().replace(b'\r\n', b'\n') !=
-                   (ROOT / 'src' / 'methods' / rel).read_bytes().replace(b'\r\n', b'\n')]
+                   r2_bytes_from_live(rel)]
         self.assertEqual(changed, sorted(R2_CHANGES))
+
+    def test_archive_holds_revision_2_complete(self):
+        """MHUP-A: revision 2 archived complete under r2/, its bytes equal to the pre-install live files."""
+        baseline = {rel: r2_bytes_from_live(rel) for rel in R1_FILES}
+        self.assertEqual(MR.check_archive(ROOT, 'E_1', '2', R1_FILES, baseline, normalise_eol=True), [])
+        changed = [rel for rel in R1_FILES if (ARCHIVE_R2 / rel).read_bytes().replace(b'\r\n', b'\n') !=
+                   (ROOT / 'src' / 'methods' / rel).read_bytes().replace(b'\r\n', b'\n')]
+        self.assertEqual(changed, sorted(R3_CHANGES))
+        text = (ARCHIVE_R2 / 'README.md').read_bytes().decode('ascii').replace('\r\n', '\n')
+        self.assertIn('# E_1 revision 2 (archived)', text)
+        self.assertIn('- **Superseded by:** revision 3.', text)
+        self.assertIn('MHUP-Q10', text)
+        for rel in R1_FILES:
+            self.assertTrue((ARCHIVE_R2 / rel).is_file(), rel)
 
     def test_readme_fields(self):
         text = (ARCHIVE / 'README.md').read_bytes().decode('ascii').replace('\r\n', '\n')
@@ -85,10 +129,10 @@ class InstalledArchive(unittest.TestCase):
             ('_common/game_draws_reader.py', '1'), ('_common/experiment_runtime_status_and_resources.py', '1'),
             ('_common/contract_dispatch.py', '1')])
 
-    def test_the_archive_is_no_package_and_only_r1_exists(self):
+    def test_the_archive_is_no_package_and_only_r1_and_r2_exist(self):
         self.assertEqual(sorted(p.name for p in (ROOT / 'archive').iterdir()), ['methods'])
         self.assertEqual(sorted(p.name for p in (ROOT / 'archive' / 'methods').iterdir()), ['E_001'])
-        self.assertEqual(sorted(p.name for p in (ROOT / 'archive' / 'methods' / 'E_001').iterdir()), ['r1'])
+        self.assertEqual(sorted(p.name for p in (ROOT / 'archive' / 'methods' / 'E_001').iterdir()), ['r1', 'r2'])
 
 
 class ArchiveIsNeverExecuted(unittest.TestCase):

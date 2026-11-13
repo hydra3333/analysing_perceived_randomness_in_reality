@@ -33,6 +33,13 @@ PART_A = 'PART A - LEAGUE TABLES: RESULTS AGAINST THE REAL DRAWS'
 PART_B = 'PART B - LEAGUE TABLES: ADJUSTED AGAINST FAIR RANDOM DRAWS'
 TIER = 'DEVELOPMENT_WF_EXPLORATORY'
 TIER_TEXT = 'retrospective development walk-forward'
+# MHUP-A (design 5.4): the Mode H report is tier-aware; its texts state what was scored and how to read a null.
+MODE_H_TIER = 'HOLDOUT_MODE_H'
+MODE_H_TIER_TEXT = ('the sealed Mode H holdout study: the ten holdout draws scored once under the primary statement '
+                    'of design section 1, a precommitted holdout evaluation')
+MODE_H_NULL = ('A null result here means no statistically compelling departure from the fair-draw reference under '
+               'the reported measures; it is never proof of randomness. Ten draws per game give limited statistical '
+               'power.')
 MEASURE_ORDER = ('MR0', 'MR1', 'MR4', 'MR5', 'MR7', 'MR16')
 
 
@@ -228,6 +235,9 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
     unfinished = [r for r in rr if r['attempt_id'] != res['attempt_id'] and
                   not any((RP.roots()['reports'] / g).glob(f"*{r['attempt_id']}*.json"))]
     status_counts = Counter(tr['status'] for tr in res['per_track'].values())
+    tier = res.get('tier', TIER)
+    mode_h = tier == MODE_H_TIER
+    tier_text = MODE_H_TIER_TEXT if mode_h else TIER_TEXT
     L_ = []
     w = L_.append
 
@@ -237,7 +247,7 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
     w(f'Game: {g}')
     w(f"Mode: {mreg['modes']['WF']['display']}")
     w(f"  {mreg['modes']['WF']['plain_meaning'].replace('**', '')}")
-    w(f'Evidence tier: {TIER} ({TIER_TEXT}); randomness chosen for the experiment where N1 runs (D-11)')
+    w(f'Evidence tier: {tier} ({tier_text}); randomness chosen for the experiment where N1 runs (D-11)')
     w(f'Window: {S}-{L} (each track scored on its own fixed grid inside it: OWN_SET, decision WF1-6)')
     w(f"Batch: {plan['batch_id']} (targets {plan['window_first']}-{plan['window_last']}); cohort digest "
       f"{plan['cohort_digest']}; {len(plan['cohort'])} variants, {len(res['per_track'])} tracks")
@@ -248,10 +258,25 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
     w(f"Tool: {RP.TOOL} {RP.EVALUATOR_VERSION}, sources SHA-256 {RP.tool_sha256()}")
     w(f'N1: {seed_line}; N1 seed policies on file for this game: {n1_policies_on_file}')
     w('Environment: ' + ', '.join(f'{k} {v}' for k, v in sorted(environment.items())))
-    w(f"Report attempt: {res['attempt_id']}; search-log row {res['search_log_row']}; scoring plan digest "
-      f"{res['scoring_plan_digest']}; generated {generated_utc}")
-    w(f"Search log ({g}): {by_type.get('RANKING_REPORT', 0)} RANKING_REPORT rows, of which {len(unfinished)} have no "
-      f"completed report besides this one; {by_type.get('WF_BATCH', 0)} WF_BATCH rows")
+    if mode_h:
+        w(f"Score attempt: {res['attempt_id']}; search-log row {res['search_log_row']} (MODE_H_REPORT); scoring plan "
+          f"digest {res['scoring_plan_digest']}; no wall-clock field (a resumed attempt gives these same bytes)")
+        w(f"Exposure flags (information only; flagged draws are scored and counted like any other draw): " +
+          (', '.join(f"draw {t} {f['decision']} ({f['record']})" for t, f in sorted(res.get('exposure', {}).items()))
+           or 'none'))
+        adv = res.get('advance')
+        if adv is None:
+            w(f"Admitted master version: {plan['ledger_version']} (the plan's frozen version v_a; no study version advance)")
+        else:
+            w(f"Study version advance (design 4.1, disclosed): admitted version {adv['admitted_version_before']} -> "
+              f"{adv['admitted_version_after']}; rows beyond v_a: " +
+              ', '.join(f"{r['version']} {r['action']} {r['master_sha256']}" for r in adv['rows_beyond_admitted']) +
+              f"; outcomes read at version {adv['admitted_version_after']}; every target's prefix is unchanged (T-05)")
+    else:
+        w(f"Report attempt: {res['attempt_id']}; search-log row {res['search_log_row']}; scoring plan digest "
+          f"{res['scoring_plan_digest']}; generated {generated_utc}")
+        w(f"Search log ({g}): {by_type.get('RANKING_REPORT', 0)} RANKING_REPORT rows, of which {len(unfinished)} have no "
+          f"completed report besides this one; {by_type.get('WF_BATCH', 0)} WF_BATCH rows")
     w('')
 
     # ---------------------------------------------------------------- 2. Part A
@@ -263,8 +288,12 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
     w('| ' + RK4_TITLE)
     w(f"| Tracks compared: {len(res['per_track'])}; variants: {len(res['per_variant'])}; local tests counted for "
       f"this report: {res['declared_tests']}")
-    w(f"| Search log ({g}): RANKING_REPORT rows {by_type.get('RANKING_REPORT', 0)} (without a completed report, "
-      f"other than this one: {len(unfinished)}); WF_BATCH rows {by_type.get('WF_BATCH', 0)}")
+    if mode_h:
+        w(f"| Mode H: one score attempt per game, scored once; this attempt {res['attempt_id']}; the study's families "
+          f"and window were fixed in the study manifest before the holdout was opened")
+    else:
+        w(f"| Search log ({g}): RANKING_REPORT rows {by_type.get('RANKING_REPORT', 0)} (without a completed report, "
+          f"other than this one: {len(unfinished)}); WF_BATCH rows {by_type.get('WF_BATCH', 0)}")
     for f in fams:
         z, p, _ = _sig_text({'Z_plus': f.get('Z_plus'), 'P_up_output': f.get('P_bonf_output')}) if f.get('P_bonf') is not None \
             else ('-', '-', '-')
@@ -419,8 +448,16 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
           f"{dict(sorted(vr['invalid'].items())) or 'none'}")
     w('')
     w('NOTES')
-    w('- Every number above is computed from frozen forecasts and the actual development draws; no holdout draw is '
-      'read or scored. Rankings are reports and change no forecast (R3 17.9 RK-1).')
+    if mode_h:
+        w('- Every number above is computed from frozen forecasts and the ten holdout draws of the sealed Mode H study, '
+          'each forecast made from the draws before its target only, all frozen before the first outcome was read, '
+          'and scored once (design v0.1r5 sections 1, 5.3, 5.4). Rankings are reports and change no forecast (R3 17.9 '
+          'RK-1).')
+        w('- ' + MODE_H_NULL)
+        w('- Mode H is its own family and window; it is never pooled with development, catch-up or prospective evidence.')
+    else:
+        w('- Every number above is computed from frozen forecasts and the actual development draws; no holdout draw is '
+          'read or scored. Rankings are reports and change no forecast (R3 17.9 RK-1).')
     w('- Ties: standard competition ranking, listed by track ID (R3 17.10.4). Undefined values are listed last, '
       'never sorted as zero.')
     w('- LOW_N marks n < 30. GRID_INCOMPLETE tracks carry SELECTION_UNVERIFIED on their exact figures (design 6.2A).')
@@ -446,7 +483,7 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
                                    'label': r['sub'][kind].get('label'), 'k': m['k'], 'R': m['R'],
                                    'p_mc': str(m['p_mc']), 'ci95_k_over_R': [m['ci_low'], m['ci_high']]})
     manifest = {'schema': 'RANKING_REPORT_MANIFEST_V1', 'n1_figures': n1_figures, 'game_id': g, 'mode': 'WF', 'mode_display': mreg['modes']['WF']['display'],
-                'evidence_tier': TIER, 'window_first': S, 'window_last': L, 'batch_id': plan['batch_id'],
+                'evidence_tier': tier, 'window_first': S, 'window_last': L, 'batch_id': plan['batch_id'],
                 'attempt_id': res['attempt_id'], 'search_log_row': res['search_log_row'],
                 'scoring_plan_digest': res['scoring_plan_digest'], 'grid_digest': res['grid_digest'],
                 'cohort_digest': plan['cohort_digest'], 'master_sha256': plan['master_sha256'],
@@ -455,7 +492,19 @@ def build(res: dict, *, generated_utc: str, seed_line: str, n1_policies_on_file:
                 'tool_sha256': RP.tool_sha256(), 'environment': environment, 'generated_utc': generated_utc,
                 'track_status_counts': dict(status_counts), 'text_sha256': sha256_hex(text),
                 'csv_sha256': sha256_hex(csv_bytes)}
+    if mode_h:
+        adv = res.get('advance')
+        manifest.update(generated_utc=None, mode_h={'score_attempt_id': res['attempt_id'],
+                                                   'exposure_flags': {str(t): f for t, f in sorted(res.get('exposure', {}).items())},
+                                                   'admitted_version': (adv['admitted_version_after'] if adv else plan['ledger_version']),
+                                                   'study_version_advance': ({k: adv[k] for k in ('admitted_version_before', 'admitted_version_after', 'rows_beyond_admitted', 'advanced_utc')} if adv else None),
+                                                   'null_result_wording': MODE_H_NULL})
     return {'txt': text, 'csv': csv_bytes, 'json': canonical(manifest)}
+
+
+def mode_h_base_name(res: dict) -> str:
+    """The Mode H report's file name: no time stamp, so a resumed attempt names and writes the same files."""
+    return f"mode_h_{res['game_id']}_{res['first']}-{res['last']}_{res['attempt_id']}"
 
 
 def write(res: dict, contents: dict, stamp: str) -> list[Path]:
@@ -463,7 +512,8 @@ def write(res: dict, contents: dict, stamp: str) -> list[Path]:
     g = res['game_id']
     folder = RP.roots()['reports'] / g
     folder.mkdir(parents=True, exist_ok=True)
-    base = f"ranking_{g}_WF_{res['first']}-{res['last']}_{stamp}_{res['attempt_id']}"
+    base = mode_h_base_name(res) if res.get('tier') == MODE_H_TIER else \
+        f"ranking_{g}_WF_{res['first']}-{res['last']}_{stamp}_{res['attempt_id']}"
     paths = []
     for ext in ('txt', 'csv', 'json'):
         p = folder / f'{base}.{ext}'

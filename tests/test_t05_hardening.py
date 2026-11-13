@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src' / 'methods'))
 from _common.game_draws_reader import DrawView, load_pinned_draw_view, header_for
 from _common.game_profiles import POWERBALL, OZLOTTO
+from ledger_fixture import write_init_ledger
 
 KINDS = ('UNORDERED_SET', 'OPERATOR_DRAWN_ORDER', 'PAIRED_DIAGNOSTIC')
 FILES = ('{g}_results_master.csv', '{g}_results_master_ledger.csv',
@@ -65,10 +66,7 @@ def write_master(root, profile, target, variant):
     raw = ('\n'.join(rows) + '\n').encode('ascii')
     sha = hashlib.sha256(raw).hexdigest()
     (folder / FILES[0].format(g=game)).write_bytes(raw)
-    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
-              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'
-              f'{profile.holdout_first - profile.first_draw}\n')
-    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))
+    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)
     evidence = {'master_sha256': sha, 'master_file': FILES[0].format(g=game), 'game': game,
                 'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1,
                 'draw_count': profile.holdout_first - profile.first_draw,

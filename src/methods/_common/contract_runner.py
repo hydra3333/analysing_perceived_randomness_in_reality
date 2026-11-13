@@ -24,14 +24,16 @@ import _common.contract_vocab as V
 from _common.contract_dispatch import DispatchRefused, dispatch_gate, refusal_text
 from _common.contract_forecast import assemble_diagnostic, assemble_forecast
 from _common.contract_publication import NO_TICKET_NO_DIAGNOSTIC, RunPublication
-from _common.contract_records import reader_pin, record_digest
+from _common.contract_records import binding_kind, reader_pin, record_digest
 from _common.contract_task import build_method_task
 from _common.game_draws_reader import load_pinned_draw_view
 
 # Code-level gate: contract runs on the real development masters. Turned ON by package WF-1A (releases and
 # WF-1 design v0.1r1 section 5.5; owner decision WF1-3, ratified 31 October 2026): it admits standalone runs of
-# released variants on the development prefix only; the reader still refuses every holdout target. It cannot
-# be set by a command-line flag or an environment variable.
+# released variants in REAL_DEVELOPMENT mode. It cannot be set by a command-line flag or an environment variable.
+# MHUP-A adds no switch (MHUP-R; design 5.1): the other real modes are governed by the owner's create-only records
+# (the opening record, the developed record), the tickets and the binding gates, and the reader admits a holdout or
+# later target only with the game's opening record.
 ENABLE_CONTRACT_REAL_DEVELOPMENT = True
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -90,6 +92,34 @@ def source_provenance(repo_root: Path, request: Mapping) -> dict:
             'init_record_sha256': _file_sha256(folder / f'{game}_results_master_init_verification.json')}
 
 
+def _run_root_for(request: Mapping) -> Path | None:
+    """The one publication root a bound real-mode request may use (design 3.4, 5.1): the Mode H run root for a plan
+    binding, the diagnostic root for the owner's route, the weekly root for a session binding; None when the request
+    carries no binding (today's development runs, whose root the caller fixes as before)."""
+    from _common import owner_records as OR
+    kind = binding_kind(request)
+    if kind == 'MODE_H_BATCH':
+        return OR.mode_h_runs_root(PROJECT_ROOT)
+    if kind == 'OWNER_DIAGNOSTIC':
+        return OR.diagnostic_runs_root(PROJECT_ROOT)
+    if kind == 'WEEKLY_SESSION':
+        return OR.weekly_runs_root(PROJECT_ROOT)
+    return None
+
+
+def _check_pin_current(repo_root: Path, request: Mapping) -> None:
+    """Design 3.4(a): every official weekly or Mode H publication requires the request's pin to be the ledger's
+    current last row (a grown master makes every further publication of a session STALE). Read after the reader
+    has already verified the chain and the pin; a diagnostic or an unbound request is exempt."""
+    if binding_kind(request) not in ('MODE_H_BATCH', 'WEEKLY_SESSION'):
+        return
+    from _common import master_versions as MV
+    version, sha = MV.current_pin(Path(repo_root), request['game_id'])
+    if (request['ledger_version'], request['master_sha256']) != (version, sha):
+        raise ValueError(f'STALE_PIN: the request pins ledger version {request["ledger_version"]} but the current '
+                         f'last row is version {version}; an official run must pin the current master')
+
+
 def _numeric(exc: BaseException) -> bool:
     text = str(exc).lower()
     return any(w in text for w in ('non-finite', 'nan', 'infinity', 'negative zero', 'outside int64'))
@@ -115,9 +145,14 @@ def run_contract_method(request: Mapping, *, compute: Callable, verify: Callable
         raise RunRefused(refusal_text(*ident, 'REAL_DEVELOPMENT_DISABLED: contract runs on the real '
                                       'development masters are switched off'), 'REAL_DEVELOPMENT_DISABLED')
     try:
-        if r.get('run_mode') == 'REAL_DEVELOPMENT':
+        if r.get('run_mode') in V.REAL_MODES or r.get('run_mode') == 'CATCH_UP':
+            # Every real mode reads the project itself, nothing else (design 5.1). The new real modes are gated by the
+            # owner's create-only records, the tickets and the binding gates, not by a switch (MHUP-R).
             if Path(repo_root).resolve() != PROJECT_ROOT.resolve():
-                raise ValueError('a real development run reads only the project itself')
+                raise ValueError('a real run reads only the project itself')
+            expected_root = _run_root_for(request)
+            if expected_root is not None and Path(run_root).resolve() != expected_root.resolve():
+                raise ValueError(f'a {r.get("run_mode")} run with this binding publishes only under {expected_root}')
         else:
             check_synthetic_workspace(repo_root)
     except ValueError as exc:
@@ -131,6 +166,7 @@ def run_contract_method(request: Mapping, *, compute: Callable, verify: Callable
     try:
         try:
             view = load_pinned_draw_view(repo_root=Path(repo_root), run_manifest=reader_pin(request))
+            _check_pin_current(repo_root, request)
             pub.provenance = source_provenance(repo_root, request)
             task = build_method_task(request, declaration, view)
         except Exception as exc:

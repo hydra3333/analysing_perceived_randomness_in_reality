@@ -30,6 +30,7 @@ from _common.game_draws_reader import header_for
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common.multigame_method_registry import method_status
 from E_006 import contract as E6
+from ledger_fixture import write_init_ledger
 from E_006.beta_bernoulli import VARIANTS, posterior_means, posterior_means_by_recursion
 
 GAMES = (POWERBALL, OZLOTTO)
@@ -63,10 +64,7 @@ def write_varied_master(root: Path, profile, target: int, variant: int) -> str:
     raw = ('\n'.join(rows) + '\n').encode('ascii')
     sha = hashlib.sha256(raw).hexdigest()
     (folder / FILES[0].format(g=game)).write_bytes(raw)
-    ledger = ('version,utc,action,master_sha256,first_draw,last_draw,draw_count\n'
-              f'1,fixture,INIT,{sha},{profile.first_draw},{profile.holdout_first - 1},'
-              f'{profile.holdout_first - profile.first_draw}\n')
-    (folder / FILES[1].format(g=game)).write_bytes(ledger.encode('ascii'))
+    write_init_ledger(folder / FILES[1].format(g=game), profile, sha)        # the updater's grammar (MHUP-A)
     (folder / FILES[2].format(g=game)).write_text(json.dumps({
         'master_sha256': sha, 'master_file': FILES[0].format(g=game), 'game': game,
         'first_draw': profile.first_draw, 'last_draw': profile.holdout_first - 1,

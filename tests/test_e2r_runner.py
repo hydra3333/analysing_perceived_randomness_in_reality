@@ -274,7 +274,7 @@ class RunLevelPrefixAndHygiene(Base):
         args = ['run', '--game', 'POWERBALL', '--method', 'E_1', '--variant', C.E1[1], '--revision', pins['method_revision'],
                 '--target', '1300', '--view', 'UNORDERED_SET', '--mode', 'SYNTHETIC_CONTRACT_TEST',
                 '--declaration-digest', pins['declaration_digest'], '--registry-entry-digest', pins['registry_entry_digest'],
-                '--master-sha256', sha, '--workspace', str(ws)]
+                '--master-sha256', sha, '--ledger-version', '1', '--workspace', str(ws)]
         out, err = io.StringIO(), io.StringIO()
         with mock.patch.object(CR, 'ORPHAN_MARKER', self.marker), contextlib.redirect_stdout(out), \
                 contextlib.redirect_stderr(err):

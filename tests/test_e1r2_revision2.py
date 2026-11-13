@@ -1,5 +1,12 @@
 """E_1 revision 2 tests (CODE-3 and E_1 revision 2 design v0.1r2, owner-ratified 31 October 2026). OFFLINE.
 
+MHUP-A (design v0.1r5 section 2, Appendix L): E_1 revision 3 holds the active SUPPORTED entry, so every check of
+'the active revision' below reads 3, revision 2 is a superseded chain entry like revision 1, and the identity test
+compares revision 3 with revision 1's frozen reference (the revision 2 reference is tests/test_e1r3_revision3.py's).
+T03 checks revision 3's admission by view data kind. T09's install-barrier states are MHUP-A's (E_1's own
+IN_DEVELOPMENT.txt around the revision 3 entries); barrier P and the gate's binding rules are tested in
+tests/test_mhupa_gates.py.
+
 E1R2-T01: r2's synthetic contract records equal E_1 revision 1's frozen reference (tests/fixtures/
 e1_r1_reference_v1.json, computed from the base commit outside the repository) apart from method_revision,
 declaration_digest and the content digest. T02 (Powerball) and T02B (Oz Lotto): REAL_DEVELOPMENT forecasts through
@@ -68,7 +75,7 @@ class Project(unittest.TestCase):
 
     def batch_forecasts(self, game, first, last):
         plan = WF.make_plan(game, first, last, self.adapters)
-        self.assertEqual([(m['method_id'], m['method_revision']) for m in plan['cohort']], [('E_1', '2')])
+        self.assertEqual([(m['method_id'], m['method_revision']) for m in plan['cohort']], [('E_1', '3')])
         self.assertEqual(WF.run_batch(game, plan['batch_id'], self.adapters, echo=lambda *_: None), 0)
         self.assertEqual(WF.pending(plan), [])
         out = {}
@@ -96,13 +103,13 @@ class IdentityWithRevision1(unittest.TestCase):
             self.assertEqual(hashlib.sha256((ROOT / rel).read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
                              ref['base_r1_sources_sha256'][rel], rel)
 
-    def test_r2_equals_r1_label_for_label(self):
+    def test_r3_equals_r1_label_for_label(self):
         ref = json.loads(REFERENCE.read_bytes())
         with tempfile.TemporaryDirectory() as td, C.installed(marker=Path(td) / 'no_marker'):
             td = Path(td)
             for r1 in ref['records']:
                 game, t = r1['game_id'], r1['target_draw_number']
-                e2, d2 = pins(game, '2')
+                e2, d2 = pins(game, '3')
                 e1, d1 = pins(game, '1')
                 sha = write_varied_master(td / f'{game}_{t}', get_profile(game), t, 0)
                 res = CR.run_contract_method(C.request(d2, e2, t, sha, run_id='mg-' + '1' * 32), compute=e_001.compute,
@@ -111,7 +118,7 @@ class IdentityWithRevision1(unittest.TestCase):
                 r2 = json.loads((res.folder / 'forecast.json').read_bytes())
                 self.assertEqual({k: v for k, v in r2.items() if k not in DIFFERS},
                                  {k: v for k, v in r1.items() if k not in DIFFERS}, (game, t))
-                self.assertEqual((r1['method_revision'], r2['method_revision']), ('1', '2'))
+                self.assertEqual((r1['method_revision'], r2['method_revision']), ('1', '3'))
                 self.assertEqual((r1['declaration_digest'], r2['declaration_digest']),
                                  (e1['declaration_digest'], e2['declaration_digest']))
                 self.assertNotEqual(r1['canonical_content_digest'], r2['canonical_content_digest'])
@@ -122,10 +129,10 @@ class RealNamespacePowerball(Project):
 
     def test_driver_forecast_equals_the_legacy_function(self):
         from E_001.e1_common_reader_bridge import prepared_e1_forecast
-        e2, d2 = pins('POWERBALL', '2')
+        e2, d2 = pins('POWERBALL', '3')
         for t, rec in self.batch_forecasts('POWERBALL', 1574, 1576).items():
             self.assertEqual((rec['run_mode'], rec['method_revision'], rec['training_last_draw_number']),
-                             ('REAL_DEVELOPMENT', '2', t - 1))
+                             ('REAL_DEVELOPMENT', '3', t - 1))
             _req, view, _task = F.load_view(self.proj, d2, t, 'UNORDERED_SET', self.sha['POWERBALL'])
             legacy, digest = prepared_e1_forecast(view)
             self.assertEqual(rec['permitted_view_digest'], digest)
@@ -221,22 +228,25 @@ class DataKinds(unittest.TestCase):
         return rows
 
     def test_admitted_and_refused(self):
+        """Revision 3 (MHUP-A): the VIEW data kinds are admitted, every run-mode name is refused, and the method has
+        no target ceiling of its own: any target with a complete prefix is computed (the shared gates decide which
+        targets a run may name), and an incomplete prefix is refused."""
         from E_001.multigame_e1 import forecast
         for p in (POWERBALL, OZLOTTO):
             t = p.first_draw + 3
             rows = self.rows(p, t)
-            for kind in ('SYNTHETIC_CONTRACT_TEST', 'REAL_DEVELOPMENT'):
+            for kind in ('SYNTHETIC_CONTRACT_TEST', 'REAL_HISTORICAL_DEVELOPMENT'):
                 self.assertEqual(forecast(p, rows, '0' * 64, t, data_kind=kind)['data_kind'], kind)
-            for kind in ('REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC', 'REAL_HISTORICAL_DEVELOPMENT',
-                         'real_development', '', None):
+            for kind in ('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC', 'CATCH_UP',
+                         'real_historical_development', '', None):
                 with self.assertRaises(ValueError, msg=(p.game_id, kind)):
                     forecast(p, rows, '0' * 64, t, data_kind=kind)
-            # The development boundary: the holdout's first draw and beyond are refused, in both games.
-            for t in (p.holdout_first, p.holdout_first + 1):
-                with self.assertRaises(ValueError, msg=(p.game_id, t)):
-                    forecast(p, self.rows(p, t), '0' * 64, t, data_kind='REAL_DEVELOPMENT')
-            last = p.holdout_first - 1
-            forecast(p, self.rows(p, last), '0' * 64, last, data_kind='REAL_DEVELOPMENT')
+            for t in (p.holdout_first - 1, p.holdout_first, p.holdout_first + 1, p.holdout_last + 5):
+                forecast(p, self.rows(p, t), '0' * 64, t, data_kind='REAL_HISTORICAL_DEVELOPMENT')
+                with self.assertRaises(ValueError, msg=(p.game_id, t)):              # one row short of the target
+                    forecast(p, self.rows(p, t)[:-1], '0' * 64, t, data_kind='REAL_HISTORICAL_DEVELOPMENT')
+            with self.assertRaises(ValueError):
+                forecast(p, [], '0' * 64, p.first_draw, data_kind='REAL_HISTORICAL_DEVELOPMENT')
 
 
 class Registry(unittest.TestCase):
@@ -246,49 +256,54 @@ class Registry(unittest.TestCase):
         for game in ('POWERBALL', 'OZLOTTO'):
             reg, ch = chain(game)
             self.assertEqual([(e['entry_sequence'], e['method_revision'], e['registry_status']) for e in ch],
-                             [(1, '1', 'SUPPORTED'), (2, '2', 'SUPPORTED')])
+                             [(1, '1', 'SUPPORTED'), (2, '2', 'SUPPORTED'), (3, '3', 'SUPPORTED')])
             self.assertEqual(ch[1]['previous_entry_digest'], record_digest(ch[0]))
-            d1, d2 = (reg.declaration(e['declaration_digest']) for e in ch)
+            self.assertEqual(ch[2]['previous_entry_digest'], record_digest(ch[1]))
+            d1, d2, d3 = (reg.declaration(e['declaration_digest']) for e in ch)
             self.assertEqual(dict(d2, method_revision='1'), d1)
-            self.assertEqual(d2['method_revision'], '2')
+            self.assertEqual(dict(d3, method_revision='2'), d2)
+            self.assertEqual((d2['method_revision'], d3['method_revision']), ('2', '3'))
             texts = ('method_name', 'one_liner', 'short_explanation', 'text_provenance', 'game_id', 'method_id',
                      'variant_id', 'schema')
-            self.assertEqual({k: ch[1][k] for k in texts}, {k: ch[0][k] for k in texts})
+            for e in ch[1:]:
+                self.assertEqual({k: e[k] for k in texts}, {k: ch[0][k] for k in texts})
 
-    def test_a_request_pinning_revision_1_is_stale(self):
+    def test_a_request_pinning_revision_1_or_2_is_stale(self):
         for game in ('POWERBALL', 'OZLOTTO'):
-            e1, d1 = pins(game, '1')
-            e2, d2 = pins(game, '2')
-            with self.assertRaises(CD.DispatchRefused) as cm:
-                CD.dispatch_gate(C.request(d1, e1, 1300 if game == 'POWERBALL' else 1500, '0' * 64))
-            self.assertEqual(cm.exception.reason, 'STALE_REGISTRY_ENTRY')
-            entry, decl = CD.dispatch_gate(C.request(d2, e2, 1300 if game == 'POWERBALL' else 1500, '0' * 64))
-            self.assertEqual((entry['method_revision'], decl['method_revision']), ('2', '2'))
+            for old in ('1', '2'):
+                e_old, d_old = pins(game, old)
+                with self.assertRaises(CD.DispatchRefused) as cm:
+                    CD.dispatch_gate(C.request(d_old, e_old, 1300 if game == 'POWERBALL' else 1500, '0' * 64))
+                self.assertEqual(cm.exception.reason, 'STALE_REGISTRY_ENTRY')
+            e3, d3 = pins(game, '3')
+            entry, decl = CD.dispatch_gate(C.request(d3, e3, 1300 if game == 'POWERBALL' else 1500, '0' * 64))
+            self.assertEqual((entry['method_revision'], decl['method_revision']), ('3', '3'))
 
 
 class LegacyRunner(unittest.TestCase):
     """E1R2-T05: D2-3's release gate is kept; only the pinned revision changes (WF1-13)."""
 
-    def test_gate_names_revision_2(self):
+    def test_gate_names_revision_3(self):
         src = (ROOT / 'src' / 'methods' / 'E_001_Historical_Appearance_Frequency.py').read_text()
         self.assertEqual(src.count('legacy_gate('), 1)
-        self.assertEqual(src.count("legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '2')"), 1)
-        entry, _decl = CD.legacy_gate('POWERBALL', *C.E1, '2')
-        self.assertEqual((entry['method_revision'], entry['registry_status']), ('2', 'SUPPORTED'))
-        with self.assertRaises(CD.DispatchRefused) as cm:
-            CD.legacy_gate('POWERBALL', *C.E1, '1')
-        self.assertEqual(cm.exception.reason, 'REVISION_MISMATCH')
+        self.assertEqual(src.count("legacy_gate('POWERBALL', 'E_1', 'FULL_HISTORY_RAW_COUNTS_V1', '3')"), 1)
+        entry, _decl = CD.legacy_gate('POWERBALL', *C.E1, '3')
+        self.assertEqual((entry['method_revision'], entry['registry_status']), ('3', 'SUPPORTED'))
+        for old in ('1', '2'):
+            with self.assertRaises(CD.DispatchRefused) as cm:
+                CD.legacy_gate('POWERBALL', *C.E1, old)
+            self.assertEqual(cm.exception.reason, 'REVISION_MISMATCH')
 
-    def test_withdrawn_revision_2_is_refused(self):
+    def test_withdrawn_revision_3_is_refused(self):
         with tempfile.TemporaryDirectory() as td:
             data = C.copy_data_root(Path(td))
-            e2, d2 = pins('POWERBALL', '2')
-            C.append_entry(data, dict(e2, entry_sequence=3, registry_status='FORMULA_OPEN',
+            e3, d3 = pins('POWERBALL', '3')
+            C.append_entry(data, dict(e3, entry_sequence=4, registry_status='FORMULA_OPEN',
                                       registry_status_reason='test harness: withdrawn',
-                                      previous_entry_digest=record_digest(e2)))
+                                      previous_entry_digest=record_digest(e3)))
             with C.installed(data=data):
                 with self.assertRaises(CD.DispatchRefused) as cm:
-                    CD.legacy_gate('POWERBALL', *C.E1, '2')
+                    CD.legacy_gate('POWERBALL', *C.E1, '3')
             self.assertEqual(cm.exception.reason, 'NOT_SUPPORTED')
 
 
@@ -302,7 +317,7 @@ class Driver(Project):
         plan = WF.make_plan('POWERBALL', 1576, 1576, adapters)
         self.assertEqual(plan['not_in_cohort'], [])
         self.assertEqual([(m['method_id'], m['method_revision']) for m in plan['cohort']],
-                         [('E_1', '2')] + [('E_6', '1')] * 3)
+                         [('E_1', '3')] + [('E_6', '1')] * 3)
         self.assertEqual(WF.run_batch('POWERBALL', plan['batch_id'], adapters, echo=lambda *_: None), 0)
         states, ignored = WF.pair_states(plan)
         self.assertEqual(ignored, 0)
@@ -311,7 +326,7 @@ class Driver(Project):
 
 # ---------------------------------------------------------------- T09: the install barrier (design section 5)
 
-REQUESTS = ('r1 contract', 'r2 contract', 'legacy 1', 'legacy 2')
+REQUESTS = ('r2 contract', 'r3 contract', 'legacy 2', 'legacy 3')
 ADMIT, FLAG, STALE, REV = 'ADMIT', 'IN_DEVELOPMENT_FLAG_PRESENT', 'STALE_REGISTRY_ENTRY', 'REVISION_MISMATCH'
 # Section 5's table (EX_089 C03): the gate's order is unchanged, so the reason depends on the request and the state.
 TABLE = {
@@ -322,10 +337,8 @@ TABLE = {
     'post':      (STALE, ADMIT, REV, ADMIT),
     'rebarrier': (STALE, FLAG, REV, FLAG),     # a STOP after step 4, gate closed again by the owner (O02)
 }
-# What the walk-forward driver does in each state (O03): which driver code is installed, whether planning refuses.
-DRIVER = {'pre': ('wf1a', False), 'barrier': ('wf1a', True), 'code': ('e1r2', True), 'release': ('e1r2', True),
-          'post': ('e1r2', False), 'rebarrier': ('e1r2', True)}
-WF1A_NOT_REAL_CAPABLE = {'E_1': "E_1 revision 1's multi-game function accepts synthetic contract data only"}
+# What the walk-forward driver does in each state (O03): whether planning refuses (the driver code is the same in all).
+DRIVER = {'pre': False, 'barrier': True, 'code': True, 'release': True, 'post': False, 'rebarrier': True}
 
 
 class InstallBarrier(Project):
@@ -335,12 +348,12 @@ class InstallBarrier(Project):
         """(data root, methods root) for one state of section 5."""
         base = self.td / name
         data = C.copy_data_root(base)
-        if name in ('pre', 'barrier', 'code'):                                    # no r2 entries yet
+        if name in ('pre', 'barrier', 'code'):                                    # no r3 entries yet
             for g in ('POWERBALL', 'OZLOTTO'):
-                (data / 'registry' / g / 'E_1' / VARIANT / 'entry_0002.json').unlink()
-        if name in ('pre', 'barrier'):                                            # no r2 declarations yet
+                (data / 'registry' / g / 'E_1' / VARIANT / 'entry_0003.json').unlink()
+        if name in ('pre', 'barrier'):                                            # no r3 declarations yet
             for g in ('POWERBALL', 'OZLOTTO'):
-                (data / 'declarations' / g / 'E_1' / VARIANT / 'r2.json').unlink()
+                (data / 'declarations' / g / 'E_1' / VARIANT / 'r3.json').unlink()
         methods = base / 'methods'
         (methods / 'E_001').mkdir(parents=True)
         if name in ('barrier', 'code', 'release', 'rebarrier'):
@@ -348,12 +361,12 @@ class InstallBarrier(Project):
         return data, methods
 
     def results(self, data, methods):
-        e1, d1 = pins('POWERBALL', '1')
-        e2, d2 = pins('POWERBALL', '2')
+        e1, d1 = pins('POWERBALL', '2')
+        e2, d2 = pins('POWERBALL', '3')
         calls = (lambda: CD.dispatch_gate(C.request(d1, e1, 1300, '0' * 64)),
                  lambda: CD.dispatch_gate(C.request(d2, e2, 1300, '0' * 64)),
-                 lambda: CD.legacy_gate('POWERBALL', *C.E1, '1'),
-                 lambda: CD.legacy_gate('POWERBALL', *C.E1, '2'))
+                 lambda: CD.legacy_gate('POWERBALL', *C.E1, '2'),
+                 lambda: CD.legacy_gate('POWERBALL', *C.E1, '3'))
         out = []
         with C.installed(data=data, methods=methods):
             for call in calls:
@@ -378,22 +391,20 @@ class InstallBarrier(Project):
     def test_the_driver_in_each_state(self):
         import Method_Contract_Runner as M
         adapters = {m: M.ADAPTERS[m] for m in ('E_1', 'E_6')}
-        with_e1 = WF.make_plan('POWERBALL', 1575, 1575, adapters)     # the installed registry: E_1 revision 2
-        self.assertEqual(with_e1['cohort'][0]['method_revision'], '2')
+        with_e1 = WF.make_plan('POWERBALL', 1575, 1575, adapters)     # the installed registry: E_1 revision 3
+        self.assertEqual(with_e1['cohort'][0]['method_revision'], '3')
         without_e1 = None
-        for name, (driver, refuses) in DRIVER.items():
+        for name, refuses in DRIVER.items():
             data, methods = self.state(name)
-            nrc = WF1A_NOT_REAL_CAPABLE if driver == 'wf1a' else {}
-            with self.subTest(state=name), C.installed(data=data, methods=methods), \
-                    mock.patch.dict(WF.NOT_REAL_CAPABLE, nrc, clear=True):
+            with self.subTest(state=name), C.installed(data=data, methods=methods):
                 if not refuses:
                     plan = WF.make_plan('POWERBALL', 1576, 1576, adapters)
                     ids = [(m['method_id'], m['method_revision']) for m in plan['cohort']]
-                    if name == 'pre':          # the baseline (O03): ordinary planning works, E_1 not in the cohort
-                        self.assertNotIn('E_1', [i for i, _r in ids])
-                        without_e1 = plan
-                    else:                      # after step 4: E_1 revision 2 joins the cohort
+                    if name == 'pre':          # the baseline: ordinary planning works, E_1 revision 2 in the cohort
                         self.assertEqual(ids[0], ('E_1', '2'))
+                        without_e1 = WF.make_plan('POWERBALL', 1576, 1576, {'E_6': adapters['E_6']})
+                    else:                      # after the release record: E_1 revision 3 joins the cohort
+                        self.assertEqual(ids[0], ('E_1', '3'))
                     WF.start_checks(plan, adapters)
                     continue
                 with self.assertRaises(WF.BatchRefused) as cm:              # planning refuses while flagged

@@ -10,7 +10,7 @@ rem              Run_Results_Updater.bat init --build-run <dir> --lott-check-run
 set "ROOT=%~dp0"
 set "PY=%ROOT%.venv\Scripts\python.exe"
 set "VENV_ACTIVATE=%ROOT%.venv\Scripts\activate.bat"
-set "TOOL=%ROOT%src\results_master_v0_1.py"
+set "TOOL=%ROOT%src\results_master_v0_2.py"
 set "RC=0"
 if not exist "%PY%" goto :missing_venv
 if not exist "%VENV_ACTIVATE%" goto :missing_venv
@@ -44,7 +44,7 @@ echo [RUN-RESULTS-UPDATER] ERROR: Project .venv missing or invalid. >&2
 set "RC=2"
 goto :finish
 :missing_tool
-echo [RUN-RESULTS-UPDATER] ERROR: src\results_master_v0_1.py not found. >&2
+echo [RUN-RESULTS-UPDATER] ERROR: src\results_master_v0_2.py not found. >&2
 set "RC=2"
 goto :finish
 :wrong_venv

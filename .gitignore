@@ -256,3 +256,18 @@ results/real/development/scores/
 /GAIS/OUTLANDISH_01/outlandish.local.toml.bak
 /GAIS/OUTLANDISH_01/.outlandish_config_new_*
 /GAIS/OUTLANDISH_01/.outlandish_config_bak_*
+
+# MHUP-A (design 4.2, Appendix J, 5.1-5.4, 6.1): the updater's local working files (covered by the owner's
+# backups), the two install barriers, the Mode H holdout contract runs, each batch's attempts log and the
+# score ledgers (they hold drawn numbers; the plan, the batch-id record, the lifecycle markers, the study
+# manifest and the owner records are committed), the lock clearance records and the byte-code sentinel
+source_data/backups/
+source_data/grabs/
+source_data/.results_master.lock
+src/methods/E_001/IN_DEVELOPMENT.txt
+src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+results/real/holdout/contract_runs/
+results/real/holdout/wf_batches/**/attempts.jsonl
+results/real/holdout/scores/
+transitory_data/lock_clearances/
+transitory_data/no_pycache_ever
