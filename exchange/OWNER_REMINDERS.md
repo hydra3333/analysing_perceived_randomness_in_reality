@@ -476,6 +476,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   13 November 2026: gate A frozen (EX_163; reviewer's EX_164 PASS); gate B installed rulebook v0.5 and T016 (760e0c6);
   T016 PASS on Windows (report 0035a22/3f348a1: 43 steps, 571/571, the three expected refusals, rows 5, 6, 7 and 10).
   Next, each under your own go: gate D (F1 deny lines), gate E (rows 8 and 9), gate F (the live install).
+  DONE 13 November 2026: gate D (138e185), gate E (rows 8-9 PASS), gate F (live install 2860e86 + effc179, verified from
+  GitHub); the post-install test fix r1 (EX_165, EX_166; T023 PASS; owner commit 87c4219, bytes verified). Open: the register
+  entry and design text for the 11 November ratification (next documentation round); a suite run after step 18 in future
+  rehearsals (EX_165 section 4, to be designed with the next package).
 - When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
 - Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 
