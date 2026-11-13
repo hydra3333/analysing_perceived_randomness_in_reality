@@ -249,6 +249,14 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   one rerun of the Windows POC suite after the install (with the owner-run byte-code checks) or accept it
   unrun with the reason recorded. (c) Confirm the backup of results/ and source_data/ (asked 2 November 2026).
 - When: (b) and (c) at MHUP-A's approval; (a) before Approval 2, the first results update.
+- Update (13 November 2026, 22:08; exchange/DECISIONS/OWNER_DECISIONS_2026_11_13b_MODEH_FIRST_Q7.md): (a) Q7 DECIDED: the
+  restriction on raw draw values in the AI chats stays after Mode H; approved project programs still read and score them
+  through their controlled interfaces; aggregate reports stay shareable; no new restriction. (b) the POC rerun preferred,
+  without --with-timeout; owner-run instructions drafted for review with the readiness sheet
+  (exchange/CLAUDE_WEB_TOOLS/modeh_readiness/OWNER_POC_RERUN_R015b_DRAFT.md); not yet authorised. (c) you confirm the backups
+  before Approval 1 (on the readiness sheet). Also decided: Mode H first, then MHUP-B (Route 2, in principle; not yet
+  Approval 1); no MHUP-B install and no change to the frozen code or environment from the first Approval 1 until both games
+  are sealed.
 
 ## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
 

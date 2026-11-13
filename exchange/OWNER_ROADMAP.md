@@ -259,10 +259,15 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            (your five deny lines, 138e185); gate E (your rows 8 and 9 PASS); gate F, the live install (2860e86,
            effc179), verified from GitHub; the post-install test fix (EX_165, EX_166, T023 PASS, your commit 87c4219);
            MHUP-A accepted and closed by you; DOC-14 installed (b8600d0).
+           DONE (13 November 2026, late): register v0.28 installed (cce4858); the MHUP-B assessment; your decisions:
+           Mode H first, then MHUP-B (Route 2, in principle); Q7 decided (the restriction on raw draw values in the AI
+           chats stays); the POC rerun preferred (R-015 (b)); backups to be confirmed before Approval 1 (R-015 (c)).
            NOW:
-           (1) Register v0.28: corrects v0.27's "RAT-28" to RAT-30 and records RAT-28 and RAT-29 (for your approval).
-           (2) Then the MHUP-B assessment for you (status, open decisions, dependencies, the recommended next step);
-               no MHUP-B design or code until you authorise it. Its rehearsals add a full-suite run after step 18.
+           (1) The Approval 1 readiness sheet (Approvals 1-4 per game, what cannot be undone, the scientific scope and
+               limits, exact commands, the freeze, STOP handling, prerequisites, exposure), with the POC rerun
+               instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.
+           (2) MHUP-B: design only on your authorisation, never touching the frozen Mode H code; installed only after
+               both games are sealed; its rehearsals add a full-suite run after step 18.
            (3) KISS-1 stays deferred until you start it.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
