@@ -2,11 +2,11 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 8 November 2026 (evening): the integrated MHUP-A package started on your "go" (the reviewed code rebuilt on
-the current main had one expected date-pinning failure in a preliminary 570-test run on each Python; the final suite
-runs on the date-frozen package; the package itself is next). The Claude chat is being handed over
-to a fresh chat: read exchange/HANDOVER_2026_11_06/Claude_Primary_Handover_H1_v1r10_delta.md. Earlier on 6 November: the
-new ChatGPT reviewer took over; H-2 v1r9 and register v0.25 ratified (DOC-12); T022 PASS; the history clean-up.
+Last updated: 13 November 2026 (evening): MHUP-A INSTALLED, released and closed (package commit 2860e86, release commit
+effc179; E_1 revision 3 released for both games, dated 2026-11-13); the post-install test fix committed (87c4219; the suite
+571/571 on main); rulebook v0.5 and your five settings deny lines in place; DOC-14 (register v0.27, design v0.1r7)
+installed at b8600d0. Next: register v0.28 (a numbering correction, for your approval), then the MHUP-B assessment.
+Earlier (8 November): the integrated MHUP-A package started; the Claude chat handed over (H-1 v1r10r3; HO-2).
 Plain-English direction: doc/Direction_for_operational_procedures_v0_3r1.md (v0.2r1 kept as history);
 the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
@@ -252,15 +252,18 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            root (LF and CRLF) with 11 negatives; one new defect found and reproduced (N1: the install records break on
            a CRLF checkout; a one-line .gitattributes fix proposed). Report: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/
            ITEMS_1_2_REPORT_2026_11_10.md. Next: item 3 on Fable, after your go.
+           DONE (11 November 2026): item 3 and the reviewer's follow-ups (N4, N4b, N5 option A, point A, REC-C01);
+           rulebook v0.5, T016 and the Appendix J amendments reviewed (R-2 PASS) and RATIFIED by you (register v0.27
+           calls it RAT-28; read RAT-30: register v0.28); the package FROZEN (EX_163; the reviewer's EX_164 PASS).
+           DONE (13 November 2026): gate B (rulebook v0.5 and T016 installed, 760e0c6); T016 PASS on Windows; gate D
+           (your five deny lines, 138e185); gate E (your rows 8 and 9 PASS); gate F, the live install (2860e86,
+           effc179), verified from GitHub; the post-install test fix (EX_165, EX_166, T023 PASS, your commit 87c4219);
+           MHUP-A accepted and closed by you; DOC-14 installed (b8600d0).
            NOW:
-           (1) The integrated install package (slice 1 + slice 2, A1 cited, on the current main; reminder R-020
-               (a)-(g)): the manifest, copy tool, verifier with a "released" phase and your Appendix J instructions;
-               your decision on R-020 (g) (DONE 10 November 2026: option (i)); then the date frozen and the final candidate built; then all
-               the evidence on that candidate (full suites, mutations, Linux LF/CRLF rehearsals, T016); then the review
-               message at the next free EX number. The work list is the handover delta's section 7.
-           The target dates of ST-5 (13-15 November) are now unlikely; FB-1 applies (nothing is cut).
-           Installing it, its Windows rehearsal and MHUP-B each wait for your separate go. The planning dates
-           above are unchanged; FB-1 applies.
+           (1) Register v0.28: corrects v0.27's "RAT-28" to RAT-30 and records RAT-28 and RAT-29 (for your approval).
+           (2) Then the MHUP-B assessment for you (status, open decisions, dependencies, the recommended next step);
+               no MHUP-B design or code until you authorise it. Its rehearsals add a full-suite run after step 18.
+           (3) KISS-1 stays deferred until you start it.
            The design:
            - Mode H: every released variant forecasts each of the 10 sealed holdout draws per game
              (Powerball 1577-1586, Oz Lotto 1694-1703), each from the draws before it, then scored

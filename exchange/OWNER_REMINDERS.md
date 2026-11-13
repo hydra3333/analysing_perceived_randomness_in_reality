@@ -480,6 +480,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   GitHub); the post-install test fix r1 (EX_165, EX_166; T023 PASS; owner commit 87c4219, bytes verified). Open: the register
   entry and design text for the 11 November ratification (next documentation round); a suite run after step 18 in future
   rehearsals (EX_165 section 4, to be designed with the next package).
+  13 November 2026, evening: you closed MHUP-A and decided (exchange/DECISIONS/OWNER_DECISIONS_2026_11_13_MHUPA_CLOSED.md):
+  DOC-14 (register v0.27, design v0.1r7) installed at b8600d0; the post-step-18 suite run goes into the next package's
+  rehearsals only; MHUP-B next (assessment first); KISS-1 stays deferred (R-014). Register v0.27 wrongly numbers the 11 November
+  ratification RAT-28 (taken by H-1 v1r10r2): register v0.28 corrects it to RAT-30 and records RAT-28 and RAT-29, for your approval.
 - When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
 - Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 
