@@ -473,6 +473,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   R-2 PASS; recorded in exchange/HO2_2026_11_10/. Still to do at the next documentation round: the register entry and the
   design text. The gates A-F (freeze, rulebook + T016 install, T016, F1, rows 8-9, live install), each needing your go:
   exchange/CLAUDE_WEB_TOOLS/mhupa/t016/final/INSTALLATION_STEPS_PROPOSED.md.
+  13 November 2026: gate A frozen (EX_163; reviewer's EX_164 PASS); gate B installed rulebook v0.5 and T016 (760e0c6);
+  T016 PASS on Windows (report 0035a22/3f348a1: 43 steps, 571/571, the three expected refusals, rows 5, 6, 7 and 10).
+  Next, each under your own go: gate D (F1 deny lines), gate E (rows 8 and 9), gate F (the live install).
 - When: N1 and F1/F2 before rulebook v0.5 and T016 are written; F6/F7 said again at freeze time and at Approval 1.
 - Where: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/ITEMS_1_2_REPORT_2026_11_10.md sections 5 and 6.
 
