@@ -50,7 +50,10 @@ class Repo(unittest.TestCase):
         self._td = tempfile.TemporaryDirectory()
         self.root = Path(self._td.name).resolve() / 'repo'
         shutil.copytree(ROOT / DATA / 'registry', self.root / DATA / 'registry', ignore=shutil.ignore_patterns('__pycache__'))
-        shutil.copytree(ROOT / DATA / 'install_records', self.root / DATA / 'install_records')
+        # The state before any package's install: the baseline record only. The repository's own later records (MHUP-A's,
+        # written at its install) are not copied, so these tests do not depend on what has been installed (13 Nov 2026).
+        (self.root / DATA / 'install_records').mkdir(parents=True)
+        shutil.copy2(ROOT / DATA / 'install_records' / IR.BASELINE_NAME, self.root / DATA / 'install_records' / IR.BASELINE_NAME)
         (self.root / 'src' / 'package_tools').mkdir(parents=True)
         shutil.copy2(TOOL, self.root / 'src' / 'package_tools' / 'install_records.py')
         shutil.copy2(ROOT / 'src' / 'package_tools' / 'process_check.py', self.root / 'src' / 'package_tools' / 'process_check.py')
@@ -107,9 +110,9 @@ class Baseline(Repo):
         self.assertEqual([(e['game_id'], e['method_id'], e['method_revision'], e['superseded_by']) for e in superseded],
                          [('OZLOTTO', 'E_1', '2', '3'), ('POWERBALL', 'E_1', '2', '3')])
         self.assertIsNone(rec['install_record_sha256'])
-        recs = IR.validate_records(ROOT)
+        recs = IR.validate_records(self.root)                  # the pre-install copy (setUp): the baseline alone
         self.assertEqual([r['_file'] for r in recs['releases']], [IR.BASELINE_NAME])
-        released = IR.released_variants(ROOT)
+        released = IR.released_variants(self.root)
         self.assertEqual(len(released), 78)
         self.assertEqual(set(released.values()), {'2026-10-31'})
         # the registry's released set (SUPPORTED, active) = the baseline's unretired entries + E_1 revision 3, which
@@ -126,8 +129,10 @@ class Baseline(Repo):
         self.assertEqual(supported, expected)
         # the baseline's two dates agree with each other; what makes it the exception is that no install record
         # precedes it (install_record_sha256 is null): as an ordinary record it would be refused by validate_records
-        IR.validate_release(rec, ROOT, is_baseline=True)
-        IR.validate_release(rec, ROOT, is_baseline=False)
+        IR.validate_release(rec, self.root, is_baseline=True)
+        IR.validate_release(rec, self.root, is_baseline=False)
+        # the repository itself, whatever has been installed since: its records validate, and the baseline is among them
+        self.assertIn(IR.BASELINE_NAME, [r['_file'] for r in IR.validate_records(ROOT)['releases']])
 
     def test_validate_command_and_tampering(self):
         rc, out = self.run_tool('validate', '--root', str(self.root))

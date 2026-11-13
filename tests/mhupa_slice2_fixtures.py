@@ -34,13 +34,24 @@ def sha(b: bytes) -> str:
 
 def copy_closure(proj: Path) -> None:
     """The code closure of 4.1 into the temporary project: src/ (without __pycache__), every root .bat,
-    requirements.txt. The project root the runner is patched to then has the same closure as the repository."""
-    shutil.copytree(ROOT / 'src', proj / 'src', ignore=shutil.ignore_patterns('__pycache__'))
+    requirements.txt. The project root the runner is patched to then has the same closure as the repository, except that
+    of the install records only the baseline is copied (_pre_install_records)."""
+    shutil.copytree(ROOT / 'src', proj / 'src', ignore=_pre_install_records)
     for p in ROOT.glob('*.bat'):
         shutil.copy2(p, proj / p.name)
     for name in CL.ROOT_FILES:
         if (ROOT / name).is_file():
             shutil.copy2(ROOT / name, proj / name)
+
+
+def _pre_install_records(dirpath, names):
+    """copytree's ignore: no __pycache__; and of the install records only the baseline, so the project is at the state
+    before any package's install whatever the repository has installed since (13 November 2026). Tests that need
+    MHUP-A's records write them with write_e1r3_release."""
+    skip = {n for n in names if n == '__pycache__'}
+    if Path(dirpath).name == 'install_records':
+        skip |= {n for n in names if n.endswith('.json') and n != RR.BASELINE_NAME}
+    return skip
 
 
 def project(tmp: Path, profile, *, variant: int = 0) -> Path:
