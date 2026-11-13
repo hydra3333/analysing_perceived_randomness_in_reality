@@ -37,12 +37,13 @@ S("The two files' SHA-256 in the clone** (read-only; the clone's copy of each fi
 S("Module origin** (the tests must use the clone's code, not the main repository's).**",
   f'{py} -I "{WF}\\tools\\check_module_origin.py" --repo "{CLONE}"',
   'Expected: every module line starts `ok`, then `ORIGIN PASS`.')
-S('All 571 tests, including E2R-T12** (about 25 minutes; see "Recording" for how to run it).**',
-  f'{py} -I "{PKG}\\tools\\RUN_MHUP_A_SUITE.py" --repo "{CLONE}"',
-  'Expected: one line per module, then `total ran 571 (expected 571); ...` and `SUITE PASS: all 571 tests ran and passed; only the allowed symlink skips, if any.` Up to 4 symlink skips are allowed on Windows; the runner itself decides. Record the whole output as printed. If it prints failure detail, copy it exactly (test names and messages only; if any line appears to contain a draw\'s numbers, put `[line withheld: possible data value]` instead and say so under Deviations).')
-S('The clone is otherwise unchanged by the run** (read-only).**',
-  f'{cc} git --task T023 -- status --short --untracked-files=no',
-  'Expected: exactly two lines, ` M tests/mhupa_slice2_fixtures.py` and ` M tests/test_mhupa_install_records.py`, then `GUARD PASS (after); git status exit code 0`.')
+OUTF = (T + r'\suite_output.txt').replace('\\', '/')
+S('All 571 tests, including E2R-T12** (about 25 minutes; run this one line as a single background command in Git Bash; see "Recording").**',
+  f'{py} -I "{PKG}\\tools\\RUN_MHUP_A_SUITE.py" --repo "{CLONE}" > "{OUTF}" 2>&1; echo "RUNNER EXIT CODE $?" >> "{OUTF}"',
+  'Expected, in the file `scratch\\T023\\suite_output.txt` once the command has ended: as its last line `RUNNER EXIT CODE 0` (the suite runner\'s own exit status, written by the same shell straight after it); before it, one line per module, then `total ran 571 (expected 571); ...` and `SUITE PASS: all 571 tests ran and passed; only the allowed symlink skips, if any.` Up to 4 symlink skips are allowed on Windows; the runner itself decides. Record the whole output as printed. If it prints failure detail, copy it exactly (test names and messages only; if any line appears to contain a draw\'s numbers, put `[line withheld: possible data value]` instead and say so under Deviations).')
+S('The clone has no other tracked change and no new untracked file** (read-only; Git-ignored files are not examined).**',
+  f'{cc} git --task T023 -- status --short',
+  'Expected: between the GUARD lines exactly two lines, ` M tests/mhupa_slice2_fixtures.py` and ` M tests/test_mhupa_install_records.py`, and nothing else (no other changed file, no `??` line); then `GUARD PASS (after); git status exit code 0`. Any other line: STOP and report it; never delete anything to obtain a pass.')
 
 w, out = None, []
 w = out.append
@@ -71,7 +72,7 @@ w('')
 w('**Recording** (so that nothing improvised is needed):')
 w('- Write `CLAUDE_CODE_WORKING_FOLDER_TREE\\outbox\\REPORT_T023.md` as you go: after each step, add its command, its exit code and its full output, before starting the next step.')
 w('- Exit codes: the program\'s own. Do not pipe a command into another program (no `| tee`); in Git Bash, `echo $?` straight after the command gives its exit code.')
-w('- Step 9 is longer than the shell\'s foreground limit. Run it in the background with its output redirected to `CLAUDE_CODE_WORKING_FOLDER_TREE\\scratch\\T023\\suite_output.txt` (`> <that file> 2>&1`), with nothing else added; wait until it ends; then put its exit code and the whole file into the report before step 10. The file goes with the clean-up.')
+w('- Step 9 is longer than the shell\'s foreground limit, so its command line already carries its own recording: run that exact line as one background command in Git Bash, and wait until the background command has finished. Its output and, on the last line, the suite runner\'s own exit status (`RUNNER EXIT CODE <n>`, written by the same shell straight after the runner ends) are in `scratch\\T023\\suite_output.txt`. Copy the whole file into the report before step 10. If that last line is missing or is not `RUNNER EXIT CODE 0`, that is a STOP: never infer a pass from the other lines, and never take an exit status from another shell or from the launch of the background command. The file goes with the clean-up.')
 w('')
 w('## Steps')
 w('')
