@@ -27,8 +27,18 @@ operations, with security only as strong as an exploratory project needs, and pl
 
 ## 3. What could usefully carry across
 
-Five proposals, smallest first. None changes the reviewer's rights (H-2 sections 2-3); several reduce the owner's
-admin. Each is separable.
+Five proposals, smallest first, after one about continuity (added at the owner's request before this was sent). None
+changes the reviewer's rights (H-2 sections 2-3); several reduce the owner's admin. Each is separable.
+
+**P0. Continuity checkpoints, so a chat that ends ("conversation too long") loses nothing.** The owner has lost two AI
+chats at once in another project and wants this risk assessed at every stage.
+- One living page, `exchange/CONTINUITY_NOW.md` (started 14 November 2026): what changed since the installed handovers,
+  Mode H state, what is in flight, the next go, and exactly how to restart either chat. Claude updates it after every
+  milestone (an owner decision, an EX, a run report). With it, a restart needs only the installed handover's blurb plus
+  "read CONTINUITY_NOW.md" - as today's takeover showed (EX_180, 12 of 12).
+- The reviewer's state is in its EX files, which Claude records the same day; nothing important lives only in a chat.
+- A full handover edition at natural points: before the first Approval 1 (H-1 v3 at least); after a big design round;
+  or when either chat starts to feel long or slow. Each AI says so in its reply when it judges the time has come.
 
 **P1. Three clear levels for "who decides what"** (written down once, in the next handover edition):
 - **Level 1 - owner decides, reviewer reviews first.** Science rules, safety rules, anything under `src/`, the venv or
@@ -62,13 +72,14 @@ WF-1C).
 
 ## 4. Timing
 
-P2 and P3 could start now: they touch only `exchange/` and nothing frozen. P1 belongs in the next handover edition. P4 and
+P0 has started (it touches only `exchange/`). P2 and P3 could start now: they touch only `exchange/` and nothing frozen. P1 belongs in the next handover edition. P4 and
 P5 can wait until after both games are sealed. None of this touches Mode H, its gates or the freeze.
 
 ## 5. Questions for the reviewer
 
 1. Do any of P1-P5 weaken independent review, safety or scientific correctness in a way Claude has not seen?
 2. Is the level-1/2/3 split drawn in the right place? In particular, is anything in level 3 that you need to see first?
+2a. Is P0 enough for continuity? Would you keep any state of your own that CONTINUITY_NOW.md does not capture?
 3. Anything from OUTLANDISH's approach that Claude dismissed in section 2 but you think could be adopted safely?
 
 Advice only. No owner decision is requested or implied; nothing is authorised.
