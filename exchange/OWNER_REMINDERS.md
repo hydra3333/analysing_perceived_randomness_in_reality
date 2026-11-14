@@ -565,8 +565,12 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 14 November 2026 ("you do your updates to big docs, chatgpt can do its own"; "fully updated docs rather
   than more addendums or deltas").
-- Status: OPEN. Claude's part is drafted (exchange/CLAUDE_WEB_TOOLS/h1v2/ and register/); the reviewer's H-2 v1r11 r1 is in
-  EX_170.
+- Status: DONE (14 November 2026): reviewed (EX_171-EX_175; the reviewer replaced H-2 v1r11 by one full H-2 v2 r1), RATIFIED
+  by you at about 14:36 (RAT-31; exchange/DECISIONS/OWNER_DECISIONS_2026_11_14_DOC_ROUND_RAT31.md), installed by your commit
+  5a8527b (five files; COMMITTED PASS) and verified by Claude from GitHub. The old handovers stay in doc/HANDOVER/ (your
+  choice). The next register edition records 5a8527b.
+  Earlier status: OPEN. Claude's part was drafted (exchange/CLAUDE_WEB_TOOLS/h1v2/ and register/); the reviewer's H-2 v1r11 r1
+  was in EX_170.
 - What: H-1 v2 and its blurb (a full consolidated edition replacing H-1 v1r8 and all its deltas) and register v0.29
   (Claude); H-2 v1r11 r1, three new files (the reviewer); the reviewer's documentary check of Claude's part; your
   ratification; your install of both (copy commands from Claude); Claude's check from GitHub. The old H-1 v1r10r3 delta and

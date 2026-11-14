@@ -267,10 +267,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            Mode H first, then MHUP-B (Route 2, in principle); Q7 decided (the restriction on raw draw values in the AI
            chats stays); the POC rerun preferred (R-015 (b)); backups to be confirmed before Approval 1 (R-015 (c)).
            NOW:
-           (0) The documentation round of 14 November 2026 (R-027): H-1 v2 and its blurb and register v0.29 (Claude,
-               full editions at your instruction); H-2 v1r11 r1 (the reviewer's own, EX_170, Claude's checks PASS). Next:
-               the reviewer's check of Claude's part; your ratification; your install of both, before the first
-               Approval 1.
+           (0) DONE (14 November 2026): the documentation round: H-1 v2, H-2 v2 r1 (one full handover each) and
+               register v0.29, reviewed (EX_171-EX_175), ratified by you (RAT-31) and installed (5a8527b, verified).
+               OPEN: your edited install_upgrade_dependencies_into_venv.bat (39 packages), not committed; to decide
+               before the readiness checks (it is in Mode H's frozen closure).
            (1) The Approval 1 readiness sheet (Approvals 1-4 per game, what cannot be undone, the scientific scope and
                limits, exact commands, the freeze, STOP handling, prerequisites, exposure), with the POC rerun
                instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.
