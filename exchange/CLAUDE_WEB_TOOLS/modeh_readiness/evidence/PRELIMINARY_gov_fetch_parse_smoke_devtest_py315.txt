@@ -1,0 +1,17 @@
+gov_fetch_parse_smoke_devtest.py (INVENTED data; a stand-in browser object; no website contacted; Linux Python 3.15; selenium 4.52.0 in a throwaway folder)
+script blob 1cbd32941234661d422c32f53bbf3b5343af2ff7
+PASS both games read as expected: exit 0
+PASS one game only: exit 0
+PASS a redirect to another host is refused: exit 3
+PASS a challenge page stops: exit 2
+PASS a quarantined heading on the page stops before its numbers are read: exit 2
+PASS a changed page wording stops: exit 2
+PASS too few results stop after the wait: exit 2
+PASS a draw that differs from the master fails, values withheld: exit 1
+PASS a browser that does not start is an error, without a traceback: exit 4
+PASS the updater's lock refuses before any browser: exit 3
+PASS an opened game refuses before any browser: exit 3
+PASS the other game still runs when asked alone: exit 0
+PASS an unknown game is refused: exit 3
+DEVTEST 13/13 PASS
+rc=0

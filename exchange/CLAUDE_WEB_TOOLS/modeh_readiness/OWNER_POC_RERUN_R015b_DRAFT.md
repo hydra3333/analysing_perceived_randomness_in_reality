@@ -1,7 +1,8 @@
-# R-015 (b): the Windows POC suite rerun and the launcher / byte-code checks - owner-run instructions (DRAFT r2)
+# R-015 (b): the Windows POC suite rerun and the launcher / byte-code checks - owner-run instructions (DRAFT r3)
 
-**DRAFT r2 for the reviewer's check with the Approval 1 readiness sheet (Claude web chat, 13 November 2026; r2 after the
-cold read on Fable). Not authorised: run nothing here until the project owner gives it its own go.** Owner decision of
+**DRAFT r3 (Claude web chat, 14 November 2026). The reviewer passed r2 for the default route (EX_167 section 4); r3 adds
+only its three notes: check each result before the next block; what to do if the expected refusal does not happen; what
+this rerun does not cover. Not authorised: run nothing here until the project owner gives it its own go.** Owner decision of
 13 November 2026, 22:08 (R-015 (b)): the rerun is preferred; the optional `--with-timeout` test is excluded.
 
 **Why.** MHUP-A changed `Run_Experiment.bat` (the interpreter option `-B`, the byte-code prefix and its refusal) and added
@@ -14,8 +15,12 @@ and refuse when the byte-code folder exists.
 would write the unresolved-orphan marker, which blocks every launch (Mode H included) until your approved manual clearance.
 The cases below passed in October without that happening; run them on an idle machine all the same.
 
-**What it touches.** Synthetic engineering probes only; no lottery data. It writes only Git-ignored folders under
-`transitory_data\poc_runs\`. Nothing is terminated. About two minutes. One CMD window (not PowerShell); Claude Code closed.
+**What it touches.** Synthetic engineering probes only; no lottery data. It does write files: new Git-ignored run folders
+under `transitory_data\poc_runs\`, and nothing else. Nothing is terminated. About two minutes. One CMD window (not
+PowerShell); Claude Code closed.
+
+**One block at a time.** Compare every line and every `EXIT` value with "Expect" before you run the next block. Anything
+different is a STOP at that point: run nothing further, change nothing, send the whole window.
 
 **Never add `--with-timeout`.** With process termination switched off, as it is, that case cannot stop its sleeping
 worker: it would fail and write the orphan marker. It stays excluded unless separately reviewed and authorised.
@@ -72,8 +77,9 @@ if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (ec
 ```
 Expect: `[RUN-EXPERIMENT] ERROR: transitory_data\no_pycache_ever exists; refusing to run.` then `EXIT 10`;
 `[RUN-EVALUATION] ERROR: transitory_data\no_pycache_ever exists; refusing to run.` then `EXIT 10`; then
-`NO_PYCACHE_EVER ABSENT`. If `rmdir` fails or the last line says `PRESENT`: STOP and send the output (every project launch
-keeps refusing until the empty folder is gone, which is safe).
+`NO_PYCACHE_EVER ABSENT`. If either `EXIT` is not 10 (a launcher started when it had to refuse), or `rmdir` fails, or the
+last line says `PRESENT`: STOP and send the output. An empty folder left behind is safe (every project launch refuses
+while it exists); do not try to clear it another way.
 
 ## 5. Afterwards
 
@@ -90,5 +96,6 @@ them and writes nothing) and `EXIT 0`; `NO_PYCACHE_EVER ABSENT`; `0` again; `Fil
 
 ## Not covered (stated, not claimed)
 
-The timeout case and process-tree termination (`--with-timeout`; excluded); Ctrl+C, memory stress and the other W-suite
-cases (the suite says so itself).
+The timeout case and process-tree termination (`--with-timeout`; excluded; no project tool ends a process whose state is
+uncertain); Ctrl+C, memory stress and the other W-suite cases (the suite says so itself); and whether the official
+results page still reads correctly, which is the separate fetch-and-parse check (readiness sheet, prerequisite 3).

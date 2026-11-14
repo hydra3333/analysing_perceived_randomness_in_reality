@@ -268,7 +268,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
                instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.
                DRAFTED (14 November 2026): exchange/CLAUDE_WEB_TOOLS/modeh_readiness/
                APPROVAL_1_READINESS_SHEET_DRAFT.md and OWNER_POC_RERUN_R015b_DRAFT.md (r2), with a full-cohort dress
-               rehearsal on invented data (PASS). WAITING for ChatGPT's review, then your decisions D1-D7.
+               rehearsal on invented data (PASS). REVIEWED: EX_167, PASS WITH CORRECTIONS (B01, B02, C01-C05).
+               REVISED (14 November 2026): the sheet r2, the POC instructions r3 and a one-off read-only check of
+               the official results page (gov_fetch_parse_smoke.py; owner-run, own go, before Approval 1).
+               WAITING for ChatGPT's focused recheck, then your decisions D1-D7. Nothing is authorised.
            (2) MHUP-B: design only on your authorisation, never touching the frozen Mode H code; installed only after
                both games are sealed; its rehearsals add a full-suite run after step 18.
            (3) KISS-1 stays deferred until you start it.
