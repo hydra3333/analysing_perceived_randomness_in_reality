@@ -84,8 +84,14 @@ whole-part replacements (`exchange/CLAUDE_WEB_TOOLS/h1v3/make_h1_v3.py`; the dif
 with its blurb, bringing H-1 to this checkpoint and recording the working approach as section 1.7. It changes no rule; section
 2A is byte-identical. Sent with this register as **EX_190** for the reviewer's documentary review; **EX_191**: PASS WITH CORRECTIONS (C01 the
 installer's modes; C02 the recovery index; O01 which steps share a day), applied as FIX AND PROCEED in EX_192. The reviewer
-judged that H-2 v2 r1 needs no new edition before the freeze. Its status and this
-register's become final only on the owner's ratification (the next RAT number is RAT-32).
+judged that H-2 v2 r1 needs no new edition before the freeze.
+
+**RAT-32 (owner, 15 November 2026, about 09:10).** Record: `exchange/DECISIONS/DECISION_LOG.md`, entry 6. Asked whether he
+ratifies "the three reviewed files for installation: H-1 v3, its blurb, and register v0.30 (RAT-32)", with H-1 v2 staying in
+`doc/HANDOVER/` as history, the owner answered "Yes, ratify all three". H-1 v3 replaces H-1 v2 as the operative Claude
+handover; H-2 v2 r1 stays the reviewer's. Only H-1 v3's status line, and this register's version line, this paragraph and
+its table's status cells, changed after the review. The ratification authorises the documentation install only, nothing for
+Mode H. The install commit cannot be named here; the next register edition records it.
 
 **Future actions (updating register v0.29's list; not authorisations).**
 1. The reviewer's review of H-1 v3 and this register (EX_190); the owner's ratification; one owner-run documentation install,
@@ -115,8 +121,8 @@ register's become final only on the owner's ratification (the next RAT number is
 | Document (path) | Author / check | Status and Git-content SHA-256 |
 |---|---|---|
 | `doc/RATIFICATION_REGISTER_v0_29.md` | Claude, from the records | OWNER-RATIFIED 14 Nov 2026 (RAT-31); installed at `5a8527b`; superseded by this register; `03efd2bac52272494a177a2654f6bcc852a3337eb5f506a73a2784064042f752` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v3.md` | Claude, from H-1 v2 and the records | CANDIDATE (EX_190); `@H1V3@` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md` | Claude | CANDIDATE (EX_190); `@H1V3B@` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v3.md` | Claude, from H-1 v2 and the records | OWNER-RATIFIED 15 Nov 2026 (RAT-32); `@H1V3@` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md` | Claude | OWNER-RATIFIED 15 Nov 2026 (RAT-32); `@H1V3B@` |
 | `exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md` | the owner's words, recorded by Claude | OWNER DECISIONS 14 Nov 2026; as stored `7ba931c6d2cc1e216e851afb73bd3feba6243ab70371edffaa08e6becc62d6ac` |
 | `exchange/DECISIONS/DECISION_LOG.md` and `exchange/CONTINUITY_NOW.md` | Claude, from the owner's words and the records | living files (P2, P0); no fixed hash; Git keeps their history |
 | `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md` (r2c) | Claude; the reviewer (EX_167, EX_168 PASS; EX_177) | REVIEWED DRAFT; authorises nothing; as stored `8f31c5ba1fd12984ce266f52e1e27a77d7208164e1974895bf9f774a4af357a1` |

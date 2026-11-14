@@ -65,3 +65,17 @@ the installed documents. This log is not a separate approval process.
   those paths are unverified on the new environment, and that risk cannot be reliably quantified. This is not
   "W-23 PASS" and authorises no further test or operation.
 - **Status:** EX_177 B01 CLOSED. EX_177 has no open item left.
+
+## 6. 15 November 2026, about 09:10 - RAT-32: H-1 v3, its blurb and register v0.30 ratified
+
+- **Where:** the question tool in the Claude chat, after EX_190 (Claude), EX_191 (the reviewer: PASS WITH CORRECTIONS; H-2
+  needs no new edition) and EX_192 (the corrections applied), and the owner's relay of EX_192 to the reviewer.
+- **Question (Claude):** "Do you ratify the three reviewed files for installation: H-1 v3, its blurb, and register v0.30
+  (RAT-32)? H-1 v2 would stay in doc/HANDOVER/ as history, like last time. This authorises only the documentation install
+  tonight, nothing for Mode H."
+- **Owner's answer:** "Yes, ratify all three (Recommended)".
+- **Status:** RATIFIED. Only the status wording changed after the review (`exchange/CLAUDE_WEB_TOOLS/doc_round_rat32/finalise_rat32.py`
+  and its two diffs). Final SHA-256: H-1 v3 `ddefe7006aa17cfd0a9a8996bd7122aed537d8d66accee92b2e5d737aefbaa54`, its blurb
+  `d1df63bf18bc7becc96212ac0d76d519a2a5c4d6b367251116b294382573dd4d`, register v0.30
+  `2a6fe7b6758d882b46a6829cff6c73ddefa5381f9fe3851b72720ab40ccdd56c`. The install is owner-run
+  (`exchange/CLAUDE_WEB_TOOLS/doc_round_rat32/INSTALL_RAT32.md`), before the day of the first Approval 1. H-2 v2 r1 stays.

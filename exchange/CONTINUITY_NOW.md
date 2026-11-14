@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 09:15 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 09:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -16,8 +16,8 @@ durable EX messages are authoritative.
   change since cc0ab73).
 - **Correction to the order (15 November):** the reviewed sheet requires the official-page check on the day of the first
   Approval 1. So the handover editions come first.
-- **Reviewed:** H-1 v3 and register v0.30: EX_191 PASS WITH CORRECTIONS, applied (EX_192). H-2 needs no new edition.
-- **Waiting on you:** passing EX_192 to the reviewer (for the record); then your ratification and the install, at home.
+- **Ratified:** H-1 v3, its blurb and register v0.30 (RAT-32, decision log entry 6), after EX_191 and EX_192. H-2 v2 r1 stays.
+- **Waiting on you:** the install, at home: `exchange/CLAUDE_WEB_TOOLS/doc_round_rat32/INSTALL_RAT32.md` (three blocks).
 - **Next go after that:** the official-page check, only on the day of Oz Lotto's Approval 1, with the backups and tree check.
 - **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
@@ -70,8 +70,9 @@ backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Both h
 
 ## Full order from here
 
-1. H-1 v3 and register v0.30: reviewed (EX_191, corrections applied in EX_192); the owner's ratification (RAT-32) and one
-   documentation install, before the day of the first Approval 1. H-2 v2 r1 stays (the reviewer: no new edition needed).
+1. H-1 v3 and register v0.30: reviewed (EX_191, EX_192) and ratified (RAT-32); one documentation install, before the day of
+   the first Approval 1. H-2 v2 r1 stays (the reviewer: no new edition needed). Once installed, a restarted Claude chat uses
+   H-1 v3's blurb.
 2. The official-page check, only when separately approved, on the same day as Oz Lotto's Approval 1; the backups, the tree
    and quiet-machine checks; then Oz Lotto's Approval 1. Each on its own go.
 3. Oz Lotto's Approvals 2-4, then Powerball's 1-4, each on its own go and its own safe schedule (a separately approved

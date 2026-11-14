@@ -19,8 +19,8 @@ section = (section.replace('@H1V3@', hashlib.sha256(open(h1, 'rb').read()).hexdi
                   .replace('@H1V3B@', hashlib.sha256(open(h1b, 'rb').read()).hexdigest()))
 EDITS = [
     ('version', '**Register version:** v0.29, 14 November 2026, OWNER-RATIFIED',
-     '**Register version:** v0.30, 15 November 2026, CANDIDATE (written by Claude from the records; for the reviewer\'s '
-     'documentary review, EX_190, and the owner\'s ratification with H-1 v3), recording the documentation install of RAT-31 '
+     '**Register version:** v0.30, 15 November 2026, OWNER-RATIFIED 15 November 2026, about 09:10 (RAT-32, with H-1 v3; '
+     'written by Claude from the records; reviewed in EX_190 to EX_192), recording the documentation install of RAT-31 '
      '(`5a8527b`), the owner\'s dependency change (`cc0ab73`) and TASK_T024, EX_176 to EX_190, the replacement reviewer chat, the '
      'owner\'s decisions of 14 November 2026 (C02, D1-D7, the working approach P0-P6, OUTLANDISH_01\'s methods, B01 as a scoped '
      'W-23 acceptance) and the POC rerun and updater self-test (both PASS); v0.29, 14 November 2026, OWNER-RATIFIED'),
