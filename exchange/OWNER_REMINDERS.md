@@ -595,7 +595,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner, 14 November 2026 ("chatgpt chat has just died ... update the chatgpt handover blurb ... prepare a few
   questions to verify clean up-to-date handover").
-- Status: OPEN until the replacement reviewer's answers are compared. The handover in force is H-2 v2 r1 (installed at
+- Status: DONE (14 November 2026, about 19:35). First reply recorded (HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_FIRST_REPLY.md);
+  answers EX_179; key and comparison EX_180 (12 of 12 PASS, commit 043adc2); the owner accepted the new chat as the standing
+  independent reviewer under H-2 v2 r1 (question tool: "Yes, accept it"). Next: EX_177 B01 and C02, then D1-D7.
+- Was: OPEN until the replacement reviewer's answers are compared. The handover in force is H-2 v2 r1 (installed at
   5a8527b, RAT-31; unchanged). The filled-in starter text is exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md;
   the twelve blind questions are EX_178; you hold the sealed answer key (its SHA-256 is in EX_178).
 - Steps: (1) start a new ChatGPT chat with the starter text (and the H-2 v2 file attached if it cannot read GitHub); (2) give
