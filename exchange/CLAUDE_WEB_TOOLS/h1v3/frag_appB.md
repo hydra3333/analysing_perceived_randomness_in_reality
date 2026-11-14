@@ -21,6 +21,6 @@ v3 is a full edition made from H-1 v2's ratified bytes (`8f15109f...0a30`) by co
 
 Every fact added here was checked against the repository at `a74cfd9` (15 November 2026; full history) or taken from the records named; every hash was computed with `git show HEAD:<path> | sha256sum`. The builder asserts v2's input hash, that each counted edit's old text occurs exactly once, that section 2A is byte-identical to v2's (and so to v1r8's), and that the output is US-ASCII with LF line endings and one final newline. Nothing in this edition was run against real data, and nothing is installed by it. Absence from these summaries is not proof of nonexistence; verify the current repository, the ratified source documents and the owner before concluding that a decision, file or obligation does not exist (EX_172 C03).
 
-**Review:** sent with register v0.30 as EX_190 for the reviewer's documentary review.
+**Review:** sent with register v0.30 as EX_190 for the reviewer's documentary review; **EX_191**: PASS WITH CORRECTIONS (C01 the installer's modes and when a new digest is needed; C02 CONTINUITY_NOW.md's lower sections; O01 which steps share a day), applied as FIX AND PROCEED in EX_192; section 2A unchanged. The reviewer judged that H-2 v2 r1 needs no new edition before the freeze.
 
 *End of H-1.*

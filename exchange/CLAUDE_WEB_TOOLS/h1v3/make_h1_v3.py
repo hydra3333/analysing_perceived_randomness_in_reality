@@ -150,11 +150,13 @@ EDITS = [
     # ---- section 5.4
     ('5.4 deps',
      'The owner\'s data tools have not yet been run under 3.15 (the updater\'s offline self-test is a prerequisite before Approval 1).',
-     '**The owner\'s dependency change of 14 November 2026** (`cc0ab73`; the installer now upgrades every package on every run): '
+     '**The owner\'s dependency change of 14 November 2026** (`cc0ab73`; in its installation modes, its default included, the installer requests upgrades of pip and every listed '
+     'package, and its `VERIFY` mode is read-only): '
      'TASK_T024 (ENV PASS, 90 distributions, 571 tests PASS) and the POC rerun of the same night were accepted by the owner as a '
      '**scoped W-23 acceptance for that change only** (decision log entry 5; never "W-23 PASS"; the timeout, Ctrl+C, memory-stress '
-     'and other lifecycle cases not run, their risk accepted as not reliably quantifiable). Any rerun of the installer before the '
-     'first Approval 1 means T024 again and a new expected digest; the owner plans no more installs and will ask Claude first '
+     'and other lifecycle cases not run, their risk accepted as not reliably quantifiable). Any further installer run before the '
+     'first Approval 1 requires a renewed environment inventory and the applicable regression and compatibility evidence (T024 '
+     'again), and an updated expected digest if the environment changed; the owner plans no more installs and will ask Claude first '
      '(OUTLANDISH_01 uses this venv too). The updater\'s offline self-test passed under 3.15 on 14 November 2026 (13/13).'),
     ('5.4 freeze', 'A pull only after checking that every incoming path is under `exchange/`.',
      'A pull only after checking that every incoming path is under `exchange/`. The owner\'s OUTLANDISH_01 commits stage '
@@ -171,7 +173,7 @@ EDITS = [
     ('7.1 row', 'tests only, outside the closure (EX_165, EX_166, T023 PASS; register v0.27) |\n',
      'tests only, outside the closure (EX_165, EX_166, T023 PASS; register v0.27) |\n'
      '| `cc0ab73` | The owner\'s dependency change (not a package) | `install_upgrade_dependencies_into_venv.bat` edited and run by the '
-     'owner, 14 November 2026: 39 direct packages, every package upgraded on every run; the venv now holds 90 distributions. '
+     'owner, 14 November 2026: 39 direct packages; its installation modes request upgrades of pip and every listed package, and `VERIFY` is read-only; the venv now holds 90 distributions. '
      'TASK_T024 PASS (report `811d0cc`); EX_176, EX_177; scoped W-23 acceptance (section 5.4) |\n'),
     ('7.4 T024', 'T016 (Appendix J step 10 on a barrier-free copy) and T023 (the installed `main` with the fix) each 571 pass',
      'T016 (Appendix J step 10 on a barrier-free copy), T023 (the installed `main` with the fix) and T024 (after the owner\'s '
@@ -218,7 +220,8 @@ EDITS = [
      'that is expected, never a reason to reset, restore or clean.\n'
      '- **The owner\'s OUTLANDISH_01 work** (`GAIS/OUTLANDISH_01/`, with its own ChatGPT chat; outside the reviewed line and the '
      'code closure) uses this project\'s `.venv`. The owner plans no further package installs and will ask Claude first (14 November '
-     '2026): any install changes the environment digest, which before Approval 1 means T024 again and after it is forbidden until '
+     '2026): an install may change the environment and its digest; before Approval 1 that means a renewed inventory (T024 again), and '
+     'after it an install is forbidden until '
      'both seals. He commits that work with `git pull --ff-only`, then `git add GAIS/OUTLANDISH_01/`, never `-A`. A pull after a '
      'local commit makes a harmless merge commit (`a6c2894`, 14 November 2026).\n'),
     ('12.9', 'At this edition: the documentation round\'s review and install; then the owner\'s readiness decisions.',

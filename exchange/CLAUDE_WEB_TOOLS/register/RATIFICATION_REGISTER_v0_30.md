@@ -2084,7 +2084,8 @@ register v0.29) were installed by the owner at **`5a8527b`** (14 November 2026);
 bytes. The old handovers stay in `doc/HANDOVER/` as history, as the owner chose.
 
 **The owner's dependency change.** On 14 November 2026 the owner edited and ran `install_upgrade_dependencies_into_venv.bat`
-(39 direct packages; it now upgrades every package on every run) and committed it at **`cc0ab73`** (with two duplicate GAIS
+(39 direct packages; in its installation modes, its default included, it requests upgrades of pip and every listed package;
+its `VERIFY` mode is read-only) and committed it at **`cc0ab73`** (with two duplicate GAIS
 notes, outside the closure). At the owner's request Claude wrote TASK_T024; the Claude Code local runner reported **PASS**
 (report `811d0cc`): the read-only `env_freeze_check.py` printed ENV PASS (90 distributions, every RECORD file present and
 matching, no orphan; Python 3.15.2; environment digest `5bf4eb8a36ddb9063fbcb27ff1b692d38de3847321518e563f70c7219999a3f9`),
@@ -2155,16 +2156,20 @@ No AI chat contacted any lottery website; no holdout was opened; the updater has
 **The Claude handover H-1 v3 (15 November 2026).** A full edition built from H-1 v2's ratified bytes by counted edits and
 whole-part replacements (`exchange/CLAUDE_WEB_TOOLS/h1v3/make_h1_v3.py`; the diffs from v2 in `exchange/CLAUDE_WEB_TOOLS/h1v3/out/`),
 with its blurb, bringing H-1 to this checkpoint and recording the working approach as section 1.7. It changes no rule; section
-2A is byte-identical. Sent with this register as **EX_190** for the reviewer's documentary review. Its status and this
+2A is byte-identical. Sent with this register as **EX_190** for the reviewer's documentary review; **EX_191**: PASS WITH CORRECTIONS (C01 the
+installer's modes; C02 the recovery index; O01 which steps share a day), applied as FIX AND PROCEED in EX_192. The reviewer
+judged that H-2 v2 r1 needs no new edition before the freeze. Its status and this
 register's become final only on the owner's ratification (the next RAT number is RAT-32).
 
 **Future actions (updating register v0.29's list; not authorisations).**
 1. The reviewer's review of H-1 v3 and this register (EX_190); the owner's ratification; one owner-run documentation install,
    before the day of the first Approval 1, so that no `doc/` change is pending during the freeze. The reviewer judges whether
    H-2 needs a new edition.
-2. On one chosen day, each on its own go: the official-page check (the readiness sheet requires it on the day of the first
-   Approval 1), the backup confirmation (R-015 (c)), the tree and identity checks, a quiet machine; then Oz Lotto's Approvals 1
-   to 4, then Powerball's, each separately, with the freeze from the first Approval 1 until both games are sealed.
+2. Each on its own go: the official-page check, which the readiness sheet requires on the same day as the first Approval 1;
+   the backup confirmation (R-015 (c)), the tree and identity checks and a quiet machine; then Oz Lotto's Approval 1. The later
+   approvals (Oz Lotto's 2 to 4, then Powerball's 1 to 4) keep their own gos and their own safe schedule, with the freeze from
+   the first Approval 1 until both games are sealed; the sheet also allows a separately approved Powerball-only page recheck
+   after Oz Lotto is sealed and before Powerball's Approval 1.
 3. Unchanged from register v0.29, items 3 to 5: after both seals the study recorded, the holdout exposure record and the
    handovers refreshed, then MHUP-B with everything it must carry; Q7 into the next editions; WF-1C; the methods still to do,
    now with OUTLANDISH_01's family probably first; KISS-1 when the owner asks; the next editions of R3, E2R-1, Architecture
@@ -2184,7 +2189,7 @@ register's become final only on the owner's ratification (the next RAT number is
 | Document (path) | Author / check | Status and Git-content SHA-256 |
 |---|---|---|
 | `doc/RATIFICATION_REGISTER_v0_29.md` | Claude, from the records | OWNER-RATIFIED 14 Nov 2026 (RAT-31); installed at `5a8527b`; superseded by this register; `03efd2bac52272494a177a2654f6bcc852a3337eb5f506a73a2784064042f752` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v3.md` | Claude, from H-1 v2 and the records | CANDIDATE (EX_190); `e9d25595c7834e5f9068629ec9e8368938642e3c69afc132aa59dd2e86f1b288` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v3.md` | Claude, from H-1 v2 and the records | CANDIDATE (EX_190); `016b809ef8a8dad18a91d8e7f92884846eb6ee6370576ad789e1be96d1244818` |
 | `doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md` | Claude | CANDIDATE (EX_190); `d1df63bf18bc7becc96212ac0d76d519a2a5c4d6b367251116b294382573dd4d` |
 | `exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md` | the owner's words, recorded by Claude | OWNER DECISIONS 14 Nov 2026; as stored `7ba931c6d2cc1e216e851afb73bd3feba6243ab70371edffaa08e6becc62d6ac` |
 | `exchange/DECISIONS/DECISION_LOG.md` and `exchange/CONTINUITY_NOW.md` | Claude, from the owner's words and the records | living files (P2, P0); no fixed hash; Git keeps their history |

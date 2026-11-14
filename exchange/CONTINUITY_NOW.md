@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 10:30 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 09:15 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -16,9 +16,9 @@ durable EX messages are authoritative.
   change since cc0ab73).
 - **Correction to the order (15 November):** the reviewed sheet requires the official-page check on the day of the first
   Approval 1. So the handover editions come first.
-- **In review:** H-1 v3 and register v0.30 (EX_190, with the reviewer). Then your ratification and install.
-- **Waiting on you:** passing EX_190 to the reviewer; later, on one chosen day: the page check, backups, tree check, then Oz
-  Lotto's Approval 1, each on its own go.
+- **Reviewed:** H-1 v3 and register v0.30: EX_191 PASS WITH CORRECTIONS, applied (EX_192). H-2 needs no new edition.
+- **Waiting on you:** passing EX_192 to the reviewer (for the record); then your ratification and the install, at home.
+- **Next go after that:** the official-page check, only on the day of Oz Lotto's Approval 1, with the backups and tree check.
 - **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
 
@@ -27,7 +27,7 @@ durable EX messages are authoritative.
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
-- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands).
+- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).
 
 ## If a chat ends
 
@@ -65,9 +65,14 @@ independent "how the process went" note from each AI, with reasoning and alterna
 
 ## Mode H state
 
-Both holdouts UNOPENED. No prerequisite and no Approval 1-4 authorised or run. Freeze not started.
+POC rerun and updater offline self-test COMPLETED (both PASS, 14 November 2026); B01 closed. The official-page check, the
+backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Both holdouts UNOPENED. Freeze not started.
 
-## Full order when resumed
+## Full order from here
 
-POC rerun, then B01; the updater self-test; the official-page check; backups; tree check and quiet machine; Oz Lotto
-Approvals 1-4; then Powerball Approvals 1-4 (D1-D7). Handover editions before the first Approval 1.
+1. H-1 v3 and register v0.30: reviewed (EX_191, corrections applied in EX_192); the owner's ratification (RAT-32) and one
+   documentation install, before the day of the first Approval 1. H-2 v2 r1 stays (the reviewer: no new edition needed).
+2. The official-page check, only when separately approved, on the same day as Oz Lotto's Approval 1; the backups, the tree
+   and quiet-machine checks; then Oz Lotto's Approval 1. Each on its own go.
+3. Oz Lotto's Approvals 2-4, then Powerball's 1-4, each on its own go and its own safe schedule (a separately approved
+   Powerball-only page recheck is allowed after Oz Lotto is sealed and before Powerball's Approval 1). D1-D7 apply.
