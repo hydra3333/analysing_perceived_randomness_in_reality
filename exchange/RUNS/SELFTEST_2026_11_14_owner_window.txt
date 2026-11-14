@@ -1,0 +1,43 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 24, done.
+remote: Counting objects: 100% (24/24), done.
+remote: Compressing objects: 100% (10/10), done.
+remote: Total 18 (delta 12), reused 14 (delta 8), pack-reused 0 (from 0)
+Unpacking objects: 100% (18/18), 8.32 KiB | 30.00 KiB/s, done.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   fa38e74..9dc0b3a  main       -> origin/main
+Updating fa38e74..9dc0b3a
+Fast-forward
+ exchange/CONTINUITY_NOW.md                         |  16 +--
+ exchange/DECISIONS/DECISION_LOG.md                 |  16 +++
+ exchange/EX_186_Claude.md                          |  59 ++++++++++
+ exchange/EX_187_ChatGPT.md                         |  15 +++
+ exchange/OWNER_REMINDERS.md                        |   2 +-
+ .../RUNS/POC_R015b_2026_11_14_owner_window.txt     | 122 +++++++++++++++++++++
+ 6 files changed, 221 insertions(+), 9 deletions(-)
+ create mode 100644 exchange/EX_186_Claude.md
+ create mode 100644 exchange/EX_187_ChatGPT.md
+ create mode 100644 exchange/RUNS/POC_R015b_2026_11_14_owner_window.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+?? GAIS/OUTLANDISH_01/OUTLANDISH_01_Q2_LegacyScanner_Comparison_README.md
+?? GAIS/OUTLANDISH_01/OUTLANDISH_01_Q2_LegacyScanner_Comparison_v0_1.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Results_Updater.bat --self-test
+[SELF-TEST] 13/13 PASS
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+?? GAIS/OUTLANDISH_01/OUTLANDISH_01_Q2_LegacyScanner_Comparison_README.md
+?? GAIS/OUTLANDISH_01/OUTLANDISH_01_Q2_LegacyScanner_Comparison_v0_1.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

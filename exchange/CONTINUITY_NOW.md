@@ -4,14 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 22:50 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 22:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
 - **Done:** the POC rerun, 14 November about 22:35: PASS (EX_186; window in exchange/RUNS/).
 - **Done:** B01 decided: scoped W-23 acceptance (decision log entry 5; EX_187 agreed).
-- **Waiting on you:** the reviewer's agreement, then your go for the updater's offline self-test (prerequisite 2).
-- **Next go after it:** the official-page check (prerequisite 3).
+- **Done:** the updater's offline self-test, about 22:43: 13/13 PASS (EX_188; two untracked OUTLANDISH files present,
+  benign).
+- **Waiting on you:** commit your OUTLANDISH files (`git add GAIS/OUTLANDISH_01/`); then the official-page check
+  (prerequisite 3), on its own go after the reviewer's view.
+- **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
