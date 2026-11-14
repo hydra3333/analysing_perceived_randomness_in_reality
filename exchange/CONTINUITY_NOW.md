@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 23:00 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 10:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -14,7 +14,11 @@ durable EX messages are authoritative.
   benign).
   The reviewer agreed the PASS stands (EX_189). The OUTLANDISH files are committed (657a2c1, merged at a6c2894; no code
   change since cc0ab73).
-- **Waiting on you:** the official-page check (prerequisite 3), on its own go after the reviewer's view of the exact block.
+- **Correction to the order (15 November):** the reviewed sheet requires the official-page check on the day of the first
+  Approval 1. So the handover editions come first.
+- **In review:** H-1 v3 and register v0.30 (EX_190, with the reviewer). Then your ratification and install.
+- **Waiting on you:** passing EX_190 to the reviewer; later, on one chosen day: the page check, backups, tree check, then Oz
+  Lotto's Approval 1, each on its own go.
 - **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
 
