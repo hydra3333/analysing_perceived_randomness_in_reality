@@ -1,0 +1,13 @@
+# H-2 v1r11r1 complete SHA-256 manifest (candidate; NOT authority)
+
+# New EX_170 against immutable EX_169; Git install content is LF, exchange content CRLF.
+CRLF-exchange 875402b632e20f29a10fa762ffe30df12e4a3952ab5d0edc4e16e1a586dfd7a5   25314 ChatGPT_Reviewer_Handover_H2_v1r11_delta.md
+LF-install    d4b8511e7ae19747cba554ce3100a6a3ffe5cae92cee4a634598c015c654b1a7   25233 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_delta.md
+CRLF-exchange a36a406b4ef34fa597a1f675ae1fd552cffe098e8d10842d517b663c8d2ef115   13912 ChatGPT_Reviewer_Handover_H2_v1r11_continuity_index.md
+LF-install    da4e6dec2d43de655ac624435f1a239cdf07a2c509787fcd7d2d1971f24c328e   13826 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_continuity_index.md
+CRLF-exchange 10f151fc55f94390a046002e45b1fbf85173d1a55fe8048f7d6573bacd1258a1    9761 ChatGPT_Reviewer_Handover_H2_v1r11_introductory_blurb.md
+LF-install    38f9a83231d8dfd1014f2651d4473d04742ee5ba6fdac591bfed89d1d017f7c1    9725 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_introductory_blurb.md
+CRLF-diff     44007d9c317fa58eec95335f3aa06587d701e364dcfffda86bb0ed4fc0d30e09   21535 H2_v1r11_TO_v1r11r1.diff
+CRLF-plan     31792bbc4b69a750fc8ea32c8d7002653269bfebd633ec95cda9d20333a4a571    4738 H2_v1r11r1_REVIEW_AND_INSTALL_PLAN.md
+CRLF-exchange 3337c00bf634dd396922284362e323579ffbe7d14253f242a226bc4f08b5ba43    3337 EX_170_ChatGPT.md
+NESTED-ZIP    79681311045f3e5d79d8e1f4fc8e800035790c470329f11f90d058a653d154e3   22730 H2_v1r11r1_DOC_HANDOVER_OVERLAY.zip
