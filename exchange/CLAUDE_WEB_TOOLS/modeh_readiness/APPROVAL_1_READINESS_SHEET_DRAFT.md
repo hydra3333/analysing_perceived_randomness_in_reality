@@ -1,10 +1,16 @@
-# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2a (reviewer PASS, EX_168); not authorised
+# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2b (reviewer PASS, EX_168; r2b for the reviewer's check, EX_176); not authorised
 
 **DRAFT r2 (Claude web chat on Fable 5.2, 14 November 2026). Nothing here is authorised and nothing was run or opened.**
 r2 applies the reviewer's EX_167 (PASS WITH CORRECTIONS: blocking B01 and B02, nonblocking C01 to C05); section 11 says
 where. **The reviewer passed r2 (EX_168: zero blocking findings; B01 and B02 closed).** r2a adds only EX_168's three notes
 and its answer on the Powerball-only rerun, which need no further recheck; the page-check script is unchanged (same blob).
-A review PASS is not a go: every step here still needs the owner's own separate approval. Written at the project owner's request of 13 November 2026, 22:08. The owner decides after the recheck, one step
+A review PASS is not a go: every step here still needs the owner's own separate approval.
+**r2b (14 November 2026, after the owner's dependency change):** the owner ran his edited
+`install_upgrade_dependencies_into_venv.bat` (committed at `cc0ab73`; 39 direct packages; the venv now holds 90
+distributions). TASK_T024 (report `811d0cc`) then found, on Windows, `ENV PASS` (no orphan; every RECORD file matching;
+environment digest `5bf4eb8a36ddb9063fbcb27ff1b692d38de3847321518e563f70c7219999a3f9`) and the whole suite passing (571,
+four symlink skips). r2b changes only the values that change: the expected environment digest and the baseline commit of
+prerequisite 5's code check, and adds one sentence on running the installer again. The closure is still 497 files. Written at the project owner's request of 13 November 2026, 22:08. The owner decides after the recheck, one step
 at a time. Sources: design v0.1r7 sections 1, 4, 5 and 7; the installed code at `main` (`effc179` for everything Mode H
 runs), read line by line; a dress rehearsal on invented data (section 10).
 US-ASCII, CRLF. No outcome of any draw appears here; draw numbers and dates (from the weekly rule) are identifiers only.
@@ -158,12 +164,12 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
    ```
    git status --short
    git status --short --ignored src
-   git diff --stat effc179 HEAD -- src "*.bat" requirements.txt
+   git diff --stat cc0ab73 HEAD -- src "*.bat" requirements.txt
    certutil -hashfile source_data\OZLOTTO_results_master.csv SHA256
    certutil -hashfile source_data\POWERBALL_results_master.csv SHA256
    ```
    Expect: nothing from the first status; from the second, nothing or only lines ending `__pycache__/`; nothing from the
-   diff (no code file has changed since the install); the version-1 hashes
+   diff (no code file has changed since the install and the owner's dependency installer, `cc0ab73`); the version-1 hashes
    `4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f` (Oz Lotto) and
    `ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8` (Powerball).
 6. **Quiet machine:** nothing of the project running; VS Code's Python terminals and Claude Code closed; no orphan marker
@@ -181,9 +187,9 @@ a few minutes):
 ```
 Run_Evaluation.bat Method_Mode_H.py manifest --game OZLOTTO
 ```
-Expect one line: `[MODE-H] MANIFEST written for OZLOTTO: 40 variants, targets 1694-1703, frozen master version 1, closure 497 files, digest <12 characters>..., environment digest 966a27926d23...`
-**Check before going on:** 40 variants; version 1; 497 files; the environment digest starts `966a27926d23` (the value T016 found on
-your venv on 13 November). If any of the four differs, stop here and send me the line: nothing is opened yet.
+Expect one line: `[MODE-H] MANIFEST written for OZLOTTO: 40 variants, targets 1694-1703, frozen master version 1, closure 497 files, digest <12 characters>..., environment digest 5bf4eb8a36dd...`
+**Check before going on:** 40 variants; version 1; 497 files; the environment digest starts `5bf4eb8a36dd` (the value T024 found on
+your venv on 14 November, after your dependency change). If any of the four differs, stop here and send me the line: nothing is opened yet.
 ```
 Run_Evaluation.bat Method_Mode_H.py open --game OZLOTTO --statement "I open the holdout of this game for the sealed Mode H study; the study manifest is frozen."
 ```
@@ -248,9 +254,9 @@ a few minutes):
 ```
 Run_Evaluation.bat Method_Mode_H.py manifest --game POWERBALL
 ```
-Expect one line: `[MODE-H] MANIFEST written for POWERBALL: 40 variants, targets 1577-1586, frozen master version 1, closure 497 files, digest <12 characters>..., environment digest 966a27926d23...`
-**Check before going on:** 40 variants; version 1; 497 files; the environment digest starts `966a27926d23` (the value T016 found on
-your venv on 13 November). If any of the four differs, stop here and send me the line: nothing is opened yet.
+Expect one line: `[MODE-H] MANIFEST written for POWERBALL: 40 variants, targets 1577-1586, frozen master version 1, closure 497 files, digest <12 characters>..., environment digest 5bf4eb8a36dd...`
+**Check before going on:** 40 variants; version 1; 497 files; the environment digest starts `5bf4eb8a36dd` (the value T024 found on
+your venv on 14 November, after your dependency change). If any of the four differs, stop here and send me the line: nothing is opened yet.
 ```
 Run_Evaluation.bat Method_Mode_H.py open --game POWERBALL --statement "I open the holdout of this game for the sealed Mode H study; the study manifest is frozen."
 ```
@@ -316,7 +322,9 @@ Every Mode H step re-checks every file under `src\`, every `.bat` in the reposit
 the base Python installation, and refuses on any difference. So, in that window:
 
 - **Do not** edit, save, add, rename or delete anything under `src\`, or any `.bat` in the root (a new one counts too).
-- **Do not** run `install_upgrade_dependencies_into_venv.bat`, `create_venv.bat` or `pip`, or update or repair Python.
+- **Do not** run `install_upgrade_dependencies_into_venv.bat`, `create_venv.bat` or `pip`, or update or repair Python. (Before
+  the first Approval 1 the installer may be run again, but it upgrades every package each time: the freeze check and the
+  suite (T024) are then repeated and the digest above is updated before any Approval 1.)
 - **Do not** install any package (MHUP-B included).
 - **Git, allowed:** `git status`, `git log`, `git diff`, `git add <named paths>`, `git commit`, `git push`, `git rev-parse`.
 - **Git, not allowed:** `checkout`, `restore`, `reset`, `stash`, `switch`, `clean`, `git add -A`, `git add .`, a re-clone.

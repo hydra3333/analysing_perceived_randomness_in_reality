@@ -577,6 +577,16 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   blurb move to doc/HANDOVER/superseded/ only if you approve.
 - When: before the first Approval 1, so that nothing in doc/ is pending during the freeze.
 
+## R-028  Your dependency change of 14 November 2026
+
+- Asked: the owner, 14 November 2026 ("i would like to include the pip changes too"; "run it": already run on the project venv).
+- Status: OPEN until the reviewer's EX_177. Committed by you at cc0ab73 (with two duplicate GAIS notes). TASK_T024 PASS
+  (report 811d0cc): the venv passes Mode H's freeze check (90 distributions, no orphan; environment digest 5bf4eb8a36dd...)
+  and the whole suite (571). Readiness sheet r2b carries the new digest; EX_176 asks the reviewer to review the change (W-23).
+- What to remember: the installer now upgrades every package on every run. Before the first Approval 1, any rerun means
+  T024 again and a new expected digest; from the first Approval 1 until both games are sealed, never run it.
+- When: before the readiness checks (R-026).
+
 ## Standing reminders
 
 - The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in
