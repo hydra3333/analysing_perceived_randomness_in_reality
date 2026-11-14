@@ -4,13 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 22:35 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 22:45 Australia/Adelaide.
 
 ## For the owner: NOW
 
-- **Waiting on you:** the POC rerun itself (GO: decision log entries 3 and 4; the reviewer agreed in EX_185; this POC
-  only). Before it: commit your OUTLANDISH work so `git status --short` shows nothing.
-- **Next go after it:** your B01 decision, then the updater self-test.
+- **Done:** the POC rerun, 14 November about 22:35: PASS (EX_186; window in exchange/RUNS/).
+- **Waiting on you:** your B01 decision (EX_186 section 3 has the proposed wording), after the reviewer's view.
+- **Next go after it:** the updater's offline self-test.
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
@@ -19,7 +19,7 @@ durable EX messages are authoritative.
   acceptance, never "W-23 PASS"). Nothing else open.
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
-- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice).
+- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed).
 
 ## If a chat ends
 

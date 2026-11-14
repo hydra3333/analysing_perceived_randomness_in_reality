@@ -1,0 +1,122 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 12, done.
+remote: Counting objects: 100% (12/12), done.
+remote: Compressing objects: 100% (2/2), done.
+remote: Total 7 (delta 5), reused 7 (delta 5), pack-reused 0 (from 0)
+Unpacking objects: 100% (7/7), 2.07 KiB | 25.00 KiB/s, done.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   b9e1fb2..fa38e74  main       -> origin/main
+Updating b9e1fb2..fa38e74
+Fast-forward
+ exchange/CONTINUITY_NOW.md         |  6 +++---
+ exchange/DECISIONS/DECISION_LOG.md |  6 ++++++
+ exchange/EX_185_ChatGPT.md         | 18 ++++++++++++++++++
+ 3 files changed, 27 insertions(+), 3 deletions(-)
+ create mode 100644 exchange/EX_185_ChatGPT.md
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir transitory_data\poc_runs\UNRESOLVED_ORPHAN.json
+ Volume in drive E is E-DRIVE
+ Volume Serial Number is 366A-E763
+
+ Directory of E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\transitory_data\poc_runs
+
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (echo NO_PYCACHE_EVER ABSENT)
+NO_PYCACHE_EVER ABSENT
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /s /b /a-d src\*.pyc 2>nul | findstr /v /i /c:"__pycache__" | find /c /v ""
+0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>"%CD%\.venv\Scripts\python.exe" -B tests\windows_architecture_poc_suite.py
+[SMOKE] P1/P2 Windows engineering tests (no lottery dataset)
+PASS: independent wrapper canonical fixture
+PASS: one-worker coordinator / canonical bytes match direct
+PASS: 1-vs-6 and manual/coordinator byte-identical; separate status
+PASS: nonzero exit=3 passed through two wrappers into coordinator
+PASS: hard exit 7, incomplete STARTED status flagged
+NOT TESTED: timeout cleanup (use --with-timeout explicitly)
+NOT TESTED: Ctrl+C, memory stress, W-23 upgrade gating and other W-suite cases
+[SMOKE] PASS
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Experiment.bat POC_Architecture_Probe.py --poc --case=canonical-fixture --run-id=poc-R015b-ok-%RANDOM%%RANDOM%
+BEGIN POC_Architecture_Probe case=canonical-fixture run=poc-R015b-ok-236305538
+RESULT {"case":"canonical-fixture","fixture_sha256":"0bca11112894bafc97a14ff91feb83bf42f464f6a0ad548c4435d6e8140b1a53","note":"Synthetic POC; never a lottery forecast","probe":"POC_Architecture_Probe","synthetic_total":31,"synthetic_values":[3,1,4,1,5,9,2,6]}
+DIGEST a853ac3545213c8f9be9355e312bf220a74fa89f240e4123aed308d983350937
+FINISH POC_Architecture_Probe SUCCESS
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (echo NO_PYCACHE_EVER ABSENT)
+NO_PYCACHE_EVER ABSENT
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Experiment.bat POC_Architecture_Probe.py --poc --case=exit-code --exit=3 --run-id=poc-R015b-exit3-%RANDOM%%RANDOM%
+BEGIN POC_Architecture_Probe case=exit-code run=poc-R015b-exit3-3236712319
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 3
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (echo NO_PYCACHE_EVER ABSENT)
+NO_PYCACHE_EVER ABSENT
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>mkdir transitory_data\no_pycache_ever
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Experiment.bat POC_Architecture_Probe.py --poc --case=echo-argv --run-id=poc-R015b-refusal-check
+[RUN-EXPERIMENT] ERROR: transitory_data\no_pycache_ever exists; refusing to run.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 10
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Evaluation.bat Method_Mode_H.py statements
+[RUN-EVALUATION] ERROR: transitory_data\no_pycache_ever exists; refusing to run.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 10
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>rmdir transitory_data\no_pycache_ever
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (echo NO_PYCACHE_EVER ABSENT)
+NO_PYCACHE_EVER ABSENT
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>call Run_Evaluation.bat Method_Mode_H.py statements
+open: I open the holdout of this game for the sealed Mode H study; the study manifest is frozen.
+advance: I advance the admitted study version after written agreement from Claude and the reviewer.
+declare-developed: I declare this game's system developed (GOAL-1); the weekly session may begin.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\no_pycache_ever (echo NO_PYCACHE_EVER PRESENT) else (echo NO_PYCACHE_EVER ABSENT)
+NO_PYCACHE_EVER ABSENT
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /s /b /a-d src\*.pyc 2>nul | findstr /v /i /c:"__pycache__" | find /c /v ""
+0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir transitory_data\poc_runs\UNRESOLVED_ORPHAN.json
+ Volume in drive E is E-DRIVE
+ Volume Serial Number is 366A-E763
+
+ Directory of E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\transitory_data\poc_runs
+
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
