@@ -4,12 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 20:25 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 20:40 Australia/Adelaide.
 
 ## For the owner: NOW
 
-- **Waiting on you:** nothing. The project is paused at your choice while you explore.
-- **Next possible go (when you resume):** the POC rerun (R-015 (b)); then your B01 decision.
+- **Waiting on you:** the reviewer's agreement to start, then the POC rerun itself (your go given, conditional on that
+  agreement; decision log entry 3). Before it: commit your OUTLANDISH work so `git status --short` shows nothing.
+- **Next go after it:** your B01 decision, then the updater self-test.
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
@@ -49,6 +50,8 @@ independent "how the process went" note from each AI, with reasoning and alterna
 - The old ChatGPT reviewer chat ended; the replacement took over (EX_178-EX_180: 12 of 12) and was accepted by the owner.
 - D1-D7 decided as recommended (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md); EX_181 agreed.
 - Working approach P0-P6 adopted (EX_182-EX_184; exchange/DECISIONS/DECISION_LOG.md).
+- OUTLANDISH_01's methods join the method backlog, probably first among the methods still to do, through this project's
+  normal route (decision log entry 3).
 - The owner works on OUTLANDISH_01 in GAIS/, committing with `git add GAIS/OUTLANDISH_01/`; no further package installs
   planned (he will ask Claude first).
 

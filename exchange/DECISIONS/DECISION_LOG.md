@@ -28,3 +28,18 @@ the installed documents. This log is not a separate approval process.
   exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md.
 - Documentation round ratified (RAT-31): exchange/DECISIONS/OWNER_DECISIONS_2026_11_14_DOC_ROUND_RAT31.md.
 - No further package installs planned; the owner will ask Claude first (Claude chat, 19:48).
+
+## 3. 14 November 2026, about 20:32 - OUTLANDISH_01 methods go first in the "still to do" list; go for task 1 if the reviewer agrees
+
+- **Where:** the owner's message in the Claude chat.
+- **Owner's words:** "outlandish will go into the "Still to do" even though these will have been developed and run they
+  will not be in a form usable by this project and will need to be reviewed and changed accordingly, probably as the first
+  ones in the "Still to do" list.  OK. lets start the process form #1 if chatgpt agrees now (al;so tell chatgpt about the
+  updated "Still to do" list then we go)"
+- **Status:** (a) DECIDED: OUTLANDISH_01's method family joins this project's method backlog, probably first among the
+  methods still to do (after Mode H, MHUP-B and WF-1C, as the existing order puts all new methods). It enters only through
+  this project's normal route: identity decision (new numbers E_63 onward need an owner decision and a catalogue
+  amendment), design review, N-1 isolation, rework into this project's method contract, release, and the Q7 raw-value
+  restriction. Its OUTLANDISH runs are not evidence for this project. (b) GO, CONDITIONAL on the reviewer's agreement:
+  task 1, the POC rerun (R-015 (b)), exactly as `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/OWNER_POC_RERUN_R015b_DRAFT.md`
+  r3 (Git blob 1105ff1c6c37f8be9bbb99e8b833dfd8dfa0a097; passed in EX_168; unchanged since), without `--with-timeout`.
