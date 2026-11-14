@@ -2,7 +2,11 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 13 November 2026 (evening): MHUP-A INSTALLED, released and closed (package commit 2860e86, release commit
+Last updated: 14 November 2026: the Mode H readiness sheet reviewed (EX_167, EX_168 PASS; nothing authorised); the
+documentation round drafted: H-1 v2 (a full Claude handover replacing v1r8 and its deltas) and register v0.29, with the
+reviewer's own H-2 v1r11 r1 (EX_169, EX_170). Next: the reviewer's check, your ratification and install, then your
+readiness decisions D1-D7.
+Earlier (13 November 2026, evening): MHUP-A INSTALLED, released and closed (package commit 2860e86, release commit
 effc179; E_1 revision 3 released for both games, dated 2026-11-13); the post-install test fix committed (87c4219; the suite
 571/571 on main); rulebook v0.5 and your five settings deny lines in place; DOC-14 (register v0.27, design v0.1r7)
 installed at b8600d0. Next: register v0.28 (a numbering correction, for your approval), then the MHUP-B assessment.
@@ -263,6 +267,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            Mode H first, then MHUP-B (Route 2, in principle); Q7 decided (the restriction on raw draw values in the AI
            chats stays); the POC rerun preferred (R-015 (b)); backups to be confirmed before Approval 1 (R-015 (c)).
            NOW:
+           (0) The documentation round of 14 November 2026 (R-027): H-1 v2 and its blurb and register v0.29 (Claude,
+               full editions at your instruction); H-2 v1r11 r1 (the reviewer's own, EX_170, Claude's checks PASS). Next:
+               the reviewer's check of Claude's part; your ratification; your install of both, before the first
+               Approval 1.
            (1) The Approval 1 readiness sheet (Approvals 1-4 per game, what cannot be undone, the scientific scope and
                limits, exact commands, the freeze, STOP handling, prerequisites, exposure), with the POC rerun
                instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.

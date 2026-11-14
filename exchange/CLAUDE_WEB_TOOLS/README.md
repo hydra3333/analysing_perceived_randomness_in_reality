@@ -138,3 +138,22 @@ The previous chat's running notes, for reference only; the register, H-1 and the
 | `mhupa/assemble_ex141.py` | `assemble_ex141.py SCRATCHPAD REPO`: builds the review zip (overlay, tools, evidence), the diff and EX_141, and stages them into `exchange/`. |
 | `mhupa/assemble_ex143.py` | The same for EX_143 (slice 1 candidate v1r1 after EX_142), plus the v1-to-v1r1 diff. |
 | `mhupa/assemble_ex145.py` | The same for EX_145 (candidate v1r2 after EX_144), plus the v1r1-to-v1r2 diff; `slice1_new/` and `slice1_edited/` are the candidate's new and whole-file-replaced sources as of EX_145. |
+
+## Added since slice 1 (summary written with H-1 v2, 14 November 2026)
+
+Each folder's own files (a README, a PLAN.md, a cover note or the builder's docstring) are authoritative on its use. H-1 v2
+sections 8.7 and 12.2 say where each fits.
+
+| Path | What it holds |
+|---|---|
+| `check_task_commands.py` | `python3 -I check_task_commands.py REPO TASK`: checks every command line of a Claude Code task file against the repository's `.claude/settings.json` deny patterns (and more); successor of `cc/check_task_vs_deny.py`. Run it on every task file before committing it. |
+| `mhupa/` (slice 2) | `build_dev_slice2.sh`, `apply_slice2.py`, `edit_tests_slice2.py`, `make_updater_v0_2.py`, `slice2_new/`, `slice2_edited/`, `slice2_checkpoint/` (the 570-test suite runner) and `mhupa_slice2_mutations.py` (103 mutants); slice 1's mutation tool grew to 90 mutants. |
+| `mhupa/integrated/` | The integrated MHUP-A package: `build_dev_integrated.sh BASE DEV TOOLS DATE`, `build_mhupa_pkg.py` (overlay, manifest, copy tool, verifier with the `released` phase, suite runner, Appendix J instructions), `PLAN.md` (the work list and checkpoint log) and the evidence. |
+| `mhupa/t016/` | Rulebook v0.5 and TASK_T016 drafts, the T016 environment harness, `final/` (the ratified Appendix J amendments, the gate list `INSTALLATION_STEPS_PROPOSED.md`, the R2-to-final diff) and the owner's rows 8 and 9 record. |
+| `mhupa/postinstall/` | The post-install verification note and the test fix r1: `fix_tests_r1/` (note, diff, overlay, `MHUPA_TESTFIX_r1.zip`, `make_task_t023.py`, the T023 draft). |
+| `doc13/` | `make_design_v0_1r6.py`, `make_register_v26.py` and its section (DOC-13). |
+| `doc14/` | `make_design_v0_1r7.py`, `make_register_v27.py`, `make_register_v28.py`, their sections, outputs and diffs, and DOC-14's cover note. |
+| `handover/` | Earlier handover builders (`make_h1_v1r6.py`, `make_h2_v1r7.py`, `build_h2_v1r9.py` and the H-2 v1r9 new parts). |
+| `h1v2/` | H-1 v2 (14 November 2026): `make_h1_v2.py REPO OUT` builds it from H-1 v1r8's ratified bytes with the counted edits in `edits_*.py` and the section fragments `frag_*.md`; `out/` holds the edition, its blurb and the diff from v1r8. |
+| `register/` | Register builders (`make_register_v22.py`, `make_register_v25.py`, `make_register_v29.py` with their sections); `RATIFICATION_REGISTER_v0_29.md` and its diff from v0.28. |
+| `modeh_readiness/` | The Mode H Approval 1 readiness sheet (reviewed draft r2a), the Windows POC rerun instructions (r3), the read-only official-page check `gov_fetch_parse_smoke.py` with its development test, `modeh_dress_rehearsal.py` (the full cohort on invented data), `modeh_scale_illustration.py` and `evidence/`. Nothing here is authorised; every owner step needs its own go. |

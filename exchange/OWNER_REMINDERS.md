@@ -257,6 +257,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   before Approval 1 (on the readiness sheet). Also decided: Mode H first, then MHUP-B (Route 2, in principle; not yet
   Approval 1); no MHUP-B install and no change to the frozen code or environment from the first Approval 1 until both games
   are sealed.
+- Update (14 November 2026): (b) and (c) are now prerequisites on the readiness sheet (r2a; the reviewer's EX_168 PASS), each
+  with its own go; see R-026. (a) goes into register v0.29 and H-1 v2.
 
 ## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
 
@@ -273,6 +275,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   continuity. No simultaneous ChatGPT takeover is prepared.
 - When: raise the ChatGPT reviewer handover with the owner only after the new Claude chat has resumed
   normal work reliably, or if the reviewer chat nears its own limit.
+- Update (14 November 2026): at your request the present reviewer wrote its own continuity refresh, H-2 v1r11 (EX_169;
+  Claude's factual check; r1 in EX_170), for your approval and install (R-027). Both the reviewer and Claude recommend a
+  full H-2 edition after both Mode H games are sealed.
 
 ## R-017  The name Lotterywest-GOV (LW-1) in the documents not yet edited
 
@@ -285,6 +290,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - When: the Claude Code rulebook's rule 1 with MHUP-A's rulebook change (register v0.24, future action 1);
   the design at its next edition (future action 6); H-2 with the later reviewer handover (R-016). The
   direction document is DONE: v0.3r1 (installed at dfc2d13, 4 November 2026) uses the name.
+- Update (14 November 2026): DONE for the rulebook (v0.5 rule 1, 760e0c6), the design (v0.1r6 and v0.1r7), H-1 (v2) and
+  H-2 (v1r11). Left: R3, the E2R contract specification, Architecture and the proposal, each at its next edition.
 
 ## R-018  The owner's decisions of 4 November 2026, to be recorded and carried into the work
 
@@ -320,6 +327,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   (i) The direction document v0.3r1 ratified (dfc2d13): register v0.25.
 - When: register v0.25 records all of them (with MHUP-A's round); each "goes into" item at its document's
   next authorised edition.
+- Update (14 November 2026): (a) and (h) are in H-1 v2 (sections 5.1, 5.3 and 10) and the readiness sheet (section 8);
+  (a), (d) and (h) go into MHUP-B's checklist when it is designed; (c) at the next template edition; (e)-(g) with the
+  cross-batch report (roadmap 21b).
 
 ## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142-EX_146)
 
@@ -353,11 +363,16 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       install safety and end-to-end synthetic lifecycles, with the applicable EX_131 and Appendix L items.
 - When: slice 2's development; its handback names where each is tested. Slice 1 PASSED (EX_146, 5 November
   2026); the integrated package needs its own integration review.
+- Update (14 November 2026): (a), (d) and (e) installed with MHUP-A (13 November 2026; EX_164 PASS). (b) and (c) stay
+  OPEN for MHUP-B (H-1 v2 section 10, item 4).
 
 ## R-020  MHUP-A integrated package: what the package or the owner must carry (from slice 2; (d)-(f) added 6 November 2026)
 
 - Asked: Claude, from slice 2's development (EX_147, 5 November 2026).
-- Status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026; the owner's "go"
+- Status: DONE (13 November 2026): the integrated package was built, frozen (EX_163), reviewed (EX_164 PASS), rehearsed
+  (T016 PASS) and installed (2860e86 + effc179): (a) E_1 revision 3 released for both games; (b) the real venv had no orphan
+  (T016 row 6); (c) your choice: the POC rerun, preferred (13 November 2026; R-015 (b), R-026); (d)-(g) done as below.
+  Earlier status: OPEN until the integrated package is built and reviewed (slice 2 PASSED, EX_152, 5 November 2026; the owner's "go"
   for the integrated package, 8 November 2026; the rebuild on main 009c985 ran 570 tests on each Python with one expected
   date-pinning failure, now fixed in the build, the final suite still to run on the frozen package; the package itself is not
   yet built: exchange/CLAUDE_WEB_TOOLS/mhupa/integrated/PLAN.md).
@@ -415,6 +430,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - What: exchange/EX_149_Claude/MHUP1_design_amendment_A1_draft.md (sections 1-5). Its section 6 records
   your other decision: the corrective scoring run after the Mode H seal is MHUP-B's, by the route stated
   there. When approved, the register records A1 and the integrated package carries it.
+- Update (14 November 2026): DONE in full: register v0.26 records A1 and design v0.1r6 folds it in (DOC-13, 52b6de8);
+  MHUP-A installed it (13 November 2026). The corrective scoring run stays with MHUP-B.
 
 ## R-022  The ChatGPT reviewer chat ended without a handover (6 November 2026): the new reviewer's takeover
 
@@ -461,7 +478,10 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-025  The integrated MHUP-A package: F1-F9 (predecessor's cross-check) and Claude's new findings N1-N3
 
 - Asked: the owner's HO-2 closure and GO, 10 November 2026 (exchange/HO2_2026_11_10/); N1-N3 found by Claude in items 1-2.
-- Status: OPEN until each is resolved in the package, the rulebook v0.5 / T016 review or the install plan.
+- Status: DONE (13-14 November 2026): every item was resolved in the package, the rulebook v0.5 / T016 review or the install;
+  the register entry for the 11 November ratification is in registers v0.27 and v0.28; the post-step-18 suite run goes into
+  MHUP-B's rehearsals (R-026's "after both seals"). Earlier status: OPEN until each is resolved in the package, the rulebook
+  v0.5 / T016 review or the install plan.
 - What: F1 settings-deny timing (proposal: your deny lines after T016, before step 0, as your own commit); F2 T016's synthetic
   root and the one owner-run live-child check; F3 Route A (rulebook v0.5 and the T016 task reviewed and installed before
   T016); F4 pathspec staging and the task-clone step 0; F5 wording; F6 the freeze runs per game from Approval 1: change
@@ -513,6 +533,45 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Left for later on purpose (the register prevails meanwhile): Architecture v0.10 (with MHUP-B), R3 v0.6, the E2R contract
   spec, Proposal v0.7 (each when next edited), the holdout exposure record (after Q7), the next full H-1 and H-2 editions
   (after MHUP-A).
+- Update (14 November 2026): H-1 v1r10r3 installed at ac52739 (RAT-29). The next full H-1 edition is H-1 v2 (R-027); the
+  reviewer's own H-2 v1r11 (R-016, R-027). Q7 is decided (R-015), so the holdout exposure record's next edition can follow
+  Mode H.
+
+## R-026  Mode H: your readiness decisions, the preparatory checks and the four approvals per game
+
+- Asked: the owner, 13 November 2026, 22:08 (the readiness sheet; exchange/DECISIONS/OWNER_DECISIONS_2026_11_13b_MODEH_FIRST_Q7.md).
+- Status: OPEN. The sheet is reviewed (EX_167 PASS WITH CORRECTIONS; r2; EX_168 PASS; r2a at 496731c). Nothing is authorised
+  and nothing has run.
+- What (exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md):
+  (a) Your decisions D1 to D7 (sheet section 9): D1 Oz Lotto first, from manifest to seal, then Powerball; D2 both games decided
+      now, whatever the first shows, barring a technical or safety STOP; D3 the witness push after each Approval 1, on its own
+      go; D4 the official-page check before Approval 1, or your written acceptance of the risk that a page change permanently
+      blocks the first game; D5 the updated masters left uncommitted until both games are sealed; D6 you upload the report
+      .txt files, preferably both together after both seals; D7 the order of your gos.
+  (b) The preparatory checks, each with its own go: the Windows POC rerun (OWNER_POC_RERUN_R015b_DRAFT.md r3; never
+      --with-timeout); the updater's offline self-test (13/13 PASS); the read-only official-page check
+      (gov_fetch_parse_smoke.py, blob 1cbd3294; two page loads; nothing written); the backups of source_data\ and results\
+      confirmed (R-015 (c)); the tree and identity checks; a quiet machine.
+  (c) Per game, each a separate go, looking at the evidence after each: Approval 1 (manifest, then open), the witness push if
+      D3, Approval 2 (the first update), Approval 3 (the plan and the batch), Approval 4 (the score and the seal). The freeze
+      holds from the first Approval 1 until both games are sealed.
+  (d) After both seals: the reports read together; the register records the study; the holdout exposure record's next edition;
+      the full H-1 and H-2 editions refreshed; then MHUP-B (design only on your authorisation, with the post-release suite run
+      in its rehearsals).
+- When: after the documentation round of 14 November 2026 is installed (R-027), whenever you choose. There is no deadline;
+  every week before the weekly session exists is, for each released variant, a draw that can later count only as catch-up.
+
+## R-027  The documentation round of 14 November 2026
+
+- Asked: the owner, 14 November 2026 ("you do your updates to big docs, chatgpt can do its own"; "fully updated docs rather
+  than more addendums or deltas").
+- Status: OPEN. Claude's part is drafted (exchange/CLAUDE_WEB_TOOLS/h1v2/ and register/); the reviewer's H-2 v1r11 r1 is in
+  EX_170.
+- What: H-1 v2 and its blurb (a full consolidated edition replacing H-1 v1r8 and all its deltas) and register v0.29
+  (Claude); H-2 v1r11 r1, three new files (the reviewer); the reviewer's documentary check of Claude's part; your
+  ratification; your install of both (copy commands from Claude); Claude's check from GitHub. The old H-1 v1r10r3 delta and
+  blurb move to doc/HANDOVER/superseded/ only if you approve.
+- When: before the first Approval 1, so that nothing in doc/ is pending during the freeze.
 
 ## Standing reminders
 
@@ -538,4 +597,6 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   (new HIGH design, the core of a HIGH code module, a BLOCKER-level review finding, an unexplained STOP)
   and Opus for everything else, including packaging, tests scaffolding, task files, installs, records and
   relays. Cold-read helpers can run on a cheaper model whatever the chat's model.
-  Recorded as MC-1 in register v0.24 and carried in H-1 v1r8 section 2.
+  Recorded as MC-1 in register v0.24 and carried in H-1 v1r8 section 2 and H-1 v2 section 2.
+- Full editions, not layers (owner, 14 November 2026): Claude's handovers come as full updated documents rather than
+  further deltas or overlays; the reviewer prepares its own.
