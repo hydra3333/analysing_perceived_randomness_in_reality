@@ -72,47 +72,5 @@ delete_superseded = true
 # --- BEGIN OUTLANDISH GENERATED STATE ---
 [state.active]
 
-[state.active.pi]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_pi_10_to_9.bin'
-digits = 1000000000
-sha256 = '2e633867ad0ed7d866bcc0b3defc29b7704d0808cf62bba1dee1935fc357316e'
-verified_utc = '2026-11-06T04:59:47Z'
-
-[state.active.phi]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_golden_ratio_10_to_9.bin'
-digits = 1000000000
-sha256 = '6be7059e971a6c710074682bfac76d415d1eff32c310bdb32c3c91283238d6d8'
-verified_utc = '2026-11-06T05:08:34Z'
-
-[state.active.e]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_e_10_to_9.bin'
-digits = 1000000000
-sha256 = '7371fbff9ebde7fc7eb6009ce1137c8ab865d4fcf03d8231d3a22a74afd56b29'
-verified_utc = '2026-11-06T05:09:52Z'
-
-[state.active.log2]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_log2_10_to_9.bin'
-digits = 1000000000
-sha256 = 'a9e86102914d564077c6fefcafc90dc27e9cad11af2bbc3159afebe1e4574f35'
-verified_utc = '2026-11-06T05:13:33Z'
-
-[state.active.gamma]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_gamma_10_to_9.bin'
-digits = 1000000000
-sha256 = '82a1ed270f9494fb01d214b1e34156d29f0b1d62b3c586d87740ea80302d919a'
-verified_utc = '2026-11-06T05:54:57Z'
-
-[state.active.lemniscate]
-# Parent: settings.storage.digits_dir (under artifact_dir, under main_root)
-file = 'digits_lemniscate_10_to_9.bin'
-digits = 1000000000
-sha256 = 'a2482f77c7eccd54e9878317e88e4d9177f20b1e91eb07c377d36668a3973be6'
-verified_utc = '2026-11-06T06:22:11Z'
-
 [state.pending_retirement]
 # --- END OUTLANDISH GENERATED STATE ---
