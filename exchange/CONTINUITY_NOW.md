@@ -1,10 +1,24 @@
 # CONTINUITY NOW - the one page that lets a new chat take over
 
-Living page. Updated in place by the Claude web chat after every milestone (Git keeps the history). It is not a
-handover and grants no permission; the installed handovers are authoritative. Its purpose: if either AI chat ends
-suddenly, nothing is lost.
+Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claude web chat after every milestone; Git
+keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
+durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 20:05 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 20:25 Australia/Adelaide.
+
+## For the owner: NOW
+
+- **Waiting on you:** nothing. The project is paused at your choice while you explore.
+- **Next possible go (when you resume):** the POC rerun (R-015 (b)); then your B01 decision.
+- **Blocks or STOPs:** none.
+
+## Reviewer status
+
+- Open findings: EX_177 B01 (owner gate: W-23 evidence for the dependency change; decide after the POC rerun, as a scoped
+  acceptance, never "W-23 PASS"). Nothing else open.
+- Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
+  (untracked files, running processes, the holdouts being unopened) is owner-reported.
+- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice).
 
 ## If a chat ends
 
@@ -16,31 +30,33 @@ suddenly, nothing is lost.
 
 ## Installed handovers (authoritative)
 
-H-1 v2 (Claude) and H-2 v2 r1 (reviewer), with register v0.29: ratified RAT-31, installed 5a8527b.
+H-1 v2 (Claude) and H-2 v2 r1 (reviewer), with register v0.29: ratified RAT-31, installed 5a8527b. Next edition due
+before the first Approval 1 (H-1 v3 at least), carrying the working approach below.
 
-## Changes since those handovers (all committed)
+## Working approach adopted 14 November 2026 (P0-P6)
+
+EX_182 as modified by EX_183, agreed in EX_184; decision log entry 1. In short: decide by effect (level 1 owner decides
+after review: science, safety, `src/`, packages, real data, Mode H; level 2 reviewed, still needs its own go; level 3
+cosmetic or routine author choices only); one decisions log; this one NOW page; living drafts, but a procedure used for
+a real step is fixed and re-reviewed if changed; an ideas backlog after Mode H; and at each substantial milestone a short
+independent "how the process went" note from each AI, with reasoning and alternatives. Reviewer rights unchanged.
+
+## Changes since the installed handovers (all committed)
 
 - Owner dependency change cc0ab73; TASK_T024 PASS (ENV PASS, 571 tests); new environment digest 5bf4eb8a36dd...
-  (H-1 v2 still quotes the older 966a2792...; the readiness sheet r2c has the new one).
-- EX_176-EX_177: reviewed, PASS WITH CORRECTIONS. C01 applied (sheet r2c). C02 closed by the owner without a pip check.
-  B01 OPEN: decided after the POC rerun, as a scoped W-23 acceptance, never "W-23 PASS" (EX_181).
-- The old ChatGPT reviewer chat ended; replacement took over (first reply recorded; EX_178-EX_180: 12 of 12); accepted by
-  the owner.
-- D1-D7 decided by the owner as recommended (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md); EX_181
-  agreed. Nothing authorised to run.
-- The owner does independent OUTLANDISH_01 work in GAIS/, committing with `git add GAIS/OUTLANDISH_01/`; no further
-  package installs planned (he will ask Claude first).
+  (H-1 v2 still quotes the older 966a2792...; readiness sheet r2c has the new one).
+- EX_176-EX_177: PASS WITH CORRECTIONS. C01 applied (sheet r2c). C02 closed by the owner without a pip check. B01 open.
+- The old ChatGPT reviewer chat ended; the replacement took over (EX_178-EX_180: 12 of 12) and was accepted by the owner.
+- D1-D7 decided as recommended (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md); EX_181 agreed.
+- Working approach P0-P6 adopted (EX_182-EX_184; exchange/DECISIONS/DECISION_LOG.md).
+- The owner works on OUTLANDISH_01 in GAIS/, committing with `git add GAIS/OUTLANDISH_01/`; no further package installs
+  planned (he will ask Claude first).
 
 ## Mode H state
 
-Both holdouts UNOPENED. No prerequisite and no Approval 1-4 has been authorised or run. Freeze not started.
+Both holdouts UNOPENED. No prerequisite and no Approval 1-4 authorised or run. Freeze not started.
 
-## In flight
+## Full order when resumed
 
-- EX_182 (Claude): could the main project borrow parts of OUTLANDISH's lighter approach? With the reviewer.
-- Project paused at the owner's choice (14 November evening) while he explores.
-
-## Next go (when the owner resumes)
-
-The POC rerun (R-015 (b)), then B01; then the self-test, the official-page check, backups, tree check; then Oz Lotto
-Approvals 1-4; then Powerball. A full handover edition (H-1 v3 at least) is due before the first Approval 1.
+POC rerun, then B01; the updater self-test; the official-page check; backups; tree check and quiet machine; Oz Lotto
+Approvals 1-4; then Powerball Approvals 1-4 (D1-D7). Handover editions before the first Approval 1.

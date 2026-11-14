@@ -266,7 +266,8 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            DONE (13 November 2026, late): register v0.28 installed (cce4858); the MHUP-B assessment; your decisions:
            Mode H first, then MHUP-B (Route 2, in principle); Q7 decided (the restriction on raw draw values in the AI
            chats stays); the POC rerun preferred (R-015 (b)); backups to be confirmed before Approval 1 (R-015 (c)).
-           NOW:
+           NOW: from 14 November 2026 (evening) the live 'now' is exchange/CONTINUITY_NOW.md (EX_183 P3); this block is
+           kept as history.
            (0) DONE (14 November 2026): the documentation round: H-1 v2, H-2 v2 r1 (one full handover each) and
                register v0.29, reviewed (EX_171-EX_175), ratified by you (RAT-31) and installed (5a8527b, verified).
                Then: your dependency change committed (cc0ab73); T024 PASS (ENV PASS, 571); EX_176 to the reviewer; its
