@@ -4,22 +4,22 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 22:45 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 22:50 Australia/Adelaide.
 
 ## For the owner: NOW
 
 - **Done:** the POC rerun, 14 November about 22:35: PASS (EX_186; window in exchange/RUNS/).
-- **Waiting on you:** your B01 decision (EX_186 section 3 has the proposed wording), after the reviewer's view.
-- **Next go after it:** the updater's offline self-test.
+- **Done:** B01 decided: scoped W-23 acceptance (decision log entry 5; EX_187 agreed).
+- **Waiting on you:** the reviewer's agreement, then your go for the updater's offline self-test (prerequisite 2).
+- **Next go after it:** the official-page check (prerequisite 3).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
 
-- Open findings: EX_177 B01 (owner gate: W-23 evidence for the dependency change; decide after the POC rerun, as a scoped
-  acceptance, never "W-23 PASS"). Nothing else open.
+- Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
-- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed).
+- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed).
 
 ## If a chat ends
 
@@ -46,7 +46,7 @@ independent "how the process went" note from each AI, with reasoning and alterna
 
 - Owner dependency change cc0ab73; TASK_T024 PASS (ENV PASS, 571 tests); new environment digest 5bf4eb8a36dd...
   (H-1 v2 still quotes the older 966a2792...; readiness sheet r2c has the new one).
-- EX_176-EX_177: PASS WITH CORRECTIONS. C01 applied (sheet r2c). C02 closed by the owner without a pip check. B01 open.
+- EX_176-EX_177: PASS WITH CORRECTIONS. C01 applied (sheet r2c). C02 closed by the owner without a pip check. B01 closed (scoped W-23 acceptance).
 - The old ChatGPT reviewer chat ended; the replacement took over (EX_178-EX_180: 12 of 12) and was accepted by the owner.
 - D1-D7 decided as recommended (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md); EX_181 agreed.
 - Working approach P0-P6 adopted (EX_182-EX_184; exchange/DECISIONS/DECISION_LOG.md).

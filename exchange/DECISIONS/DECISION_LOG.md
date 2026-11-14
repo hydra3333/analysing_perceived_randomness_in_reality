@@ -49,3 +49,19 @@ the installed documents. This log is not a separate approval process.
 - **Where:** the reviewer's agreement (EX_185, relayed by the owner).
 - **Status:** entry 3 (b)'s condition is met. GO for the POC rerun r3 (blob 1105ff1c...), default route, no
   `--with-timeout`. This POC only; nothing else is authorised. The reviewer also acknowledged entry 3 (a).
+
+## 5. 14 November 2026, about 22:45 - B01: scoped W-23 acceptance of the dependency change
+
+- **Where:** the question tool in the Claude chat, after EX_186 (Claude) and EX_187 (reviewer).
+- **Question (Claude):** "B01: do you accept T024 plus tonight's POC rerun as enough evidence for your 14 November
+  dependency change (cc0ab73) only? This is recorded as a 'scoped W-23 acceptance', never 'W-23 PASS'. Not tested on the
+  new packages: the timeout/cleanup case, Ctrl+C, memory stress and the other lifecycle tests. You'd be accepting that
+  their risk can't be measured (the reviewer's correction to my 'low'). Both AIs recommend accepting."
+- **Owner's answer:** "Yes, accept (Recommended)".
+- **As decided:** Scoped W-23 acceptance for the dependency change of 14 November 2026 (cc0ab73) only: TASK_T024 (ENV
+  PASS, 90 distributions, environment digest 5bf4eb8a36dd...; 571 tests PASS, 4 permitted skips) and the R-015 (b) POC
+  rerun of 14 November 2026 (PASS; EX_186, EX_187) are accepted as sufficient. Not run: the timeout and process-tree
+  cleanup case (`--with-timeout`), Ctrl+C, memory stress and the other W-suite lifecycle cases. Residual risk accepted:
+  those paths are unverified on the new environment, and that risk cannot be reliably quantified. This is not
+  "W-23 PASS" and authorises no further test or operation.
+- **Status:** EX_177 B01 CLOSED. EX_177 has no open item left.
