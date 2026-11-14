@@ -4,12 +4,12 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 20:40 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 22:35 Australia/Adelaide.
 
 ## For the owner: NOW
 
-- **Waiting on you:** the reviewer's agreement to start, then the POC rerun itself (your go given, conditional on that
-  agreement; decision log entry 3). Before it: commit your OUTLANDISH work so `git status --short` shows nothing.
+- **Waiting on you:** the POC rerun itself (GO: decision log entries 3 and 4; the reviewer agreed in EX_185; this POC
+  only). Before it: commit your OUTLANDISH work so `git status --short` shows nothing.
 - **Next go after it:** your B01 decision, then the updater self-test.
 - **Blocks or STOPs:** none.
 

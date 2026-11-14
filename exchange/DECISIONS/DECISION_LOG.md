@@ -43,3 +43,9 @@ the installed documents. This log is not a separate approval process.
   restriction. Its OUTLANDISH runs are not evidence for this project. (b) GO, CONDITIONAL on the reviewer's agreement:
   task 1, the POC rerun (R-015 (b)), exactly as `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/OWNER_POC_RERUN_R015b_DRAFT.md`
   r3 (Git blob 1105ff1c6c37f8be9bbb99e8b833dfd8dfa0a097; passed in EX_168; unchanged since), without `--with-timeout`.
+
+## 4. 14 November 2026, 22:32 - condition met: the POC rerun may run
+
+- **Where:** the reviewer's agreement (EX_185, relayed by the owner).
+- **Status:** entry 3 (b)'s condition is met. GO for the POC rerun r3 (blob 1105ff1c...), default route, no
+  `--with-timeout`. This POC only; nothing else is authorised. The reviewer also acknowledged entry 3 (a).
