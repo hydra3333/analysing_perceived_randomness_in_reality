@@ -269,8 +269,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            NOW:
            (0) DONE (14 November 2026): the documentation round: H-1 v2, H-2 v2 r1 (one full handover each) and
                register v0.29, reviewed (EX_171-EX_175), ratified by you (RAT-31) and installed (5a8527b, verified).
-               OPEN: your edited install_upgrade_dependencies_into_venv.bat (39 packages), not committed; to decide
-               before the readiness checks (it is in Mode H's frozen closure).
+               Then: your dependency change committed (cc0ab73); T024 PASS (ENV PASS, 571); EX_176 to the reviewer; its
+               EX_177: PASS WITH CORRECTIONS (B01 your W-23 decision; C01 applied as readiness sheet r2c; C02 pip check).
+               The ChatGPT reviewer chat then ended (14 November, about 18:00). NOW: the replacement reviewer's takeover
+               (R-029: the starter text, EX_178's blind questions); then EX_177's B01 and C02 (R-028); then D1-D7.
            (1) The Approval 1 readiness sheet (Approvals 1-4 per game, what cannot be undone, the scientific scope and
                limits, exact commands, the freeze, STOP handling, prerequisites, exposure), with the POC rerun
                instructions; then ChatGPT's independent review; then your decisions. Nothing is opened or run.

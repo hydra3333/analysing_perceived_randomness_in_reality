@@ -580,12 +580,27 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-028  Your dependency change of 14 November 2026
 
 - Asked: the owner, 14 November 2026 ("i would like to include the pip changes too"; "run it": already run on the project venv).
-- Status: OPEN until the reviewer's EX_177. Committed by you at cc0ab73 (with two duplicate GAIS notes). TASK_T024 PASS
+- Status: OPEN. EX_177 (the previous reviewer's last message): PASS WITH CORRECTIONS. Still yours to decide (its B01): T024
+  does not run the Windows W-suite, so record whether T024 plus the default POC rerun (R-015 (b), when you authorise it) is
+  enough for this change, as a scoped W-23 acceptance, or name one further safe check. Its C01 is applied (readiness sheet r2c);
+  its C02: keep your installer run's own output if you still have it, or authorise one read-only `pip check`.
+  Earlier status: OPEN until the reviewer's EX_177. Committed by you at cc0ab73 (with two duplicate GAIS notes). TASK_T024 PASS
   (report 811d0cc): the venv passes Mode H's freeze check (90 distributions, no orphan; environment digest 5bf4eb8a36dd...)
   and the whole suite (571). Readiness sheet r2b carries the new digest; EX_176 asks the reviewer to review the change (W-23).
 - What to remember: the installer now upgrades every package on every run. Before the first Approval 1, any rerun means
   T024 again and a new expected digest; from the first Approval 1 until both games are sealed, never run it.
 - When: before the readiness checks (R-026).
+
+## R-029  The ChatGPT reviewer chat ended (14 November 2026, about 18:00): the replacement reviewer's takeover
+
+- Asked: the owner, 14 November 2026 ("chatgpt chat has just died ... update the chatgpt handover blurb ... prepare a few
+  questions to verify clean up-to-date handover").
+- Status: OPEN until the replacement reviewer's answers are compared. The handover in force is H-2 v2 r1 (installed at
+  5a8527b, RAT-31; unchanged). The filled-in starter text is exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md;
+  the twelve blind questions are EX_178; you hold the sealed answer key (its SHA-256 is in EX_178).
+- Steps: (1) start a new ChatGPT chat with the starter text (and the H-2 v2 file attached if it cannot read GitHub); (2) give
+  its first reply to Claude; (3) paste EX_178's questions; (4) give its answers (EX_179) to Claude; Claude publishes the key as
+  EX_180 with a comparison; (5) your acceptance; then EX_177's open points continue.
 
 ## Standing reminders
 

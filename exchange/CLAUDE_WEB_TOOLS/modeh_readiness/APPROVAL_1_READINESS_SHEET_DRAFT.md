@@ -1,4 +1,4 @@
-# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2b (reviewer PASS, EX_168; r2b for the reviewer's check, EX_176); not authorised
+# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2c (reviewer PASS, EX_168; r2b checked in EX_177, its C01 applied as r2c); not authorised
 
 **DRAFT r2 (Claude web chat on Fable 5.2, 14 November 2026). Nothing here is authorised and nothing was run or opened.**
 r2 applies the reviewer's EX_167 (PASS WITH CORRECTIONS: blocking B01 and B02, nonblocking C01 to C05); section 11 says
@@ -11,8 +11,9 @@ distributions). TASK_T024 (report `811d0cc`) then found, on Windows, `ENV PASS` 
 environment digest `5bf4eb8a36ddb9063fbcb27ff1b692d38de3847321518e563f70c7219999a3f9`) and the whole suite passing (571,
 four symlink skips). r2b changes only the values that change: the expected environment digest and the baseline commit of
 prerequisite 5's code check, and adds one sentence on running the installer again. The closure is still 497 files. Written at the project owner's request of 13 November 2026, 22:08. The owner decides after the recheck, one step
-at a time. Sources: design v0.1r7 sections 1, 4, 5 and 7; the installed code at `main` (`effc179` for everything Mode H
-runs), read line by line; a dress rehearsal on invented data (section 10).
+at a time. Sources: design v0.1r7 sections 1, 4, 5 and 7; the installed code at `main` (the Mode H implementation installed in package commit `2860e86` and released in
+`effc179`, with a later test-only fix; the root dependency installer updated by the owner at `cc0ab73`, part of the
+497-file closure), read line by line; a dress rehearsal on invented data (section 10).
 US-ASCII, CRLF. No outcome of any draw appears here; draw numbers and dates (from the weekly rule) are identifiers only.
 
 ## 1. What you would be committing to
