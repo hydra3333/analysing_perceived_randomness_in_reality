@@ -1,0 +1,7 @@
+# SHA-256 of exact attached final candidate bytes (LF docs, ZIP binary)
+279f3ad6172442e5968e3d601d78acb4690745c380c3d1df8eca595016eb2bbe  ChatGPT_Reviewer_Handover_H2_v2.md  76061 bytes
+06a9079be03eede3ca67f76a5797a43733a7f7c4f4c33faa8b76d5e97b3a3ef1  ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md  7954 bytes
+40cfa5c2e5cf490590e6e4d7d9add99d468c2cbfd6b005795287b2a8dde08505  H2_v1r8_TO_v2.diff  77028 bytes
+224c07a518093ed17e5321ae5a9fb16f725823c6569707998e18a3acbde147f5  H2_v2_DOC_HANDOVER_OVERLAY.zip  33341 bytes
+8d84af5c388d9151bae81db2bf1d15606d3d08732d77cf5a6b3a1aa419157637  H2_v2_PRESERVATION_REPORT.md  2673 bytes
+d7b5cdeea2fedaada895d828a408c4a427c90ca557b6907de3d326523c6d78db  H2_v2_INSTALL_PLAN_DRAFT.md  2430 bytes

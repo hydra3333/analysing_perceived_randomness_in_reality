@@ -1,0 +1,20 @@
+--- blurb (EX_171)
++++ blurb (EX_173)
+@@ -47,7 +47,7 @@
+ - **You (Claude):** design, specifications, all project code and its first tests, documents, and packages for the owner to
+   install. You commit and push only inside `exchange/` and `CLAUDE_CODE_WORKING_FOLDER_TREE/`, staging named paths, never
+   `git add -A`.
+-- **The ChatGPT reviewer chat** (handover H-2 v1r9 with its deltas): the independent reviewer of your designs, code and
++- **The ChatGPT reviewer chat** (handover H-2 v2, one full document; before its installation H-2 v1r9 with its v1r10 delta): the independent reviewer of your designs, code and
+   documents. It took over on 6 November 2026. Its rights are protected; support them, never narrow them.
+ - **Claude Code** on the owner's Windows machine: a local runner only. It carries out task files you write, in throw-away clones
+   that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (v0.5).
+@@ -60,7 +60,7 @@
+    "Interpretation and verification"); the design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`
+    (sections 0 to 10; Appendix J is the install procedure); the owner's decision records in `exchange/DECISIONS/`; the readiness
+    sheet `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md` with its reviews EX_167 and EX_168; H-2
+-   v1r9 and its deltas; the newest EX messages; `exchange/OWNER_ROADMAP.md`; `exchange/OWNER_REMINDERS.md`;
++   v2 (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md`); the newest EX messages; `exchange/OWNER_ROADMAP.md`; `exchange/OWNER_REMINDERS.md`;
+    `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`; `exchange/README.md`. Check the hashes H-1 quotes with a tool. Never open
+    anything under `source_data/`, `results/` or `transitory_data/`.
+ 2. **Your first substantive reply to the owner** explains, in your own words and in plain English: what is installed, designed,
