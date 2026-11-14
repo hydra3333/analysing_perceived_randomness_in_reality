@@ -1,0 +1,13 @@
+# H-2 v1r11 candidate - SHA-256 over complete exact file bytes
+# CRLF-exchange and LF-install have identical text after normalising CRLF to LF.
+# Prepared by ChatGPT 14 November 2026. This manifest is not owner ratification.
+
+CRLF-exchange c950d2baab21d1c3a7d35004d32f3b6c7c99569939efce440892b31d86ee112a   24698 ChatGPT_Reviewer_Handover_H2_v1r11_delta.md
+LF-install    8a7fa594013dc9d015fa0316fdca16a4a894d4e0e6e3fdfd2bd4f8480bcdd466   24617 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_delta.md
+CRLF-exchange 69e09a855f8d533e11a67f2f767ead7ad54932bf8cded35fcac98b8efdf056c6   13652 ChatGPT_Reviewer_Handover_H2_v1r11_continuity_index.md
+LF-install    c51939e0bfcc977056b0248cef72e7b837917bde30ba0ffbb680f0680f9df53a   13566 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_continuity_index.md
+CRLF-exchange 2f9575f731c3ed9d1b25b0cd51fc4f74ee2d7c2b7e08035b039f31e8c46597c6    9612 ChatGPT_Reviewer_Handover_H2_v1r11_introductory_blurb.md
+LF-install    9d9b348c0475084574815dc4c6079f37a57f1e7d16e3899ff292f5ca2b83a690    9576 doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v1r11_introductory_blurb.md
+CRLF-exchange 6e55926f8b89cff5f3a393d575e01c634ec1a1b8de2276673dd8ec0168e84dd2    5235 H2_v1r11_REVIEW_AND_INSTALL_PLAN.md
+CRLF-exchange 2866294067a4af88652ec4fbb12e76ec0f8c59fb9bdfd68d8a2643a4eb1c8caf    4348 EX_169_ChatGPT.md
+NESTED-ZIP    3ee0ea39111a1a1d8281f8a44acc60c1fdd0d16eb2a4454a64ac2608e16385b8   22353 H2_v1r11_DOC_HANDOVER_OVERLAY.zip
