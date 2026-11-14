@@ -2008,8 +2008,10 @@ Claude). Claude's factual check (recorded with EX_169 at `959b072`): PASS WITH C
 points. **EX_170** (r1) applied exactly those nine lines (Claude's diff check: PASS; recorded at `ac2c063`). The owner then
 asked for one full document instead of layers, and the reviewer wrote **H-2 v2** (EX_172): one file and its blurb, sections 1
 to 5 byte-identical to the ratified H-2 v1r8 and v1r9 (the rights region unchanged), the rest consolidating H-2 v1r9, its
-v1r10 delta and the v1r11 r1 content. Claude's factual check is EX_173. H-2 v1r11 r1 is never installed; H-2 v2 awaits the
-owner's ratification and installation. This register does not ratify it.
+v1r10 delta and the v1r11 r1 content. Claude's factual check (EX_173): PASS WITH CORRECTIONS, four corrections and one
+addition (the N1 seed policy and WF-1C's carried obligations); the reviewer accepted all and sent **H-2 v2 r1** (EX_174),
+which Claude's diff check passed (EX_175). H-2 v1r11 r1 is never installed; H-2 v2 r1 awaits the owner's ratification and
+installation. This register does not ratify it.
 
 **The Claude handover H-1 v2 (14 November 2026).** At the owner's instruction, a full consolidated edition replacing H-1 v1r8
 and all its deltas (v1r9, v1r10, v1r10r1, v1r10r2, v1r10r3), built from v1r8's ratified bytes by counted edits and section
@@ -2051,10 +2053,10 @@ absence), each a FIX AND PROCEED, applied in EX_173. CANDIDATE until the owner r
 | Document (path) | Author / check | Status and Git-content SHA-256 |
 |---|---|---|
 | `doc/RATIFICATION_REGISTER_v0_28.md` | Claude, from the records | OWNER-APPROVED 13 Nov 2026; installed at `cce4858`; superseded by this register; `79ff491ffebae33715f1d434104324ff8301e6adf78177080c784e5f18a38e62` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v2.md` | Claude, from H-1 v1r8 and the records | CANDIDATE 14 Nov 2026, for the reviewer's documentary check and the owner's ratification; `d75cb7310608a48dcf0f49e96b95d6aa022deff8545cf12b18026935caafe313` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v2.md` | Claude, from H-1 v1r8 and the records | CANDIDATE 14 Nov 2026, for the reviewer's documentary check and the owner's ratification; `acfad9fa153e566bbee19afa32865c255122ffb982531e4f3f7195017e1837b4` |
 | `doc/HANDOVER/Claude_Primary_Handover_H1_v2_introductory_blurb.md` | Claude | CANDIDATE 14 Nov 2026; `b9e3e486720a31905e9df36f6cfd9b65dce7f549288efb7ac6465a55d335ca86` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md` | the reviewer (EX_172); Claude's factual check (EX_173) | CANDIDATE 14 Nov 2026, for the owner's ratification; `279f3ad6172442e5968e3d601d78acb4690745c380c3d1df8eca595016eb2bbe` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md` | the reviewer (EX_172) | CANDIDATE 14 Nov 2026; `06a9079be03eede3ca67f76a5797a43733a7f7c4f4c33faa8b76d5e97b3a3ef1` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md` (r1) | the reviewer (EX_172, r1 EX_174); Claude's checks (EX_173, EX_175) | CANDIDATE 14 Nov 2026, for the owner's ratification; `dee6e106957e0c4f918349510fe948e98d180c7d784159eecfae9ee166045803` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md` (r1) | the reviewer (EX_172, r1 EX_174) | CANDIDATE 14 Nov 2026; `e607f114d8ee00cea623180136a0980aee08c9512c00ef76b341ee407098ca11` |
 | `exchange/DECISIONS/OWNER_DECISIONS_2026_11_13b_MODEH_FIRST_Q7.md` | the owner's words, recorded by Claude | OWNER DECISION 13 Nov 2026; as stored `68d919a7272276a20ae527ba929453e5397c81d9fee389ff54b4f0b05a3aac31` |
 | `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md` (r2a) | Claude; the reviewer (EX_167, EX_168 PASS) | REVIEWED DRAFT; authorises nothing; as stored `7f85d98fc948499b0841e5de9546bb801d649c01dd87528d3176738eca71b583` |
 | `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/OWNER_POC_RERUN_R015b_DRAFT.md` (r3) | Claude; the reviewer (EX_168 PASS) | REVIEWED DRAFT; not run; as stored `c0f1c59f38290dc53773efa534f95df1c8df285aa9520797d98a9ea3af99959a` |

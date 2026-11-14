@@ -1,0 +1,17 @@
+--- EX_172/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md
++++ EX_174/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md
+@@ -1,4 +1,4 @@
+-# Introductory blurb for a replacement ChatGPT independent reviewer - H-2 v2 (FULL EDITION, CANDIDATE 14 November 2026)
++# Introductory blurb for a replacement ChatGPT independent reviewer - H-2 v2 r1 (FULL EDITION, CANDIDATE 14 November 2026)
+ 
+ ## Instructions for the project owner (do not paste these instructions as the blurb)
+ 
+@@ -19,7 +19,7 @@
+ 
+ **Hard rules:** No lottery-results website contact or data scraping by AI chats, no reading/printing of the repository's `source_data/`, `results/` or `transitory_data/` or actual draw outcomes, no bypass of N-1 or source isolation, no process kill without verified PID+creation-time+ancestry+status, and no orphan-marker clearance by AI. The single approved production source is Lotterywest-GOV, exact `https://www.lotterywest.wa.gov.au/` results-search pages, only through the owner's approved tool. Never `oz.lotterywest.com`, The Lott, old GAIS Selenium fetchers or the retired two-site checker. Do not confuse those retired tools with the unrelated `GAIS/OUTLANDISH_01` project. Never treat a PASS, a document, an EX message, a roadmap item or a reviewer judgement as owner permission for a new test, real update, holdout opening, install, Mode H or dependency change. The reviewed FIX AND PROCEED / RECHECK procedure and the eight mandatory code-review topics continue unchanged.
+ 
+-**Actual checkpoint, 14 November 2026:** MHUP-A installed and released on 13 November (`2860e86`, `effc179`), corrected two test fixtures (`87c4219`), and closed. Windows T016 and T023 owner/runner reports each showed 571/571 with four permitted symlink skips. DOC-14 installed design v0.1r7; register v0.28 corrected the RAT-28/29/30 number clash. H-1 v2 and register v0.29 are candidates prepared by Claude in EX_171 (commit `74eb656`); verify owner installation before calling them operative.
++**Actual checkpoint, 14 November 2026:** MHUP-A installed and released on 13 November (`2860e86`, `effc179`), corrected two test fixtures (`87c4219`), and closed. Windows T016 and T023 owner/runner reports each showed 571/571 with four permitted symlink skips. DOC-14 installed design v0.1r7; register v0.28 corrected the RAT-28/29/30 number clash. H-1 v2 and register v0.29 are candidates prepared in EX_171 (commit `74eb656`) and corrected in EX_173; this H-2 v2 r1 is in EX_174. Verify owner installation before calling any candidate operative.
+ 
+ **Holdouts still UNOPENED at that checkpoint:** Powerball draws 1577-1586 and Oz Lotto 1694-1703, ten each. Neither has been entered into a real Mode H study. No Approval 1-4 or live updater/browser smoke has been authorised or performed as of inspected HEAD. Approved code implements a prospective-safe N-1 Mode H study for the fixed current 40-variant/game cohort; it is not pre-draw forecasting because these outcomes were already public. The owner prefers Mode H first, MHUP-B only after BOTH games' `MODE_H_SEALED` markers; freezes code and Python environment from the FIRST Approval 1 until both sealed. Q7 is decided: no raw draw values in AI chats even afterward; controlled owner programs can score them and aggregate reports can be shared. Retrospective `CATCH_UP` cannot replace a truly prospective forecast. Powerball HX-1 exposure of 1585/1586 remains labelled.
+ 
