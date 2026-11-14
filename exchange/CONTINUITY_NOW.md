@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 14 November 2026, about 22:55 Australia/Adelaide.
+**Last updated:** 14 November 2026, about 23:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -12,8 +12,9 @@ durable EX messages are authoritative.
 - **Done:** B01 decided: scoped W-23 acceptance (decision log entry 5; EX_187 agreed).
 - **Done:** the updater's offline self-test, about 22:43: 13/13 PASS (EX_188; two untracked OUTLANDISH files present,
   benign).
-- **Waiting on you:** commit your OUTLANDISH files (`git add GAIS/OUTLANDISH_01/`); then the official-page check
-  (prerequisite 3), on its own go after the reviewer's view.
+  The reviewer agreed the PASS stands (EX_189). The OUTLANDISH files are committed (657a2c1, merged at a6c2894; no code
+  change since cc0ab73).
+- **Waiting on you:** the official-page check (prerequisite 3), on its own go after the reviewer's view of the exact block.
 - **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
 
@@ -22,7 +23,7 @@ durable EX messages are authoritative.
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
-- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed).
+- Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands).
 
 ## If a chat ends
 
