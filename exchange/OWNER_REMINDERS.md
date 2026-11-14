@@ -584,6 +584,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   does not run the Windows W-suite, so record whether T024 plus the default POC rerun (R-015 (b), when you authorise it) is
   enough for this change, as a scoped W-23 acceptance, or name one further safe check. Its C01 is applied (readiness sheet r2c);
   its C02: keep your installer run's own output if you still have it, or authorise one read-only `pip check`.
+  C02 CLOSED by you, 14 November 2026 19:37: the output is gone; a separate ChatGPT conversation went through the run with you
+  and judged it a success; good enough for you; no pip check (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md).
+  B01 still open.
   Earlier status: OPEN until the reviewer's EX_177. Committed by you at cc0ab73 (with two duplicate GAIS notes). TASK_T024 PASS
   (report 811d0cc): the venv passes Mode H's freeze check (90 distributions, no orphan; environment digest 5bf4eb8a36dd...)
   and the whole suite (571). Readiness sheet r2b carries the new digest; EX_176 asks the reviewer to review the change (W-23).
