@@ -1,6 +1,6 @@
 # OUTLANDISH_01 — living decisions and progress
 
-**Updated:** 14 November 2026 (Australia/Adelaide). **Status:** working current record prepared for owner review/installation; not a new ratified science specification. **One file to update in place**, append succinctly with dated amendments; previous versioned handovers/specs remain archival authorities. Suggested repository location `GAIS/OUTLANDISH_01/OUTLANDISH_01_Living_Decisions_and_Progress.md`.
+**Updated:** 14 November 2026 (Australia/Adelaide), after confirmed legacy deletion and Q2 historical-scanner comparison. **Status:** owner-run evidence recorded; working progress record, not a new ratified science specification. **One file updated in place**; previous versioned handovers/specs remain archival authorities. Canonical repository location: `GAIS/OUTLANDISH_01/OUTLANDISH_01_Living_Decisions_and_Progress.md`. **For current status, read §8 first; earlier sections retain their dated pre-cleanup checkpoints as historical observations.**
 
 ## 1. Current milestone / evidence
 
@@ -83,3 +83,54 @@ Recorded current Ryzen `G:\OUTLANDISH_01\large_artifacts\digits\`: six *old* `di
 **Q2 first implementation aid:** `OUTLANDISH_01_Q2_Independent_Oracle_v0_1.py --self-test` is stdlib-only and deliberately uses a small direct digit-string scan, independent of production matching/index libraries. Its initial planted PB/Oz fixture assertions passed in the assistant's isolated environment. Its results **do not qualify** the existing packed scanner, which must be executed unchanged against fixture files outside REAL output roots and compared exactly. Extend with required error mutations, overlapping event attribution, chunk-crossing duplicates, genuine odd-padding EOF, and source-isolation tests.
 
 **Operational side effect boundary:** The legacy reset will leave `[state.active]` empty in the *old numeric-byte* registry, even though all six good packed files still exist on G:. This is deliberate; the ratified scanner operates from packed receipts and does not require a new packed registry. Existing legacy `scan_1e9.cmd` and `scan_1e10.cmd` must not be used afterwards.
+
+
+## 8. 14 November 2026 late update — six-file legacy retirement COMPLETED; Q2 legacy scanner defect confirmed
+
+**Authority/evidence:** Owner-supplied Windows command output from Ryzen 3900X, after clean Git commit/push `3d25f61` (`main...origin/main` as checked by owner after cleanup). The historical scanner's source is preserved unchanged at `GAIS/OUTLANDISH_01/OUTLANDISH_WSL/wsl_scan_packed_powerball.py`, Git blob `675d0f1592d417483c051605d77093a3e716ac03`. This section **supersedes the outstanding-state descriptions in earlier sections**; it does not rewrite historical decisions.
+
+### M-07 — Legacy numeric-byte retirement: COMPLETE / VERIFIED (owner-run)
+
+- Original exact six `[state.active]` records were SHA-verified against all six old `digits_*_10_to_9.bin` binaries, each 1,000,000,000 bytes; `HASHED_PASS` obtained earlier in Q1. The cleanup `--deactivate --confirm-idle` reran all six full SHA checks and archived the original registry and `retirement_evidence.json` in `G:\OUTLANDISH_01\large_artifacts\logs\legacy_1e9_retirement_20261114T082816Z\`. The archive's two files were subsequently listed by owner: `old_registry_exact.toml` (4,248 bytes) and `retirement_evidence.json` (2,335 bytes).
+- The registry was atomically deactivated, without falsely registering packed BCD in the legacy byte-per-digit format. The separately confirmed `--delete --manifest ... --confirm-idle` rehashed **all six original files again before the first deletion**, checked packed size/receipt identities (not fresh packed full-file SHA), then printed `DELETED` for each exact old filename and `DELETE COMPLETE`.
+- Post-delete `outlandish_artifacts.py validate` printed `CONFIG PASS ... 0 active constants`; `status` showed `active=NONE`, `pending_retire=NONE` for all six. The owner printed `git status --short --branch` as `## main...origin/main` with no uncommitted changes. There are **no remaining approved old 10^9 numeric-byte binaries in the canonical G: digits folder**. Historical scan CSVs, reports, provenance and all six 10^10 packed binaries/receipts remain to be preserved.
+- **Do not re-register the packed files in this legacy registry; do not run the old byte scanner via `scan_1e9.cmd` or `scan_1e10.cmd`.** The ratified matching v0.2 works directly from the high-first BCD files and receipts, with no extra packed registry.
+
+### M-08 — Q2 first historical-scanner versus independent-oracle comparison: PARTIAL PASS, DEFECT FOUND
+
+Owner ran `OUTLANDISH_01_Q2_LegacyScanner_Comparison_v0_1.py --self-test` and `--run` from the project venv on Ryzen. Source-identity gate passed. The unchanged packed Powerball scanner was exercised on small synthetic data/fixture drawsets in isolated temporary TEST results, **not** on REAL data or the 5 GB production binaries.
+
+| Synthetic case | Exact oracle comparison |
+|---|---|
+| `planted_baseline_340` | **PASS**: 10 exact tuples, P1/P2/P3=2/4/4 |
+| `chunk_crossings_duplicate_keys_odd_N` | **PASS**: 16 tuples, 3/7/6 |
+| `EOF_K7S_odd_N` | **PASS**: 4 tuples, 1/2/1 |
+| `EOF_K7_even_N` | **PASS**: 1 tuple, 0/1/0 |
+| `EOF_K6S_odd_N` | **PASS**: 1 tuple, 0/0/1 |
+| `PREFIX_END_EOF_ELIGIBILITY` | **Q2 FINDING**: expected 2/5/5, observed 3/7/6; four extra draw-attributed events beyond requested logical prefix |
+| `canary_invalid_bcd` | PASS: refused invalid nibble |
+| `canary_wrong_full_sha` | PASS: refused wrong full-scan digest |
+| `canary_cutoff_draw_refusal` | PASS: refused draw `>=1577` |
+| REAL results isolation | **PASS**: directory listing and metadata unchanged |
+
+**Precisely reproduced defect:** Fixture's physical digit string has 341 logical digits but the requested scan prefix is **332 digits**. Scanner emits `(draw, family, start, matched_digits)` tuples that have `start + family_length > 332`: draw 1 P1 at 325 (`0307111519233507`), draw 1 P2 at 325 (`03071115192335`), draw 1 P3 at 327 (`07111519233507`), draw 6 P2 at 325 (`03071115192335`). No expected tuples were missing. This is an **effective-prefix EOF eligibility error**, not a conversion error or suspicious mathematical pattern.
+
+**Source-level cause supported by checked historical scanner:** in `scan_file()`, `look = min(total-start, span+15)` draws lookahead from **full-file** `total`, not effective requested `n`; `valid = min(span, max(0, len(digits)-13))` and the P1 `i+15 < len(digits)` condition then permit matches whose end crosses `n`. The new matching engine must separately enforce **`start+14<=effective_N` for P2/P3, `start+16<=effective_N` for P1**, and correspondingly independent 12/14/16-digit family windows for Oz. Keep lookahead for chunk correctness but never let it extend logical eligibility past the requested prefix. A targeted independent regression test must fail the known old scanner in prefix mode and pass the new engine.
+
+**Impact bounds:** This particular bug affects a scan that requests a prefix smaller than its underlying packed file. It does **not** explain the existing 227 full-10^10 φ events where effective N equals physical N; those remain **scientifically unqualified** pending Q2–Q4. Q1's 100m/1e9 comparisons were performed by *post-filtering saved tuples on their derived end offsets*, not by trusting an unqualified prefix scan, so this finding does not overturn Q1's exact set agreement. No real production rescan is justified by this finding alone.
+
+**Qualification state:** Q1 recorded PASS, legacy cleanup COMPLETE, Q2 **IN PROGRESS with one known reproducible defect in old code**. Initial independent Powerball/Oz oracle self-test already passed. Still needed in Q2: further ratified mutation/error canaries, comprehensive exact-oracle comparisons for role/offset/overlap cases, and documented outcomes/limits for Oz because the unchanged historical scanner implements Powerball only. A known historical defect is not patched in place; qualification moves toward a new shared Q3 engine that passes the independent tests.
+
+**Current next action:** preserve/commit the Q2 comparison harness source if not yet tracked; expand Q2 mutation fixtures without touching the six packed binaries, historical scanner, REAL drawset or REAL results. Before significant Q3 implementation, do the already-agreed brief interface compatibility review with the parked forecasting specification (event CSV/manifest schemas and past-only temporal constraints). Do **not** authorise Q5 full REAL scans or forecast methods yet.
+
+## 9. 14 November 2026 — Q2 extension results PASS; Q3 interface review complete
+
+**Owner-run Q2 extension:** `OUTLANDISH_01_Q2_Remaining_Qualification_v0_1.py --self-test` printed `Q2 EXTENSION SELF-TEST PASS` (8 syntactically valid mutation templates and 12 refusal cases); `--run` printed `Q2 EXTENSION PASS: controls=2/2 mutations=8/8 refusals=12/12`. Both planted control comparisons reproduced exact independent-oracle event tuple sets: baseline 10 events (P1/P2/P3=2/4/4) and chunk-crossing/odd-N 16 events (3/7/6). The 8 mutations deliberately omitted odd starts/lookahead, forbade PB/main equality, narrowed P2 seventh main to 1–20, shifted starts, duplicated chunk ownership, confused K6S lookup, or corrupted K6S end offsets; **all were detected**. The 12 malformed input/receipt/draw tests each refused as intended. The REAL results directory listing/metadata was unchanged, the original packed scanner stayed unmodified, and Q2's prior known `PREFIX_END_EOF_ELIGIBILITY` defect remains **OPEN AS HISTORICAL FINDING / REQUIRED Q3 REGRESSION**.
+
+**Qualification limit:** This passes the stated Q2 extension tests, not every ratified Q2 fixture obligation. Oz had an independent oracle self-test but no old Oz packed scanner exists to compare. Any remaining at-least-two-plants/category, same-start multi-draw, overlap and specific invalid-input/EOF coverage must be shown by additional fixture results, and new Q3 must satisfy the known effective-prefix regression. Do not call the historical scanner qualified and do not begin Q5 production.
+
+**Forecast interface compatibility review — ENGINEERING REVIEW COMPLETE (not forecast-spec ratification):** The ratified v0.2 `raw_events.csv` four-column contract remains unchanged: `draw_number,family,start_digit_offset,matched_digits`. The run manifest binds game/constant, REAL/NULL type, source/receipt, drawset and results digests, logical scan length and completed status. `matched_digits` stays literal text, including leading zero; event identities are unique by draw/family/start; event ends are derived with family-specific length and bounded by effective_N. A future proposed forecasting consumer **must receive only events and derived state labelled with draw <= origin W**, and must not use future-derived global ranks or statistics. Full-source digests remain provenance rather than forecast features. The parked forecasting proposal v0.1 is still UNRATIFIED and no forecasting code, Q5 scans or parent admission is authorized. Details: `OUTLANDISH_01_Q3_Event_Interface_Review_20261114.md`.
+
+**Local interface proof aid:** `OUTLANDISH_01_Q3_Event_Interface_Smoke_v0_1.py --self-test` was run in an isolated assistant environment and passed in-memory text/duplicate/order/EOF/family checks and an origin-scoped future-scramble canary. It does **not** qualify a scanner, implement a forecast, or read any REAL files. Owner-run Windows reproduction is pending.
+
+**Next coding slice:** Q3 Powerball read-only BCD reader, raw family event index/writer, exact oracle comparisons and the historical prefix-EOF regression; then Oz family matching on the same shared engine. Keep all TEST outputs isolated and preserve existing v0.2, prior source and the six packed binaries.
