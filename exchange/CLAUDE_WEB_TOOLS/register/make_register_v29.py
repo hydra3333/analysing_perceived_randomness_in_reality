@@ -23,8 +23,8 @@ section = (section.replace('@H1V2@', hashlib.sha256(open(h1, 'rb').read()).hexdi
                   .replace('@H2V2B@', hashlib.sha256(open(h2b, 'rb').read()).hexdigest()))
 EDITS = [
     ('version', '**Register version:** v0.28, 13 November 2026, OWNER-APPROVED',
-     '**Register version:** v0.29, 14 November 2026, CANDIDATE (written by Claude from the records; documentation of decisions '
-     'already taken, not a new ratification), recording the owner\'s decisions of 13 November 2026 (Mode H first, then MHUP-B; '
+     '**Register version:** v0.29, 14 November 2026, OWNER-RATIFIED 14 November 2026, about 14:36 (RAT-31, with H-1 v2 and '
+     'H-2 v2 r1; written by Claude from the records), recording the owner\'s decisions of 13 November 2026 (Mode H first, then MHUP-B; '
      'the fixed cohort; CATCH_UP; the freeze; Q7 decided; R-015 (b) and (c)), the Mode H readiness reviews (EX_167, EX_168 '
      'PASS; nothing authorised), the reviewer\'s full handover H-2 v2 (EX_169 to EX_172) and the full Claude handover '
      'H-1 v2 (EX_171, EX_172); v0.28, 13 November 2026, OWNER-APPROVED'),

@@ -5,7 +5,7 @@ is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `mai
 `git archive -o E:\TEMP\repo_main_no_data.zip HEAD -- . ":(exclude)source_data" ":(exclude)results" ":(exclude)transitory_data" ":(exclude)GAIS"`.
 
 Written by Claude on 14 November 2026 with H-1 v2, the full consolidated edition that replaces H-1 v1r8 and all its deltas
-(CANDIDATE until the owner ratifies and installs it). The ChatGPT reviewer chat that took over on 6 November 2026 is in place
+(OWNER-RATIFIED 14 November 2026, RAT-31). The ChatGPT reviewer chat that took over on 6 November 2026 is in place
 and checks the new Claude chat's first reply. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
 
 **Note for the owner: which model, when** (Claude's recommendation, 14 November 2026):

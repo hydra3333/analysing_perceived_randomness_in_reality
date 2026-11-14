@@ -64,8 +64,7 @@ asked for one full document instead of layers, and the reviewer wrote **H-2 v2**
 to 5 byte-identical to the ratified H-2 v1r8 and v1r9 (the rights region unchanged), the rest consolidating H-2 v1r9, its
 v1r10 delta and the v1r11 r1 content. Claude's factual check (EX_173): PASS WITH CORRECTIONS, four corrections and one
 addition (the N1 seed policy and WF-1C's carried obligations); the reviewer accepted all and sent **H-2 v2 r1** (EX_174),
-which Claude's diff check passed (EX_175). H-2 v1r11 r1 is never installed; H-2 v2 r1 awaits the owner's ratification and
-installation. This register does not ratify it.
+which Claude's diff check passed (EX_175). H-2 v1r11 r1 is never installed. H-2 v2 r1 is ratified by RAT-31 (below).
 
 **The Claude handover H-1 v2 (14 November 2026).** At the owner's instruction, a full consolidated edition replacing H-1 v1r8
 and all its deltas (v1r9, v1r10, v1r10r1, v1r10r2, v1r10r3), built from v1r8's ratified bytes by counted edits and section
@@ -73,7 +72,17 @@ replacements (`exchange/CLAUDE_WEB_TOOLS/h1v2/make_h1_v2.py`), with a section-by
 v1r10r3 delta went (its Appendix B), and a new introductory blurb. It changes no rule. Sent with this register as EX_171.
 **EX_172** (the reviewer's documentary review): PASS WITH CORRECTIONS; both files rebuilt byte for byte from v1r8 and v0.28;
 no binding loss; C01 (point to the full H-2 v2, not to layers), C02 (R-015 (c) still pending) and C03 (no inference from
-absence), each a FIX AND PROCEED, applied in EX_173. CANDIDATE until the owner ratifies and installs it.
+absence), each a FIX AND PROCEED, applied in EX_173.
+
+**RAT-31 (owner, 14 November 2026, about 14:36).** Record (verbatim):
+`exchange/DECISIONS/OWNER_DECISIONS_2026_11_14_DOC_ROUND_RAT31.md`. Asked whether he ratifies "the five handover documents for
+installation: Claude's H-1 v2 and its blurb, ChatGPT's H-2 v2 (r1) and its blurb, and register v0.29", the owner answered "Yes,
+ratify all five"; asked whether the old handover files those editions replace move to `doc/HANDOVER/superseded/` in the same
+install, he answered "Leave them where they are". **H-1 v2 replaces H-1 v1r8 and its v1r10r3 delta, and H-2 v2 r1 replaces H-2
+v1r9 and its v1r10 delta, as the operative handovers; the replaced files stay in `doc/HANDOVER/` as history.** Only the status
+lines of H-1 v2 and its blurb, and this register's version line and table, changed after the review; the reviewer's two files
+are installed exactly as received in EX_174. The ratification authorises the documentation install only, nothing for Mode H.
+The install commit cannot be named here; the next register edition records it.
 
 **Future actions (updating register v0.27's list; not authorisations).**
 1. The owner's decisions D1 to D7; then the preparatory checks, each with its own go: the Windows POC rerun (R-015 (b)), the
@@ -99,7 +108,8 @@ absence), each a FIX AND PROCEED, applied in EX_173. CANDIDATE until the owner r
 - **Design v0.1r7, section 4.4 item 1 and the plan table in section 8** ("MHUP-B is installed before Approval 1 ... or after the
   Mode H score is sealed"; "installed before Approval 1"): the owner chose after both games are sealed; the dates in the plan
   table have passed (FB-1).
-- **H-1 v1r8 and the H-1 v1r10r3 delta:** replaced by H-1 v2 once it is ratified and installed; until then they are in force.
+- **H-1 v1r8 and the H-1 v1r10r3 delta:** replaced by H-1 v2 (RAT-31) once it is installed; they stay in `doc/HANDOVER/` as
+  history.
 - **H-2 v1r9 and its v1r10 delta, their status statements** ("nothing installed", R-020 (g) open): superseded by H-2 v2 once
   it is installed. **H-2 v1r11 r1** (EX_169, EX_170): superseded by H-2 v2 before installation; never installed.
 - **The readiness drafts r1 and r2:** superseded by r2a.
@@ -107,10 +117,10 @@ absence), each a FIX AND PROCEED, applied in EX_173. CANDIDATE until the owner r
 | Document (path) | Author / check | Status and Git-content SHA-256 |
 |---|---|---|
 | `doc/RATIFICATION_REGISTER_v0_28.md` | Claude, from the records | OWNER-APPROVED 13 Nov 2026; installed at `cce4858`; superseded by this register; `79ff491ffebae33715f1d434104324ff8301e6adf78177080c784e5f18a38e62` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v2.md` | Claude, from H-1 v1r8 and the records | CANDIDATE 14 Nov 2026, for the reviewer's documentary check and the owner's ratification; `@H1V2@` |
-| `doc/HANDOVER/Claude_Primary_Handover_H1_v2_introductory_blurb.md` | Claude | CANDIDATE 14 Nov 2026; `@H1V2B@` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md` (r1) | the reviewer (EX_172, r1 EX_174); Claude's checks (EX_173, EX_175) | CANDIDATE 14 Nov 2026, for the owner's ratification; `@H2V2@` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md` (r1) | the reviewer (EX_172, r1 EX_174) | CANDIDATE 14 Nov 2026; `@H2V2B@` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v2.md` | Claude, from H-1 v1r8 and the records; the reviewer (EX_172) | OWNER-RATIFIED 14 Nov 2026 (RAT-31); `@H1V2@` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v2_introductory_blurb.md` | Claude | OWNER-RATIFIED 14 Nov 2026 (RAT-31); `@H1V2B@` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md` (r1) | the reviewer (EX_172, r1 EX_174); Claude's checks (EX_173, EX_175) | OWNER-RATIFIED 14 Nov 2026 (RAT-31); its header reads CANDIDATE r1, and this register decides its status; `@H2V2@` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2_introductory_blurb.md` (r1) | the reviewer (EX_172, r1 EX_174) | OWNER-RATIFIED 14 Nov 2026 (RAT-31); `@H2V2B@` |
 | `exchange/DECISIONS/OWNER_DECISIONS_2026_11_13b_MODEH_FIRST_Q7.md` | the owner's words, recorded by Claude | OWNER DECISION 13 Nov 2026; as stored `68d919a7272276a20ae527ba929453e5397c81d9fee389ff54b4f0b05a3aac31` |
 | `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md` (r2a) | Claude; the reviewer (EX_167, EX_168 PASS) | REVIEWED DRAFT; authorises nothing; as stored `7f85d98fc948499b0841e5de9546bb801d649c01dd87528d3176738eca71b583` |
 | `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/OWNER_POC_RERUN_R015b_DRAFT.md` (r3) | Claude; the reviewer (EX_168 PASS) | REVIEWED DRAFT; not run; as stored `c0f1c59f38290dc53773efa534f95df1c8df285aa9520797d98a9ea3af99959a` |
