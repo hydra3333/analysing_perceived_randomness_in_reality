@@ -271,7 +271,10 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
                rehearsal on invented data (PASS). REVIEWED: EX_167, PASS WITH CORRECTIONS (B01, B02, C01-C05).
                REVISED (14 November 2026): the sheet r2, the POC instructions r3 and a one-off read-only check of
                the official results page (gov_fetch_parse_smoke.py; owner-run, own go, before Approval 1).
-               WAITING for ChatGPT's focused recheck, then your decisions D1-D7. Nothing is authorised.
+               RECHECKED: EX_168, PASS (zero blocking; B01 and B02 closed; notes N01-N03 added as sheet r2a).
+               NEXT: your decisions D1-D7 (sheet section 9) and your separate gos, in order: the POC rerun, the
+               updater self-test, the official-page check, the backups and tree check, then Approval 1 for Oz Lotto.
+               Nothing is authorised until you say so, step by step.
            (2) MHUP-B: design only on your authorisation, never touching the frozen Mode H code; installed only after
                both games are sealed; its rehearsals add a full-suite run after step 18.
            (3) KISS-1 stays deferred until you start it.

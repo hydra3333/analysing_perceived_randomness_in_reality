@@ -1,8 +1,10 @@
-# Mode H: the Approval 1 readiness sheet (both games) - DRAFT r2 for the reviewer's focused recheck
+# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2a (reviewer PASS, EX_168); not authorised
 
 **DRAFT r2 (Claude web chat on Fable 5.2, 14 November 2026). Nothing here is authorised and nothing was run or opened.**
 r2 applies the reviewer's EX_167 (PASS WITH CORRECTIONS: blocking B01 and B02, nonblocking C01 to C05); section 11 says
-where. Written at the project owner's request of 13 November 2026, 22:08. The owner decides after the recheck, one step
+where. **The reviewer passed r2 (EX_168: zero blocking findings; B01 and B02 closed).** r2a adds only EX_168's three notes
+and its answer on the Powerball-only rerun, which need no further recheck; the page-check script is unchanged (same blob).
+A review PASS is not a go: every step here still needs the owner's own separate approval. Written at the project owner's request of 13 November 2026, 22:08. The owner decides after the recheck, one step
 at a time. Sources: design v0.1r7 sections 1, 4, 5 and 7; the installed code at `main` (`effc179` for everything Mode H
 runs), read line by line; a dress rehearsal on invented data (section 10).
 US-ASCII, CRLF. No outcome of any draw appears here; draw numbers and dates (from the weekly rule) are identifiers only.
@@ -108,17 +110,19 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
    `gov_fetch_parse_smoke.py` is a one-off, read-only script outside `src\`. It uses the installed updater's own browser
    fetcher and parser, unchanged, on the nine June and July 2026 draws per game that the real first update will check
    as its overlap, always with the quarantine closed, and compares each parsed draw with your master. It requests no
-   date from 1 August 2026 on, writes nothing, takes no lock and prints draw numbers and counts only.
+   date from 1 August 2026 on, writes nothing in the project (Selenium may keep Chrome's driver in its own cache in your
+   user profile, as it would for the updater), takes no lock and prints draw numbers and counts only.
    ```
    cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
    git status --short
    git rev-parse HEAD:exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+   git hash-object exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
    "%CD%\.venv\Scripts\python.exe" -I -B exchange\CLAUDE_WEB_TOOLS\modeh_readiness\gov_fetch_parse_smoke.py
    echo EXIT %ERRORLEVEL%
    git status --short
    ```
-   Expect: nothing from the first status; `1cbd32941234661d422c32f53bbf3b5343af2ff7` (the reviewed file; anything else: stop,
-   do not run it); then
+   Expect: nothing from the first status; `1cbd32941234661d422c32f53bbf3b5343af2ff7` twice (the committed file and the file
+   on disk are both the reviewed one; anything else: stop, do not run it); then
    ```
    [GOV-SMOKE] POWERBALL: master verified against its ledger (version 1, last draw 1576); read-only
    [GOV-SMOKE] OZLOTTO: master verified against its ledger (version 1, last draw 1693); read-only
@@ -143,8 +147,11 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
    - `FAIL` (exit 1): the page parsed, but not to the expected nine draws, or not equal to the master.
    **What a PASS shows:** on that day the installed browser and parser read 18 known draws from the official page exactly
    as the master holds them. It cannot promise the page is the same at Approval 2, so run it on the day of the first
-   Approval 1. It may be run again for Powerball alone (`--games POWERBALL`) before Powerball's Approval 1; it changes
-   nothing the freeze protects.
+   Approval 1. It may be run again for Powerball alone (add `--games POWERBALL`), on its own go, only after Oz Lotto is
+   sealed and before Powerball's Approval 1 (never while Oz Lotto is unsealed). Expect then the Powerball lines only,
+   ending `[GOV-SMOKE] PASS: POWERBALL: ...`; both `git status --short` outputs will show Oz Lotto's master and ledger as
+   modified, which is normal. The check changes no file the freeze protects. (`-B` stops byte-code being written; it does
+   not stop Python reading an existing cache. That does not matter for this one-off check and is not claimed.)
 4. **Backups confirmed** of `source_data\` and `results\` (R-015 (c)). The frozen forecasts, the tickets and the score
    ledger are Git-ignored and exist only on your PC, so back up again after each game is sealed, and check the copy.
 5. **The tree is the reviewed one** (the last thing before Approval 1):
@@ -469,4 +476,5 @@ The reviewer's position (EX_167 section 5) is given with each.
 | C04 three readouts; catch-up against development evidence | sections 1 and 2 |
 | C05 Q7 records; sharing the reports | section 1; D6; F-6 |
 | Section 4 (POC) | `OWNER_POC_RERUN_R015b_DRAFT.md` r3 |
-| One addition of mine for the recheck | the page check also compares each parsed draw with the master (read through the updater's own verified loader; counts only are printed). It is the comparison the real update makes next. Say if you want it out. |
+| EX_168 N01 to N03 and answer (f) (r2a) | prerequisite 3 |
+| One addition of mine, kept by the reviewer (EX_168 (b)) | the page check also compares each parsed draw with the master (read through the updater's own verified loader; counts only are printed). It is the comparison the real update makes next. |
