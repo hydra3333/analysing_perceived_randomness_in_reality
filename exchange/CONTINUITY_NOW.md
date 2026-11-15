@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 18:50 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 18:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -23,7 +23,8 @@ durable EX messages are authoritative.
   Decision log entry 9; window in exchange/RUNS/. ROOT CAUSE (EX_194): the check r1 compared draw numbers in page order
   with an oldest-first list; the installed updater does not depend on order (evidence on invented data). Proposed: check r2
   (order-free; 26 draws per game to match the real update's page size) and sheet r2d. REVIEWED: EX_195 PASS (scoped; blobs
-  r2 449b5cd3..., sheet r2d 7aa8c89c...). Waiting: the owner's own new go to run prerequisite 3 with r2. No rerun meanwhile. Carried: order-varied pages in the updater's own
+  r2 449b5cd3..., sheet r2d 7aa8c89c...). Then prerequisite 3 with r2: PASS (18:50; decision log entry 11). Oz Lotto Approval 1 must be today (15 November)
+  or the page check runs again. Next: backups (prerequisite 4), tree check, quiet machine, Approval 1. No rerun meanwhile. Carried: order-varied pages in the updater's own
   tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.

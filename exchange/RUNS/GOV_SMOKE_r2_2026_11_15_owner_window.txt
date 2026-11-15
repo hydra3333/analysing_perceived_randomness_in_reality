@@ -1,0 +1,65 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 49, done.
+remote: Counting objects: 100% (49/49), done.
+remote: Compressing objects: 100% (19/19), done.
+remote: Total 37 (delta 23), reused 32 (delta 18), pack-reused 0 (from 0)
+Unpacking objects: 100% (37/37), 25.98 KiB | 65.00 KiB/s, done.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   aff1b18..bb9dfc4  main       -> origin/main
+Updating aff1b18..bb9dfc4
+Fast-forward
+ .../APPROVAL_1_READINESS_SHEET_DRAFT.md            |  38 +++++--
+ .../modeh_readiness/SHEET_r2c_TO_r2d.diff          |  55 +++++++++
+ .../modeh_readiness/SMOKE_DEVTEST_r1_TO_r2.diff    |  99 ++++++++++++++++
+ .../modeh_readiness/SMOKE_r1_TO_r2.diff            |  72 ++++++++++++
+ ...NARY_gov_fetch_parse_smoke_r2_devtest_py315.txt |  30 +++++
+ .../PRELIMINARY_repro_r1_newest_first_py315.txt    |   9 ++
+ ...ELIMINARY_updater_page_order_evidence_py315.txt |  21 ++++
+ .../evidence/repro_r1_newest_first.py              |  16 +++
+ .../modeh_readiness/gov_fetch_parse_smoke.py       |  40 +++++--
+ .../gov_fetch_parse_smoke_devtest.py               |  49 +++++---
+ .../modeh_readiness/updater_page_order_evidence.py | 124 +++++++++++++++++++++
+ exchange/CONTINUITY_NOW.md                         |  15 ++-
+ exchange/DECISIONS/DECISION_LOG.md                 |  16 +++
+ exchange/EX_194_Claude.md                          | 115 +++++++++++++++++++
+ exchange/EX_195_ChatGPT.md                         | 100 +++++++++++++++++
+ .../RUNS/GOV_SMOKE_2026_11_15_owner_window.txt     |  39 +++++++
+ 16 files changed, 794 insertions(+), 44 deletions(-)
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/SHEET_r2c_TO_r2d.diff
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/SMOKE_DEVTEST_r1_TO_r2.diff
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/SMOKE_r1_TO_r2.diff
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/evidence/PRELIMINARY_gov_fetch_parse_smoke_r2_devtest_py315.txt
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/evidence/PRELIMINARY_repro_r1_newest_first_py315.txt
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/evidence/PRELIMINARY_updater_page_order_evidence_py315.txt
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/evidence/repro_r1_newest_first.py
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_readiness/updater_page_order_evidence.py
+ create mode 100644 exchange/EX_194_Claude.md
+ create mode 100644 exchange/EX_195_ChatGPT.md
+ create mode 100644 exchange/RUNS/GOV_SMOKE_2026_11_15_owner_window.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rev-parse HEAD:exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+449b5cd3a974d34488eb1522b5a75809e8d212b1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git hash-object exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+449b5cd3a974d34488eb1522b5a75809e8d212b1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>"%CD%\.venv\Scripts\python.exe" -I -B exchange\CLAUDE_WEB_TOOLS\modeh_readiness\gov_fetch_parse_smoke.py
+[GOV-SMOKE] POWERBALL: master verified against its ledger (version 1, last draw 1576); read-only
+[GOV-SMOKE] OZLOTTO: master verified against its ledger (version 1, last draw 1693); read-only
+[GOV-SMOKE] POWERBALL: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1551-1576, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
+[GOV-SMOKE] POWERBALL: PASS
+[GOV-SMOKE] OZLOTTO: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1668-1693, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
+[GOV-SMOKE] OZLOTTO: PASS
+[GOV-SMOKE] PASS: POWERBALL, OZLOTTO: the installed fetcher and parser read the official page as expected. This check wrote nothing.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

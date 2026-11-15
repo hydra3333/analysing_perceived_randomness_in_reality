@@ -114,3 +114,11 @@ the installed documents. This log is not a separate approval process.
 - **Owner's words:** "yes both show 26 draws.  no "load more" or similar."
 - **Status:** an owner observation (not a check run, not a go): the two pre-quarantine pages the check r2 will load
   (31 January to 31 July 2026) each show all 26 draws, with no paging or "load more". Waiting: the reviewer's EX_195.
+
+## 11. 15 November 2026, about 18:50 - prerequisite 3 with the check r2: PASS
+
+- **Where:** the owner's new go in the Claude chat ("ok go I'll do those step 1 commands again now"), after EX_195; his CMD
+  window recorded unchanged: `exchange/RUNS/GOV_SMOKE_r2_2026_11_15_owner_window.txt`.
+- **Result:** clean status before and after; both blob lines `449b5cd3...`; the seven `[GOV-SMOKE]` lines identical to sheet
+  r2d's expected lines (26 draws per game, listed newest first, weekly rule 26/26, equal to the master 26/26); EXIT 0.
+  **PASS** (checked by Claude line by line). Approval 1 for Oz Lotto must follow on the same day (15 November 2026).
