@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 20:00 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 22:05 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -30,7 +30,8 @@ durable EX messages are authoritative.
   1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). **Plan DONE 19:26** (entry 18: batch
   wf-5af149aef7444336a38e469146c95a20). **Batch DONE** (entry 19: 400 of 400 forecasts SUCCESS). **OZ LOTTO SEALED 19:54**
   (entry 20: attempt mh-ba0c301b..., 800 score lines, 400 rank lines). Report files stay unshared until Powerball is
-  sealed (D6). Next: a second backup; the reviewer's review of the whole sequence; Powerball on another evening. No rerun meanwhile. Carried: order-varied pages in the updater's own
+  sealed (D6). Second backup done (entry 21). Waiting: the reviewer's review of the whole sequence (EX_196); then Powerball
+  on another evening, starting with a new page check on its Approval 1 day. No rerun meanwhile. Carried: order-varied pages in the updater's own
   tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.
@@ -80,14 +81,16 @@ independent "how the process went" note from each AI, with reasoning and alterna
 
 ## Mode H state
 
-POC rerun and updater offline self-test COMPLETED (both PASS, 14 November 2026); B01 closed. The official-page check, the
-backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Oz Lotto: OPENED 19:19 and SEALED 19:54 (15 November). Powerball: UNOPENED. The freeze is ON (from 19:18) until Powerball is
-sealed too.
+Prerequisites run on 15 November 2026: the page check r2 (PASS), backups, tree check. Oz Lotto: Approvals 1-4 DONE; OPENED 19:19,
+SEALED 19:54 (decision log entries 14-20). Powerball: UNOPENED; none of its approvals run. The freeze is ON (from 19:18) until
+Powerball is sealed too: no code or package change, no git add -A, no rewrite of working files, pulls only of exchange/ paths.
+Oz Lotto's master and ledger stay uncommitted (D5); its report files stay unshared until Powerball is sealed (D6).
 
 ## Full order from here
 
-1. DONE: H-1 v3 and register v0.30 reviewed (EX_191, EX_192), ratified (RAT-32) and installed (`5b4df41`).
-2. The official-page check, only when separately approved, on the same day as Oz Lotto's Approval 1; the backups, the tree
-   and quiet-machine checks; then Oz Lotto's Approval 1. Each on its own go.
-3. Oz Lotto's Approvals 2-4, then Powerball's 1-4, each on its own go and its own safe schedule (a separately approved
-   Powerball-only page recheck is allowed after Oz Lotto is sealed and before Powerball's Approval 1). D1-D7 apply.
+1. The reviewer's review of 15 November's sequence (EX_196).
+2. Powerball, on an evening the owner chooses, each on its own go: `git pull --ff-only` (only exchange/ paths incoming), the
+   page check r2 with `--games POWERBALL` (sheet r2d prerequisite 3; the same day as Powerball's Approval 1), a backup, the tree
+   check (now expecting Oz Lotto's master and ledger as ` M`), a quiet machine; Approvals 1-4 for Powerball; a backup after.
+3. After both seals: both reports shared together (D6); the register records the study; the handovers refreshed; then MHUP-B.
+

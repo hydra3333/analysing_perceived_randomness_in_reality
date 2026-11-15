@@ -207,3 +207,11 @@ the installed documents. This log is not a separate approval process.
   study is SEALED.** No AI has seen any draw value or the report. Per D6 the report files are shared after Powerball is
   sealed too (not committed now). Next for Oz Lotto: a second backup (D5); then the reviewer's review of tonight's whole
   sequence (EX_193). Powerball on another evening, on its own gos, with a new page check on its Approval 1 day.
+
+## 21. 15 November 2026, about 19:55-20:01 - the backup after Oz Lotto's seal (D5)
+
+- **Where:** the owner's CMD window, pasted in the chat at 22:02 (robocopy to
+  `G:\BACKUPS\powerball_modeh_2026-11-15_after_ozlotto_seal\`).
+- **Result:** `source_data` 9 files (42.7 kB) and `results` 79,362 files (188.95 MB) copied, FAILED 0 and Mismatch 0 in both
+  summaries; the first exit line `ROBOCOPY EXIT 1`; the second exit line's value was not in the pasted text (the summary shows
+  no failure). **Backup after the seal confirmed.**
