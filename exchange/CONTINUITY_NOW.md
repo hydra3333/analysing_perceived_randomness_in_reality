@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 09:30 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 18:10 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -16,9 +16,11 @@ durable EX messages are authoritative.
   change since cc0ab73).
 - **Correction to the order (15 November):** the reviewed sheet requires the official-page check on the day of the first
   Approval 1. So the handover editions come first.
-- **Ratified:** H-1 v3, its blurb and register v0.30 (RAT-32, decision log entry 6), after EX_191 and EX_192. H-2 v2 r1 stays.
-- **Waiting on you:** the install, at home: `exchange/CLAUDE_WEB_TOOLS/doc_round_rat32/INSTALL_RAT32.md` (three blocks).
-- **Next go after that:** the official-page check, only on the day of Oz Lotto's Approval 1, with the backups and tree check.
+- **Installed:** H-1 v3, its blurb and register v0.30 (RAT-32), at `5b4df41` (15 November, about 18:06; COMMITTED PASS, checked
+  by Claude from GitHub). H-2 v2 r1 stays the reviewer's handover.
+- **Waiting on you:** nothing. Choose the day for the next steps.
+- **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
+  then Oz Lotto's Approval 1.
 - **Next after it:** backups confirmed (prerequisite 4).
 - **Blocks or STOPs:** none.
 
@@ -31,16 +33,16 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat with `doc/HANDOVER/Claude_Primary_Handover_H1_v2_introductory_blurb.md`.
-  In its "Since 14 November 2026" line write: "see exchange/CONTINUITY_NOW.md".
+- **Claude chat ended:** start a new Claude chat with `doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md`.
+  In its "Since 15 November 2026" line write: "see exchange/CONTINUITY_NOW.md".
 - **ChatGPT reviewer chat ended:** start a new ChatGPT chat with
   `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`, adding: "Then read exchange/CONTINUITY_NOW.md".
   Optional check: blind questions as in EX_178 (Claude writes new ones; the owner holds the key).
 
 ## Installed handovers (authoritative)
 
-H-1 v2 (Claude) and H-2 v2 r1 (reviewer), with register v0.29: ratified RAT-31, installed 5a8527b. Next edition due
-before the first Approval 1 (H-1 v3 at least), carrying the working approach below.
+H-1 v3 (Claude; RAT-32, installed `5b4df41`) and H-2 v2 r1 (reviewer; RAT-31, installed `5a8527b`), with register v0.30.
+The next full refresh: after both games are sealed, or earlier if a chat grows long.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 
@@ -70,9 +72,7 @@ backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Both h
 
 ## Full order from here
 
-1. H-1 v3 and register v0.30: reviewed (EX_191, EX_192) and ratified (RAT-32); one documentation install, before the day of
-   the first Approval 1. H-2 v2 r1 stays (the reviewer: no new edition needed). Once installed, a restarted Claude chat uses
-   H-1 v3's blurb.
+1. DONE: H-1 v3 and register v0.30 reviewed (EX_191, EX_192), ratified (RAT-32) and installed (`5b4df41`).
 2. The official-page check, only when separately approved, on the same day as Oz Lotto's Approval 1; the backups, the tree
    and quiet-machine checks; then Oz Lotto's Approval 1. Each on its own go.
 3. Oz Lotto's Approvals 2-4, then Powerball's 1-4, each on its own go and its own safe schedule (a separately approved
