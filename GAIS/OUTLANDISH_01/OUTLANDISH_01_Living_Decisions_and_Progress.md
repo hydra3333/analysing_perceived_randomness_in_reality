@@ -163,3 +163,21 @@ Owner ran `OUTLANDISH_01_Q2_LegacyScanner_Comparison_v0_1.py --self-test` and `-
 **Optional 4 MB/8 MB measurement prepared, not yet Windows-run.** `OUTLANDISH_01_Q3_Synthetic_Performance_Benchmark_v0_1.py` (separate two-file ZIP, 15 Nov) generates a 16–128 decimal-MB temporary synthetic packed input, fixed-seed fabricated 433-draw-per-game histories, and independent worker processes for each chunk/game. It reports elapsed scan seconds, packed-MB/s and OS-measured peak process resident/working-set MiB, and checks **identical CSV digests** for 4 MB versus 8 MB. Local non-Ryzen 16 MB trial **PASS**: Powerball 4/8 MB = **0.479/0.506 s**, **386/646 MiB** peak; Oz 4/8 MB = **1.295/1.381 s**, **342/556 MiB** peak. This single different-host trial does **not** establish that 8 MB is faster; 8 MB used markedly more memory. Ryzen comparison remains to be measured before choosing whether to adjust defaults. No changes to scanner v0.3 or ratified science were made.
 
 **Current action:** benchmark is an **optional performance check**, not a blocker on scientific Q3/Q4 work. The next substantive correctness milestone remains implementation and adversarial qualification of REAL/NULL source isolation, profile-bound histories, receipt/source hashes, create-only run manifest/completion semantics, immutable event loader and reporting. Do not access the six 5 GB published constants, REAL drawsets or production result directories in synthetic development tests. **Q5 scans and forecasting remain unauthorised.** Parent project's unrelated working files remain outside OUTLANDISH-only staging.
+
+## 12. 15 November 2026 — Ryzen synthetic 4 MB vs 8 MB benchmark PASS
+
+**Owner-run evidence, Ryzen Windows, 32 MB synthetic packed FIXED2 BCD, 433 fabricated draws per game.** The temporary-process performance harness returned `Q3 SYNTHETIC BENCHMARK PASS` with matching raw event CSV SHA-256 for 4 MB and 8 MB chunks in both games. No REAL inputs or Q5 scans were accessed/authorised.
+
+| Game | Packed chunk | Time | Packed MB/s | Peak process MiB | Events |
+|---|---:|---:|---:|---:|---:|
+| Powerball | 4 MB | 2.363 s | 13.54 | 297.8 | 8 |
+| Powerball | 8 MB | 2.395 s | 13.36 | 561.0 | 8 |
+| Oz Lotto | 4 MB | 4.054 s | 7.89 | 254.7 | 336 |
+| Oz Lotto | 8 MB | 4.059 s | 7.88 | 471.2 | 336 |
+
+Powerball event CSV SHA-256: `2c0c5ff1bae6ff4a7e8f6ad09e4aacb4ad3e36c2b71cfb4996519bf26e30dd90`.
+Oz event CSV SHA-256: `b0ef635aa49d7dce65da845a07a0f713102cde9da315e4b4ea6478ea2dec03fb`.
+
+**Interpretation / development-chat recommendation (not yet an owner policy change):** This small synthetic benchmark detects **no throughput benefit** from 8 MB, whereas 8 MB requires about 88%/85% more peak process RAM for PB/Oz respectively. Prefer a uniform **4 MB default** on both 16 GiB and 32 GiB machines, retain a simple explicit `chunk_bytes` override to explore 8 MB or other valid sizes, and leave the constants easy to tune. Timing differences are too small for a performance claim; test is not proof of production full-size throughput. Existing v0.3 RAM-aware 4/8 automatic policy remains **unchanged in source until deliberately revised**. No further optimisation is necessary before the next scientific correctness stage.
+
+**Next substantive work:** Q3/Q4 REAL/NULL provenance, game-specific history isolation, receipt/manifest digest validation, create-only incomplete/completed run semantics and adversarial refusal tests, initially **temporary synthetic fixtures only**. Preserve original Powerball scanner, six production packed sources, prior results and overarching project's unrelated working files. The integration/forecast contracts and Q5 production scans remain deferred/unapproved.
