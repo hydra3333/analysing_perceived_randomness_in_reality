@@ -27,7 +27,8 @@ durable EX messages are authoritative.
   or the page check runs again. Backups confirmed (19:01, entry 12; G:\BACKUPS\powerball_modeh_2026-11-15). Tree check PASS (entry 13).
   **Oz Lotto Approval 1 DONE: manifest PASS (entry 14); holdout OPENED 19:19 (entry 15, permanent); witness push 9eb5e33
   (entry 16). THE FREEZE IS ON** until both games are sealed. **Approval 2 DONE 19:23** (entry 17: 15 draws added,
-  1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). Next: Approval 3 (plan, then batch). No rerun meanwhile. Carried: order-varied pages in the updater's own
+  1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). **Plan DONE 19:26** (entry 18: batch
+  wf-5af149aef7444336a38e469146c95a20). Next: the batch run (Approval 3, part 2), on its own go. No rerun meanwhile. Carried: order-varied pages in the updater's own
   tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.

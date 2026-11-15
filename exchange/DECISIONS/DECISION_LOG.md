@@ -177,3 +177,11 @@ the installed documents. This log is not a separate approval process.
 - **Claude's check:** overlap 9, all matched; 15 added (1694-1708, the holdout and five later draws); no warnings; every
   snapshot line as a clean success leaves it. **PASS.** The holdout draws are now in the local master; no AI has seen any
   value. Next: Approval 3 (the plan), on its own go.
+
+## 18. 15 November 2026, about 19:26 - Oz Lotto Approval 3, part 1: the plan
+
+- **Output (verbatim):** `[WALK-FORWARD] MODE H PLAN wf-5af149aef7444336a38e469146c95a20: OZLOTTO targets 1694-1703, 40 variants,
+  master version 2 63e3349333f8...` and the `next:` line naming
+  `Run_Experiment.bat Method_Walk_Forward.py run --game OZLOTTO --batch wf-5af149aef7444336a38e469146c95a20`.
+- **Claude's check:** targets 1694-1703, 40 variants, master version 2 with the hash from Approval 2. **PASS.** Batch id
+  **`wf-5af149aef7444336a38e469146c95a20`** (400 planned pairs). Next: the batch run, on its own go.
