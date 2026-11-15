@@ -1,0 +1,44 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+(fast-forward bb9dfc4..510a37f: 4 files, all under exchange/)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short --ignored src
+!! src/__pycache__/
+!! src/coordinator_private/__pycache__/
+!! src/evaluation/__pycache__/
+!! src/methods/E_001/__pycache__/
+!! src/methods/E_002/__pycache__/
+!! src/methods/E_003/__pycache__/
+!! src/methods/E_004/__pycache__/
+!! src/methods/E_006/__pycache__/
+!! src/methods/E_007/__pycache__/
+!! src/methods/E_008/__pycache__/
+!! src/methods/E_009/__pycache__/
+!! src/methods/E_010/__pycache__/
+!! src/methods/E_017/__pycache__/
+!! src/methods/E_018/__pycache__/
+!! src/methods/E_019/__pycache__/
+!! src/methods/__pycache__/
+!! src/methods/_common/__pycache__/
+!! src/methods/contract_adapters/__pycache__/
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git diff --stat cc0ab73 HEAD -- src "*.bat" requirements.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\OZLOTTO_results_master.csv SHA256
+SHA256 hash of source_data\OZLOTTO_results_master.csv:
+4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\POWERBALL_results_master.csv SHA256
+SHA256 hash of source_data\POWERBALL_results_master.csv:
+ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir transitory_data\poc_runs\UNRESOLVED_ORPHAN.json
+ Volume in drive E is E-DRIVE
+ Volume Serial Number is 366A-E763
+
+ Directory of E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\transitory_data\poc_runs
+
+File Not Found

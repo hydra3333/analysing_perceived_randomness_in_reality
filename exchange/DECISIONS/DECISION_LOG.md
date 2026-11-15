@@ -129,3 +129,12 @@ the installed documents. This log is not a separate approval process.
   `exchange/RUNS/BACKUP_2026_11_15_owner_window.txt`.
 - **Result:** `source_data` 6 files and `results` 78,148 files (181.94 MB) copied, FAILED 0, exit 1 each (robocopy's "copied,
   no errors"); the two list-only checks found Copied 0, Mismatch 0, FAILED 0, exit 0 each. **Backups confirmed (R-015 (c)).**
+
+## 13. 15 November 2026, about 19:10 - prerequisites 5 and 6: tree check PASS
+
+- **Where:** the owner's CMD window (pasted in the chat; recorded as `exchange/RUNS/TREE_CHECK_2026_11_15_owner_window.txt`,
+  the pull's file list abbreviated, every check line unchanged).
+- **Result:** clean status; only `__pycache__/` folders ignored under `src/`; no change to `src/`, root `.bat` or
+  `requirements.txt` since `cc0ab73`; both masters at their version-1 SHA-256 (Oz Lotto `4a6cecc2...`, Powerball
+  `ce0ae7e7...`); no orphan marker. **PASS.** The owner is asked to confirm that Claude Code and VS Code's Python terminals
+  are closed. Claude holds its own pushes from here until the owner's witness push after Approval 1.
