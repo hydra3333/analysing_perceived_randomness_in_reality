@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 19:55 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 20:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -28,8 +28,9 @@ durable EX messages are authoritative.
   **Oz Lotto Approval 1 DONE: manifest PASS (entry 14); holdout OPENED 19:19 (entry 15, permanent); witness push 9eb5e33
   (entry 16). THE FREEZE IS ON** until both games are sealed. **Approval 2 DONE 19:23** (entry 17: 15 draws added,
   1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). **Plan DONE 19:26** (entry 18: batch
-  wf-5af149aef7444336a38e469146c95a20). **Batch DONE** (entry 19: 400 of 400 forecasts SUCCESS). Next: Approval 4 (the one
-  score and MODE_H_SEALED), on its own go. No rerun meanwhile. Carried: order-varied pages in the updater's own
+  wf-5af149aef7444336a38e469146c95a20). **Batch DONE** (entry 19: 400 of 400 forecasts SUCCESS). **OZ LOTTO SEALED 19:54**
+  (entry 20: attempt mh-ba0c301b..., 800 score lines, 400 rank lines). Report files stay unshared until Powerball is
+  sealed (D6). Next: a second backup; the reviewer's review of the whole sequence; Powerball on another evening. No rerun meanwhile. Carried: order-varied pages in the updater's own
   tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.
@@ -80,7 +81,8 @@ independent "how the process went" note from each AI, with reasoning and alterna
 ## Mode H state
 
 POC rerun and updater offline self-test COMPLETED (both PASS, 14 November 2026); B01 closed. The official-page check, the
-backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Oz Lotto's holdout OPENED (15 November 19:19); Powerball's UNOPENED. The freeze is ON (from 19:18).
+backups, the tree and quiet-machine checks and all Approvals 1-4 NOT RUN. Oz Lotto: OPENED 19:19 and SEALED 19:54 (15 November). Powerball: UNOPENED. The freeze is ON (from 19:18) until Powerball is
+sealed too.
 
 ## Full order from here
 

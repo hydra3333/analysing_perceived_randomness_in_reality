@@ -195,3 +195,15 @@ the installed documents. This log is not a separate approval process.
   `DONE: SUCCESS, consumable, under this plan's pins`; ignored attempt lines 0; lifecycle marker BATCH_COMPLETE.
 - **Claude's check** (counted with a tool): 40 variants x 10 = 400 forecasts, all successful; no method failure. **PASS.**
   Next: Approval 4 (the one score and the seal), on its own go.
+
+## 20. 15 November 2026, about 19:54 (09:23:52 UTC) - Oz Lotto Approval 4: scored and SEALED
+
+- **Where:** the owner's go and CMD window (recorded unchanged: `exchange/RUNS/OZLOTTO_MODEH_SCORE_2026_11_15_owner_window.txt`;
+  value-free).
+- **Output:** study and batch verified (roster of 400 pairs); attempt `mh-ba0c301be2fb4c459492697d0137e7ed`, search-log row 8;
+  outcomes read once; score ledger 800 score lines, 400 rank lines; N1 simulation; measures for 80 tracks and 40 variants;
+  report files txt, csv and json written; **`MODE_H_SEALED written; the study is closed`**.
+- **Claude's check:** every line as sheet r2d expects, with 800 and 400 (every forecast succeeded). **PASS. The Oz Lotto Mode H
+  study is SEALED.** No AI has seen any draw value or the report. Per D6 the report files are shared after Powerball is
+  sealed too (not committed now). Next for Oz Lotto: a second backup (D5); then the reviewer's review of tonight's whole
+  sequence (EX_193). Powerball on another evening, on its own gos, with a new page check on its Approval 1 day.
