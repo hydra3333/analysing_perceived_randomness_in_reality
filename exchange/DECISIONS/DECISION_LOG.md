@@ -165,3 +165,15 @@ the installed documents. This log is not a separate approval process.
   shows the push received at **2026-11-15T08:51:04Z** (19:21:04 Adelaide); the commit's own time stamp (19:20:59 +10:30) is set by
   the PC and is not the stronger item. What it shows: the study record existed on GitHub before the project first ingested any
   holdout result. Not proof of pre-draw forecasting (the draws were already public). Next: Approval 2, on its own go.
+
+## 17. 15 November 2026, about 19:23 - Oz Lotto Approval 2: the first results update
+
+- **Where:** the owner's go and CMD window in the Claude chat (with the read-only state snapshot, run as information).
+- **Output (verbatim):** `[MASTER] OZLOTTO: checked 9 overlapping draws (all matched), added 15 (1694..1708), warnings 0` and
+  `[MASTER]   grab kept: OZLOTTO_grab_draws_1685-1708_as_at_20261115_085242Z.csv; backup: OZLOTTO_master_draws_1474-1693_as_at_20261115_085242Z.csv`.
+- **Snapshot:** ` M` for the Oz Lotto master and ledger only (expected; D5: left uncommitted); no lock; no `.part-` file;
+  one grab and one backup, both of this run; master SHA-256 now `63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e`
+  (version 2).
+- **Claude's check:** overlap 9, all matched; 15 added (1694-1708, the holdout and five later draws); no warnings; every
+  snapshot line as a clean success leaves it. **PASS.** The holdout draws are now in the local master; no AI has seen any
+  value. Next: Approval 3 (the plan), on its own go.

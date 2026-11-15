@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 19:25 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 19:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -26,7 +26,8 @@ durable EX messages are authoritative.
   r2 449b5cd3..., sheet r2d 7aa8c89c...). Then prerequisite 3 with r2: PASS (18:50; decision log entry 11). Oz Lotto Approval 1 must be today (15 November)
   or the page check runs again. Backups confirmed (19:01, entry 12; G:\BACKUPS\powerball_modeh_2026-11-15). Tree check PASS (entry 13).
   **Oz Lotto Approval 1 DONE: manifest PASS (entry 14); holdout OPENED 19:19 (entry 15, permanent); witness push 9eb5e33
-  (entry 16). THE FREEZE IS ON** until both games are sealed. Next: Approval 2 (the first results update), on its own go. No rerun meanwhile. Carried: order-varied pages in the updater's own
+  (entry 16). THE FREEZE IS ON** until both games are sealed. **Approval 2 DONE 19:23** (entry 17: 15 draws added,
+  1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). Next: Approval 3 (plan, then batch). No rerun meanwhile. Carried: order-varied pages in the updater's own
   tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.
