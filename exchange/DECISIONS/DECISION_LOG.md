@@ -88,3 +88,13 @@ the installed documents. This log is not a separate approval process.
   the three files, each with its ratified SHA-256; no file under `src/`, no root `.bat` and no `requirements.txt` has changed
   since `cc0ab73`. H-1 v3 (with its blurb) is now the installed Claude handover; H-2 v2 r1 stays the reviewer's; register
   v0.30 is the installed register. The next register edition records `5b4df41`.
+
+## 8. 15 November 2026, about 18:15 - tonight: Oz Lotto only, streamlined review
+
+- **Where:** the owner's message in the Claude chat, with the reviewer's agreement (EX_193).
+- **Owner's words:** "ok per your recommendations lets start and do only OzLotto tonight. Yes to "1. Ask the reviewer to agree
+  tonight's exact blocks once, upfront"". (`results\` is about 181 MB.)
+- **Status:** DECIDED for tonight only: Oz Lotto from the official-page check to its seal, following readiness sheet r2c
+  (blob `b544438f...` at this edition's check) exactly; each step on the owner's own go after Claude has checked the previous
+  output; the reviewer reviews the whole recorded sequence afterwards, or at any STOP (EX_193's five safeguards). Powerball on
+  another evening, on its own gos. D1-D7 unchanged.
