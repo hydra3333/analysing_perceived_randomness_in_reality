@@ -147,3 +147,11 @@ the installed documents. This log is not a separate approval process.
 - **Claude's check:** 40 variants, targets 1694-1703, master version 1, 497 closure files, environment digest `5bf4eb8a36dd`
   (T024's): all as sheet r2d expects. **PASS.** The freeze holds from here until both games are sealed. Next: the opening
   record (permanent), on the owner's go.
+
+## 15. 15 November 2026, about 19:19 - Oz Lotto Approval 1, part 2: the holdout OPENED
+
+- **Where:** the owner's go and CMD window in the Claude chat; the fixed owner statement given verbatim.
+- **Output (verbatim):** `[MODE-H] HOLDOUT OPENED for OZLOTTO: freeze version 1; the opening record is permanent. The display
+  rule is unchanged: no outcome of a holdout draw is shown or computed with outside the sealed Mode H score.`
+- **Claude's check:** as sheet r2d expects. **Oz Lotto's holdout (1694-1703) is OPENED; the opening record is permanent.**
+  No results update has run; no holdout draw has been read. Next: the D3 witness push, on its own go, before Approval 2.
