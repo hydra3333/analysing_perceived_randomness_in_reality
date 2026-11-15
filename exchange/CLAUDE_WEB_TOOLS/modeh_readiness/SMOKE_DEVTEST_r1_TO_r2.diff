@@ -1,0 +1,99 @@
+--- /tmp/devtest_r1.py	2026-11-15 18:29:51.773912650 +1030
++++ exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke_devtest.py	2026-11-15 18:29:59.834496465 +1030
+@@ -1,11 +1,12 @@
+ #!/usr/bin/env python3
+-"""Development test of gov_fetch_parse_smoke.py on INVENTED data with a FAKE browser (Claude web chat, 14 November 2026).
++"""Development test of gov_fetch_parse_smoke.py (r2) on INVENTED data with a FAKE browser (Claude web chat, 14 November 2026;
++r2 of 15 November 2026: the pages are now built newest first, as the real page lists them, and the page's order is varied).
+ No website is contacted: the installed BrowserFetcher.fetch runs unchanged against a stand-in driver object whose page
+ text is built from an invented master. It reads nothing under the repository's source_data/, results/ or
+ transitory_data/. Not Windows evidence, and no evidence about the real page: that is what the owner-run check is for.
+ Usage (from a clone; selenium importable): PYTHONPATH=src:src/methods:tests python -B gov_fetch_parse_smoke_devtest.py
+ """
+-import contextlib, hashlib, io, json, shutil, sys, tempfile
++import contextlib, hashlib, io, json, random, shutil, sys, tempfile
+ from datetime import date
+ from pathlib import Path
+ 
+@@ -51,11 +52,12 @@
+         pass
+ 
+ 
+-def page(RM, root, game, *, change=None, extra=()):
+-    """The page text for the smoke's window, in the wording the parser expects, from the INVENTED master."""
++def page(RM, root, game, *, change=None, extra=(), order="newest first", repeat=None):
++    """The page text for the smoke's window, in the wording the parser expects, from the INVENTED master. The blocks are
++    listed newest first by default (the real page's order on 15 November 2026), or oldest first, or shuffled."""
+     a, b = SMOKE.WINDOW
+     master = RM.Store(root, game).load_verified_master(quarantine_closed=True)[0]
+-    lines = []
++    blocks = []
+     for d in list(master) + list(extra):
+         day = date.fromisoformat(d.day)
+         if not a <= day <= b and d not in extra:
+@@ -64,10 +66,19 @@
+             d = change(d)
+             if d is None:
+                 continue
+-        lines += [f"Draw {d.number}", f"{day.strftime('%A')} {day.day} {RM.MONTH_NAMES[day.month - 1]} {day.year}",
+-                  "Winning numbers:", *map(str, d.main),
+-                  "Powerball:" if game == "POWERBALL" else "Supplementary numbers:", *map(str, d.secondary), "View prizes"]
+-    return "\n".join(lines)
++        blocks.append((d.number, "\n".join([f"Draw {d.number}", f"{day.strftime('%A')} {day.day} {RM.MONTH_NAMES[day.month - 1]} {day.year}",
++                                            "Winning numbers:", *map(str, d.main),
++                                            "Powerball:" if game == "POWERBALL" else "Supplementary numbers:",
++                                            *map(str, d.secondary), "View prizes"])))
++    if repeat is not None:                                   # the same block listed twice
++        blocks += [b for b in blocks if b[0] == repeat]
++    if order == "newest first":
++        blocks.reverse()
++    elif order == "shuffled":
++        random.Random(20261115).shuffle(blocks)
++    else:
++        assert order == "oldest first", order
++    return "\n".join(b[1] for b in blocks)
+ 
+ 
+ def run(root, driver=None, argv=(), factory=None):
+@@ -101,13 +112,21 @@
+             print(f"{'PASS' if ok else 'FAIL'} {name}: exit {rc}" + ("" if ok else f"\n{text}"))
+             return text
+ 
+-        t = case("both games read as expected", 0, "PASS: POWERBALL, OZLOTTO", driver=FakeDriver(good))
+-        assert "parsed 9 draw(s) 1568-1576" in t and "parsed 9 draw(s) 1685-1693" in t and "equal to the master 9/9" in t
+-        drawn = [" ".join(map(str, d.main)) for g in PROFILES for d in RM.Store(root, g).load_verified_master(quarantine_closed=True)[0][-9:]]
++        t = case("both games read as expected (the page newest first, as the real page)", 0, "PASS: POWERBALL, OZLOTTO", driver=FakeDriver(good))
++        assert "parsed 26 draw(s) 1551-1576, listed newest first" in t and "parsed 26 draw(s) 1668-1693, listed newest first" in t
++        assert t.count("on the weekly date rule 26/26; equal to the master 26/26") == 2
++        drawn = [" ".join(map(str, d.main)) for g in PROFILES for d in RM.Store(root, g).load_verified_master(quarantine_closed=True)[0][-26:]]
+         assert not any(x in t for x in drawn), "a drawn number sequence was printed"
++        for o in ("oldest first", "shuffled"):
++            t = case(f"the same draws listed {o} pass too", 0, "PASS: POWERBALL, OZLOTTO",
++                     driver=FakeDriver({g: page(RM, root, g, order=o) for g in PROFILES}))
++            assert t.count(f"listed {'mixed' if o == 'shuffled' else o}") == 2 and t.count("equal to the master 26/26") == 2
++        t = case("a draw listed twice fails (each expected exactly once)", 1, "OZLOTTO: FAIL: expected exactly draws 1668-1693, each once, in any order (26); the parser returned 27; repeated 1680",
++                 driver=FakeDriver({**good, "OZLOTTO": page(RM, root, "OZLOTTO", repeat=1680)}))
++        assert "POWERBALL: PASS" in t
+         d1 = FakeDriver(good)
+         case("one game only", 0, "PASS: OZLOTTO", driver=d1, argv=["--games", "OZLOTTO"])
+-        assert len(d1.gets) == 1 and "toDate=Fri+Jul+31+2026" in d1.gets[0] and "fromDate=Sun+May+31+2026" in d1.gets[0]
++        assert len(d1.gets) == 1 and "toDate=Fri+Jul+31+2026" in d1.gets[0] and "fromDate=Sat+Jan+31+2026" in d1.gets[0]
+         case("a redirect to another host is refused", 3, "REFUSED: the browser's final URL is https://oz.lotterywest.com",
+              driver=FakeDriver(good, final="https://oz.lotterywest.com/results"))
+         case("a challenge page stops", 2, "STOP: www.lotterywest.wa.gov.au served a block/challenge page",
+@@ -117,13 +136,13 @@
+              driver=FakeDriver({**good, "POWERBALL": page(RM, root, "POWERBALL", extra=[q])}))
+         case("a changed page wording stops", 2, "'Winning numbers:' not found",
+              driver=FakeDriver({**good, "POWERBALL": good["POWERBALL"].replace("Winning numbers:", "Results:")}))
+-        case("too few results stop after the wait", 2, "did not appear (expected at least 9, saw 8)",
++        case("too few results stop after the wait", 2, "did not appear (expected at least 26, saw 25)",
+              driver=FakeDriver({**good, "POWERBALL": page(RM, root, "POWERBALL", change=lambda d: None if d.number == 1570 else d)}))
+         def swap(d):
+             return dataclasses.replace(d, main=d.main[1:] + d.main[:1]) if d.number == 1690 else d
+         t = case("a draw that differs from the master fails, values withheld", 1, "OZLOTTO: FAIL: parsed draw(s) 1690 differ",
+                  driver=FakeDriver({**good, "OZLOTTO": page(RM, root, "OZLOTTO", change=swap)}))
+-        assert "equal to the master 8/9" in t
++        assert "equal to the master 25/26" in t
+         def boom():
+             raise RuntimeError("the browser did not start\nsecond line never shown")
+         t = case("a browser that does not start is an error, without a traceback", 4, "ERROR: RuntimeError: the browser did not start", factory=boom)

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 18:25 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 19:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -20,8 +20,11 @@ durable EX messages are authoritative.
   by Claude from GitHub). H-2 v2 r1 stays the reviewer's handover.
 - **STOP (15 November, about 18:17) at the official-page check:** both games FAIL on the expected draw order (the page
   returned the nine known draws newest-first; every one equal to the master). Nothing written, nothing opened, no approval.
-  Decision log entry 9; window in exchange/RUNS/. Waiting: Claude's root-cause analysis (suggested on Fable), then the
-  reviewer, then the owner's decision. No rerun meanwhile.
+  Decision log entry 9; window in exchange/RUNS/. ROOT CAUSE (EX_194): the check r1 compared draw numbers in page order
+  with an oldest-first list; the installed updater does not depend on order (evidence on invented data). Proposed: check r2
+  (order-free; 26 draws per game to match the real update's page size) and sheet r2d. Waiting: the reviewer (EX_195), then
+  the owner's go to run prerequisite 3 again with r2. No rerun meanwhile. Carried: order-varied pages in the updater's own
+  tests, next code package (tests only).
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.
 - **Next after it:** backups confirmed (prerequisite 4).

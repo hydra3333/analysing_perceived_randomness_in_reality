@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
-"""Lotterywest-GOV fetch-and-parse smoke check (EX_167 B01). DRAFT until reviewed; run only by the project owner,
-only on his own separate go, before a game's Approval 1. One-off: not production code, not part of any package.
+"""Lotterywest-GOV fetch-and-parse smoke check (EX_167 B01), r2 of 15 November 2026. DRAFT until reviewed; run only by
+the project owner, only on his own separate go, before a game's Approval 1. One-off: not production code, not part of any
+package.
+
+r2 (after r1's STOP on 15 November 2026: the real page lists its draws NEWEST FIRST, and r1 compared the parsed draw
+numbers with an oldest-first list): the draw numbers are now compared as a set, each expected exactly once, in any order,
+as the installed updater itself treats them (it files each draw under its number and sorts); the page's order is shown,
+not judged. The window is widened from 9 to 26 draws per game, still wholly before the quarantine and still one page load
+per game, so the page holds at least as many draws as the first real update will ask for in one page (24 to 26 during
+November and December 2026).
 
 What it does: with the INSTALLED updater's own browser fetcher and parser (src/results_master_v0_2.py, unchanged, imported
 read-only), it loads the official results-search page once per game for a window that ends BEFORE the quarantine
-(31 May to 31 July 2026: the nine draws per game that the first real update will check as its overlap), always with
-quarantine_closed=True, and checks without showing any drawn number that:
+(31 January to 31 July 2026: 26 draws per game, the last nine of which the first real update will check as its overlap),
+always with quarantine_closed=True, and checks without showing any drawn number that:
   - the browser's final address is https on exactly www.lotterywest.wa.gov.au (the updater's own rule; no fallback);
   - the page is not a block or challenge page (the updater's own rule; nothing is bypassed);
-  - the parser returns exactly the nine expected draw numbers, each structurally valid (the updater's own checks; a date
-    off the weekly rule is counted and shown, as the updater's warning would be, and is not a failure by itself);
+  - the parser returns exactly the 26 expected draw numbers, each once, in whatever order the page lists them, each
+    structurally valid (the updater's own checks; a date off the weekly rule is counted and shown, as the updater's
+    warning would be, and is not a failure by itself);
   - each parsed draw equals the master's draw of the same number (the comparison the real update makes next).
 What it never does: it writes no file, takes no lock, changes no master, ledger, record, code or environment file, makes
 no Git change, requests no date on or after 1 August 2026, and prints draw numbers and counts only, never a drawn number.
@@ -30,8 +39,8 @@ from datetime import date
 from pathlib import Path
 from urllib.parse import urlsplit
 
-WINDOW = (date(2026, 5, 31), date(2026, 7, 31))                        # ends before the quarantine (1 August 2026)
-EXPECTED = {"POWERBALL": (1568, 1576), "OZLOTTO": (1685, 1693)}        # the draws strictly inside the window
+WINDOW = (date(2026, 1, 31), date(2026, 7, 31))                        # ends before the quarantine (1 August 2026)
+EXPECTED = {"POWERBALL": (1551, 1576), "OZLOTTO": (1668, 1693)}        # the draws strictly inside the window (26 each)
 
 
 def say(text: str) -> None:
@@ -45,15 +54,24 @@ def check_game(RM, game: str, master: list, fetcher) -> bool:
     driver = getattr(fetcher, "driver", None)
     final = urlsplit(getattr(driver, "current_url", "") or "")
     numbers = [d.number for d in draws]
+    want = list(range(lo, hi + 1))
+    order = ("oldest first" if numbers == sorted(numbers) else
+             "newest first" if numbers == sorted(numbers, reverse=True) else "mixed")
     by_no = {d.number: d for d in master}
     on_rule = sum(1 for d in draws if d.day == RM.derived_date(game, d.number).isoformat())
     differ = [d.number for d in draws if by_no.get(d.number) != d]
     say(f"{game}: window {a}..{b}; final address {final.scheme}://{final.hostname}; parsed {len(draws)} draw(s)"
-        + (f" {numbers[0]}-{numbers[-1]}" if numbers else "") + f"; on the weekly date rule {on_rule}/{len(draws)}; "
+        + (f" {min(numbers)}-{max(numbers)}, listed {order}" if numbers else "")
+        + f"; on the weekly date rule {on_rule}/{len(draws)}; "
         f"equal to the master {len(draws) - len(differ)}/{len(draws)}")
     ok = True
-    if numbers != list(range(lo, hi + 1)):
-        say(f"{game}: FAIL: expected exactly draws {lo}-{hi} ({hi - lo + 1}); the parser returned {len(numbers)}")
+    if sorted(numbers) != want:                                         # as a set, each once; the order is not judged
+        missing = [n for n in want if n not in numbers]
+        extra = sorted(set(numbers) - set(want))
+        repeated = sorted({n for n in numbers if numbers.count(n) > 1})
+        say(f"{game}: FAIL: expected exactly draws {lo}-{hi}, each once, in any order ({len(want)}); the parser returned "
+            f"{len(numbers)}" + "".join(f"; {label} {', '.join(map(str, ns[:10]))}"
+                                        for label, ns in (("missing", missing), ("unexpected", extra), ("repeated", repeated)) if ns))
         ok = False
     if differ:
         say(f"{game}: FAIL: parsed draw(s) {', '.join(map(str, differ[:10]))} differ from the master (values withheld)")

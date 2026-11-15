@@ -1,4 +1,4 @@
-# Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2c (reviewer PASS, EX_168; r2b checked in EX_177, its C01 applied as r2c); not authorised
+# Mode H: the Approval 1 readiness sheet (both games) - DRAFT r2d (r2c reviewed: EX_168, EX_177; r2d changes prerequisite 3 only and awaits the reviewer's recheck, EX_194); not authorised
 
 **DRAFT r2 (Claude web chat on Fable 5.2, 14 November 2026). Nothing here is authorised and nothing was run or opened.**
 r2 applies the reviewer's EX_167 (PASS WITH CORRECTIONS: blocking B01 and B02, nonblocking C01 to C05); section 11 says
@@ -14,6 +14,14 @@ prerequisite 5's code check, and adds one sentence on running the installer agai
 at a time. Sources: design v0.1r7 sections 1, 4, 5 and 7; the installed code at `main` (the Mode H implementation installed in package commit `2860e86` and released in
 `effc179`, with a later test-only fix; the root dependency installer updated by the owner at `cc0ab73`, part of the
 497-file closure), read line by line; a dress rehearsal on invented data (section 10).
+**r2d (15 November 2026, after the page check's STOP):** the owner ran prerequisite 3 on its own go; the check (r1, blob
+`1cbd3294...`) reported FAIL for both games and wrote nothing (`exchange/RUNS/GOV_SMOKE_2026_11_15_owner_window.txt`). Cause: the
+real page lists its draws newest first, and r1 compared the parsed draw numbers with an oldest-first list; every parsed
+draw equalled the master. The installed updater does not depend on the page's order (it files each draw under its number
+and sorts; shown on invented data, `evidence/PRELIMINARY_updater_page_order_evidence_py315.txt`). r2d changes prerequisite
+3 only: the check r2 compares the draw numbers as a set, shows the page's order without judging it, and reads 26 draws
+per game instead of 9 (still wholly before the quarantine, still one page load per game), so that the page holds at
+least as many draws as the real first update will ask for in one page. Nothing else in this sheet changes.
 US-ASCII, CRLF. No outcome of any draw appears here; draw numbers and dates (from the weekly rule) are identifiers only.
 
 ## 1. What you would be committing to
@@ -115,8 +123,9 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
    Expect only `[SELF-TEST] 13/13 PASS`. Any `FAIL` or traceback is a STOP.
 3. **The official-page fetch-and-parse check** (EX_167 B01; new in r2; contacts Lotterywest-GOV twice; about a minute).
    `gov_fetch_parse_smoke.py` is a one-off, read-only script outside `src\`. It uses the installed updater's own browser
-   fetcher and parser, unchanged, on the nine June and July 2026 draws per game that the real first update will check
-   as its overlap, always with the quarantine closed, and compares each parsed draw with your master. It requests no
+   fetcher and parser, unchanged, on the 26 draws per game dated February to July 2026 (the last nine are those the real
+   first update will check as its overlap; 26 is at least as many draws as that update will ask for in one page, 24 to 26
+   during November and December 2026), always with the quarantine closed, and compares each parsed draw with your master. It requests no
    date from 1 August 2026 on, writes nothing in the project (Selenium may keep Chrome's driver in its own cache in your
    user profile, as it would for the updater), takes no lock and prints draw numbers and counts only.
    ```
@@ -128,20 +137,22 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
    echo EXIT %ERRORLEVEL%
    git status --short
    ```
-   Expect: nothing from the first status; `1cbd32941234661d422c32f53bbf3b5343af2ff7` twice (the committed file and the file
+   Expect: nothing from the first status; `449b5cd3a974d34488eb1522b5a75809e8d212b1` twice (the committed file and the file
    on disk are both the reviewed one; anything else: stop, do not run it); then
    ```
    [GOV-SMOKE] POWERBALL: master verified against its ledger (version 1, last draw 1576); read-only
    [GOV-SMOKE] OZLOTTO: master verified against its ledger (version 1, last draw 1693); read-only
-   [GOV-SMOKE] POWERBALL: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1568-1576; on the weekly date rule 9/9; equal to the master 9/9
+   [GOV-SMOKE] POWERBALL: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1551-1576, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
    [GOV-SMOKE] POWERBALL: PASS
-   [GOV-SMOKE] OZLOTTO: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1685-1693; on the weekly date rule 9/9; equal to the master 9/9
+   [GOV-SMOKE] OZLOTTO: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1668-1693, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
    [GOV-SMOKE] OZLOTTO: PASS
    [GOV-SMOKE] PASS: POWERBALL, OZLOTTO: the installed fetcher and parser read the official page as expected. This check wrote nothing.
    ```
    `EXIT 0`; nothing from the second status.
    **STOP criteria:** any exit code but 0; any `REFUSED`, `STOP`, `FAIL`, `VERIFY FAIL` or `ERROR` line; a traceback; a
-   line that differs from the above (a weekly-rule count below 9/9 with `PASS` is the one tolerated difference: send it).
+   line that differs from the above. Two differences are tolerated when the game's line is still `PASS`, and both are sent
+   to me before anything else: a weekly-rule count below 26/26, and a `listed ...` wording other than `newest first` (the
+   page's order is shown, not judged; the updater does not depend on it).
    On a STOP: do not rerun (the site is not to be retried casually), change nothing, send me the window. No Approval 1
    follows a STOP. What each means:
    - `ERROR` (exit 4): the browser, its driver or Selenium did not start. Fixed outside the frozen code, before any manifest.
@@ -151,8 +162,9 @@ else is a STOP. Begin with `git pull --ff-only` (before the freeze a pull is fin
      has changed. This is the fault the check exists to find while the code can still be fixed by a reviewed package.
    - `STOP: ... a quarantined draw appeared on the page` (exit 2): the page showed a result outside the dates asked for;
      the check stopped before reading its numbers. Inconclusive; send it.
-   - `FAIL` (exit 1): the page parsed, but not to the expected nine draws, or not equal to the master.
-   **What a PASS shows:** on that day the installed browser and parser read 18 known draws from the official page exactly
+   - `FAIL` (exit 1): the page parsed, but not to exactly the expected 26 draws (each once, in any order), or not equal
+     to the master.
+   **What a PASS shows:** on that day the installed browser and parser read 52 known draws from the official page exactly
    as the master holds them. It cannot promise the page is the same at Approval 2, so run it on the day of the first
    Approval 1. It may be run again for Powerball alone (add `--games POWERBALL`), on its own go, only after Oz Lotto is
    sealed and before Powerball's Approval 1 (never while Oz Lotto is unsealed). Expect then the Powerball lines only,
@@ -467,9 +479,11 @@ The reviewer's position (EX_167 section 5) is given with each.
   drawn number in any report file (`evidence/PRELIMINARY_modeh_dress_rehearsal_full_cohort_py315.txt`). It is not
   Windows evidence, not real data, and not a live fetch.
 - `gov_fetch_parse_smoke_devtest.py`: the page check run against a stand-in browser object and an invented master (no
-  website contacted): 13 of 13 cases, covering the pass, every STOP and refusal listed in prerequisite 3, "no file
-  changed" after every case, and "no browser started" on every precondition refusal
-  (`evidence/PRELIMINARY_gov_fetch_parse_smoke_devtest_py315.txt`). It proves the script's logic, nothing about the
+  website contacted): for r2, 16 of 16 cases (r1: 13 of 13), covering the pass with the page newest first, oldest first
+  and shuffled, a draw listed twice, every STOP and refusal listed in prerequisite 3, "no file changed" after every case,
+  and "no browser started" on every precondition refusal
+  (`evidence/PRELIMINARY_gov_fetch_parse_smoke_r2_devtest_py315.txt`). r1's failure of 15 November 2026 is reproduced line
+  for line on invented data (`evidence/PRELIMINARY_repro_r1_newest_first_py315.txt`). It proves the script's logic, nothing about the
   real page.
 - The released set, the registry and the runner adapters agree at 40 per game (a read-only check of the installed code).
 

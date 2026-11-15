@@ -1,0 +1,55 @@
+1c1
+< # Mode H: the Approval 1 readiness sheet (both games) - REVIEWED DRAFT r2c (reviewer PASS, EX_168; r2b checked in EX_177, its C01 applied as r2c); not authorised
+---
+> # Mode H: the Approval 1 readiness sheet (both games) - DRAFT r2d (r2c reviewed: EX_168, EX_177; r2d changes prerequisite 3 only and awaits the reviewer's recheck, EX_194); not authorised
+16a17,24
+> **r2d (15 November 2026, after the page check's STOP):** the owner ran prerequisite 3 on its own go; the check (r1, blob
+> `1cbd3294...`) reported FAIL for both games and wrote nothing (`exchange/RUNS/GOV_SMOKE_2026_11_15_owner_window.txt`). Cause: the
+> real page lists its draws newest first, and r1 compared the parsed draw numbers with an oldest-first list; every parsed
+> draw equalled the master. The installed updater does not depend on the page's order (it files each draw under its number
+> and sorts; shown on invented data, `evidence/PRELIMINARY_updater_page_order_evidence_py315.txt`). r2d changes prerequisite
+> 3 only: the check r2 compares the draw numbers as a set, shows the page's order without judging it, and reads 26 draws
+> per game instead of 9 (still wholly before the quarantine, still one page load per game), so that the page holds at
+> least as many draws as the real first update will ask for in one page. Nothing else in this sheet changes.
+118,119c126,128
+<    fetcher and parser, unchanged, on the nine June and July 2026 draws per game that the real first update will check
+<    as its overlap, always with the quarantine closed, and compares each parsed draw with your master. It requests no
+---
+>    fetcher and parser, unchanged, on the 26 draws per game dated February to July 2026 (the last nine are those the real
+>    first update will check as its overlap; 26 is at least as many draws as that update will ask for in one page, 24 to 26
+>    during November and December 2026), always with the quarantine closed, and compares each parsed draw with your master. It requests no
+131c140
+<    Expect: nothing from the first status; `1cbd32941234661d422c32f53bbf3b5343af2ff7` twice (the committed file and the file
+---
+>    Expect: nothing from the first status; `449b5cd3a974d34488eb1522b5a75809e8d212b1` twice (the committed file and the file
+136c145
+<    [GOV-SMOKE] POWERBALL: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1568-1576; on the weekly date rule 9/9; equal to the master 9/9
+---
+>    [GOV-SMOKE] POWERBALL: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1551-1576, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
+138c147
+<    [GOV-SMOKE] OZLOTTO: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1685-1693; on the weekly date rule 9/9; equal to the master 9/9
+---
+>    [GOV-SMOKE] OZLOTTO: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1668-1693, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
+144c153,155
+<    line that differs from the above (a weekly-rule count below 9/9 with `PASS` is the one tolerated difference: send it).
+---
+>    line that differs from the above. Two differences are tolerated when the game's line is still `PASS`, and both are sent
+>    to me before anything else: a weekly-rule count below 26/26, and a `listed ...` wording other than `newest first` (the
+>    page's order is shown, not judged; the updater does not depend on it).
+154,155c165,167
+<    - `FAIL` (exit 1): the page parsed, but not to the expected nine draws, or not equal to the master.
+<    **What a PASS shows:** on that day the installed browser and parser read 18 known draws from the official page exactly
+---
+>    - `FAIL` (exit 1): the page parsed, but not to exactly the expected 26 draws (each once, in any order), or not equal
+>      to the master.
+>    **What a PASS shows:** on that day the installed browser and parser read 52 known draws from the official page exactly
+470,472c482,486
+<   website contacted): 13 of 13 cases, covering the pass, every STOP and refusal listed in prerequisite 3, "no file
+<   changed" after every case, and "no browser started" on every precondition refusal
+<   (`evidence/PRELIMINARY_gov_fetch_parse_smoke_devtest_py315.txt`). It proves the script's logic, nothing about the
+---
+>   website contacted): for r2, 16 of 16 cases (r1: 13 of 13), covering the pass with the page newest first, oldest first
+>   and shuffled, a draw listed twice, every STOP and refusal listed in prerequisite 3, "no file changed" after every case,
+>   and "no browser started" on every precondition refusal
+>   (`evidence/PRELIMINARY_gov_fetch_parse_smoke_r2_devtest_py315.txt`). r1's failure of 15 November 2026 is reproduced line
+>   for line on invented data (`evidence/PRELIMINARY_repro_r1_newest_first_py315.txt`). It proves the script's logic, nothing about the

@@ -1,0 +1,21 @@
+updater_page_order_evidence.py (INVENTED data; a stand-in browser object; no website contacted; Linux Python 3.15.0b4; selenium 4.52.0; the installed src/results_master_v0_2.py, SHA-256 b71f4ffa14ea9f8b6c3e404c0ba46f6abe313ead3178bba553ed9b4ad5e2a43f)
+A: the Mode H first update (opened game, 15 November 2026)
+  POWERBALL, page oldest first (24 draws, first listed 1568, 1 page load): exit 0; [MASTER] POWERBALL: checked 9 overlapping draws (all matched), added 15 (1577..1591), warnings 0; master 01daf3fb6f89, grab 183b83b1636f, backup db2f2fc54f5c
+  POWERBALL, page newest first (24 draws, first listed 1591, 1 page load): exit 0; [MASTER] POWERBALL: checked 9 overlapping draws (all matched), added 15 (1577..1591), warnings 0; master 01daf3fb6f89, grab 183b83b1636f, backup db2f2fc54f5c
+  POWERBALL, page shuffled (24 draws, first listed 1589, 1 page load): exit 0; [MASTER] POWERBALL: checked 9 overlapping draws (all matched), added 15 (1577..1591), warnings 0; master 01daf3fb6f89, grab 183b83b1636f, backup db2f2fc54f5c
+  POWERBALL: IDENTICAL across the three page orders (exit code, [MASTER] line, master, grab, backup and ledger fields)
+  OZLOTTO, page oldest first (24 draws, first listed 1685, 1 page load): exit 0; [MASTER] OZLOTTO: checked 9 overlapping draws (all matched), added 15 (1694..1708), warnings 0; master d0161f4866b5, grab 4d7e3dafdec4, backup c5c7dba382e7
+  OZLOTTO, page newest first (24 draws, first listed 1708, 1 page load): exit 0; [MASTER] OZLOTTO: checked 9 overlapping draws (all matched), added 15 (1694..1708), warnings 0; master d0161f4866b5, grab 4d7e3dafdec4, backup c5c7dba382e7
+  OZLOTTO, page shuffled (24 draws, first listed 1706, 1 page load): exit 0; [MASTER] OZLOTTO: checked 9 overlapping draws (all matched), added 15 (1694..1708), warnings 0; master d0161f4866b5, grab 4d7e3dafdec4, backup c5c7dba382e7
+  OZLOTTO: IDENTICAL across the three page orders (exit code, [MASTER] line, master, grab, backup and ledger fields)
+B: a closed game before the quarantine (31 July 2026)
+  POWERBALL, page oldest first (26 draws, first listed 1551, 1 page load): exit 0; [MASTER] POWERBALL: checked 26 overlapping draws (all matched), added 0, warnings 0; master db2f2fc54f5c, grab 1451913c955c
+  POWERBALL, page newest first (26 draws, first listed 1576, 1 page load): exit 0; [MASTER] POWERBALL: checked 26 overlapping draws (all matched), added 0, warnings 0; master db2f2fc54f5c, grab 1451913c955c
+  POWERBALL, page shuffled (26 draws, first listed 1574, 1 page load): exit 0; [MASTER] POWERBALL: checked 26 overlapping draws (all matched), added 0, warnings 0; master db2f2fc54f5c, grab 1451913c955c
+  POWERBALL: IDENTICAL across the three page orders (exit code, [MASTER] line, master, grab, backup and ledger fields)
+  OZLOTTO, page oldest first (26 draws, first listed 1668, 1 page load): exit 0; [MASTER] OZLOTTO: checked 26 overlapping draws (all matched), added 0, warnings 0; master c5c7dba382e7, grab 1fa7b942088e
+  OZLOTTO, page newest first (26 draws, first listed 1693, 1 page load): exit 0; [MASTER] OZLOTTO: checked 26 overlapping draws (all matched), added 0, warnings 0; master c5c7dba382e7, grab 1fa7b942088e
+  OZLOTTO, page shuffled (26 draws, first listed 1691, 1 page load): exit 0; [MASTER] OZLOTTO: checked 26 overlapping draws (all matched), added 0, warnings 0; master c5c7dba382e7, grab 1fa7b942088e
+  OZLOTTO: IDENTICAL across the three page orders (exit code, [MASTER] line, master, grab, backup and ledger fields)
+PAGE-ORDER EVIDENCE PASS: the installed updater's result does not depend on the page's order
+rc=0
