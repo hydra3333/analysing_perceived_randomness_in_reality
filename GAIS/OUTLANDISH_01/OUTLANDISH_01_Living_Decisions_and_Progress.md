@@ -1,6 +1,6 @@
 # OUTLANDISH_01 — living decisions and progress
 
-**Updated:** 15 November 2026 (Australia/Adelaide), after owner Windows Q3 v0.4 and Q4 fixture guard PASS, commit `39d569b`. **This is the current living handover/progress record, not an amendment to the ratified science. Read §13 first; previous sections are retained as dated evidence.**
+**Updated:** 16 November 2026 (Australia/Adelaide), after owner Windows synthetic qualification through Q4g at GitHub commit `f42ae71`. **Read §14 first for current status, remaining Q4 tasks, KISS concerns and Claude review point A.** Earlier §§1–13 are retained as dated evidence; their historical status/next-step statements are superseded by §14 when inconsistent. This does not amend ratified scientific specification v0.2 or authorise Q5.
 
 ## 1. Current milestone / evidence
 
@@ -205,3 +205,55 @@ The owner committed and pushed **`39d569b`** to `main` (six files, all under `GA
 **Future integration reminder:** OUTLANDISH remains autonomous, preserves unconventional retrospective exploration and is not constrained to parent scored rankings. Keep a callable scientific core, structured raw events and explicit past-only W→W+1 boundary for possible *later* parent adapter. Current parent sandbox has no approved arbitrary 5 GB constant-file access; formal integration and E IDs remain deferred, and the parent will eventually undergo a post-implementation KISS review. No extra administrative machinery or dependency is required by this checkpoint.
 
 **Next-chat operational handover:** canonical repository `hydra3333/analysing_perceived_randomness_in_reality`, workspace `GAIS/OUTLANDISH_01/`, primary design `OUTLANDISH_01_Consolidated_Matching_Reporting_Spec_v0_2_RATIFIED.md`, current working history **this living file §13**. Owner uses Windows CMD + `.venv\Scripts\python.exe`. Commit only OUTLANDISH changes via `git add GAIS/OUTLANDISH_01/`; parent project has unrelated uncommitted Oz Lotto/Mode H files that must not be touched. **Immediately next coding slice:** published-receipt/profile/run-root validation guarded behind synthetic-only qualification, not a REAL-run CLI. Keep old operational handovers as dated archival evidence; do not rewrite them.
+
+## 14. 16 November 2026 — Q4b–Q4g qualified synthetically; Claude review A / KISS checkpoint
+
+**Current status:** Q1 reconciliation and legacy retirement COMPLETE; Q2 independent-oracle qualification PASS; Q3 v0.4 shared packed scanner SYNTHETIC PASS; Q4a–Q4g owner-run Windows SYNTHETIC PASS. **This does not complete Q4 production readiness.** Q4c–Q4g interfaces are deliberately synthetic-only. No new 5 GB REAL scan, REAL historical input read by the Q4 test runs, Q5 execution, parent holdout access, or parent-method admission is authorised or claimed.
+
+**GitHub checkpoint:** Before this progress update, main was verified at f42ae71ad340bb7db7b5808ac59ebc4f2009bc67 (OUTLANDISH Q4b-Q4g synthetic qualification and integration). The commit added exactly 17 files, every one inside GAIS/OUTLANDISH_01/. Earlier checkpoints: 39d569b (Q3 v0.4/Q4a) and 8cdfdb0 (handover-only update). Owner Windows outputs are recorded evidence, **not** independent production results.
+
+### 14.1 Up-to-date qualification tracker
+
+| Stage | State | Owner Windows evidence / limitation |
+|---|---|---|
+| Six verified packed constants | COMPLETE | Six immutable 10^10-digit high-first BCD binaries (5,000,000,000 bytes each) and matching receipts; generation finished. |
+| Q1 saved phi reconciliation and legacy retirement | COMPLETE / PASS | Exact historical prefix reconciliation, zero mismatches; earlier 10^9-byte artifacts retired through controlled cleanup. Saved historical long-scan rows are not yet qualified Q5 findings. |
+| Q2 independent oracle | PASS | Powerball/Oz oracle and adversarial checks; old prefix-EOF defect recorded and fixed in new Q3. |
+| Q3 v0.4 shared scanner | SYNTHETIC PASS | 51 oracle/v0.3 regression comparisons. Default 4,000,000 packed bytes, explicit 8 MB override possible; no auto-increased chunk policy. |
+| Q4a fixture guards | SYNTHETIC PASS | 4 isolated fixture runs, 53 guard refusals, 51 v0.4 regressions. |
+| Q4b published-source/receipt/drawset guards | SYNTHETIC PASS | Owner Windows refusal count 69; 0 production scans and 0 REAL history reads. Oz REAL modern-era source/profile intentionally not assumed. |
+| Q4c typed TEST_REAL/TEST_NULL processing | SYNTHETIC PASS | Self-test 10 guard refusals; integration 4 isolated runs, 26 refusals; 0 production scans, 0 REAL history reads. |
+| Q4d pure statistical core | SYNTHETIC PASS | 1,025 hand/arithmetic checks, 13 refusals; integration 4 synthetic scans and 2 fixture reports; 0 production scans, 0 REAL reads. |
+| Q4e reporting and replay | SYNTHETIC PASS | Self-test 10 refusals; integration 4 source runs, 4 reports, 39 refusals; 0 production scans, 0 REAL reads. |
+| Q4f full two-game/six-constant matrix | SYNTHETIC PASS | Self-test 7 refusals; integration 24 source runs, 24 reports, 92 refusals; 0 production scans, 0 REAL reads. |
+| Q4g six-constant game aggregation | SYNTHETIC PASS | Self-test 10 refusals; integration 24 source runs, 24 reports, 2 game aggregates, 23 refusals; 0 production scans, 0 REAL reads. |
+| **Q4 production readiness** | **OPEN — review point A next** | Finish scientific/code/KISS review; approved Oz isolated modern-era CSV/era/cutoff; minimal production runner and actual interface qualification. |
+| Q5 actual 5 GB REAL scans | BLOCKED | Needs final Q4 readiness and separate owner authorisation; owner-vetoable P3_any/O3_any primary decision must remain visible. |
+| Post-match/adaptive forecasting and parent integration | PARKED | No parent-scored method or holdout consumption; independent later owner review. |
+
+### 14.2 KISS and science-protection priorities for review point A
+
+**Owner concern:** Q4a–Q4g synthetic coverage is valuable, but we may have accumulated too much administrative, verification and replay machinery for a one-person research project. The ratified v0.2 expressly rejects new registries, approval ledgers, manual signing, extra allowlists and ceremony. Judge protections by their actual scientific or data-integrity value.
+
+- **Retain necessary correctness:** independent matching oracle; drawn-order roles, overlaps, all logical offsets and EOF; complete era/cutoff drawset validation and REAL/NULL isolation; create-only runs with an unambiguous INCOMPLETE/COMPLETE barrier; simple input/event provenance; robust scientific tests and reproducibility.
+- **Keep full-source integrity but avoid redundant I/O:** check existing converter receipt, sample plan and size before scanning; compare the full 5 GB source SHA-256 produced during the same sequential matching pass against the receipt before COMPLETE. No separate mandatory second 5 GB hashing pass.
+- **Investigate, do not pre-judge:** Q4e/Q4g currently tie historical report replay to hashes of the currently installed implementation; replay can recompute permutations/reports repeatedly; adjacent layers duplicate verification; Q4g's synthetic aggregation requires REAL-like and NULL-like rosters. For production, REAL six-constant analysis should be independently usable and NULL comparisons optional later. Consider smaller corrections without discarding working test evidence.
+- **Protect statistical meaning:** categorical events and derived order views, analytical expected event counts, direct same-draw physical overlap, every chronological draw including zero matches, signed minimum-gap tie ordering, whole-draw-set permutation with empty sets and undefined outcomes reported N/A, and Holm across exactly six constants **within each game**. P3_any (Powerball) and O3_any (Oz) are proposed owner-vetoable primary positional statistics, not irrevocably ratified choices.
+
+### 14.3 Reviewer assignment, scope and communication
+
+**Reviewer handover:** Owner reports the standby Claude handover completed and Claude moving to a fresh chat for **review point A**. Claude is a **read-only-by-default, independent scientific/technical reviewer**; ChatGPT is OUTLANDISH implementer; owner retains consequential decisions. Request an evidence-based, ranked findings memo before any implementation changes. Findings should identify affected code/spec, scientific consequence, concrete evidence, and smallest necessary remedy. Do not create a new governance regime or automatically treat passing synthetic tests as a production approval.
+
+**Review timing:** (A) **now**: committed Q3/Q4 scientific correctness, ratified v0.2 compliance, KISS/least-admin examination; (B) before consequential adoption of a minimal production-runner design, particularly input history, receipt/full SHA, REAL/NULL separation and completion; (C) after qualified final Q4 evidence and before requesting owner's Q5 REAL-run authorisation. Additional consultation only for consequential discoveries, not routine coding.
+
+**Strict boundary:** All new review artifacts, changes and commits, if explicitly requested, belong **only** to GAIS/OUTLANDISH_01/ and its subfolders. Never stage/change the parent's results/, source_data/, top-level exchange/, src/, holdout, or any unrelated local work. The owner can relay Markdown findings directly; optional in-tree GAIS/OUTLANDISH_01/REVIEW/ notes are not mandatory. No separate recovery/reconciliation document is required. The 14 November reconciliation is **superseded as an active handover**; owner states its corrections were carried in Claude's completed handover. Preserve earlier documents as historical evidence, not as current operating orders.
+
+### 14.4 Immediate task order / safety stop
+
+1. **Review point A findings first**, including scientifically material defects and proportionate KISS simplifications. Resolve substantive differences against the ratified v0.2 text; do not launch another synthetic feature expansion by default.
+2. **Complete the isolated approved Oz modern-era REAL profile**: concrete file/header/drawn-order roles and known effective first draw/exclusive cutoff. Do not guess values or read the parent holdout.
+3. **Design/implement minimal distinct REAL and NULL production adapters** around the shared scientific core, existing receipts and isolated drawsets, single-pass full-source digest, simple manifests and events-derived reports. REAL must not depend on NULL execution.
+4. **Qualify the actual production interfaces with synthetic/adversarial inputs**, including failure handling, source changes, event replay and sensible resource use; consult Claude at B/C for consequential boundaries.
+5. **Owner Q5 gate**: revisit the proposed P3/O3 primary if needed, review final qualified implementation, and obtain separate explicit authorisation **before any** REAL 5 GB x draw-history scan. Forecasting remains parked.
+
+**Authority:** Matching/reporting science is still OUTLANDISH_01_Consolidated_Matching_Reporting_Spec_v0_2_RATIFIED.md. This living file §14 is the current progress/decision-location pointer. Previous §§1–13 remain intact for dated evidence. No code change, new governance file or production-run authorisation is introduced here.
