@@ -1,0 +1,39 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 18, done.
+remote: Counting objects: 100% (18/18), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 13 (delta 10), reused 8 (delta 5), pack-reused 0 (from 0)
+Unpacking objects: 100% (13/13), 4.29 KiB | 35.00 KiB/s, done.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   5b4df41..aff1b18  main       -> origin/main
+Updating 5b4df41..aff1b18
+Fast-forward
+ exchange/CONTINUITY_NOW.md         | 25 ++++++++++++++-----------
+ exchange/DECISIONS/DECISION_LOG.md | 19 +++++++++++++++++++
+ exchange/EX_193_ChatGPT.md         | 19 +++++++++++++++++++
+ 3 files changed, 52 insertions(+), 11 deletions(-)
+ create mode 100644 exchange/EX_193_ChatGPT.md
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rev-parse HEAD:exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+1cbd32941234661d422c32f53bbf3b5343af2ff7
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git hash-object exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+1cbd32941234661d422c32f53bbf3b5343af2ff7
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>"%CD%\.venv\Scripts\python.exe" -I -B exchange\CLAUDE_WEB_TOOLS\modeh_readiness\gov_fetch_parse_smoke.py
+[GOV-SMOKE] POWERBALL: master verified against its ledger (version 1, last draw 1576); read-only
+[GOV-SMOKE] OZLOTTO: master verified against its ledger (version 1, last draw 1693); read-only
+[GOV-SMOKE] POWERBALL: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1576-1568; on the weekly date rule 9/9; equal to the master 9/9
+[GOV-SMOKE] POWERBALL: FAIL: expected exactly draws 1568-1576 (9); the parser returned 9
+[GOV-SMOKE] OZLOTTO: window 2026-05-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 9 draw(s) 1693-1685; on the weekly date rule 9/9; equal to the master 9/9
+[GOV-SMOKE] OZLOTTO: FAIL: expected exactly draws 1685-1693 (9); the parser returned 9
+[GOV-SMOKE] FAIL: see the line(s) above. This check wrote nothing.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short

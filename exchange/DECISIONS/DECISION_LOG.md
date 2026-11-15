@@ -98,3 +98,12 @@ the installed documents. This log is not a separate approval process.
   (blob `b544438f...` at this edition's check) exactly; each step on the owner's own go after Claude has checked the previous
   output; the reviewer reviews the whole recorded sequence afterwards, or at any STOP (EX_193's five safeguards). Powerball on
   another evening, on its own gos. D1-D7 unchanged.
+
+## 9. 15 November 2026, about 18:17 - STOP at the official-page check (prerequisite 3)
+
+- **What happened:** the check exited 1 with `FAIL` for both games: "parsed 9 draw(s) 1576-1568 ... equal to the master 9/9",
+  then "FAIL: expected exactly draws 1568-1576 (9); the parser returned 9" (Oz Lotto the same with 1693-1685). Window recorded
+  unchanged: `exchange/RUNS/GOV_SMOKE_2026_11_15_owner_window.txt`. Nothing was written (clean status before and after); nothing
+  opened; no approval given.
+- **Status:** STOP (EX_193 safeguard 4; sheet prerequisite 3). No rerun, no repair, no Approval 1 tonight until Claude proposes
+  a response, the reviewer reviews it and the owner authorises it.

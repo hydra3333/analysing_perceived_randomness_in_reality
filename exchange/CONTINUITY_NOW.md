@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 18:20 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 18:25 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -18,14 +18,14 @@ durable EX messages are authoritative.
   Approval 1. So the handover editions come first.
 - **Installed:** H-1 v3, its blurb and register v0.30 (RAT-32), at `5b4df41` (15 November, about 18:06; COMMITTED PASS, checked
   by Claude from GitHub). H-2 v2 r1 stays the reviewer's handover.
-- **IN PROGRESS (15 November, evening): Oz Lotto only, page check to seal** (decision log entry 8; reviewer EX_193: each step
-  on the owner's go after Claude's check; the reviewer reviews the whole record afterwards or at any STOP). Step reached: see
-  the newest entries in exchange/RUNS/ and the decision log. If this chat ends mid-sequence: STOP, record nothing new, start a
-  new Claude chat; do not continue without its check of the last output.
+- **STOP (15 November, about 18:17) at the official-page check:** both games FAIL on the expected draw order (the page
+  returned the nine known draws newest-first; every one equal to the master). Nothing written, nothing opened, no approval.
+  Decision log entry 9; window in exchange/RUNS/. Waiting: Claude's root-cause analysis (suggested on Fable), then the
+  reviewer, then the owner's decision. No rerun meanwhile.
 - **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
   then Oz Lotto's Approval 1.
 - **Next after it:** backups confirmed (prerequisite 4).
-- **Blocks or STOPs:** none.
+- **Blocks or STOPs:** the page-check STOP above (Approval 1 waits for it).
 
 ## Reviewer status
 
