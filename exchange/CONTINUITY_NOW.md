@@ -8,39 +8,22 @@ durable EX messages are authoritative.
 
 ## For the owner: NOW
 
-- **Done:** the POC rerun, 14 November about 22:35: PASS (EX_186; window in exchange/RUNS/).
-- **Done:** B01 decided: scoped W-23 acceptance (decision log entry 5; EX_187 agreed).
-- **Done:** the updater's offline self-test, about 22:43: 13/13 PASS (EX_188; two untracked OUTLANDISH files present,
-  benign).
-  The reviewer agreed the PASS stands (EX_189). The OUTLANDISH files are committed (657a2c1, merged at a6c2894; no code
-  change since cc0ab73).
-- **Correction to the order (15 November):** the reviewed sheet requires the official-page check on the day of the first
-  Approval 1. So the handover editions come first.
-- **Installed:** H-1 v3, its blurb and register v0.30 (RAT-32), at `5b4df41` (15 November, about 18:06; COMMITTED PASS, checked
-  by Claude from GitHub). H-2 v2 r1 stays the reviewer's handover.
-- **STOP (15 November, about 18:17) at the official-page check:** both games FAIL on the expected draw order (the page
-  returned the nine known draws newest-first; every one equal to the master). Nothing written, nothing opened, no approval.
-  Decision log entry 9; window in exchange/RUNS/. ROOT CAUSE (EX_194): the check r1 compared draw numbers in page order
-  with an oldest-first list; the installed updater does not depend on order (evidence on invented data). Proposed: check r2
-  (order-free; 26 draws per game to match the real update's page size) and sheet r2d. REVIEWED: EX_195 PASS (scoped; blobs
-  r2 449b5cd3..., sheet r2d 7aa8c89c...). Then prerequisite 3 with r2: PASS (18:50; decision log entry 11). Oz Lotto Approval 1 must be today (15 November)
-  or the page check runs again. Backups confirmed (19:01, entry 12; G:\BACKUPS\powerball_modeh_2026-11-15). Tree check PASS (entry 13).
-  **Oz Lotto Approval 1 DONE: manifest PASS (entry 14); holdout OPENED 19:19 (entry 15, permanent); witness push 9eb5e33
-  (entry 16). THE FREEZE IS ON** until both games are sealed. **Approval 2 DONE 19:23** (entry 17: 15 draws added,
-  1694-1708; master v2 63e33493...; master and ledger left uncommitted, D5). **Plan DONE 19:26** (entry 18: batch
-  wf-5af149aef7444336a38e469146c95a20). **Batch DONE** (entry 19: 400 of 400 forecasts SUCCESS). **OZ LOTTO SEALED 19:54**
-  (entry 20: attempt mh-ba0c301b..., 800 score lines, 400 rank lines). Report files stay unshared until Powerball is
-  sealed (D6). Second backup done (entry 21). Waiting: the reviewer's review of the whole sequence (EX_196); then Powerball
-  on another evening, starting with a new page check on its Approval 1 day. No rerun meanwhile. Carried: order-varied pages in the updater's own
-  tests, next code package (tests only).
-- **Next go (on one chosen day, each on its own go):** the official-page check, the backups, the tree and quiet-machine checks,
-  then Oz Lotto's Approval 1.
-- **Next after it:** backups confirmed (prerequisite 4).
-- **Blocks or STOPs:** the page-check STOP above (Approval 1 waits for it).
+- **Oz Lotto's Mode H study is SEALED** (15 November 2026, 19:54). Opened 19:19; witness push `9eb5e33` (GitHub receipt
+  08:51:04Z); first update added 1694-1708 (master v2 `63e33493...`); batch `wf-5af149ae...` 400/400; score attempt
+  `mh-ba0c301b...`, 800 score lines, 400 rank lines. Backups before and after (G:\BACKUPS\powerball_modeh_2026-11-15*).
+  Decision log entries 9-21; windows in exchange/RUNS/. Earlier that evening: a STOP at the page check (the check r1's
+  order assumption; fixed as r2 and reviewed, EX_194/EX_195).
+- **Waiting on you:** passing the reviewer's EX_196 (its review of the whole sequence) to Claude; then choosing an evening
+  for Powerball.
+- **Leave alone:** Oz Lotto's master and ledger (` M`, uncommitted, D5); its report files (unshared until Powerball is
+  sealed, D6).
+- **Blocks or STOPs:** none.
+- **The freeze is ON** until Powerball is sealed (see "Mode H state").
 
 ## Reviewer status
 
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
+- Waiting: EX_196, the reviewer's review of 15 November's Oz Lotto sequence (EX_193's arrangement).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
 - Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).
