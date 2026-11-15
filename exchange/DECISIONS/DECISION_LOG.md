@@ -107,3 +107,10 @@ the installed documents. This log is not a separate approval process.
   opened; no approval given.
 - **Status:** STOP (EX_193 safeguard 4; sheet prerequisite 3). No rerun, no repair, no Approval 1 tonight until Claude proposes
   a response, the reviewer reviews it and the owner authorises it.
+
+## 10. 15 November 2026, about 18:37 - the owner's own look at the 26-draw pages
+
+- **Where:** the owner's message in the Claude chat, after EX_194.
+- **Owner's words:** "yes both show 26 draws.  no "load more" or similar."
+- **Status:** an owner observation (not a check run, not a go): the two pre-quarantine pages the check r2 will load
+  (31 January to 31 July 2026) each show all 26 draws, with no paging or "load more". Waiting: the reviewer's EX_195.
