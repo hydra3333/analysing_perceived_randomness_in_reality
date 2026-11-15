@@ -138,3 +138,12 @@ the installed documents. This log is not a separate approval process.
   `requirements.txt` since `cc0ab73`; both masters at their version-1 SHA-256 (Oz Lotto `4a6cecc2...`, Powerball
   `ce0ae7e7...`); no orphan marker. **PASS.** The owner is asked to confirm that Claude Code and VS Code's Python terminals
   are closed. Claude holds its own pushes from here until the owner's witness push after Approval 1.
+
+## 14. 15 November 2026, about 19:18 - Oz Lotto Approval 1, part 1: the study manifest
+
+- **Where:** the owner's go and CMD window in the Claude chat.
+- **Output (verbatim):** `[MODE-H] MANIFEST written for OZLOTTO: 40 variants, targets 1694-1703, frozen master version 1,
+  closure 497 files, digest ed6e569ce560..., environment digest 5bf4eb8a36dd...`
+- **Claude's check:** 40 variants, targets 1694-1703, master version 1, 497 closure files, environment digest `5bf4eb8a36dd`
+  (T024's): all as sheet r2d expects. **PASS.** The freeze holds from here until both games are sealed. Next: the opening
+  record (permanent), on the owner's go.
