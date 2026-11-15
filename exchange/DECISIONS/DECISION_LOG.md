@@ -155,3 +155,13 @@ the installed documents. This log is not a separate approval process.
   rule is unchanged: no outcome of a holdout draw is shown or computed with outside the sealed Mode H score.`
 - **Claude's check:** as sheet r2d expects. **Oz Lotto's holdout (1694-1703) is OPENED; the opening record is permanent.**
   No results update has run; no holdout draw has been read. Next: the D3 witness push, on its own go, before Approval 2.
+
+## 16. 15 November 2026, about 19:21 - the D3 witness push
+
+- **Where:** the owner's go and CMD window in the Claude chat (staging checked by Claude before the commit).
+- **Result:** commit **`9eb5e33c5bf19409a1ea3c9d6e5058e70a410eee`** ("Mode H OZLOTTO: study manifest and opening record (Approval
+  1)"), exactly three paths: `results/audit/SEARCH_LOG.csv` (modified), `results/real/holdout/OZLOTTO/MODE_H_STUDY_MANIFEST_V1.json`
+  and `source_data/HOLDOUT_OPENED_OZLOTTO.json` (added); no master, no ledger. Pushed `510a37f..9eb5e33`. GitHub's event record
+  shows the push received at **2026-11-15T08:51:04Z** (19:21:04 Adelaide); the commit's own time stamp (19:20:59 +10:30) is set by
+  the PC and is not the stronger item. What it shows: the study record existed on GitHub before the project first ingested any
+  holdout result. Not proof of pre-draw forecasting (the draws were already public). Next: Approval 2, on its own go.
