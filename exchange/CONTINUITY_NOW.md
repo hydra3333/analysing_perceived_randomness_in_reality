@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 15 November 2026, about 22:05 Australia/Adelaide.
+**Last updated:** 15 November 2026, about 22:15 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -13,8 +13,8 @@ durable EX messages are authoritative.
   `mh-ba0c301b...`, 800 score lines, 400 rank lines. Backups before and after (G:\BACKUPS\powerball_modeh_2026-11-15*).
   Decision log entries 9-21; windows in exchange/RUNS/. Earlier that evening: a STOP at the page check (the check r1's
   order assumption; fixed as r2 and reviewed, EX_194/EX_195).
-- **Waiting on you:** passing the reviewer's EX_196 (its review of the whole sequence) to Claude; then choosing an evening
-  for Powerball.
+- **Reviewed:** EX_196, PASS WITH EVIDENCE LIMITATIONS (no blocking discrepancy). Missing standalone windows now stored.
+- **Waiting on you:** choosing an evening for Powerball (its own gos; EX_193's arrangement does not carry over).
 - **Leave alone:** Oz Lotto's master and ledger (` M`, uncommitted, D5); its report files (unshared until Powerball is
   sealed, D6).
 - **Blocks or STOPs:** none.
@@ -23,7 +23,7 @@ durable EX messages are authoritative.
 ## Reviewer status
 
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
-- Waiting: EX_196, the reviewer's review of 15 November's Oz Lotto sequence (EX_193's arrangement).
+- EX_196 (15 November): Oz Lotto's sequence PASS WITH EVIDENCE LIMITATIONS; nothing blocking.
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
 - Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).

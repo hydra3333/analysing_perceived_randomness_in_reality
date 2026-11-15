@@ -215,3 +215,14 @@ the installed documents. This log is not a separate approval process.
 - **Result:** `source_data` 9 files (42.7 kB) and `results` 79,362 files (188.95 MB) copied, FAILED 0 and Mismatch 0 in both
   summaries; the first exit line `ROBOCOPY EXIT 1`; the second exit line's value was not in the pasted text (the summary shows
   no failure). **Backup after the seal confirmed.**
+
+## 22. 15 November 2026, about 22:07 - the reviewer's audit of the Oz Lotto sequence (EX_196)
+
+- **Result:** EX_196: **PASS WITH EVIDENCE LIMITATIONS**; no blocking discrepancy; MODE_H_SEALED as recorded; no replay,
+  extra fetch or correction warranted; EX_193's arrangement was for Oz Lotto only (Powerball gets its own).
+- **Its main limitation:** several windows were quoted in this log, not stored as standalone files. Claude has now stored
+  the owner's windows exactly as pasted into the Claude chat (manifest, opening, witness push, first update with its
+  snapshot and the plan, and the backup after the seal) in `exchange/RUNS/` (`OZLOTTO_APPROVAL1_MANIFEST_...`,
+  `OZLOTTO_APPROVAL1_OPEN_...`, `OZLOTTO_WITNESS_PUSH_...` (Parts A and B together), `OZLOTTO_APPROVAL2_UPDATE_AND_PLAN_...`,
+  `BACKUP_AFTER_OZLOTTO_SEAL_...`). They are the chat pastes, not reconstructions; where a paste was cut off (the second
+  backup's last exit line), the file ends where the paste ended. Lesson carried: store each window as it arrives.

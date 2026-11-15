@@ -1,0 +1,30 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Results_Updater.bat update --games OZLOTTO
+[MASTER] OZLOTTO: checked 9 overlapping draws (all matched), added 15 (1694..1708), warnings 0
+[MASTER]   grab kept: OZLOTTO_grab_draws_1685-1708_as_at_20261115_085242Z.csv; backup: OZLOTTO_master_draws_1474-1693_as_at_20261115_085242Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short source_data
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b source_data\.results_master.lock
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b source_data\*.part-*
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b /o:d source_data\grabs
+OZLOTTO_grab_draws_1685-1708_as_at_20261115_085242Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b /o:d source_data\backups
+OZLOTTO_master_draws_1474-1693_as_at_20261115_085242Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\OZLOTTO_results_master.csv SHA256
+SHA256 hash of source_data\OZLOTTO_results_master.csv:
+63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Experiment.bat Method_Walk_Forward.py plan --mode H --game OZLOTTO
+[WALK-FORWARD] MODE H PLAN wf-5af149aef7444336a38e469146c95a20: OZLOTTO targets 1694-1703, 40 variants, master version 2 63e3349333f8...
+[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game OZLOTTO --batch wf-5af149aef7444336a38e469146c95a20
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
