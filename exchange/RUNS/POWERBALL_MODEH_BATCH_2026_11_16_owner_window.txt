@@ -1,0 +1,334 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Experiment.bat Method_Walk_Forward.py run --game POWERBALL --batch wf-5085cd8feaf54cffb22823ab5869d5a8
+[WALK-FORWARD] BATCH_COMPLETE written: every planned pair has its DONE ticket (design 5.2)
+[WALK-FORWARD] COMPLETE: 400 run(s) in this invocation; every pair of the plan is done
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Experiment.bat Method_Walk_Forward.py status --game POWERBALL --batch wf-5085cd8feaf54cffb22823ab5869d5a8
+{
+ "E_1 FULL_HISTORY_RAW_COUNTS_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_10 CONTRAST_S13_L104_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_10 CONTRAST_S26_L208_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_10 CONTRAST_S52_FULL_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_17 HAZARD_BINS_C100_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_17 HAZARD_BINS_W208_C100_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_17 HAZARD_LOGAGE_SIGN_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_18 MIX4_ALL_C10_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_18 MIX4_W104_C10_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_18 MIX4_W208_C10_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_19 PERIODIC_T2_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_19 PERIODIC_T3_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_19 PERIODIC_T4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_2 RECUR_MEAN_ALL_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_2 RECUR_MEAN_LAST8_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_2 RECUR_MEDIAN_ALL_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_INTERP_W52_D4_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_LS_W104_D3_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_LS_W52_D2_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_LS_W52_D3_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_MINIMAX_W52_D2_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_3 POLY_MINIMAX_W52_D3_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_INTERP_W52_D4_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_LS_W104_D3_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_LS_W52_D2_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_LS_W52_D3_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_MINIMAX_W52_D2_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_4 POLY_MINIMAX_W52_D3_H4_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_6 BETA_BERNOULLI_DECAY_149_150_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_6 BETA_BERNOULLI_DECAY_74_75_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_6 BETA_BERNOULLI_FULL_MEMORY_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_7 BETA_SHRINK_FULL_C52_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_7 BETA_SHRINK_W104_C52_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_7 BETA_SHRINK_W52_C52_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_8 HIER_PERIODS_P13_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_8 HIER_PERIODS_P26_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_8 HIER_PERIODS_P52_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_9 EXP_DECAY_18_19_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_9 EXP_DECAY_37_38_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "E_9 EXP_DECAY_5_6_V1": {
+  "attempt_states": {
+   "DONE: SUCCESS, consumable, under this plan's pins": 10
+  },
+  "attempts": 10,
+  "done": 10,
+  "pending": 0
+ },
+ "ignored_attempt_lines": 0,
+ "lifecycle_markers": [
+  "BATCH_COMPLETE"
+ ]
+}
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

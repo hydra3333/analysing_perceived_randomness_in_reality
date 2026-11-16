@@ -317,3 +317,11 @@ the installed documents. This log is not a separate approval process.
   40 variants, master version 2 e4f2feb8b18f...` and the `next:` run line.
 - **Claude's check:** targets 1577-1586, 40 variants, master version 2 with Approval 2's hash. **PASS.** Batch id
   **`wf-5085cd8feaf54cffb22823ab5869d5a8`** (400 planned pairs). Next: the batch run, on its own go.
+
+## 33. 16 November 2026, about 20:49 - Powerball Approval 3, part 2: the batch
+
+- **Where:** the owner's go and CMD window (stored unchanged: `exchange/RUNS/POWERBALL_MODEH_BATCH_2026_11_16_owner_window.txt`).
+- **Output:** `BATCH_COMPLETE written` and `COMPLETE: 400 run(s) in this invocation; every pair of the plan is done`; the status:
+  40 variants, each attempts 10, done 10, pending 0, every attempt `DONE: SUCCESS, consumable, under this plan's pins`; ignored
+  attempt lines 0; marker BATCH_COMPLETE.
+- **Claude's check** (counted with a tool): 400 of 400 forecasts SUCCESS; no method failure. **PASS.** Next: Approval 4.
