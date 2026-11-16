@@ -265,3 +265,10 @@ the installed documents. This log is not a separate approval process.
   (to `G:\BACKUPS\powerball_modeh_2026-11-16_before_powerball\`).
 - **Result:** `source_data` 9 files and `results` 79,362 files (188.95 MB) copied, FAILED 0, exit 1 each; both list-only
   checks Copied 0, Mismatch 0, FAILED 0, exit 0 each. **Backups confirmed.** (Held locally until the witness push.)
+
+## 27. 16 November 2026, about 20:18 - Powerball prerequisites 5 and 6: tree check PASS
+
+- **Where:** the owner's CMD window, stored as pasted: `exchange/RUNS/POWERBALL_TREE_CHECK_2026_11_16_owner_window.txt`.
+- **Result:** `git status --short` exactly E0; only `__pycache__/` ignored under `src/`; no change to `src/`, root `.bat` or
+  `requirements.txt` since `cc0ab73`; Oz Lotto master `63e33493...` (version 2), Powerball master `ce0ae7e7...` (version 1);
+  no orphan marker. **PASS** (annex r1). (Held locally until the witness push.)

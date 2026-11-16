@@ -1,0 +1,53 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+ M results/audit/SEARCH_LOG.csv
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+?? results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+?? results/real/holdout/wf_batches/
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short --ignored src
+!! src/__pycache__/
+!! src/coordinator_private/__pycache__/
+!! src/evaluation/__pycache__/
+!! src/methods/E_001/__pycache__/
+!! src/methods/E_002/__pycache__/
+!! src/methods/E_003/__pycache__/
+!! src/methods/E_004/__pycache__/
+!! src/methods/E_006/__pycache__/
+!! src/methods/E_007/__pycache__/
+!! src/methods/E_008/__pycache__/
+!! src/methods/E_009/__pycache__/
+!! src/methods/E_010/__pycache__/
+!! src/methods/E_017/__pycache__/
+!! src/methods/E_018/__pycache__/
+!! src/methods/E_019/__pycache__/
+!! src/methods/__pycache__/
+!! src/methods/_common/__pycache__/
+!! src/methods/contract_adapters/__pycache__/
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git diff --stat cc0ab73 HEAD -- src "*.bat" requirements.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\OZLOTTO_results_master.csv SHA256
+SHA256 hash of source_data\OZLOTTO_results_master.csv:
+63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\POWERBALL_results_master.csv SHA256
+SHA256 hash of source_data\POWERBALL_results_master.csv:
+ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir transitory_data\poc_runs\UNRESOLVED_ORPHAN.json
+ Volume in drive E is E-DRIVE
+ Volume Serial Number is 366A-E763
+
+ Directory of E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\transitory_data\poc_runs
+
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
