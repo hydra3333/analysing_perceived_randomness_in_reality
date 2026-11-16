@@ -2,7 +2,14 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 14 November 2026: the Mode H readiness sheet reviewed (EX_167, EX_168 PASS; nothing authorised); the
+Last updated: 16 November 2026: MODE H IS DONE in both games (Oz Lotto sealed 15 November, Powerball 16 November) and both
+reports are read: no statistically significant predictive advantage was demonstrated (EX_200 to EX_205). You agreed the
+approach from here on 16 November (exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md): all draws treated the same; MHUP-B
+(catch-up, the weekly session, a league table after every draw listing every method) is the next package and the
+priority; item 21b's questions are settled inside its design. Next: your D5 commit of the updated results files; one
+paste to the reviewer; register v0.31 and H-1 v4 alongside the MHUP-B design. The page that is always current is
+exchange/CONTINUITY_NOW.md.
+Earlier (14 November 2026): the Mode H readiness sheet reviewed (EX_167, EX_168 PASS; nothing authorised); the
 documentation round drafted: H-1 v2 (a full Claude handover replacing v1r8 and its deltas) and register v0.29, with the
 reviewer's own H-2 v1r11 r1 (EX_169, EX_170). Next: the reviewer's check, your ratification and install, then your
 readiness decisions D1-D7.

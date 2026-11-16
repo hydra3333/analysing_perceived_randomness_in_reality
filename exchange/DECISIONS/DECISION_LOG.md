@@ -542,3 +542,18 @@ the installed documents. This log is not a separate approval process.
   joined on request, CSV, a plain layout) and a first sketch are in
   `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md` (design inputs D-1 to D-10; not a design, not reviewed).
 - **Still not in force:** the draw-visibility rules (Q7) stand until the owner confirms after the reviewer's reply.
+
+## 47. 16 November 2026, about 23:07 - OWNER DECISION: the approach agreed (seven lines); D5 now; documents first, then the reviewer
+
+- **Before it (22:58 and 22:59), the owner's words:** "I like the sketch as a starting point for your design , it could include
+  all methods not only the top "n"." and "I have not pasted anything of this discussion with chatgpt yet and dio not plan to
+  until we agree we have workable approach."
+- **The owner's words at 23:07 (as written), replying to Claude's seven-line summary:** ok. 2. unless I agree to something on a case by case basis only. 3. archiving may need to consider date/time appended to filename or something in case multiples in a session or day.  5. I hope this considers and takes into account this discussion.  6. perhaps stays on file means each superseded ranking gets archived somehow (see above) ?7. I don't know what this means but if you say it's good then lets do it.   "Your D5 commit of the updated results files" please lead me through doing that now. ok to "When a new method’s back-history gets built (roadmap item 21b). I’d settle that inside the MHUP-B design."  I thin you should update your handover-to-new-claude document(s) and all other documents that need updating right now for risk management, then we tell/consult chatgpt about all this.
+- **Recorded as:** `exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md` (the seven lines with his amendments: exceptions to the
+  three protections only case by case; archive names carry the date and time; each superseded ranking is its own archived
+  file; the close-out runs alongside MHUP-B).
+- **D5 DECIDED:** the owner commits the updated results files now, led step by step by Claude, named paths only.
+- **Order set by the owner:** documents updated first for risk management, then the reviewer is told and consulted. So the
+  owner has decided before the reviewer's view; the reviewer's reply may still lead him to adjust.
+- **Documents tonight:** this log, the agreed-approach page, the recovery page (rewritten) and the roadmap's top note. The
+  formal editions (register v0.31, H-1 v4) need review and ratification and are the next sitting's work.

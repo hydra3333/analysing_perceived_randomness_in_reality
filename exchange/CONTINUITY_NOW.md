@@ -4,64 +4,26 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 23:30 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 23:45 Australia/Adelaide.
 
 ## For the owner: NOW
 
-- **MODE H IS COMPLETE.** Oz Lotto SEALED 15 November 2026, 19:54 (decision log entries 9-21; EX_196 PASS WITH EVIDENCE
-  LIMITATIONS). Powerball SEALED 16 November 2026, 20:53 (entries 24-35; EX_199 PASS WITH EVIDENCE LIMITATIONS). 400/400
-  forecasts and 800 score lines / 400 rank lines in each game. Witness pushes 9eb5e33 (Oz Lotto) and c302871 (Powerball).
-  Backups before and after each seal on G:\BACKUPS\powerball_modeh_2026-11-1*. **The Mode H freeze has ENDED.**
-- **D6: both reports read independently, and the readings agree.** The reviewer's EX_200 and Claude's EX_201 (sealed by
-  hash until EX_200 was given; entries 38-39) both find: **null at the 5% level in each of the three predeclared MR7
-  families** (Bonferroni P 1.000 Oz Lotto main numbers, 0.672 Powerball main numbers, 0.920 Powerball number). No advantage
-  over fair draws detected; ten draws per game give very low power; retrospective, not prospective. A few exploratory leads
-  are recorded, not findings. Comparison and proposed record wording: EX_202.
-- **The reviewer agrees, and the record wording is agreed between the two AIs.** EX_203A (pasted assessment of EX_201:
-  AGREE, three nonblocking qualifications; answered by EX_204; entry 40) and EX_203 (the reviewer's reply to EX_202: Q1
-  accept with wording precision, Q2 retain with further qualification, Q3 agree; answered by EX_205; entry 41). **The
-  wording to carry into register v0.31 is EX_205 section 5 (r2).** Its headline: "No statistically significant predictive
-  advantage was demonstrated under the predeclared Mode H tests."
-- **Numbering:** "EX_203" in EX_204 and in entry 40 means EX_203A (entry 41 explains).
-- **Do not quote** "about three independent bets", "roughly one sigma" or "one time in six" (EX_201 section 3.3): not
-  calibrated. The pass thresholds (21 Oz Lotto and 25 Powerball main-number matches over ten draws) are rejection
-  thresholds, not a power calculation; the same holds for the development-window figures in EX_204.
-- **The wider picture (EX_203A, EX_204):** the development walk-forward evaluation (Oz Lotto 219 targets; Powerball 432
-  targets forecast, 291 draws scored; 26,040 forecasts) is the large part of the evidence and also showed no statistically
-  significant advantage (H-1 v3 section 7.5). Development, holdout and prospective evidence stay separate.
-- **Waiting for:** the owner's go for the close-out. Nothing is owed by or to the reviewer.
-- **Open owner question (entry 42; fact-finding only, nothing authorised):** the full-history walk-forward ranking and
-  where it sits in the plan. It is roadmap item 10, done (development reports of 1 November 2026: Oz Lotto 1474-1693,
-  Powerball 1286-1576). Open: which "last 3 draws" he wants shown; his upload of the two development `.txt` reports for a
-  plain summary (Claude may not open `results/`); whether roadmap item 21b (the consolidated report) is brought forward.
-- **Relay to the reviewer is ON HOLD (owner, 22:59):** "I have not pasted anything of this discussion with chatgpt yet and
-  dio not plan to until we agree we have workable approach." So the reviewer has seen nothing of entries 42 to 46, the
-  rules draft or the MHUP-B design inputs. When the owner and Claude agree, Claude gives ONE paste that replaces every
-  earlier block on these topics. Nothing below is waiting on the reviewer yet.
-- **Q7 under change (entries 43-44; NOT YET IN FORCE):** the owner's preference (22:26) is to drop the raw-draw-value
-  restriction and "treat all draws the same". Claude has no strong objection and recommends three things stay (no lottery
-  websites or results searches by the AIs; evidence only from reviewed programs and logged runs; Claude's write limits
-  and the runner's rulebook unchanged). Waiting for the reviewer's view, then the owner's confirmation. **Until then Q7
-  stands exactly as it is.** The sealed holdout draws are already ordinary history under the ratified design.
-  **The rule-by-rule proposal is `exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r2.md`** (entries 45-46): drop the
-  draw-visibility rules; keep the runner's operating rules (safety); the runner's rules 4 and 5 go in MHUP-B's rulebook
-  edition. The owner also holds: no holdout for future method development; a new method re-ranks all draws.
-- **OWNER DECISION (entry 46, 22:51): Claude's write limit is removed**, on condition that nothing is destroyed (archive
-  instead). Claude's working rule for using it is r2 section 2A: documents directly once reviewed and ratified; code and
-  tests still by reviewed package and the owner's Windows install; the data folders never; not used before the owner has
-  seen the reviewer's reply. The local runner's rules are kept.
-- **The owner's priority (entry 44):** the missing code is to be fixed "asap": that is MHUP-B (catch-up, weekly session,
-  the dated league table after every scored draw: design v0.1r7 section 6.6). Proposed additions for its design: the same
-  table over the past history, and raising the report tool's Phase 1 window cap. **Claude reads the owner's 22:51 message
-  as the go for the MHUP-B design (design only; entry 46).** The inputs gathered so far, with a first league-table sketch,
-  are in `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md` (D-1 to D-10). Design work: Fable (High).
-- **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
-  any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
-- **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).
-- **Then (close-out):** the register records the study; the holdout exposure record; the P6 milestone note; the handovers refreshed;
-  the owner's separate D5 decision on committing the updated masters, ledgers and value-free records; then MHUP-B.
-- **Leave alone until D5 is decided:** both games' masters and ledgers (` M`), the reports and the batch records; commit
-  only by named paths (never `git add -A`).
+- **MODE H IS COMPLETE AND READ.** Oz Lotto SEALED 15 November 2026 (EX_196); Powerball SEALED 16 November 2026 (EX_199).
+  Both reports were read independently by the reviewer (EX_200) and Claude (EX_201) and the readings agree (EX_202 to
+  EX_205; "EX_203" in EX_204 and entry 40 means EX_203A). **Result: no statistically significant predictive advantage was
+  demonstrated under the predeclared Mode H tests** (Bonferroni family-adjusted P 1.000, 0.672, 0.920). The wording for the
+  record is EX_205 section 5. The development walk-forward evaluation (26,040 forecasts) also showed nothing significant.
+- **THE APPROACH AGREED BY THE OWNER (16 November, 23:07; entry 47): `exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md`.**
+  All draws are treated the same and the AI chats may see draw values and results; three protections stay (no lottery
+  websites by the AIs; results count only from reviewed programs, chat calculations are "suggestive"; nothing runs without
+  the owner's go); Claude may commit documents directly once reviewed and ratified, code still goes by reviewed package and
+  the owner's Windows install, Claude never writes the data folders, nothing is deleted (archive with date-time names);
+  the local runner keeps its rules; MHUP-B is next and the priority. Detail: `RULES_AFTER_Q7_DRAFT_r2.md` and
+  `MHUPB_DESIGN_INPUTS_2026_11_16.md` in the same folder.
+- **The reviewer has NOT yet seen entries 42 to 47 or those three pages.** The owner's order: documents first, then one
+  paste that tells and consults the reviewer. Every earlier paste block on these topics is void.
+- **In progress: D5**, the owner's commit of the updated results files, led by Claude step by step (named paths only).
+- **Next sitting:** register v0.31 and H-1 v4 (Opus), alongside the MHUP-B design (Fable, High; design only so far).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
@@ -108,18 +70,18 @@ independent "how the process went" note from each AI, with reasoning and alterna
 
 ## Mode H state
 
-Both games SEALED (Oz Lotto 15 November 19:54; Powerball 16 November 20:53). Mode H execution is complete and its
-code/environment freeze has ended; D5 (raw masters and ledgers not committed until the owner decides) and D6 (both reports
-shared together) still govern the data and the reports. Q7 stands: no raw draw value enters an AI chat.
-
-Result as read by both AIs (EX_200 to EX_205): null in all three predeclared families; the record wording (EX_205 section 5,
-r2) goes into register v0.31 for review and the owner's ratification. The two report files are not committed (D5); their SHA-256 values are
-in decision log entry 38. The reading tools are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
+Both games SEALED (Oz Lotto 15 November 19:54; Powerball 16 November 20:53) and read (EX_200 to EX_205). The sealed studies
+are never reopened, rescored or edited. The freeze has ended. D5 was decided on 16 November (entry 47): the owner commits
+the updated results files. Q7 (no raw draw value in an AI chat) is replaced by the agreed approach of 16 November, which
+the reviewer has still to be consulted on. The two Mode H report files' SHA-256 values are in entry 38; the reading tools
+are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
 
-1. D6: done (EX_200 to EX_205; the readings agree). The record wording (EX_205 section 5) is ratified with register v0.31.
-2. Done: EX_199 C01 (entry 37).
-3. Close-out: register v0.31 (study, RAT for any new editions), holdout exposure record, P6 notes, handover refresh (H-1 v4; the reviewer decides on H-2), D5 decision.
-4. MHUP-B design (on the owner's authorisation), then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
-
+1. D5: the owner's commit of the updated results files (in progress).
+2. One paste to the reviewer: the agreed approach, the rules page r2, the MHUP-B inputs; its reply; any adjustment by the owner.
+3. Close-out documents, alongside item 4: register v0.31 (Mode H, the record wording of EX_205 section 5, the agreed
+   approach), H-1 v4 (the reviewer decides on H-2), the holdout exposure record closed.
+4. **MHUP-B design (priority; design only so far)**, from `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md`; then its
+   code, review, rehearsal and install by the usual package route.
+5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).

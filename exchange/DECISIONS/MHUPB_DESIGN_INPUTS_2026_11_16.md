@@ -33,7 +33,7 @@ Kept so that no input is lost if a chat ends. The owner's exact words are in dec
 | # | Item | Note |
 |---|---|---|
 | D-1 | An "all scored draws" column in the league table: one cumulative figure per method over every draw scored, whatever its kind. Every variant of every method is a row; a short per-method roll-up may sit above it | New. The design today has only the separate columns. The forward-only column stays beside it: only forecasts frozen before their draw can confirm anything |
-| D-2 | Numbered table files, never overwritten: `league_<GAME>_d<draw>_v<5 digits>.txt` and the same as `.csv` | The owner's naming idea; fits the design's "dated table, earlier ones stay as published" |
+| D-2 | Numbered table files, never overwritten: `league_<GAME>_d<draw>_v<5 digits>_<date-time>.txt` and the same as `.csv`. Each superseded ranking stays as its own archived file | The owner's naming idea, with his 23:07 addition: the date and time in the name, so several in one session or day never collide |
 | D-3 | A history report on request: the numbered tables joined, newest first | The owner's idea |
 | D-4 | One CSV per game with a row per draw and method (cumulative hits and rank after that draw) | Gives the table after every draw for the whole past from the score records, without one file per past draw |
 | D-5 | Raise the report window cap (R3 17.3.6) so the sealed holdout and later draws are ordinary history | Code and an R3 edition |
