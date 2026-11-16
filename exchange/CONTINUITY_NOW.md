@@ -26,7 +26,7 @@ durable EX messages are authoritative.
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. Open: EX_199 C01 (optional backup check).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
-  (untracked files, running processes, the holdouts being unopened) is owner-reported.
+  (untracked files, running processes, the sealed local artifacts) is owner-reported.
 - Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).
 
 ## If a chat ends
