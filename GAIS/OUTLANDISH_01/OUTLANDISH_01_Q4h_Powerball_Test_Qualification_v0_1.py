@@ -60,6 +60,8 @@ def guards(roots, profile):
 def integration(roots, profile, digits):
     source_sha = Six.seed_six_sources(roots, digits)
     roster = {}
+    raw_p = {}
+    secondary_p = {}
     refusal_count = 0
     for i, const in enumerate(S.CONSTANTS):
         rid = f'TEST_REAL_q4h_{const}'
@@ -74,6 +76,19 @@ def integration(roots, profile, digits):
         report = view['report']
         assert report['permutation']['iterations_requested'] == 10_000
         assert report['primary_family'] == 'K6S' and report['game'] == 'powerball'
+        assert report['primary_statistic'] == S.GEOMETRIC_PRIMARY
+        assert report['secondary_statistic'] == S.MEDIAN_SECONDARY
+        assert report['secondary_exploratory'] is True
+        assert report['legacy_exposure_disclosure'] == R.D5_LEGACY_EXPOSURE_DISCLOSURE
+        perm = report['permutation']
+        assert perm['geometric_primary']['statistic'] == S.GEOMETRIC_PRIMARY
+        assert perm['median_secondary']['statistic'] == S.MEDIAN_SECONDARY
+        assert perm['median_secondary']['centered_two_sided_p'] == perm['centered_two_sided_p']
+        assert perm['median_secondary']['observed'] == perm['observed_median']
+        assert (perm['geometric_primary']['observed'] ==
+                report['transitions_summary']['observed_primary_mean_log10_gap_plus_one'])
+        raw_p[const] = perm['geometric_primary']['centered_two_sided_p']
+        secondary_p[const] = perm['median_secondary']['centered_two_sided_p']
         assert R.audit_test_report(roots, profile, const, rid)['science_matches']
         roster[const] = rid
         refusal_count += refuses('create-only run', lambda const=const, rid=rid:
@@ -86,6 +101,18 @@ def integration(roots, profile, digits):
     aggregate = A.load_test_aggregate(roots, profile, aggregate_id)
     assert aggregate['null_comparison'] == 'NOT_RUN_OPTIONAL'
     assert aggregate['holm_family'] == list(S.CONSTANTS)
+    assert aggregate['secondary_holm_family'] == list(S.CONSTANTS)
+    assert aggregate['primary_statistic'] == S.GEOMETRIC_PRIMARY
+    assert aggregate['secondary_statistic'] == S.MEDIAN_SECONDARY
+    assert aggregate['legacy_exposure_disclosure'] == R.D5_LEGACY_EXPOSURE_DISCLOSURE
+    primary_holm = S.holm_six_constants(raw_p)
+    secondary_holm = S.holm_six_constants(secondary_p)
+    for const in S.CONSTANTS:
+        item = aggregate['per_constant'][const]
+        assert item['raw_primary_p'] == raw_p[const]
+        assert item['raw_secondary_p'] == secondary_p[const]
+        assert item['holm_adjusted_p'] == primary_holm[const]
+        assert item['holm_adjusted_secondary_p'] == secondary_holm[const]
     refusal_count += refuses('create-only aggregate', lambda:
                             A.create_test_aggregate(roots, profile, aggregate_id, roster))
     refusal_count += refuses('cross-constant report', lambda:

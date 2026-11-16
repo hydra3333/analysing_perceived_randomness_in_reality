@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from bisect import bisect_left
 from collections import Counter, defaultdict
-from math import exp, isfinite, lgamma, log, log1p
+from math import exp, fsum, isfinite, lgamma, log, log10, log1p
 import random
 import statistics
 from typing import Iterable, Mapping
@@ -22,6 +22,9 @@ GAME_FAMILIES = {
 }
 CONSTANTS = ('pi', 'phi', 'e', 'log2', 'gamma', 'lemniscate')
 PRIMARY_FAMILY = {'powerball': 'K6S', 'oz': 'K6'}
+# Owner D4 (16 Nov 2026), Powerball ONLY. Oz remains undecided.
+GEOMETRIC_PRIMARY = 'P3_ANY_MEAN_LOG10_MIN_ABS_GAP_PLUS_ONE_V1'
+MEDIAN_SECONDARY = 'P3_ANY_MEDIAN_MIN_ABS_GAP_V1'
 
 # (view, original family, relative membership, patterns per draw, condition parent)
 # A view represents DRAW-ATTRIBUTED event counts. Nesting is intentional.
@@ -214,9 +217,28 @@ def closest_gap(starts_a: Iterable[int], starts_b: Iterable[int]):
     return best
 
 
+def _transition_gaps(sets: Iterable[Iterable[int]]) -> list[int]:
+    """Every evaluable adjacent pair contributes exactly one nonnegative gap."""
+    seq = tuple(tuple(s) for s in sets)
+    return [closest_gap(a, b)[0] for a, b in zip(seq, seq[1:]) if a and b]
+
+
+def geometric_mean_log_gap(gaps: Iterable[int]) -> float | None:
+    """D4 primary: mean log10(g+1), sorted + fsum, 12-decimal canonical result.
+
+    This is log10 of the geometric mean of (g+1), NOT log10(mean(g)+1).
+    Zero gaps contribute log10(1)=0. Empty/evaluable-free input is N/A.
+    """
+    ordered = sorted(gaps)
+    if not ordered:
+        return None
+    if any(type(g) is not int or g < 0 for g in ordered):
+        raise ValueError('adjacent-pair gaps must be nonnegative integers')
+    return round(fsum(log10(g + 1) for g in ordered) / len(ordered), 12)
+
+
 def _transition_summaries(sets: Iterable[Iterable[int]]):
-    sets = tuple(tuple(s) for s in sets)
-    gaps = [closest_gap(aa,bb)[0] for aa,bb in zip(sets,sets[1:]) if aa and bb]
+    gaps = _transition_gaps(sets)
     return statistics.median(gaps) if gaps else None, len(gaps)
 
 
@@ -249,56 +271,98 @@ def transitions(game: str, events: Iterable, draw_numbers: Iterable[int], N: int
     meta=dict(game=game, family=selected_family, total_adjacent_pairs=len(rows),
               evaluable_pairs=len(gaps), non_evaluable_pairs=len(rows)-len(gaps),
               observed_median_absolute_gap=statistics.median(gaps) if gaps else None,
+              # D4 Powerball primary; event extraction and adjacent-pair rows unchanged.
+              observed_primary_mean_log10_gap_plus_one=(geometric_mean_log_gap(gaps)
+                  if game == 'powerball' and selected_family == 'K6S' else None),
               undefined_reason=None if gaps else 'NO_EVALUABLE_ADJACENT_PAIRS')
     return tuple(rows), meta, sets
 
 
 def permutation_test(offsets_per_draw: Iterable[Iterable[int]], *, seed: int,
-                     iterations: int = 10_000) -> dict:
-    """Shuffle WHOLE offset sets across all D positions, including empty sets.
+                     iterations: int = 10_000, geometric_primary: bool = False) -> dict:
+    """Shuffle whole draw-offset sets, including empty draws, once per trial.
 
-    Undefined permutations are EXCLUDED and reported, not assigned 0 or inf.
-    If the observed statistic is undefined or all permutations are undefined,
-    inferential p-values are N/A. No p-value is invented.
+    The legacy median output fields are preserved verbatim. When
+    geometric_primary=True, the SAME shuffle loop additionally computes the
+    owner-D4 Powerball primary, alongside the old median as an exploratory
+    secondary with a separate centred two-sided p-value. Oz's old Q4d callers
+    retain the median-only default until an explicit Oz owner decision.
     """
     sets = tuple(tuple(sorted(set(s))) for s in offsets_per_draw)
     if (len(sets) < 2 or type(seed) is not int or not 0 <= seed < 2**64
-            or type(iterations) is not int or not 1 <= iterations <= 1_000_000):
+            or type(iterations) is not int or not 1 <= iterations <= 1_000_000
+            or type(geometric_primary) is not bool):
         raise ValueError('invalid permutation configuration')
     if any(type(v) is not int or v < 0 for s in sets for v in s):
         raise ValueError('invalid offsets')
-    observed,n_observed = _transition_summaries(sets)
+    observed_gaps = _transition_gaps(sets)
+    observed = statistics.median(observed_gaps) if observed_gaps else None
+    n_observed = len(observed_gaps)
+    geometric_observed = (geometric_mean_log_gap(observed_gaps)
+                          if geometric_primary else None)
     rng = random.Random(seed)
-    valid=[]
-    evaluated_counts=[]
+    valid = []
+    geometric_valid = []
+    evaluated_counts = []
     for _ in range(iterations):
-        shuffled=list(sets)  # every draw, even empties, is permuted
+        shuffled = list(sets)  # every draw, including zero-match draws
         rng.shuffle(shuffled)
-        median,evaluable=_transition_summaries(shuffled)
-        evaluated_counts.append(evaluable)
-        if median is not None:
-            valid.append(median)
-    invalid = iterations-len(valid)
-    answer=dict(seed=seed, generator='PYTHON_RANDOM_SHUFFLE_WHOLE_DRAW_SETS_V1',
-                iterations_requested=iterations, valid_permutations=len(valid),
-                undefined_permutations=invalid, observed_evaluable_pairs=n_observed,
-                permutation_evaluable_min=min(evaluated_counts),
-                permutation_evaluable_max=max(evaluated_counts),
-                observed_median=observed, permuted_median_center=None,
-                tail_upper_inclusive=None,tail_lower_inclusive=None,
-                centered_two_sided_p=None,
-                undefined_reason=None)
+        gaps = _transition_gaps(shuffled)
+        evaluated_counts.append(len(gaps))
+        if gaps:
+            valid.append(statistics.median(gaps))
+            if geometric_primary:
+                geometric_valid.append(geometric_mean_log_gap(gaps))
+    invalid = iterations - len(valid)
+    answer = dict(seed=seed, generator='PYTHON_RANDOM_SHUFFLE_WHOLE_DRAW_SETS_V1',
+                  iterations_requested=iterations, valid_permutations=len(valid),
+                  undefined_permutations=invalid, observed_evaluable_pairs=n_observed,
+                  permutation_evaluable_min=min(evaluated_counts),
+                  permutation_evaluable_max=max(evaluated_counts),
+                  observed_median=observed, permuted_median_center=None,
+                  tail_upper_inclusive=None, tail_lower_inclusive=None,
+                  centered_two_sided_p=None, undefined_reason=None)
     if observed is None:
-        answer['undefined_reason']='OBSERVED_NO_EVALUABLE_ADJACENT_PAIRS'
+        answer['undefined_reason'] = 'OBSERVED_NO_EVALUABLE_ADJACENT_PAIRS'
     elif not valid:
-        answer['undefined_reason']='NO_VALID_PERMUTATIONS'
+        answer['undefined_reason'] = 'NO_VALID_PERMUTATIONS'
     else:
-        mid=statistics.median(valid)
-        extreme=sum(abs(v-mid)>=abs(observed-mid) for v in valid)
+        mid = statistics.median(valid)
+        extreme = sum(abs(v - mid) >= abs(observed - mid) for v in valid)
         answer.update(permuted_median_center=mid,
-                      centered_two_sided_p=(1+extreme)/(len(valid)+1),
-                      tail_upper_inclusive=(1+sum(v>=observed for v in valid))/(len(valid)+1),
-                      tail_lower_inclusive=(1+sum(v<=observed for v in valid))/(len(valid)+1))
+                      centered_two_sided_p=(1 + extreme) / (len(valid) + 1),
+                      tail_upper_inclusive=(1 + sum(v >= observed for v in valid)) / (len(valid) + 1),
+                      tail_lower_inclusive=(1 + sum(v <= observed for v in valid)) / (len(valid) + 1))
+    if geometric_primary:
+        # Both summaries are defined on the same evaluable pairs; a single
+        # trial is included/excluded together for both statistics.
+        if len(geometric_valid) != len(valid):
+            raise AssertionError('dual permutation evaluability disagreement')
+        g = dict(statistic=GEOMETRIC_PRIMARY,
+                 observed=geometric_observed,
+                 permuted_median_center=None,
+                 tail_upper_inclusive=None,
+                 tail_lower_inclusive=None,
+                 centered_two_sided_p=None,
+                 undefined_reason=answer['undefined_reason'])
+        if observed is not None and valid:
+            # All geometric statistics have already been rounded to 12 places;
+            # round the permutation centre too before ANY tail comparison.
+            centre = round(statistics.median(geometric_valid), 12)
+            extreme = sum(abs(v - centre) >= abs(geometric_observed - centre)
+                          for v in geometric_valid)
+            g.update(permuted_median_center=centre,
+                     centered_two_sided_p=(1 + extreme) / (len(valid) + 1),
+                     tail_upper_inclusive=(1 + sum(v >= geometric_observed for v in geometric_valid)) / (len(valid) + 1),
+                     tail_lower_inclusive=(1 + sum(v <= geometric_observed for v in geometric_valid)) / (len(valid) + 1))
+        answer['geometric_primary'] = g
+        answer['median_secondary'] = dict(statistic=MEDIAN_SECONDARY,
+                                          observed=observed,
+                                          permuted_median_center=answer['permuted_median_center'],
+                                          centered_two_sided_p=answer['centered_two_sided_p'],
+                                          tail_upper_inclusive=answer['tail_upper_inclusive'],
+                                          tail_lower_inclusive=answer['tail_lower_inclusive'],
+                                          undefined_reason=answer['undefined_reason'])
     return answer
 
 

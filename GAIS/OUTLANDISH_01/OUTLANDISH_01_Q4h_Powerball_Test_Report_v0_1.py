@@ -19,7 +19,19 @@ import OUTLANDISH_01_Q4i_Mode_v0_1 as M
 
 PERMUTATIONS = 10_000
 TEST_PRIMARY_SEED = 271828  # retained only for historical synthetic regressions
-SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_REPORT_V2'
+SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_REPORT_V3'
+PRIMARY_STATISTIC = S.GEOMETRIC_PRIMARY
+SECONDARY_STATISTIC = S.MEDIAN_SECONDARY
+D5_LEGACY_EXPOSURE_DISCLOSURE = (
+    'Before the Powerball primary statistic was fixed, legacy match rows had been examined for phi (full '
+    '10^10 digits, 227 P3 rows) and for pi and phi (first 10^9 digits). On 5 November 2026 the signed P3-'
+    '>P3 gaps for the five adjacent draw pairs having P3 matches in those 10^9 prefixes (pi 3, phi 2) wer'
+    'e computed and recorded in OUTLANDISH_01_2026-11-05_Historical_Status_and_Draft_Spec_v0_1.md section'
+    ' 5.2. No median, geometric-mean or permutation test of P3->P3 gaps appears in the reviewed project r'
+    'ecord. The D4 primary statistic was chosen on simulation evidence (REVIEW/OUTLANDISH_REVIEW_005_Clau'
+    'de_to_ChatGPT.md) without reference to these values. These exposures are disclosed; results are not '
+    'represented as wholly blind.'
+)
 CODE_NAMES = ('OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py',
               'OUTLANDISH_01_Q3_Event_Classifier_v0_1.py',
               'OUTLANDISH_01_Q4d_Statistical_Core_v0_1.py',
@@ -62,13 +74,18 @@ def compute_report(mode: M.PowerballMode, constant: str, run_id: str):
         'event_sha256': meta['event_sha256'],
         'run_manifest_sha256': hashlib.sha256(raw_manifest).hexdigest(),
         'code_sha256_recorded_not_a_gate': _code_hashes(),
-        'primary_family': 'K6S', 'primary_owner_vetoable': True,
+        'primary_family': 'K6S', 'primary_owner_vetoable': False,
+        'primary_statistic': PRIMARY_STATISTIC,
+        'secondary_statistic': SECONDARY_STATISTIC,
+        'secondary_exploratory': True,
+        'legacy_exposure_disclosure': D5_LEGACY_EXPOSURE_DISCLOSURE,
         'permutations_predeclared': PERMUTATIONS,
         'seed_label': label, 'seed': seed, 'seed_status': status,
         'category_summary': S.category_summary('powerball', classified, draws, N),
         'physical_same_draw_overlaps': S.physical_overlaps('powerball', events, draws, N),
         'transitions': rows, 'transitions_summary': transition,
-        'permutation': S.permutation_test(sets, seed=seed, iterations=PERMUTATIONS),
+        'permutation': S.permutation_test(sets, seed=seed, iterations=PERMUTATIONS,
+                                          geometric_primary=True),
     }
 
 
@@ -104,15 +121,25 @@ def load_report(mode: M.PowerballMode, constant: str, run_id: str):
                 'history_sha256': meta['history_sha256'],
                 'event_sha256': meta['event_sha256'],
                 'run_manifest_sha256': hashlib.sha256(raw_manifest).hexdigest(),
-                'primary_family': 'K6S', 'primary_owner_vetoable': True,
+                'primary_family': 'K6S', 'primary_owner_vetoable': False,
+                'primary_statistic': PRIMARY_STATISTIC,
+                'secondary_statistic': SECONDARY_STATISTIC,
+                'secondary_exploratory': True,
+                'legacy_exposure_disclosure': D5_LEGACY_EXPOSURE_DISCLOSURE,
                 'permutations_predeclared': PERMUTATIONS,
                 'seed_label': label, 'seed': seed, 'seed_status': status}
     if not isinstance(body, dict) or any(body.get(k) != v for k, v in required.items()):
         raise ValueError('report source/mode/primary provenance mismatch')
     perm = body.get('permutation')
     if (not isinstance(perm, dict) or perm.get('iterations_requested') != PERMUTATIONS
-            or perm.get('seed') != seed):
-        raise ValueError('report permutation provenance mismatch')
+            or perm.get('seed') != seed
+            or not isinstance(perm.get('geometric_primary'), dict)
+            or perm['geometric_primary'].get('statistic') != PRIMARY_STATISTIC
+            or not isinstance(perm.get('median_secondary'), dict)
+            or perm['median_secondary'].get('statistic') != SECONDARY_STATISTIC
+            or perm['median_secondary'].get('centered_two_sided_p') != perm.get('centered_two_sided_p')
+            or perm['median_secondary'].get('observed') != perm.get('observed_median')):
+        raise ValueError('report permutation/primary/secondary provenance mismatch')
     return {'report': body,
             'code_matches_current': body.get('code_sha256_recorded_not_a_gate') == _code_hashes()}
 
