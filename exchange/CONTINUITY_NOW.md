@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 00:40 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 10:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -20,8 +20,9 @@ durable EX messages are authoritative.
   the owner's Windows install, Claude never writes the data folders, nothing is deleted (archive with date-time names);
   the local runner keeps its rules; MHUP-B is next and the priority. Detail: `RULES_AFTER_Q7_DRAFT_r2.md` and
   `MHUPB_DESIGN_INPUTS_2026_11_16.md` in the same folder.
-- **The reviewer has NOT yet seen entries 42 to 47 or those three pages.** The owner's order: documents first, then one
-  paste that tells and consults the reviewer. Every earlier paste block on these topics is void.
+- **The reviewer has been consulted and agrees with conditions (EX_206, entry 50)**; its conditions match the working
+  rule of `RULES_AFTER_Q7_DRAFT_r2.md` section 2A. The reviewer's own H-2 v3 CANDIDATE is in `doc/HANDOVER/` (not ratified).
+  Still to be reviewed: the MHUP-B design supplement draft.
 - **D5 DONE (entry 48):** the owner committed and pushed the Mode H results at `c7622fa` (masters and ledgers version 2,
   search log, batch records, markers, reports); the masters and reports match the fingerprints recorded at the seals.
 - **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by

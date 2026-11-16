@@ -586,3 +586,20 @@ the installed documents. This log is not a separate approval process.
   takes; and a recommendation that MHUP-B carry no scope that can wait (a new method's back-history and the report window
   cap go to a small follow-on package), because each week without the weekly session is a forward draw lost for good.
   Nothing in it is decided: it lists five questions for the reviewer and four decisions for the owner.
+
+## 50. 17 November 2026, about 09:46 - the reviewer's view on the agreed approach (EX_206): AGREE WITH CONDITIONS
+
+- **Where:** the owner gave Claude `EX_206_ChatGPT.md`; recorded unchanged as `exchange/EX_206_ChatGPT.md`.
+- **Result:** the reviewer supports the owner's seven-line approach of 16 November 2026 and answers the five questions of
+  `RULES_AFTER_Q7_DRAFT_r2.md`: Q1 agree (the AI chats may read draw values and results; N-1 isolation, forecast identities
+  and append-only evidence kept; chat computation is suggestive; evaluation on already-known draws is development evidence,
+  never prospective); Q2 agree to the all-history descriptive table with every method, a forward-only column beside it and
+  the kinds identified; backfilled rankings never shown as if they existed earlier; Q3 agree to close the exposure record in
+  register v0.31, keeping the HX-1 and HX-2 facts; Q4 the runner's rules 4 and 5 stay binding until MHUP-B's reviewed
+  rulebook edition; Q5 agree with conditions that match section 2A (named paths, hash checks, collision-proof archive names,
+  coordination with the owner's Git activity; code by package; no writes to the data folders, `GAIS/` or protected
+  settings; no reset, clean, overwrite or force push).
+- **Also:** the owner authorised the reviewer to commit its own H-2 handover files; it committed an H-2 v3 CANDIDATE and its
+  blurb to `doc/HANDOVER/` (commits `5204c41` and `e631380`). Not ratified; H-2 v2 r1 stays the installed handover.
+- **Status:** the approach is now agreed by the owner and reviewed. The owner keeps the final say on its wording and
+  effective date. The MHUP-B design supplement draft is still to be reviewed under the normal rules.
