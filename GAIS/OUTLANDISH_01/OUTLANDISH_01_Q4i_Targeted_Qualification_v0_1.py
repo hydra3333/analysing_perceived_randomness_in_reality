@@ -11,6 +11,7 @@ import argparse
 from dataclasses import replace
 import hashlib
 import json
+import os
 from pathlib import Path
 import tempfile
 from types import SimpleNamespace
@@ -37,7 +38,7 @@ def refuses(label, func, errors=(ValueError, RuntimeError, PermissionError,
 def test_modes(roots, profile, digits):
     m = M.PowerballMode.synthetic(roots,profile,digits)
     assert m.checked() is m and m.run_type == 'TEST_REAL'
-    assert Entry.ENABLE_Q5_PRODUCTION_SCANS is False, 'OWNER SAFETY STOP: test needs switch OFF'
+    # N2: never require the committed Q5 switch to be False just to test.
     checks = 0
     forged=replace(m,run_type='REAL')
     checks += refuses('synthetic cannot claim REAL', forged.checked)
@@ -51,15 +52,21 @@ def test_modes(roots, profile, digits):
                      lambda: roots.run_location('REAL','REAL_forged'))
     checks += refuses('synthetic cannot relabel Oz as Powerball',
                      lambda: replace(m,profile=Old._historical_profile(roots,'oz')).checked())
-    checks += refuses('production switch checked even on direct runner call',
-                     lambda: P._require_scan_permission(SimpleNamespace(
-                         checked=lambda: None, roots=SimpleNamespace(synthetic=False))))
+    old_switch = Entry.ENABLE_Q5_PRODUCTION_SCANS
+    try:
+        Entry.ENABLE_Q5_PRODUCTION_SCANS = False   # in memory, only for this refusal
+        checks += refuses('production switch checked even on direct runner call',
+                         lambda: P._require_scan_permission(SimpleNamespace(
+                             checked=lambda: None, roots=SimpleNamespace(synthetic=False))))
+    finally:
+        Entry.ENABLE_Q5_PRODUCTION_SCANS = old_switch
     # No construction of a REAL mode is needed for the above test. A production
     # mode can be created for read-only inspection with switch OFF on Windows;
     # starting a genuine scan must remain blocked by P._require_scan_permission.
     label,seed=R.primary_seed('powerball','pi')
     assert label=='OUTLANDISH_01|powerball|pi|PRIMARY_W_TO_W1|V1'
     assert seed == int.from_bytes(hashlib.sha256(label.encode('ascii')).digest()[:8], 'big')
+    assert seed == 9006290301332289919   # independently fixed powerball/pi known answer
     assert 0 <= seed < 2**64 and R.primary_seed('powerball','phi')[1]!=seed
     assert R.PERMUTATIONS == 10_000
     assert R._close(1,1) and not R._close(1,2)
@@ -181,6 +188,72 @@ def test_duplicate_replay(roots, profile, digits):
     return count,1
 
 
+def test_windows_production_off():
+    """W3: actual fixed-root production mode on Windows; NO source/history reads."""
+    if os.name != 'nt':
+        return 0
+    # The constructor validates path identity but never opens the files.
+    mode = M.PowerballMode.production_powerball()
+    calls = {'source': 0, 'history': 0}
+    def unexpected_source(*args, **kwargs):
+        calls['source'] += 1
+        raise AssertionError('disabled production scan reached source validation')
+    def unexpected_history(*args, **kwargs):
+        calls['history'] += 1
+        raise AssertionError('disabled production scan reached history validation')
+    old_source, old_history = G.validate_published_source, G.validate_drawset
+    old_switch = Entry.ENABLE_Q5_PRODUCTION_SCANS
+    try:
+        Entry.ENABLE_Q5_PRODUCTION_SCANS = False
+        G.validate_published_source = unexpected_source
+        G.validate_drawset = unexpected_history
+        count = refuses('actual production mode refuses before source/history calls',
+                        lambda: P.run_powerball(mode, 'pi', 'REAL_q4j_switch_off_probe'))
+        assert calls == {'source': 0, 'history': 0}, calls
+        return count
+    finally:
+        G.validate_published_source, G.validate_drawset = old_source, old_history
+        Entry.ENABLE_Q5_PRODUCTION_SCANS = old_switch
+
+
+def test_cross_type_replay(roots, profile, digits):
+    """W2: shared REAL-shaped loader refuses text decoys or NULL-type manifests.
+
+    Uses *only* a synthetic TEST_REAL fixture. The production REAL loader is
+    the same function but never runs against real inputs during qualification.
+    """
+    mode = M.PowerballMode.synthetic(roots, profile, digits)
+    run_id = 'TEST_REAL_q4j_cross_type'
+    folder = P.run_powerball(mode, 'phi', run_id, chunk_bytes=9)
+    event_file, manifest_file = folder/'raw_events.csv', folder/'run_manifest.json'
+    original_events, original_manifest = event_file.read_bytes(), manifest_file.read_bytes()
+    rows = original_events.splitlines(keepends=True)
+    assert len(rows) >= 2, 'cross-type fixture requires at least one event'
+    # Replace exactly one canonical integer draw ID with an unparseable text decoy.
+    _, sep, tail = rows[1].partition(b',')
+    assert sep and tail
+    mutated = b''.join([rows[0], b'DECOY_Q4J,'+tail, *rows[2:]])
+    meta = json.loads(original_manifest.decode('utf-8'))
+    meta['event_sha256'] = hashlib.sha256(mutated).hexdigest()
+    try:
+        event_file.write_bytes(mutated)
+        manifest_file.write_bytes(P.encode(meta))
+        a = refuses('text decoy rejected despite updated event digest',
+                    lambda: P.load_run(mode, 'phi', run_id))
+    finally:
+        event_file.write_bytes(original_events)
+        manifest_file.write_bytes(original_manifest)
+    meta = json.loads(original_manifest.decode('utf-8'))
+    meta['run_type'] = 'NULL'
+    try:
+        manifest_file.write_bytes(P.encode(meta))
+        b = refuses('NULL-typed manifest rejected by REAL-shaped loader',
+                    lambda: P.load_run(mode, 'phi', run_id))
+    finally:
+        manifest_file.write_bytes(original_manifest)
+    return a+b
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__.splitlines()[0])
     g=parser.add_mutually_exclusive_group(required=True)
@@ -190,23 +263,25 @@ def main():
     with tempfile.TemporaryDirectory(prefix='OUTLANDISH_Q4I_SYNTHETIC_') as td:
         roots,n=F.make_temp(Path(td))
         profile=Old._historical_profile(roots,'powerball')
-        refusals=test_modes(roots,profile,n)
+        refusals=test_modes(roots,profile,n) + test_windows_production_off()
         if args.run:
             # Duplicate replay on the ORIGINAL small fixture, then large fixture
             # replaces only the isolated phi source for the unsampled hash test.
             duplicates, canaries=test_duplicate_replay(roots,profile,n)
+            cross_type = test_cross_type_replay(roots,profile,n)
             canaries+=test_history_sha_canary(roots,profile)
             refuse_large,size,missed=test_unsampled_corruption(roots,profile)
             canaries+=1  # verified negative control: full digest disabled accepts corruption
             canaries+=1  # verified negative control: mode identity disabled accepts forged mode
-            refusals+=duplicates+refuse_large
+            refusals+=duplicates+cross_type+refuse_large
         else:
             canaries=0
             size=missed=0
     print(f'Q4I SYNTHETIC {"TARGETED" if args.run else "GUARDS"} PASS: '
           f'refusals={refusals} canaries={canaries} '
           f'unsampled-fixture-bytes={size} unsampled-offset={missed} '
-          'Q5-switch=OFF production-scans=0 REAL-history-reads=0')
+          f'Q5-switch={"ENABLED" if Entry.ENABLE_Q5_PRODUCTION_SCANS is True else "OFF"} '
+          'production-scans=0 REAL-history-reads=0')
 
 
 if __name__=='__main__':

@@ -20,6 +20,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest='action', required=True)
     sub.add_parser('status', help='show the scan switch, without accessing production inputs')
+    preflight = sub.add_parser('preflight',
+                               help='OWNER-PERMITTED read-only receipt/sample check; no scan')
+    preflight.add_argument('--constant', required=True,
+                           choices=('pi','phi','e','log2','gamma','lemniscate'))
     scan = sub.add_parser('scan', help='new REAL Powerball scan; requires owner switch True')
     scan.add_argument('--constant', required=True,
                       choices=('pi','phi','e','log2','gamma','lemniscate'))
@@ -42,6 +46,17 @@ def main():
 
     from OUTLANDISH_01_Q4i_Mode_v0_1 import PowerballMode
     mode = PowerballMode.production_powerball()
+    if args.action == 'preflight':
+        # This is an explicit operator action only: never called automatically.
+        # Verifies receipt fields, size and 12 sampled blocks without full-file scan,
+        # without reading historical outcomes, and without creating any output.
+        # Owner must separately authorise actually invoking this action.
+        from OUTLANDISH_01_Q4_Published_Source_Guards_v0_1 import validate_published_source
+        checked = validate_published_source(mode.roots, args.constant)
+        print('READ-ONLY PREFLIGHT PASS:', checked.constant, 'bytes=', checked.packed_bytes,
+              'receipt_sha256=', checked.receipt_sha256,
+              'expected_full_scan_sha256=', checked.packed_sha256)
+        return
     if args.action == 'scan':
         from OUTLANDISH_01_Q4h_Powerball_Test_Runner_v0_1 import run_powerball
         print(run_powerball(mode,args.constant,args.run_id))
