@@ -617,3 +617,22 @@ the installed documents. This log is not a separate approval process.
   the one overall measure; a new method's back-history; the report window cap lifted; the consolidated report (roadmap 21b);
   and the scoring of Powerball targets 1145 to 1285. The cost is a larger review and rehearsal, to be built in tested layers.
 - **Next:** the supplement revised to v0.2 on that basis (Fable, High; on the owner's go), then to the reviewer.
+
+## 52. 17 November 2026, about 09:51-09:56 - the owner's "go" for design v0.2; the reviewer's review of v0.1 (EX_207)
+
+- **The owner's words:** "go" (09:51, to Claude's "Suggest switching to Fable (High) for this"), and at 09:56, with the
+  reviewer's file: "fyi, chatgpt assessment of your last post in case that helps:".
+- **EX_207** (recorded unchanged as `exchange/EX_207_ChatGPT_REVISED_20261117.md`): CONDITIONAL PASS ON DIRECTION on draft
+  v0.1, revised by the reviewer for entry 51 before it was relayed. It accepts the full MHUP-B in independently tested
+  layers with the live forecast and score path isolated; supports one overall primary forward measure in principle, with
+  its formula, null calibration, error budget and repeated-look policy still to be specified; prefers one confirmatory
+  test at 5% with the 80-track family secondary; corrects the reading of v0.1's power figures; and asks for a cross-source
+  read contract, zero-score variants shown, LOW_N under 30, `LATE_PRE_DRAW` stated, and past-draw rankings labelled as a
+  reconstruction. It requires its own review of v0.2's actual bytes.
+- **Done on that go (design only):** `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_2.md`, with
+  `overall_measure_check.py` and its output. v0.2 answers each EX_207 point (its section 1), sets out eight layers with
+  acceptance gates and the isolation rule, and defines the overall measure OV-1: per forward draw, the summed weight of the
+  drawn numbers (methods favouring minus methods disfavouring each number), divided by its exact fair-draw spread; both
+  games together; two-sided; read formally five times only (52, 104, 208, 416, 832 forward draws) at 1% each; everything
+  else secondary. Claude withdrew v0.1's claim that one measure would be more than twice as fast.
+- **Not decided:** v0.2 lists seven questions for the reviewer and four decisions for the owner. Nothing is authorised.

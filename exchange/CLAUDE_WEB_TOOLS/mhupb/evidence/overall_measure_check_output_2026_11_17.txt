@@ -1,0 +1,21 @@
+overall_measure_check.py - output of the run of 17 November 2026 (Claude web chat's Linux workspace, Python 3, pure Python, about 8 minutes).
+Simulated draws only; no project data was read. Recorded as printed.
+
+NULL (fair draws): share of runs with S >= z; the target is 0.050 and 0.005
+  POWERBALL-like  fixed    n= 52: mean +0.000 sd 1.002  P(S>=1.645) 0.0503  P(S>=2.576) 0.0054
+  POWERBALL-like  fixed    n=208: mean -0.003 sd 1.010  P(S>=1.645) 0.0508  P(S>=2.576) 0.0050
+  POWERBALL-like  adaptive n= 52: mean -0.024 sd 1.007  P(S>=1.645) 0.0512  P(S>=2.576) 0.0030
+  POWERBALL-like  adaptive n=208: mean +0.021 sd 1.004  P(S>=1.645) 0.0483  P(S>=2.576) 0.0047
+  OZLOTTO-like    fixed    n= 52: mean +0.003 sd 1.009  P(S>=1.645) 0.0530  P(S>=2.576) 0.0053
+  OZLOTTO-like    fixed    n=208: mean +0.003 sd 1.005  P(S>=1.645) 0.0510  P(S>=2.576) 0.0054
+  OZLOTTO-like    adaptive n= 52: mean -0.004 sd 0.999  P(S>=1.645) 0.0467  P(S>=2.576) 0.0047
+  OZLOTTO-like    adaptive n=208: mean -0.018 sd 0.981  P(S>=1.645) 0.0440  P(S>=2.576) 0.0022
+POWER (tilted draws, fixed tickets; edge = relative tilt for the most favoured number): share with S >= 2.576
+  POWERBALL-like  edge 0.10 n=104: mean S +1.12  passes 0.079
+  POWERBALL-like  edge 0.10 n=416: mean S +2.31  passes 0.399
+  POWERBALL-like  edge 0.20 n=104: mean S +2.26  passes 0.375
+  POWERBALL-like  edge 0.20 n=416: mean S +4.61  passes 0.961
+  OZLOTTO-like    edge 0.10 n=104: mean S +1.09  passes 0.072
+  OZLOTTO-like    edge 0.10 n=416: mean S +2.16  passes 0.344
+  OZLOTTO-like    edge 0.20 n=104: mean S +2.17  passes 0.352
+  OZLOTTO-like    edge 0.20 n=416: mean S +4.31  passes 0.929
