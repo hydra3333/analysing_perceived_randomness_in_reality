@@ -226,3 +226,16 @@ the installed documents. This log is not a separate approval process.
   `OZLOTTO_APPROVAL1_OPEN_...`, `OZLOTTO_WITNESS_PUSH_...` (Parts A and B together), `OZLOTTO_APPROVAL2_UPDATE_AND_PLAN_...`,
   `BACKUP_AFTER_OZLOTTO_SEAL_...`). They are the chat pastes, not reconstructions; where a paste was cut off (the second
   backup's last exit line), the file ends where the paste ended. Lesson carried: store each window as it arrives.
+
+## 23. 16 November 2026, about 18:39 - the OUTLANDISH_01 pre-holdout Oz Lotto export
+
+- **Where:** the owner's go and CMD window in the Claude chat, after the reviewer's blocking finding on the tool (module not
+  registered before execution) was fixed as r3 (`8c4bec69...`, commit `76d1c6d`).
+- **Certificate (from the window):** source the committed version-1 master `4a6cecc2...`; draws 1474 (17 May 2022, the current
+  format) to 1693; exclusive cutoff 1694 (the parent project's Oz Lotto holdout 1694-1703); 220 rows; every row 10 distinct
+  values in 1-47; no gaps or duplicates; dates off the weekly rule 0; order check: mains already ascending 0/220, supplementaries
+  ascending 36/220 (about 37 expected for an unsorted order), so the page's stored order is NOT a sorted order; read only the
+  committed Git bytes. File `GAIS/OUTLANDISH_01/OZLOTTO_preholdout_only.csv`, 9,829 bytes, LF, SHA-256 `82557ea5...c44c`;
+  committed by the owner at `c528be4` (Git stores the LF bytes; checked by Claude by hash only, no value read).
+- **Status:** done. No holdout draw is in the file. This concerns the side project only; it changes nothing in Mode H or the
+  freeze.
