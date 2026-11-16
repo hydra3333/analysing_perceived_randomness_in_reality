@@ -42,7 +42,9 @@ def main(root: Path | None = None) -> int:
     if not out.parent.is_dir():
         say(f"REFUSED: {OUT_REL.parent.as_posix()} is not a folder; nothing was read or written"); return 3
     spec = importlib.util.spec_from_file_location("results_master_v0_2", root / "src" / "results_master_v0_2.py")
-    RM = importlib.util.module_from_spec(spec); spec.loader.exec_module(RM)
+    RM = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = RM            # before exec: @dataclass looks its module up there (reviewer, 16 November 2026)
+    spec.loader.exec_module(RM)
     era, cutoff = RM.ERAS[GAME], RM.FIRST_QUARANTINED_DRAW[GAME]
     r = subprocess.run(["git", "--no-optional-locks", "-C", str(root), "show", f"HEAD:source_data/{GAME}_results_master.csv"],
                        capture_output=True)

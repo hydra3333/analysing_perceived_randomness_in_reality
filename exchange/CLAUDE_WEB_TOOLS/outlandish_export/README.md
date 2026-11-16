@@ -11,6 +11,11 @@ Development test (invented master in a scratch Git repository; Linux Python 3.15
 no BOM); a refusal when the output exists; the same output when the working tree holds an extra draw 1694 (proving it
 reads only the committed bytes); a refusal when the committed master's hash differs. Not Windows evidence.
 
+r3 (16 November 2026): the reviewer found that the dynamic import did not register the module in `sys.modules` before
+executing it, which makes `@dataclass` fail on some Python versions. Claude reproduced it on Python 3.13.18
+(`AttributeError: 'NoneType' object has no attribute '__dict__'`; Python 3.15.0b4 happened to pass). Fixed as the
+reviewer proposed; the same four cases rerun and passing on both 3.15.0b4 and 3.13.18, with identical output bytes.
+
 Note for the side project: the numbers are in the order the master stores them, which is the order the official results
 page lists them; whether that is the machine's drawn order is not something this project has established. The certificate's order check
 counts (without showing any value) how many rows are already ascending: about 0 of 220 for the mains if the page shows
