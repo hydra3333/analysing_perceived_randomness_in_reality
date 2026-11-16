@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 23:45 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 23:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -22,7 +22,10 @@ durable EX messages are authoritative.
   `MHUPB_DESIGN_INPUTS_2026_11_16.md` in the same folder.
 - **The reviewer has NOT yet seen entries 42 to 47 or those three pages.** The owner's order: documents first, then one
   paste that tells and consults the reviewer. Every earlier paste block on these topics is void.
-- **In progress: D5**, the owner's commit of the updated results files, led by Claude step by step (named paths only).
+- **D5 DONE (entry 48):** the owner committed and pushed the Mode H results at `c7622fa` (masters and ledgers version 2,
+  search log, batch records, markers, reports); the masters and reports match the fingerprints recorded at the seals.
+- **In progress tonight:** H-1 v4 and its blurb, as DRAFTS in `exchange/CLAUDE_WEB_TOOLS/h1v4/` (the owner asked for them
+  tonight for risk management; not yet reviewed or ratified).
 - **Next sitting:** register v0.31 and H-1 v4 (Opus), alongside the MHUP-B design (Fable, High; design only so far).
 - **Blocks or STOPs:** none.
 
@@ -71,14 +74,13 @@ independent "how the process went" note from each AI, with reasoning and alterna
 ## Mode H state
 
 Both games SEALED (Oz Lotto 15 November 19:54; Powerball 16 November 20:53) and read (EX_200 to EX_205). The sealed studies
-are never reopened, rescored or edited. The freeze has ended. D5 was decided on 16 November (entry 47): the owner commits
-the updated results files. Q7 (no raw draw value in an AI chat) is replaced by the agreed approach of 16 November, which
+are never reopened, rescored or edited. The freeze has ended. D5 is done (entry 48, commit `c7622fa`). Q7 (no raw draw value in an AI chat) is replaced by the agreed approach of 16 November, which
 the reviewer has still to be consulted on. The two Mode H report files' SHA-256 values are in entry 38; the reading tools
 are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
 
-1. D5: the owner's commit of the updated results files (in progress).
+1. D5: done (`c7622fa`, entry 48).
 2. One paste to the reviewer: the agreed approach, the rules page r2, the MHUP-B inputs; its reply; any adjustment by the owner.
 3. Close-out documents, alongside item 4: register v0.31 (Mode H, the record wording of EX_205 section 5, the agreed
    approach), H-1 v4 (the reviewer decides on H-2), the holdout exposure record closed.

@@ -557,3 +557,17 @@ the installed documents. This log is not a separate approval process.
   owner has decided before the reviewer's view; the reviewer's reply may still lead him to adjust.
 - **Documents tonight:** this log, the agreed-approach page, the recovery page (rewritten) and the roadmap's top note. The
   formal editions (register v0.31, H-1 v4) need review and ratification and are the next sitting's work.
+
+## 48. 16 November 2026, about 23:11-23:15 - D5 DONE: the owner committed and pushed the Mode H results (commit c7622fa)
+
+- **Where:** the owner's go and CMD windows, stored as pasted: `exchange/RUNS/D5_STEP1_PULL_AND_STATUS_2026_11_16_owner_window.txt`
+  and `exchange/RUNS/D5_STEPS_2_3_ADD_COMMIT_PUSH_2026_11_16_owner_window.txt`.
+- **Before:** `git pull --ff-only` to `e17fcc9`; status 5 modified and 20 untracked files, all Mode H, nothing else.
+- **Commit `c7622fa`** (named paths only, 25 files): both results masters and their ledgers (version 2), the search log, the
+  six Mode H report files, the two `MODE_H_BATCH_ID.json` records, and each game's batch folder (plan, segment record,
+  `BATCH_COMPLETE`, `SCORING_STARTED`, `SCORE_COMPLETE`, `MODE_H_SEALED`). Pushed `e17fcc9..c7622fa`; the tree is clean.
+- **Claude's check from GitHub (fingerprints only):** the committed Oz Lotto master (`63e33493...`), Powerball master
+  (`e4f2feb8...`) and the two report `.txt` files (`68112928...`, `1bad6295...`) are byte-identical to the SHA-256 values
+  recorded at the seals and in entry 38. Nothing outside `source_data/` and `results/` is in the commit. **PASS.**
+- **Not committed, by design:** the git-ignored run folders, attempts ledgers and score ledgers (they stay on the owner's PC
+  and in his backups on `G:`).

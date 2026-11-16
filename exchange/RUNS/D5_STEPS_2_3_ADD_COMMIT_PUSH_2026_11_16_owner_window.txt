@@ -1,0 +1,95 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/audit/SEARCH_LOG.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add source_data/OZLOTTO_results_master.csv source_data/OZLOTTO_results_master_ledger.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add source_data/POWERBALL_results_master.csv source_data/POWERBALL_results_master_ledger.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json results/real/holdout/POWERBALL/MODE_H_BATCH_ID.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+M  results/audit/SEARCH_LOG.csv
+A  results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+A  results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+A  results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+A  results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.csv
+A  results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.json
+A  results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.txt
+A  results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+A  results/real/holdout/POWERBALL/MODE_H_BATCH_ID.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/BATCH_COMPLETE.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/MODE_H_SEALED.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORE_COMPLETE.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORING_STARTED.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/plan.json
+A  results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/segment_20261115T085921761215Z_2ee6d371.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/BATCH_COMPLETE.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/MODE_H_SEALED.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORE_COMPLETE.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORING_STARTED.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/plan.json
+A  results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/segment_20261116T101803379996Z_1db1fd89.json
+M  source_data/OZLOTTO_results_master.csv
+M  source_data/OZLOTTO_results_master_ledger.csv
+M  source_data/POWERBALL_results_master.csv
+M  source_data/POWERBALL_results_master_ledger.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git commit -m "Mode H results (D5): updated masters and ledgers, search log, Mode H batch records, markers and reports for both games"
+[main c7622fa] Mode H results (D5): updated masters and ledgers, search log, Mode H batch records, markers and reports for both games
+ 25 files changed, 20770 insertions(+)
+ create mode 100644 results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+ create mode 100644 results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+ create mode 100644 results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+ create mode 100644 results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.csv
+ create mode 100644 results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.json
+ create mode 100644 results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.txt
+ create mode 100644 results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+ create mode 100644 results/real/holdout/POWERBALL/MODE_H_BATCH_ID.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/BATCH_COMPLETE.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/MODE_H_SEALED.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORE_COMPLETE.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORING_STARTED.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/plan.json
+ create mode 100644 results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/segment_20261115T085921761215Z_2ee6d371.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/BATCH_COMPLETE.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/MODE_H_SEALED.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORE_COMPLETE.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORING_STARTED.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/plan.json
+ create mode 100644 results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/segment_20261116T101803379996Z_1db1fd89.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git push
+Enumerating objects: 56, done.
+Counting objects: 100% (56/56), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (41/41), done.
+Writing objects: 100% (42/42), 144.39 KiB | 3.44 MiB/s, done.
+Total 42 (delta 13), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (13/13), completed with 4 local objects.
+To https://github.com/hydra3333/analysing_perceived_randomness_in_reality.git
+   e17fcc9..c7622fa  main -> main
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git log --oneline -1
+c7622fa (HEAD -> main, origin/main, origin/HEAD) Mode H results (D5): updated masters and ledgers, search log, Mode H batch records, markers and reports for both games
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
