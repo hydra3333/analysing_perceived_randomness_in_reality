@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 10:00 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 10:10 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -29,8 +29,9 @@ durable EX messages are authoritative.
   `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
   lists what must still be rewritten before ratification.
 - **MHUP-B design supplement, DRAFT v0.1** (entry 49): `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_1.md`.
-  The owner has not yet read it. It recommends MHUP-B keep to the ratified section 6 plus the league-table additions, with
-  a small follow-on package for a new method's back-history and the report window cap.
+  **Its section 7 (keep MHUP-B small) is WITHDRAWN: the owner prefers as much as possible in MHUP-B (entry 51)**, including
+  one overall measure fixed in advance beside all the existing measures, a new method's back-history, the window cap and
+  the consolidated report. Draft v0.2 is to be written on that basis (Fable, High; on the owner's go).
 - **Next sitting:** the owner reads the supplement's section 0; the paste to the reviewer (the owner holds it); register
   v0.31 and finishing H-1 v4 (Opus); the supplement's corrections and MHUP-B's code plan (Fable, High).
 - **Blocks or STOPs:** none.

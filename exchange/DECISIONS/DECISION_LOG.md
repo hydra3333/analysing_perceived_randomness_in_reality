@@ -603,3 +603,17 @@ the installed documents. This log is not a separate approval process.
   blurb to `doc/HANDOVER/` (commits `5204c41` and `e631380`). Not ratified; H-2 v2 r1 stays the installed handover.
 - **Status:** the approach is now agreed by the owner and reviewed. The owner keeps the final say on its wording and
   effective date. The MHUP-B design supplement draft is still to be reviewed under the normal rules.
+
+## 51. 17 November 2026, about 09:49 - OWNER PREFERENCE: both kinds of measure; MHUP-B as full as possible, not small
+
+- **The owner's words:** "BRIEFLY PLS CLARIFY IN PRACTISE WEHAT THIS MEANS "Fixing one overall measure in advance, instead of
+  testing 80 tickets at once,"" (09:46) and "can we have both one measure as well as all the other measures ? My preference
+  is to implement as much as possible as fast as possible rather than Keep MHUP-B small so it can start sooner." (09:49).
+- **Claude's answer:** yes to both measures: one overall measure, fixed in advance as the primary forward test, with every
+  existing measure and the 80-track family kept beside it (how the two share the 5% is a question for the reviewer).
+- **On scope, Claude withdraws the recommendation of the supplement's section 7.** By the supplement's own arithmetic
+  (section 5) a few forward draws more or less change little against the hundreds needed, and one package means one design
+  review and one install round. So MHUP-B is to carry: the ratified weekly session; the league table, files and history;
+  the one overall measure; a new method's back-history; the report window cap lifted; the consolidated report (roadmap 21b);
+  and the scoring of Powerball targets 1145 to 1285. The cost is a larger review and rehearsal, to be built in tested layers.
+- **Next:** the supplement revised to v0.2 on that basis (Fable, High; on the owner's go), then to the reviewer.
