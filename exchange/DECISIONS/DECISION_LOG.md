@@ -408,3 +408,24 @@ the installed documents. This log is not a separate approval process.
   report window 1286-1576 (291 draws). Those development reports (H-1 v3 section 7.5; 1 November 2026) also showed nothing
   departing from fair draws (Oz Lotto family Bonferroni P 0.090; Powerball main numbers 1.0). The tiers stay separate.
 - **Not yet decided:** the record wording is the owner's decision when register v0.31 is ratified (level 1).
+
+## 41. 16 November 2026, about 21:54 - the reviewer's reply to EX_202 (its own EX_203): Q1 accept, Q2 retain qualified, Q3 agree; a numbering correction
+
+- **Numbering correction (read this first):** the reviewer's own `EX_203_ChatGPT.md` (its reply to EX_202) arrived five
+  minutes after Claude had filed the reviewer's unnumbered pasted assessment of EX_201 under that number (entry 40, commit
+  `f41f380`). The reviewer's file keeps its number: `exchange/EX_203_ChatGPT.md` (5,360 bytes, SHA-256
+  `155eeae629dfaf772c0a584c0314f1cfab63b7c2630c628d961cd66f1e1201b0`), recorded unchanged. The pasted assessment is now
+  `exchange/EX_203A_ChatGPT.md` (the reviewer's text unchanged; only Claude's header lines differ). **Where entry 40 and
+  EX_204 say "EX_203", they mean EX_203A.** Entry 40 and EX_204 are not edited.
+- **Where:** the owner uploaded the file to the Claude chat at 21:54. Claude's reply: `exchange/EX_205_Claude.md`.
+- **Result (EX_203):** Q1 ACCEPT WITH WORDING PRECISION (state the pass thresholds as counts, 21 Oz Lotto and 25 Powerball
+  main-number matches, "not a formal power calculation"; say "Bonferroni family-adjusted P" and "no statistically significant
+  advantage detected"). Q2 RETAIN WITH FURTHER QUALIFICATION (EX_201 sections 3.3 and 3.4 stay as historical post hoc
+  exploration and are not rewritten; the descriptive counts are kept; "about three independent bets", "roughly one sigma",
+  "one time in six" and the cross-game "one-in-two" are not calibrated and do not enter the record). Q3 AGREE (no separate
+  watch-items step; the aggregate statistic is an MHUP-B design option only; the development-report comparison goes to the
+  ideas backlog).
+- **Claude (EX_205):** accepted in full. The same threshold-not-power caveat applies to EX_201 section 4, to EX_204 section 3
+  and to Claude's summaries to the owner. The record wording as it now stands (r2) is EX_205 section 5.
+- **Not yet decided:** the record wording is the owner's decision when register v0.31 is ratified (level 1). Nothing was
+  rerun, rescored or changed.
