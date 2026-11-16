@@ -1,6 +1,6 @@
 # OUTLANDISH_01 — living decisions and progress
 
-**Updated:** 16 November 2026 (Australia/Adelaide), after the owner D4/D5 decisions, Q4k implementation `b5f2ada`, Claude focused review `d036859`, the cross-platform Windows result, and handover v0.7 `4b1faac`. **Read §17 first** for the current pre-Q5 disposition; earlier sections remain dated evidence and are superseded where inconsistent. Ratified scientific specification v0.2, as amended by the explicit owner D3/D4/D5 decisions, remains binding. Q5 is **NOT authorised**.
+**Updated:** 16 November 2026 (Australia/Adelaide), following all six Powerball Q5 REAL scans, independent verification (memo 007), switch reset and Claude reviewer handover v0.8. **Read §18 first for current Q5 outcome and open owner decisions.** Earlier §§1–17 are retained as dated evidence and are superseded where they describe Q5 as upcoming or unauthorised. The Q5 production scan switch is **False**.
 
 ## 1. Current milestone / evidence
 
@@ -357,3 +357,37 @@ The owner committed and pushed **`39d569b`** to `main` (six files, all under `GA
 **W5 known-answer comparator preparation.** A narrow read-only Q4l utility reuses Q1 `parse_evidence` for both legacy and qualified four-column K6S CSVs. Synthetic `--self-test` can run now; a `--run-id REAL_...` comparison is **not to be run before a separately approved COMPLETE REAL phi scan**. It checks pinned legacy CSV SHA-256 `7a4315d66b028a2664413f0b3017714c10653110a1d79af7102d8ea09bbb5c83`, pinned φ source and event-manifest identities and then compares only the permitted triples. If the sets differ, STOP the scan sequence for investigation without assuming which scanner is right; if identical, continue only within the separately authorised Q5 scope. It does not open raw packed binary, receipt or history files, compute gaps or write results.
 
 **Next owner decision: Q5 authorisation only.** After the living record and Q4l comparator are installed and its synthetic self-test passes, the owner may separately authorise Powerball REAL scans by a named Git commit setting the existing entry switch to `True`, identifying the code commit and the scope (six constants, D4 primary, D5 disclosure). First REAL scan **phi**, then the restricted known-answer comparison before proceeding further. Until that independent owner action, Q5 is OFF.
+
+## 18. 16 November 2026 — Powerball Q5 REAL completion, independently verified null result, switch reset
+
+**Status: COMPLETE / INDEPENDENTLY VERIFIED / NULL under the declared Powerball tests.** The owner separately authorised Q5 at commit f939652 (code checkpoint 826b045; six Powerball constants; D4 primary, D5 disclosure; phi first). All six full 10^10-digit REAL scans completed on 16 November: REAL_pi_q5_v1, REAL_phi_q5_v1, REAL_e_q5_v1, REAL_log2_q5_v1, REAL_gamma_q5_v1, REAL_lemniscate_q5_v1. Six REAL reports and REAL-only aggregate REAL_AGGREGATE_powerball_q5_v1 were produced without reported error. The first qualified phi scan matched all **227/227** saved legacy P3 rows by Q4l exact event-set identity (draw, start offset, matched digits): **227 matched, 0 missing, 0 extra**, permitting the next five runs under the owner's authorisation.
+
+**Independent Q5 verification.** Claude's memo 007 and independent recomputation script, committed as 931d119 (REVIEW/ only), checked the owner-supplied copy of all six REAL result folders and the aggregate. Independent arithmetic from raw events reproduced all six reports and aggregate exactly: category counts, evaluable pairs, geometric-primary and median-secondary statistics, permutation centres/tails/p-values, and separate six-constant Holm families. All **2,659 genuine events** satisfied their family rules against the pinned pre-holdout draws. Each COMPLETE REAL manifest records **10,000,000,000 digits**, **5,000,000,000 scanned bytes**, and 4,000,000-byte chunks; all six in-scan full-source SHA-256 hashes matched the 14 November recorded hashes. History SHA-256 matched the N1-pinned c71039c63f64479b2d83c10e8df3ad5e7525091b3a7f44c5a2680015f4fd2e54. Event, receipt/manifest, report and aggregate digests, D1 seeds, 10,000 permutations, D4/D5 identities/disclosure, and code hashes were checked. Each scan took approximately 6.3 minutes. Completeness is supported by the exact phi historical reconciliation and the previously qualified synthetic/full-size tests, but independent recomputation of stored events is not a second exhaustive scan of all constants.
+
+**Declared Powerball results (memo 007; centred two-sided raw permutation p-values):**
+
+| Constant | P3_any events | D4 primary raw p | Primary Holm | Median secondary raw p | Secondary Holm |
+|---|---:|---:|---:|---:|---:|
+| pi | 233 | 0.2914 | 1.0000 | 0.6487 | 1.0000 |
+| phi | 227 | 0.3710 | 1.0000 | 0.8941 | 1.0000 |
+| e | 228 | 0.5623 | 1.0000 | 0.5392 | 1.0000 |
+| log2 | 227 | 0.2373 | 1.0000 | 0.4383 | 1.0000 |
+| gamma | 227 | 0.6747 | 1.0000 | 0.8171 | 1.0000 |
+| lemniscate | 220 | 0.3711 | 1.0000 | 0.3640 | 1.0000 |
+
+D4 **primary** is the predeclared mean of log10(g+1) over evaluable adjacent P3_any draw pairs, using whole-draw-set shuffles including empties and D1 seeds. The **secondary** is exploratory median gap with its own six-constant Holm family. All adjusted p-values are **1.0000**. Across six constants, **P3_any = 1,362 and P2_any = 1,287**, compared with about **1,309 expected each**; **P1_any = 10** versus about **13.1 expected**. There were **zero drawn-order matches**. The smallest adjacent-pair minimum gap was **26,289,307 digits** (pi), with none below 10^7; **13** pairs were within 10^8 digits, about the chance expectation. **No statistically significant positional structure was detected under the declared Powerball primary; the secondary likewise shows none.** These are retrospective findings for 433 pre-holdout draws: they do not rule out other structures or imply predictive ability.
+
+**D5 disposition.** The owner-approved freeze on computing further legacy phi/pi consecutive-draw statistics **lifts now that the qualified REAL reports exist**. D5's exposure disclosure remains binding and was present verbatim in each report and the aggregate. The five previously hand-computed signed legacy P3-to-P3 gaps and the previous inspection of matching rows stay documented. The completed six-constant families remain intact; no retrospective exclusion, multiplicity revision or selective test is part of the declared result. Any new analysis requires separate owner direction and should be written down first and labelled exploratory.
+
+**Q5 switch RESET TO FALSE, owner commit 8a25667.** The authorised six-scan sequence is finished; another genuine REAL scan needs a **fresh owner authorisation**, not reuse of f939652. Claude reviewer handover v0.8 was committed as 0d69065, confirming Q5 completion and the verified null result. No outstanding scientific correction or reviewer check is reported for the completed Powerball Q5 study.
+
+**Open owner decisions — no action authorised pending owner instructions:**
+
+1. Whether to commit a copy of the seven owner-held REAL result folders from G:\OUTLANDISH_01\large_artifacts\results\ under GAIS/OUTLANDISH_01/ for durable provenance. Their existence on G: is reported; no repository copy is asserted.
+2. Whether to specify any further analyses *before running them*, labelled exploratory with the number of comparisons. No after-the-fact search for promising views is authorised.
+3. Whether to pursue optional Powerball NULL decoy runs. Claude recommends **not** building the deferred NULL production entry now; the D3 deferral and separate future owner decision remain in force.
+4. Oz Lotto remains separate: obtain an approved isolated modern-era source, start and exclusive cutoff; simulate its denser-event regime and select its primary before any Oz REAL examination.
+5. Forecasting stays parked absent a separate owner decision; Powerball Q5 did not establish a positional predictive signal.
+
+**Evidence:** REVIEW/OUTLANDISH_REVIEW_007_Claude_to_ChatGPT.md and REVIEW/OUTLANDISH_REVIEW_Claude_Q5_Powerball_Recompute_v0_1.py (931d119); REVIEW/OUTLANDISH_01_Claude_Reviewer_Handover_v0_8.md (0d69065); owner authorisation f939652; owner scan-switch reset 8a25667. Earlier dated sections remain intact as historical records.
+
