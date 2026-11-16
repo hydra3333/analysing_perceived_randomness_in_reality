@@ -473,3 +473,30 @@ the installed documents. This log is not a separate approval process.
   report files under `results/method_rankings/`, and nothing else in `results/`, `source_data/` or `transitory_data/`;
   C open the folders fully (not recommended). If B is decided it is written into H-1 v4; the local runner's rulebook is
   unchanged.
+
+## 44. 16 November 2026, about 22:26 - the owner's preference: drop the raw-draw-value restriction (Q7); fix the code gap "asap"
+
+- **The owner's words:** "\"There is no automatic table after every draw over the history\" seems like a gap. into the future
+  every new draw (and sometimes we will miss some draws and have a min-catchup) that will be required. OK, (1) \"What stops
+  us today is missing code, not a rule\" needs to be fixed asap (2) I see the risk associated with \"I design the method\" as
+  extremely low and acceptable on the basis that I assess that you are very much smarter and more ethical than letting
+  knowledge of draw numbers interfere with designing and programming algorithms to assess and use the individual draw
+  numbers, so lets get rid of that rule. We treat all draws the same is my preference unless you have a very strong
+  objection."
+- **Claude's position (in the chat): no strong objection to (2).** The reason is the design's structure, not Claude's
+  character: every future forecast is frozen before its draw exists, so having seen past draws cannot leak a future one,
+  and results on already-seen draws are development evidence by rule. Knowing the data can still shape what is designed
+  without anyone intending it; the cost falls only on evidence that is already non-confirmatory.
+- **What Claude recommends stays, whatever is decided on Q7:** (a) the AIs never contact lottery websites or search for
+  results (a separate rule; the owner's updater stays the only source); (b) evidence comes only from the reviewed programs
+  and their logged runs, and anything an AI computes from raw draws in a chat is exploratory and is never quoted as a
+  result; (c) Claude writes only under `exchange/` and `CLAUDE_CODE_WORKING_FOLDER_TREE/`, the sealed Mode H records are
+  untouched, and the local runner's rulebook is left as it is (the runner needs no draw value).
+- **Status: NOT YET IN FORCE.** Q7 is a ratified rule and the reviewer earlier leaned to keeping it (EX_125 O03, EX_127 O01),
+  so under P1 (level 1) the reviewer's view is sought first; then the owner confirms. Until then Claude keeps Q7 exactly.
+  If confirmed it is recorded in register v0.31 and H-1 v4, and the practical step is the owner's D5 commit of the updated
+  masters, ledgers and reports (Claude's clone sees only what is on GitHub).
+- **On (1):** the table after every new draw, catch-ups included, is already in the ratified design (Mode H, update and
+  prospective design v0.1r7 section 6.6: each session writes the dated cumulative league table) and is MHUP-B's scope
+  (marked HIGH). Not designed anywhere: the same table over the past history; raising the report tool's Phase 1 cap
+  (R3 17.3.6). Claude proposes both as items for the MHUP-B design. The MHUP-B design starts on the owner's "go".

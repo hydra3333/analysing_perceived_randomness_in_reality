@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 22:45 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 22:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -34,10 +34,15 @@ durable EX messages are authoritative.
   where it sits in the plan. It is roadmap item 10, done (development reports of 1 November 2026: Oz Lotto 1474-1693,
   Powerball 1286-1576). Open: which "last 3 draws" he wants shown; his upload of the two development `.txt` reports for a
   plain summary (Claude may not open `results/`); whether roadmap item 21b (the consolidated report) is brought forward.
-- **Open owner question (entry 43; not decided):** whether Q7 is narrowed so the AI chats may read the committed value-free
-  `.txt` reports under `results/method_rankings/` (Claude's recommendation, option B; needs the reviewer's view and the
-  owner's decision). Until decided, Q7 stands exactly as it is. The sealed holdout draws are already ordinary history for
-  training under the ratified design; making that operational is MHUP-B.
+- **Q7 under change (entries 43-44; NOT YET IN FORCE):** the owner's preference (22:26) is to drop the raw-draw-value
+  restriction and "treat all draws the same". Claude has no strong objection and recommends three things stay (no lottery
+  websites or results searches by the AIs; evidence only from reviewed programs and logged runs; Claude's write limits
+  and the runner's rulebook unchanged). Waiting for the reviewer's view, then the owner's confirmation. **Until then Q7
+  stands exactly as it is.** The sealed holdout draws are already ordinary history under the ratified design.
+- **The owner's priority (entry 44):** the missing code is to be fixed "asap": that is MHUP-B (catch-up, weekly session,
+  the dated league table after every scored draw: design v0.1r7 section 6.6). Proposed additions for its design: the same
+  table over the past history, and raising the report tool's Phase 1 window cap. The design starts on the owner's "go"
+  (suggest Fable).
 - **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
   any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).
