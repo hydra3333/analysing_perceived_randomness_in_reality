@@ -1,0 +1,43 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git fetch
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git diff --stat HEAD origin/main
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+Already up to date.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+ M results/audit/SEARCH_LOG.csv
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+?? results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+?? results/real/holdout/wf_batches/
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rev-parse HEAD:exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+449b5cd3a974d34488eb1522b5a75809e8d212b1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git hash-object exchange/CLAUDE_WEB_TOOLS/modeh_readiness/gov_fetch_parse_smoke.py
+449b5cd3a974d34488eb1522b5a75809e8d212b1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>"%CD%\.venv\Scripts\python.exe" -I -B exchange\CLAUDE_WEB_TOOLS\modeh_readiness\gov_fetch_parse_smoke.py --games POWERBALL
+[GOV-SMOKE] POWERBALL: master verified against its ledger (version 1, last draw 1576); read-only
+[GOV-SMOKE] POWERBALL: window 2026-01-31..2026-07-31; final address https://www.lotterywest.wa.gov.au; parsed 26 draw(s) 1551-1576, listed newest first; on the weekly date rule 26/26; equal to the master 26/26
+[GOV-SMOKE] POWERBALL: PASS
+[GOV-SMOKE] PASS: POWERBALL: the installed fetcher and parser read the official page as expected. This check wrote nothing.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo EXIT %ERRORLEVEL%
+EXIT 0
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+ M results/audit/SEARCH_LOG.csv
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+?? results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+?? results/real/holdout/wf_batches/

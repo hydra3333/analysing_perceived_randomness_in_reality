@@ -250,3 +250,11 @@ the installed documents. This log is not a separate approval process.
   own go per step; Claude checks every output first and stores each window in exchange/RUNS/ as it arrives; the reviewer
   reviews the whole record afterwards or any STOP. The page check and Approval 1 on the same Adelaide day; breaks allowed.
 - **Status:** the arrangement is agreed; nothing is authorised by it. Each step waits for the owner's go.
+
+## 25. 16 November 2026, about 20:05 - Powerball prerequisite 3 (the page check, Powerball only): PASS
+
+- **Where:** the owner's go and CMD window (`exchange/RUNS/POWERBALL_GOV_SMOKE_r2_2026_11_16_owner_window.txt`, as pasted).
+- **Result:** nothing incoming before the pull; `git status --short` exactly E0 (annex r1), identical before and after; both
+  blob lines `449b5cd3...`; the four `[GOV-SMOKE]` lines identical to the annex (26 draws 1551-1576, listed newest first, weekly
+  rule 26/26, equal to the master 26/26); EXIT 0. **PASS** (compared with a tool). Powerball's Approval 1 must follow on
+  16 November 2026. Claude holds its pushes from here until the owner's witness push.
