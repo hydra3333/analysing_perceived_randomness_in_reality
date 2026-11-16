@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Powerball Q4h: minimal production-shaped runner, SYNTHETIC TEST ONLY.
+"""Q4h shared Powerball runner, now taking Q4i immutable mode.
 
-Deliberately NO REAL execution API/CLI, no published G: file reads and no Q5.
-Receipts/historical profiles come from Q4b; streaming engine from Q3 v0.4.
+DEFAULT Q5 SWITCH IS OFF. No production scan can be started by calling this
+module directly while disabled. Existing TEST wrappers retained for regression.
 """
 from __future__ import annotations
 
@@ -14,8 +14,9 @@ from pathlib import Path
 
 import OUTLANDISH_01_Q4_Published_Source_Guards_v0_1 as G
 import OUTLANDISH_01_Q4h_Events_v0_1 as E
+import OUTLANDISH_01_Q4i_Mode_v0_1 as M
 
-SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_TEST_RUN_V1'
+SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_RUN_V2'
 
 
 def encode(value):
@@ -31,121 +32,141 @@ def put_new(path, data):
 
 
 def _test(roots, profile):
-    if not isinstance(roots, G.FixedRoots) or not roots.synthetic:
-        raise ValueError('Q4h cannot use a production root; no REAL entry point')
-    G.FixedRoots.test_sandbox(roots.base)
-    if os.name == 'nt' and roots.base.is_relative_to(
-            Path(r'G:\OUTLANDISH_01\large_artifacts').absolute()):
-        raise ValueError('synthetic sandbox nested in production artifacts')
-    if (not isinstance(profile, G.HistoryProfile) or not profile.synthetic
-            or profile.game != 'powerball' or profile.header != G.PB_HEADER
-            or Path(profile.source).absolute() !=
-               (roots.base / 'histories' / 'powerball_synthetic.csv').absolute()):
-        raise ValueError('Q4h requires isolated synthetic Powerball history')
-    for label in ('digits', 'histories', 'results'):
-        if not (roots.base / label).is_dir():
-            raise ValueError('missing marked fixture folder')
+    # Backward-compatible validation for the pre-Review-B qualification harness.
+    M.PowerballMode.synthetic(roots, profile, 32)
 
 
-def _receipt_only(roots, constant, meta):
-    # Replay never opens packed BCD, even if original source is absent.
+def _mode_from_run(roots, profile, run_id):
+    """TEST wrapper only: read untrusted N, then let strict loader validate it."""
+    folder = roots.run_location('TEST_REAL', run_id)
+    raw = G._inside(roots.base, folder / 'run_manifest.json').read_bytes()
+    obj = json.loads(raw.decode('utf-8'))
+    if not isinstance(obj, dict):
+        raise ValueError('bad TEST manifest')
+    return M.PowerballMode.synthetic(roots, profile, obj.get('digits'))
+
+
+def _receipt_only(mode, constant, meta):
+    roots = mode.roots
     receipt = G._inside(roots.base, roots.receipt(constant))
     raw = receipt.read_bytes()
     if hashlib.sha256(raw).hexdigest() != meta.get('receipt_sha256'):
         raise ValueError('converter receipt changed')
     obj = json.loads(raw.decode('utf-8'))
-    if (obj.get('constant') != constant or obj.get('format') != G.FORMAT
-            or obj.get('scope') != G.SCOPE
+    if (not isinstance(obj, dict) or obj.get('constant') != constant
+            or obj.get('format') != G.FORMAT or obj.get('scope') != G.SCOPE
             or obj.get('binary_name') != roots.published_binary(constant).name
             or obj.get('binary_sha256_streamed') != meta.get('packed_sha256')
-            or obj.get('digits_including_integer') != meta.get('digits')
+            or obj.get('digits_including_integer') != mode.digits
             or obj.get('packed_bytes') != meta.get('bytes_hashed')):
         raise ValueError('converter receipt/run mismatch')
 
 
-def load_test_run(roots, profile, constant, run_id):
-    """Digest/identity replay of COMPLETE synthetic run, without BCD reread."""
-    _test(roots, profile)
-    folder = roots.run_location('TEST_REAL', run_id)
-    raw_meta = (G._inside(roots.base, folder / 'run_manifest.json')).read_bytes()
+def load_run(mode: M.PowerballMode, constant: str, run_id: str):
+    """Read COMPLETE manifest and event CSV; never reopen packed BCD."""
+    mode = mode.checked()
+    roots = mode.roots
+    folder = roots.run_location(mode.run_type, run_id)
+    raw_meta = G._inside(roots.base, folder / 'run_manifest.json').read_bytes()
     meta = json.loads(raw_meta.decode('utf-8'))
-    required = {'schema': SCHEMA, 'status': 'COMPLETE', 'run_type': 'TEST_REAL',
+    required = {'schema': SCHEMA, 'status': 'COMPLETE', 'run_type': mode.run_type,
                 'game': 'powerball', 'constant': constant, 'run_id': run_id,
                 'event_file': 'raw_events.csv',
                 'packed_file': roots.published_binary(constant).name,
-                'scanner': 'OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py'}
-    if not isinstance(meta, dict) or any(meta.get(k) != v for k, v in required.items()):
+                'scanner': 'OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py',
+                'digits': mode.digits}
+    if not isinstance(meta, dict) or any(meta.get(k) != v for k,v in required.items()):
         raise ValueError('invalid COMPLETE Powerball run identity')
-    n = meta.get('digits')
-    if type(n) is not int or n < 32 or meta.get('bytes_hashed') != (n+1)//2:
-        raise ValueError('run source length/hash coverage invalid')
-    if not G.SHA256.fullmatch(meta.get('packed_sha256', '')):
-        raise ValueError('missing scan source digest')
-    _receipt_only(roots, constant, meta)
-    hist = G.validate_drawset(profile, expected_sha256=meta.get('history_sha256'))
+    if (type(meta.get('bytes_hashed')) is not int
+            or meta['bytes_hashed'] != (mode.digits + 1)//2
+            or not isinstance(meta.get('packed_sha256'), str)
+            or G.SHA256.fullmatch(meta['packed_sha256']) is None):
+        raise ValueError('invalid scan source digest and coverage')
+    _receipt_only(mode, constant, meta)
+    history = G.validate_drawset(mode.profile, expected_sha256=meta.get('history_sha256'))
     events, classified = E.read_and_classify(
-        (G._inside(roots.base, folder / 'raw_events.csv')).read_bytes(),
-        recorded_sha256=meta.get('event_sha256'), history=hist, digits=n)
-    if len(events) != meta.get('event_count') or {
-        fam: sum(e.family == fam for e in events) for fam in sorted(set(e.family for e in events))
-    } != meta.get('family_counts'):
-        raise ValueError('event totals differ from manifest')
-    return meta, raw_meta, hist, events, classified
+        G._inside(roots.base, folder / 'raw_events.csv').read_bytes(),
+        recorded_sha256=meta.get('event_sha256'), history=history, digits=mode.digits)
+    counts = {f: sum(e.family == f for e in events)
+              for f in sorted(set(e.family for e in events))}
+    if len(events) != meta.get('event_count') or counts != meta.get('family_counts'):
+        raise ValueError('event totals disagree with run manifest')
+    return meta, raw_meta, history, events, classified
 
 
-def run_test_powerball(roots, profile, constant, run_id, *, digits, chunk_bytes=None,
-                       inject_failure=False):
-    """Run a tiny isolated synthetic fixture; never accept REAL input paths."""
-    _test(roots, profile)
-    source = G.validate_published_source(roots, constant, fixture_digits=digits)
-    history = G.validate_drawset(profile)
-    location = roots.validate_run_location('TEST_REAL', run_id,
-                                           roots.run_location('TEST_REAL', run_id))
+def _require_scan_permission(mode):
+    mode.checked()
+    if not mode.roots.synthetic:
+        # Import the one owner-controlled switch AT THE ACTUAL SCAN BOUNDARY.
+        # A caller invoking run_powerball directly cannot bypass this check.
+        from OUTLANDISH_01_Q4i_Production_Entry_v0_1 import ENABLE_Q5_PRODUCTION_SCANS
+        if ENABLE_Q5_PRODUCTION_SCANS is not True:
+            raise PermissionError('Q5 production scanning disabled; owner git authorisation required')
+
+
+def run_powerball(mode: M.PowerballMode, constant: str, run_id: str, *,
+                  chunk_bytes=None, inject_failure=False):
+    """One Powerball run; while switch false ONLY synthetic runs can execute."""
+    _require_scan_permission(mode)  # BEFORE opening production source/history or creating results.
+    roots = mode.roots
+    source = G.validate_published_source(roots, constant,
+                                          fixture_digits=mode.digits if roots.synthetic else None)
+    history = G.validate_drawset(mode.profile)
+    location = roots.validate_run_location(mode.run_type, run_id,
+                                            roots.run_location(mode.run_type, run_id))
     from OUTLANDISH_01_Q3_Packed_Matcher_v0_4 import PBRecord, scan_packed_stream
     draws = tuple(PBRecord(i, vals[:7], vals[7]) for i, vals in history.draw_rows)
     location.mkdir(exist_ok=False)
-    base = {'schema': SCHEMA, 'run_type': 'TEST_REAL', 'status': 'INCOMPLETE',
+    base = {'schema': SCHEMA, 'run_type': mode.run_type, 'status': 'INCOMPLETE',
             'game': 'powerball', 'constant': constant, 'run_id': run_id,
             'event_file': 'raw_events.csv', 'packed_file': source.path.name,
             'scanner': 'OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py',
-            'digits': source.digits, 'history_sha256': history.sha256,
+            'digits': mode.digits, 'history_sha256': history.sha256,
             'receipt_sha256': source.receipt_sha256,
             'packed_sha256': source.packed_sha256,
             'started_utc': datetime.now(timezone.utc).isoformat(timespec='seconds')}
     put_new(location / 'run_manifest.json', encode(base))
-    scan = scan_packed_stream(source.path, physical_digits=source.digits,
-                              effective_digits=source.digits, draws=draws,
+    scan = scan_packed_stream(source.path, physical_digits=mode.digits,
+                              effective_digits=mode.digits, draws=draws,
                               output_csv=location / 'raw_events.csv',
                               expected_full_sha256=source.packed_sha256,
                               chunk_bytes=chunk_bytes)
     source.check_completed_stream(scan.sha256_full_packed, scan.bytes_hashed)
-    raw = (location / 'raw_events.csv').read_bytes()
+    raw = G._inside(roots.base, location / 'raw_events.csv').read_bytes()
     digest = hashlib.sha256(raw).hexdigest()
     if digest != scan.event_sha256 or scan.event_count < 0:
         raise ValueError('scanner CSV digest/count invalid')
     events, _ = E.read_and_classify(raw, recorded_sha256=digest, history=history,
-                                    digits=source.digits)
+                                    digits=mode.digits)
     counted = {f: sum(e.family == f for e in events)
                for f in sorted(set(e.family for e in events))}
     if (len(events) != scan.event_count or counted != scan.family_counts
             or scan.event_csv != location / 'raw_events.csv'):
         raise ValueError('scanner event identity/totals mismatch')
-    # Final small-file provenance check immediately before COMPLETE. The 5 GB
-    # input is NOT reopened: its read-once scan digest was already compared.
     if G._sha(source.receipt_path) != source.receipt_sha256:
         raise ValueError('converter receipt changed during scan')
-    G.validate_drawset(profile, expected_sha256=history.sha256)
+    G.validate_drawset(mode.profile, expected_sha256=history.sha256)
     if inject_failure:
-        raise RuntimeError('injected failure after verified scan, before COMPLETE')
-    finished = {**base, 'status': 'COMPLETE', 'event_sha256': digest,
+        raise RuntimeError('injected post-scan pre-COMPLETE failure')
+    complete = {**base, 'status': 'COMPLETE', 'event_sha256': digest,
                 'event_count': scan.event_count, 'family_counts': scan.family_counts,
-                'bytes_hashed': scan.bytes_hashed,
-                'chunk_bytes': scan.chunk_bytes,
+                'bytes_hashed': scan.bytes_hashed, 'chunk_bytes': scan.chunk_bytes,
                 'finished_utc': datetime.now(timezone.utc).isoformat(timespec='seconds')}
-    put_new(location / 'run_manifest.next.json', encode(finished))
+    put_new(location / 'run_manifest.next.json', encode(complete))
     os.replace(location / 'run_manifest.next.json', location / 'run_manifest.json')
     return location
 
 
+# Thin compatibility wrappers keep Q4h historical tests, not a separate REAL stack.
+def load_test_run(roots, profile, constant, run_id):
+    return load_run(_mode_from_run(roots, profile, run_id), constant, run_id)
+
+
+def run_test_powerball(roots, profile, constant, run_id, *, digits, chunk_bytes=None,
+                       inject_failure=False):
+    return run_powerball(M.PowerballMode.synthetic(roots, profile, digits), constant,
+                         run_id, chunk_bytes=chunk_bytes, inject_failure=inject_failure)
+
+
 if __name__ == '__main__':
-    raise SystemExit('Q4h has no REAL production CLI; synthetic qualification only')
+    raise SystemExit('No direct runner CLI: Q5 switch is controlled in single entry point')
