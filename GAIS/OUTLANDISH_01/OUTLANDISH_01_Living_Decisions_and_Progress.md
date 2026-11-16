@@ -1,6 +1,6 @@
 # OUTLANDISH_01 — living decisions and progress
 
-**Updated:** 16 November 2026 (Australia/Adelaide), following all six Powerball Q5 REAL scans, independent verification (memo 007), switch reset and Claude reviewer handover v0.8. **Read §18 first for current Q5 outcome and open owner decisions.** Earlier §§1–17 are retained as dated evidence and are superseded where they describe Q5 as upcoming or unauthorised. The Q5 production scan switch is **False**.
+**Updated:** 16 November 2026 (Australia/Adelaide), after the owner's Powerball closure and minimum-overhead Oz Lotto plan. **Read §19 first for the current owner-directed scope, then §18 for the verified Powerball result.** Earlier dated sections remain intact as historical records and are superseded where they describe Powerball or Oz next steps differently. The Powerball production scan switch is **False**.
 
 ## 1. Current milestone / evidence
 
@@ -390,4 +390,22 @@ D4 **primary** is the predeclared mean of log10(g+1) over evaluable adjacent P3_
 5. Forecasting stays parked absent a separate owner decision; Powerball Q5 did not establish a positional predictive signal.
 
 **Evidence:** REVIEW/OUTLANDISH_REVIEW_007_Claude_to_ChatGPT.md and REVIEW/OUTLANDISH_REVIEW_Claude_Q5_Powerball_Recompute_v0_1.py (931d119); REVIEW/OUTLANDISH_01_Claude_Reviewer_Handover_v0_8.md (0d69065); owner authorisation f939652; owner scan-switch reset 8a25667. Earlier dated sections remain intact as historical records.
+
+## 19. 16 November 2026 — Owner closes Powerball and sets minimum-overhead Oz Lotto route
+
+**POWERBALL CLOSED — OWNER DECISION (16 November 2026).** The six-constant Powerball investigation is **closed at 10^10 digits per constant**, with the independently verified **null** finding in Claude memo 007 (931d119) and §18 as its completed result. No further Powerball scanning or inferential development follows from this decision. The production Powerball switch remains **False**, restored by owner commit 8a25667. Any future reopening requires a new, explicit owner decision. **Still OPEN, owner choice only:** whether to commit an *unchanged copy* of the seven small Powerball REAL result folders into GAIS/OUTLANDISH_01/ for archival provenance. No copying or result mutation is authorised by recording this choice.
+
+**OZ LOTTO — OWNER-APPROVED MINIMUM-OVERHEAD DEVELOPMENT ROUTE (16 November 2026).** Reuse the reviewed Powerball scanner/statistics/reporting machinery and guards; **no new framework or duplicate game stack**. Scope and budget: **one development slice**, **one synthetic Oz end-to-end integration test plus the applicable existing guards**, **one focused Claude review**, and **no more than one correction round** if a real defect is found. No separate review points A/B/C, full-size rehearsal, production NULL work, additional governance or approval machinery.
+
+**Required sequence and respective responsibilities:**
+
+1. **Owner supplies the isolated Oz Lotto historical input** in GAIS/OUTLANDISH_01/: the modern **7 main + 3 supplementary from 47**, preserving operator-labelled drawn order, from the **first modern draw** through Oz's **own exclusive holdout cutoff**. The actual first draw, exclusive cutoff, file identity and pinned history bytes must be supplied/confirmed; do not fabricate bounds or borrow Powerball's cutoff. No parent project's history/holdout is an authorised substitute.
+2. **Claude runs a short simulation** targeted to Oz's much denser event regime and recommends a suitable Oz primary. **Owner decides and fixes it as D6 before Oz report implementation**. Do not silently adopt Powerball's D4 primary, or invent D6.
+3. **ChatGPT implements ONE scoped development slice**, parameterising the **existing Q4i mode and Q4h report/aggregate** for game rather than copying them. Add the pinned Oz history profile, D6 statistic, and a **separate default-OFF Oz production scan switch**. Reuse existing scanner/statistics/guards wherever applicable; preserve Powerball's closed result, identities, and OFF switch. The slice includes the single synthetic Oz integration test and necessary existing guard regressions; no giant rehearsal or new subsystem.
+4. **Claude performs ONE focused independent review** of the changed science and safety boundary. At most one corrective round for consequential findings; do not restart general reviews A/B/C.
+5. **Owner separately authorises Oz REAL work** after the implementation and focused review. Before the six full scans, perform the agreed **prefix cross-check** of the shared scanner against Claude's independent oracle on the **first 10–20 million digits of one genuine constant** (Oz has no saved legacy known-answer set). Investigate any mismatch before proceeding. Only under the separate owner authorisation and successful prefix cross-check, scan all six constants and have Claude independently recompute the Oz reports/aggregate.
+
+**Current state and limits.** Oz history/bounds and D6 are **pending**, so neither the Oz implementation nor any genuine Oz read, prefix check or scan is authorised merely by this plan. No Oz production switch has been enabled. Powerball remains closed and OFF; Powerball results are not to be changed. Powerball NULL is not pursued under this Oz route; forecasting remains parked. Existing D1–D5 Powerball decisions remain historical evidence and are not silently transplanted as a new Oz scientific primary. Keep scope, tests and documentation proportional to the five-step owner plan.
+
+**Immediate next dependency:** the owner's isolated, clearly bounded Oz history and Claude's short primary-selection simulation, followed by the owner's explicit D6 decision. The result-archive choice for Powerball can be made separately.
 
