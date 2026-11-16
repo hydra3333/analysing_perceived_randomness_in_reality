@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 21:15 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 21:50 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -12,8 +12,9 @@ durable EX messages are authoritative.
   LIMITATIONS). Powerball SEALED 16 November 2026, 20:53 (entries 24-35; EX_199 PASS WITH EVIDENCE LIMITATIONS). 400/400
   forecasts and 800 score lines / 400 rank lines in each game. Witness pushes 9eb5e33 (Oz Lotto) and c302871 (Powerball).
   Backups before and after each seal on G:\BACKUPS\powerball_modeh_2026-11-1*. **The Mode H freeze has ENDED.**
-- **Next (D6):** both value-free report .txt files read together: the reviewer first and independently, then Claude
-  (suggested on Fable). Neither report has been opened by any AI yet.
+- **D6 in progress:** both value-free reports are with Claude (16 November 21:13); Claude's reading EX_201 is written and
+  held unpublished (its SHA-256 is in decision log entry 38) until the reviewer's independent reading EX_200 is given; then
+  Claude publishes EX_201 and compares the two.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).
 - **Then:** the register records the study; the holdout exposure record; the P6 milestone note; the handovers refreshed;
   the owner's separate D5 decision on committing the updated masters, ledgers and value-free records; then MHUP-B.

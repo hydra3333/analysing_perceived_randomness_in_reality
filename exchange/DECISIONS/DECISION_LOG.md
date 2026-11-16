@@ -357,3 +357,14 @@ the installed documents. This log is not a separate approval process.
   `exchange/RUNS/POWERBALL_BACKUP_AFTER_SEAL_CHECK_2026_11_16_owner_window.txt`.
 - **Result:** both read-only `/L` comparisons of `G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\`: `source_data`
   12 files and `results` 80,576 files, Copied 0, Mismatch 0, FAILED 0, exit 0 each. The copy matches the original. **C01 closed.**
+
+## 38. 16 November 2026, about 21:13 - D6: both Mode H reports given to Claude; Claude's reading sealed until the reviewer's
+
+- **Where:** the owner uploaded the two value-free report `.txt` files to the Claude chat (D6: both together, after both seals).
+  Oz Lotto report SHA-256 `68112928b332666c8e2da6504b06e93a81295cf21682cd076d0a85e754ebd0e6` (585,497 bytes); Powerball report
+  SHA-256 `1bad6295f5af67845412983c3c37ae48156530dad3b12ce24ad3234cf4177ffc` (750,084 bytes), as uploaded. Claude has not
+  committed the reports (their commit is the owner's D5 decision).
+- **Status:** Claude's independent reading is written (EX_201, on Fable) and given to the owner in the chat. It is NOT yet
+  published here, so that the reviewer's own reading (EX_200) stays independent. Its SHA-256 (CRLF bytes, 13,202 bytes) is
+  `8e350fe7385cd4b94f976ae823c8fbc0fa657cf5b6e536305d4ff8777c235dbd`; Claude publishes the file unchanged, with its reading
+  tools, once EX_200 has been given, and then compares the two readings.
