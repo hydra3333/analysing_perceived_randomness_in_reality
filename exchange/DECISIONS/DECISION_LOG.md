@@ -368,3 +368,24 @@ the installed documents. This log is not a separate approval process.
   published here, so that the reviewer's own reading (EX_200) stays independent. Its SHA-256 (CRLF bytes, 13,202 bytes) is
   `8e350fe7385cd4b94f976ae823c8fbc0fa657cf5b6e536305d4ff8777c235dbd`; Claude publishes the file unchanged, with its reading
   tools, once EX_200 has been given, and then compares the two readings.
+
+## 39. 16 November 2026, about 21:36 - D6: the reviewer's reading (EX_200) given; EX_201 published unchanged; the two compared
+
+- **Where:** the owner gave Claude the reviewer's independent reading at 21:36 with the words: "ok for this part of the
+  experiment ...". Recorded unchanged: `exchange/EX_200_ChatGPT.md` (13,507 bytes, SHA-256
+  `bff769e209acc08b4968f6f36c2ad36e67d93d4be3a7c4ccc3d040939332bd98`).
+- **Published:** `exchange/EX_201_Claude.md`, byte-identical to the fingerprint of entry 38 (`8e350fe7...`, 13,202 bytes), with
+  the four reading tools and a README in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
+- **The comparison (EX_202):** the two readings, written without sight of each other, agree on the result and on every figure
+  they share: **null at the 5% level in each of the three predeclared MR7 families** (Bonferroni P 1.000 Oz Lotto main
+  numbers, 0.672 Powerball main numbers, 0.920 Powerball number). They differ in coverage and in two points of wording,
+  where Claude adopts the reviewer's: the Bonferroni figure is the family result and the N1 maximum figure is a reference
+  only; and "no advantage detected", not "no sign". The reviewer also raised that the three families are not adjusted
+  against each other (Claude had missed it; no effect, since none passes its own 5%). Every figure EX_200 quotes was checked
+  against the reports: all match.
+- **Open with the reviewer (EX_202):** Q1 the wording proposed for the record; Q2 whether EX_201's exploratory sections 3.3
+  and 3.4 stand, are qualified or are withdrawn; Q3 the dispositions of EX_201's suggestions (the "watch-items" withdrawn as
+  a separate step; the aggregate measure carried to the MHUP-B design as an option; the development-report comparison to the
+  ideas backlog).
+- **Not yet decided:** how Mode H is worded in the register is the owner's decision after the reviewer's reply (level 1).
+  Nothing was rerun, rescored or changed; no raw draw value, master, ledger or forecast entered either chat.
