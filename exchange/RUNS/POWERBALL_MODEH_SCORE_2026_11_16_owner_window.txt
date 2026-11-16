@@ -1,0 +1,14 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Evaluation.bat Method_Mode_H.py score --game POWERBALL
+[MODE-H] 10:20:33 UTC  study and batch verified; roster of 400 pairs, digest b697b6c9da8c...
+[MODE-H] 10:21:13 UTC  attempt mh-24b3eb05319d4051be2f5e6ae1e6c8b8: search-log row 12, scoring plan and SCORING_STARTED written
+[MODE-H] 10:21:14 UTC  outcomes read once; score ledger written: 800 score lines, 400 rank lines
+[MODE-H] 10:21:14 UTC  N1: simulating the fair-draw histories and the Monte Carlo figures
+[MODE-H] 10:22:19 UTC  measures for 80 tracks and 40 variants
+[MODE-H] 10:22:23 UTC  report files: txt, csv, json written, 0 already present with these exact bytes
+[MODE-H] 10:22:23 UTC  MODE_H_SEALED written; the study is closed
+[MODE-H] SEALED: attempt mh-24b3eb05319d4051be2f5e6ae1e6c8b8, batch wf-5085cd8feaf54cffb22823ab5869d5a8, search-log row 12, 800 score lines, 400 rank lines
+[MODE-H] wrote E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\method_rankings\POWERBALL\mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.txt
+[MODE-H] wrote E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\method_rankings\POWERBALL\mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.csv
+[MODE-H] wrote E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\method_rankings\POWERBALL\mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
