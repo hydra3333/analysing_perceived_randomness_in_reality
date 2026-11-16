@@ -258,3 +258,10 @@ the installed documents. This log is not a separate approval process.
   blob lines `449b5cd3...`; the four `[GOV-SMOKE]` lines identical to the annex (26 draws 1551-1576, listed newest first, weekly
   rule 26/26, equal to the master 26/26); EXIT 0. **PASS** (compared with a tool). Powerball's Approval 1 must follow on
   16 November 2026. Claude holds its pushes from here until the owner's witness push.
+
+## 26. 16 November 2026, about 20:17 - Powerball prerequisite 4: backups confirmed
+
+- **Where:** the owner's CMD window, stored unchanged: `exchange/RUNS/POWERBALL_BACKUP_BEFORE_2026_11_16_owner_window.txt`
+  (to `G:\BACKUPS\powerball_modeh_2026-11-16_before_powerball\`).
+- **Result:** `source_data` 9 files and `results` 79,362 files (188.95 MB) copied, FAILED 0, exit 1 each; both list-only
+  checks Copied 0, Mismatch 0, FAILED 0, exit 0 each. **Backups confirmed.** (Held locally until the witness push.)
