@@ -12,6 +12,9 @@ Kept so that no input is lost if a chat ends. The owner's exact words are in dec
 4. Earlier rankings may be kept as separate files (by game, draw number and a five-digit version) and joined into one report
    on request; neat columns or CSV; laid out for a non-specialist reader.
 5. All draws are treated the same; no holdout for future method development; a new method re-ranks all draws to the latest.
+6. Added 22:58, on seeing the sketch of section 4: "I like the sketch as a starting point for your design , it could
+   include all methods not only the top "n"." So the table lists **every method and every variant** (40 rows per game
+   today), never only a top few. The ".." in the sketch only shortens the sample.
 
 ## 2. What already exists (checked 16 November 2026)
 
@@ -29,7 +32,7 @@ Kept so that no input is lost if a chat ends. The owner's exact words are in dec
 
 | # | Item | Note |
 |---|---|---|
-| D-1 | An "all scored draws" column in the league table: one cumulative figure per method over every draw scored, whatever its kind | New. The design today has only the separate columns. The forward-only column stays beside it: only forecasts frozen before their draw can confirm anything |
+| D-1 | An "all scored draws" column in the league table: one cumulative figure per method over every draw scored, whatever its kind. Every variant of every method is a row; a short per-method roll-up may sit above it | New. The design today has only the separate columns. The forward-only column stays beside it: only forecasts frozen before their draw can confirm anything |
 | D-2 | Numbered table files, never overwritten: `league_<GAME>_d<draw>_v<5 digits>.txt` and the same as `.csv` | The owner's naming idea; fits the design's "dated table, earlier ones stay as published" |
 | D-3 | A history report on request: the numbered tables joined, newest first | The owner's idea |
 | D-4 | One CSV per game with a row per draw and method (cumulative hits and rank after that draw) | Gives the table after every draw for the whole past from the score records, without one file per past draw |
