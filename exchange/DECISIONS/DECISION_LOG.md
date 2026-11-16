@@ -571,3 +571,18 @@ the installed documents. This log is not a separate approval process.
   recorded at the seals and in entry 38. Nothing outside `source_data/` and `results/` is in the commit. **PASS.**
 - **Not committed, by design:** the git-ignored run folders, attempts ledgers and score ledgers (they stay on the owner's PC
   and in his backups on `G:`).
+
+## 49. 16 November 2026, about 23:17-23:30 - documents first; then unattended design work on the remaining Fable allowance
+
+- **The owner's words:** "I'd prefer it tonight please, for some reason I feel shaky that we may lose all this good work."
+  (23:11); "the doc updates are #1 priority though" (23:18); "brilliant. is there something you would like to start tonight
+  since i have 25% fable left to use before 11:30 am tomorrow ? preferably unattended by me." (23:30).
+- **Done for risk management:** the H-1 v4 DRAFT and its blurb draft (`exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; commit
+  `21b7220`), built from H-1 v3's ratified bytes; `exchange/CONTINUITY_NOW.md` says how to start a new chat from them.
+  Not reviewed, not ratified.
+- **Done unattended (design only, as authorised in entry 46):** `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_1.md`,
+  a first draft applying the owner's inputs D-1 to D-10 to the ratified design v0.1r7. Its main points: the ratified
+  section 6 is not reopened; the league table's layout, files and history; planning arithmetic on how long forward testing
+  takes; and a recommendation that MHUP-B carry no scope that can wait (a new method's back-history and the report window
+  cap go to a small follow-on package), because each week without the weekly session is a forward draw lost for good.
+  Nothing in it is decided: it lists five questions for the reviewer and four decisions for the owner.
