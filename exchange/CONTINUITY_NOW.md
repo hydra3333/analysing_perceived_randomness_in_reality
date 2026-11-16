@@ -14,7 +14,7 @@ durable EX messages are authoritative.
   Backups before and after each seal on G:\BACKUPS\powerball_modeh_2026-11-1*. **The Mode H freeze has ENDED.**
 - **Next (D6):** both value-free report .txt files read together: the reviewer first and independently, then Claude
   (suggested on Fable). Neither report has been opened by any AI yet.
-- **Optional (EX_199 C01):** the read-only `/L` comparison of the after-Powerball-seal backup, on its own go.
+- **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).
 - **Then:** the register records the study; the holdout exposure record; the P6 milestone note; the handovers refreshed;
   the owner's separate D5 decision on committing the updated masters, ledgers and value-free records; then MHUP-B.
 - **Leave alone until D5 is decided:** both games' masters and ledgers (` M`), the reports and the batch records; commit
@@ -24,7 +24,7 @@ durable EX messages are authoritative.
 ## Reviewer status
 
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
-- EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. Open: EX_199 C01 (optional backup check).
+- EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.
 - Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).
@@ -72,7 +72,7 @@ shared together) still govern the data and the reports. Q7 stands: no raw draw v
 ## Full order from here
 
 1. D6: the reviewer's independent reading of both reports, then Claude's; compare.
-2. Optional: EX_199 C01, the `/L` check of the after-seal backup.
+2. Done: EX_199 C01 (entry 37).
 3. Close-out: register (study, RAT for any new editions), holdout exposure record, P6 notes, handover refresh, D5 decision.
 4. MHUP-B design (on the owner's authorisation), then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
 
