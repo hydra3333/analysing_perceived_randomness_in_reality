@@ -1,0 +1,5 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Results_Updater.bat update --games POWERBALL
+[MASTER] POWERBALL: checked 9 overlapping draws (all matched), added 15 (1577..1591), warnings 0
+[MASTER]   grab kept: POWERBALL_grab_draws_1568-1591_as_at_20261116_100004Z.csv; backup: POWERBALL_master_draws_1144-1576_as_at_20261116_100004Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

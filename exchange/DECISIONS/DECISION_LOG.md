@@ -298,3 +298,11 @@ the installed documents. This log is not a separate approval process.
   and `source_data/HOLDOUT_OPENED_POWERBALL.json` (added); no master, ledger or report. Pushed `50472b4..c302871`. GitHub's
   repository activity record shows the push received at **2026-11-16T09:58:02Z** (20:28:02 Adelaide), before any Powerball
   holdout result was fetched. Status afterwards: E0 without the search-log line (EX_198 note 2). Next: Approval 2.
+
+## 31. 16 November 2026, about 20:37 (10:00:04 UTC) - Powerball Approval 2: the first results update
+
+- **Output (verbatim, stored in exchange/RUNS/):** `[MASTER] POWERBALL: checked 9 overlapping draws (all matched), added 15
+  (1577..1591), warnings 0` and `[MASTER]   grab kept: POWERBALL_grab_draws_1568-1591_as_at_20261116_100004Z.csv; backup:
+  POWERBALL_master_draws_1144-1576_as_at_20261116_100004Z.csv`.
+- **Claude's check:** exactly as annex r1 expects (9 overlap all matched; 15 added 1577-1591, the holdout and five later draws;
+  no warnings; grab and backup of this run). **PASS.** The read-only snapshot was requested next, before the plan.
