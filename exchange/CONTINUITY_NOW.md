@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 22:25 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 22:35 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -30,6 +30,10 @@ durable EX messages are authoritative.
   targets forecast, 291 draws scored; 26,040 forecasts) is the large part of the evidence and also showed no statistically
   significant advantage (H-1 v3 section 7.5). Development, holdout and prospective evidence stay separate.
 - **Waiting for:** the owner's go for the close-out. Nothing is owed by or to the reviewer.
+- **Open owner question (entry 42; fact-finding only, nothing authorised):** the full-history walk-forward ranking and
+  where it sits in the plan. It is roadmap item 10, done (development reports of 1 November 2026: Oz Lotto 1474-1693,
+  Powerball 1286-1576). Open: which "last 3 draws" he wants shown; his upload of the two development `.txt` reports for a
+  plain summary (Claude may not open `results/`); whether roadmap item 21b (the consolidated report) is brought forward.
 - **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
   any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).

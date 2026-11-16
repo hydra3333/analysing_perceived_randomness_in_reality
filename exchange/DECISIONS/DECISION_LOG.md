@@ -429,3 +429,25 @@ the installed documents. This log is not a separate approval process.
   and to Claude's summaries to the owner. The record wording as it now stands (r2) is EX_205 section 5.
 - **Not yet decided:** the record wording is the owner's decision when register v0.31 is ratified (level 1). Nothing was
   rerun, rescored or changed.
+
+## 42. 16 November 2026, about 22:12 - the owner's question: full-history walk-forward ranking, and where it sits in the plan
+
+- **Where:** the owner's note to the Claude chat, with his two queries to the reviewer and the reviewer's brief for Claude
+  (provisional name ALL_WALKFORWARD_RANKING_EVALUATING). Recorded unchanged:
+  `exchange/DECISIONS/OWNER_REQUEST_2026_11_16_ALL_WALKFORWARD_RANKING_EVALUATING.txt`.
+- **The owner's two questions, in his words:** "(i) can we display the ranking stats for last 3 draws ? (ii) where the ranking
+  and performance vs chance reports fit into the forward plan ?" He asked for a brief reply. The brief states: "this is a
+  fact-finding and planning request only. No development, execution, rescoring, file modification or release is authorised."
+- **Claude's answer (in the chat; facts checked in the roadmap, R3 17.3.6 and the report tool's code):**
+  - The objective as the owner recalls it is roadmap item 10 (WF-1A and WF-1B), done 31 October to 1 November 2026: every past
+    draw forecast from the draws before it (Powerball 432 targets, Oz Lotto 219; 40 variants), scored, ranked and compared
+    with chance. The two development reports exist (Oz Lotto window 1474-1693; Powerball window 1286-1576, R3's default
+    start at the first draw of 2021). The figures of EX_200 to EX_205 are the ten-draw holdouts only.
+  - "Last 3 draws": the report tool ranks over any window inside a batch, so the last three development draws can be
+    reported with the existing tool as new owner-run report operations (a non-registered window has no family-adjusted
+    figure). The sealed holdouts cannot be re-windowed. The last three draws in the dataset (after the holdouts) have not
+    been forecast: that is MHUP-B's catch-up. The tool does not print a table after every draw; that is one run per draw.
+  - The plan: done, item 10 and Mode H; next, MHUP-B (weekly update, catch-up, scoring, a new dated league table each time);
+    then WF-1C; later, item 21b (one consolidated report with development, Mode H, catch-up and prospective kept separate).
+- **Open:** which three draws the owner means; whether he uploads the two development `.txt` reports for a plain summary;
+  whether item 21b is brought forward (a roadmap change: the owner's decision after review). Nothing is authorised.
