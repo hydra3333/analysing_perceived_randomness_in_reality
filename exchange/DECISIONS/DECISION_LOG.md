@@ -310,3 +310,10 @@ the installed documents. This log is not a separate approval process.
   games' masters and ledgers only; no lock; no `.part-` file; one grab and one backup per game, Powerball's of this run;
   Powerball master SHA-256 now **`e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0`** (version 2). Clean.
   Next: Approval 3 (the plan), on its own go.
+
+## 32. 16 November 2026, about 20:44 - Powerball Approval 3, part 1: the plan
+
+- **Output (verbatim, stored in exchange/RUNS/):** `MODE H PLAN wf-5085cd8feaf54cffb22823ab5869d5a8: POWERBALL targets 1577-1586,
+  40 variants, master version 2 e4f2feb8b18f...` and the `next:` run line.
+- **Claude's check:** targets 1577-1586, 40 variants, master version 2 with Approval 2's hash. **PASS.** Batch id
+  **`wf-5085cd8feaf54cffb22823ab5869d5a8`** (400 planned pairs). Next: the batch run, on its own go.

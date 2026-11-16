@@ -1,0 +1,5 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Experiment.bat Method_Walk_Forward.py plan --mode H --game POWERBALL
+[WALK-FORWARD] MODE H PLAN wf-5085cd8feaf54cffb22823ab5869d5a8: POWERBALL targets 1577-1586, 40 variants, master version 2 e4f2feb8b18f...
+[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game POWERBALL --batch wf-5085cd8feaf54cffb22823ab5869d5a8
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
