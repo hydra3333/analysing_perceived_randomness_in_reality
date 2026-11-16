@@ -303,7 +303,9 @@ def main():
         n+=test_roots(roots)
         n+=test_game(roots,'powerball',11)
         n+=test_game(roots,'oz',21)
-        n+=refuse('unconfirmed Oz REAL profile',lambda:G.installed_history_profile('oz'))
+        n+=refuse('forged Oz REAL cutoff',lambda:G.HistoryProfile(
+            'oz',Path(G.__file__).absolute().parent/'OZLOTTO_preholdout_only.csv',
+            1474,1695,G.OZ_HEADER))
         n+=refuse('synthetic PB cannot become REAL profile',lambda:G.HistoryProfile(
             'powerball',roots.base/'histories'/'powerball_synthetic.csv',1144,1577,G.PB_HEADER))
         n+=refuse('synthetic Oz cannot become REAL profile',lambda:G.HistoryProfile(

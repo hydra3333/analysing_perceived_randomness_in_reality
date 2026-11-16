@@ -20,6 +20,7 @@ import OUTLANDISH_01_Q4i_Mode_v0_1 as M
 PERMUTATIONS = 10_000
 TEST_PRIMARY_SEED = 271828  # retained only for historical synthetic regressions
 SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_REPORT_V3'
+OZ_SCHEMA = 'OUTLANDISH_Q4H_OZ_REPORT_V1'
 PRIMARY_STATISTIC = S.GEOMETRIC_PRIMARY
 SECONDARY_STATISTIC = S.MEDIAN_SECONDARY
 D5_LEGACY_EXPOSURE_DISCLOSURE = (
@@ -55,7 +56,7 @@ def primary_seed(game: str, constant: str) -> tuple[str, int]:
 def _seed(mode, constant):
     if mode.roots.synthetic:
         return 'PROVISIONAL_SYNTHETIC_271828', TEST_PRIMARY_SEED, 'SYNTHETIC_TEST_ONLY'
-    label, number = primary_seed('powerball', constant)
+    label, number = primary_seed(mode.game, constant)
     return label, number, 'OWNER_APPROVED_DETERMINISTIC_V1'
 
 
@@ -64,29 +65,48 @@ def compute_report(mode: M.PowerballMode, constant: str, run_id: str):
     meta, raw_manifest, hist, events, classified = P.load_run(mode, constant, run_id)
     N = mode.digits
     draws = tuple(i for i, _ in hist.draw_rows)
-    rows, transition, sets = S.transitions('powerball', events, draws, N)
     label, seed, status = _seed(mode, constant)
-    return {
-        'schema': SCHEMA, 'game': 'powerball', 'run_type': mode.run_type,
+    body = {
+        'schema': SCHEMA if mode.game == 'powerball' else OZ_SCHEMA,
+        'game': mode.game, 'run_type': mode.run_type,
         'constant': constant, 'run_id': run_id, 'digits': N,
         'source_sha256': meta['packed_sha256'],
         'history_sha256': hist.sha256,
         'event_sha256': meta['event_sha256'],
         'run_manifest_sha256': hashlib.sha256(raw_manifest).hexdigest(),
         'code_sha256_recorded_not_a_gate': _code_hashes(),
-        'primary_family': 'K6S', 'primary_owner_vetoable': False,
-        'primary_statistic': PRIMARY_STATISTIC,
-        'secondary_statistic': SECONDARY_STATISTIC,
-        'secondary_exploratory': True,
-        'legacy_exposure_disclosure': D5_LEGACY_EXPOSURE_DISCLOSURE,
+        'primary_owner_vetoable': False,
         'permutations_predeclared': PERMUTATIONS,
         'seed_label': label, 'seed': seed, 'seed_status': status,
-        'category_summary': S.category_summary('powerball', classified, draws, N),
-        'physical_same_draw_overlaps': S.physical_overlaps('powerball', events, draws, N),
-        'transitions': rows, 'transitions_summary': transition,
-        'permutation': S.permutation_test(sets, seed=seed, iterations=PERMUTATIONS,
-                                          geometric_primary=True),
+        'category_summary': S.category_summary(mode.game, classified, draws, N),
+        'physical_same_draw_overlaps': S.physical_overlaps(mode.game, events, draws, N),
     }
+    if mode.game == 'powerball':
+        rows, transition, sets = S.transitions('powerball', events, draws, N)
+        body.update(
+            primary_family='K6S', primary_statistic=PRIMARY_STATISTIC,
+            secondary_statistic=SECONDARY_STATISTIC, secondary_exploratory=True,
+            legacy_exposure_disclosure=D5_LEGACY_EXPOSURE_DISCLOSURE,
+            transitions=rows, transitions_summary=transition,
+            permutation=S.permutation_test(sets, seed=seed, iterations=PERMUTATIONS,
+                                           geometric_primary=True))
+    else:
+        # D6: three views, one common shuffle sequence and one 18-test Holm family.
+        transition_rows, transition_meta, per_draw = {}, {}, {}
+        for view in S.OZ_D6_VIEWS:
+            rows, info, sets = S.transitions('oz', events, draws, N,
+                                             family=S.OZ_D6_FAMILIES[view])
+            transition_rows[view], transition_meta[view], per_draw[view] = rows, info, sets
+        body.update(
+            primary_views=list(S.OZ_D6_VIEWS),
+            primary_families=dict(S.OZ_D6_FAMILIES),
+            primary_statistic=S.OZ_D6_PRIMARY,
+            secondary_statistic=None, secondary_exploratory=False,
+            holm_family_size=18,
+            transitions=transition_rows, transitions_summary=transition_meta,
+            permutation=S.oz_three_family_permutation(
+                per_draw, seed=seed, iterations=PERMUTATIONS))
+    return body
 
 
 def create_report(mode: M.PowerballMode, constant: str, run_id: str):
@@ -104,7 +124,7 @@ def create_report(mode: M.PowerballMode, constant: str, run_id: str):
 
 
 def load_report(mode: M.PowerballMode, constant: str, run_id: str):
-    """Digest/identity only, with NO automatic Monte Carlo recomputation."""
+    """Digest/identity only; no automatic Monte Carlo recomputation."""
     mode = mode.checked()
     meta, raw_manifest, _hist, _events, _classified = P.load_run(mode, constant, run_id)
     roots = mode.roots
@@ -115,31 +135,52 @@ def load_report(mode: M.PowerballMode, constant: str, run_id: str):
         raise ValueError('stored report digest mismatch')
     body = json.loads(raw.decode('utf-8'))
     label, seed, status = _seed(mode, constant)
-    required = {'schema': SCHEMA, 'game': 'powerball', 'run_type': mode.run_type,
+    required = {'schema': SCHEMA if mode.game == 'powerball' else OZ_SCHEMA,
+                'game': mode.game, 'run_type': mode.run_type,
                 'constant': constant, 'run_id': run_id, 'digits': mode.digits,
                 'source_sha256': meta['packed_sha256'],
                 'history_sha256': meta['history_sha256'],
                 'event_sha256': meta['event_sha256'],
                 'run_manifest_sha256': hashlib.sha256(raw_manifest).hexdigest(),
-                'primary_family': 'K6S', 'primary_owner_vetoable': False,
-                'primary_statistic': PRIMARY_STATISTIC,
-                'secondary_statistic': SECONDARY_STATISTIC,
-                'secondary_exploratory': True,
-                'legacy_exposure_disclosure': D5_LEGACY_EXPOSURE_DISCLOSURE,
+                'primary_owner_vetoable': False,
                 'permutations_predeclared': PERMUTATIONS,
                 'seed_label': label, 'seed': seed, 'seed_status': status}
+    if mode.game == 'powerball':
+        required.update(primary_family='K6S',
+                        primary_statistic=PRIMARY_STATISTIC,
+                        secondary_statistic=SECONDARY_STATISTIC,
+                        secondary_exploratory=True,
+                        legacy_exposure_disclosure=D5_LEGACY_EXPOSURE_DISCLOSURE)
+    else:
+        required.update(primary_views=list(S.OZ_D6_VIEWS),
+                        primary_families=dict(S.OZ_D6_FAMILIES),
+                        primary_statistic=S.OZ_D6_PRIMARY,
+                        secondary_statistic=None, secondary_exploratory=False,
+                        holm_family_size=18)
     if not isinstance(body, dict) or any(body.get(k) != v for k, v in required.items()):
-        raise ValueError('report source/mode/primary provenance mismatch')
+        raise ValueError('report source/mode/statistic provenance mismatch')
     perm = body.get('permutation')
     if (not isinstance(perm, dict) or perm.get('iterations_requested') != PERMUTATIONS
-            or perm.get('seed') != seed
-            or not isinstance(perm.get('geometric_primary'), dict)
-            or perm['geometric_primary'].get('statistic') != PRIMARY_STATISTIC
-            or not isinstance(perm.get('median_secondary'), dict)
-            or perm['median_secondary'].get('statistic') != SECONDARY_STATISTIC
-            or perm['median_secondary'].get('centered_two_sided_p') != perm.get('centered_two_sided_p')
-            or perm['median_secondary'].get('observed') != perm.get('observed_median')):
-        raise ValueError('report permutation/primary/secondary provenance mismatch')
+            or perm.get('seed') != seed):
+        raise ValueError('report permutation provenance mismatch')
+    if mode.game == 'powerball':
+        if (not isinstance(perm.get('geometric_primary'), dict)
+                or perm['geometric_primary'].get('statistic') != PRIMARY_STATISTIC
+                or not isinstance(perm.get('median_secondary'), dict)
+                or perm['median_secondary'].get('statistic') != SECONDARY_STATISTIC
+                or perm['median_secondary'].get('centered_two_sided_p') != perm.get('centered_two_sided_p')
+                or perm['median_secondary'].get('observed') != perm.get('observed_median')):
+            raise ValueError('report Powerball primary/secondary provenance mismatch')
+    else:
+        views = perm.get('views')
+        if (not isinstance(views, dict) or set(views) != set(S.OZ_D6_VIEWS)
+                or any(not isinstance(views[k], dict)
+                       or views[k].get('statistic') != S.OZ_D6_PRIMARY
+                       or views[k].get('event_view') != k
+                       or views[k].get('valid_permutations', -1) +
+                          views[k].get('undefined_permutations', -1) != PERMUTATIONS
+                       for k in S.OZ_D6_VIEWS)):
+            raise ValueError('report Oz D6 three-view provenance mismatch')
     return {'report': body,
             'code_matches_current': body.get('code_sha256_recorded_not_a_gate') == _code_hashes()}
 

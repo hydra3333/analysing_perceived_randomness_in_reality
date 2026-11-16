@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Q4h shared Powerball runner, now taking Q4i immutable mode.
+"""Q4h shared Powerball/Oz runner, taking the Q4i immutable game mode.
 
-DEFAULT Q5 SWITCH IS OFF. No production scan can be started by calling this
-module directly while disabled. Existing TEST wrappers retained for regression.
+Both per-game scan switches default OFF. Direct production calls are guarded
+separately by game. Existing Powerball TEST wrappers remain compatible.
 """
 from __future__ import annotations
 
@@ -17,6 +17,20 @@ import OUTLANDISH_01_Q4h_Events_v0_1 as E
 import OUTLANDISH_01_Q4i_Mode_v0_1 as M
 
 SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_RUN_V2'
+OZ_SCHEMA = 'OUTLANDISH_Q4H_OZ_RUN_V1'
+
+
+def _schema(game):
+    return SCHEMA if game == 'powerball' else OZ_SCHEMA if game == 'oz' else None
+
+
+def _guard_run_game(mode, run_id):
+    # Oz runs must be game-labelled; Powerball's historical IDs remain valid.
+    prefix = mode.run_type + '_oz_'
+    if (mode.game == 'oz' and not run_id.startswith(prefix)) or (
+            mode.game == 'powerball' and run_id.startswith(prefix)):
+        raise ValueError('run ID/game identity mismatch')
+
 
 
 def encode(value):
@@ -43,7 +57,8 @@ def _mode_from_run(roots, profile, run_id):
     obj = json.loads(raw.decode('utf-8'))
     if not isinstance(obj, dict):
         raise ValueError('bad TEST manifest')
-    return M.PowerballMode.synthetic(roots, profile, obj.get('digits'))
+    return M.PowerballMode.synthetic(roots, profile, obj.get('digits'),
+                                     game=profile.game)
 
 
 def _receipt_only(mode, constant, meta):
@@ -66,11 +81,12 @@ def load_run(mode: M.PowerballMode, constant: str, run_id: str):
     """Read COMPLETE manifest and event CSV; never reopen packed BCD."""
     mode = mode.checked()
     roots = mode.roots
+    _guard_run_game(mode, run_id)
     folder = roots.run_location(mode.run_type, run_id)
     raw_meta = G._inside(roots.base, folder / 'run_manifest.json').read_bytes()
     meta = json.loads(raw_meta.decode('utf-8'))
-    required = {'schema': SCHEMA, 'status': 'COMPLETE', 'run_type': mode.run_type,
-                'game': 'powerball', 'constant': constant, 'run_id': run_id,
+    required = {'schema': _schema(mode.game), 'status': 'COMPLETE', 'run_type': mode.run_type,
+                'game': mode.game, 'constant': constant, 'run_id': run_id,
                 'event_file': 'raw_events.csv',
                 'packed_file': roots.published_binary(constant).name,
                 'scanner': 'OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py',
@@ -86,7 +102,8 @@ def load_run(mode: M.PowerballMode, constant: str, run_id: str):
     history = G.validate_drawset(mode.profile, expected_sha256=meta.get('history_sha256'))
     events, classified = E.read_and_classify(
         G._inside(roots.base, folder / 'raw_events.csv').read_bytes(),
-        recorded_sha256=meta.get('event_sha256'), history=history, digits=mode.digits)
+        recorded_sha256=meta.get('event_sha256'), history=history, digits=mode.digits,
+        game=mode.game)
     counts = {f: sum(e.family == f for e in events)
               for f in sorted(set(e.family for e in events))}
     if len(events) != meta.get('event_count') or counts != meta.get('family_counts'):
@@ -97,28 +114,38 @@ def load_run(mode: M.PowerballMode, constant: str, run_id: str):
 def _require_scan_permission(mode):
     mode.checked()
     if not mode.roots.synthetic:
-        # Import the one owner-controlled switch AT THE ACTUAL SCAN BOUNDARY.
-        # A caller invoking run_powerball directly cannot bypass this check.
-        from OUTLANDISH_01_Q4i_Production_Entry_v0_1 import ENABLE_Q5_PRODUCTION_SCANS
-        if ENABLE_Q5_PRODUCTION_SCANS is not True:
-            raise PermissionError('Q5 production scanning disabled; owner git authorisation required')
+        # Independent per-game gates at the actual scan boundary, not just CLI.
+        from OUTLANDISH_01_Q4i_Production_Entry_v0_1 import (
+            ENABLE_Q5_PRODUCTION_SCANS, ENABLE_OZ_PRODUCTION_SCANS)
+        enabled = (ENABLE_Q5_PRODUCTION_SCANS if mode.game == 'powerball'
+                   else ENABLE_OZ_PRODUCTION_SCANS if mode.game == 'oz' else False)
+        if enabled is not True:
+            raise PermissionError(f'{mode.game} production scanning disabled; '
+                                  'separate owner git authorisation required')
 
 
 def run_powerball(mode: M.PowerballMode, constant: str, run_id: str, *,
                   chunk_bytes=None, inject_failure=False):
-    """One Powerball run; while switch false ONLY synthetic runs can execute."""
-    _require_scan_permission(mode)  # BEFORE opening production source/history or creating results.
+    """One shared game runner; independent gates before ANY production I/O."""
+    _require_scan_permission(mode)  # Before production source/history/output access.
+    _guard_run_game(mode, run_id)
     roots = mode.roots
     source = G.validate_published_source(roots, constant,
                                           fixture_digits=mode.digits if roots.synthetic else None)
     history = G.validate_drawset(mode.profile)
     location = roots.validate_run_location(mode.run_type, run_id,
                                             roots.run_location(mode.run_type, run_id))
-    from OUTLANDISH_01_Q3_Packed_Matcher_v0_4 import PBRecord, scan_packed_stream
-    draws = tuple(PBRecord(i, vals[:7], vals[7]) for i, vals in history.draw_rows)
+    from OUTLANDISH_01_Q3_Packed_Matcher_v0_4 import (
+        PBRecord, OzRecord, scan_packed_stream, scan_packed_oz_stream)
+    # Scanner v0.4 owns record classes; classification has its own v0.2 types.
+    if mode.game == 'powerball':
+        draws = tuple(PBRecord(i, vals[:7], vals[7]) for i, vals in history.draw_rows)
+    else:
+        draws = tuple(OzRecord(i, vals[:7], vals[7:]) for i, vals in history.draw_rows)
+    scanner = scan_packed_stream if mode.game == 'powerball' else scan_packed_oz_stream
     location.mkdir(exist_ok=False)
-    base = {'schema': SCHEMA, 'run_type': mode.run_type, 'status': 'INCOMPLETE',
-            'game': 'powerball', 'constant': constant, 'run_id': run_id,
+    base = {'schema': _schema(mode.game), 'run_type': mode.run_type, 'status': 'INCOMPLETE',
+            'game': mode.game, 'constant': constant, 'run_id': run_id,
             'event_file': 'raw_events.csv', 'packed_file': source.path.name,
             'scanner': 'OUTLANDISH_01_Q3_Packed_Matcher_v0_4.py',
             'digits': mode.digits, 'history_sha256': history.sha256,
@@ -126,7 +153,7 @@ def run_powerball(mode: M.PowerballMode, constant: str, run_id: str, *,
             'packed_sha256': source.packed_sha256,
             'started_utc': datetime.now(timezone.utc).isoformat(timespec='seconds')}
     put_new(location / 'run_manifest.json', encode(base))
-    scan = scan_packed_stream(source.path, physical_digits=mode.digits,
+    scan = scanner(source.path, physical_digits=mode.digits,
                               effective_digits=mode.digits, draws=draws,
                               output_csv=location / 'raw_events.csv',
                               expected_full_sha256=source.packed_sha256,
@@ -137,7 +164,7 @@ def run_powerball(mode: M.PowerballMode, constant: str, run_id: str, *,
     if digest != scan.event_sha256 or scan.event_count < 0:
         raise ValueError('scanner CSV digest/count invalid')
     events, _ = E.read_and_classify(raw, recorded_sha256=digest, history=history,
-                                    digits=mode.digits)
+                                    digits=mode.digits, game=mode.game)
     counted = {f: sum(e.family == f for e in events)
                for f in sorted(set(e.family for e in events))}
     if (len(events) != scan.event_count or counted != scan.family_counts

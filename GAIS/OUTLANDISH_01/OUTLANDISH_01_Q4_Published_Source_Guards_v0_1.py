@@ -6,8 +6,8 @@ REAL/NULL runner. It cannot launch a scanner, create a run, or publish outputs.
 The accompanying qualification harness only uses marked temporary sandboxes.
 
 Production paths are fixed in code; there is no caller-supplied REAL input or
-results-root override. Oz's REAL profile remains unavailable until the actual
-approved isolated modern-era source and bounds are confirmed.
+results-root override. Oz REAL profile is pinned to the owner-isolated
+modern-era pre-holdout export and is not scan authorisation.
 """
 from __future__ import annotations
 
@@ -38,6 +38,8 @@ PB_HEADER = ('Draw_Number', 'Date', *(f'Drawn_{i}' for i in range(1, 8)), 'Power
 # It MUST NOT be assumed to describe an approved REAL source file.
 SYNTHETIC_OZ_HEADER = ('Draw_Number', 'Date', *(f'Drawn_{i}' for i in range(1, 8)),
                        'Supplementary_1', 'Supplementary_2', 'Supplementary_3')
+OZ_HEADER = SYNTHETIC_OZ_HEADER  # confirmed modern operator-drawn 7+3 from 47
+OZ_HISTORY_SHA256 = '82557ea5ad01aef075b4031014714417eddbd7d7128666f464f79c416c9bd44c'
 
 
 def _sha(path: Path) -> str:
@@ -271,8 +273,8 @@ class HistoryProfile:
             raise ValueError('invalid era/cutoff')
         if self.game == 'powerball' and self.header != PB_HEADER:
             raise ValueError('incorrect Powerball source-column profile')
-        if self.game == 'oz' and self.synthetic and self.header != SYNTHETIC_OZ_HEADER:
-            raise ValueError('incorrect synthetic Oz source-column profile')
+        if self.game == 'oz' and self.header != OZ_HEADER:
+            raise ValueError('incorrect Oz source-column profile')
         if self.synthetic:
             source = Path(self.source).absolute()
             roots = [node for node in source.parents
@@ -283,11 +285,15 @@ class HistoryProfile:
             FixedRoots.test_sandbox(roots[0])
             _inside(roots[0], source)
         if not self.synthetic:
-            # Only this already-validated isolated source/cutoff can be used.
-            known = Path(__file__).absolute().parent/'POWERBALL_preholdout_only.csv'
-            if (self.game != 'powerball' or self.era_first_draw != 1144
-                    or self.cutoff_exclusive != 1577
-                    or Path(self.source).absolute() != known):
+            # No caller-selected REAL history: pinned isolated game-specific bytes.
+            root = Path(__file__).absolute().parent
+            if self.game == 'powerball':
+                required = (1144, 1577, root/'POWERBALL_preholdout_only.csv')
+            else:
+                required = (1474, 1694, root/'OZLOTTO_preholdout_only.csv')
+            if (self.era_first_draw != required[0]
+                    or self.cutoff_exclusive != required[1]
+                    or Path(self.source).absolute() != required[2]):
                 raise ValueError('unapproved REAL historical profile')
         _no_links(Path(self.source).absolute())
 
@@ -298,7 +304,9 @@ def installed_history_profile(game: str) -> HistoryProfile:
                               Path(__file__).absolute().parent/'POWERBALL_preholdout_only.csv',
                               1144, 1577, PB_HEADER)
     if game == 'oz':
-        raise ValueError('REAL Oz profile blocked: approved isolated source/era/cutoff not confirmed')
+        return HistoryProfile('oz',
+                              Path(__file__).absolute().parent/'OZLOTTO_preholdout_only.csv',
+                              1474, 1694, OZ_HEADER)
     raise ValueError('unknown game')
 
 
@@ -336,6 +344,9 @@ def validate_drawset(profile: HistoryProfile, *,
         raise ValueError('missing isolated historical drawset')
     raw = source.read_bytes()
     actual_sha256 = hashlib.sha256(raw).hexdigest()
+    # For REAL Oz, bind exact source bytes before parsing ANY rows or outcomes.
+    if not profile.synthetic and profile.game == 'oz' and actual_sha256 != OZ_HISTORY_SHA256:
+        raise ValueError('pinned Oz historical CSV SHA-256 mismatch')
     if expected_sha256 is not None and actual_sha256 != _digest(expected_sha256, 'manifest drawset'):
         raise ValueError('drawset SHA-256 differs from run manifest')
     try:

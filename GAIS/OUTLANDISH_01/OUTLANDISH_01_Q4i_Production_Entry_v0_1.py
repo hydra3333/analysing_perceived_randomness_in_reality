@@ -1,31 +1,31 @@
 #!/usr/bin/env python3
-"""SINGLE owner-controlled Q5 Powerball production entry point.
+"""Single owner-controlled entry for shared Powerball/Oz Q4h science.
 
-DEFAULT DISABLED. The ONLY toggle for genuine scans is the named constant below.
-An owner Git commit changing it to True is required before any Q5 scan.
-The Q4h runner separately checks this same constant at the scan boundary,
-so bypassing this CLI does not bypass the authorisation switch.
-
-Existing COMPLETE REAL run/report inspection does not require the switch.
-No Oz/NULL/forecast/parent project work is authorised by this switch.
+Independent game scan switches default OFF. Each requires a separate owner
+authorisation commit. The Q4h runner checks the correct gate again at the
+actual scan boundary; constructing modes and reading old COMPLETE results
+do not require scan authorisation. Oz D6 does not reopen Powerball.
 """
 from __future__ import annotations
 
 import argparse
 
 ENABLE_Q5_PRODUCTION_SCANS = False  # OWNER Q5 GATE: keep False until separate approval!
-#ENABLE_Q5_PRODUCTION_SCANS = True  # OWNER Q5 GATE: True is now given separate approval!
+#ENABLE_Q5_PRODUCTION_SCANS = True  # prior 16 Nov owner Q5 authority is CLOSED
+ENABLE_OZ_PRODUCTION_SCANS = False  # OWNER OZ GATE: NO Oz REAL scans authorised
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument('--game', choices=('powerball','oz'), default='powerball',
+                        help='select pinned game; default retains old Powerball CLI')
     sub = parser.add_subparsers(dest='action', required=True)
     sub.add_parser('status', help='show the scan switch, without accessing production inputs')
     preflight = sub.add_parser('preflight',
                                help='OWNER-PERMITTED read-only receipt/sample check; no scan')
     preflight.add_argument('--constant', required=True,
                            choices=('pi','phi','e','log2','gamma','lemniscate'))
-    scan = sub.add_parser('scan', help='new REAL Powerball scan; requires owner switch True')
+    scan = sub.add_parser('scan', help='new REAL game scan; requires that game switch True')
     scan.add_argument('--constant', required=True,
                       choices=('pi','phi','e','log2','gamma','lemniscate'))
     scan.add_argument('--run-id', required=True, help='new REAL_... run identifier')
@@ -33,20 +33,25 @@ def main():
     report.add_argument('--constant', required=True,
                         choices=('pi','phi','e','log2','gamma','lemniscate'))
     report.add_argument('--run-id', required=True)
-    ag = sub.add_parser('aggregate', help='create REAL-only Holm from six COMPLETE reports')
-    ag.add_argument('--aggregate-id', required=True, help='REAL_AGGREGATE_powerball_...')
+    ag = sub.add_parser('aggregate', help='create game-specific REAL-only Holm from six COMPLETE reports')
+    ag.add_argument('--aggregate-id', required=True, help='REAL_AGGREGATE_<game>_...')
     ag.add_argument('--runs', required=True, nargs=6,
                     metavar='REAL_ID',help='six run IDs in order: pi phi e log2 gamma lemniscate')
     args = parser.parse_args()
     if args.action == 'status':
-        print('Q5 PRODUCTION POWERBALL SCANS:', 'ENABLED' if ENABLE_Q5_PRODUCTION_SCANS else 'DISABLED')
+        if args.game == 'powerball':
+            print('Q5 PRODUCTION POWERBALL SCANS:', 'ENABLED' if ENABLE_Q5_PRODUCTION_SCANS else 'DISABLED')
+        else:
+            print('OZ LOTTO PRODUCTION SCANS:', 'ENABLED' if ENABLE_OZ_PRODUCTION_SCANS else 'DISABLED')
         return
-    # Always check switch BEFORE constructing production mode / opening sources.
-    if args.action == 'scan' and ENABLE_Q5_PRODUCTION_SCANS is not True:
-        raise SystemExit('SAFETY STOP: Q5 production scans DISABLED; owner git authorisation required')
+    # Check only the corresponding named owner gate, before opening any inputs.
+    enabled = ENABLE_Q5_PRODUCTION_SCANS if args.game == 'powerball' else ENABLE_OZ_PRODUCTION_SCANS
+    if args.action == 'scan' and enabled is not True:
+        raise SystemExit('SAFETY STOP: ' + args.game + ' production scans DISABLED; '
+                         'separate owner git authorisation required')
 
     from OUTLANDISH_01_Q4i_Mode_v0_1 import PowerballMode
-    mode = PowerballMode.production_powerball()
+    mode = PowerballMode.production(args.game)
     if args.action == 'preflight':
         # This is an explicit operator action only: never called automatically.
         # Verifies receipt fields, size and 12 sampled blocks without full-file scan,

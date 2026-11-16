@@ -16,18 +16,21 @@ import OUTLANDISH_01_Q4h_Powerball_Test_Report_v0_1 as R
 import OUTLANDISH_01_Q4i_Mode_v0_1 as M
 
 SCHEMA = 'OUTLANDISH_Q4H_POWERBALL_AGGREGATE_V3'
+OZ_SCHEMA = 'OUTLANDISH_Q4H_OZ_AGGREGATE_V1'
 
 
 def _folder(mode, aggregate_id):
     mode = mode.checked()
     if not isinstance(aggregate_id, str) or not aggregate_id.startswith(
-            mode.run_type + '_AGGREGATE_powerball_'):
+            mode.run_type + '_AGGREGATE_' + mode.game + '_'):
         raise ValueError('aggregate must carry matching type and game')
     return mode.roots.run_location(mode.run_type, aggregate_id)
 
 
 def compute_aggregate(mode: M.PowerballMode, real_runs: dict):
     mode = mode.checked()
+    if mode.game == 'oz':
+        return _compute_oz_aggregate(mode, real_runs)
     if not isinstance(real_runs, dict) or set(real_runs) != set(S.CONSTANTS):
         raise ValueError('exact six REAL-like constant run roster required')
     if len(set(real_runs.values())) != len(S.CONSTANTS):
@@ -82,6 +85,61 @@ def compute_aggregate(mode: M.PowerballMode, real_runs: dict):
             'primary_owner_vetoable':False}
 
 
+def _compute_oz_aggregate(mode, real_runs: dict):
+    """Owner D6: one fixed 18-hypothesis family, NO Oz secondary."""
+    if (not isinstance(real_runs, dict) or set(real_runs) != set(S.CONSTANTS)
+            or len(set(real_runs.values())) != len(S.CONSTANTS)):
+        raise ValueError('exact six distinct Oz REAL report IDs required')
+    keys = [f'{const}:{view}' for const in S.CONSTANTS for view in S.OZ_D6_VIEWS]
+    pvalues, entries, histories, digests, lengths = {}, {}, set(), set(), set()
+    for const in S.CONSTANTS:
+        run_id = real_runs[const]
+        body = R.load_report(mode, const, run_id)['report']
+        if (body['game'] != 'oz' or body['primary_statistic'] != S.OZ_D6_PRIMARY
+                or body['primary_views'] != list(S.OZ_D6_VIEWS)):
+            raise ValueError('incorrect Oz D6 report identity')
+        views = body['permutation']['views']
+        histories.add(body['history_sha256'])
+        lengths.add(body['digits'])
+        digests.add(body['source_sha256'])
+        report_path = G._inside(mode.roots.base,
+                               mode.roots.run_location(mode.run_type, run_id) / 'report.json')
+        entry = {'source_run': run_id,
+                 'report_sha256': hashlib.sha256(report_path.read_bytes()).hexdigest(),
+                 'seed': body['seed'], 'seed_label': body['seed_label'],
+                 'views': {}}
+        for view in S.OZ_D6_VIEWS:
+            data = views[view]
+            pv = data['centered_two_sided_p']
+            if pv is not None and (type(pv) not in (int, float) or not 0 <= pv <= 1):
+                raise ValueError('invalid Oz primary p-value')
+            pvalues[f'{const}:{view}'] = pv
+            entry['views'][view] = {
+                'family': S.OZ_D6_FAMILIES[view],
+                'raw_primary_p': pv,
+                'observed_primary_mean_log10_gap_plus_one': data['observed'],
+                'valid_permutations': data['valid_permutations']}
+        entries[const] = entry
+    if len(histories) != 1 or len(lengths) != 1 or len(digests) != len(S.CONSTANTS):
+        raise ValueError('Oz reports must share history/digits and have six distinct sources')
+    adjusted = S.holm_adjusted(pvalues, keys)
+    for const in S.CONSTANTS:
+        for view in S.OZ_D6_VIEWS:
+            entries[const]['views'][view]['holm_adjusted_p'] = adjusted[f'{const}:{view}']
+    return {
+        'schema': OZ_SCHEMA, 'game': 'oz', 'run_type': mode.run_type,
+        'primary_statistic': S.OZ_D6_PRIMARY,
+        'primary_views': list(S.OZ_D6_VIEWS),
+        'primary_families': dict(S.OZ_D6_FAMILIES),
+        'secondary_statistic': None, 'secondary_exploratory': False,
+        'permutations': R.PERMUTATIONS,
+        'seed_rule': ('PROVISIONAL_SYNTHETIC_271828' if mode.roots.synthetic
+                      else 'DERIVED_PER_GAME_AND_CONSTANT_V1'),
+        'history_sha256': next(iter(histories)), 'digits': next(iter(lengths)),
+        'holm_family': keys, 'per_constant': entries,
+        'null_comparison': 'NOT_RUN_OPTIONAL', 'primary_owner_vetoable': False}
+
+
 def create_aggregate(mode: M.PowerballMode, aggregate_id: str, real_runs: dict):
     body = compute_aggregate(mode,real_runs)
     folder = _folder(mode,aggregate_id)
@@ -97,39 +155,55 @@ def create_aggregate(mode: M.PowerballMode, aggregate_id: str, real_runs: dict):
 
 def load_aggregate(mode: M.PowerballMode, aggregate_id: str):
     mode = mode.checked()
-    folder = _folder(mode,aggregate_id)
-    raw = G._inside(mode.roots.base,folder/'aggregate.json').read_bytes()
-    recorded = G._inside(mode.roots.base,folder/'aggregate.sha256').read_bytes()
-    if recorded != (hashlib.sha256(raw).hexdigest()+'\n').encode('ascii'):
+    folder = _folder(mode, aggregate_id)
+    raw = G._inside(mode.roots.base, folder/'aggregate.json').read_bytes()
+    recorded = G._inside(mode.roots.base, folder/'aggregate.sha256').read_bytes()
+    if recorded != (hashlib.sha256(raw).hexdigest() + '\n').encode('ascii'):
         raise ValueError('aggregate digest mismatch')
     body = json.loads(raw.decode('utf-8'))
-    if (not isinstance(body,dict) or body.get('schema') != SCHEMA
-            or body.get('game') != 'powerball' or body.get('run_type') != mode.run_type
-            or body.get('aggregate_id') != aggregate_id
-            or body.get('null_comparison') != 'NOT_RUN_OPTIONAL'
-            or body.get('permutations') != R.PERMUTATIONS
-            or body.get('primary_statistic') != R.PRIMARY_STATISTIC
-            or body.get('secondary_statistic') != R.SECONDARY_STATISTIC
-            or body.get('secondary_exploratory') is not True
-            or body.get('legacy_exposure_disclosure') != R.D5_LEGACY_EXPOSURE_DISCLOSURE
-            or body.get('holm_family') != list(S.CONSTANTS)
-            or body.get('secondary_holm_family') != list(S.CONSTANTS)
-            or not isinstance(body.get('per_constant'),dict)
+    required = {
+        'schema': SCHEMA if mode.game == 'powerball' else OZ_SCHEMA,
+        'game': mode.game, 'run_type': mode.run_type,
+        'aggregate_id': aggregate_id, 'null_comparison': 'NOT_RUN_OPTIONAL',
+        'permutations': R.PERMUTATIONS}
+    if mode.game == 'powerball':
+        required.update(primary_statistic=R.PRIMARY_STATISTIC,
+                        secondary_statistic=R.SECONDARY_STATISTIC,
+                        secondary_exploratory=True,
+                        legacy_exposure_disclosure=R.D5_LEGACY_EXPOSURE_DISCLOSURE,
+                        holm_family=list(S.CONSTANTS),
+                        secondary_holm_family=list(S.CONSTANTS))
+    else:
+        required.update(primary_statistic=S.OZ_D6_PRIMARY,
+                        primary_views=list(S.OZ_D6_VIEWS),
+                        primary_families=dict(S.OZ_D6_FAMILIES),
+                        secondary_statistic=None, secondary_exploratory=False,
+                        holm_family=[f'{c}:{v}' for c in S.CONSTANTS for v in S.OZ_D6_VIEWS])
+    if (not isinstance(body, dict) or any(body.get(k) != v for k,v in required.items())
+            or not isinstance(body.get('per_constant'), dict)
             or set(body['per_constant']) != set(S.CONSTANTS)):
-        raise ValueError('bad aggregate identity or six-constant scope')
-    # Replay each report's digest/source identity WITHOUT recomputing Holm or MC.
-    for constant in S.CONSTANTS:
-        item = body['per_constant'][constant]
-        if not isinstance(item,dict) or not isinstance(item.get('source_run'),str):
-            raise ValueError('bad aggregate report reference')
+        raise ValueError('bad aggregate identity or family scope')
+    # Digest-and-identity replay, WITHOUT recalculating Holm or Monte Carlo.
+    for const in S.CONSTANTS:
+        item = body['per_constant'][const]
+        if not isinstance(item, dict) or not isinstance(item.get('source_run'), str):
+            raise ValueError('bad aggregate source report reference')
         run_id = item['source_run']
-        view = R.load_report(mode,constant,run_id)['report']
-        report = G._inside(mode.roots.base,mode.roots.run_location(mode.run_type,run_id)/'report.json')
-        if hashlib.sha256(report.read_bytes()).hexdigest() != item.get('report_sha256'):
-            raise ValueError('one stored source report digest changed')
-        if (view['history_sha256'] != body['history_sha256']
-                or view['digits'] != body['digits']):
-            raise ValueError('one source report history/length differs')
+        report = R.load_report(mode, const, run_id)['report']
+        filename = G._inside(mode.roots.base, mode.roots.run_location(
+            mode.run_type, run_id)/'report.json')
+        if hashlib.sha256(filename.read_bytes()).hexdigest() != item.get('report_sha256'):
+            raise ValueError('stored source report digest changed')
+        if (report['history_sha256'] != body['history_sha256']
+                or report['digits'] != body['digits']):
+            raise ValueError('aggregate report history/length mismatch')
+        if mode.game == 'oz':
+            if (not isinstance(item.get('views'), dict)
+                    or set(item['views']) != set(S.OZ_D6_VIEWS)
+                    or any(item['views'][v].get('raw_primary_p') !=
+                           report['permutation']['views'][v]['centered_two_sided_p']
+                           for v in S.OZ_D6_VIEWS)):
+                raise ValueError('Oz aggregate view identity mismatch')
     return body
 
 

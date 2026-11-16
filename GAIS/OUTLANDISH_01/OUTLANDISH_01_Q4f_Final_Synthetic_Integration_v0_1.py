@@ -70,8 +70,10 @@ def seed_six_sources(roots, n):
 
 def test_boundaries(roots):
     n = 0
-    # The production-specific validator refuses absent/unapproved Oz profiles.
-    n += refuses('unconfirmed Oz REAL profile', lambda: G.installed_history_profile('oz'))
+    # A fixed, owner-approved Oz REAL profile now exists; forged bounds still refuse.
+    n += refuses('forged Oz REAL era', lambda: G.HistoryProfile(
+        'oz', Path(G.__file__).absolute().parent/'OZLOTTO_preholdout_only.csv',
+        1473,1694,G.OZ_HEADER))
     n += refuses('TEST runner cannot take REAL type', lambda: P.run_synthetic(
         roots, 'powerball', 'phi', 'REAL', 'REAL_forbidden', fixture_digits=N))
     n += refuses('TEST runner cannot take NULL type', lambda: P.run_synthetic(

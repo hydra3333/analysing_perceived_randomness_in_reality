@@ -25,6 +25,10 @@ PRIMARY_FAMILY = {'powerball': 'K6S', 'oz': 'K6'}
 # Owner D4 (16 Nov 2026), Powerball ONLY. Oz remains undecided.
 GEOMETRIC_PRIMARY = 'P3_ANY_MEAN_LOG10_MIN_ABS_GAP_PLUS_ONE_V1'
 MEDIAN_SECONDARY = 'P3_ANY_MEDIAN_MIN_ABS_GAP_V1'
+# Owner D6 (16 Nov): three co-primary Oz views, one 18-test Holm family.
+OZ_D6_VIEWS = ('O1_any', 'O2_any_slot', 'O3_any')
+OZ_D6_FAMILIES = {'O1_any': 'K7', 'O2_any_slot': 'K7mix', 'O3_any': 'K6'}
+OZ_D6_PRIMARY = 'OZ_D6_MEAN_LOG10_MIN_ABS_GAP_PLUS_ONE_V1'
 
 # (view, original family, relative membership, patterns per draw, condition parent)
 # A view represents DRAW-ATTRIBUTED event counts. Nesting is intentional.
@@ -273,7 +277,8 @@ def transitions(game: str, events: Iterable, draw_numbers: Iterable[int], N: int
               observed_median_absolute_gap=statistics.median(gaps) if gaps else None,
               # D4 Powerball primary; event extraction and adjacent-pair rows unchanged.
               observed_primary_mean_log10_gap_plus_one=(geometric_mean_log_gap(gaps)
-                  if game == 'powerball' and selected_family == 'K6S' else None),
+                  if (game == 'powerball' and selected_family == 'K6S') or
+                     (game == 'oz' and selected_family in OZ_D6_FAMILIES.values()) else None),
               undefined_reason=None if gaps else 'NO_EVALUABLE_ADJACENT_PAIRS')
     return tuple(rows), meta, sets
 
@@ -366,24 +371,97 @@ def permutation_test(offsets_per_draw: Iterable[Iterable[int]], *, seed: int,
     return answer
 
 
-def holm_six_constants(pvalues: Mapping[str,float|None]) -> dict[str,float|None]:
-    """Fixed six-constant family PER GAME. N/A hypotheses conservatively get p=1.
+def oz_three_family_permutation(sets_by_view: Mapping[str, Iterable[Iterable[int]]],
+                                *, seed: int, iterations: int = 10_000) -> dict:
+    """D6: ONE common shuffle per trial, applied identically to all three views.
 
-    Caller must NOT combine games. Return None for N/A but count it in family of six.
+    Uses existing adjacent-pair gap and D4 geometric-mean calculation;
+    no median/secondary test. Undefined trials are excluded per view.
     """
-    if not isinstance(pvalues,Mapping) or set(pvalues)!=set(CONSTANTS):
-        raise ValueError('Holm requires exactly six named constants in one game')
+    if (not isinstance(sets_by_view, Mapping) or set(sets_by_view) != set(OZ_D6_VIEWS)
+            or type(seed) is not int or not 0 <= seed < 2**64
+            or type(iterations) is not int or not 1 <= iterations <= 1_000_000):
+        raise ValueError('invalid Oz D6 permutation identity')
+    ordered = {view: tuple(tuple(sorted(set(row))) for row in sets_by_view[view])
+               for view in OZ_D6_VIEWS}
+    draw_counts = {len(rows) for rows in ordered.values()}
+    if len(draw_counts) != 1 or next(iter(draw_counts)) < 2:
+        raise ValueError('Oz three views require the same complete drawset')
+    if any(type(offset) is not int or offset < 0
+           for rows in ordered.values() for one in rows for offset in one):
+        raise ValueError('invalid Oz event offset')
+    n = next(iter(draw_counts))
+    observed_gaps = {v: _transition_gaps(ordered[v]) for v in OZ_D6_VIEWS}
+    observed = {v: geometric_mean_log_gap(observed_gaps[v]) for v in OZ_D6_VIEWS}
+    valid = {v: [] for v in OZ_D6_VIEWS}
+    evaluated = {v: [] for v in OZ_D6_VIEWS}
+    rng = random.Random(seed)
+    for _ in range(iterations):
+        indices = list(range(n))
+        rng.shuffle(indices)
+        for view in OZ_D6_VIEWS:
+            gaps = _transition_gaps(ordered[view][j] for j in indices)
+            evaluated[view].append(len(gaps))
+            if gaps:
+                valid[view].append(geometric_mean_log_gap(gaps))
+    views = {}
+    for view in OZ_D6_VIEWS:
+        ok = valid[view]
+        why = ('OBSERVED_NO_EVALUABLE_ADJACENT_PAIRS' if observed[view] is None
+               else 'NO_VALID_PERMUTATIONS' if not ok else None)
+        info = dict(statistic=OZ_D6_PRIMARY, event_view=view,
+                    observed=observed[view],
+                    observed_evaluable_pairs=len(observed_gaps[view]),
+                    valid_permutations=len(ok),
+                    undefined_permutations=iterations-len(ok),
+                    permutation_evaluable_min=min(evaluated[view]),
+                    permutation_evaluable_max=max(evaluated[view]),
+                    permuted_median_center=None, tail_upper_inclusive=None,
+                    tail_lower_inclusive=None, centered_two_sided_p=None,
+                    undefined_reason=why)
+        if why is None:
+            centre = round(statistics.median(ok), 12)
+            value = observed[view]
+            extreme = sum(abs(z-centre) >= abs(value-centre) for z in ok)
+            info.update(permuted_median_center=centre,
+                        centered_two_sided_p=(1+extreme)/(len(ok)+1),
+                        tail_upper_inclusive=(1+sum(z>=value for z in ok))/(len(ok)+1),
+                        tail_lower_inclusive=(1+sum(z<=value for z in ok))/(len(ok)+1))
+        views[view] = info
+    return dict(seed=seed, generator='PYTHON_RANDOM_SHUFFLE_WHOLE_DRAW_SETS_V1',
+                iterations_requested=iterations, views=views)
+
+
+def holm_adjusted(pvalues: Mapping[str, float | None],
+                  hypothesis_order: Iterable[str]) -> dict[str, float | None]:
+    """Fixed explicit hypothesis roster, including N/A as p=1.
+
+    May be six (Powerball per-statistic) or eighteen (Oz 3 x 6).
+    """
+    order_given = tuple(hypothesis_order)
+    if (not isinstance(pvalues, Mapping) or not order_given
+            or len(set(order_given)) != len(order_given)
+            or set(pvalues) != set(order_given)):
+        raise ValueError('Holm requires the exact explicit family')
     for p in pvalues.values():
-        if p is not None and (type(p) not in (float,int) or not isfinite(p) or not 0<=p<=1):
+        if p is not None and (type(p) not in (float, int)
+                              or not isfinite(p) or not 0 <= p <= 1):
             raise ValueError('invalid raw p-value')
-    order=sorted(CONSTANTS,key=lambda n:((1.0 if pvalues[n] is None else pvalues[n]),n))
-    adjusted={}
-    running=0.0
-    for rank,name in enumerate(order):
-        raw=1.0 if pvalues[name] is None else pvalues[name]
-        running=max(running,min(1.0, (6-rank)*raw))
-        adjusted[name]=None if pvalues[name] is None else running
-    return {name:adjusted[name] for name in CONSTANTS}
+    ranking = sorted(order_given,
+                     key=lambda k: ((1.0 if pvalues[k] is None else pvalues[k]), k))
+    adjusted = {}
+    running = 0.0
+    size = len(ranking)
+    for rank, key in enumerate(ranking):
+        raw = 1.0 if pvalues[key] is None else pvalues[key]
+        running = max(running, min(1.0, (size-rank)*raw))
+        adjusted[key] = None if pvalues[key] is None else running
+    return {key: adjusted[key] for key in order_given}
+
+
+def holm_six_constants(pvalues: Mapping[str, float | None]) -> dict[str, float | None]:
+    """Backward-compatible Powerball family of exactly six constants."""
+    return holm_adjusted(pvalues, CONSTANTS)
 
 
 def decoy_count_tails(real_count: int, decoy_counts: Iterable[int]) -> dict:
