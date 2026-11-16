@@ -389,3 +389,22 @@ the installed documents. This log is not a separate approval process.
   ideas backlog).
 - **Not yet decided:** how Mode H is worded in the register is the owner's decision after the reviewer's reply (level 1).
   Nothing was rerun, rescored or changed; no raw draw value, master, ledger or forecast entered either chat.
+
+## 40. 16 November 2026, about 21:49 - the reviewer's assessment of EX_201 (EX_203): AGREE, three nonblocking qualifications
+
+- **Where:** pasted by the owner into the Claude chat at 21:49; recorded unchanged below a two-line header as
+  `exchange/EX_203_ChatGPT.md`. Claude's reply: `exchange/EX_204_Claude.md`.
+- **Result:** EX_200 and EX_201 are "consistent independent scientific readings"; no blocking disagreement, no alteration of
+  either sealed study, no rerun. Three qualifications, all accepted by Claude (EX_204): (1) "about three independent bets"
+  and its one-sigma reading stay provisional and exploratory; (2) the 1/2,081 comparison illustrates multiple testing and is
+  not a calibration; (3) record wording: "No statistically significant predictive advantage was demonstrated under the
+  predeclared Mode H tests."
+- **EX_202's questions:** EX_203 does not mention EX_202 (they crossed). Claude reads it as answering Q2 (EX_201 sections 3.3
+  and 3.4 stand, labelled exploratory) and Q3 in substance (hypotheses kept for prospective examination only with definitions
+  and treatment fixed before new outcomes: MHUP-B design work); Q1's wording comes to the reviewer inside register v0.31.
+  The reviewer may still say otherwise.
+- **The reviewer's broader point (the development evidence):** agreed. Counts checked against register v0.30: Powerball 432
+  targets (17,280 runs), Oz Lotto 219 targets (8,760 runs), 26,040 in all. Precision: Powerball's ranking report scored the
+  report window 1286-1576 (291 draws). Those development reports (H-1 v3 section 7.5; 1 November 2026) also showed nothing
+  departing from fair draws (Oz Lotto family Bonferroni P 0.090; Powerball main numbers 1.0). The tiers stay separate.
+- **Not yet decided:** the record wording is the owner's decision when register v0.31 is ratified (level 1).

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 22:00 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 22:10 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -17,8 +17,14 @@ durable EX messages are authoritative.
   families** (Bonferroni P 1.000 Oz Lotto main numbers, 0.672 Powerball main numbers, 0.920 Powerball number). No advantage
   over fair draws detected; ten draws per game give very low power; retrospective, not prospective. A few exploratory leads
   are recorded, not findings. Comparison and proposed record wording: EX_202.
-- **Waiting for:** the reviewer's reply to EX_202 (Q1 the record wording; Q2 EX_201's exploratory sections 3.3-3.4; Q3 the
-  dispositions of EX_201's suggestions). Then the owner decides the wording (level 1).
+- **The reviewer agrees (EX_203, entry 40):** AGREE with three nonblocking qualifications, all accepted (EX_204). Record
+  wording to use: "No statistically significant predictive advantage was demonstrated under the predeclared Mode H tests."
+  EX_201's aggregate observations stay labelled exploratory and provisional. Anything kept for prospective examination must
+  have its definition and statistical treatment fixed before new outcomes (MHUP-B design work).
+- **The wider picture (EX_203, EX_204):** the development walk-forward evaluation (Oz Lotto 219 targets; Powerball 432
+  targets forecast, 291 draws scored; 26,040 forecasts) is the large part of the evidence and also showed nothing departing
+  from fair draws (H-1 v3 section 7.5). Development, holdout and prospective evidence stay separate.
+- **Waiting for:** nothing from the reviewer (it may still comment on EX_202 or EX_204). The owner's go for the close-out.
 - **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
   any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).
@@ -34,7 +40,7 @@ durable EX messages are authoritative.
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.
-- Latest reviewer messages: EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed), EX_193 and EX_198 (the streamlined arrangement, each game), EX_195 (page check r2), EX_196 and EX_199 (the two audits), EX_200 (independent reading of both reports: primary family results null in both games). Claude's EX_202 awaits a reply.
+- Latest reviewer messages: EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed), EX_193 and EX_198 (the streamlined arrangement, each game), EX_195 (page check r2), EX_196 and EX_199 (the two audits), EX_200 (independent reading of both reports: primary family results null in both games). EX_203 (assessment of EX_201: AGREE, three nonblocking qualifications; the development evidence to be recognised, kept separate).
 
 ## If a chat ends
 
@@ -76,13 +82,13 @@ Both games SEALED (Oz Lotto 15 November 19:54; Powerball 16 November 20:53). Mod
 code/environment freeze has ended; D5 (raw masters and ledgers not committed until the owner decides) and D6 (both reports
 shared together) still govern the data and the reports. Q7 stands: no raw draw value enters an AI chat.
 
-Result as read by both AIs (EX_200, EX_201, EX_202): null in all three predeclared families; the record wording awaits the
-reviewer's reply to EX_202 and the owner's decision. The two report files are not committed (D5); their SHA-256 values are
+Result as read by both AIs (EX_200 to EX_204): null in all three predeclared families; the record wording (EX_202 section 5
+as revised by EX_203 and EX_204) goes into register v0.31 for review and the owner's ratification. The two report files are not committed (D5); their SHA-256 values are
 in decision log entry 38. The reading tools are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
 
-1. D6: done to the comparison (EX_200, EX_201, EX_202). Open: the reviewer's reply to EX_202; the owner's decision on the record wording.
+1. D6: done (EX_200 to EX_204; the readings agree). The record wording is settled in register v0.31.
 2. Done: EX_199 C01 (entry 37).
 3. Close-out: register v0.31 (study, RAT for any new editions), holdout exposure record, P6 notes, handover refresh (H-1 v4; the reviewer decides on H-2), D5 decision.
 4. MHUP-B design (on the owner's authorisation), then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
