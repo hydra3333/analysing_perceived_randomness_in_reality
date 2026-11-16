@@ -9,8 +9,9 @@ How it checks: with the installed updater's own CSV reader and validators (src/r
 unchanged), quarantine closed: any draw at or after the holdout boundary stops it before anything is written.
 What it writes: one NEW file, GAIS/OUTLANDISH_01/OZLOTTO_preholdout_only.csv (refuses if it exists), UTF-8 (ASCII), LF, no
 BOM: Draw_Number,Date,Drawn_1..Drawn_7,Supplementary_1..Supplementary_3, ascending, the numbers in the order the master
-stores them (as the official results page lists them; never sorted). It prints a certificate of counts and hashes only,
-never a drawn number.
+stores them (as the official results page lists them; never sorted). The FILE holds every drawn number; the screen
+shows a certificate of counts and hashes only (no drawn number), including how many rows have their mains, or their
+supplementaries, already in ascending order: if (nearly) all do, the page shows them sorted, not in drawn order.
 Run from the repository root:  "%CD%\\.venv\\Scripts\\python.exe" -I -B exchange\\CLAUDE_WEB_TOOLS\\outlandish_export\\make_ozlotto_preholdout.py
 Exit codes: 0 written; 1 a check failed (nothing written); 3 refused (nothing written).
 """
@@ -79,6 +80,11 @@ def main(root: Path | None = None) -> int:
     say(f"first draw {nums[0]}, last draw {nums[-1]}, rows {len(draws)} (= {cutoff} - {era.first_draw}); max draw {max(nums)} < {cutoff}")
     say(f"every row: 10 distinct values, all in 1-47 ({len(draws)}/{len(draws)}); ascending, no gaps or duplicates; "
         f"dates off the weekly rule: {len(warns)}")
+    asc_m = sum(1 for d in draws if list(d.main) == sorted(d.main))
+    asc_s = sum(1 for d in draws if list(d.secondary) == sorted(d.secondary))
+    say(f"order check: rows with the 7 mains already ascending {asc_m}/{len(draws)}; with the 3 supplementaries ascending "
+        f"{asc_s}/{len(draws)} (if drawn order is stored, expect about {len(draws) / 5040:.2f} and {len(draws) / 6:.0f}; "
+        f"if all {len(draws)}, the page lists them sorted, not in drawn order)")
     say("read: only the committed Git bytes above; no working-tree master, ledger, grab, backup, results or holdout file")
     say(f"wrote {OUT_REL.as_posix()}: {len(body)} bytes, UTF-8 (ASCII), LF, no BOM; SHA-256 {hashlib.sha256(body).hexdigest()}")
     return 0
