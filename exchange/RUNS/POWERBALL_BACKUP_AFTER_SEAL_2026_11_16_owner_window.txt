@@ -1,0 +1,71 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>robocopy source_data G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\source_data /E /COPY:DAT /DCOPY:DAT /R:1 /W:1 /NFL /NDL /NP
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows
+-------------------------------------------------------------------------------
+
+  Started : Monday, 16 November 2026 8:54:23 PM
+   Source : E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\source_data\
+     Dest : G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\source_data\
+
+    Files : *.*
+
+  Options : *.* /NDL /NFL /S /E /DCOPY:DAT /COPY:DAT /NP /R:1 /W:1
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :         3         3         0         0         0         0
+   Files :        12        12         0         0         0         0
+   Bytes :    61.6 k    61.6 k         0         0         0         0
+   Times :   0:00:00   0:00:00                       0:00:00   0:00:00
+
+
+   Speed :           1,127,339 Bytes/sec.
+   Speed :              64.507 MegaBytes/min.
+   Ended : Monday, 16 November 2026 8:54:23 PM
+
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo ROBOCOPY EXIT %ERRORLEVEL%
+ROBOCOPY EXIT 1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>robocopy results G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\results /E /COPY:DAT /DCOPY:DAT /R:1 /W:1 /NFL /NDL /NP
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows
+-------------------------------------------------------------------------------
+
+  Started : Monday, 16 November 2026 8:54:23 PM
+   Source : E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\
+     Dest : G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\results\
+
+    Files : *.*
+
+  Options : *.* /NDL /NFL /S /E /DCOPY:DAT /COPY:DAT /NP /R:1 /W:1
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :     27090     27090         0         0         0         0
+   Files :     80576     80576         0         0         0         0
+   Bytes :  196.85 m  196.85 m         0         0         0         0
+   Times :   0:06:05   0:05:44                       0:00:00   0:00:21
+
+
+   Speed :             598,977 Bytes/sec.
+   Speed :              34.274 MegaBytes/min.
+   Ended : Monday, 16 November 2026 9:00:29 PM
+
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>echo ROBOCOPY EXIT %ERRORLEVEL%
+ROBOCOPY EXIT 1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

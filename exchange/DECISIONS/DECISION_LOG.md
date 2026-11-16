@@ -337,3 +337,10 @@ the installed documents. This log is not a separate approval process.
 - **Next:** a backup after the seal (D5); the reviewer's review of tonight's sequence; then D6 (both value-free reports shared
   together), the register recording the study, the holdout exposure record, the handovers refreshed, and the owner's separate
   D5 decision on committing the updated masters, ledgers and records; then MHUP-B.
+
+## 35. 16 November 2026, about 20:54-21:00 - the backup after Powerball's seal (D5)
+
+- **Where:** the owner's CMD window, stored as pasted: `exchange/RUNS/POWERBALL_BACKUP_AFTER_SEAL_2026_11_16_owner_window.txt`
+  (to `G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\`).
+- **Result:** `source_data` 12 files (61.6 kB) and `results` 80,576 files (196.85 MB) copied, FAILED 0, exit 1 each. **Backup
+  after the seal confirmed.** Both games' sealed states are now backed up on `G:`.

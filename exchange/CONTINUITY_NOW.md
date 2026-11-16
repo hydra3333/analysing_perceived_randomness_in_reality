@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 20:55 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 21:05 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -18,8 +18,8 @@ durable EX messages are authoritative.
   the EX_193 arrangement extended to tonight; decision log entry 24). Each on its own go: page check (Powerball only),
   backup, tree check, Approvals 1-4. DONE so far: page check PASS (25), backups (26), tree check (27), manifest (28),
   **Powerball OPENED 20:26 (29, permanent)**, witness push c302871 (30), first update 1577-1591 (31; master v2 e4f2feb8),
-  plan wf-5085cd8f (32), batch 400/400 (33), **SEALED 20:53 (34). MODE H IS COMPLETE; THE FREEZE HAS ENDED.** Next: backup
-  after the seal; the reviewer's review; then both reports together (D6). Step reached: see the newest
+  plan wf-5085cd8f (32), batch 400/400 (33), **SEALED 20:53 (34). MODE H IS COMPLETE; THE FREEZE HAS ENDED.** Backup after
+  the seal done (35). Waiting: the reviewer's review (EX_199); then both reports together (D6), in a fresh session. Step reached: see the newest
   decision log entries and exchange/RUNS/. If this chat ends
   mid-sequence: STOP at the last completed step; a new Claude chat checks the last output before anything continues.
 - **OUTLANDISH export done** (entry 23; 1474-1693, c528be4).
