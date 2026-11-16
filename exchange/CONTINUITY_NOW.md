@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 19:35 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 20:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -16,7 +16,9 @@ durable EX messages are authoritative.
 - **Reviewed:** EX_196, PASS WITH EVIDENCE LIMITATIONS (no blocking discrepancy). Missing standalone windows now stored.
 - **Powerball tonight (16 November), if practical, with breaks:** the expected-state annex r1 to r2d is reviewed (EX_198 PASS;
   the EX_193 arrangement extended to tonight; decision log entry 24). Each on its own go: page check (Powerball only),
-  backup, tree check, Approvals 1-4. Step reached: see the newest decision log entries and exchange/RUNS/. If this chat ends
+  backup, tree check, Approvals 1-4. DONE so far: page check PASS (25), backups (26), tree check (27), manifest (28),
+  **Powerball OPENED 20:26 (29, permanent)**, witness push c302871 (30). Next: Approval 2. Step reached: see the newest
+  decision log entries and exchange/RUNS/. If this chat ends
   mid-sequence: STOP at the last completed step; a new Claude chat checks the last output before anything continues.
 - **OUTLANDISH export done** (entry 23; 1474-1693, c528be4).
 - **Leave alone:** Oz Lotto's master and ledger (` M`, uncommitted, D5); its report files (unshared until Powerball is
@@ -69,7 +71,7 @@ independent "how the process went" note from each AI, with reasoning and alterna
 ## Mode H state
 
 Prerequisites run on 15 November 2026: the page check r2 (PASS), backups, tree check. Oz Lotto: Approvals 1-4 DONE; OPENED 19:19,
-SEALED 19:54 (decision log entries 14-20). Powerball: UNOPENED; none of its approvals run. The freeze is ON (from 19:18) until
+SEALED 19:54 (decision log entries 14-20). Powerball: OPENED 16 November 20:26; Approval 1 and the witness push done. The freeze is ON (from 19:18) until
 Powerball is sealed too: no code or package change, no git add -A, no rewrite of working files, pulls only of exchange/ paths.
 Oz Lotto's master and ledger stay uncommitted (D5); its report files stay unshared until Powerball is sealed (D6).
 
