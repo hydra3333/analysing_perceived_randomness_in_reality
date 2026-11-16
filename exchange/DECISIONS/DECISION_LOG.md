@@ -280,3 +280,11 @@ the installed documents. This log is not a separate approval process.
 - **Claude's check:** 40 variants; targets 1577-1586; version 1; 497 files; environment digest `5bf4eb8a36dd`. The closure
   digest `ed6e569ce560` is the same as Oz Lotto's manifest of 15 November: the frozen code is unchanged between the two studies.
   **PASS.** Next: the opening record (permanent), on the owner's go.
+
+## 29. 16 November 2026, about 20:26 - Powerball Approval 1, part 2: the holdout OPENED
+
+- **Output (verbatim, stored in exchange/RUNS/):** `[MODE-H] HOLDOUT OPENED for POWERBALL: freeze version 1; the opening record
+  is permanent. The display rule is unchanged: no outcome of a holdout draw is shown or computed with outside the sealed Mode H
+  score.`
+- **Claude's check:** as expected. **Powerball's holdout (1577-1586) is OPENED; permanent.** No results update yet. Next: the
+  D3 witness push, on its own go.

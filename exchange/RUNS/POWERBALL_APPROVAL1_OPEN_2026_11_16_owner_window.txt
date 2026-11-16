@@ -1,0 +1,4 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Evaluation.bat Method_Mode_H.py open --game POWERBALL --statement "I open the holdout of this game for the sealed Mode H study; the study manifest is frozen."
+[MODE-H] HOLDOUT OPENED for POWERBALL: freeze version 1; the opening record is permanent. The display rule is unchanged: no outcome of a holdout draw is shown or computed with outside the sealed Mode H score.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
