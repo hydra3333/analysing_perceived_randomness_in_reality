@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 23:05 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 23:20 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -39,13 +39,18 @@ durable EX messages are authoritative.
   websites or results searches by the AIs; evidence only from reviewed programs and logged runs; Claude's write limits
   and the runner's rulebook unchanged). Waiting for the reviewer's view, then the owner's confirmation. **Until then Q7
   stands exactly as it is.** The sealed holdout draws are already ordinary history under the ratified design.
-  **The rule-by-rule proposal is `exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r1.md`** (entry 45): drop the draw-visibility
-  rules; keep Claude's write limits and the runner's operating rules (safety); the runner's rules 4 and 5 go in MHUP-B's
-  rulebook edition. The owner also holds: no holdout for future method development; a new method re-ranks all draws.
+  **The rule-by-rule proposal is `exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r2.md`** (entries 45-46): drop the
+  draw-visibility rules; keep the runner's operating rules (safety); the runner's rules 4 and 5 go in MHUP-B's rulebook
+  edition. The owner also holds: no holdout for future method development; a new method re-ranks all draws.
+- **OWNER DECISION (entry 46, 22:51): Claude's write limit is removed**, on condition that nothing is destroyed (archive
+  instead). Claude's working rule for using it is r2 section 2A: documents directly once reviewed and ratified; code and
+  tests still by reviewed package and the owner's Windows install; the data folders never; not used before the owner has
+  seen the reviewer's reply. The local runner's rules are kept.
 - **The owner's priority (entry 44):** the missing code is to be fixed "asap": that is MHUP-B (catch-up, weekly session,
   the dated league table after every scored draw: design v0.1r7 section 6.6). Proposed additions for its design: the same
-  table over the past history, and raising the report tool's Phase 1 window cap. The design starts on the owner's "go"
-  (suggest Fable).
+  table over the past history, and raising the report tool's Phase 1 window cap. **Claude reads the owner's 22:51 message
+  as the go for the MHUP-B design (design only; entry 46).** The inputs gathered so far, with a first league-table sketch,
+  are in `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md` (D-1 to D-10). Design work: Fable (High).
 - **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
   any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).

@@ -518,3 +518,27 @@ the installed documents. This log is not a separate approval process.
   Neither is about seeing draws. The runner's two draw-visibility rules (4 and 5) have no safety reason left and are
   proposed for removal inside MHUP-B's rulebook edition, with no separate round.
 - **Status: NOT YET IN FORCE.** The draft goes to the reviewer; the owner then confirms. Until then Q7 stands.
+
+## 46. 16 November 2026, about 22:51 - OWNER DECISIONS: Claude's write limit removed (conditional); the runner's rules kept; the league table
+
+- **The owner's words (as written):** yes. re "A single table over all draws" lets clarify that ... if it is a single table showing all results for all draws in descending order, historical results/rankings could perhaps be kept in separate files (filename by game and draw number and 5 digit version or something) and maybe when requested simply be appended together or something into one report; nice columns or csv or something may be useful, I don't know, see what you can design for a dummy human. If it is something else please clarify what you mean.  I am more interested in the latest ranking/performance which i think we had agreed was based on hit-rates or something of all previous draws (I may be wrong) ? If I'm wrong please say so and clarify why. I hereby remove the limitation "I can only put files in `exchange\` and the runner’s folder" as long as you are always careful not to destroy anything - if you must, do good archiving or something.  Yes keep runners rules for Claude Code. yes to your proposal for "Runner’s two draw rules" as long as it never kills nor interferes with any other data.
+- **Decided by the owner:**
+  1. **Claude's write limit is removed**, on his condition: always careful not to destroy anything; archive if something
+     must go.
+  2. **The local runner's rules are kept.**
+  3. **The runner's two draw-visibility rules (4 and 5)** are dropped or reworded inside MHUP-B's rulebook edition, on his
+     condition that the runner "never kills nor interferes with any other data".
+- **How Claude will use decision 1** (`exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r2.md` section 2A; Claude's own working rule,
+  open to the owner's correction): documents may be committed directly once reviewed and ratified by SHA-256; code and tests
+  keep the reviewed-package route with the Windows rehearsal and the owner's install; the data folders are never written by
+  Claude; nothing is deleted or overwritten (a superseded file moves to `superseded/` or `archive/`); and Claude does not use
+  the wider permission before the owner has seen the reviewer's reply to the draft. Decision 1 was made before the
+  reviewer's view (P1, level 1): the reviewer is asked in r2's question Q5.
+- **Read by Claude as the owner's go for the MHUP-B design (design only):** "yes." and "see what you can design for a dummy
+  human", after Claude's request to say "go MHUP-B". The owner may correct this reading. No code, install or run is authorised.
+- **The league table, clarified:** the owner's recollection is right: the ranking is cumulative, by each method's hits over
+  all scored draws, against chance. By "a single table over all draws" Claude meant one added column giving each method one
+  figure over every scored draw, beside the separate kinds of evidence. The owner's ideas (numbered files per game and draw,
+  joined on request, CSV, a plain layout) and a first sketch are in
+  `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md` (design inputs D-1 to D-10; not a design, not reviewed).
+- **Still not in force:** the draw-visibility rules (Q7) stand until the owner confirms after the reviewer's reply.
