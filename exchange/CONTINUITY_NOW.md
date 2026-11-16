@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 23:55 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 00:10 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -24,8 +24,9 @@ durable EX messages are authoritative.
   paste that tells and consults the reviewer. Every earlier paste block on these topics is void.
 - **D5 DONE (entry 48):** the owner committed and pushed the Mode H results at `c7622fa` (masters and ledgers version 2,
   search log, batch records, markers, reports); the masters and reports match the fingerprints recorded at the seals.
-- **In progress tonight:** H-1 v4 and its blurb, as DRAFTS in `exchange/CLAUDE_WEB_TOOLS/h1v4/` (the owner asked for them
-  tonight for risk management; not yet reviewed or ratified).
+- **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by
+  `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
+  lists what must still be rewritten before ratification.
 - **Next sitting:** register v0.31 and H-1 v4 (Opus), alongside the MHUP-B design (Fable, High; design only so far).
 - **Blocks or STOPs:** none.
 
@@ -39,11 +40,14 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat with `doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md`.
-  In its "Since 15 November 2026" line write: "see exchange/CONTINUITY_NOW.md".
+- **Claude chat ended:** start a new Claude chat by pasting the blurb
+  `exchange/CLAUDE_WEB_TOOLS/h1v4/out/Claude_Primary_Handover_H1_v4_DRAFT_introductory_blurb.md` (the DRAFT of 16 November
+  2026, which already describes the state after Mode H and the agreed approach). In its last line write:
+  "see exchange/CONTINUITY_NOW.md". The new chat then reads the H-1 v4 DRAFT beside it, section 0B first. (The installed,
+  ratified pair is still H-1 v3 and its blurb in `doc/HANDOVER/`; they stop at 15 November.)
 - **ChatGPT reviewer chat ended:** start a new ChatGPT chat with
-  `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`, adding: "Then read exchange/CONTINUITY_NOW.md".
-  Optional check: blind questions as in EX_178 (Claude writes new ones; the owner holds the key).
+  `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`, adding: "Then read exchange/CONTINUITY_NOW.md and
+  exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md". Optional check: blind questions as in EX_178.
 
 ## Installed handovers (authoritative)
 
