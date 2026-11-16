@@ -239,3 +239,14 @@ the installed documents. This log is not a separate approval process.
   committed by the owner at `c528be4` (Git stores the LF bytes; checked by Claude by hash only, no value read).
 - **Status:** done. No holdout draw is in the file. This concerns the side project only; it changes nothing in Mode H or the
   freeze.
+
+## 24. 16 November 2026, about 19:05-19:30 - Powerball tonight; the annex reviewed; the arrangement extended
+
+- **Owner's words (19:04, with the reviewer):** "I will persist with this tonight !" (Powerball Mode H tonight if practical, with
+  breaks; OUTLANDISH development paused meanwhile, 19:24).
+- **EX_197 / EX_198:** the expected-state annex r1 to sheet r2d (blob `cc00da36...`): PASS WITH NONBLOCKING CLARIFICATIONS (E0
+  is the pre-Powerball status; after the witness commit the search log's modified mark clears until a later step changes it
+  again). The reviewer extends EX_193's arrangement to Powerball's session of 16 November 2026, on the same terms: the owner's
+  own go per step; Claude checks every output first and stores each window in exchange/RUNS/ as it arrives; the reviewer
+  reviews the whole record afterwards or any STOP. The page check and Approval 1 on the same Adelaide day; breaks allowed.
+- **Status:** the arrangement is agreed; nothing is authorised by it. Each step waits for the owner's go.

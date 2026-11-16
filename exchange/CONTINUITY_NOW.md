@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 19:20 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 19:35 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -14,8 +14,10 @@ durable EX messages are authoritative.
   Decision log entries 9-21; windows in exchange/RUNS/. Earlier that evening: a STOP at the page check (the check r1's
   order assumption; fixed as r2 and reviewed, EX_194/EX_195).
 - **Reviewed:** EX_196, PASS WITH EVIDENCE LIMITATIONS (no blocking discrepancy). Missing standalone windows now stored.
-- **Powerball tonight (16 November), if practical, with breaks:** the expected-state annex to r2d (EX_197) is with the
-  reviewer (EX_198). Then, each on its own go: page check (Powerball only), backup, tree check, Approvals 1-4.
+- **Powerball tonight (16 November), if practical, with breaks:** the expected-state annex r1 to r2d is reviewed (EX_198 PASS;
+  the EX_193 arrangement extended to tonight; decision log entry 24). Each on its own go: page check (Powerball only),
+  backup, tree check, Approvals 1-4. Step reached: see the newest decision log entries and exchange/RUNS/. If this chat ends
+  mid-sequence: STOP at the last completed step; a new Claude chat checks the last output before anything continues.
 - **OUTLANDISH export done** (entry 23; 1474-1693, c528be4).
 - **Leave alone:** Oz Lotto's master and ledger (` M`, uncommitted, D5); its report files (unshared until Powerball is
   sealed, D6).
