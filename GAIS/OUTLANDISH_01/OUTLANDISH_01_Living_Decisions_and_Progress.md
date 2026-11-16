@@ -1,6 +1,6 @@
 # OUTLANDISH_01 — living decisions and progress
 
-**Updated:** 16 November 2026 (Australia/Adelaide), after owner Windows synthetic qualification through Q4g and Claude independent review point A **complete**. **Read §14, especially §14.5, for current status, review findings, remaining production tasks and KISS decisions proposed for implementation.** Earlier §§1–13 are retained as dated evidence and superseded where inconsistent. This does not amend ratified scientific specification v0.2 or authorise Q5.
+**Updated:** 16 November 2026 (Australia/Adelaide), after Q4i Windows synthetic qualification and GitHub code commit `3a07e8a`. **Read §15 first** for current status, owner D1/D2 decisions, Review B disposition, Review C scope and outstanding Q5 gates. Earlier §§1–14 (including §14.5 Review A) remain as dated evidence; their next-step instructions are superseded by §15 where inconsistent. Ratified scientific specification v0.2 remains binding. Q5 is **NOT authorised**.
 
 ## 1. Current milestone / evidence
 
@@ -227,7 +227,7 @@ The owner committed and pushed **`39d569b`** to `main` (six files, all under `GA
 | Q4e reporting and replay | SYNTHETIC PASS | Self-test 10 refusals; integration 4 source runs, 4 reports, 39 refusals; 0 production scans, 0 REAL reads. |
 | Q4f full two-game/six-constant matrix | SYNTHETIC PASS | Self-test 7 refusals; integration 24 source runs, 24 reports, 92 refusals; 0 production scans, 0 REAL reads. |
 | Q4g six-constant game aggregation | SYNTHETIC PASS | Self-test 10 refusals; integration 24 source runs, 24 reports, 2 game aggregates, 23 refusals; 0 production scans, 0 REAL reads. |
-| **Q4 production readiness** | **OPEN — Review A COMPLETE** | Address reviewed pre-production design findings F1–F4 in a minimal Powerball REAL path; qualify real interfaces using synthetic inputs; approved Oz era/cutoff still missing. Review point B remains upcoming. |
+| **Q4 production readiness** | **OPEN — see §15** | Review A and B COMPLETE, Q4h/Q4i Windows synthetic PASS, and Review C NEXT. This §14 row is superseded by §15; no Q5 authorisation. |
 | Q5 actual 5 GB REAL scans | BLOCKED | Needs final Q4 readiness and separate owner authorisation; owner-vetoable P3_any/O3_any primary decision must remain visible. |
 | Post-match/adaptive forecasting and parent integration | PARKED | No parent-scored method or holdout consumption; independent later owner review. |
 
@@ -279,3 +279,51 @@ The owner committed and pushed **`39d569b`** to `main` (six files, all under `GA
 **Open owner/input decisions:** (i) approved isolated modern Oz Lotto CSV, roles/header, first modern-era draw and exclusive cutoff are still unavailable; do not infer them or read the parent holdout; (ii) owner may veto or confirm proposed primary P3_any / O3_any before Q5; (iii) fix and disclose the per-game permutation seed convention prior to qualified reporting; (iv) Holm N/A uses fixed six hypotheses, treating undefined as p=1 for adjusting others (conservative) while reporting the affected result N/A; (v) no production-file receipt preflight or genuine scan without explicit owner authorisation; (vi) NULL K=19/99 only when preparing that optional workload.
 
 **Next:** implement/qualify the *minimal synthetic-tested* Powerball REAL architecture with F1–F4 corrected, then consult Claude at review point **B** before adopting the production design. This does not grant REAL input access, publish Q5 results, or permit changes outside `GAIS/OUTLANDISH_01/`. The 14 November reconciliation is superseded as an active handover, with its corrections carried forward; no additional recovery document is required.
+
+## 15. 16 November 2026 — Q4h/Q4i Windows synthetic PASS; Review B complete; Review C NEXT
+
+**Authority and scope:** This §15 supersedes prior sections' outdated next-step/decision status without rewriting historical evidence. Ratified \`OUTLANDISH_01_Consolidated_Matching_Reporting_Spec_v0_2_RATIFIED.md\` still governs scientific work. Review C covers the Powerball production-capable *architecture*, not permission to read or scan a genuine source. Q5 is still **BLOCKED**; the single production-entry switch is committed **False**. All new work is confined to \`GAIS/OUTLANDISH_01/\` and cannot touch parent-project Oz Mode H results, sources or holdouts.
+
+### 15.1 Exact checkpoints and completed qualification
+
+| Checkpoint | Evidence and limit |
+|---|---|
+| Q4h implementation | \`b7ce6fd\` committed six files: one event reader, shared test runner, reporter, six-constant REAL-only Holm aggregator, synthetic qualification and README; no production entry at that point. |
+| Owner Windows Q4h qualification | \`--self-test\` PASS: **5 refusals**. \`--run\` PASS: **6 TEST_REAL runs, 6 reports, 1 REAL-like aggregate, 27 refusals, 10,000 permutations per report**. This uses the actual committed Q3 modules, not local stand-ins. |
+| Claude Review B | \`REVIEW/OUTLANDISH_REVIEW_003_Claude_to_ChatGPT.md\`, committed \`677347b\`, reviews \`b7ce6fd\`: **no blocker; F1–F4 resolved; Q4h suitable as basis for Powerball production**. The reviewer ran both Q4h suites on Linux and wrote an independent end-to-end checker. Review B did not validate genuine 5 GB inputs, real histories or Windows behaviour independently. |
+| Independent realistic-shape evidence | Reuse unchanged \`REVIEW/OUTLANDISH_REVIEW_Claude_Q4h_EndToEnd_Check_v0_1.py\`: **433 fabricated draws, six fabricated 300,000-digit sources, ~200 planted events per source, 10,000 permutations**, independently checked counts/expectations/gaps/p-values/Holm. Owner reran on Windows with Q4i and reported **PASS**; planted \`e\` effect gave p=**0.0001**, Holm=**0.0006**. These are artificial positive controls, **not observations about mathematical constants**. |
+| Q4i shared-mode implementation | \`3a07e8aba15cb159e7e0cfc35e41a46bd5558833\` (seven files: 3 Q4h modules modified in place + 4 new Q4i modules/README). \`git show --format= --check HEAD\` produced no output on owner Windows (no Git whitespace errors). No Q3/Q4d or original reviewer evidence was changed. |
+| Owner Windows Q4i qualification | Entry \`status\`: **Q5 DISABLED**. Q4h regression \`--self-test\`: 5 refusals PASS; Q4h \`--run\`: 6 runs / 6 reports / 1 aggregate / 27 refusals PASS. Q4i \`--self-test\`: 4 refusals PASS; Q4i \`--run\`: **6 refusals, 4 negative canaries, 150,000-byte fixture**, with corruption at unsampled byte offset **5001**, PASS. Reused 433-draw independent end-to-end check PASS. **Production scans=0; genuine REAL-history reads=0.** |
+| Source-digest negative control | Fixture receipt sampled **48,912 of 150,000 bytes**. Unsampled-byte corruption passed receipt preflight but was caught by the full SHA-256 produced during the scanner's matching pass; the new synthetic run stayed **INCOMPLETE** and no raw-event CSV survived. Canaries confirm key tests detect loss of critical protections. No mandatory extra full-file hash pass. |
+| Parent project | Unrelated Oz Lotto Mode H modified/untracked files remained **unstaged and untouched** in owner's git status after Q4i push. No parent integration or forecasting authorised. |
+
+### 15.2 Review B disposition and KISS
+
+**Review B, memo 003:** F1 optional NULL reports, F2 advisory historical code digests, F3 digest-based routine report loading plus separate audit, and F4 fixed 10,000 primary permutations are **resolved** in Q4h. Claude found no blocking safety/science defect and independently checked the data path. Three worthwhile, non-bureaucratic corrections were accepted for Q4i:
+
+- **K1 IMPLEMENTED:** the existing Q4h runner/reporter/aggregator were modified **in place**, not copied. One immutable \`PowerballMode\` carries fixed roots, validated history profile, \`TEST_REAL\` or \`REAL\` type and digit count; exactly two construction routes (marked synthetic sandbox; fixed installed Powerball production). Both reach the same scientific path. Historical synthetic wrapper entry points remain only for existing regression callers.
+- **K2 IMPLEMENTED:** loading an aggregate checks its own digest and the six stored source-report digests and identities, without recalculating Holm or Monte Carlo statistics or byte-comparing a regenerated aggregate.
+- **K3 IMPLEMENTED:** aggregates are stored under the existing run-location guard, not a new results hierarchy. Older synthetic aggregate IDs have thin compatibility mapping only.
+
+**KISS verdict:** Favor the single tested path and necessary contamination/integrity safeguards. Do **not** refactor older Q4a–Q4g suites, clone the REAL stack, invent registries/allowlists/extra manual approvals, repeat 5 GB hashing, or write a second 433-draw fixture. Nonessential Review B suggestions O1–O4 remain deferred unless later evidence establishes a need.
+
+### 15.3 Owner decisions D1 and D2 (16 November 2026; accepted by ChatGPT)
+
+**D1 — qualified primary permutation seed.** Deterministic and independent per \`(game, constant)\`. Compute the first eight bytes, unsigned big-endian, of SHA-256 of the ASCII label \`OUTLANDISH_01|<game>|<constant>|PRIMARY_W_TO_W1|V1\`, where game is \`powerball\` or \`oz\` and constant is \`pi, phi, e, log2, gamma, lemniscate\`. Record **the exact text label and resulting integer seed** in each qualified REAL report. Example checked independently: \`OUTLANDISH_01|powerball|pi|PRIMARY_W_TO_W1|V1\` -> SHA-256 prefix \`7cfcc54fcaf4f97f\` -> seed **9006290301332289919**. Q4h historical synthetic reviewer runs retain \`271828\` so the external regression calculation remains comparable. All primary reports use **R=10,000**.
+
+**D2 — one explicit Q5 scan switch.** \`OUTLANDISH_01_Q4i_Production_Entry_v0_1.py\` contains \`ENABLE_Q5_PRODUCTION_SCANS = False\`. Only an owner's later explicit reviewed Git commit setting it to \`True\` constitutes scan authorisation. The Q4h shared runner checks the same constant immediately before commencing any genuine \`REAL\` scan, including a direct call; there is no CLI/environment bypass. Synthetic modes do **not** consult or need the switch, and reading/reporting already completed genuine results does **not** require switching it on. This prevents **accidental**, not deliberately malicious, execution; no extra anti-tamper mechanism is wanted. **The switch remains False now.**
+
+### 15.4 Review point C — requested scope and unresolved conditions
+
+**NEXT: Claude independent Review C of code checkpoint \`3a07e8a\` plus this updated living record and owner Windows evidence.** Reuse Review A/B scripts and v0.2; report ranked defects, minimal remedies and explicit KISS assessment, not another framework. Verify the single shared Powerball mode path, fixed installed roots/profile, REAL/TEST root separation, Q5 False in production entry **and** runner, synthetic independence from switch, and read-only existing-result access while False. Verify D1 code against the literal known \`powerball/pi\` seed; v0.2 primary status; six-constant Holm without NULL; 10,000 whole-draw permutations; event/manifest/receipt/history integrity; and no re-reading 5 GB per report. Inspect Q4i 150,000-byte unsampled-corruption gate, negative canaries and the existing 433-draw independent positive control; distinguish owner Windows evidence from independently reproduced checks. Review realistic running costs and file/IO implications; keep it simple.
+
+**Open scientific and operational items (do not invent completion):**
+
+1. **Powerball primary selection:** \`P3_any -> P3_any\` remains the *proposed, owner-vetoable* primary adjacent-draw statistic until the owner's final Q5 decision; \`O3_any -> O3_any\` likewise for future Oz.
+2. **Physical files/receipts:** six immutable genuine 5 GB packed sources and their receipts exist on the owner's \`G:\` storage, but this code has **not** performed an approved read-only receipt/sample preflight, nor been run against any genuine packed input. A preflight (12 samples of 4096 bytes per source, no writes) requires separate **explicit owner permission**; no result is claimed.
+3. **Oz profile:** approved isolated modern-era source/header/roles, first draw and exclusive cutoff remain unknown here. No parent holdout access, fabricated bounds or Oz production run.
+4. **REAL/NULL Q4 scope:** v0.2 Q4 calls for separate REAL/NULL entry points and Q5 allows optional later NULL production *runs*. Q4i implements the Powerball REAL route but **not a production NULL runner**. Reviewer C should state whether this deferral is compatible with the ratified Q4/Q5 sequence or whether a minimal NULL entry point or a specific owner-approved scope adjustment is required before Powerball Q5. Do not silently waive the binding requirement.
+5. **Evidence boundary:** the owner has supplied Windows PASS lines, and Claude's Review B independently passed the Q4h and reviewer synthetic checks on Linux. **No one has claimed an end-to-end qualified Q5 REAL scan.**
+6. **Review/authorisation:** Claude's point C findings and any essential corrections precede the owner's separate final Q5 decision. The switch shall remain **False**; no production scan, genuine receipt preflight, parent data read, Oz integration or forecasting is automatically authorised by finishing documentation.
+
+**Owner-facing next step:** Relay the short Review C brief under \`REVIEW/\` to Claude, obtain its independent findings, then resolve only consequential defects/decisions. No extra interim review, administrative ledger or release framework is justified.
