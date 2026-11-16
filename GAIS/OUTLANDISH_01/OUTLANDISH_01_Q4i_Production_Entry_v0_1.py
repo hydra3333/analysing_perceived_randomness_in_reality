@@ -13,7 +13,8 @@ from __future__ import annotations
 
 import argparse
 
-ENABLE_Q5_PRODUCTION_SCANS = False  # OWNER Q5 GATE: keep False until separate approval!
+#ENABLE_Q5_PRODUCTION_SCANS = False  # OWNER Q5 GATE: keep False until separate approval!
+ENABLE_Q5_PRODUCTION_SCANS = True  # OWNER Q5 GATE: True is now given separate approval!
 
 
 def main():
