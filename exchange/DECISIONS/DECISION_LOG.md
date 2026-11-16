@@ -306,3 +306,7 @@ the installed documents. This log is not a separate approval process.
   POWERBALL_master_draws_1144-1576_as_at_20261116_100004Z.csv`.
 - **Claude's check:** exactly as annex r1 expects (9 overlap all matched; 15 added 1577-1591, the holdout and five later draws;
   no warnings; grab and backup of this run). **PASS.** The read-only snapshot was requested next, before the plan.
+- **Snapshot (about 20:43; stored as `exchange/RUNS/POWERBALL_APPROVAL2_SNAPSHOT_2026_11_16_owner_window.txt`):** ` M` for both
+  games' masters and ledgers only; no lock; no `.part-` file; one grab and one backup per game, Powerball's of this run;
+  Powerball master SHA-256 now **`e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0`** (version 2). Clean.
+  Next: Approval 3 (the plan), on its own go.

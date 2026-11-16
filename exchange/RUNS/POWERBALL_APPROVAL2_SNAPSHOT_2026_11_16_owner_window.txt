@@ -1,0 +1,26 @@
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short source_data
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+ M source_data/POWERBALL_results_master.csv
+ M source_data/POWERBALL_results_master_ledger.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b source_data\.results_master.lock
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b source_data\*.part-*
+File Not Found
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b /o:d source_data\grabs
+OZLOTTO_grab_draws_1685-1708_as_at_20261115_085242Z.csv
+POWERBALL_grab_draws_1568-1591_as_at_20261116_100004Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /b /o:d source_data\backups
+OZLOTTO_master_draws_1474-1693_as_at_20261115_085242Z.csv
+POWERBALL_master_draws_1144-1576_as_at_20261116_100004Z.csv
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile source_data\POWERBALL_results_master.csv SHA256
+SHA256 hash of source_data\POWERBALL_results_master.csv:
+e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
