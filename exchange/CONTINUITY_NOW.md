@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 22:35 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 22:45 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -34,6 +34,10 @@ durable EX messages are authoritative.
   where it sits in the plan. It is roadmap item 10, done (development reports of 1 November 2026: Oz Lotto 1474-1693,
   Powerball 1286-1576). Open: which "last 3 draws" he wants shown; his upload of the two development `.txt` reports for a
   plain summary (Claude may not open `results/`); whether roadmap item 21b (the consolidated report) is brought forward.
+- **Open owner question (entry 43; not decided):** whether Q7 is narrowed so the AI chats may read the committed value-free
+  `.txt` reports under `results/method_rankings/` (Claude's recommendation, option B; needs the reviewer's view and the
+  owner's decision). Until decided, Q7 stands exactly as it is. The sealed holdout draws are already ordinary history for
+  training under the ratified design; making that operational is MHUP-B.
 - **Handover refresh is now due** (Mode H complete and read): register v0.31 and H-1 v4 are the next piece of work, before
   any MHUP-B design. Until then this page and the decision log carry everything since H-1 v3.
 - **Done (EX_199 C01):** the after-seal backup checked with `/L` (entry 37).

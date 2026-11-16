@@ -451,3 +451,25 @@ the installed documents. This log is not a separate approval process.
     then WF-1C; later, item 21b (one consolidated report with development, Mode H, catch-up and prospective kept separate).
 - **Open:** which three draws the owner means; whether he uploads the two development `.txt` reports for a plain summary;
   whether item 21b is brought forward (a roadmap change: the owner's decision after review). Nothing is authorised.
+
+## 43. 16 November 2026, about 22:19 - the owner's two questions on the sealed holdouts and on Claude's access to `results\` (open)
+
+- **The owner's words:** "a deeper dive on holdouts - now that we have looked at them (1) why can't we now treat them as a
+  normal part of the dataset (which we must eventually anyway since the holdouts only purpose is now achieved) ? (2) why
+  can you not yet access results\ since I think we are entering the next phase of processing full draws and results ongoing ?"
+- **Claude's answer (in the chat):**
+  - (1) They already are ordinary history under the ratified design (Mode H design v0.1r7: "a sealed holdout is ordinary
+    history"; the weekly scope starts at `holdout_last + 1` and trains on everything before it). Three things stay special:
+    the Mode H scores keep their own label and are shown beside, never pooled with, the other tiers; a later method's
+    forecasts of those ten draws count as development evidence only (the owner's own condition of 13 November); the sealed
+    records are not rescored. What is missing is code, not permission: the report tool's Phase 1 cap (R3 17.3.6: L <= 1576
+    and 1693) and the catch-up and weekly machinery, which is MHUP-B.
+  - (2) It is the owner's decision Q7 of 13 November 2026, not a technical limit. Its first reason (blindness before
+    Mode H) has lapsed for the ten holdout draws; two reasons remain (one simple rule for folders that will hold every
+    future draw and forecast; the method designer should not browse outcomes and per-draw scores). The rule is wider than
+    those reasons need: the value-free `.txt` reports under `results\method_rankings\` are already committed and public.
+- **Options put to the owner (not decided; level 1, after the reviewer's view):** A keep Q7 as it is (the owner uploads the
+  reports); **B (Claude's recommendation)** a narrow amendment: the AI chats may read the committed value-free `.txt`
+  report files under `results/method_rankings/`, and nothing else in `results/`, `source_data/` or `transitory_data/`;
+  C open the folders fully (not recommended). If B is decided it is written into H-1 v4; the local runner's rulebook is
+  unchanged.
