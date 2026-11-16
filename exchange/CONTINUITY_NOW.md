@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 23:20 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 23:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -34,6 +34,10 @@ durable EX messages are authoritative.
   where it sits in the plan. It is roadmap item 10, done (development reports of 1 November 2026: Oz Lotto 1474-1693,
   Powerball 1286-1576). Open: which "last 3 draws" he wants shown; his upload of the two development `.txt` reports for a
   plain summary (Claude may not open `results/`); whether roadmap item 21b (the consolidated report) is brought forward.
+- **Relay to the reviewer is ON HOLD (owner, 22:59):** "I have not pasted anything of this discussion with chatgpt yet and
+  dio not plan to until we agree we have workable approach." So the reviewer has seen nothing of entries 42 to 46, the
+  rules draft or the MHUP-B design inputs. When the owner and Claude agree, Claude gives ONE paste that replaces every
+  earlier block on these topics. Nothing below is waiting on the reviewer yet.
 - **Q7 under change (entries 43-44; NOT YET IN FORCE):** the owner's preference (22:26) is to drop the raw-draw-value
   restriction and "treat all draws the same". Claude has no strong objection and recommends three things stay (no lottery
   websites or results searches by the AIs; evidence only from reviewed programs and logged runs; Claude's write limits
