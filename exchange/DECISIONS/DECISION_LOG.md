@@ -272,3 +272,11 @@ the installed documents. This log is not a separate approval process.
 - **Result:** `git status --short` exactly E0; only `__pycache__/` ignored under `src/`; no change to `src/`, root `.bat` or
   `requirements.txt` since `cc0ab73`; Oz Lotto master `63e33493...` (version 2), Powerball master `ce0ae7e7...` (version 1);
   no orphan marker. **PASS** (annex r1). (Held locally until the witness push.)
+
+## 28. 16 November 2026, about 20:25 - Powerball Approval 1, part 1: the study manifest
+
+- **Output (verbatim, stored in exchange/RUNS/):** `[MODE-H] MANIFEST written for POWERBALL: 40 variants, targets 1577-1586,
+  frozen master version 1, closure 497 files, digest ed6e569ce560..., environment digest 5bf4eb8a36dd...`
+- **Claude's check:** 40 variants; targets 1577-1586; version 1; 497 files; environment digest `5bf4eb8a36dd`. The closure
+  digest `ed6e569ce560` is the same as Oz Lotto's manifest of 15 November: the frozen code is unchanged between the two studies.
+  **PASS.** Next: the opening record (permanent), on the owner's go.
