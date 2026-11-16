@@ -344,3 +344,9 @@ the installed documents. This log is not a separate approval process.
   (to `G:\BACKUPS\powerball_modeh_2026-11-16_after_powerball_seal\`).
 - **Result:** `source_data` 12 files (61.6 kB) and `results` 80,576 files (196.85 MB) copied, FAILED 0, exit 1 each. **Backup
   after the seal confirmed.** Both games' sealed states are now backed up on `G:`.
+
+## 36. 16 November 2026, about 21:08 - the reviewer's audit of the Powerball sequence (EX_199)
+
+- **Result:** EX_199: **PASS WITH EVIDENCE LIMITATIONS**; Powerball SEALED accepted; **Mode H execution complete; the freeze
+  ended**. C01 (nonblocking): the after-seal backup's read-only `/L` comparison is not recorded; proposed as an optional step
+  on its own go. C02 (nonblocking): stale clauses in CONTINUITY_NOW.md; fixed the same evening. D5 and D6 still govern.

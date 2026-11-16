@@ -4,34 +4,27 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 21:05 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 21:15 Australia/Adelaide.
 
 ## For the owner: NOW
 
-- **Oz Lotto's Mode H study is SEALED** (15 November 2026, 19:54). Opened 19:19; witness push `9eb5e33` (GitHub receipt
-  08:51:04Z); first update added 1694-1708 (master v2 `63e33493...`); batch `wf-5af149ae...` 400/400; score attempt
-  `mh-ba0c301b...`, 800 score lines, 400 rank lines. Backups before and after (G:\BACKUPS\powerball_modeh_2026-11-15*).
-  Decision log entries 9-21; windows in exchange/RUNS/. Earlier that evening: a STOP at the page check (the check r1's
-  order assumption; fixed as r2 and reviewed, EX_194/EX_195).
-- **Reviewed:** EX_196, PASS WITH EVIDENCE LIMITATIONS (no blocking discrepancy). Missing standalone windows now stored.
-- **Powerball tonight (16 November), if practical, with breaks:** the expected-state annex r1 to r2d is reviewed (EX_198 PASS;
-  the EX_193 arrangement extended to tonight; decision log entry 24). Each on its own go: page check (Powerball only),
-  backup, tree check, Approvals 1-4. DONE so far: page check PASS (25), backups (26), tree check (27), manifest (28),
-  **Powerball OPENED 20:26 (29, permanent)**, witness push c302871 (30), first update 1577-1591 (31; master v2 e4f2feb8),
-  plan wf-5085cd8f (32), batch 400/400 (33), **SEALED 20:53 (34). MODE H IS COMPLETE; THE FREEZE HAS ENDED.** Backup after
-  the seal done (35). Waiting: the reviewer's review (EX_199); then both reports together (D6), in a fresh session. Step reached: see the newest
-  decision log entries and exchange/RUNS/. If this chat ends
-  mid-sequence: STOP at the last completed step; a new Claude chat checks the last output before anything continues.
-- **OUTLANDISH export done** (entry 23; 1474-1693, c528be4).
-- **Leave alone:** Oz Lotto's master and ledger (` M`, uncommitted, D5); its report files (unshared until Powerball is
-  sealed, D6).
+- **MODE H IS COMPLETE.** Oz Lotto SEALED 15 November 2026, 19:54 (decision log entries 9-21; EX_196 PASS WITH EVIDENCE
+  LIMITATIONS). Powerball SEALED 16 November 2026, 20:53 (entries 24-35; EX_199 PASS WITH EVIDENCE LIMITATIONS). 400/400
+  forecasts and 800 score lines / 400 rank lines in each game. Witness pushes 9eb5e33 (Oz Lotto) and c302871 (Powerball).
+  Backups before and after each seal on G:\BACKUPS\powerball_modeh_2026-11-1*. **The Mode H freeze has ENDED.**
+- **Next (D6):** both value-free report .txt files read together: the reviewer first and independently, then Claude
+  (suggested on Fable). Neither report has been opened by any AI yet.
+- **Optional (EX_199 C01):** the read-only `/L` comparison of the after-Powerball-seal backup, on its own go.
+- **Then:** the register records the study; the holdout exposure record; the P6 milestone note; the handovers refreshed;
+  the owner's separate D5 decision on committing the updated masters, ledgers and value-free records; then MHUP-B.
+- **Leave alone until D5 is decided:** both games' masters and ledgers (` M`), the reports and the batch records; commit
+  only by named paths (never `git add -A`).
 - **Blocks or STOPs:** none.
-- **The freeze is ON** until Powerball is sealed (see "Mode H state").
 
 ## Reviewer status
 
 - Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
-- EX_196 (15 November): Oz Lotto's sequence PASS WITH EVIDENCE LIMITATIONS; nothing blocking.
+- EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. Open: EX_199 C01 (optional backup check).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the holdouts being unopened) is owner-reported.
 - Latest reviewer messages: EX_181 (D1-D7 advice), EX_183 (P0-P5 advice), EX_185 (POC agreed), EX_187 (POC PASS and B01 wording agreed), EX_189 (self-test PASS stands), EX_191 (H-1 v3 and register v0.30: PASS WITH CORRECTIONS; no H-2 edition needed).
@@ -72,16 +65,14 @@ independent "how the process went" note from each AI, with reasoning and alterna
 
 ## Mode H state
 
-Prerequisites run on 15 November 2026: the page check r2 (PASS), backups, tree check. Oz Lotto: Approvals 1-4 DONE; OPENED 19:19,
-SEALED 19:54 (decision log entries 14-20). Powerball: OPENED 16 November 20:26 and SEALED 20:53. Mode H complete; the freeze has ended. The freeze is ON (from 19:18) until
-Powerball is sealed too: no code or package change, no git add -A, no rewrite of working files, pulls only of exchange/ paths.
-Oz Lotto's master and ledger stay uncommitted (D5); its report files stay unshared until Powerball is sealed (D6).
+Both games SEALED (Oz Lotto 15 November 19:54; Powerball 16 November 20:53). Mode H execution is complete and its
+code/environment freeze has ended; D5 (raw masters and ledgers not committed until the owner decides) and D6 (both reports
+shared together) still govern the data and the reports. Q7 stands: no raw draw value enters an AI chat.
 
 ## Full order from here
 
-1. The reviewer's review of 15 November's sequence (EX_196).
-2. Powerball, on an evening the owner chooses, each on its own go: `git pull --ff-only` (only exchange/ paths incoming), the
-   page check r2 with `--games POWERBALL` (sheet r2d prerequisite 3; the same day as Powerball's Approval 1), a backup, the tree
-   check (now expecting Oz Lotto's master and ledger as ` M`), a quiet machine; Approvals 1-4 for Powerball; a backup after.
-3. After both seals: both reports shared together (D6); the register records the study; the handovers refreshed; then MHUP-B.
+1. D6: the reviewer's independent reading of both reports, then Claude's; compare.
+2. Optional: EX_199 C01, the `/L` check of the after-seal backup.
+3. Close-out: register (study, RAT for any new editions), holdout exposure record, P6 notes, handover refresh, D5 decision.
+4. MHUP-B design (on the owner's authorisation), then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
 
