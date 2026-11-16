@@ -1,0 +1,83 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 118, done.
+remote: Counting objects: 100% (118/118), done.
+remote: Compressing objects: 100% (77/77), done.
+remote: Total 110 (delta 82), reused 61 (delta 33), pack-reused 0 (from 0)
+Receiving objects: 100% (110/110), 84.87 KiB | 17.00 KiB/s, done.
+Resolving deltas: 100% (82/82), completed with 8 local objects.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   1bbde0a..e17fcc9  main       -> origin/main
+Updating 1bbde0a..e17fcc9
+Fast-forward
+ exchange/CLAUDE_WEB_TOOLS/modeh_reading/README.md  |  25 +++
+ .../CLAUDE_WEB_TOOLS/modeh_reading/aggregate.py    |  77 ++++++++
+ exchange/CLAUDE_WEB_TOOLS/modeh_reading/analyse.py |  40 ++++
+ exchange/CLAUDE_WEB_TOOLS/modeh_reading/detail.py  |  72 +++++++
+ .../CLAUDE_WEB_TOOLS/modeh_reading/parse_report.py |  31 +++
+ exchange/CONTINUITY_NOW.md                         |  66 +++----
+ exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md   |  38 ++++
+ exchange/DECISIONS/DECISION_LOG.md                 | 213 +++++++++++++++++++++
+ .../DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md    |  64 +++++++
+ ...26_11_16_ALL_WALKFORWARD_RANKING_EVALUATING.txt | 127 ++++++++++++
+ exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r2.md      |  82 ++++++++
+ exchange/EX_199_ChatGPT.md                         | 178 +++++++++++++++++
+ exchange/EX_200_ChatGPT.md                         |  76 ++++++++
+ exchange/EX_201_Claude.md                          | 156 +++++++++++++++
+ exchange/EX_202_Claude.md                          | 114 +++++++++++
+ exchange/EX_203A_ChatGPT.md                        |  32 ++++
+ exchange/EX_203_ChatGPT.md                         |  45 +++++
+ exchange/EX_204_Claude.md                          |  66 +++++++
+ exchange/EX_205_Claude.md                          |  90 +++++++++
+ exchange/OWNER_ROADMAP.md                          |   9 +-
+ ...UP_AFTER_SEAL_CHECK_2026_11_16_owner_window.txt |  61 ++++++
+ 21 files changed, 1628 insertions(+), 34 deletions(-)
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_reading/README.md
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_reading/aggregate.py
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_reading/analyse.py
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_reading/detail.py
+ create mode 100644 exchange/CLAUDE_WEB_TOOLS/modeh_reading/parse_report.py
+ create mode 100644 exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md
+ create mode 100644 exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md
+ create mode 100644 exchange/DECISIONS/OWNER_REQUEST_2026_11_16_ALL_WALKFORWARD_RANKING_EVALUATING.txt
+ create mode 100644 exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r2.md
+ create mode 100644 exchange/EX_199_ChatGPT.md
+ create mode 100644 exchange/EX_200_ChatGPT.md
+ create mode 100644 exchange/EX_201_Claude.md
+ create mode 100644 exchange/EX_202_Claude.md
+ create mode 100644 exchange/EX_203A_ChatGPT.md
+ create mode 100644 exchange/EX_203_ChatGPT.md
+ create mode 100644 exchange/EX_204_Claude.md
+ create mode 100644 exchange/EX_205_Claude.md
+ create mode 100644 exchange/RUNS/POWERBALL_BACKUP_AFTER_SEAL_CHECK_2026_11_16_owner_window.txt
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short --untracked-files=all
+ M results/audit/SEARCH_LOG.csv
+ M source_data/OZLOTTO_results_master.csv
+ M source_data/OZLOTTO_results_master_ledger.csv
+ M source_data/POWERBALL_results_master.csv
+ M source_data/POWERBALL_results_master_ledger.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.csv
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.json
+?? results/method_rankings/OZLOTTO/mode_h_OZLOTTO_1694-1703_mh-ba0c301be2fb4c459492697d0137e7ed.txt
+?? results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.csv
+?? results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.json
+?? results/method_rankings/POWERBALL/mode_h_POWERBALL_1577-1586_mh-24b3eb05319d4051be2f5e6ae1e6c8b8.txt
+?? results/real/holdout/OZLOTTO/MODE_H_BATCH_ID.json
+?? results/real/holdout/POWERBALL/MODE_H_BATCH_ID.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/BATCH_COMPLETE.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/MODE_H_SEALED.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORE_COMPLETE.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/SCORING_STARTED.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/plan.json
+?? results/real/holdout/wf_batches/OZLOTTO/wf-5af149aef7444336a38e469146c95a20/segment_20261115T085921761215Z_2ee6d371.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/BATCH_COMPLETE.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/MODE_H_SEALED.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORE_COMPLETE.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/SCORING_STARTED.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/plan.json
+?? results/real/holdout/wf_batches/POWERBALL/wf-5085cd8feaf54cffb22823ab5869d5a8/segment_20261116T101803379996Z_1db1fd89.json
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
