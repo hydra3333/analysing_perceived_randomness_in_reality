@@ -500,3 +500,21 @@ the installed documents. This log is not a separate approval process.
   prospective design v0.1r7 section 6.6: each session writes the dated cumulative league table) and is MHUP-B's scope
   (marked HIGH). Not designed anywhere: the same table over the past history; raising the report tool's Phase 1 cap
   (R3 17.3.6). Claude proposes both as items for the MHUP-B design. The MHUP-B design starts on the owner's "go".
+
+## 45. 16 November 2026, about 22:39 - the owner on catch-ups, no future holdouts, re-rankings, and the three rules to keep
+
+- **The owner's words (as written):** "Every forward forecast is frozen before its draw exists, so my having seen old draws can’t leak a future one" and "Old draws are already non-confirmatory" ... nearly ... catchups for missing a few weeks are the edge case and I accept the associated risks, I still assess you are better than letting such things interfere even in the absence of "admin" and rules. we do not need holdouts for future method development in my view.  New methods will by the nature of our project of course cause re-rankings and re-[performance vs chance] of all draws up to the latest in the dataset, replacing prior now-obsolete rankings etc.     OK 1. No lottery websites or results searches by the AIs.  2. "Evidence comes only from the reviewed programs and their logged runs"  ... although it can and must be clearly stated as suggestive as it may lead to now and novel methods 3. "My write limits and the local runner’s rulebook stay as they are" I do not understand this one, whatever they are they need reviewing and possibleo chnage to align with what we are discussing here and KISS and least-admin unless there is a "safety" issue of some kind in your view which we can explore and decide on.
+- **Claude's reading:** (a) catch-up forecasts of already-public draws are the edge case to "the future protects itself";
+  the owner accepts that risk, and the design already labels them CATCH-UP (retrospective). (b) No holdout for future method
+  development: consistent with the ratified design (a later method never gets a fresh holdout; forward forecasts are its
+  test). (c) Re-ranking over all draws when a method is added: consistent with "a league table is a dated view"; the new
+  table is the current one and earlier dated reports stay on file. One design question follows: a single all-history table
+  beside the labelled tiers (for the MHUP-B design, with the reviewer). (d) Rules 1 and 2 agreed, rule 2 with the owner's
+  addition: what an AI computes in a chat is "suggestive", stated as such, and may lead to new methods.
+- **Rule 3 explained and reviewed, as the owner asked:** `exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r1.md` lists every current
+  restriction with DROP, KEEP or CHANGE and the reason. Claude's view: there is a safety reason for two things and only two:
+  Claude's write limits (an AI mistake cannot damage the data or the sealed records; nothing reaches the code without the
+  reviewer and the owner) and the operating rules of the local runner, which sits on the owner's PC beside the real data.
+  Neither is about seeing draws. The runner's two draw-visibility rules (4 and 5) have no safety reason left and are
+  proposed for removal inside MHUP-B's rulebook edition, with no separate round.
+- **Status: NOT YET IN FORCE.** The draft goes to the reviewer; the owner then confirms. Until then Q7 stands.

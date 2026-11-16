@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 16 November 2026, about 22:55 Australia/Adelaide.
+**Last updated:** 16 November 2026, about 23:05 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -39,6 +39,9 @@ durable EX messages are authoritative.
   websites or results searches by the AIs; evidence only from reviewed programs and logged runs; Claude's write limits
   and the runner's rulebook unchanged). Waiting for the reviewer's view, then the owner's confirmation. **Until then Q7
   stands exactly as it is.** The sealed holdout draws are already ordinary history under the ratified design.
+  **The rule-by-rule proposal is `exchange/DECISIONS/RULES_AFTER_Q7_DRAFT_r1.md`** (entry 45): drop the draw-visibility
+  rules; keep Claude's write limits and the runner's operating rules (safety); the runner's rules 4 and 5 go in MHUP-B's
+  rulebook edition. The owner also holds: no holdout for future method development; a new method re-ranks all draws.
 - **The owner's priority (entry 44):** the missing code is to be fixed "asap": that is MHUP-B (catch-up, weekly session,
   the dated league table after every scored draw: design v0.1r7 section 6.6). Proposed additions for its design: the same
   table over the past history, and raising the report tool's Phase 1 window cap. The design starts on the owner's "go"
