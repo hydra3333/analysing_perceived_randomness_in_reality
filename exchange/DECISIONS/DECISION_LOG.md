@@ -741,3 +741,18 @@ the installed documents. This log is not a separate approval process.
   permission to write code or run anything.
 - **Draft v0.6** (`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_6.md`; EX_212 is the covering note)
   records F01, F02, the C03 wording and D-11. Nothing else changed from v0.5.
+
+## 60. 17 November 2026, about 14:40 - the reviewer's final recheck (EX_213): design pass, ratification recommended with RC-1
+
+- **The owner's words:** "Wonderful, I like what you have done. Thanks. I'll past that blurb to chatgpt now." (14:38) and
+  "check" (14:40). Claude fetched and read `exchange/EX_213_ChatGPT.md` (the reviewer's commit `1b8d34a`).
+- **EX_213:** FOCUSED DESIGN PASS on v0.6; it recommends the owner ratify the supplement with one narrow condition, RC-1: after
+  a stopped primary stream, a new registration gets no automatic new 2.5% allowance and needs an explicit reviewed
+  error-budget allocation; a recovery after the outcome may continue the original stream only under a rule fixed in
+  advance and independent of the outcome. The code round's gates remain (numerical implementation, source schemas,
+  de-duplication tests, eligibility restart tests, live-path isolation, the Windows rehearsal).
+- **Claude:** RC-1 accepted and written into section 6.8. The ratification candidate is
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_7_RATIFICATION_CANDIDATE.md` (38,428 bytes; SHA-256
+  `04c4f68a638fff7d93f06d25084d1454bdfc443e9aab6b0b12ffdfd8b5323d26`; Git blob `7acd172c586aba407200cc0b2abcbbcb1fb2aa71`):
+  v0.6 with RC-1 and a status header, nothing else changed.
+- **Awaiting:** the owner's explicit ratification of that file and his approval of O-1 to O-3 (and O-4's objective).
