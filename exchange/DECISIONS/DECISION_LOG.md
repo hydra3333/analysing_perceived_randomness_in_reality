@@ -910,3 +910,27 @@ the installed documents. This log is not a separate approval process.
   approach without weakening review or science.
 - **Next:** code plan v0.2 and the smallest design amendment, then a focused recheck, then the owner's ratification of the
   complete plan; no code before a specific go (entry 67).
+
+## 69. 17 November 2026, about 18:43 - OWNER DIRECTIONS on OD-1 to OD-4 and OD-6 (code plan section 12; EX_223 section 3); OD-5 open
+
+- **Where:** the owner's message in the Claude chat, after Claude set out each decision with its own and the reviewer's
+  recommendation (which agreed on all six).
+- **The owner's words:** "OD-1 yes to A. OD-2 yes to B conditionally as reviewer indicated. OD-3 yes to B. OD-4 yes to A.
+  OD-5 I don't understand it nor why the secrecy/controls around it as we are now past that need (eg holdouts), feel
+  free to discuss after OD-6 is noted. OD-6 yes to A. Please do not progress anything else until OD-1 through 6 are all
+  formally agreed."
+- **So (directions for plan v0.2 and the design amendment; the exact wording returns to the owner for ratification):**
+  - **OD-1 = A:** two kinds of development run: routine fill (a new method's own variants and gaps) and exploratory rerun
+    (any runnable method, variants or the whole cohort, over any eligible past draws, on the owner's request). Separate
+    immutable attempts; never counted twice; the main league's one score per key chosen by a fixed rule; sealed Mode H
+    untouched. This is a new, narrow exception to the full-cohort choice of 31 October 2026 (ER-6 declined).
+  - **OD-2 = B, conditionally as the reviewer indicated (EX_223 B01):** a draw with no qualifying frozen set counts as a
+    neutral factor of 1 under a rule fixed at registration, decided by the program from the complete chained records and
+    provably blind to the outcome; a frozen set without its pre-draw entry is still a stop; if such a rule cannot be
+    specified and proved, option A (stop) applies.
+  - **OD-3 = B:** noon Adelaide time on the draw day as the last moment for OV-1's pre-draw entry; the forecast deadline
+    stays midnight. Open point: the owner's confirmation that both games are drawn in the evening.
+  - **OD-4 = A:** after a genuine stop the stream stays stopped; no restart or second registration in MHUP-B.
+  - **OD-6 = A:** three technical review slices, one integrated review, one install; no extra owner approvals per slice.
+  - **OD-5: OPEN.** The owner questions the need and the controls; to be discussed.
+- **Nothing else is progressed until all six are agreed (the owner's instruction).**
