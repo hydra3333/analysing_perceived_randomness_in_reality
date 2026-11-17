@@ -874,3 +874,10 @@ the installed documents. This log is not a separate approval process.
   OD-5 (a read-only census of the real score records before the install); OD-6 (three review slices).
 - **Model (MC-1):** the Fable task is finished. Opus is enough until the reviewer replies; Fable again for any plan
   revision that touches OV-1's arithmetic, the release rules or the gates.
+
+## 66. 17 November 2026, about 16:50 - correction of entry 65's time
+
+- Entry 65's heading says "about 18:15". **The time was about 16:45.** Claude's slip: a step that was to correct the time
+  in two files stopped after the first, and the commit went ahead (commit `2b050e4`). `exchange/CONTINUITY_NOW.md` has the
+  right time. Nothing else in entry 65 is affected. Lesson kept: when a correction touches several files, check each
+  before committing; this log holds the owner's words as written, which are not all US-ASCII, so it is opened as bytes.
