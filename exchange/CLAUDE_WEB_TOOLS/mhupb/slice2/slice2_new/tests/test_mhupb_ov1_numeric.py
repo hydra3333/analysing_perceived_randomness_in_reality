@@ -191,6 +191,39 @@ class Primitives(unittest.TestCase):
         self.assertLessEqual(ORACLE_EXP(F(lo, S))[1], 2)
         self.assertGreaterEqual(ORACLE_EXP(F(hi, S))[0], 3)
 
+    def test_enclosures_hold_with_few_terms_so_the_remainders_matter(self):
+        """With the series cut short the remainder terms carry the bound (with the full term counts they are far below
+        the last digit). The enclosures must still contain the truth, only wider."""
+        rng = random.Random(5)
+        keep = (N._EXP_TERMS, N._LOG_TERMS)
+        try:
+            N._EXP_TERMS, N._LOG_TERMS = 6, 4
+            for a in [S, S // 2, 3 * S + 7, -2 * S] + [rng.randrange(-6 * S, 6 * S) for _ in range(40)]:
+                lo, hi = N.exp_enc(a)
+                o_lo, o_hi = ORACLE_EXP(F(a, S))
+                self.assertLessEqual(F(lo, S), o_lo, a)
+                self.assertGreaterEqual(F(hi, S), o_hi, a)
+                self.assertGreater(hi - lo, 10 ** 30, a)                      # visibly wider: the remainder is at work
+            for m in [2 * S, 4 * S, 5 * S] + [S + rng.randrange(S // 2, 4 * S) for _ in range(40)]:
+                lo, hi = N.log_enc(m, m)
+                self.assertLessEqual(ORACLE_EXP(F(lo, S))[1], F(m, S), m)
+                self.assertGreaterEqual(ORACLE_EXP(F(hi, S))[0], F(m, S), m)
+                self.assertGreater(hi - lo, 10 ** 30, m)
+        finally:
+            N._EXP_TERMS, N._LOG_TERMS = keep
+
+    def test_squaring_rounds_each_end_the_right_way_exactly(self):
+        """The squaring step of exp: the lower end is the exact floor and the upper end the exact ceiling of the square
+        (the accumulated slack of a whole exp would hide a flipped direction, so the step is checked on its own)."""
+        rng = random.Random(6)
+        for _ in range(200):
+            lo = rng.randrange(1, 9 * S)
+            hi = lo + rng.randrange(0, 1000)
+            out_lo, out_hi = N._square(lo, hi)
+            self.assertTrue(out_lo * S <= lo * lo < (out_lo + 1) * S)
+            self.assertTrue((out_hi - 1) * S < hi * hi <= out_hi * S)
+        self.assertEqual(N._square(S, S), (S, S))
+
     def test_sqrt_bounds_are_exact(self):
         for p, q in ((2, 1), (1, 3), (196, 34), (7 * 28 * 22400, 34 * 35), (0, 5), (10 ** 40 + 1, 7)):
             lo, hi = N.sqrt_enc(p, q)
@@ -325,6 +358,19 @@ class FactorTable(unittest.TestCase):
                 N.factor_table(w)
         finally:
             N.MARGIN = margin
+
+    def test_the_certificate_catches_an_error_in_the_derivation(self):
+        """Plan 6.3: the certificate is a second, independent guarantee. A logarithm that is wrong by 1e-28 (inside an
+        enclosure that still looks narrow) would make every stored factor too large; the pointwise width check cannot
+        see it, and the certificate refuses."""
+        real = N.log_enc
+        try:
+            N.log_enc = lambda a, b: tuple(v - 10 ** 22 for v in real(a, b))
+            with self.assertRaises(N.Refuse) as caught:
+                N.factor_table(CASES['one variant N=35'])
+            self.assertIn('certificate', str(caught.exception))
+        finally:
+            N.log_enc = real
 
     def test_frozen_fixture_digests(self):
         """A later kernel must reproduce these bytes exactly, or it is a reviewed amendment (plan L5)."""

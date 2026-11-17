@@ -489,6 +489,23 @@ class Missed(Stream):
         self.assertEqual(self.record(), [('MISSED', self.m + 1)])             # resumes by itself once it verifies
         self.assertEqual(self.ov1_rows()[-1]['forecast_ledger_extent'], JL.extent(self.lines()))
 
+    def test_a_freeze_time_later_than_the_clock_blocks(self):
+        """Everything in the forecast ledger agrees with every earlier record, but its last freeze time is later than
+        this program's clock (the clock went back): absence is not established, so the target is blocked."""
+        self.missed_setup()
+        t0 = self.now                                                         # after M + 1's cut-off
+        self.grow([self.m + 1])
+        self.now = t0 + timedelta(hours=2)
+        sid = self.open()['session_id']
+        self.assertEqual(self.next(sid), ('FROZE', self.m + 1))              # a catch-up line for M + 1, frozen at t0 + 2h
+        self.now = t0 + timedelta(hours=1)                                    # the clock is now behind that line
+        before = self.ledger_bytes()
+        with self.assertRaises(OV.OV1Blocked):
+            self.record()
+        self.assertEqual(self.ledger_bytes(), before)
+        self.now = t0 + timedelta(hours=3)
+        self.assertEqual(self.record(), [('MISSED', self.m + 1)])
+
     def test_a_publication_manifest_that_names_a_lost_extent_blocks(self):
         """The league table's manifests (slice 3) are read through ov1.publication_names; here that reader is stood
         in for, to show a named extent or freeze line that is gone blocks the missed line."""
@@ -627,6 +644,22 @@ class Stops(Stream):
             self.assertEqual(self.record(), [('STOP', self.m)])
         self.after_a_stop('FACTOR_TABLE_MISMATCH', sid)
 
+    def test_a_replaced_forecast_ledger_blocks_a_sealed_draw_and_is_not_a_stop(self):
+        """The freeze line an eligibility line sealed is gone from the forecast ledger (a consistent ledger with
+        another line in its place): the input does not verify, so the draw is blocked, never stopped and never
+        skipped; with the ledger back, the factor line is written."""
+        sid = self.sealed_and_scored()
+        path = OR.forecast_ledger_path(self.proj, self.GAME)
+        good = path.read_bytes()
+        line = json.loads(good.split(b'\n')[0])
+        path.write_bytes(canonical(dict(line, closure_digest='d' * 64)))
+        before = self.ledger_bytes()
+        with self.assertRaises(OV.OV1Blocked):
+            self.record()
+        self.assertEqual(self.ledger_bytes(), before)
+        path.write_bytes(good)
+        self.assertEqual(self.record(), [('FACTOR', self.m)])
+
     def test_the_owners_stop_at_an_open_target_and_at_a_sealed_one(self):
         self.register()
         with self.assertRaises(OV.OV1Refused):
@@ -635,6 +668,18 @@ class Stops(Stream):
         self.assertEqual((line['cause'], line['target_draw_number'], line['owner_statement']),
                          ('OWNER_STOP', self.m, OV.STOP_STATEMENT))
         self.assertEqual(self.week()[1], [])
+        path = OV.ledger_path(self.proj, self.GAME)                           # a line after a stop is not this program's
+        good = path.read_bytes()
+        rows = self.ov1_rows()
+        after = JL.chained({'schema': OV.LINE_SCHEMA, 'kind': 'MISSED', 'game_id': self.GAME, 'target_draw_number': self.m,
+                            'registration_digest': rows[0]['registration_digest'],
+                            'cutoff_utc': WR.utc_text(self.cut(self.m)), 'written_utc': WR.utc_text(self.cut(self.m, 5)),
+                            'reason': OV.MISSED_REASON, 'label': OV.MISSED_LABEL,
+                            'forecast_ledger_extent': JL.extent(self.lines())}, rows)
+        path.write_bytes(good + canonical(after))
+        with self.assertRaises(OV.OV1Blocked):
+            OV.status(self.GAME)
+        path.write_bytes(good)
         self.tearDown()
         self.setUp()
         sid = self.sealed_and_scored()                                        # sealed, scored, the factor not yet written

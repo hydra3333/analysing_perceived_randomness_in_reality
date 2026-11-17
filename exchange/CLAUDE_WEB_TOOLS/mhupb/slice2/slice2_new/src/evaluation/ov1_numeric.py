@@ -94,6 +94,11 @@ def _exp_small(a: int) -> tuple[int, int]:
     return lo, hi + 2 * tu + 1
 
 
+def _square(lo: int, hi: int) -> tuple[int, int]:
+    """(a lower bound of S * (lo/S)^2, an upper bound of S * (hi/S)^2) for 0 <= lo <= hi: an exact floor and ceiling."""
+    return _fdiv(lo * lo, S), _cdiv(hi * hi, S)
+
+
 def exp_enc(a: int) -> tuple[int, int]:
     """(lo, hi) enclosing S * exp(a / S) for any whole a (P2)."""
     _whole(a, 'exp argument')
@@ -106,7 +111,7 @@ def exp_enc(a: int) -> tuple[int, int]:
     lo = _exp_small(a >> j)[0]
     hi = _exp_small(-((-a) >> j))[1]
     for _ in range(j):
-        lo, hi = _fdiv(lo * lo, S), _cdiv(hi * hi, S)
+        lo, hi = _square(lo, hi)
     return lo, hi
 
 
