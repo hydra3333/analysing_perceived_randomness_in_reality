@@ -1,6 +1,6 @@
 diff -ru slice1_tree/src/evaluation/collect.py slice2_tree/src/evaluation/collect.py
 --- slice1_tree/src/evaluation/collect.py	2026-11-17 20:14:02.547839259 +1030
-+++ slice2_tree/src/evaluation/collect.py	2026-11-18 01:58:27.655753046 +1030
++++ slice2_tree/src/evaluation/collect.py	2026-11-18 10:02:17.905714287 +1030
 @@ -30,6 +30,10 @@
      on draw numbers and the declaration."""
      e = get_profile(plan['game_id']).first_draw
@@ -13,27 +13,32 @@ diff -ru slice1_tree/src/evaluation/collect.py slice2_tree/src/evaluation/collec
  
  
 diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation/outcome_reader.py
---- slice1_tree/src/evaluation/outcome_reader.py	2026-11-18 02:23:14.382821324 +1030
-+++ slice2_tree/src/evaluation/outcome_reader.py	2026-11-18 01:58:27.656398989 +1030
-@@ -79,6 +79,25 @@
+--- slice1_tree/src/evaluation/outcome_reader.py	2026-11-18 10:28:16.766959856 +1030
++++ slice2_tree/src/evaluation/outcome_reader.py	2026-11-18 10:02:17.907475876 +1030
+@@ -52,7 +52,8 @@
+     SCORING_STARTED's roster digest equals the exact roster of the plan (every planned pair with its DONE ticket, by
+     identity, computed here from the records), the target is one of the plan's, and SCORE_COMPLETE does not yet
+     exist (after it, no outcome is re-read, 5.2). For a draw after the holdout (MHUP-B, design 6.3 and Appendix E): only
+-    when the game's developed record exists and names its sealed Mode H study, the forecast ledger (verified in full:
++    when the game's developed record exists (the owner's declaration; the archive is not consulted), the forecast
++    ledger (verified in full:
+     canonical lines, the chain, every
+     line's shape) holds a freeze line for the target, every record that line names verifies (its own session record
+     and digest, its DONE ticket and digest, its run folder and digest), and the target is at most the last draw of
+@@ -79,12 +80,26 @@
          return False
  
  
 +def development_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
-+    """The post-seal development rule (MHUP-B; supplement v0.8 section 7.2 rules 1, 2 and 2A; code plan CF-4; an
-+    always-review subject). Decides whether the outcome of a holdout or later draw may be served to a DEVELOPMENT
-+    report: only when the game's opening record exists and its Mode H study is SEALED (the sealed study is never
-+    reopened: this reads the master, not the study); and, for a draw after the holdout, only when the weekly
-+    freeze-line rule also releases it (the developed record, a verified freeze line for the draw, the draw accepted).
-+    Fixed evidence paths under the root; anything invalid or absent refuses (False)."""
-+    import _common.owner_records as OR
++    """Whether the outcome of a draw at or after the former holdout's first draw may be served to a DEVELOPMENT report
++    (MHUP-B; an always-review subject). A former holdout draw is an ordinary historical draw: it is released like
++    any draw of the pinned master, with no condition on the archived Mode H study (the owner's clarification of
++    18 November 2026; EX_234 section 3). A draw after it belongs to weekly operation: it is released only when the
++    weekly freeze-line rule releases it (the developed record, a verified freeze line for the draw, the draw
++    accepted), so a development report never reads a result before the weekly forecasts for it are frozen.
++    The Mode H scorer's own rule (outcome_release_allowed) is unchanged and is not used here."""
 +    p = get_profile(game_id)
 +    if type(target) is not int or target < p.holdout_first:
-+        return False
-+    try:
-+        if OR.opening_record(repo_root, game_id) is None or not OR.mode_h_sealed(repo_root, game_id):
-+            return False
-+    except OR.RecordRefused:
 +        return False
 +    return target <= p.holdout_last or _weekly_release_allowed(repo_root, game_id, target)
 +
@@ -41,7 +46,14 @@ diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation
  def _weekly_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
      """The weekly freeze-line rule (design 6.3). Fixed evidence paths under the root; no caller-chosen input."""
      import _common.owner_records as OR
-@@ -95,7 +114,8 @@
+     import _common.weekly_records as WR
+     try:
+-        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal
++        WR.developed(repo_root, game_id)                   # the owner's declaration, or a refusal
+         line = WR.freeze_line_for(WR.forecast_ledger(repo_root, game_id), target)
+         if line is None:
+             return False
+@@ -95,7 +110,8 @@
          return False
  
  
@@ -51,7 +63,7 @@ diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation
      p = get_profile(game_id)
      out = sorted(set(targets))
      if not out:
-@@ -103,7 +123,7 @@
+@@ -103,7 +119,7 @@
      for t in out:
          if type(t) is not int or t < p.first_draw + 1:
              raise OutcomeRefused(f'target {t!r} is not a draw after the first of the era ({p.first_draw})')
@@ -60,7 +72,7 @@ diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation
              raise OutcomeRefused(f'target {t} is a holdout or later draw not released by the freeze-before-outcome '
                                   f'rule (design 5.3, 6.3)')
      return out
-@@ -137,23 +157,28 @@
+@@ -137,23 +153,28 @@
      return v
  
  
@@ -93,7 +105,7 @@ diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation
      raw = _verify_source(repo_root, game_id, master_sha256, ledger_version)
      want = set(wanted)
      last = wanted[-1]                               # in or after the holdout only if released (5.3, 6.3)
-@@ -171,7 +196,7 @@
+@@ -171,7 +192,7 @@
          number = p.first_draw + i
          if number not in want:
              continue                                 # never decoded
@@ -104,7 +116,7 @@ diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation
              row = next(csv.reader([line.decode('ascii', errors='strict')], strict=True))
 diff -ru slice1_tree/src/evaluation/report.py slice2_tree/src/evaluation/report.py
 --- slice1_tree/src/evaluation/report.py	2026-11-17 20:14:02.548358882 +1030
-+++ slice2_tree/src/evaluation/report.py	2026-11-18 01:58:27.656725443 +1030
++++ slice2_tree/src/evaluation/report.py	2026-11-18 10:02:17.908952065 +1030
 @@ -80,6 +80,15 @@
      return [f for f in reg['families'] if f['game_id'] == game_id and (f['window_first'], f['window_last']) == (first, last)]
  
@@ -144,14 +156,14 @@ diff -ru slice1_tree/src/evaluation/report.py slice2_tree/src/evaluation/report.
                              f"[{plan['window_first']}, {plan['window_last']}]")
 -    families = load_families(game_id, first, last)
 +    if second_kind:
-+        # MHUP-B (supplement v0.8 7.2; code plan L6): a plan of the second kind is reported on its own pairs. A holdout
-+        # or later target is read only under the post-seal development rule; that is checked here, before the
++        # MHUP-B (supplement v0.8 7.2; code plan L6): a plan of the second kind is reported on its own pairs. A target
++        # after the former holdout is read only once the weekly rule releases it; that is checked here, before the
 +        # search-log row, from value-free records, so a refused window appends nothing. No registered family applies:
 +        # every table of such a report is EXPLORATORY_COHORT.
 +        for t in sorted({t for _mem, t in WF.plan_pairs(plan) if first <= t <= last and t >= p.holdout_first}):
 +            if not OR.development_release_allowed(roots()['project'], game_id, t):
-+                raise ReportRefused(f'target {t} is not released to a development report (the game\'s Mode H seal; and, '
-+                                    f'after the holdout, the weekly freeze line: supplement 7.2)')
++                raise ReportRefused(f'target {t} is not released to a development report yet: after the former holdout a '
++                                    f'draw is read only once its weekly freeze line exists (supplement 7.2 rule 2A)')
 +        families = []
 +    else:
 +        families = development_families(game_id, first, last)
@@ -190,7 +202,7 @@ diff -ru slice1_tree/src/evaluation/report.py slice2_tree/src/evaluation/report.
              'scoring_plan_digest': sp_digest, 'scores_folder': folder, 'declared_tests': tests,
 diff -ru slice1_tree/src/evaluation/report_writer.py slice2_tree/src/evaluation/report_writer.py
 --- slice1_tree/src/evaluation/report_writer.py	2026-11-17 20:14:02.548358882 +1030
-+++ slice2_tree/src/evaluation/report_writer.py	2026-11-18 01:58:27.657054514 +1030
++++ slice2_tree/src/evaluation/report_writer.py	2026-11-18 10:02:17.906700904 +1030
 @@ -253,6 +253,10 @@
        f"{plan['cohort_digest']}; {len(plan['cohort'])} variants, {len(res['per_track'])} tracks")
      w('Families: ' + (', '.join(f['family_id'] for f in res['families']) or 'none apply to this window: '
@@ -225,7 +237,7 @@ diff -ru slice1_tree/src/evaluation/report_writer.py slice2_tree/src/evaluation/
          manifest.update(generated_utc=None, mode_h={'score_attempt_id': res['attempt_id'],
 diff -ru slice1_tree/src/methods/Method_Walk_Forward.py slice2_tree/src/methods/Method_Walk_Forward.py
 --- slice1_tree/src/methods/Method_Walk_Forward.py	2026-11-17 20:14:02.549345312 +1030
-+++ slice2_tree/src/methods/Method_Walk_Forward.py	2026-11-18 01:58:27.657219700 +1030
++++ slice2_tree/src/methods/Method_Walk_Forward.py	2026-11-18 10:02:17.906801248 +1030
 @@ -6,6 +6,11 @@
    plan   --mode H --game G              MHUP-A (design 5.1): freeze the game's one Mode H plan from the study
                                          manifest, at the admitted master version, under the opening record; one
@@ -275,19 +287,20 @@ diff -ru slice1_tree/src/methods/Method_Walk_Forward.py slice2_tree/src/methods/
              made = WF.make_plan(args.game, args.first, args.last, ADAPTERS)
 diff -ru slice1_tree/src/methods/_common/contract_dispatch.py slice2_tree/src/methods/_common/contract_dispatch.py
 --- slice1_tree/src/methods/_common/contract_dispatch.py	2026-11-17 20:14:02.561303528 +1030
-+++ slice2_tree/src/methods/_common/contract_dispatch.py	2026-11-18 01:58:27.653829437 +1030
-@@ -215,6 +215,58 @@
++++ slice2_tree/src/methods/_common/contract_dispatch.py	2026-11-18 10:02:17.907969883 +1030
+@@ -215,6 +215,54 @@
                  refuse('MODE_DISAGREES_WITH_RELEASE', 'CATCH_UP needs a release date before the target\'s draw date')
              if mode == 'REAL_DEVELOPMENT' and released_before:
                  refuse('MODE_DISAGREES_WITH_RELEASE', 'a variant released before the draw gets CATCH_UP, not development')
 +        elif kind == 'DEV_BATCH':
 +            # MHUP-B (code plan v0.3 L6; supplement v0.8 7.1A, 7.2). A development plan of the second kind: the plan
 +            # exists with the digest the binding names and its search-log row, and lists this exact pair; the request
-+            # pins the plan's pin; an open ticket, and no DONE ticket for the pair in the batch. At or above the
-+            # holdout: the opening record and the game's seal. Above the holdout: a weekly freeze line for the target
-+            # (a target still open in the weekly session is never a batch's); and, for a routine fill, rule 2A: that
-+            # line was frozen before the variant's release instant, does not name the variant, and no session ledger
-+            # holds a ticket for the pair. Value-free records at fixed roots only.
++            # pins the plan's pin; an open ticket, and no DONE ticket for the pair in the batch. A draw up to the end of
++            # the former holdout is an ordinary historical draw: no record of the archived Mode H study is a condition
++            # here (the owner's clarification of 18 November 2026). After it the weekly session owns the targets: a
++            # batch gets one only once its weekly freeze line exists (a target still open is never a batch's); and, for
++            # a routine fill, rule 2A: that line was frozen before the variant's release instant, does not name the
++            # variant, and no session ledger holds a ticket for the pair. Value-free records at fixed roots only.
 +            plan = OR.dev_plan(root, game, b['batch_id'])
 +            if record_digest(plan) != b['plan_digest']:
 +                refuse('BINDING_NOT_RESOLVED', 'the binding does not name the plan\'s digest')
@@ -304,11 +317,6 @@ diff -ru slice1_tree/src/methods/_common/contract_dispatch.py slice2_tree/src/me
 +            if not OR.open_ticket_for(rows, run_id=run_id, pair=pair, request_digest=record_digest(request)):
 +                refuse('NO_OPEN_TICKET', 'no open ticket names this run id, pair and request')
 +            p = get_profile(game)
-+            if target >= p.holdout_first:
-+                if OR.opening_record(root, game) is None:
-+                    refuse('HOLDOUT_NOT_OPENED', 'a holdout or later development target needs the opening record')
-+                if not OR.mode_h_sealed(root, game):
-+                    refuse('MODE_H_NOT_SEALED', 'a holdout or later development target needs the game\'s Mode H seal')
 +            if target > p.holdout_last:
 +                lines = [r for r in OR.forecast_ledger_lines(root, game) if r['target_draw_number'] == target]
 +                if len(lines) != 1:
@@ -335,7 +343,7 @@ diff -ru slice1_tree/src/methods/_common/contract_dispatch.py slice2_tree/src/me
          elif kind == 'OWNER_DIAGNOSTIC':
              if mode != 'REAL_DEVELOPMENT':
                  refuse('DIAGNOSTIC_MODE', 'the diagnostic route admits REAL_DEVELOPMENT only')
-@@ -227,6 +279,17 @@
+@@ -227,6 +275,17 @@
          refuse('BINDING_NOT_RESOLVED', str(exc))
  
  
@@ -355,7 +363,7 @@ diff -ru slice1_tree/src/methods/_common/contract_dispatch.py slice2_tree/src/me
      which has no RUN_REQUEST_V1 and so no pins: an active SUPPORTED entry for exactly this game, method,
 diff -ru slice1_tree/src/methods/_common/contract_records.py slice2_tree/src/methods/_common/contract_records.py
 --- slice1_tree/src/methods/_common/contract_records.py	2026-11-17 20:14:02.561303528 +1030
-+++ slice2_tree/src/methods/_common/contract_records.py	2026-11-18 01:58:27.652480223 +1030
++++ slice2_tree/src/methods/_common/contract_records.py	2026-11-18 10:02:17.903541536 +1030
 @@ -323,7 +323,8 @@
  _REQUEST_OPTIONAL = ('binding',)      # MHUP-A: present exactly when the mode and target need one (design 3.4)
  _BINDING_FIELDS = {'MODE_H_BATCH': ('kind', 'batch_id', 'plan_digest', 'run_id'),
@@ -388,8 +396,8 @@ diff -ru slice1_tree/src/methods/_common/contract_records.py slice2_tree/src/met
                  raise ValueError(f'{where}: a development run within the prefix carries no session or Mode H binding')
          elif kind == 'WEEKLY_SESSION':
 diff -ru slice1_tree/src/methods/_common/contract_runner.py slice2_tree/src/methods/_common/contract_runner.py
---- slice1_tree/src/methods/_common/contract_runner.py	2026-11-18 02:23:14.383260152 +1030
-+++ slice2_tree/src/methods/_common/contract_runner.py	2026-11-18 01:58:27.654346480 +1030
+--- slice1_tree/src/methods/_common/contract_runner.py	2026-11-18 10:28:16.767530954 +1030
++++ slice2_tree/src/methods/_common/contract_runner.py	2026-11-18 10:02:17.904609731 +1030
 @@ -105,6 +105,8 @@
          return OR.diagnostic_runs_root(PROJECT_ROOT)
      if kind == 'WEEKLY_SESSION':
@@ -409,8 +417,8 @@ diff -ru slice1_tree/src/methods/_common/contract_runner.py slice2_tree/src/meth
      from _common import master_versions as MV
      _raw, rows, _evidence = MV.load_verified_source(Path(repo_root), request['game_id'])
 diff -ru slice1_tree/src/methods/_common/contract_vocab.py slice2_tree/src/methods/_common/contract_vocab.py
---- slice1_tree/src/methods/_common/contract_vocab.py	2026-11-18 02:23:14.382009851 +1030
-+++ slice2_tree/src/methods/_common/contract_vocab.py	2026-11-18 01:58:27.652110818 +1030
+--- slice1_tree/src/methods/_common/contract_vocab.py	2026-11-18 10:28:16.766290640 +1030
++++ slice2_tree/src/methods/_common/contract_vocab.py	2026-11-18 10:02:17.903253733 +1030
 @@ -80,7 +80,7 @@
  WEEKLY_MODES = frozenset(('FINAL_NEXT_DRAW', 'CATCH_UP'))                 # session-bound, above the holdout only
  # The binding a real-mode request above the development prefix must carry (design 3.4): the Mode H plan, a weekly
@@ -422,7 +430,7 @@ diff -ru slice1_tree/src/methods/_common/contract_vocab.py slice2_tree/src/metho
                             'IS_DIAGNOSTIC_ENTRY', 'BENCHMARK_TIMING'))
 diff -ru slice1_tree/src/methods/_common/master_versions.py slice2_tree/src/methods/_common/master_versions.py
 --- slice1_tree/src/methods/_common/master_versions.py	2026-11-17 20:14:02.561303528 +1030
-+++ slice2_tree/src/methods/_common/master_versions.py	2026-11-18 01:58:27.652708986 +1030
++++ slice2_tree/src/methods/_common/master_versions.py	2026-11-18 10:02:17.903703899 +1030
 @@ -314,6 +314,16 @@
      return master_raw, rows, json.loads(evidence_raw)
  
@@ -441,8 +449,8 @@ diff -ru slice1_tree/src/methods/_common/master_versions.py slice2_tree/src/meth
      """(version, master_sha256) of the ledger's current last row, after rules 1 and 2. Orchestration only."""
      _raw, rows, _ev = load_verified_source(repo_root, game_id)
 diff -ru slice1_tree/src/methods/_common/owner_records.py slice2_tree/src/methods/_common/owner_records.py
---- slice1_tree/src/methods/_common/owner_records.py	2026-11-18 02:23:14.382982622 +1030
-+++ slice2_tree/src/methods/_common/owner_records.py	2026-11-18 01:58:27.653381789 +1030
+--- slice1_tree/src/methods/_common/owner_records.py	2026-11-18 10:28:16.767106854 +1030
++++ slice2_tree/src/methods/_common/owner_records.py	2026-11-18 10:02:17.904088931 +1030
 @@ -284,6 +284,70 @@
      return v, _sha(rec, 'master_sha256', what)
  
@@ -516,7 +524,7 @@ diff -ru slice1_tree/src/methods/_common/owner_records.py slice2_tree/src/method
      return (target in plan.get('targets', []) and
 diff -ru slice1_tree/src/methods/_common/release_records.py slice2_tree/src/methods/_common/release_records.py
 --- slice1_tree/src/methods/_common/release_records.py	2026-11-17 20:14:02.561303528 +1030
-+++ slice2_tree/src/methods/_common/release_records.py	2026-11-18 01:58:27.653604147 +1030
++++ slice2_tree/src/methods/_common/release_records.py	2026-11-18 10:02:17.904226181 +1030
 @@ -121,6 +121,19 @@
      return recs
  
@@ -538,8 +546,8 @@ diff -ru slice1_tree/src/methods/_common/release_records.py slice2_tree/src/meth
      """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
      record's entries, less every entry a record retires or marks superseded_by, and less every entry whose registry
 diff -ru slice1_tree/src/methods/_common/score_identities.py slice2_tree/src/methods/_common/score_identities.py
---- slice1_tree/src/methods/_common/score_identities.py	2026-11-18 02:23:14.436448428 +1030
-+++ slice2_tree/src/methods/_common/score_identities.py	2026-11-18 01:58:27.655609760 +1030
+--- slice1_tree/src/methods/_common/score_identities.py	2026-11-18 10:28:16.838480129 +1030
++++ slice2_tree/src/methods/_common/score_identities.py	2026-11-18 10:02:17.905611056 +1030
 @@ -64,6 +64,70 @@
      return frozenset(seen)
  
@@ -613,7 +621,7 @@ diff -ru slice1_tree/src/methods/_common/score_identities.py slice2_tree/src/met
              named['scored_record_digest'], WR.ROUTINE_POLICY)
 diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods/_common/walk_forward.py
 --- slice1_tree/src/methods/_common/walk_forward.py	2026-11-17 20:14:02.561303528 +1030
-+++ slice2_tree/src/methods/_common/walk_forward.py	2026-11-18 01:58:27.655389289 +1030
++++ slice2_tree/src/methods/_common/walk_forward.py	2026-11-18 10:02:17.908718158 +1030
 @@ -22,6 +22,12 @@
    <project>/results/real/holdout/wf_batches/<GAME>/<batch_id>/       plan.json, attempts.jsonl, the markers
    <project>/results/real/holdout/contract_runs/                       the runs
@@ -670,23 +678,11 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
  
  
  def utc_now() -> str:
-@@ -228,6 +246,146 @@
+@@ -228,6 +246,134 @@
      return plan
  
  
 +# ---------------------------------------------------------------- plans of the second kind (MHUP-B, supplement 7.1A)
-+
-+def development_cap(game_id: str) -> int:
-+    """The last draw a development batch may target under the window contract (supplement v0.8 7.2 rules 1 and 2):
-+    the Phase 1 cap until the game's Mode H study is sealed, the holdout's last draw after it."""
-+    p = get_profile(game_id)
-+    root = roots()['project']
-+    try:
-+        sealed = OR.opening_record(root, game_id) is not None and OR.mode_h_sealed(root, game_id)
-+    except OR.RecordRefused as exc:
-+        raise BatchRefused(f'owner record refused: {exc}') from None
-+    return p.holdout_last if sealed else p.holdout_first - 1
-+
 +
 +def _weekly_facts(game_id: str) -> tuple[dict, dict]:
 +    """(target -> verified weekly freeze line, (game, method, revision, variant) -> release instant). Value-free."""
@@ -701,9 +697,11 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +    return lines, instants
 +
 +
-+def _fill_pairs(game_id: str, members, cap: int, last_draw: int) -> list[list]:
++def _fill_pairs(game_id: str, members, last_draw: int) -> list[list]:
 +    """A routine fill's pairs, worked out by the driver (plan L6): for every released variant, its eligible targets
-+    that no canonical source covers. Eligible: the game's first target to the cap; and, above the holdout, rule 2A:
++    that no canonical source covers (each revision is its own identity). Eligible: every draw from the game's first
++    target to `holdout_last`, the last draw before weekly operation (the former holdout draws are ordinary draws,
++    with no condition on the archived Mode H study); and, after it, rule 2A:
 +    an accepted target whose weekly freeze line was frozen before the variant's release instant, does not name the
 +    variant, and for which no session ledger holds a ticket."""
 +    from _common import score_identities as SI
@@ -714,11 +712,11 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +        covered = SI.canonical_coverage(root, game_id)
 +    except OR.RecordRefused as exc:
 +        raise BatchRefused(f'the league\'s source list refuses: {exc}') from None
-+    lines, instants = _weekly_facts(game_id) if cap == p.holdout_last and last_draw > p.holdout_last else ({}, {})
++    lines, instants = _weekly_facts(game_id) if last_draw > p.holdout_last else ({}, {})
 +    pairs = []
 +    for mem in members:
 +        key = (mem['method_id'], mem['method_revision'], mem['variant_id'])
-+        for t in range(p.first_draw + 1, cap + 1):
++        for t in range(p.first_draw + 1, p.holdout_last + 1):
 +            if (*key, t) not in covered:
 +                pairs.append([*key, t])
 +        released = instants.get((game_id, *key))
@@ -742,8 +740,9 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +
 +    ROUTINE_FILL: the owner names only the game; the driver works out the missing pairs (see _fill_pairs).
 +    EXPLORATORY_RERUN: the owner names the window and, optionally, the variants as (method_id, variant_id) pairs (the
-+    whole released cohort otherwise). Any target up to the cap, and any later accepted target that has a weekly freeze
-+    line, whether or not it was scored before. A window that reaches a target outside those refuses.
++    whole released cohort otherwise). Any accepted target up to `holdout_last`, and any later accepted target that has
++    a weekly freeze line, whether or not it was scored before. A window that reaches a target outside those refuses.
++    No record of the archived Mode H study is a condition of either kind.
 +    Either kind runs only released, runnable variants (a retired revision is not runnable), gives development evidence
 +    only, and writes only under the development roots."""
 +    from _common import master_versions as MV
@@ -760,11 +759,10 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +        last_draw = MV.load_verified_source(roots()['project'], game_id)[1][-1].last_draw
 +    except MV.LedgerRefused as exc:
 +        raise BatchRefused(f'{game_id}: the master ledger does not pass the version-2 rules: {exc}') from None
-+    cap = development_cap(game_id)
 +    if plan_kind == 'ROUTINE_FILL':
 +        if variants is not None or first is not None or last is not None:
 +            raise BatchRefused('a routine fill works out its own pairs: it takes no variants and no window')
-+        pairs = _fill_pairs(game_id, members, cap, last_draw)
++        pairs = _fill_pairs(game_id, members, last_draw)
 +        if not pairs:
 +            raise BatchRefused('nothing to fill: every eligible pair of every released variant is covered')
 +    else:
@@ -784,9 +782,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +            chosen = [by_name[w] for w in sorted(set(wanted), key=lambda k: (int(k[0][2:]), k[1]))]
 +        lines = _weekly_facts(game_id)[0] if last > p.holdout_last else {}
 +        for t in range(first, last + 1):
-+            if cap < t <= p.holdout_last:
-+                raise BatchRefused(f'target {t} is a holdout draw and the game\'s Mode H study is not sealed')
-+            if t > p.holdout_last and (cap != p.holdout_last or t not in lines):
++            if t > p.holdout_last and t not in lines:
 +                raise BatchRefused(f'target {t} is after the holdout and has no weekly freeze line: it is the weekly '
 +                                   f'session\'s, not a batch\'s')
 +        pairs = [[m['method_id'], m['method_revision'], m['variant_id'], t] for m in chosen for t in range(first, last + 1)]
@@ -800,7 +796,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
 +            'created_utc': utc_now(), 'driver_version': DRIVER_VERSION, 'run_mode': 'REAL_DEVELOPMENT',
 +            'product_kind': V.producible('REAL_DEVELOPMENT', V.FORECAST)[0], 'observation_view': VIEW,
 +            'include_dates': False, 'master_file': f'{game_id}_results_master.csv', 'ledger_version': version,
-+            'master_sha256': pin, 'development_cap': cap, 'cohort': members, 'not_in_cohort': excluded,
++            'master_sha256': pin, 'cohort': members, 'not_in_cohort': excluded,
 +            'cohort_digest': sha256_hex(canonical({'cohort': members})), 'pairs': pairs,
 +            'pairs_digest': sha256_hex(canonical({'pairs': pairs}))}
 +    folder = roots('DEV_BATCH')['batches'] / game_id / batch_id
@@ -817,7 +813,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
  # ---------------------------------------------------------------- the Mode H batch kind (MHUP-A, design 4.1, 5.1, 5.2)
  
  def _study(game_id: str) -> dict:
-@@ -367,6 +525,8 @@
+@@ -367,6 +513,8 @@
      if not path.is_file() or path.is_symlink():
          raise BatchRefused(f'no plan for batch {batch_id} in {game_id}')
      plan = json.loads(path.read_bytes().decode('ascii'))
@@ -826,7 +822,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
      if (plan.get('schema') != schema or plan.get('batch_id') != batch_id or plan.get('game_id') != game_id or
              canonical(plan) != path.read_bytes() or
              plan.get('cohort_digest') != sha256_hex(canonical({'cohort': plan.get('cohort')}))):
-@@ -380,6 +540,13 @@
+@@ -380,6 +528,13 @@
              raise BatchRefused(f'not the game\'s one Mode H plan: {exc}') from None
          if plan.get('targets') != list(range(plan['window_first'], plan['window_last'] + 1)):
              raise BatchRefused('the Mode H plan\'s targets are not its window')
@@ -840,7 +836,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
      return plan
  
  
-@@ -424,6 +591,9 @@
+@@ -424,6 +579,9 @@
             'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
             'run_id': run_id, 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
             'master_sha256': plan['master_sha256']}
@@ -850,7 +846,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
      if kind_of(plan) == 'MODE_H_BATCH':
          version, sha = _admitted_pin(plan)
          req.update(ledger_version=version, master_sha256=sha,
-@@ -458,8 +628,8 @@
+@@ -458,8 +616,8 @@
  def _append_attempt(plan: Mapping, req: Mapping) -> None:
      """Before a run: a WF_BATCH_ATTEMPT_V1 line (development batch) or an OPEN ticket (Mode H batch, design 3.4), each
      naming the fresh run ID and the digest of the exact request about to be issued."""
@@ -861,7 +857,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
                        method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
                        target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
                        request_digest=record_digest(req))
-@@ -474,7 +644,7 @@
+@@ -474,7 +632,7 @@
  def _append_closing_ticket(plan: Mapping, req: Mapping, kind: str, terminal_class: str | None) -> None:
      """After a Mode H run: DONE (the run folder proves a CONTINUE-class run) or FAILED_TO_START (a resume found an
      open ticket whose run never completed; the run ID is never reused)."""
@@ -870,7 +866,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
                    method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
                    target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
                    terminal_class=terminal_class)
-@@ -483,7 +653,7 @@
+@@ -483,7 +641,7 @@
  
  def _mode_h_tickets(plan: Mapping) -> list[dict]:
      try:
@@ -879,7 +875,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
                            game_id=plan['game_id'])
      except OR.RecordRefused as exc:
          raise BatchRefused(f'the batch\'s attempts ledger is invalid: {exc}') from None
-@@ -493,13 +663,15 @@
+@@ -493,13 +651,15 @@
      """(method, variant, target) -> [run IDs] of this batch's OPEN tickets whose request digest is the plan's own
      request for that pair and run ID (the other ticket kinds close them; the folder decides what a run proved)."""
      members = {(m['method_id'], m['variant_id']): m for m in plan['cohort']}
@@ -896,7 +892,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
                  t['request_digest'] != record_digest(request_for(plan, mem, target, t['run_id']))):
              bad += 1
              continue
-@@ -511,35 +683,34 @@
+@@ -511,35 +671,34 @@
      """Design 5.2, before any new ticket: every OPEN ticket of this batch not yet closed by a DONE or FAILED_TO_START
      for its run ID gets one: DONE if its run folder proves a CONTINUE-class run, FAILED_TO_START otherwise.
      Returns the counts written."""
@@ -947,7 +943,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
          return _mode_h_attempts(plan)
      path = _attempts_path(plan)
      out, bad = {}, 0
-@@ -626,20 +797,18 @@
+@@ -626,20 +785,18 @@
      attempts, bad = _attempts(plan)
      reg = _registry()
      out = {}
@@ -973,7 +969,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
  
  
  def _loop(plan: Mapping, todo, adapters: Mapping, runs: list):
-@@ -663,7 +832,7 @@
+@@ -663,7 +820,7 @@
          runs.append({'run_id': req['run_id'], 'method_id': mem['method_id'], 'variant_id': mem['variant_id'],
                       'target': target, 'outcome': res.outcome, 'reason_prefix': reason_prefix(res.reason),
                       'class': cls})
@@ -982,7 +978,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
              _append_closing_ticket(plan, req, 'DONE', f'{res.outcome} {reason_prefix(res.reason)}')
          if cls == 'STOP':
              return f'{ident}: {res.outcome}: {res.reason}'
-@@ -727,7 +896,8 @@
+@@ -727,7 +884,8 @@
      for mem in plan['cohort']:
          decl = reg.declaration(mem['declaration_digest'])
          done, made, why = 0, 0, {}
@@ -992,7 +988,7 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
              states = [attempt_state(plan, mem, target, rid, decl)
                        for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ())]
              made += len(states)
-@@ -735,7 +905,7 @@
+@@ -735,7 +893,7 @@
              for s, r in states:
                  k = f'{s}: {r}'
                  why[k] = why.get(k, 0) + 1
@@ -1001,9 +997,89 @@ diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods
          out[f"{mem['method_id']} {mem['variant_id']}"] = {'done': done, 'pending': n - done, 'attempts': made,
                                                             'attempt_states': why}
      if kind_of(plan) == 'MODE_H_BATCH':
+diff -ru slice1_tree/src/methods/_common/weekly_records.py slice2_tree/src/methods/_common/weekly_records.py
+--- slice1_tree/src/methods/_common/weekly_records.py	2026-11-18 10:28:16.824599258 +1030
++++ slice2_tree/src/methods/_common/weekly_records.py	2026-11-18 10:02:17.906947515 +1030
+@@ -49,22 +49,16 @@
+ # ---------------------------------------------------------------- the developed record, tied to the sealed study (6.7)
+ 
+ def developed(root: Path, game_id: str) -> dict:
+-    """The game's developed record, only if it is the declaration of this game's sealed Mode H study (design 6.7: "an
+-    arbitrary file is not a declaration"): the record exists and is well formed; the game's one Mode H batch carries
+-    its seal; and the record names that batch, the seal's score-ledger digest and the fixed owner sentence, as
+-    `declare-developed` writes them. Anything else refuses. The weekly session and the weekly release of an outcome
+-    both start from this (found on re-reading with EX_229's principle: a record's presence is not its validity)."""
++    """The game's developed record: the owner's one declaration that the weekly session may begin (GOAL-1, design
++    6.7). It must exist, be well formed and carry the owner's fixed sentence ("an arbitrary file is not a declaration").
++    It is read as the owner's own record. The archived Mode H study, its seal included, is NOT consulted: the archive
++    is never a gate in normal work (the owner's clarification of 18 November 2026; EX_234 section 3). The record is
++    made once, by `declare-developed`. The weekly session and the weekly release of an outcome both start from this."""
+     rec = OR.developed_record(root, game_id)
+     if rec is None:
+         raise RecordRefused(f'NOT_DEVELOPED: no developed record for {game_id} (GOAL-1); the weekly session has not begun')
+-    batch = OR.batch_id_record(root, game_id)
+-    if batch is None or not OR.mode_h_sealed(root, game_id):
+-        raise RecordRefused(f'NOT_DEVELOPED: the Mode H study of {game_id} is not sealed; its developed record stands for nothing')
+-    seal = OR.marker(root, game_id, batch['batch_id'], OR.SEAL)
+-    if (rec['mode_h_score_digest'] != seal['score_ledger_sha256'] or rec.get('mode_h_batch_id') != batch['batch_id'] or
+-            rec['owner_statement'] != OR.DEVELOPED_STATEMENT):
+-        raise RecordRefused(f'NOT_DEVELOPED: the developed record of {game_id} does not name this game\'s sealed Mode H '
+-                            f'score and the owner\'s sentence')
++    if rec['owner_statement'] != OR.DEVELOPED_STATEMENT:
++        raise RecordRefused(f'NOT_DEVELOPED: the developed record of {game_id} does not carry the owner\'s sentence')
+     return rec
+ 
+ 
+diff -ru slice1_tree/tests/test_mhupb_weekly_forecast.py slice2_tree/tests/test_mhupb_weekly_forecast.py
+--- slice1_tree/tests/test_mhupb_weekly_forecast.py	2026-11-18 10:28:16.847592181 +1030
++++ slice2_tree/tests/test_mhupb_weekly_forecast.py	2026-11-18 10:02:17.930274835 +1030
+@@ -280,20 +280,21 @@
+         with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
+             self.open()
+         (self.td / 'developed.json').rename(OR.developed_record_path(self.proj, self.GAME))
+-        # a developed record is believed only as the declaration of this game's sealed Mode H study (design 6.7)
++        # a developed record is the owner's declaration: well formed, with his fixed sentence (design 6.7). The archived
++        # Mode H study is not consulted (the owner's clarification of 18 November 2026): what the record says of it,
++        # and whether its seal is there, do not gate the weekly session.
+         genuine = OR.developed_record_path(self.proj, self.GAME).read_bytes()
+-        for change in (dict(mode_h_score_digest='d' * 64), dict(mode_h_batch_id='wf-' + 'e' * 32),
+-                       dict(owner_statement='I say so'), dict(mode_h_batch_id=None)):
+-            with self.subTest(developed=change):
+-                self.write_developed(**change)
+-                OR.validate_developed_record(json.loads(OR.developed_record_path(self.proj, self.GAME).read_bytes()), self.GAME)
+-                with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
+-                    self.open()
++        self.write_developed(owner_statement='I say so')
++        OR.validate_developed_record(json.loads(OR.developed_record_path(self.proj, self.GAME).read_bytes()), self.GAME)
++        with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
++            self.open()
++        for change in (dict(mode_h_score_digest='d' * 64), dict(mode_h_batch_id='wf-' + 'e' * 32)):
++            self.write_developed(**change)
++            self.assertEqual(WR.developed(self.proj, self.GAME)['owner_statement'], OR.DEVELOPED_STATEMENT)
+         OR.developed_record_path(self.proj, self.GAME).write_bytes(genuine)
+         seal = OR.marker_path(self.proj, self.GAME, self.BATCH, 'MODE_H_SEALED')
+         seal.rename(self.td / 'seal.json')
+-        with self.assertRaisesRegex(WS.SessionRefused, 'not sealed'):
+-            self.open()
++        self.assertEqual(WR.developed(self.proj, self.GAME)['owner_statement'], OR.DEVELOPED_STATEMENT)
+         (self.td / 'seal.json').rename(seal)
+         marker = CR.ORPHAN_MARKER
+         marker.parent.mkdir(parents=True)
+diff -ru slice1_tree/tests/test_mhupb_weekly_score.py slice2_tree/tests/test_mhupb_weekly_score.py
+--- slice1_tree/tests/test_mhupb_weekly_score.py	2026-11-18 10:28:16.842940988 +1030
++++ slice2_tree/tests/test_mhupb_weekly_score.py	2026-11-18 10:02:17.930390105 +1030
+@@ -178,7 +178,7 @@
+             self.outcome(self.first)
+         (self.td / 'd.json').rename(developed)
+         genuine = developed.read_bytes()
+-        self.write_developed(mode_h_score_digest='d' * 64)               # well formed, but not this game's sealed score
++        self.write_developed(owner_statement='I say so')                 # well formed, but not the owner's declaration
+         self.refused_everywhere(sid, self.first)
+         developed.write_bytes(genuine)
+         with self.assertRaisesRegex(SC.ScoreRefused, 'not the game\'s active session'):
 diff -ru slice1_tree/tests/test_wf1b_static.py slice2_tree/tests/test_wf1b_static.py
---- slice1_tree/tests/test_wf1b_static.py	2026-11-18 02:23:14.406580908 +1030
-+++ slice2_tree/tests/test_wf1b_static.py	2026-11-18 01:58:27.694122858 +1030
+--- slice1_tree/tests/test_wf1b_static.py	2026-11-18 10:28:16.792790483 +1030
++++ slice2_tree/tests/test_wf1b_static.py	2026-11-18 10:02:17.930087544 +1030
 @@ -19,7 +19,7 @@
                    # MHUP-B slice 1: the weekly records' shapes, the ledger write discipline and the score identities.
                    # All three are value-free orchestration modules; none imports method code.

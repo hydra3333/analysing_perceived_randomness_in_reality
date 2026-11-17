@@ -3,10 +3,13 @@
 weekly project of mhupb_fixtures (the game's Mode H study sealed, the system declared developed); every draw, clock
 reading, release instant and source list is invented.
 
+ Equal draws The owner's clarification of 18 November 2026 (EX_234, EX_235): a former holdout draw is an ordinary draw with
+             no record of the archived Mode H study as a condition; a bulk catch-up computes what week-by-week operation
+             computes; a revised version is a new identity and the old one keeps its history.
  Plans       WF_BATCH_PLAN_V2 beside the first schema, which keeps its rules. A routine fill's pairs are worked out by
              the driver and checked against an ORACLE written from the supplement's rules; an exploratory rerun runs
              what the owner names. Refused windows refuse and write nothing.
- The gate    every refusal of the DEV_BATCH branch once; rule 2A by the release instant; a target still open in the
+ The gate    every refusal of the DEV_BATCH branch once (none of them about the Mode H archive); rule 2A by the release instant; a target still open in the
              weekly session is never a batch's; the mode-to-pin rule.
  Evidence    every forecast is REAL_DEVELOPMENT, tier DEVELOPMENT_WF_EXPLORATORY, N-1 (it trains to the draw before its
              target), under the development roots; no byte of any sealed Mode H path, freeze line or weekly ledger
@@ -111,7 +114,7 @@ class Dev(B.Weekly):
                 'window_last': max(x[3] for x in pairs), 'created_utc': WF.utc_now(), 'driver_version': WF.DRIVER_VERSION,
                 'run_mode': 'REAL_DEVELOPMENT', 'product_kind': 'WF_FORECAST', 'observation_view': WF.VIEW,
                 'include_dates': False, 'master_file': f'{self.GAME}_results_master.csv', 'ledger_version': version,
-                'master_sha256': pin, 'development_cap': WF.development_cap(self.GAME), 'cohort': used,
+                'master_sha256': pin, 'cohort': used,
                 'not_in_cohort': [], 'cohort_digest': sha256_hex(canonical({'cohort': used})), 'pairs': pairs,
                 'pairs_digest': sha256_hex(canonical({'pairs': pairs}))}
         folder = WF.roots('DEV_BATCH')['batches'] / self.GAME / batch
@@ -183,8 +186,7 @@ class Plans(Dev):
         plan = self.fill()
         self.assertEqual(plan['pairs'], self.oracle_fill_pairs(v1['window_last']))
         self.assertEqual(len(plan['pairs']), self.UNCOVERED + 10)
-        self.assertEqual((plan['schema'], plan['plan_kind'], plan['run_mode'], plan['development_cap']),
-                         ('WF_BATCH_PLAN_V2', 'ROUTINE_FILL', 'REAL_DEVELOPMENT', self.p.holdout_last))
+        self.assertEqual((plan['schema'], plan['plan_kind'], plan['run_mode']), ('WF_BATCH_PLAN_V2', 'ROUTINE_FILL', 'REAL_DEVELOPMENT'))
         rows = [r for r in RP.search_rows(self.GAME) if r['row_type'] == 'DEV_BATCH']
         self.assertEqual([r['plan_digest'] for r in rows], [record_digest(plan)])
         self.assertEqual(WF.load_plan(self.GAME, plan['batch_id']), plan)
@@ -342,29 +344,59 @@ class Plans(Dev):
         code, text = main('plan', '--fill', '--game', self.GAME, '--first', '1200', '--last', '1201')
         self.assertEqual((code, 'REFUSED' in text), (2, True))
 
-    def test_before_the_seal_the_old_cap_stands(self):
-        """Supplement 7.2 rule 1: until the game's MODE_H_SEALED record exists, no development batch reaches a holdout
-        draw: not by the planner, not at the gate for a plan that names one, and not in a report."""
+    def strip_mode_h(self):
+        """Remove every record of the archived Mode H study from the project: its plan's lifecycle markers (the seal
+        among them) and the batch-id record. The opening record stays: the installed reader asks for it at or above
+        the former holdout, and that reader is not part of this slice."""
+        for name in OR.LIFECYCLE_MARKERS:
+            OR.marker_path(self.proj, self.GAME, self.BATCH, name).unlink()
+        OR.batch_id_record_path(self.proj, self.GAME).unlink()
+
+    def test_a_former_holdout_draw_is_an_ordinary_draw_with_no_mode_h_record(self):
+        """The owner's clarification (EX_234 section 3): with the seal and every other Mode H marker gone, the former
+        holdout draws are planned, forecast (N-1), reported and scored like any historical draw."""
         self.cover_the_prefix()
-        sealed_plan = self.hand_plan('EXPLORATORY_RERUN', [[*self.key(), self.p.holdout_first]])
-        seal = OR.marker_path(self.proj, self.GAME, self.BATCH, 'MODE_H_SEALED')
-        raw = seal.read_bytes()
-        seal.unlink()
-        try:
-            self.assertEqual(WF.development_cap(self.GAME), self.p.holdout_first - 1)
+        self.strip_mode_h()
+        k = self.key()
+        plan = self.fill()
+        holdout = list(range(self.p.holdout_first, self.p.holdout_last + 1))
+        self.assertEqual([p[3] for p in plan['pairs']][self.UNCOVERED:], holdout)
+        self.assertEqual(self.run_plan(plan)[0], 0)
+        made = self.forecasts_of(plan)
+        for t in holdout:
+            fc, rc = made[(k[0], k[2], t)]
+            self.assertEqual((fc['run_mode'], rc['evidence_tier'], fc['training_last_draw_number']),
+                             ('REAL_DEVELOPMENT', 'DEVELOPMENT_WF_EXPLORATORY', t - 1))
+        self.assertTrue(all(RD.development_release_allowed(self.proj, self.GAME, t) for t in holdout))
+        res = RP.run_report(self.GAME, plan['batch_id'], plan['window_first'], plan['window_last'])
+        scores = [json.loads(x) for x in (res['scores_folder'] / 'score_ledger.jsonl').read_bytes().split(b'\n')[:-1]]
+        self.assertEqual(sorted({s['draw_number'] for s in scores}), sorted(p[3] for p in plan['pairs']))
+        self.assertIn('unavailable', res['sealed_comparison'])                # the optional archive comparison: not a condition
+        rerun = self.rerun(self.p.holdout_first - 1, self.p.holdout_first + 1)    # and an exploratory rerun across the boundary
+        self.assertEqual(self.run_plan(rerun)[0], 0)
+        self.assertFalse(RD.outcome_release_allowed(self.proj, self.GAME, self.p.holdout_first))   # the Mode H scorer's own rule: unchanged
+
+    def test_a_revised_version_is_a_new_identity_and_the_old_one_keeps_its_history(self):
+        """EX_234 section 2. Every key carries the revision. With revision 1 covered up to the end of the prefix, a
+        revised version (revision 2) is planned from its first eligible target, and revision 1's covered keys and
+        records are untouched. A revision the installed registry does not hold is not runnable: nothing archived is
+        ever executed."""
+        v1 = self.cover_the_prefix()
+        k = self.key()
+        old = SI.canonical_coverage(self.proj, self.GAME)
+        self.assertEqual({key[1] for key in old}, {'1'})
+        current = WF.cohort
+
+        def revised(game_id, adapters_):
+            members, excluded = current(game_id, adapters_)
+            return [dict(m, method_revision='2') for m in members], excluded
+        with mock.patch.object(WF, 'cohort', revised):
             plan = self.fill()
-            self.assertEqual({p[3] for p in plan['pairs']}, {self.p.holdout_first - 2, self.p.holdout_first - 1})
-            with self.assertRaises(WF.BatchRefused):
-                self.rerun(self.p.holdout_first - 1, self.p.holdout_first)
-            self.assertIn('MODE_H_NOT_SEALED', self.one_run(sealed_plan, [*self.key(), self.p.holdout_first]))
-            self.assertFalse(RD.development_release_allowed(self.proj, self.GAME, self.p.holdout_first))
-            rows = len(RP.search_rows(self.GAME))
-            with self.assertRaises(RP.ReportRefused):
-                RP.run_report(self.GAME, sealed_plan['batch_id'], self.p.holdout_first, self.p.holdout_first)
-            self.assertEqual(len(RP.search_rows(self.GAME)), rows)            # refused before the search-log row
-        finally:
-            seal.write_bytes(raw)
-        self.assertEqual(WF.development_cap(self.GAME), self.p.holdout_last)
+        self.assertEqual(plan['pairs'], [[k[0], '2', k[2], t] for t in range(self.p.first_draw + 1, self.p.holdout_last + 1)])
+        self.assertEqual(SI.canonical_coverage(self.proj, self.GAME), old)    # the old version's history is as it was
+        self.assertEqual(WF.load_plan(self.GAME, v1['batch_id']), v1)
+        self.assertIn('method_revision', SI.IDENTITY_FIELDS)                  # a score's identity names its revision
+        self.assertIn('REVISION_MISMATCH', self.one_run(plan, plan['pairs'][0]))   # not installed: not runnable
 
     def test_the_first_plan_kind_is_untouched(self):
         plan = WF.make_plan(self.GAME, self.p.first_draw + 1, self.p.first_draw + 3, B.adapters())
@@ -556,11 +588,19 @@ class Reports(Dev):
         res2 = RP.run_report(self.GAME, rerun['batch_id'], self.first, self.first + 1)
         self.assertEqual((res2['sealed_comparison']['pairs'], res2['scoring_plan']['plan_kind']), ([], 'EXPLORATORY_RERUN'))
         self.assertEqual(self.protected_bytes(), before)
+        # a draw after the former holdout that the weekly rule does not release refuses, before any search-log row
+        developed = OR.developed_record_path(self.proj, self.GAME)
+        raw, rows = developed.read_bytes(), len(RP.search_rows(self.GAME))
+        developed.unlink()
+        with self.assertRaises(RP.ReportRefused):
+            RP.run_report(self.GAME, rerun['batch_id'], self.first, self.first + 1)
+        self.assertEqual(len(RP.search_rows(self.GAME)), rows)
+        developed.write_bytes(raw)
 
     def test_the_release_rules_of_the_outcome_reader(self):
-        """CF-4. A development report reads a holdout draw only after the seal, and a later draw only with its weekly
-        freeze line; the Mode H scorer's own rule is unchanged (after the seal it reads nothing again); a prefix draw
-        needs no release."""
+        """CF-4, as clarified on 18 November 2026. A development report reads a former holdout draw like any historical
+        draw, and a later draw only with its weekly freeze line; the Mode H scorer's own rule is unchanged (after its
+        seal it reads nothing again); a prefix draw needs no release."""
         self.session()
         row = self.rows[-1]
         kw = dict(repo_root=self.proj, game_id=self.GAME, master_sha256=row['master_sha256'], ledger_version=row['version'])
@@ -574,6 +614,12 @@ class Reports(Dev):
         self.assertFalse(RD.outcome_release_allowed(self.proj, self.GAME, h))
         with self.assertRaises(RD.OutcomeRefused):
             RD.read_outcomes(targets=[h, m], development=True, **kw)
+        seal = OR.marker_path(self.proj, self.GAME, self.BATCH, 'MODE_H_SEALED')    # the archive's seal is not a condition
+        raw = seal.read_bytes()
+        seal.unlink()
+        self.assertEqual([RD.development_release_allowed(self.proj, self.GAME, t) for t in (h, self.p.holdout_last, self.first)],
+                         [True, True, True])
+        seal.write_bytes(raw)
         OR.developed_record_path(self.proj, self.GAME).unlink()               # without the developed record: holdout only
         self.assertEqual([RD.development_release_allowed(self.proj, self.GAME, t) for t in (h, self.first)], [True, False])
 
@@ -620,6 +666,54 @@ class Reports(Dev):
         for want in ('MAIN TOP: [3]', 'MAIN ranking: 2 position(s) differ, the first at position 1', 'MAIN ties', 'MAIN scores: 1 label'):
             self.assertIn(want, text)
         self.assertNotIn('run_mode', json.dumps(RC.named_content(fc())))      # mode-specific fields are left out
+
+
+class CatchUp(B.Weekly):
+    """EX_234 section 1. Several draws accepted in one update are processed one target at a time, each from the prefix
+    to N-1: the forecasts and the scores are what week-by-week operation gives. Only the evidence label differs."""
+    EXTRA = 0
+    DRAWS = 4
+
+    def content(self):
+        """(variant, target) -> what was forecast and how it scored, free of run mode, run id and time."""
+        forecasts = {}
+        for folder in self.run_folders():
+            f = folder / CP.FILES['forecast']
+            if f.is_file():
+                fc = json.loads(f.read_bytes())
+                forecasts[(fc['variant_id'], fc['target_draw_number'])] = (
+                    RC.named_content(fc), fc['permitted_view_digest'], fc['training_last_draw_number'])
+        scores = {(s['variant_id'], s['target_draw_number']): (s['readouts'], s['rank'], s['drawn_main'], s['drawn_powerball'])
+                  for s in self.scores()}
+        classes = {(s['variant_id'], s['target_draw_number']): s['effective_class'] for s in self.scores()}
+        return forecasts, scores, classes
+
+    def test_a_bulk_catch_up_computes_what_week_by_week_operation_computes(self):
+        targets = list(range(self.first, self.first + self.DRAWS))
+        for name in OR.LIFECYCLE_MARKERS:                                     # and no Mode H marker is needed for any of it
+            OR.marker_path(self.proj, self.GAME, self.BATCH, name).unlink()
+        for t in targets:                                                     # week by week: forecast t, then its result
+            self.now = self.at(t, hours_before=30)
+            self.assertEqual(self.session()[1][-1], ('FROZE_NEXT', t))
+            self.grow([t])
+        self.now = self.at(targets[-1] + 1, hours_before=30)
+        self.session()
+        weekly = self.content()
+        self.tearDown()
+        self.setUp()
+        for name in OR.LIFECYCLE_MARKERS:
+            OR.marker_path(self.proj, self.GAME, self.BATCH, name).unlink()
+        self.grow(targets)                                                    # four weeks missed: one update, one session
+        self.now = self.at(targets[-1] + 1, hours_before=30)
+        self.assertEqual(self.session()[1], [('FROZE', t) for t in targets] + [('FROZE_NEXT', targets[-1] + 1)])
+        bulk = self.content()
+        keys = sorted(k for k in weekly[1] if k[1] in targets)
+        self.assertEqual(len(keys), 3 * self.DRAWS)
+        for key in keys:
+            self.assertEqual(bulk[0][key], weekly[0][key], key)               # the same ranking, scores, ties, TOP and WORST,
+            self.assertEqual(bulk[0][key][2], key[1] - 1)                     # from the same view, which ends at N-1
+            self.assertEqual(bulk[1][key], weekly[1][key], key)               # and the same score against the same draw
+        self.assertEqual(({weekly[2][k] for k in keys}, {bulk[2][k] for k in keys}), ({'PROSPECTIVE'}, {'CATCH_UP'}))
 
 
 class Statics(Dev):

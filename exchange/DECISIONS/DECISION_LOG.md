@@ -1181,3 +1181,28 @@ the installed documents. This log is not a separate approval process.
   holdout gates from the staged normal paths (including slice 1's weekly readiness check), closes S2-F02, and shows the
   focused examples EX_234 section 6 lists. Then a full new edition of the Claude handover (H-1) and its blurb, as the
   owner asked. Slice 3 still waits for the reviewer's acceptance of slice 2 and the owner's go.
+
+## 85. 18 November 2026, 10:28 - the corrected slice 2 sent as EX_236; the change note; a full new H-1 edition (candidate)
+
+- **The owner's further clarification to Claude (09:41):** EX_235 supplements and clarifies EX_234 and EX_233 rather than
+  replacing them; recording the direction first is fine provided it only updates the existing records; slice 2 is
+  corrected now, and the retrospective OV-1 reporting is slice 3 (L7), after slice 2 passes and he gives the normal go.
+- **The corrected slice 2 (cloud only, NOT INSTALLED), `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/`, EX_236:**
+  1. No normal path staged in slices 1 and 2 asks for the Mode H seal or the opening record: the weekly readiness check
+     (slice 1's `weekly_records.developed` is now the owner's declaration alone), the development planner, the
+     `DEV_BATCH` gate and the development report's release rule. Rule 2A and the weekly freeze-line conditions stay.
+  2. S2-F02 closed: OV-1's registration and every eligibility line count only with a CONFIRMED line whose time was read
+     after the record was read back; not confirmed before its limit, in the same process or after an interruption, the
+     stream stops. One consequence, stated to the reviewer: a registration not confirmed before its first target's
+     deadline leaves that game's formal stream stopped for good (no second registration).
+  3. The examples of EX_234 section 6.4 are tests (a former holdout draw with no Mode H marker; a revised version as a
+     new identity; a bulk catch-up equal to week-by-week runs; a missed draw scored as usual).
+- **Left as installed, on purpose:** the installed reader's opening-record condition at or above the former holdout, and
+  the diagnostic route's opening-record and seal conditions (validated MHUP-A code; no effect in the real project).
+- **Results:** 700 tests in 51 modules, 0 failing, on Python 3.13.18 and 3.15.0b4; 101 planted defects caught, none
+  surviving; tree digest `000dc4aeee4a649cbd1b2a6a36928a72f18c51ab5e997bb702ed7157a581241d`, reproduced from the repository copy.
+- **The change note for the ratified documents:** `exchange/DECISIONS/OWNER_CLARIFICATION_2026_11_18_EQUAL_DRAWS_AND_OV1_USES.md`.
+- **The handover, at the owner's request (09:34):** a full new edition H-1 v5 and a full new blurb, as CANDIDATES, in
+  `exchange/CLAUDE_WEB_TOOLS/h1v5/out/`, built by `make_h1_v5.py` from H-1 v4's ratified bytes. H-1 v4 stays the
+  installed edition until the owner ratifies v5.
+- **Next:** the reviewer's recheck of EX_236. Slice 3 only after its acceptance, on the owner's go.

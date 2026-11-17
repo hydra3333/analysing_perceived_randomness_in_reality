@@ -1,11 +1,18 @@
 # MHUP-B slice 2 (layers L5 and L6) - cloud workspace copy, NOT INSTALLED
 
-Status: SUBMITTED FOR REVIEW (see the EX message that names this folder). Nothing here is installed; `src/` and `tests/`
-on `main` are as at `cc0ab73`. Slice 2 is built ON TOP of slice 1's tree (`../slice1/`, passed in EX_231).
+Status: CORRECTED EDITION, sent as EX_236 on 18 November 2026. The first edition was EX_232; the reviewer's review is
+EX_233 (kernel proofs accepted; S2-F02 to fix; S2-F01 later withdrawn); the owner's clarified research model is recorded in
+EX_234 and EX_235 and in decision log entry 84. Nothing here is installed; `src/` and `tests/` on `main` are as at
+`cc0ab73`. Slice 2 is built ON TOP of slice 1's tree (`../slice1/`, passed in EX_231).
+
+What the correction changed (`SLICE2_EX232_TO_EX236.diff` shows every line): the archived Mode H study's seal and opening
+record are no longer conditions of any normal path staged here (weekly readiness, development plan, gate, report); OV-1's
+registration and every eligibility line now need a CONFIRMED line, read after the record, before they are used (S2-F02).
 
 Governing documents: `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (section 5 L5 and L6; sections 6, 7, 9),
-`doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (sections 6 and 7), and the working principle
-`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`.
+`doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (sections 6 and 7), both as changed by the owner's
+clarification of 18 November 2026 (`exchange/DECISIONS/OWNER_CLARIFICATION_2026_11_18_EQUAL_DRAWS_AND_OV1_USES.md`), and
+the working principle `exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`.
 
 ## What is here
 
@@ -19,6 +26,7 @@ Governing documents: `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (sectio
 - `mutations_slice2.py TREE [name ...]`: one planted defect per rule, each caught by a named test; the equivalent
   mutants are listed in its docstring. `ov1_bruteforce_evidence.py TREE`: every 7-subset of both barrels enumerated.
 - `SLICE2_EDITS_TO_SLICE1_TREE.diff`: every changed line of a file that slice 1's tree already had.
+- `SLICE2_EX232_TO_EX236.diff`: every changed line of this folder's tools, sources and tests since EX_232.
 - `evidence/`: the suite summaries on Python 3.13 and 3.15, the mutation run and the brute-force run.
 - `WORKING_NOTES.md`: the working log.
 

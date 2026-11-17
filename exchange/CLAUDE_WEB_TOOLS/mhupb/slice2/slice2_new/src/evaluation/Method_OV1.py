@@ -48,8 +48,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == 'register':
             rec = OV.register(args.game, args.statement)
-            echo(f'[OV1] registered for {args.game}: the first eligible draw is {rec["first_target"]}; bar {OV.NUM.BAR}')
-            _result('REGISTERED', args.game, rec['first_target'])
+            state = OV.status(args.game)
+            if state['stopped'] is not None:
+                echo(f'[OV1] THE REGISTRATION OF {args.game} WAS NOT CONFIRMED IN TIME: {state["stopped"]["detail"]}.')
+                echo('[OV1] The stream is stopped and stays stopped; there is no second registration. Tell Claude.')
+                _result('STOPPED', args.game, rec['first_target'])
+            else:
+                echo(f'[OV1] registered for {args.game} and confirmed: the first eligible draw is {rec["first_target"]}; '
+                     f'bar {OV.NUM.BAR}')
+                _result('REGISTERED', args.game, rec['first_target'])
         elif args.command == 'record':
             out = OV.record(args.game, echo=echo)
             for line in OV.status_lines(args.game):

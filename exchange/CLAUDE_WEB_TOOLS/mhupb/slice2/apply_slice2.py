@@ -677,3 +677,123 @@ edit('src/methods/Method_Walk_Forward.py', [
      "                parser.error('--variants belongs to --rerun')\n"
      "            if args.first is None or args.last is None:\n                parser.error('a development plan needs --first and --last')\n"),
 ])
+
+
+# =====================================================================================================================
+# The owner's clarification of 18 November 2026 (decision log entry 84; EX_234 section 3; EX_235 section 4).
+# All draws are equal research targets. The archived Mode H study is kept as a read-only archive; its seal and opening
+# record are not conditions of any normal path staged here. The edits below apply to the tree as edited above (the first
+# edition of this slice, EX_232, carried those conditions) and to slice 1's weekly readiness check.
+# =====================================================================================================================
+
+def cut(rel, start, end, new):
+    """Replace the text from `start` (inclusive) to `end` (exclusive) by `new`; each anchor must occur exactly once."""
+    p = tree / rel
+    s = p.read_bytes().decode('ascii')
+    assert '\r' not in s and s.count(start) == 1 and s.count(end) == 1 and s.index(start) < s.index(end), (rel, start[:60])
+    p.write_bytes((s[:s.index(start)] + new + s[s.index(end):]).encode('ascii'))
+    print('cut', rel, start[:50].strip())
+
+
+# ---- weekly readiness (slice 1): the owner's declaration alone; the archive is not consulted
+cut(C + 'weekly_records.py',
+    '    """The game\'s developed record, only if it is the declaration of this game\'s sealed Mode H study',
+    '# ---------------------------------------------------------------- the clock (patched only by the test harness)',
+    r'''    """The game's developed record: the owner's one declaration that the weekly session may begin (GOAL-1, design
+    6.7). It must exist, be well formed and carry the owner's fixed sentence ("an arbitrary file is not a declaration").
+    It is read as the owner's own record. The archived Mode H study, its seal included, is NOT consulted: the archive
+    is never a gate in normal work (the owner's clarification of 18 November 2026; EX_234 section 3). The record is
+    made once, by `declare-developed`. The weekly session and the weekly release of an outcome both start from this."""
+    rec = OR.developed_record(root, game_id)
+    if rec is None:
+        raise RecordRefused(f'NOT_DEVELOPED: no developed record for {game_id} (GOAL-1); the weekly session has not begun')
+    if rec['owner_statement'] != OR.DEVELOPED_STATEMENT:
+        raise RecordRefused(f'NOT_DEVELOPED: the developed record of {game_id} does not carry the owner\'s sentence')
+    return rec
+
+
+''')
+
+# ---- the outcome reader: a former holdout draw is an ordinary historical draw for a development report
+cut(E + 'outcome_reader.py',
+    '    """The post-seal development rule (MHUP-B; supplement v0.8 section 7.2 rules 1, 2 and 2A; code plan CF-4; an',
+    'def _weekly_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:',
+    r'''    """Whether the outcome of a draw at or after the former holdout's first draw may be served to a DEVELOPMENT report
+    (MHUP-B; an always-review subject). A former holdout draw is an ordinary historical draw: it is released like
+    any draw of the pinned master, with no condition on the archived Mode H study (the owner's clarification of
+    18 November 2026; EX_234 section 3). A draw after it belongs to weekly operation: it is released only when the
+    weekly freeze-line rule releases it (the developed record, a verified freeze line for the draw, the draw
+    accepted), so a development report never reads a result before the weekly forecasts for it are frozen.
+    The Mode H scorer's own rule (outcome_release_allowed) is unchanged and is not used here."""
+    p = get_profile(game_id)
+    if type(target) is not int or target < p.holdout_first:
+        return False
+    return target <= p.holdout_last or _weekly_release_allowed(repo_root, game_id, target)
+
+
+''')
+edit(E + 'outcome_reader.py', [
+    ("    when the game's developed record exists and names its sealed Mode H study, the forecast ledger (verified in full:\n",
+     "    when the game's developed record exists (the owner's declaration; the archive is not consulted), the forecast\n"
+     "    ledger (verified in full:\n"),
+    ("        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal\n",
+     "        WR.developed(repo_root, game_id)                   # the owner's declaration, or a refusal\n"),
+])
+
+# ---- the dispatch gate's DEV_BATCH branch: no opening record, no seal
+cut(C + 'contract_dispatch.py',
+    '            if target >= p.holdout_first:\n                if OR.opening_record(root, game) is None:\n'
+    '                    refuse(\'HOLDOUT_NOT_OPENED\', \'a holdout or later development target needs the opening record\')',
+    '            if target > p.holdout_last:\n                lines = [r for r in OR.forecast_ledger_lines(root, game)',
+    '')
+edit(C + 'contract_dispatch.py', [
+    ("            # pins the plan's pin; an open ticket, and no DONE ticket for the pair in the batch. At or above the\n"
+     "            # holdout: the opening record and the game's seal. Above the holdout: a weekly freeze line for the target\n"
+     "            # (a target still open in the weekly session is never a batch's); and, for a routine fill, rule 2A: that\n"
+     "            # line was frozen before the variant's release instant, does not name the variant, and no session ledger\n"
+     "            # holds a ticket for the pair. Value-free records at fixed roots only.\n",
+     "            # pins the plan's pin; an open ticket, and no DONE ticket for the pair in the batch. A draw up to the end of\n"
+     "            # the former holdout is an ordinary historical draw: no record of the archived Mode H study is a condition\n"
+     "            # here (the owner's clarification of 18 November 2026). After it the weekly session owns the targets: a\n"
+     "            # batch gets one only once its weekly freeze line exists (a target still open is never a batch's); and, for\n"
+     "            # a routine fill, rule 2A: that line was frozen before the variant's release instant, does not name the\n"
+     "            # variant, and no session ledger holds a ticket for the pair. Value-free records at fixed roots only.\n"),
+])
+
+# ---- the driver: no cap that depends on the archive
+cut(C + 'walk_forward.py', 'def development_cap(game_id: str) -> int:', 'def _weekly_facts(game_id: str) -> tuple[dict, dict]:', '')
+edit(C + 'walk_forward.py', [
+    ("def _fill_pairs(game_id: str, members, cap: int, last_draw: int) -> list[list]:\n",
+     "def _fill_pairs(game_id: str, members, last_draw: int) -> list[list]:\n"),
+    ("    that no canonical source covers. Eligible: the game's first target to the cap; and, above the holdout, rule 2A:\n",
+     "    that no canonical source covers (each revision is its own identity). Eligible: every draw from the game's first\n"
+     "    target to `holdout_last`, the last draw before weekly operation (the former holdout draws are ordinary draws,\n"
+     "    with no condition on the archived Mode H study); and, after it, rule 2A:\n"),
+    ("    lines, instants = _weekly_facts(game_id) if cap == p.holdout_last and last_draw > p.holdout_last else ({}, {})\n",
+     "    lines, instants = _weekly_facts(game_id) if last_draw > p.holdout_last else ({}, {})\n"),
+    ("        for t in range(p.first_draw + 1, cap + 1):\n", "        for t in range(p.first_draw + 1, p.holdout_last + 1):\n"),
+    ("    whole released cohort otherwise). Any target up to the cap, and any later accepted target that has a weekly freeze\n"
+     "    line, whether or not it was scored before. A window that reaches a target outside those refuses.\n",
+     "    whole released cohort otherwise). Any accepted target up to `holdout_last`, and any later accepted target that has\n"
+     "    a weekly freeze line, whether or not it was scored before. A window that reaches a target outside those refuses.\n"
+     "    No record of the archived Mode H study is a condition of either kind.\n"),
+    ("    cap = development_cap(game_id)\n", ""),
+    ("        pairs = _fill_pairs(game_id, members, cap, last_draw)\n", "        pairs = _fill_pairs(game_id, members, last_draw)\n"),
+    ("            if cap < t <= p.holdout_last:\n"
+     "                raise BatchRefused(f'target {t} is a holdout draw and the game\\'s Mode H study is not sealed')\n"
+     "            if t > p.holdout_last and (cap != p.holdout_last or t not in lines):\n",
+     "            if t > p.holdout_last and t not in lines:\n"),
+    ("            'master_sha256': pin, 'development_cap': cap, 'cohort': members,", "            'master_sha256': pin, 'cohort': members,"),
+])
+
+# ---- the report tool's wording
+edit(E + 'report.py', [
+    ("        # MHUP-B (supplement v0.8 7.2; code plan L6): a plan of the second kind is reported on its own pairs. A holdout\n"
+     "        # or later target is read only under the post-seal development rule; that is checked here, before the\n",
+     "        # MHUP-B (supplement v0.8 7.2; code plan L6): a plan of the second kind is reported on its own pairs. A target\n"
+     "        # after the former holdout is read only once the weekly rule releases it; that is checked here, before the\n"),
+    ("                raise ReportRefused(f'target {t} is not released to a development report (the game\\'s Mode H seal; and, '\n"
+     "                                    f'after the holdout, the weekly freeze line: supplement 7.2)')\n",
+     "                raise ReportRefused(f'target {t} is not released to a development report yet: after the former holdout a '\n"
+     "                                    f'draw is read only once its weekly freeze line exists (supplement 7.2 rule 2A)')\n"),
+])

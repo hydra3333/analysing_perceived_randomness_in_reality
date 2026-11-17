@@ -18,6 +18,11 @@ What each target becomes is fixed by what existed before its cut-off C(T), 01:30
             reconciles with every earlier record that names part of it. Labelled as recorded after the cut-off.
   stop      a pre-cut-off freeze line with no eligibility line at C(T); an owner stop; or a contradiction about a
             counted target. No factor line for that target or any later one, ever.
+  confirmed a time written into a line is read before the line is durable. So the registration, and every eligibility
+            line, is followed by a CONFIRMED line whose time is read AFTER the record was read back from disk, and
+            must be before the record's limit. A record with no confirmation before its limit is never used: the
+            stream stops (EX_233 S2-F02). This holds across an interruption: a restart reads the record back and
+            either confirms it in time or stops.
   blocked   an input is not there yet or does not verify. Nothing is written for the target or any later one; nothing
             is passed over; `record` resumes by itself when the input verifies. A failure is never a skip.
 
@@ -48,8 +53,9 @@ TOOL = 'Method_OV1.py'
 OV1_VERSION = 'MHUPB_OV1_V1'
 REGISTRATION_SCHEMA = 'OV1_REGISTRATION_V1'
 LINE_SCHEMA = 'OV1_LINE_V1'
-KINDS = ('ELIGIBILITY', 'FACTOR', 'MISSED', 'STOP')
-STOP_CAUSES = ('ELIGIBILITY_NOT_VERIFIED', 'OWNER_STOP', 'FACTOR_TABLE_MISMATCH', 'X_CONTRADICTION',
+KINDS = ('CONFIRMED', 'ELIGIBILITY', 'FACTOR', 'MISSED', 'STOP')
+CONFIRMS = ('REGISTRATION', 'ELIGIBILITY')
+STOP_CAUSES = ('REGISTRATION_NOT_VERIFIED', 'ELIGIBILITY_NOT_VERIFIED', 'OWNER_STOP', 'FACTOR_TABLE_MISMATCH', 'X_CONTRADICTION',
                'SCORE_LINE_CONTRADICTION', 'DRAW_DATE_NOT_DERIVED')
 F01_TEXT = 'OV-1 eligibility NOT VERIFIED - PRIMARY STREAM STOP'
 MISSED_REASON = 'MISSED_NO_FREEZE'
@@ -69,6 +75,8 @@ RULES = {
     'opportunity_rule': 'every target from first_target, in draw order, exactly once: COUNTED (or SKIPPED), '
                         'MISSED_NO_FREEZE (factor 1), or STOP; fixed by what existed before the cut-off',
     'cutoff_rule': '01:30 UTC on the target\'s derived draw date; the eligibility line durable before it',
+    'confirmation_rule': 'the registration and every eligibility line count only with a CONFIRMED line whose time was '
+                         'read after the record was read back and is before the record\'s limit; otherwise STOP',
     'operating_assumptions': [
         'the writers append as specified and nothing is later truncated, replaced or suppressed',
         'the PC\'s clock and the order of its events are trustworthy relative to the real cut-off',
@@ -217,6 +225,9 @@ def register(game_id: str, statement: str) -> dict:
                            'mode': 'OV1', 'window_first': t0, 'test_count': 1, 'measures': 'OV-1',
                            'plan_digest': record_digest(rec), 'tool': TOOL, 'tool_version': OV1_VERSION,
                            'tool_sha256': tool_sha256()})
+    # `registered_utc` was read before the record was durable. The record is read back and confirmed now, or the
+    # stream stops (EX_233 S2-F02): `record` appends the ledger's first line, CONFIRMED or STOP.
+    record(game_id, echo=lambda s: None)
     return rec
 
 
@@ -232,6 +243,7 @@ _FIELDS = {
     'FACTOR': _COMMON + ('eligibility_line_digest', 'skipped', 'outcome_pins', 'x', 'z', 'log_factors',
                          'running_logs', 'counted_draws', 'score_lower_bound', 'score_text', 'crossed'),
     'MISSED': _COMMON + ('cutoff_utc', 'written_utc', 'reason', 'label', 'forecast_ledger_extent'),
+    'CONFIRMED': _COMMON + ('confirms', 'confirmed_digest', 'limit_utc', 'confirmed_utc'),
     'STOP': _COMMON + ('written_utc', 'cause', 'detail', 'owner_statement'),
 }
 
@@ -254,7 +266,7 @@ def replay(reg: dict, rows) -> dict:
     game, reg_digest = reg['game_id'], record_digest(reg)
     n = WR.MAIN_POOL[game]
     st = {'reg': reg, 'registration_digest': reg_digest, 'rows': list(rows), 'next_target': reg['first_target'],
-          'pending': None, 'sums': [0] * len(NUM.LAMBDAS), 'counted': 0, 'skipped': 0, 'missed': 0, 'stopped': None,
+          'pending': None, 'confirmed': False, 'registered': False, 'sums': [0] * len(NUM.LAMBDAS), 'counted': 0, 'skipped': 0, 'missed': 0, 'stopped': None,
           'first_crossing': None, 'last_utc': WR.parse_utc(reg['registered_utc'])}
     for row in rows:
         what = f'OV-1 ledger line {row.get("line_number")}'
@@ -267,13 +279,27 @@ def replay(reg: dict, rows) -> dict:
             raise OR.RecordRefused(f'{what}: wrong schema, game, registration or target (expected draw {t})')
         if st['stopped'] is not None:
             raise OR.RecordRefused(f'{what}: a line after a stop')
+        if not st['registered'] and kind != 'STOP' and not (kind == 'CONFIRMED' and row['confirms'] == 'REGISTRATION'):
+            raise OR.RecordRefused(f'{what}: a line before the registration is confirmed')
         if kind != 'FACTOR':
-            when = WR.parse_utc(row['written_utc'], f'{what}.written_utc')
+            when = WR.parse_utc(row['confirmed_utc' if kind == 'CONFIRMED' else 'written_utc'], f'{what} time')
             if when < st['last_utc']:
                 raise OR.RecordRefused(f'{what}: a time earlier than the line before it')
             st['last_utc'] = when
         cut = cutoff(game, t)
-        if kind == 'ELIGIBILITY':
+        if kind == 'CONFIRMED':
+            # The time of a confirmation was read after the record it names was read back from disk (S2-F02).
+            if row['confirms'] not in CONFIRMS or row['limit_utc'] != WR.utc_text(cut) or not when < cut:
+                raise OR.RecordRefused(f'{what}: a confirmation of an unknown kind, or not before its limit')
+            if row['confirms'] == 'REGISTRATION':
+                if st['registered'] or row['confirmed_digest'] != reg_digest:
+                    raise OR.RecordRefused(f'{what}: not the one confirmation of this registration')
+                st['registered'] = True
+            else:
+                if st['pending'] is None or st['confirmed'] or row['confirmed_digest'] != record_digest(st['pending']):
+                    raise OR.RecordRefused(f'{what}: not the one confirmation of the eligibility line before it')
+                st['confirmed'] = True
+        elif kind == 'ELIGIBILITY':
             w = row['weights']
             if st['pending'] is not None or row['cutoff_utc'] != WR.utc_text(cut) or not when < cut or \
                     not WR.parse_utc(row['freeze_frozen_utc'], what) < cut:
@@ -289,11 +315,12 @@ def replay(reg: dict, rows) -> dict:
                     row['eligible_count'] != len(elig) or row['eligible_digest'] != record_digest({'eligible': elig}) or
                     elig != sorted(elig) or type(row['freeze_line_number']) is not int):
                 raise OR.RecordRefused(f'{what}: variance, skip, table, kernel or eligible variants do not agree')
-            st['pending'] = row
+            st['pending'], st['confirmed'] = row, False
         elif kind == 'FACTOR':
             p = st['pending']
-            if p is None or row['eligibility_line_digest'] != record_digest(p) or row['skipped'] is not p['skip']:
-                raise OR.RecordRefused(f'{what}: a factor line without its eligibility line')
+            if p is None or not st['confirmed'] or row['eligibility_line_digest'] != record_digest(p) or \
+                    row['skipped'] is not p['skip']:
+                raise OR.RecordRefused(f'{what}: a factor line without its confirmed eligibility line')
             logs = [_int_text(v) for v in row['log_factors']] if type(row['log_factors']) is list else []
             if len(logs) != len(NUM.LAMBDAS) or (p['skip'] and (any(logs) or row['x'] is not None)) or \
                     (not p['skip'] and type(row['x']) is not int):
@@ -306,7 +333,7 @@ def replay(reg: dict, rows) -> dict:
                 raise OR.RecordRefused(f'{what}: running sums, score or crossing do not follow from the lines before')
             if row['crossed'] and st['first_crossing'] is None:
                 st['first_crossing'] = t
-            st['pending'], st['next_target'] = None, t + 1
+            st['pending'], st['confirmed'], st['next_target'] = None, False, t + 1
         elif kind == 'MISSED':
             if st['pending'] is not None or row['cutoff_utc'] != WR.utc_text(cut) or when < cut or \
                     row['reason'] != MISSED_REASON or row['label'] != MISSED_LABEL:
@@ -500,8 +527,28 @@ def _due(root: Path, game_id: str, st: dict) -> dict | None:
     is not there or does not verify."""
     t = st['next_target']
     cut = cutoff(game_id, t)
+    if st['pending'] is not None and not st['confirmed']:
+        # The eligibility line was read back from the ledger, so it is durable at this reading of the clock. Its own
+        # time was read before it was written and proves nothing by itself (S2-F02). In time: confirm. Late, in this
+        # process or after an interruption: it is never counted; the stream stops.
+        now = WR.now_utc()
+        if now < cut:
+            return {**_base(st, 'CONFIRMED'), 'confirms': 'ELIGIBILITY', 'confirmed_digest': record_digest(st['pending']),
+                    'limit_utc': WR.utc_text(cut), 'confirmed_utc': WR.utc_text(now)}
+        return _stop_line(st, 'ELIGIBILITY_NOT_VERIFIED', f'{F01_TEXT}: draw {t}\'s eligibility line was not confirmed '
+                                                           f'durable before its cut-off')
     lines, torn = _forecast_ledger(root, game_id)
     line = WR.freeze_line_for(lines, t)
+    if not st['registered']:
+        # The registration was read back from disk (stream). It is confirmed only while what `register` required still
+        # holds at this later reading: before the first target's deadline, and that target not frozen. Otherwise the
+        # registration did not become durable in time: the stream stops, for good.
+        now = WR.now_utc()
+        if now < WR.deadline(game_id, t)[0] and now < cut and line is None:
+            return {**_base(st, 'CONFIRMED'), 'confirms': 'REGISTRATION', 'confirmed_digest': st['registration_digest'],
+                    'limit_utc': WR.utc_text(cut), 'confirmed_utc': WR.utc_text(now)}
+        return _stop_line(st, 'REGISTRATION_NOT_VERIFIED', f'the registration was not confirmed durable before draw {t} '
+                                                            f'was frozen or past its deadline')
     if st['pending'] is not None:
         try:
             scores = WR.score_ledger(root, game_id)
@@ -583,7 +630,9 @@ def stop(game_id: str, statement: str) -> dict:
 def status(game_id: str) -> dict:
     st = stream(_root(), game_id)
     return {'game_id': game_id, 'first_target': st['reg']['first_target'], 'next_target': st['next_target'],
-            'awaiting_score': None if st['pending'] is None else st['pending']['target_draw_number'],
+            'registration_confirmed': st['registered'],
+            'awaiting_score': None if st['pending'] is None or not st['confirmed'] else st['pending']['target_draw_number'],
+            'awaiting_confirmation': None if st['pending'] is None or st['confirmed'] else st['pending']['target_draw_number'],
             'counted': st['counted'], 'skipped': st['skipped'], 'missed': st['missed'],
             'score_text': NUM.fixed_text(NUM.mixture_lower(st['sums'])), 'bar': NUM.BAR,
             'first_crossing': st['first_crossing'],
@@ -603,6 +652,10 @@ def status_lines(game_id: str) -> list[str]:
     if s['stopped'] is not None:
         out.append(f'  STREAM STOPPED at draw {s["stopped"]["target"]} ({s["stopped"]["cause"]}): {s["stopped"]["detail"]}')
         out.append('  a stopped stream stays stopped; forecasting and scoring continue as normal')
+    elif not s['registration_confirmed']:
+        out.append('  the registration is written but not yet confirmed: run record before the first draw\'s deadline')
+    elif s['awaiting_confirmation'] is not None:
+        out.append(f'  draw {s["awaiting_confirmation"]}: eligibility written, not yet confirmed: run record before its cut-off')
     elif s['awaiting_score'] is not None:
         out.append(f'  draw {s["awaiting_score"]}: eligibility sealed before its cut-off; awaiting its scores')
     else:

@@ -12,6 +12,9 @@ release date is invented.
                 failure blocks and writes nothing, and the stream resumes by itself.
  Stops          each cause planted once; no factor line for that target or any later one; forecasting carries on.
  Restart        a fault after each append, then a rerun: the same bytes as an uninterrupted run; verify rebuilds all.
+ Durability     EX_233 S2-F02: a record's own time is read before the record is durable, so the registration and every
+                eligibility line count only with a CONFIRMED line read after the record; a stalled write, or an
+                interruption, that carries a record past its limit ends in a stop and is never counted.
  Isolation      no failure of the recorder changes a byte of the live path's records.
 """
 from __future__ import annotations
@@ -48,7 +51,9 @@ class Stream(B.Weekly):
         return OV.register(self.GAME, OV.REGISTRATION_STATEMENT)
 
     def record(self):
-        return OV.record(self.GAME, echo=lambda s: None)['written']
+        """What `record` appended, without the CONFIRMED lines (one follows the registration and every eligibility line;
+        the class Durability and the reader's test look at them)."""
+        return [w for w in OV.record(self.GAME, echo=lambda s: None)['written'] if w[0] != 'CONFIRMED']
 
     def week(self, *, record=True):
         """One weekly session as the sequencer runs it: next and score in turn, OV-1's record after every score and at
@@ -76,8 +81,11 @@ class Stream(B.Weekly):
         return OV.cutoff(self.GAME, target) + timedelta(seconds=seconds)
 
     # ------------------------------------------------------------ reading
-    def ov1_rows(self):
+    def raw_rows(self):
         return OV.stream(self.proj, self.GAME)['rows']
+
+    def ov1_rows(self):
+        return [r for r in self.raw_rows() if r['kind'] != 'CONFIRMED']
 
     def kinds(self):
         return [(r['kind'], r['target_draw_number']) for r in self.ov1_rows()]
@@ -161,6 +169,10 @@ class Registration(Stream):
                 if r['row_type'] == 'OV1_REGISTRATION']
         self.assertEqual([(r['plan_digest'], r['window_first']) for r in rows], [(record_digest(rec), str(self.m))])
         self.assertEqual(OV.status(self.GAME)['next_target'], self.m)
+        (first,) = self.raw_rows()                                            # the registration, read back and confirmed
+        self.assertEqual((first['kind'], first['confirms'], first['confirmed_digest']), ('CONFIRMED', 'REGISTRATION', record_digest(rec)))
+        self.assertGreater(WR.parse_utc(first['confirmed_utc']), WR.parse_utc(rec['registered_utc']))
+        self.assertTrue(OV.status(self.GAME)['registration_confirmed'])
         with self.assertRaises(OV.OV1Refused):                                # no second registration, ever
             self.register()
         self.assertEqual(self.record(), [])                                   # nothing is due before the cut-off
@@ -194,15 +206,28 @@ class Registration(Stream):
 
     def test_a_registration_under_other_rules_is_not_this_programs(self):
         rec = self.register()
-        path = OV.registration_path(self.proj, self.GAME)
+        path, ledger = OV.registration_path(self.proj, self.GAME), OV.ledger_path(self.proj, self.GAME)
+        confirmed = ledger.read_bytes()
+        ledger.unlink()                                                       # as a registration no ledger has yet confirmed
         for change in ({'rules': dict(rec['rules'], bar=20)}, {'rules': dict(rec['rules'], kernel_margin='0')},
                        {'first_target': self.m - 1}, {'owner_statement': 'x'}, {'tool_version': 'MHUPB_OV1_V0'}):
             path.write_bytes(canonical(dict(rec, **change)))
             with self.assertRaises(OV.OV1Blocked):
+                OV.status(self.GAME)
+            with self.assertRaises(OV.OV1Blocked):
                 self.record()
+            self.assertTrue(OR.absent(ledger))
         path.write_bytes(canonical(rec)[:-1])                                 # not canonical bytes
         with self.assertRaises(OV.OV1Blocked):
             OV.status(self.GAME)
+        # and the ledger pins the registration it confirmed: another valid registration in its place is not this stream's
+        ledger.write_bytes(confirmed)
+        later = WR.utc_text(WR.parse_utc(rec['registered_utc']) + timedelta(seconds=1))
+        path.write_bytes(canonical(dict(rec, registered_utc=later)))
+        with self.assertRaises(OV.OV1Blocked):
+            OV.status(self.GAME)
+        path.write_bytes(canonical(rec))
+        self.assertTrue(OV.status(self.GAME)['registration_confirmed'])
 
 
 class CutOff(Stream):
@@ -272,9 +297,10 @@ class CutOff(Stream):
         self.register()
         self.week(record=False)
         self.grow([self.m])                                                   # (cannot happen under the stated schedule)
+        before = self.ledger_bytes()
         with self.assertRaises(OV.OV1Blocked):
             self.record()
-        self.assertEqual(self.ledger_bytes(), b'')
+        self.assertEqual(self.ledger_bytes(), before)
         self.now = self.cut(self.m, 1)
         self.assertEqual(self.record(), [('STOP', self.m)])
 
@@ -339,7 +365,7 @@ class Counted(Stream):
         st = OV.status(self.GAME)
         self.assertEqual((st['counted'], st['skipped'], st['missed'], st['awaiting_score']), (3, 0, 0, self.m + 3))
         self.assertEqual(st['score_text'], NUM.fixed_text(NUM.mixture_lower(sums)))
-        self.assertEqual(OV.verify(self.GAME), {'lines': 7, 'eligibility': 4, 'factor': 3, 'missed': 0, 'stop': 0})
+        self.assertEqual(OV.verify(self.GAME), {'lines': 12, 'confirmed': 5, 'eligibility': 4, 'factor': 3, 'missed': 0, 'stop': 0})
         before = self.ledger_bytes()
         self.assertEqual(self.record(), [])                                   # idempotent: nothing twice
         self.assertEqual(self.ledger_bytes(), before)
@@ -395,7 +421,7 @@ class Counted(Stream):
         WS.close_session(self.GAME, sid)
         self.result(self.m)
         self.assertEqual(self.week()[1], [('ELIGIBILITY', self.m + 1)])
-        self.assertEqual(OV.verify(self.GAME)['lines'], 3)
+        self.assertEqual(OV.verify(self.GAME)['lines'], 6)
 
 
 class Missed(Stream):
@@ -418,6 +444,10 @@ class Missed(Stream):
         self.assertEqual(states, [('FROZE', self.first), ('FROZE', self.m), ('FROZE', self.m + 1), ('FROZE_NEXT', self.m + 2)])
         self.assertEqual(self.kinds(), [('MISSED', self.m), ('MISSED', self.m + 1), ('ELIGIBILITY', self.m + 2)])
         self.assertEqual({l['set_kind'] for l in self.lines()[:3]}, {'CATCH_UP_SET'})    # a catch-up line is never counted
+        # the missed draws are forecast (N-1) and scored like any draw; they are simply not in the formal stream
+        missed = [s for s in self.scores() if s['target_draw_number'] in (self.m, self.m + 1)]
+        self.assertEqual(len(missed), 2 * len(self.lines()[1]['records']))
+        self.assertTrue(all(s['effective_class'] == 'CATCH_UP' and s['readouts'] is not None for s in missed))
         self.result(self.m + 2)
         self.assertEqual(self.week()[1], [('FACTOR', self.m + 2), ('ELIGIBILITY', self.m + 3)])
         st = OV.status(self.GAME)
@@ -670,7 +700,7 @@ class Stops(Stream):
         self.assertEqual(self.week()[1], [])
         path = OV.ledger_path(self.proj, self.GAME)                           # a line after a stop is not this program's
         good = path.read_bytes()
-        rows = self.ov1_rows()
+        rows = self.raw_rows()
         after = JL.chained({'schema': OV.LINE_SCHEMA, 'kind': 'MISSED', 'game_id': self.GAME, 'target_draw_number': self.m,
                             'registration_digest': rows[0]['registration_digest'],
                             'cutoff_utc': WR.utc_text(self.cut(self.m)), 'written_utc': WR.utc_text(self.cut(self.m, 5)),
@@ -728,22 +758,25 @@ class Stops(Stream):
 
 class Restart(Stream):
     def test_a_fault_after_each_append_then_a_rerun_gives_the_same_bytes(self):
-        """Plan section 9, `record`: missed line, missed line, eligibility line in one run; then the factor line.
-        With the clock held still, an interrupted and rerun record leaves exactly the bytes of an uninterrupted one."""
+        """Plan section 9, `record`: missed line, missed line, eligibility line and its confirmation in one run; then
+        the factor line. With the clock held still, an interrupted and rerun record leaves exactly the bytes of an
+        uninterrupted one."""
         self.register()
+        path = OV.ledger_path(self.proj, self.GAME)
+        first = path.read_bytes()                                             # the registration's confirmation
         self.grow([self.m], [self.m + 1])                                     # two weeks with no session
         self.now = self.at(self.m + 2, hours_before=30)
         self.assertEqual(self.week(record=False)[0][-1], ('FROZE_NEXT', self.m + 2))
-        path = OV.ledger_path(self.proj, self.GAME)
         still = self.now + timedelta(minutes=1)
         with mock.patch.object(WR, 'now_utc', lambda: still):
             self.assertEqual(self.record(), [('MISSED', self.m), ('MISSED', self.m + 1), ('ELIGIBILITY', self.m + 2)])
             want = path.read_bytes()
-            for k in (1, 2, 3):
-                path.unlink()
+            self.assertEqual([r['kind'] for r in self.raw_rows()], ['CONFIRMED', 'MISSED', 'MISSED', 'ELIGIBILITY', 'CONFIRMED'])
+            for k in (1, 2, 3, 4):
+                path.write_bytes(first)
                 with B.fault_after(k) as steps, self.assertRaises(B.Boom):
                     self.record()
-                self.assertEqual(len(path.read_bytes().split(b'\n')) - 1, k)  # the k-th line is durable
+                self.assertEqual(len(path.read_bytes().split(b'\n')) - 1, k + 1)   # the k-th line is durable
                 self.record()
                 self.assertEqual(path.read_bytes(), want, k)
                 self.assertEqual(self.record(), [])
@@ -753,12 +786,12 @@ class Restart(Stream):
         self.score(sid, self.m + 2)
         self.assertEqual(self.record(), [('FACTOR', self.m + 2)])
         want = path.read_bytes()
-        path.write_bytes(b''.join(x + b'\n' for x in want.split(b'\n')[:3]))  # as if the factor line was never written
+        path.write_bytes(b''.join(x + b'\n' for x in want.split(b'\n')[:5]))  # as if the factor line was never written
         with B.fault_after(1), self.assertRaises(B.Boom):
             self.record()
         self.assertEqual(self.record(), [])
         self.assertEqual(path.read_bytes(), want)                             # a factor line holds no time: same bytes
-        self.assertEqual(OV.verify(self.GAME), {'lines': 4, 'eligibility': 1, 'factor': 1, 'missed': 2, 'stop': 0})
+        self.assertEqual(OV.verify(self.GAME), {'lines': 6, 'confirmed': 2, 'eligibility': 1, 'factor': 1, 'missed': 2, 'stop': 0})
 
     def test_a_torn_last_line_is_kept_aside_and_the_line_is_written_again(self):
         self.register()
@@ -771,7 +804,7 @@ class Restart(Stream):
         self.assertEqual(self.week()[1], [('FACTOR', self.m), ('ELIGIBILITY', self.m + 1)])
         self.assertTrue(path.read_bytes().startswith(good))
         self.assertEqual(len(list(path.parent.glob(path.name + '.torn_*'))), 1)
-        self.assertEqual(OV.verify(self.GAME)['lines'], 3)
+        self.assertEqual(OV.verify(self.GAME)['lines'], 6)
 
     def test_verify_and_the_reader_catch_every_altered_line(self):
         self.register()
@@ -781,31 +814,51 @@ class Restart(Stream):
         path = OV.ledger_path(self.proj, self.GAME)
         good = path.read_bytes()
         rows = [json.loads(x) for x in good.split(b'\n')[:-1]]
-        self.assertEqual([r['kind'] for r in rows], ['ELIGIBILITY', 'FACTOR', 'ELIGIBILITY'])
+        self.assertEqual([r['kind'] for r in rows], ['CONFIRMED', 'ELIGIBILITY', 'CONFIRMED', 'FACTOR', 'ELIGIBILITY', 'CONFIRMED'])
+        c0, e1, c1, f1, e2, c2 = rows
 
         def rechained(new):
-            out = []
+            """The lines chained afresh, each confirmation and factor line naming the eligibility line before it."""
+            out, elig = [], None
             for r in new:
                 r = {k: v for k, v in r.items() if k not in ('line_number', 'previous_line_digest')}
                 if r['kind'] == 'FACTOR':
-                    r['eligibility_line_digest'] = record_digest(out[-1])
+                    r['eligibility_line_digest'] = record_digest(elig)
+                elif r['kind'] == 'CONFIRMED' and r['confirms'] == 'ELIGIBILITY' and elig is not None:
+                    r['confirmed_digest'] = record_digest(elig)
                 out.append(JL.chained(r, out))
+                if r['kind'] == 'ELIGIBILITY':
+                    elig = out[-1]
             return b''.join(canonical(r) for r in out)
-        w = list(rows[0]['weights'])
+        self.assertEqual(rechained(rows), good)
+        w = list(e1['weights'])
         i, j = w.index(max(w)), w.index(min(w))
         w[i], w[j] = w[j], w[i]                                               # other weights with the same variance
-        logs = [str(int(v) + 1) for v in rows[1]['log_factors']]
+        logs = [str(int(v) + 1) for v in f1['log_factors']]
+        at_cut = WR.utc_text(self.cut(self.m))
         altered = {
             'a byte changed without the chain': good.replace(b'"skip":false', b'"skip":true', 1),
-            'a line removed': b''.join(canonical(r) for r in rows[1:]),
-            'the factor line first': rechained([rows[1], rows[0]]) if False else canonical(rows[1]) + canonical(rows[0]),
-            'log-factors raised, sums not': rechained([rows[0], dict(rows[1], log_factors=logs), rows[2]]),
-            'crossed claimed': rechained([rows[0], dict(rows[1], crossed=True), rows[2]]),
-            'a second eligibility line for the same draw': rechained([rows[0], dict(rows[0])]),
-            'an eligibility line dated after its cut-off': rechained(
-                [dict(rows[0], written_utc=WR.utc_text(self.cut(self.m, 1)))] + rows[1:]),
-            'a line of another registration': rechained([dict(rows[0], registration_digest='a' * 64)] + rows[1:]),
-            'an unknown field': rechained([dict(rows[0], note='x')] + rows[1:]),
+            'a line removed': b''.join(canonical(r) for r in rows[:1] + rows[2:]),
+            'the factor line first': b''.join(canonical(r) for r in (c0, f1, e1, c1)),
+            'log-factors raised, sums not': rechained([c0, e1, c1, dict(f1, log_factors=logs), e2, c2]),
+            'crossed claimed': rechained([c0, e1, c1, dict(f1, crossed=True), e2, c2]),
+            'a second eligibility line for the same draw': rechained([c0, e1, c1, dict(e1)]),
+            'an eligibility line dated after its cut-off': rechained([c0, dict(e1, written_utc=WR.utc_text(self.cut(self.m, 1)))]),
+            'a line of another registration': rechained([c0, dict(e1, registration_digest='a' * 64), c1, f1, e2, c2]),
+            'an unknown field': rechained([c0, dict(e1, note='x'), c1, f1, e2, c2]),
+            # EX_233 S2-F02: what the reader requires of the confirmations
+            'no confirmation of the registration': rechained([e1, c1, f1, e2, c2]),
+            'a factor line with no confirmation of its eligibility line': rechained([c0, e1, f1, e2, c2]),
+            'a confirmation dated at its cut-off': rechained([c0, e1, dict(c1, confirmed_utc=at_cut), f1, e2, c2]),
+            'a confirmation dated before the line it confirms': rechained(
+                [c0, e1, dict(c1, confirmed_utc=WR.utc_text(WR.parse_utc(e1['written_utc']) - timedelta(seconds=1))), f1]),
+            'a confirmation with another limit': rechained([c0, e1, dict(c1, limit_utc=WR.utc_text(self.cut(self.m, 60))), f1]),
+            'two confirmations of one eligibility line': rechained([c0, e1, c1, dict(c1), f1, e2, c2]),
+            'a second confirmation of the registration': rechained([c0, dict(c0), e1, c1, f1]),
+            'a registration confirmed at its first target\'s cut-off': rechained([dict(c0, confirmed_utc=at_cut)]),
+            'a confirmation of another record': b''.join(canonical(r) for r in (
+                c0, e1, JL.chained({k: v for k, v in dict(c1, confirmed_digest='a' * 64).items()
+                                    if k not in ('line_number', 'previous_line_digest')}, [c0, e1]))),
         }
         for name, raw in altered.items():
             with self.subTest(read=name):
@@ -817,19 +870,18 @@ class Restart(Stream):
                 self.assertEqual(path.read_bytes(), raw)                      # blocked: nothing written
         # lines that are consistent with each other but not with the frozen tickets or the scores: verify finds them
         num, den = NUM.variance(w)
-        self.assertEqual(f'{num}/{den}', rows[0]['variance'])
-        t = NUM.factor_table(rows[0]['weights'])
-        x_other = next(x for x in sorted(t['counts']) if x != rows[1]['x'])
+        self.assertEqual(f'{num}/{den}', e1['variance'])
+        t = NUM.factor_table(e1['weights'])
+        x_other = next(x for x in sorted(t['counts']) if x != f1['x'])
         new_logs = [str(row[x_other]) for row in t['rows']]
         consistent = {
-            'other weights, self-consistent': [dict(rows[0], weights=w), rows[1], rows[2]],
-            'another X with its own factors': [rows[0], dict(rows[1], x=x_other, log_factors=new_logs,
-                                                             z=NUM.z_text(x_other, *t['variance']),
-                                                             **OV._score_fields([int(v) for v in new_logs], 1)), rows[2]],
-            'an eligible variant dropped': [dict(rows[0], eligible=rows[0]['eligible'][1:],
-                                                 eligible_count=rows[0]['eligible_count'] - 1,
-                                                 eligible_digest=record_digest({'eligible': rows[0]['eligible'][1:]})),
-                                            rows[1], rows[2]],
+            'other weights, self-consistent': [c0, dict(e1, weights=w), c1, f1, e2, c2],
+            'another X with its own factors': [c0, e1, c1, dict(f1, x=x_other, log_factors=new_logs,
+                                                                z=NUM.z_text(x_other, *t['variance']),
+                                                                **OV._score_fields([int(v) for v in new_logs], 1)), e2, c2],
+            'an eligible variant dropped': [c0, dict(e1, eligible=e1['eligible'][1:], eligible_count=e1['eligible_count'] - 1,
+                                                     eligible_digest=record_digest({'eligible': e1['eligible'][1:]})),
+                                            c1, f1, e2, c2],
         }
         for name, new in consistent.items():
             with self.subTest(verify=name):
@@ -838,7 +890,7 @@ class Restart(Stream):
                 with self.assertRaises(OV.OV1Blocked):
                     OV.verify(self.GAME)
         path.write_bytes(good)
-        self.assertEqual(OV.verify(self.GAME)['lines'], 3)
+        self.assertEqual(OV.verify(self.GAME)['lines'], 6)
 
     def test_the_bar(self):
         """The crossing is the kernel's integer comparison on the exact running sums; it is recorded on the line where
@@ -849,7 +901,7 @@ class Restart(Stream):
         num, den = NUM.variance(w)
         KT.getcontext().prec = 90
         ln40 = int(KT.Decimal(40).ln() * KT.Decimal(10 ** 50))
-        rows, sums = [], [0] * 6
+        rows, sums = list(self.raw_rows()), [0] * 6                           # the registration's confirmation
 
         def pair(target, logs, counted):
             nonlocal sums
@@ -866,6 +918,8 @@ class Restart(Stream):
                                'certificate': 'PASS', 'kernel_version': NUM.KERNEL_VERSION,
                                'master_pin': {'ledger_version': 2, 'master_sha256': 'c' * 64, 'last_draw': target - 1}}, rows)
             rows.append(elig)
+            rows.append(JL.chained({**base, 'kind': 'CONFIRMED', 'confirms': 'ELIGIBILITY', 'confirmed_digest': record_digest(elig),
+                                    'limit_utc': WR.utc_text(cut), 'confirmed_utc': elig['written_utc']}, rows))
             sums = [a + b for a, b in zip(sums, logs)]
             rows.append(JL.chained({**base, 'kind': 'FACTOR', 'eligibility_line_digest': record_digest(elig),
                                     'skipped': False, 'outcome_pins': [], 'x': 0, 'z': '0.000000000000',
@@ -882,7 +936,102 @@ class Restart(Stream):
         self.assertIn(f'the score reached 40 at draw {self.m + 1}', text)
         self.assertIn('not proof of a cause', text)
         with self.assertRaises(OR.RecordRefused):                             # a crossing that the sums do not give
-            getc(rows[:1] + [dict(rows[1], crossed=True)])
+            getc(rows[:3] + [dict(rows[3], crossed=True)])
+
+
+class Durability(Stream):
+    """EX_233 S2-F02. A time written into a record is read from the clock BEFORE the record is durable, so a write that
+    stalls across a limit would leave a late record with an in-time stamp. The registration and every eligibility line
+    therefore count only with a CONFIRMED line, whose time is read AFTER the record was read back from disk. A record
+    not confirmed before its limit is never used: the stream stops. The same holds across an interruption."""
+
+    def stalled(self, kind, until):
+        """`append` as installed, except that a line of `kind` becomes durable only as the clock reaches `until`."""
+        real = OV.JL.append
+
+        def append(path, record):
+            raw = real(path, record)
+            if record.get('kind') == kind:
+                self.now = until
+            return raw
+        return mock.patch.object(OV.JL, 'append', append)
+
+    def confirmations(self, what):
+        return [r for r in self.raw_rows() if r['kind'] == 'CONFIRMED' and r['confirms'] == what]
+
+    def test_an_eligibility_line_durable_after_its_cutoff_is_never_counted(self):
+        self.register()
+        self.week(record=False)
+        self.now = self.cut(self.m, -5)                                       # five seconds before the cut-off
+        with self.stalled('ELIGIBILITY', self.cut(self.m, 3)):                # the write completes three seconds after it
+            self.assertEqual(self.record(), [('ELIGIBILITY', self.m), ('STOP', self.m)])
+        elig, stop = self.ov1_rows()
+        self.assertLess(WR.parse_utc(elig['written_utc']), self.cut(self.m))  # the line's own time says "in time"
+        self.assertEqual((stop['cause'], self.confirmations('ELIGIBILITY')), ('ELIGIBILITY_NOT_VERIFIED', []))
+        self.result(self.m)
+        self.assertEqual(self.week()[1], [])                                  # the draw is forecast and scored as usual,
+        self.assertTrue([s for s in self.scores() if s['target_draw_number'] == self.m])
+        self.assertNotIn('FACTOR', [k for k, _t in self.kinds()])             # and never enters the formal stream
+        self.assertEqual(OV.verify(self.GAME)['stop'], 1)
+
+    def test_an_interrupted_eligibility_is_confirmed_in_time_or_the_stream_stops(self):
+        for seconds in (-2, 2):                                               # the restart: before, or after, the cut-off
+            with self.subTest(restart=seconds):
+                self.tearDown()
+                self.setUp()
+                self.register()
+                self.week(record=False)
+                self.now = self.cut(self.m, -5)
+                with B.fault_after(1), self.assertRaises(B.Boom):             # the process dies as the line lands
+                    self.record()
+                self.assertEqual((self.kinds(), self.confirmations('ELIGIBILITY')), ([('ELIGIBILITY', self.m)], []))
+                self.assertEqual(OV.status(self.GAME)['awaiting_confirmation'], self.m)
+                self.now = self.cut(self.m, seconds)
+                self.record()
+                in_time = seconds < 0
+                self.assertEqual(self.kinds(), [('ELIGIBILITY', self.m)] + ([] if in_time else [('STOP', self.m)]))
+                self.assertEqual(len(self.confirmations('ELIGIBILITY')), 1 if in_time else 0)
+                self.result(self.m)
+                self.assertEqual(('FACTOR', self.m) in self.week()[1], in_time)
+
+    def test_a_registration_durable_too_late_never_becomes_a_stream(self):
+        self.now = self.at(self.m, minutes_before=1)                          # a minute before the first target's deadline
+        real = OR.write_record
+
+        def slow(path, rec):
+            raw = real(path, rec)
+            self.now = self.at(self.m, minutes_before=-1)                     # the write completes a minute after it
+            return raw
+        with mock.patch.object(OV.OR, 'write_record', slow):
+            rec = self.register()
+        self.assertLess(WR.parse_utc(rec['registered_utc']), self.at(self.m))  # the record's own time says "in time"
+        st = OV.status(self.GAME)
+        self.assertEqual((st['stopped']['cause'], st['registration_confirmed']), ('REGISTRATION_NOT_VERIFIED', False))
+        self.assertEqual(self.week()[1], [])                                  # no line ever follows; forecasting is as usual
+        with self.assertRaises(OV.OV1Refused):
+            self.register()                                                   # and there is no second registration
+
+    def test_an_interrupted_registration_is_confirmed_in_time_or_the_stream_stops(self):
+        for case in ('in time', 'after the deadline', 'after the first target is frozen'):
+            with self.subTest(restart=case):
+                self.tearDown()
+                self.setUp()
+                with mock.patch.object(OV, 'record', side_effect=B.Boom('the process dies')), self.assertRaises(B.Boom):
+                    self.register()
+                self.assertEqual(self.ledger_bytes(), b'')                    # the registration is on disk, unconfirmed
+                self.assertFalse(OV.status(self.GAME)['registration_confirmed'])
+                if case == 'after the deadline':
+                    self.now = self.at(self.m, minutes_before=-1)
+                elif case == 'after the first target is frozen':
+                    self.week(record=False)
+                self.record()
+                st = OV.status(self.GAME)
+                if case == 'in time':
+                    self.assertEqual((st['registration_confirmed'], st['stopped'], len(self.confirmations('REGISTRATION'))), (True, None, 1))
+                    self.assertEqual(self.week()[1], [('ELIGIBILITY', self.m)])
+                else:
+                    self.assertEqual((st['registration_confirmed'], st['stopped']['cause']), (False, 'REGISTRATION_NOT_VERIFIED'))
+                    self.assertEqual(self.record(), [])
 
 
 class Isolation(Stream):
@@ -892,10 +1041,10 @@ class Isolation(Stream):
         byte, and the stream continues once the fault is gone."""
         self.register()
         self.assertEqual(self.week(record=False)[0][-1], ('FROZE_NEXT', self.m))
-        live = self.live_bytes()
+        live, base = self.live_bytes(), self.ledger_bytes()
         with mock.patch.object(OV, 'eligibility_content', side_effect=RuntimeError('fault')), self.assertRaises(RuntimeError):
             self.record()
-        self.assertEqual((self.live_bytes(), self.ledger_bytes()), (live, b''))
+        self.assertEqual((self.live_bytes(), self.ledger_bytes()), (live, base))
         self.assertEqual(self.record(), [('ELIGIBILITY', self.m)])            # rerun before the cut-off writes the line
         self.result(self.m)
         sid = self.open()['session_id']
@@ -988,7 +1137,7 @@ class OzLotto(Stream):
         self.assertEqual(len(rows[0]['weights']), 47)
         self.check_counted(rows[0], rows[1], [0] * 6)
         self.assertTrue(OR.absent(OV.ledger_path(self.proj, 'POWERBALL')))
-        self.assertEqual(OV.verify(self.GAME)['lines'], 3)
+        self.assertEqual(OV.verify(self.GAME)['lines'], 6)
 
 
 if __name__ == '__main__':

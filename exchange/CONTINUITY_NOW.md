@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 09:40 Australia/Adelaide (owner's clarified model and EX_233 to EX_235 recorded, entry 84; Claude is correcting slice 2).
+**Last updated:** 18 November 2026, 10:28 Australia/Adelaide (corrected slice 2 sent, EX_236, entry 85; H-1 v5 candidate written; the owner's clarified model, entry 84).
 
 ## For the owner: NOW
 
@@ -60,20 +60,26 @@ durable EX messages are authoritative.
   All draws equal (the former holdout draws are ordinary draws; the Mode H seal is an archive, never a gate in normal
   work); every method version its own identity, old versions kept; catch-up is the same N-1 walk-forward; two
   labelled OV-1 uses (formal prospective, bar 40; retrospective diagnostic, descriptive, in slice 3's report).
-  This changes parts of supplement v0.8 (6.7; 7.2 rules 1 to 3) and plan v0.3 (L6 gates): a short amendment travels
-  with the package. **NOW: Claude is correcting slice 2** (remove the seal gates from the staged normal paths,
-  slice 1's readiness check included; close S2-F02), then a full new H-1 edition. Reviewer verdict on EX_232:
-  recheck required (EX_233), kernel proofs accepted.
-- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
+  This changes parts of supplement v0.8 (6.7; 7.2 rules 1 to 3) and plan v0.3 (L6 gates); the change note is
+  `exchange/DECISIONS/OWNER_CLARIFICATION_2026_11_18_EQUAL_DRAWS_AND_OV1_USES.md`; the amendments travel with the package.
+- **NOW: THE CORRECTED SLICE 2 IS WITH THE REVIEWER: EX_236 (entry 85).** 700 tests, 0 failing, on both Pythons;
+  101 planted defects caught; tree digest `000dc4ae...a581241d`. It removes the Mode H seal and opening
+  conditions from the staged normal paths (slice 1's readiness check included) and closes S2-F02 with CONFIRMED lines
+  in OV-1's ledger. Two installed conditions were left on purpose (the reader's opening record; the diagnostic
+  route): EX_236 section 2. The Fable task is finished: Opus is enough until the reviewer replies.
+- **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
+  S2-F02 stood). Superseded by EX_236.
+- **Slice 2, first edition, as recorded then:**- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` (README there). NOT INSTALLED. 694 tests, 0 failing, on both Pythons;
   94 planted defects caught; tree digest `887731e1...4bedabc4`. EX_232 section 6 lists what was built lean or moved
   to slice 3, and section 7 six questions for the reviewer. The Fable task (slice 2) is finished: Opus is enough
   until the reviewer replies.
-- **NEXT: the reviewer's review of EX_232; then slice 3** (L4 league table, L7 report, L8 sequencers; Opus) on the
+- **NEXT: the reviewer's recheck of EX_236; then slice 3** (L4 league table, L7 report, L8 sequencers; Opus) on the
   owner's go; slices are serial. Slice 3 must: connect `ov1.publication_names` to the league manifests; write
   `LEAGUE_SOURCES_<GAME>.json` in the shape `score_identities.league_sources` reads; add OV-1's measure-registry
-  entry; run `Method_OV1.py record` after every score and at once on FROZE_NEXT; admit existing attempts before any
-  routine fill. Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
+  entry; run `Method_OV1.py record` after every score and at once on FROZE_NEXT, reading its state line and not only
+  its exit code; admit existing attempts before any routine fill, verifying complete report records; build the two
+  labelled OV-1 views in the report (formal; retrospective, descriptive, same kernel, never the formal ledger). Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
   or feature only if its absence could change a result, invalidate the evidence or break his weekly use. No change to
   his PC's date, time or zone (entry 78); no further daylight-saving work.
 - **Joint working principle (entry 81), agreed by Claude and the reviewer on the owner's text:**
@@ -95,7 +101,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). **Awaited: its review of slice 2 (EX_232).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). **Awaited: its recheck of the corrected slice 2 (EX_236).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
@@ -104,11 +110,12 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`.
-  In its last line write: "see exchange/CONTINUITY_NOW.md, including its section 'Resuming the MHUP-B slice work', and
-  exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md". The new chat reads H-1 v4 beside it, section
-  0B first. H-1 v4 predates the code round; this page, the decision log (entries 65 to 82) and EX_220 to EX_231 carry
-  what happened since. A new H-1 edition is due with the integrated package (plan section 11), not before.
+- **Claude chat ended:** start a new Claude chat by pasting the NEW blurb,
+  `exchange/CLAUDE_WEB_TOOLS/h1v5/out/Claude_Primary_Handover_H1_v5_CANDIDATE_introductory_blurb.md` (a full new text
+  written 18 November 2026 with H-1 v5, a CANDIDATE until the owner ratifies it; H-1 v4 in `doc/HANDOVER/` is still the
+  installed edition and its blurb still works, but it predates the code round and the owner's clarified model).
+  In the blurb's last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v5's section 0B first and
+  its section 12.10 for the code work.
 - **ChatGPT reviewer chat ended:** H-2 v2 r1 is still the installed reviewer handover. The reviewer's newest starter text is
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_RATIFICATION_CANDIDATE_20261117_introductory_blurb.md` (a candidate; by its
   own instructions, until H-2 v3 is ratified the new reviewer chat is pointed to the installed H-2 v2 r1 and register
@@ -141,9 +148,12 @@ durable EX messages are authoritative.
   exchange/CLAUDE_WEB_TOOLS/mhupb/slice2`; the suite with slice 1's `run_suite.py`; the planted defects with
   `mutations_slice2.py` on a separate copy of the tree. Corrections after the review go into that folder's tools
   (`apply_slice2.py`, `slice2_new/`), never into `src/` or `tests/` on `main`. Slice 3 goes in `slice3/`, built on
-  top of slice 2's tree. Next free EX number after `git fetch`: EX_233 at the time of writing.
+  top of slice 2's tree. Next free EX number after `git fetch`: EX_237 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**A full new Claude handover, H-1 v5, exists as a CANDIDATE** (`exchange/CLAUDE_WEB_TOOLS/h1v5/out/`; entry 85), awaiting
+the owner's ratification. The reviewer's newest candidate is H-2 v3r3 (`doc/HANDOVER/`, 18 November 2026).
 
 H-1 v4 (Claude; RAT-34, committed into `doc/HANDOVER/` by Claude on 17 November 2026) and H-2 v2 r1 (reviewer; RAT-31,
 installed `5a8527b`; the reviewer's H-2 v3 CANDIDATE is beside it, to be updated and ratified separately), with register
