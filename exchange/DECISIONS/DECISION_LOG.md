@@ -1060,3 +1060,20 @@ the installed documents. This log is not a separate approval process.
 - **Results on the corrected tree:** 623 tests in 48 modules, no failure, on Python 3.13.18 and 3.15.0b4; 57 planted
   defects, all caught. Sent as EX_230 for a focused recheck.
 - **No owner decision arose.** Slice 2 has not started; it starts on the owner's next word (Fable, High).
+
+## 78. 17 November 2026, about 23:34 - the owner will not change his PC's date or time for a test
+
+- **The owner's words (23:33):** "i cannot test daylight saving change on my PC which would involve date/time changes as I
+  am unwilling to do that."
+- **Recorded as a standing constraint:** no task file, rehearsal or test changes the date, time or time zone of the
+  owner's PC. T017 never planned to; this makes it a rule.
+- **Why it is not needed.** The deadline is 00:00 local on the draw's date; the daylight-saving changes are at 2 a.m. on
+  a Sunday and the draws are on Tuesdays and Thursdays, so no deadline falls on a change. The only effect is the
+  offset (10:30 in daylight time, 9:30 in standard time), which the program takes from the system's zone rules for the
+  draw's date, not from today's clock. OV-1's cut-off is a fixed UTC instant and is unaffected.
+- **Checked in the cloud, no clock changed:** with the process's zone set to Australia/Adelaide (the `TZ` variable), the
+  slice's `weekly_records.deadline` was compared with the zone database for 1,040 weekly draws (ten years, both games):
+  none wrong; 518 at +10:30, 522 at +9:30; the first draws after each change in 2027 and 2028 are right.
+- **To do, with the integrated package:** that check as a suite test (it sets `TZ` for its own process, so it is skipped
+  on Windows); and in T017 one read-only step that prints the deadline and offset for a draw in each season on the
+  owner's PC, with no setting changed.
