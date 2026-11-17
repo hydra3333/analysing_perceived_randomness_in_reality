@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 10:40 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 12:10 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -28,13 +28,14 @@ durable EX messages are authoritative.
 - **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by
   `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
   lists what must still be rewritten before ratification.
-- **MHUP-B design supplement, DRAFT v0.2** (entry 52): `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_2.md`
-  (v0.1 kept as history; its "keep it small" section and its "twice as fast" claim are withdrawn). Full scope in eight
+- **MHUP-B design supplement, DRAFT v0.3** (entries 52-53): `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_3.md`
+  (v0.3 adds the owner's decision of entry 53: the holdout draws open to re-forecasting by every variant as development
+  evidence, the sealed Mode H records kept as separate history and never added twice; v0.1 and v0.2 kept as history; its "keep it small" section and its "twice as fast" claim are withdrawn). Full scope in eight
   tested layers, the live path isolated; the league table; the cross-source read contract; the overall measure OV-1 (one
   confirmatory forward test for both games, read five times at 1%); back-history and the window contract. It answers
   the reviewer's EX_207 (conditional pass on v0.1's direction). **Waiting for:** the owner's read of its section 0, then the
-  reviewer's review of v0.2 (seven questions), then the owner's four decisions. Only then the code plan.
-- **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the decisions on v0.2, MHUP-B's code plan (Fable, High).
+  reviewer's review of v0.3 (seven questions), then the owner's four decisions. Only then the code plan.
+- **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the decisions on v0.3, MHUP-B's code plan (Fable, High).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status

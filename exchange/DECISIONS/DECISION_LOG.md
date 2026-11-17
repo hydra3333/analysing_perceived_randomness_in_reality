@@ -636,3 +636,18 @@ the installed documents. This log is not a separate approval process.
   games together; two-sided; read formally five times only (52, 104, 208, 416, 832 forward draws) at 1% each; everything
   else secondary. Claude withdrew v0.1's claim that one measure would be more than twice as fast.
 - **Not decided:** v0.2 lists seven questions for the reviewer and four decisions for the owner. Nothing is authorised.
+
+## 53. 17 November 2026, about 11:49 - OWNER DECISION: the holdout draws opened to re-forecasting; the sealed forecasts kept as history
+
+- **The owner's words** (on v0.2's decision 3, "the 40 current variants can never be re-forecast on the holdout draws"):
+  "For 3. Retain current forecasts as separate history but specifically open up holdouts to reforecasting ... so everything
+  draws and methods all get treated the same."
+- **Claude's view: agreed, with three guard rails,** built into draft v0.3 section 7: (1) the sealed Mode H forecasts,
+  scores, markers and reports stay exactly as they are, as separate history; (2) every re-forecast of a holdout draw is
+  development evidence, for any variant, and can never be called holdout or forward evidence; (3) each variant's result for
+  a draw is counted once in any total: the all-draws column takes the walk-forward record and shows the Mode H result
+  beside it. Re-forecasting cannot make a second blind test and does not weaken the first; it makes the pipeline uniform.
+- **A gain:** where the method revision is unchanged, the re-forecast should equal the sealed forecast exactly, so the
+  batch report compares them (v0.3 section 7.2 rule 7): a reproducibility check of Mode H.
+- **Recorded as:** `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_3.md` (replaces v0.2; v0.1 and v0.2 kept).
+  The reviewer has yet to review it (question R-6 asks about this decision). Nothing is authorised to run.
