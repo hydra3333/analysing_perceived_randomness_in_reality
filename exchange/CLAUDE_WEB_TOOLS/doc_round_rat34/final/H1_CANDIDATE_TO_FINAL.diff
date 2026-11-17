@@ -1,0 +1,4 @@
+5c5
+< **Status:** CANDIDATE for the owner's ratification with register v0.31 (RAT-34), after the reviewer's documentary review (EX_214). Until then the installed handover is H-1 v3 (RAT-32), read together with `exchange/CONTINUITY_NOW.md`. When ratified it replaces H-1 v3, which stays in `doc/HANDOVER/` as history.
+---
+> **Status:** OWNER-RATIFIED 17 November 2026, about 15:15 (RAT-34; register v0.31; record `exchange/DECISIONS/DECISION_LOG.md`, entry 63), after the reviewer's documentary review (EX_214; **EX_215: DOCUMENTARY PASS**). It replaces H-1 v3, which stays in `doc/HANDOVER/` as history. Committed into `doc/` by Claude directly (section 0B, item 4); the next register edition records the commit.

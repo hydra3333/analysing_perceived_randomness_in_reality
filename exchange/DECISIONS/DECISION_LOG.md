@@ -796,3 +796,29 @@ the installed documents. This log is not a separate approval process.
   force with them).
 - **Claude's commitment (the owner's assumption, confirmed):** just before the handover to a new Claude chat, Claude
   re-checks H-1 v4, its blurb and `exchange/CONTINUITY_NOW.md` against GitHub and updates them if anything has moved.
+
+## 63. 17 November 2026, about 15:15 - RAT-34: register v0.31, H-1 v4 and its blurb ratified; the approach of 16 November in force
+
+- **The owner's words (15:14):** "check ex_215 whilst also noting: chatgpt "My recommendation: You can proceed with RAT-34 for
+  register v0.31, H-1 v4 and its blurb, with the previously ratified MHUP-B v0.7 supplement installed alongside them. Claude
+  should verify the final ratified-file hashes after the limited status updates. Keep H-2 v3 for a separate update and
+  ratification. This need not delay the fresh Claude chat or its subsequent readiness check.""
+- **EX_215** (the reviewer's commit `ebfe97d`; as stored `3f16bfd0c4bb756834731fd46c2fc9013f92a808fa63b333d02c279a31e9203f`):
+  DOCUMENTARY PASS; it recommends RAT-34; it agrees RAT-34 is the right point for the approach of 16 November to take effect,
+  with the EX_206 conditions as written; it agrees the closing of the exposure record; it recommends H-2 v3 be updated by the
+  reviewer and ratified separately, not with RAT-34. A note for the successor chat: "nothing is tested again on the sealed
+  holdouts" means the sealed study is never reopened; it does not forbid the new development re-forecasts of RAT-33.
+- **Claude's tap question:** "Do you ratify register v0.31, H-1 v4 and its blurb, with your approach of 16 November coming
+  into force with them? The ratified MHUP-B design goes into doc/ alongside. H-2 v3 waits for ChatGPT to update it, as it
+  advises. This authorises no code, run or install." **The owner's answer:** "Yes, ratify (Recommended)".
+- **RAT-34 is recorded. The approach of 16 November 2026 is in force from now**, with the EX_206 conditions.
+- **The status-only changes** (`exchange/CLAUDE_WEB_TOOLS/doc_round_rat34/finalise_rat34.py`; the candidate-to-final diffs in
+  its `final/` folder): H-1 v4's status line; the register's version line, its RAT-34 paragraph and two status cells. Final
+  SHA-256: register v0.31 `c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`; H-1 v4
+  `cc52ed4f988d9a4044d3699de7626717b4a0fd760e927aa1ad582187edbc8d3d`; its blurb (unchanged)
+  `2cfa6cf521aabee3bbef257eb8a917caea92c73ddac54e90ddda79464ecd67be`; the RAT-33 supplement (unchanged)
+  `04c4f68a638fff7d93f06d25084d1454bdfc443e9aab6b0b12ffdfd8b5323d26`.
+- **Committed by Claude directly into `doc/`** (the first use of the wider write permission): `doc/RATIFICATION_REGISTER_v0_31.md`,
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v4.md`, its blurb, `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_7.md`.
+  New files only; nothing existing was changed or removed. Checked from GitHub after the push (CONTINUITY_NOW records the
+  commit). The owner only pulls.
