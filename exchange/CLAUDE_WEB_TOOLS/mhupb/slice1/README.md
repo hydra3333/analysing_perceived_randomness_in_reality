@@ -1,4 +1,7 @@
-# MHUP-B slice 1 (the live path): sent for technical review as EX_228 - NOT INSTALLED
+# MHUP-B slice 1 (the live path): corrected edition sent for a focused recheck as EX_230 - NOT INSTALLED
+
+EX_228 sent the first edition; EX_229 (the reviewer) asked for four corrections; this folder now holds the corrected
+edition (EX_230). `SLICE1_EX228_TO_EX230.diff` shows every line changed between the two.
 
 Code plan v0.3 (RAT-35), slice 1 = the baseline test fixes, L1 (modes and gates), L2 (the forecasting half), L3 (the
 scoring half). The owner's go for code: decision log entry 75. Nothing here is installed; the project's `src/` and
@@ -11,5 +14,6 @@ scoring half). The owner's go for code: decision log entry 75. Nothing here is i
 - `run_suite.py TREE OUT [JOBS] [filter ...]`: the offline suite, one module per process, without E2R-T12.
 - `mutations_slice1.py TREE`: one planted defect per rule; each must be caught by its named test.
 - `SLICE1_EDITS_TO_INSTALLED_FILES.diff`: every changed line of an installed file.
-- `evidence/`: the suite summaries on Python 3.13 and 3.15 and the mutation run, for the tree EX_228 names.
+- `evidence/`: the suite summaries on Python 3.13 and 3.15 and the mutation run, for EX_228's tree and (the files
+  named `corrected`) for EX_230's tree.
 - `WORKING_NOTES.md`: Claude's notes while coding.

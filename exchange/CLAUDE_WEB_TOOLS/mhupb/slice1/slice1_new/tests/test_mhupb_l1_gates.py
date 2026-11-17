@@ -368,21 +368,52 @@ class ModeToPin(Project):
             X.write_developed_record(self.proj, p.game_id)
         self.n = 0
 
-    def attempt(self, game, mode, target, *, release='BEFORE', diagnostic=False):
+    def ticketed(self, game, mode, target, *, release='BEFORE', diagnostic=False):
+        """A request of one mode, with its session record and open ticket (or the diagnostic binding)."""
         p = get_profile(game)
         self.n += 1
         rid, sid, pin = f'mg-{self.n:032x}', f'{self.n:032x}', self.v2(game)
         if diagnostic:
-            req = request(game, target, mode, run_id=rid, binding=X.DIAGNOSTIC, pin=pin)
-        else:
-            e, _d = e1_pins(game)
-            when = p.derived_date(target - 1 if release == 'BEFORE' else target).isoformat()
-            sess = X.write_session(self.proj, game, sid, [{'method_id': 'E_1', 'variant_id': C.E1[1],
-                                   'method_revision': e['method_revision'], 'release_date': when}], pin=pin)
-            req = request(game, target, mode, run_id=rid, binding=X.binding_for_session(sess, rid), pin=pin)
-            X.open_ticket(OR.session_attempts_path(self.proj, game, sid), req, scope_kind='WEEKLY_SESSION', scope_id=sid)
-        res = self.launch(req)
+            return request(game, target, mode, run_id=rid, binding=X.DIAGNOSTIC, pin=pin)
+        e, _d = e1_pins(game)
+        when = p.derived_date(target - 1 if release == 'BEFORE' else target).isoformat()
+        sess = X.write_session(self.proj, game, sid, [{'method_id': 'E_1', 'variant_id': C.E1[1],
+                               'method_revision': e['method_revision'], 'release_date': when}], pin=pin)
+        req = request(game, target, mode, run_id=rid, binding=X.binding_for_session(sess, rid), pin=pin)
+        X.open_ticket(OR.session_attempts_path(self.proj, game, sid), req, scope_kind='WEEKLY_SESSION', scope_id=sid)
+        return req
+
+    def attempt(self, game, mode, target, *, release='BEFORE', diagnostic=False):
+        res = self.launch(self.ticketed(game, mode, target, release=release, diagnostic=diagnostic))
         return res.outcome, res.reason, res.folder
+
+    def test_each_session_run_mode_publishes_under_its_one_root(self):
+        """Design 6.4 (EX_229 F-229-1): CATCH_UP and FINAL_NEXT_DRAW under the weekly run root; a session-bound
+        REAL_DEVELOPMENT run under the development run root. The other root refuses before anything is read or
+        written; the tier follows the run mode, never the folder."""
+        weekly, development = OR.weekly_runs_root(self.proj), OR.development_runs_root(self.proj)
+        self.assertEqual(OR.session_runs_root(self.proj, 'REAL_DEVELOPMENT'), development)
+        for mode in sorted(V.WEEKLY_MODES):
+            self.assertEqual(OR.session_runs_root(self.proj, mode), weekly)
+        for game in ('POWERBALL', 'OZLOTTO'):
+            last = get_profile(game).holdout_last + EXTRA
+            for mode, target, release, right, wrong, tier in (
+                    ('CATCH_UP', last, 'BEFORE', weekly, development, 'CATCH_UP'),
+                    ('FINAL_NEXT_DRAW', last + 1, 'BEFORE', weekly, development, 'PROSPECTIVE'),
+                    ('REAL_DEVELOPMENT', last, 'ON', development, weekly, 'DEVELOPMENT_WF_EXPLORATORY')):
+                with self.subTest(game=game, mode=mode):
+                    req = self.ticketed(game, mode, target, release=release)
+                    before = sorted(str(f) for f in (self.proj / 'results').rglob('*'))
+                    for bad_root in (wrong, OR.diagnostic_runs_root(self.proj), OR.mode_h_runs_root(self.proj)):
+                        with self.assertRaises(CR.RunRefused) as cm:
+                            self.launch(req, run_root=bad_root)
+                        self.assertEqual(cm.exception.reason, 'DATA_SOURCE_REFUSED')
+                    self.assertEqual(sorted(str(f) for f in (self.proj / 'results').rglob('*')), before)
+                    res = self.launch(req)
+                    self.assertEqual(res.outcome, 'SUCCESS', res.reason)
+                    self.assertTrue(res.folder.is_relative_to(right / game))
+                    receipt = json.loads((res.folder / 'forecast_receipt.json').read_bytes())
+                    self.assertEqual((receipt['evidence_tier'], receipt['run_mode']), (tier, mode))
 
     def test_each_mode_at_the_last_draw_the_next_and_beyond(self):
         for game in ('POWERBALL', 'OZLOTTO'):

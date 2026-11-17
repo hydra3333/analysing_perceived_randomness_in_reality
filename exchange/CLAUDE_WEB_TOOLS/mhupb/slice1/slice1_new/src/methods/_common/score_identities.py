@@ -5,9 +5,13 @@ never see an outcome. This module is its only reader of the weekly score ledger.
 (game, method, revision, variant, target, the scored record's digest, the scoring policy id). It returns no match
 count, division, rank, drawn number, score or date, and imports nothing from the evaluator.
 
-A target is closed only by routine score lines that carry the digests of the records its own freeze line names. A score
-line that is malformed, repeats a scientific identity, or names a record no freeze line names refuses: it never closes
-a target and is never read as "not scored".
+A target is closed only by valid routine score lines of the records its own freeze line names (EX_229 F-229-2). Before
+any identity is returned, every line of the ledger must be exactly its canonical bytes and a complete, well-formed score
+line (weekly_records.validate_score_line), and must belong to one record of its target's freeze line, repeating that
+record's facts (weekly_records.check_score_linkage). A line that is an identity-shaped fragment, not canonical, without
+its provenance, a repeat of a scientific identity, or the score of a record no freeze line names refuses: it never
+closes a target and is never read as "not scored". The validation happens inside this module; what comes out is
+identities only.
 """
 from __future__ import annotations
 
@@ -36,17 +40,26 @@ def identity_of(line: Mapping) -> tuple:
     return ident
 
 
-def scored_identities(root: Path, game_id: str) -> frozenset:
-    """Every scientific identity in the game's weekly score ledger. A repeated identity refuses (one routine score per
-    identity; an amendment carries another policy id)."""
-    rows, _torn = OR.read_jsonl(WR.score_ledger_path(root, game_id))
-    seen = set()
-    for line in rows:
-        ident = identity_of(line)
-        if ident[0] != game_id:
-            raise OR.RecordRefused('score ledger: a line of another game')
+def scored_identities(root: Path, game_id: str, freeze_lines) -> frozenset:
+    """Every scientific identity in the game's weekly score ledger, after the whole ledger has been validated: canonical
+    lines of the full shape (weekly_records.score_ledger), each linked to a record of its target's freeze line, one
+    line per identity (an amendment carries another policy id and names the earlier line of the same record it stands
+    beside). `freeze_lines` are the verified lines of the forecast ledger. Only identities are returned."""
+    from _common.contract_records import record_digest
+    rows = WR.score_ledger(root, game_id)                    # canonical bytes, the full shape, this game
+    by_target = {line['target_draw_number']: line for line in freeze_lines}
+    seen, earlier = set(), {}
+    for s in rows:
+        ident = identity_of(s)
         if ident in seen:
             raise OR.RecordRefused('score ledger: a scientific identity scored twice')
+        line = by_target.get(s['target_draw_number'])
+        if line is None:
+            raise OR.RecordRefused('score ledger: a score for a target that has no freeze line')
+        WR.check_score_linkage(s, line)
+        if s['amendment_of'] is not None and earlier.get(s['amendment_of']) != ident[:6]:
+            raise OR.RecordRefused('score ledger: an amendment that names no earlier score line of the same record')
+        earlier[record_digest(s)] = ident[:6]
         seen.add(ident)
     return frozenset(seen)
 
@@ -57,15 +70,8 @@ def routine_identity(game_id: str, target: int, named: Mapping) -> tuple:
 
 
 def closed_targets(game_id: str, freeze_lines, identities) -> set[int]:
-    """The targets whose every named record has its routine score line. Every routine identity must belong to a record
-    some freeze line names, with that record's digest; a foreign identity refuses."""
-    owed = {}
-    for line in freeze_lines:
-        for r in line['records']:
-            owed[routine_identity(game_id, line['target_draw_number'], r)] = line['target_draw_number']
-    for ident in identities:
-        if ident[6] == WR.ROUTINE_POLICY and ident not in owed:
-            raise OR.RecordRefused('score ledger: a routine score for a record no freeze line names')
+    """The targets whose every named record has its routine score line. `identities` come from scored_identities, which
+    has already validated each line and tied it to its freeze line."""
     out = set()
     for line in freeze_lines:
         t = line['target_draw_number']

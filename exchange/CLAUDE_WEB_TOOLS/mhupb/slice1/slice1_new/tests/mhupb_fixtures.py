@@ -62,11 +62,7 @@ class Weekly(unittest.TestCase):
         self.rows = X.grow_master(self.proj, self.p, self.versions)
         X.write_opening_record(self.proj, self.GAME, freeze_version=1, freeze_sha=self.rows[0]['master_sha256'])
         # the game's Mode H study is sealed and the system declared developed (stage S5 of Appendix E)
-        X.write_mode_h_plan(self.proj, self.GAME, 'wf-' + 'a' * 32, [], [], pin=(2, self.rows[1]['master_sha256']),
-                            manifest_sha=X.write_study_manifest(self.proj, self.GAME))
-        for marker in OR.LIFECYCLE_MARKERS:
-            X.write_marker(self.proj, self.GAME, 'wf-' + 'a' * 32, marker)
-        X.write_developed_record(self.proj, self.GAME)
+        self.seal_and_declare()
         self.methods = set(self.METHODS)
         self.release_dates = {}                               # (method, variant) -> date, overriding RELEASED
         self.digests = ('c' * 64, 'e' * 64)
@@ -84,6 +80,32 @@ class Weekly(unittest.TestCase):
     def tearDown(self):
         self.stack.close()
         self._td.cleanup()
+
+    BATCH = 'wf-' + 'a' * 32
+    SCORE_DIGEST = 'b' * 64
+
+    def seal_and_declare(self):
+        """The game's one Mode H plan with its four lifecycle markers, written through the installed marker writer (so
+        each has its real shape and order), and the developed record as `declare-developed` writes it."""
+        plan = X.write_mode_h_plan(self.proj, self.GAME, self.BATCH, [], [], pin=(2, self.rows[1]['master_sha256']),
+                                   manifest_sha=X.write_study_manifest(self.proj, self.GAME))
+        for name in OR.LIFECYCLE_MARKERS:
+            OR.write_marker(self.proj, self.GAME, self.BATCH, name, {
+                'schema': OR.MARKER_SCHEMAS[name], 'batch_id': self.BATCH, 'game_id': self.GAME,
+                'utc': '2026-11-15T00:00:00.000000Z', 'plan_digest': X.record_digest(plan), 'pairs': 1,
+                'attempt_id': 'mh-fixture', 'roster_digest': 'a' * 64, 'score_ledger_sha256': self.SCORE_DIGEST,
+                'report_sha256': 'c' * 64})
+        self.write_developed()
+
+    def write_developed(self, **change):
+        rec = {'schema': OR.DEVELOPED_SCHEMA, 'game': self.GAME, 'declared_utc': '2026-11-16T00:00:00.000000Z',
+               'owner_statement': OR.DEVELOPED_STATEMENT, 'mode_h_score_digest': self.SCORE_DIGEST,
+               'mode_h_batch_id': self.BATCH, 'mode_h_score_attempt_id': 'mh-fixture'}
+        rec.update(change)
+        path = OR.developed_record_path(self.proj, self.GAME)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(X.canonical(rec))
+        return rec
 
     # ------------------------------------------------------------ the patched facts
     def _now(self):
@@ -171,13 +193,19 @@ class Weekly(unittest.TestCase):
         return WR.session_tickets(self.proj, self.GAME)
 
     def run_folders(self):
-        root = OR.weekly_runs_root(self.proj) / self.GAME
-        return sorted(f for f in root.glob('*/*/*') if f.is_dir()) if root.is_dir() else []
+        """Every run folder a session made: CATCH_UP and FINAL_NEXT_DRAW under the weekly root, a session's
+        REAL_DEVELOPMENT runs under the development root (design 6.4). The fixture makes no other development run."""
+        out = []
+        for base in (OR.weekly_runs_root(self.proj), OR.development_runs_root(self.proj)):
+            root = base / self.GAME
+            out += [f for f in root.glob('*/*/*') if f.is_dir()] if root.is_dir() else []
+        return sorted(out)
 
     def weekly_bytes(self):
         """Every file under the game's weekly folder and the weekly run root, by relative name."""
         out = {}
-        for base in (OR.weekly_root(self.proj, self.GAME), OR.weekly_runs_root(self.proj)):
+        for base in (OR.weekly_root(self.proj, self.GAME), OR.weekly_runs_root(self.proj),
+                     OR.development_runs_root(self.proj)):
             if base.is_dir():
                 for f in sorted(base.rglob('*')):
                     if f.is_file():

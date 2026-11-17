@@ -127,8 +127,7 @@ def score(game_id: str, session_id: str, target: int, *, echo=print) -> dict:
             raise ScoreRefused(f'a named record\'s training pin is not a row of the ledger: {exc}') from None
         if trained.version > outcome_row.version:
             raise ScoreRefused('a named record\'s training pin is newer than the scoring session\'s version')
-    identities = _guard(SI.scored_identities, root, game_id)
-    _guard(SI.closed_targets, game_id, lines, identities)                  # a foreign routine identity refuses here
+    identities = _guard(SI.scored_identities, root, game_id, lines)       # the whole score ledger, validated and linked
     todo = {SI.routine_identity(game_id, target, ev['named']): ev for ev in evidence
             if SI.routine_identity(game_id, target, ev['named']) not in identities}
     if not todo:
@@ -165,6 +164,7 @@ def score(game_id: str, session_id: str, target: int, *, echo=print) -> dict:
              'draw_date_is_derived': date_text == p.derived_date(target).isoformat()}
         try:
             WR.validate_score_line(s)
+            WR.check_score_linkage(s, line)
             if SI.identity_of(s) != ident:
                 raise OR.RecordRefused('the line\'s scientific identity is not the record\'s')
         except OR.RecordRefused as exc:
@@ -193,6 +193,7 @@ def witness(game_id: str, target: int, kind: str, ref: str) -> dict:
     w = {'schema': WR.WITNESS_SCHEMA, 'kind': 'WITNESS_RECORDED', 'game_id': game_id, 'target_draw_number': target,
          'freeze_line_digest': record_digest(line), 'witness_kind': kind, 'ref': ref.strip(),
          'recorded_utc': CP.utc_now()}
+    _guard(WR.validate_witness_line, w, game_id)
     JL.append(WR.witness_ledger_path(root, game_id), w)
     return w
 
@@ -223,6 +224,7 @@ def verify(game_id: str, target: int, verified_by: str, received_utc: str, evide
          'freeze_line_digest': digest, 'witness_kind': recorded[-1]['witness_kind'], 'ref': ref,
          'verified_by': verified_by, 'received_utc': received_utc, 'evidence': evidence,
          'digest_binding': 'human-checked', 'recorded_utc': CP.utc_now()}
+    _guard(WR.validate_witness_line, w, game_id)
     JL.append(WR.witness_ledger_path(root, game_id), w)
     return w
 

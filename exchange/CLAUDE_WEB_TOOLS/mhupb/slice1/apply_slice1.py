@@ -133,7 +133,8 @@ draw whose every named record verifies, and the draw accepted in the master).
         return False
 """,
      """    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout (MHUP-B, design 6.3 and Appendix E): only
-    when the game's developed record exists, the forecast ledger (verified in full: canonical lines, the chain, every
+    when the game's developed record exists and names its sealed Mode H study, the forecast ledger (verified in full:
+    canonical lines, the chain, every
     line's shape) holds a freeze line for the target, every record that line names verifies (its own session record
     and digest, its DONE ticket and digest, its run folder and digest), and the target is at most the last draw of
     the ledger's current last row. Anything invalid or absent refuses (False).\"\"\"
@@ -151,8 +152,7 @@ draw whose every named record verifies, and the draw accepted in the master).
     import _common.owner_records as OR
     import _common.weekly_records as WR
     try:
-        if OR.developed_record(repo_root, game_id) is None:
-            return False
+        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal
         line = WR.freeze_line_for(WR.forecast_ledger(repo_root, game_id), target)
         if line is None:
             return False
@@ -211,5 +211,42 @@ def read_outcome_rows(*, repo_root: Path, game_id: str, master_sha256: str, targ
     ("""            out[number] = (main, supps)
 """,
      """            out[number] = (main, supps, row[1])
+"""),
+])
+
+# ---------------------------------------------------------------- EX_229 F-229-1: the session's run roots, by run mode (design 6.4)
+edit('src/methods/_common/owner_records.py', [
+    ("""def weekly_runs_root(root: Path) -> Path:
+    return Path(root) / 'results' / 'real' / 'weekly' / 'contract_runs'
+""",
+     """def weekly_runs_root(root: Path) -> Path:
+    return Path(root) / 'results' / 'real' / 'weekly' / 'contract_runs'
+
+
+def development_runs_root(root: Path) -> Path:
+    return Path(root) / 'results' / 'real' / 'development' / 'contract_runs'
+
+
+def session_runs_root(root: Path, run_mode: str) -> Path:
+    \"\"\"The one publication root of a session-bound run, by its run mode (design v0.1r7 section 6.4; MHUP-B, EX_229
+    F-229-1): a development run made inside a weekly session (a variant released on or after the target's draw date)
+    goes to the development run root; CATCH_UP and FINAL_NEXT_DRAW runs go to the weekly run root. The binding, the
+    ticket and the evidence tier are the same wherever the folder is.\"\"\"
+    return development_runs_root(root) if run_mode == 'REAL_DEVELOPMENT' else weekly_runs_root(root)
+"""),
+])
+edit('src/methods/_common/contract_runner.py', [
+    ("""    binding, the diagnostic root for the owner's route, the weekly root for a session binding; None when the request
+    carries no binding (today's development runs, whose root the caller fixes as before).\"\"\"
+""",
+     """    binding, the diagnostic root for the owner's route; for a session binding the root its run mode fixes (design 6.4:
+    the development root for a session-bound REAL_DEVELOPMENT run, the weekly root for CATCH_UP and FINAL_NEXT_DRAW);
+    None when the request carries no binding (today's development runs, whose root the caller fixes as before).\"\"\"
+"""),
+    ("""    if kind == 'WEEKLY_SESSION':
+        return OR.weekly_runs_root(PROJECT_ROOT)
+""",
+     """    if kind == 'WEEKLY_SESSION':
+        return OR.session_runs_root(PROJECT_ROOT, request.get('run_mode'))
 """),
 ])

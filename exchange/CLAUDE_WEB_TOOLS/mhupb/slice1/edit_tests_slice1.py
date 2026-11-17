@@ -196,3 +196,29 @@ edit('tests/test_mhupa_master_versions.py', [
             self.assertNotIn(word, weekly.split('def request_for')[1].split('def run_folder')[0])
 """),
 ])
+
+# ---------------------------------------------------------------- 5. EX_229 F-229-1: a session's development run uses the development root
+edit('tests/test_mhupa_gates.py', [
+    ("""                        'WEEKLY_SESSION': OR.weekly_runs_root(self.proj)}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
+""",
+     """                        'WEEKLY_SESSION': OR.session_runs_root(self.proj, req.get('run_mode'))}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
+"""),
+    ("""        # the happy path publishes under the weekly root with the right pins
+""",
+     """        # the happy path publishes under the DEVELOPMENT root (design 6.4: a session-bound REAL_DEVELOPMENT run; MHUP-B,
+        # EX_229 F-229-1), with the right pins; the weekly root refuses it before anything is read
+"""),
+    ("""        res = self.launch(req4)
+        self.assertEqual(res.outcome, 'SUCCESS', res.reason)
+        self.assertTrue(res.folder.is_relative_to(OR.weekly_runs_root(self.proj)))
+""",
+     """        files = sorted(str(f) for f in (self.proj / 'results').rglob('*'))
+        with self.assertRaises(CR.RunRefused) as wrong:
+            self.launch(req4, run_root=OR.weekly_runs_root(self.proj))
+        self.assertEqual(wrong.exception.reason, 'DATA_SOURCE_REFUSED')
+        self.assertEqual(sorted(str(f) for f in (self.proj / 'results').rglob('*')), files)    # nothing written
+        res = self.launch(req4)
+        self.assertEqual(res.outcome, 'SUCCESS', res.reason)
+        self.assertTrue(res.folder.is_relative_to(OR.development_runs_root(self.proj)))
+"""),
+])

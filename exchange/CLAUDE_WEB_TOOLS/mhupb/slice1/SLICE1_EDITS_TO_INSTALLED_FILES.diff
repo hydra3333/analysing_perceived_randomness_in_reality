@@ -67,7 +67,28 @@
  def permitted_view_digest(view, run_mode: str) -> str:
 --- a/src/methods/_common/contract_runner.py
 +++ b/src/methods/_common/contract_runner.py
-@@ -120,6 +120,28 @@
+@@ -94,8 +94,9 @@
+ 
+ def _run_root_for(request: Mapping) -> Path | None:
+     """The one publication root a bound real-mode request may use (design 3.4, 5.1): the Mode H run root for a plan
+-    binding, the diagnostic root for the owner's route, the weekly root for a session binding; None when the request
+-    carries no binding (today's development runs, whose root the caller fixes as before)."""
++    binding, the diagnostic root for the owner's route; for a session binding the root its run mode fixes (design 6.4:
++    the development root for a session-bound REAL_DEVELOPMENT run, the weekly root for CATCH_UP and FINAL_NEXT_DRAW);
++    None when the request carries no binding (today's development runs, whose root the caller fixes as before)."""
+     from _common import owner_records as OR
+     kind = binding_kind(request)
+     if kind == 'MODE_H_BATCH':
+@@ -103,7 +104,7 @@
+     if kind == 'OWNER_DIAGNOSTIC':
+         return OR.diagnostic_runs_root(PROJECT_ROOT)
+     if kind == 'WEEKLY_SESSION':
+-        return OR.weekly_runs_root(PROJECT_ROOT)
++        return OR.session_runs_root(PROJECT_ROOT, request.get('run_mode'))
+     return None
+ 
+ 
+@@ -120,6 +121,28 @@
                           f'last row is version {version}; an official run must pin the current master')
  
  
@@ -96,7 +117,7 @@
  def _numeric(exc: BaseException) -> bool:
      text = str(exc).lower()
      return any(w in text for w in ('non-finite', 'nan', 'infinity', 'negative zero', 'outside int64'))
-@@ -145,7 +167,7 @@
+@@ -145,7 +168,7 @@
          raise RunRefused(refusal_text(*ident, 'REAL_DEVELOPMENT_DISABLED: contract runs on the real '
                                        'development masters are switched off'), 'REAL_DEVELOPMENT_DISABLED')
      try:
@@ -105,7 +126,7 @@
              # Every real mode reads the project itself, nothing else (design 5.1). The new real modes are gated by the
              # owner's create-only records, the tickets and the binding gates, not by a switch (MHUP-R).
              if Path(repo_root).resolve() != PROJECT_ROOT.resolve():
-@@ -167,6 +189,7 @@
+@@ -167,6 +190,7 @@
          try:
              view = load_pinned_draw_view(repo_root=Path(repo_root), run_manifest=reader_pin(request))
              _check_pin_current(repo_root, request)
@@ -113,6 +134,27 @@
              pub.provenance = source_provenance(repo_root, request)
              task = build_method_task(request, declaration, view)
          except Exception as exc:
+--- a/src/methods/_common/owner_records.py
++++ b/src/methods/_common/owner_records.py
+@@ -98,6 +98,18 @@
+     return Path(root) / 'results' / 'real' / 'weekly' / 'contract_runs'
+ 
+ 
++def development_runs_root(root: Path) -> Path:
++    return Path(root) / 'results' / 'real' / 'development' / 'contract_runs'
++
++
++def session_runs_root(root: Path, run_mode: str) -> Path:
++    """The one publication root of a session-bound run, by its run mode (design v0.1r7 section 6.4; MHUP-B, EX_229
++    F-229-1): a development run made inside a weekly session (a variant released on or after the target's draw date)
++    goes to the development run root; CATCH_UP and FINAL_NEXT_DRAW runs go to the weekly run root. The binding, the
++    ticket and the evidence tier are the same wherever the folder is."""
++    return development_runs_root(root) if run_mode == 'REAL_DEVELOPMENT' else weekly_runs_root(root)
++
++
+ def session_record_path(root: Path, game_id: str, session_id: str) -> Path:
+     return weekly_root(root, game_id) / 'sessions' / f'SESSION_{session_id}.json'
+ 
 --- a/src/evaluation/outcome_reader.py
 +++ b/src/evaluation/outcome_reader.py
 @@ -16,7 +16,8 @@
@@ -125,14 +167,15 @@
  
  Outcomes are returned only for the requested targets. For Oz Lotto, the three supplementary numbers are returned
  only so that the caller can compute `supplementary_matches` and the division (R2 2.5; R3 17.8); the caller never
-@@ -50,12 +51,17 @@
+@@ -50,12 +51,18 @@
      For a holdout draw: only when the game's one Mode H batch has its BATCH_COMPLETE and SCORING_STARTED markers,
      SCORING_STARTED's roster digest equals the exact roster of the plan (every planned pair with its DONE ticket, by
      identity, computed here from the records), the target is one of the plan's, and SCORE_COMPLETE does not yet
 -    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout: never in this package (the weekly
 -    freeze-line rule is MHUP-B's). Anything invalid or absent refuses (False)."""
 +    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout (MHUP-B, design 6.3 and Appendix E): only
-+    when the game's developed record exists, the forecast ledger (verified in full: canonical lines, the chain, every
++    when the game's developed record exists and names its sealed Mode H study, the forecast ledger (verified in full:
++    canonical lines, the chain, every
 +    line's shape) holds a freeze line for the target, every record that line names verifies (its own session record
 +    and digest, its DONE ticket and digest, its run folder and digest), and the target is at most the last draw of
 +    the ledger's current last row. Anything invalid or absent refuses (False)."""
@@ -146,7 +189,7 @@
      try:
          rec = OR.batch_id_record(repo_root, game_id)
          if rec is None:
-@@ -72,17 +78,34 @@
+@@ -72,17 +79,33 @@
          return False
  
  
@@ -155,8 +198,7 @@
 +    import _common.owner_records as OR
 +    import _common.weekly_records as WR
 +    try:
-+        if OR.developed_record(repo_root, game_id) is None:
-+            return False
++        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal
 +        line = WR.freeze_line_for(WR.forecast_ledger(repo_root, game_id), target)
 +        if line is None:
 +            return False
@@ -422,6 +464,37 @@
          self.assertEqual(V.producible('REAL_HOLDOUT', V.FORECAST), ('WF_FORECAST', 'HOLDOUT_MODE_H'))
          with self.assertRaises(ValueError):
              V.producible('REAL_HOLDOUT', V.DIAGNOSTIC)
+@@ -171,7 +174,7 @@
+         kind = req.get('binding', {}).get('kind')
+         if run_root is None:
+             run_root = {'MODE_H_BATCH': OR.mode_h_runs_root(self.proj), 'OWNER_DIAGNOSTIC': OR.diagnostic_runs_root(self.proj),
+-                        'WEEKLY_SESSION': OR.weekly_runs_root(self.proj)}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
++                        'WEEKLY_SESSION': OR.session_runs_root(self.proj, req.get('run_mode'))}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
+         return CR.run_contract_method(req, compute=e_001.compute, verify=e_001.verify, repo_root=self.proj, run_root=run_root)
+ 
+ 
+@@ -524,13 +527,19 @@
+                 self.refused(req_e, verdict)
+             else:
+                 CD.dispatch_gate(req_e)
+-        # the happy path publishes under the weekly root with the right pins
++        # the happy path publishes under the DEVELOPMENT root (design 6.4: a session-bound REAL_DEVELOPMENT run; MHUP-B,
++        # EX_229 F-229-1), with the right pins; the weekly root refuses it before anything is read
+         sess4 = self.session(game, release_date=p.derived_date(target).isoformat())
+         req4 = self.dev_request(game, target, sess4, run_id='mg-' + '6' * 32)
+         X.open_ticket(path, req4, scope_kind='WEEKLY_SESSION', scope_id=SESSION)
++        files = sorted(str(f) for f in (self.proj / 'results').rglob('*'))
++        with self.assertRaises(CR.RunRefused) as wrong:
++            self.launch(req4, run_root=OR.weekly_runs_root(self.proj))
++        self.assertEqual(wrong.exception.reason, 'DATA_SOURCE_REFUSED')
++        self.assertEqual(sorted(str(f) for f in (self.proj / 'results').rglob('*')), files)    # nothing written
+         res = self.launch(req4)
+         self.assertEqual(res.outcome, 'SUCCESS', res.reason)
+-        self.assertTrue(res.folder.is_relative_to(OR.weekly_runs_root(self.proj)))
++        self.assertTrue(res.folder.is_relative_to(OR.development_runs_root(self.proj)))
+ 
+ 
+ class Launcher(Project):
 --- a/tests/test_wf1b_static.py
 +++ b/tests/test_wf1b_static.py
 @@ -15,7 +15,10 @@

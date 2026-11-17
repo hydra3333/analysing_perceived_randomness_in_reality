@@ -1,0 +1,1333 @@
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/apply_slice1.py tools/apply_slice1.py
+--- ex228/apply_slice1.py	2026-11-17 22:25:06.951372744 +1030
++++ corrected/apply_slice1.py	2026-11-17 22:38:56.161148758 +1030
+@@ -133,7 +133,8 @@
+         return False
+ """,
+      """    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout (MHUP-B, design 6.3 and Appendix E): only
+-    when the game's developed record exists, the forecast ledger (verified in full: canonical lines, the chain, every
++    when the game's developed record exists and names its sealed Mode H study, the forecast ledger (verified in full:
++    canonical lines, the chain, every
+     line's shape) holds a freeze line for the target, every record that line names verifies (its own session record
+     and digest, its DONE ticket and digest, its run folder and digest), and the target is at most the last draw of
+     the ledger's current last row. Anything invalid or absent refuses (False).\"\"\"
+@@ -151,8 +152,7 @@
+     import _common.owner_records as OR
+     import _common.weekly_records as WR
+     try:
+-        if OR.developed_record(repo_root, game_id) is None:
+-            return False
++        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal
+         line = WR.freeze_line_for(WR.forecast_ledger(repo_root, game_id), target)
+         if line is None:
+             return False
+@@ -213,3 +213,40 @@
+      """            out[number] = (main, supps, row[1])
+ """),
+ ])
++
++# ---------------------------------------------------------------- EX_229 F-229-1: the session's run roots, by run mode (design 6.4)
++edit('src/methods/_common/owner_records.py', [
++    ("""def weekly_runs_root(root: Path) -> Path:
++    return Path(root) / 'results' / 'real' / 'weekly' / 'contract_runs'
++""",
++     """def weekly_runs_root(root: Path) -> Path:
++    return Path(root) / 'results' / 'real' / 'weekly' / 'contract_runs'
++
++
++def development_runs_root(root: Path) -> Path:
++    return Path(root) / 'results' / 'real' / 'development' / 'contract_runs'
++
++
++def session_runs_root(root: Path, run_mode: str) -> Path:
++    \"\"\"The one publication root of a session-bound run, by its run mode (design v0.1r7 section 6.4; MHUP-B, EX_229
++    F-229-1): a development run made inside a weekly session (a variant released on or after the target's draw date)
++    goes to the development run root; CATCH_UP and FINAL_NEXT_DRAW runs go to the weekly run root. The binding, the
++    ticket and the evidence tier are the same wherever the folder is.\"\"\"
++    return development_runs_root(root) if run_mode == 'REAL_DEVELOPMENT' else weekly_runs_root(root)
++"""),
++])
++edit('src/methods/_common/contract_runner.py', [
++    ("""    binding, the diagnostic root for the owner's route, the weekly root for a session binding; None when the request
++    carries no binding (today's development runs, whose root the caller fixes as before).\"\"\"
++""",
++     """    binding, the diagnostic root for the owner's route; for a session binding the root its run mode fixes (design 6.4:
++    the development root for a session-bound REAL_DEVELOPMENT run, the weekly root for CATCH_UP and FINAL_NEXT_DRAW);
++    None when the request carries no binding (today's development runs, whose root the caller fixes as before).\"\"\"
++"""),
++    ("""    if kind == 'WEEKLY_SESSION':
++        return OR.weekly_runs_root(PROJECT_ROOT)
++""",
++     """    if kind == 'WEEKLY_SESSION':
++        return OR.session_runs_root(PROJECT_ROOT, request.get('run_mode'))
++"""),
++])
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/edit_tests_slice1.py tools/edit_tests_slice1.py
+--- ex228/edit_tests_slice1.py	2026-11-17 22:25:06.951902309 +1030
++++ corrected/edit_tests_slice1.py	2026-11-17 22:33:12.807101055 +1030
+@@ -196,3 +196,29 @@
+             self.assertNotIn(word, weekly.split('def request_for')[1].split('def run_folder')[0])
+ """),
+ ])
++
++# ---------------------------------------------------------------- 5. EX_229 F-229-1: a session's development run uses the development root
++edit('tests/test_mhupa_gates.py', [
++    ("""                        'WEEKLY_SESSION': OR.weekly_runs_root(self.proj)}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
++""",
++     """                        'WEEKLY_SESSION': OR.session_runs_root(self.proj, req.get('run_mode'))}.get(kind, self.proj / 'results' / 'real' / 'development' / 'contract_runs')
++"""),
++    ("""        # the happy path publishes under the weekly root with the right pins
++""",
++     """        # the happy path publishes under the DEVELOPMENT root (design 6.4: a session-bound REAL_DEVELOPMENT run; MHUP-B,
++        # EX_229 F-229-1), with the right pins; the weekly root refuses it before anything is read
++"""),
++    ("""        res = self.launch(req4)
++        self.assertEqual(res.outcome, 'SUCCESS', res.reason)
++        self.assertTrue(res.folder.is_relative_to(OR.weekly_runs_root(self.proj)))
++""",
++     """        files = sorted(str(f) for f in (self.proj / 'results').rglob('*'))
++        with self.assertRaises(CR.RunRefused) as wrong:
++            self.launch(req4, run_root=OR.weekly_runs_root(self.proj))
++        self.assertEqual(wrong.exception.reason, 'DATA_SOURCE_REFUSED')
++        self.assertEqual(sorted(str(f) for f in (self.proj / 'results').rglob('*')), files)    # nothing written
++        res = self.launch(req4)
++        self.assertEqual(res.outcome, 'SUCCESS', res.reason)
++        self.assertTrue(res.folder.is_relative_to(OR.development_runs_root(self.proj)))
++"""),
++])
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/mutations_slice1.py tools/mutations_slice1.py
+--- ex228/mutations_slice1.py	2026-11-17 22:25:07.074188335 +1030
++++ corrected/mutations_slice1.py	2026-11-17 23:14:01.679186937 +1030
+@@ -68,9 +68,6 @@
+     ('a freeze time earlier than the last', C + 'weekly_session.py',
+      "    if lines and now < WR.parse_utc(lines[-1]['frozen_utc']):\n", "    if False:\n",
+      FC + '.Deadline.test_the_clock_behind_the_last_freeze_line_refuses'),
+-    ('a foreign score identity accepted', C + 'score_identities.py',
+-     "        if ident[6] == WR.ROUTINE_POLICY and ident not in owed:\n", "        if False:\n",
+-     FC + '.ReadingScored.test_identities_only_and_refusals'),
+     ('a duplicated score identity accepted', C + 'score_identities.py',
+      "        if ident in seen:\n", "        if False:\n", FC + '.ReadingScored.test_identities_only_and_refusals'),
+     ('development back-history run as catch-up', C + 'weekly_session.py',
+@@ -96,6 +93,75 @@
+      "        if st['lowest_unclosed'] is not None:\n            raise SessionRefused(f'target {st[\"lowest_unclosed\"]} has an accepted result",
+      "        if False:\n            raise SessionRefused(f'target {st[\"lowest_unclosed\"]} has an accepted result",
+      FC + '.Interruptions.test_open_session_refusals'),
++    # ---- found on re-reading with EX_229's principle: the developed record is tied to the sealed study (design 6.7)
++    ('an arbitrary developed record believed', C + 'weekly_records.py',
++     "    if (rec['mode_h_score_digest'] != seal['score_ledger_sha256'] or rec.get('mode_h_batch_id') != batch['batch_id'] or\n            rec['owner_statement'] != OR.DEVELOPED_STATEMENT):\n",
++     "    if False:\n", FC + '.Interruptions.test_open_session_refusals'),
++    ('a developed record believed without the seal', C + 'weekly_records.py',
++     "    if batch is None or not OR.mode_h_sealed(root, game_id):\n", "    if False:\n",
++     FC + '.Interruptions.test_open_session_refusals'),
++    # ---- EX_229 F-229-1: the run root follows the run mode (design 6.4)
++    ('a session development run sent to the weekly root', C + 'owner_records.py',
++     "    return development_runs_root(root) if run_mode == 'REAL_DEVELOPMENT' else weekly_runs_root(root)\n",
++     "    return weekly_runs_root(root)\n", L1 + '.ModeToPin.test_each_session_run_mode_publishes_under_its_one_root'),
++    ('the runner accepts any root for a session run', C + 'contract_runner.py',
++     "        return OR.session_runs_root(PROJECT_ROOT, request.get('run_mode'))\n", "        return None\n",
++     L1 + '.ModeToPin.test_each_session_run_mode_publishes_under_its_one_root'),
++    ('evidence looked for under the weekly root only', C + 'weekly_records.py',
++     "    return (OR.session_runs_root(root, request['run_mode']) / request['game_id']",
++     "    return (OR.weekly_runs_root(root) / request['game_id']", SC_ + '.RunRoots'),
++    ('the forecasting half publishes every run in the weekly root', C + 'weekly_session.py',
++     "run_root=OR.session_runs_root(root, mode))", "run_root=OR.weekly_runs_root(root))", SC_ + '.RunRoots'),
++    # ---- EX_229 F-229-2: only valid, canonical, linked score lines count
++    ('score lines not fully validated', C + 'weekly_records.py',
++     "    for s in rows:\n        validate_score_line(s)\n", "    for s in rows:\n",
++     FC + '.ReadingScored.test_identity_shaped_fragments_cannot_close_a_target'),
++    ('score lines not canonical', C + 'weekly_records.py',
++     "    rows, _torn = JL.read_lines(score_ledger_path(root, game_id))\n",
++     "    rows, _torn = OR.read_jsonl(score_ledger_path(root, game_id))\n",
++     FC + '.ReadingScored.test_identities_only_and_refusals'),
++    ('a score not tied to its freeze line', C + 'score_identities.py',
++     "        WR.check_score_linkage(s, line)\n", "", FC + '.ReadingScored.test_identities_only_and_refusals'),
++    ('a readout out of range accepted', C + 'weekly_records.py',
++     "            _check_readout(s['readouts'][name], s['game_id'], f'{what}: readout {name}')\n", "            pass\n",
++     FC + '.ReadingScored.test_identities_only_and_refusals'),
++    ('an amendment that names nothing', C + 'score_identities.py',
++     "        if s['amendment_of'] is not None and earlier.get(s['amendment_of']) != ident[:6]:\n", "        if False:\n",
++     FC + '.ReadingScored.test_identities_only_and_refusals'),
++    # ---- EX_229 F-229-3: only complete, linked witness lines count
++    ('an unlinked verification promotes', C + 'weekly_records.py',
++     "        elif link not in recorded:\n", "        elif False:\n", SC_ + '.Witness'),
++    ('an incomplete witness line accepted', C + 'weekly_records.py',
++     "    _need(w, WITNESS_RECORDED_FIELDS if kind == 'WITNESS_RECORDED' else WITNESS_VERIFIED_FIELDS, what)\n", "",
++     SC_ + '.Witness'),
++    ('a verification by a name read as valid', C + 'weekly_records.py',
++     "        if w['verified_by'] not in VERIFIER_ROLES:\n            raise RecordRefused(f'{what}: verified_by is a role",
++     "        if False:\n            raise RecordRefused(f'{what}: verified_by is a role", SC_ + '.Witness'),
++    ('evidence without the reference read as valid', C + 'weekly_records.py',
++     "                w['ref'] not in w['evidence']:\n", "                False:\n", SC_ + '.Witness'),
++    # ---- EX_229 F-229-4: a next-draw set is believed only with its genuine SET_STARTED ticket
++    ('a SET_STARTED ticket inside the hour', C + 'weekly_records.py',
++     "    if started + HOUR_RULE > parse_utc(want, f'{what} deadline') or started < parse_utc(owner['started_utc']):\n",
++     "    if False:\n", SC_ + '.SetProvenance'),
++    ('a SET_STARTED ticket from a session that holds the draw', C + 'weekly_records.py',
++     "    if owner['last_draw'] != target - 1:\n        raise RecordRefused(f'{what} was written",
++     "    if False:\n        raise RecordRefused(f'{what} was written", SC_ + '.SetProvenance'),
++    ('two SET_STARTED tickets', C + 'weekly_records.py',
++     "    if len(found) != 1:\n        raise RecordRefused(f'{what} is not exactly one",
++     "    if False:\n        raise RecordRefused(f'{what} is not exactly one", SC_ + '.SetProvenance'),
++    ('a SET_STARTED ticket of another mode or deadline', C + 'weekly_records.py',
++     "    if t.get('run_mode') != 'FINAL_NEXT_DRAW' or t.get('deadline_utc') != want:\n", "    if False:\n",
++     SC_ + '.SetProvenance'),
++    ('a next-draw set believed from its label', C + 'weekly_records.py',
++     "        if found_start is None:\n            raise RecordRefused(f'target {target}: a next-draw record or set with no SET_STARTED ticket')\n",
++     "        if found_start is None:\n            found_start = (None, {'utc': '2000-01-01T00:00:00Z'})\n", SC_ + '.SetProvenance'),
++    ('the forecasting half believes a late SET_STARTED ticket', C + 'weekly_session.py',
++     "    return _guard(WR.set_started_ticket, _root(), game_id, target, tickets) is not None\n",
++     "    return any(t['kind'] == 'SET_STARTED' and t['target_draw_number'] == target for rows in tickets.values() for t in rows)\n",
++     FC + '.Deadline.test_a_set_started_ticket_that_breaks_the_hour_rule_is_not_believed'),
++    # Not listed, because each has a second guard (tried 17 November 2026): the SET_STARTED ticket later than its records
++    # (also later than the freeze line); a CATCH_UP record from a session whose master lacks the draw (its session
++    # record's digest and the runner's mode-to-pin rule refuse first).
+     # ---- L3
+     ('outcome released without verifying the records', E + 'outcome_reader.py',
+      "        WR.verify_named_records(repo_root, game_id, line)\n", "",
+@@ -104,7 +170,7 @@
+      "        if line is None:\n            return False\n        WR.verify_named_records", "        if line is None:\n            return True\n        WR.verify_named_records",
+      SC_ + '.ReleaseRule.test_no_freeze_line_no_outcome_and_the_other_refusals'),
+     ('outcome released without the developed record', E + 'outcome_reader.py',
+-     "        if OR.developed_record(repo_root, game_id) is None:\n            return False\n        line = ", "        line = ",
++     "        WR.developed(repo_root, game_id)                   # the declaration of this game's sealed study, or a refusal\n", "",
+      SC_ + '.ReleaseRule.test_no_freeze_line_no_outcome_and_the_other_refusals'),
+     ('a second routine score', E + 'weekly_score.py',
+      "            if SI.routine_identity(game_id, target, ev['named']) not in identities}\n", "            }\n",
+@@ -121,8 +187,9 @@
+     ('the date flag always true', E + 'weekly_score.py',
+      "             'draw_date_is_derived': date_text == p.derived_date(target).isoformat()}\n",
+      "             'draw_date_is_derived': True}\n", SC_ + '.Quantities.test_a_date_off_the_weekly_rule_is_flagged'),
+-    ('verification without the reference', E + 'weekly_score.py',
+-     "    if ref not in evidence:\n", "    if False:\n", SC_ + '.Witness'),
++    # Not listed since EX_229's corrections, because it now has a second guard: the scorer's own "reference in the
++    # evidence" test in verify() is repeated by the witness line's validator ('evidence without the reference read as
++    # valid', above, is the listed one).
+     ('a late verification promotes', C + 'weekly_records.py',
+      "        if w['kind'] == 'WITNESS_VERIFIED' and parse_utc(w['received_utc'], 'witness received_utc') < limit:\n",
+      "        if w['kind'] == 'WITNESS_VERIFIED':\n", SC_ + '.Witness'),
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/src/evaluation/weekly_score.py tools/slice1_new/src/evaluation/weekly_score.py
+--- ex228/slice1_new/src/evaluation/weekly_score.py	2026-11-17 22:25:06.489398420 +1030
++++ corrected/slice1_new/src/evaluation/weekly_score.py	2026-11-17 22:26:22.293519768 +1030
+@@ -127,8 +127,7 @@
+             raise ScoreRefused(f'a named record\'s training pin is not a row of the ledger: {exc}') from None
+         if trained.version > outcome_row.version:
+             raise ScoreRefused('a named record\'s training pin is newer than the scoring session\'s version')
+-    identities = _guard(SI.scored_identities, root, game_id)
+-    _guard(SI.closed_targets, game_id, lines, identities)                  # a foreign routine identity refuses here
++    identities = _guard(SI.scored_identities, root, game_id, lines)       # the whole score ledger, validated and linked
+     todo = {SI.routine_identity(game_id, target, ev['named']): ev for ev in evidence
+             if SI.routine_identity(game_id, target, ev['named']) not in identities}
+     if not todo:
+@@ -165,6 +164,7 @@
+              'draw_date_is_derived': date_text == p.derived_date(target).isoformat()}
+         try:
+             WR.validate_score_line(s)
++            WR.check_score_linkage(s, line)
+             if SI.identity_of(s) != ident:
+                 raise OR.RecordRefused('the line\'s scientific identity is not the record\'s')
+         except OR.RecordRefused as exc:
+@@ -193,6 +193,7 @@
+     w = {'schema': WR.WITNESS_SCHEMA, 'kind': 'WITNESS_RECORDED', 'game_id': game_id, 'target_draw_number': target,
+          'freeze_line_digest': record_digest(line), 'witness_kind': kind, 'ref': ref.strip(),
+          'recorded_utc': CP.utc_now()}
++    _guard(WR.validate_witness_line, w, game_id)
+     JL.append(WR.witness_ledger_path(root, game_id), w)
+     return w
+ 
+@@ -223,6 +224,7 @@
+          'freeze_line_digest': digest, 'witness_kind': recorded[-1]['witness_kind'], 'ref': ref,
+          'verified_by': verified_by, 'received_utc': received_utc, 'evidence': evidence,
+          'digest_binding': 'human-checked', 'recorded_utc': CP.utc_now()}
++    _guard(WR.validate_witness_line, w, game_id)
+     JL.append(WR.witness_ledger_path(root, game_id), w)
+     return w
+ 
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/src/methods/_common/score_identities.py tools/slice1_new/src/methods/_common/score_identities.py
+--- ex228/slice1_new/src/methods/_common/score_identities.py	2026-11-17 22:25:06.487513476 +1030
++++ corrected/slice1_new/src/methods/_common/score_identities.py	2026-11-17 22:26:22.292942315 +1030
+@@ -5,9 +5,13 @@
+ (game, method, revision, variant, target, the scored record's digest, the scoring policy id). It returns no match
+ count, division, rank, drawn number, score or date, and imports nothing from the evaluator.
+ 
+-A target is closed only by routine score lines that carry the digests of the records its own freeze line names. A score
+-line that is malformed, repeats a scientific identity, or names a record no freeze line names refuses: it never closes
+-a target and is never read as "not scored".
++A target is closed only by valid routine score lines of the records its own freeze line names (EX_229 F-229-2). Before
++any identity is returned, every line of the ledger must be exactly its canonical bytes and a complete, well-formed score
++line (weekly_records.validate_score_line), and must belong to one record of its target's freeze line, repeating that
++record's facts (weekly_records.check_score_linkage). A line that is an identity-shaped fragment, not canonical, without
++its provenance, a repeat of a scientific identity, or the score of a record no freeze line names refuses: it never
++closes a target and is never read as "not scored". The validation happens inside this module; what comes out is
++identities only.
+ """
+ from __future__ import annotations
+ 
+@@ -36,17 +40,26 @@
+     return ident
+ 
+ 
+-def scored_identities(root: Path, game_id: str) -> frozenset:
+-    """Every scientific identity in the game's weekly score ledger. A repeated identity refuses (one routine score per
+-    identity; an amendment carries another policy id)."""
+-    rows, _torn = OR.read_jsonl(WR.score_ledger_path(root, game_id))
+-    seen = set()
+-    for line in rows:
+-        ident = identity_of(line)
+-        if ident[0] != game_id:
+-            raise OR.RecordRefused('score ledger: a line of another game')
++def scored_identities(root: Path, game_id: str, freeze_lines) -> frozenset:
++    """Every scientific identity in the game's weekly score ledger, after the whole ledger has been validated: canonical
++    lines of the full shape (weekly_records.score_ledger), each linked to a record of its target's freeze line, one
++    line per identity (an amendment carries another policy id and names the earlier line of the same record it stands
++    beside). `freeze_lines` are the verified lines of the forecast ledger. Only identities are returned."""
++    from _common.contract_records import record_digest
++    rows = WR.score_ledger(root, game_id)                    # canonical bytes, the full shape, this game
++    by_target = {line['target_draw_number']: line for line in freeze_lines}
++    seen, earlier = set(), {}
++    for s in rows:
++        ident = identity_of(s)
+         if ident in seen:
+             raise OR.RecordRefused('score ledger: a scientific identity scored twice')
++        line = by_target.get(s['target_draw_number'])
++        if line is None:
++            raise OR.RecordRefused('score ledger: a score for a target that has no freeze line')
++        WR.check_score_linkage(s, line)
++        if s['amendment_of'] is not None and earlier.get(s['amendment_of']) != ident[:6]:
++            raise OR.RecordRefused('score ledger: an amendment that names no earlier score line of the same record')
++        earlier[record_digest(s)] = ident[:6]
+         seen.add(ident)
+     return frozenset(seen)
+ 
+@@ -57,15 +70,8 @@
+ 
+ 
+ def closed_targets(game_id: str, freeze_lines, identities) -> set[int]:
+-    """The targets whose every named record has its routine score line. Every routine identity must belong to a record
+-    some freeze line names, with that record's digest; a foreign identity refuses."""
+-    owed = {}
+-    for line in freeze_lines:
+-        for r in line['records']:
+-            owed[routine_identity(game_id, line['target_draw_number'], r)] = line['target_draw_number']
+-    for ident in identities:
+-        if ident[6] == WR.ROUTINE_POLICY and ident not in owed:
+-            raise OR.RecordRefused('score ledger: a routine score for a record no freeze line names')
++    """The targets whose every named record has its routine score line. `identities` come from scored_identities, which
++    has already validated each line and tied it to its freeze line."""
+     out = set()
+     for line in freeze_lines:
+         t = line['target_draw_number']
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/src/methods/_common/weekly_records.py tools/slice1_new/src/methods/_common/weekly_records.py
+--- ex228/slice1_new/src/methods/_common/weekly_records.py	2026-11-17 22:25:06.486622050 +1030
++++ corrected/slice1_new/src/methods/_common/weekly_records.py	2026-11-17 22:37:38.575766332 +1030
+@@ -46,6 +46,28 @@
+     return OR.weekly_root(root, game_id) / 'sessions'
+ 
+ 
++# ---------------------------------------------------------------- the developed record, tied to the sealed study (6.7)
++
++def developed(root: Path, game_id: str) -> dict:
++    """The game's developed record, only if it is the declaration of this game's sealed Mode H study (design 6.7: "an
++    arbitrary file is not a declaration"): the record exists and is well formed; the game's one Mode H batch carries
++    its seal; and the record names that batch, the seal's score-ledger digest and the fixed owner sentence, as
++    `declare-developed` writes them. Anything else refuses. The weekly session and the weekly release of an outcome
++    both start from this (found on re-reading with EX_229's principle: a record's presence is not its validity)."""
++    rec = OR.developed_record(root, game_id)
++    if rec is None:
++        raise RecordRefused(f'NOT_DEVELOPED: no developed record for {game_id} (GOAL-1); the weekly session has not begun')
++    batch = OR.batch_id_record(root, game_id)
++    if batch is None or not OR.mode_h_sealed(root, game_id):
++        raise RecordRefused(f'NOT_DEVELOPED: the Mode H study of {game_id} is not sealed; its developed record stands for nothing')
++    seal = OR.marker(root, game_id, batch['batch_id'], OR.SEAL)
++    if (rec['mode_h_score_digest'] != seal['score_ledger_sha256'] or rec.get('mode_h_batch_id') != batch['batch_id'] or
++            rec['owner_statement'] != OR.DEVELOPED_STATEMENT):
++        raise RecordRefused(f'NOT_DEVELOPED: the developed record of {game_id} does not name this game\'s sealed Mode H '
++                            f'score and the owner\'s sentence')
++    return rec
++
++
+ # ---------------------------------------------------------------- the clock (patched only by the test harness)
+ 
+ def now_utc() -> datetime:
+@@ -336,8 +358,11 @@
+                         'session_digest': record_digest(session), 'run_id': run_id}}
+ 
+ 
+-def run_folder(root: Path, game_id: str, method_id: str, variant_id: str, run_id: str) -> Path:
+-    return OR.weekly_runs_root(root) / game_id / method_id / variant_id / run_id
++def run_folder(root: Path, request: Mapping) -> Path:
++    """Where a session-bound request publishes: the root its run mode fixes (design 6.4), then
++    <game>/<method>/<variant>/<run id>. A record anywhere else is not this request's."""
++    return (OR.session_runs_root(root, request['run_mode']) / request['game_id'] / request['method_id'] /
++            request['variant_id'] / request['run_id'])
+ 
+ 
+ def _canonical_file(path: Path):
+@@ -362,7 +387,7 @@
+     import _common.contract_publication as CP
+     import _common.walk_forward as WF
+     from _common.contract_receipts import consumable, validate_terminal
+-    folder = run_folder(root, request['game_id'], request['method_id'], request['variant_id'], request['run_id'])
++    folder = run_folder(root, request)
+     if not folder.is_dir() or folder.is_symlink():
+         raise RecordRefused('no run folder')
+     term = _canonical_file(folder / CP.FILES['terminal'])
+@@ -433,6 +458,36 @@
+     return out
+ 
+ 
++# ---------------------------------------------------------------- the SET_STARTED ticket (design 6.3, 6.4; EX_229 F-229-4)
++
++def set_started_ticket(root: Path, game_id: str, target: int, tickets_by_session: Mapping,
++                       deadline_text: str | None = None) -> tuple[str, dict] | None:
++    """(session id, ticket) of the target's one genuine SET_STARTED ticket, or None if no session ever started a
++    next-draw set for it. Genuine means: exactly one such ticket in all the game's session ledgers; written by a
++    session whose pinned master ends at the draw just before the target (so the target's result was not accepted);
++    naming FINAL_NEXT_DRAW and the target's deadline; and written at least an hour before that deadline (the hour
++    rule, judged once and persisted). Anything else refuses: a set kind is never taken from a label alone."""
++    found = [(sid, t) for sid, rows in tickets_by_session.items() for t in rows
++             if t['kind'] == 'SET_STARTED' and t.get('target_draw_number') == target]
++    if not found:
++        return None
++    what = f'target {target}: its SET_STARTED ticket'
++    if len(found) != 1:
++        raise RecordRefused(f'{what} is not exactly one ({len(found)} found)')
++    sid, t = found[0]
++    owner = session(root, game_id, sid)
++    if owner['last_draw'] != target - 1:
++        raise RecordRefused(f'{what} was written by a session whose master does not end just before the target')
++    limit, _offset = deadline(game_id, target)
++    want = utc_text(limit) if deadline_text is None else deadline_text
++    if t.get('run_mode') != 'FINAL_NEXT_DRAW' or t.get('deadline_utc') != want:
++        raise RecordRefused(f'{what} does not name FINAL_NEXT_DRAW and the target\'s deadline')
++    started = parse_utc(t['utc'], f'{what} time')
++    if started + HOUR_RULE > parse_utc(want, f'{what} deadline') or started < parse_utc(owner['started_utc']):
++        raise RecordRefused(f'{what} was not written at least an hour before the deadline, inside its session')
++    return sid, t
++
++
+ # ---------------------------------------------------------------- the cross-session check (design 6.3, Appendix E)
+ 
+ def verify_named_records(root: Path, game_id: str, line: Mapping) -> list[dict]:
+@@ -441,7 +496,13 @@
+     ticket names exactly the session's request; and the run folder proves that run with the digest the line records.
+     Returns, in the line's order, each record's evidence ({'named', 'forecast', 'receipt', 'terminal'}); anything
+     absent or invalid refuses. Nothing here requires a record's pin to equal the reader's (the equal-pin rule is for
+-    new publications only): a line of one session is verified, and scored, by a later one."""
++    new publications only): a line of one session is verified, and scored, by a later one.
++
++    The set's provenance is verified too (EX_229 F-229-4), so that `set_kind` and a record's FINAL_NEXT_DRAW mode are
++    never believed from a label: every FINAL_NEXT_DRAW record, and every NEXT_DRAW_SET line, needs the target's one
++    genuine SET_STARTED ticket (set_started_ticket), written before the record's own ticket and before the line, and
++    the record's session must have pinned a master that ends just before the target; every other record's session
++    must have pinned a master that holds the target (its result was accepted when the record was made)."""
+     from _common.contract_records import record_digest
+     from _common.contract_registry import InstalledRegistry
+     import _common.contract_registry as REG
+@@ -449,6 +510,14 @@
+     target = line['target_draw_number']
+     tickets_by_session = session_tickets(root, game_id)
+     done = done_records(tickets_by_session, target)
++    start = None
++    if line['set_kind'] == 'NEXT_DRAW_SET' or any(r['run_mode'] == 'FINAL_NEXT_DRAW' for r in line['records']):
++        found_start = set_started_ticket(root, game_id, target, tickets_by_session, line['deadline_utc'])
++        if found_start is None:
++            raise RecordRefused(f'target {target}: a next-draw record or set with no SET_STARTED ticket')
++        start = parse_utc(found_start[1]['utc'])
++        if start > parse_utc(line['frozen_utc']):
++            raise RecordRefused(f'target {target}: its SET_STARTED ticket is later than its freeze line')
+     out = []
+     for r in line['records']:
+         key = named_key(r)
+@@ -466,6 +535,11 @@
+         request = request_for(owner, member, target, r['run_id'], r['run_mode'])
+         if record_digest(request) != found[2]['request_digest']:
+             raise RecordRefused(f'{what}: its ticket does not name its session\'s request')
++        if r['run_mode'] == 'FINAL_NEXT_DRAW':
++            if owner['last_draw'] != target - 1 or parse_utc(found[2]['utc']) < start:
++                raise RecordRefused(f'{what}: a FINAL_NEXT_DRAW record that its SET_STARTED ticket does not cover')
++        elif owner['last_draw'] < target:
++            raise RecordRefused(f'{what}: a {r["run_mode"]} record from a session whose master does not hold the target')
+         try:
+             declaration = registry.declaration(member['declaration_digest'])
+         except ValueError:
+@@ -497,6 +571,59 @@
+ SCORE_RUN_ID = re.compile(r'ws-[0-9a-f]{32}\Z', re.ASCII)
+ 
+ 
++_FRACTION = re.compile(r'-?(0|[1-9][0-9]*)(/[1-9][0-9]*)?\Z', re.ASCII)
++_READOUT_FIELDS = {'POWERBALL': {'main_matches': 7, 'powerball_match': 1, 'division': 9},
++                   'OZLOTTO': {'main_matches': 7, 'supplementary_matches': 3, 'division': 7}}
++_RANK_FIELDS = {'POWERBALL': ('mean_rank_main', 'fair_var_main', 'rank_powerball', 'fair_var_pb'),
++                'OZLOTTO': ('mean_rank_main', 'fair_var_main')}
++
++
++def _check_readout(v, game_id: str, what: str) -> None:
++    """One readout of a scored forecast: WF-1B's per-target fields for the game, each a whole number in its range; or
++    {'unavailable': reason} when the forecast did not give that readout."""
++    if type(v) is not dict:
++        raise RecordRefused(f'{what}: not an object')
++    if set(v) == {'unavailable'}:
++        if type(v['unavailable']) is not str or not v['unavailable']:
++            raise RecordRefused(f'{what}: no reason')
++        return
++    fields = _READOUT_FIELDS[game_id]
++    if set(v) != set(fields) or not all(type(v[f]) is int and 0 <= v[f] <= high for f, high in fields.items()):
++        raise RecordRefused(f'{what}: fields are not the game\'s, or out of range')
++
++
++def _check_rank(v, game_id: str, what: str) -> None:
++    """The rank fields of a scored forecast: None when the forecast has no ranking, else exact fractions as text."""
++    if v is None:
++        return
++    if type(v) is not dict or set(v) != set(_RANK_FIELDS[game_id]) or \
++            not all(type(x) is str and _FRACTION.fullmatch(x) for x in v.values()):
++        raise RecordRefused(f'{what}: fields are not the game\'s exact fractions')
++
++
++def check_score_linkage(s: Mapping, line: Mapping, what: str = 'score line') -> None:
++    """A score line belongs to exactly one record of its target's freeze line (EX_229 F-229-2): it names that line's
++    digest and number, and every fact it repeats about the scored record is the fact the freeze line recorded.
++    Anything else refuses: such a line is not the score of a frozen record and closes nothing."""
++    from _common.contract_records import record_digest
++    if s['target_draw_number'] != line['target_draw_number'] or s['game_id'] != line['game_id']:
++        raise RecordRefused(f'{what}: not this freeze line\'s target')
++    if s['freeze_line_digest'] != record_digest(line) or s['freeze_line_number'] != line['line_number']:
++        raise RecordRefused(f'{what}: does not name its target\'s freeze line')
++    named = [r for r in line['records']
++             if named_key(r) == (s['method_id'], s['method_revision'], s['variant_id']) and
++             r['scored_record_digest'] == s['scored_record_digest']]
++    if len(named) != 1:
++        raise RecordRefused(f'{what}: a score for a record no freeze line names')
++    r = named[0]
++    for mine, theirs in (('run_id', 'run_id'), ('run_mode', 'run_mode'), ('tier', 'tier'), ('record_kind', 'record_kind'),
++                         ('frozen_at_utc', 'frozen_at_utc'), ('effective_class', 'effective_class'),
++                         ('missing_batch', 'missing_batch'), ('training_ledger_version', 'ledger_version'),
++                         ('training_master_sha256', 'master_sha256'), ('freeze_receipt_digest', 'freeze_receipt_digest')):
++        if s[mine] != r[theirs]:
++            raise RecordRefused(f'{what}: {mine} is not what the freeze line records for this record')
++
++
+ def validate_score_line(s: Mapping, what: str = 'score line') -> dict:
+     """The shape of one weekly score line. The arithmetic is the evaluator's; this checks identity, provenance and that
+     the quantities are present exactly when the record was a forecast."""
+@@ -536,12 +663,17 @@
+     if not failed:
+         parse_utc(s['frozen_at_utc'], f'{what}.frozen_at_utc')
+         _sha(s['freeze_receipt_digest'], f'{what}.freeze_receipt_digest')
++    if type(s['scorer_version']) is not str or not V.VERSION_TAG.fullmatch(s['scorer_version']):
++        raise RecordRefused(f'{what}: scorer_version')
+     if failed:
+         if s['readouts'] is not None or s['rank'] is not None:
+             raise RecordRefused(f'{what}: a failure record carries no quantities')
+-    elif type(s['readouts']) is not dict or set(s['readouts']) != set(READOUTS) or \
+-            not all(type(v) is dict and v for v in s['readouts'].values()):
+-        raise RecordRefused(f'{what}: readouts')
++    else:
++        if type(s['readouts']) is not dict or set(s['readouts']) != set(READOUTS):
++            raise RecordRefused(f'{what}: readouts')
++        for name in READOUTS:
++            _check_readout(s['readouts'][name], s['game_id'], f'{what}: readout {name}')
++        _check_rank(s['rank'], s['game_id'], f'{what}: rank')
+     main = s['drawn_main']
+     if type(main) is not list or len(main) != 7 or sorted(set(main)) != main or \
+             not all(type(x) is int and 1 <= x <= MAIN_POOL[s['game_id']] for x in main):
+@@ -570,22 +702,70 @@
+ VERIFIER_ROLES = ('project-owner', 'reviewer')
+ 
+ 
++WITNESS_RECORDED_FIELDS = ('schema', 'kind', 'game_id', 'target_draw_number', 'freeze_line_digest', 'witness_kind',
++                           'ref', 'recorded_utc')
++WITNESS_VERIFIED_FIELDS = WITNESS_RECORDED_FIELDS + ('verified_by', 'received_utc', 'evidence', 'digest_binding')
++
++
++def _printable(v, what: str) -> str:
++    if type(v) is not str or not v.strip() or not v.isascii() or not v.isprintable() or v != v.strip():
++        raise RecordRefused(f'{what}: empty, padded or not printable ASCII')
++    return v
++
++
++def validate_witness_line(w: Mapping, game_id: str, what: str = 'witness line') -> dict:
++    """The full shape of one witness line (design 6.5, Appendix G; EX_229 F-229-3): exactly its kind's fields."""
++    if type(w) is not dict or w.get('schema') != WITNESS_SCHEMA:
++        raise RecordRefused(f'{what}: wrong schema')
++    kind = w.get('kind')
++    if kind not in ('WITNESS_RECORDED', 'WITNESS_VERIFIED'):
++        raise RecordRefused(f'{what}: unknown kind')
++    _need(w, WITNESS_RECORDED_FIELDS if kind == 'WITNESS_RECORDED' else WITNESS_VERIFIED_FIELDS, what)
++    if w['game_id'] != game_id or type(w['target_draw_number']) is not int or \
++            w['target_draw_number'] <= get_profile(game_id).holdout_last:
++        raise RecordRefused(f'{what}: game or target')
++    _sha(w['freeze_line_digest'], f'{what}.freeze_line_digest')
++    if w['witness_kind'] not in WITNESS_KINDS:
++        raise RecordRefused(f'{what}: witness_kind is not one of {", ".join(WITNESS_KINDS)}')
++    _printable(w['ref'], f'{what}.ref')
++    parse_utc(w['recorded_utc'], f'{what}.recorded_utc')
++    if kind == 'WITNESS_VERIFIED':
++        if w['verified_by'] not in VERIFIER_ROLES:
++            raise RecordRefused(f'{what}: verified_by is a role, one of {", ".join(VERIFIER_ROLES)} (never a name)')
++        parse_utc(w['received_utc'], f'{what}.received_utc')
++        if type(w['evidence']) is not str or not w['evidence'].strip() or not w['evidence'].isascii() or \
++                w['ref'] not in w['evidence']:
++            raise RecordRefused(f'{what}: the evidence text is empty, not ASCII or lacks the reference')
++        if w['digest_binding'] != 'human-checked':
++            raise RecordRefused(f'{what}: digest_binding')
++    return dict(w)
++
++
+ def witness_ledger(root: Path, game_id: str) -> list[dict]:
++    """Every line of the game's witness ledger: canonical bytes, the full shape of its kind, and linkage: a
++    WITNESS_VERIFIED line must follow a WITNESS_RECORDED line for the same target, freeze-line digest, witness kind and
++    reference. Anything unknown, incomplete or unlinked refuses (EX_229 F-229-3): it is never read as a witness."""
+     from _common import jsonl_ledger as JL
+     rows, _torn = JL.read_lines(witness_ledger_path(root, game_id))
++    recorded = set()
+     for w in rows:
+-        if w.get('schema') != WITNESS_SCHEMA or w.get('kind') not in ('WITNESS_RECORDED', 'WITNESS_VERIFIED') or \
+-                w.get('game_id') != game_id or type(w.get('target_draw_number')) is not int:
+-            raise RecordRefused('witness ledger: a line of an unknown shape')
+-        _sha(w.get('freeze_line_digest'), 'witness ledger: freeze_line_digest')
++        validate_witness_line(w, game_id)
++        link = (w['target_draw_number'], w['freeze_line_digest'], w['witness_kind'], w['ref'])
++        if w['kind'] == 'WITNESS_RECORDED':
++            recorded.add(link)
++        elif link not in recorded:
++            raise RecordRefused('witness ledger: a verification with no earlier matching WITNESS_RECORDED line')
+     return rows
+ 
+ 
+-def publication_status(game_id: str, line: Mapping, witness_rows) -> tuple[str, str]:
++def publication_status(root: Path, game_id: str, line: Mapping) -> tuple[str, str]:
+     """(status, detail) of one freeze line, derived at report time and never stored in a score line or a frozen record
+     (design 6.5): PUBLISHED_BEFORE_DRAW when a WITNESS_VERIFIED line for this line's digest was received before the
+-    target's deadline; otherwise TIMELINESS_UNVERIFIED, with what is on file. It never changes an effective class."""
++    target's deadline; otherwise TIMELINESS_UNVERIFIED, with what is on file. It never changes an effective class.
++    The witness lines are read here, through the strict reader, so no caller can offer unvalidated ones; a line for a
++    digest that is not this freeze line's is kept in the ledger and never promotes."""
+     from _common.contract_records import record_digest
++    witness_rows = witness_ledger(root, game_id)
+     digest = record_digest(line)
+     mine = [w for w in witness_rows if w['freeze_line_digest'] == digest and
+             w['target_draw_number'] == line['target_draw_number']]
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/src/methods/_common/weekly_session.py tools/slice1_new/src/methods/_common/weekly_session.py
+--- ex228/slice1_new/src/methods/_common/weekly_session.py	2026-11-17 22:25:06.487090565 +1030
++++ corrected/slice1_new/src/methods/_common/weekly_session.py	2026-11-17 22:37:38.576288327 +1030
+@@ -144,8 +144,7 @@
+ def open_session(game_id: str, adapters: Mapping, *, resume: bool = False) -> dict:
+     _marker_check()
+     root, p = _root(), get_profile(game_id)
+-    if _guard(OR.developed_record, root, game_id) is None:
+-        raise SessionRefused(f'NOT_DEVELOPED: no developed record for {game_id} (GOAL-1); the weekly session has not begun')
++    _guard(WR.developed, root, game_id)                  # the declaration of this game's sealed study, or a refusal
+     if _exists(OR.updater_lock_path(root)):
+         raise SessionRefused('the updater\'s lock exists (an update may be in progress); no session is opened')
+     locked = _lock_session(game_id)
+@@ -213,7 +212,7 @@
+     """The freeze lines, which targets are closed, and the lowest accepted target that is not (or None)."""
+     root, p = _root(), get_profile(game_id)
+     lines = _guard(WR.forecast_ledger, root, game_id)
+-    identities = _guard(SI.scored_identities, root, game_id)
++    identities = _guard(SI.scored_identities, root, game_id, lines)     # validated and linked; identities only
+     closed = _guard(SI.closed_targets, game_id, lines, identities)
+     by_target = {line['target_draw_number']: line for line in lines}
+     lowest = next((t for t in range(p.holdout_last + 1, row.last_draw + 1) if t not in closed), None)
+@@ -221,9 +220,11 @@
+             'identities': identities}
+ 
+ 
+-def _set_started(tickets_by_session: Mapping, target: int) -> bool:
+-    return any(t['kind'] == 'SET_STARTED' and t['target_draw_number'] == target
+-               for rows in tickets_by_session.values() for t in rows)
++def _set_started(game_id: str, target: int) -> bool:
++    """Whether a genuine next-draw set was started for the target (weekly_records.set_started_ticket; EX_229 F-229-4).
++    A ticket that is not genuine refuses: no set is completed under it, and none is started beside it."""
++    tickets = _guard(WR.session_tickets, _root(), game_id)
++    return _guard(WR.set_started_ticket, _root(), game_id, target, tickets) is not None
+ 
+ 
+ def _own_session(game_id: str, session_id: str) -> dict:
+@@ -254,7 +255,7 @@
+     if m in st['by_target']:
+         return 'OPEN', m
+     root = _root()
+-    if not _set_started(_guard(WR.session_tickets, root, game_id), m):
++    if not _set_started(game_id, m):
+         deadline_utc, _offset = WR.deadline(game_id, m)
+         now = WR.now_utc()
+         if now + WR.HOUR_RULE > deadline_utc:
+@@ -338,7 +339,7 @@
+         try:
+             res = CR.run_contract_method(req, compute=adapters[mem['method_id']].compute,
+                                          verify=adapters[mem['method_id']].verify, repo_root=root,
+-                                         run_root=OR.weekly_runs_root(root))
++                                         run_root=OR.session_runs_root(root, mode))
+         except (CR.RunRefused, DispatchRefused) as exc:
+             raise SessionStopped(f'{ident}: REFUSED: {exc.text}') from None
+         if WF.classify(res.outcome, res.reason) != 'CONTINUE':
+@@ -428,7 +429,7 @@
+         m = row.last_draw + 1
+         if m in st['by_target']:
+             end = 'OPEN'
+-        elif _set_started(_guard(WR.session_tickets, _root(), game_id), m):
++        elif _set_started(game_id, m):
+             raise SessionRefused(f'the set for target {m} was started and has no freeze line; the lock stays')
+         else:
+             end = 'NONE'
+@@ -459,7 +460,7 @@
+     now = WR.now_utc()
+     if m in st['by_target']:
+         nxt = 'OPEN (frozen; its result is not yet accepted)'
+-    elif _set_started(tickets, m):
++    elif _set_started(game_id, m):
+         nxt = 'a set was started and has no freeze line: the next session completes it'
+     elif now + WR.HOUR_RULE <= deadline_utc:
+         nxt = 'a next-draw set can start (at least an hour remains): its records will be PROSPECTIVE if frozen before the deadline'
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/tests/mhupb_fixtures.py tools/slice1_new/tests/mhupb_fixtures.py
+--- ex228/slice1_new/tests/mhupb_fixtures.py	2026-11-17 22:25:06.771142525 +1030
++++ corrected/slice1_new/tests/mhupb_fixtures.py	2026-11-17 22:38:56.161646678 +1030
+@@ -62,11 +62,7 @@
+         self.rows = X.grow_master(self.proj, self.p, self.versions)
+         X.write_opening_record(self.proj, self.GAME, freeze_version=1, freeze_sha=self.rows[0]['master_sha256'])
+         # the game's Mode H study is sealed and the system declared developed (stage S5 of Appendix E)
+-        X.write_mode_h_plan(self.proj, self.GAME, 'wf-' + 'a' * 32, [], [], pin=(2, self.rows[1]['master_sha256']),
+-                            manifest_sha=X.write_study_manifest(self.proj, self.GAME))
+-        for marker in OR.LIFECYCLE_MARKERS:
+-            X.write_marker(self.proj, self.GAME, 'wf-' + 'a' * 32, marker)
+-        X.write_developed_record(self.proj, self.GAME)
++        self.seal_and_declare()
+         self.methods = set(self.METHODS)
+         self.release_dates = {}                               # (method, variant) -> date, overriding RELEASED
+         self.digests = ('c' * 64, 'e' * 64)
+@@ -85,6 +81,32 @@
+         self.stack.close()
+         self._td.cleanup()
+ 
++    BATCH = 'wf-' + 'a' * 32
++    SCORE_DIGEST = 'b' * 64
++
++    def seal_and_declare(self):
++        """The game's one Mode H plan with its four lifecycle markers, written through the installed marker writer (so
++        each has its real shape and order), and the developed record as `declare-developed` writes it."""
++        plan = X.write_mode_h_plan(self.proj, self.GAME, self.BATCH, [], [], pin=(2, self.rows[1]['master_sha256']),
++                                   manifest_sha=X.write_study_manifest(self.proj, self.GAME))
++        for name in OR.LIFECYCLE_MARKERS:
++            OR.write_marker(self.proj, self.GAME, self.BATCH, name, {
++                'schema': OR.MARKER_SCHEMAS[name], 'batch_id': self.BATCH, 'game_id': self.GAME,
++                'utc': '2026-11-15T00:00:00.000000Z', 'plan_digest': X.record_digest(plan), 'pairs': 1,
++                'attempt_id': 'mh-fixture', 'roster_digest': 'a' * 64, 'score_ledger_sha256': self.SCORE_DIGEST,
++                'report_sha256': 'c' * 64})
++        self.write_developed()
++
++    def write_developed(self, **change):
++        rec = {'schema': OR.DEVELOPED_SCHEMA, 'game': self.GAME, 'declared_utc': '2026-11-16T00:00:00.000000Z',
++               'owner_statement': OR.DEVELOPED_STATEMENT, 'mode_h_score_digest': self.SCORE_DIGEST,
++               'mode_h_batch_id': self.BATCH, 'mode_h_score_attempt_id': 'mh-fixture'}
++        rec.update(change)
++        path = OR.developed_record_path(self.proj, self.GAME)
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_bytes(X.canonical(rec))
++        return rec
++
+     # ------------------------------------------------------------ the patched facts
+     def _now(self):
+         self.now += timedelta(milliseconds=1)                # every reading is later than the one before
+@@ -171,13 +193,19 @@
+         return WR.session_tickets(self.proj, self.GAME)
+ 
+     def run_folders(self):
+-        root = OR.weekly_runs_root(self.proj) / self.GAME
+-        return sorted(f for f in root.glob('*/*/*') if f.is_dir()) if root.is_dir() else []
++        """Every run folder a session made: CATCH_UP and FINAL_NEXT_DRAW under the weekly root, a session's
++        REAL_DEVELOPMENT runs under the development root (design 6.4). The fixture makes no other development run."""
++        out = []
++        for base in (OR.weekly_runs_root(self.proj), OR.development_runs_root(self.proj)):
++            root = base / self.GAME
++            out += [f for f in root.glob('*/*/*') if f.is_dir()] if root.is_dir() else []
++        return sorted(out)
+ 
+     def weekly_bytes(self):
+         """Every file under the game's weekly folder and the weekly run root, by relative name."""
+         out = {}
+-        for base in (OR.weekly_root(self.proj, self.GAME), OR.weekly_runs_root(self.proj)):
++        for base in (OR.weekly_root(self.proj, self.GAME), OR.weekly_runs_root(self.proj),
++                     OR.development_runs_root(self.proj)):
+             if base.is_dir():
+                 for f in sorted(base.rglob('*')):
+                     if f.is_file():
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/tests/test_mhupb_l1_gates.py tools/slice1_new/tests/test_mhupb_l1_gates.py
+--- ex228/slice1_new/tests/test_mhupb_l1_gates.py	2026-11-17 22:25:06.766987582 +1030
++++ corrected/slice1_new/tests/test_mhupb_l1_gates.py	2026-11-17 22:29:40.034049806 +1030
+@@ -368,22 +368,53 @@
+             X.write_developed_record(self.proj, p.game_id)
+         self.n = 0
+ 
+-    def attempt(self, game, mode, target, *, release='BEFORE', diagnostic=False):
++    def ticketed(self, game, mode, target, *, release='BEFORE', diagnostic=False):
++        """A request of one mode, with its session record and open ticket (or the diagnostic binding)."""
+         p = get_profile(game)
+         self.n += 1
+         rid, sid, pin = f'mg-{self.n:032x}', f'{self.n:032x}', self.v2(game)
+         if diagnostic:
+-            req = request(game, target, mode, run_id=rid, binding=X.DIAGNOSTIC, pin=pin)
+-        else:
+-            e, _d = e1_pins(game)
+-            when = p.derived_date(target - 1 if release == 'BEFORE' else target).isoformat()
+-            sess = X.write_session(self.proj, game, sid, [{'method_id': 'E_1', 'variant_id': C.E1[1],
+-                                   'method_revision': e['method_revision'], 'release_date': when}], pin=pin)
+-            req = request(game, target, mode, run_id=rid, binding=X.binding_for_session(sess, rid), pin=pin)
+-            X.open_ticket(OR.session_attempts_path(self.proj, game, sid), req, scope_kind='WEEKLY_SESSION', scope_id=sid)
+-        res = self.launch(req)
++            return request(game, target, mode, run_id=rid, binding=X.DIAGNOSTIC, pin=pin)
++        e, _d = e1_pins(game)
++        when = p.derived_date(target - 1 if release == 'BEFORE' else target).isoformat()
++        sess = X.write_session(self.proj, game, sid, [{'method_id': 'E_1', 'variant_id': C.E1[1],
++                               'method_revision': e['method_revision'], 'release_date': when}], pin=pin)
++        req = request(game, target, mode, run_id=rid, binding=X.binding_for_session(sess, rid), pin=pin)
++        X.open_ticket(OR.session_attempts_path(self.proj, game, sid), req, scope_kind='WEEKLY_SESSION', scope_id=sid)
++        return req
++
++    def attempt(self, game, mode, target, *, release='BEFORE', diagnostic=False):
++        res = self.launch(self.ticketed(game, mode, target, release=release, diagnostic=diagnostic))
+         return res.outcome, res.reason, res.folder
+ 
++    def test_each_session_run_mode_publishes_under_its_one_root(self):
++        """Design 6.4 (EX_229 F-229-1): CATCH_UP and FINAL_NEXT_DRAW under the weekly run root; a session-bound
++        REAL_DEVELOPMENT run under the development run root. The other root refuses before anything is read or
++        written; the tier follows the run mode, never the folder."""
++        weekly, development = OR.weekly_runs_root(self.proj), OR.development_runs_root(self.proj)
++        self.assertEqual(OR.session_runs_root(self.proj, 'REAL_DEVELOPMENT'), development)
++        for mode in sorted(V.WEEKLY_MODES):
++            self.assertEqual(OR.session_runs_root(self.proj, mode), weekly)
++        for game in ('POWERBALL', 'OZLOTTO'):
++            last = get_profile(game).holdout_last + EXTRA
++            for mode, target, release, right, wrong, tier in (
++                    ('CATCH_UP', last, 'BEFORE', weekly, development, 'CATCH_UP'),
++                    ('FINAL_NEXT_DRAW', last + 1, 'BEFORE', weekly, development, 'PROSPECTIVE'),
++                    ('REAL_DEVELOPMENT', last, 'ON', development, weekly, 'DEVELOPMENT_WF_EXPLORATORY')):
++                with self.subTest(game=game, mode=mode):
++                    req = self.ticketed(game, mode, target, release=release)
++                    before = sorted(str(f) for f in (self.proj / 'results').rglob('*'))
++                    for bad_root in (wrong, OR.diagnostic_runs_root(self.proj), OR.mode_h_runs_root(self.proj)):
++                        with self.assertRaises(CR.RunRefused) as cm:
++                            self.launch(req, run_root=bad_root)
++                        self.assertEqual(cm.exception.reason, 'DATA_SOURCE_REFUSED')
++                    self.assertEqual(sorted(str(f) for f in (self.proj / 'results').rglob('*')), before)
++                    res = self.launch(req)
++                    self.assertEqual(res.outcome, 'SUCCESS', res.reason)
++                    self.assertTrue(res.folder.is_relative_to(right / game))
++                    receipt = json.loads((res.folder / 'forecast_receipt.json').read_bytes())
++                    self.assertEqual((receipt['evidence_tier'], receipt['run_mode']), (tier, mode))
++
+     def test_each_mode_at_the_last_draw_the_next_and_beyond(self):
+         for game in ('POWERBALL', 'OZLOTTO'):
+             last = get_profile(game).holdout_last + EXTRA
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/tests/test_mhupb_weekly_forecast.py tools/slice1_new/tests/test_mhupb_weekly_forecast.py
+--- ex228/slice1_new/tests/test_mhupb_weekly_forecast.py	2026-11-17 22:25:06.771274719 +1030
++++ corrected/slice1_new/tests/test_mhupb_weekly_forecast.py	2026-11-17 22:38:56.162234004 +1030
+@@ -55,7 +55,7 @@
+     def check_invariants(self):
+         lines = self.lines()
+         self.assertTrue(B.oracle_chain_ok(OR.forecast_ledger_path(self.proj, self.GAME)) or not lines)
+-        closed = SI.closed_targets(self.GAME, lines, SI.scored_identities(self.proj, self.GAME))
++        closed = SI.closed_targets(self.GAME, lines, SI.scored_identities(self.proj, self.GAME, lines))
+         self.assertEqual(closed, B.oracle_closed_targets(OR.forecast_ledger_path(self.proj, self.GAME),
+                                                          WR.score_ledger_path(self.proj, self.GAME)))
+         self.assertTrue(all(n == 1 for n in self.done_counts().values()), self.done_counts())
+@@ -280,6 +280,21 @@
+         with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
+             self.open()
+         (self.td / 'developed.json').rename(OR.developed_record_path(self.proj, self.GAME))
++        # a developed record is believed only as the declaration of this game's sealed Mode H study (design 6.7)
++        genuine = OR.developed_record_path(self.proj, self.GAME).read_bytes()
++        for change in (dict(mode_h_score_digest='d' * 64), dict(mode_h_batch_id='wf-' + 'e' * 32),
++                       dict(owner_statement='I say so'), dict(mode_h_batch_id=None)):
++            with self.subTest(developed=change):
++                self.write_developed(**change)
++                OR.validate_developed_record(json.loads(OR.developed_record_path(self.proj, self.GAME).read_bytes()), self.GAME)
++                with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
++                    self.open()
++        OR.developed_record_path(self.proj, self.GAME).write_bytes(genuine)
++        seal = OR.marker_path(self.proj, self.GAME, self.BATCH, 'MODE_H_SEALED')
++        seal.rename(self.td / 'seal.json')
++        with self.assertRaisesRegex(WS.SessionRefused, 'not sealed'):
++            self.open()
++        (self.td / 'seal.json').rename(seal)
+         marker = CR.ORPHAN_MARKER
+         marker.parent.mkdir(parents=True)
+         marker.write_text('{}')
+@@ -412,6 +427,22 @@
+         self.score(sid2, self.m)
+         self.check_invariants()
+ 
++    def test_a_set_started_ticket_that_breaks_the_hour_rule_is_not_believed(self):     # EX_229 F-229-4
++        self.now = self.at(self.m, minutes_before=30)
++        sid = self.open()['session_id']
++        self.assertEqual(self.next(sid), ('NONE', self.m))               # too late to start a set
++        deadline_utc = WR.deadline(self.GAME, self.m)[0]
++        forged = OR.ticket('SET_STARTED', scope_kind='WEEKLY_SESSION', scope_id=sid, game_id=self.GAME, method_id=None,
++                           variant_id=None, method_revision=None, target_draw_number=self.m, run_id=None,
++                           utc=WR.utc_text(self.now), extra={'run_mode': 'FINAL_NEXT_DRAW',
++                                                             'deadline_utc': WR.utc_text(deadline_utc)})
++        B.X.append_ticket(OR.session_attempts_path(self.proj, self.GAME, sid), forged)
++        before = self.weekly_bytes()
++        for call in (lambda: self.next(sid), lambda: WS.close_session(self.GAME, sid), lambda: WS.status(self.GAME)):
++            with self.assertRaisesRegex(WS.SessionRefused, 'at least an hour before the deadline'):
++                call()
++        self.assertEqual((self.weekly_bytes(), self.run_folders()), (before, []))    # no set is completed under it
++
+     def test_the_clock_behind_the_last_freeze_line_refuses(self):
+         self.now = self.at(self.m, minutes_before=61)
+         sid, _states = self.session()
+@@ -482,6 +513,15 @@
+         self.assertEqual(got.pop(late), ('REAL_DEVELOPMENT', 'DEVELOPMENT_WF_EXPLORATORY', 'DEVELOPMENT_WF_EXPLORATORY', False))
+         self.assertEqual(set(got.values()), {('CATCH_UP', 'CATCH_UP', 'CATCH_UP', True)})
+         self.assertEqual({r['run_mode'] for r in nxt['records']}, {'FINAL_NEXT_DRAW'})
++        # design 6.4 (EX_229 F-229-1): the development record is under the development run root, the others under the
++        # weekly run root; each record's tier follows its run mode, not its folder
++        where = {f.name: f for f in self.run_folders()}
++        for line in (first, nxt):
++            for r in line['records']:
++                root = OR.development_runs_root(self.proj) if r['run_mode'] == 'REAL_DEVELOPMENT' else OR.weekly_runs_root(self.proj)
++                self.assertTrue(where[r['run_id']].is_relative_to(root / self.GAME), r['run_mode'])
++        self.assertEqual(len(list((OR.development_runs_root(self.proj) / self.GAME).glob('*/*/*'))), 1)
++        self.assertEqual({s['tier'] for s in self.scores() if s['variant_id'] == late}, {'DEVELOPMENT_WF_EXPLORATORY'})
+         self.check_invariants()
+ 
+ 
+@@ -548,55 +588,130 @@
+ class ReadingScored(B.Weekly, Checks):
+     EXTRA = 2
+ 
+-    def test_identities_only_and_refusals(self):
++    def scored_first(self):
+         sid = self.open()['session_id']
+         self.next(sid)
+         self.score(sid, self.first)
+         path = WR.score_ledger_path(self.proj, self.GAME)
+-        good = path.read_bytes()
+-        idents = SI.scored_identities(self.proj, self.GAME)
++        return sid, path, path.read_bytes(), [json.loads(x) for x in path.read_bytes().split(b'\n')[:-1]]
++
++    def test_identities_only_and_refusals(self):                          # EX_223 CP-Q5; EX_229 F-229-2
++        sid, path, good, rows = self.scored_first()
++        idents = SI.scored_identities(self.proj, self.GAME, self.lines())
+         self.assertEqual(len(idents), 3)
+         for ident in idents:
+             self.assertEqual(len(ident), 7)
+             self.assertEqual((ident[0], ident[4], ident[6]), (self.GAME, self.first, 'WEEKLY_SCORE_POLICY_V1'))
+-        rows = [json.loads(x) for x in good.split(b'\n')[:-1]]
+-        cases = {'duplicated': good + canonical(rows[0]),
+-                 'foreign digest': good + canonical(dict(rows[0], scored_record_digest='0' * 64)),
+-                 'no freeze line': good + canonical(dict(rows[0], target_draw_number=self.first + 9)),
+-                 'malformed': good + b'{"schema": "WEEKLY_SCORE_LINE_V1", "method_id": 7}\n',
+-                 'unknown schema': good + b'{"schema": "OTHER_V1"}\n', 'blank line': good + b'\n'}
++            self.assertTrue(all(type(x) in (str, int) for x in ident))
++        rest = b''.join(canonical(r) for r in rows[1:])
++        first = lambda **change: canonical(dict(rows[0], **change)) + rest          # the first line altered, the others kept
++        without = lambda field: canonical({k: v for k, v in rows[0].items() if k != field}) + rest
++        top = rows[0]['readouts']['TOP']
++        cases = {
++            'duplicated': good + canonical(rows[0]),
++            'duplicated under another score run': good + canonical(dict(rows[0], score_run_id='ws-' + 'a' * 32)),
++            'foreign digest': good + canonical(dict(rows[0], scored_record_digest='0' * 64)),
++            'no freeze line': good + canonical(dict(rows[0], target_draw_number=self.first + 9)),
++            'identity-only fragment': canonical({f: rows[0][f] for f in ('schema', *SI.IDENTITY_FIELDS)}) + rest,
++            'not canonical': good.replace(b'{"amendment_of"', b'{ "amendment_of"', 1),
++            'no outcome pin': without('outcome_master_sha256'),
++            'no score run id': without('score_run_id'),
++            'no scored time': without('scored_utc'),
++            'no quantities': without('readouts'),
++            'no freeze identity': without('freeze_line_digest'),
++            'an extra field': first(extra_field=1),
++            'another freeze line digest': first(freeze_line_digest='0' * 64),
++            'another freeze line number': first(freeze_line_number=2),
++            'a class the freeze line does not record': first(effective_class='PROSPECTIVE'),
++            'a run the freeze line does not record': first(run_id='mg-' + '9' * 32),
++            'a training pin the freeze line does not record': first(training_ledger_version=1),
++            'a readout out of range': first(readouts=dict(rows[0]['readouts'], TOP=dict(top, main_matches=8))),
++            'a readout of another game': first(readouts=dict(rows[0]['readouts'], TOP={'main_matches': 1, 'division': 0})),
++            'a rank that is not a fraction': first(rank=dict(rows[0]['rank'], mean_rank_main='about 14')),
++            'an amendment that names nothing': good + canonical(dict(rows[0], scoring_policy_id='CORRECTED_POLICY_V2',
++                                                                    amendment_of='0' * 64)),
++            'an amendment without its policy': good + canonical(dict(rows[0], amendment_of=record_digest(rows[0]))),
++            'malformed': good + b'{"schema": "WEEKLY_SCORE_LINE_V1", "method_id": 7}\n',
++            'unknown schema': good + b'{"schema": "OTHER_V1"}\n', 'blank line': good + b'\n'}
++        self.assertIn(b'{"amendment_of"', good)
+         for name, raw in cases.items():
+             with self.subTest(case=name):
+                 path.write_bytes(raw)
++                before = self.weekly_bytes()
++                with self.assertRaises(OR.RecordRefused):
++                    SI.scored_identities(self.proj, self.GAME, self.lines())
+                 with self.assertRaises(WS.SessionRefused):
+-                    self.next(sid)                                       # never read as "scored", never as "not scored"
++                    self.next(sid)                       # never read as "scored", never as "not scored"
++                with self.assertRaises(WS.SessionRefused):
++                    WS.status(self.GAME)
++                self.assertEqual(self.weekly_bytes(), before)            # nothing is forecast for a later target
+         path.write_bytes(good)
+-        # an amendment under another policy stands beside the routine line and closes nothing by itself (L-S2)
++        # an amendment under another policy stands beside the routine line it names and closes nothing by itself (L-S2)
+         amend = dict(rows[0], scoring_policy_id='CORRECTED_POLICY_V2', amendment_of=record_digest(rows[0]))
+         WR.validate_score_line(amend)
+         path.write_bytes(good + canonical(amend))
++        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 4)
+         self.assertEqual(self.next(sid), ('FROZE', self.first + 1))
+         self.assertTrue(path.read_bytes().startswith(good))
+ 
+-    def test_a_taint_in_the_score_ledger_reaches_nothing_the_forecasting_half_writes(self):       # EX_223 CP-Q5
++    def test_identity_shaped_fragments_cannot_close_a_target(self):       # EX_229 F-229-2: the false-closure path
+         sid = self.open()['session_id']
+-        self.next(sid)
+-        self.score(sid, self.first)
++        self.assertEqual(self.next(sid), ('FROZE', self.first))          # frozen, not scored
++        line = self.lines()[0]
+         path = WR.score_ledger_path(self.proj, self.GAME)
+-        tainted = []
+-        for raw in path.read_bytes().split(b'\n')[:-1]:
+-            s = json.loads(raw)
+-            for field in s:
+-                if field not in SI.IDENTITY_FIELDS and field != 'schema':
+-                    s[field] = f'TAINT-{field}'                          # every outcome-derived and provenance field
+-            tainted.append(canonical(s))
+-        path.write_bytes(b''.join(tainted))
+-        requests, appended, echoed = [], [], []
++        path.write_bytes(b''.join(canonical({
++            'schema': WR.SCORE_LINE_SCHEMA, 'game_id': self.GAME, 'method_id': r['method_id'],
++            'method_revision': r['method_revision'], 'variant_id': r['variant_id'], 'target_draw_number': self.first,
++            'scored_record_digest': r['scored_record_digest'], 'scoring_policy_id': WR.ROUTINE_POLICY})
++            for r in line['records']))
++        # a reader that looked at identities alone would call the target closed (the oracle is such a reader)
++        self.assertEqual(B.oracle_closed_targets(OR.forecast_ledger_path(self.proj, self.GAME), path), {self.first})
++        before = self.weekly_bytes()
++        with self.assertRaises(WS.SessionRefused):
++            self.next(sid)
++        with self.assertRaises(WS.SessionRefused):
++            WS.close_session(self.GAME, sid)
++        self.assertEqual(self.weekly_bytes(), before)
++        self.assertEqual(len(self.run_folders()), 3)                     # nothing was forecast for the next target
++        path.unlink()
++        self.score(sid, self.first)                                      # the real scorer's lines close it
++        self.assertEqual(self.next(sid), ('FROZE', self.first + 1))
++
++    def test_valid_score_values_reach_nothing_the_forecasting_half_makes(self):        # EX_223 CP-Q5; EX_229 F-229-2
++        """The score ledger is rewritten with VALID, schema-conforming and distinctive values in every outcome-derived
++        and provenance field. The forecasting half must accept it (it is a valid ledger) and none of those values may
++        reach a method's task or view, a run request, a ticket, a freeze line, a session record, the status block or
++        any file a run writes."""
++        sid, path, good, rows = self.scored_first()
++        marks = {'score_run_id': 'ws-' + '7' * 32, 'scorer_version': 'MARKED_SCORER_V7',
++                 'scored_utc': '2031-07-07T07:07:07.777777Z', 'outcome_master_sha256': '7' * 64,
++                 'outcome_ledger_version': 77, 'drawn_main': [29, 30, 31, 32, 33, 34, 35], 'drawn_powerball': 19,
++                 'readouts': {'TOP': {'main_matches': 7, 'powerball_match': 1, 'division': 1},
++                              'WORST': {'unavailable': 'MARKED_REASON'}},
++                 'rank': {'mean_rank_main': '7777/7', 'fair_var_main': '7777/77', 'rank_powerball': '19',
++                          'fair_var_pb': '7777/777'}, 'draw_date_is_derived': False}
++        needles = ('ws-7777777', 'MARKED_SCORER', '2031-07-07', '7' * 64, '7777/7', 'MARKED_REASON',
++                   '29, 30, 31, 32, 33, 34, 35', '29,30,31,32,33,34,35', '"outcome_ledger_version": 77',
++                   '"outcome_ledger_version":77')
++        master = (self.proj / 'source_data' / f'{self.GAME}_results_master.csv').read_text(encoding='ascii')
++        self.assertNotIn('29,30,31,32,33,34,35', master)                 # the mark is no draw of the invented master
++        marked = [dict(r, **marks) for r in rows]
++        for r in marked:
++            WR.validate_score_line(r)
++        path.write_bytes(b''.join(canonical(r) for r in marked))
++        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 3)     # a valid ledger
++        requests, appended, echoed, seen = [], [], [], []
+         real_run, real_append = CR.run_contract_method, JL.append
++        e6 = B.adapters()['E_6']
++        real_compute = e6.compute
++
++        def compute(task, view):
++            seen.append(json.dumps([task.as_dict(), view.simple_rows()], default=str))
++            return real_compute(task, view)
+ 
+         def run(request, **kw):
+             requests.append(json.dumps(request))
+-            return real_run(request, **kw)
++            return real_run(request, **dict(kw, compute=compute))
+ 
+         def append(p, record):
+             appended.append(json.dumps(record))
+@@ -604,12 +719,12 @@
+         with mock.patch.object(WS.CR, 'run_contract_method', run), mock.patch.object(WS.JL, 'append', append):
+             self.assertEqual(self.next(sid, echoed), ('FROZE', self.first + 1))
+         status = '\n'.join(WS.status_lines(WS.status(self.GAME)))
+-        self.assertEqual((len(requests), len(appended)), (3, 7))
+-        for text in (*requests, *appended, *echoed, status, json.dumps(WR.session(self.proj, self.GAME, sid))):
+-            self.assertNotIn('TAINT', text)
+-        for folder in self.run_folders():
+-            for f in folder.iterdir():
+-                self.assertNotIn(b'TAINT', f.read_bytes())
++        self.assertEqual((len(requests), len(appended), len(seen)), (3, 7, 3))
++        texts = [*requests, *appended, *echoed, *seen, status, json.dumps(WR.session(self.proj, self.GAME, sid))]
++        texts += [raw.decode('ascii') for name, raw in self.weekly_bytes().items() if not name.endswith('SCORE_LEDGER_V1.jsonl')]
++        for text in texts:
++            for needle in needles:
++                self.assertNotIn(needle, text)
+ 
+     def test_statics_of_the_forecasting_half(self):
+         banned = ('main_matches', 'powerball_match', 'division', 'drawn_main', 'drawn_powerball', 'readouts',
+@@ -633,7 +748,11 @@
+             if not rel.endswith('weekly_records.py'):                    # it defines the score line's shape for both halves
+                 for word in banned:                                      # no outcome-derived field is named in the code
+                     self.assertFalse([w for w in words if word in w], (rel, word))
+-        users = [rel for rel in METHODS_SIDE if 'score_ledger_path' in (ROOT / rel).read_text(encoding='ascii')]
++        # the score ledger is opened in one place (weekly_records.score_ledger, the strict reader) and that reader is
++        # called, on the forecasting side, only by score_identities, which returns identities
++        named = [rel for rel in METHODS_SIDE if 'score_ledger_path' in (ROOT / rel).read_text(encoding='ascii')]
++        self.assertEqual(named, ['src/methods/_common/weekly_records.py'])
++        users = [rel for rel in METHODS_SIDE if 'score_ledger' in (ROOT / rel).read_text(encoding='ascii')]
+         self.assertEqual(users, ['src/methods/_common/weekly_records.py', 'src/methods/_common/score_identities.py'])
+         session = (ROOT / 'src/methods/_common/weekly_session.py').read_text(encoding='ascii')
+         self.assertNotIn('score_ledger', session)                        # it reads scores only through score_identities
+diff -ruN '--exclude=__pycache__' '--exclude=*.diff' tools_ex228/slice1_new/tests/test_mhupb_weekly_score.py tools/slice1_new/tests/test_mhupb_weekly_score.py
+--- ex228/slice1_new/tests/test_mhupb_weekly_score.py	2026-11-17 22:25:06.950987593 +1030
++++ corrected/slice1_new/tests/test_mhupb_weekly_score.py	2026-11-17 22:38:56.162735325 +1030
+@@ -134,8 +134,8 @@
+         self.assertEqual(OR.forecast_ledger_path(self.proj, self.GAME).read_bytes(), canonical(line))  # the line untouched
+ 
+ 
+-class ReleaseRule(B.Weekly):
+-    EXTRA = 2
++class Refusals:
++    """Shared by the classes below: a target that must be refused everywhere."""
+ 
+     def outcome(self, target):
+         return RD.read_outcomes(repo_root=self.proj, game_id=self.GAME, master_sha256=self.rows[-1]['master_sha256'],
+@@ -153,6 +153,10 @@
+             self.assertRegex(str(cm.exception), pattern)
+         self.assertEqual(self.weekly_bytes(), before)
+ 
++
++class ReleaseRule(B.Weekly, Refusals):
++    EXTRA = 2
++
+     def test_no_freeze_line_no_outcome_and_the_other_refusals(self):
+         self.assertEqual(self.outcome(self.p.holdout_first - 1)[self.p.holdout_first - 1][0][0] > 0, True)   # the prefix
+         for t in (self.p.holdout_first, self.p.holdout_last):                 # the holdout: Mode H's rule, unchanged
+@@ -173,6 +177,10 @@
+         with self.assertRaises(RD.OutcomeRefused):
+             self.outcome(self.first)
+         (self.td / 'd.json').rename(developed)
++        genuine = developed.read_bytes()
++        self.write_developed(mode_h_score_digest='d' * 64)               # well formed, but not this game's sealed score
++        self.refused_everywhere(sid, self.first)
++        developed.write_bytes(genuine)
+         with self.assertRaisesRegex(SC.ScoreRefused, 'not the game\'s active session'):
+             self.score('f' * 32, self.first)
+         marker = CR.ORPHAN_MARKER
+@@ -273,7 +281,7 @@
+         got = self.score(sid, self.first)
+         self.assertEqual((got['scored'], got['already']), (1, 2))
+         self.assertTrue(WR.score_ledger_path(self.proj, self.GAME).read_bytes().startswith(first_two))
+-        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME)), 3)
++        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 3)
+         self.assertEqual(self.next(sid), ('FROZE_NEXT', self.first + 1))
+ 
+     def test_a_failure_record_is_named_scored_as_missing_and_never_run_again(self):
+@@ -306,6 +314,61 @@
+ class Witness(B.Weekly):
+     EXTRA = 0
+ 
++    def forged_witness_lines_never_promote(self, m, line, status):
++        """EX_229 F-229-3: a WITNESS_VERIFIED line that is incomplete, unlinked or contradictory is refused by the
++        reader, so it can never make PUBLISHED_BEFORE_DRAW appear; a well-formed pair for another digest is kept and
++        never promotes."""
++        path = WR.witness_ledger_path(self.proj, self.GAME)
++        digest, early = record_digest(line), WR.utc_text(self.at(m, hours_before=1))
++        rec = {'schema': WR.WITNESS_SCHEMA, 'kind': 'WITNESS_RECORDED', 'game_id': self.GAME, 'target_draw_number': m,
++               'freeze_line_digest': digest, 'witness_kind': 'github', 'ref': 'abc123def',
++               'recorded_utc': WR.utc_text(self.at(m, hours_before=2))}
++        ver = dict(rec, kind='WITNESS_VERIFIED', verified_by='reviewer', received_utc=early,
++                   evidence='PushEvent created_at ... commit abc123def', digest_binding='human-checked')
++        WR.validate_witness_line(rec, self.GAME)
++        WR.validate_witness_line(ver, self.GAME)
++        minimal = {k: ver[k] for k in ('schema', 'kind', 'game_id', 'target_draw_number', 'freeze_line_digest', 'received_utc')}
++        drop = lambda w, f: {k: v for k, v in w.items() if k != f}
++        forged = {
++            'an incomplete verification alone': [minimal],
++            'a complete verification with no record before it': [ver],
++            'a verification before its record': [ver, rec],
++            'a verification of another reference': [rec, dict(ver, ref='fff999', evidence='commit fff999')],
++            'a verification of another kind': [rec, dict(ver, witness_kind='email')],
++            'a verification by a name': [rec, dict(ver, verified_by='Dana')],
++            'a verification without evidence': [rec, drop(ver, 'evidence')],
++            'evidence that lacks the reference': [rec, dict(ver, evidence='a receipt for another commit')],
++            'a verification without its binding': [rec, dict(ver, digest_binding='tool-checked')],
++            'a received time that is not UTC': [rec, dict(ver, received_utc='Tuesday morning')],
++            'an extra field': [rec, dict(ver, promoted=True)],
++            'a record of an unknown kind of witness': [dict(rec, witness_kind='fax'), ver],
++            'an unknown line kind': [dict(rec, kind='WITNESS_ASSERTED')],
++            'another game': [dict(rec, game_id='OZLOTTO' if self.GAME == 'POWERBALL' else 'POWERBALL')],
++            'not canonical': None}
++        for name, rows in forged.items():
++            with self.subTest(forged=name):
++                raw = b''.join(canonical(r) for r in rows) if rows is not None else canonical(rec).replace(b'{"', b'{ "', 1)
++                path.write_bytes(raw)
++                with self.assertRaises(OR.RecordRefused):
++                    WR.witness_ledger(self.proj, self.GAME)
++                with self.assertRaises(OR.RecordRefused):
++                    status()                                              # refused: never PUBLISHED_BEFORE_DRAW
++                with self.assertRaises(SC.ScoreRefused):
++                    SC.witness(self.GAME, m, 'github', 'abc123def')       # nothing is appended to a ledger that refuses
++                self.assertEqual(path.read_bytes(), raw)
++        # a well-formed, linked pair for a digest that is not this freeze line's: kept, shown, never promoting
++        elsewhere = [dict(rec, freeze_line_digest='0' * 64), dict(ver, freeze_line_digest='0' * 64)]
++        path.write_bytes(b''.join(canonical(r) for r in elsewhere))
++        self.assertEqual(len(WR.witness_ledger(self.proj, self.GAME)), 2)
++        self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
++        # and the genuine early pair does promote, by itself, touching no forecast or score byte
++        frozen = OR.forecast_ledger_path(self.proj, self.GAME).read_bytes()
++        path.write_bytes(canonical(rec) + canonical(ver))
++        self.assertEqual(status(), ('PUBLISHED_BEFORE_DRAW', 'witness verified, received before the deadline'))
++        self.assertEqual(OR.forecast_ledger_path(self.proj, self.GAME).read_bytes(), frozen)
++        path.unlink()
++        self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
++
+     def test_witness_lines_and_the_derived_publication_status(self):                       # L-V1 to L-V3
+         m = self.first
+         self.now = self.at(m, minutes_before=61)
+@@ -321,8 +384,9 @@
+         with mock.patch.object(WS.CR, 'run_contract_method', slow):
+             self.next(sid)                                               # two PROSPECTIVE records and one LATE_PRE_DRAW
+         line = self.lines()[0]
+-        status = lambda: WR.publication_status(self.GAME, self.lines()[0], WR.witness_ledger(self.proj, self.GAME))
++        status = lambda: WR.publication_status(self.proj, self.GAME, self.lines()[0])
+         self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
++        self.forged_witness_lines_never_promote(m, line, status)
+         for bad in (dict(target=m + 1), dict(kind='carrier-pigeon'), dict(ref='  '), dict(ref='caf\xe9')):
+             args = dict(target=m, kind='github', ref='abc123def')
+             args.update(bad)
+@@ -370,6 +434,132 @@
+         self.assertEqual(len(list(path.parent.glob(path.name + '.torn_*'))), 1)
+ 
+ 
++class RunRoots(B.Weekly, Refusals):
++    """Design 6.4 (EX_229 F-229-1): a session's REAL_DEVELOPMENT record lives under the development run root."""
++    EXTRA = 1
++
++    def test_a_development_record_of_an_earlier_session_is_found_verified_and_scored(self):
++        members = [m for m in B._real_cohort(self.GAME, B.adapters())[0] if m['method_id'] == 'E_6']
++        late = sorted(m['variant_id'] for m in members)[0]               # the roster's first variant
++        self.release_dates[('E_6', late)] = self.p.derived_date(self.first).isoformat()   # released ON the draw date
++        s1 = self.open()['session_id']
++        with B.fault_after(3), self.assertRaises(B.Boom):                # OPEN, run, DONE: the development record
++            self.next(s1)
++        self.assertEqual([(t['variant_id'], t['run_mode']) for t in self.tickets()[s1] if t['kind'] == 'DONE'],
++                         [(late, 'REAL_DEVELOPMENT')])
++        self.clear_lock()
++        s2 = self.open()['session_id']                                   # a successor completes the set
++        self.assertEqual(self.next(s2), ('FROZE', self.first))
++        line = self.lines()[0]
++        dev = [r for r in line['records'] if r['variant_id'] == late][0]
++        others = [r for r in line['records'] if r['variant_id'] != late]
++        self.assertEqual((dev['run_mode'], dev['tier'], dev['session_id'], dev['missing_batch']),
++                         ('REAL_DEVELOPMENT', 'DEVELOPMENT_WF_EXPLORATORY', s1, False))
++        self.assertEqual({(r['run_mode'], r['session_id']) for r in others}, {('CATCH_UP', s2)})
++        right = OR.development_runs_root(self.proj) / self.GAME / 'E_6' / late / dev['run_id']
++        wrong = OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / late / dev['run_id']
++        self.assertTrue(right.is_dir() and not wrong.exists())
++        for r in others:
++            self.assertTrue((OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / r['variant_id'] / r['run_id']).is_dir())
++        # an otherwise valid record in the WRONG root is not the record the line names: no outcome, no score
++        wrong.parent.mkdir(parents=True, exist_ok=True)
++        right.rename(wrong)
++        self.refused_everywhere(s2, self.first, 'no run folder')
++        wrong.rename(right)
++        other = others[0]
++        o_right = OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / other['variant_id'] / other['run_id']
++        o_wrong = OR.development_runs_root(self.proj) / self.GAME / 'E_6' / other['variant_id'] / other['run_id']
++        o_wrong.parent.mkdir(parents=True, exist_ok=True)
++        o_right.rename(o_wrong)
++        self.refused_everywhere(s2, self.first, 'no run folder')
++        o_wrong.rename(o_right)
++        self.score(s2, self.first)
++        scored = {s['variant_id']: s for s in self.scores()}
++        self.assertEqual((scored[late]['tier'], scored[late]['effective_class'], scored[late]['run_mode'],
++                          scored[late]['scoring_session_id'], scored[late]['training_ledger_version']),
++                         ('DEVELOPMENT_WF_EXPLORATORY', 'DEVELOPMENT_WF_EXPLORATORY', 'REAL_DEVELOPMENT', s2, 2))
++        self.assertIsNotNone(scored[late]['readouts'])
++        self.assertEqual(self.next(s2), ('FROZE_NEXT', self.first + 1))  # closed with it; never run again
++        self.assertEqual(len(self.run_folders()), 6)
++
++
++class SetProvenance(B.Weekly, Refusals):
++    """EX_229 F-229-4: a NEXT_DRAW_SET line, and every FINAL_NEXT_DRAW record, is believed only with the target's one
++    genuine SET_STARTED ticket. A label alone never makes prospective evidence."""
++    EXTRA = 0
++
++    def test_a_next_draw_set_needs_its_genuine_set_started_ticket(self):
++        m = self.first
++        s1, states = self.session()
++        self.assertEqual(states, [('FROZE_NEXT', m)])
++        self.assertEqual(self.lines()[0]['set_kind'], 'NEXT_DRAW_SET')
++        self.assertEqual(len(WR.verify_named_records(self.proj, self.GAME, self.lines()[0])), 3)     # genuine
++        attempts = OR.session_attempts_path(self.proj, self.GAME, s1)
++        good = attempts.read_bytes()
++        rows = good.split(b'\n')[:-1]
++        start = [r for r in rows if b'"kind":"SET_STARTED"' in r]
++        self.assertEqual((len(start), rows.index(start[0])), (1, 0))     # written before every ticket of the set
++        t = json.loads(start[0])
++        self.grow([m])
++        self.now = self.at(m + 1, hours_before=40)
++        s2 = self.open()['session_id']
++        self.assertEqual(self.next(s2), ('FROZE', m))
++        other = OR.session_attempts_path(self.proj, self.GAME, s2)
++        swap = lambda **change: b'\n'.join(canonical(dict(t, **change))[:-1] if r == start[0] else r for r in rows) + b'\n'
++        dropped = b'\n'.join(r for r in rows if r != start[0]) + b'\n'
++        cases = {'removed': (dropped, None),
++                 'another target': (swap(target_draw_number=m + 1), None),
++                 'within the hour': (swap(utc=WR.utc_text(self.at(m, minutes_before=30))), None),
++                 'after the deadline': (swap(utc=WR.utc_text(self.at(m, minutes_before=-30))), None),
++                 'another mode': (swap(run_mode='CATCH_UP'), None),
++                 'another deadline': (swap(deadline_utc='2026-01-01T00:00:00.000000Z'), None),
++                 'no deadline': (b'\n'.join(canonical({k: v for k, v in t.items() if k != 'deadline_utc'})[:-1]
++                                            if r == start[0] else r for r in rows) + b'\n', None),
++                 'two tickets': (good + start[0] + b'\n', None),
++                 'later than its own records': (swap(utc=WR.utc_text(self.at(m, hours_before=2))), None),
++                 'before its session began': (swap(utc='2020-01-01T00:00:00.000000Z'), None),
++                 'in the scoring session, which began after the deadline':
++                     (dropped, canonical(dict(t, scope_id=s2, utc=WR.utc_text(self.at(m, hours_before=3))))),
++                 # a well-formed session record, begun in time, whose pinned master already held the draw: only the
++                 # rule "the starting session's master ends just before the target" can refuse this one
++                 'in a session whose master already holds the draw': (dropped, 'FORGED SESSION')}
++        self.assertFalse(other.exists())
++        forged_id = 'f' * 32
++        forged_record = OR.session_record_path(self.proj, self.GAME, forged_id)
++        forged_ledger = OR.session_attempts_path(self.proj, self.GAME, forged_id)
++        for name, (mine, theirs) in cases.items():
++            with self.subTest(case=name):
++                attempts.write_bytes(mine)
++                if theirs == 'FORGED SESSION':
++                    genuine = json.loads(OR.session_record_path(self.proj, self.GAME, s1).read_bytes())
++                    forged = dict(genuine, session_id=forged_id, last_draw=m)
++                    WR.validate_session(forged, self.GAME)
++                    forged_record.write_bytes(canonical(forged))
++                    forged_ledger.write_bytes(canonical(dict(t, scope_id=forged_id)))
++                elif theirs is not None:
++                    other.write_bytes(theirs)
++                with self.assertRaises(OR.RecordRefused):
++                    WR.verify_named_records(self.proj, self.GAME, self.lines()[0])
++                self.refused_everywhere(s2, m)
++                attempts.write_bytes(good)
++                for path in (other, forged_record, forged_ledger):
++                    path.unlink(missing_ok=True)
++        self.score(s2, m)
++        self.assertEqual({s['effective_class'] for s in self.scores()}, {'PROSPECTIVE'})
++
++    def test_a_catch_up_set_needs_no_set_started_ticket(self):
++        self.grow([self.first])                                          # one accepted draw to catch up
++        self.now = self.at(self.first + 1, hours_before=40)
++        sid = self.open()['session_id']
++        self.assertEqual(self.next(sid), ('FROZE', self.first))
++        self.assertEqual(self.lines()[0]['set_kind'], 'CATCH_UP_SET')
++        self.assertEqual(len(WR.verify_named_records(self.proj, self.GAME, self.lines()[0])), 3)
++        self.assertFalse(any(t['kind'] == 'SET_STARTED' for t in self.tickets()[sid]))
++        self.assertIsNone(WR.set_started_ticket(self.proj, self.GAME, self.first, self.tickets()))
++        self.score(sid, self.first)
++        self.assertEqual(len(self.scores()), 3)
++
++
+ class DiagnosticScore(B.Weekly):
+     EXTRA = 1
+ 

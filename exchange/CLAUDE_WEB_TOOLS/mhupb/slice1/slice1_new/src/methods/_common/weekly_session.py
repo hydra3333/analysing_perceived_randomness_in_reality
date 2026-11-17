@@ -144,8 +144,7 @@ def roster_now(game_id: str, adapters: Mapping) -> tuple[list[dict], list[dict]]
 def open_session(game_id: str, adapters: Mapping, *, resume: bool = False) -> dict:
     _marker_check()
     root, p = _root(), get_profile(game_id)
-    if _guard(OR.developed_record, root, game_id) is None:
-        raise SessionRefused(f'NOT_DEVELOPED: no developed record for {game_id} (GOAL-1); the weekly session has not begun')
+    _guard(WR.developed, root, game_id)                  # the declaration of this game's sealed study, or a refusal
     if _exists(OR.updater_lock_path(root)):
         raise SessionRefused('the updater\'s lock exists (an update may be in progress); no session is opened')
     locked = _lock_session(game_id)
@@ -213,7 +212,7 @@ def _state(game_id: str, row) -> dict:
     """The freeze lines, which targets are closed, and the lowest accepted target that is not (or None)."""
     root, p = _root(), get_profile(game_id)
     lines = _guard(WR.forecast_ledger, root, game_id)
-    identities = _guard(SI.scored_identities, root, game_id)
+    identities = _guard(SI.scored_identities, root, game_id, lines)     # validated and linked; identities only
     closed = _guard(SI.closed_targets, game_id, lines, identities)
     by_target = {line['target_draw_number']: line for line in lines}
     lowest = next((t for t in range(p.holdout_last + 1, row.last_draw + 1) if t not in closed), None)
@@ -221,9 +220,11 @@ def _state(game_id: str, row) -> dict:
             'identities': identities}
 
 
-def _set_started(tickets_by_session: Mapping, target: int) -> bool:
-    return any(t['kind'] == 'SET_STARTED' and t['target_draw_number'] == target
-               for rows in tickets_by_session.values() for t in rows)
+def _set_started(game_id: str, target: int) -> bool:
+    """Whether a genuine next-draw set was started for the target (weekly_records.set_started_ticket; EX_229 F-229-4).
+    A ticket that is not genuine refuses: no set is completed under it, and none is started beside it."""
+    tickets = _guard(WR.session_tickets, _root(), game_id)
+    return _guard(WR.set_started_ticket, _root(), game_id, target, tickets) is not None
 
 
 def _own_session(game_id: str, session_id: str) -> dict:
@@ -254,7 +255,7 @@ def next_step(game_id: str, session_id: str, adapters: Mapping, *, echo=print) -
     if m in st['by_target']:
         return 'OPEN', m
     root = _root()
-    if not _set_started(_guard(WR.session_tickets, root, game_id), m):
+    if not _set_started(game_id, m):
         deadline_utc, _offset = WR.deadline(game_id, m)
         now = WR.now_utc()
         if now + WR.HOUR_RULE > deadline_utc:
@@ -338,7 +339,7 @@ def _complete_set(session: Mapping, target: int, set_kind: str, lines, adapters:
         try:
             res = CR.run_contract_method(req, compute=adapters[mem['method_id']].compute,
                                          verify=adapters[mem['method_id']].verify, repo_root=root,
-                                         run_root=OR.weekly_runs_root(root))
+                                         run_root=OR.session_runs_root(root, mode))
         except (CR.RunRefused, DispatchRefused) as exc:
             raise SessionStopped(f'{ident}: REFUSED: {exc.text}') from None
         if WF.classify(res.outcome, res.reason) != 'CONTINUE':
@@ -428,7 +429,7 @@ def close_session(game_id: str, session_id: str) -> str:
         m = row.last_draw + 1
         if m in st['by_target']:
             end = 'OPEN'
-        elif _set_started(_guard(WR.session_tickets, _root(), game_id), m):
+        elif _set_started(game_id, m):
             raise SessionRefused(f'the set for target {m} was started and has no freeze line; the lock stays')
         else:
             end = 'NONE'
@@ -459,7 +460,7 @@ def status(game_id: str) -> dict:
     now = WR.now_utc()
     if m in st['by_target']:
         nxt = 'OPEN (frozen; its result is not yet accepted)'
-    elif _set_started(tickets, m):
+    elif _set_started(game_id, m):
         nxt = 'a set was started and has no freeze line: the next session completes it'
     elif now + WR.HOUR_RULE <= deadline_utc:
         nxt = 'a next-draw set can start (at least an hour remains): its records will be PROSPECTIVE if frozen before the deadline'

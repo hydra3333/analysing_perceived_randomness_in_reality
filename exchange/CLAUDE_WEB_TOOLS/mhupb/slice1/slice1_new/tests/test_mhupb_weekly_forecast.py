@@ -55,7 +55,7 @@ class Checks:
     def check_invariants(self):
         lines = self.lines()
         self.assertTrue(B.oracle_chain_ok(OR.forecast_ledger_path(self.proj, self.GAME)) or not lines)
-        closed = SI.closed_targets(self.GAME, lines, SI.scored_identities(self.proj, self.GAME))
+        closed = SI.closed_targets(self.GAME, lines, SI.scored_identities(self.proj, self.GAME, lines))
         self.assertEqual(closed, B.oracle_closed_targets(OR.forecast_ledger_path(self.proj, self.GAME),
                                                          WR.score_ledger_path(self.proj, self.GAME)))
         self.assertTrue(all(n == 1 for n in self.done_counts().values()), self.done_counts())
@@ -280,6 +280,21 @@ class Interruptions(B.Weekly, Checks):
         with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
             self.open()
         (self.td / 'developed.json').rename(OR.developed_record_path(self.proj, self.GAME))
+        # a developed record is believed only as the declaration of this game's sealed Mode H study (design 6.7)
+        genuine = OR.developed_record_path(self.proj, self.GAME).read_bytes()
+        for change in (dict(mode_h_score_digest='d' * 64), dict(mode_h_batch_id='wf-' + 'e' * 32),
+                       dict(owner_statement='I say so'), dict(mode_h_batch_id=None)):
+            with self.subTest(developed=change):
+                self.write_developed(**change)
+                OR.validate_developed_record(json.loads(OR.developed_record_path(self.proj, self.GAME).read_bytes()), self.GAME)
+                with self.assertRaisesRegex(WS.SessionRefused, 'NOT_DEVELOPED'):
+                    self.open()
+        OR.developed_record_path(self.proj, self.GAME).write_bytes(genuine)
+        seal = OR.marker_path(self.proj, self.GAME, self.BATCH, 'MODE_H_SEALED')
+        seal.rename(self.td / 'seal.json')
+        with self.assertRaisesRegex(WS.SessionRefused, 'not sealed'):
+            self.open()
+        (self.td / 'seal.json').rename(seal)
         marker = CR.ORPHAN_MARKER
         marker.parent.mkdir(parents=True)
         marker.write_text('{}')
@@ -412,6 +427,22 @@ class Deadline(B.Weekly, Checks):
         self.score(sid2, self.m)
         self.check_invariants()
 
+    def test_a_set_started_ticket_that_breaks_the_hour_rule_is_not_believed(self):     # EX_229 F-229-4
+        self.now = self.at(self.m, minutes_before=30)
+        sid = self.open()['session_id']
+        self.assertEqual(self.next(sid), ('NONE', self.m))               # too late to start a set
+        deadline_utc = WR.deadline(self.GAME, self.m)[0]
+        forged = OR.ticket('SET_STARTED', scope_kind='WEEKLY_SESSION', scope_id=sid, game_id=self.GAME, method_id=None,
+                           variant_id=None, method_revision=None, target_draw_number=self.m, run_id=None,
+                           utc=WR.utc_text(self.now), extra={'run_mode': 'FINAL_NEXT_DRAW',
+                                                             'deadline_utc': WR.utc_text(deadline_utc)})
+        B.X.append_ticket(OR.session_attempts_path(self.proj, self.GAME, sid), forged)
+        before = self.weekly_bytes()
+        for call in (lambda: self.next(sid), lambda: WS.close_session(self.GAME, sid), lambda: WS.status(self.GAME)):
+            with self.assertRaisesRegex(WS.SessionRefused, 'at least an hour before the deadline'):
+                call()
+        self.assertEqual((self.weekly_bytes(), self.run_folders()), (before, []))    # no set is completed under it
+
     def test_the_clock_behind_the_last_freeze_line_refuses(self):
         self.now = self.at(self.m, minutes_before=61)
         sid, _states = self.session()
@@ -482,6 +513,15 @@ class StaleAndRoster(B.Weekly, Checks):
         self.assertEqual(got.pop(late), ('REAL_DEVELOPMENT', 'DEVELOPMENT_WF_EXPLORATORY', 'DEVELOPMENT_WF_EXPLORATORY', False))
         self.assertEqual(set(got.values()), {('CATCH_UP', 'CATCH_UP', 'CATCH_UP', True)})
         self.assertEqual({r['run_mode'] for r in nxt['records']}, {'FINAL_NEXT_DRAW'})
+        # design 6.4 (EX_229 F-229-1): the development record is under the development run root, the others under the
+        # weekly run root; each record's tier follows its run mode, not its folder
+        where = {f.name: f for f in self.run_folders()}
+        for line in (first, nxt):
+            for r in line['records']:
+                root = OR.development_runs_root(self.proj) if r['run_mode'] == 'REAL_DEVELOPMENT' else OR.weekly_runs_root(self.proj)
+                self.assertTrue(where[r['run_id']].is_relative_to(root / self.GAME), r['run_mode'])
+        self.assertEqual(len(list((OR.development_runs_root(self.proj) / self.GAME).glob('*/*/*'))), 1)
+        self.assertEqual({s['tier'] for s in self.scores() if s['variant_id'] == late}, {'DEVELOPMENT_WF_EXPLORATORY'})
         self.check_invariants()
 
 
@@ -548,55 +588,130 @@ class LedgerRules(B.Weekly, Checks):
 class ReadingScored(B.Weekly, Checks):
     EXTRA = 2
 
-    def test_identities_only_and_refusals(self):
+    def scored_first(self):
         sid = self.open()['session_id']
         self.next(sid)
         self.score(sid, self.first)
         path = WR.score_ledger_path(self.proj, self.GAME)
-        good = path.read_bytes()
-        idents = SI.scored_identities(self.proj, self.GAME)
+        return sid, path, path.read_bytes(), [json.loads(x) for x in path.read_bytes().split(b'\n')[:-1]]
+
+    def test_identities_only_and_refusals(self):                          # EX_223 CP-Q5; EX_229 F-229-2
+        sid, path, good, rows = self.scored_first()
+        idents = SI.scored_identities(self.proj, self.GAME, self.lines())
         self.assertEqual(len(idents), 3)
         for ident in idents:
             self.assertEqual(len(ident), 7)
             self.assertEqual((ident[0], ident[4], ident[6]), (self.GAME, self.first, 'WEEKLY_SCORE_POLICY_V1'))
-        rows = [json.loads(x) for x in good.split(b'\n')[:-1]]
-        cases = {'duplicated': good + canonical(rows[0]),
-                 'foreign digest': good + canonical(dict(rows[0], scored_record_digest='0' * 64)),
-                 'no freeze line': good + canonical(dict(rows[0], target_draw_number=self.first + 9)),
-                 'malformed': good + b'{"schema": "WEEKLY_SCORE_LINE_V1", "method_id": 7}\n',
-                 'unknown schema': good + b'{"schema": "OTHER_V1"}\n', 'blank line': good + b'\n'}
+            self.assertTrue(all(type(x) in (str, int) for x in ident))
+        rest = b''.join(canonical(r) for r in rows[1:])
+        first = lambda **change: canonical(dict(rows[0], **change)) + rest          # the first line altered, the others kept
+        without = lambda field: canonical({k: v for k, v in rows[0].items() if k != field}) + rest
+        top = rows[0]['readouts']['TOP']
+        cases = {
+            'duplicated': good + canonical(rows[0]),
+            'duplicated under another score run': good + canonical(dict(rows[0], score_run_id='ws-' + 'a' * 32)),
+            'foreign digest': good + canonical(dict(rows[0], scored_record_digest='0' * 64)),
+            'no freeze line': good + canonical(dict(rows[0], target_draw_number=self.first + 9)),
+            'identity-only fragment': canonical({f: rows[0][f] for f in ('schema', *SI.IDENTITY_FIELDS)}) + rest,
+            'not canonical': good.replace(b'{"amendment_of"', b'{ "amendment_of"', 1),
+            'no outcome pin': without('outcome_master_sha256'),
+            'no score run id': without('score_run_id'),
+            'no scored time': without('scored_utc'),
+            'no quantities': without('readouts'),
+            'no freeze identity': without('freeze_line_digest'),
+            'an extra field': first(extra_field=1),
+            'another freeze line digest': first(freeze_line_digest='0' * 64),
+            'another freeze line number': first(freeze_line_number=2),
+            'a class the freeze line does not record': first(effective_class='PROSPECTIVE'),
+            'a run the freeze line does not record': first(run_id='mg-' + '9' * 32),
+            'a training pin the freeze line does not record': first(training_ledger_version=1),
+            'a readout out of range': first(readouts=dict(rows[0]['readouts'], TOP=dict(top, main_matches=8))),
+            'a readout of another game': first(readouts=dict(rows[0]['readouts'], TOP={'main_matches': 1, 'division': 0})),
+            'a rank that is not a fraction': first(rank=dict(rows[0]['rank'], mean_rank_main='about 14')),
+            'an amendment that names nothing': good + canonical(dict(rows[0], scoring_policy_id='CORRECTED_POLICY_V2',
+                                                                    amendment_of='0' * 64)),
+            'an amendment without its policy': good + canonical(dict(rows[0], amendment_of=record_digest(rows[0]))),
+            'malformed': good + b'{"schema": "WEEKLY_SCORE_LINE_V1", "method_id": 7}\n',
+            'unknown schema': good + b'{"schema": "OTHER_V1"}\n', 'blank line': good + b'\n'}
+        self.assertIn(b'{"amendment_of"', good)
         for name, raw in cases.items():
             with self.subTest(case=name):
                 path.write_bytes(raw)
+                before = self.weekly_bytes()
+                with self.assertRaises(OR.RecordRefused):
+                    SI.scored_identities(self.proj, self.GAME, self.lines())
                 with self.assertRaises(WS.SessionRefused):
-                    self.next(sid)                                       # never read as "scored", never as "not scored"
+                    self.next(sid)                       # never read as "scored", never as "not scored"
+                with self.assertRaises(WS.SessionRefused):
+                    WS.status(self.GAME)
+                self.assertEqual(self.weekly_bytes(), before)            # nothing is forecast for a later target
         path.write_bytes(good)
-        # an amendment under another policy stands beside the routine line and closes nothing by itself (L-S2)
+        # an amendment under another policy stands beside the routine line it names and closes nothing by itself (L-S2)
         amend = dict(rows[0], scoring_policy_id='CORRECTED_POLICY_V2', amendment_of=record_digest(rows[0]))
         WR.validate_score_line(amend)
         path.write_bytes(good + canonical(amend))
+        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 4)
         self.assertEqual(self.next(sid), ('FROZE', self.first + 1))
         self.assertTrue(path.read_bytes().startswith(good))
 
-    def test_a_taint_in_the_score_ledger_reaches_nothing_the_forecasting_half_writes(self):       # EX_223 CP-Q5
+    def test_identity_shaped_fragments_cannot_close_a_target(self):       # EX_229 F-229-2: the false-closure path
         sid = self.open()['session_id']
-        self.next(sid)
-        self.score(sid, self.first)
+        self.assertEqual(self.next(sid), ('FROZE', self.first))          # frozen, not scored
+        line = self.lines()[0]
         path = WR.score_ledger_path(self.proj, self.GAME)
-        tainted = []
-        for raw in path.read_bytes().split(b'\n')[:-1]:
-            s = json.loads(raw)
-            for field in s:
-                if field not in SI.IDENTITY_FIELDS and field != 'schema':
-                    s[field] = f'TAINT-{field}'                          # every outcome-derived and provenance field
-            tainted.append(canonical(s))
-        path.write_bytes(b''.join(tainted))
-        requests, appended, echoed = [], [], []
+        path.write_bytes(b''.join(canonical({
+            'schema': WR.SCORE_LINE_SCHEMA, 'game_id': self.GAME, 'method_id': r['method_id'],
+            'method_revision': r['method_revision'], 'variant_id': r['variant_id'], 'target_draw_number': self.first,
+            'scored_record_digest': r['scored_record_digest'], 'scoring_policy_id': WR.ROUTINE_POLICY})
+            for r in line['records']))
+        # a reader that looked at identities alone would call the target closed (the oracle is such a reader)
+        self.assertEqual(B.oracle_closed_targets(OR.forecast_ledger_path(self.proj, self.GAME), path), {self.first})
+        before = self.weekly_bytes()
+        with self.assertRaises(WS.SessionRefused):
+            self.next(sid)
+        with self.assertRaises(WS.SessionRefused):
+            WS.close_session(self.GAME, sid)
+        self.assertEqual(self.weekly_bytes(), before)
+        self.assertEqual(len(self.run_folders()), 3)                     # nothing was forecast for the next target
+        path.unlink()
+        self.score(sid, self.first)                                      # the real scorer's lines close it
+        self.assertEqual(self.next(sid), ('FROZE', self.first + 1))
+
+    def test_valid_score_values_reach_nothing_the_forecasting_half_makes(self):        # EX_223 CP-Q5; EX_229 F-229-2
+        """The score ledger is rewritten with VALID, schema-conforming and distinctive values in every outcome-derived
+        and provenance field. The forecasting half must accept it (it is a valid ledger) and none of those values may
+        reach a method's task or view, a run request, a ticket, a freeze line, a session record, the status block or
+        any file a run writes."""
+        sid, path, good, rows = self.scored_first()
+        marks = {'score_run_id': 'ws-' + '7' * 32, 'scorer_version': 'MARKED_SCORER_V7',
+                 'scored_utc': '2031-07-07T07:07:07.777777Z', 'outcome_master_sha256': '7' * 64,
+                 'outcome_ledger_version': 77, 'drawn_main': [29, 30, 31, 32, 33, 34, 35], 'drawn_powerball': 19,
+                 'readouts': {'TOP': {'main_matches': 7, 'powerball_match': 1, 'division': 1},
+                              'WORST': {'unavailable': 'MARKED_REASON'}},
+                 'rank': {'mean_rank_main': '7777/7', 'fair_var_main': '7777/77', 'rank_powerball': '19',
+                          'fair_var_pb': '7777/777'}, 'draw_date_is_derived': False}
+        needles = ('ws-7777777', 'MARKED_SCORER', '2031-07-07', '7' * 64, '7777/7', 'MARKED_REASON',
+                   '29, 30, 31, 32, 33, 34, 35', '29,30,31,32,33,34,35', '"outcome_ledger_version": 77',
+                   '"outcome_ledger_version":77')
+        master = (self.proj / 'source_data' / f'{self.GAME}_results_master.csv').read_text(encoding='ascii')
+        self.assertNotIn('29,30,31,32,33,34,35', master)                 # the mark is no draw of the invented master
+        marked = [dict(r, **marks) for r in rows]
+        for r in marked:
+            WR.validate_score_line(r)
+        path.write_bytes(b''.join(canonical(r) for r in marked))
+        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 3)     # a valid ledger
+        requests, appended, echoed, seen = [], [], [], []
         real_run, real_append = CR.run_contract_method, JL.append
+        e6 = B.adapters()['E_6']
+        real_compute = e6.compute
+
+        def compute(task, view):
+            seen.append(json.dumps([task.as_dict(), view.simple_rows()], default=str))
+            return real_compute(task, view)
 
         def run(request, **kw):
             requests.append(json.dumps(request))
-            return real_run(request, **kw)
+            return real_run(request, **dict(kw, compute=compute))
 
         def append(p, record):
             appended.append(json.dumps(record))
@@ -604,12 +719,12 @@ class ReadingScored(B.Weekly, Checks):
         with mock.patch.object(WS.CR, 'run_contract_method', run), mock.patch.object(WS.JL, 'append', append):
             self.assertEqual(self.next(sid, echoed), ('FROZE', self.first + 1))
         status = '\n'.join(WS.status_lines(WS.status(self.GAME)))
-        self.assertEqual((len(requests), len(appended)), (3, 7))
-        for text in (*requests, *appended, *echoed, status, json.dumps(WR.session(self.proj, self.GAME, sid))):
-            self.assertNotIn('TAINT', text)
-        for folder in self.run_folders():
-            for f in folder.iterdir():
-                self.assertNotIn(b'TAINT', f.read_bytes())
+        self.assertEqual((len(requests), len(appended), len(seen)), (3, 7, 3))
+        texts = [*requests, *appended, *echoed, *seen, status, json.dumps(WR.session(self.proj, self.GAME, sid))]
+        texts += [raw.decode('ascii') for name, raw in self.weekly_bytes().items() if not name.endswith('SCORE_LEDGER_V1.jsonl')]
+        for text in texts:
+            for needle in needles:
+                self.assertNotIn(needle, text)
 
     def test_statics_of_the_forecasting_half(self):
         banned = ('main_matches', 'powerball_match', 'division', 'drawn_main', 'drawn_powerball', 'readouts',
@@ -633,7 +748,11 @@ class ReadingScored(B.Weekly, Checks):
             if not rel.endswith('weekly_records.py'):                    # it defines the score line's shape for both halves
                 for word in banned:                                      # no outcome-derived field is named in the code
                     self.assertFalse([w for w in words if word in w], (rel, word))
-        users = [rel for rel in METHODS_SIDE if 'score_ledger_path' in (ROOT / rel).read_text(encoding='ascii')]
+        # the score ledger is opened in one place (weekly_records.score_ledger, the strict reader) and that reader is
+        # called, on the forecasting side, only by score_identities, which returns identities
+        named = [rel for rel in METHODS_SIDE if 'score_ledger_path' in (ROOT / rel).read_text(encoding='ascii')]
+        self.assertEqual(named, ['src/methods/_common/weekly_records.py'])
+        users = [rel for rel in METHODS_SIDE if 'score_ledger' in (ROOT / rel).read_text(encoding='ascii')]
         self.assertEqual(users, ['src/methods/_common/weekly_records.py', 'src/methods/_common/score_identities.py'])
         session = (ROOT / 'src/methods/_common/weekly_session.py').read_text(encoding='ascii')
         self.assertNotIn('score_ledger', session)                        # it reads scores only through score_identities

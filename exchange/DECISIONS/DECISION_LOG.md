@@ -1045,3 +1045,18 @@ the installed documents. This log is not a separate approval process.
   every session run in the weekly run folder. Claude kept the installed behaviour and asked which should stand.
 - **Not done:** Windows, the owner's PC, real data, E2R-T12; the PC's own time zone across a daylight-saving change.
 - **Model (MC-1):** slice 2 (OV-1; the two kinds of development run) is also Fable (High) work.
+
+## 77. 17 November 2026, about 22:22-23:20 - EX_229 (slice 1: recheck required); the corrected slice 1 sent as EX_230
+
+- **The owner's word (22:22):** "go EX_229".
+- **EX_229 (the reviewer, commit `7ed7a46`):** slice 1 is not yet passed. Rulings: S1-D1 follow the ratified design (a
+  session's development runs go to the development run folder; correct the code; no owner decision needed); S1-D2 to
+  S1-D7 accepted. Findings: F-229-1 the run folder; F-229-2 a malformed score line could falsely close a target;
+  F-229-3 a malformed witness verification could falsely show "published before the draw"; F-229-4 a next-draw set
+  must be proved by its own start ticket, not believed from a label.
+- **Done (cloud workspace only; nothing installed):** all four fixed with regression tests and planted-defect checks.
+  Claude re-read the slice with the reviewer's principle and found one more of the same kind: the developed record was
+  believed from its shape; it is now tied to the game's sealed Mode H study (flagged to the reviewer as F-230-A).
+- **Results on the corrected tree:** 623 tests in 48 modules, no failure, on Python 3.13.18 and 3.15.0b4; 57 planted
+  defects, all caught. Sent as EX_230 for a focused recheck.
+- **No owner decision arose.** Slice 2 has not started; it starts on the owner's next word (Fable, High).

@@ -134,8 +134,8 @@ class AcrossWeeks(B.Weekly):
         self.assertEqual(OR.forecast_ledger_path(self.proj, self.GAME).read_bytes(), canonical(line))  # the line untouched
 
 
-class ReleaseRule(B.Weekly):
-    EXTRA = 2
+class Refusals:
+    """Shared by the classes below: a target that must be refused everywhere."""
 
     def outcome(self, target):
         return RD.read_outcomes(repo_root=self.proj, game_id=self.GAME, master_sha256=self.rows[-1]['master_sha256'],
@@ -152,6 +152,10 @@ class ReleaseRule(B.Weekly):
         if pattern:
             self.assertRegex(str(cm.exception), pattern)
         self.assertEqual(self.weekly_bytes(), before)
+
+
+class ReleaseRule(B.Weekly, Refusals):
+    EXTRA = 2
 
     def test_no_freeze_line_no_outcome_and_the_other_refusals(self):
         self.assertEqual(self.outcome(self.p.holdout_first - 1)[self.p.holdout_first - 1][0][0] > 0, True)   # the prefix
@@ -173,6 +177,10 @@ class ReleaseRule(B.Weekly):
         with self.assertRaises(RD.OutcomeRefused):
             self.outcome(self.first)
         (self.td / 'd.json').rename(developed)
+        genuine = developed.read_bytes()
+        self.write_developed(mode_h_score_digest='d' * 64)               # well formed, but not this game's sealed score
+        self.refused_everywhere(sid, self.first)
+        developed.write_bytes(genuine)
         with self.assertRaisesRegex(SC.ScoreRefused, 'not the game\'s active session'):
             self.score('f' * 32, self.first)
         marker = CR.ORPHAN_MARKER
@@ -273,7 +281,7 @@ class ScoringGuards(B.Weekly):
         got = self.score(sid, self.first)
         self.assertEqual((got['scored'], got['already']), (1, 2))
         self.assertTrue(WR.score_ledger_path(self.proj, self.GAME).read_bytes().startswith(first_two))
-        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME)), 3)
+        self.assertEqual(len(SI.scored_identities(self.proj, self.GAME, self.lines())), 3)
         self.assertEqual(self.next(sid), ('FROZE_NEXT', self.first + 1))
 
     def test_a_failure_record_is_named_scored_as_missing_and_never_run_again(self):
@@ -306,6 +314,61 @@ class ScoringGuards(B.Weekly):
 class Witness(B.Weekly):
     EXTRA = 0
 
+    def forged_witness_lines_never_promote(self, m, line, status):
+        """EX_229 F-229-3: a WITNESS_VERIFIED line that is incomplete, unlinked or contradictory is refused by the
+        reader, so it can never make PUBLISHED_BEFORE_DRAW appear; a well-formed pair for another digest is kept and
+        never promotes."""
+        path = WR.witness_ledger_path(self.proj, self.GAME)
+        digest, early = record_digest(line), WR.utc_text(self.at(m, hours_before=1))
+        rec = {'schema': WR.WITNESS_SCHEMA, 'kind': 'WITNESS_RECORDED', 'game_id': self.GAME, 'target_draw_number': m,
+               'freeze_line_digest': digest, 'witness_kind': 'github', 'ref': 'abc123def',
+               'recorded_utc': WR.utc_text(self.at(m, hours_before=2))}
+        ver = dict(rec, kind='WITNESS_VERIFIED', verified_by='reviewer', received_utc=early,
+                   evidence='PushEvent created_at ... commit abc123def', digest_binding='human-checked')
+        WR.validate_witness_line(rec, self.GAME)
+        WR.validate_witness_line(ver, self.GAME)
+        minimal = {k: ver[k] for k in ('schema', 'kind', 'game_id', 'target_draw_number', 'freeze_line_digest', 'received_utc')}
+        drop = lambda w, f: {k: v for k, v in w.items() if k != f}
+        forged = {
+            'an incomplete verification alone': [minimal],
+            'a complete verification with no record before it': [ver],
+            'a verification before its record': [ver, rec],
+            'a verification of another reference': [rec, dict(ver, ref='fff999', evidence='commit fff999')],
+            'a verification of another kind': [rec, dict(ver, witness_kind='email')],
+            'a verification by a name': [rec, dict(ver, verified_by='Dana')],
+            'a verification without evidence': [rec, drop(ver, 'evidence')],
+            'evidence that lacks the reference': [rec, dict(ver, evidence='a receipt for another commit')],
+            'a verification without its binding': [rec, dict(ver, digest_binding='tool-checked')],
+            'a received time that is not UTC': [rec, dict(ver, received_utc='Tuesday morning')],
+            'an extra field': [rec, dict(ver, promoted=True)],
+            'a record of an unknown kind of witness': [dict(rec, witness_kind='fax'), ver],
+            'an unknown line kind': [dict(rec, kind='WITNESS_ASSERTED')],
+            'another game': [dict(rec, game_id='OZLOTTO' if self.GAME == 'POWERBALL' else 'POWERBALL')],
+            'not canonical': None}
+        for name, rows in forged.items():
+            with self.subTest(forged=name):
+                raw = b''.join(canonical(r) for r in rows) if rows is not None else canonical(rec).replace(b'{"', b'{ "', 1)
+                path.write_bytes(raw)
+                with self.assertRaises(OR.RecordRefused):
+                    WR.witness_ledger(self.proj, self.GAME)
+                with self.assertRaises(OR.RecordRefused):
+                    status()                                              # refused: never PUBLISHED_BEFORE_DRAW
+                with self.assertRaises(SC.ScoreRefused):
+                    SC.witness(self.GAME, m, 'github', 'abc123def')       # nothing is appended to a ledger that refuses
+                self.assertEqual(path.read_bytes(), raw)
+        # a well-formed, linked pair for a digest that is not this freeze line's: kept, shown, never promoting
+        elsewhere = [dict(rec, freeze_line_digest='0' * 64), dict(ver, freeze_line_digest='0' * 64)]
+        path.write_bytes(b''.join(canonical(r) for r in elsewhere))
+        self.assertEqual(len(WR.witness_ledger(self.proj, self.GAME)), 2)
+        self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
+        # and the genuine early pair does promote, by itself, touching no forecast or score byte
+        frozen = OR.forecast_ledger_path(self.proj, self.GAME).read_bytes()
+        path.write_bytes(canonical(rec) + canonical(ver))
+        self.assertEqual(status(), ('PUBLISHED_BEFORE_DRAW', 'witness verified, received before the deadline'))
+        self.assertEqual(OR.forecast_ledger_path(self.proj, self.GAME).read_bytes(), frozen)
+        path.unlink()
+        self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
+
     def test_witness_lines_and_the_derived_publication_status(self):                       # L-V1 to L-V3
         m = self.first
         self.now = self.at(m, minutes_before=61)
@@ -321,8 +384,9 @@ class Witness(B.Weekly):
         with mock.patch.object(WS.CR, 'run_contract_method', slow):
             self.next(sid)                                               # two PROSPECTIVE records and one LATE_PRE_DRAW
         line = self.lines()[0]
-        status = lambda: WR.publication_status(self.GAME, self.lines()[0], WR.witness_ledger(self.proj, self.GAME))
+        status = lambda: WR.publication_status(self.proj, self.GAME, self.lines()[0])
         self.assertEqual(status(), ('TIMELINESS_UNVERIFIED', 'no witness'))
+        self.forged_witness_lines_never_promote(m, line, status)
         for bad in (dict(target=m + 1), dict(kind='carrier-pigeon'), dict(ref='  '), dict(ref='caf\xe9')):
             args = dict(target=m, kind='github', ref='abc123def')
             args.update(bad)
@@ -368,6 +432,132 @@ class Witness(B.Weekly):
         SC.witness(self.GAME, m, 'email', '<id-1@example.invalid>')
         self.assertEqual(len(WR.witness_ledger(self.proj, self.GAME)), 4)
         self.assertEqual(len(list(path.parent.glob(path.name + '.torn_*'))), 1)
+
+
+class RunRoots(B.Weekly, Refusals):
+    """Design 6.4 (EX_229 F-229-1): a session's REAL_DEVELOPMENT record lives under the development run root."""
+    EXTRA = 1
+
+    def test_a_development_record_of_an_earlier_session_is_found_verified_and_scored(self):
+        members = [m for m in B._real_cohort(self.GAME, B.adapters())[0] if m['method_id'] == 'E_6']
+        late = sorted(m['variant_id'] for m in members)[0]               # the roster's first variant
+        self.release_dates[('E_6', late)] = self.p.derived_date(self.first).isoformat()   # released ON the draw date
+        s1 = self.open()['session_id']
+        with B.fault_after(3), self.assertRaises(B.Boom):                # OPEN, run, DONE: the development record
+            self.next(s1)
+        self.assertEqual([(t['variant_id'], t['run_mode']) for t in self.tickets()[s1] if t['kind'] == 'DONE'],
+                         [(late, 'REAL_DEVELOPMENT')])
+        self.clear_lock()
+        s2 = self.open()['session_id']                                   # a successor completes the set
+        self.assertEqual(self.next(s2), ('FROZE', self.first))
+        line = self.lines()[0]
+        dev = [r for r in line['records'] if r['variant_id'] == late][0]
+        others = [r for r in line['records'] if r['variant_id'] != late]
+        self.assertEqual((dev['run_mode'], dev['tier'], dev['session_id'], dev['missing_batch']),
+                         ('REAL_DEVELOPMENT', 'DEVELOPMENT_WF_EXPLORATORY', s1, False))
+        self.assertEqual({(r['run_mode'], r['session_id']) for r in others}, {('CATCH_UP', s2)})
+        right = OR.development_runs_root(self.proj) / self.GAME / 'E_6' / late / dev['run_id']
+        wrong = OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / late / dev['run_id']
+        self.assertTrue(right.is_dir() and not wrong.exists())
+        for r in others:
+            self.assertTrue((OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / r['variant_id'] / r['run_id']).is_dir())
+        # an otherwise valid record in the WRONG root is not the record the line names: no outcome, no score
+        wrong.parent.mkdir(parents=True, exist_ok=True)
+        right.rename(wrong)
+        self.refused_everywhere(s2, self.first, 'no run folder')
+        wrong.rename(right)
+        other = others[0]
+        o_right = OR.weekly_runs_root(self.proj) / self.GAME / 'E_6' / other['variant_id'] / other['run_id']
+        o_wrong = OR.development_runs_root(self.proj) / self.GAME / 'E_6' / other['variant_id'] / other['run_id']
+        o_wrong.parent.mkdir(parents=True, exist_ok=True)
+        o_right.rename(o_wrong)
+        self.refused_everywhere(s2, self.first, 'no run folder')
+        o_wrong.rename(o_right)
+        self.score(s2, self.first)
+        scored = {s['variant_id']: s for s in self.scores()}
+        self.assertEqual((scored[late]['tier'], scored[late]['effective_class'], scored[late]['run_mode'],
+                          scored[late]['scoring_session_id'], scored[late]['training_ledger_version']),
+                         ('DEVELOPMENT_WF_EXPLORATORY', 'DEVELOPMENT_WF_EXPLORATORY', 'REAL_DEVELOPMENT', s2, 2))
+        self.assertIsNotNone(scored[late]['readouts'])
+        self.assertEqual(self.next(s2), ('FROZE_NEXT', self.first + 1))  # closed with it; never run again
+        self.assertEqual(len(self.run_folders()), 6)
+
+
+class SetProvenance(B.Weekly, Refusals):
+    """EX_229 F-229-4: a NEXT_DRAW_SET line, and every FINAL_NEXT_DRAW record, is believed only with the target's one
+    genuine SET_STARTED ticket. A label alone never makes prospective evidence."""
+    EXTRA = 0
+
+    def test_a_next_draw_set_needs_its_genuine_set_started_ticket(self):
+        m = self.first
+        s1, states = self.session()
+        self.assertEqual(states, [('FROZE_NEXT', m)])
+        self.assertEqual(self.lines()[0]['set_kind'], 'NEXT_DRAW_SET')
+        self.assertEqual(len(WR.verify_named_records(self.proj, self.GAME, self.lines()[0])), 3)     # genuine
+        attempts = OR.session_attempts_path(self.proj, self.GAME, s1)
+        good = attempts.read_bytes()
+        rows = good.split(b'\n')[:-1]
+        start = [r for r in rows if b'"kind":"SET_STARTED"' in r]
+        self.assertEqual((len(start), rows.index(start[0])), (1, 0))     # written before every ticket of the set
+        t = json.loads(start[0])
+        self.grow([m])
+        self.now = self.at(m + 1, hours_before=40)
+        s2 = self.open()['session_id']
+        self.assertEqual(self.next(s2), ('FROZE', m))
+        other = OR.session_attempts_path(self.proj, self.GAME, s2)
+        swap = lambda **change: b'\n'.join(canonical(dict(t, **change))[:-1] if r == start[0] else r for r in rows) + b'\n'
+        dropped = b'\n'.join(r for r in rows if r != start[0]) + b'\n'
+        cases = {'removed': (dropped, None),
+                 'another target': (swap(target_draw_number=m + 1), None),
+                 'within the hour': (swap(utc=WR.utc_text(self.at(m, minutes_before=30))), None),
+                 'after the deadline': (swap(utc=WR.utc_text(self.at(m, minutes_before=-30))), None),
+                 'another mode': (swap(run_mode='CATCH_UP'), None),
+                 'another deadline': (swap(deadline_utc='2026-01-01T00:00:00.000000Z'), None),
+                 'no deadline': (b'\n'.join(canonical({k: v for k, v in t.items() if k != 'deadline_utc'})[:-1]
+                                            if r == start[0] else r for r in rows) + b'\n', None),
+                 'two tickets': (good + start[0] + b'\n', None),
+                 'later than its own records': (swap(utc=WR.utc_text(self.at(m, hours_before=2))), None),
+                 'before its session began': (swap(utc='2020-01-01T00:00:00.000000Z'), None),
+                 'in the scoring session, which began after the deadline':
+                     (dropped, canonical(dict(t, scope_id=s2, utc=WR.utc_text(self.at(m, hours_before=3))))),
+                 # a well-formed session record, begun in time, whose pinned master already held the draw: only the
+                 # rule "the starting session's master ends just before the target" can refuse this one
+                 'in a session whose master already holds the draw': (dropped, 'FORGED SESSION')}
+        self.assertFalse(other.exists())
+        forged_id = 'f' * 32
+        forged_record = OR.session_record_path(self.proj, self.GAME, forged_id)
+        forged_ledger = OR.session_attempts_path(self.proj, self.GAME, forged_id)
+        for name, (mine, theirs) in cases.items():
+            with self.subTest(case=name):
+                attempts.write_bytes(mine)
+                if theirs == 'FORGED SESSION':
+                    genuine = json.loads(OR.session_record_path(self.proj, self.GAME, s1).read_bytes())
+                    forged = dict(genuine, session_id=forged_id, last_draw=m)
+                    WR.validate_session(forged, self.GAME)
+                    forged_record.write_bytes(canonical(forged))
+                    forged_ledger.write_bytes(canonical(dict(t, scope_id=forged_id)))
+                elif theirs is not None:
+                    other.write_bytes(theirs)
+                with self.assertRaises(OR.RecordRefused):
+                    WR.verify_named_records(self.proj, self.GAME, self.lines()[0])
+                self.refused_everywhere(s2, m)
+                attempts.write_bytes(good)
+                for path in (other, forged_record, forged_ledger):
+                    path.unlink(missing_ok=True)
+        self.score(s2, m)
+        self.assertEqual({s['effective_class'] for s in self.scores()}, {'PROSPECTIVE'})
+
+    def test_a_catch_up_set_needs_no_set_started_ticket(self):
+        self.grow([self.first])                                          # one accepted draw to catch up
+        self.now = self.at(self.first + 1, hours_before=40)
+        sid = self.open()['session_id']
+        self.assertEqual(self.next(sid), ('FROZE', self.first))
+        self.assertEqual(self.lines()[0]['set_kind'], 'CATCH_UP_SET')
+        self.assertEqual(len(WR.verify_named_records(self.proj, self.GAME, self.lines()[0])), 3)
+        self.assertFalse(any(t['kind'] == 'SET_STARTED' for t in self.tickets()[sid]))
+        self.assertIsNone(WR.set_started_ticket(self.proj, self.GAME, self.first, self.tickets()))
+        self.score(sid, self.first)
+        self.assertEqual(len(self.scores()), 3)
 
 
 class DiagnosticScore(B.Weekly):
