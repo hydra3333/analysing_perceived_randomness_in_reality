@@ -892,3 +892,21 @@ the installed documents. This log is not a separate approval process.
 - **Also (16:50):** the owner asked Claude to name the model to select before each piece of evaluation or work; Claude
   does so at the start of each piece (MC-1). The permission mode stays on Auto (16:52); the project's own go points are
   unchanged by it.
+
+## 68. 17 November 2026, about 18:24 - the reviewer's review of code plan v0.1: EX_223 (supersedes EX_221 and EX_222)
+
+- **The owner's words (18:24):** "ok EX_223 supersedes both EX_221 and EX_222, so read and use EX_223 whilst also noting the
+  in-place "minimum admin overhead" agreement."
+- **EX_223** (the reviewer's commit `b5678d8`; as stored `8f1b86d3...5c`; EX_221 at `0114ee1` and EX_222 at `4e73031` kept
+  as history): PASS WITH REQUIRED CORRECTIONS; not yet ready for ratification or code. B01 a precise OV-1 missed-week and
+  noon-cut-off rule (needs a design amendment); B02 the league table's archive and search-log row made crash-consistent;
+  B03 the same-day release gap closed by the release instant; B04 two kinds of development rerun (ROUTINE_FILL and
+  EXPLORATORY_RERUN), which the owner asked for; C01 one initiator and one writer per ledger; C02 OV-1's failure
+  semantics; C03 the one small tracked LEAGUE_SOURCES file, no extra chain; C04 the plan audited against the
+  minimum-administration approach (P0-P6, entry 1; "KISS and least-admin", entry 45). Recommendations on OD-1 to OD-6
+  given; the owner has decided none of them yet.
+- **The owner's two questions to the reviewer after EX_221** (as EX_222 records them): whether the recommendations let any
+  eligible method be re-run over eligible history for development, and whether the plan keeps to the minimum-admin
+  approach without weakening review or science.
+- **Next:** code plan v0.2 and the smallest design amendment, then a focused recheck, then the owner's ratification of the
+  complete plan; no code before a specific go (entry 67).

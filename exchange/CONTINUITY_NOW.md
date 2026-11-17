@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 16:55 Australia/Adelaide (the code plan with the reviewer, EX_220; the owner's instruction, entry 67).
+**Last updated:** 17 November 2026, about 18:30 Australia/Adelaide (the reviewer's review EX_223 read; entry 68).
 
 ## For the owner: NOW
 
@@ -40,7 +40,8 @@ durable EX messages are authoritative.
   OD-1 to OD-6 (plan section 12), the plan is complete and OWNER-RATIFIED, and the owner then gives a specific go for
   code (entry 67).** The Fable task (the plan) is finished: Opus is enough
   until the reviewer replies.
-- **Waiting on the reviewer:** its review of the plan and its answers to CP-Q1 to CP-Q9.
+- **The reviewer's review is in: EX_223** (supersedes EX_221 and EX_222): PASS WITH REQUIRED CORRECTIONS (B01-B04,
+  C01-C04). Next: plan v0.2 and the smallest design amendment (Fable, High), then a focused recheck, then ratification.
 - **Waiting on the owner (after the review; nothing needed now):** OD-1 may a development batch name its variants (he
   declined that as ER-6 on 31 October; the supplement's rule 2A needs it); OD-2 what OV-1 does with a missed week; OD-3
   the cut-off for OV-1's pre-draw record; OD-4 no recovery after a stopped stream (recommended); OD-5 a read-only census
