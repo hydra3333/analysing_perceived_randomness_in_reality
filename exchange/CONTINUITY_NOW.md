@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 18:50 Australia/Adelaide (OD-1 to OD-4 and OD-6 directed, entry 69; OD-5 open; nothing else moves until all six are agreed).
+**Last updated:** 17 November 2026, about 19:15 Australia/Adelaide (OD-1 to OD-6 all agreed, entries 69 and 70; waiting for the owner's go for plan v0.2).
 
 ## For the owner: NOW
 
@@ -42,13 +42,17 @@ durable EX messages are authoritative.
   until the reviewer replies.
 - **The reviewer's review is in: EX_223** (supersedes EX_221 and EX_222): PASS WITH REQUIRED CORRECTIONS (B01-B04,
   C01-C04). Next: plan v0.2 and the smallest design amendment (Fable, High), then a focused recheck, then ratification.
-- **Waiting on the owner (after the review; nothing needed now):** OD-1 may a development batch name its variants (he
-  declined that as ER-6 on 31 October; the supplement's rule 2A needs it); OD-2 what OV-1 does with a missed week; OD-3
-  the cut-off for OV-1's pre-draw record; OD-4 no recovery after a stopped stream (recommended); OD-5 a read-only census
-  of the real score records before the install; OD-6 review in three slices.
+- **OD-1 TO OD-6 ARE ALL AGREED BY THE OWNER (entries 69 and 70), as directions:** OD-1 two kinds of development run
+  (routine fill; exploratory rerun); OD-2 a missed week counts as a neutral factor of 1 under a rule fixed in advance
+  and blind to the outcome (else stop); OD-3 noon Adelaide time as the last moment for OV-1's pre-draw entry (the owner:
+  both games close at 7.30pm AEST); OD-4 a stopped stream stays stopped; OD-5 the real score records checked before the
+  install: the owner committed them (`cc665ce`) and Claude's census passed; OD-6 three review slices, one install.
+- **Waiting on the owner:** his go for plan v0.2 and the supplement's next full edition (Fable, High).
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
+  From `cc665ce` a third test fails, known: `tests/test_mhupa_launchers.py` `test_gitignore_lines` (the owner commented
+  out an ignore line that the test requires; fixed with the package, entry 70).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status

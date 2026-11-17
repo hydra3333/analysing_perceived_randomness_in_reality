@@ -1,0 +1,41 @@
+--- DEV OZLOTTO wf-a7598865.. rr-4be324ab..
+  scoring plan: canonical bytes True | search-log row 3 RANKING_REPORT | row names this attempt True | plan digest matches the row True
+  plan fields: ['attempt_id', 'availability', 'batch_id', 'cohort_digest', 'declared_tests', 'evaluator_version', 'family_ids', 'game_id', 'grid_digest', 'measures', 'mode', 'plan_digest', 'receipt_selection_policy', 'schema', 'search_log_row', 'selected_forecasts', 'window_first', 'window_last']
+  score_ledger.jsonl: 5776436 bytes, 11916 lines, canonical True, CR bytes 0, sha256 e52733790484792fdba4ecd3fae327aefaab82de298586e70b5c908a514a69c2
+    POST_OUTCOME_SCORE_RECORD_V1: 11916 lines; field sets: 1
+      11916 x ['division', 'draw_number', 'drawn_main', 'evaluator_version', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'main_matches', 'method_revision', 'mode', 'schema', 'supplementary_matches', 'track_id']
+    score keys (track, draw): 11916 distinct of 11916; draws 1475-1693; tracks 80; revisions ['1', '2']; evaluator ['WF1B_EVALUATOR_V1']; exposure flags 0; a track id: OZLOTTO:E_1:FULL_HISTORY_RAW_COUNTS_V1:TOP:WF
+  rank_ledger.jsonl: 2628349 bytes, 5958 lines, canonical True, CR bytes 0, sha256 1445a1515a9aa324225ac1f851ac667bb8b6deecd009dff25b238bf13fdb646d
+    RANK_POSITION_RECORD_V1: 5958 lines; field sets: 1
+      5958 x ['draw_number', 'evaluator_version', 'fair_var_main', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'mean_rank_main', 'method_id', 'method_revision', 'mode', 'schema', 'variant_id']
+--- DEV POWERBALL wf-3347ad11.. rr-97bb4861..
+  scoring plan: canonical bytes True | search-log row 4 RANKING_REPORT | row names this attempt True | plan digest matches the row True
+  plan fields: ['attempt_id', 'availability', 'batch_id', 'cohort_digest', 'declared_tests', 'evaluator_version', 'family_ids', 'game_id', 'grid_digest', 'measures', 'mode', 'plan_digest', 'receipt_selection_policy', 'schema', 'search_log_row', 'selected_forecasts', 'window_first', 'window_last']
+  score_ledger.jsonl: 11496022 bytes, 22884 lines, canonical True, CR bytes 0, sha256 5ebf18b3dbbb746e8767bcbd70580be6f1f5e92931bb6c19358c01fc44f2d168
+    POST_OUTCOME_SCORE_RECORD_V1: 22884 lines; field sets: 1
+      22884 x ['division', 'draw_number', 'drawn_main', 'drawn_powerball', 'evaluator_version', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'main_matches', 'method_revision', 'mode', 'powerball_match', 'schema', 'track_id']
+    score keys (track, draw): 22884 distinct of 22884; draws 1286-1576; tracks 80; revisions ['1', '2']; evaluator ['WF1B_EVALUATOR_V1']; exposure flags 0; a track id: POWERBALL:E_1:FULL_HISTORY_RAW_COUNTS_V1:TOP:WF
+  rank_ledger.jsonl: 5531484 bytes, 11442 lines, canonical True, CR bytes 0, sha256 e21106dd9169ab824df4160df96e2f89760a99cc92261dd9045479681cd08860
+    RANK_POSITION_RECORD_V1: 11442 lines; field sets: 1
+      11442 x ['draw_number', 'evaluator_version', 'fair_var_main', 'fair_var_pb', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'mean_rank_main', 'method_id', 'method_revision', 'mode', 'rank_powerball', 'schema', 'variant_id']
+--- MODE_H OZLOTTO wf-5af149ae.. mh-ba0c301b..
+  scoring plan: canonical bytes True | search-log row 8 MODE_H_REPORT | row names this attempt True | plan digest matches the row True
+  plan fields: ['attempt_id', 'batch_id', 'cohort_digest', 'declared_tests', 'evaluator_version', 'evidence_tier', 'family_ids', 'game_id', 'grid_digest', 'measures', 'mode', 'plan_digest', 'receipt_selection_policy', 'roster_digest', 'schema', 'search_log_row', 'selected_forecasts', 'study_manifest_sha256', 'window_first', 'window_last']
+  mode_h_score_ledger.jsonl: 563402 bytes, 1200 lines, canonical True, CR bytes 0, sha256 7a35198cf351fd60da08c6f4594a3b94fc9d31f2994a99aa0a800ef88b6836ef
+    POST_OUTCOME_SCORE_RECORD_V1: 800 lines; field sets: 1
+      800 x ['division', 'draw_number', 'drawn_main', 'evaluator_version', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'main_matches', 'method_revision', 'mode', 'schema', 'supplementary_matches', 'track_id']
+    RANK_POSITION_RECORD_V1: 400 lines; field sets: 1
+      400 x ['draw_number', 'evaluator_version', 'fair_var_main', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'mean_rank_main', 'method_id', 'method_revision', 'mode', 'schema', 'variant_id']
+    score keys (track, draw): 800 distinct of 800; draws 1694-1703; tracks 80; revisions ['1', '3']; evaluator ['WF1B_EVALUATOR_V1']; exposure flags 0; a track id: OZLOTTO:E_1:FULL_HISTORY_RAW_COUNTS_V1:TOP:WF
+  SCORE_COMPLETE names this ledger: True | lines 1200 | seal names it: True | attempt True
+--- MODE_H POWERBALL wf-5085cd8f.. mh-24b3eb05..
+  scoring plan: canonical bytes True | search-log row 12 MODE_H_REPORT | row names this attempt True | plan digest matches the row True
+  plan fields: ['attempt_id', 'batch_id', 'cohort_digest', 'declared_tests', 'evaluator_version', 'evidence_tier', 'family_ids', 'game_id', 'grid_digest', 'measures', 'mode', 'plan_digest', 'receipt_selection_policy', 'roster_digest', 'schema', 'search_log_row', 'selected_forecasts', 'study_manifest_sha256', 'window_first', 'window_last']
+  mode_h_score_ledger.jsonl: 607491 bytes, 1200 lines, canonical True, CR bytes 0, sha256 f4c871a49c796c1a7b5b100b21bcd1f0c8b177f2c1818f50595eaf02b1968524
+    POST_OUTCOME_SCORE_RECORD_V1: 800 lines; field sets: 2
+      640 x ['division', 'draw_number', 'drawn_main', 'drawn_powerball', 'evaluator_version', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'main_matches', 'method_revision', 'mode', 'powerball_match', 'schema', 'track_id']
+      160 x ['division', 'draw_number', 'drawn_main', 'drawn_powerball', 'evaluator_version', 'exposure_flag', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'main_matches', 'method_revision', 'mode', 'powerball_match', 'schema', 'track_id']
+    RANK_POSITION_RECORD_V1: 400 lines; field sets: 1
+      400 x ['draw_number', 'evaluator_version', 'fair_var_main', 'fair_var_pb', 'forecast_content_digest', 'freeze_receipt_digest', 'game_id', 'mean_rank_main', 'method_id', 'method_revision', 'mode', 'rank_powerball', 'schema', 'variant_id']
+    score keys (track, draw): 800 distinct of 800; draws 1577-1586; tracks 80; revisions ['1', '3']; evaluator ['WF1B_EVALUATOR_V1']; exposure flags 160; a track id: POWERBALL:E_1:FULL_HISTORY_RAW_COUNTS_V1:TOP:WF
+  SCORE_COMPLETE names this ledger: True | lines 1200 | seal names it: True | attempt True

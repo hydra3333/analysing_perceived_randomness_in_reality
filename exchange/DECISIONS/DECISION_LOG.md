@@ -934,3 +934,31 @@ the installed documents. This log is not a separate approval process.
   - **OD-6 = A:** three technical review slices, one integrated review, one install; no extra owner approvals per slice.
   - **OD-5: OPEN.** The owner questions the need and the controls; to be discussed.
 - **Nothing else is progressed until all six are agreed (the owner's instruction).**
+
+## 70. 17 November 2026, about 19:03 - OD-5 agreed and done; OD-3's fact confirmed; OD-1 to OD-6 ALL AGREED
+
+- **OD-5, the owner's words:** (18:47) "my answer: before. why cant we pop them into github as far as I can tell they are open
+  info and you can see them from there if you like and any programs can read them whenever they like (am I wrong ?) ?";
+  (18:50) "lets fix that now so it never gets lost - which 2 lines ?"; (19:03) "both close at 7.30pm (AEST) . pushed."
+- **Claude's answer:** he is right. Since RAT-34 the score records are open to both AIs; they were git-ignored for bulk and
+  for the old rule against sharing the Mode H score ledger, which no longer applies. The earlier wording about printing
+  "only counts and field names" was habit and is withdrawn.
+- **Done by the owner (commit `cc665ce`):** the development score records (two report attempts: the score ledger, the rank
+  ledger and the scoring plan each) and the two Mode H score ledgers with their scoring plans, ten files, committed
+  unchanged; and `.gitignore` with both `scores/` lines commented out.
+- **Claude's check from GitHub (the one-time census of OD-5; `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/score_census.py` and its
+  output in `evidence/`): PASS.** Every file is canonical with no CR byte; both Mode H score ledgers equal the SHA-256 in
+  their `SCORE_COMPLETE` and `MODE_H_SEALED` markers (1,200 lines each); every scoring plan matches its search-log row;
+  every (track, draw) key is unique; the record fields are the ones the installed writers define. Worth knowing for the
+  plan: the development scores of E_1 are for revision 2 (now superseded); E_1 revision 3 has no development score yet,
+  so a routine fill for it is among the first runs MHUP-B makes possible.
+- **A side effect, known and accepted for now:** Claude had advised leaving the `results/real/holdout/scores/` line in
+  place because `tests/test_mhupa_launchers.py` (`test_gitignore_lines`) requires it; with the line commented out that one
+  test fails. So the baseline on `main` from `cc665ce` is three known failing tests: the two of entry 65 and this one.
+  The MHUP-B package updates that test with the ignore list (tests only); nothing is relabelled as a skip.
+- **OD-3's fact, the owner's words:** "both close at 7.30pm (AEST)". Noon Adelaide time is 11:30 or 12:30 AEST, at least
+  seven hours earlier. The registration will record this as the owner's statement.
+- **ALL SIX AGREED (directions; the exact wording returns for ratification with the complete plan):** OD-1 A; OD-2 B
+  conditionally as the reviewer indicated; OD-3 B; OD-4 A; OD-5 the check before the install, done as above; OD-6 A.
+- **Next, on the owner's go:** code plan v0.2 and the design supplement's next full edition (Fable, High), then the
+  reviewer's focused recheck, then the owner's ratification; no code before a specific go (entry 67).
