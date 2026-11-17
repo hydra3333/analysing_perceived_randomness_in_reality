@@ -962,3 +962,19 @@ the installed documents. This log is not a separate approval process.
   conditionally as the reviewer indicated; OD-3 B; OD-4 A; OD-5 the check before the install, done as above; OD-6 A.
 - **Next, on the owner's go:** code plan v0.2 and the design supplement's next full edition (Fable, High), then the
   reviewer's focused recheck, then the owner's ratification; no code before a specific go (entry 67).
+
+## 71. 17 November 2026, about 19:07-20:10 - the owner's "go"; code plan v0.2 and supplement v0.8 sent for the recheck (EX_224)
+
+- **The owner's word (19:07):** "go" (to Claude's request to start plan v0.2 and the supplement's next full edition on
+  Fable, High). No code is covered by it (entry 67).
+- **Done (plan and design text only):** `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_2.md` (a full
+  edition; its section 1A maps every point of EX_223) and
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_AMENDMENT_CANDIDATE.md` (a full edition built from the
+  ratified v0.7's bytes by 21 counted edits; its section 1A lists them). Sent to the reviewer as EX_224 for a focused
+  recheck. v0.7 stays the ratified supplement until the owner ratifies v0.8.
+- **One point for the owner at ratification (R-1):** OD-3's "noon Adelaide time" is written as a fixed instant, 01:30 UTC
+  on the draw date. That is noon in Adelaide during daylight saving and 11:00 in standard time: never later than noon,
+  one hour stricter for about half the year, and with no time-zone rule in the code.
+- **For the owner's ratification of v0.8 (its section 13):** O-5 the opportunity rule, the cut-off and the failure rules;
+  O-6 the two kinds of development run and the canonical rule; O-7 the writer, source-file and publication wording.
+- **Model (MC-1):** the Fable task is finished. Opus is enough to read the reviewer's recheck.

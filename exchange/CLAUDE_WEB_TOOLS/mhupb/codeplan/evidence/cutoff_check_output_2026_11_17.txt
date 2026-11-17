@@ -1,0 +1,3 @@
+Tuesdays and Thursdays from 2026-11-17 to 2045-12-31: 1996 checked, 0 failures
+local Adelaide time of the cut-off: [(11, 994), (12, 1002)] (hour: number of draw dates)
+each is on the draw date, never after 12:00 Adelaide, 11 or 12 hours after local midnight, 8 hours before 09:30 UTC

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 19:15 Australia/Adelaide (OD-1 to OD-6 all agreed, entries 69 and 70; waiting for the owner's go for plan v0.2).
+**Last updated:** 17 November 2026, about 20:10 Australia/Adelaide (plan v0.2 and supplement v0.8 with the reviewer, EX_224; entry 71).
 
 ## For the owner: NOW
 
@@ -47,7 +47,14 @@ durable EX messages are authoritative.
   and blind to the outcome (else stop); OD-3 noon Adelaide time as the last moment for OV-1's pre-draw entry (the owner:
   both games close at 7.30pm AEST); OD-4 a stopped stream stays stopped; OD-5 the real score records checked before the
   install: the owner committed them (`cc665ce`) and Claude's census passed; OD-6 three review slices, one install.
-- **Waiting on the owner:** his go for plan v0.2 and the supplement's next full edition (Fable, High).
+- **PLAN v0.2 AND SUPPLEMENT v0.8 (AMENDMENT CANDIDATE) ARE WITH THE REVIEWER (EX_224; entry 71):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_2.md` and
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_AMENDMENT_CANDIDATE.md`. v0.7 stays the ratified supplement
+  until the owner ratifies v0.8.
+- **Waiting on the reviewer:** its focused recheck (R-1 to R-6) and its recommendation on ratification.
+- **Then the owner:** ratifying plan v0.2 and supplement v0.8 together (O-5 to O-7; note R-1: the cut-off is written as
+  01:30 UTC, which is noon Adelaide daylight time and 11:00 standard time). Only after that, and on his specific go,
+  does coding start (entry 67).
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
