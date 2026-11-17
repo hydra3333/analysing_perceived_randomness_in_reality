@@ -780,3 +780,19 @@ the installed documents. This log is not a separate approval process.
   removed the relay step. Claude's slips: one inaccurate commit message (corrected in entry 54) and one claim about
   numerical loss stated before it was shown (withdrawn). Lesson kept: check a guarantee by exact computation before
   writing the word.
+
+## 62. 17 November 2026, about 14:54 - the paperwork before the code round: register v0.31 and H-1 v4 (EX_214)
+
+- **The owner's words:** "re "I recommend doing the paperwork first and then starting the code work in a fresh Claude chat.
+  This chat is very long, and the code round is the worst place to lose one. Everything a new chat needs is on GitHub now;
+  the finished H-1 v4 would make the takeover cleaner." ok, great call. I assume just before we do the actual handover you
+  will have re-checked and updated the handover and/or blurb if required. SO, yes to I give chatgpt the blurb then you do
+  the paperwork."
+- **Done (on Opus):** register v0.31 (`exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_31.md`, SHA-256
+  `465dc50a55120e8afdd983475c7d94b8ac0ff654e46507df96532862ac7fb5f2`) and H-1 v4 with its blurb
+  (`exchange/CLAUDE_WEB_TOOLS/h1v4/out/`, SHA-256 `0f34ec4c...2c2` and `2cfa6cf5...67be`), each built by a counted-edit builder
+  from the installed bytes and reproduced from scratch. Sent for the reviewer's documentary review as EX_214. Register
+  v0.31 records RAT-33 and asks for RAT-34 (register v0.31, H-1 v4 and its blurb, and the approach of 16 November 2026 in
+  force with them).
+- **Claude's commitment (the owner's assumption, confirmed):** just before the handover to a new Claude chat, Claude
+  re-checks H-1 v4, its blurb and `exchange/CONTINUITY_NOW.md` against GitHub and updates them if anything has moved.

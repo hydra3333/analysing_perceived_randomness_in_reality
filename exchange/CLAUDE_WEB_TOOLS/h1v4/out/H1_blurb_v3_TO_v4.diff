@@ -1,0 +1,103 @@
+--- doc/HANDOVER/Claude_Primary_Handover_H1_v3_introductory_blurb.md	2026-11-15 18:06:48.725725140 +1030
++++ exchange/CLAUDE_WEB_TOOLS/h1v4/out/Claude_Primary_Handover_H1_v4_introductory_blurb.md	2026-11-17 14:59:14.356725313 +1030
+@@ -1,19 +1,19 @@
+-# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v3
++# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v4
+ 
+ The project owner pastes the text below the line into a new Claude chat to start it. Nothing needs attaching: the repository
+ is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `main` made with
+ `git archive -o E:\TEMP\repo_main_no_data.zip HEAD -- . ":(exclude)source_data" ":(exclude)results" ":(exclude)transitory_data" ":(exclude)GAIS"`.
+ 
+-Written by Claude on 15 November 2026 with H-1 v3, the full edition that replaces H-1 v2 (its status is in the register).
++Written by Claude on 17 November 2026 with H-1 v4, the full edition that replaces H-1 v3 (its status is in the register).
+ The ChatGPT reviewer chat that took over on 14 November 2026 is in place and checks the new Claude chat's first reply. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
+ 
+-**Note for the owner: which model, when** (Claude's recommendation, 15 November 2026):
++**Note for the owner: which model, when** (Claude's recommendation, 17 November 2026):
+ 1. **Start the new chat on Opus 5.5.** The takeover is reading and explaining, which Opus does well and cheaply.
+-2. **Stay on Opus** for the Mode H operations (reading your pasted outputs, the per-game steps of the readiness sheet) and for
+-   documents, task files and packaging.
+-3. **Switch to Fable (High)** for MHUP-B's design and the core of its code, any BLOCKER-level review finding, any unexplained
+-   STOP during Mode H, or a cold read before a review round. The new chat should say "Suggest switching to Fable (High) for this"
+-   at those points and wait for your "go"; when the Fable work is done it should say so.
++2. **Stay on Opus** for documents, task files, packaging and reading run outputs.
++3. **Switch to Fable (High)** for MHUP-B's code plan and the core of its code (the evidence score, the live path), any
++   BLOCKER-level review finding, any unexplained STOP, or a cold read before a review round. The new chat should say
++   "Suggest switching to Fable (High) for this" at those points and wait for your "go"; when the Fable work is done it should
++   say so.
+ 
+ **Before you paste it:** fill in the last paragraph. "See exchange/CONTINUITY_NOW.md" is usually enough, as that page is kept
+ current; add anything that happened after its last update.
+@@ -22,7 +22,8 @@
+ 
+ You are Claude, taking over as the **primary designer and coder** of a research project. The Claude chats before you did this
+ work; the last one ended because it had grown too long. Everything it knew is in the public repository:
+-- the handover **H-1 v3** (`doc/HANDOVER/Claude_Primary_Handover_H1_v3.md`), one complete file: read all of it, including
++- the handover **H-1 v4** (`doc/HANDOVER/Claude_Primary_Handover_H1_v4.md`), one complete file: **read its section 0B first**,
++  then all of it, including
+   section 0A (four things that trip a new chat) and section 12 "Working knowledge";
+ - its tools in `exchange/CLAUDE_WEB_TOOLS/`, and the Mode H readiness files in `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/`;
+ - the one-page recovery index `exchange/CONTINUITY_NOW.md`: read it first; it says what is waiting now.
+@@ -56,13 +57,14 @@
+ 
+ **How your takeover works (as HO-2; binding).**
+ 1. **Read and verify first.** Clone the repository with its full history (`git fetch --unshallow` if the clone is shallow).
+-   Read H-1 v3 in full. Then: the newest register's new sections (`doc/RATIFICATION_REGISTER_v0_30.md` or later, just before
++   Read H-1 v4 in full, section 0B first. Then: the newest register's new sections
++   (`doc/RATIFICATION_REGISTER_v0_31.md` or later, just before
+    "Interpretation and verification"); the design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`
+-   (sections 0 to 10; Appendix J is the install procedure); the owner's decision records in `exchange/DECISIONS/`; the readiness
+-   sheet `exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md` with its reviews EX_167, EX_168 and EX_177; H-2
+-   v2 (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md`); the newest EX messages; `exchange/OWNER_ROADMAP.md`; `exchange/OWNER_REMINDERS.md`;
+-   `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`; `exchange/README.md`. Check the hashes H-1 quotes with a tool. Never open
+-   anything under `source_data/`, `results/` or `transitory_data/`.
++   (sections 0 to 10; Appendix J is the install procedure); the owner's decision records in `exchange/DECISIONS/`; the MHUP-B
++   design supplement `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_7.md` with its reviews EX_207 to EX_213; H-2 v2
++   (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v2.md`) and the reviewer's own H-2 v3 candidate beside it; the newest EX messages; `exchange/OWNER_ROADMAP.md`; `exchange/OWNER_REMINDERS.md`;
++   `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`; `exchange/README.md`. Check the hashes H-1 quotes with a tool. Since RAT-34
++   you may read `source_data/` and `results/` (H-1 section 0B, item 4); never write there.
+ 2. **Your first substantive reply to the owner** explains, in your own words and in plain English: what is installed, designed,
+    ratified, reviewed-but-not-authorised, and open; the immediate work and its order; the safety, scientific and operational
+    restrictions; exactly what you are authorised to do next and what needs the owner's further approval; any discrepancy
+@@ -72,7 +74,22 @@
+ 4. A PASS, a ratified design or a reviewed readiness sheet authorises no install or run; every check, install, holdout step and
+    dependency change has its own owner approval.
+ 
+-**Where things stood on 15 November 2026.**
++**Where things stood on 17 November 2026 (this overrides the older bullets below; H-1 section 0B has the detail).**
++- **Mode H is complete:** Oz Lotto sealed 15 November, Powerball 16 November; both reports read independently by the reviewer
++  and Claude, and the readings agree: no statistically significant predictive advantage was demonstrated under the predeclared
++  Mode H tests (EX_200 to EX_205). The freeze has ended. The owner committed the results at `c7622fa` (D5).
++- **The approach the owner agreed on 16 November 2026**, reviewed (EX_206) and in force from RAT-34
++  (`exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md`): all draws are treated the same and the AI chats may read draw values
++  and results; no lottery websites or results searches by the AIs; results count only from the reviewed programs (chat
++  calculations are "suggestive"); nothing runs without his go; Claude commits reviewed and ratified documents directly, code
++  still goes by reviewed package and his Windows install, Claude never writes the data folders, nothing is deleted. The
++  reviewer commits its own replies to `exchange/`: fetch before reading or numbering anything.
++- **The MHUP-B design supplement is ratified** (RAT-33; `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_7.md`):
++  eight tested layers, a league table of every method with `current` and archive folders, re-forecasting of every draw as
++  development evidence, and one exact evidence score per game as the only confirmatory forward test. Design only.
++- **Next:** the MHUP-B code plan (Fable, High), reviewed before any code.
++
++**Where things stood on 15 November 2026 (history).**
+ - **Installed:** MHUP-A (13 November 2026: Mode H's commands and score, the version-2 master rules, the updater v0.2, the
+   install and release records); E_1 revision 3 released; 571 tests pass on Windows. MHUP-A is closed.
+ - **Decided by the owner (13 November 2026):** Mode H first, game by game, then the weekly-session package MHUP-B; the 40
+@@ -93,8 +110,8 @@
+ - The one production results source is **Lotterywest-GOV** (`www.lotterywest.wa.gov.au`, HTTPS), reached only by the owner's
+   approved tools. Never `oz.lotterywest.com`, The Lott, an API, a scraper or a lottery-results search of any kind. You never
+   contact any lottery website.
+-- Never display, paste or compute with an outcome for Powerball draw 1577 or later, or Oz Lotto draw 1694 or later. Never open
+-  `source_data`, `results` or `transitory_data`.
++- (Replaced from RAT-34 by the owner's agreed approach of 16 November 2026: the AI chats may see draw values and read
++  `source_data` and `results`. They never write there, and they never fetch results themselves.)
+ - The orphan marker blocks all launches; only the owner's approved manual procedure clears it.
+ - Three safety switches stay False; the allowlist stays empty.
+ - No install, real-data run, holdout opening, Mode H step, results update, weekly session, process termination, destructive or
+@@ -120,5 +137,5 @@
+   message, so nothing lives only in the chat. At every stage judge whether to refresh the handovers; when the chat grows long,
+   say so and offer to write the next handover first.
+ 
+-Since 15 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
++Since 17 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
+ The repository commit is `<commit>`. Today's date is `<date>`.

@@ -1,0 +1,1 @@
+| H-1 v3 (predecessor; OWNER-RATIFIED 15 November 2026, RAT-32; installed at `5b4df41`) | `doc/HANDOVER/Claude_Primary_Handover_H1_v3.md`, `ddefe7006aa17cfd0a9a8996bd7122aed537d8d66accee92b2e5d737aefbaa54`; its blurb `d1df63bf18bc7becc96212ac0d76d519a2a5c4d6b367251116b294382573dd4d` |

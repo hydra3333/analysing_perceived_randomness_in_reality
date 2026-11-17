@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 14:55 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 16:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -37,8 +37,12 @@ durable EX messages are authoritative.
   before its first draw. **It approves a design only: no code, run or install.** **Next:** the code plan in the eight
   layers (Fable, High; on the owner's go), with the code round's gates as the supplement lists them; the supplement is
   numbered in register v0.31 and copied into `doc/` unchanged.
-- **Also due:** register v0.31 and finishing H-1 v4 (Opus). Claude recommends doing these before the code round and
-  starting the code round in a fresh Claude chat, because this chat is very long.
+- **Register v0.31 and H-1 v4 are written** (entry 62; EX_214; `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_31.md`
+  and `exchange/CLAUDE_WEB_TOOLS/h1v4/out/Claude_Primary_Handover_H1_v4.md` with its blurb). **Waiting for:** the reviewer's
+  documentary review (it commits its reply to `exchange/`), then the owner's RAT-34 (the two documents, the blurb, and the
+  approach of 16 November 2026 in force with them). Then Claude commits the ratified files and the RAT-33 supplement into
+  `doc/` directly and checks them. **Then the code round starts in a fresh Claude chat**, from the H-1 v4 blurb with
+  "see exchange/CONTINUITY_NOW.md"; Claude re-checks H-1 v4, the blurb and this page just before that handover.
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
@@ -54,13 +58,12 @@ durable EX messages are authoritative.
 ## If a chat ends
 
 - **Claude chat ended:** start a new Claude chat by pasting the blurb
-  `exchange/CLAUDE_WEB_TOOLS/h1v4/out/Claude_Primary_Handover_H1_v4_DRAFT_introductory_blurb.md` (the DRAFT of 16 November
-  2026, which already describes the state after Mode H and the agreed approach). In its last line write:
-  "see exchange/CONTINUITY_NOW.md". The new chat then reads the H-1 v4 DRAFT beside it, section 0B first. (The installed,
-  ratified pair is still H-1 v3 and its blurb in `doc/HANDOVER/`; they stop at 15 November.)
-- **ChatGPT reviewer chat ended:** start a new ChatGPT chat with
-  `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`, adding: "Then read exchange/CONTINUITY_NOW.md and
-  exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md". Optional check: blind questions as in EX_178.
+  `exchange/CLAUDE_WEB_TOOLS/h1v4/out/Claude_Primary_Handover_H1_v4_introductory_blurb.md` (after RAT-34 the same file is in
+  `doc/HANDOVER/`). In its last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v4 beside it, section
+  0B first. (The installed, ratified pair until RAT-34 is H-1 v3 and its blurb; they stop at 15 November.)
+- **ChatGPT reviewer chat ended:** start a new ChatGPT chat with the reviewer's own blurb,
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_CANDIDATE_introductory_blurb.md` (or, if the reviewer prefers, the installed
+  `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`), adding: "Then read exchange/CONTINUITY_NOW.md".
 
 ## Installed handovers (authoritative)
 

@@ -1,0 +1,8 @@
+- **A check must not assert a property the production code does not rely on** (the official-page check r1, 15 November 2026: it compared draw numbers in page order; the page lists the newest first; the updater does not care). Test stand-ins should include newest-first and shuffled pages; adding those cases to the updater's own tests is a carried item (tests only).
+- **Store each owner CMD window in `exchange/RUNS/` as it arrives**, not afterwards (EX_196).
+- **A dynamically imported module that defines a dataclass must be put in `sys.modules` before it is executed**; test such tools on more than one Python version (the OUTLANDISH export, 16 November 2026).
+- **An unnumbered reviewer message pasted by the owner is filed under a letter suffix** (EX_203A), never under the next free EX number; and fetch before numbering, now that the reviewer commits its own replies.
+- **The family result is the Bonferroni figure; the N1 maximum is a reference.** A total needed to pass is a threshold, not the size of effect a study can detect (EX_203, EX_205).
+- **A normal cut-off on a sum of exactly standardised scores is not an exact error rate** (EX_208's counterexample: 1.0718% at a nominal 1%). Before writing "guaranteed", prove it or compute it exactly; the evidence score of the MHUP-B supplement is the exact replacement.
+- **When the owner's wish and a rule conflict, say plainly which rules have a safety reason and which do not, and let him decide** (16 November 2026: he dropped the draw-visibility rules and kept those with a safety reason).
+- **Keep the live path and the reporting apart** (MHUP-B supplement section 2): a report that fails must never stop, delay or reorder a frozen forecast.
