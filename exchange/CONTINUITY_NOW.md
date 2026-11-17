@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 00:22 Australia/Adelaide (joint working principle agreed, entry 81; slice 1 PASSED, EX_231; slice 2 next on the owner's go).
+**Last updated:** 18 November 2026, 00:29 Australia/Adelaide (handover check before slice 2, entry 82; working principle entry 81; slice 1 PASSED, EX_231; slice 2 next on the owner's go).
 
 ## For the owner: NOW
 
@@ -34,14 +34,12 @@ durable EX messages are authoritative.
 - **THE CLAUDE HANDOVER IS DONE (HO-2; entry 64).** A fresh Claude chat took over on 17 November 2026 from H-1 v4: first
   reply EX_216, the reviewer's five blind questions EX_217, the answers EX_218, **EX_219: TAKEOVER PASS**. The owner
   authorised normal work at 16:01.
-- **NOW: THE MHUP-B CODE PLAN IS WITH THE REVIEWER (EX_220; entry 65).** Draft v0.1:
+- **History (the plan stage, now complete):** the code plan went to the reviewer as EX_220 (entry 65). Draft v0.1:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_1.md`, with the OV-1 numerical probe and the evidence
-  beside it. **No implementation code exists. None is written until the plan has passed review, the owner has decided
-  OD-1 to OD-6 (plan section 12), the plan is complete and OWNER-RATIFIED, and the owner then gives a specific go for
-  code (entry 67).** The Fable task (the plan) is finished: Opus is enough
-  until the reviewer replies.
-- **The reviewer's review is in: EX_223** (supersedes EX_221 and EX_222): PASS WITH REQUIRED CORRECTIONS (B01-B04,
-  C01-C04). Next: plan v0.2 and the smallest design amendment (Fable, High), then a focused recheck, then ratification.
+  beside it. The condition of entry 67 (review, OD-1 to OD-6, ratification, then a specific go for code) was met by
+  RAT-35 (entry 74) and the owner's code go (entry 75).
+- **History:** EX_223 (supersedes EX_221 and EX_222): PASS WITH REQUIRED CORRECTIONS (B01-B04, C01-C04), answered by
+  plan v0.2 and supplement v0.8 (EX_224 to EX_227), ratified as RAT-35.
 - **OD-1 TO OD-6 ARE ALL AGREED BY THE OWNER (entries 69 and 70), as directions:** OD-1 two kinds of development run
   (routine fill; exploratory rerun); OD-2 a missed week counts as a neutral factor of 1 under a rule fixed in advance
   and blind to the outcome (else stop); OD-3 noon Adelaide time as the last moment for OV-1's pre-draw entry (the owner:
@@ -82,7 +80,9 @@ durable EX messages are authoritative.
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
-  PASS; cautions C1 and C2 for the code plan). **Awaited: its review of the code plan (EX_220).** (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
+  PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
+  applied). **Awaited: nothing until slice 2 is submitted.** The joint working principle (entry 81) was agreed by chat
+  paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.
@@ -91,12 +91,41 @@ durable EX messages are authoritative.
 ## If a chat ends
 
 - **Claude chat ended:** start a new Claude chat by pasting `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`.
-  In its last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v4 beside it, section 0B first.
+  In its last line write: "see exchange/CONTINUITY_NOW.md, including its section 'Resuming the MHUP-B slice work', and
+  exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md". The new chat reads H-1 v4 beside it, section
+  0B first. H-1 v4 predates the code round; this page, the decision log (entries 65 to 82) and EX_220 to EX_231 carry
+  what happened since. A new H-1 edition is due with the integrated package (plan section 11), not before.
 - **ChatGPT reviewer chat ended:** H-2 v2 r1 is still the installed reviewer handover. The reviewer's newest starter text is
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_RATIFICATION_CANDIDATE_20261117_introductory_blurb.md` (a candidate; by its
   own instructions, until H-2 v3 is ratified the new reviewer chat is pointed to the installed H-2 v2 r1 and register
   v0.31; the installed starter is `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`). Add: "Then read
   exchange/CONTINUITY_NOW.md". The H-2 v3 CANDIDATE of 16 November is a preserved draft.
+
+## Resuming the MHUP-B slice work (for a new Claude chat)
+
+- **What governs:** `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (L5 section 5 and section 6 for OV-1; L6 section 5;
+  sections 7, 9, 13, 14) and `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (6.5 and 6.8 for OV-1), with the
+  design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`. Apply the working principle (entry 81).
+- **Where the code is:** slice 1 in full at `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (README, `WORKING_NOTES.md`, the
+  edit scripts, the new files by final path in `slice1_new/`, the suite runner, the mutation tool, the evidence). Nothing
+  is installed; `src/` and `tests/` on `main` are as at `cc0ab73`. The cloud workspace of an ended chat is gone: rebuild
+  from the repository. Slice 2 goes in `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` in the same layout, built on top of
+  slice 1's tree (never in `src/` or `tests/` on `main`).
+- **Rebuild and test (cloud, from the repository root):**
+  `git clone <repo> base`, then
+  `sh exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/build_dev_slice1.sh base dev exchange/CLAUDE_WEB_TOOLS/mhupb/slice1`,
+  `python3 -I exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/run_suite.py dev OUT 2` (one module per process, without class
+  `T12Determinism`), and `python3 -I exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/mutations_slice1.py <a separate copy of dev>`.
+  Second interpreter: `uv python install 3.15` then `uv venv --python 3.15 venv315` and
+  `uv pip install --python venv315 numpy scipy psutil requests beautifulsoup4 selenium`; run the suite with
+  `venv315/bin/python -I`. Use absolute paths in the build script's arguments.
+- **Last known results:** EX_230's tree 623 tests, 0 failing on 3.13.18 and 3.15.0b4, 57 mutants caught, digest
+  `14d07246...596c8017a`. After N-231-1 only the two weekly modules (46 tests) were rerun, both Pythons pass, and the new
+  mutant is caught; slice 2's submission carries the full-suite run.
+- **Slice 2 must:** call `weekly_records.verify_named_records` before counting any freeze line in OV-1; add the
+  canonical-coverage reader to `score_identities.py` for routine fill; treat the missed-week rule as part of OV-1's validity
+  (correct and sufficiently tested); keep restart corner cases and development-run plumbing plain, and name any lean
+  build of a ratified item in the covering note. Next free EX number after `git fetch`: EX_232 at the time of writing.
 
 ## Installed handovers (authoritative)
 
@@ -137,8 +166,9 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
 2. Done 17 November: the handover to a fresh Claude chat (EX_216 to EX_219; entry 64).
-3. **The MHUP-B code plan** in the supplement's eight layers (Fable, High), reviewed before any code; then the code, its
-   review, the Windows rehearsal (with a full-suite run after step 18) and the owner's install, each on its own go; then the
-   registration of OV-1 before its first forward draw, and the runs (each on its own go).
+3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). **Next: slice 2** (Fable, High, on the owner's go),
+   then slice 3 (Opus), then the integrated package with the document amendments (plan section 11), the Windows
+   rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
+   registration of OV-1 before its first forward draw, and the runs, each on its own go.
 4. The reviewer's H-2 v3, for a separate ratification (no need to wait for it).
 5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).

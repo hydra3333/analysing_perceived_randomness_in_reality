@@ -1119,3 +1119,15 @@ the installed documents. This log is not a separate approval process.
   process; no EX round was needed. Entries 78 and 80 stand.
 - **For slice 2:** the missed-week eligibility rule is part of OV-1's validity, so it gets correct implementation and
   sufficient tests, not recovery machinery. Slice 2 still waits on the owner's go, on Fable (High).
+
+## 82. 18 November 2026, 00:29 - handover check before slice 2
+
+- **Asked by the owner (00:28):** does the handover need updating before slice 2, so no continuity is lost?
+- **Claude's assessment:** a new H-1 edition is not needed now. H-1 v4 is installed and ratified; a new edition would need
+  review and ratification and is already scheduled with the integrated package (plan section 11). What a successor would
+  lack is how to resume the code work, and some lines of `CONTINUITY_NOW.md` were out of date (they still said the code
+  plan was with the reviewer and that no code existed).
+- **Done:** `CONTINUITY_NOW.md` corrected and given a section "Resuming the MHUP-B slice work" (what governs, where the
+  slice 1 code is, how to rebuild and test it including the second Python, the last known results, what slice 2 must do).
+  The "If a chat ends" line now points a new Claude chat to that section and to the working principle. The slice 1 tools
+  in the repository were checked identical to the working copy.
