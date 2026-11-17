@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 12:50 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 13:00 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -32,9 +32,9 @@ durable EX messages are authoritative.
   (v0.1 to v0.3 kept as history). Full scope in eight tested layers with the live path isolated; the league table; the
   cross-source read contract; back-history, with the holdout draws open to re-forecasting by every variant as development
   evidence (owner, entry 53) and the sealed Mode H records kept as separate history; the overall measure OV-1 as an exact
-  evidence score (it replaces v0.2's five readings after the reviewer's EX_208). **Waiting for:** the owner's choice of
-  Option P (a score per game, bar 40; recommended) or Option J (both games together, bar 20; needs an exception to R3
-  17.3.1); then the reviewer's review of v0.4 (six questions); then the owner's decisions. Only then the code plan.
+  evidence score (it replaces v0.2's five readings after the reviewer's EX_208). **The owner chose Option P (entry 55): a score per game,
+  bar 40 each; no exception to R3 17.3.1.** **Waiting for:** the reviewer's review of v0.4 (six questions), read with
+  Option P as decided; then the owner's remaining decisions. Only then the code plan.
 - **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the decisions on v0.4, MHUP-B's code plan (Fable, High).
 - **Blocks or STOPs:** none.
 

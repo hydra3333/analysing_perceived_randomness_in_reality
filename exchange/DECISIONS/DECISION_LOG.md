@@ -671,3 +671,12 @@ the installed documents. This log is not a separate approval process.
 - **Correction of a commit message:** commit `980004d` says it holds entries 53-54 and a CONTINUITY_NOW update; entry 53 was
   already in `02f97cd`, and entry 54 and the CONTINUITY_NOW update are in the commit after it.
 - **Open:** the owner's choice of Option P or J; the reviewer's review of v0.4 (six questions). Nothing is authorised.
+
+## 55. 17 November 2026, about 12:55 - OWNER DECISION: the overall measure is scored per game (Option P)
+
+- **Where:** Claude's tap question in the chat (the owner was on his phone). Asked: should the overall measure be scored per
+  game or for both games together? Offered: "Per game (Recommended)", "Both games together", "Ask ChatGPT first".
+- **The owner's answer:** "Per game (Recommended)".
+- **So:** OV-1 has one evidence score for Powerball and one for Oz Lotto, each with a bar of 40 (2.5% each, 5% in all). No
+  exception to R3 17.3.1 is needed; games are never pooled. The joint figure may be shown as secondary. Draft v0.4 section
+  6.3 still shows both options; the next revision (after the reviewer's review of v0.4) will state Option P as decided.
