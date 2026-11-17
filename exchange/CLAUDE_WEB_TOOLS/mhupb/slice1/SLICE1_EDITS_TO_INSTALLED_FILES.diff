@@ -1,0 +1,465 @@
+--- a/src/methods/_common/contract_vocab.py
++++ b/src/methods/_common/contract_vocab.py
+@@ -66,14 +66,18 @@
+ ))
+ 
+ # Run modes, products, paths and tiers (section 9.1).
+-RUN_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC',
++RUN_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'CATCH_UP', 'IN_SAMPLE_DIAGNOSTIC',
+                        'SYNTHETIC_CONTRACT_TEST', 'SYNTHETIC_NULL', 'SYNTHETIC_PLANTED',
+                        'SYNTHETIC_IDENTIFIABILITY', 'BENCHMARK_REAL', 'BENCHMARK_SYNTHETIC'))
+ SYNTHETIC_MODES = frozenset(m for m in RUN_MODES if m.startswith('SYNTHETIC_'))
+ # E2R-R44, R44A. REAL_HOLDOUT was unreserved by MHUP-R (design v0.1r5 section 5.1): it opens only for a ticketed
+ # request bound to the game's one Mode H plan, with the opening record present (the dispatch gate decides).
+-RESERVED_MODES = frozenset(('FINAL_NEXT_DRAW', 'IN_SAMPLE_DIAGNOSTIC'))
+-REAL_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW'))   # every mode that reads a real master
++# FINAL_NEXT_DRAW was unreserved by MHUP-B (design v0.1r7 section 6.4), and CATCH_UP added as a run mode with its own
++# evidence tier: both open only for a ticketed request bound to a weekly session, above the holdout, with the game's
++# developed record (the dispatch gate decides), and under the mode-to-pin rule (the runner, after the reader).
++RESERVED_MODES = frozenset(('IN_SAMPLE_DIAGNOSTIC',))
++REAL_MODES = frozenset(('REAL_DEVELOPMENT', 'REAL_HOLDOUT', 'FINAL_NEXT_DRAW', 'CATCH_UP'))   # every mode that reads a real master
++WEEKLY_MODES = frozenset(('FINAL_NEXT_DRAW', 'CATCH_UP'))                 # session-bound, above the holdout only
+ # The binding a real-mode request above the development prefix must carry (design 3.4): the Mode H plan, a weekly
+ # session, or the owner's unofficial diagnostic route.
+ BINDING_KINDS = frozenset(('MODE_H_BATCH', 'WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'))
+@@ -81,7 +85,7 @@
+ PRODUCT_KINDS = frozenset(('WF_FORECAST', 'DIAGNOSTIC_OUTPUT', 'SYNTHETIC_TEST_OUTPUT',
+                            'IS_DIAGNOSTIC_ENTRY', 'BENCHMARK_TIMING'))
+ EXECUTION_PATHS = frozenset(('STANDALONE', 'COORDINATED'))
+-EVIDENCE_TIERS = frozenset(('DEVELOPMENT_WF_EXPLORATORY', 'HOLDOUT_MODE_H', 'PROSPECTIVE',
++EVIDENCE_TIERS = frozenset(('DEVELOPMENT_WF_EXPLORATORY', 'HOLDOUT_MODE_H', 'PROSPECTIVE', 'CATCH_UP',
+                             'IS_DESCRIPTIVE', 'NOT_EVIDENCE'))
+ DERIVED_SCORING_STATES = frozenset(('NOT_YET_SCORED', 'SCORED', 'NEVER_SCORED'))  # report time only
+ 
+@@ -100,6 +104,10 @@
+             return 'WF_FORECAST', 'DEVELOPMENT_WF_EXPLORATORY'
+         if run_mode == 'REAL_HOLDOUT':
+             return 'WF_FORECAST', 'HOLDOUT_MODE_H'           # E2R-R41's row, unreserved as written (MHUP-R)
++        if run_mode == 'FINAL_NEXT_DRAW':
++            return 'WF_FORECAST', 'PROSPECTIVE'              # E2R-R41's row, unreserved as written (MHUP-B)
++        if run_mode == 'CATCH_UP':
++            return 'WF_FORECAST', 'CATCH_UP'                 # the new row (design 6.4; E2R-R41 amended)
+         if run_mode in SYNTHETIC_MODES:
+             return 'SYNTHETIC_TEST_OUTPUT', 'NOT_EVIDENCE'
+     elif schema == DIAGNOSTIC:
+--- a/src/methods/_common/contract_forecast.py
++++ b/src/methods/_common/contract_forecast.py
+@@ -281,6 +281,9 @@
+     if mode == 'REAL_HOLDOUT':
+         if not (p.holdout_first <= target <= p.holdout_last):
+             raise ValueError(f'{where}: a REAL_HOLDOUT record must name a holdout draw')
++    elif mode in V.WEEKLY_MODES:
++        if target <= p.holdout_last:
++            raise ValueError(f'{where}: a {mode} record must name a draw after the holdout')
+     elif mode in V.REAL_MODES:
+         if target <= p.first_draw:
+             raise ValueError(f'{where}: target has no history')
+--- a/src/methods/_common/contract_task.py
++++ b/src/methods/_common/contract_task.py
+@@ -46,7 +46,7 @@
+     """One data kind for every real mode (design 3.3): the view a method sees, and so its permitted-view digest and
+     every tie-break, depend on the prefix, the configuration and the software only, never on the run mode. A
+     synthetic mode keeps its own name, as before."""
+-    return REAL_VIEW_DATA_KIND if run_mode in V.REAL_MODES or run_mode == 'CATCH_UP' else run_mode
++    return REAL_VIEW_DATA_KIND if run_mode in V.REAL_MODES else run_mode
+ 
+ 
+ def permitted_view_digest(view, run_mode: str) -> str:
+--- a/src/methods/_common/contract_runner.py
++++ b/src/methods/_common/contract_runner.py
+@@ -120,6 +120,28 @@
+                          f'last row is version {version}; an official run must pin the current master')
+ 
+ 
++def _check_mode_pin(repo_root: Path, request: Mapping) -> None:
++    """Design 3.4(a), the pin-dependent half of the mode rules, checked where the pin is read (MHUP-B; code plan CF-2):
++    FINAL_NEXT_DRAW only for target = last_draw(v) + 1 of the pinned version v, so a FINAL_NEXT_DRAW record can never
++    exist for a draw whose result the pinned master already holds; CATCH_UP, a session-bound REAL_DEVELOPMENT run and
++    the owner's diagnostic route only for targets at or below last_draw(v). Read after the reader has verified the
++    chain and the pin; no draw is decoded here."""
++    mode, kind = request['run_mode'], binding_kind(request)
++    if mode not in V.WEEKLY_MODES and kind not in ('WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'):
++        return
++    from _common import master_versions as MV
++    _raw, rows, _evidence = MV.load_verified_source(Path(repo_root), request['game_id'])
++    last = MV.resolve_pin(rows, request['ledger_version'], request['master_sha256']).last_draw
++    target = request['target_draw_number']
++    if mode == 'FINAL_NEXT_DRAW':
++        if target != last + 1:
++            raise ValueError(f'MODE_PIN: FINAL_NEXT_DRAW names only the draw after the pinned master\'s last draw '
++                             f'({last + 1}), not {target}')
++    elif target > last:
++        raise ValueError(f'MODE_PIN: a {mode} run with this binding names only draws the pinned master holds '
++                         f'(up to {last}), not {target}')
++
++
+ def _numeric(exc: BaseException) -> bool:
+     text = str(exc).lower()
+     return any(w in text for w in ('non-finite', 'nan', 'infinity', 'negative zero', 'outside int64'))
+@@ -145,7 +167,7 @@
+         raise RunRefused(refusal_text(*ident, 'REAL_DEVELOPMENT_DISABLED: contract runs on the real '
+                                       'development masters are switched off'), 'REAL_DEVELOPMENT_DISABLED')
+     try:
+-        if r.get('run_mode') in V.REAL_MODES or r.get('run_mode') == 'CATCH_UP':
++        if r.get('run_mode') in V.REAL_MODES:
+             # Every real mode reads the project itself, nothing else (design 5.1). The new real modes are gated by the
+             # owner's create-only records, the tickets and the binding gates, not by a switch (MHUP-R).
+             if Path(repo_root).resolve() != PROJECT_ROOT.resolve():
+@@ -167,6 +189,7 @@
+         try:
+             view = load_pinned_draw_view(repo_root=Path(repo_root), run_manifest=reader_pin(request))
+             _check_pin_current(repo_root, request)
++            _check_mode_pin(repo_root, request)
+             pub.provenance = source_provenance(repo_root, request)
+             task = build_method_task(request, declaration, view)
+         except Exception as exc:
+--- a/src/evaluation/outcome_reader.py
++++ b/src/evaluation/outcome_reader.py
+@@ -16,7 +16,8 @@
+ draw number is taken from its RAW FIRST FIELD only; a line is decoded only when its number is a requested target.
+ No line at or after the holdout's first draw is ever decoded unless the freeze-before-outcome rule released that
+ draw (then only the released, requested holdout draws are decoded); a draw after the holdout is never decoded in
+-this package (the weekly freeze-line rule arrives with MHUP-B).
++the weekly freeze-line rule releases it (MHUP-B, design 6.3: the game's developed record, a freeze line for the
++draw whose every named record verifies, and the draw accepted in the master).
+ 
+ Outcomes are returned only for the requested targets. For Oz Lotto, the three supplementary numbers are returned
+ only so that the caller can compute `supplementary_matches` and the division (R2 2.5; R3 17.8); the caller never
+@@ -50,12 +51,17 @@
+     For a holdout draw: only when the game's one Mode H batch has its BATCH_COMPLETE and SCORING_STARTED markers,
+     SCORING_STARTED's roster digest equals the exact roster of the plan (every planned pair with its DONE ticket, by
+     identity, computed here from the records), the target is one of the plan's, and SCORE_COMPLETE does not yet
+-    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout: never in this package (the weekly
+-    freeze-line rule is MHUP-B's). Anything invalid or absent refuses (False)."""
++    exist (after it, no outcome is re-read, 5.2). For a draw after the holdout (MHUP-B, design 6.3 and Appendix E): only
++    when the game's developed record exists, the forecast ledger (verified in full: canonical lines, the chain, every
++    line's shape) holds a freeze line for the target, every record that line names verifies (its own session record
++    and digest, its DONE ticket and digest, its run folder and digest), and the target is at most the last draw of
++    the ledger's current last row. Anything invalid or absent refuses (False)."""
+     import _common.owner_records as OR
+     p = get_profile(game_id)
+-    if type(target) is not int or target > p.holdout_last or target < p.holdout_first:
++    if type(target) is not int or target < p.holdout_first:
+         return False
++    if target > p.holdout_last:
++        return _weekly_release_allowed(repo_root, game_id, target)
+     try:
+         rec = OR.batch_id_record(repo_root, game_id)
+         if rec is None:
+@@ -72,17 +78,34 @@
+         return False
+ 
+ 
++def _weekly_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
++    """The weekly freeze-line rule (design 6.3). Fixed evidence paths under the root; no caller-chosen input."""
++    import _common.owner_records as OR
++    import _common.weekly_records as WR
++    try:
++        if OR.developed_record(repo_root, game_id) is None:
++            return False
++        line = WR.freeze_line_for(WR.forecast_ledger(repo_root, game_id), target)
++        if line is None:
++            return False
++        WR.verify_named_records(repo_root, game_id, line)
++        _raw, rows, _evidence = MV.load_verified_source(repo_root, game_id)
++        return target <= rows[-1].last_draw
++    except (OR.RecordRefused, MV.LedgerRefused, ValueError, OSError):
++        return False
++
++
+ def _check_targets(game_id: str, targets, repo_root: Path | None = None) -> list[int]:
+     p = get_profile(game_id)
+     out = sorted(set(targets))
+     if not out:
+         raise OutcomeRefused('no target requested')
+     for t in out:
+-        if type(t) is not int or t < p.first_draw + 1 or t > p.holdout_last:
+-            raise OutcomeRefused(f'target {t!r} is outside [{p.first_draw + 1}, {p.holdout_last}]')
++        if type(t) is not int or t < p.first_draw + 1:
++            raise OutcomeRefused(f'target {t!r} is not a draw after the first of the era ({p.first_draw})')
+         if t >= p.holdout_first and (repo_root is None or not outcome_release_allowed(repo_root, game_id, t)):
+-            raise OutcomeRefused(f'target {t} is a holdout draw not released by the freeze-before-outcome rule '
+-                                 f'(design 5.3)')
++            raise OutcomeRefused(f'target {t} is a holdout or later draw not released by the freeze-before-outcome '
++                                 f'rule (design 5.3, 6.3)')
+     return out
+ 
+ 
+@@ -118,13 +141,22 @@
+     """{target: (drawn_main, drawn_powerball)} for Powerball, or {target: (drawn_main, drawn_supplementaries)} for
+     Oz Lotto, both as ascending tuples, for exactly the requested targets. Refuses (OutcomeRefused) before
+     decoding any row if a target or a source check fails. `ledger_version` is the pinned version (MHUP-A)."""
++    rows = read_outcome_rows(repo_root=repo_root, game_id=game_id, master_sha256=master_sha256, targets=targets,
++                             ledger_version=ledger_version)
++    return {t: (main, extra) for t, (main, extra, _date) in rows.items()}
++
++
++def read_outcome_rows(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1) -> dict:
++    """As read_outcomes, with each draw's date as the master records it: {target: (drawn_main, drawn_powerball or
++    drawn_supplementaries, draw_date_text)} (MHUP-B: the weekly score line records whether the master's date is the
++    draw's derived date, supplement v0.8 section 6.8). The same checks, in the same order."""
+     if not isinstance(repo_root, Path):
+         raise OutcomeRefused('invalid repository root')
+     p = get_profile(game_id)
+     wanted = _check_targets(game_id, targets, repo_root)
+     raw = _verify_source(repo_root, game_id, master_sha256, ledger_version)
+     want = set(wanted)
+-    last = wanted[-1]                               # <= holdout_last; in the holdout only if released (5.3)
++    last = wanted[-1]                               # in or after the holdout only if released (5.3, 6.3)
+     high = 35 if game_id == 'POWERBALL' else 47
+     width = len(header_for(game_id))
+     stream = io.BytesIO(raw)
+@@ -140,7 +172,7 @@
+         if number not in want:
+             continue                                 # never decoded
+         if number >= p.holdout_first and not outcome_release_allowed(repo_root, game_id, number):
+-            raise OutcomeRefused('holdout row reached without release')     # a second guard; unreachable by construction
++            raise OutcomeRefused('holdout or later row reached without release')     # a second guard; unreachable by construction
+         try:
+             row = next(csv.reader([line.decode('ascii', errors='strict')], strict=True))
+         except (UnicodeDecodeError, csv.Error, StopIteration):
+@@ -151,12 +183,12 @@
+         if len(set(main)) != 7:
+             raise OutcomeRefused(f'repeated main number in draw {number}')
+         if game_id == 'POWERBALL':
+-            out[number] = (main, _number(row[9], 20, 'Powerball'))
++            out[number] = (main, _number(row[9], 20, 'Powerball'), row[1])
+         else:
+             supps = tuple(sorted(_number(x, 47, 'supplementary number') for x in row[9:12]))
+             if len(set(supps)) != 3 or set(supps) & set(main):
+                 raise OutcomeRefused(f'invalid supplementary numbers in draw {number}')
+-            out[number] = (main, supps)
++            out[number] = (main, supps, row[1])
+     if set(out) != want:                             # every requested target must be present
+         raise OutcomeRefused('not every requested target was found')
+     return out
+--- a/.gitignore
++++ b/.gitignore
+@@ -236,9 +236,8 @@
+ # in wf_batches/ are committed)
+ results/real/development/contract_runs/
+ results/real/development/wf_batches/**/attempts.jsonl
+-# WF-1B: the score and rank-position ledgers hold drawn numbers, so they stay local (design 6.4, 6.8; WF1-10);
+-# the report files in results/method_rankings/ and the search log are committed
+-#results/real/development/scores/
++# WF-1B: the report files in results/method_rankings/ and the search log are committed; so, since 17 November 2026
++# (owner decision OD-5, decision log entry 70), are the score and rank-position ledgers under the scores folder
+ 
+ # GAIS - exclude large constants and generated binary/txt data
+ /GAIS/**/*.bin
+@@ -258,9 +257,9 @@
+ /GAIS/OUTLANDISH_01/.outlandish_config_bak_*
+ 
+ # MHUP-A (design 4.2, Appendix J, 5.1-5.4, 6.1): the updater's local working files (covered by the owner's
+-# backups), the two install barriers, the Mode H holdout contract runs, each batch's attempts log and the
+-# score ledgers (they hold drawn numbers; the plan, the batch-id record, the lifecycle markers, the study
+-# manifest and the owner records are committed), the lock clearance records and the byte-code sentinel
++# backups), the two install barriers, the Mode H holdout contract runs and each batch's attempts log (the plan,
++# the batch-id record, the lifecycle markers, the study manifest, the owner records and, since 17 November 2026,
++# the Mode H score ledgers are committed), the lock clearance records and the byte-code sentinel
+ source_data/backups/
+ source_data/grabs/
+ source_data/.results_master.lock
+@@ -268,6 +267,13 @@
+ src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
+ results/real/holdout/contract_runs/
+ results/real/holdout/wf_batches/**/attempts.jsonl
+-#results/real/holdout/scores/
+ transitory_data/lock_clearances/
+ transitory_data/no_pycache_ever
++
++# MHUP-B (design 6.4): the weekly and diagnostic contract runs (bulk), each session's attempts ledger and the
++# session lock. The session records, the forecast, witness and score ledgers, the OV-1 ledgers and the league
++# tables are committed, so a push of them is a witness.
++results/real/weekly/contract_runs/
++results/real/weekly/**/SESSION_*_attempts.jsonl
++results/real/weekly/**/ACTIVE_SESSION.lock
++results/real/diagnostic/contract_runs/
+--- a/tests/test_multigame_reader_contracts.py
++++ b/tests/test_multigame_reader_contracts.py
+@@ -79,13 +79,37 @@
+ 
+ class V011ReaderTests(unittest.TestCase):
+     def test_master_source_and_ledger_file_hashes(self):
++        """The master is bound to its ledger by SHA-256. MHUP-B slice 1 (readiness finding F-2): the real masters grow
++        with every update, so the pinned values below are the VERSION-1 hashes, which stay true for ever: the ledger's
++        INIT row carries them and the master's version-1 prefix must still hash to them. The current master is checked
++        with no pinned value at all, through the installed version-2 chain and prefix rules. And the same binding is
++        proved on a synthetic INIT master whose hash this test computes from the bytes it wrote."""
++        from _common import master_versions as MV
+         for game in SHA:
+             with self.subTest(game=game):
+-                b=(ROOT/'source_data'/f'{game}_results_master.csv').read_bytes()
+-                self.assertEqual(hashlib.sha256(b).hexdigest(),SHA[game])
+                 p=POWERBALL if game=='POWERBALL' else OZLOTTO
++                raw,rows,_evidence=MV.load_verified_source(ROOT,game)        # refuses unless the whole chain passes
++                self.assertEqual((rows[0].version,rows[0].action,rows[0].master_sha256),(1,'INIT',SHA[game]))
++                self.assertEqual(hashlib.sha256(MV.prefix_bytes(raw,rows[0])).hexdigest(),SHA[game])
++                self.assertEqual(rows[0].last_draw,p.holdout_first-1)
++                self.assertEqual(hashlib.sha256(raw).hexdigest(),rows[-1].master_sha256)
++                self.assertEqual(MV.current_pin(ROOT,game),(rows[-1].version,rows[-1].master_sha256))
+                 self.assertEqual((p.holdout_first,p.holdout_last),
+                                  (1577,1586) if game=='POWERBALL' else (1694,1703))
++        with tempfile.TemporaryDirectory() as td:
++            root=Path(td)
++            for game in SHA:
++                with self.subTest(synthetic=game):
++                    sha,_target=fake_root(root,game)
++                    written=(root/'source_data'/f'{game}_results_master.csv').read_bytes()
++                    self.assertEqual(hashlib.sha256(written).hexdigest(),sha)
++                    raw,rows,_evidence=MV.load_verified_source(root,game)
++                    self.assertEqual((len(rows),rows[0].master_sha256,raw),(1,sha,written))
++                    flipped=written[:-2]+bytes([written[-2]^1])+written[-1:]    # one bit, same length and lines
++                    self.assertEqual((len(flipped),flipped.count(b'\n')),(len(written),written.count(b'\n')))
++                    (root/'source_data'/f'{game}_results_master.csv').write_bytes(flipped)
++                    with self.assertRaisesRegex(MV.LedgerRefused,'SHA-256'):
++                        MV.load_verified_source(root,game)
+ 
+     def test_e1_frozen_1577_forecast_only_without_dev_build(self):
+         v=load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('POWERBALL',1577))
+@@ -354,13 +378,51 @@
+                     load_pinned_draw_view(repo_root=root,run_manifest=normal)
+ 
+     def test_only_legacy_e1_allowed_at_boundary(self):
+-        for change in (dict(method_id='E_2'),dict(variant_id='SYNTHETIC'),
+-                       dict(view_kind='PAIRED_DIAGNOSTIC'),dict(include_dates=True)):
+-            with self.subTest(change=change),self.assertRaises(ValueError):
+-                load_pinned_draw_view(repo_root=ROOT,run_manifest={**pin('POWERBALL',1577),**change})
+-        for bad in (1578,1586,1600):
+-            with self.assertRaises(ValueError):load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('POWERBALL',bad))
+-        with self.assertRaises(ValueError):load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('OZLOTTO',1694))
++        """At the first holdout target of an UNOPENED game the reader admits only the legacy E_1 forecast-only request.
++        MHUP-B slice 1 (readiness finding F-2): proved on a synthetic unopened project this test builds, because the
++        real games were opened on 14 November 2026 and their masters now hold these draws. The positive half is
++        test_boundary_admitted_once_opened."""
++        from test_e6_beta_bernoulli import write_varied_master
++        with tempfile.TemporaryDirectory() as td:
++            root=Path(td)
++            sha={g.game_id:write_varied_master(root,g,g.holdout_first,0) for g in (POWERBALL,OZLOTTO)}
++            first=pin('POWERBALL',1577,sha=sha['POWERBALL'])
++            v=load_pinned_draw_view(repo_root=root,run_manifest=first)          # the one legacy exception
++            self.assertEqual((int(v.draw_number[0]),int(v.draw_number[-1])),(1144,1576))
++            for m in self.boundary_requests(sha):
++                with self.subTest(unopened=m),self.assertRaisesRegex(ValueError,'opening record'):
++                    load_pinned_draw_view(repo_root=root,run_manifest=m)
++            for bad in (1578,1586,1600):
++                with self.assertRaises(ValueError):
++                    load_pinned_draw_view(repo_root=root,run_manifest=pin('POWERBALL',bad,sha=sha['POWERBALL']))
++        for bad in (1578,1586,1600):                    # the real master at its version-1 pin: beyond last draw + 1
++            with self.assertRaisesRegex(ValueError,'outside the pinned version'):
++                load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('POWERBALL',bad))
++
++    @staticmethod
++    def boundary_requests(sha):
++        first=pin('POWERBALL',1577,sha=sha['POWERBALL'])
++        return [{**first,**change} for change in (dict(method_id='E_2'),dict(variant_id='SYNTHETIC'),
++                dict(view_kind='PAIRED_DIAGNOSTIC'),dict(include_dates=True))]+[pin('OZLOTTO',1694,sha=sha['OZLOTTO'])]
++
++    def test_boundary_admitted_once_opened(self):
++        """The same five requests on the same synthetic project once each game has a valid opening record: the reader
++        admits them (which run modes may then use them is the request validator's, the dispatch gate's and the
++        runner's business, tested in test_mhupa_gates and test_mhupb_l1_gates). An invalid opening record refuses."""
++        from test_e6_beta_bernoulli import write_varied_master
++        import mhupa_fixtures as X
++        with tempfile.TemporaryDirectory() as td:
++            root=Path(td)
++            sha={g.game_id:write_varied_master(root,g,g.holdout_first,0) for g in (POWERBALL,OZLOTTO)}
++            for g in (POWERBALL,OZLOTTO):
++                X.write_opening_record(root,g.game_id,freeze_version=1,freeze_sha=sha[g.game_id])
++            for m in self.boundary_requests(sha):
++                with self.subTest(opened=m):
++                    v=load_pinned_draw_view(repo_root=root,run_manifest=m)
++                    self.assertEqual(int(v.draw_number[-1]),m['draw_number']-1)
++            X.write_opening_record(root,'OZLOTTO',freeze_version=1,freeze_sha=sha['OZLOTTO'],owner_statement='')
++            with self.assertRaisesRegex(ValueError,'opening record refused'):
++                load_pinned_draw_view(repo_root=root,run_manifest=pin('OZLOTTO',1694,sha=sha['OZLOTTO']))
+         # Actual accepted Oz development view supplies 47, so prove the
+         # 47*47=2209 invariant on an exported int64 SCIENTIFIC view array.
+         oz=load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('OZLOTTO',1693))
+--- a/tests/test_mhupa_launchers.py
++++ b/tests/test_mhupa_launchers.py
+@@ -49,7 +49,14 @@
+ GITIGNORE_LINES = ['source_data/backups/', 'source_data/grabs/', 'source_data/.results_master.lock',
+                    'src/methods/E_001/IN_DEVELOPMENT.txt', 'src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt',
+                    'results/real/holdout/contract_runs/', 'results/real/holdout/wf_batches/**/attempts.jsonl',
+-                   'results/real/holdout/scores/', 'transitory_data/lock_clearances/', 'transitory_data/no_pycache_ever']
++                   'transitory_data/lock_clearances/', 'transitory_data/no_pycache_ever',
++                   # MHUP-B (design 6.4): the weekly run folders, the session attempts ledgers and the session lock
++                   'results/real/weekly/contract_runs/', 'results/real/weekly/**/SESSION_*_attempts.jsonl',
++                   'results/real/weekly/**/ACTIVE_SESSION.lock', 'results/real/diagnostic/contract_runs/']
++# The score records are tracked since the owner committed them on 17 November 2026 (cc665ce; decision log entry 70):
++# no ignore line, commented out or not, may name either scores folder.
++NEVER_IGNORED = ('results/real/development/scores', 'results/real/holdout/scores', 'results/real/weekly/POWERBALL/',
++                 'results/real/weekly/OZLOTTO/', 'results/method_rankings')
+ PROBE = ('import sys,pathlib;sys.exit(0 if pathlib.Path(sys.prefix).resolve()==pathlib.Path(sys.argv[1]).resolve() else 12)')
+ 
+ 
+@@ -123,6 +130,9 @@
+         present = {l.strip() for l in text.splitlines()}
+         for line in GITIGNORE_LINES:
+             self.assertIn(line, present, line)
++        for line in text.splitlines():
++            for path in NEVER_IGNORED:
++                self.assertFalse(line.strip().lstrip('#!/ ').startswith(path), line)
+ 
+ 
+ def plant(tmp: Path) -> tuple[Path, Path]:
+--- a/tests/test_mhupa_gates.py
++++ b/tests/test_mhupa_gates.py
+@@ -98,9 +98,12 @@
+         validate_run_request(request('POWERBALL', 1300, mode='REAL_DEVELOPMENT', version=7, sha=sha))
+         with self.assertRaises(ValueError):
+             validate_run_request(request('POWERBALL', 1300, mode='REAL_DEVELOPMENT', version=0, sha=sha))
+-        # FINAL_NEXT_DRAW stays reserved in this package (no producible product), whatever its binding
+-        with self.assertRaises(ValueError):
+-            V.producible('FINAL_NEXT_DRAW', V.FORECAST)
++        # MHUP-B unreserved FINAL_NEXT_DRAW and added CATCH_UP (design v0.1r7 section 6.4); neither has a diagnostic row
++        self.assertEqual(V.producible('FINAL_NEXT_DRAW', V.FORECAST), ('WF_FORECAST', 'PROSPECTIVE'))
++        self.assertEqual(V.producible('CATCH_UP', V.FORECAST), ('WF_FORECAST', 'CATCH_UP'))
++        for weekly_mode in ('FINAL_NEXT_DRAW', 'CATCH_UP'):
++            with self.assertRaises(ValueError):
++                V.producible(weekly_mode, V.DIAGNOSTIC)
+         self.assertEqual(V.producible('REAL_HOLDOUT', V.FORECAST), ('WF_FORECAST', 'HOLDOUT_MODE_H'))
+         with self.assertRaises(ValueError):
+             V.producible('REAL_HOLDOUT', V.DIAGNOSTIC)
+--- a/tests/test_wf1b_static.py
++++ b/tests/test_wf1b_static.py
+@@ -15,7 +15,10 @@
+                   '_common.master_versions',       # MHUP-A: the version-2 master rules (design 3.2, Appendix L)
+                   '_common.owner_records',         # MHUP-A slice 2: the value-free owner records, plans, tickets, markers
+                   '_common.closure',               # MHUP-A slice 2: the closure and environment inventories (4.1)
+-                  '_common.release_records'}       # MHUP-A slice 2: the release records' one reader (4.3; EX_148 B03)
++                  '_common.release_records',       # MHUP-A slice 2: the release records' one reader (4.3; EX_148 B03)
++                  # MHUP-B slice 1: the weekly records' shapes, the ledger write discipline and the score identities.
++                  # All three are value-free orchestration modules; none imports method code.
++                  '_common.weekly_records', '_common.jsonl_ledger', '_common.score_identities'}
+ STDLIB_OK = {'__future__', 'argparse', 'csv', 'collections', 'decimal', 'fractions', 'functools', 'hashlib', 'io',
+              'json', 'math', 'pathlib', 'platform', 're', 'struct', 'sys', 'uuid', 'numpy', 'evaluation'}
+ 
+@@ -64,7 +67,8 @@
+                 self.assertNotIn('_trusted_file_bytes', text, p.name)
+                 self.assertNotIn('ledger_pin', text, p.name)
+         users = [p.name for p in EVAL.glob('*.py') if any(n.endswith('outcome_reader') for n in imports(p))]
+-        self.assertEqual(sorted(users), ['mode_h.py', 'report.py'])     # MHUP-A: the Mode H scorer (design 5.3, 6.1)
++        # MHUP-A: the Mode H scorer (design 5.3, 6.1); MHUP-B: the weekly scoring half (design 6.1, Appendix L)
++        self.assertEqual(sorted(users), ['mode_h.py', 'report.py', 'weekly_score.py'])
+ 
+     def test_sources_are_ascii(self):
+         for p in list(EVAL.glob('*.py')) + list((EVAL / 'registry').glob('*.json')):
+--- a/tests/test_mhupa_master_versions.py
++++ b/tests/test_mhupa_master_versions.py
+@@ -389,7 +389,13 @@
+             'src/methods/Method_Contract_Runner.py', 'src/methods/_common/contract_receipts.py',
+             'src/methods/_common/contract_records.py', 'src/methods/_common/contract_runner.py',
+             'src/methods/_common/game_draws_reader.py', 'src/methods/_common/master_versions.py',
+-            'src/methods/_common/walk_forward.py', 'src/results_master_v0_2.py'])        # MHUP-A slice 2: v0.2 (design 7)
++            'src/methods/_common/walk_forward.py',
++            'src/methods/_common/weekly_records.py',      # MHUP-B: names the master file in a session's run request, as
++            'src/results_master_v0_2.py'])                # the driver does; it opens no master (asserted below)
++        weekly = (ROOT / 'src' / 'methods' / '_common' / 'weekly_records.py').read_text(encoding='ascii')
++        self.assertEqual(weekly.count('_results_master'), 1)
++        for word in ('open(', 'read_bytes', 'read_text', '_trusted_file_bytes', 'load_verified_source', 'csv.'):
++            self.assertNotIn(word, weekly.split('def request_for')[1].split('def run_folder')[0])
+         mv = (ROOT / 'src' / 'methods' / '_common' / 'master_versions.py').read_text(encoding='ascii')
+         for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
+             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column

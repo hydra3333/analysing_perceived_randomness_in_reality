@@ -1031,3 +1031,17 @@ the installed documents. This log is not a separate approval process.
   registration; each needs its own go.
 - **Order:** slice 1 (baseline fixes, L1 to L3; Fable, High), slice 2 (L5, L6; Fable, High), slice 3 (L4, L7, L8; Opus),
   the integrated package and document amendments (Opus), then T017 and the install.
+
+## 76. 17 November 2026, about 20:10-21:57 - MHUP-B slice 1 built, tested and sent for technical review (EX_228)
+
+- **Done (cloud workspace only; nothing installed; `src/` and `tests/` unchanged):** slice 1 of code plan v0.3: the fixes for
+  the three known failing tests; L1 (`CATCH_UP`, `FINAL_NEXT_DRAW`, the mode-to-pin rule); L2 (the forecasting half:
+  sessions, tickets, freeze lines, the chained forecast ledger); L3 (the scoring half, the outcome reader's weekly
+  release rule, the witness ledger, diagnostic-score). Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/`.
+- **Results:** on the built tree the offline suite runs 617 tests in 48 modules with no failure on Python 3.13.18 and
+  3.15.0b4 (the baseline was 570 with three known failures); 38 planted defects each caught by a named test.
+- **Sent to the reviewer as EX_228**, with seven coding decisions for its ruling. S1-D1 is the one that may reach the
+  owner: design 6.4 says a session's development runs go to the development run folder; the installed MHUP-A code puts
+  every session run in the weekly run folder. Claude kept the installed behaviour and asked which should stand.
+- **Not done:** Windows, the owner's PC, real data, E2R-T12; the PC's own time zone across a daylight-saving change.
+- **Model (MC-1):** slice 2 (OV-1; the two kinds of development run) is also Fable (High) work.

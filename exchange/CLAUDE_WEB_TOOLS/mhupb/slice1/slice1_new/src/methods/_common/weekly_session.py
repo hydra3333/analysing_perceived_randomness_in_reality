@@ -473,7 +473,6 @@ def status(game_id: str) -> dict:
     except (RR.Refused, ValueError, KeyError) as exc:
         raise SessionRefused(f'the release records refuse: {exc}') from None
     out['active_variants'] = len(released)
-    sessions = sorted((WR.session(root, game_id, sid) for sid in tickets), key=lambda s: s['started_utc']) if tickets else []
     last = None
     for path in sorted(WR.sessions_folder(root, game_id).glob('SESSION_*.json')) if WR.sessions_folder(root, game_id).is_dir() else []:
         s = _guard(WR.session, root, game_id, path.name[len('SESSION_'):-len('.json')])
@@ -497,8 +496,7 @@ def status(game_id: str) -> dict:
     out['last_done_target'] = max(done_by_variant.values(), default=None)
     out['last_scored_target'] = max(scored_by_variant.values(), default=None)
     diag = OR.diagnostic_runs_root(root) / game_id
-    out['diagnostic_records'] = sum(1 for f in diag.rglob('terminal_record.json')) if diag.is_dir() else 0
-    del sessions
+    out['diagnostic_records'] = sum(1 for _f in diag.rglob(CP.FILES['terminal'])) if diag.is_dir() else 0
     return out
 
 

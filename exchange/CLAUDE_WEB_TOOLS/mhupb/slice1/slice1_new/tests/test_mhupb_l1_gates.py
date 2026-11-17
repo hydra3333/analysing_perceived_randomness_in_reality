@@ -26,7 +26,7 @@ import _common.contract_dispatch as CD
 import _common.contract_runner as CR
 import _common.contract_vocab as V
 from _common.contract_forecast import validate_forecast
-from _common.contract_records import record_digest, validate_run_request
+from _common.contract_records import content_digest, record_digest, validate_run_request
 from _common.contract_task import view_data_kind
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common import owner_records as OR
@@ -433,6 +433,18 @@ class ModeToPin(Project):
                                       'draw_key', 'declaration_digest'):
                             self.assertEqual(rec[field], base[field], field)
                 self.assertEqual({m: r['run_mode'] for m, r in seen}, {m: m for m, _r in seen})
+            # the record itself may not name a prefix or holdout draw in a weekly mode (the forecast header's rule)
+            for mode in sorted(V.WEEKLY_MODES):
+                forged = dict(base, run_mode=mode)
+                forged['canonical_content_digest'] = content_digest(forged)
+                validate_forecast(forged, e1_pins(game)[1])                       # after the holdout: a valid record
+                for bad_target in (get_profile(game).holdout_last, get_profile(game).holdout_first - 2):
+                    forged = dict(base, run_mode=mode, target_draw_number=bad_target,
+                                  training_last_draw_number=bad_target - 1,
+                                  draw_key=get_profile(game).draw_key(bad_target))
+                    forged['canonical_content_digest'] = content_digest(forged)
+                    with self.assertRaisesRegex(ValueError, 'must name a draw after the holdout'):
+                        validate_forecast(forged, e1_pins(game)[1])
             # FINAL_NEXT_DRAW at last + 1 against a development forecast of the same prefix on a master one draw longer
             out, why, folder = self.attempt(game, 'FINAL_NEXT_DRAW', last + 1)
             self.assertEqual(out, 'SUCCESS', why)

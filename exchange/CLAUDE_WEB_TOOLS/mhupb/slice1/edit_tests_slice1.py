@@ -62,8 +62,10 @@ edit('tests/test_multigame_reader_contracts.py', [
                     self.assertEqual(hashlib.sha256(written).hexdigest(),sha)
                     raw,rows,_evidence=MV.load_verified_source(root,game)
                     self.assertEqual((len(rows),rows[0].master_sha256,raw),(1,sha,written))
-                    (root/'source_data'/f'{game}_results_master.csv').write_bytes(written+b'x')   # one byte more
-                    with self.assertRaises(MV.LedgerRefused):
+                    flipped=written[:-2]+bytes([written[-2]^1])+written[-1:]    # one bit, same length and lines
+                    self.assertEqual((len(flipped),flipped.count(b'\\n')),(len(written),written.count(b'\\n')))
+                    (root/'source_data'/f'{game}_results_master.csv').write_bytes(flipped)
+                    with self.assertRaisesRegex(MV.LedgerRefused,'SHA-256'):
                         MV.load_verified_source(root,game)
 """),
     ("""    def test_only_legacy_e1_allowed_at_boundary(self):
@@ -178,5 +180,19 @@ edit('tests/test_wf1b_static.py', [
 """,
      """        # MHUP-A: the Mode H scorer (design 5.3, 6.1); MHUP-B: the weekly scoring half (design 6.1, Appendix L)
         self.assertEqual(sorted(users), ['mode_h.py', 'report.py', 'weekly_score.py'])
+"""),
+])
+
+# ---------------------------------------------------------------- 4. which files name the master (MHUP-A's static list)
+edit('tests/test_mhupa_master_versions.py', [
+    ("""            'src/methods/_common/walk_forward.py', 'src/results_master_v0_2.py'])        # MHUP-A slice 2: v0.2 (design 7)
+""",
+     """            'src/methods/_common/walk_forward.py',
+            'src/methods/_common/weekly_records.py',      # MHUP-B: names the master file in a session's run request, as
+            'src/results_master_v0_2.py'])                # the driver does; it opens no master (asserted below)
+        weekly = (ROOT / 'src' / 'methods' / '_common' / 'weekly_records.py').read_text(encoding='ascii')
+        self.assertEqual(weekly.count('_results_master'), 1)
+        for word in ('open(', 'read_bytes', 'read_text', '_trusted_file_bytes', 'load_verified_source', 'csv.'):
+            self.assertNotIn(word, weekly.split('def request_for')[1].split('def run_folder')[0])
 """),
 ])

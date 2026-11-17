@@ -125,9 +125,8 @@ def score(game_id: str, session_id: str, target: int, *, echo=print) -> dict:
             trained = MV.resolve_pin(rows, r['ledger_version'], r['master_sha256'])
         except MV.LedgerRefused as exc:
             raise ScoreRefused(f'a named record\'s training pin is not a row of the ledger: {exc}') from None
-        if trained.version > outcome_row.version or trained.last_draw >= target:
-            raise ScoreRefused('a named record\'s training pin is not a prefix of the scoring version that ends before '
-                               'the target')
+        if trained.version > outcome_row.version:
+            raise ScoreRefused('a named record\'s training pin is newer than the scoring session\'s version')
     identities = _guard(SI.scored_identities, root, game_id)
     _guard(SI.closed_targets, game_id, lines, identities)                  # a foreign routine identity refuses here
     todo = {SI.routine_identity(game_id, target, ev['named']): ev for ev in evidence

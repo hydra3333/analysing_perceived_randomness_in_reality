@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 20:10 Australia/Adelaide (the owner's go for code; slice 1 in progress; entry 75).
+**Last updated:** 17 November 2026, about 21:57 Australia/Adelaide (slice 1 with the reviewer, EX_228; entry 76).
 
 ## For the owner: NOW
 
@@ -52,11 +52,16 @@ durable EX messages are authoritative.
   `d5c2b318...546d0169`) and `Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (SHA-256 `e3d977e1...9be97c27e`),
   byte for byte the candidates; v0.8 governs, v0.7 is history. Includes O-5 (the 01:30 UTC cut-off, a conservative
   choice), O-6, O-7.
-- **THE OWNER GAVE THE GO FOR CODE (17 November, 20:09; entry 75). SLICE 1 IS IN PROGRESS** (cloud workspace only; the
-  slice's files will be under `exchange/CLAUDE_WEB_TOOLS/mhupb/` in the MHUP-A layout: `slice1_new/`, `apply_slice1.py`,
-  `build_dev_slice1.sh`). The order: slice 1
-  (the baseline fixes, L1 to L3) on Fable (High); slice 2 (L5, L6) on Fable (High); slice 3 (L4, L7, L8) and packaging on
-  Opus. Each slice goes to the reviewer; then the integrated package; then T017; then the owner's install go.
+- **THE OWNER GAVE THE GO FOR CODE (17 November, 20:09; entry 75).** Order: slice 1 (baseline fixes, L1 to L3), slice 2
+  (L5, L6), slice 3 (L4, L7, L8), the integrated package and document amendments, T017, the install. Slices 1 and 2 are
+  Fable (High) work; slice 3 and packaging are Opus work.
+- **SLICE 1 IS WITH THE REVIEWER (EX_228; entry 76).** Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (MHUP-A layout:
+  `apply_slice1.py`, `edit_tests_slice1.py`, `slice1_new/`, `build_dev_slice1.sh`, `run_suite.py`, `mutations_slice1.py`).
+  Built tree: 617 tests, no failure, on Python 3.13 and 3.15; 38 mutants caught. NOT INSTALLED. Seven coding decisions
+  (S1-D1 to S1-D7) await the reviewer's ruling; S1-D1 (which run folder a session's development runs use) may need the
+  owner. A successor chat rebuilds the tree with the commands in EX_228 section 1.
+- **NEXT for Claude:** slice 2 (OV-1 kernel and recorder; `WF_BATCH_PLAN_V2`, the `DEV_BATCH` gate, the post-seal
+  release rule), on Fable (High). It builds on slice 1's tree.
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
