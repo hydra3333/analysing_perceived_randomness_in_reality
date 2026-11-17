@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 15:40 Australia/Adelaide (re-checked for the Claude handover).
+**Last updated:** 17 November 2026, about 16:10 Australia/Adelaide (the new Claude chat has taken over; entry 64).
 
 ## For the owner: NOW
 
@@ -31,16 +31,21 @@ durable EX messages are authoritative.
   run or install.** O-4 (scoring Powerball 1145-1285) is an approved objective; its run needs its own go.
 - **Installed documents (RAT-34, committed by Claude, verified from a fresh clone):** register v0.31, H-1 v4 and its blurb,
   and the supplement. H-2: v2 r1 stays installed; the reviewer updates its H-2 v3 candidate for a separate ratification.
-- **NEXT: the handover to a fresh Claude chat** (paste `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`,
-  last line "see exchange/CONTINUITY_NOW.md"); then, at the owner's option, a short readiness check; then **the MHUP-B code
-  plan in the eight layers** (Fable, High), reviewed before any code is written.
+- **THE CLAUDE HANDOVER IS DONE (HO-2; entry 64).** A fresh Claude chat took over on 17 November 2026 from H-1 v4: first
+  reply EX_216, the reviewer's five blind questions EX_217, the answers EX_218, **EX_219: TAKEOVER PASS**. The owner
+  authorised normal work at 16:01.
+- **NOW: the MHUP-B code plan in the eight layers** (Claude, Fable High; authorised 16:01), to go to the reviewer for
+  independent review **before any implementation code is written**. EX_219's two cautions travel with it: C1 no
+  alpha-recycling after a stopped OV-1 stream; C2 the actual test baseline on current `main` is taken first (T024's 571 is
+  dated history: tests pinned to the version-1 masters are expected to fail now).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
-- Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass). (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
+- Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
+  PASS; cautions C1 and C2 for the code plan). (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.
@@ -50,9 +55,11 @@ durable EX messages are authoritative.
 
 - **Claude chat ended:** start a new Claude chat by pasting `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`.
   In its last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v4 beside it, section 0B first.
-- **ChatGPT reviewer chat ended:** start a new ChatGPT chat with the reviewer's own blurb,
-  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_CANDIDATE_introductory_blurb.md` (or, if the reviewer prefers, the installed
-  `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`), adding: "Then read exchange/CONTINUITY_NOW.md".
+- **ChatGPT reviewer chat ended:** H-2 v2 r1 is still the installed reviewer handover. The reviewer's newest starter text is
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_RATIFICATION_CANDIDATE_20261117_introductory_blurb.md` (a candidate; by its
+  own instructions, until H-2 v3 is ratified the new reviewer chat is pointed to the installed H-2 v2 r1 and register
+  v0.31; the installed starter is `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`). Add: "Then read
+  exchange/CONTINUITY_NOW.md". The H-2 v3 CANDIDATE of 16 November is a preserved draft.
 
 ## Installed handovers (authoritative)
 
@@ -92,7 +99,7 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
-2. **The handover to a fresh Claude chat**; then, at the owner's option, a short readiness check.
+2. Done 17 November: the handover to a fresh Claude chat (EX_216 to EX_219; entry 64).
 3. **The MHUP-B code plan** in the supplement's eight layers (Fable, High), reviewed before any code; then the code, its
    review, the Windows rehearsal (with a full-suite run after step 18) and the owner's install, each on its own go; then the
    registration of OV-1 before its first forward draw, and the runs (each on its own go).

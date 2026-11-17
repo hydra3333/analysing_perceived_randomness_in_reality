@@ -822,3 +822,33 @@ the installed documents. This log is not a separate approval process.
   `doc/HANDOVER/Claude_Primary_Handover_H1_v4.md`, its blurb, `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_7.md`.
   New files only; nothing existing was changed or removed. Checked from GitHub after the push (CONTINUITY_NOW records the
   commit). The owner only pulls.
+
+## 64. 17 November 2026, about 15:23-16:01 - HO-2: the new Claude chat's takeover; PASS; OWNER AUTHORISATION of normal work and of the MHUP-B code plan
+
+- **The takeover (H-1 v4 section 0, item 4).** The owner started a fresh Claude chat at about 15:23 from the H-1 v4 blurb. It
+  read and checked first (101 of H-1 v4's quoted file hashes match Git; one historical row, see below) and gave its first
+  substantive reply to the owner, uncommitted.
+- **Two narrow exceptions to "no commit before authorisation".** Asked by tap question whether the reply could be committed so
+  the reviewer could read it from GitHub, the owner answered "Yes, as EX_216 (Recommended)" (about 15:40), and for the blind
+  answers "Yes, as EX_218 (Recommended)" (about 15:50). **Correction (EX_219 section 4): EX_218's cover says "about 16:00";
+  the time was about 15:50.** The owner: "for me "about 16:00" reads as close enough to 15:50 in this specific case so no
+  need to update it." EX_218 is not edited.
+- **The exchange:** EX_216 (Claude's first reply, commit `7243599`); EX_217 (the reviewer's five questions only, `6db4827`);
+  EX_218 (Claude's blind answers, `0070640`); **EX_219 (the reviewer, `a18ac58`): HO-2 TAKEOVER PASS**, no further quiz, with
+  two cautions for the code plan: C1, no convenient alpha-recycling after a stopped OV-1 stream (default: stay in PRIMARY
+  STREAM STOP; any distinct fresh test needs a reviewed argument preserving the programme's 5% and the owner's decision);
+  C2, take the actual test baseline on current `main` before fixing anything, and keep T024's 571 as dated history.
+- **The owner's words (16:01):** "EX_219 is available for you to read. I authorise you as the new Claude chat to resume
+  normal work and have changed your model to Fable (High) for the MHUP-B eight-layer code plan. That plan must return to
+  the chatgpt Reviewer for independent review before implementation code is written. Thanks and welcome here !"
+- **So:** normal work is authorised; the code plan is authorised on Fable (High); no implementation code before its review.
+  As EX_219 says, this approves no code, package, install, runner task, real-data run, OV-1 registration or weekly session.
+- **Discrepancies the new chat reported (EX_216 section 6; none blocking):** D1 the recovery page pointed to the older H-2 v3
+  starter text (corrected in CONTINUITY_NOW with this entry); D2 H-1 v4 Appendix A quotes the readiness sheet's r2c hash at a
+  path that now holds r2d (r2c is at commit `454921f`); D3 `exchange/README.md` v0.5 predates RAT-34's write rules (a v0.6
+  to be proposed for review); D4 "87 Bash deny patterns" in H-1 is 84 deny plus 3 allow; D5 H-1 says E_2 has six variants
+  (it has three; the total of 40 is right); D6 the roadmap and reminders were last refreshed on 16 November; D7 the
+  supplement in `doc/` is stored CRLF, deliberately. D2, D4 and D5 are for the next H-1 edition.
+- **P6 note (Claude, on how the takeover went):** H-1 v4 with CONTINUITY_NOW was enough to take over from the repository
+  alone. The friction was in side files not refreshed at each milestone and in commits made after the blurb's anchor.
+  Suggestion: at each ratification CONTINUITY_NOW names the newest starter files by path.
