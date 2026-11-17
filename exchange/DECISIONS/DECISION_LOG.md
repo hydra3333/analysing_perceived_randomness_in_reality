@@ -984,3 +984,18 @@ the installed documents. This log is not a separate approval process.
 - Entry 71's heading says "about 19:07-20:10". **The work ran from about 19:07 to about 19:20.** Claude wrote the end time
   without reading the clock, the same slip as entry 65. From now on every time Claude writes into a record is read from
   the clock by the command that writes it.
+
+## 73. 17 November 2026, about 19:49-19:53 - EX_225 read; its two corrections applied; ratification candidates sent (EX_226)
+
+- **The owner's word (19:49):** "go EX_225 let me know if you need fable for any of it". Claude judged Opus enough: the
+  reviewer passed the arithmetic, and both corrections are precise wording and tests.
+- **EX_225:** focused pass with two corrections before ratification: RC-225-1 (the missed rule rests on stated operating
+  assumptions; a verified chain is local evidence, not proof of absence; reconcile with earlier records, else block) and
+  RC-225-2 (a repeated admission of the same attempt is a no-op; one search-log row per publication). R-1 (the cut-off as
+  01:30 UTC) accepted, to be shown to the owner as a conservative choice; R-5 (the report-only form) accepted.
+- **Done:** both applied by counted edits (`make_ratification_candidates.py`):
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_RATIFICATION_CANDIDATE.md` and
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_v0_3_RATIFICATION_CANDIDATE.md`, with their diffs. Sent as EX_226
+  for the reviewer's check of the corrections only.
+- **Next:** the reviewer's check; then the owner ratifies both together (O-5 to O-7); no code until his separate go
+  (entry 67).

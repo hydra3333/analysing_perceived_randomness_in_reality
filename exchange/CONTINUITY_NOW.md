@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 19:21 Australia/Adelaide (plan v0.2 and supplement v0.8 with the reviewer, EX_224; entry 71).
+**Last updated:** 17 November 2026, about 19:53 Australia/Adelaide (EX_225's corrections applied; ratification candidates with the reviewer, EX_226; entry 73).
 
 ## For the owner: NOW
 
@@ -47,11 +47,12 @@ durable EX messages are authoritative.
   and blind to the outcome (else stop); OD-3 noon Adelaide time as the last moment for OV-1's pre-draw entry (the owner:
   both games close at 7.30pm AEST); OD-4 a stopped stream stays stopped; OD-5 the real score records checked before the
   install: the owner committed them (`cc665ce`) and Claude's census passed; OD-6 three review slices, one install.
-- **PLAN v0.2 AND SUPPLEMENT v0.8 (AMENDMENT CANDIDATE) ARE WITH THE REVIEWER (EX_224; entry 71):**
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_2.md` and
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_AMENDMENT_CANDIDATE.md`. v0.7 stays the ratified supplement
+- **THE RATIFICATION CANDIDATES ARE WITH THE REVIEWER (EX_226; entry 73):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_v0_3_RATIFICATION_CANDIDATE.md` and
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_RATIFICATION_CANDIDATE.md` (EX_225's RC-225-1 and RC-225-2
+  applied to plan v0.2 and the v0.8 amendment candidate, which stay as history). v0.7 stays the ratified supplement
   until the owner ratifies v0.8.
-- **Waiting on the reviewer:** its focused recheck (R-1 to R-6) and its recommendation on ratification.
+- **Waiting on the reviewer:** its check of the two corrections only.
 - **Then the owner:** ratifying plan v0.2 and supplement v0.8 together (O-5 to O-7; note R-1: the cut-off is written as
   01:30 UTC, which is noon Adelaide daylight time and 11:00 standard time). Only after that, and on his specific go,
   does coding start (entry 67).

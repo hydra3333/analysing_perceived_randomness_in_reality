@@ -1,0 +1,208 @@
+--- MHUPB_CODE_PLAN_DRAFT_v0_2.md
++++ MHUPB_CODE_PLAN_v0_3_RATIFICATION_CANDIDATE.md
+@@ -1,6 +1,6 @@
+-# MHUP-B code plan - DRAFT v0.2 (for the reviewer's focused recheck, then the owner's ratification)
++# MHUP-B code plan - v0.3 (RATIFICATION CANDIDATE)
+ 
+-**Status: DRAFT v0.2, by the Claude web chat, 17 November 2026 (Adelaide). A plan only. It authorises nothing: no code,
++**Status: RATIFICATION CANDIDATE v0.3, by the Claude web chat, 17 November 2026 (Adelaide). A plan only. It authorises nothing: no code,
+ package, task file, run, registration, re-forecast or install. No implementation code exists.** By the owner's
+ instruction (decision log entry 67), no code is written until this plan is complete and owner-ratified and he has then
+ given a specific go for code.
+@@ -9,8 +9,14 @@
+ CORRECTIONS) and the owner's directions on OD-1 to OD-6 (decision log entries 69 and 70) are applied. Section 1A says
+ where each point landed. v0.1 stays beside this file, and `PLAN_v0_1_TO_v0_2.diff` shows every changed line. The design
+ amendments the plan needs are in the supplement's next full edition,
+-`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_AMENDMENT_CANDIDATE.md` ("Sup v0.8"), which goes to the same
+-recheck and the same ratification.
++`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_RATIFICATION_CANDIDATE.md` ("Sup v0.8"), which goes to the
++same ratification.
++
++**What changed from v0.2.** The reviewer's focused recheck (EX_225) passed v0.2 with two corrections, both applied here
++and in Sup v0.8: RC-225-1, what local records can and cannot establish about a missed week (L5; 6.6); and RC-225-2, a
++repeated admission of the same attempt changes nothing and no publication is made twice (L4; L8; 9). R-5's conditions
++for the report-only form are added to L8, and section 12 records the answers. Nothing else changed.
++`CANDIDATE_TO_RATIFICATION_CANDIDATE_PLAN.diff` shows every changed line; v0.2 stays beside this file.
+ 
+ **Authorities it stands on:** the ratified design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`
+ ("Des") sections 6 and 7 and Appendices E to L; the ratified supplement
+@@ -91,6 +97,9 @@
+ | OD-4 | A stopped stream stays stopped | L5; 6.6 | 6.8 |
+ | OD-5 | The real score records checked before the install | 8 | - |
+ | OD-6 | Three technical review slices, one install | 4 | - |
++| EX_225 RC-225-1 | What local records can and cannot show about a missed week; reconciliation with earlier records | L5; 6.6 | 6.8 |
++| EX_225 RC-225-2 | A repeated admission of the same attempt is a no-op; one row per publication; resume after any crash | L4; L8; 9 | 4 rule 2A; 5.1 |
++| EX_225 R-5 | The report-only form: a pinned, authorised batch; resumable; tested with both plan kinds | L8 | - |
+ 
+ ## 2. What reading the installed code showed
+ 
+@@ -319,7 +328,10 @@
+   the admission step below, by an atomic replace of the whole file. The owner never edits it.
+ - **Admission is deterministic and part of the job that made the attempt** (Sup v0.8 4 rule 2A). `admit` adds a
+   routine-fill attempt, or a report attempt over a version-1 batch, only if its report completed and none of its keys
+-  is already supplied by a canonical source or by the weekly score ledger. Otherwise it refuses, names the first conflicting key, and changes nothing. An
++  is already supplied by a canonical source or by the weekly score ledger. Otherwise it refuses, names the first conflicting key, and changes nothing. A repeat for exactly the
++  attempt already listed, with the same score-ledger digest, keys' scope and scoring policy, succeeds and changes nothing
++  (the file is not rewritten), so the job goes on to publish; the same identity with any difference refuses (EX_225
++  RC-225-2). An
+   exploratory attempt is never admitted. So the canonical score of a key is the first one admitted, never the newest
+   or the best. The two existing attempts (`rr-4be324ab...` for Oz Lotto, `rr-97bb4861...` for Powerball) are admitted
+   the same way at the first use after the install. Replacing a canonical source is not provided: it would be a
+@@ -339,7 +351,7 @@
+   1. Build both members' bytes in memory and check them.
+   2. Create the publication's manifest in the archive, create-only: the identity; both members' digests; and every
+      input pinned so the bytes can be rebuilt exactly (the source file's digest and entries, each ledger's verified
+-     length and digest, the roster with release dates).
++     length and digest, the forecast ledger's included, the roster with release dates).
+   3. Create the two archive members, create-only.
+   4. Append the `WEEKLY_TABLE` search-log row, naming the manifest. **The row is written last, so a row always points
+      at a complete, verified set.**
+@@ -350,7 +362,10 @@
+   (the same bytes, the same identity). If they cannot be rebuilt identically it writes a create-only
+   `PUBLICATION_INCOMPLETE` note beside the manifest, reports it, and never logs that publication. Nothing in the
+   archive is overwritten or deleted, no logged path ever lacks its files, and version numbers come from the manifests,
+-  so none is reused. A failed `current` copy is repaired from the archive.
++  so none is reused. A failed `current` copy is repaired from the archive. A `publish` whose pinned inputs equal those of
++  the latest logged publication writes nothing and reports the table as up to date, so a rerun after a crash that
++  followed the row never makes a second publication; and before appending a row the writer checks that no row already
++  names the manifest (EX_225 RC-225-2).
+ - **Who starts and who writes** (Sup v0.8 4 rule 4; EX_223 C01). A publication is started only by `Method_League_Table.py
+   publish`, which the weekly and development sequencers run and the owner may run on its own. Whoever starts it, the
+   same writer runs the same five steps, so no publication can exist without its row. `league_sources.py` and
+@@ -360,7 +375,11 @@
+   figure for the same keys), never in a canonical column or total.
+ - **Gates:** each refusal and each degraded case of Sup 4 once; the adapters on writer-made records and on the real
+   committed ones (section 8); an interruption before and after every durable step of a publication and of the
+-  `current` copy (section 9); a manifest whose inputs have changed is marked incomplete, not finished wrongly;
++  `current` copy (section 9); a manifest whose inputs have changed is marked incomplete, not finished wrongly; a
++  repeated `admit` of the same attempt changes no byte, and the same identity with different bytes or scope refuses;
++  crashes before and after admission, between admission and publication, after the row and during the `current`
++  repair, each ending with exactly one canonical score per key and one row per publication; a torn or duplicated
++  search-log row;
+   admission refused on an overlapping key, with the file byte-identical; a repeated attempt for a covered key never
+   counted; the history report recomputes nothing; every reconstruction row carries its label and the "released at
+   that date" column.
+@@ -386,8 +405,9 @@
+   - *factor*: the eligibility line's digest, the outcome pin copied from the score lines, X, Z to a fixed number of
+     digits for display, the six stored log-factors as exact fixed-point integers, the six running sums, the proved
+     lower bound of the score, and `crossed`;
+-  - *missed* (`MISSED_NO_FREEZE`), for a target with no pre-cut-off freeze line: written after C(T), from the verified
+-    forecast ledger, naming that ledger's length and digest as read, and labelled as recorded after the cut-off;
++  - *missed* (`MISSED_NO_FREEZE`), for a target with no pre-cut-off freeze line: written after C(T), from the forecast
++    ledger once its chain verifies and it reconciles with every earlier record (6.6), naming that ledger's length and
++    digest as read, and labelled as recorded after the cut-off from local records;
+   - *stop*: the target and the cause.
+ - **One idempotent command, `record --game G`,** run by the sequencer after every `score` and after the loop, and safe
+   for the owner to run again at any time. It takes the targets from T0 in order and writes whatever is due, nothing
+@@ -399,8 +419,11 @@
+   every line from the eligibility lines, the forecast ledger and the score ledger and compares bytes. A later kernel
+   version must reproduce a frozen fixture ledger byte for byte, or it is a reviewed amendment.
+ - **Gates** (Sup 2 row L5; Sup v0.8 14): section 6's; every target classified as counted, skipped, missed or a stop from
+-  the records alone, with the cut-off tested one second before, at, and one second after; a missed line refused when
+-  the forecast ledger's chain is broken or its times run backwards; a freeze line appended after the cut-off never
++  the records alone, with the cut-off tested one second before, at, and one second after; a missed line refused, and
++  the target blocked, when the forecast ledger is torn, truncated or replaced, its chain is broken, its times run
++  backwards or lie after the recorder's clock, or it conflicts with an extent or freeze-line digest named earlier in
++  the OV-1 ledger, the witness ledger or a publication manifest (EX_225 RC-225-1); a freeze line appended after the
++  cut-off never
+   counted; incomplete pairs excluded; changing rosters and history-dependent weights; an interruption exactly between
+   the freeze line and the eligibility line, resumed before and after the cut-off; each stop cause of 6.6 planted
+   once, with no factor line after it; restart giving the same bytes; no OV-1 figure for a holdout, catch-up or
+@@ -473,9 +496,12 @@
+ - **`Run_Development_Batch.bat --game G --fill`**, or **`--rerun --variants ... --first S --last L`** (new; EX_223 C04):
+   plan; run; report; then for a fill, `admit` and `publish`. A third form, `--report --batch B --first S --last L`,
+   scores forecasts an existing batch already holds, then `admit` and `publish`: it is how the Powerball 1145-1285
+-  scores of O-4 are made, with no forecast run again. Rerunning the command with the batch it printed continues
+-  from the records alone: an unfinished batch is run on, a batch without a report is reported, an unadmitted fill is
+-  admitted. It opens no weekly record. It is a new launch interface, so the Architecture's next edition names it
++  scores of O-4 are made, with no forecast run again. That form uses only an authorised batch at its own pin and the
++  accepted outcome reader, never changes the batch's forecasts, refuses any key a canonical source already supplies,
++  and is tested with a version-1 batch and a version-2 batch (EX_225 R-5); running it for O-4 still needs its own go.
++  Rerunning the command with the batch it printed continues from the records alone: an unfinished batch is run on, a
++  batch without a report is reported, an unadmitted attempt is admitted, an admitted one is not admitted again (L4),
++  and an unpublished table is published. It opens no weekly record. It is a new launch interface, so the Architecture's next edition names it
+   beside the weekly one.
+ - **Exit statuses, distinct:** 0 complete; one value for "frozen; table not written"; one for "frozen; OV-1 recorder
+   failed"; another for a stop of the live path or of a batch, naming the child. A failure after `close-session` never
+@@ -560,8 +586,8 @@
+ | State | When | What the program does |
+ |---|---|---|
+ | Counted | a pre-cut-off freeze line and a valid eligibility line | applies the sealed factor at the observed X (1 if V = 0) |
+-| Missed | no pre-cut-off freeze line for the target | factor 1, a `MISSED_NO_FREEZE` line, written after the cut-off from the verified forecast ledger |
+-| Blocked | an input is not yet there or does not verify: the result not accepted; a score line not written; a ledger whose chain or times fail | writes nothing for that target or any later one; passes over nothing; resumes by itself when the input verifies |
++| Missed | no pre-cut-off freeze line for the target | factor 1, a `MISSED_NO_FREEZE` line, written after the cut-off from the forecast ledger, verified and reconciled |
++| Blocked | an input is not yet there or does not verify: the result not accepted; a score line not written; a ledger whose chain, times or reconciliation fail | writes nothing for that target or any later one; passes over nothing; resumes by itself when the input verifies |
+ | Stop | a pre-cut-off freeze line with no valid eligibility line at the cut-off (F01); an owner stop; or a contradiction about a counted target (below) | a stop line; no factor line for that target or any later one, ever |
+ 
+ - **The contradictions that stop the stream:** the factor table rebuilt at scoring is not the sealed one; X is outside
+@@ -572,11 +598,20 @@
+   corrupt score, a missing eligibility line or a broken ledger is never turned into either.
+ - **Why "missed" cannot see the result.** Whether a freeze line with a freeze time before C(T) exists is settled at
+   C(T), eight hours before the result. A line appended later carries its own later time (the writer refuses a time
+-  earlier than the line before), so it can never become a pre-cut-off line. The recorder writes the missed line only
+-  after C(T) and only from a ledger whose whole chain it has verified; a broken chain blocks, because an absence of
+-  evidence is not evidence of absence. Skipping a draw by a rule that uses only information from before the draw keeps
+-  the score a fair-draw supermartingale, exactly as V = 0 does. The times are the PC's clock, the same trust the
+-  design already places in `PROSPECTIVE` (Sup 6.4).
++  earlier than the line before), so it can never become a pre-cut-off line. Skipping a draw by a rule that uses only
++  information from before the draw keeps the score a fair-draw supermartingale, exactly as V = 0 does.
++- **What that rests on (EX_225 RC-225-1; Sup v0.8 6.8).** Three operating assumptions, stated in the registration: the
++  writers append as specified and nothing is later truncated, replaced or suppressed; the PC's clock and event order
++  are trustworthy relative to the real cut-off (the trust the design already places in `PROSPECTIVE` and the deadline;
++  the clock is no witness); no eligible freeze line is removed or hidden after the fact. A verified chain is local
++  evidence that the lines agree; it does not prove when they were written or that the ledger was never replaced
++  (design 6.5). So the recorder writes a missed line only after C(T), only from a ledger whose whole chain verifies,
++  and only once the ledger reconciles with every earlier record that names part of it: each forecast-ledger extent
++  and freeze-line digest named in the OV-1 ledger, the witness ledger or a publication manifest must be there
++  unchanged, and no record may name a freeze line for T that the ledger lacks. Any failure, or a time after the
++  recorder's clock, blocks the target; it is never turned into missed, because an absence of evidence is not
++  evidence of absence. The missed line is labelled as recorded after the cut-off from local records, and is never
++  presented as independent proof of absence or of timing. No owner step and no outside witness are needed.
+ - **Why a stop cannot manufacture a crossing.** A stop ends the stream at its last value and no later factor is ever
+   applied, so every crossing the software can declare is a crossing of the whole registered process at that same
+   draw. Stopping, for any reason and at any time, can only remove crossings. What would break the guarantee is
+@@ -648,8 +683,8 @@
+ | `next`, next-draw set | `SET_STARTED`; each ticket and record; the freeze line | completed under the same ticket; classes by each record's own time |
+ | `score` | each score line | no line twice; unscored records only |
+ | `record` (OV-1) | eligibility line; each factor line; missed line; stop line | same bytes; never a second line for a target; never out of order |
+-| `publish` | before and after: the manifest; each archive member; the `WEEKLY_TABLE` row; each step of the `current` copy | a row only for a complete set; the same publication finished with the same bytes, or marked incomplete; no version reused |
+-| `admit` | the source file's replacement | the old file or the new file, never a mixture; no key admitted twice |
++| `publish` | before and after: the manifest; each archive member; the `WEEKLY_TABLE` row; each step of the `current` copy | a row only for a complete set; the same publication finished with the same bytes, or marked incomplete; no version reused; a rerun after the row publishes nothing new and adds no row |
++| `admit` | the source file's replacement | the old file or the new file, never a mixture; no key admitted twice; a repeat of the same attempt succeeds and changes no byte |
+ | V2 batch `run` | each ticket and record | as the Mode H batch today |
+ | either sequencer | between every pair of children | the rerun continues from the records alone |
+ 
+@@ -709,7 +744,8 @@
+ 
+ **The reviewer's answers CP-Q1 to CP-Q9 are all adopted** (section 1A). CP-Q7's gap is closed by rule 2A as amended.
+ 
+-**For the focused recheck (the points where this plan goes beyond the exact words of EX_223):**
++**Put to the focused recheck (the points where this plan went beyond the exact words of EX_223); EX_225's answers
++follow the list:**
+ - **R-1. The cut-off as a fixed instant.** OD-3 says noon Adelaide time. Sup v0.8 6.8 fixes 01:30 UTC on the draw date,
+   which is noon in daylight time and 11:00 in standard time: never later than Adelaide's noon, one hour stricter for
+   about half the year, and free of any time-zone rule. Is that acceptable as the realisation of OD-3? The owner sees
+@@ -726,8 +762,14 @@
+ 
+ **DECIDED (cited, not reopened):** per game, bar 40, no joint figure (entry 55); the eight layers and the isolation rule
+ (RAT-33); the deadline (MHUP-R); tickets for official runs (Q11); two commits per install; the full suite after step 18;
+-OD-1 to OD-6 as directions (entries 69, 70). **RECOMMENDED:** everything else in sections 4 to 10. **OPEN:** R-1 to R-6;
+-the owner's ratification of this plan and of Sup v0.8.
++OD-1 to OD-6 as directions (entries 69, 70). **RECOMMENDED:** everything else in sections 4 to 10.
++
++**EX_225's answers:** R-1 accepted, to be shown to the owner as a conservative choice, not an exact translation of
++"noon Adelaide time" (Sup v0.8 13, O-5); R-2 the arithmetic and the stop argument passed, the evidence wording
++corrected by RC-225-1; R-3 and R-4 accepted, with RC-225-2; R-5 accepted, with RC-225-2's restart behaviour and its
++conditions (L8); R-6 passed, subject to the two corrections; the probe is never claimed to prove the production
++software (6.5). **OPEN:** the reviewer's check of the two corrections; then the owner's ratification of this plan and
++of Sup v0.8, together. Ratification authorises no code (entry 67).
+ 
+ ## 12A. The three everyday jobs (EX_223 Appendix A, the operator experience test)
+ 
+@@ -812,5 +854,5 @@
+     files, but exactly the administration the owner asked to avoid.
+   - One big review instead of slices: fewer rounds, but faults in the live path would be found late.
+ 
+-End of draft v0.2.
++End of v0.3.
+ 

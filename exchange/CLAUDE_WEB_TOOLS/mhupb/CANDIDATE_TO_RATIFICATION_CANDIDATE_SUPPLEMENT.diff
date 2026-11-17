@@ -1,0 +1,154 @@
+--- MHUPB_DESIGN_SUPPLEMENT_v0_8_AMENDMENT_CANDIDATE.md
++++ MHUPB_DESIGN_SUPPLEMENT_v0_8_RATIFICATION_CANDIDATE.md
+@@ -1,17 +1,19 @@
+-# MHUP-B design supplement - v0.8 (AMENDMENT CANDIDATE)
++# MHUP-B design supplement - v0.8 (RATIFICATION CANDIDATE)
+ 
+-**Status: AMENDMENT CANDIDATE, by the Claude web chat (17 November 2026).** A full edition: the supplement v0.7 as the
++**Status: RATIFICATION CANDIDATE, by the Claude web chat (17 November 2026).** A full edition: the supplement v0.7 as the
+ project owner ratified it on 17 November 2026 (RAT-33; SHA-256 `04c4f68a638fff7d93f06d25084d1454bdfc443e9aab6b0b12ffdfd8b5323d26`)
+ with the focused amendments listed in section 1A. They answer the reviewer's review of the code plan (EX_223: B01, B02,
+-B03, B04, C01, C02, C03) and follow the owner's directions OD-1 to OD-4 (decision log entries 69 and 70). Everything not
+-listed in section 1A is v0.7's text, unchanged; the builder `make_supplement_v0_8.py` makes it from v0.7's bytes by
+-counted edits. **Until the owner ratifies v0.8, v0.7 is the ratified edition and governs. Ratifying v0.8 approves a
++B03, B04, C01, C02, C03) and to the reviewer's focused recheck (EX_225: RC-225-1 and RC-225-2), and follow the owner's
++directions OD-1 to OD-4 (decision log entries 69 and 70). Everything not listed in section 1A is v0.7's text, unchanged;
++the builders `make_supplement_v0_8.py` (v0.7 to the amendment candidate) and `make_ratification_candidates.py` (EX_225's
++two corrections) make it from v0.7's bytes by counted edits. **Until the owner ratifies v0.8, v0.7 is the ratified edition and governs. Ratifying v0.8 approves a
+ design: it authorises no code, run, rescore, re-forecast or install, each of which needs its own go.** Drafts v0.1 to
+ v0.6 are kept in the same folder as history. It supplements the ratified design
+ (`doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`, "the design" below).
+ 
+ **Review record:** EX_207 (v0.1), EX_208 (v0.2), EX_209 (v0.4), EX_211 (v0.5), EX_213 (v0.6: focused design pass); for
+-v0.8, EX_223 (the review of the code plan, which asked for these amendments). **Gates left
++v0.8, EX_223 (the review of the code plan, which asked for these amendments) and EX_225 (the focused recheck: a pass
++with two corrections, RC-225-1 and RC-225-2, both applied). **Gates left
+ for the code round** (EX_213): the numerical implementation and its error bounds; the adapters against the actual score
+ schemas; de-duplication and correction-chain tests; eligibility crash and restart tests; isolation of the live path from
+ the reporting layers; the full suite and the install rehearsal on Windows.
+@@ -87,6 +89,7 @@
+ | EX_223 B04; owner OD-1 (v0.8) | Routine fill and exploratory rerun; canonical and exploratory attempts | 7.1A, 4 rule 2A |
+ | EX_223 C01, C03, B02 (v0.8) | One writer per ledger; one small source file, with admission inside an approved workflow; a table is logged only when its set is complete | 4 rules 4 and 5, 5.1 |
+ | Owner OD-4 (v0.8) | A stopped stream stays stopped; no second registration in MHUP-B | 6.8 |
++| EX_225 RC-225-1, RC-225-2 (v0.8) | What local records can and cannot establish about a missed week; repeating an admission already made changes nothing | 6.8; 4 rule 2A; 5.1 |
+ 
+ ## 1A. What v0.8 changes in the ratified v0.7
+ 
+@@ -105,6 +108,7 @@
+ | 7.2 rule 2A | Replaced: by the release instant; exploratory reruns above the holdout |
+ | 7.3 | One sentence added |
+ | 11, 12, 13, 14 | The ER-6 note; three alternatives; the decisions O-5 to O-7; the code round's added proofs |
++| After EX_225: 4 rule 2A, 5.1, 6.8, 13, 14 | A repeated admission of the same attempt is a no-op; a publication is not made twice from the same inputs; the missed rule's operating assumptions and its reconciliation with earlier records; the cut-off shown to the owner as a conservative choice; the matching code-round tests |
+ 
+ ## 2. The package in layers (EX_207 R-4)
+ 
+@@ -185,7 +189,10 @@
+    the all-draws column) or *exploratory* (never listed; shown only in separate, labelled comparisons by named
+    attempt). A routine-fill attempt (7.1A), or a report attempt over a plan of the first kind, is admitted as canonical
+    by its own workflow only if no key it supplies is already supplied by a canonical source or by the weekly score
+-   ledger; otherwise it is not admitted and the table is unchanged. So the canonical
++   ledger; otherwise it is not admitted and the table is unchanged. The one exception is a repeat: if exactly that
++   attempt is already listed, with the same score-ledger digest, keys' scope and scoring policy, the admission succeeds
++   and changes nothing (the file is not rewritten), so an interrupted job can resume and publish. The same attempt
++   identity with any difference still refuses, as does any key supplied by another source (EX_225 RC-225-2). So the canonical
+    score for a key is the first one admitted. It is never replaced because a later run is newer or more favourable. An
+    exploratory rerun is never admitted. Replacing a canonical source is a correction: a reviewed, named change on the
+    owner's decision.
+@@ -212,7 +219,9 @@
+ Each table set (the `.txt` and `.csv` of one publication) is logged in the search log (`WEEKLY_TABLE`). A set is logged,
+ and counts as published, only when both of its archive files are durable and verified. An interrupted publication is
+ finished with exactly the same bytes and identity, or is marked incomplete; it is never logged as complete, never
+-overwritten and never abandoned silently (v0.8; EX_223 B02).
++overwritten and never abandoned silently (v0.8; EX_223 B02). Each publication's manifest pins its inputs; a publication
++whose inputs equal those of the latest logged one is not made again, and the publish command reports the table as up to
++date. No two search-log rows name the same publication (EX_225 RC-225-2).
+ - **The archive**, `results/method_rankings/<GAME>/league/archive/`: every published set, written once, tracked, and never
+   moved, changed, deleted or rewritten. Its paths are the ones the search log records. **The archive is the record.**
+ - **The current folder**, `results/method_rankings/<GAME>/league/current/` (owner input D-11): copies of the newest complete
+@@ -338,7 +347,8 @@
+   Adelaide, and with no time-zone data to depend on. It is at least seven hours before a result can exist, on the
+   owner's statement, recorded in the registration, that both games close at 7.30pm AEST. An eligibility line counts
+   only if it is durable before C(T) and T's result is not then in the master; otherwise the recorder refuses to write
+-  one. **The cut-off moves no forecast deadline:** a ticket counts only if its own freeze time is before the design's
++  one. The master is only a further check here: a result absent from the master is never taken as evidence that C(T)
++  has not passed or that no result exists (EX_225). **The cut-off moves no forecast deadline:** a ticket counts only if its own freeze time is before the design's
+   midnight deadline (design 6.4), exactly as before, and nothing frozen later is promoted. If the operator's schedule
+   changes so that a result could exist before C(T), the owner stops the stream by a recorded stop before the first
+   affected draw; and a counted draw whose date in the master is not its derived date stops the stream.
+@@ -348,19 +358,34 @@
+   - *Counted:* T has a pre-cut-off freeze line and a valid eligibility line. Its factor is that of 6.5, or 1 if the
+     line records V = 0.
+   - *Missed (`MISSED_NO_FREEZE`):* T has no pre-cut-off freeze line. Its factor is 1. The program decides this, never
+-    a person. After C(T) it records the fact from the forecast ledger, whose whole chain it has first verified, and
+-    labels the line as recorded after the cut-off from the records, which is a weaker witness than a pre-outcome line.
++    a person. After C(T) it records the fact from the forecast ledger, once it has verified the ledger's whole chain and
++    reconciled it with every earlier record that names it (below), and labels the line as recorded after the cut-off
++    from local records, which is a weaker witness than a pre-outcome line.
+   - *Stop:* T has a pre-cut-off freeze line and no valid eligibility line at C(T). **"OV-1 eligibility NOT VERIFIED -
+     PRIMARY STREAM STOP"** (F01), in the session record and in every report for that game from that target. It is
+     never treated as missed.
+   Which of the three applies is fixed by what existed before C(T), and so before T's result existed. Recording it
+   later reads that fact and cannot choose it: a freeze line appended later carries its own later time and can never
+-  become a pre-cut-off line. If the ledger's chain does not verify, or its times do not run forward, absence is not
+-  established and nothing is recorded: an absence of evidence is never evidence of absence. The genuine forecasts,
++  become a pre-cut-off line.
++- **What the missed rule rests on (EX_225 RC-225-1).** The rule is valid only under three operating assumptions, which
++  the registration states: the writers operate as specified, append-only, and nothing is later truncated, replaced or
++  suppressed; the PC's clock and the order of its events are trustworthy relative to the real cut-off; and no eligible
++  freeze line is ever removed or hidden after the fact. They are the trust the design already places in the freeze
++  time and the deadline (design 6.4: the clock is no witness). A verified chain is local operational evidence only: as
++  design 6.5 says, it shows that the lines agree with each other, and by itself it proves neither when they were
++  written nor that the whole ledger was never replaced. A missed line is therefore never presented as independent
++  proof of absence or of timing. **Reconciliation:** before writing a missed line the recorder checks the forecast
++  ledger against every earlier record that names part of it. Every forecast-ledger extent (length and digest) and
++  every freeze-line digest named in the OV-1 ledger, the witness ledger or a league publication's manifest must still
++  be there, at the same position, with the same bytes; and no record of any kind may name a freeze line for T that the
++  ledger does not hold. If the chain does not verify, its times do not run forward or lie after the recorder's own
++  clock, or any reconciliation fails or cannot be completed, absence is not established and nothing is recorded: the
++  target is blocked, never turned into missed. An absence of evidence is never evidence of absence. The rule needs no
++  outside witness and no step by the owner in a missed week. The genuine forecasts,
+   their scores and the failure evidence are always kept, and forecasting and scoring continue as normal.
+ - **Failures (v0.8; EX_223 C02).** A failure is never a skip.
+   - *Blocked:* an input is not yet there or cannot be verified (the result not yet accepted; a score line not yet
+-    written; a ledger that does not verify). Nothing is written for that target or any later one until it resolves. No
++    written; a ledger that does not verify or reconcile). Nothing is written for that target or any later one until it resolves. No
+     target is passed over.
+   - *Stop:* the F01 case above; a recorded owner stop; or a contradiction about a counted target between what was
+     sealed and what came later: the factor table rebuilt at scoring is not the one whose digest the eligibility line
+@@ -526,7 +551,10 @@
+ ## 13. For the reviewer and the owner
+ 
+ **The reviewer's recommendation (EX_213):** ratify, with RC-1 (now in 6.8). **For v0.8:** EX_223 asked for the amendments
+-of section 1A; the owner gave his directions on 17 November 2026 (decision log entries 69 and 70).
++of section 1A; the owner gave his directions on 17 November 2026 (decision log entries 69 and 70). The reviewer's
++focused recheck (EX_225) passed them with two corrections, RC-225-1 and RC-225-2, both applied in this edition, and
++recommends that the owner ratify this corrected edition together with the code plan once it has checked the two
++corrections.
+ 
+ **The owner's decisions** (his position is in decision log entry 59). O-1 to O-4 were approved with v0.7 (RAT-33) and
+ are unchanged:
+@@ -537,7 +565,10 @@
+ - O-4. The objective of scoring Powerball targets 1145-1285; the run itself needs a separate go once its command is reviewed.
+ 
+ **New in v0.8, for the owner's ratification:**
+-- O-5. The opportunity rule, the cut-off and the failure rules of 6.5 and 6.8 (his directions OD-2, OD-3 and OD-4).
++- O-5. The opportunity rule, the cut-off and the failure rules of 6.5 and 6.8 (his directions OD-2, OD-3 and OD-4),
++  with the missed rule's operating assumptions. The cut-off is written as 01:30 UTC on the draw date: noon in Adelaide
++  in daylight time and 11:00 in standard time. That is a conservative choice, never later than his noon, not an exact
++  translation of "noon Adelaide time" (EX_225 R-1).
+ - O-6. The two kinds of development run and the canonical rule (7.1A, 7.2 rule 2A, section 4 rule 2A; his direction OD-1).
+ - O-7. The writer, source-file and publication wording (section 4 rules 4 and 5; 5.1).
+ 
+@@ -556,4 +587,12 @@
+ one driver, with no key counted twice and no exploratory attempt in a canonical total; and an interrupted publication
+ finished with the same bytes or marked incomplete, never logged as complete.
+ 
++After EX_225 the code round must also show: the missed status refused, and the target blocked, for a torn, truncated or
++replaced forecast ledger, for a prefix that conflicts with an extent or freeze-line digest recorded earlier in the OV-1
++ledger, the witness ledger or a publication manifest, for a freeze-line time after the recorder's clock, and for a
++clock that runs backwards; a repeated admission of the same attempt succeeding without rewriting the source file, and
++the same identity with different bytes or scope refusing; crashes before and after admission, between admission and
++publication, after the search-log row and during the repair of `current`, each ending with exactly one canonical score
++per key and one `WEEKLY_TABLE` row per completed publication; a torn or duplicated search-log row.
++
+ End of v0.8.
