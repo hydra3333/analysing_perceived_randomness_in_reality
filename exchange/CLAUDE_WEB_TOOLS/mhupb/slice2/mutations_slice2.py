@@ -277,7 +277,7 @@ MUTANTS = [
      "                                development=True) if targets else {}\n", "                                development=False) if targets else {}\n",
      DB + '.Reports.test_a_v2_batch_is_reported_on_its_own_pairs'),
     ('the Mode H families loaded by a development report', E + 'report.py',
-     "\n            and (tier is None or (f.get('evidence_tier') or 'DEVELOPMENT_WF_EXPLORATORY') == tier)]\n", "]\n",
+     "\n            if (f.get('evidence_tier') or 'DEVELOPMENT_WF_EXPLORATORY') == 'DEVELOPMENT_WF_EXPLORATORY']\n", "]\n",
      DB + '.Reports.test_families_are_loaded_by_window_and_tier'),
     ('a V2 batch reported over its whole window', E + 'collect.py',
      "    if WF.kind_of(plan) == 'DEV_BATCH':", "    if False:", DB + '.Reports.test_a_v2_batch_is_reported_on_its_own_pairs'),

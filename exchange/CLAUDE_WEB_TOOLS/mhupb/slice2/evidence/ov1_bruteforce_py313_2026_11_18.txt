@@ -1,0 +1,4 @@
+N=35, the reviewer's counterexample (40 identical variants): all 6,724,520 subsets enumerated; 15 values of X; equal to both routes of the kernel (6 s)
+N=35, 23 overlapping variants: all 6,724,520 subsets enumerated; 15 values of X; equal to both routes of the kernel (6 s)
+N=47, 31 overlapping variants: all 62,891,499 subsets enumerated; 29 values of X; equal to both routes of the kernel (50 s)
+python 3.13.18; kernel OV1_KERNEL_V1; BRUTE-FORCE EVIDENCE PASS

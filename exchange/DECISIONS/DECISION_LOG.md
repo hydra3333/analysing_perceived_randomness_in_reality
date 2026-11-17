@@ -1131,3 +1131,23 @@ the installed documents. This log is not a separate approval process.
   slice 1 code is, how to rebuild and test it including the second Python, the last known results, what slice 2 must do).
   The "If a chat ends" line now points a new Claude chat to that section and to the working principle. The slice 1 tools
   in the repository were checked identical to the working copy.
+
+## 83. 18 November 2026, 02:24 - slice 2 (L5 and L6) built and sent for review as EX_232
+
+- **The owner's go for slice 2:** 00:35, on Fable (High).
+- **Built, cloud only, NOT INSTALLED:** `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` on top of slice 1's tree. L5: OV-1's
+  numerical kernel (`ov1_numeric.py`, proofs P1 to P8 in its docstring), the recorder (`ov1.py`, `Method_OV1.py`:
+  register, record, stop, status, verify). L6: `WF_BATCH_PLAN_V2` (routine fill, exploratory rerun), the `DEV_BATCH`
+  gate, the post-seal development release rule in the outcome reader, the report on a V2 batch's own pairs,
+  `reforecast_compare.py`, and the read side of `LEAGUE_SOURCES_V1`.
+- **Results:** 694 tests in 51 modules, 0 failing, on Python 3.13.18 and 3.15.0b4 (71 new); 94 planted defects caught,
+  0 survived; the exact distribution equals brute force over all 6,724,520 and 62,891,499 subsets; tree digest
+  `887731e17598dcd71d8f331797047d31d3133dd04028aa5287501d0d4bedabc4`, reproduced from the repository copy.
+- **Found on the way:** a fault in the plan-stage probe's `exp_enc` (reduction by the floor: fixed in the kernel); the
+  plan's |Z| bound is valid but not attained; one regression of Claude's own caught by the full suite and fixed
+  before sending (the Mode H scorer's family lookup).
+- **Built lean or moved to slice 3 (listed in EX_232 section 6 for the reviewer):** OV-1's measure-registry entry; the
+  league manifests' reader for the missed-week reconciliation (a seam, to be connected before any install); admission
+  and the new table after a routine fill; the exploratory comparison with canonical figures.
+- **Not tested:** Windows, T017, real data, the comparison against a real sealed Mode H batch, the sequencers.
+- **Next:** the reviewer's review of EX_232. Slice 3 (Opus) only after its acceptance, on the owner's go.

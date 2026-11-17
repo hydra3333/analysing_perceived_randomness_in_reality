@@ -584,9 +584,10 @@ class Reports(Dev):
         for game, lo, hi in (('POWERBALL', 1577, 1586), ('OZLOTTO', 1694, 1703)):
             there = [f for f in reg['families'] if f['game_id'] == game and (f['window_first'], f['window_last']) == (lo, hi)]
             self.assertTrue(there and all(f['evidence_tier'] == 'HOLDOUT_MODE_H' for f in there))
-            self.assertEqual(RP.load_families(game, lo, hi, tier='DEVELOPMENT_WF_EXPLORATORY'), [])
+            self.assertEqual(RP.development_families(game, lo, hi), [])
             self.assertEqual(RP.load_families(game, lo, hi), there)           # the Mode H scorer's own call is unchanged
-        self.assertTrue(RP.load_families('POWERBALL', 1286, 1576, tier='DEVELOPMENT_WF_EXPLORATORY'))   # development families load
+        self.assertEqual(RP.development_families('POWERBALL', 1286, 1576), RP.load_families('POWERBALL', 1286, 1576))
+        self.assertTrue(RP.development_families('POWERBALL', 1286, 1576))     # the development families still load
 
     def test_named_content_comparison(self):
         """Rule 7 on fabricated records: identical named content under different run modes; every kind of difference

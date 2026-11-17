@@ -1,0 +1,1015 @@
+diff -ru slice1_tree/src/evaluation/collect.py slice2_tree/src/evaluation/collect.py
+--- slice1_tree/src/evaluation/collect.py	2026-11-17 20:14:02.547839259 +1030
++++ slice2_tree/src/evaluation/collect.py	2026-11-18 01:58:27.655753046 +1030
+@@ -30,6 +30,10 @@
+     on draw numbers and the declaration."""
+     e = get_profile(plan['game_id']).first_draw
+     need = max(1, member['minimum_history_draws'])
++    if WF.kind_of(plan) == 'DEV_BATCH':                    # MHUP-B: a plan of the second kind is reported on its own pairs
++        mine = sorted(t for mem, t in WF.plan_pairs(plan)
++                      if (mem['method_id'], mem['variant_id']) == (member['method_id'], member['variant_id']))
++        return [n for n in mine if first <= n <= last and n - e >= need]
+     return [n for n in range(first, last + 1) if n - e >= need]
+ 
+ 
+diff -ru slice1_tree/src/evaluation/outcome_reader.py slice2_tree/src/evaluation/outcome_reader.py
+--- slice1_tree/src/evaluation/outcome_reader.py	2026-11-18 02:23:14.382821324 +1030
++++ slice2_tree/src/evaluation/outcome_reader.py	2026-11-18 01:58:27.656398989 +1030
+@@ -79,6 +79,25 @@
+         return False
+ 
+ 
++def development_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
++    """The post-seal development rule (MHUP-B; supplement v0.8 section 7.2 rules 1, 2 and 2A; code plan CF-4; an
++    always-review subject). Decides whether the outcome of a holdout or later draw may be served to a DEVELOPMENT
++    report: only when the game's opening record exists and its Mode H study is SEALED (the sealed study is never
++    reopened: this reads the master, not the study); and, for a draw after the holdout, only when the weekly
++    freeze-line rule also releases it (the developed record, a verified freeze line for the draw, the draw accepted).
++    Fixed evidence paths under the root; anything invalid or absent refuses (False)."""
++    import _common.owner_records as OR
++    p = get_profile(game_id)
++    if type(target) is not int or target < p.holdout_first:
++        return False
++    try:
++        if OR.opening_record(repo_root, game_id) is None or not OR.mode_h_sealed(repo_root, game_id):
++            return False
++    except OR.RecordRefused:
++        return False
++    return target <= p.holdout_last or _weekly_release_allowed(repo_root, game_id, target)
++
++
+ def _weekly_release_allowed(repo_root: Path, game_id: str, target: int) -> bool:
+     """The weekly freeze-line rule (design 6.3). Fixed evidence paths under the root; no caller-chosen input."""
+     import _common.owner_records as OR
+@@ -95,7 +114,8 @@
+         return False
+ 
+ 
+-def _check_targets(game_id: str, targets, repo_root: Path | None = None) -> list[int]:
++def _check_targets(game_id: str, targets, repo_root: Path | None = None, released=None) -> list[int]:
++    released = released or outcome_release_allowed
+     p = get_profile(game_id)
+     out = sorted(set(targets))
+     if not out:
+@@ -103,7 +123,7 @@
+     for t in out:
+         if type(t) is not int or t < p.first_draw + 1:
+             raise OutcomeRefused(f'target {t!r} is not a draw after the first of the era ({p.first_draw})')
+-        if t >= p.holdout_first and (repo_root is None or not outcome_release_allowed(repo_root, game_id, t)):
++        if t >= p.holdout_first and (repo_root is None or not released(repo_root, game_id, t)):
+             raise OutcomeRefused(f'target {t} is a holdout or later draw not released by the freeze-before-outcome '
+                                  f'rule (design 5.3, 6.3)')
+     return out
+@@ -137,23 +157,28 @@
+     return v
+ 
+ 
+-def read_outcomes(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1) -> dict:
++def read_outcomes(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1,
++                  development: bool = False) -> dict:
+     """{target: (drawn_main, drawn_powerball)} for Powerball, or {target: (drawn_main, drawn_supplementaries)} for
+     Oz Lotto, both as ascending tuples, for exactly the requested targets. Refuses (OutcomeRefused) before
+     decoding any row if a target or a source check fails. `ledger_version` is the pinned version (MHUP-A)."""
+     rows = read_outcome_rows(repo_root=repo_root, game_id=game_id, master_sha256=master_sha256, targets=targets,
+-                             ledger_version=ledger_version)
++                             ledger_version=ledger_version, development=development)
+     return {t: (main, extra) for t, (main, extra, _date) in rows.items()}
+ 
+ 
+-def read_outcome_rows(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1) -> dict:
++def read_outcome_rows(*, repo_root: Path, game_id: str, master_sha256: str, targets, ledger_version: int = 1,
++                      development: bool = False) -> dict:
+     """As read_outcomes, with each draw's date as the master records it: {target: (drawn_main, drawn_powerball or
+     drawn_supplementaries, draw_date_text)} (MHUP-B: the weekly score line records whether the master's date is the
+     draw's derived date, supplement v0.8 section 6.8). The same checks, in the same order."""
+     if not isinstance(repo_root, Path):
+         raise OutcomeRefused('invalid repository root')
+     p = get_profile(game_id)
+-    wanted = _check_targets(game_id, targets, repo_root)
++    # `development=True` is the development report's call (MHUP-B): holdout and later draws are then released by the
++    # post-seal development rule, not by the Mode H scorer's or the weekly scorer's rule.
++    released = development_release_allowed if development else outcome_release_allowed
++    wanted = _check_targets(game_id, targets, repo_root, released)
+     raw = _verify_source(repo_root, game_id, master_sha256, ledger_version)
+     want = set(wanted)
+     last = wanted[-1]                               # in or after the holdout only if released (5.3, 6.3)
+@@ -171,7 +196,7 @@
+         number = p.first_draw + i
+         if number not in want:
+             continue                                 # never decoded
+-        if number >= p.holdout_first and not outcome_release_allowed(repo_root, game_id, number):
++        if number >= p.holdout_first and not released(repo_root, game_id, number):
+             raise OutcomeRefused('holdout or later row reached without release')     # a second guard; unreachable by construction
+         try:
+             row = next(csv.reader([line.decode('ascii', errors='strict')], strict=True))
+diff -ru slice1_tree/src/evaluation/report.py slice2_tree/src/evaluation/report.py
+--- slice1_tree/src/evaluation/report.py	2026-11-17 20:14:02.548358882 +1030
++++ slice2_tree/src/evaluation/report.py	2026-11-18 01:58:27.656725443 +1030
+@@ -80,6 +80,15 @@
+     return [f for f in reg['families'] if f['game_id'] == game_id and (f['window_first'], f['window_last']) == (first, last)]
+ 
+ 
++def development_families(game_id: str, first: int, last: int) -> list[dict]:
++    """The registered families a DEVELOPMENT report may take (MHUP-B, code plan CF-5): by window AND tier, so a
++    development report never takes a family registered for another evidence tier (the Mode H families cover exactly
++    the holdout windows; a family without a tier field is a development family). `load_families` itself, which the
++    Mode H scorer also calls, is unchanged."""
++    return [f for f in load_families(game_id, first, last)
++            if (f.get('evidence_tier') or 'DEVELOPMENT_WF_EXPLORATORY') == 'DEVELOPMENT_WF_EXPLORATORY']
++
++
+ def search_rows(game_id: str | None = None) -> list[dict]:
+     path = roots()['search_log']
+     if not path.is_file():
+@@ -122,19 +131,31 @@
+         raise ReportRefused('the window must be two whole draw numbers, first <= last')
+     if first < p.first_draw:
+         raise ReportRefused(f'first must be at least {p.first_draw} (S >= E(G), R3 17.3.6)')
+-    if last > p.holdout_first - 1:
+-        raise ReportRefused(f'last must be at most {p.holdout_first - 1} for a development report (R3 17.3.6; MRT-14); '
+-                            f'the Mode H batch is scored once by Method_Mode_H.py score (design 5.4)')
+     try:
+         plan = WF.load_plan(game_id, batch_id)
+     except WF.BatchRefused as exc:
+         raise ReportRefused(f'unknown or altered batch: {exc}') from None
+-    if WF.kind_of(plan) != 'WF_BATCH':
++    if WF.kind_of(plan) == 'MODE_H_BATCH':
+         raise ReportRefused('this tool reports development batches only; the Mode H batch is scored by Method_Mode_H.py')
++    second_kind = WF.kind_of(plan) == 'DEV_BATCH'
++    if not second_kind and last > p.holdout_first - 1:
++        raise ReportRefused(f'last must be at most {p.holdout_first - 1} for a development report (R3 17.3.6; MRT-14); '
++                            f'the Mode H batch is scored once by Method_Mode_H.py score (design 5.4)')
+     if first < plan['window_first'] - (1 if plan['window_first'] == p.first_draw + 1 else 0) or last > plan['window_last']:
+         raise ReportRefused(f"the window [{first}, {last}] is outside the batch's window "
+                             f"[{plan['window_first']}, {plan['window_last']}]")
+-    families = load_families(game_id, first, last)
++    if second_kind:
++        # MHUP-B (supplement v0.8 7.2; code plan L6): a plan of the second kind is reported on its own pairs. A holdout
++        # or later target is read only under the post-seal development rule; that is checked here, before the
++        # search-log row, from value-free records, so a refused window appends nothing. No registered family applies:
++        # every table of such a report is EXPLORATORY_COHORT.
++        for t in sorted({t for _mem, t in WF.plan_pairs(plan) if first <= t <= last and t >= p.holdout_first}):
++            if not OR.development_release_allowed(roots()['project'], game_id, t):
++                raise ReportRefused(f'target {t} is not released to a development report (the game\'s Mode H seal; and, '
++                                    f'after the holdout, the weekly freeze line: supplement 7.2)')
++        families = []
++    else:
++        families = development_families(game_id, first, last)
+ 
+     # ---------------------------------------------------------------- steps 2-3: grid and frozen forecasts
+     progress(f'checks passed; collecting the frozen forecasts of {len(plan["cohort"])} variants')
+@@ -155,6 +176,8 @@
+                     'measures': STAGE2, 'declared_tests': tests, 'selected_forecasts': selected,
+                     'availability': dict(sorted(availability.items())), 'evaluator_version': EVALUATOR_VERSION,
+                     'receipt_selection_policy': 'EARLIEST_FROZEN_AT_UTC_EQUAL_CONTENT_DIGESTS'}
++    if second_kind:
++        scoring_plan['plan_kind'] = plan['plan_kind']
+     sp_digest = record_digest(scoring_plan)
+     progress(f'forecasts collected: {len(collected["cells"])} grid cells, {len(selected)} valid')
+ 
+@@ -177,7 +200,8 @@
+     # ---------------------------------------------------------------- step 6: the outcomes of valid grid targets only
+     targets = sorted({k[2] for k, c in collected['cells'].items() if c['valid']})
+     outcomes = OR.read_outcomes(repo_root=roots()['project'], game_id=game_id, master_sha256=plan['master_sha256'],
+-                                targets=targets, ledger_version=plan['ledger_version']) if targets else {}
++                                targets=targets, ledger_version=plan['ledger_version'],
++                                development=True) if targets else {}
+ 
+     # ---------------------------------------------------------------- step 7: the ledgers (create-only)
+     scores, ranks, per_track, per_variant = score_cells(game_id, members, collected, outcomes)
+@@ -188,7 +212,9 @@
+     # ---------------------------------------------------------------- step 8: measures (N1 optional)
+     results, var_results, n1 = measures_stage(game_id, per_track, per_variant, families, n1_runner, progress)
+     progress('measures done; writing the report')
+-    return {'plan': plan, 'families': families, 'collected': collected, 'per_track': per_track,
++    from . import reforecast_compare as RC
++    sealed = RC.sealed_comparison(game_id, plan, collected, first, last) if second_kind else None   # reads only (rule 7)
++    return {'sealed_comparison': sealed, 'plan': plan, 'families': families, 'collected': collected, 'per_track': per_track,
+             'per_variant': per_variant, 'results': results, 'var_results': var_results, 'n1': n1,
+             'attempt_id': attempt_id, 'search_log_row': row, 'scoring_plan': scoring_plan_record,
+             'scoring_plan_digest': sp_digest, 'scores_folder': folder, 'declared_tests': tests,
+diff -ru slice1_tree/src/evaluation/report_writer.py slice2_tree/src/evaluation/report_writer.py
+--- slice1_tree/src/evaluation/report_writer.py	2026-11-17 20:14:02.548358882 +1030
++++ slice2_tree/src/evaluation/report_writer.py	2026-11-18 01:58:27.657054514 +1030
+@@ -253,6 +253,10 @@
+       f"{plan['cohort_digest']}; {len(plan['cohort'])} variants, {len(res['per_track'])} tracks")
+     w('Families: ' + (', '.join(f['family_id'] for f in res['families']) or 'none apply to this window: '
+                       'every table is EXPLORATORY_COHORT'))
++    if plan.get('schema') == 'WF_BATCH_PLAN_V2':
++        w(f"Plan kind: {plan['plan_kind']} ({len(plan['pairs'])} planned pairs, each named in the plan). Development "
++          'evidence only: no figure here is catch-up, prospective or Mode H evidence, and repeated runs of a draw are '
++          'never added together or treated as independent observations.')
+     w('Track counts by status: ' + ', '.join(f'{k} {v}' for k, v in sorted(status_counts.items())))
+     w(f"Master: {plan['master_file']} version {plan['ledger_version']}, SHA-256 {plan['master_sha256']}")
+     w(f"Tool: {RP.TOOL} {RP.EVALUATOR_VERSION}, sources SHA-256 {RP.tool_sha256()}")
+@@ -463,6 +467,10 @@
+     w('- LOW_N marks n < 30. GRID_INCOMPLETE tracks carry SELECTION_UNVERIFIED on their exact figures (design 6.2A).')
+     w('- Not produced in this stage: MR2, MR3, MR6, MR8-MR15, the in-sample mode and the side-by-side tables (R3 '
+       'stage 3).')
++    if res.get('sealed_comparison') is not None:
++        from . import reforecast_compare as RC
++        for line in RC.section_lines(res['sealed_comparison']):
++            w(line)
+     text = ('\n'.join(L_) + '\n').encode('ascii', errors='replace')
+ 
+     buf = io.StringIO()
+@@ -492,6 +500,9 @@
+                 'tool_sha256': RP.tool_sha256(), 'environment': environment, 'generated_utc': generated_utc,
+                 'track_status_counts': dict(status_counts), 'text_sha256': sha256_hex(text),
+                 'csv_sha256': sha256_hex(csv_bytes)}
++    if plan.get('schema') == 'WF_BATCH_PLAN_V2':
++        manifest.update(plan_kind=plan['plan_kind'], planned_pairs=len(plan['pairs']),
++                        sealed_comparison=res.get('sealed_comparison'))
+     if mode_h:
+         adv = res.get('advance')
+         manifest.update(generated_utc=None, mode_h={'score_attempt_id': res['attempt_id'],
+diff -ru slice1_tree/src/methods/Method_Walk_Forward.py slice2_tree/src/methods/Method_Walk_Forward.py
+--- slice1_tree/src/methods/Method_Walk_Forward.py	2026-11-17 20:14:02.549345312 +1030
++++ slice2_tree/src/methods/Method_Walk_Forward.py	2026-11-18 01:58:27.657219700 +1030
+@@ -6,6 +6,11 @@
+   plan   --mode H --game G              MHUP-A (design 5.1): freeze the game's one Mode H plan from the study
+                                         manifest, at the admitted master version, under the opening record; one
+                                         MODE_H_BATCH search-log row; refused a second time. No --first/--last.
++  plan   --fill --game G                MHUP-B (supplement 7.1A): a routine fill. The driver works out the missing
++                                        pairs of every released variant itself; one DEV_BATCH search-log row.
++  plan   --rerun --game G --first S --last L [--variants M:V,M:V,...]
++                                        MHUP-B: an exploratory rerun of the named variants (or the whole released
++                                        cohort) over S..L, whether or not scored before. Never a canonical source.
+   run    --game G --batch ID            Run the plan: one standalone contract run per (variant, target), in order;
+                                         re-running the same command resumes. Stops at once on any refusal, data-
+                                         admission failure, interruption or unrecognised outcome (the STOP rule).
+@@ -32,6 +37,9 @@
+     plan.add_argument('--mode', choices=('WF', 'H'), default='WF')
+     plan.add_argument('--first', type=int)
+     plan.add_argument('--last', type=int)
++    plan.add_argument('--fill', action='store_true')
++    plan.add_argument('--rerun', action='store_true')
++    plan.add_argument('--variants')
+     for name in ('run', 'status'):
+         p = sub.add_parser(name)
+         p.add_argument('--game', required=True)
+@@ -51,6 +59,24 @@
+                 print(f"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} "
+                       f"--batch {made['batch_id']}", flush=True)
+                 return 0
++            if args.fill or args.rerun:
++                if args.fill and args.rerun:
++                    parser.error('one of --fill and --rerun')
++                names = None
++                if args.variants is not None:
++                    names = [tuple(x.split(':', 1)) for x in args.variants.split(',')]
++                    if any(len(n) != 2 for n in names):
++                        parser.error('--variants is a list of METHOD:VARIANT separated by commas')
++                made = WF.make_dev_plan(args.game, 'ROUTINE_FILL' if args.fill else 'EXPLORATORY_RERUN', ADAPTERS,
++                                        variants=names, first=args.first, last=args.last)
++                print(f"[WALK-FORWARD] PLAN {made['batch_id']}: {args.game} {made['plan_kind']}, {len(made['pairs'])} "
++                      f"pairs of {len(made['cohort'])} variants, targets {made['window_first']}-{made['window_last']}, "
++                      f"master version {made['ledger_version']} {made['master_sha256'][:12]}...", flush=True)
++                print(f"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} "
++                      f"--batch {made['batch_id']}", flush=True)
++                return 0
++            if args.variants is not None:
++                parser.error('--variants belongs to --rerun')
+             if args.first is None or args.last is None:
+                 parser.error('a development plan needs --first and --last')
+             made = WF.make_plan(args.game, args.first, args.last, ADAPTERS)
+diff -ru slice1_tree/src/methods/_common/contract_dispatch.py slice2_tree/src/methods/_common/contract_dispatch.py
+--- slice1_tree/src/methods/_common/contract_dispatch.py	2026-11-17 20:14:02.561303528 +1030
++++ slice2_tree/src/methods/_common/contract_dispatch.py	2026-11-18 01:58:27.653829437 +1030
+@@ -215,6 +215,58 @@
+                 refuse('MODE_DISAGREES_WITH_RELEASE', 'CATCH_UP needs a release date before the target\'s draw date')
+             if mode == 'REAL_DEVELOPMENT' and released_before:
+                 refuse('MODE_DISAGREES_WITH_RELEASE', 'a variant released before the draw gets CATCH_UP, not development')
++        elif kind == 'DEV_BATCH':
++            # MHUP-B (code plan v0.3 L6; supplement v0.8 7.1A, 7.2). A development plan of the second kind: the plan
++            # exists with the digest the binding names and its search-log row, and lists this exact pair; the request
++            # pins the plan's pin; an open ticket, and no DONE ticket for the pair in the batch. At or above the
++            # holdout: the opening record and the game's seal. Above the holdout: a weekly freeze line for the target
++            # (a target still open in the weekly session is never a batch's); and, for a routine fill, rule 2A: that
++            # line was frozen before the variant's release instant, does not name the variant, and no session ledger
++            # holds a ticket for the pair. Value-free records at fixed roots only.
++            plan = OR.dev_plan(root, game, b['batch_id'])
++            if record_digest(plan) != b['plan_digest']:
++                refuse('BINDING_NOT_RESOLVED', 'the binding does not name the plan\'s digest')
++            if not OR.search_log_names(root, 'DEV_BATCH', b['batch_id'], b['plan_digest']):
++                refuse('PLAN_NOT_LOGGED', 'the plan has no search-log row')
++            if pin != OR.pin_of(plan, 'development plan'):
++                refuse('PIN_DISAGREES_WITH_PLAN', 'the request does not pin the master version the plan froze')
++            if not OR.dev_plan_lists_pair(plan, method, revision, variant, target):
++                refuse('PAIR_NOT_IN_PLAN', 'the plan does not list this method, revision, variant and target')
++            rows = OR.tickets(OR.dev_batch_folder(root, game, b['batch_id']) / 'attempts.jsonl',
++                              scope_kind='DEV_BATCH', scope_id=b['batch_id'], game_id=game)
++            if OR.pair_has_done_ticket(rows, pair):
++                refuse('PAIR_ALREADY_DONE', 'the pair has a DONE ticket in this batch; no second record')
++            if not OR.open_ticket_for(rows, run_id=run_id, pair=pair, request_digest=record_digest(request)):
++                refuse('NO_OPEN_TICKET', 'no open ticket names this run id, pair and request')
++            p = get_profile(game)
++            if target >= p.holdout_first:
++                if OR.opening_record(root, game) is None:
++                    refuse('HOLDOUT_NOT_OPENED', 'a holdout or later development target needs the opening record')
++                if not OR.mode_h_sealed(root, game):
++                    refuse('MODE_H_NOT_SEALED', 'a holdout or later development target needs the game\'s Mode H seal')
++            if target > p.holdout_last:
++                lines = [r for r in OR.forecast_ledger_lines(root, game) if r['target_draw_number'] == target]
++                if len(lines) != 1:
++                    refuse('TARGET_NOT_FROZEN', 'a target after the holdout is a batch\'s only once its weekly freeze '
++                                                'line exists; an open target is the weekly session\'s')
++                if plan['plan_kind'] == 'ROUTINE_FILL':
++                    import _common.release_records as RR
++                    try:
++                        released = RR.release_instants(root).get((game, method, revision, variant))
++                    except (RR.Refused, ValueError, KeyError) as exc:
++                        refuse('BINDING_NOT_RESOLVED', f'the release records refuse: {exc}')
++                    frozen = lines[0].get('frozen_utc')
++                    if type(released) is not str or type(frozen) is not str or \
++                            _instant(frozen) is None or _instant(released) is None:
++                        refuse('BINDING_NOT_RESOLVED', 'no release instant for this variant, or no freeze time')
++                    if not _instant(frozen) < _instant(released):
++                        refuse('FROZEN_AFTER_RELEASE', 'the target was frozen at or after the variant\'s release instant: '
++                                                       'it was the weekly session\'s (rule 2A)')
++                    if any(type(r) is dict and (r.get('method_id'), r.get('method_revision'), r.get('variant_id')) ==
++                           (method, revision, variant) for r in lines[0].get('records') or []):
++                        refuse('PAIR_HAS_WEEKLY_RECORD', 'the target\'s freeze line names this variant')
++                    if OR.session_ticket_for_pair(root, game, pair):
++                        refuse('PAIR_HAS_WEEKLY_TICKET', 'a session ledger holds a ticket for this pair')
+         elif kind == 'OWNER_DIAGNOSTIC':
+             if mode != 'REAL_DEVELOPMENT':
+                 refuse('DIAGNOSTIC_MODE', 'the diagnostic route admits REAL_DEVELOPMENT only')
+@@ -227,6 +279,17 @@
+         refuse('BINDING_NOT_RESOLVED', str(exc))
+ 
+ 
++def _instant(text: str):
++    """A UTC instant written as the records write it, or None."""
++    from datetime import datetime, timezone
++    for fmt in ('%Y-%m-%dT%H:%M:%S.%fZ', '%Y-%m-%dT%H:%M:%SZ'):
++        try:
++            return datetime.strptime(text, fmt).replace(tzinfo=timezone.utc)
++        except ValueError:
++            continue
++    return None
++
++
+ def legacy_gate(game_id: str, method_id: str, variant_id: str, revision: str) -> tuple[dict, dict]:
+     """The same release rule for E_1's legacy standalone runner (owner decision D2-3, 29 October 2026),
+     which has no RUN_REQUEST_V1 and so no pins: an active SUPPORTED entry for exactly this game, method,
+diff -ru slice1_tree/src/methods/_common/contract_records.py slice2_tree/src/methods/_common/contract_records.py
+--- slice1_tree/src/methods/_common/contract_records.py	2026-11-17 20:14:02.561303528 +1030
++++ slice2_tree/src/methods/_common/contract_records.py	2026-11-18 01:58:27.652480223 +1030
+@@ -323,7 +323,8 @@
+ _REQUEST_OPTIONAL = ('binding',)      # MHUP-A: present exactly when the mode and target need one (design 3.4)
+ _BINDING_FIELDS = {'MODE_H_BATCH': ('kind', 'batch_id', 'plan_digest', 'run_id'),
+                    'WEEKLY_SESSION': ('kind', 'session_id', 'session_digest', 'run_id'),
+-                   'OWNER_DIAGNOSTIC': ('kind',)}
++                   'OWNER_DIAGNOSTIC': ('kind',),
++                   'DEV_BATCH': ('kind', 'batch_id', 'plan_digest', 'run_id')}   # MHUP-B: a plan of the second kind
+ BATCH_ID = re.compile(r'wf-[0-9a-f]{32}\Z', re.ASCII)
+ SESSION_ID = re.compile(r'[0-9a-f]{32}\Z', re.ASCII)
+ 
+@@ -334,7 +335,7 @@
+         raise ValueError(f'{where}: kind must be one of {sorted(V.BINDING_KINDS)}')
+     kind = b['kind']
+     _keys(b, _BINDING_FIELDS[kind], where)
+-    if kind == 'MODE_H_BATCH':
++    if kind in ('MODE_H_BATCH', 'DEV_BATCH'):
+         _match(BATCH_ID, b['batch_id'], f'{where}.batch_id')
+         _match(V.SHA256, b['plan_digest'], f'{where}.plan_digest')
+     elif kind == 'WEEKLY_SESSION':
+@@ -367,7 +368,10 @@
+         if kind is not None:
+             raise ValueError(f'{where}: a {mode} request carries no binding')
+     elif mode == 'REAL_DEVELOPMENT':
+-        if in_prefix:
++        if kind == 'DEV_BATCH':
++            pass      # MHUP-B (supplement v0.8 7.2): a development plan of the second kind may name any target with
++                      # history; which targets, and under which records, is the dispatch gate's (the DEV_BATCH branch)
++        elif in_prefix:
+             if kind not in (None, 'OWNER_DIAGNOSTIC'):
+                 raise ValueError(f'{where}: a development run within the prefix carries no session or Mode H binding')
+         elif kind == 'WEEKLY_SESSION':
+diff -ru slice1_tree/src/methods/_common/contract_runner.py slice2_tree/src/methods/_common/contract_runner.py
+--- slice1_tree/src/methods/_common/contract_runner.py	2026-11-18 02:23:14.383260152 +1030
++++ slice2_tree/src/methods/_common/contract_runner.py	2026-11-18 01:58:27.654346480 +1030
+@@ -105,6 +105,8 @@
+         return OR.diagnostic_runs_root(PROJECT_ROOT)
+     if kind == 'WEEKLY_SESSION':
+         return OR.session_runs_root(PROJECT_ROOT, request.get('run_mode'))
++    if kind == 'DEV_BATCH':                              # MHUP-B: a plan of the second kind writes under the
++        return OR.development_runs_root(PROJECT_ROOT)     # development run root only (supplement v0.8 7.2 rule 5)
+     return None
+ 
+ 
+@@ -128,7 +130,7 @@
+     the owner's diagnostic route only for targets at or below last_draw(v). Read after the reader has verified the
+     chain and the pin; no draw is decoded here."""
+     mode, kind = request['run_mode'], binding_kind(request)
+-    if mode not in V.WEEKLY_MODES and kind not in ('WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'):
++    if mode not in V.WEEKLY_MODES and kind not in ('WEEKLY_SESSION', 'OWNER_DIAGNOSTIC', 'DEV_BATCH'):
+         return
+     from _common import master_versions as MV
+     _raw, rows, _evidence = MV.load_verified_source(Path(repo_root), request['game_id'])
+diff -ru slice1_tree/src/methods/_common/contract_vocab.py slice2_tree/src/methods/_common/contract_vocab.py
+--- slice1_tree/src/methods/_common/contract_vocab.py	2026-11-18 02:23:14.382009851 +1030
++++ slice2_tree/src/methods/_common/contract_vocab.py	2026-11-18 01:58:27.652110818 +1030
+@@ -80,7 +80,7 @@
+ WEEKLY_MODES = frozenset(('FINAL_NEXT_DRAW', 'CATCH_UP'))                 # session-bound, above the holdout only
+ # The binding a real-mode request above the development prefix must carry (design 3.4): the Mode H plan, a weekly
+ # session, or the owner's unofficial diagnostic route.
+-BINDING_KINDS = frozenset(('MODE_H_BATCH', 'WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'))
++BINDING_KINDS = frozenset(('MODE_H_BATCH', 'WEEKLY_SESSION', 'OWNER_DIAGNOSTIC', 'DEV_BATCH'))   # DEV_BATCH: MHUP-B
+ BENCHMARK_MODES = frozenset(('BENCHMARK_REAL', 'BENCHMARK_SYNTHETIC'))                  # E2R-R41A
+ PRODUCT_KINDS = frozenset(('WF_FORECAST', 'DIAGNOSTIC_OUTPUT', 'SYNTHETIC_TEST_OUTPUT',
+                            'IS_DIAGNOSTIC_ENTRY', 'BENCHMARK_TIMING'))
+diff -ru slice1_tree/src/methods/_common/master_versions.py slice2_tree/src/methods/_common/master_versions.py
+--- slice1_tree/src/methods/_common/master_versions.py	2026-11-17 20:14:02.561303528 +1030
++++ slice2_tree/src/methods/_common/master_versions.py	2026-11-18 01:58:27.652708986 +1030
+@@ -314,6 +314,16 @@
+     return master_raw, rows, json.loads(evidence_raw)
+ 
+ 
++def ledger_rows(repo_root: Path, game_id: str) -> list[LedgerRow]:
++    """The rows of the game's version ledger alone, its chain parsed and checked. The master itself is not opened
++    (MHUP-B: OV-1's recorder needs the current last draw number and pin, and never a draw). Orchestration only."""
++    try:
++        raw = _trusted_file_bytes(source_paths(repo_root, game_id)[0])
++    except ValueError as exc:
++        raise LedgerRefused(f'source file: {exc}') from None
++    return parse_ledger(raw, game_id)
++
++
+ def current_pin(repo_root: Path, game_id: str) -> tuple[int, str]:
+     """(version, master_sha256) of the ledger's current last row, after rules 1 and 2. Orchestration only."""
+     _raw, rows, _ev = load_verified_source(repo_root, game_id)
+diff -ru slice1_tree/src/methods/_common/owner_records.py slice2_tree/src/methods/_common/owner_records.py
+--- slice1_tree/src/methods/_common/owner_records.py	2026-11-18 02:23:14.382982622 +1030
++++ slice2_tree/src/methods/_common/owner_records.py	2026-11-18 01:58:27.653381789 +1030
+@@ -284,6 +284,70 @@
+     return v, _sha(rec, 'master_sha256', what)
+ 
+ 
++DEV_PLAN_SCHEMA = 'WF_BATCH_PLAN_V2'
++DEV_PLAN_KINDS = ('ROUTINE_FILL', 'EXPLORATORY_RERUN')
++
++
++def dev_batch_folder(root: Path, game_id: str, batch_id: str) -> Path:
++    return Path(root) / 'results' / 'real' / 'development' / 'wf_batches' / game_id / batch_id
++
++
++def dev_plan(root: Path, game_id: str, batch_id: str) -> dict:
++    """A development plan of the second kind (MHUP-B, supplement v0.8 section 7.1A): its kind, its cohort and its
++    explicit pairs [method, revision, variant, target], each a pair of a cohort member, none twice."""
++    if type(batch_id) is not str or not BATCH_ID.fullmatch(batch_id):
++        raise RecordRefused('invalid batch id')
++    what = 'development plan'
++    plan = _read_canonical_json(dev_batch_folder(root, game_id, batch_id) / 'plan.json', what)
++    if plan.get('schema') != DEV_PLAN_SCHEMA or plan.get('batch_id') != batch_id or plan.get('game_id') != game_id:
++        raise RecordRefused(f'{what}: wrong schema, batch or game')
++    if plan.get('plan_kind') not in DEV_PLAN_KINDS or plan.get('run_mode') != 'REAL_DEVELOPMENT':
++        raise RecordRefused(f'{what}: unknown kind, or not a development plan')
++    pin_of(plan, what)
++    cohort, pairs = plan.get('cohort'), plan.get('pairs')
++    if type(cohort) is not list or type(pairs) is not list or not pairs:
++        raise RecordRefused(f'{what}: cohort or pairs missing')
++    members = {(m.get('method_id'), m.get('method_revision'), m.get('variant_id')) for m in cohort if type(m) is dict}
++    seen = set()
++    for pair in pairs:
++        if (type(pair) is not list or len(pair) != 4 or tuple(pair[:3]) not in members or type(pair[3]) is not int or
++                tuple(pair) in seen):
++            raise RecordRefused(f'{what}: a pair that is not [method, revision, variant, target] of a member, once')
++        seen.add(tuple(pair))
++    return plan
++
++
++def dev_plan_lists_pair(plan: Mapping, method_id: str, method_revision: str, variant_id: str, target: int) -> bool:
++    return [method_id, method_revision, variant_id, target] in plan.get('pairs', [])
++
++
++def search_log_names(root: Path, row_type: str, batch_id: str, plan_digest: str) -> bool:
++    """Whether the search log holds a row of this type for this batch and plan digest (value-free; a log that exists
++    but is not a plain file refuses)."""
++    import csv
++    import io
++    path = Path(root) / 'results' / 'audit' / 'SEARCH_LOG.csv'
++    if absent(path):
++        return False
++    if not _plain_file(path):
++        raise RecordRefused('the search log exists but is not a plain file')
++    try:
++        rows = list(csv.DictReader(io.StringIO(path.read_bytes().decode('ascii'))))
++    except (UnicodeDecodeError, csv.Error):
++        raise RecordRefused('the search log does not decode') from None
++    return any(r.get('row_type') == row_type and r.get('batch_id') == batch_id and r.get('plan_digest') == plan_digest
++               for r in rows)
++
++
++def session_ticket_for_pair(root: Path, game_id: str, pair: tuple) -> bool:
++    """Whether any session's attempts ledger of the game holds a ticket of any kind for this pair."""
++    for path in all_session_attempt_paths(root, game_id):
++        rows = tickets(path, scope_kind='WEEKLY_SESSION', scope_id=session_id_of_attempts_path(path), game_id=game_id)
++        if any(pair_of(t) == pair for t in rows):
++            return True
++    return False
++
++
+ def plan_lists_pair(plan: Mapping, method_id: str, method_revision: str, variant_id: str, target: int) -> bool:
+     members = plan.get('cohort') or []
+     return (target in plan.get('targets', []) and
+diff -ru slice1_tree/src/methods/_common/release_records.py slice2_tree/src/methods/_common/release_records.py
+--- slice1_tree/src/methods/_common/release_records.py	2026-11-17 20:14:02.561303528 +1030
++++ slice2_tree/src/methods/_common/release_records.py	2026-11-18 01:58:27.653604147 +1030
+@@ -121,6 +121,19 @@
+     return recs
+ 
+ 
++def release_instants(root: Path) -> dict:
++    """(game, method, revision, variant) -> the `released_utc` of the release record that names it, for the released,
++    unretired entries (MHUP-B, supplement v0.8 section 7.2 rule 2A: back-history is judged by the release instant)."""
++    live = released_variants(root)
++    out: dict = {}
++    for r in validate_records(root)['releases']:
++        for e in r['entries']:
++            key = _entry(e, r['_file'])
++            if key in live:
++                out[key] = r['released_utc']
++    return out
++
++
+ def released_variants(root: Path) -> dict:
+     """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
+     record's entries, less every entry a record retires or marks superseded_by, and less every entry whose registry
+diff -ru slice1_tree/src/methods/_common/score_identities.py slice2_tree/src/methods/_common/score_identities.py
+--- slice1_tree/src/methods/_common/score_identities.py	2026-11-18 02:23:14.436448428 +1030
++++ slice2_tree/src/methods/_common/score_identities.py	2026-11-18 01:58:27.655609760 +1030
+@@ -64,6 +64,70 @@
+     return frozenset(seen)
+ 
+ 
++# ---------------------------------------------------------------- which keys the league's canonical sources cover
++
++LEAGUE_SOURCES_SCHEMA = 'LEAGUE_SOURCES_V1'
++LEAGUE_SOURCE_FIELDS = ('attempt_id', 'batch_id', 'batch_kind', 'plan_digest', 'window_first', 'window_last',
++                        'score_ledger_sha256', 'evaluator_version')
++LEAGUE_SOURCE_KINDS = ('WF_BATCH_PLAN_V1', 'ROUTINE_FILL')          # an exploratory rerun is never a canonical source
++
++
++def league_sources_path(root: Path, game_id: str) -> Path:
++    return Path(root) / 'results' / 'method_rankings' / game_id / 'league' / f'LEAGUE_SOURCES_{game_id}.json'
++
++
++def league_sources(root: Path, game_id: str) -> list[dict]:
++    """The canonical development attempts listed in LEAGUE_SOURCES_<GAME>.json (supplement v0.8 section 4; the file
++    is written only by the league's admission step, layer L4). A file never written lists nothing; a file that is
++    not exactly a source list refuses."""
++    import json
++    from _common.contract_records import canonical
++    path = league_sources_path(root, game_id)
++    if OR.absent(path):
++        return []
++    if path.is_symlink() or not path.is_file():
++        raise OR.RecordRefused('league sources: exists but is not a plain file')
++    raw = path.read_bytes()
++    try:
++        rec = json.loads(raw.decode('ascii'))
++    except (ValueError, UnicodeDecodeError):
++        raise OR.RecordRefused('league sources: not JSON') from None
++    if (type(rec) is not dict or canonical(rec) != raw or set(rec) != {'schema', 'game_id', 'sources'} or
++            rec['schema'] != LEAGUE_SOURCES_SCHEMA or rec['game_id'] != game_id or type(rec['sources']) is not list):
++        raise OR.RecordRefused('league sources: not a canonical LEAGUE_SOURCES_V1 record of this game')
++    seen = set()
++    for s in rec['sources']:
++        if (type(s) is not dict or set(s) != set(LEAGUE_SOURCE_FIELDS) or s['batch_kind'] not in LEAGUE_SOURCE_KINDS or
++                type(s['batch_id']) is not str or not OR.BATCH_ID.fullmatch(s['batch_id']) or
++                not all(type(s[f]) is str and V.SHA256.fullmatch(s[f]) for f in ('plan_digest', 'score_ledger_sha256')) or
++                not all(type(s[f]) is int for f in ('window_first', 'window_last')) or
++                s['window_first'] > s['window_last'] or type(s['attempt_id']) is not str or s['attempt_id'] in seen):
++            raise OR.RecordRefused('league sources: an entry of an unknown shape, or an attempt listed twice')
++        seen.add(s['attempt_id'])
++    return rec['sources']
++
++
++def canonical_coverage(root: Path, game_id: str) -> frozenset:
++    """Every (method, revision, variant, target) key that a canonical development source covers: for each listed
++    attempt, the pairs of its batch's plan inside the attempt's window. Identities only: it reads the source list and
++    the plans, never a score record, an outcome or a forecast. A listed batch whose plan is gone or changed refuses."""
++    import _common.walk_forward as WF
++    from _common.contract_records import record_digest
++    out = set()
++    for s in league_sources(root, game_id):
++        try:
++            plan = WF.load_plan(game_id, s['batch_id'])
++        except WF.BatchRefused as exc:
++            raise OR.RecordRefused(f'league sources: the plan of {s["batch_id"]} does not load: {exc}') from None
++        kind = plan['plan_kind'] if WF.kind_of(plan) == 'DEV_BATCH' else 'WF_BATCH_PLAN_V1'
++        if WF.kind_of(plan) == 'MODE_H_BATCH' or kind != s['batch_kind'] or record_digest(plan) != s['plan_digest']:
++            raise OR.RecordRefused(f'league sources: {s["batch_id"]} is not the plan the list names')
++        for mem, t in WF.plan_pairs(plan):
++            if s['window_first'] <= t <= s['window_last']:
++                out.add((mem['method_id'], mem['method_revision'], mem['variant_id'], t))
++    return frozenset(out)
++
++
+ def routine_identity(game_id: str, target: int, named: Mapping) -> tuple:
+     return (game_id, named['method_id'], named['method_revision'], named['variant_id'], target,
+             named['scored_record_digest'], WR.ROUTINE_POLICY)
+diff -ru slice1_tree/src/methods/_common/walk_forward.py slice2_tree/src/methods/_common/walk_forward.py
+--- slice1_tree/src/methods/_common/walk_forward.py	2026-11-17 20:14:02.561303528 +1030
++++ slice2_tree/src/methods/_common/walk_forward.py	2026-11-18 01:58:27.655389289 +1030
+@@ -22,6 +22,12 @@
+   <project>/results/real/holdout/wf_batches/<GAME>/<batch_id>/       plan.json, attempts.jsonl, the markers
+   <project>/results/real/holdout/contract_runs/                       the runs
+   <project>/results/real/holdout/<GAME>/MODE_H_BATCH_ID.json          the game's one plan (create-only)
++
++MHUP-B adds plans of the second kind, WF_BATCH_PLAN_V2 (design supplement v0.8 sections 7.1A, 7.2; code plan v0.3
++L6): `make_dev_plan` freezes a ROUTINE_FILL (the driver works out the missing pairs from the league's source list)
++or an EXPLORATORY_RERUN (the owner names variants and window), each with its explicit pairs. Its runs are
++REAL_DEVELOPMENT, bound to the plan (binding kind DEV_BATCH), ticketed like the Mode H batch's, and published under
++the development roots above, beside the first kind's. Plans of the first kind keep their schema, bytes and rules.
+ """
+ from __future__ import annotations
+ 
+@@ -49,10 +55,12 @@
+ from _common.game_profiles import get_profile
+ from _common import owner_records as OR
+ 
+-DRIVER_VERSION = 'WF1A_DRIVER_V2'            # MHUP-A: the Mode H batch kind
++DRIVER_VERSION = 'WF1A_DRIVER_V3'            # MHUP-A: the Mode H batch kind; MHUP-B: plans of the second kind
+ PLAN_SCHEMA = 'WF_BATCH_PLAN_V1'
+ MODE_H_PLAN_SCHEMA = OR.MODE_H_PLAN_SCHEMA
+-KINDS = ('WF_BATCH', 'MODE_H_BATCH')
++DEV_PLAN_SCHEMA = OR.DEV_PLAN_SCHEMA         # MHUP-B: WF_BATCH_PLAN_V2 (supplement v0.8 7.1A); V1 plans are untouched
++KINDS = ('WF_BATCH', 'MODE_H_BATCH', 'DEV_BATCH')
++TICKETED = ('MODE_H_BATCH', 'DEV_BATCH')     # kinds whose runs are bound to the plan and ticketed (design 3.4)
+ SEGMENT_SCHEMA = 'WF_BATCH_SEGMENT_V1'
+ BATCH_ID = re.compile(r'wf-[0-9a-f]{32}\Z', re.ASCII)
+ VIEW = 'UNORDERED_SET'
+@@ -83,7 +91,7 @@
+     if kind == 'MODE_H_BATCH':
+         return {'project': project, 'batches': project / 'results' / 'real' / 'holdout' / 'wf_batches',
+                 'runs': OR.mode_h_runs_root(project), 'scores': OR.mode_h_scores_root(project), 'search_log': log}
+-    if kind != 'WF_BATCH':
++    if kind not in ('WF_BATCH', 'DEV_BATCH'):               # both development kinds share the development roots
+         raise ValueError(f'unknown batch kind {kind!r}')
+     dev = project / 'results' / 'real' / 'development'
+     return {'project': project, 'batches': dev / 'wf_batches', 'runs': dev / 'contract_runs', 'scores': dev / 'scores',
+@@ -91,7 +99,17 @@
+ 
+ 
+ def kind_of(plan: Mapping) -> str:
+-    return 'MODE_H_BATCH' if plan.get('schema') == MODE_H_PLAN_SCHEMA else 'WF_BATCH'
++    schema = plan.get('schema')
++    return 'MODE_H_BATCH' if schema == MODE_H_PLAN_SCHEMA else 'DEV_BATCH' if schema == DEV_PLAN_SCHEMA else 'WF_BATCH'
++
++
++def plan_pairs(plan: Mapping) -> list[tuple[dict, int]]:
++    """Every (member, target) pair of a plan, in run order: a plan of the first kind and the Mode H plan run their
++    whole cohort over their window; a plan of the second kind runs exactly the pairs it lists."""
++    if kind_of(plan) == 'DEV_BATCH':
++        members = {(m['method_id'], m['method_revision'], m['variant_id']): m for m in plan['cohort']}
++        return [(members[(m, rev, v)], t) for m, rev, v, t in plan['pairs']]
++    return [(mem, t) for mem in plan['cohort'] for t in range(plan['window_first'], plan['window_last'] + 1)]
+ 
+ 
+ def utc_now() -> str:
+@@ -228,6 +246,146 @@
+     return plan
+ 
+ 
++# ---------------------------------------------------------------- plans of the second kind (MHUP-B, supplement 7.1A)
++
++def development_cap(game_id: str) -> int:
++    """The last draw a development batch may target under the window contract (supplement v0.8 7.2 rules 1 and 2):
++    the Phase 1 cap until the game's Mode H study is sealed, the holdout's last draw after it."""
++    p = get_profile(game_id)
++    root = roots()['project']
++    try:
++        sealed = OR.opening_record(root, game_id) is not None and OR.mode_h_sealed(root, game_id)
++    except OR.RecordRefused as exc:
++        raise BatchRefused(f'owner record refused: {exc}') from None
++    return p.holdout_last if sealed else p.holdout_first - 1
++
++
++def _weekly_facts(game_id: str) -> tuple[dict, dict]:
++    """(target -> verified weekly freeze line, (game, method, revision, variant) -> release instant). Value-free."""
++    import _common.release_records as RR
++    from _common import weekly_records as WR
++    root = roots()['project']
++    try:
++        lines = {line['target_draw_number']: line for line in WR.forecast_ledger(root, game_id)}
++        instants = RR.release_instants(root)
++    except (OR.RecordRefused, RR.Refused, ValueError, KeyError) as exc:
++        raise BatchRefused(f'the weekly or release records refuse: {exc}') from None
++    return lines, instants
++
++
++def _fill_pairs(game_id: str, members, cap: int, last_draw: int) -> list[list]:
++    """A routine fill's pairs, worked out by the driver (plan L6): for every released variant, its eligible targets
++    that no canonical source covers. Eligible: the game's first target to the cap; and, above the holdout, rule 2A:
++    an accepted target whose weekly freeze line was frozen before the variant's release instant, does not name the
++    variant, and for which no session ledger holds a ticket."""
++    from _common import score_identities as SI
++    from _common import weekly_records as WR
++    p = get_profile(game_id)
++    root = roots()['project']
++    try:
++        covered = SI.canonical_coverage(root, game_id)
++    except OR.RecordRefused as exc:
++        raise BatchRefused(f'the league\'s source list refuses: {exc}') from None
++    lines, instants = _weekly_facts(game_id) if cap == p.holdout_last and last_draw > p.holdout_last else ({}, {})
++    pairs = []
++    for mem in members:
++        key = (mem['method_id'], mem['method_revision'], mem['variant_id'])
++        for t in range(p.first_draw + 1, cap + 1):
++            if (*key, t) not in covered:
++                pairs.append([*key, t])
++        released = instants.get((game_id, *key))
++        for t in sorted(lines):
++            if t > last_draw or (*key, t) in covered or released is None:
++                continue
++            line = lines[t]
++            try:
++                weekly = (WR.parse_utc(line['frozen_utc']) >= WR.parse_utc(released) or
++                          any(WR.named_key(r) == key for r in line['records']) or
++                          OR.session_ticket_for_pair(root, game_id, (*key, t)))
++            except OR.RecordRefused as exc:
++                raise BatchRefused(f'the weekly records refuse: {exc}') from None
++            if not weekly:
++                pairs.append([*key, t])
++    return pairs
++
++
++def make_dev_plan(game_id: str, plan_kind: str, adapters: Mapping, *, variants=None, first=None, last=None) -> dict:
++    """Freeze a plan of the second kind (create-only) and append one DEV_BATCH search-log row.
++
++    ROUTINE_FILL: the owner names only the game; the driver works out the missing pairs (see _fill_pairs).
++    EXPLORATORY_RERUN: the owner names the window and, optionally, the variants as (method_id, variant_id) pairs (the
++    whole released cohort otherwise). Any target up to the cap, and any later accepted target that has a weekly freeze
++    line, whether or not it was scored before. A window that reaches a target outside those refuses.
++    Either kind runs only released, runnable variants (a retired revision is not runnable), gives development evidence
++    only, and writes only under the development roots."""
++    from _common import master_versions as MV
++    p = get_profile(game_id)
++    if _marker_present():
++        raise BatchRefused('UNRESOLVED_ORPHAN_MARKER: no experiment is permitted')
++    if plan_kind not in OR.DEV_PLAN_KINDS:
++        raise BatchRefused(f'the plan kind is one of {", ".join(OR.DEV_PLAN_KINDS)}')
++    members, excluded = cohort(game_id, adapters)
++    if not members:
++        raise BatchRefused('the cohort is empty: no released variant with a runner adapter')
++    version, pin = ledger_pin(game_id)
++    try:
++        last_draw = MV.load_verified_source(roots()['project'], game_id)[1][-1].last_draw
++    except MV.LedgerRefused as exc:
++        raise BatchRefused(f'{game_id}: the master ledger does not pass the version-2 rules: {exc}') from None
++    cap = development_cap(game_id)
++    if plan_kind == 'ROUTINE_FILL':
++        if variants is not None or first is not None or last is not None:
++            raise BatchRefused('a routine fill works out its own pairs: it takes no variants and no window')
++        pairs = _fill_pairs(game_id, members, cap, last_draw)
++        if not pairs:
++            raise BatchRefused('nothing to fill: every eligible pair of every released variant is covered')
++    else:
++        if type(first) is not int or type(last) is not int or first > last:
++            raise BatchRefused('an exploratory rerun needs a window: two whole draw numbers, first <= last')
++        if first < p.first_draw + 1:
++            raise BatchRefused(f'first must be at least {p.first_draw + 1}: the era\'s first draw has no history')
++        if last > last_draw:
++            raise BatchRefused(f'last must be an accepted draw (the master ends at {last_draw})')
++        chosen = members
++        if variants is not None:
++            wanted = [tuple(v) for v in variants]
++            by_name = {(m['method_id'], m['variant_id']): m for m in members}
++            unknown = [f'{m} {v}' for m, v in wanted if (m, v) not in by_name]
++            if unknown or not wanted or len(set(wanted)) != len(wanted):
++                raise BatchRefused('not released, runnable variants of this game (or named twice): ' + ', '.join(unknown))
++            chosen = [by_name[w] for w in sorted(set(wanted), key=lambda k: (int(k[0][2:]), k[1]))]
++        lines = _weekly_facts(game_id)[0] if last > p.holdout_last else {}
++        for t in range(first, last + 1):
++            if cap < t <= p.holdout_last:
++                raise BatchRefused(f'target {t} is a holdout draw and the game\'s Mode H study is not sealed')
++            if t > p.holdout_last and (cap != p.holdout_last or t not in lines):
++                raise BatchRefused(f'target {t} is after the holdout and has no weekly freeze line: it is the weekly '
++                                   f'session\'s, not a batch\'s')
++        pairs = [[m['method_id'], m['method_revision'], m['variant_id'], t] for m in chosen for t in range(first, last + 1)]
++        members = chosen
++    used = {tuple(pair[:3]) for pair in pairs}
++    members = [m for m in members if (m['method_id'], m['method_revision'], m['variant_id']) in used]
++    batch_id = 'wf-' + uuid.uuid4().hex
++    targets = [pair[3] for pair in pairs]
++    plan = {'schema': DEV_PLAN_SCHEMA, 'plan_kind': plan_kind, 'batch_id': batch_id, 'game_id': game_id,
++            'profile_version': p.version, 'window_first': min(targets), 'window_last': max(targets),
++            'created_utc': utc_now(), 'driver_version': DRIVER_VERSION, 'run_mode': 'REAL_DEVELOPMENT',
++            'product_kind': V.producible('REAL_DEVELOPMENT', V.FORECAST)[0], 'observation_view': VIEW,
++            'include_dates': False, 'master_file': f'{game_id}_results_master.csv', 'ledger_version': version,
++            'master_sha256': pin, 'development_cap': cap, 'cohort': members, 'not_in_cohort': excluded,
++            'cohort_digest': sha256_hex(canonical({'cohort': members})), 'pairs': pairs,
++            'pairs_digest': sha256_hex(canonical({'pairs': pairs}))}
++    folder = roots('DEV_BATCH')['batches'] / game_id / batch_id
++    folder.mkdir(parents=True, exist_ok=False)
++    CP.create_only(folder / 'plan.json', canonical(plan))
++    _append_search_row({'row_type': 'DEV_BATCH', 'utc': plan['created_utc'], 'game_id': game_id, 'mode': 'WF',
++                        'window_first': plan['window_first'], 'window_last': plan['window_last'],
++                        'cohort_size': len(members), 'cohort_digest': plan['cohort_digest'], 'batch_id': batch_id,
++                        'plan_digest': record_digest(plan), 'tool': 'Method_Walk_Forward.py',
++                        'tool_version': DRIVER_VERSION, 'tool_sha256': tool_sha256()})
++    return plan
++
++
+ # ---------------------------------------------------------------- the Mode H batch kind (MHUP-A, design 4.1, 5.1, 5.2)
+ 
+ def _study(game_id: str) -> dict:
+@@ -367,6 +525,8 @@
+     if not path.is_file() or path.is_symlink():
+         raise BatchRefused(f'no plan for batch {batch_id} in {game_id}')
+     plan = json.loads(path.read_bytes().decode('ascii'))
++    if kind == 'WF_BATCH' and type(plan) is dict and plan.get('schema') == DEV_PLAN_SCHEMA:      # the second kind
++        kind, schema, row_type = 'DEV_BATCH', DEV_PLAN_SCHEMA, 'DEV_BATCH'
+     if (plan.get('schema') != schema or plan.get('batch_id') != batch_id or plan.get('game_id') != game_id or
+             canonical(plan) != path.read_bytes() or
+             plan.get('cohort_digest') != sha256_hex(canonical({'cohort': plan.get('cohort')}))):
+@@ -380,6 +540,13 @@
+             raise BatchRefused(f'not the game\'s one Mode H plan: {exc}') from None
+         if plan.get('targets') != list(range(plan['window_first'], plan['window_last'] + 1)):
+             raise BatchRefused('the Mode H plan\'s targets are not its window')
++    if kind == 'DEV_BATCH':
++        try:
++            OR.dev_plan(roots(kind)['project'], game_id, batch_id)        # its kind, its pin, its explicit pairs
++        except OR.RecordRefused as exc:
++            raise BatchRefused(f'not a valid plan of the second kind: {exc}') from None
++        if plan.get('pairs_digest') != sha256_hex(canonical({'pairs': plan['pairs']})):
++            raise BatchRefused('the plan\'s pairs do not match their digest')
+     return plan
+ 
+ 
+@@ -424,6 +591,9 @@
+            'declaration_digest': mem['declaration_digest'], 'registry_entry_digest': mem['registry_entry_digest'],
+            'run_id': run_id, 'master_file': plan['master_file'], 'ledger_version': plan['ledger_version'],
+            'master_sha256': plan['master_sha256']}
++    if kind_of(plan) == 'DEV_BATCH':
++        req['binding'] = {'kind': 'DEV_BATCH', 'batch_id': plan['batch_id'], 'plan_digest': record_digest(plan),
++                          'run_id': run_id}
+     if kind_of(plan) == 'MODE_H_BATCH':
+         version, sha = _admitted_pin(plan)
+         req.update(ledger_version=version, master_sha256=sha,
+@@ -458,8 +628,8 @@
+ def _append_attempt(plan: Mapping, req: Mapping) -> None:
+     """Before a run: a WF_BATCH_ATTEMPT_V1 line (development batch) or an OPEN ticket (Mode H batch, design 3.4), each
+     naming the fresh run ID and the digest of the exact request about to be issued."""
+-    if kind_of(plan) == 'MODE_H_BATCH':
+-        t = OR.ticket('OPEN', scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'], game_id=plan['game_id'],
++    if kind_of(plan) in TICKETED:
++        t = OR.ticket('OPEN', scope_kind=kind_of(plan), scope_id=plan['batch_id'], game_id=plan['game_id'],
+                       method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
+                       target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
+                       request_digest=record_digest(req))
+@@ -474,7 +644,7 @@
+ def _append_closing_ticket(plan: Mapping, req: Mapping, kind: str, terminal_class: str | None) -> None:
+     """After a Mode H run: DONE (the run folder proves a CONTINUE-class run) or FAILED_TO_START (a resume found an
+     open ticket whose run never completed; the run ID is never reused)."""
+-    t = OR.ticket(kind, scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'], game_id=plan['game_id'],
++    t = OR.ticket(kind, scope_kind=kind_of(plan), scope_id=plan['batch_id'], game_id=plan['game_id'],
+                   method_id=req['method_id'], variant_id=req['variant_id'], method_revision=req['method_revision'],
+                   target_draw_number=req['target_draw_number'], run_id=req['run_id'], utc=CP.utc_now(),
+                   terminal_class=terminal_class)
+@@ -483,7 +653,7 @@
+ 
+ def _mode_h_tickets(plan: Mapping) -> list[dict]:
+     try:
+-        return OR.tickets(_attempts_path(plan), scope_kind='MODE_H_BATCH', scope_id=plan['batch_id'],
++        return OR.tickets(_attempts_path(plan), scope_kind=kind_of(plan), scope_id=plan['batch_id'],
+                           game_id=plan['game_id'])
+     except OR.RecordRefused as exc:
+         raise BatchRefused(f'the batch\'s attempts ledger is invalid: {exc}') from None
+@@ -493,13 +663,15 @@
+     """(method, variant, target) -> [run IDs] of this batch's OPEN tickets whose request digest is the plan's own
+     request for that pair and run ID (the other ticket kinds close them; the folder decides what a run proved)."""
+     members = {(m['method_id'], m['variant_id']): m for m in plan['cohort']}
++    planned = {(mem['method_id'], mem['variant_id'], target) for mem, target in plan_pairs(plan)}
+     out, bad = {}, 0
+     for t in _mode_h_tickets(plan):
+         if t['kind'] != 'OPEN':
+             continue
+         mem = members.get((t['method_id'], t['variant_id']))
+         target = t['target_draw_number']
+-        if (mem is None or mem['method_revision'] != t['method_revision'] or target not in plan['targets'] or
++        if (mem is None or mem['method_revision'] != t['method_revision'] or
++                (t['method_id'], t['variant_id'], target) not in planned or
+                 t['request_digest'] != record_digest(request_for(plan, mem, target, t['run_id']))):
+             bad += 1
+             continue
+@@ -511,35 +683,34 @@
+     """Design 5.2, before any new ticket: every OPEN ticket of this batch not yet closed by a DONE or FAILED_TO_START
+     for its run ID gets one: DONE if its run folder proves a CONTINUE-class run, FAILED_TO_START otherwise.
+     Returns the counts written."""
+-    if kind_of(plan) != 'MODE_H_BATCH':
++    if kind_of(plan) not in TICKETED:
+         return {}
+     tickets = _mode_h_tickets(plan)
+     closed = {t['run_id'] for t in tickets if t['kind'] in ('DONE', 'FAILED_TO_START')}
+     attempts, _bad = _mode_h_attempts(plan)
+     reg = _registry()
+     counts = {'DONE': 0, 'FAILED_TO_START': 0}
+-    for mem in plan['cohort']:
++    for mem, target in plan_pairs(plan):
+         decl = reg.declaration(mem['declaration_digest'])
+-        for target in plan['targets']:
+-            for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ()):
+-                if rid in closed:
+-                    continue
+-                state, why = attempt_state(plan, mem, target, rid, decl)
+-                req = request_for(plan, mem, target, rid)
+-                if state == 'DONE':
+-                    _append_closing_ticket(plan, req, 'DONE', why.split(' (', 1)[0])
+-                    counts['DONE'] += 1
+-                else:
+-                    _append_closing_ticket(plan, req, 'FAILED_TO_START', None)
+-                    counts['FAILED_TO_START'] += 1
+-                closed.add(rid)
++        for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ()):
++            if rid in closed:
++                continue
++            state, why = attempt_state(plan, mem, target, rid, decl)
++            req = request_for(plan, mem, target, rid)
++            if state == 'DONE':
++                _append_closing_ticket(plan, req, 'DONE', why.split(' (', 1)[0])
++                counts['DONE'] += 1
++            else:
++                _append_closing_ticket(plan, req, 'FAILED_TO_START', None)
++                counts['FAILED_TO_START'] += 1
++            closed.add(rid)
+     return counts
+ 
+ 
+ def _attempts(plan: Mapping) -> tuple[dict, int]:
+     """(method, variant, target) -> [run IDs] of this batch's well-formed attempt lines whose request digest is the
+     plan's own request for that pair and run ID; and the number of lines ignored as malformed or foreign."""
+-    if kind_of(plan) == 'MODE_H_BATCH':
++    if kind_of(plan) in TICKETED:
+         return _mode_h_attempts(plan)
+     path = _attempts_path(plan)
+     out, bad = {}, 0
+@@ -626,20 +797,18 @@
+     attempts, bad = _attempts(plan)
+     reg = _registry()
+     out = {}
+-    for mem in plan['cohort']:
++    for mem, target in plan_pairs(plan):
+         decl = reg.declaration(mem['declaration_digest'])
+-        for target in range(plan['window_first'], plan['window_last'] + 1):
+-            key = (mem['method_id'], mem['variant_id'], target)
+-            done = any(attempt_state(plan, mem, target, rid, decl)[0] == 'DONE' for rid in attempts.get(key, ()))
+-            out[key] = 'DONE' if done else 'NOT_DONE'
++        key = (mem['method_id'], mem['variant_id'], target)
++        done = any(attempt_state(plan, mem, target, rid, decl)[0] == 'DONE' for rid in attempts.get(key, ()))
++        out[key] = 'DONE' if done else 'NOT_DONE'
+     return out, bad
+ 
+ 
+ def pending(plan: Mapping) -> list[tuple[dict, int]]:
+     """Every (member, target) pair that is not proven done by an attempt of this batch, in run order."""
+     states, _bad = pair_states(plan)
+-    return [(mem, t) for mem in plan['cohort'] for t in range(plan['window_first'], plan['window_last'] + 1)
+-            if states[(mem['method_id'], mem['variant_id'], t)] != 'DONE']
++    return [(mem, t) for mem, t in plan_pairs(plan) if states[(mem['method_id'], mem['variant_id'], t)] != 'DONE']
+ 
+ 
+ def _loop(plan: Mapping, todo, adapters: Mapping, runs: list):
+@@ -663,7 +832,7 @@
+         runs.append({'run_id': req['run_id'], 'method_id': mem['method_id'], 'variant_id': mem['variant_id'],
+                      'target': target, 'outcome': res.outcome, 'reason_prefix': reason_prefix(res.reason),
+                      'class': cls})
+-        if cls == 'CONTINUE' and kind_of(plan) == 'MODE_H_BATCH':
++        if cls == 'CONTINUE' and kind_of(plan) in TICKETED:
+             _append_closing_ticket(plan, req, 'DONE', f'{res.outcome} {reason_prefix(res.reason)}')
+         if cls == 'STOP':
+             return f'{ident}: {res.outcome}: {res.reason}'
+@@ -727,7 +896,8 @@
+     for mem in plan['cohort']:
+         decl = reg.declaration(mem['declaration_digest'])
+         done, made, why = 0, 0, {}
+-        for target in range(plan['window_first'], plan['window_last'] + 1):
++        mine = [t for m, t in plan_pairs(plan) if m is mem]
++        for target in mine:
+             states = [attempt_state(plan, mem, target, rid, decl)
+                       for rid in attempts.get((mem['method_id'], mem['variant_id'], target), ())]
+             made += len(states)
+@@ -735,7 +905,7 @@
+             for s, r in states:
+                 k = f'{s}: {r}'
+                 why[k] = why.get(k, 0) + 1
+-        n = plan['window_last'] - plan['window_first'] + 1
++        n = len(mine)
+         out[f"{mem['method_id']} {mem['variant_id']}"] = {'done': done, 'pending': n - done, 'attempts': made,
+                                                            'attempt_states': why}
+     if kind_of(plan) == 'MODE_H_BATCH':
+diff -ru slice1_tree/tests/test_wf1b_static.py slice2_tree/tests/test_wf1b_static.py
+--- slice1_tree/tests/test_wf1b_static.py	2026-11-18 02:23:14.406580908 +1030
++++ slice2_tree/tests/test_wf1b_static.py	2026-11-18 01:58:27.694122858 +1030
+@@ -19,7 +19,7 @@
+                   # MHUP-B slice 1: the weekly records' shapes, the ledger write discipline and the score identities.
+                   # All three are value-free orchestration modules; none imports method code.
+                   '_common.weekly_records', '_common.jsonl_ledger', '_common.score_identities'}
+-STDLIB_OK = {'__future__', 'argparse', 'csv', 'collections', 'decimal', 'fractions', 'functools', 'hashlib', 'io',
++STDLIB_OK = {'__future__', 'argparse', 'csv', 'collections', 'datetime', 'decimal', 'fractions', 'functools', 'hashlib', 'io',
+              'json', 'math', 'pathlib', 'platform', 're', 'struct', 'sys', 'uuid', 'numpy', 'evaluation'}
+ 
+ 

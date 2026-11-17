@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 00:29 Australia/Adelaide (handover check before slice 2, entry 82; working principle entry 81; slice 1 PASSED, EX_231; slice 2 next on the owner's go).
+**Last updated:** 18 November 2026, 02:24 Australia/Adelaide (slice 2 sent for review, EX_232, entry 83; working principle entry 81; slice 1 PASSED, EX_231).
 
 ## For the owner: NOW
 
@@ -56,10 +56,16 @@ durable EX messages are authoritative.
 - **SLICE 1 PASSED THE REVIEWER'S SOURCE REVIEW (EX_231; entry 79).** History: EX_228 (first edition), EX_229 (four
   corrections), EX_230 (corrected), EX_231 (PASS, with the small note N-231-1, since applied). Files:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (MHUP-A layout). NOT INSTALLED. Rebuild with the commands in EX_228 section 1.
-- **NEXT: slice 2** (OV-1 kernel and recorder; `WF_BATCH_PLAN_V2`, the `DEV_BATCH` gate, the post-seal release rule), on
-  Fable (High), on the owner's go; slices are serial. It builds on slice 1's tree, must use
-  `weekly_records.verify_named_records` before counting any freeze line, and its submission carries the full-suite
-  evidence for N-231-1. Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
+- **SLICE 2 (L5 OV-1; L6 development runs) IS WITH THE REVIEWER: EX_232 (entry 83).** Files:
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` (README there). NOT INSTALLED. 694 tests, 0 failing, on both Pythons;
+  94 planted defects caught; tree digest `887731e1...4bedabc4`. EX_232 section 6 lists what was built lean or moved
+  to slice 3, and section 7 six questions for the reviewer. The Fable task (slice 2) is finished: Opus is enough
+  until the reviewer replies.
+- **NEXT: the reviewer's review of EX_232; then slice 3** (L4 league table, L7 report, L8 sequencers; Opus) on the
+  owner's go; slices are serial. Slice 3 must: connect `ov1.publication_names` to the league manifests; write
+  `LEAGUE_SOURCES_<GAME>.json` in the shape `score_identities.league_sources` reads; add OV-1's measure-registry
+  entry; run `Method_OV1.py record` after every score and at once on FROZE_NEXT; admit existing attempts before any
+  routine fill. Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
   or feature only if its absence could change a result, invalidate the evidence or break his weekly use. No change to
   his PC's date, time or zone (entry 78); no further daylight-saving work.
 - **Joint working principle (entry 81), agreed by Claude and the reviewer on the owner's text:**
@@ -81,7 +87,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). **Awaited: nothing until slice 2 is submitted.** The joint working principle (entry 81) was agreed by chat
+  applied). **Awaited: its review of slice 2 (EX_232).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
@@ -122,10 +128,12 @@ durable EX messages are authoritative.
 - **Last known results:** EX_230's tree 623 tests, 0 failing on 3.13.18 and 3.15.0b4, 57 mutants caught, digest
   `14d07246...596c8017a`. After N-231-1 only the two weekly modules (46 tests) were rerun, both Pythons pass, and the new
   mutant is caught; slice 2's submission carries the full-suite run.
-- **Slice 2 must:** call `weekly_records.verify_named_records` before counting any freeze line in OV-1; add the
-  canonical-coverage reader to `score_identities.py` for routine fill; treat the missed-week rule as part of OV-1's validity
-  (correct and sufficiently tested); keep restart corner cases and development-run plumbing plain, and name any lean
-  build of a ratified item in the covering note. Next free EX number after `git fetch`: EX_232 at the time of writing.
+- **Slice 2 is built and submitted (EX_232):** `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` with its README. Rebuild:
+  `sh exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/build_dev_slice2.sh base dev exchange/CLAUDE_WEB_TOOLS/mhupb/slice1
+  exchange/CLAUDE_WEB_TOOLS/mhupb/slice2`; the suite with slice 1's `run_suite.py`; the planted defects with
+  `mutations_slice2.py` on a separate copy of the tree. Corrections after the review go into that folder's tools
+  (`apply_slice2.py`, `slice2_new/`), never into `src/` or `tests/` on `main`. Slice 3 goes in `slice3/`, built on
+  top of slice 2's tree. Next free EX number after `git fetch`: EX_233 at the time of writing.
 
 ## Installed handovers (authoritative)
 
@@ -166,8 +174,8 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
 2. Done 17 November: the handover to a fresh Claude chat (EX_216 to EX_219; entry 64).
-3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). **Next: slice 2** (Fable, High, on the owner's go),
-   then slice 3 (Opus), then the integrated package with the document amendments (plan section 11), the Windows
+3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). Slice 2 with the reviewer (EX_232). **Next:
+   slice 3** (Opus, on the owner's go, after slice 2's acceptance), then the integrated package with the document amendments (plan section 11), the Windows
    rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
    registration of OV-1 before its first forward draw, and the runs, each on its own go.
 4. The reviewer's H-2 v3, for a separate ratification (no need to wait for it).
