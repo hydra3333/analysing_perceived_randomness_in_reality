@@ -881,3 +881,14 @@ the installed documents. This log is not a separate approval process.
   in two files stopped after the first, and the commit went ahead (commit `2b050e4`). `exchange/CONTINUITY_NOW.md` has the
   right time. Nothing else in entry 65 is affected. Lesson kept: when a correction touches several files, check each
   before committing; this log holds the owner's words as written, which are not all US-ASCII, so it is opened as bytes.
+
+## 67. 17 November 2026, about 16:54 - OWNER INSTRUCTION: no MHUP-B coding until the plan is complete and ratified, and a specific go
+
+- **The owner's words:** "when you get the chatgpt review, please do not commence coding using it until I give specific
+  authorization, we need to ensure the plan in complete and ratified before that."
+- **So:** after the reviewer's review of the code plan (EX_220), Claude only reads it, revises the plan and puts the
+  decisions (OD-1 to OD-6) to the owner. The plan is to be complete and owner-ratified first; implementation code starts
+  only on the owner's specific authorisation after that. A review PASS is not that authorisation.
+- **Also (16:50):** the owner asked Claude to name the model to select before each piece of evaluation or work; Claude
+  does so at the start of each piece (MC-1). The permission mode stays on Auto (16:52); the project's own go points are
+  unchanged by it.

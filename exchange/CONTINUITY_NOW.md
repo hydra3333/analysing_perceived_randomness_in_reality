@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 16:45 Australia/Adelaide (the MHUP-B code plan sent for review, EX_220; entry 65).
+**Last updated:** 17 November 2026, about 16:55 Australia/Adelaide (the code plan with the reviewer, EX_220; the owner's instruction, entry 67).
 
 ## For the owner: NOW
 
@@ -36,8 +36,9 @@ durable EX messages are authoritative.
   authorised normal work at 16:01.
 - **NOW: THE MHUP-B CODE PLAN IS WITH THE REVIEWER (EX_220; entry 65).** Draft v0.1:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_1.md`, with the OV-1 numerical probe and the evidence
-  beside it. **No implementation code exists, and none is written until the plan has passed review, the owner has
-  decided OD-1 to OD-6 (plan section 12) and has given his go.** The Fable task (the plan) is finished: Opus is enough
+  beside it. **No implementation code exists. None is written until the plan has passed review, the owner has decided
+  OD-1 to OD-6 (plan section 12), the plan is complete and OWNER-RATIFIED, and the owner then gives a specific go for
+  code (entry 67).** The Fable task (the plan) is finished: Opus is enough
   until the reviewer replies.
 - **Waiting on the reviewer:** its review of the plan and its answers to CP-Q1 to CP-Q9.
 - **Waiting on the owner (after the review; nothing needed now):** OD-1 may a development batch name its variants (he
