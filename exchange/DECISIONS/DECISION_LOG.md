@@ -680,3 +680,11 @@ the installed documents. This log is not a separate approval process.
 - **So:** OV-1 has one evidence score for Powerball and one for Oz Lotto, each with a bar of 40 (2.5% each, 5% in all). No
   exception to R3 17.3.1 is needed; games are never pooled. The joint figure may be shown as secondary. Draft v0.4 section
   6.3 still shows both options; the next revision (after the reviewer's review of v0.4) will state Option P as decided.
+
+## 56. 17 November 2026, about 12:09 - OWNER: the reviewer may commit its replies to `exchange/`
+
+- **The owner's words:** "Ok. Fyi chatgpt can now commit to exchange for you to read a respinse from there."
+- **So:** the reviewer's EX messages may arrive as its own commits under `exchange/` (as EX_208 did, commit `613da3d`), besides
+  its H-2 handover files in `doc/HANDOVER/` (EX_206). The owner no longer has to carry each file across.
+- **Claude's practice from now:** fetch and fast-forward before reading or writing anything; take the next free EX number
+  only after fetching (the EX_203 lesson); rebase and push by named paths; never edit a file the reviewer committed.
