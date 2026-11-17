@@ -1103,3 +1103,19 @@ the installed documents. This log is not a separate approval process.
 - **Withdrawn:** entry 78's two to-do items (a daylight-saving suite test; a daylight-saving step in T017). The cloud
   check already done is enough. Entry 78's constraint stands: nothing changes the owner's PC date, time or zone.
 - Reporting to the owner stays as he has asked for it (plain steps, decisions with reasons, the paste block).
+
+## 81. 18 November 2026, 00:22 - joint ChatGPT-Claude working principle agreed and recorded
+
+- **What:** "Main-game priority, proportional engineering and minimum overhead". The owner proposed the text (00:11).
+  Claude agreed and proposed three additions: (1) whoever proposes extra work states the concrete failure and its
+  consequence, or the item is simplified, deferred or dropped; (2) a ratified item that looks disproportionate is built
+  in the simplest version that satisfies the ratified rule and noted in the slice's covering note, and changing a
+  ratified rule still needs the owner; (3) principle 2 names correct method and calculation implementation and accurate,
+  traceable reporting. The reviewer accepted all three, with a wording refinement to (3) that Claude accepts (reply
+  relayed by the owner at 00:21).
+- **The owner's clarification (00:15):** the science, the software methods, the calculations and the reporting all have
+  to be right. The principle limits effort on side issues only.
+- **The final text, once:** `exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`. No new approval
+  process; no EX round was needed. Entries 78 and 80 stand.
+- **For slice 2:** the missed-week eligibility rule is part of OV-1's validity, so it gets correct implementation and
+  sufficient tests, not recovery machinery. Slice 2 still waits on the owner's go, on Fable (High).

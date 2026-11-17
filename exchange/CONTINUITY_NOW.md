@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 23:56 Australia/Adelaide (slice 1 PASSED, EX_231; entry 79; slice 2 next).
+**Last updated:** 18 November 2026, 00:22 Australia/Adelaide (joint working principle agreed, entry 81; slice 1 PASSED, EX_231; slice 2 next on the owner's go).
 
 ## For the owner: NOW
 
@@ -64,6 +64,12 @@ durable EX messages are authoritative.
   evidence for N-231-1. Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
   or feature only if its absence could change a result, invalidate the evidence or break his weekly use. No change to
   his PC's date, time or zone (entry 78); no further daylight-saving work.
+- **Joint working principle (entry 81), agreed by Claude and the reviewer on the owner's text:**
+  `exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`. READ IT BEFORE BUILDING OR REVIEWING.
+  The science, the methods, the calculations and the reporting must be right; effort on side issues is kept
+  proportionate. Whoever proposes extra work states the concrete failure and consequence. A ratified item is
+  built in its simplest satisfying version and noted in the covering note. For slice 2 the missed-week rule is
+  part of OV-1's validity (correct and sufficiently tested, no recovery machinery).
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
