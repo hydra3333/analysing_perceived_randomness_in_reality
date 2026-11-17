@@ -10,6 +10,10 @@ Not listed, because they are equivalent (each is one of two guards on the same f
     the same cases; the second one is listed;
   * 'NEXT_DRAW_SET' in the pre-cut-off test: a catch-up line is always frozen after the draw, so after the cut-off;
   * check_score_linkage in ov1.factor_step: the digest comparison beside it refuses the same planted line;
+  * "the freeze line names the variant" in the planner (walk_forward._fill_pairs): a named record always has its session
+    ticket, which the next condition finds; at the gate the two are separate and both are listed;
+  * the first plan kind's cap in report.run_report: a plan of the first kind cannot reach the holdout (make_plan
+    refuses it), so the window check beside it refuses the same request;
   * the "drawn numbers disagree" test in ov1.factor_step: X by matches and by weights then disagree, the same stop;
   * the byte comparison of an eligibility line in ov1.verify: the factor line's rebuild refuses the same altered ledgers.
 """
@@ -24,6 +28,11 @@ C = 'src/methods/_common/'
 E = 'src/evaluation/'
 KT, RT = 'tests.test_mhupb_ov1_numeric', 'tests.test_mhupb_ov1'
 P, D, FT, X = KT + '.Primitives', KT + '.Distribution', KT + '.FactorTable', KT + '.Crossing'
+DB = 'tests.test_mhupb_dev_batch'
+GT = DB + '.Gate.test_every_refusal_of_the_dev_batch_branch'
+R2A = DB + '.Plans.test_rule_2a_back_history_by_the_release_instant'
+SRC = DB + '.Sources.test_canonical_coverage_and_the_source_list'
+REL = DB + '.Reports.test_the_release_rules_of_the_outcome_reader'
 
 MUTANTS = [
     # ---- L5, the kernel (plan 6.5): a rounding direction flipped in each primitive; a remainder dropped; the margin
@@ -188,6 +197,99 @@ MUTANTS = [
      RT + '.Restart.test_verify_and_the_reader_catch_every_altered_line'),
     ('OV-1 opens the outcome reader', E + 'ov1.py',
      "from . import collect as COL\n", "from . import collect as COL\nfrom . import outcome_reader\n", RT + '.Isolation.test_statics'),
+    # ---- L6, the DEV_BATCH branch of the dispatch gate
+    ('a plan without its search-log row admitted', C + 'contract_dispatch.py',
+     "            if not OR.search_log_names(root, 'DEV_BATCH', b['batch_id'], b['plan_digest']):\n", "            if False:\n", GT),
+    ('a pin that is not the plan\'s admitted', C + 'contract_dispatch.py',
+     "            if pin != OR.pin_of(plan, 'development plan'):\n", "            if False:\n", GT),
+    ('a pair the plan does not list admitted', C + 'contract_dispatch.py',
+     "            if not OR.dev_plan_lists_pair(plan, method, revision, variant, target):\n", "            if False:\n", GT),
+    ('a second record for a pair of the batch', C + 'contract_dispatch.py',
+     "            if OR.pair_has_done_ticket(rows, pair):\n                refuse('PAIR_ALREADY_DONE', 'the pair has a DONE ticket in this batch; no second record')\n",
+     "            if False:\n                refuse('PAIR_ALREADY_DONE', 'the pair has a DONE ticket in this batch; no second record')\n", GT),
+    ('a development run without its ticket', C + 'contract_dispatch.py',
+     "in this batch; no second record')\n            if not OR.open_ticket_for(",
+     "in this batch; no second record')\n            if False and not OR.open_ticket_for(", GT),
+    ('a holdout development target before the seal', C + 'contract_dispatch.py',
+     "                if not OR.mode_h_sealed(root, game):\n                    refuse('MODE_H_NOT_SEALED', 'a holdout or later development target",
+     "                if False:\n                    refuse('MODE_H_NOT_SEALED', 'a holdout or later development target",
+     DB + '.Plans.test_before_the_seal_the_old_cap_stands'),
+    ('a target still open in the weekly session given to a batch', C + 'contract_dispatch.py',
+     "                if len(lines) != 1:\n", "                if False:\n", GT),
+    ('rule 2A: the release instant not compared', C + 'contract_dispatch.py',
+     "                    if not _instant(frozen) < _instant(released):\n", "                    if False:\n", R2A),
+    ('rule 2A: a variant the freeze line names', C + 'contract_dispatch.py',
+     "                    if any(type(r) is dict and (r.get('method_id'),", "                    if False and any(type(r) is dict and (r.get('method_id'),", R2A),
+    ('rule 2A: a weekly ticket ignored', C + 'contract_dispatch.py',
+     "                    if OR.session_ticket_for_pair(root, game, pair):\n", "                    if False:\n", R2A),
+    ('a batch of the second kind publishing under the weekly root', C + 'contract_runner.py',
+     "        return OR.development_runs_root(PROJECT_ROOT)     # development run root only", "        return OR.weekly_runs_root(PROJECT_ROOT)     #",
+     DB + '.Plans.test_a_routine_fill_plans_exactly_the_uncovered_pairs_and_runs_them'),
+    ('a development forecast for the next draw', C + 'contract_runner.py',
+     "kind not in ('WEEKLY_SESSION', 'OWNER_DIAGNOSTIC', 'DEV_BATCH'):", "kind not in ('WEEKLY_SESSION', 'OWNER_DIAGNOSTIC'):", GT),
+    ('the DEV_BATCH binding under another mode', C + 'contract_records.py',
+     "        if kind != 'WEEKLY_SESSION':\n            raise ValueError(f'{where}: a {mode} request must be bound to a weekly session')\n",
+     "        if kind not in ('WEEKLY_SESSION', 'DEV_BATCH'):\n            raise ValueError(f'{where}: a {mode} request must be bound to a weekly session')\n", GT),
+    # ---- L6, the planner and the driver
+    ('a routine fill ignores what is covered', C + 'walk_forward.py',
+     "            if (*key, t) not in covered:\n                pairs.append([*key, t])\n", "            if True:\n                pairs.append([*key, t])\n",
+     DB + '.Plans.test_a_routine_fill_plans_exactly_the_uncovered_pairs_and_runs_them'),
+    ('the cap lifted before the seal', C + 'walk_forward.py',
+     "    return p.holdout_last if sealed else p.holdout_first - 1\n", "    return p.holdout_last\n", DB + '.Plans.test_before_the_seal_the_old_cap_stands'),
+    ('rule 2A in the planner: frozen after the release', C + 'walk_forward.py',
+     "                weekly = (WR.parse_utc(line['frozen_utc']) >= WR.parse_utc(released) or\n", "                weekly = (False or\n", R2A),
+    ('a rerun over an accepted draw the session has not frozen', C + 'walk_forward.py',
+     "            if t > p.holdout_last and (cap != p.holdout_last or t not in lines):\n", "            if False:\n",
+     DB + '.Plans.test_an_exploratory_rerun_and_its_refused_windows'),
+    ('a rerun of a variant that is not released', C + 'walk_forward.py',
+     "            if unknown or not wanted or len(set(wanted)) != len(wanted):\n", "            if not wanted or len(set(wanted)) != len(wanted):\n",
+     DB + '.Plans.test_an_exploratory_rerun_and_its_refused_windows'),
+    ('runs of the second kind not ticketed', C + 'walk_forward.py',
+     "TICKETED = ('MODE_H_BATCH', 'DEV_BATCH')", "TICKETED = ('MODE_H_BATCH',)",
+     DB + '.Plans.test_a_routine_fill_plans_exactly_the_uncovered_pairs_and_runs_them'),
+    ('an open ticket never closed on resume', C + 'walk_forward.py',
+     "    if kind_of(plan) not in TICKETED:\n        return {}\n", "    if kind_of(plan) != 'MODE_H_BATCH':\n        return {}\n",
+     DB + '.Gate.test_an_interrupted_batch_resumes_and_no_pair_is_run_twice'),
+    # ---- L6, the source list and the coverage reader
+    ('an exploratory rerun accepted as a canonical source', C + 'score_identities.py',
+     "LEAGUE_SOURCE_KINDS = ('WF_BATCH_PLAN_V1', 'ROUTINE_FILL')", "LEAGUE_SOURCE_KINDS = ('WF_BATCH_PLAN_V1', 'ROUTINE_FILL', 'EXPLORATORY_RERUN')", SRC),
+    ('coverage beyond the attempt\'s window', C + 'score_identities.py',
+     "            if s['window_first'] <= t <= s['window_last']:\n", "            if True:\n", SRC),
+    ('a listed plan\'s digest not checked', C + 'score_identities.py',
+     " or kind != s['batch_kind'] or record_digest(plan) != s['plan_digest']:", " or kind != s['batch_kind']:", SRC),
+    ('a listed plan\'s kind not checked', C + 'score_identities.py',
+     " or kind != s['batch_kind'] or record_digest(plan) != s['plan_digest']:", " or record_digest(plan) != s['plan_digest']:", SRC),
+    ('a source list of another shape accepted', C + 'score_identities.py',
+     "        if (type(s) is not dict or set(s) != set(LEAGUE_SOURCE_FIELDS) or", "        if (type(s) is not dict or", SRC),
+    # ---- L6, the report tool and the outcome reader
+    ('a V2 report not checked for release before its row', E + 'report.py',
+     "            if not OR.development_release_allowed(roots()['project'], game_id, t):\n", "            if False:\n",
+     DB + '.Plans.test_before_the_seal_the_old_cap_stands'),
+    ('a holdout outcome to a development report before the seal', E + 'outcome_reader.py',
+     "        if OR.opening_record(repo_root, game_id) is None or not OR.mode_h_sealed(repo_root, game_id):\n            return False\n    except OR.RecordRefused:\n        return False\n    return target <=",
+     "        pass\n    except OR.RecordRefused:\n        return False\n    return target <=",
+     DB + '.Plans.test_before_the_seal_the_old_cap_stands'),
+    ('a later outcome to a development report without its freeze line', E + 'outcome_reader.py',
+     "    return target <= p.holdout_last or _weekly_release_allowed(repo_root, game_id, target)\n", "    return True\n", REL),
+    ('the Mode H scorer\'s rule widened to the development rule', E + 'outcome_reader.py',
+     "    released = development_release_allowed if development else outcome_release_allowed\n", "    released = development_release_allowed\n", REL),
+    ('the development rule not used by the report', E + 'report.py',
+     "                                development=True) if targets else {}\n", "                                development=False) if targets else {}\n",
+     DB + '.Reports.test_a_v2_batch_is_reported_on_its_own_pairs'),
+    ('the Mode H families loaded by a development report', E + 'report.py',
+     "\n            and (tier is None or (f.get('evidence_tier') or 'DEVELOPMENT_WF_EXPLORATORY') == tier)]\n", "]\n",
+     DB + '.Reports.test_families_are_loaded_by_window_and_tier'),
+    ('a V2 batch reported over its whole window', E + 'collect.py',
+     "    if WF.kind_of(plan) == 'DEV_BATCH':", "    if False:", DB + '.Reports.test_a_v2_batch_is_reported_on_its_own_pairs'),
+    ('a registered family applied to a V2 report', E + 'report.py',
+     "        families = []\n    else:\n", "        families = load_families(game_id, 1286, 1576)\n    else:\n",
+     DB + '.Reports.test_a_v2_batch_is_reported_on_its_own_pairs'),
+    ('the comparison ignores the scores', E + 'reforecast_compare.py',
+     "        if x['scores'] != y['scores']:\n", "        if False:\n", DB + '.Reports.test_named_content_comparison'),
+    ('the comparison ignores the TOP and WORST sets', E + 'reforecast_compare.py',
+     "            if x[side] != y[side]:\n", "            if False:\n", DB + '.Reports.test_named_content_comparison'),
+    ('a precondition not judged', E + 'reforecast_compare.py',
+     "    ('the same environment', lambda fc, rc: rc.get('environment_identity')),\n", "", DB + '.Reports.test_named_content_comparison'),
 ]
 
 env = dict(os.environ)

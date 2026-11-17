@@ -60,7 +60,7 @@ STOP_STATEMENT = 'I stop the OV-1 stream of this game. It stays stopped.'
 RULES = {
     'formula': 'w_j = (variants with j in TOP) - (variants with j in WORST), over the variants with a complete '
                'PROSPECTIVE pair; X = sum of w_j over the seven drawn; Z = X / sqrt(V); '
-               'f(lambda) = exp(lambda Z) / E0[exp(lambda Z)]; E_n = mean over lambda of the products of f; E_0 = 1',
+               'f(lambda) = exp(lambda Z) / E0[exp(lambda Z)]; E(n) = mean over lambda of the products of f; E(0) = 1',
     'lambdas': [f'{n}/{d}' for n, d in NUM.LAMBDAS],
     'lambda_weights': 'EQUAL',
     'bar': NUM.BAR,
@@ -167,7 +167,7 @@ def registration(root: Path, game_id: str) -> dict | None:
 def _master_last(root: Path, game_id: str):
     """The last row of the master's version ledger (version, digest, last draw). The master itself is not opened."""
     try:
-        return MV.parse_ledger(MV._trusted_file_bytes(MV.source_paths(root, game_id)[0]), game_id)[-1]
+        return MV.ledger_rows(root, game_id)[-1]
     except (ValueError, IndexError) as exc:
         raise OV1Blocked(f'the master\'s version ledger does not read: {exc}') from None
 
