@@ -756,3 +756,27 @@ the installed documents. This log is not a separate approval process.
   `04c4f68a638fff7d93f06d25084d1454bdfc443e9aab6b0b12ffdfd8b5323d26`; Git blob `7acd172c586aba407200cc0b2abcbbcb1fb2aa71`):
   v0.6 with RC-1 and a status header, nothing else changed.
 - **Awaiting:** the owner's explicit ratification of that file and his approval of O-1 to O-3 (and O-4's objective).
+
+## 61. 17 November 2026, 14:48 - OWNER RATIFICATION: the MHUP-B design supplement v0.7; O-1 to O-3 approved; O-4's objective approved
+
+- **Where:** Claude's tap question in the chat. Asked: "Do you ratify the design (supplement v0.7) and approve O-1, O-2 and
+  O-3, with O-4's objective approved and its run needing a separate go? This approves the design only: no code, run or
+  install." Offered: "Yes, ratify (Recommended)", "Not yet".
+- **The owner's answer:** "Yes, ratify (Recommended)".
+- **Ratified:** `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_7_RATIFICATION_CANDIDATE.md`, SHA-256
+  `04c4f68a638fff7d93f06d25084d1454bdfc443e9aab6b0b12ffdfd8b5323d26` (38,428 bytes; Git blob
+  `7acd172c586aba407200cc0b2abcbbcb1fb2aa71`; commit `9f7625e`), after the reviewer's design pass and recommendation
+  (EX_213), with its condition RC-1 included. To be numbered and recorded in register v0.31 (the next number after RAT-32),
+  and copied into `doc/` unchanged with that register.
+- **Approved with it:** O-1 the league table, its files, the `current` folder and the archive; O-2 OV-1 as the one
+  confirmatory forward test for each game (evidence score, bar 40), everything else secondary; O-3 the window contract and
+  the re-forecasting rules; O-4 the objective of scoring Powerball targets 1145-1285 (the run needs a separate go once its
+  command is reviewed).
+- **Not authorised by this:** any code, package, install, run, rescore, re-forecast or registration of the primary test.
+  The code round's gates listed in the supplement's header stand.
+- **P6 note (Claude, on how this round went):** six drafts in a day, each answering a specific review. The reviewer found
+  two real faults (a cut-off that did not guarantee its error rate; back-history that missed closed weekly targets) and
+  both were fixed by simpler mechanisms than the ones they replaced. The reviewer committing its replies to `exchange/`
+  removed the relay step. Claude's slips: one inaccurate commit message (corrected in entry 54) and one claim about
+  numerical loss stated before it was shown (withdrawn). Lesson kept: check a guarantee by exact computation before
+  writing the word.

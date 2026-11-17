@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 15:00 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 14:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -28,15 +28,17 @@ durable EX messages are authoritative.
 - **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by
   `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
   lists what must still be rewritten before ratification.
-- **MHUP-B design supplement v0.7, RATIFICATION CANDIDATE** (entries 52-60):
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_7_RATIFICATION_CANDIDATE.md` (SHA-256 `04c4f68a...3d26`; drafts
-  v0.1 to v0.6 kept). The reviewer passed v0.6 as a design and recommends ratification with RC-1 (EX_213); v0.7 is v0.6
-  plus RC-1. Content: full MHUP-B in eight tested layers with the live path isolated; the league table with `current`
-  and archive folders; the cross-source read contract; re-forecasting of every draw by every variant as development
-  evidence, the sealed Mode H records kept as separate history; OV-1 as an exact evidence score, one per game, bar 40,
-  registered before its first draw. **Waiting for:** the owner's explicit ratification and approval of O-1 to O-3 (and
-  O-4's objective). Then: the code plan in the eight layers (Fable, High); the supplement joins `doc/` with register v0.31.
-- **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the approvals on v0.6, MHUP-B's code plan (Fable, High).
+- **THE MHUP-B DESIGN SUPPLEMENT IS RATIFIED (owner, 17 November 2026, 14:48; entry 61):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_7_RATIFICATION_CANDIDATE.md`, SHA-256 `04c4f68a...3d26`, after
+  the reviewer's design pass (EX_213). O-1 to O-3 approved; O-4's objective approved (its run needs a separate go).
+  Content: full MHUP-B in eight tested layers with the live path isolated; the league table with `current` and archive
+  folders; the cross-source read contract; re-forecasting of every draw by every variant as development evidence, the
+  sealed Mode H records kept as separate history; OV-1 as an exact evidence score, one per game, bar 40, registered
+  before its first draw. **It approves a design only: no code, run or install.** **Next:** the code plan in the eight
+  layers (Fable, High; on the owner's go), with the code round's gates as the supplement lists them; the supplement is
+  numbered in register v0.31 and copied into `doc/` unchanged.
+- **Also due:** register v0.31 and finishing H-1 v4 (Opus). Claude recommends doing these before the code round and
+  starting the code round in a fresh Claude chat, because this chat is very long.
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
