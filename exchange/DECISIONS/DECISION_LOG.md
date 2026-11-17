@@ -978,3 +978,9 @@ the installed documents. This log is not a separate approval process.
 - **For the owner's ratification of v0.8 (its section 13):** O-5 the opportunity rule, the cut-off and the failure rules;
   O-6 the two kinds of development run and the canonical rule; O-7 the writer, source-file and publication wording.
 - **Model (MC-1):** the Fable task is finished. Opus is enough to read the reviewer's recheck.
+
+## 72. 17 November 2026, about 19:21 - correction of entry 71's time
+
+- Entry 71's heading says "about 19:07-20:10". **The work ran from about 19:07 to about 19:20.** Claude wrote the end time
+  without reading the clock, the same slip as entry 65. From now on every time Claude writes into a record is read from
+  the clock by the command that writes it.
