@@ -1077,3 +1077,14 @@ the installed documents. This log is not a separate approval process.
 - **To do, with the integrated package:** that check as a suite test (it sets `TZ` for its own process, so it is skipped
   on Windows); and in T017 one read-only step that prints the deadline and offset for a draw in each season on the
   owner's PC, with no setting changed.
+
+## 79. 17 November 2026, about 23:56 - EX_231: slice 1 PASSED (cloud source review); one small follow-up applied
+
+- **EX_231 (the reviewer, commit `25875c0`):** focused technical PASS of slice 1 (F-229-1 to F-229-4 and F-230-A). One
+  minor, non-blocking note, N-231-1 (a drawn Powerball in a score line must be 1 to 20), to be fixed in the normal code
+  round. Slices are serial: slice 2 after slice 1's acceptance, slice 3 after slice 2's. No install, PC or real-data go.
+- **Done:** N-231-1 applied in `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` with a negative test and a planted-fault check;
+  the two weekly test modules pass on Python 3.13 and 3.15. Its full-suite evidence comes with slice 2's submission.
+- **The owner's reminder (23:50):** focus on the core systems that serve the objectives, in preference to side issues
+  and administrative overhead. Claude keeps reports and exchanges short and raises only what changes a result.
+- **Next:** slice 2 (OV-1; the two kinds of development run), Fable (High), on the owner's go.

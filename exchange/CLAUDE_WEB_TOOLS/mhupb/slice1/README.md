@@ -1,4 +1,7 @@
-# MHUP-B slice 1 (the live path): corrected edition sent for a focused recheck as EX_230 - NOT INSTALLED
+# MHUP-B slice 1 (the live path): PASSED the reviewer's source review (EX_231) - NOT INSTALLED
+
+After EX_231 the small note N-231-1 (a drawn Powerball must be 1 to 20) was applied here, with its test and mutant;
+the `evidence/` files are for EX_230's tree, and N-231-1's full-suite evidence comes with slice 2.
 
 EX_228 sent the first edition; EX_229 (the reviewer) asked for four corrections; this folder now holds the corrected
 edition (EX_230). `SLICE1_EX228_TO_EX230.diff` shows every line changed between the two.

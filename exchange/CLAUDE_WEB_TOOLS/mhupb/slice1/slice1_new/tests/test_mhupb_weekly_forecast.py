@@ -628,6 +628,10 @@ class ReadingScored(B.Weekly, Checks):
             'a readout out of range': first(readouts=dict(rows[0]['readouts'], TOP=dict(top, main_matches=8))),
             'a readout of another game': first(readouts=dict(rows[0]['readouts'], TOP={'main_matches': 1, 'division': 0})),
             'a rank that is not a fraction': first(rank=dict(rows[0]['rank'], mean_rank_main='about 14')),
+            'a Powerball above 20': first(drawn_powerball=99),              # EX_231 N-231-1
+            'a Powerball of zero': first(drawn_powerball=0),
+            'no Powerball': first(drawn_powerball=None),
+            'a drawn main number outside the barrel': first(drawn_main=[1, 2, 3, 4, 5, 6, 36]),
             'an amendment that names nothing': good + canonical(dict(rows[0], scoring_policy_id='CORRECTED_POLICY_V2',
                                                                     amendment_of='0' * 64)),
             'an amendment without its policy': good + canonical(dict(rows[0], amendment_of=record_digest(rows[0]))),

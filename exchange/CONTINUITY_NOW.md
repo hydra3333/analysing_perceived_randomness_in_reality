@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 23:20 Australia/Adelaide (corrected slice 1 with the reviewer, EX_230; entry 77).
+**Last updated:** 17 November 2026, about 23:56 Australia/Adelaide (slice 1 PASSED, EX_231; entry 79; slice 2 next).
 
 ## For the owner: NOW
 
@@ -55,16 +55,14 @@ durable EX messages are authoritative.
 - **THE OWNER GAVE THE GO FOR CODE (17 November, 20:09; entry 75).** Order: slice 1 (baseline fixes, L1 to L3), slice 2
   (L5, L6), slice 3 (L4, L7, L8), the integrated package and document amendments, T017, the install. Slices 1 and 2 are
   Fable (High) work; slice 3 and packaging are Opus work.
-- **SLICE 1, CORRECTED EDITION, IS WITH THE REVIEWER (EX_230; entry 77).** EX_228 sent the first edition; EX_229 asked
-  for four corrections (the run folder of a session's development runs follows the design; only complete, canonical,
-  linked score lines close a target; only complete, linked witness lines promote; a next-draw set needs its genuine
-  start ticket); all applied, plus one Claude found (the developed record is tied to the sealed study). Files:
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (MHUP-A layout; `SLICE1_EX228_TO_EX230.diff`). Corrected tree: 623 tests, no
-  failure, on Python 3.13 and 3.15; 57 mutants caught. NOT INSTALLED. A successor chat rebuilds the tree with the
-  commands in EX_228 section 1.
-- **NEXT for Claude:** the reviewer's focused recheck of EX_230; and slice 2 (OV-1 kernel and recorder;
-  `WF_BATCH_PLAN_V2`, the `DEV_BATCH` gate, the post-seal release rule), on Fable (High), on the owner's next word. It
-  builds on slice 1's tree and must use `weekly_records.verify_named_records` before counting any freeze line.
+- **SLICE 1 PASSED THE REVIEWER'S SOURCE REVIEW (EX_231; entry 79).** History: EX_228 (first edition), EX_229 (four
+  corrections), EX_230 (corrected), EX_231 (PASS, with the small note N-231-1, since applied). Files:
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (MHUP-A layout). NOT INSTALLED. Rebuild with the commands in EX_228 section 1.
+- **NEXT: slice 2** (OV-1 kernel and recorder; `WF_BATCH_PLAN_V2`, the `DEV_BATCH` gate, the post-seal release rule), on
+  Fable (High), on the owner's go; slices are serial. It builds on slice 1's tree, must use
+  `weekly_records.verify_named_records` before counting any freeze line, and its submission carries the full-suite
+  evidence for N-231-1. Owner's standing reminders: focus on core systems, minimum administration; no change to his
+  PC's date, time or zone (entry 78).
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).

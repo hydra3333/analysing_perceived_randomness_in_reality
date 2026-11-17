@@ -568,6 +568,7 @@ SCORE_FIELDS = ('schema', 'game_id', 'method_id', 'method_revision', 'variant_id
                 'draw_date_is_derived')
 READOUTS = ('TOP', 'WORST')
 MAIN_POOL = {'POWERBALL': 35, 'OZLOTTO': 47}             # the main barrel's size (R2; evaluation.divisions has the same)
+PB_POOL = 20                                             # the Powerball barrel's size
 SCORE_RUN_ID = re.compile(r'ws-[0-9a-f]{32}\Z', re.ASCII)
 
 
@@ -678,8 +679,11 @@ def validate_score_line(s: Mapping, what: str = 'score line') -> dict:
     if type(main) is not list or len(main) != 7 or sorted(set(main)) != main or \
             not all(type(x) is int and 1 <= x <= MAIN_POOL[s['game_id']] for x in main):
         raise RecordRefused(f'{what}: drawn_main')
-    if (s['game_id'] == 'POWERBALL') != (type(s['drawn_powerball']) is int):
-        raise RecordRefused(f'{what}: drawn_powerball')
+    if s['game_id'] == 'POWERBALL':                       # EX_231 N-231-1: the drawn Powerball is a whole number 1..20
+        if type(s['drawn_powerball']) is not int or not 1 <= s['drawn_powerball'] <= PB_POOL:
+            raise RecordRefused(f'{what}: drawn_powerball is not a whole number from 1 to {PB_POOL}')
+    elif s['drawn_powerball'] is not None:
+        raise RecordRefused(f'{what}: drawn_powerball (Oz Lotto has none)')
     if s['exposure_flag'] != OR.exposure_flag(s['game_id'], s['target_draw_number']):
         raise RecordRefused(f'{what}: exposure_flag is not the recorded decision for this draw')
     return dict(s)
