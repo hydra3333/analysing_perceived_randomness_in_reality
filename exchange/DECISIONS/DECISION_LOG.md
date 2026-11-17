@@ -688,3 +688,17 @@ the installed documents. This log is not a separate approval process.
   its H-2 handover files in `doc/HANDOVER/` (EX_206). The owner no longer has to carry each file across.
 - **Claude's practice from now:** fetch and fast-forward before reading or writing anything; take the next free EX number
   only after fetching (the EX_203 lesson); rebase and push by named paths; never edit a file the reviewer committed.
+
+## 57. 17 November 2026, about 12:37 - the reviewer's recheck of v0.4 (EX_209): pass with corrections; draft v0.5 (EX_210)
+
+- **The owner's words:** "Good. Please check." Claude fetched and read `exchange/EX_209_ChatGPT.md` (the reviewer's own commit
+  `44c75bb`).
+- **EX_209:** PASS WITH CORRECTIONS; a focused recheck before ratification. The mathematics of the evidence score is passed
+  (a genuine test martingale; the chance a game's score ever reaches 40 is at most 2.5%; 5% in all by the union bound).
+  Corrections: B01 register the test before its first contributing draw; B02 a numerical contract so the bound holds for
+  the program; C01 compare forecast content, not whole records, with the sealed forecasts; C02 a score or typed status per
+  eligible target; C03 name each writer and path; C04 bind the OV-1 ledger to the freeze line and outcome pin; C05 record
+  Option P as decided and make no joint figure; and bind the selected score version by identity (R-5). The reviewer
+  expects to recommend ratification if these are made.
+- **Draft v0.5** (`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_5.md`) applies all of them; EX_210 is the
+  covering note with the table of where each landed. v0.1 to v0.4 are kept. Nothing is authorised.
