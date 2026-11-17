@@ -42,6 +42,7 @@ Kept so that no input is lost if a chat ends. The owner's exact words are in dec
 | D-8 | The runner's rulebook rules 4 and 5 reworded to read-only inside MHUP-B's rulebook edition | Owner agreed 22:51, on condition the runner never interferes with data |
 | D-9 | Whether roadmap item 21b (the consolidated report; a new method's back-history) comes forward to sit with or right after MHUP-B | A roadmap change: the owner's decision |
 | D-10 | A proper power statement for the league table's "against chance" figures | From EX_203: thresholds are not power |
+| D-11 | A `current` folder holding only the newest table set, with every table kept for ever in an archive folder | Owner, 17 November 2026 (decision log entry 58): the archive is create-only and never moves; `current` is a replaceable copy |
 
 ## 4. Sketch of the latest league table (layout only; the numbers are invented)
 

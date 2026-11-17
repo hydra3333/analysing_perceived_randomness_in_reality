@@ -702,3 +702,21 @@ the installed documents. This log is not a separate approval process.
   expects to recommend ratification if these are made.
 - **Draft v0.5** (`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_5.md`) applies all of them; EX_210 is the
   covering note with the table of where each landed. v0.1 to v0.4 are kept. Nothing is authorised.
+
+## 58. 17 November 2026, about 14:15-14:20 - the owner's clarifying questions, and his input on a "current" folder
+
+- **The owner asked (14:15)** how catch-up works after missed rounds, and what happens when a method is modified or added.
+  Claude's answers, from the design: catch-up takes only the missed draws, oldest first, each forecast from the draws before
+  it, then freezes the next forecast; nothing earlier is redone. A new or modified method (a new revision) is walked forward
+  from its first valid draw to the latest as development evidence; only the new or changed variants are computed; every
+  other method's frozen forecasts and scores are reused; a new league table becomes the current one.
+- **The owner's words (14:20):** ""The earlier tables stay as their own dated files; nothing is overwritten." good, perhaps in
+  a superseded folder or something so that "current" are easily identifiable by being the only set of results/rankings in
+  a main or "current" folder. Yes "marked retired" is the righ thing to do so method versions results are never mixed up.
+  I'll read the decisions after chatgpt's review."
+- **Design input D-11 (for the next revision of the supplement, after the reviewer's recheck of v0.5):** every table is
+  written once, create-only, into a permanent archive folder and logged there; a `current` folder holds a copy of the
+  newest set only, replaced each time. The archive is the record and never moves (so no logged path ever changes); the
+  `current` copy is a convenience and the only thing that is ever replaced. A failed copy never affects the archive.
+- **Confirmed by the owner:** a modified method's old revision is marked retired and its results are never mixed with the
+  new revision's.

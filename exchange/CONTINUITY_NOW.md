@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 13:40 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 14:30 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -35,6 +35,8 @@ durable EX messages are authoritative.
   evidence score, **one per game with a bar of 40 (owner, entry 55)**, registered before its first draw. The reviewer
   passed v0.4 with corrections (EX_209), all applied in v0.5. **Waiting for:** the reviewer's focused recheck of v0.5 (it
   commits its reply to `exchange/`); then the owner's four decisions (v0.5 section 13); then the code plan.
+  Carried into the next revision: design input D-11 (a `current` folder with only the newest table set; the archive
+  create-only and never moved; entry 58).
 - **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the decisions on v0.5, MHUP-B's code plan (Fable, High).
 - **Blocks or STOPs:** none.
 
