@@ -4,52 +4,43 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 15:30 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 15:40 Australia/Adelaide (re-checked for the Claude handover).
 
 ## For the owner: NOW
 
 - **MODE H IS COMPLETE AND READ.** Oz Lotto SEALED 15 November 2026 (EX_196); Powerball SEALED 16 November 2026 (EX_199).
-  Both reports were read independently by the reviewer (EX_200) and Claude (EX_201) and the readings agree (EX_202 to
-  EX_205; "EX_203" in EX_204 and entry 40 means EX_203A). **Result: no statistically significant predictive advantage was
-  demonstrated under the predeclared Mode H tests** (Bonferroni family-adjusted P 1.000, 0.672, 0.920). The wording for the
-  record is EX_205 section 5. The development walk-forward evaluation (26,040 forecasts) also showed nothing significant.
-- **THE APPROACH AGREED BY THE OWNER (16 November, 23:07; entry 47): `exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md`.**
-  All draws are treated the same and the AI chats may see draw values and results; three protections stay (no lottery
-  websites by the AIs; results count only from reviewed programs, chat calculations are "suggestive"; nothing runs without
-  the owner's go); Claude may commit documents directly once reviewed and ratified, code still goes by reviewed package and
-  the owner's Windows install, Claude never writes the data folders, nothing is deleted (archive with date-time names);
-  the local runner keeps its rules; MHUP-B is next and the priority. Detail: `RULES_AFTER_Q7_DRAFT_r2.md` and
-  `MHUPB_DESIGN_INPUTS_2026_11_16.md` in the same folder.
-- **The reviewer has been consulted and agrees with conditions (EX_206, entry 50)**; its conditions match the working
-  rule of `RULES_AFTER_Q7_DRAFT_r2.md` section 2A. The reviewer's own H-2 v3 CANDIDATE is in `doc/HANDOVER/` (not ratified).
-  Still to be reviewed: the MHUP-B design supplement draft.
-- **D5 DONE (entry 48):** the owner committed and pushed the Mode H results at `c7622fa` (masters and ledgers version 2,
-  search log, batch records, markers, reports); the masters and reports match the fingerprints recorded at the seals.
-- **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by
-  `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
-  lists what must still be rewritten before ratification.
-- **THE MHUP-B DESIGN SUPPLEMENT IS RATIFIED (owner, 17 November 2026, 14:48; entry 61):**
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_7_RATIFICATION_CANDIDATE.md`, SHA-256 `04c4f68a...3d26`, after
-  the reviewer's design pass (EX_213). O-1 to O-3 approved; O-4's objective approved (its run needs a separate go).
-  Content: full MHUP-B in eight tested layers with the live path isolated; the league table with `current` and archive
-  folders; the cross-source read contract; re-forecasting of every draw by every variant as development evidence, the
-  sealed Mode H records kept as separate history; OV-1 as an exact evidence score, one per game, bar 40, registered
-  before its first draw. **It approves a design only: no code, run or install.** **Next:** the code plan in the eight
-  layers (Fable, High; on the owner's go), with the code round's gates as the supplement lists them; the supplement is
-  numbered in register v0.31 and copied into `doc/` unchanged.
-- **RAT-34 DONE (owner, 17 November 2026, about 15:15; entry 63):** register v0.31, H-1 v4 and its blurb ratified after the
-  reviewer's DOCUMENTARY PASS (EX_215), and **the approach of 16 November 2026 is in force**, with the EX_206 conditions.
-  Claude committed them, with the RAT-33 supplement, into `doc/` directly. H-2 v3: the reviewer updates it and the owner
-  ratifies it separately; H-2 v2 r1 stays installed meanwhile.
-- **Next: the handover to a fresh Claude chat**, then (owner's option) a short readiness check, then the MHUP-B code plan
-  (Fable, High). Claude re-checks H-1 v4, its blurb and this page just before the handover.
+  Both AIs read both reports independently and agree (EX_200 to EX_205; "EX_203" in EX_204 and entry 40 means EX_203A).
+  **No statistically significant predictive advantage was demonstrated under the predeclared Mode H tests** (Bonferroni
+  family-adjusted P 1.000, 0.672, 0.920). The record of the study is in register v0.31 (from EX_205 section 5). The
+  development walk-forward evaluation (26,040 forecasts) also showed nothing significant. D5 done: the owner committed the
+  results at `c7622fa`.
+- **THE APPROACH OF 16 NOVEMBER 2026 IS IN FORCE (RAT-34, 17 November, about 15:15; entry 63),** with the reviewer's EX_206
+  conditions: all draws are treated the same and the AI chats may read draw values, the masters and the results; no lottery
+  websites or results searches by any AI; results count only from the reviewed programs and logged runs (chat calculations
+  are "suggestive"); N-1 isolation, forecast identities and append-only evidence kept; known draws give development
+  evidence only; the sealed Mode H records are never altered or rescored; nothing runs without the owner's go. Claude
+  commits reviewed and ratified documents directly; code still goes by reviewed package, Windows rehearsal and the owner's
+  install; Claude never writes `source_data/`, `results/`, `transitory_data/`, `GAIS/` or settings; nothing is deleted.
+  The reviewer commits its own replies to `exchange/`. The local runner keeps rulebook v0.5, rules 4 and 5 included, until
+  MHUP-B's rulebook edition. Record: `exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md`; register v0.31.
+- **THE MHUP-B DESIGN IS RATIFIED (RAT-33, 17 November, 14:48; entry 61):** `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_7.md`
+  (SHA-256 `04c4f68a...3d26`; reviews EX_207 to EX_213). Full MHUP-B in eight tested layers, the live path isolated; a league
+  table of every method and variant with `current` and archive folders; re-forecasting of every draw up to the holdout's end
+  by every variant as development evidence, the sealed Mode H records kept as separate history; OV-1, one exact evidence
+  score per game (bar 40), registered before its first draw, the only confirmatory forward test. **Design only: no code,
+  run or install.** O-4 (scoring Powerball 1145-1285) is an approved objective; its run needs its own go.
+- **Installed documents (RAT-34, committed by Claude, verified from a fresh clone):** register v0.31, H-1 v4 and its blurb,
+  and the supplement. H-2: v2 r1 stays installed; the reviewer updates its H-2 v3 candidate for a separate ratification.
+- **NEXT: the handover to a fresh Claude chat** (paste `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`,
+  last line "see exchange/CONTINUITY_NOW.md"); then, at the owner's option, a short readiness check; then **the MHUP-B code
+  plan in the eight layers** (Fable, High), reviewed before any code is written.
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
-- Open findings: none. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
+- Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass). (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.
@@ -99,10 +90,11 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
 
-1. D5: done (`c7622fa`, entry 48).
-2. One paste to the reviewer: the agreed approach, the rules page r2, the MHUP-B inputs; its reply; any adjustment by the owner.
-3. Close-out documents, alongside item 4: register v0.31 (Mode H, the record wording of EX_205 section 5, the agreed
-   approach), H-1 v4 (the reviewer decides on H-2), the holdout exposure record closed.
-4. **MHUP-B design (priority; design only so far)**, from `exchange/DECISIONS/MHUPB_DESIGN_INPUTS_2026_11_16.md`; then its
-   code, review, rehearsal and install by the usual package route.
+1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
+   H-1 v4 (RAT-34), the holdout exposure record closed.
+2. **The handover to a fresh Claude chat**; then, at the owner's option, a short readiness check.
+3. **The MHUP-B code plan** in the supplement's eight layers (Fable, High), reviewed before any code; then the code, its
+   review, the Windows rehearsal (with a full-suite run after step 18) and the owner's install, each on its own go; then the
+   registration of OV-1 before its first forward draw, and the runs (each on its own go).
+4. The reviewer's H-2 v3, for a separate ratification (no need to wait for it).
 5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
