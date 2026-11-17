@@ -999,3 +999,23 @@ the installed documents. This log is not a separate approval process.
   for the reviewer's check of the corrections only.
 - **Next:** the reviewer's check; then the owner ratifies both together (O-5 to O-7); no code until his separate go
   (entry 67).
+
+## 74. 17 November 2026, about 20:06 - RAT-35: MHUP-B code plan v0.3 and design supplement v0.8 ratified together
+
+- **EX_227 (the reviewer, commit `12877cb`):** PASS on RC-225-1 and RC-225-2; it recommends that the owner ratify the exact
+  two candidates together, without further edits. It recomputed both SHA-256 values from GitHub.
+- **The owner's words (20:06):** "I ratify MHUP-B code plan v0.3 and design supplement v0.8, exact files as listed in
+  EX_227."
+- **RAT-35 is recorded.** Ratified, byte for byte:
+  - code plan v0.3, SHA-256 `d5c2b3180ffbdb28f28da95fcfc3b0ebfe87ef19653457a6c7d4a07d546d0169`;
+  - design supplement v0.8, SHA-256 `e3d977e16c910dfb0c3c37b440760f3d4c6ac4588c06af519aa0f9c9be97c27e`, including the
+    owner's decisions O-5 (the opportunity rule, the 01:30 UTC cut-off as a conservative choice, the failure rules and the
+    missed rule's operating assumptions), O-6 (two kinds of development run; the canonical rule) and O-7 (writers, the
+    source file, publication).
+- **Installed by Claude (approach of 16 November 2026: ratified documents committed directly):** the same bytes as
+  `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` and `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md`.
+  Their status lines still read "RATIFICATION CANDIDATE" so that the ratified SHA-256 holds; this entry is the record of
+  ratification, as RAT-33's was for v0.7. v0.8 now governs; v0.7 stays in `doc/` as history.
+- **Not authorised by RAT-35 (entry 67):** any implementation code, synthetic or real run, task file, install, OV-1
+  registration, forecast, score or change to sealed Mode H. **Coding starts only on the owner's separate, specific go.**
+- **For the next register edition (v0.32):** record RAT-35 (with the H-1 notes D2, D4 and D5).

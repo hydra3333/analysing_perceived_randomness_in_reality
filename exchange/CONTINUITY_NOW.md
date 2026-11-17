@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 19:53 Australia/Adelaide (EX_225's corrections applied; ratification candidates with the reviewer, EX_226; entry 73).
+**Last updated:** 17 November 2026, about 20:07 Australia/Adelaide (RAT-35: MHUP-B code plan v0.3 and design supplement v0.8 ratified; entry 74).
 
 ## For the owner: NOW
 
@@ -47,15 +47,14 @@ durable EX messages are authoritative.
   and blind to the outcome (else stop); OD-3 noon Adelaide time as the last moment for OV-1's pre-draw entry (the owner:
   both games close at 7.30pm AEST); OD-4 a stopped stream stays stopped; OD-5 the real score records checked before the
   install: the owner committed them (`cc665ce`) and Claude's census passed; OD-6 three review slices, one install.
-- **THE RATIFICATION CANDIDATES ARE WITH THE REVIEWER (EX_226; entry 73):**
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_v0_3_RATIFICATION_CANDIDATE.md` and
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_v0_8_RATIFICATION_CANDIDATE.md` (EX_225's RC-225-1 and RC-225-2
-  applied to plan v0.2 and the v0.8 amendment candidate, which stay as history). v0.7 stays the ratified supplement
-  until the owner ratifies v0.8.
-- **Waiting on the reviewer:** its check of the two corrections only.
-- **Then the owner:** ratifying plan v0.2 and supplement v0.8 together (O-5 to O-7; note R-1: the cut-off is written as
-  01:30 UTC, which is noon Adelaide daylight time and 11:00 standard time). Only after that, and on his specific go,
-  does coding start (entry 67).
+- **RAT-35 (17 November, 20:06; entry 74): THE MHUP-B CODE PLAN v0.3 AND DESIGN SUPPLEMENT v0.8 ARE RATIFIED** (reviews
+  EX_223, EX_225, EX_227 PASS). Installed in `doc/`: `Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (SHA-256
+  `d5c2b318...546d0169`) and `Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (SHA-256 `e3d977e1...9be97c27e`),
+  byte for byte the candidates; v0.8 governs, v0.7 is history. Includes O-5 (the 01:30 UTC cut-off, a conservative
+  choice), O-6, O-7.
+- **NEXT: the owner's separate, specific go for code (entry 67).** Nothing is written until then. On the go: slice 1
+  (the baseline fixes, L1 to L3) on Fable (High); slice 2 (L5, L6) on Fable (High); slice 3 (L4, L7, L8) and packaging on
+  Opus. Each slice goes to the reviewer; then the integrated package; then T017; then the owner's install go.
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
