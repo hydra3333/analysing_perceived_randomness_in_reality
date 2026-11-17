@@ -61,8 +61,9 @@ durable EX messages are authoritative.
 - **NEXT: slice 2** (OV-1 kernel and recorder; `WF_BATCH_PLAN_V2`, the `DEV_BATCH` gate, the post-seal release rule), on
   Fable (High), on the owner's go; slices are serial. It builds on slice 1's tree, must use
   `weekly_records.verify_named_records` before counting any freeze line, and its submission carries the full-suite
-  evidence for N-231-1. Owner's standing reminders: focus on core systems, minimum administration; no change to his
-  PC's date, time or zone (entry 78).
+  evidence for N-231-1. Owner's standing rule (entry 80): no over-engineering of side issues; add a guard, test
+  or feature only if its absence could change a result, invalidate the evidence or break his weekly use. No change to
+  his PC's date, time or zone (entry 78); no further daylight-saving work.
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
   (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
   the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).

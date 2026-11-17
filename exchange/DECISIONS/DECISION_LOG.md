@@ -1088,3 +1088,18 @@ the installed documents. This log is not a separate approval process.
 - **The owner's reminder (23:50):** focus on the core systems that serve the objectives, in preference to side issues
   and administrative overhead. Claude keeps reports and exchanges short and raises only what changes a result.
 - **Next:** slice 2 (OV-1; the two kinds of development run), Fable (High), on the owner's go.
+
+## 80. 18 November 2026, about 00:05 - correction of entry 79's reading of the owner's reminder; entry 78's to-do withdrawn
+
+- **Entry 79 misread the owner.** He was not asking for shorter reports. His words (00:05): the concern is
+  "over-engineering things that do not really matter in the scheme of things to the project eg like additional admin
+  overhead in ensuring time change code is built in and works when that contributes almost nothing to advancing the
+  project"; "admin trivia defocuses us and energy from the main game"; "I am not complaining about reporting, I am
+  complaining about paying too much undue attention to things that do not really matter."
+- **The standing rule, as Claude now holds it:** effort goes to what the objectives need: whether any method predicts,
+  honest forecasts frozen before the draw, correct scoring, a valid formal test, and the owner's weekly use. A guard,
+  test or feature is added only if its absence could change a result, invalidate the evidence or break that weekly use.
+  Rare operational corner cases get the simplest safe behaviour (refuse and say why), not machinery.
+- **Withdrawn:** entry 78's two to-do items (a daylight-saving suite test; a daylight-saving step in T017). The cloud
+  check already done is enough. Entry 78's constraint stands: nothing changes the owner's PC date, time or zone.
+- Reporting to the owner stays as he has asked for it (plain steps, decisions with reasons, the paste block).
