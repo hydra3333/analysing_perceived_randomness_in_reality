@@ -651,3 +651,23 @@ the installed documents. This log is not a separate approval process.
   batch report compares them (v0.3 section 7.2 rule 7): a reproducibility check of Mode H.
 - **Recorded as:** `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_3.md` (replaces v0.2; v0.1 and v0.2 kept).
   The reviewer has yet to review it (question R-6 asks about this decision). Nothing is authorised to run.
+
+## 54. 17 November 2026, midday - the reviewer's review of v0.2 (EX_208): recheck required on four points; draft v0.4
+
+- **The owner, 11:52:** "Ps i am on my phone so can only give short responses".
+- **EX_208** was committed to `exchange/` by the reviewer itself (commit `613da3d`). Disposition: RECHECK REQUIRED BEFORE
+  RATIFICATION; it supports the eight-layer full MHUP-B, the isolated live path, the descriptive league and the OV-1
+  concept. Four points: (1) OV-1's zero mean needs complete TOP and WORST pairs; (2) five readings at 2.576 are nominal,
+  not a guaranteed 5% (an exact counterexample: 1.0718% at one reading); (3) pooling the games conflicts with ratified
+  R3 17.3.1 and needs the owner's explicit choice; (4) back-history misses weekly targets closed before a variant's release,
+  and de-duplication must not be by scoring policy. Also: no OV-1 on the sealed holdout draws by default; the local-clock
+  class is acceptable for the formal sample if its limitation is printed.
+- **Claude checked the counterexample** (`ov1_eprocess_check.py`): reproduced to every printed digit. The reviewer is right.
+- **Draft v0.4** (`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_4.md`, commit `980004d`; v0.1 to v0.3
+  kept) answers all four and keeps entry 53: complete-pair eligibility; the five readings replaced by an exact evidence
+  score (a test martingale from the exact fair-draw distribution of each draw's weights; the chance of ever reaching the
+  bar is at most 5% however often it is looked at); per game (bar 40) or joint (bar 20, needing an exception to R3 17.3.1)
+  put to the owner; rule 2A for closed weekly targets; de-duplication by target and readout with one approved policy.
+- **Correction of a commit message:** commit `980004d` says it holds entries 53-54 and a CONTINUITY_NOW update; entry 53 was
+  already in `02f97cd`, and entry 54 and the CONTINUITY_NOW update are in the commit after it.
+- **Open:** the owner's choice of Option P or J; the reviewer's review of v0.4 (six questions). Nothing is authorised.
