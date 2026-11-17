@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 16:10 Australia/Adelaide (the new Claude chat has taken over; entry 64).
+**Last updated:** 17 November 2026, about 16:45 Australia/Adelaide (the MHUP-B code plan sent for review, EX_220; entry 65).
 
 ## For the owner: NOW
 
@@ -34,10 +34,19 @@ durable EX messages are authoritative.
 - **THE CLAUDE HANDOVER IS DONE (HO-2; entry 64).** A fresh Claude chat took over on 17 November 2026 from H-1 v4: first
   reply EX_216, the reviewer's five blind questions EX_217, the answers EX_218, **EX_219: TAKEOVER PASS**. The owner
   authorised normal work at 16:01.
-- **NOW: the MHUP-B code plan in the eight layers** (Claude, Fable High; authorised 16:01), to go to the reviewer for
-  independent review **before any implementation code is written**. EX_219's two cautions travel with it: C1 no
-  alpha-recycling after a stopped OV-1 stream; C2 the actual test baseline on current `main` is taken first (T024's 571 is
-  dated history: tests pinned to the version-1 masters are expected to fail now).
+- **NOW: THE MHUP-B CODE PLAN IS WITH THE REVIEWER (EX_220; entry 65).** Draft v0.1:
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_1.md`, with the OV-1 numerical probe and the evidence
+  beside it. **No implementation code exists, and none is written until the plan has passed review, the owner has
+  decided OD-1 to OD-6 (plan section 12) and has given his go.** The Fable task (the plan) is finished: Opus is enough
+  until the reviewer replies.
+- **Waiting on the reviewer:** its review of the plan and its answers to CP-Q1 to CP-Q9.
+- **Waiting on the owner (after the review; nothing needed now):** OD-1 may a development batch name its variants (he
+  declined that as ER-6 on 31 October; the supplement's rule 2A needs it); OD-2 what OV-1 does with a missed week; OD-3
+  the cut-off for OV-1's pre-draw record; OD-4 no recovery after a stopped stream (recommended); OD-5 a read-only census
+  of the real score records before the install; OD-6 review in three slices.
+- **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15
+  (E2R-T12 left out); exactly two fail, both in `tests/test_multigame_reader_contracts.py`, both the expected ones tied to
+  the version-1 masters (F-2). T024's 571 is dated history. No Windows baseline at the current state exists yet (T017).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
@@ -45,7 +54,7 @@ durable EX messages are authoritative.
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
-  PASS; cautions C1 and C2 for the code plan). (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
+  PASS; cautions C1 and C2 for the code plan). **Awaited: its review of the code plan (EX_220).** (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
   (untracked files, running processes, the sealed local artifacts) is owner-reported.

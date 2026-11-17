@@ -1,0 +1,17 @@
+fixed point: D = 50 digits; MARGIN = 1e-30; Python 3.15.0b4
+0. exp and log enclosures contain the 90-digit decimal value in 4,002 random and fixed cases; largest relative exp width 1.0e-24
+1. exact distribution: route 1 (one number at a time) equals route 2 (grouped binomials) on 8 full-size patterns, and both equal brute force on N=13
+2. reviewer counterexample N=35: support 15 points, max |Z| 4.610 (bound 6.519); enclosure width 1.2e-47; certificate holds (slack 1.0e-30); 0.01 s
+2. one variant N=35: support 15 points, max |Z| 4.610 (bound 6.519); enclosure width 8.6e-48; certificate holds (slack 1.0e-30); 0.01 s
+2. one variant N=47: support 15 points, max |Z| 5.199 (bound 7.352); enclosure width 8.6e-48; certificate holds (slack 1.0e-30); 0.02 s
+2. skewed N=47: 300 share TOP, WORST spread: support 36 points, max |Z| 6.782 (bound 7.352); enclosure width 3.2e-47; certificate holds (slack 1.0e-30); 0.03 s
+2. 40 overlapping N=35: support 191 points, max |Z| 4.614 (bound 6.519); enclosure width 9.9e-48; certificate holds (slack 1.0e-30); 0.14 s
+2. 40 overlapping N=47: support 134 points, max |Z| 4.381 (bound 7.352); enclosure width 9.5e-48; certificate holds (slack 1.0e-30); 0.12 s
+2. 400 overlapping N=35: support 1327 points, max |Z| 4.620 (bound 6.519); enclosure width 1.8e-47; certificate holds (slack 1.0e-30); 1.38 s
+2. 2000 near-identical N=47: support 1348 points, max |Z| 5.200 (bound 7.352); enclosure width 1.6e-46; certificate holds (slack 1.0e-30); 1.15 s
+   largest (true - stored) log-factor in the checked cells: 1.00e-30  (MARGIN 1e-30 plus the enclosure width)
+   all-zero weights (no complete pair, or cancelling tickets): V = 0, the registered skip (factor 1)
+3. 300 fair draws, roster changing every draw: stored running logs vs float reference differ by at most 2.2e-15 (float rounding); proved mixture lower bound now 0.662216; reached 40: never
+   worst-case loss of sensitivity after 300 draws: at most 300 * 2e-30 = 6e-28 in each log
+4. threshold: all six logs 1e-40 above log 40 cross; 1e-40 below do not; huge negative logs give lower bound 0; one very large component crosses; exp(5000) is enclosed without overflow
+PROBE PASS

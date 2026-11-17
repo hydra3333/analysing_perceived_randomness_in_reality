@@ -852,3 +852,25 @@ the installed documents. This log is not a separate approval process.
 - **P6 note (Claude, on how the takeover went):** H-1 v4 with CONTINUITY_NOW was enough to take over from the repository
   alone. The friction was in side files not refreshed at each milestone and in commits made after the blurb's anchor.
   Suggestion: at each ratification CONTINUITY_NOW names the newest starter files by path.
+
+## 65. 17 November 2026, about 18:15 - the MHUP-B code plan, draft v0.1, sent for review (EX_220); the baseline taken; no owner decision
+
+- **Done under entry 64's authorisation (Fable, High; plan only, no implementation code):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/codeplan/MHUPB_CODE_PLAN_DRAFT_v0_1.md`, sent to the reviewer as EX_220.
+- **The baseline (EX_219 C2; cloud workspace, a disposable clone of `b30919d`, E2R-T12 left out):** Python 3.13.18 and
+  3.15.0b4 each ran 570 tests in 45 modules; two tests fail, both in `tests/test_multigame_reader_contracts.py`
+  (`test_master_source_and_ledger_file_hashes`, `test_only_legacy_e1_allowed_at_boundary`), both the documented
+  version-1-master failures (readiness F-2). No unexpected failure. Nothing was fixed or relabelled.
+- **What reading the installed code showed (plan section 2):** MHUP-A already installed most of the weekly gate plumbing;
+  but the mode-to-pin rule of design 3.4(a) is enforced nowhere yet; development plans, requests and reports stop at the
+  old cap in three places; no outcome after the holdout is released to any scorer; and a development report over exactly
+  the holdout window would load the Mode H families. Each is a planned, reviewed change.
+- **OV-1's arithmetic (plan section 6; the probe `ov1_lower_bound_probe.py`, invented data):** integers only, every
+  rounding against a crossing, exact sums across draws, and a per-draw check that the stored factors average at most 1
+  under fair draws. Loss about 1e-30 per draw; about 0.1 s per draw at 40 variants; identical output on both Pythons.
+- **Waiting for the owner later, after the review (plan section 12; none decided, none assumed):** OD-1 (a development
+  batch that names its variants: declined as ER-6 on 31 October 2026, but needed by the supplement's rule 2A); OD-2 (a
+  missed week and OV-1); OD-3 (the cut-off for OV-1's pre-draw record); OD-4 (no recovery after a stop: recommended);
+  OD-5 (a read-only census of the real score records before the install); OD-6 (three review slices).
+- **Model (MC-1):** the Fable task is finished. Opus is enough until the reviewer replies; Fable again for any plan
+  revision that touches OV-1's arithmetic, the release rules or the gates.
