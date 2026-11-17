@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 20:07 Australia/Adelaide (RAT-35: MHUP-B code plan v0.3 and design supplement v0.8 ratified; entry 74).
+**Last updated:** 17 November 2026, about 20:10 Australia/Adelaide (the owner's go for code; slice 1 in progress; entry 75).
 
 ## For the owner: NOW
 
@@ -52,7 +52,9 @@ durable EX messages are authoritative.
   `d5c2b318...546d0169`) and `Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (SHA-256 `e3d977e1...9be97c27e`),
   byte for byte the candidates; v0.8 governs, v0.7 is history. Includes O-5 (the 01:30 UTC cut-off, a conservative
   choice), O-6, O-7.
-- **NEXT: the owner's separate, specific go for code (entry 67).** Nothing is written until then. On the go: slice 1
+- **THE OWNER GAVE THE GO FOR CODE (17 November, 20:09; entry 75). SLICE 1 IS IN PROGRESS** (cloud workspace only; the
+  slice's files will be under `exchange/CLAUDE_WEB_TOOLS/mhupb/` in the MHUP-A layout: `slice1_new/`, `apply_slice1.py`,
+  `build_dev_slice1.sh`). The order: slice 1
   (the baseline fixes, L1 to L3) on Fable (High); slice 2 (L5, L6) on Fable (High); slice 3 (L4, L7, L8) and packaging on
   Opus. Each slice goes to the reviewer; then the integrated package; then T017; then the owner's install go.
 - **The test baseline on current `main` (EX_219 C2), cloud only:** 570 tests run in 45 modules on Python 3.13 and 3.15

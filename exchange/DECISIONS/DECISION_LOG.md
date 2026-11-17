@@ -1019,3 +1019,15 @@ the installed documents. This log is not a separate approval process.
 - **Not authorised by RAT-35 (entry 67):** any implementation code, synthetic or real run, task file, install, OV-1
   registration, forecast, score or change to sealed Mode H. **Coding starts only on the owner's separate, specific go.**
 - **For the next register edition (v0.32):** record RAT-35 (with the H-1 notes D2, D4 and D5).
+
+## 75. 17 November 2026, about 20:10 - the owner's go for code (entry 67's specific authorisation); slice 1 started
+
+- **The owner's words (20:09, after switching the model to Fable):** "I see you mention slices 1 and 2 ... please briefly
+  outline the forward plan including slices and then "go"."
+- **How Claude read it:** as the specific go for code that entry 67 requires, following RAT-35. Claude said so at the top
+  of its reply, with the outline, and that it stops at once if the owner meant "outline, then wait".
+- **What the go covers (plan v0.3 section 13):** the code round, to the integrated package, built and tested in Claude's
+  cloud workspace only. Not covered: T017, the install, any run on the owner's PC, any real-data run, OV-1's
+  registration; each needs its own go.
+- **Order:** slice 1 (baseline fixes, L1 to L3; Fable, High), slice 2 (L5, L6; Fable, High), slice 3 (L4, L7, L8; Opus),
+  the integrated package and document amendments (Opus), then T017 and the install.
