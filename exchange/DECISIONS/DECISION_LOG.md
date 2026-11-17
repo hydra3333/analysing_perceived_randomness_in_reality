@@ -1151,3 +1151,33 @@ the installed documents. This log is not a separate approval process.
   and the new table after a routine fill; the exploratory comparison with canonical figures.
 - **Not tested:** Windows, T017, real data, the comparison against a real sealed Mode H batch, the sequencers.
 - **Next:** the reviewer's review of EX_232. Slice 3 (Opus) only after its acceptance, on the owner's go.
+
+## 84. 18 November 2026, 09:40 - the reviewer's slice 2 review (EX_233) and the owner's clarified research model (EX_234, EX_235)
+
+- **Source.** EX_233 (slice 2 review), EX_234 and EX_235 (the reviewer's record of the owner's clarifications, made in the
+  owner's conversation with the reviewer). The owner to Claude, 09:34 and 09:36: "go ex_235"; "the latest EX_235 prevails
+  over the 2 earlier docs". EX_235 keeps EX_233 and EX_234 in force wherever it does not supersede them.
+- **The owner's research model, as now stated (binding direction; it changes parts of the ratified supplement v0.8 and
+  plan v0.3, to be carried as a short amendment with the package):**
+  1. **All draws are equal research targets.** The former holdout draws (Powerball 1577-1586, Oz Lotto 1694-1703) are
+     ordinary draws for walk-forward, scoring and rankings. The sealed Mode H study is kept as a read-only archive. Its
+     seal is not a permission gate in any normal workflow (weekly readiness, catch-up, routine fill, exploratory
+     rerun, report, scoring), and it is never summed again into ordinary scores.
+  2. **Every method version is a legitimate subject.** A modified method is a new immutable scientific identity; the
+     earlier version's forecasts, scores and published rankings stay. Each version is walked forward from its earliest
+     eligible draw and ranked separately. Archived code is not run unless an installed runnable revision exists.
+  3. **Catch-up is the same walk-forward.** Several draws accepted at once are processed one target at a time, each from
+     the prefix to N-1 only. Evidence LABELS differ (historical, catch-up, prospective); the computing and the ordinary
+     scores do not.
+  4. **Two clearly labelled OV-1 uses.** (A) the registered formal prospective test, one per game, bar 40, unchanged;
+     (B) a retrospective OV-1-style walk-forward diagnostic over history and versions: descriptive, with 40 shown only
+     as a reference line, no P value and no 2.5% claim, never written to the formal ledger. (B) is a reporting
+     requirement for slice 3 (L7), and it replaces supplement v0.8 section 6.7's limit.
+  5. **Bar 40 is kept** (5% for the programme, 2.5% a game, 1/0.025 = 40 by Ville's inequality).
+- **EX_233's findings.** S2-F01 (harden the seal check) is WITHDRAWN: the fix is to remove the seal dependency from
+  normal paths. S2-F02 (an eligibility line or a registration could become durable after its limit while carrying an
+  earlier time) STANDS, for the formal stream only. The kernel's proofs P1 to P8 and EX_232's Q2 to Q6 are accepted.
+- **Claude's next step (cloud only, under the existing code-round go):** one corrected slice 2 that removes the seal and
+  holdout gates from the staged normal paths (including slice 1's weekly readiness check), closes S2-F02, and shows the
+  focused examples EX_234 section 6 lists. Then a full new edition of the Claude handover (H-1) and its blurb, as the
+  owner asked. Slice 3 still waits for the reviewer's acceptance of slice 2 and the owner's go.

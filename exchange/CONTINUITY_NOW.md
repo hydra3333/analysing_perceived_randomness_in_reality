@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 02:24 Australia/Adelaide (slice 2 sent for review, EX_232, entry 83; working principle entry 81; slice 1 PASSED, EX_231).
+**Last updated:** 18 November 2026, 09:40 Australia/Adelaide (owner's clarified model and EX_233 to EX_235 recorded, entry 84; Claude is correcting slice 2).
 
 ## For the owner: NOW
 
@@ -56,7 +56,15 @@ durable EX messages are authoritative.
 - **SLICE 1 PASSED THE REVIEWER'S SOURCE REVIEW (EX_231; entry 79).** History: EX_228 (first edition), EX_229 (four
   corrections), EX_230 (corrected), EX_231 (PASS, with the small note N-231-1, since applied). Files:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (MHUP-A layout). NOT INSTALLED. Rebuild with the commands in EX_228 section 1.
-- **SLICE 2 (L5 OV-1; L6 development runs) IS WITH THE REVIEWER: EX_232 (entry 83).** Files:
+- **THE OWNER'S CLARIFIED MODEL (18 November; entry 84; EX_235 governs, with EX_234 and EX_233 where not superseded).**
+  All draws equal (the former holdout draws are ordinary draws; the Mode H seal is an archive, never a gate in normal
+  work); every method version its own identity, old versions kept; catch-up is the same N-1 walk-forward; two
+  labelled OV-1 uses (formal prospective, bar 40; retrospective diagnostic, descriptive, in slice 3's report).
+  This changes parts of supplement v0.8 (6.7; 7.2 rules 1 to 3) and plan v0.3 (L6 gates): a short amendment travels
+  with the package. **NOW: Claude is correcting slice 2** (remove the seal gates from the staged normal paths,
+  slice 1's readiness check included; close S2-F02), then a full new H-1 edition. Reviewer verdict on EX_232:
+  recheck required (EX_233), kernel proofs accepted.
+- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` (README there). NOT INSTALLED. 694 tests, 0 failing, on both Pythons;
   94 planted defects caught; tree digest `887731e1...4bedabc4`. EX_232 section 6 lists what was built lean or moved
   to slice 3, and section 7 six questions for the reviewer. The Fable task (slice 2) is finished: Opus is enough
