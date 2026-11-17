@@ -1,0 +1,12 @@
+ov1_eprocess_check.py - output of the run of 17 November 2026 (Claude web chat's Linux workspace, Python 3, about 80 seconds).
+Invented fair draws only; no project data was read. Recorded as printed.
+
+1. identical tickets, N=35: Var(D) = 2.3058823529411767 (EX_208: 2.3058823529411767)
+   P(|S_104| >= 2.5758293) = 0.0107176149616 (EX_208: 0.0107176149616)
+2. largest |null mean of a component - 1| over 7 weight patterns: 1.11e-16
+3. fair draws, identical tickets N=35: ever >= 20 within 1040 draws: 0.0278 (bound 0.05); ever >= 40: 0.0129 (bound 0.025)
+3. fair draws, overlapping tickets N=35: ever >= 20 within 1040 draws: 0.0302 (bound 0.05); ever >= 40: 0.0140 (bound 0.025)
+3. fair draws, overlapping tickets N=47: ever >= 20 within 1040 draws: 0.0286 (bound 0.05); ever >= 40: 0.0129 (bound 0.025)
+4. mean Z about 0.11 per draw: draws needed, score 20: median 567, 80% by 1005; score 40: median 710, 80% by 1176
+4. mean Z about 0.22 per draw: draws needed, score 20: median 163, 80% by 254; score 40: median 190, 80% by 297
+4. mean Z about 0.35 per draw: draws needed, score 20: median 84, 80% by 116; score 40: median 100, 80% by 137
