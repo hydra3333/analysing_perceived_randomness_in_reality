@@ -720,3 +720,24 @@ the installed documents. This log is not a separate approval process.
   `current` copy is a convenience and the only thing that is ever replaced. A failed copy never affects the archive.
 - **Confirmed by the owner:** a modified method's old revision is marked retired and its results are never mixed with the
   new revision's.
+
+## 59. 17 November 2026, about 14:27 - the reviewer's recheck of v0.5 (EX_211): design pass; draft v0.6; the owner on the four decisions
+
+- **EX_211** (the reviewer's commit `3f6a4b5`): FOCUSED DESIGN PASS WITH TWO NARROW CLARIFICATIONS AND CODE-ROUND GATES. F01: a
+  missing pre-outcome eligibility line must stop the primary stream openly, never silently. F02: the lower-bound guarantee
+  must cover every running component, the mixture and the comparison with 40. Also a wording precision on C03, and the
+  owner's D-11 accepted with a whole-set integrity rule. It recommends ratification once these are recorded; the numerical
+  implementation and source-schema checks are gates of the code round.
+- **The owner's words (14:27):** "please check for ex_211, also noting chatgpt's advice on the decisions "What I would do I
+  recommend approving O-1, O-2 and O-3 together when Claude's next corrected supplement has passed its focused recheck.
+  Those are design decisions, not permission to start programming or running experiments. For O-4, approve the objective
+  now, but retain the separate execution authorisation until the command has been checked. That avoids an unnecessarily
+  early real-data operation. The two outstanding EX_211 points-pre-outcome OV-1 eligibility recording and conservative
+  numerical comparison with threshold 40-are narrow and should not require reconsidering your scientific approach. Bottom
+  line: I support all four proposals. Three can proceed as design approvals following the final recheck; the fourth needs
+  a later, specific run approval." which I accept unless you have other views in which case we will discuss."
+- **Claude's view:** no other view; agreed. So: O-1, O-2 and O-3 are to be approved together when v0.6 has passed its
+  check; O-4's objective is approved, its run needing a separate go once the command is reviewed. Design approvals are not
+  permission to write code or run anything.
+- **Draft v0.6** (`exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_6.md`; EX_212 is the covering note)
+  records F01, F02, the C03 wording and D-11. Nothing else changed from v0.5.

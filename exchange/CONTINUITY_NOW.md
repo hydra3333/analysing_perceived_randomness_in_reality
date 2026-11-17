@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 17 November 2026, about 14:30 Australia/Adelaide.
+**Last updated:** 17 November 2026, about 14:55 Australia/Adelaide.
 
 ## For the owner: NOW
 
@@ -28,16 +28,16 @@ durable EX messages are authoritative.
 - **H-1 v4 and its blurb exist as DRAFTS** (16 November, night; `exchange/CLAUDE_WEB_TOOLS/h1v4/out/`; built by
   `make_h1_v4.py` from H-1 v3's ratified bytes; new section 0B prevails). Not yet reviewed or ratified. Their Appendix B.2
   lists what must still be rewritten before ratification.
-- **MHUP-B design supplement, DRAFT v0.5** (entries 52-57; EX_210): `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_5.md`
-  (v0.1 to v0.4 kept as history). Full scope in eight tested layers with the live path isolated; the league table; the
-  cross-source read contract; back-history, with the holdout draws open to re-forecasting by every variant as development
-  evidence (owner, entry 53) and the sealed Mode H records kept as separate history; the overall measure OV-1 as an exact
-  evidence score, **one per game with a bar of 40 (owner, entry 55)**, registered before its first draw. The reviewer
-  passed v0.4 with corrections (EX_209), all applied in v0.5. **Waiting for:** the reviewer's focused recheck of v0.5 (it
-  commits its reply to `exchange/`); then the owner's four decisions (v0.5 section 13); then the code plan.
-  Carried into the next revision: design input D-11 (a `current` folder with only the newest table set; the archive
-  create-only and never moved; entry 58).
-- **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the decisions on v0.5, MHUP-B's code plan (Fable, High).
+- **MHUP-B design supplement, DRAFT v0.6** (entries 52-59; EX_212): `exchange/CLAUDE_WEB_TOOLS/mhupb/MHUPB_DESIGN_SUPPLEMENT_DRAFT_v0_6.md`
+  (v0.1 to v0.5 kept as history). Full scope in eight tested layers with the live path isolated; the league table with a
+  `current` folder and a permanent archive; the cross-source read contract; back-history, with the holdout draws open to
+  re-forecasting by every variant as development evidence (entry 53) and the sealed Mode H records kept as separate
+  history; the overall measure OV-1 as an exact evidence score, one per game with a bar of 40 (entry 55), registered
+  before its first draw. The reviewer passed v0.5 as a design (EX_211) with two narrow clarifications, both in v0.6.
+  **The owner (entry 59) will approve O-1, O-2 and O-3 together once v0.6 has passed the reviewer's last check; O-4's
+  objective is approved, its run needs a separate go.** **Waiting for:** that check (the reviewer commits its reply to
+  `exchange/`). Then the owner's approval, the supplement's ratification record, and the code plan (Fable, High).
+- **Also due:** register v0.31 and finishing H-1 v4 (Opus); after the approvals on v0.6, MHUP-B's code plan (Fable, High).
 - **Blocks or STOPs:** none.
 
 ## Reviewer status
