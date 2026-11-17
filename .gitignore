@@ -238,7 +238,7 @@ results/real/development/contract_runs/
 results/real/development/wf_batches/**/attempts.jsonl
 # WF-1B: the score and rank-position ledgers hold drawn numbers, so they stay local (design 6.4, 6.8; WF1-10);
 # the report files in results/method_rankings/ and the search log are committed
-results/real/development/scores/
+#results/real/development/scores/
 
 # GAIS - exclude large constants and generated binary/txt data
 /GAIS/**/*.bin
@@ -268,6 +268,6 @@ src/methods/E_001/IN_DEVELOPMENT.txt
 src/methods/_common/contract_data/INSTALL_IN_PROGRESS.txt
 results/real/holdout/contract_runs/
 results/real/holdout/wf_batches/**/attempts.jsonl
-results/real/holdout/scores/
+#results/real/holdout/scores/
 transitory_data/lock_clearances/
 transitory_data/no_pycache_ever
