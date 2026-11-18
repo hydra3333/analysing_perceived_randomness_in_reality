@@ -1324,3 +1324,27 @@ the installed documents. This log is not a separate approval process.
   attempts (their run folders are on the owner's PC).
 - **Next:** the owner's separate go for the integrated package (EX_242 is not that go). Install, T017, real runs and
   OV-1's registration each still need their own go.
+
+## 92. 18 November 2026, 20:12 - RAT-37: H-1 v5 ratified by the owner; the two installed archive checks to be removed; the package go is under discussion
+
+- **The owner's words (20:11, to Claude), in answer to Claude's two questions after EX_242:** "Decision 2: yes.  Decision 1:
+  we discuss first now. Please ratify H-1 v5 handover candidate now."
+- **RAT-37 is recorded: H-1 v5 and its blurb are ratified** (RAT-36 was the last number used). The owner ratified the
+  candidate as it stood after the EX_242 refresh: handover SHA-256
+  `22a543df4d5a8e36aaf4e790128a0a279649f9328bde545e1fc6321a218abd55`, blurb
+  `11387112c91238cf20ff15b629c5b7bc778ec3f3999685aeea5a1b23f757b8aa` (`exchange/CLAUDE_WEB_TOOLS/h1v5/out/`).
+- **Finalised by the status line only** (H-1's own rule; `exchange/CLAUDE_WEB_TOOLS/h1v5/finalise_rat37.py`; the one-line
+  candidate-to-final diff is in `h1v5/final/`). Final SHA-256: `doc/HANDOVER/Claude_Primary_Handover_H1_v5.md`
+  `3f0c0b1adef03947c05c180b2f3081efd2111f735b753abcea22ec01f555a3ae`; its blurb (unchanged bytes)
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v5_introductory_blurb.md`. Committed by Claude directly into `doc/HANDOVER/`.
+  **H-1 v5 is the installed Claude handover**; H-1 v4 (RAT-34) stays as history.
+- **Stated plainly:** the reviewer was offered a documentary look at H-1 v5 (EX_236) and has given no ruling on it. The
+  owner ratified it directly; it carries no reviewer PASS. Its status line says so.
+- **Decision 2: yes.** The integrated package removes the two Mode H archive checks that were left in the installed
+  code on purpose (the results reader's opening-record condition for a target at or above the former holdout; the
+  owner's diagnostic route's opening-record and seal conditions), with the tests that expect them adjusted. The Mode H
+  study's own tools and readers keep validating the archive when they read it. This closes the item carried in EX_237
+  section 2 and EX_242 section 5.
+- **Decision 1 (the go for the integrated package): NOT GIVEN.** The owner wants to discuss it first. Claude has not
+  started the package.
+- **For the next register edition (v0.32):** record RAT-35, RAT-36 and RAT-37.

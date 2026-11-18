@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 20:08 Australia/Adelaide (slice 3 PASSED, EX_242, entry 91; all three slices passed; next: the owner's go for the integrated package).
+**Last updated:** 18 November 2026, 20:12 Australia/Adelaide (H-1 v5 ratified, RAT-37; the archive checks to be removed in the package; the package go under discussion with the owner, NOT given; entry 92).
 
 ## For the owner: NOW
 
@@ -74,7 +74,9 @@ durable EX messages are authoritative.
   (review: structure accepted, the five questions answered and the choices kept, three narrow corrections F3-01 to
   F3-03); EX_241 (the three applied). Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (README there). NOT INSTALLED.
   758 tests in 55 modules, 0 failing, on both Pythons (Claude's runs); 106 planted defects caught; tree digest
-  `ef2b67e0...1f50e9d13`. **NEXT: the owner's go for the integrated package** (EX_242 is not that go).
+  `ef2b67e0...1f50e9d13`. **NEXT: the integrated package. THE OWNER HAS NOT GIVEN ITS GO: he wants to discuss it first (entry 92).**
+- **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
+  opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
   S2-F02 stood). Superseded by EX_236.
 - **Slice 2, first edition, as recorded then:**- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
@@ -118,10 +120,9 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting the NEW blurb,
-  `exchange/CLAUDE_WEB_TOOLS/h1v5/out/Claude_Primary_Handover_H1_v5_CANDIDATE_introductory_blurb.md` (a full new text
-  written 18 November 2026 with H-1 v5, a CANDIDATE until the owner ratifies it; H-1 v4 in `doc/HANDOVER/` is still the
-  installed edition and its blurb still works, but it predates the code round and the owner's clarified model).
+- **Claude chat ended:** start a new Claude chat by pasting the installed blurb,
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v5_introductory_blurb.md` (H-1 v5, ratified by the owner on 18 November 2026:
+  RAT-37, entry 92; it describes the state up to slice 3's pass, EX_242; what happened after is on this page).
   In the blurb's last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v5's section 0B first and
   its section 12.10 for the code work.
 - **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
@@ -159,13 +160,12 @@ durable EX messages are authoritative.
 
 ## Installed handovers (authoritative)
 
-**A full new Claude handover, H-1 v5, exists as a CANDIDATE** (`exchange/CLAUDE_WEB_TOOLS/h1v5/out/`; entry 85), awaiting
-the owner's ratification; it is NOT ratified.
-
-H-1 v4 (Claude; RAT-34, committed into `doc/HANDOVER/` by Claude on 17 November 2026) and **H-2 v3r4 (reviewer; RAT-36,
+**H-1 v5 (Claude; RAT-37, entry 92; `doc/HANDOVER/Claude_Primary_Handover_H1_v5.md`, SHA-256 `3f0c0b1a...f555a3ae`,
+committed by Claude on 18 November 2026; ratified by the owner directly, with no reviewer ruling on it)** and **H-2 v3r4 (reviewer; RAT-36,
 entry 87; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, blob `6477493d`)**, with
-register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 and RAT-36 are in the decision log, for register v0.32).
-H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history.
+register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35, RAT-36 and RAT-37 are in the decision log, for register
+v0.32). H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
+are frozen; H-1 v5 is not refreshed any more: later state goes on this page.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 
@@ -204,5 +204,5 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
    go: After its acceptance, on the owner's go: the integrated package with the document amendments (plan section 11), the Windows
    rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
    registration of OV-1 before its first forward draw, and the runs, each on its own go.
-4. Done 18 November: the reviewer's H-2 v3r4 ratified (RAT-36). Open: the owner's ratification of H-1 v5.
+4. Done 18 November: the reviewer's H-2 v3r4 ratified (RAT-36); H-1 v5 ratified (RAT-37).
 5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
