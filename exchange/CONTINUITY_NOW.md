@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 14:30 Australia/Adelaide (slice 2 PASSED, EX_237, entry 86; new reviewer chat in place; slice 3 next on the owner's go).
+**Last updated:** 18 November 2026, 14:36 Australia/Adelaide (the owner gave the go for slice 3, entry 88; SLICE 3 IN PROGRESS; H-2 v3r4 ratified, RAT-36, entry 87).
 
 ## For the owner: NOW
 
@@ -67,7 +67,9 @@ durable EX messages are authoritative.
   101 planted defects caught; tree digest `000dc4ae...7a581241d`. Two installed archive checks were left on purpose and
   are to be re-evaluated when the integrated package is planned (EX_237 section 2).
 - **The reviewer chat changed on 18 November 2026 (about 11:00);** the new one took over from H-2 v3r3 and refreshed its
-  candidate to H-2 v3r4 (`d5e810c`).
+  handover to H-2 v3r4 (`d5e810c`), **which the owner ratified (RAT-36; EX_238; entry 87).**
+- **SLICE 3 IS IN PROGRESS (the owner's go, 14:33 on 18 November; entry 88).** Work folder
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (its `WORKING_NOTES.md` says how far it has got). Nothing of it is reviewed.
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
   S2-F02 stood). Superseded by EX_236.
 - **Slice 2, first edition, as recorded then:**- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
@@ -117,11 +119,10 @@ durable EX messages are authoritative.
   installed edition and its blurb still works, but it predates the code round and the owner's clarified model).
   In the blurb's last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v5's section 0B first and
   its section 12.10 for the code work.
-- **ChatGPT reviewer chat ended:** H-2 v2 r1 is still the installed reviewer handover. The reviewer's newest starter text is
-  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3_RATIFICATION_CANDIDATE_20261117_introductory_blurb.md` (a candidate; by its
-  own instructions, until H-2 v3 is ratified the new reviewer chat is pointed to the installed H-2 v2 r1 and register
-  v0.31; the installed starter is `exchange/HANDOVER_2026_11_14_REVIEWER/NEW_REVIEWER_START_PASTE.md`). Add: "Then read
-  exchange/CONTINUITY_NOW.md". The H-2 v3 CANDIDATE of 16 November is a preserved draft.
+- **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
+  87): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md` (the word CANDIDATE in its name
+  is frozen history). Point the new reviewer chat straight at that full file, then at `exchange/CONTINUITY_NOW.md` and
+  the newest EX messages. The separate H-2 blurbs (v3, v3r3) were not ratified and are older; H-2 v2 r1 is history.
 
 ## Resuming the MHUP-B slice work (for a new Claude chat)
 
@@ -149,16 +150,17 @@ durable EX messages are authoritative.
   exchange/CLAUDE_WEB_TOOLS/mhupb/slice2`; the suite with slice 1's `run_suite.py`; the planted defects with
   `mutations_slice2.py` on a separate copy of the tree. Corrections after the review go into that folder's tools
   (`apply_slice2.py`, `slice2_new/`), never into `src/` or `tests/` on `main`. Slice 3 goes in `slice3/`, built on
-  top of slice 2's tree. Next free EX number after `git fetch`: EX_238 at the time of writing.
+  top of slice 2's tree. Next free EX number after `git fetch`: EX_239 at the time of writing.
 
 ## Installed handovers (authoritative)
 
 **A full new Claude handover, H-1 v5, exists as a CANDIDATE** (`exchange/CLAUDE_WEB_TOOLS/h1v5/out/`; entry 85), awaiting
-the owner's ratification. The reviewer's newest candidate is H-2 v3r4 (`doc/HANDOVER/`, 18 November 2026).
+the owner's ratification; it is NOT ratified.
 
-H-1 v4 (Claude; RAT-34, committed into `doc/HANDOVER/` by Claude on 17 November 2026) and H-2 v2 r1 (reviewer; RAT-31,
-installed `5a8527b`; the reviewer's H-2 v3 CANDIDATE is beside it, to be updated and ratified separately), with register
-v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`). H-1 v3 and register v0.30 stay in `doc/` as history.
+H-1 v4 (Claude; RAT-34, committed into `doc/HANDOVER/` by Claude on 17 November 2026) and **H-2 v3r4 (reviewer; RAT-36,
+entry 87; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, blob `6477493d`)**, with
+register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 and RAT-36 are in the decision log, for register v0.32).
+H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 
@@ -193,9 +195,9 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
 2. Done 17 November: the handover to a fresh Claude chat (EX_216 to EX_219; entry 64).
-3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). Slice 2 with the reviewer (EX_232). **Next:
-   slice 3** (Opus, on the owner's go, after slice 2's acceptance), then the integrated package with the document amendments (plan section 11), the Windows
+3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). Slice 2 done (EX_237 PASS). **Slice 3 in
+   progress** (the owner's go of 18 November, entry 88), then the integrated package with the document amendments (plan section 11), the Windows
    rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
    registration of OV-1 before its first forward draw, and the runs, each on its own go.
-4. The reviewer's H-2 v3, for a separate ratification (no need to wait for it).
+4. Done 18 November: the reviewer's H-2 v3r4 ratified (RAT-36). Open: the owner's ratification of H-1 v5.
 5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).

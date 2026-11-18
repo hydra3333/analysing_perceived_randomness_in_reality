@@ -1224,3 +1224,34 @@ the installed documents. This log is not a separate approval process.
   labelled OV-1 views; L8 reads OV-1's state line, not only its exit code.
 - **The reviewer refreshed its handover candidate to H-2 v3r4** (`d5e810c`).
 - **Next:** slice 3 (L4, L7, L8) on the owner's go; the slices are serial.
+
+## 87. 18 November 2026, 14:36 - RAT-36: the reviewer handover H-2 v3r4 ratified by the owner (EX_238)
+
+- **The owner's decision, given in the ChatGPT reviewer chat at about 14:28 and relayed in EX_238 (commit `660fc5a`):**
+  "unless you object i ratify the handover if it references
+  exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md". The reviewer confirmed the reference (its
+  sections 0.1(3) and 0.6) and answered "No objection. I support ratification." Claude re-read the file: the reference is
+  there (lines 16 and 74).
+- **RAT-36 is recorded** (RAT-35 was the last number used). Ratified, byte for byte:
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, Git blob
+  `6477493db1080323e1321a23065f903b0260a12f`, SHA-256
+  `d75df39c097f119512feb3a6fe28f8ec9de653fdc775cf17fbf931f7afd9bbd4` (both computed by Claude from main), introduced by
+  commit `d5e810c`. **H-2 v3r4 is the operative reviewer handover**; it supersedes H-2 v2 r1 for a reviewer takeover.
+  H-2 v2 r1 and the earlier candidates stay as history.
+- **The word CANDIDATE in the file's name and heading is frozen at its authoring time** and is superseded by this
+  decision; the ratified bytes are not edited (an edit would make a different, unratified edition).
+- **Not ratified by this:** the separate H-2 v3r3 introductory blurb, and Claude's H-1 v5 candidate (H-1 v4, RAT-34, is
+  still the installed Claude handover). A reviewer takeover is pointed straight at the full H-2 v3r4 file.
+- **Scope:** the reviewer handover's status only. No change to the design, the RAT-35 plan, the code, the installed tree,
+  OV-1 or the Mode H records; no permission for any run, install or PC step.
+- **For the next register edition (v0.32):** record RAT-36 with RAT-35.
+
+## 88. 18 November 2026, 14:36 - the owner's go for slice 3
+
+- **The owner's words (14:33, to Claude):** "please go now", in answer to Claude's statement that slice 3 would not start
+  without an explicit go. Before that (14:32): he stays on Fable for the time being.
+- **How Claude read it:** the serial go that EX_237 section 5 requires, for slice 3 only (L4 the league table, L7 the
+  consolidated report with the two labelled OV-1 views, L8 the sequencers, launchers and documents), built in the cloud
+  on top of slice 2's tree, in `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/`, and sent for review. It is not a go for the
+  integrated package, T017, an install, a registration or any run on the owner's PC.
+- **Next:** slice 3, checkpointed to the repository as it is built.
