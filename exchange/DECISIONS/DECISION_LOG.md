@@ -1206,3 +1206,21 @@ the installed documents. This log is not a separate approval process.
   `exchange/CLAUDE_WEB_TOOLS/h1v5/out/`, built by `make_h1_v5.py` from H-1 v4's ratified bytes. H-1 v4 stays the
   installed edition until the owner ratifies v5.
 - **Next:** the reviewer's recheck of EX_236. Slice 3 only after its acceptance, on the owner's go.
+
+## 86. 18 November 2026, 14:30 - slice 2 PASSED the reviewer's recheck (EX_237); the new reviewer chat took over
+
+- **The reviewer chat changed (about 11:00).** The previous ChatGPT reviewer chat reached its limit. The new one took over
+  from the H-2 v3r3 candidate; the owner checked the takeover with Claude's continuity questions (answers sound: it found
+  EX_236 at HEAD `bb43668` unprompted, stated the weekly-session boundary after `holdout_last`, S2-F02 and bar 40 correctly,
+  and read the working principle as intended). The owner accepted the takeover and commissioned the recheck.
+- **EX_237 (commit `b0b9ce0`): INDEPENDENT FOCUSED SOURCE-REVIEW PASS for the corrected slice 2 (EX_236).** S2-F01: the seal
+  gates are gone from the staged normal paths. S2-F02: closed by the CONFIRMED lines; the consequence (a registration not
+  confirmed in time stops that game's formal stream for good) ACCEPTED. The examples credible. No further slice 2 edits.
+  The test figures remain Claude's own runs. NOT INSTALLED, not integrated.
+- **Carried, not blockers:** the two installed archive checks left on purpose (the reader's opening-record condition at or
+  above the former holdout; the diagnostic route's opening and seal) are to be re-evaluated when the integrated package is
+  planned, and removed if they would actually prevent the normal workflow. Slice 3's four obligations (EX_237 section 5):
+  L4 admission verifies complete, labelled attempts and reconciles manifests; connect `ov1.publication_names`; L7 the two
+  labelled OV-1 views; L8 reads OV-1's state line, not only its exit code.
+- **The reviewer refreshed its handover candidate to H-2 v3r4** (`d5e810c`).
+- **Next:** slice 3 (L4, L7, L8) on the owner's go; the slices are serial.

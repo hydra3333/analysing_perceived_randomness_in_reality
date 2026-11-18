@@ -61,7 +61,7 @@ s = one(s, row, row + frag('frag/frag_8_8_add.md'), '8.8 lessons')
 s = part(s, '1. **Done since v3 (15 to 17 November 2026; section 0B has the detail):**', '5. **WF-1C** (WORKERS-1; roadmap item 10d)', frag('frag/frag_10_head.md'), 'section 10 items 1-4')
 s = one(s, line_starting(s, '**At this edition (section 0B):** Mode H\'s gates are behind us;', '11 lead'), frag('frag/frag_11_lead.md'), '11 lead line')
 s = one(s, 'At this edition the newest is EX_214 (Claude: this edition and register v0.31 for review).',
-        'At this edition the newest is EX_236 (Claude: the corrected slice 2).', 'EX numbering')
+        'At this edition the newest is EX_237 (the reviewer: slice 2 PASS).', 'EX numbering')
 s = part(s, '### 12.8 Open items at this edition (17 November 2026)', '- **The reminders** (`exchange/OWNER_REMINDERS.md`', frag('frag/frag_12_8.md'), '12.8 head')
 s = one(s, '\n---\n\n## Appendix A. Identities (non-self-referential)\n', '\n' + frag('frag/frag_12_10.md') + '---\n\n## Appendix A. Identities (non-self-referential)\n', '12.10')
 rows = (
