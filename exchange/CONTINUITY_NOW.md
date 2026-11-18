@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 22:10 Australia/Adelaide (the production layout is under discussion with the owner, entry 93; the package go is NOT given).
+**Last updated:** 18 November 2026, 22:12 Australia/Adelaide (production layout under discussion: no Git at all in production, entry 94; a deploy tool proposed; the package go is NOT given).
 
 ## For the owner: NOW
 
@@ -77,8 +77,10 @@ durable EX messages are authoritative.
   `ef2b67e0...1f50e9d13`. **NEXT: the integrated package. THE OWNER HAS NOT GIVEN ITS GO: he wants to discuss it first (entry 92).**
 - **UNDER DISCUSSION WITH THE OWNER (entry 93): where production runs.** Decided so far: production gets its own folder on
   his G: drive, development stays on E:; production must run free of GitHub (OFF-1) and must not need to be a Git
-  working tree. Two installed tools use Git today (`install_records.py`; `process_check.py`'s root check). Open: local
-  Git allowed or none at all; how code gets in and records get out; the order of steps. Read entry 93 before proposing.
+  working tree. Two installed tools use Git today (`install_records.py`; `process_check.py`'s root check). **Settled (entry 94): no Git
+  at all in the production folder.** Proposed by Claude, not yet agreed: one deploy tool (`check`, `init`, `update`,
+  `export`), `main` on E: as the release, records copied back one way. Three questions are with the owner (entry 94).
+  Read entries 93 and 94 before proposing.
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;

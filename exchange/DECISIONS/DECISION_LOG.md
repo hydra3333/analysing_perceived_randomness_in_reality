@@ -1374,3 +1374,16 @@ the installed documents. This log is not a separate approval process.
 - **Open, with the owner:** whether "free of GitHub" means no remote and no network (a local Git folder allowed) or no
   Git at all in production; how code gets in (an install into a plain folder) and how records get out (a copy to the
   development clone, then commit and push); and the order of the steps so that the first forward draws are not delayed.
+
+## 94. 18 November 2026, 22:12 - the owner settles it: no Git at all in the deployed production area
+
+- **The owner's words (22:12):** "\"Free of GitHub\" means no git at all on the deployed production area."
+- **So:** the production folder (G:) is a plain folder tree with no `.git`. Git and GitHub live only in the development
+  clone (E:). Entry 93's open question (a local Git folder, or none) is closed: none.
+- **What follows from it (Claude's proposal to the owner, 22:11 and 22:12; NOT yet agreed, and no go given):** `main` in
+  the development clone is the release; one small deploy tool with the modes `check`, `init`, `update` and `export`
+  (the owner raised the idea of a deploy tool at 22:11) replaces the Git-based install for production and proves the
+  installed code by file hashes; records return to the development clone by a one-way verified copy and are committed
+  there; `process_check.py`'s root check loses its `.git` condition; design Appendix J is amended and ratified. Three
+  questions are with the owner: the four-mode shape; a marker file so that real-data commands refuse outside production;
+  whether to start real work on E: after the install and move later, or to wait for G:.
