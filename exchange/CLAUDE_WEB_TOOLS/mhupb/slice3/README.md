@@ -1,9 +1,15 @@
 # MHUP-B slice 3 (layers L4, L7 and L8) - cloud workspace copy, NOT INSTALLED
 
-Status: FIRST EDITION, sent as EX_239 on 18 November 2026 for the reviewer's source review. The owner's go for this slice:
-18 November 2026, 14:33 (decision log entry 88). Nothing here is installed; `src/` and `tests/` on `main` are as at
-`cc0ab73`. Slice 3 is built ON TOP of slice 2's tree (`../slice2/`, passed in EX_237), which is built on slice 1's
-(`../slice1/`, passed in EX_231).
+Status: CORRECTED EDITION, sent as EX_241 on 18 November 2026 for the reviewer's focused recheck. The first edition
+was EX_239; the reviewer's source review is EX_240 (three narrow corrections, F3-01 to F3-03; the five questions of
+EX_239 answered and the choices kept). The owner's go for this slice: 18 November 2026, 14:33 (decision log entry 88).
+Nothing here is installed; `src/` and `tests/` on `main` are as at `cc0ab73`. Slice 3 is built ON TOP of slice 2's tree
+(`../slice2/`, passed in EX_237), which is built on slice 1's (`../slice1/`, passed in EX_231).
+
+What the correction changed (`SLICE3_EX239_TO_EX241.diff` shows every line): admission also binds each score's method
+revision and freeze receipt to the frozen forecast it scores and checks its prize division against its own matches
+(F3-01); a lost source blanks only the (method, revision, variant) identities it supplies (F3-02); a publication
+counts as logged only if its search-log row holds the digest of the manifest as read (F3-03).
 
 Governing documents: `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (section 5 L4, L7, L8; sections 7, 8, 9, 12A),
 `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (sections 3, 4, 5, 8), both as changed by the owner's
@@ -29,7 +35,8 @@ EX_235 section 2 (the two labelled OV-1 uses), EX_237 section 5 (slice 3's oblig
 - `mutations_slice3.py TREE [name ...]`: one planted defect per rule, each caught by a named test; the equivalent
   mutants are listed in its docstring.
 - `SLICE3_EDITS_TO_SLICE2_TREE.diff`: every changed line of a file that slice 2's tree already had (seven files).
-- `evidence/`: the suite summaries on Python 3.13 and 3.15 and the mutation run.
+- `SLICE3_EX239_TO_EX241.diff`: every changed line of this folder's sources, tests and mutation tool since EX_239.
+- `evidence/`: the suite summaries on Python 3.13 and 3.15 and the mutation run, for EX_239 and (`*_corrected_*`) EX_241.
 - `WORKING_NOTES.md`: the build log, with the times read from the clock.
 
 ## Rebuild and check (Linux; nothing is installed and no real data is written)
@@ -39,7 +46,7 @@ EX_235 section 2 (the two labelled OV-1 uses), EX_237 section 5 (slice 3's oblig
     sh $T/slice3/build_dev_slice3.sh base dev $T/slice1 $T/slice2 $T/slice3
     (cd dev && find . -type f \( -path './src/*' -o -path './tests/*' -o -name '.gitignore' \
         -o -path './Run_Weekly_Session.bat' -o -path './Run_Development_Batch.bat' \) ! -name '*.pyc' -print0 \
-        | sort -z | xargs -0 sha256sum | sha256sum)                      # the tree digest quoted in EX_239
+        | sort -z | xargs -0 sha256sum | sha256sum)                      # the tree digest quoted in EX_241
     python3 -I $T/slice1/run_suite.py dev out 2                          # the offline suite, one module per process
     python3 -I $T/slice3/mutations_slice3.py dev                         # on a copy of the tree
 

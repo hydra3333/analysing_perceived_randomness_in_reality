@@ -47,9 +47,11 @@ def dec(x: Fraction, places: int = 2, sign: bool = False) -> str:
     return ('-' if scaled < 0 else '+' if sign else '') + s
 
 
-def _blocked_by(data: dict, method: str, variant: str) -> str | None:
+def _blocked_by(data: dict, method: str, revision: str, variant: str) -> str | None:
+    """The unavailable source that supplies this (method, revision, variant), if any. Each revision is its own
+    identity: another revision's lost source blanks nothing here (EX_240 F3-02)."""
     for n in data['not_available']:
-        if n['variants'] is None or [method, variant] in [list(v) for v in n['variants']]:
+        if n['variants'] is None or [method, revision, variant] in [list(v) for v in n['variants']]:
             return n['source']
     return None
 
@@ -81,7 +83,7 @@ def summarise(data: dict) -> list[dict]:
         mh = [r for r in sealed[key] if r['readout'] == 'TOP']
         failed = sum(1 for f in data['failed'] if tuple(f[:3]) == key)
         e = {'method': key[0], 'revision': key[1], 'variant': key[2], 'release_date': people[key][0],
-             'status': people[key][1], 'not_available': _blocked_by(data, key[0], key[2]),
+             'status': people[key][1], 'not_available': _blocked_by(data, *key),
              'all_draws': n, 'all_hits': hits, 'all_chance': n * per,
              'forward_draws': len(fwd), 'forward_hits': sum(r['main'] for r in fwd), 'forward_chance': len(fwd) * per,
              'forward_witness_verified': sum(1 for r in fwd if r['witnessed']),

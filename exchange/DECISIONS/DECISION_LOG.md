@@ -1287,3 +1287,24 @@ the installed documents. This log is not a separate approval process.
   CANDIDATE awaiting the owner's ratification.
 - **Next:** the reviewer's source review of EX_239. Then, on the owner's go, the integrated package with the document
   amendments; then T017; then the install.
+
+## 90. 18 November 2026, 19:46 - EX_240 (slice 3 reviewed: three narrow corrections) and the corrected edition EX_241
+
+- **EX_240 (commit `ddeb072`): FOCUSED RECHECK REQUIRED BEFORE AN UNCONDITIONAL SOURCE PASS.** The structure of L4, L7 and
+  L8, the separation of the formal and the retrospective OV-1 views, the publication repair design and the two
+  sequencers are accepted at source level. The five questions of EX_239: Q1 keep the ratified folder name `league/archive`
+  with the commented constant; Q2 no search-log row for `history` and `reconstruction`; Q3 the retrospective view's
+  default cohort is the currently released variants; Q4 keep the admission's check against the frozen forecasts; Q5 keep
+  the routine fill's wait for unadmitted reports (an informative, recoverable refusal, never a gate of its own).
+- **Three findings, all accepted by Claude as real gaps:** F3-01 admission did not bind a score's method revision and
+  freeze receipt to its frozen forecast, nor check its prize division against its own matches; F3-02 a lost source was
+  attributed by (method, variant), so it could blank another revision's valid totals; F3-03 a logged publication was
+  recognised by name alone, not by the manifest digest its search-log row holds (which OV-1's missed-week
+  reconciliation relies on).
+- **EX_241: the corrected edition.** Each finding closed by a small edit in the routine named, with a focused test per
+  distinct rule and six planted defects. Two source files, one test file and the mutation tool changed
+  (`SLICE3_EX239_TO_EX241.diff`); the counted edits to slice 2's tree are unchanged.
+- **Results (Claude's own cloud runs):** 758 tests in 55 modules, 0 failing, on Python 3.13.18 and 3.15.0b4; 106 planted
+  defects caught, none surviving; tree digest `ef2b67e04c500ee940b765bb5a427666430f73ea70fc3a2b1f3e24a1f50e9d13`, reproduced from the repository copy.
+- **Not tested:** as in entry 89 (Windows; the two real attempts' admission; real data).
+- **Next:** the reviewer's focused recheck of EX_241. On a pass, the integrated package on the owner's go.

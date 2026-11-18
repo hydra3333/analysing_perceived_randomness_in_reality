@@ -1,0 +1,261 @@
+diff -ruN -x __pycache__ -x '*.pyc' -x evidence -x WORKING_NOTES.md -x README.md -x SLICE3_EX239_TO_EX241.diff tools_ex239/mutations_slice3.py tools/mutations_slice3.py
+--- tools_ex239/mutations_slice3.py	2026-11-18 16:05:58.653969682 +1030
++++ tools/mutations_slice3.py	2026-11-18 19:28:24.574901036 +1030
+@@ -32,6 +32,7 @@
+ ONE = LG + '.Sources.test_one_score_per_key_across_sources'
+ GONE = LG + '.Sources.test_a_missing_or_altered_source_is_not_available_never_a_partial_total'
+ MH = LG + '.Sources.test_mode_h_as_sealed_is_shown_and_never_summed'
++REV = LG + '.Sources.test_a_lost_source_blanks_only_the_revision_it_supplies'
+ LATE = LG + '.Sources.test_late_pre_draw_is_counted_once_and_never_forward_and_a_witness_must_be_verified_in_time'
+ CHAIN = LG + '.Sources.test_a_branching_correction_chain_refuses'
+ SAME = LG + '.Publication.test_unchanged_inputs_publish_nothing_and_a_change_takes_the_next_version'
+@@ -128,8 +129,25 @@
+     ('admit: a score that is not its ticket\'s matches admitted', E + 'league_sources.py',
+      "        if rec['main_matches'] != len(set(ticket[0]) & set(rec['drawn_main'])) or \\\n", "        if False or \\\n", COMPLETE),
+     ('admit: a key scored twice inside one ledger admitted', E + 'league_sources.py',
+-     "        if ticket is None or key in got or selected.get(key[:3]) != rec['forecast_content_digest']:\n",
+-     "        if ticket is None or selected.get(key[:3]) != rec['forecast_content_digest']:\n", COMPLETE),
++     "        if ticket is None or key in got or selected[key[:3]][0] != rec['forecast_content_digest']:\n",
++     "        if ticket is None or selected[key[:3]][0] != rec['forecast_content_digest']:\n", COMPLETE),
++    ('admit: a score under another revision of the method admitted (F3-01)', E + 'league_sources.py',
++     "        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:\n",
++     "        if rec['freeze_receipt_digest'] != frozen[key[:3]][1]:\n", COMPLETE),
++    ('admit: a score with another freeze receipt admitted (F3-01)', E + 'league_sources.py',
++     "        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:\n",
++     "        if rec['method_revision'] != frozen[key[:3]][0]:\n", COMPLETE),
++    ('admit: a prize division its matches do not give admitted (F3-01)', E + 'league_sources.py',
++     "        if rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),\n",
++     "        if False and rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),\n", COMPLETE),
++    ('sources: a lost source blanks another revision (F3-02)', E + 'league_table.py',
++     "        if n['variants'] is None or [method, revision, variant] in [list(v) for v in n['variants']]:\n",
++     "        if n['variants'] is None or [method, variant] in [[v[0], v[2]] for v in n['variants']]:\n", REV),
++    ('sources: a lost source whose plan cannot be read blanks nothing (F3-02)', E + 'league_sources.py',
++     "    except WF.BatchRefused:\n        return None\n    return sorted({(m['method_id'], m['method_revision'], m['variant_id'])",
++     "    except WF.BatchRefused:\n        return []\n    return sorted({(m['method_id'], m['method_revision'], m['variant_id'])", REV),
++    ('sources: a changed manifest accepted under its logged name (F3-03)', E + 'league_sources.py',
++     "            if name in logged and logged[name][0] != record_digest(m):          # EX_240 F3-03\n", "            if False:\n", SEAM),
+     ('admit: a repeat rewrites or refuses', E + 'league_publish.py', "            if s == entry:\n", "            if False:\n", REPEAT),
+     ('admit: the same attempt with another identity accepted', E + 'league_publish.py', "            if s == entry:\n", "            if True:\n", REPEAT),
+     ('admit: an overlapping key admitted', E + 'league_publish.py', "    if clash:\n", "    if False:\n", ONE),
+@@ -181,7 +199,7 @@
+     ('table: the first ten, not the last ten', E + 'league_table.py',
+      "             'last10_hits': sum(r['main'] for r in top[-10:]),\n", "             'last10_hits': sum(r['main'] for r in top[:10]),\n", PURE),
+     ('table: a partial total shown for a missing source', E + 'league_table.py',
+-     "             'status': people[key][1], 'not_available': _blocked_by(data, key[0], key[2]),\n",
++     "             'status': people[key][1], 'not_available': _blocked_by(data, *key),\n",
+      "             'status': people[key][1], 'not_available': None,\n", GONE),
+     ('table: rounding by cutting', E + 'league_table.py',
+      "    scaled = round(Fraction(x) * 10 ** places)\n", "    scaled = int(Fraction(x) * 10 ** places)\n", PURE),
+diff -ruN -x __pycache__ -x '*.pyc' -x evidence -x WORKING_NOTES.md -x README.md -x SLICE3_EX239_TO_EX241.diff tools_ex239/slice3_new/src/evaluation/league_sources.py tools/slice3_new/src/evaluation/league_sources.py
+--- tools_ex239/slice3_new/src/evaluation/league_sources.py	2026-11-18 16:00:57.903425498 +1030
++++ tools/slice3_new/src/evaluation/league_sources.py	2026-11-18 19:08:47.530124005 +1030
+@@ -247,13 +247,14 @@
+ 
+ 
+ def _affected(game_id: str, entry: dict):
+-    """The (method, variant) pairs a listed attempt supplies, from its batch plan; None (every variant) if the plan
+-    itself cannot be read."""
++    """The (method, revision, variant) identities a listed attempt supplies, from its batch plan; None (every variant)
++    only if the plan itself cannot be read. The revision is part of it: losing an older revision's source never
++    blanks a newer revision of the same method and variant (EX_240 F3-02)."""
+     try:
+         plan = WF.load_plan(game_id, entry['batch_id'])
+     except WF.BatchRefused:
+         return None
+-    return sorted({(m['method_id'], m['variant_id']) for m in plan['cohort']})
++    return sorted({(m['method_id'], m['method_revision'], m['variant_id']) for m in plan['cohort']})
+ 
+ 
+ # ---------------------------------------------------------------- (c) the sealed Mode H ledger: shown, never summed
+@@ -375,21 +376,25 @@
+ 
+ def manifests(root: Path, game_id: str) -> list[dict]:
+     """Every publication manifest in the archive, validated, in version order, each with 'logged' (its WEEKLY_TABLE
+-    row exists) and 'incomplete' (a PUBLICATION_INCOMPLETE note stands beside it). Two manifests of one version, a
+-    manifest that does not validate, or two rows naming one manifest refuse."""
++    row exists) and 'incomplete' (a PUBLICATION_INCOMPLETE note stands beside it). A publication counts as logged only
++    if its one row holds the digest of the manifest read here. Two manifests of one version, a manifest that does
++    not validate or is not the one its row names, or two rows naming one manifest refuse."""
+     folder = archive_dir(root, game_id)
+     out = []
+-    logged: dict[str, int] = {}
++    logged: dict[str, list] = {}
+     for r in search_rows(game_id):
+         if r.get('row_type') == ROW_TYPE:
+-            logged[r.get('attempt_id')] = logged.get(r.get('attempt_id'), 0) + 1
+-    twice = sorted(n for n, c in logged.items() if c > 1)
++            logged.setdefault(r.get('attempt_id'), []).append(r.get('plan_digest'))
++    twice = sorted(n for n, c in logged.items() if len(c) > 1)
+     if twice:
+         raise LeagueRefused(f'two search-log rows name the publication {twice[0]}')
+     if folder.is_dir():
+         for path in sorted(folder.glob('league_*.manifest.json')):
+             name = path.name[:-len('.manifest.json')]
+             m = validate_manifest(canonical_file(path, f'publication manifest {name}'), game_id, name)
++            if name in logged and logged[name][0] != record_digest(m):          # EX_240 F3-03
++                raise LeagueRefused(f'publication manifest {name}: it is not the record its search-log row names (the '
++                                    f'row holds the digest of the manifest as it was published)')
+             out.append({'manifest': m, 'digest': record_digest(m), 'name': name, 'logged': name in logged,
+                         'incomplete': not OR.absent(folder / f'{name}.PUBLICATION_INCOMPLETE.json')})
+     out.sort(key=lambda p: p['manifest']['version'])
+@@ -471,14 +476,20 @@
+              'plan_digest': record_digest(plan), 'window_first': first, 'window_last': last,
+              'score_ledger_sha256': sha256_hex(raw), 'evaluator_version': sp['evaluator_version']}
+     rows = source_rows(game_id, entry)
+-    selected = {(s[0], s[1], s[2]): s[3] for s in sp['selected_forecasts']}
++    selected = {(s[0], s[1], s[2]): (s[3], s[4]) for s in sp['selected_forecasts']}     # content digest, receipt digest
+     # Every score is checked against the frozen forecast it scores (read again here; no outcome is read): the ledger
+     # must hold exactly one record for every available readout of every selected forecast, and each record's matches
+-    # must be those of its frozen ticket against the drawn numbers the record itself carries.
++    # must be those of its frozen ticket against the drawn numbers the record itself carries. The record must also carry
++    # that forecast's own method revision and freeze receipt (the track id holds no revision, E2R-R40, so a record
++    # could otherwise be counted for another version of the method), and the prize division that follows from its own
++    # match fields (EX_240 F3-01).
+     from . import collect as COL
+-    want = {}
++    from . import divisions as DV
++    want, frozen = {}, {}
+     for (method, variant, t), cell in COL.collect(plan, first, last)['cells'].items():
+-        if cell['valid'] and selected.get((method, variant, t)) == cell['forecast_content_digest']:
++        if cell['valid'] and selected.get((method, variant, t)) == (cell['forecast_content_digest'],
++                                                                    cell['freeze_receipt_digest']):
++            frozen[(method, variant, t)] = (cell['method_revision'], cell['freeze_receipt_digest'])
+             for readout, ticket in cell['entries'].items():
+                 want[(method, variant, t, readout)] = ticket
+     got, drawn = set(), {}
+@@ -486,7 +497,7 @@
+         _g, method, variant, readout, _m = rec['track_id'].split(':')
+         key = (method, variant, rec['draw_number'], readout)
+         ticket = want.get(key)
+-        if ticket is None or key in got or selected.get(key[:3]) != rec['forecast_content_digest']:
++        if ticket is None or key in got or selected[key[:3]][0] != rec['forecast_content_digest']:
+             raise LeagueRefused(f'{attempt_id}: a score record of {key} is not the one score of a forecast its scoring '
+                                 f'plan selected from its batch')
+         if drawn.setdefault(rec['draw_number'], (rec['drawn_main'], rec.get('drawn_powerball'))) != \
+@@ -496,6 +507,13 @@
+                 (game_id == 'POWERBALL' and rec['powerball_match'] != (1 if ticket[1] == rec['drawn_powerball'] else 0)):
+             raise LeagueRefused(f'{attempt_id}: the score record of {key} does not hold the matches of its frozen ticket '
+                                 f'against the drawn numbers it records')
++        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:
++            raise LeagueRefused(f'{attempt_id}: the score record of {key} does not carry the method revision and the '
++                                f'freeze receipt of the frozen forecast it scores')
++        if rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),
++                                          rec.get('supplementary_matches')):
++            raise LeagueRefused(f'{attempt_id}: the score record of {key} holds a prize division that does not follow '
++                                f'from its own matches')
+         got.add(key)
+     if got != set(want) or {k[:3] for k in want} != set(selected):
+         raise LeagueRefused(f'{attempt_id}: its score ledger does not hold a score for every forecast and readout its '
+diff -ruN -x __pycache__ -x '*.pyc' -x evidence -x WORKING_NOTES.md -x README.md -x SLICE3_EX239_TO_EX241.diff tools_ex239/slice3_new/src/evaluation/league_table.py tools/slice3_new/src/evaluation/league_table.py
+--- tools_ex239/slice3_new/src/evaluation/league_table.py	2026-11-18 14:55:02.303992692 +1030
++++ tools/slice3_new/src/evaluation/league_table.py	2026-11-18 19:05:55.223953725 +1030
+@@ -47,9 +47,11 @@
+     return ('-' if scaled < 0 else '+' if sign else '') + s
+ 
+ 
+-def _blocked_by(data: dict, method: str, variant: str) -> str | None:
++def _blocked_by(data: dict, method: str, revision: str, variant: str) -> str | None:
++    """The unavailable source that supplies this (method, revision, variant), if any. Each revision is its own
++    identity: another revision's lost source blanks nothing here (EX_240 F3-02)."""
+     for n in data['not_available']:
+-        if n['variants'] is None or [method, variant] in [list(v) for v in n['variants']]:
++        if n['variants'] is None or [method, revision, variant] in [list(v) for v in n['variants']]:
+             return n['source']
+     return None
+ 
+@@ -81,7 +83,7 @@
+         mh = [r for r in sealed[key] if r['readout'] == 'TOP']
+         failed = sum(1 for f in data['failed'] if tuple(f[:3]) == key)
+         e = {'method': key[0], 'revision': key[1], 'variant': key[2], 'release_date': people[key][0],
+-             'status': people[key][1], 'not_available': _blocked_by(data, key[0], key[2]),
++             'status': people[key][1], 'not_available': _blocked_by(data, *key),
+              'all_draws': n, 'all_hits': hits, 'all_chance': n * per,
+              'forward_draws': len(fwd), 'forward_hits': sum(r['main'] for r in fwd), 'forward_chance': len(fwd) * per,
+              'forward_witness_verified': sum(1 for r in fwd if r['witnessed']),
+diff -ruN -x __pycache__ -x '*.pyc' -x evidence -x WORKING_NOTES.md -x README.md -x SLICE3_EX239_TO_EX241.diff tools_ex239/slice3_new/tests/test_mhupb_league.py tools/slice3_new/tests/test_mhupb_league.py
+--- tools_ex239/slice3_new/tests/test_mhupb_league.py	2026-11-18 16:05:58.658447454 +1030
++++ tools/slice3_new/tests/test_mhupb_league.py	2026-11-18 19:06:43.971862056 +1030
+@@ -330,6 +330,34 @@
+         with self.assertRaisesRegex(LS.LeagueRefused, 'not the attempt, batch, window'):
+             LS.source_rows(self.GAME, dict(SI.league_sources(self.proj, self.GAME)[0], window_last=self.plan['window_last'] - 1))
+ 
++    def test_a_lost_source_blanks_only_the_revision_it_supplies(self):
++        """EX_240 F3-02: each revision is its own identity. The development source holds revision 1 of the variant; the
++        weekly ledger (here made to carry revision 2 of the same method and variant) is intact. Losing the development
++        source makes revision 1 NOT AVAILABLE and leaves revision 2's totals and rank as they are."""
++        LP.admit(self.GAME, attempt_id=self.attempt)
++        rows = self.scores()
++        newer = [dict(r, method_revision='2') for r in rows]
++        (LS.scores_folder(self.GAME, self.plan['batch_id'], self.attempt) / 'score_ledger.jsonl').unlink()
++        with mock.patch.object(WR, 'score_ledger', lambda root, game: newer), \
++                mock.patch.object(SI, 'scored_identities', lambda *a: frozenset()):
++            data, _pins = LS.collect(self.proj, self.GAME)
++            m = self.members()[0]
++            self.assertEqual(data['not_available'][0]['variants'], [(m['method_id'], '1', m['variant_id'])])
++            by = {e['revision']: e for e in LT.summarise(data)}
++            self.assertEqual((by['1']['not_available'], by['1']['rank']), (self.attempt, None))
++            hits = sum(r['readouts']['TOP']['main_matches'] for r in rows)
++            self.assertEqual((by['2']['not_available'], by['2']['rank'], by['2']['all_draws'], by['2']['all_hits']),
++                             (None, 1, len(rows), hits))
++            built = LT.build(data, {'name': 'league_X', 'version': 1, 'latest_draw': LT.latest_draw(data), 'published_utc': 'T'})
++            out = {r['revision']: r for r in csv.DictReader(io.StringIO(built['csv'].decode('ascii')))}
++            self.assertEqual((out['1']['not_available'], out['1']['all_draws']), (self.attempt, ''))
++            self.assertEqual((out['2']['not_available'], out['2']['all_draws'], out['2']['rank']), ('', str(len(rows)), '1'))
++            # only when the lost source's own plan cannot be read is every variant taken as affected
++            with mock.patch.object(WF, 'load_plan', side_effect=WF.BatchRefused('gone')):
++                unknown, _pins = LS.collect(self.proj, self.GAME)
++            self.assertIsNone(unknown['not_available'][0]['variants'])
++            self.assertEqual({e['not_available'] for e in LT.summarise(unknown)}, {self.attempt})
++
+     def test_mode_h_as_sealed_is_shown_and_never_summed(self):
+         """The fixture's SCORE_COMPLETE record names a digest. A ledger that is not those bytes is 'not available'; the
+         ledger it names is shown in its own column and changes no total."""
+@@ -634,13 +662,24 @@
+         one = json.loads(lines[0])
+         more = canonical(dict(one, main_matches=(one['main_matches'] + 1) % 8, division=one['division']))
+         other = canonical(dict(json.loads(lines[-1]), drawn_main=[1, 2, 3, 4, 5, 6, 8]))
++        rest = b''.join(lines[1:])
++        # EX_240 F3-01: a record that is well formed, with its true matches, but under another revision of the method,
++        # with another freeze receipt, or with a prize division its own matches do not give
++        revised = canonical(dict(one, method_revision='2'))
++        receipt = canonical(dict(one, freeze_receipt_digest='0' * 64))
++        prize = canonical(dict(one, division=one['division'] + 1))
++        self.assertEqual(one['method_revision'], '1')
+         for damaged, why in ((b''.join(lines[:-1]), 'does not hold a score for every forecast and readout'),
+                              (raw + lines[0], 'not the one score of a forecast'),
+-                             (more + b''.join(lines[1:]), 'does not hold the matches of its frozen ticket'),
+-                             (b''.join(lines[:-1]) + other, 'disagree about the numbers drawn')):
++                             (more + rest, 'does not hold the matches of its frozen ticket'),
++                             (b''.join(lines[:-1]) + other, 'disagree about the numbers drawn'),
++                             (revised + rest, 'does not carry the method revision and the freeze receipt'),
++                             (receipt + rest, 'does not carry the method revision and the freeze receipt'),
++                             (prize + rest, 'a prize division that does not follow from its own matches')):
+             (folder / 'score_ledger.jsonl').write_bytes(damaged)
+             with self.assertRaisesRegex(LS.LeagueRefused, why):
+                 LP.admit(self.GAME, attempt_id=attempt)
++            self.assertTrue(OR.absent(path), why)             # refused: no source list was written
+         (folder / 'score_ledger.jsonl').write_bytes(raw)
+         sp = (folder / 'scoring_plan.json').read_bytes()
+         (folder / 'scoring_plan.json').write_bytes(canonical(dict(json.loads(sp), declared_tests=1)))
+@@ -742,6 +781,21 @@
+         with self.assertRaisesRegex(OV.OV1Blocked, 'league publication ' + res['name']):
+             OV.reconcile(self.proj, self.GAME, st, lines[:-1], False, self.now)
+         path = LS.archive_dir(self.proj, self.GAME) / f'{res["name"]}.manifest.json'
++        # EX_240 F3-03: the manifest rewritten as a well-formed, canonical record under the same name, pinning a shorter
++        # extent that the forecast ledger does hold. Only the digest in its search-log row gives it away.
++        published = path.read_bytes()
++        changed = json.loads(published)
++        changed['inputs']['forecast_ledger'] = {'lines': len(lines) - 1, 'last_line_digest': record_digest(lines[-2])}
++        path.write_bytes(canonical(changed))
++        self.assertEqual(LS.validate_manifest(changed, self.GAME, res['name']), changed)      # its shape is in order
++        for call in (lambda: LS.manifests(self.proj, self.GAME), lambda: LP.publish(self.GAME),
++                     lambda: LS.publication_names(self.proj, self.GAME)):
++            with self.assertRaisesRegex(LS.LeagueRefused, 'not the record its search-log row names'):
++                call()
++        with self.assertRaisesRegex(OV.OV1Blocked, 'publication records do not verify'):
++            OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)
++        path.write_bytes(published)
++        OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)
+         path.write_bytes(path.read_bytes().replace(b'"version":1', b'"version":7'))
+         with self.assertRaisesRegex(OV.OV1Blocked, 'publication records do not verify'):
+             OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)

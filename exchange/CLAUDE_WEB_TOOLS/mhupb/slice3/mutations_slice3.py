@@ -32,6 +32,7 @@ ROWS = LG + '.Figures.test_no_scores_one_draw_and_retired_rows'
 ONE = LG + '.Sources.test_one_score_per_key_across_sources'
 GONE = LG + '.Sources.test_a_missing_or_altered_source_is_not_available_never_a_partial_total'
 MH = LG + '.Sources.test_mode_h_as_sealed_is_shown_and_never_summed'
+REV = LG + '.Sources.test_a_lost_source_blanks_only_the_revision_it_supplies'
 LATE = LG + '.Sources.test_late_pre_draw_is_counted_once_and_never_forward_and_a_witness_must_be_verified_in_time'
 CHAIN = LG + '.Sources.test_a_branching_correction_chain_refuses'
 SAME = LG + '.Publication.test_unchanged_inputs_publish_nothing_and_a_change_takes_the_next_version'
@@ -128,8 +129,25 @@ MUTANTS = [
     ('admit: a score that is not its ticket\'s matches admitted', E + 'league_sources.py',
      "        if rec['main_matches'] != len(set(ticket[0]) & set(rec['drawn_main'])) or \\\n", "        if False or \\\n", COMPLETE),
     ('admit: a key scored twice inside one ledger admitted', E + 'league_sources.py',
-     "        if ticket is None or key in got or selected.get(key[:3]) != rec['forecast_content_digest']:\n",
-     "        if ticket is None or selected.get(key[:3]) != rec['forecast_content_digest']:\n", COMPLETE),
+     "        if ticket is None or key in got or selected[key[:3]][0] != rec['forecast_content_digest']:\n",
+     "        if ticket is None or selected[key[:3]][0] != rec['forecast_content_digest']:\n", COMPLETE),
+    ('admit: a score under another revision of the method admitted (F3-01)', E + 'league_sources.py',
+     "        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:\n",
+     "        if rec['freeze_receipt_digest'] != frozen[key[:3]][1]:\n", COMPLETE),
+    ('admit: a score with another freeze receipt admitted (F3-01)', E + 'league_sources.py',
+     "        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:\n",
+     "        if rec['method_revision'] != frozen[key[:3]][0]:\n", COMPLETE),
+    ('admit: a prize division its matches do not give admitted (F3-01)', E + 'league_sources.py',
+     "        if rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),\n",
+     "        if False and rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),\n", COMPLETE),
+    ('sources: a lost source blanks another revision (F3-02)', E + 'league_table.py',
+     "        if n['variants'] is None or [method, revision, variant] in [list(v) for v in n['variants']]:\n",
+     "        if n['variants'] is None or [method, variant] in [[v[0], v[2]] for v in n['variants']]:\n", REV),
+    ('sources: a lost source whose plan cannot be read blanks nothing (F3-02)', E + 'league_sources.py',
+     "    except WF.BatchRefused:\n        return None\n    return sorted({(m['method_id'], m['method_revision'], m['variant_id'])",
+     "    except WF.BatchRefused:\n        return []\n    return sorted({(m['method_id'], m['method_revision'], m['variant_id'])", REV),
+    ('sources: a changed manifest accepted under its logged name (F3-03)', E + 'league_sources.py',
+     "            if name in logged and logged[name][0] != record_digest(m):          # EX_240 F3-03\n", "            if False:\n", SEAM),
     ('admit: a repeat rewrites or refuses', E + 'league_publish.py', "            if s == entry:\n", "            if False:\n", REPEAT),
     ('admit: the same attempt with another identity accepted', E + 'league_publish.py', "            if s == entry:\n", "            if True:\n", REPEAT),
     ('admit: an overlapping key admitted', E + 'league_publish.py', "    if clash:\n", "    if False:\n", ONE),
@@ -181,7 +199,7 @@ MUTANTS = [
     ('table: the first ten, not the last ten', E + 'league_table.py',
      "             'last10_hits': sum(r['main'] for r in top[-10:]),\n", "             'last10_hits': sum(r['main'] for r in top[:10]),\n", PURE),
     ('table: a partial total shown for a missing source', E + 'league_table.py',
-     "             'status': people[key][1], 'not_available': _blocked_by(data, key[0], key[2]),\n",
+     "             'status': people[key][1], 'not_available': _blocked_by(data, *key),\n",
      "             'status': people[key][1], 'not_available': None,\n", GONE),
     ('table: rounding by cutting', E + 'league_table.py',
      "    scaled = round(Fraction(x) * 10 ** places)\n", "    scaled = int(Fraction(x) * 10 ** places)\n", PURE),

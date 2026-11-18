@@ -96,7 +96,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   and ratified (RAT-33; RAT-35: code plan v0.3 and design supplement v0.8), in eight layers and three review slices with
   one install. **Slice 1 (the live forecasting and scoring path) passed review. Slice 2 (the formal test OV-1 and the two
   kinds of development run) was built, reviewed, corrected and passed (EX_237). Slice 3 (the league table, the
-  report, the sequencers) is built and with the reviewer (EX_239).** All of it is staged under `exchange/CLAUDE_WEB_TOOLS/mhupb/`; **nothing is
+  report, the sequencers) is built, reviewed (EX_240) and corrected (EX_241, with the reviewer).** All of it is staged under `exchange/CLAUDE_WEB_TOOLS/mhupb/`; **nothing is
   installed**, and `src/` and `tests/` on `main` are as MHUP-A left them.
 - **OV-1:** one running evidence score per game from every variant's frozen TOP and WORST picks; bar 40 (at most a 1 in 40
   chance of ever reaching it under fair draws; 5% for both games). Two labelled uses: the registered formal prospective
@@ -104,7 +104,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
 - **The working principle** (`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`): the science, the
   methods, the calculations, the scoring and the reporting must be right; engineering is proportionate; no over-engineering
   of side issues. It is not a request for shorter reports.
-- **Next:** the review of slice 3 and any fixes; on the owner's go, the integrated package with its document
+- **Next:** the reviewer's recheck of slice 3 (EX_241); on the owner's go, the integrated package with its document
   amendments; the Windows rehearsal (T017); the owner's install; then `declare-developed` and OV-1's registration for each
   game, the weekly sessions and the development jobs, each on its own go. After MHUP-B: WF-1C, then the methods still to do
   (OUTLANDISH_01's family probably first, through the normal route).

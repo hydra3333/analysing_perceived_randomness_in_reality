@@ -330,6 +330,34 @@ class Sources(League):
         with self.assertRaisesRegex(LS.LeagueRefused, 'not the attempt, batch, window'):
             LS.source_rows(self.GAME, dict(SI.league_sources(self.proj, self.GAME)[0], window_last=self.plan['window_last'] - 1))
 
+    def test_a_lost_source_blanks_only_the_revision_it_supplies(self):
+        """EX_240 F3-02: each revision is its own identity. The development source holds revision 1 of the variant; the
+        weekly ledger (here made to carry revision 2 of the same method and variant) is intact. Losing the development
+        source makes revision 1 NOT AVAILABLE and leaves revision 2's totals and rank as they are."""
+        LP.admit(self.GAME, attempt_id=self.attempt)
+        rows = self.scores()
+        newer = [dict(r, method_revision='2') for r in rows]
+        (LS.scores_folder(self.GAME, self.plan['batch_id'], self.attempt) / 'score_ledger.jsonl').unlink()
+        with mock.patch.object(WR, 'score_ledger', lambda root, game: newer), \
+                mock.patch.object(SI, 'scored_identities', lambda *a: frozenset()):
+            data, _pins = LS.collect(self.proj, self.GAME)
+            m = self.members()[0]
+            self.assertEqual(data['not_available'][0]['variants'], [(m['method_id'], '1', m['variant_id'])])
+            by = {e['revision']: e for e in LT.summarise(data)}
+            self.assertEqual((by['1']['not_available'], by['1']['rank']), (self.attempt, None))
+            hits = sum(r['readouts']['TOP']['main_matches'] for r in rows)
+            self.assertEqual((by['2']['not_available'], by['2']['rank'], by['2']['all_draws'], by['2']['all_hits']),
+                             (None, 1, len(rows), hits))
+            built = LT.build(data, {'name': 'league_X', 'version': 1, 'latest_draw': LT.latest_draw(data), 'published_utc': 'T'})
+            out = {r['revision']: r for r in csv.DictReader(io.StringIO(built['csv'].decode('ascii')))}
+            self.assertEqual((out['1']['not_available'], out['1']['all_draws']), (self.attempt, ''))
+            self.assertEqual((out['2']['not_available'], out['2']['all_draws'], out['2']['rank']), ('', str(len(rows)), '1'))
+            # only when the lost source's own plan cannot be read is every variant taken as affected
+            with mock.patch.object(WF, 'load_plan', side_effect=WF.BatchRefused('gone')):
+                unknown, _pins = LS.collect(self.proj, self.GAME)
+            self.assertIsNone(unknown['not_available'][0]['variants'])
+            self.assertEqual({e['not_available'] for e in LT.summarise(unknown)}, {self.attempt})
+
     def test_mode_h_as_sealed_is_shown_and_never_summed(self):
         """The fixture's SCORE_COMPLETE record names a digest. A ledger that is not those bytes is 'not available'; the
         ledger it names is shown in its own column and changes no total."""
@@ -634,13 +662,24 @@ class Admission(League):
         one = json.loads(lines[0])
         more = canonical(dict(one, main_matches=(one['main_matches'] + 1) % 8, division=one['division']))
         other = canonical(dict(json.loads(lines[-1]), drawn_main=[1, 2, 3, 4, 5, 6, 8]))
+        rest = b''.join(lines[1:])
+        # EX_240 F3-01: a record that is well formed, with its true matches, but under another revision of the method,
+        # with another freeze receipt, or with a prize division its own matches do not give
+        revised = canonical(dict(one, method_revision='2'))
+        receipt = canonical(dict(one, freeze_receipt_digest='0' * 64))
+        prize = canonical(dict(one, division=one['division'] + 1))
+        self.assertEqual(one['method_revision'], '1')
         for damaged, why in ((b''.join(lines[:-1]), 'does not hold a score for every forecast and readout'),
                              (raw + lines[0], 'not the one score of a forecast'),
-                             (more + b''.join(lines[1:]), 'does not hold the matches of its frozen ticket'),
-                             (b''.join(lines[:-1]) + other, 'disagree about the numbers drawn')):
+                             (more + rest, 'does not hold the matches of its frozen ticket'),
+                             (b''.join(lines[:-1]) + other, 'disagree about the numbers drawn'),
+                             (revised + rest, 'does not carry the method revision and the freeze receipt'),
+                             (receipt + rest, 'does not carry the method revision and the freeze receipt'),
+                             (prize + rest, 'a prize division that does not follow from its own matches')):
             (folder / 'score_ledger.jsonl').write_bytes(damaged)
             with self.assertRaisesRegex(LS.LeagueRefused, why):
                 LP.admit(self.GAME, attempt_id=attempt)
+            self.assertTrue(OR.absent(path), why)             # refused: no source list was written
         (folder / 'score_ledger.jsonl').write_bytes(raw)
         sp = (folder / 'scoring_plan.json').read_bytes()
         (folder / 'scoring_plan.json').write_bytes(canonical(dict(json.loads(sp), declared_tests=1)))
@@ -742,6 +781,21 @@ class Seams(League):
         with self.assertRaisesRegex(OV.OV1Blocked, 'league publication ' + res['name']):
             OV.reconcile(self.proj, self.GAME, st, lines[:-1], False, self.now)
         path = LS.archive_dir(self.proj, self.GAME) / f'{res["name"]}.manifest.json'
+        # EX_240 F3-03: the manifest rewritten as a well-formed, canonical record under the same name, pinning a shorter
+        # extent that the forecast ledger does hold. Only the digest in its search-log row gives it away.
+        published = path.read_bytes()
+        changed = json.loads(published)
+        changed['inputs']['forecast_ledger'] = {'lines': len(lines) - 1, 'last_line_digest': record_digest(lines[-2])}
+        path.write_bytes(canonical(changed))
+        self.assertEqual(LS.validate_manifest(changed, self.GAME, res['name']), changed)      # its shape is in order
+        for call in (lambda: LS.manifests(self.proj, self.GAME), lambda: LP.publish(self.GAME),
+                     lambda: LS.publication_names(self.proj, self.GAME)):
+            with self.assertRaisesRegex(LS.LeagueRefused, 'not the record its search-log row names'):
+                call()
+        with self.assertRaisesRegex(OV.OV1Blocked, 'publication records do not verify'):
+            OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)
+        path.write_bytes(published)
+        OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)
         path.write_bytes(path.read_bytes().replace(b'"version":1', b'"version":7'))
         with self.assertRaisesRegex(OV.OV1Blocked, 'publication records do not verify'):
             OV.reconcile(self.proj, self.GAME, st, lines, False, self.now)

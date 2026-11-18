@@ -247,13 +247,14 @@ def source_rows(game_id: str, entry: dict) -> list[dict]:
 
 
 def _affected(game_id: str, entry: dict):
-    """The (method, variant) pairs a listed attempt supplies, from its batch plan; None (every variant) if the plan
-    itself cannot be read."""
+    """The (method, revision, variant) identities a listed attempt supplies, from its batch plan; None (every variant)
+    only if the plan itself cannot be read. The revision is part of it: losing an older revision's source never
+    blanks a newer revision of the same method and variant (EX_240 F3-02)."""
     try:
         plan = WF.load_plan(game_id, entry['batch_id'])
     except WF.BatchRefused:
         return None
-    return sorted({(m['method_id'], m['variant_id']) for m in plan['cohort']})
+    return sorted({(m['method_id'], m['method_revision'], m['variant_id']) for m in plan['cohort']})
 
 
 # ---------------------------------------------------------------- (c) the sealed Mode H ledger: shown, never summed
@@ -375,21 +376,25 @@ def publication_name(game_id: str, latest_draw: int, version: int, published_utc
 
 def manifests(root: Path, game_id: str) -> list[dict]:
     """Every publication manifest in the archive, validated, in version order, each with 'logged' (its WEEKLY_TABLE
-    row exists) and 'incomplete' (a PUBLICATION_INCOMPLETE note stands beside it). Two manifests of one version, a
-    manifest that does not validate, or two rows naming one manifest refuse."""
+    row exists) and 'incomplete' (a PUBLICATION_INCOMPLETE note stands beside it). A publication counts as logged only
+    if its one row holds the digest of the manifest read here. Two manifests of one version, a manifest that does
+    not validate or is not the one its row names, or two rows naming one manifest refuse."""
     folder = archive_dir(root, game_id)
     out = []
-    logged: dict[str, int] = {}
+    logged: dict[str, list] = {}
     for r in search_rows(game_id):
         if r.get('row_type') == ROW_TYPE:
-            logged[r.get('attempt_id')] = logged.get(r.get('attempt_id'), 0) + 1
-    twice = sorted(n for n, c in logged.items() if c > 1)
+            logged.setdefault(r.get('attempt_id'), []).append(r.get('plan_digest'))
+    twice = sorted(n for n, c in logged.items() if len(c) > 1)
     if twice:
         raise LeagueRefused(f'two search-log rows name the publication {twice[0]}')
     if folder.is_dir():
         for path in sorted(folder.glob('league_*.manifest.json')):
             name = path.name[:-len('.manifest.json')]
             m = validate_manifest(canonical_file(path, f'publication manifest {name}'), game_id, name)
+            if name in logged and logged[name][0] != record_digest(m):          # EX_240 F3-03
+                raise LeagueRefused(f'publication manifest {name}: it is not the record its search-log row names (the '
+                                    f'row holds the digest of the manifest as it was published)')
             out.append({'manifest': m, 'digest': record_digest(m), 'name': name, 'logged': name in logged,
                         'incomplete': not OR.absent(folder / f'{name}.PUBLICATION_INCOMPLETE.json')})
     out.sort(key=lambda p: p['manifest']['version'])
@@ -471,14 +476,20 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
              'plan_digest': record_digest(plan), 'window_first': first, 'window_last': last,
              'score_ledger_sha256': sha256_hex(raw), 'evaluator_version': sp['evaluator_version']}
     rows = source_rows(game_id, entry)
-    selected = {(s[0], s[1], s[2]): s[3] for s in sp['selected_forecasts']}
+    selected = {(s[0], s[1], s[2]): (s[3], s[4]) for s in sp['selected_forecasts']}     # content digest, receipt digest
     # Every score is checked against the frozen forecast it scores (read again here; no outcome is read): the ledger
     # must hold exactly one record for every available readout of every selected forecast, and each record's matches
-    # must be those of its frozen ticket against the drawn numbers the record itself carries.
+    # must be those of its frozen ticket against the drawn numbers the record itself carries. The record must also carry
+    # that forecast's own method revision and freeze receipt (the track id holds no revision, E2R-R40, so a record
+    # could otherwise be counted for another version of the method), and the prize division that follows from its own
+    # match fields (EX_240 F3-01).
     from . import collect as COL
-    want = {}
+    from . import divisions as DV
+    want, frozen = {}, {}
     for (method, variant, t), cell in COL.collect(plan, first, last)['cells'].items():
-        if cell['valid'] and selected.get((method, variant, t)) == cell['forecast_content_digest']:
+        if cell['valid'] and selected.get((method, variant, t)) == (cell['forecast_content_digest'],
+                                                                    cell['freeze_receipt_digest']):
+            frozen[(method, variant, t)] = (cell['method_revision'], cell['freeze_receipt_digest'])
             for readout, ticket in cell['entries'].items():
                 want[(method, variant, t, readout)] = ticket
     got, drawn = set(), {}
@@ -486,7 +497,7 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
         _g, method, variant, readout, _m = rec['track_id'].split(':')
         key = (method, variant, rec['draw_number'], readout)
         ticket = want.get(key)
-        if ticket is None or key in got or selected.get(key[:3]) != rec['forecast_content_digest']:
+        if ticket is None or key in got or selected[key[:3]][0] != rec['forecast_content_digest']:
             raise LeagueRefused(f'{attempt_id}: a score record of {key} is not the one score of a forecast its scoring '
                                 f'plan selected from its batch')
         if drawn.setdefault(rec['draw_number'], (rec['drawn_main'], rec.get('drawn_powerball'))) != \
@@ -496,6 +507,13 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
                 (game_id == 'POWERBALL' and rec['powerball_match'] != (1 if ticket[1] == rec['drawn_powerball'] else 0)):
             raise LeagueRefused(f'{attempt_id}: the score record of {key} does not hold the matches of its frozen ticket '
                                 f'against the drawn numbers it records')
+        if (rec['method_revision'], rec['freeze_receipt_digest']) != frozen[key[:3]]:
+            raise LeagueRefused(f'{attempt_id}: the score record of {key} does not carry the method revision and the '
+                                f'freeze receipt of the frozen forecast it scores')
+        if rec['division'] != DV.division(game_id, rec['main_matches'], rec.get('powerball_match'),
+                                          rec.get('supplementary_matches')):
+            raise LeagueRefused(f'{attempt_id}: the score record of {key} holds a prize division that does not follow '
+                                f'from its own matches')
         got.add(key)
     if got != set(want) or {k[:3] for k in want} != set(selected):
         raise LeagueRefused(f'{attempt_id}: its score ledger does not hold a score for every forecast and readout its '
