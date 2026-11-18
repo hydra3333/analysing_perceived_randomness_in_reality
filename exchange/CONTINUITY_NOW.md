@@ -87,8 +87,9 @@ durable EX messages are authoritative.
   CHAT with its blurb; (4) the new chat's first real task, on the owner's go: the deployment design note (Fable (High)),
   to the reviewer before any code; (5) the deployment layer, reviewed like a slice; (6) the integrated package; (7)
   T017; (8) the first deployment. **No go has been given for the design note or the package.**
-- **Asked of the owner, open:** restore the ratified bytes of `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`
-  (his commit `86f6c43` changed it, apparently by accident)?
+- **Done (entry 99, 18 November 2026, 23:31):** on the owner's word, the ratified bytes of
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md` were restored by a forward commit (his commit
+  `86f6c43` had changed it, apparently by accident); SHA-256 `2cfa6cf5...67be`, as recorded at RAT-34.
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;

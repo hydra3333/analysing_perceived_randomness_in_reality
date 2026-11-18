@@ -1467,3 +1467,15 @@ the installed documents. This log is not a separate approval process.
 - **Next:** the owner pastes EX_243's block to the reviewer; the reviewer updates H-2; the owner ratifies H-1 v6 (or not)
   and starts a new Claude chat with its blurb. The new chat's first real task, on the owner's go, is the deployment
   design note (Fable (High)). The package go and the design-note go are NOT given.
+
+## 99. 18 November 2026, 23:31 - the owner: restore the H-1 v4 blurb; Claude restored its ratified bytes
+
+- **The owner (23:29):** "restore it to what it should be please" - the answer to the question left open in entry 98.
+- **Done by Claude:** `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md` written back from the RAT-34
+  commit (`git show 0044de8:<path>`), as a new forward commit; nothing was reset or rewritten. Tool-computed SHA-256
+  after the restore: `2cfa6cf521aabee3bbef257eb8a917caea92c73ddac54e90ddda79464ecd67be`, equal to RAT-34's recorded value.
+- **What had changed** (the owner's commit `86f6c43`, apparently by accident): the owner's notes above the line were
+  gone and the last lines had been filled in for a paste (commit and date); SHA-256 `dad5f7d5...3675`. That version
+  stays in the history.
+- **Nothing else touched.** No design, no code. The file is history: H-1 v5 (RAT-37) is the installed handover and the
+  H-1 v6 candidate's blurb is the one a new chat starts from.
