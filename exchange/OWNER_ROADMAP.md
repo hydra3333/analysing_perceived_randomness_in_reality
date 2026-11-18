@@ -2,7 +2,15 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 16 November 2026: MODE H IS DONE in both games (Oz Lotto sealed 15 November, Powerball 16 November) and both
+Last updated: 18 November 2026 (late evening): MHUP-B's code has passed review in all three slices (the weekly forecasting
+and scoring; the formal forward test OV-1 and the back-history runs; the league table, the weekly report and your two
+commands). Nothing is installed. You decided how production will run (decision log entries 92 to 98): from its own
+folder on G: with no Git in it; code gets there through one small deploy tool you can run again safely; a ZIP backup
+to T: after every job, and rollback by restoring one; and nothing is installed until that is designed, reviewed and
+built. Next: your paste of EX_243 to the reviewer; the reviewer updates its handover; a new Claude chat (blurb:
+exchange/CLAUDE_WEB_TOOLS/h1v6/out/); then, on your go, the deployment design note. The page that is always current is
+exchange/CONTINUITY_NOW.md.
+Earlier (16 November 2026): MODE H IS DONE in both games (Oz Lotto sealed 15 November, Powerball 16 November) and both
 reports are read: no statistically significant predictive advantage was demonstrated (EX_200 to EX_205). You agreed the
 approach from here on 16 November (exchange/DECISIONS/AGREED_APPROACH_2026_11_16.md): all draws treated the same; MHUP-B
 (catch-up, the weekly session, a league table after every draw listing every method) is the next package and the

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 23:14 Australia/Adelaide (the owner: build the production deployment clean, once, before the package, entry 97; the design note awaits his go; nothing started).
+**Last updated:** 18 November 2026, 23:24 Australia/Adelaide (the owner's production decisions recorded and sent to the reviewer, EX_243; H-1 v6 candidate written; next: a new Claude chat, then the deployment design note on the owner's go; entry 98).
 
 ## For the owner: NOW
 
@@ -75,17 +75,20 @@ durable EX messages are authoritative.
   F3-03); EX_241 (the three applied). Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (README there). NOT INSTALLED.
   758 tests in 55 modules, 0 failing, on both Pythons (Claude's runs); 106 planted defects caught; tree digest
   `ef2b67e0...1f50e9d13`. **NEXT: the integrated package. THE OWNER HAS NOT GIVEN ITS GO: he wants to discuss it first (entry 92).**
-- **UNDER DISCUSSION WITH THE OWNER (entry 93): where production runs.** Decided so far: production gets its own folder on
-  his G: drive, development stays on E:; production must run free of GitHub (OFF-1) and must not need to be a Git
-  working tree. Two installed tools use Git today (`install_records.py`; `process_check.py`'s root check). **Settled (entry 94): no Git
-  at all in the production folder.** Proposed by Claude, not yet agreed: one deploy tool (`check`, `init`, `update`,
-  `export`), `main` on E: as the release, records copied back one way. **Agreed in outline by the owner (entry 95),
-  provided every mode is re-runnable:** that tool; a marker file so real-data commands refuse outside production; a
-  date-and-time-named `.zip` snapshot (Python's `zipfile`, verified) to a nominated backup folder at the END of each
-  production job only (entry 96); rollback = restore from backup. **Decided (entry 97): build it clean, once: no
-  interim install on E:; the deployment layer is designed, reviewed and built BEFORE the integrated package, and MHUP-B
-  reaches production by that route.** Open: the backup folder's drive; the design note (needs the owner's go; nothing
-  started). Read entries 93 to 97 before proposing.
+- **DECIDED BY THE OWNER, 18 November 2026, evening (entries 93 to 98; `exchange/EX_243_Claude.md` is the record for the
+  reviewer, table D1 to D12): where production runs.** Production gets its own folder on his G: drive with NO Git in it
+  at all (OFF-1); development, Git and GitHub stay in the clone on E:. Code reaches production only through one small,
+  re-runnable deploy tool (outline: `check`, `init`, `update`, `export`). A marker file makes real-data commands refuse
+  anywhere else. A verified `.zip` snapshot (Python's `zipfile`; to T:, a setting) at the END of every production job;
+  a missed one is made first by the next job; rollback = restore from backup. **Build it clean, once: nothing is
+  installed or deployed now and changed later.** None of it is designed yet.
+- **THE ORDER NOW (entry 98):** (1) the owner pastes EX_243's block to the reviewer; (2) the reviewer updates H-2;
+  (3) the owner ratifies H-1 v6 (a CANDIDATE in `exchange/CLAUDE_WEB_TOOLS/h1v6/out/`) or not, and starts a NEW CLAUDE
+  CHAT with its blurb; (4) the new chat's first real task, on the owner's go: the deployment design note (Fable (High)),
+  to the reviewer before any code; (5) the deployment layer, reviewed like a slice; (6) the integrated package; (7)
+  T017; (8) the first deployment. **No go has been given for the design note or the package.**
+- **Asked of the owner, open:** restore the ratified bytes of `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md`
+  (his commit `86f6c43` changed it, apparently by accident)?
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
@@ -131,9 +134,11 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting the installed blurb,
-  `doc/HANDOVER/Claude_Primary_Handover_H1_v5_introductory_blurb.md` (H-1 v5, ratified by the owner on 18 November 2026:
-  RAT-37, entry 92; it describes the state up to slice 3's pass, EX_242; what happened after is on this page).
+- **Claude chat ended:** start a new Claude chat by pasting the NEWEST blurb,
+  `exchange/CLAUDE_WEB_TOOLS/h1v6/out/Claude_Primary_Handover_H1_v6_CANDIDATE_introductory_blurb.md` (H-1 v6, written late on
+  18 November 2026 with the owner's production decisions; a CANDIDATE until he ratifies it, then in `doc/HANDOVER/`).
+  The installed edition is H-1 v5 (RAT-37; `doc/HANDOVER/Claude_Primary_Handover_H1_v5_introductory_blurb.md`), which
+  describes the state up to slice 3's pass and knows nothing of entries 93 to 98.
   In the blurb's last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v5's section 0B first and
   its section 12.10 for the code work.
 - **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
@@ -167,7 +172,7 @@ durable EX messages are authoritative.
   exchange/CLAUDE_WEB_TOOLS/mhupb/slice2`; the suite with slice 1's `run_suite.py`; the planted defects with
   `mutations_slice2.py` on a separate copy of the tree. Corrections after the review go into that folder's tools
   (`apply_slice2.py`, `slice2_new/`), never into `src/` or `tests/` on `main`. Slice 3 goes in `slice3/`, built on
-  top of slice 2's tree. Next free EX number after `git fetch`: EX_243 at the time of writing.
+  top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
 
@@ -176,7 +181,8 @@ committed by Claude on 18 November 2026; ratified by the owner directly, with no
 entry 87; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, blob `6477493d`)**, with
 register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35, RAT-36 and RAT-37 are in the decision log, for register
 v0.32). H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
-are frozen; H-1 v5 is not refreshed any more: later state goes on this page.
+are frozen. **H-1 v6 exists as a CANDIDATE** (`exchange/CLAUDE_WEB_TOOLS/h1v6/out/`; entry 98), awaiting the owner's
+ratification; it is NOT ratified.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 

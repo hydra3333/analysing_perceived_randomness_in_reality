@@ -1441,3 +1441,29 @@ the installed documents. This log is not a separate approval process.
   package; some code that has passed review changes (the two launchers and the sequencers for the marker and the
   snapshot; `process_check.py`'s root check; `install_records.py`'s Git checks); T017 rehearses the new route.
 - **Still open:** the backup folder's drive; the owner's go for the design note. Nothing has been started.
+
+## 98. 18 November 2026, 23:24 - the owner: nothing deployed now and modified later; backups to T:; the reviewer told (EX_243); handovers updated; then a new Claude chat
+
+- **The owner's words (23:18):** "It also means that any suggestion to deploy current code now and modify later is a no.  we
+  need to tell reviewer what happened and what is decided so they know what standard to review against. Backup will be
+  to T: (perhaps parameter configurable). So once that is done (no code or design work I assume, if you propose that not
+  please pause and tell me first) then you update your handover and all related docs (decisions, etc etc) , chatgpt
+  updates theirs and then a new chat for you."
+- **Decided:** (1) no interim deployment of the current code, in any form (confirms entry 97); (2) the backup folder is
+  on the owner's T: drive, as a setting; (3) the order: the reviewer is told; Claude updates its handover and the related
+  records; the reviewer updates H-2; a new Claude chat starts. No code or design work in this chat.
+- **Done by Claude (documents only; no design, no code):**
+  - `exchange/EX_243_Claude.md` to the reviewer: what happened, the decisions as a table D1 to D12, the facts verified in
+    the installed code, what is NOT decided, and what it means for the review standard. It asks for no ruling; it asks
+    the reviewer to update H-2 and to say now if any decision would harm the science or the records.
+  - **H-1 v6 and its blurb, as CANDIDATES** (`exchange/CLAUDE_WEB_TOOLS/h1v6/`, built by `make_h1_v6.py` from H-1 v5's
+    ratified bytes): section 0B item 12 (where production runs), items 8 and 10, section 10, sections 12.8 and 12.11 (the
+    deployment work), two lessons, the appendices. SHA-256: handover `6dc8185a72006861c860773a18887ad51135f2bd129bce7a549879a17e280353`; blurb
+    `d78249b94ba1af56dd0a2c9cd20fde803ded069098ea4bed04a50b039b97c47c`. H-1 v5 (RAT-37) stays installed until the owner ratifies v6.
+  - `exchange/CONTINUITY_NOW.md` and `exchange/OWNER_ROADMAP.md` brought up to date.
+- **Asked of the owner, not answered yet:** whether to restore the ratified bytes of
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v4_introductory_blurb.md` (changed by his commit `86f6c43` at 23:08, apparently
+  by accident; RAT-34's recorded SHA-256 is `2cfa6cf5...67be`; the file is history and nothing in use depends on it).
+- **Next:** the owner pastes EX_243's block to the reviewer; the reviewer updates H-2; the owner ratifies H-1 v6 (or not)
+  and starts a new Claude chat with its blurb. The new chat's first real task, on the owner's go, is the deployment
+  design note (Fable (High)). The package go and the design-note go are NOT given.
