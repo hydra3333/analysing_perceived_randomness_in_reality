@@ -82,7 +82,7 @@ def scores_folder(game_id: str, batch_id: str, attempt_id: str) -> Path:
 
 # ---------------------------------------------------------------- small readers
 
-def _canonical_file(path: Path, what: str) -> dict:
+def canonical_file(path: Path, what: str) -> dict:
     if OR.absent(path) or path.is_symlink() or not path.is_file():
         raise LeagueRefused(f'{what}: not there')
     raw = path.read_bytes()
@@ -226,7 +226,7 @@ def source_rows(game_id: str, entry: dict) -> list[dict]:
     raw = path.read_bytes()
     if sha256_hex(raw) != entry['score_ledger_sha256']:
         raise LeagueRefused('its score ledger is not the bytes the source list names')
-    sp = _canonical_file(folder / 'scoring_plan.json', 'its scoring plan')
+    sp = canonical_file(folder / 'scoring_plan.json', 'its scoring plan')
     if (sp.get('attempt_id'), sp.get('batch_id'), sp.get('game_id'), sp.get('window_first'), sp.get('window_last'),
             sp.get('plan_digest'), sp.get('evaluator_version')) != (
             aid, entry['batch_id'], game_id, entry['window_first'], entry['window_last'], entry['plan_digest'],
@@ -384,7 +384,7 @@ def manifests(root: Path, game_id: str) -> list[dict]:
     if folder.is_dir():
         for path in sorted(folder.glob('league_*.manifest.json')):
             name = path.name[:-len('.manifest.json')]
-            m = validate_manifest(_canonical_file(path, f'publication manifest {name}'), game_id, name)
+            m = validate_manifest(canonical_file(path, f'publication manifest {name}'), game_id, name)
             out.append({'manifest': m, 'digest': record_digest(m), 'name': name, 'logged': name in logged,
                         'incomplete': not OR.absent(folder / f'{name}.PUBLICATION_INCOMPLETE.json')})
     out.sort(key=lambda p: p['manifest']['version'])
@@ -436,7 +436,7 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
     if batch_kind not in SI.LEAGUE_SOURCE_KINDS:
         raise LeagueRefused(f'{attempt_id}: an exploratory rerun is never admitted (supplement 4 rule 2A)')
     folder = scores_folder(game_id, batch_id, attempt_id)
-    sp = _canonical_file(folder / 'scoring_plan.json', f'{attempt_id}: scoring plan')
+    sp = canonical_file(folder / 'scoring_plan.json', f'{attempt_id}: scoring plan')
     body = {k: v for k, v in sp.items() if k != 'search_log_row'}
     if (record_digest(body) != row.get('plan_digest') or sp.get('attempt_id') != attempt_id or
             sp.get('batch_id') != batch_id or sp.get('game_id') != game_id or sp.get('mode') != 'WF' or
@@ -446,7 +446,7 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
     found = sorted(reports_dir(root, game_id).glob(f'ranking_{game_id}_WF_{first}-{last}_*_{attempt_id}.json'))
     if len(found) != 1:
         raise LeagueRefused(f'{attempt_id}: its report did not complete (no report manifest file)')
-    man = _canonical_file(found[0], f'{attempt_id}: report manifest')
+    man = canonical_file(found[0], f'{attempt_id}: report manifest')
     base = found[0].name[:-len('.json')]
     members = {ext: found[0].with_name(f'{base}.{ext}') for ext in ('txt', 'csv')}
     if (man.get('schema') != 'RANKING_REPORT_MANIFEST_V1' or man.get('attempt_id') != attempt_id or
