@@ -1308,3 +1308,19 @@ the installed documents. This log is not a separate approval process.
   defects caught, none surviving; tree digest `ef2b67e04c500ee940b765bb5a427666430f73ea70fc3a2b1f3e24a1f50e9d13`, reproduced from the repository copy.
 - **Not tested:** as in entry 89 (Windows; the two real attempts' admission; real data).
 - **Next:** the reviewer's focused recheck of EX_241. On a pass, the integrated package on the owner's go.
+
+## 91. 18 November 2026, 20:08 - slice 3 PASSED the reviewer's recheck (EX_242); all three slices passed
+
+- **EX_242 (commit `d642760`): INDEPENDENT FOCUSED SOURCE-REVIEW PASS for the corrected slice 3 (EX_241).** F3-01, F3-02
+  and F3-03 closed; no further slice 3 edit. EX_240's acceptance of the L4, L7 and L8 structure and its answers to Q1 to
+  Q5 stand. The reviewer checked that the counted edits to slice 2's tree, the retrospective OV-1 module, the weekly
+  sequencer and `league_publish.py` are byte-identical to EX_239's. It notes precisely that the 106 mutants were 105
+  caught in the full run plus one caught in a separate rerun. The test figures remain Claude's own runs.
+- **All three slices have now passed source review:** slice 1 (EX_231), slice 2 (EX_237), slice 3 (EX_242). NOT
+  INSTALLED, not integrated, nothing run on real data.
+- **Carried into the integrated package (EX_242 section 5):** the document amendments with the owner's change note of
+  18 November 2026 folded in; the two installed Mode H archive checks to be re-evaluated (removed if they would obstruct
+  normal work); the Windows launchers and process-check chain in T017; the first admission of the two real report
+  attempts (their run folders are on the owner's PC).
+- **Next:** the owner's separate go for the integrated package (EX_242 is not that go). Install, T017, real runs and
+  OV-1's registration each still need their own go.
