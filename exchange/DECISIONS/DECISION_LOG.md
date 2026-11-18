@@ -1387,3 +1387,18 @@ the installed documents. This log is not a separate approval process.
   there; `process_check.py`'s root check loses its `.git` condition; design Appendix J is amended and ratified. Three
   questions are with the owner: the four-mode shape; a marker file so that real-data commands refuse outside production;
   whether to start real work on E: after the install and move later, or to wait for G:.
+
+## 95. 18 November 2026, 22:21 - the owner on the deployment proposal: marker yes; snapshots before and after; rollback is restore from backup; re-runnable
+
+- **The owner's words (22:20):** "ok to marker. if something gets completely borked in prod (always a strong possibility)
+  lets as a part of the beginning and end of a walk-forward or whatever, do a 'date/time in filename' clone or TAR
+  (preferable, max zip compression) or something to a nominated backup folder G: or something ? ROLLBACK = RESTORE FROM
+  BACKUP. happy with your deployment proposal as long as it is generally re-runable."
+- **Decided:** (1) the marker file: yes (real-data commands refuse to run outside the production folder); (2) a
+  date-and-time-named compressed snapshot (TAR preferred, maximum compression) of production to a nominated backup
+  folder at the beginning and at the end of each production job; (3) rollback means restoring from such a backup, no
+  other rollback machinery; (4) the deployment proposal of entry 94 (one tool; `check`, `init`, `update`, `export`) is
+  accepted in outline, on the condition that every mode can be run again safely.
+- **Still open:** whether real work starts on E: straight after the install and moves to G: later, or waits for G:;
+  where the backup folder is; the design note for the reviewer (not started; needs the owner's go). The package go is
+  still NOT given.

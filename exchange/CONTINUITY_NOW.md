@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 22:12 Australia/Adelaide (production layout under discussion: no Git at all in production, entry 94; a deploy tool proposed; the package go is NOT given).
+**Last updated:** 18 November 2026, 22:21 Australia/Adelaide (production layout: deploy tool, marker, snapshots and restore agreed in outline, entry 95; design note and package go NOT given).
 
 ## For the owner: NOW
 
@@ -79,8 +79,11 @@ durable EX messages are authoritative.
   his G: drive, development stays on E:; production must run free of GitHub (OFF-1) and must not need to be a Git
   working tree. Two installed tools use Git today (`install_records.py`; `process_check.py`'s root check). **Settled (entry 94): no Git
   at all in the production folder.** Proposed by Claude, not yet agreed: one deploy tool (`check`, `init`, `update`,
-  `export`), `main` on E: as the release, records copied back one way. Three questions are with the owner (entry 94).
-  Read entries 93 and 94 before proposing.
+  `export`), `main` on E: as the release, records copied back one way. **Agreed in outline by the owner (entry 95),
+  provided every mode is re-runnable:** that tool; a marker file so real-data commands refuse outside production; a
+  date-and-time-named compressed snapshot to a nominated backup folder at the start and end of each production job;
+  rollback = restore from backup. Open: start on E: and move later, or wait for G:; the backup folder; the design note
+  (needs the owner's go). Read entries 93 to 95 before proposing.
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
