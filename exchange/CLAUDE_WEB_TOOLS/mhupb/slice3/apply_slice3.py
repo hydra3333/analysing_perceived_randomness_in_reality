@@ -5,6 +5,11 @@
  registry         MEASURE_REGISTRY_V1.json: the CATCH_UP evidence tier, and OV-1 with its two labelled uses (code plan L5/L7
                   as changed by the owner's clarification of 18 November 2026). The file's `source` field still names
                   R3 as installed; R3's amendment travels with the integrated package.
+ walk_forward     `NothingToFill` (a BatchRefused): a routine fill with nothing missing is told apart from a refusal, so the
+                  development sequencer can go on to publish. Method_Walk_Forward.py prints one machine-readable last
+                  line for a plan of the second kind, as the other tools do (design 6.1).
+ Method_OV1       `record` for a game that is not registered says NOT_REGISTERED and exits 0: nothing is due, and the
+                  weekly sequencer reads that state (EX_237 section 5: the state line, not only the exit code).
  ov1              `publication_names` is connected to the league's publication manifests (supplement 6.8; EX_225
                   RC-225-1; EX_237 section 5): the reconcile step checks the forecast-ledger extent each one pinned.
 Every old string must occur exactly once; the script stops otherwise. Usage: python3 -I apply_slice3.py TREE
@@ -77,4 +82,43 @@ edit(E + 'registry/MEASURE_REGISTRY_V1.json', [
      '    {\n     "label": "OV-1 RETROSPECTIVE WALK-FORWARD - DESCRIPTIVE, NOT FORMAL PROSPECTIVE",\n'
      '     "meaning": "the same arithmetic over forecasts already scored: descriptive, no P value, 40 a reference line only, '
      'never written to the formal ledger"\n    }\n   ]\n  }\n ]\n}\n'),
+])
+
+# ---------------------------------------------------------------- L8: what the sequencers read from their children
+edit(C + 'walk_forward.py', [
+    ("            raise BatchRefused('nothing to fill: every eligible pair of every released variant is covered')\n",
+     "            raise NothingToFill('nothing to fill: every eligible pair of every released variant is covered')\n"),
+    ("\n\ndef roots(kind: str = 'WF_BATCH') -> dict:\n",
+     "\n\nclass NothingToFill(BatchRefused):\n"
+     "    \"\"\"A routine fill found no pair without a canonical score: no plan is made. Not an error (MHUP-B, L8).\"\"\"\n"
+     "\n\ndef roots(kind: str = 'WF_BATCH') -> dict:\n"),
+])
+edit('src/methods/Method_Walk_Forward.py', [
+    ("                print(f\"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} \"\n"
+     "                      f\"--batch {made['batch_id']}\", flush=True)\n"
+     "                return 0\n"
+     "            if args.variants is not None:\n",
+     "                print(f\"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} \"\n"
+     "                      f\"--batch {made['batch_id']}\", flush=True)\n"
+     "                print(f\"[WALK-FORWARD] RESULT state=PLANNED game={args.game} batch={made['batch_id']} \"\n"
+     "                      f\"kind={made['plan_kind']} first={made['window_first']} last={made['window_last']}\", flush=True)\n"
+     "                return 0\n"
+     "            if args.variants is not None:\n"),
+    ("    except (WF.BatchRefused, ValueError) as exc:\n",
+     "    except WF.NothingToFill as exc:\n"
+     "        print(f'[WALK-FORWARD] {exc}. No plan was made and nothing was run.', flush=True)\n"
+     "        print(f'[WALK-FORWARD] RESULT state=NOTHING_TO_FILL game={args.game} batch=-', flush=True)\n"
+     "        return 0\n"
+     "    except (WF.BatchRefused, ValueError) as exc:\n"),
+])
+edit(E + 'Method_OV1.py', [
+    ("        elif args.command == 'record':\n"
+     "            out = OV.record(args.game, echo=echo)\n",
+     "        elif args.command == 'record':\n"
+     "            if OV.OR.absent(OV.registration_path(OV._root(), args.game)):\n"
+     "                echo(f'[OV1] {args.game} is not registered: nothing is due (the owner registers OV-1 once, before '\n"
+     "                     f'its first eligible draw)')\n"
+     "                _result('NOT_REGISTERED', args.game, None)\n"
+     "                return 0\n"
+     "            out = OV.record(args.game, echo=echo)\n"),
 ])
