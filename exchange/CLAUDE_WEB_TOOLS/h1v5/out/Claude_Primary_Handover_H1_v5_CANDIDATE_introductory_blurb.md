@@ -57,7 +57,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   `transitory_data/`, `GAIS/` or any settings file.
 - **The ChatGPT reviewer chat:** the independent reviewer of your designs, code and documents. It commits its own replies
   (`exchange/EX_nnn_ChatGPT.md`) and its own handover files; never edit them. Its rights are protected; support them, never
-  narrow them. Its installed handover is H-2 v2 r1; its newest candidate is in `doc/HANDOVER/` (v3r3 at this writing).
+  narrow them. Its installed handover is H-2 v2 r1; its newest candidate is in `doc/HANDOVER/` (v3r4 at this writing).
 - **Claude Code** on the owner's Windows machine: a local runner only. It carries out task files you write, in throw-away clones
   that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (v0.5).
 - **Messages:** you and the reviewer exchange numbered messages (EX_NNN) through the owner. Fetch, then take the next free
@@ -95,7 +95,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
 - **MHUP-B** (the weekly session, the league table, the back-history and the one formal forward test) is designed and planned
   and ratified (RAT-33; RAT-35: code plan v0.3 and design supplement v0.8), in eight layers and three review slices with
   one install. **Slice 1 (the live forecasting and scoring path) passed review. Slice 2 (the formal test OV-1 and the two
-  kinds of development run) was built, reviewed and corrected, and is with the reviewer. Slice 3 (the league table, the
+  kinds of development run) was built, reviewed, corrected and passed (EX_237). Slice 3 (the league table, the
   report, the sequencers) is not started.** All of it is staged under `exchange/CLAUDE_WEB_TOOLS/mhupb/`; **nothing is
   installed**, and `src/` and `tests/` on `main` are as MHUP-A left them.
 - **OV-1:** one running evidence score per game from every variant's frozen TOP and WORST picks; bar 40 (at most a 1 in 40
@@ -104,7 +104,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
 - **The working principle** (`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`): the science, the
   methods, the calculations, the scoring and the reporting must be right; engineering is proportionate; no over-engineering
   of side issues. It is not a request for shorter reports.
-- **Next:** the reviewer's verdict on slice 2; slice 3 on the owner's go; the integrated package with its document
+- **Next:** slice 3 on the owner's go; the integrated package with its document
   amendments; the Windows rehearsal (T017); the owner's install; then `declare-developed` and OV-1's registration for each
   game, the weekly sessions and the development jobs, each on its own go. After MHUP-B: WF-1C, then the methods still to do
   (OUTLANDISH_01's family probably first, through the normal route).
