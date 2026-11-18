@@ -1479,3 +1479,59 @@ the installed documents. This log is not a separate approval process.
   stays in the history.
 - **Nothing else touched.** No design, no code. The file is history: H-1 v5 (RAT-37) is the installed handover and the
   H-1 v6 candidate's blurb is the one a new chat starts from.
+
+## 100. 19 November 2026, 06:04-06:20 - HO-2: the new Claude chat's first reply (EX_245); the owner's decision on how a restore is done
+
+- **The takeover.** The owner started a new Claude chat at about 06:04 from the H-1 v6 candidate's blurb (commit
+  `de1aa3e`). It read and checked first: 163 of H-1 v6's quoted file hashes match Git, none failed; the two slice tree
+  digests and the environment digests were not reproduced (that needs a build, or the owner's PC). Its first
+  substantive reply is `exchange/EX_245_Claude.md`, which also records the discrepancies found (none blocking).
+- **EX_244 read and accepted** as the basis for the deployment design note. Claude checked the staged slice 3 code (read
+  only): a STOPPED formal OV-1 stream does not block forecasting, scoring or the league table; the development sequencer
+  does not touch OV-1; the retrospective view never writes to the formal ledger. No change to slices 1 to 3 is needed.
+- **The owner's decision (06:16), on how a production restore is done:** "I prefer to rename the old code/data folder
+  tree and restore afresh into a fresh \"standard\" empty tree". So: the old production tree is renamed aside (kept,
+  never deleted), and the chosen verified snapshot is unpacked into a new, empty tree at the standard production path.
+  The details (the renamed tree's name, the checks before the rename, the orphan marker, `.venv`, a restore record) are
+  for the deployment design note. A restore stays a step on the owner's own go.
+- **Commit of EX_245 (06:20):** the owner relayed the reviewer's answer to Claude's question Q1, "EX_245 - YES. Please
+  commit the reply as `exchange/EX_245_Claude.md`". A narrow exception to "no commit before the takeover is accepted",
+  as for EX_216 and EX_218 (entry 64). Normal work is NOT yet authorised: the reviewer's check of the takeover reply is
+  still to come.
+
+## 101. 19 November 2026, 06:21 - RAT-38: H-1 v6 and its blurb ratified as they stand; EX_244 recorded as the governing clarification on restore and replay
+
+- **Source (06:20).** The owner relayed the reviewer chat's text answering EX_245's Q2: "H-1 v6 - RATIFIED AS IT STANDS. I
+  ratify H-1 v6 and its accompanying introductory blurb as currently submitted. No v6r1 is required. Please record this
+  ratification in the decision log and update `CONTINUITY_NOW.md` accordingly. Also record `EX_244_ChatGPT.md` as the
+  latest clarification governing production backup restoration, historical N-1 walk-forward replay and OV-1
+  calculations. ... EX_244 takes precedence over any older, inconsistent restore guidance in the handovers. Please
+  retain the ratified H-1 v6 bytes unchanged and use the decision log and continuity record for this subsequent
+  clarification. This ratification does not authorise deployment design, coding, installation, Windows execution or
+  production runs." The owner added, in his own words: "however, I would like the latest direction/decisions folded in
+  where appropriate at the earliest convenient time."
+- **How Claude read it:** the owner's ratification, given as the text he relayed and endorsed (only the owner ratifies).
+  If that is not what he meant, a correcting entry follows.
+- **RAT-38 is recorded** (RAT-37 was the last number used). Ratified, byte for byte, the candidates of entry 98:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v6.md`, SHA-256
+  `6dc8185a72006861c860773a18887ad51135f2bd129bce7a549879a17e280353`, and
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v6_introductory_blurb.md`, SHA-256
+  `d78249b94ba1af56dd0a2c9cd20fde803ded069098ea4bed04a50b039b97c47c` (both computed by Claude; equal to the files in
+  `exchange/CLAUDE_WEB_TOOLS/h1v6/out/`). **H-1 v6 is the installed Claude handover**; H-1 v5 (RAT-37) stays as history.
+- **Bytes unchanged, as instructed:** unlike RAT-37, the status line is NOT finalised. H-1 v6's header still reads
+  CANDIDATE; that word is frozen authoring-time history, superseded by this entry (as for H-2 v3r4, entry 87). A chat
+  that reads H-1 v6 section 0 item 3 ("if this file's status line still reads CANDIDATE, stop and ask") is answered by
+  this entry and by CONTINUITY_NOW.
+- **EX_244 governs** production backup restoration, historical N-1 walk-forward replay and OV-1 calculations, and takes
+  precedence over older, inconsistent restore guidance in the handovers (H-1 v6 section 12.11 included). In short: a
+  full restore followed by N-1 replay, with OV-1's numbers recomputed, is valid research; no automatic research STOP and
+  no special prospective-evidence reconstruction because an older backup was restored; the formal registered OV-1
+  guarantee keeps its own assumptions, which never block ordinary research computations.
+- **The owner's direction: fold the latest decisions in at the earliest convenient time.** Claude's reading: the next
+  full H-1 edition (v7) folds in EX_244, entry 100's restore decision, this entry and the stale lines EX_245 section 6
+  item 5 lists; the reviewer's H-2 likewise in its own edition; and the ratified documents (the design's deploy
+  procedure, the direction document's backup paragraph) through the integrated package's amendments. When is the
+  owner's call; Claude will propose a moment that does not hold up the design note.
+- **Scope:** the Claude handover's status and the record only. No design, no code, no install, no run, no go for the
+  deployment design note. H-2 v3r6 is still a candidate; H-2 v3r4 (RAT-36) stays the operative reviewer handover.
+- **For the next register edition (v0.32):** record RAT-35 to RAT-38.

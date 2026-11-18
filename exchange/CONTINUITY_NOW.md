@@ -4,10 +4,30 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 23:24 Australia/Adelaide (the owner's production decisions recorded and sent to the reviewer, EX_243; H-1 v6 candidate written; next: a new Claude chat, then the deployment design note on the owner's go; entry 98).
+**Last updated:** 19 November 2026, 06:21 Australia/Adelaide (a new Claude chat's takeover reply EX_245 committed; RAT-38: H-1 v6 ratified as it stands; EX_244 recorded as governing restore and replay; the owner's restore decision; entries 100 and 101). **Normal work is NOT yet authorised: the reviewer's check of EX_245 comes first.**
 
 ## For the owner: NOW
 
+- **NEW CLAUDE CHAT, TAKEOVER UNDER WAY (19 November 2026; entries 100, 101).** It started at about 06:04 from H-1 v6's
+  blurb (commit `de1aa3e`), checked H-1 v6's hashes (163 match, none failed) and wrote its first reply,
+  `exchange/EX_245_Claude.md` (committed at the owner's word, a narrow exception like EX_216). **Next: the reviewer checks
+  EX_245 and sends its questions; Claude answers them blind; then the owner authorises normal work (or not).** No
+  design, code, task file or run until then, and the deployment design note still needs its own go.
+- **RAT-38 (entry 101): H-1 v6 and its blurb RATIFIED AS THEY STAND**, now in `doc/HANDOVER/`
+  (`Claude_Primary_Handover_H1_v6.md`, SHA-256 `6dc8185a...e280353`; blurb `d78249b9...7c47c`). Bytes unchanged: its
+  header still says CANDIDATE, which is frozen history (as for H-2 v3r4). The owner wants the latest decisions folded
+  in at the earliest convenient time (the next full edition, H-1 v7, and the package's document amendments).
+- **EX_244 GOVERNS RESTORE AND REPLAY (entry 101; the owner with the reviewer, 18 November 2026, after H-1 v6 was
+  written):** a full restore from a verified snapshot followed by N-1 walk-forward replay, with OV-1's numbers
+  recomputed, is valid research; no automatic research STOP and no prospective-evidence reconstruction because an older
+  backup was restored; the FORMAL registered OV-1 guarantee keeps its own assumptions, which never block ordinary
+  research computations. It takes precedence over older restore guidance in the handovers (H-1 v6 section 12.11
+  included). The reviewer's H-2 v3r5 candidate was superseded by its H-2 v3r6 candidate (`de1aa3e`); H-2 v3r4 (RAT-36)
+  stays operative.
+- **THE OWNER'S RESTORE DECISION (entry 100, 19 November 2026, 06:16):** "rename the old code/data folder tree and
+  restore afresh into a fresh \"standard\" empty tree": the old production tree is renamed aside (kept, never
+  deleted) and the snapshot unpacked into a new, empty tree at the standard production path. Details are for the
+  deployment design note; a restore is a step on the owner's own go.
 - **MODE H IS COMPLETE AND READ.** Oz Lotto SEALED 15 November 2026 (EX_196); Powerball SEALED 16 November 2026 (EX_199).
   Both AIs read both reports independently and agree (EX_200 to EX_205; "EX_203" in EX_204 and entry 40 means EX_203A).
   **No statistically significant predictive advantage was demonstrated under the predeclared Mode H tests** (Bonferroni
@@ -82,9 +102,9 @@ durable EX messages are authoritative.
   anywhere else. A verified `.zip` snapshot (Python's `zipfile`; to T:, a setting) at the END of every production job;
   a missed one is made first by the next job; rollback = restore from backup. **Build it clean, once: nothing is
   installed or deployed now and changed later.** None of it is designed yet.
-- **THE ORDER NOW (entry 98):** (1) the owner pastes EX_243's block to the reviewer; (2) the reviewer updates H-2;
-  (3) the owner ratifies H-1 v6 (a CANDIDATE in `exchange/CLAUDE_WEB_TOOLS/h1v6/out/`) or not, and starts a NEW CLAUDE
-  CHAT with its blurb; (4) the new chat's first real task, on the owner's go: the deployment design note (Fable (High)),
+- **THE ORDER NOW (entry 98; steps 1 to 3 done by 19 November, 06:20):** (1) done: EX_243 to the reviewer (its
+  replies: H-2 v3r5, EX_244, H-2 v3r6); (2) done: the reviewer's H-2 candidate (v3r6; not yet ratified);
+  (3) done: H-1 v6 ratified (RAT-38) and a NEW CLAUDE CHAT started (takeover reply EX_245, check pending); (4) the new chat's first real task, on the owner's go: the deployment design note (Fable (High)),
   to the reviewer before any code; (5) the deployment layer, reviewed like a slice; (6) the integrated package; (7)
   T017; (8) the first deployment. **No go has been given for the design note or the package.**
 - **Done (entry 99, 18 November 2026, 23:31):** on the owner's word, the ratified bytes of
@@ -94,7 +114,7 @@ durable EX messages are authoritative.
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
   S2-F02 stood). Superseded by EX_236.
-- **Slice 2, first edition, as recorded then:**- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
+- **Slice 2, first edition, as recorded then: EX_232 (entry 83).** Files:
   `exchange/CLAUDE_WEB_TOOLS/mhupb/slice2/` (README there). NOT INSTALLED. 694 tests, 0 failing, on both Pythons;
   94 planted defects caught; tree digest `887731e1...4bedabc4`. EX_232 section 6 lists what was built lean or moved
   to slice 3, and section 7 six questions for the reviewer. The Fable task (slice 2) is finished: Opus is enough
@@ -126,7 +146,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). **Awaited: nothing until slice 3 is submitted.** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). **Awaited: the reviewer's check of the new Claude chat's takeover reply EX_245.** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
@@ -135,13 +155,11 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting the NEWEST blurb,
-  `exchange/CLAUDE_WEB_TOOLS/h1v6/out/Claude_Primary_Handover_H1_v6_CANDIDATE_introductory_blurb.md` (H-1 v6, written late on
-  18 November 2026 with the owner's production decisions; a CANDIDATE until he ratifies it, then in `doc/HANDOVER/`).
-  The installed edition is H-1 v5 (RAT-37; `doc/HANDOVER/Claude_Primary_Handover_H1_v5_introductory_blurb.md`), which
-  describes the state up to slice 3's pass and knows nothing of entries 93 to 98.
-  In the blurb's last line write: "see exchange/CONTINUITY_NOW.md". The new chat reads H-1 v5's section 0B first and
-  its section 12.10 for the code work.
+- **Claude chat ended:** start a new Claude chat by pasting the blurb of the installed handover, H-1 v6 (RAT-38):
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v6_introductory_blurb.md`. Fill in its last line ("see
+  exchange/CONTINUITY_NOW.md" and the commit). Its header says CANDIDATE: frozen history, ratified by RAT-38 (entry
+  101). The new chat reads H-1 v6's section 0B first, then decision log entries 100 onward and EX_244, which governs
+  restore and replay over the handover's older wording.
 - **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
   87): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md` (the word CANDIDATE in its name
   is frozen history). Point the new reviewer chat straight at that full file, then at `exchange/CONTINUITY_NOW.md` and
@@ -177,13 +195,13 @@ durable EX messages are authoritative.
 
 ## Installed handovers (authoritative)
 
-**H-1 v5 (Claude; RAT-37, entry 92; `doc/HANDOVER/Claude_Primary_Handover_H1_v5.md`, SHA-256 `3f0c0b1a...f555a3ae`,
-committed by Claude on 18 November 2026; ratified by the owner directly, with no reviewer ruling on it)** and **H-2 v3r4 (reviewer; RAT-36,
+**H-1 v6 (Claude; RAT-38, entry 101; `doc/HANDOVER/Claude_Primary_Handover_H1_v6.md`, SHA-256 `6dc8185a...e280353`,
+committed by Claude on 19 November 2026, bytes unchanged from the candidate, so its header still reads CANDIDATE)** and **H-2 v3r4 (reviewer; RAT-36,
 entry 87; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, blob `6477493d`)**, with
-register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35, RAT-36 and RAT-37 are in the decision log, for register
-v0.32). H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
-are frozen. **H-1 v6 exists as a CANDIDATE** (`exchange/CLAUDE_WEB_TOOLS/h1v6/out/`; entry 98), awaiting the owner's
-ratification; it is NOT ratified.
+register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 to RAT-38 are in the decision log, for register
+v0.32). H-1 v5 (RAT-37), H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
+are frozen. The `h1v6/out/` candidate files are frozen too. The reviewer's H-2 v3r6 is a CANDIDATE
+(`de1aa3e`), not ratified; H-2 v3r5 was superseded by it.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 
