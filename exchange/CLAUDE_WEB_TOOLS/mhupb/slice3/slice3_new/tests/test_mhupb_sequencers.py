@@ -413,6 +413,31 @@ class Batches(Sequenced):
         self.assertEqual([s['batch_kind'] for s in SI.league_sources(self.proj, self.GAME)], ['WF_BATCH_PLAN_V1', 'ROUTINE_FILL'])
         self.assertEqual(len(self.table_rows()), 2)
 
+    def test_a_fill_waits_for_a_report_that_is_not_yet_admitted(self):
+        """Code plan L4: the existing report attempts are admitted before any routine fill. While a development report
+        is not a canonical source, a fill plans nothing (it would run that report's pairs again) and says what to type;
+        an exploratory rerun's report never stands in the way."""
+        plan = self.v1_batch()
+        attempt = self.report(plan)                            # reported, as the two real attempts are; not admitted
+        code, text = self.batch('--fill')
+        self.assertEqual(code, DBO.EXIT_STOP)
+        said = ''.join(self.out)
+        self.assertIn(f'--report --batch {plan["batch_id"]} --first {plan["window_first"]} --last {plan["window_last"]}', said)
+        self.assertEqual(list((WF.roots('DEV_BATCH')['batches'] / self.GAME).glob('wf-*/plan.json')),
+                         [WF.roots('DEV_BATCH')['batches'] / self.GAME / plan['batch_id'] / 'plan.json'])       # nothing planned
+        code, text = self.batch('--report', '--batch', plan['batch_id'], '--first', str(plan['window_first']),
+                                '--last', str(plan['window_last']))
+        self.assertEqual(code, 0, text + ''.join(self.out))
+        self.assertEqual([c[3] for c in self.calls], ['BATCH', 'ADMITTED', 'PUBLISHED'])        # the report it had; not again
+        self.assertEqual(SI.league_sources(self.proj, self.GAME)[0]['attempt_id'], attempt)
+        m = self.members()[0]
+        code, text = self.batch('--rerun', '--first', str(self.first), '--last', str(self.first), '--variants',
+                                f'{m["method_id"]}:{m["variant_id"]}')
+        self.assertEqual(code, 0, text + ''.join(self.out))
+        code, text = self.batch('--fill')                      # the rerun's report is in the log and does not block
+        self.assertEqual(code, 0, text + ''.join(self.out))
+        self.assertEqual(self.calls[0][3], 'NOTHING_TO_FILL')
+
     def test_arguments(self):
         for bad in ([], ['--fill', '--rerun'], ['--rerun'], ['--fill', '--first', '1', '--last', '2'], ['--report', '--first',
                     '1', '--last', '2'], ['--fill', '--variants', 'A:B'], ['--batch', 'wf-x', '--first', '1', '--last', '2']):

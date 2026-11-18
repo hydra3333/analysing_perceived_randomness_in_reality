@@ -49,11 +49,13 @@ class Report(L.League, O.Stream):
         super().setUp()
         self.keep = 2
 
-    def history(self, weeks=2, *, register=True):
+    def history(self, weeks=2, *, register=True, dev_keep=None):
         """An admitted development attempt over three prefix draws, then `weeks` forward draws frozen before their
         results, scored and (when registered) recorded by OV-1. Returns the forward targets."""
+        keep, self.keep = self.keep, dev_keep or self.keep     # the development batch may hold fewer variants
         plan = self.v1_batch()
         LP.admit(self.GAME, attempt_id=self.report(plan))
+        self.keep = keep
         if register:
             self.register()
         targets = []
@@ -221,6 +223,21 @@ class Retrospective(Report):
                          (t, 'V0_SKIPPED', 0, None, NUM.fixed_text(NUM.S)))
         self.assertEqual(v['skipped_v0'], 1)
 
+    def test_reaching_the_reference_line_is_reported_as_an_observation(self):
+        """The first draw at or above 40 is named once, as an observation about history, with no P value. (Invented
+        data cannot reach 40, so the kernel's comparison is made to say so from the second draw on.)"""
+        self.history(register=False, weeks=1)
+        data, _pins = LS.collect(self.proj, self.GAME)
+        calls = []
+        with mock.patch.object(NUM, 'crossing', lambda sums: calls.append(1) or len(calls) >= 2):
+            v = RET.view(self.proj, self.GAME, data)
+        self.assertEqual(v['first_target_at_or_above_reference'], v['series'][1]['target'])
+        self.assertEqual([s['at_or_above_reference'] for s in v['series']], [False, True, True, True])
+        text = '\n'.join(RET.lines(v))
+        self.assertIn(f'first reached at draw {v["series"][1]["target"]} (an observation about history; not the '
+                      f'registered finding and not a P value)', text)
+        self.assertEqual(text.count('(at or above the reference line)'), 3)
+
     def test_the_view_cannot_reach_the_formal_ledger(self):
         """Statically: the retrospective module imports the kernel and the sources, never the recorder, and holds no
         writing call."""
@@ -294,9 +311,11 @@ class Parts(Report):
     def test_nothing_is_pooled_and_every_part_names_its_source(self):
         """Plan L7's gate: search the text, the CSV and the manifest for any pooled or joint figure and find none; a P
         value appears only on local, labelled rows of the secondary tables."""
+        from evaluation import league_table as LT
         self.history()
         LP.publish(self.GAME)
-        res, out = self.run()
+        with mock.patch.object(LT, 'build', side_effect=AssertionError('the report quotes the published table; it never rebuilds one')):
+            res, out = self.run()
         text = out['txt'].decode('ascii')
         rows = list(csv.DictReader(io.StringIO(out['csv'].decode('ascii'))))
         man = json.loads(out['json'])
@@ -376,7 +395,7 @@ class Parts(Report):
         self.assertIn('nothing here is a confirmatory claim', text)
 
     def test_the_matched_view_the_retired_index_and_the_written_files(self):
-        plan, forward = self.history(register=False, weeks=1)
+        plan, forward = self.history(register=False, weeks=1, dev_keep=1)   # only the first variant has development scores
         members = self.members()
         gone = members[1]
         self.keep = 1                                          # the second variant is retired; its records stay
@@ -395,19 +414,27 @@ class Parts(Report):
         self.assertEqual([(r['method'], r['revision'], r['variant']) for r in index['retired']],
                          [(gone['method_id'], gone['method_revision'], gone['variant_id'])])          # once
         entry = index['retired'][0]
-        self.assertEqual((entry['last_scored_target'], entry['score_records']), (forward[-1], 2 * (3 + 1)))
-        self.assertEqual(entry['records_in'], sorted([LS.WEEKLY_SOURCE, LS.SI.league_sources(self.proj, self.GAME)[0]['attempt_id']]))
+        self.assertEqual((entry['last_scored_target'], entry['score_records']), (forward[-1], 2 * 1))
+        self.assertEqual(entry['records_in'], [LS.WEEKLY_SOURCE])
         mt = man['parts']['matched_targets']
-        self.assertEqual((mt['variants'], mt['matched_draws'], mt['first'], mt['last']), (2, 4, plan['window_first'], forward[-1]))
+        self.assertEqual((mt['variants'], mt['matched_draws'], mt['first'], mt['last']), (2, 1, forward[-1], forward[-1]))
         hits = {}
         for s in self.scores():
             hits[s['variant_id']] = hits.get(s['variant_id'], 0) + s['readouts']['TOP']['main_matches']
-        for r in self.dev_records(plan, SI_attempt(self)):
-            if ':TOP:' in r['track_id']:
-                v = r['track_id'].split(':')[2]
-                hits[v] = hits.get(v, 0) + r['main_matches']
+        self.assertEqual(len(self.dev_records(plan, SI_attempt(self))), 2 * 3)      # one variant's, left out of the match
         self.assertEqual({r['variant']: r['hits'] for r in mt['rows']}, hits)
         self.assertEqual(man['parts']['ov1_retrospective']['cohort_scope'], 'EVERY_SCORED_IDENTITY')
+        # the tool ran WF-1B's own Monte Carlo runner (the approved seed policy installed in the tree) on the forward tracks
+        from evaluation import seed_policies as SP
+        policy = SP.approved_policy()
+        if policy is not None:
+            self.assertEqual(man['parts']['secondary']['classes']['FORWARD']['n1'], f'policy {policy["policy_id"]}, R = 10000')
+            rows = list(csv.DictReader(io.StringIO(next(f for f in files if f.name.endswith('.csv')).read_text())))
+            mc = [r for r in rows if r['monte_carlo']]
+            self.assertEqual({r['part'] for r in mc}, {'SECONDARY_FORWARD'})
+            self.assertEqual({r['item'] for r in mc} & {'MR1', 'MR5.MAIN'}, {'MR1', 'MR5.MAIN'})
+            text = next(f for f in files if f.name.endswith('.txt')).read_text()
+            self.assertIn(mc[0]['monte_carlo'], text)
         self.assertEqual(man['parts']['league_table']['state'], 'NOT_AVAILABLE')            # none published: said so
 
     def test_a_failing_report_changes_nothing_else_and_refusals_write_nothing(self):
@@ -431,6 +458,16 @@ class Parts(Report):
             self.assertEqual(TOOL.main(['--game', self.GAME]), 2)
         marker.unlink()
         self.assertEqual((snap(), len(LS.search_rows(self.GAME))), (before, rows + 1))
+        one = self.members()[0]                                # a named cohort at the command line: one variant, scoped
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            self.assertEqual(TOOL.main(['--game', self.GAME, '--ov1-cohort', f'{one["method_id"]}:{one["method_revision"]}:'
+                                        f'{one["variant_id"]}', '--ov1-first', str(self.first)]), 0)
+        named = json.loads(sorted(LS.reports_dir(self.proj, self.GAME).glob('weekly_report_*wr-*[0-9a-f].json'))[-1].read_bytes())
+        part = named['parts']['ov1_retrospective']
+        self.assertEqual((part['cohort_scope'], len(part['cohort']), part['window']), ('NAMED_LIST', 1, [self.first, None]))
+        for bad in ('E_6:1', 'a:b:c:d', ':1:x'):
+            with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+                TOOL.main(['--game', self.GAME, '--ov1-cohort', bad])
         with mock.patch.object(RET, 'view', side_effect=RET.RetroRefused('injected disagreement')):
             res, built = self.run()
         self.assertEqual(res['retrospective']['state'], 'NOT_AVAILABLE')

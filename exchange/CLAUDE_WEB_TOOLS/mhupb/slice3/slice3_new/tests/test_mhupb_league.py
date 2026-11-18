@@ -252,6 +252,22 @@ class Figures(League):
         data, _pins = LS.collect(self.proj, self.GAME)
         ident = {'name': 'league_X', 'version': 1, 'latest_draw': LT.latest_draw(data), 'published_utc': 'T'}
         self.assertEqual(LT.build(data, ident), LT.build(json.loads(json.dumps(data)), ident))
+        row = lambda v, t, hits, kind='DEVELOPMENT': {'method': 'M', 'revision': '1', 'variant': v, 'target': t, 'readout': 'TOP',
+                                                    'main': hits, 'pb': 0, 'division': 0, 'kind': kind, 'source': 's',
+                                                    'witnessed': False, 'drawn_main': []}
+        made = dict(data, roster=[], failed=[], not_available=[], mode_h={'rows': [], 'identity': None, 'not_available': 'x'},
+                    rows=[row('A', 1, 1), row('A', 2, 1), row('A', 3, 1), row('A', 4, 1),          # 4 hits in 4 draws: 1
+                          row('B', 1, 0), row('B', 2, 3),                                         # 3 hits in 2 draws: 3/2
+                          row('C', 1, 7),                                                         # one draw: never ranked
+                          row('D', 5, 2), row('D', 6, 1),                                         # 3/2 again: tie, by identity
+                          *[row('E', t, 1 if t > 2 else 0) for t in range(1, 13)]])               # 12 draws, 10 hits late
+        order = [(e['variant'], e['rank']) for e in LT.summarise(made)]
+        self.assertEqual(order, [('B', 1), ('D', 2), ('A', 3), ('E', 4), ('C', None)])           # by rate, not by hits
+        e = {x['variant']: x for x in LT.summarise(made)}
+        self.assertEqual((e['E']['all_hits'], e['E']['last10_hits'], e['E']['missing_targets']), (10, 10, 0))
+        self.assertEqual((e['D']['first_target'], e['D']['last_target'], e['A']['all_chance']), (5, 6, 4 * Fraction(49, 35)))
+        gap = LT.summarise(dict(made, rows=[row('G', 1, 0), row('G', 4, 0)]))[0]
+        self.assertEqual(gap['missing_targets'], 2)                                              # draws 2 and 3
         self.assertEqual(LT.dec(Fraction(1, 8), 2), '0.12')                    # half to even, by whole numbers
         self.assertEqual(LT.dec(Fraction(-3, 8), 2, sign=True), '-0.38')
         self.assertEqual(LT.dec(Fraction(7, 5), 2, sign=True), '+1.40')
@@ -292,11 +308,15 @@ class Sources(League):
         self.assertGreater(int(good['all_draws']), int(good['catch_up_draws']))
         path = LS.scores_folder(self.GAME, self.plan['batch_id'], self.attempt) / 'score_ledger.jsonl'
         raw = path.read_bytes()
-        for damage in (raw[:-1] + b' \n', None):
+        second = self.report(self.plan)                          # another complete attempt, for the admission below
+        shorter = b''.join(raw.splitlines(keepends=True)[:-1])   # still a well-formed ledger: only its digest gives it away
+        for damage in (shorter, raw[:-1] + b' \n', None):
             if damage is None:
                 path.unlink()
             else:
                 path.write_bytes(damage)
+            with self.assertRaisesRegex(LS.LeagueRefused, 'nothing can be admitted until it is'):
+                LP.admit(self.GAME, attempt_id=second)              # its keys cannot be compared with a source that is gone
             res = LP.publish(self.GAME)
             row = self.csv_of(res['name'])[0]
             self.assertEqual(row['not_available'], self.attempt)
@@ -331,6 +351,33 @@ class Sources(League):
         self.assertGreater(sum(e['mode_h'][0] for e in after), 0)
         for a, b in zip(before, after):                      # shown beside; no total moves
             self.assertEqual({k: v for k, v in a.items() if k != 'mode_h'}, {k: v for k, v in b.items() if k != 'mode_h'})
+
+    def test_late_pre_draw_is_counted_once_and_never_forward_and_a_witness_must_be_verified_in_time(self):
+        """Sup 3.5: a LATE_PRE_DRAW record is in the all-draws total, in its own column, never in the forward column.
+        Sup 3.2: the witness count takes only a verified witness of that freeze line, received before the draw."""
+        rows, lines = self.scores(), self.lines()
+        t = rows[0]['target_draw_number']
+        line = WR.freeze_line_for(lines, t)
+        late = [dict(r, effective_class='LATE_PRE_DRAW') if r['target_draw_number'] == t else r for r in rows]
+        with mock.patch.object(WR, 'score_ledger', lambda root, game: late), \
+                mock.patch.object(SI, 'scored_identities', lambda *a: frozenset()):
+            e = LT.summarise(LS.collect(self.proj, self.GAME)[0])[0]
+        self.assertEqual((e['kinds']['LATE_PRE_DRAW'][0], e['forward_draws'], e['all_draws']), (1, 0, self.EXTRA))
+        forward = [dict(r, effective_class='PROSPECTIVE') if r['target_draw_number'] == t else r for r in rows]
+        base = {'schema': WR.WITNESS_SCHEMA, 'game_id': self.GAME, 'target_draw_number': t, 'witness_kind': 'github',
+                'freeze_line_digest': record_digest(line), 'ref': 'abc'}
+        before = WR.utc_text(WR.parse_utc(line['deadline_utc']) - timedelta(hours=1))
+        after = WR.utc_text(WR.parse_utc(line['deadline_utc']) + timedelta(hours=1))
+        cases = (([dict(base, kind='WITNESS_VERIFIED', received_utc=before)], 1),
+                 ([dict(base, kind='WITNESS_RECORDED')], 0),                                       # a claim, not verified
+                 ([dict(base, kind='WITNESS_VERIFIED', received_utc=after)], 0),                   # received after the draw
+                 ([dict(base, kind='WITNESS_VERIFIED', received_utc=before, freeze_line_digest='0' * 64)], 0))
+        for witness, want in cases:
+            with mock.patch.object(WR, 'score_ledger', lambda root, game: forward), \
+                    mock.patch.object(WR, 'witness_ledger', lambda root, game, w=witness: w), \
+                    mock.patch.object(SI, 'scored_identities', lambda *a: frozenset()):
+                e = LT.summarise(LS.collect(self.proj, self.GAME)[0])[0]
+            self.assertEqual((e['forward_draws'], e['forward_witness_verified']), (1, want), witness)
 
     def test_a_branching_correction_chain_refuses(self):
         rows = self.scores()
@@ -407,22 +454,72 @@ class Publication(League):
 
     def test_an_interrupted_publication_whose_table_cannot_be_rebuilt_is_marked_never_logged(self):
         LP.publish(self.GAME)
-        self.change_inputs(1)
-        with self.assertRaises(B.Boom), league_fault(2):      # the manifest and one member exist; no row
+        version = 1
+        for k in (1, 2):                                      # only the manifest exists; the manifest and one member
+            self.change_inputs(k)
+            with self.assertRaises(B.Boom), league_fault(k):
+                LP.publish(self.GAME)
+            with mock.patch.object(LT, 'ORDER_SENTENCE', 'A different sentence.'):  # the bytes can no longer be rebuilt
+                res = LP.publish(self.GAME)
+            version += 2
+            self.assertEqual(res['state'], 'PUBLISHED')
+            self.assertEqual(len(res['repair']['incomplete']), 1, k)
+            self.assertIn(f'_v{version:05d}_', res['name'])   # the marked one keeps its version for ever
+            files = self.archive()
+            marked = res['repair']['incomplete'][0]
+            note = json.loads(files[f'{marked}.PUBLICATION_INCOMPLETE.json'])
+            self.assertEqual(note['manifest_digest'], sha256_hex(files[f'{marked}.manifest.json']))
+            self.assertNotIn(marked, [r['attempt_id'] for r in self.table_rows()])
+            self.check_archive(settled=True)
+            self.assertEqual(LP.repair(self.GAME)['incomplete'], [])          # marked once; never tried again
+            self.assertNotIn(marked, [n['what'].split()[-1] for n in LS.publication_names(self.proj, self.GAME)])
+            self.assertEqual(LP.publish(self.GAME)['state'], 'UP_TO_DATE')     # the inputs have not changed since
+
+    def test_an_unfinished_publication_with_a_damaged_member_is_marked(self):
+        """The manifest and the text member exist; the member's bytes are then damaged. The table can still be rebuilt,
+        but the member in the archive is not it: nothing is overwritten, the publication is marked, never logged."""
+        with self.assertRaises(B.Boom), league_fault(2):
             LP.publish(self.GAME)
-        with mock.patch.object(LT, 'ORDER_SENTENCE', 'A different sentence.'):      # the bytes can no longer be rebuilt
-            res = LP.publish(self.GAME)
-        self.assertEqual(res['state'], 'PUBLISHED')
-        self.assertEqual(len(res['repair']['incomplete']), 1)
-        self.assertIn('_v00003_', res['name'])                # the marked one keeps version 2 for ever
-        files = self.archive()
-        marked = res['repair']['incomplete'][0]
-        note = json.loads(files[f'{marked}.PUBLICATION_INCOMPLETE.json'])
-        self.assertEqual(note['manifest_digest'], sha256_hex(files[f'{marked}.manifest.json']))
-        self.assertNotIn(marked, [r['attempt_id'] for r in self.table_rows()])
-        self.check_archive(settled=True)
-        self.assertEqual(LP.repair(self.GAME)['incomplete'], [])              # marked once; never tried again
-        self.assertNotIn(marked, [n['what'].split()[-1] for n in LS.publication_names(self.proj, self.GAME)])
+        name = next(iter(self.check_archive(settled=False)[0]))
+        member = LS.archive_dir(self.proj, self.GAME) / f'{name}.txt'
+        damaged = member.read_bytes() + b'x'
+        member.write_bytes(damaged)
+        res = LP.repair(self.GAME)
+        self.assertEqual((res['finished'], res['incomplete']), ([], [name]))
+        self.assertEqual(member.read_bytes(), damaged)        # never overwritten
+        self.assertIn('holds other bytes', self.archive()[f'{name}.PUBLICATION_INCOMPLETE.json'].decode('ascii'))
+        self.assertEqual(self.table_rows(), [])
+        self.assertIn('_v00002_', LP.publish(self.GAME)['name'])
+
+    def test_the_tools_other_commands(self):
+        def run(*args):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out), contextlib.redirect_stderr(out):
+                code = TOOL.main([*args, '--game', self.GAME])
+            return code, out.getvalue().splitlines()
+        self.assertEqual(run('history')[0], 2)                # nothing published yet: refused, nothing written
+        with self.assertRaises(B.Boom), league_fault(1):
+            LP.publish(self.GAME)
+        code, lines = run('sources-check')
+        self.assertEqual((code, lines[-1]), (0, f'[LEAGUE] RESULT state=CHECKED game={self.GAME} name=-'))
+        self.assertIn('1 unfinished', lines[0])
+        code, lines = run('repair')
+        self.assertEqual((code, lines[-1]), (0, f'[LEAGUE] RESULT state=REPAIRED game={self.GAME} name=-'))
+        self.assertIn('finished with the same bytes and identity', lines[0])
+        self.assertIn('0 unfinished', run('sources-check')[1][0])
+        for command, state in (('history', 'WRITTEN'), ('history', 'UNCHANGED'), ('reconstruction', 'WRITTEN')):
+            code, lines = run(command)
+            self.assertEqual(code, 0, lines)
+            self.assertRegex(lines[-1], rf'^\[LEAGUE\] RESULT state={state} game={self.GAME} name=league_{command}_{self.GAME}_\S+$')
+        self.assertEqual(len(list(LS.derived_dir(self.proj, self.GAME).iterdir())), 2)
+        code, lines = run('admit', '--attempt', 'rr-' + '0' * 32)
+        self.assertEqual((code, lines[-1]), (2, f'[LEAGUE] RESULT state=REFUSED game={self.GAME} name=-'))
+        with mock.patch.object(LP, 'publish', side_effect=RuntimeError('disk')):
+            code, lines = run('publish')
+        self.assertEqual((code, lines[-1]), (1, f'[LEAGUE] RESULT state=FAILED game={self.GAME} name=-'))
+        for bad in (['admit'], ['admit', '--attempt', 'a', '--batch', 'b'], ['batch-state'], ['admit', '--batch', 'b', '--first', '1']):
+            with self.assertRaises(SystemExit), contextlib.redirect_stderr(io.StringIO()):
+                TOOL.main([*bad, '--game', self.GAME])
 
     def test_a_grown_ledger_does_not_stop_an_interrupted_publication(self):
         """The manifest pins a prefix of every ledger, so a session that runs between the fault and the rerun does not

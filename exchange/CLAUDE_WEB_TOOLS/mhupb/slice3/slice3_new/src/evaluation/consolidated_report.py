@@ -56,7 +56,7 @@ CLASSES = (('FORWARD', 'PROSPECTIVE'), ('CATCH_UP', 'CATCH_UP'))          # kept
 NO_POOLING = ('No figure in this report pools games, kinds of evidence or tests into one P value. Each part names its '
               'sources; a part marked NOT AVAILABLE was not computed.')
 HEADLINE = ('MR7.MAIN', 'MR7.PB', 'MR5.MAIN')                               # the sub-measures shown in the text
-CSV_FIELDS = ('part', 'label', 'game_id', 'unit', 'item', 'n', 'value', 'z', 'p', 'labels', 'source')
+CSV_FIELDS = ('part', 'label', 'game_id', 'unit', 'item', 'n', 'value', 'z', 'p', 'labels', 'source', 'monte_carlo')
 
 
 class ReportRefused(Exception):
@@ -163,7 +163,7 @@ def _measure_row(unit: str, sid: str, sub: dict, track: dict) -> dict:
     z, p, labels = RW._sig_text(sig)
     return {'unit': unit, 'sub_measure': sid, 'n': sub['n'], 'descriptive': RW.describe(sub), 'z_plus': z, 'p_up': p,
             'labels': '+'.join(x for x in (labels if labels != '-' else '', *sub['flags']) if x) or '-',
-            'mc': RW.mc_text(sig), 'track_status': track['status']}
+            'mc': RW.mc_text(sig) or RW.mc_text(sub.get('n1_reference')) or '', 'track_status': track['status']}
 
 
 def matched_part(data: dict) -> dict:
@@ -284,8 +284,8 @@ def build(res: dict, generated_utc: str) -> dict:
     w = out.append
     rows: list[dict] = []
 
-    def add(part, label, unit, item, n='', value='', z='', p='', labels='', source=''):
-        rows.append(dict(zip(CSV_FIELDS, (part, label, g, unit, item, n, value, z, p, labels, source))))
+    def add(part, label, unit, item, n='', value='', z='', p='', labels='', source='', mc=''):
+        rows.append(dict(zip(CSV_FIELDS, (part, label, g, unit, item, n, value, z, p, labels, source, mc))))
 
     def head(title):
         out.extend(['', '=' * 100, title, '=' * 100])
@@ -351,8 +351,11 @@ def build(res: dict, generated_utc: str) -> dict:
                              [[x['unit'], x['sub_measure'], x['n'], x['descriptive'], x['z_plus'], x['p_up'], x['labels']]
                               for x in shown]) if shown else ['  no score line of this class yet'])
         for x in c['rows']:
+            if x['mc']:                                      # the fixed-forecast Monte Carlo reference, beside its figure
+                w(f'  {x["unit"]} {x["sub_measure"]}: {x["mc"]}')
+        for x in c['rows']:
             add(f'SECONDARY_{name}', SECONDARY_LABEL, x['unit'], x['sub_measure'], n=x['n'], value=x['descriptive'],
-                z=x['z_plus'], p=x['p_up'], labels=x['labels'], source='weekly score ledger')
+                z=x['z_plus'], p=x['p_up'], labels=x['labels'], source='weekly score ledger', mc=x['mc'])
 
     head('5. THE MATCHED-TARGET VIEW (TOP ticket, main barrel; only the draws every listed variant has)')
     mt = res['matched']

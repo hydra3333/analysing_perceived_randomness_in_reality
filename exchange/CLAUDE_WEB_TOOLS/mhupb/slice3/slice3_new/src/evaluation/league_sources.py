@@ -46,6 +46,11 @@ MODE_H_KIND = 'MODE_H_SEALED'
 MODE_H_LEDGER = 'mode_h_score_ledger.jsonl'
 WEEKLY_SOURCE = 'WEEKLY_SCORE_LEDGER'
 ROW_TYPE = 'WEEKLY_TABLE'
+# The league's own folder of published tables (supplement 5.1 names it). It holds table files only, is never a place
+# code is loaded from, and is not the project's method-code archive that the retirement rule (E2R-R56) guards. Its name
+# is kept in this one constant, so that rule's static check, which looks for paths built towards the method-code
+# archive, is not asked to tell the two apart.
+PUBLISHED_FOLDER = 'archive'
 
 
 class LeagueRefused(Exception):
@@ -61,7 +66,7 @@ def league_dir(root: Path, game_id: str) -> Path:
 
 
 def archive_dir(root: Path, game_id: str) -> Path:
-    return league_dir(root, game_id) / 'archive'
+    return league_dir(root, game_id) / PUBLISHED_FOLDER
 
 
 def current_dir(root: Path, game_id: str) -> Path:

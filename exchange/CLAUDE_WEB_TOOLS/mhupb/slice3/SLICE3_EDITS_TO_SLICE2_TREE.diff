@@ -1,0 +1,195 @@
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/evaluation/Method_OV1.py slice3/dev/src/evaluation/Method_OV1.py
+--- slice2/dev/src/evaluation/Method_OV1.py	2026-11-18 10:02:17.942193636 +1030
++++ slice3/dev/src/evaluation/Method_OV1.py	2026-11-18 16:00:58.850433994 +1030
+@@ -58,6 +58,11 @@
+                      f'bar {OV.NUM.BAR}')
+                 _result('REGISTERED', args.game, rec['first_target'])
+         elif args.command == 'record':
++            if OV.OR.absent(OV.registration_path(OV._root(), args.game)):
++                echo(f'[OV1] {args.game} is not registered: nothing is due (the owner registers OV-1 once, before '
++                     f'its first eligible draw)')
++                _result('NOT_REGISTERED', args.game, None)
++                return 0
+             out = OV.record(args.game, echo=echo)
+             for line in OV.status_lines(args.game):
+                 echo('[OV1] ' + line)
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/evaluation/ov1.py slice3/dev/src/evaluation/ov1.py
+--- slice2/dev/src/evaluation/ov1.py	2026-11-18 10:02:17.947453465 +1030
++++ slice3/dev/src/evaluation/ov1.py	2026-11-18 16:00:58.849694456 +1030
+@@ -474,9 +474,13 @@
+ def publication_names(root: Path, game_id: str) -> list[dict]:
+     """The forecast-ledger extents and freeze-line digests that the league table's publication manifests name
+     (Sup 6.8, EX_225 RC-225-1), each as {'what', 'lines', 'last_line_digest'} or {'what', 'target', 'freeze_line_digest'}.
+-    The league table is layer L4 (slice 3): until its manifests exist there is nothing to name, and its reader is
+-    connected here in that slice."""
+-    return []
++    The reader is the league's own (layer L4); a manifest that does not validate blocks, for an absence of evidence
++    is never taken as evidence of absence."""
++    from . import league_sources as LS
++    try:
++        return LS.publication_names(root, game_id)
++    except LS.LeagueRefused as exc:
++        raise OV1Blocked(f'the league table\'s publication records do not verify: {exc}') from None
+ 
+ 
+ def reconcile(root: Path, game_id: str, st: dict, lines, torn: bool, now: datetime) -> None:
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/evaluation/registry/MEASURE_REGISTRY_V1.json slice3/dev/src/evaluation/registry/MEASURE_REGISTRY_V1.json
+--- slice2/dev/src/evaluation/registry/MEASURE_REGISTRY_V1.json	2026-11-17 20:14:02.548358882 +1030
++++ slice3/dev/src/evaluation/registry/MEASURE_REGISTRY_V1.json	2026-11-18 16:00:58.849828358 +1030
+@@ -123,6 +123,10 @@
+    "meaning": "forecasts frozen and published before their draws"
+   },
+   {
++   "tier": "CATCH_UP",
++   "meaning": "forecasts made by the weekly session for a draw whose result was already accepted: computed from earlier draws only, but not frozen before the draw"
++  },
++  {
+    "tier": "IS_DESCRIPTIVE",
+    "meaning": "in-sample."
+   }
+@@ -148,5 +152,22 @@
+    "origin": "A pattern that persists on genuinely new outcomes",
+    "distinguished_by": "Only HOLDOUT_MODE_H and PROSPECTIVE tiers can show it."
+   }
++ ],
++ "overall_measures": [
++  {
++   "id": "OV-1",
++   "heading": "OV-1 - The one overall measure (one per game; games never combined)",
++   "one_liner": "an evidence score that grows only if the variants' most favoured numbers keep being drawn more often than their least favoured ones.",
++   "uses": [
++    {
++     "label": "OV-1 FORMAL PROSPECTIVE (REGISTERED)",
++     "meaning": "the registered test: one stream per game, every forecast frozen before its draw, bar 40 (if the draws are fair, at most a 2.5% chance per game of ever reaching it, under the registered operating assumptions)"
++    },
++    {
++     "label": "OV-1 RETROSPECTIVE WALK-FORWARD - DESCRIPTIVE, NOT FORMAL PROSPECTIVE",
++     "meaning": "the same arithmetic over forecasts already scored: descriptive, no P value, 40 a reference line only, never written to the formal ledger"
++    }
++   ]
++  }
+  ]
+ }
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/methods/Method_Walk_Forward.py slice3/dev/src/methods/Method_Walk_Forward.py
+--- slice2/dev/src/methods/Method_Walk_Forward.py	2026-11-18 10:02:17.906801248 +1030
++++ slice3/dev/src/methods/Method_Walk_Forward.py	2026-11-18 16:00:58.850308999 +1030
+@@ -74,6 +74,8 @@
+                       f"master version {made['ledger_version']} {made['master_sha256'][:12]}...", flush=True)
+                 print(f"[WALK-FORWARD] next: Run_Experiment.bat Method_Walk_Forward.py run --game {args.game} "
+                       f"--batch {made['batch_id']}", flush=True)
++                print(f"[WALK-FORWARD] RESULT state=PLANNED game={args.game} batch={made['batch_id']} "
++                      f"kind={made['plan_kind']} first={made['window_first']} last={made['window_last']}", flush=True)
+                 return 0
+             if args.variants is not None:
+                 parser.error('--variants belongs to --rerun')
+@@ -89,6 +91,10 @@
+             return WF.run_batch(args.game, args.batch, ADAPTERS, echo=lambda s: print(s, flush=True))
+         print(json.dumps(WF.status(args.game, args.batch), indent=1, sort_keys=True), flush=True)
+         return 0
++    except WF.NothingToFill as exc:
++        print(f'[WALK-FORWARD] {exc}. No plan was made and nothing was run.', flush=True)
++        print(f'[WALK-FORWARD] RESULT state=NOTHING_TO_FILL game={args.game} batch=-', flush=True)
++        return 0
+     except (WF.BatchRefused, ValueError) as exc:
+         print(f'[WALK-FORWARD] REFUSED: {exc}. Nothing was run.', file=sys.stderr, flush=True)
+         return 2
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/methods/_common/release_records.py slice3/dev/src/methods/_common/release_records.py
+--- slice2/dev/src/methods/_common/release_records.py	2026-11-18 10:02:17.904226181 +1030
++++ slice3/dev/src/methods/_common/release_records.py	2026-11-18 16:00:58.849281807 +1030
+@@ -134,6 +134,16 @@
+     return out
+ 
+ 
++def released_history(root: Path) -> dict:
++    """(game, method, revision, variant) -> local release date, for EVERY entry any release record names, retired or
++    superseded ones included (MHUP-B, supplement v0.8 section 3.1: the league table shows them "as published")."""
++    out: dict = {}
++    for r in validate_records(root)['releases']:
++        for e in r['entries']:
++            out.setdefault(_entry(e, r['_file']), r['local_date'])
++    return out
++
++
+ def released_variants(root: Path) -> dict:
+     """(game, method, revision, variant) -> local release date, for the released, unretired entries: every release
+     record's entries, less every entry a record retires or marks superseded_by, and less every entry whose registry
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/src/methods/_common/walk_forward.py slice3/dev/src/methods/_common/walk_forward.py
+--- slice2/dev/src/methods/_common/walk_forward.py	2026-11-18 10:02:17.908718158 +1030
++++ slice3/dev/src/methods/_common/walk_forward.py	2026-11-18 16:00:58.850183519 +1030
+@@ -84,6 +84,10 @@
+     """Refused before any run (and, at plan time, before anything is written)."""
+ 
+ 
++class NothingToFill(BatchRefused):
++    """A routine fill found no pair without a canonical score: no plan is made. Not an error (MHUP-B, L8)."""
++
++
+ def roots(kind: str = 'WF_BATCH') -> dict:
+     """The fixed roots of one batch kind (kind-aware since MHUP-A, design 5.1)."""
+     project = Path(CR.PROJECT_ROOT)
+@@ -299,6 +303,35 @@
+     return pairs
+ 
+ 
++def _unadmitted_reports(game_id: str) -> list:
++    """(batch, first, last) of every development report in the search log whose batch and window no canonical source
++    of the league table has yet, oldest first (MHUP-B, code plan L4: the existing report attempts are admitted before
++    any routine fill, or the fill would run their pairs again). Value-free: the search log, the plans and the source
++    list only. An exploratory rerun's report is never a source and never counts."""
++    from _common import score_identities as SI
++    path = roots()['search_log']
++    if not path.is_file() or path.is_symlink():
++        return []
++    try:
++        listed = {(s['batch_id'], s['window_first'], s['window_last']) for s in SI.league_sources(roots()['project'], game_id)}
++    except OR.RecordRefused as exc:
++        raise BatchRefused(f'the league\'s source list does not read: {exc}') from None
++    out = []
++    for r in csv.DictReader(io.StringIO(path.read_bytes().decode('ascii'))):
++        if r.get('row_type') != 'RANKING_REPORT' or r.get('game_id') != game_id:
++            continue
++        key = (r.get('batch_id'), int(r['window_first']), int(r['window_last']))
++        if key in listed or key in out:
++            continue
++        try:
++            plan = load_plan(game_id, key[0])
++        except BatchRefused:
++            plan = {}                                    # a report whose batch no longer loads still has to be looked at
++        if plan.get('plan_kind') != 'EXPLORATORY_RERUN':
++            out.append(key)
++    return out
++
++
+ def make_dev_plan(game_id: str, plan_kind: str, adapters: Mapping, *, variants=None, first=None, last=None) -> dict:
+     """Freeze a plan of the second kind (create-only) and append one DEV_BATCH search-log row.
+ 
+@@ -326,9 +359,15 @@
+     if plan_kind == 'ROUTINE_FILL':
+         if variants is not None or first is not None or last is not None:
+             raise BatchRefused('a routine fill works out its own pairs: it takes no variants and no window')
++        waiting = _unadmitted_reports(game_id)
++        if waiting:
++            b, s, l = waiting[0]
++            raise BatchRefused(f'a report of batch {b} over draws {s}-{l} is not yet a canonical source of the league '
++                               f'table, so a fill would plan its pairs a second time. Admit it first: '
++                               f'Run_Development_Batch.bat --game {game_id} --report --batch {b} --first {s} --last {l}')
+         pairs = _fill_pairs(game_id, members, last_draw)
+         if not pairs:
+-            raise BatchRefused('nothing to fill: every eligible pair of every released variant is covered')
++            raise NothingToFill('nothing to fill: every eligible pair of every released variant is covered')
+     else:
+         if type(first) is not int or type(last) is not int or first > last:
+             raise BatchRefused('an exploratory rerun needs a window: two whole draw numbers, first <= last')
+diff -ruN '--exclude=__pycache__' -x '*.pyc' slice2/dev/tests/test_mhupb_ov1.py slice3/dev/tests/test_mhupb_ov1.py
+--- slice2/dev/tests/test_mhupb_ov1.py	2026-11-18 10:02:17.950653062 +1030
++++ slice3/dev/tests/test_mhupb_ov1.py	2026-11-18 16:00:58.875677907 +1030
+@@ -1087,7 +1087,8 @@
+             '_common.contract_publication', '_common.contract_runner', '_common.jsonl_ledger', '_common.master_versions',
+             '_common.owner_records', '_common.score_identities', '_common.walk_forward', '_common.weekly_records',
+             '_common.contract_records.canonical', '_common.contract_records.record_digest',
+-            '_common.contract_records.sha256_hex', '_common.game_profiles.get_profile', '..collect', '..ov1_numeric'})
++            '_common.contract_records.sha256_hex', '_common.game_profiles.get_profile', '..collect', '..ov1_numeric',
++            '..league_sources'})        # slice 3: the reader of the league's publication manifests (read-only)
+         common = src.parent / 'methods' / '_common'
+         for live in (common / 'weekly_session.py', common / 'weekly_records.py', common / 'score_identities.py',
+                      common / 'jsonl_ledger.py', src / 'weekly_score.py', src.parent / 'methods' / 'Method_Weekly_Forecast.py',
