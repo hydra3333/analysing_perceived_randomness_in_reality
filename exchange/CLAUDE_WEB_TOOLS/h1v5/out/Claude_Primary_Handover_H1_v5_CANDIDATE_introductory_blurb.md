@@ -10,7 +10,7 @@ the older ones. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
 
 **Note for the owner: which model, when** (Claude's recommendation, 18 November 2026):
 1. **Start the new chat on Opus 5.5.** The takeover is reading and explaining, which Opus does well and cheaply.
-2. **Stay on Opus** for documents, records, task files, packaging, reading run outputs, and most of slice 3 (the league
+2. **Stay on Opus** for documents, records, task files, packaging, reading run outputs, and fixes to slice 3 (the league
    table, the report, the sequencers).
 3. **Switch to Fable (High)** for: a correction to OV-1's arithmetic or recorder; the retrospective OV-1 view's statistics in
    the report; any change to a release rule or gate (what may read which draw, and when); a BLOCKER-level review finding;
@@ -57,7 +57,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   `transitory_data/`, `GAIS/` or any settings file.
 - **The ChatGPT reviewer chat:** the independent reviewer of your designs, code and documents. It commits its own replies
   (`exchange/EX_nnn_ChatGPT.md`) and its own handover files; never edit them. Its rights are protected; support them, never
-  narrow them. Its installed handover is H-2 v2 r1; its newest candidate is in `doc/HANDOVER/` (v3r4 at this writing).
+  narrow them. Its installed handover is H-2 v3r4 in `doc/HANDOVER/` (ratified by the owner, RAT-36).
 - **Claude Code** on the owner's Windows machine: a local runner only. It carries out task files you write, in throw-away clones
   that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` (v0.5).
 - **Messages:** you and the reviewer exchange numbered messages (EX_NNN) through the owner. Fetch, then take the next free
@@ -71,7 +71,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
    `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` and the design supplement
    `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md`; the design
    `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md` (sections 3.4 and 6, Appendices E, F, G, I, J, L);
-   the EX messages from EX_220 on, the newest first; the two slice folders' READMEs and working notes; the reviewer's newest
+   the EX messages from EX_220 on, the newest first; the three slice folders' READMEs and working notes; the reviewer's newest
    handover; `exchange/OWNER_ROADMAP.md`; `exchange/OWNER_REMINDERS.md`; `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`;
    `exchange/README.md`. Check the hashes H-1 quotes with a tool. You may read `source_data/` and `results/`; never write there.
 2. **Your first substantive reply to the owner** explains, in your own words and in plain English: what is installed, what is
@@ -96,7 +96,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   and ratified (RAT-33; RAT-35: code plan v0.3 and design supplement v0.8), in eight layers and three review slices with
   one install. **Slice 1 (the live forecasting and scoring path) passed review. Slice 2 (the formal test OV-1 and the two
   kinds of development run) was built, reviewed, corrected and passed (EX_237). Slice 3 (the league table, the
-  report, the sequencers) is not started.** All of it is staged under `exchange/CLAUDE_WEB_TOOLS/mhupb/`; **nothing is
+  report, the sequencers) is built and with the reviewer (EX_239).** All of it is staged under `exchange/CLAUDE_WEB_TOOLS/mhupb/`; **nothing is
   installed**, and `src/` and `tests/` on `main` are as MHUP-A left them.
 - **OV-1:** one running evidence score per game from every variant's frozen TOP and WORST picks; bar 40 (at most a 1 in 40
   chance of ever reaching it under fair draws; 5% for both games). Two labelled uses: the registered formal prospective
@@ -104,7 +104,7 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
 - **The working principle** (`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`): the science, the
   methods, the calculations, the scoring and the reporting must be right; engineering is proportionate; no over-engineering
   of side issues. It is not a request for shorter reports.
-- **Next:** slice 3 on the owner's go; the integrated package with its document
+- **Next:** the review of slice 3 and any fixes; on the owner's go, the integrated package with its document
   amendments; the Windows rehearsal (T017); the owner's install; then `declare-developed` and OV-1's registration for each
   game, the weekly sessions and the development jobs, each on its own go. After MHUP-B: WF-1C, then the methods still to do
   (OUTLANDISH_01's family probably first, through the normal route).

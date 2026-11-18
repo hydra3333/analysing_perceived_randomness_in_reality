@@ -38,12 +38,12 @@ EX_235 section 2 (the two labelled OV-1 uses), EX_237 section 5 (slice 3's oblig
     T=base/exchange/CLAUDE_WEB_TOOLS/mhupb
     sh $T/slice3/build_dev_slice3.sh base dev $T/slice1 $T/slice2 $T/slice3
     (cd dev && find . -type f \( -path './src/*' -o -path './tests/*' -o -name '.gitignore' \
-        -o -name 'Run_Weekly_Session.bat' -o -name 'Run_Development_Batch.bat' \) ! -name '*.pyc' -print0 \
+        -o -path './Run_Weekly_Session.bat' -o -path './Run_Development_Batch.bat' \) ! -name '*.pyc' -print0 \
         | sort -z | xargs -0 sha256sum | sha256sum)                      # the tree digest quoted in EX_239
     python3 -I $T/slice1/run_suite.py dev out 2                          # the offline suite, one module per process
     python3 -I $T/slice3/mutations_slice3.py dev                         # on a copy of the tree
 
-The digest recipe is slice 2's with the two new launchers added (they are outside `src/` and `tests/`). The launchers
+The digest recipe is slice 2's with the two new launchers at the tree's root added (they are outside `src/` and `tests/`; `-path`, not `-name`, so that the copies under `exchange/` in a full checkout are not taken). The launchers
 are CRLF in a checkout that follows the repository's `.gitattributes` (`*.bat text eol=crlf`); the digest is of such a
 checkout.
 

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 14:36 Australia/Adelaide (the owner gave the go for slice 3, entry 88; SLICE 3 IN PROGRESS; H-2 v3r4 ratified, RAT-36, entry 87).
+**Last updated:** 18 November 2026, 17:14 Australia/Adelaide (slice 3 built and sent for review, EX_239, entry 89; waiting on the reviewer).
 
 ## For the owner: NOW
 
@@ -68,8 +68,11 @@ durable EX messages are authoritative.
   are to be re-evaluated when the integrated package is planned (EX_237 section 2).
 - **The reviewer chat changed on 18 November 2026 (about 11:00);** the new one took over from H-2 v3r3 and refreshed its
   handover to H-2 v3r4 (`d5e810c`), **which the owner ratified (RAT-36; EX_238; entry 87).**
-- **SLICE 3 IS IN PROGRESS (the owner's go, 14:33 on 18 November; entry 88).** Work folder
-  `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (its `WORKING_NOTES.md` says how far it has got). Nothing of it is reviewed.
+- **SLICE 3 IS BUILT AND WITH THE REVIEWER: EX_239 (entry 89).** L4 the league table, L7 the weekly report with the two
+  labelled OV-1 views, L8 the two sequencers and launchers. Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (README
+  there). NOT INSTALLED. 757 tests in 55 modules, 0 failing, on both Pythons (Claude's runs); 100 planted defects
+  caught; tree digest `62304524...1b7f24e3b` (the recipe now includes the two new launchers). EX_239 section 9 lists what
+  was built lean; section 12 has five questions. **Waiting on the reviewer.**
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
   S2-F02 stood). Superseded by EX_236.
 - **Slice 2, first edition, as recorded then:**- **SLICE 2, FIRST EDITION: EX_232 (entry 83).** Files:
@@ -150,7 +153,7 @@ durable EX messages are authoritative.
   exchange/CLAUDE_WEB_TOOLS/mhupb/slice2`; the suite with slice 1's `run_suite.py`; the planted defects with
   `mutations_slice2.py` on a separate copy of the tree. Corrections after the review go into that folder's tools
   (`apply_slice2.py`, `slice2_new/`), never into `src/` or `tests/` on `main`. Slice 3 goes in `slice3/`, built on
-  top of slice 2's tree. Next free EX number after `git fetch`: EX_239 at the time of writing.
+  top of slice 2's tree. Next free EX number after `git fetch`: EX_240 at the time of writing.
 
 ## Installed handovers (authoritative)
 
@@ -195,8 +198,8 @@ are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
 2. Done 17 November: the handover to a fresh Claude chat (EX_216 to EX_219; entry 64).
-3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). Slice 2 done (EX_237 PASS). **Slice 3 in
-   progress** (the owner's go of 18 November, entry 88), then the integrated package with the document amendments (plan section 11), the Windows
+3. **MHUP-B code.** Plan done (RAT-35). Slice 1 done (EX_231 PASS). Slice 2 done (EX_237 PASS). **Slice 3 built and with
+   the reviewer (EX_239; entry 89).** After its acceptance, on the owner's go: the integrated package with the document amendments (plan section 11), the Windows
    rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
    registration of OV-1 before its first forward draw, and the runs, each on its own go.
 4. Done 18 November: the reviewer's H-2 v3r4 ratified (RAT-36). Open: the owner's ratification of H-1 v5.

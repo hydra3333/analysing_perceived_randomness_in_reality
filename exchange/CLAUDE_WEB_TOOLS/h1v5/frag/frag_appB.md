@@ -26,5 +26,5 @@ v5 is a full edition made from H-1 v4's ratified bytes (`cc52ed4f...8d3d`) by co
 
 Every fact added here was taken from the repository on 18 November 2026 or from the records named; every hash was computed from the stored bytes by the builder. No file under `src/`, no root `.bat` and no `requirements.txt` has changed since `cc0ab73`.
 
-**Review:** named in EX_236 for the reviewer's documentary look; refreshed after EX_237 (slice 2 PASS); the owner ratifies.
+**Review:** named in EX_236 for the reviewer's documentary look; refreshed after EX_237 (slice 2 PASS), and again when slice 3 was sent (EX_239) and H-2 v3r4 was ratified (RAT-36); the owner ratifies.
 

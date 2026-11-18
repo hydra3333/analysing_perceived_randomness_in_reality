@@ -1255,3 +1255,35 @@ the installed documents. This log is not a separate approval process.
   on top of slice 2's tree, in `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/`, and sent for review. It is not a go for the
   integrated package, T017, an install, a registration or any run on the owner's PC.
 - **Next:** slice 3, checkpointed to the repository as it is built.
+
+## 89. 18 November 2026, 17:14 - MHUP-B slice 3 built and sent for review (EX_239)
+
+- **What:** layers L4 (the league table: three read-only sources, one score per key, the five-step publication that is
+  finished whole or marked incomplete, admission), L7 (the weekly report with the two labelled OV-1 views; the
+  retrospective view; the retired-revision index) and L8 (the two sequencers, their shared child launcher, the two
+  launchers), on top of slice 2's tree. Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/`. NOT INSTALLED; nothing was run
+  on real data; the adapters did read the committed real score records (counts equal the census of plan section 8).
+- **EX_237 section 5's four obligations are met** (EX_239 section 8): the publication manifests pin the forecast-ledger
+  extent and `ov1.publication_names` reads them; admission takes only complete, correctly labelled attempts; the report
+  gives the formal and the retrospective OV-1 views under their own labels; the weekly sequencer reads OV-1's state line.
+- **The retrospective OV-1 view (the owner's use B)** uses slice 2's kernel unchanged over forecasts already scored. It
+  equals an oracle written in the test (own count of the fair-draw distribution; floating point) to nine places, and
+  over the draws the registered stream counted its X, Z and score are the formal ledger's. Labelled descriptive; no P
+  value; never written to the formal ledger.
+- **Added beyond the plan's words, each with its reason (EX_239 section 12, Q4 and Q5):** admission checks every score
+  against the frozen forecast it scores; a routine fill waits while a development report is not yet a canonical source
+  (so the two existing attempts are admitted first).
+- **Counted edits to code already passed:** seven files (EX_239 section 7), among them `Method_OV1.py record` answering
+  `NOT_REGISTERED` (exit 0) for an unregistered game.
+- **Results (Claude's own cloud runs):** 757 tests in 55 modules, 0 failing, on Python 3.13.18 and 3.15.0b4; 100 planted
+  defects caught, none surviving (two survived the first run and led to sharper tests); tree digest
+  `62304524367973df2cd1217fa3a9b5bdf4fdfa758837372c8dd9a4c1b7f24e3b` (slice 2's recipe plus the two new launchers), reproduced from the repository copy.
+- **Five questions to the reviewer** (EX_239 section 12): the league's folder named `archive` against the retirement
+  rule's static check; no search-log row for `history` and `reconstruction`; the retrospective view's default cohort;
+  the two additions above.
+- **Not tested:** Windows and the launch chain (T017's); the admission of the two real attempts (their run folders are
+  on the owner's PC only); anything on real data.
+- **The handover:** the H-1 v5 candidate and its blurb were refreshed (slice 3 sent; H-2 v3r4 installed, RAT-36). Still a
+  CANDIDATE awaiting the owner's ratification.
+- **Next:** the reviewer's source review of EX_239. Then, on the owner's go, the integrated package with the document
+  amendments; then T017; then the install.
