@@ -1,25 +1,3 @@
-# Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v4
-
-The project owner pastes the text below the line into a new Claude chat to start it. Nothing needs attaching: the repository
-is public. If the new chat cannot reach GitHub, the owner attaches a ZIP of `main` made with
-`git archive -o E:\TEMP\repo_main_no_data.zip HEAD -- . ":(exclude)source_data" ":(exclude)results" ":(exclude)transitory_data" ":(exclude)GAIS"`.
-
-Written by Claude on 17 November 2026 with H-1 v4, the full edition that replaces H-1 v3 (its status is in the register).
-The ChatGPT reviewer chat that took over on 14 November 2026 is in place and checks the new Claude chat's first reply. Fill in `<commit>` (from `git rev-parse HEAD`) and `<date>`.
-
-**Note for the owner: which model, when** (Claude's recommendation, 17 November 2026):
-1. **Start the new chat on Opus 5.5.** The takeover is reading and explaining, which Opus does well and cheaply.
-2. **Stay on Opus** for documents, task files, packaging and reading run outputs.
-3. **Switch to Fable (High)** for MHUP-B's code plan and the core of its code (the evidence score, the live path), any
-   BLOCKER-level review finding, any unexplained STOP, or a cold read before a review round. The new chat should say
-   "Suggest switching to Fable (High) for this" at those points and wait for your "go"; when the Fable work is done it should
-   say so.
-
-**Before you paste it:** fill in the last paragraph. "See exchange/CONTINUITY_NOW.md" is usually enough, as that page is kept
-current; add anything that happened after its last update.
-
----
-
 You are Claude, taking over as the **primary designer and coder** of a research project. The Claude chats before you did this
 work; the last one ended because it had grown too long. Everything it knew is in the public repository:
 - the handover **H-1 v4** (`doc/HANDOVER/Claude_Primary_Handover_H1_v4.md`), one complete file: **read its section 0B first**,
@@ -137,5 +115,8 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   message, so nothing lives only in the chat. At every stage judge whether to refresh the handovers; when the chat grows long,
   say so and offer to write the next handover first.
 
-Since 17 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
-The repository commit is `<commit>`. Today's date is `<date>`.
+Since 17 November 2026: see exchange/CONTINUITY_NOW.md, including its section 'Resuming the MHUP-B slice work', and exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md
+The repository commit is `5812e0af0f0c35619c93fea9614356218d5dd446`. Today's date is `17 November 2026`.
+
+
+
