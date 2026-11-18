@@ -1535,3 +1535,27 @@ the installed documents. This log is not a separate approval process.
 - **Scope:** the Claude handover's status and the record only. No design, no code, no install, no run, no go for the
   deployment design note. H-2 v3r6 is still a candidate; H-2 v3r4 (RAT-36) stays the operative reviewer handover.
 - **For the next register edition (v0.32):** record RAT-35 to RAT-38.
+
+## 102. 19 November 2026, 06:32 - HO-2: TAKEOVER ACCEPTED; the owner authorises normal work (the new Claude chat)
+
+- **The exchange:** EX_245 (Claude's first reply, `c32b899`); the reviewer's five questions Q1 to Q5, relayed by the
+  owner at 06:25 (questions only); EX_246 (Claude's blind answers, written at 06:27 before seeing the reviewer's
+  assessment; committed with this entry).
+- **The owner's message (06:31), relaying the reviewer's verdict and his decision:** "HO-2 TAKEOVER ACCEPTED. The
+  ChatGPT independent reviewer has assessed EX_245 and the blind answers in EX_246 and returned PASS on all five
+  questions, with no material discrepancies or outstanding takeover questions. I accept the new Claude chat's takeover
+  and authorise normal work under the existing project rules. This does not constitute a GO for the deployment design
+  note, deployment-layer coding, the integrated package, T017, installation, registration or any real-data run. Those
+  retain their separate owner approvals. EX_244 remains governing for the scientific validity of restored historical
+  N-1 walk-forward and descriptive OV-1 recalculations. H-1 v7 may be prepared at a convenient point, but it is not a
+  prerequisite to the deployment design note. Please retain EX_245 and EX_246 as the takeover evidence and proceed
+  according to the established authorisation sequence." And in his own words: "you now have the commit authorization
+  which you had prior to this new handover."
+- **So:** normal work is authorised. Claude's commit rights are as before (H-1 v6 section 0B item 4 and 1.6: documents
+  and records under `exchange/` and `CLAUDE_CODE_WORKING_FOLDER_TREE/` freely, into `doc/` once reviewed and ratified;
+  never code into `src/` or `tests/`; never `source_data/`, `results/`, `transitory_data/`, `GAIS/` or settings).
+- **Not authorised by this:** the deployment design note, deployment-layer code, the integrated package, T017, any
+  install, `declare-developed`, OV-1's registration, any real-data run. Each keeps its own go.
+- **The reviewer's PASS** was relayed in the owner's message; no reviewer EX file was committed for it (fetched at
+  06:32). If the reviewer commits one later, it is the record of the PASS.
+- **H-1 v7:** at a convenient point; not a prerequisite to the design note.
