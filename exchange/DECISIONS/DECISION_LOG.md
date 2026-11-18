@@ -1419,3 +1419,25 @@ the installed documents. This log is not a separate approval process.
   Windows 11's File Explorer opens it is not verified.
 - **Still open:** start on E: and move later, or wait for G:; the backup folder's drive; the go for the design note. The
   package go is still NOT given.
+
+## 97. 18 November 2026, 23:14 - the owner: keep the missed-snapshot rule; build it clean, once (no interim arrangement)
+
+- **The owner's words (23:13):** "yes to \"One rule I'd keep\" although how you determine that is obscure to me, it could be
+  created by a weeks-gap walkforward or a new mthod intrioduced or some other reason.  My preference is not to implement
+  something we know we are going to change so lets re-work whatever we have to so the result is we implement clean code
+  and processes."
+- **Decided (1):** if a run's end-of-run snapshot was not made, the next run makes it first. The mechanism Claude proposed,
+  to be stated plainly in the design: every production job, of whatever kind and after whatever gap, leaves a small
+  "snapshot due" file when it finishes; the file is removed only when a verified snapshot exists; a job that finds the
+  file takes the snapshot before doing anything else. It does not depend on why or when the earlier job ran.
+- **Decided (2): no interim arrangement.** This answers the question left open in entries 94 to 96: MHUP-B is NOT
+  installed first on E: with the Git-based procedure and moved later. The deployment design (production on G: with no
+  Git; the deploy tool; the marker; end-of-run snapshots; restore) is designed, reviewed and built first, the existing
+  tools and the ratified install procedure (design Appendix J) are reworked to it, and MHUP-B reaches production by
+  that one clean route. Claude told the owner the cost before he decided: the first forward draws start later (each
+  week before production runs is one draw per game that can be caught up and scored but not counted as forward
+  evidence).
+- **Consequences for the code round:** a further layer (deployment) is designed and reviewed before the integrated
+  package; some code that has passed review changes (the two launchers and the sequencers for the marker and the
+  snapshot; `process_check.py`'s root check; `install_records.py`'s Git checks); T017 rehearses the new route.
+- **Still open:** the backup folder's drive; the owner's go for the design note. Nothing has been started.
