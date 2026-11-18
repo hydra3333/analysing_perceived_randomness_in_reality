@@ -258,7 +258,7 @@ def build(data: dict, identity: dict) -> dict:
                     cell(_pct(e['all_hits'], e['all_chance'])),
                     e['forward_draws'], e['forward_hits'], str(e['forward_chance']), e['forward_witness_verified'],
                     cell(e['last10_hits']),
-                    *[cell(x) for k in KINDS for x in e['kinds'][k]],
+                    *[cell(x) for k in KINDS[:3] for x in e['kinds'][k]],          # forward has its own columns
                     *(e['mode_h'] if data['mode_h']['identity'] else ('', '')),
                     cell(e['worst_draws']), cell(e['worst_hits']),
                     cell(e['powerball_draws']) if game == 'POWERBALL' else '',

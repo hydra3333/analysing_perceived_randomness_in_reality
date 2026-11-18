@@ -467,16 +467,34 @@ def attempt_entry(root: Path, game_id: str, attempt_id: str) -> tuple[dict, list
              'score_ledger_sha256': sha256_hex(raw), 'evaluator_version': sp['evaluator_version']}
     rows = source_rows(game_id, entry)
     selected = {(s[0], s[1], s[2]): s[3] for s in sp['selected_forecasts']}
-    scope = {(m['method_id'], m['variant_id'], t) for m, t in WF.plan_pairs(plan)}
+    # Every score is checked against the frozen forecast it scores (read again here; no outcome is read): the ledger
+    # must hold exactly one record for every available readout of every selected forecast, and each record's matches
+    # must be those of its frozen ticket against the drawn numbers the record itself carries.
+    from . import collect as COL
+    want = {}
+    for (method, variant, t), cell in COL.collect(plan, first, last)['cells'].items():
+        if cell['valid'] and selected.get((method, variant, t)) == cell['forecast_content_digest']:
+            for readout, ticket in cell['entries'].items():
+                want[(method, variant, t, readout)] = ticket
+    got, drawn = set(), {}
     for rec in score_records(raw, game_id, f'score ledger of {attempt_id}'):
-        _g, method, variant, _ro, _m = rec['track_id'].split(':')
-        key = (method, variant, rec['draw_number'])
-        if selected.get(key) != rec['forecast_content_digest'] or key not in scope:
-            raise LeagueRefused(f'{attempt_id}: a score record of {key} is not the score of a forecast its scoring '
+        _g, method, variant, readout, _m = rec['track_id'].split(':')
+        key = (method, variant, rec['draw_number'], readout)
+        ticket = want.get(key)
+        if ticket is None or key in got or selected.get(key[:3]) != rec['forecast_content_digest']:
+            raise LeagueRefused(f'{attempt_id}: a score record of {key} is not the one score of a forecast its scoring '
                                 f'plan selected from its batch')
-    if {(r['method'], r['variant'], r['target']) for r in rows} != set(selected):
-        raise LeagueRefused(f'{attempt_id}: its score ledger does not hold a score for every forecast its scoring plan '
-                            f'selected (the report is not complete)')
+        if drawn.setdefault(rec['draw_number'], (rec['drawn_main'], rec.get('drawn_powerball'))) != \
+                (rec['drawn_main'], rec.get('drawn_powerball')):
+            raise LeagueRefused(f'{attempt_id}: two score records disagree about the numbers drawn in draw {key[2]}')
+        if rec['main_matches'] != len(set(ticket[0]) & set(rec['drawn_main'])) or \
+                (game_id == 'POWERBALL' and rec['powerball_match'] != (1 if ticket[1] == rec['drawn_powerball'] else 0)):
+            raise LeagueRefused(f'{attempt_id}: the score record of {key} does not hold the matches of its frozen ticket '
+                                f'against the drawn numbers it records')
+        got.add(key)
+    if got != set(want) or {k[:3] for k in want} != set(selected):
+        raise LeagueRefused(f'{attempt_id}: its score ledger does not hold a score for every forecast and readout its '
+                            f'scoring plan selected (the report is not complete)')
     return entry, rows
 
 
