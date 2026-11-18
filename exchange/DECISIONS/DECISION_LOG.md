@@ -1402,3 +1402,20 @@ the installed documents. This log is not a separate approval process.
 - **Still open:** whether real work starts on E: straight after the install and moves to G: later, or waits for G:;
   where the backup folder is; the design note for the reviewer (not started; needs the owner's go). The package go is
   still NOT given.
+
+## 96. 18 November 2026, 22:37 - the owner on snapshots: ZIP, and only at the end of a run
+
+- **Format (22:25):** "no tar.xz it must always be understandable by windows i.e. zip is natively displayable by file
+  explorer." So: a standard `.zip` (Deflate, level 9), written with Python's own `zipfile` library (no extra install in
+  any Python), named with the date and time, read back and hash-checked before it counts.
+- **When (22:36):** "even better only backup after the catchup and whatnot run completes since the end of the previous run
+  is essentially the rollback backup." So: one snapshot at the END of each production job, none at the start. This
+  replaces entry 95 item (2)'s "beginning and end".
+- **The production tree, measured by the owner on E: (22:34; `du64`):** about 81,500 files and 211 MB (`results` 80,576
+  files, 206 MB, of which the development run folders are about 144 MB; `src`, `tests`, `archive`, `source_data` and
+  `transitory_data` together 937 files, 4 MB). Claude's estimates, not measured: about 100 MB and one to three minutes
+  per snapshot.
+- **To check on the owner's PC at the first test snapshot:** more than 65,535 files needs the ZIP64 form; whether
+  Windows 11's File Explorer opens it is not verified.
+- **Still open:** start on E: and move later, or wait for G:; the backup folder's drive; the go for the design note. The
+  package go is still NOT given.

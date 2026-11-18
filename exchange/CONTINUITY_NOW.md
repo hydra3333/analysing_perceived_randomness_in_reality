@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 22:21 Australia/Adelaide (production layout: deploy tool, marker, snapshots and restore agreed in outline, entry 95; design note and package go NOT given).
+**Last updated:** 18 November 2026, 22:37 Australia/Adelaide (production layout: deploy tool, marker, end-of-run ZIP snapshots and restore agreed in outline, entries 95 and 96; design note and package go NOT given).
 
 ## For the owner: NOW
 
@@ -81,9 +81,9 @@ durable EX messages are authoritative.
   at all in the production folder.** Proposed by Claude, not yet agreed: one deploy tool (`check`, `init`, `update`,
   `export`), `main` on E: as the release, records copied back one way. **Agreed in outline by the owner (entry 95),
   provided every mode is re-runnable:** that tool; a marker file so real-data commands refuse outside production; a
-  date-and-time-named compressed snapshot to a nominated backup folder at the start and end of each production job;
-  rollback = restore from backup. Open: start on E: and move later, or wait for G:; the backup folder; the design note
-  (needs the owner's go). Read entries 93 to 95 before proposing.
+  date-and-time-named `.zip` snapshot (Python's `zipfile`, verified) to a nominated backup folder at the END of each
+  production job only (entry 96); rollback = restore from backup. Open: start on E: and move later, or wait for G:; the backup folder; the design note
+  (needs the owner's go). Read entries 93 to 96 before proposing.
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
