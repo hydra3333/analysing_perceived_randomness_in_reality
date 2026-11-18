@@ -1348,3 +1348,29 @@ the installed documents. This log is not a separate approval process.
 - **Decision 1 (the go for the integrated package): NOT GIVEN.** The owner wants to discuss it first. Claude has not
   started the package.
 - **For the next register edition (v0.32):** record RAT-35, RAT-36 and RAT-37.
+
+## 93. 18 November 2026, 22:10 - the owner's directions on where production runs (discussion before the package go; no go given)
+
+- **Context:** before giving the go for the integrated package the owner asked how production is to be laid out and
+  maintained (20:16), and answered Claude's options (22:08). This entry records his directions so far; the discussion
+  continues and **the package go is still NOT given**.
+- **Decided: production and development are separate folders (Claude's option A).** Production moves to its own folder
+  tree on the owner's G: drive; development (VS Code, the GitHub clone, Claude Code and its task clones) stays on E:.
+- **Accepted:** the production folder gets its own freshly made `.venv` (a venv cannot be copied); that step needs a short
+  reviewed procedure, being a dependency step.
+- **The owner's direction: production must run free of GitHub, and the requirement that the production folder be a Git
+  working tree "will need to change".** He recalled that this was established near the start of the project. Claude
+  confirmed the ratified rule: OFF-1, `doc/Direction_for_operational_procedures_v0_3r1.md` section 9: "Everything installed
+  runs without GitHub; only the updater needs the internet."
+- **What Claude verified in the installed code (a search of `src/` for every use of Git):** the forecasting, scoring,
+  league, report and updater programs use no Git in normal operation. Two tools do: `package_tools/install_records.py`
+  (the install procedure of design Appendix J is built on Git: steps 0, 12, 13, 17 and 19, and the release record
+  requires the install record committed at HEAD and a clean tree), and `package_tools/process_check.py`, whose root
+  check refuses a folder with no `.git` (so in a folder without Git the weekly session could not resume after an
+  interruption). The updater names Git only in its one-time INIT, already done.
+- **Facts checked for the move:** every program finds the project root from its own file's place (no drive letter or
+  root setting anywhere); the record writer needs hard links (NTFS); the git-ignored run folders exist only on E: and the
+  backup, so production is made by copying, not by a fresh clone; a folder is moved only while no session lock exists.
+- **Open, with the owner:** whether "free of GitHub" means no remote and no network (a local Git folder allowed) or no
+  Git at all in production; how code gets in (an install into a plain folder) and how records get out (a copy to the
+  development clone, then commit and push); and the order of the steps so that the first forward draws are not delayed.

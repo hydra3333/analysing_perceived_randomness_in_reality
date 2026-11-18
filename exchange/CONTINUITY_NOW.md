@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 18 November 2026, 20:12 Australia/Adelaide (H-1 v5 ratified, RAT-37; the archive checks to be removed in the package; the package go under discussion with the owner, NOT given; entry 92).
+**Last updated:** 18 November 2026, 22:10 Australia/Adelaide (the production layout is under discussion with the owner, entry 93; the package go is NOT given).
 
 ## For the owner: NOW
 
@@ -75,6 +75,10 @@ durable EX messages are authoritative.
   F3-03); EX_241 (the three applied). Files: `exchange/CLAUDE_WEB_TOOLS/mhupb/slice3/` (README there). NOT INSTALLED.
   758 tests in 55 modules, 0 failing, on both Pythons (Claude's runs); 106 planted defects caught; tree digest
   `ef2b67e0...1f50e9d13`. **NEXT: the integrated package. THE OWNER HAS NOT GIVEN ITS GO: he wants to discuss it first (entry 92).**
+- **UNDER DISCUSSION WITH THE OWNER (entry 93): where production runs.** Decided so far: production gets its own folder on
+  his G: drive, development stays on E:; production must run free of GitHub (OFF-1) and must not need to be a Git
+  working tree. Two installed tools use Git today (`install_records.py`; `process_check.py`'s root check). Open: local
+  Git allowed or none at all; how code gets in and records get out; the order of steps. Read entry 93 before proposing.
 - **DECIDED BY THE OWNER (entry 92): the package removes the two installed Mode H archive checks** (the results reader's
   opening-record condition at or above the former holdout; the diagnostic route's opening and seal conditions).
 - **SLICE 2, FIRST EDITION: EX_232 (entry 83)**, reviewed in EX_233 (kernel proofs accepted; S2-F01 withdrawn later;
