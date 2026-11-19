@@ -1667,3 +1667,10 @@ the installed documents. This log is not a separate approval process.
   optional early File Explorer check on his PC (its own go).
 - **Model (MC-1):** the Fable task is finished. Opus is enough until the reviewer replies; Fable again for a revision
   that touches the formal OV-1 rule, the barriers or the release identity.
+
+## 109. 20 November 2026, 00:10 - correction of a count in EX_247
+
+- EX_247 section 3 says Claude's second reading of the design note "made nine corrections before sending". **The
+  second reading made 17 counted edits to the draft** (counted from the edit script); nine was Claude's estimate of
+  the substantive ones, written without counting. The examples EX_247 names are right. EX_247 is not edited; the
+  note's content is unaffected. Lesson kept: count before claiming, in a covering note too.
