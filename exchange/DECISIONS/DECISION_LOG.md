@@ -1559,3 +1559,20 @@ the installed documents. This log is not a separate approval process.
 - **The reviewer's PASS** was relayed in the owner's message; no reviewer EX file was committed for it (fetched at
   06:32). If the reviewer commits one later, it is the record of the PASS.
 - **H-1 v7:** at a convenient point; not a prerequisite to the design note.
+
+## 103. 19 November 2026, 22:38 - OWNER DECISION: test on Python 3.15 only; the routine Python 3.13 runs are dropped
+
+- **The owner's words (22:36 and 22:37):** "do we need to run it in bopth pythoin versions given I use 3.15.2 ?", then,
+  after Claude's recommendation: "yes to dropping the routine Python 3.13 runs and testing on 3.15 only. i accept the
+  risk."
+- **So:** Claude's cloud test runs use one interpreter, the newest Python 3.15 build available to the cloud workspace
+  (until now 3.15.0b4). The authoritative runs are on the owner's PC, Python 3.15.2 under Windows, through Claude Code
+  task files and T017. The routine 3.13 runs of H-1 sections 8.3, 12.3, 12.9 and 12.10 end. No one-off 3.13 run is
+  planned.
+- **Why (Claude's reasoning, accepted):** production only ever runs on the owner's 3.15.2 (the fresh production `.venv`
+  is built from it); a 3.13 pass proves nothing about 3.15.2; the cloud's 3.15 build is itself a Linux beta, so the
+  Windows run is the one that counts. Planted-defect checks and the Windows rehearsal are unchanged.
+- **The risk the owner accepts:** a fault that depends on the Python version would show only when he next changes
+  Python. The existing rule covers that moment: after any dependency or Python change, stop until the full suite passes.
+- **To tell the reviewer** in the covering note of the next code submission (its R-2 reproduction right needs to know
+  which interpreter the evidence comes from). Earlier evidence on two Pythons stays as it was recorded.
