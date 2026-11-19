@@ -1674,3 +1674,32 @@ the installed documents. This log is not a separate approval process.
   second reading made 17 counted edits to the draft** (counted from the edit script); nine was Claude's estimate of
   the substantive ones, written without counting. The examples EX_247 names are right. EX_247 is not edited; the
   note's content is unaffected. Lesson kept: count before claiming, in a covering note too.
+
+## 110. 20 November 2026, 02:35 - EX_248 (the design note: RECHECK, six findings); the owner confirms nine choices and gives the go for the revision
+
+- **EX_248 (the reviewer's commit `65e2078`): R-3 DESIGN REVIEW, RECHECK.** The architecture is supported (Git-free
+  production, one tool with five modes, release identity by file hashes, barriers U and P, ZIP snapshots, set-aside and
+  restore). Six findings to resolve on paper before any code: B01 an emergency restore must not depend on the damaged
+  tree passing the healthy-production checks; B02 a stale orphan marker must neither block every restore nor be copied
+  into the restored tree as an active block; B03 the formal OV-1 rule of the draft's section 9 is too discretionary: a
+  source-level trace of five cases and an objective, pre-specified classification are wanted; B04 an export after a
+  restore must not leave a mixed set of records in the clone; B05 snapshot completeness (which commands leave the flag
+  and take a snapshot; a quiet state; the historical lock and wheels of an old release); B06 the production guard must
+  check the path, not only that the marker exists. Section 1 carries the owner's scientific clarification made in his
+  conversation with the reviewer: all eligible methods run impartially; restore and replay are the same chronological
+  process and valid research; no rule is added against an unshown selection mechanism; the registered formal claim is
+  a distinction of inferential labels only.
+- **The owner's words to Claude (02:34), after Claude listed the nine choices EX_248 section 4 relays:** "yes io confirm. go
+  EX_248".
+- **Confirmed by the owner:** (1) `.venv` is not in snapshots; it is rebuilt at a restore from the exact locked wheels of
+  that release. (2) `SNAPSHOT_DUE` is written just before a job's first write. (3) When an overdue snapshot cannot be
+  made, ALL jobs continue with a loud, persistent warning; the owner accepts the loss-of-rollback exposure, `update`
+  included. This relaxes decision D8's "the next job makes it first" (entry 97) for the case where it cannot be made.
+  (4) An orphan marker neither refuses a restore outright nor is copied into the restored tree as an active block: a
+  reboot is recommended, then a fresh clean process check, then the owner's explicit clearance of the stale marker;
+  never while a process is running or uncertain. (5) Formal OV-1: no difference for the research; the actual code is
+  traced to say what the registered claim can still certify, reported truthfully. (6) The production guard checks the
+  path, not only the marker's presence. (7) `restore` is a fifth mode of the one tool. (8) The production folder is
+  `G:\a_p_r_i_r`. (9) The backup folder is `T:\a_p_r_i_r_backups`.
+- **The go:** for the revision of the design note in answer to EX_248 (Fable (High)), to be resubmitted for the R-3
+  recheck as EX_249. Design only: no code, package, Windows step, install, restore or run.
