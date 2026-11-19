@@ -1588,3 +1588,18 @@ the installed documents. This log is not a separate approval process.
 - **Claude's reading, not a new decision:** the one restore that T017 rehearses in a scratch folder (H-1 v6 section 10
   item 4; EX_246 Q3) stays planned, because it is the only check that a snapshot can actually be restored and that
   File Explorer opens it. If the owner did not mean to keep that, a correcting entry follows.
+
+## 105. 19 November 2026, 22:43 - OWNER DECISION: no replay-against-originals comparison; go for H-1 v7
+
+- **The owner's words (22:43):** "we forego item 15 \"Checking a replay against the originals\" ... it is the same as a
+  catchup which does not (cannot) do it either.  go."
+- **So:** after a restore, replayed forecasts are not compared with the originals kept in the renamed-aside tree; a
+  replay is treated exactly like a catch-up. Claude's suggestion (EX_246 Q1, "a useful check that costs nothing") is
+  withdrawn and is not carried into the deployment design note.
+- **Go for H-1 v7** (Opus), a full edition from H-1 v6's ratified bytes folding in the items Claude listed at 22:38 and
+  22:40 (items 1 to 14, 16 and 17; item 15 dropped): EX_244 and the restore method (entry 100); formal OV-1 and the
+  orphan marker after a restore as open design-note items; RAT-38 and the takeover (entry 102); Python 3.15 only
+  (entry 103); no monthly restore test (entry 104); the stale lines EX_245 lists; the header and section 0 item 3; new
+  lessons; the slice digests reproduced; Appendix A rows; the ten safeguards of EX_246 Q3 as the design note's
+  checklist; v7 not a prerequisite to the design note; the reviewer's PASS relayed, not filed; a new blurb. The
+  ratified documents and the reviewer's H-2 are not edited; the owner ratifies v7.
