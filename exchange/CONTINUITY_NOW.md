@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 19 November 2026, 06:32 Australia/Adelaide (HO-2 TAKEOVER ACCEPTED: the reviewer passed EX_245 and the blind answers EX_246; the owner authorised normal work; entry 102). **Next: the owner's go for the deployment design note (none given yet).**
+**Last updated:** 19 November 2026, 22:48 Australia/Adelaide (H-1 v7 CANDIDATE written at the owner's go, entry 105; the owner's decisions of the evening: Python 3.15 only, no monthly restore test, no replay comparison, entries 103 to 105). **Next: the owner ratifies H-1 v7 (or not); the go for the deployment design note is still not given.**
 
 ## For the owner: NOW
 
+- **H-1 v7 CANDIDATE (19 November 2026; entry 105)** in `exchange/CLAUDE_WEB_TOOLS/h1v7/out/` (builder `make_h1_v7.py`, the
+  diffs from v6 beside it): a full edition from H-1 v6's ratified bytes folding in everything decided since v6 (its
+  section 0B item 13 and Appendix B). **Waiting on the owner's ratification**; on ratification only its status line
+  changes and it goes into `doc/HANDOVER/`. Not a prerequisite to the deployment design note.
+- **The owner's decisions of 19 November 2026, evening:** test on **Python 3.15 only**, the routine 3.13 runs dropped,
+  risk accepted (entry 103); **no monthly restore test** (entry 104; the one restore T017 rehearses stays); **no
+  comparison of a replay with the originals**, which a catch-up cannot do either (entry 105).
 - **HO-2 TAKEOVER ACCEPTED; NORMAL WORK AUTHORISED (entry 102, 19 November 2026, 06:31).** The new Claude chat started at
   about 06:04 from H-1 v6's blurb (`de1aa3e`): first reply `exchange/EX_245_Claude.md`; the reviewer's five questions;
   blind answers `exchange/EX_246_Claude.md`; the reviewer's PASS on all five, relayed by the owner. Claude's commit
@@ -181,7 +188,7 @@ durable EX messages are authoritative.
   `sh exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/build_dev_slice1.sh base dev exchange/CLAUDE_WEB_TOOLS/mhupb/slice1`,
   `python3 -I exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/run_suite.py dev OUT 2` (one module per process, without class
   `T12Determinism`), and `python3 -I exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/mutations_slice1.py <a separate copy of dev>`.
-  Second interpreter: `uv python install 3.15` then `uv venv --python 3.15 venv315` and
+  The interpreter (Python 3.15 only, entry 103; the earlier 3.13 runs are history): `uv python install 3.15` then `uv venv --python 3.15 venv315` and
   `uv pip install --python venv315 numpy scipy psutil requests beautifulsoup4 selenium`; run the suite with
   `venv315/bin/python -I`. Use absolute paths in the build script's arguments.
 - **Last known results:** EX_230's tree 623 tests, 0 failing on 3.13.18 and 3.15.0b4, 57 mutants caught, digest

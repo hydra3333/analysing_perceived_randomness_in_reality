@@ -1,0 +1,51 @@
+1c1
+< # Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v6
+---
+> # Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v7
+7,8c7,8
+< Written by Claude late on 18 November 2026 with H-1 v6, a full new edition written at the owner's instruction after he
+< decided how production is to be deployed and run (its status, candidate or ratified, is in H-1 v6's own header and in
+---
+> Written by Claude on 19 November 2026 with H-1 v7, a full new edition written at the owner's go after the takeover of that
+> day and his decisions on restore and testing (its status, candidate or ratified, is in H-1 v7's own header and in
+11c11
+< **Note for the owner: which model, when** (Claude's recommendation, 18 November 2026):
+---
+> **Note for the owner: which model, when** (Claude's recommendation, 19 November 2026):
+29,31c29,31
+< - the handover **H-1 v6** (`exchange/CLAUDE_WEB_TOOLS/h1v6/out/Claude_Primary_Handover_H1_v6_CANDIDATE.md` while it is a
+<   candidate; `doc/HANDOVER/Claude_Primary_Handover_H1_v6.md` once ratified; H-1 v5 in `doc/HANDOVER/` is the installed
+<   edition until then), one complete file: **read its section 0B first** (item 12 above all), then all of it, including
+---
+> - the handover **H-1 v7** (`exchange/CLAUDE_WEB_TOOLS/h1v7/out/Claude_Primary_Handover_H1_v7_CANDIDATE.md` while it is a
+>   candidate; `doc/HANDOVER/Claude_Primary_Handover_H1_v7.md` once ratified; H-1 v6 in `doc/HANDOVER/` is the installed
+>   edition until then), one complete file: **read its section 0B first** (items 12 and 13 above all), then all of it, including
+37c37
+< - the tools and the staged code in `exchange/CLAUDE_WEB_TOOLS/` (`mhupb/slice1/`, `mhupb/slice2/` and their READMEs).
+---
+> - the tools and the staged code in `exchange/CLAUDE_WEB_TOOLS/` (`mhupb/slice1/`, `mhupb/slice2/`, `mhupb/slice3/` and their READMEs).
+72,74c72,75
+<    Read `exchange/CONTINUITY_NOW.md`, then H-1 v6 in full, section 0B first. Then: the decisions log from entry 64 on
+<    (**entries 92 to 98 are the owner's decisions on production deployment**); `exchange/EX_243_Claude.md` and any reply to
+<    it; the working principle and the owner's clarification note of 18 November 2026 in `exchange/DECISIONS/`; OFF-1 in
+---
+>    Read `exchange/CONTINUITY_NOW.md`, then H-1 v7 in full, section 0B first. Then: the decisions log from entry 64 on
+>    (**entries 92 to 98 are the owner's decisions on production deployment; 99 to 105 the later ones**);
+>    `exchange/EX_243_Claude.md` and `exchange/EX_244_ChatGPT.md` (EX_244 governs restore and replay); `exchange/EX_245_Claude.md`
+>    and `EX_246_Claude.md` (the last takeover); the working principle and the owner's clarification note of 18 November 2026 in `exchange/DECISIONS/`; OFF-1 in
+91c92
+< **Where things stood late on 18 November 2026 (H-1 v6 section 0B has the detail; CONTINUITY_NOW.md is newer).**
+---
+> **Where things stood on 19 November 2026 (H-1 v7 section 0B has the detail; CONTINUITY_NOW.md is newer).**
+117a119,125
+> - **Restore and replay (EX_244; the owner, 19 November 2026).** A restore renames the old production tree aside (kept) and
+>   unpacks a verified snapshot into a fresh, empty tree at the standard path. Replaying the N-1 walk-forward afterwards,
+>   with OV-1's numbers recomputed, is valid research: no research STOP, timestamp proof or special recovery procedure.
+>   Only the formal registered OV-1 claim keeps its own assumptions. No monthly restore test; no comparison of a replay
+>   with the originals.
+> - **Testing: Python 3.15 only** (the owner, 19 November 2026): one 3.15 build in the cloud; the authoritative runs are on
+>   the owner's 3.15.2 under Windows, through Claude Code and T017.
+158c166
+< Since 18 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
+---
+> Since 19 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
