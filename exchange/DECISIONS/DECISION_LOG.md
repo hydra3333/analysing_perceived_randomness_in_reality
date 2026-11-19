@@ -1627,3 +1627,19 @@ the installed documents. This log is not a separate approval process.
   not a blocker).
 - **Scope:** the Claude handover's status and the records only. No deployment design, code, tests, install or run.
 - **For the next register edition (v0.32):** record RAT-35 to RAT-39.
+
+## 107. 19 November 2026, 23:51 - OWNER GO: the deployment design note only (Fable (High))
+
+- **The owner's words (23:50):** "OWNER GO - DEPLOYMENT DESIGN NOTE ONLY. I authorise preparation of the deployment design
+  note described in H-1 v7r1 section 12.11. Agreed: switch to Fable (High) for this design work. Use the ratified H-1
+  v7r1 checklist and the existing owner decisions, particularly EX_243, EX_244 and decision-log entries 100-105. Keep the
+  design simple and proportionate. Preserve the project's scientific integrity, existing process safety and the
+  separation between ordinary investigative OV-1 and the formal registered statistical claim. The design must not
+  reintroduce monthly restore testing, replay comparison against originals, unnecessary prospective-evidence recovery
+  machinery or additional deployment complexity contrary to the agreed decisions. Please prepare the design note with
+  the necessary alternatives and your recommendations, then submit it for independent ChatGPT review before seeking my
+  ratification. Scope of this GO: design and its supporting documentary submission only. No deployment code,
+  integration, installation, Windows tests, production restoration or real-data execution is authorised. Each later
+  stage requires its separate GO."
+- **So:** Claude writes the design note (reading the installed and staged code first), commits it under `exchange/` and
+  sends it to the reviewer as an EX message. No code, package, task file or run. The owner ratifies after the review.
