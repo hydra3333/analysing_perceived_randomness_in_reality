@@ -1,0 +1,37 @@
+(a) No formal line lost: restore to the snapshot taken at the end of the last job.
+    the OV-1 ledger after the restore equals the one before, byte for byte: True
+  after the next ordinary week
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1), ('FACTOR', 1), ('ELIGIBILITY', 2), ('FACTOR', 2), ('ELIGIBILITY', 3)]   (targets shown as M+n)
+    status: counted 3, missed 0, score 0.979739214220, stopped None
+(b) Only a FACTOR line lost; its pre-cut-off freeze and eligibility lines are in the snapshot.
+  the old tree when it broke
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1), ('FACTOR', 1)]   (targets shown as M+n)
+    status: counted 2, missed 0, score 0.988226352101, stopped None
+  the restored tree after the results update and one weekly session
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1), ('FACTOR', 1), ('ELIGIBILITY', 2)]   (targets shown as M+n)
+    status: counted 2, missed 0, score 0.988226352101, stopped None
+    the re-derived FACTOR line for M+1: 17 of 17 fields equal the lost line's; different: []
+(c) A pre-cut-off freeze and eligibility line lost, and the restore comes after that draw's cut-off.
+  the old tree before the restore
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1), ('FACTOR', 1), ('ELIGIBILITY', 2), ('FACTOR', 2), ('ELIGIBILITY', 3)]   (targets shown as M+n)
+    status: counted 3, missed 0, score 0.979739214220, stopped None
+    the replayed session: [('FROZE', 1), ('FROZE', 2), ('FROZE_NEXT', 3)]
+  the restored tree after the results update and one weekly session
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1), ('FACTOR', 1), ('MISSED', 2), ('ELIGIBILITY', 3)]   (targets shown as M+n)
+    status: counted 2, missed 1, score 0.988226352101, stopped None
+    M+2 is now a MISSED line: reason MISSED_NO_FREEZE, label RECORDED_AFTER_THE_CUTOFF_FROM_LOCAL_RECORDS
+    ordinary scores of M+2 in the replay: 3 variants; readouts equal to the old tree's for 3 of them; classes ['CATCH_UP']
+    verify() on the restored tree: passes
+(d) The snapshot is older than the registration.
+  the old tree before the restore
+    OV-1 ledger: [('ELIGIBILITY', 0), ('FACTOR', 0), ('ELIGIBILITY', 1)]   (targets shown as M+n)
+    status: counted 1, missed 0, score 0.993758800396, stopped None
+    registration file present after the restore: False
+    record (library call): refused, "OV-1 is not registered for POWERBALL (the owner registers it once, before its first draw)"; the command answers NOT_REGISTERED, exit 0 (EX_239)
+    a second `register` typed before any session is ACCEPTED by the staged code (first target M+1): the code cannot know of the first one
+    one weekly session without the recorder: [('FROZE', 0), ('FROZE_NEXT', 1)] (ordinary work goes on)
+    a second `register` typed after that session is refused by an existing rule: draw 1588 already has a freeze line: OV-1 is registered before its first target is frozen
+(e) The set-aside tree cannot be read. The recorder never looks at it: what it appends in the restored tree is
+    case (c)'s, line for line. Any rule that needs the old tree's ledgers cannot be applied here.
+
+trace finished: 5 cases, 0 failures, 0 errors; python 3.15.0b4

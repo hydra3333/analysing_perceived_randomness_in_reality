@@ -1703,3 +1703,24 @@ the installed documents. This log is not a separate approval process.
   `G:\a_p_r_i_r`. (9) The backup folder is `T:\a_p_r_i_r_backups`.
 - **The go:** for the revision of the design note in answer to EX_248 (Fable (High)), to be resubmitted for the R-3
   recheck as EX_249. Design only: no code, package, Windows step, install, restore or run.
+
+## 111. 20 November 2026, 02:47 - the deployment design note, DRAFT v0.2, sent for the R-3 recheck (EX_249); no owner decision
+
+- **Done under entry 110's go (Fable, High; design only, no code):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_2.md`
+  (a full document; exact diff `NOTE_v0_1_TO_v0_2.diff`; builder `make_note_v0_2.py`), sent as `exchange/EX_249_Claude.md`.
+  All six findings of EX_248 accepted and answered (the note's section 18).
+- **A trace of the passed code on invented data** (`restore_ov1_trace.py`): after a restore the staged recorder
+  re-derives a lost factor line exactly (17 of 17 fields); it appends MISSED for a formerly counted draw whose
+  pre-cut-off freeze line is not in the snapshot, and its own `verify` passes; a second `register` is accepted when the
+  snapshot predates the registration. So the note proposes one objective check in the recorder (a new stop cause
+  `NOT_ESTABLISHED_AFTER_RESTORE`, from the snapshot's time, the restore's time and the cut-off), fed by a restore
+  notice, and a refusal in `register`. Ordinary forecasting, scoring, league tables and the retrospective view are
+  untouched. It is a small edit to passed slice 2 code and an amendment to supplement 6.8: for the reviewer's
+  judgement and the owner's ratification.
+- **Still for the owner, after the recheck (note section 15; none decided, none assumed):** A the run-sheet snapshot
+  after single owner commands; B the exact condition for a stale orphan marker at a restore (the draft makes the
+  restart a checked condition); C the formal OV-1 check (recorder, or report label only); D the two proof-of-concept
+  probes left unguarded; E the optional early File Explorer check on his PC (its own go).
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies; Fable again if the recheck touches
+  section 8's orphan rule or section 9.

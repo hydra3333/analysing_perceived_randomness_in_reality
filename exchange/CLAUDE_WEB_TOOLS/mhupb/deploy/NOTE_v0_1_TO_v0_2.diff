@@ -1,0 +1,682 @@
+1c1
+< # MHUP-B deployment design note - DRAFT v0.1
+---
+> # MHUP-B deployment design note - DRAFT v0.2
+3,5c3,7
+< **Status:** DRAFT for the reviewer's design-stage review (R-3). Not ratified. It authorises nothing.
+< **Written:** 20 November 2026, 00:09 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's go
+< of 19 November 2026, 23:50 (decision log entry 107: the design note only; Fable (High)).
+---
+> **Status:** DRAFT v0.2 for the reviewer's R-3 RECHECK. Not ratified. It authorises nothing. It answers EX_248 (RECHECK;
+> findings B01 to B06) and carries the nine choices the owner confirmed on 20 November 2026 (decision log entry 110).
+> Section 18 says where each finding landed. v0.1 (sent as EX_247) is kept beside it; `NOTE_v0_1_TO_v0_2.diff` is exact.
+> **Written:** 20 November 2026, 02:46 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+> go of 19 November 2026, 23:50 (decision log entry 107) and his go for this revision (entry 110). Fable (High).
+8c10
+< and the formal OV-1 claim). **Base:** `main` at `dd5788d`; staged slices as passed (EX_231, EX_237, EX_242).
+---
+> and the formal OV-1 claim). **Base:** `main` at `9350196`; staged slices as passed (EX_231, EX_237, EX_242).
+15c17
+< | Binds it | Owner decisions D1 to D12 (EX_243; decision log 92 to 98); EX_244 (restore and replay; governs); decision log 100 (how a restore is done), 103 (Python 3.15 only), 104 (no monthly restore test), 105 (no replay comparison), 107 (this go); H-1 v7r1 section 12.11 (the checklist); the working principle of 18 November 2026 |
+---
+> | Binds it | Owner decisions D1 to D12 (EX_243; decision log 92 to 98); EX_244 (restore and replay; governs); decision log 100 (how a restore is done), 103 (Python 3.15 only), 104 (no monthly restore test), 105 (no replay comparison), 107 (the go), 110 (the nine confirmed choices; EX_248 section 1, the owner's scientific clarification); H-1 v7r1 section 12.11 (the checklist); the working principle of 18 November 2026 |
+18c20
+< | Evidence state | DESIGNED. Nothing implemented or tested, except one small probe on invented files (section 14) |
+---
+> | Evidence state | DESIGNED. Nothing implemented or tested, except a probe and a trace on invented files (section 14) |
+35,46c37,55
+<    Python's own `zipfile`, read back and hash-checked before it counts, named with the date and time, in your backup
+<    folder on T:. Every production job ends with one. A small "snapshot due" file makes the next job take it first if
+<    it was missed.
+< 6. **Restore** renames the old tree aside (kept), unpacks the snapshot into a fresh tree at the same path, rebuilds the
+<    Python environment and writes a short restore record. After that you work normally: the updater, then the weekly
+<    session, replay the missing draws one at a time from the draws before each. That is valid research (EX_244). Nothing
+<    is compared with the old tree, no timestamp proof is asked for, nothing stops.
+< 7. **The formal OV-1 claim is kept apart.** A restore never blocks forecasting, scoring, league tables or the
+<    descriptive OV-1 view. Whether a game's *registered formal stream* goes on is settled by one short rule fixed now
+<    (section 9), from a list of line kinds the restore tool prints. No records are carried forward.
+< 8. **A marker file** at the production root. Every launcher refuses without it, so a weekly session or a registration
+<    typed in the E: clone does nothing.
+---
+>    Python's own `zipfile`, checked twice before it counts (the archive read back; the files read again), named with
+>    the date and time, in `T:\a_p_r_i_r_backups`. Every production job ends with one. A "snapshot due" file, written
+>    before a job's first write, makes the next job take a missed one first. If it cannot be made (T: missing), every
+>    job goes on with a loud warning that stays until one is made: your decision, with its risk stated in section 7.
+> 6. **Restore** works even when production is damaged: it needs only a verified snapshot, a clean process check and
+>    your go. It renames the old tree aside (kept), unpacks the snapshot into a fresh tree at `G:\a_p_r_i_r`, rebuilds
+>    the Python environment from that release's own locked wheels and writes a restore record. After that you work
+>    normally: the updater, then the weekly session, replay the missing draws one at a time from the draws before each.
+>    That is the same chronological process and valid research (EX_244; EX_248 section 1). Nothing is compared with the
+>    old tree, no timestamp proof is asked for, nothing stops.
+> 7. **The formal OV-1 claim is kept apart, with no human choice.** A trace of the passed code (section 9) shows the one
+>    thing a restore changes: a draw that was counted before the restore can come back as "missed". The fix is one
+>    objective check in the recorder, fed by a small restore notice: such a draw makes the *registered formal claim*
+>    read "not established from draw T". Forecasting, scoring, league tables and the descriptive OV-1 view never wait
+>    for it and are never changed by it.
+> 8. **A marker file** at the production root, checked with its path at every real-data launch, so nothing real starts
+>    in the E: clone or in a copied or set-aside folder. The proof-of-concept suite still runs where it does today.
+> 9. **A stale orphan marker never blocks a restore for ever and is never copied back as a live block:** restart the PC
+>    (recommended and checked), a fresh clean process check, and your typed acknowledgement (section 8).
+48c57
+< Seven choices are yours (section 15), each with the alternatives and my recommendation.
+---
+> The nine choices you confirmed are recorded in section 15, with five smaller ones still yours.
+80a90,96
+>   9. **The trace of section 9** (the passed slice 3 tree run on the invented weekly project; section 14): after a
+>      restore the recorder re-derives a lost FACTOR line with all 17 fields equal; it records a formerly counted draw as
+>      MISSED when its pre-cut-off freeze line is not in the snapshot and its cut-off has passed; its own `verify` then
+>      passes; and in a tree whose snapshot predates the registration a second `register` is accepted.
+>   10. The owner's existing orphan-clearance utility (`transitory_data/P1P2_Clear_Archived_Real_Orphan_v0_1.py`) is
+>      written for one incident: it is pinned to that marker's SHA-256 and that incident's process identities. A new
+>      marker needs a new reviewed procedure. Section 8 does not change that route; it adds one other.
+88c104
+<     G:\<production>\                 (the owner names it; a short path, section 15 item 8)
+---
+>     G:\a_p_r_i_r\                    (the owner's choice; backups in T:\a_p_r_i_r_backups\)
+91c107
+<       PRODUCTION_SETTINGS.json       the owner's settings: the backup folder (T:...), the wheel folder (section 6).
+---
+>       PRODUCTION_SETTINGS.json       the owner's settings: the backup folder, the wheel folder (section 6).
+99c115,117
+<                                      SNAPSHOT_LOG.jsonl, INIT_RECORD.json, RESTORE_<date>_<time>.json,
+---
+>                                      LOCK_<digest>.txt (the Python lock of each release deployed; section 6),
+>                                      SNAPSHOT_LOG.jsonl, INIT_RECORD.json, RESTORE_<date>_<time>.json (and, beside
+>                                      it, the bytes of any orphan marker a restore set aside as evidence),
+162c180,182
+< both; the longest path. Every other mode starts with the same checks and stops on a refusal.
+---
+> both; the longest path. `init`, `update` and `export` start with the checks that concern them and stop on a
+> refusal. **`restore` does not:** it has its own short list (section 8), because it must work when production is the
+> thing that is broken.
+179c199
+< marker guard keeps real-data jobs from running there; `export` keeps the tracked ones current.
+---
+> production guard (section 10) keeps real-data jobs from running there; `export` keeps the tracked ones current.
+220,223c240,260
+< - **After a restore** production's records legitimately differ from the clone's. `export --after-restore` is allowed
+<   only when production holds a restore record the clone does not; it then copies production's files over the clone's
+<   working files. Git's history keeps every earlier version, so nothing is lost. It never deletes: files the clone has
+<   and production lacks are listed and left.
+---
+> - **Every export is planned before it writes.** The tool first classifies every file on both sides (new, identical,
+>   grown, changed, and in the clone only), and requires the clone's `source_data/`, `results/` and
+>   `production_records/` to have no uncommitted change. If anything is refused it prints the whole list and writes
+>   nothing.
+> - **After a restore** production's records legitimately differ from the clone's, and the clone holds later records
+>   that no longer belong to production's state. An ordinary `export` then refuses (changed records). The owner runs
+>   `export --after-restore`, allowed only when production holds a restore record the clone does not. It makes the
+>   clone's active folders **exactly** production's tracked records, and nothing is deleted:
+>   1. every clone file that is changed, or is in the clone only, is first **moved** to
+>      `superseded_by_restore/<the restore's date and time>/<its same path>` in the clone (bytes checked);
+>   2. then production's files are copied in.
+>   So after it, `source_data/` and `results/` in the clone are one coherent state (production's), and everything that
+>   was there before the restore is in one dated folder, visibly not current, and in Git's history. An interrupted run
+>   is finished by typing the command again (a file already moved with the same bytes is skipped). **Active** therefore
+>   has one meaning: what is under `source_data/` and `results/`; a reader of GitHub is never shown a mixture.
+> - **A worked example (invented names).** Before the restore the clone holds the forecast ledger with freeze lines
+>   for draws 1 to 5, session files S4 and S5, and OV-1's ledger through draw 5. Production is restored to a snapshot
+>   taken after draw 3 and replays draws 4 and 5 (new session R4). Ordinary `export`: REFUSED, listing the forecast
+>   ledger and OV-1's ledger as changed and S4, S5 as in the clone only; nothing written. `export --after-restore`:
+>   the four old files go to `superseded_by_restore/20261203_101500/results/...`; the clone then holds production's
+>   ledgers and R4 only. The commit shows four moves and the new files.
+247c284
+< | 9. The marker guard; every mode re-runnable | Sections 10 and 4 |
+---
+> | 9. The production guard; every mode re-runnable | Sections 10 and 4 |
+249c286
+< | Appendix J's two stated residual risks (D3: three programs no barrier stops; a run straddling the gate copy) | Smaller: with the marker guard every launcher refuses outside production, and P is in place before any file changes. A project program started by hand between two checks remains the stated residual |
+---
+> | Appendix J's two stated residual risks (D3: three programs no barrier stops; a run straddling the gate copy) | Smaller: with the production guard every real-data launcher refuses outside production, and P is in place before any file changes. A project program started by hand between two checks remains the stated residual |
+259,260c296,305
+< - **The wheel folder** holds the wheel files. It is not evidence (every wheel is hash-checked against the lock when
+<   installed), so it lives outside Git and outside the snapshots; recommended place: beside the snapshots on T:.
+---
+> - **Each release has its own lock.** `update` and `init` copy the release's lock file into
+>   `production_records/LOCK_<digest>.txt`, so **every snapshot carries the exact lock of the release it holds**.
+> - **The wheel folder** (recommended: `T:\a_p_r_i_r_backups\wheels`, a setting) holds the wheel files of every lock
+>   ever deployed. Nothing prunes it. It is not evidence (every wheel is hash-checked against the lock when installed),
+>   so it lives outside Git and outside the snapshots.
+> - **A restore rebuilds the environment from the snapshot's own lock,** not from whatever lock is newest on E:. If a
+>   wheel that lock names is missing or has another hash, the tool lists exactly which, writes no marker (so nothing
+>   runs in the fresh tree) and reports RESTORE NOT COMPLETE: ENVIRONMENT NOT BUILT. The owner puts the wheels back (the
+>   same pinned versions fetched again, on a dependency go; they are hash-checked) and types the command again. An old
+>   lock also needs the Python version it was made for; the tool says so if the base Python no longer matches.
+275,279c320,327
+<   its SHA-256 goes into a list stored as the last member (`SNAPSHOT_MANIFEST.json`). Then the archive is **read back**:
+<   every member's bytes are hashed and compared with the list, and each file's size and time are compared with what was
+<   seen before it was read (a file that changed meanwhile fails the snapshot). Only then is it renamed to `<name>.zip`
+<   (never over an existing name), a line is appended to `SNAPSHOT_LOG.jsonl`, and `SNAPSHOT_DUE` is removed. A
+<   `.partial` file is never a snapshot.
+---
+>   its SHA-256 goes into a list stored as the last member (`SNAPSHOT_MANIFEST.json`), with the time the copying began.
+> - **Verified means two checks, both required.** (1) *The archive:* it is read back and every member's bytes are hashed
+>   and compared with the list. (2) *The source:* after the archive is complete, every file in production is read and
+>   hashed **again** and must equal the list, and the set of files must be the same. Production's records are created,
+>   grow, or are replaced by newer ones; none returns to earlier bytes. So files equal at both readings were the same
+>   in between: the snapshot is one state, the state at the moment between the two readings. A file that changed, appeared or vanished fails the snapshot. Only
+>   then is the file renamed to `<name>.zip` (never over an existing name), a line appended to `SNAPSHOT_LOG.jsonl`, and
+>   `SNAPSHOT_DUE` removed. A `.partial` file is never a snapshot. A lock file stops two snapshots running at once.
+285,288c333,343
+< - **Which jobs end with one:** the weekly session and the development batch (their two sequencers), and the deploy
+<   tool's `init` and `update`. **Not** hooked: the updater (it keeps its own backups, and its change is in the next
+<   job's snapshot) and single owner commands such as `declare-developed` and OV-1's registration; their run sheets end
+<   with `Run_Production_Snapshot.bat`. (A registration is the one record a restore must not lose: section 9.)
+---
+> - **Which commands do it by themselves** (flag before the first write, snapshot at the end):
+> 
+>   | Command | Flag and snapshot |
+>   |---|---|
+>   | `Run_Weekly_Session.bat`, `Run_Development_Batch.bat` | automatic, in their sequencers |
+>   | `Run_Results_Updater.bat update` | automatic, in the launcher: flag, the updater, then the snapshot. The updater's own file is not touched. So the first backup after a results update exists even if no weekly session follows |
+>   | the deploy tool's `init` and `update` | automatic |
+>   | `Run_Production_Snapshot.bat` | the snapshot, by hand, at any time |
+>   | single owner commands through the general launchers (`declare-developed`; OV-1's `register` and `stop`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic.** Their run sheets end with `Run_Production_Snapshot.bat`. Until then their change is in no snapshot. This is an exception for the owner's explicit acceptance (section 15, item A) |
+>   | `restore`; `export`; `check`; any read-only command | none (nothing in production changes, or the tree is the snapshot just read) |
+> 
+291,297c346,357
+<   finds it takes that snapshot before anything else (D8), whatever kind of job left it and however long ago. A job
+<   that was refused before it started writes nothing and leaves no flag.
+< - **If the end-of-job snapshot fails** (T: unplugged, disk full): the job's own work stands and nothing is undone; the
+<   flag stays; the job's exit status says so (a new status "complete, snapshot not made" when everything else was
+<   complete; otherwise the job's own status, with the snapshot line printed as well). The live path comes first, as for
+<   the league table.
+< - **If an overdue snapshot cannot be made at a job's start:** section 15 item 3.
+---
+>   finds it tries that snapshot before anything else, whatever kind of job left it and however long ago. A job that was
+>   refused before it started writes nothing and leaves no flag.
+> - **If a snapshot cannot be made** (T: unplugged, disk full, a check fails), at the start or at the end of a job:
+>   **every job goes on** (the owner's decision, entry 110, item 3). The flag stays. Nothing claims a snapshot was made.
+>   A warning in capitals is printed at the start and again as the last lines of the job, by every job, until a
+>   verified snapshot exists; the job's exit status says so (a new status "complete, snapshot not made" when everything
+>   else was complete; otherwise the job's own status, with the warning). The live path comes first.
+>   **The risk the owner accepts, stated plainly:** while the flag stands, the newest rollback point is the last
+>   verified snapshot; a restore then replays everything since. That costs time, never research validity. It can cost a
+>   game's formal OV-1 claim if a counted draw's records exist only in the unsnapshotted stretch (section 9). The
+>   exposure is largest before `update`, which changes the code with no fresh snapshot of the old state; `update` prints
+>   that sentence and the date of the last verified snapshot before it goes on.
+304c364
+< ## 8. Restore (D10; decision log entry 100; EX_244)
+---
+> ## 8. Restore (D10; decision log entries 100 and 110; EX_244; EX_248 B01 and B02)
+306c366,367
+< `restore --snapshot <zip>`, on the owner's own go each time:
+---
+> `restore --snapshot <zip>`, on the owner's own go each time. **It asks nothing of the damaged tree.** It does not run
+> `check`, does not use production's Python, and does not need any file of the old tree to be readable.
+308,335c369
+< 1. **The snapshot is verified in full** (every member against its list) before anything is touched.
+< 2. **Checks on the tree to be set aside:** no project process (the process check, run from the clone's hash-verified
+<    copy, because production's own Python may be what is broken; an unreadable process is a refusal; nothing is
+<    terminated; an uncertain process is treated as alive and the restore waits). **The orphan marker:** section 15
+<    item 4. A session lock, the updater's lock or P left in the old tree by the job that broke do **not** block the
+<    restore: they are files that go aside with the tree, and the restore record lists them.
+< 3. **The formal OV-1 listing** (section 9) is printed and kept for the restore record.
+< 4. **Rename** the production folder to `<name>_SET_ASIDE_<YYYYMMDD>_<HHMMSS>`: one rename, nothing copied, nothing
+<    deleted. Windows refuses it while any file inside is open; then nothing has changed and the tool says what to
+<    close. The marker inside the set-aside tree is then renamed too, so no launcher runs there.
+< 5. **A fresh, empty folder at the standard path;** every member unpacked, each file hashed against the list as it is
+<    written; the marker last.
+< 6. **The environment** rebuilt from the lock and wheel folder and verified; production checked against its own stored
+<    hash list (the code in a snapshot is the code that was deployed then).
+< 7. **The restore record**, create-only, `production_records\RESTORE_<date>_<time>.json`: the snapshot's name and
+<    SHA-256, the set-aside tree's name, what was found in the old tree (locks, the formal OV-1 listing), the times.
+< 8. No snapshot is taken: the restored tree is the snapshot just read.
+< 
+< A fault part-way: the same command again. A fresh tree that was not finished is itself renamed aside
+< (`..._PARTIAL_RESTORE_...`) and the unpacking starts again; the first set-aside tree is never touched again.
+< 
+< **After a restore, ordinary work, each step on its usual go:** the updater brings the results forward; the weekly
+< session catches up one target at a time, each from the draws before it; development jobs, league tables and reports
+< as normal. Per EX_244 this is valid research. Records made in the replay carry their real times and their truthful
+< labels: a forecast made after its draw is catch-up or development evidence, not prospective. **One plain consequence,
+< stated so that nobody is surprised:** forecasts that were genuinely made before their draws, after the snapshot, are
+< in the set-aside tree (and in Git's history if they were exported), not in production; the replayed ones for the same
+< draws are labelled catch-up. That is truthful labelling. Nothing is merged back, compared (entry 105) or recovered.
+---
+> **What it requires (all of these, and nothing else):**
+337,338c371,443
+< **By hand, if the tool or the clone is unavailable:** because a snapshot is an ordinary zip, the owner can rename the
+< folder and extract the zip in File Explorer. The run sheet will say what the tool would have checked.
+---
+> 1. The owner's go: the command typed by him, naming the snapshot.
+> 2. The snapshot verified in full, every member against its list, before anything is touched.
+> 3. Process safety, checked independently of production: the reviewed process tool, from the clone's hash-verified
+>    copy, run with the development environment's Python, applied to the production path whether or not the folder is
+>    whole. Any project Python process, or one whose details cannot be read, is a refusal. Nothing is terminated, and no
+>    acknowledgement overrides it: an uncertain process is treated as alive and the restore waits.
+> 4. Only if an orphan marker is found: the condition under "A stale orphan marker" below.
+> 
+> **What it does, in order:**
+> 
+> 1. **Looks at the old tree, best effort, for the record only:** locks and barriers left behind; an orphan marker;
+>    whether each game's weekly folder holds an OV-1 registration. Whatever cannot be read is recorded as "could not be
+>    read". Nothing found here stops the restore, except the orphan marker's condition.
+> 2. **Renames the old folder** to `G:\a_p_r_i_r_SET_ASIDE_<YYYYMMDD>_<HHMMSS>`: one rename, nothing copied, nothing
+>    deleted. If the old folder is absent, this step is skipped. If Windows refuses (a file inside is open, or the
+>    disk is failing), nothing has changed and the tool says what it met. Then the production marker inside the
+>    set-aside tree, if there is one, is renamed, so no launcher runs there.
+> 3. **Makes a fresh, empty `G:\a_p_r_i_r`,** writes `RESTORE_IN_PROGRESS.json` in it first, and unpacks every member,
+>    hashing each file against the list as it is written. An orphan marker inside the snapshot is not unpacked to its
+>    active place (below).
+> 4. **Writes the restore record** `production_records\RESTORE_<date>_<time>.json` (create-only: the snapshot's name,
+>    SHA-256 and time; the set-aside tree's name; what step 1 found; the times) **and the two restore notices** of
+>    section 9.
+> 5. **Rebuilds the environment from the snapshot's own lock** (section 6) and verifies it; checks the code against the
+>    snapshot's own hash list.
+> 6. **Writes the production marker last** and removes `RESTORE_IN_PROGRESS.json`. Until then no launcher runs there, and
+>    the tool does not say the restore succeeded.
+> 7. No snapshot is taken: the restored tree is the snapshot just read.
+> 
+> **If it stops half-way,** the same command again. A fresh tree still holding `RESTORE_IN_PROGRESS.json` whose
+> unpacking did not finish is itself renamed aside (`..._PARTIAL_RESTORE_...`) and the unpacking starts again. If only
+> the environment failed (a wheel missing), the command continues from step 5. The first set-aside tree is never touched
+> again by any run.
+> 
+> ### A stale orphan marker (EX_248 B02; the owner's decision, entry 110 item 4)
+> 
+> `transitory_data/poc_runs/UNRESOLVED_ORPHAN.json` is the coordinator's record that a process may have been left alive.
+> It is a different thing from the production marker `PRODUCTION_ROOT.json`, which is identity only and is restored
+> normally. An orphan marker can be met in two places: in the old tree, and inside the snapshot. Today's rule: any entry
+> blocks all launches for both games, and only the owner's approved manual clearance procedure clears it. **The smallest
+> change, proposed for ratification as one added exception** (Architecture 5C is a protected block: it is amended by
+> ratification, not edited):
+> 
+> > At a restore, a stale orphan marker is set aside as evidence instead of being cleared in place, when all of these
+> > hold: (a) the tool has shown the marker and a prominent warning that recommends restarting the PC; (b) the PC was
+> > started after the marker was written; (c) a fresh process check, made after that, is CLEAN; (d) the owner types the
+> > fixed acknowledgement sentence. No part can be waived, and (d) never stands in for (b) or (c).
+> 
+> - **Why (b), and how it is checked.** A restart ends every process the marker could name. That is a fact the tool can
+>   check (Windows' start time against the marker's own time, or its file time if the marker cannot be parsed); "I
+>   closed them" is not. So in this route the recommended restart is also verified. **Why (c) as well:** a restart
+>   shows the old processes are gone, not that nothing new was started since.
+> - **No restart since the marker:** the restore refuses and names the two ways forward: restart the PC, or first clear
+>   the marker by the existing route, a clearance procedure written and reviewed for that incident (section 1, fact 10).
+> - **The old tree too damaged to show whether a marker exists:** treated as a marker of unknown time. The tool notes
+>   the time of this first attempt in the backup folder and asks for a restart; (b) is then judged against that time.
+> - **Where the bytes go.** The old tree's marker stays where it is, in the set-aside tree, untouched. A marker inside
+>   the snapshot is unpacked only to `production_records\RESTORE_<date>_<time>_ORPHAN_MARKER.json`. The restore record
+>   gives each one's SHA-256, the start time that satisfied (b) and the check that satisfied (c). **The fresh tree
+>   starts with no active orphan marker.**
+> - **Nothing else about the rule changes.** No chat clears a marker; no tool ends a process; no PID is acted on; and
+>   outside a restore the existing rule stands as it is.
+> 
+> ### After a restore
+> 
+> Ordinary work, each step on its usual go: the updater brings the results forward; the weekly session catches up one
+> target at a time, each from the draws before it; development jobs, league tables and reports as normal. Every eligible
+> method and revision is run, impartially; rankings are outputs. This is the same chronological process as before and
+> valid research (EX_244; EX_248 section 1). Records made in the replay carry their real times and their truthful labels:
+> a forecast made after its draw is catch-up or development evidence, not prospective. **One plain consequence, stated
+> so that nobody is surprised:** forecasts that were genuinely made before their draws, after the snapshot, are in the
+> set-aside tree (and in Git's history if they were exported), not in production; the replayed ones for the same draws
+> are labelled catch-up. That is truthful labelling. Nothing is merged back, compared (entry 105) or recovered.
+342c447
+< ## 9. The formal OV-1 claim after a restore
+---
+> ## 9. The formal OV-1 claim after a restore (EX_248 B03)
+344,406c449,567
+< **What is and is not at stake.** Nothing ordinary: the staged code already goes on when a formal stream is stopped.
+< Only this: may a game's *registered* stream still carry its 2.5% claim? Its missed rule rests on the assumption that no
+< eligible freeze line is ever removed after the fact (supplement 6.8). A restore removes from production every line
+< written after the snapshot. If the recorder simply ran on, a draw that had been genuinely frozen before its cut-off
+< and counted would be recorded as MISSED (factor 1), because its replayed freeze line is later than the cut-off. A
+< restore decided after results are known could then erase counted draws, and the claim would not hold. So the claim
+< needs a rule; the research does not.
+< 
+< **The restore tool's part** is small and holds no draw value. For each game with a registration in the set-aside
+< tree it lists the lines that the set-aside tree's OV-1 ledger and forecast ledger hold beyond the snapshot's copies:
+< line number, kind, target draw number, written time. It prints the list and stores it in the restore record.
+< 
+< **The rule, fixed now so that it is never chosen after the event.** The owner applies it with Claude from that list,
+< before the first weekly session after the restore, and it is recorded in the decision log; if in doubt, F-C. No step of
+< it is needed before any calculation, and no program waits for it:
+< 
+< - **F-A. Nothing beyond the snapshot.** The stream is the same stream. It continues.
+< - **F-B. Only lines the recorder writes again by itself, identically or before any outcome exists.** It continues.
+<   These are exactly: (i) a FACTOR line for a target whose eligibility line and its confirmation are in the snapshot
+<   (the factor is looked up in the table sealed before the outcome; a different result would be the recorder's own
+<   contradiction STOP); (ii) a MISSED line (it is missed again); (iii) the freeze, eligibility and confirmation lines
+<   of a target whose cut-off has not passed when the first session after the restore runs (they are made again before
+<   the cut-off; if that session in fact runs after the cut-off, this is F-C); (iv) catch-up freeze lines, which play no
+<   part in the formal stream.
+< - **F-C. Anything else,** for example: a next-draw freeze line frozen before its cut-off, for a target whose cut-off
+<   has passed, that the snapshot lacks; a STOP line; or the registration itself. The formal claim for that game is
+<   **not established** from there on:
+<   - a lost counted or countable draw, or a lost STOP: the owner records the stop with the existing command
+<     (`Method_OV1.py stop`) before the first session. Every report then shows the stream as stopped, by code that has
+<     already passed review. The stop lands at the stream's open target, so at most one re-derivable factor is given up;
+<   - a lost registration (the snapshot is older than the registration): the game is **not registered again** unless
+<     the owner separately decides it with the reviewer's assessment (no second registration: OD-4; EX_219 C1; EX_244
+<     section 1 D). The restore record says so in words.
+<   In every case forecasting, scoring, the league table and the retrospective OV-1 view go on over every draw. If a
+<   session is run before the rule was applied, nothing ordinary is harmed: under F-B the recorder has only written the
+<   same lines again; under F-C the stop is recorded late, and the restore record's list shows which lines in between
+<   are outside the claim.
+< 
+< **Why F-B is sound:** under it the restored stream ends up with the same counted draws and the same factors as the
+< lost one, whichever snapshot was chosen and whenever; the choice cannot favour any outcome. **Why not more:** a restore
+< to the latest snapshot soon after a job broke, before the next cut-off, is F-A or F-B, which is the common case; only
+< a restore that reaches back past counted draws costs the formal claim, and it costs nothing else.
+< 
+< **Alternatives.** (1) Stop the formal stream on any difference: simplest, but it would end a game's one confirmatory
+< test for a fault that lost nothing of substance. (2) The rule above: recommended. (3) Carry the formal ledger and its
+< evidence forward from the set-aside tree: recovery machinery, which the owner ruled out and which would bring back
+< records from a tree judged unusable. (4) Do nothing and let the recorder run: rejected, because it would silently
+< turn counted draws into missed ones under a claim that forbids exactly that.
+< 
+< ## 10. The marker guard (D5)
+< 
+< - **Rule:** every root launcher (`Run_Coordinator`, `Run_Experiment`, `Run_Evaluation`, `Run_Method_Rankings`,
+<   `Run_Results_Updater`, `Run_Weekly_Session`, `Run_Development_Batch`) refuses, before starting Python, unless
+<   `PRODUCTION_ROOT.json` exists beside it. Two lines in each `.bat`, no extra process per run.
+< - The two sequencers and `check` also compare the path recorded in the marker with where they are, so a production
+<   tree copied elsewhere by hand is noticed.
+< - **Effect:** in the E: clone no launcher runs. The offline suite is not affected (it starts Python directly);
+<   rehearsals run in a scratch production folder that `init` makes. **One existing thing changes:** the owner-run
+<   Windows proof-of-concept suite (`tests/windows_architecture_poc_suite.py`) starts the real launchers in the tree it
+<   is run from, so from now on it is run in a marker-holding folder (a scratch production folder, or production). This
+<   is the cost of the uniform rule; section 15 item 6 has the alternative.
+< - **Limits, stated:** it is a wrong-folder guard, not security: Python typed by hand bypasses it, as it bypasses the
+<   launchers' other checks today.
+---
+> **Nothing ordinary is at stake** (EX_248 section 1). All eligible methods and revisions run impartially; a restore and
+> replay are the same chronological process; the ordinary forecasts, scores, rankings and the retrospective OV-1 X, Z,
+> factors and trajectory are valid research; no rule here guards against choosing methods to suit results, because the
+> system has no such mechanism. The one question is narrow: what can the restored tree still certify about the claim
+> labelled "REGISTERED FORMAL PROSPECTIVE OV-1, 2.5% per game", whose ratified rule requires, for every counted draw, a
+> freeze line and an eligibility line made before that draw's cut-off (supplement v0.8 section 6.8)?
+> 
+> ### 9.1 The trace: what the passed code does today
+> 
+> The passed slice 3 tree, run on the invented weekly project of its own tests (section 14). M is the first registered
+> target. "Restore" means: the project folder renamed aside and an earlier copy put back, the clock left at the real,
+> later time.
+> 
+> | Case | Before the restore | The restore | What the recorder then appends | What the report's formal view shows |
+> |---|---|---|---|---|
+> | (a) nothing lost | M and M+1 counted; M+2 eligible | to the snapshot from the end of that job | Nothing differs: the ledger is byte-identical after the restore; the next week appends FACTOR M+2 and ELIGIBILITY M+3 (counted 3, score 0.979739214220) | RUNNING, as if no restore had happened |
+> | (b) only a factor line lost | M counted; M+1's factor written by the job that then broke | to the snapshot from the job before (it holds M+1's confirmed eligibility line), before M+2's cut-off | FACTOR M+1 again, 17 of 17 fields equal to the lost line's; then ELIGIBILITY M+2 (counted 2, score 0.988226352101, before and after) | RUNNING, the same figures |
+> | (c) a counted draw's pre-cut-off records lost | M, M+1 and M+2 counted (score 0.979739214220); M+3 eligible | to the snapshot from before M+2 was frozen, after M+2's cut-off | FACTOR M+1 again; **MISSED M+2** (reason `MISSED_NO_FREEZE`, label `RECORDED_AFTER_THE_CUTOFF_FROM_LOCAL_RECORDS`); ELIGIBILITY M+3 (counted 2, missed 1, score 0.988226352101). `verify` passes | RUNNING, one counted draw fewer and another score, with nothing to say it changed |
+> | (d) the registration lost | registered; M counted | to a snapshot older than the registration | Nothing: no registration, no ledger; `record` answers NOT_REGISTERED. A second `register` typed before the next session is ACCEPTED (after a session it is refused only because the next draw is already frozen) | "not registered yet" |
+> | (e) the old tree unreadable | as (c) | as (c) | Exactly as (c): the recorder never reads the old tree | as (c) |
+> 
+> In (c) the replay's ordinary scores for M+2 equal the old tree's for all three invented variants, classed CATCH_UP:
+> the research is the same. Only the formal bookkeeping moved.
+> 
+> **The code-level reason.** (c): in `ov1.py`, `_due`, when the forecast ledger holds no next-draw freeze line frozen
+> before C(T) and the clock is past C(T), the recorder calls `reconcile` and appends MISSED. After a restore the tree is
+> consistent with itself, so `reconcile` passes. The line is truthful about the tree it is in, but the registered
+> sequence of opportunities has changed, and the missed rule's own stated assumption (no eligible freeze line is removed
+> after the fact; supplement 6.8) no longer holds, with nothing in the tree to say so. (d): `register` can only check
+> the tree it is in.
+> 
+> ### 9.2 The smallest objective classification
+> 
+> Two times are known in the restored tree without the old one: **S**, when the snapshot's copying began (in its
+> manifest), and **R**, when the restore finished. C(T) is a fixed instant (01:30 UTC on the draw's date). For a target T:
+> 
+> - **C(T) at or before S:** everything that existed before the cut-off is in the snapshot. Counted or missed, as the
+>   snapshot shows. Certifiable.
+> - **C(T) after R:** everything about T is made afresh, before any outcome exists. Certifiable.
+> - **S before C(T), and C(T) at or before R:** only what the snapshot holds is known.
+>   - It holds T's freeze line and its confirmed eligibility line: counted; the factor is looked up again in the table
+>     sealed before the outcome (case b). Certifiable.
+>   - It holds the freeze line without a confirmed eligibility line: the passed recorder already stops
+>     (`ELIGIBILITY_NOT_VERIFIED`).
+>   - **It holds no pre-cut-off freeze line for T:** the tree cannot tell "missed" from "counted, then lost". The honest
+>     status is **not established from T**. This is the one place where today's code states something it cannot know.
+> 
+> The classification uses three times and the snapshot's contents. No person decides it, no outcome enters it, and the
+> old tree is not read.
+> 
+> ### 9.3 The mechanism (recommended)
+> 
+> 1. **A restore notice.** `restore` writes, create-only, in each game's weekly folder,
+>    `RESTORE_NOTICE_<date>_<time>.json`: S, R, the snapshot's name and SHA-256, and `registration_before_restore`:
+>    `YES`, `NO` or `COULD_NOT_BE_READ` (whether the old tree's weekly folder held a registration that the snapshot
+>    lacks; from step 1 of the restore, best effort). For both games, at every restore, registered or not.
+> 2. **One check in the recorder.** Where it is about to append MISSED for T: if a notice has S before C(T) and C(T) at
+>    or before R, it appends instead a STOP line with the new cause `NOT_ESTABLISHED_AFTER_RESTORE` and the detail
+>    "FORMAL CLAIM NOT ESTABLISHED FROM DRAW T: production was restored at R from a snapshot of S; whether draw T was
+>    frozen before its cut-off cannot be verified from this tree". Because targets are taken in order, the stop is at
+>    the **earliest** such draw, not at whatever target is open when someone notices. Every report then shows it by code
+>    that has already passed (state STOPPED, the cause, the detail). `verify` applies the same check.
+> 3. **`register` after a lost registration.** With a notice that says `YES` or `COULD_NOT_BE_READ` for the game,
+>    `register` refuses: "a registration made before the restore of R is not in this tree (or could not be checked);
+>    there is no second registration (OD-4)". The report's formal view then reads "NOT ESTABLISHED: the registration was
+>    made before a restore and is not in this tree" instead of "not registered yet". A fresh formal test after that
+>    would be a new, separately reviewed decision of the owner (EX_219 C1); nothing here provides one.
+> 4. **Nothing else changes.** No existing line is rewritten; no time is altered or invented; the kernel
+>    (`ov1_numeric.py`) is untouched; cases (a) and (b) behave exactly as traced.
+> 
+> **What never waits and never changes:** forecasting, scoring, the league table and the retrospective OV-1 view. The
+> weekly sequencer already treats a stopped formal stream as an expected state and goes on (it prints that forecasting,
+> scoring and the league table continue), and the retrospective view computes X, Z, the factors and the trajectory over
+> every draw, the replayed ones included, under its descriptive label. The tests show these outputs byte-identical with
+> and without the new check (section 12).
+> 
+> **Why this is sound, and not a new test.** The change can only stop a stream; it never adds a counted draw, changes a
+> factor or restarts anything. Stopping cannot raise the chance of ever reaching the bar. Whichever snapshot is restored
+> and whenever, the counted draws that remain have exactly their original factors (case b). The stop cause becomes part
+> of the rule each stream is registered under; no stream is registered yet, so none is changed after the event. It is
+> recorded as a short amendment to supplement 6.8, ratified with the package.
+> 
+> **Its cost.** It is conservative in one way: a draw that was genuinely missed, with its cut-off between S and R, also
+> reads "not established". And the stretch between S and R is longer whenever snapshots were not made (section 7).
+> 
+> **Alternatives.** (1) The mechanism above: recommended. (2) Leave the recorder alone and let the report print "not
+> established from draw T" beside a ledger that keeps counting: no edit to slice 2, but two voices about one stream,
+> and a later crossing would sit in a ledger the report disowns. (3) Do nothing: case (c) shows the silent change.
+> (4) v0.1's list applied by the owner and Claude after a restore: withdrawn (EX_248 B03: discretionary, and it needed
+> the old tree).
+> 
+> ## 10. The production guard (D5; EX_248 B06)
+> 
+> - **Two different markers.** `PRODUCTION_ROOT.json` says "this folder is production, at this path". It has nothing to
+>   do with the orphan marker of section 8.
+> - **The rule.** Every real-data launcher already starts Python once, before the program, to confirm it is running in
+>   the project's own environment. That pre-check becomes one small reviewed module, `production_guard.py`, which makes
+>   the same test **and** requires that the marker exists, parses, and records exactly the folder the launcher is in
+>   (resolved, case ignored). Any failure refuses before the program starts. No extra process per run.
+> - **Which launchers:** `Run_Experiment.bat`, `Run_Evaluation.bat`, `Run_Method_Rankings.bat`,
+>   `Run_Results_Updater.bat`, `Run_Weekly_Session.bat`, `Run_Development_Batch.bat`, `Run_Production_Snapshot.bat`.
+> - **Not guarded, so that safe synthetic work stays where it is:** `Run_Coordinator.bat`, and `Run_Experiment.bat` when
+>   the file it is asked to run is one of the two proof-of-concept probes the coordinator's own whitelist names
+>   (`POC_Architecture_Probe.py`, `POC_Coordinator_Probe.py`). They read no draw and write no project record, so the
+>   owner-run Windows proof-of-concept suite keeps running in the clone. A test pins the two names. **A condition
+>   recorded now:** if scientific coordination is ever switched on (its switch is False and has its own gate), the
+>   coordinator's launcher gets the guard in that same package.
+> - **What it stops:**
+> 
+>   | Folder | Why a real-data launcher refuses there |
+>   |---|---|
+>   | the E: clone | no marker |
+>   | a set-aside tree | its marker was renamed at the restore, and the path differs |
+>   | a production folder copied by hand to another place | the marker's recorded path is not that place |
+> 
+> - **Limits, stated:** Python typed by hand does not pass through a launcher, as today; the deploy tool and the process
+>   tool are given their folder explicitly and check it themselves.
+> - **Alternative:** guard the coordinator path too and move the proof-of-concept suite into a marked folder. Simpler to
+>   state, but it would forbid safe synthetic work in the clone for no gain today.
+414c575
+< | `Run_Experiment.bat`, `Run_Evaluation.bat`, `Run_Method_Rankings.bat`, `Run_Results_Updater.bat`, `Run_Coordinator.bat` (installed); `Run_Weekly_Session.bat`, `Run_Development_Batch.bat` (slice 3) | the marker test |
+---
+> | `Run_Experiment.bat`, `Run_Evaluation.bat`, `Run_Method_Rankings.bat`, `Run_Results_Updater.bat` (installed); `Run_Weekly_Session.bat`, `Run_Development_Batch.bat` (slice 3) | the production guard, inside the Python pre-check each already makes (section 10). `Run_Experiment.bat`: not for the one proof-of-concept probe. `Run_Results_Updater.bat`: also the flag and the snapshot around `update` (section 7). `Run_Coordinator.bat` is not edited |
+417c578,580
+< | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git` |
+---
+> | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git`; for `restore` only, the listing rule is applied to the production path even when the folder is missing or damaged (the rule itself is unchanged) |
+> | `src/evaluation/ov1.py` (slice 2; the recorder, not the kernel) | reads the restore notices in its own weekly folder; one new stop cause where it would otherwise write MISSED; `register` refuses after a lost registration (section 9) |
+> | `src/evaluation/consolidated_report.py` (slice 3) | the formal view's wording when a registration was lost (section 9) |
+419c582
+< | New | `deploy/Deploy_Production.py` and its launcher; `deploy/RELEASE.json`; the lock file; `src/package_tools/production_snapshot.py`; `Run_Production_Snapshot.bat` |
+---
+> | New | `deploy/Deploy_Production.py` and its launcher; `deploy/RELEASE.json`; the lock file; `src/package_tools/production_snapshot.py`; `src/package_tools/production_guard.py` (the pre-check); `Run_Production_Snapshot.bat` |
+422c585
+< Not edited: the OV-1 kernel and recorder, the forecasting and scoring halves, the league table, the report.
+---
+> Not edited: the OV-1 kernel (`ov1_numeric.py`), the forecasting and scoring halves, the league table, the updater.
+434,440c597,622
+<   the archive, a file changed during the snapshot, a full or missing backup folder each leave no snapshot and leave
+<   the flag; an existing name is never overwritten; the overdue snapshot is taken first.
+< - **Restore:** onto an invented production tree; the set-aside tree is byte-identical to the tree before; a launcher
+<   refuses in it; a process listed, or an orphan marker, refuses as decided; the formal OV-1 listing for each of F-A,
+<   F-B and F-C on invented ledgers; after a restore the weekly sequence on invented data runs to a clean end.
+< - **`export`:** new, grown and identical files; a changed create-only record refuses and writes nothing; the two
+<   exempt kinds; `--after-restore` refused without a new restore record; production's bytes never change.
+---
+>   the archive, a file changed, added or removed during the snapshot (a same-size rewrite included), a full or
+>   missing backup folder each leave no snapshot and leave the flag; an existing name is never overwritten; the overdue
+>   snapshot is tried first; when it cannot be made the job still runs, warns at its start and end, and exits with the
+>   stated status; the updater's launcher takes one after `update` and none after a read-only command.
+> - **Restore:** onto an invented production tree; the set-aside tree is byte-identical to the tree before, apart from
+>   its renamed marker; with the old tree absent, half missing, without a `.venv`, with an unreadable OV-1 ledger: the
+>   restore completes; a process listed refuses and no acknowledgement overrides it; extraction stopped half-way, then
+>   the command again; a wheel missing: no marker, RESTORE NOT COMPLETE, then complete after the wheel is put back.
+> - **The orphan marker at a restore:** in the old tree and in the snapshot; restart shown, clean check and the typed
+>   sentence: the restore proceeds, the fresh tree has no active marker, the evidence bytes are kept; no restart shown:
+>   refused; a wrong or missing sentence: refused; a marker written after the last restart: refused.
+> - **Formal OV-1 after a restore** (the five cases of section 9, on the invented weekly project): (a) and (b)
+>   unchanged ledgers and equal factors; (c) the new stop at the earliest unverifiable draw, never a MISSED line, with
+>   forecasting, scoring, the league table and the retrospective view identical to a run without the check; a draw
+>   whose cut-off is before the snapshot or after the restore still becomes MISSED as today; (d) the report's wording
+>   and `register` refusing; (e) the same as (c) with the old tree deleted. One planted defect per rule.
+> - **Labels after a restore** (EX_248 section 3): an original release record brought back by `update`; a replayed
+>   forecast for a draw after that release date is CATCH-UP, never PROSPECTIVE; revisions are not pooled.
+> - **The production guard:** the clone (no marker), a renamed-aside tree and a hand-copied marked folder each refuse
+>   every real-data launcher; the proof-of-concept probe still starts in the clone.
+> - **`export`:** new, grown and identical files; a changed create-only record refuses and writes nothing at all (the
+>   plan is complete before the first write); the two exempt kinds; an uncommitted change in the clone refuses;
+>   `--after-restore` refused without a new restore record; the worked example of section 4.4 end to end: afterwards
+>   the clone's active folders equal production's tracked records file for file, every earlier file is under the dated
+>   folder with its bytes, and an interruption at each step followed by the command again gives the same result;
+>   production's bytes never change.
+451,452c633,635
+< `update` with a fault planted and the command typed again; an overdue snapshot taken first; one `restore`, then a
+< catch-up over the lost draws; an `export` and what it prints; records made in one folder read in another (the open
+---
+> `update` with a fault planted and the command typed again; an overdue snapshot taken first, and a job that goes
+> on with the warning when the backup folder is missing; one `restore`, with a stale orphan marker and a restart of the
+> PC by the owner, then a catch-up over the lost draws and the formal view's "not established" line; an `export` and what it prints; records made in one folder read in another (the open
+456c639
+< ## 14. The probe (invented files; cloud, Linux; an indication only)
+---
+> ## 14. The probe and the trace (invented files; cloud, Linux)
+465,492c648,695
+< ## 15. Choices for the owner (each: the question, the options, my recommendation and why)
+< 
+< 1. **Is `.venv` inside each snapshot?** (a) No: rebuilt at a restore from the wheel folder (recommended: the
+<    environment is as large as the data, changes rarely and can always be rebuilt and verified; snapshots stay about
+<    half the size and time). (b) Yes: a restore is "unzip and go", at roughly double the size and time of every
+<    snapshot (my estimate, not measured), and it still depends on the base Python being where it was.
+< 2. **When is `SNAPSHOT_DUE` written?** (a) Just before a job's first write (recommended: it then also covers a job cut
+<    off by a power failure; cost: a couple of minutes at the rerun). (b) When the job finishes, the wording of
+<    entry 97: a job that dies midway leaves no flag, and the next snapshot comes at the end of the rerun.
+< 3. **A job finds an overdue snapshot and cannot make it** (T: missing). (a) It stops before starting, except the
+<    weekly session, which goes ahead with a loud warning because a forecast must be frozen before its deadline
+<    (recommended). (b) Every job goes ahead with the warning. (c) Every job stops.
+< 4. **The orphan marker at a restore.** (a) The restore refuses while the tree to be set aside holds one; the owner's
+<    approved clearance procedure comes first (recommended: the marker means a process may still be alive, which is
+<    exactly when a tree must not be moved). (b) The restore carries the marker across into the fresh tree unchanged.
+<    Either way a restore is never a way round the marker.
+< 5. **The formal OV-1 claim after a restore:** the rule of section 9 (recommended), or "any difference stops it".
+< 6. **Where the marker guard sits:** (a) every launcher (recommended: one uniform rule, nothing real can start in the
+<    clone; cost: the Windows proof-of-concept suite moves to a marker-holding folder, section 10). (b) Only the two
+<    sequencers, the updater's launcher and the irreversible owner commands: the proof-of-concept suite stays where it
+<    is, but the rule has a list to keep right.
+< 7. **`restore` as a fifth mode of the one tool** (recommended: the checks of section 8 are the point), or a hand
+<    procedure in File Explorer only. D4 named four modes; this adds one to the same tool, not a second tool.
+< 8. **Two names, when convenient:** the production folder on G: and the backup folder on T: (short paths, please: the
+<    set-aside name adds 26 characters to every path in the old tree).
+< 9. **Optional, early, on its own go:** running the probe of section 14 once on your PC and opening its zip in File
+<    Explorer (about five minutes, invented files only). If Explorer cannot open it, the fallback of section 7 changes
+<    the snapshot format, and it is cheaper to know before the code is written.
+---
+> **The trace** (`restore_ov1_trace.py`, output in `restore_ov1_trace_output.txt`): the passed slice 3 tree, built from
+> the repository copy (tree digest `ef2b67e0...1f50e9d13`), on the invented weekly project of the slice's own tests,
+> Python 3.15.0b4. A "restore" there is: the invented project folder renamed aside and an earlier copy put in its
+> place, with the clock left at the real later time. Section 9 quotes its five cases. It is a trace of existing code on
+> invented data: not a test, not a result, and it changes no file of the slices.
+> 
+> ## 15. The owner's choices
+> 
+> **Confirmed by the owner on 20 November 2026 (decision log entry 110; relayed in EX_248 section 4). Built into this
+> draft; listed so the ratification covers them:**
+> 
+> 1. `.venv` is not in snapshots; it is rebuilt at a restore from the exact locked wheels of that release (section 6).
+> 2. `SNAPSHOT_DUE` is written just before a job's first write (section 7).
+> 3. When a snapshot that is due cannot be made, **all** jobs go on with a loud warning that stays until one is made.
+>    This relaxes D8's "the next job makes it first" (entry 97) for the case where it cannot be made; the risk is
+>    written in section 7 and printed by `update`.
+> 4. An orphan marker neither refuses a restore outright nor is copied into the restored tree as a live block
+>    (section 8).
+> 5. Formal OV-1: no difference for the research; the passed code traced; the registered claim reported truthfully
+>    (section 9).
+> 6. The production guard checks the path, not only the marker's presence (section 10).
+> 7. `restore` is a fifth mode of the one tool.
+> 8. Production: `G:\a_p_r_i_r`. 9. Backups: `T:\a_p_r_i_r_backups`.
+> 
+> **Still yours, each with the options and my recommendation:**
+> 
+> - **A. Single owner commands and snapshots** (section 7's table). `declare-developed`, OV-1's `register` and `stop`,
+>   and the few other commands typed by hand through the general launchers do not take a snapshot by themselves. (a)
+>   Their run sheets end with `Run_Production_Snapshot.bat`, and you accept that until then their change is in no
+>   snapshot (recommended: these are rare, each already has a reviewed run sheet and its own go, and hooking the general
+>   launchers would touch every one of the thousands of runs inside a session). (b) A wrapper launcher for owner
+>   commands that sets the flag and takes the snapshot: one more launcher to keep right. The one that matters most is
+>   `register`: a registration lost by a restore cannot be made again (section 9).
+> - **B. The exact condition for a stale orphan marker at a restore** (section 8's boxed text). You confirmed the
+>   principle. The draft makes the restart a checked condition of this route, and leaves "identify and close the
+>   processes" to the existing per-incident clearance procedure. (a) As drafted (recommended: a restart is the one fact
+>   about old processes a tool can verify). (b) Also let the tool accept, without a restart, that every process
+>   identity recorded in the marker is gone: more code in an always-review area, and it cannot work on a marker that
+>   cannot be read.
+> - **C. The formal OV-1 check** (section 9.3). (a) One check in the recorder and one in `register`, fed by the restore
+>   notice (recommended). (b) A report label only. It is a small change to code that has passed review, and to
+>   supplement 6.8, so it needs your ratification with the reviewer's view.
+> - **D. The proof-of-concept suite and the guard** (section 10). (a) The two proof-of-concept probes stay unguarded, so
+>   the suite runs in the clone as today (recommended). (b) Guard everything and run that suite in a marked folder.
+> - **E. Optional, early, on its own go** (the reviewer recommends it, EX_248 section 3): run the probe of section 14
+>   once on your PC and open its zip in File Explorer (about five minutes, invented files only). If Explorer cannot
+>   open it, the fallback of section 7 changes the snapshot format, and it is cheaper to know before the code is
+>   written.
+498c701
+<   are written), 6.1 (the launchers' marker test; the snapshot at a session's end) and 7 (the checklist).
+---
+>   are written), 6.1 (the launchers' production guard; the snapshot at a session's end) and 7 (the checklist).
+503c706,709
+< - **Architecture** (the launch interfaces: the marker test, the new launcher); **code plan v0.3 section 10** (T017 and
+---
+> - **Supplement v0.8 section 6.8** (and code plan v0.3 L5): the restore notice; one more stop cause; `register` after a
+>   lost registration (section 9). **The orphan-marker rule** (Architecture 5C, a protected block, amended by
+>   ratification and not edited; H-1 5.4): the one added exception of section 8.
+> - **Architecture** (the launch interfaces: the production guard in the pre-check, the new launcher); **code plan v0.3 section 10** (T017 and
+511a718,722
+> - **A restore by hand in File Explorer** is possible because a snapshot is an ordinary zip, but it writes no restore
+>   record and no restore notice, so the formal check of section 9 would not see it. It is therefore not a supported
+>   procedure: if the tool cannot be used, the steps are written and reviewed for that case.
+> - **Section 9's check is conservative in one way:** a draw that was genuinely missed, whose cut-off lies between the
+>   snapshot and the restore, also reads "not established", because the restored tree cannot tell the two apart.
+523,525c734,749
+< - Rule F-B (iii) depends on a human reading of "has the cut-off passed" from the printed list. The cut-off is a fixed
+<   instant (01:30 UTC on the draw date); the run sheet will give it for the draw in question.
+< - Size: about a small slice (one tool, one module, counted edits to twelve files, their tests).
+---
+> - Size: about a small slice (one tool, two small modules, counted edits to thirteen files, their tests).
+> 
+> ## 18. Where each finding of EX_248 landed
+> 
+> | Finding | The scenario, in one line | The correction | Where |
+> |---|---|---|---|
+> | B01 emergency restore | Production is restored because its tree, environment or records are damaged, so it cannot pass a healthy-production check | `restore` has its own four requirements and never runs `check`, never uses production's Python and never needs the old tree readable; the old tree absent, half missing or unreadable is handled; a stop half-way is finished by the same command | 4.1, 8 |
+> | B02 the orphan marker | A marker left by a crash would block the very restore the crash calls for; copied back, it would block the fresh tree | One added exception to the owner-only rule: restart shown, fresh clean process check, typed acknowledgement; the bytes kept as evidence; never an active marker in the fresh tree; never an override of a running or uncertain process | 8, 16 |
+> | B03 formal OV-1 | The staged recorder turns a formerly counted draw into MISSED after a restore, and accepts a second registration | Traced on the passed code (five cases); an objective classification from three times and the snapshot's contents; one new stop cause at the earliest unverifiable draw; `register` refuses after a lost registration; v0.1's list applied by people withdrawn | 9, 14 |
+> | B04 export after a restore | The clone's active folders could mix production's restored state with later records | Every export is planned before it writes; after a restore, changed and clone-only files are moved to one dated folder and the active folders become exactly production's; a worked example; the tests | 4.4, 12 |
+> | B05 snapshots | Which commands snapshot; a coherent single state; the old release's own lock and wheels; the changed choice on an overdue snapshot | A table of commands, the updater's launcher included; a second reading of the source; each release's lock kept in production and so in every snapshot, wheels of every lock kept, and no "restored" before the environment is verified; all jobs go on with a standing warning, the risk stated | 6, 7 |
+> | B06 the guard | A hand-copied production folder carries the marker and would run | The path is checked at every real-data launch, inside the pre-check each launcher already makes; the proof-of-concept probes stay unguarded so safe synthetic work stays in the clone | 10 |
+> | Section 3, labels | A replayed forecast for a draw after an original release date | CATCH-UP, never PROSPECTIVE; revisions never pooled; a fixture | 4.3, 12 |
+> 
+> Not changed from v0.1: sections 3 (the release and its proof), 4.2, 4.3 and 5 (init, update, Appendix J's properties),
+> which EX_248 supported.
