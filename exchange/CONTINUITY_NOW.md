@@ -4,19 +4,23 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 19 November 2026, 23:12 Australia/Adelaide (H-1 v7r1 CANDIDATE, the reviewer's two corrections to v7). **Next: the owner ratifies H-1 v7r1; the go for the deployment design note is still not given.**
+**Last updated:** 19 November 2026, 23:26 Australia/Adelaide (RAT-39: H-1 v7r1 ratified after the reviewer's PASS and installed in `doc/HANDOVER/`; entry 106). **Next: the owner's go for the deployment design note (not given).**
 
 ## For the owner: NOW
 
-- **H-1 v7r1 CANDIDATE (23:12): the one to ratify.** The reviewer supported v7 and asked (relayed by the owner at 23:11)
+- **RAT-39 (entry 106, 19 November 2026, 23:25): H-1 v7r1 RATIFIED AND INSTALLED** after the reviewer's PASS:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md` (SHA-256 `6f968eef...771c97cd`; status line finalised) and its blurb
+  (`76be41b0...d41992a6`). It is the installed Claude handover; H-1 v6 is history. **Nothing else is authorised: the
+  deployment design note still needs the owner's go** (Claude will suggest Fable (High)). Section 12.3's leftover
+  sentence is for the next edition.
+- **(History) H-1 v7r1 CANDIDATE (23:12): the one to ratify.** The reviewer supported v7 and asked (relayed by the owner at 23:11)
   for two narrow corrections only: section 0 steps 1 and 3 (the obsolete prohibition on reading `source_data/` and
   records removed, RAT-34) and section 7.5 (the updater has run live once per game). Files:
   `exchange/CLAUDE_WEB_TOOLS/h1v7/out_r1/` (builder `make_h1_v7r1.py`; diff `H1_v7_TO_v7r1.diff`, 18 lines). The owner
   intends to ratify it.
 - **H-1 v7 CANDIDATE (19 November 2026; entry 105)** in `exchange/CLAUDE_WEB_TOOLS/h1v7/out/` (builder `make_h1_v7.py`, the
   diffs from v6 beside it): a full edition from H-1 v6's ratified bytes folding in everything decided since v6 (its
-  section 0B item 13 and Appendix B). **Waiting on the owner's ratification**; on ratification only its status line
-  changes and it goes into `doc/HANDOVER/`. Not a prerequisite to the deployment design note.
+  section 0B item 13 and Appendix B). Superseded by v7r1 before ratification; never ratified. Not a prerequisite to the deployment design note.
 - **The owner's decisions of 19 November 2026, evening:** test on **Python 3.15 only**, the routine 3.13 runs dropped,
   risk accepted (entry 103); **no monthly restore test** (entry 104; the one restore T017 rehearses stays); **no
   comparison of a replay with the originals**, which a catch-up cannot do either (entry 105).
@@ -168,11 +172,10 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting the blurb of the installed handover, H-1 v6 (RAT-38):
-  `doc/HANDOVER/Claude_Primary_Handover_H1_v6_introductory_blurb.md`. Fill in its last line ("see
-  exchange/CONTINUITY_NOW.md" and the commit). Its header says CANDIDATE: frozen history, ratified by RAT-38 (entry
-  101). The new chat reads H-1 v6's section 0B first, then decision log entries 100 onward and EX_244, which governs
-  restore and replay over the handover's older wording.
+- **Claude chat ended:** start a new Claude chat by pasting the blurb of the installed handover, H-1 v7r1 (RAT-39):
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1_introductory_blurb.md`. Fill in its last lines (the commit, the date and
+  "see exchange/CONTINUITY_NOW.md"). The new chat reads H-1 v7r1's section 0B first (items 12 and 13 above all), then the
+  decision log from entry 99 on.
 - **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
   87): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md` (the word CANDIDATE in its name
   is frozen history). Point the new reviewer chat straight at that full file, then at `exchange/CONTINUITY_NOW.md` and
@@ -208,11 +211,11 @@ durable EX messages are authoritative.
 
 ## Installed handovers (authoritative)
 
-**H-1 v6 (Claude; RAT-38, entry 101; `doc/HANDOVER/Claude_Primary_Handover_H1_v6.md`, SHA-256 `6dc8185a...e280353`,
-committed by Claude on 19 November 2026, bytes unchanged from the candidate, so its header still reads CANDIDATE)** and **H-2 v3r4 (reviewer; RAT-36,
+**H-1 v7r1 (Claude; RAT-39, entry 106; `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md`, SHA-256 `6f968eef...771c97cd`,
+committed by Claude on 19 November 2026 after the reviewer's PASS; status line finalised)** and **H-2 v3r4 (reviewer; RAT-36,
 entry 87; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md`, blob `6477493d`)**, with
-register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 to RAT-38 are in the decision log, for register
-v0.32). H-1 v5 (RAT-37), H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
+register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 to RAT-39 are in the decision log, for register
+v0.32). H-1 v6 (RAT-38, header CANDIDATE as frozen history), H-1 v5 (RAT-37), H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
 are frozen. The `h1v6/out/` candidate files are frozen too. The reviewer's H-2 v3r6 is a CANDIDATE
 (`de1aa3e`), not ratified; H-2 v3r5 was superseded by it.
 

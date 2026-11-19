@@ -1603,3 +1603,27 @@ the installed documents. This log is not a separate approval process.
   lessons; the slice digests reproduced; Appendix A rows; the ten safeguards of EX_246 Q3 as the design note's
   checklist; v7 not a prerequisite to the design note; the reviewer's PASS relayed, not filed; a new blurb. The
   ratified documents and the reviewer's H-2 are not edited; the owner ratifies v7.
+
+## 106. 19 November 2026, 23:26 - RAT-39: H-1 v7r1 and its blurb ratified by the owner, after the reviewer's PASS
+
+- **History of the edition:** the v7 candidate (entry 105; `bd68f4f`); the reviewer examined it, supported its content and
+  ratification, and asked (relayed by the owner at 23:11) for two narrow corrections only: section 0 steps 1 and 3 (the
+  obsolete prohibition on reading `source_data/` and records, against RAT-34) and section 7.5 (the updater has run live
+  once per game). The v7r1 candidate made exactly those, plus identity lines (`39f3ef7`; diff `H1_v7_TO_v7r1.diff`).
+- **The owner's words (23:25):** "H-1 v7r1 - OWNER RATIFIED. The independent ChatGPT reviewer has examined H-1 v7r1 at
+  commit `39f3ef7` and returned PASS. I ratify H-1 v7r1 and its introductory blurb, incorporating the two requested
+  corrections. Please install the ratified documents in `doc/HANDOVER/`, record the ratification in the decision log and
+  update `CONTINUITY_NOW.md`, following the established documentation procedure. The remaining obsolete sentence in
+  section 12.3 may be corrected in the next edition; it is not a blocker. This ratification authorises only the
+  associated documentary records. It does not authorise deployment design, code, tests, installation or production
+  runs."
+- **RAT-39 is recorded** (RAT-38 was the last number used). Finalised by the status line only, as H-1's own rule says
+  (`exchange/CLAUDE_WEB_TOOLS/h1v7/finalise_rat39.py`; the two-line candidate-to-final diff is
+  `h1v7/H1_v7r1_CANDIDATE_TO_FINAL.diff`). Candidate SHA-256 `ed3513f5c7400ca9bb9f0a915bb9ed93176d040c663acb5b821be23e221ec667`;
+  final `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md`, SHA-256 `6f968eefebf3cb13212d967ee28fe76b84ed49f319d0df0121e2d746771c97cd`; its blurb (unchanged bytes)
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1_introductory_blurb.md`, SHA-256 `76be41b0ecb91e0c1e9c1c07f1ae01c925d9590624c96256723013d0d41992a6`. **H-1 v7r1 is the installed
+  Claude handover**; H-1 v6 (RAT-38) stays as history. The v7 candidate (`h1v7/out/`) was never ratified.
+- **Carried to the next edition:** section 12.3's "Claude never opens those folders itself" (the same obsolete prohibition;
+  not a blocker).
+- **Scope:** the Claude handover's status and the records only. No deployment design, code, tests, install or run.
+- **For the next register edition (v0.32):** record RAT-35 to RAT-39.
