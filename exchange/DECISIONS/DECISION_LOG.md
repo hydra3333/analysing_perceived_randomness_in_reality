@@ -1576,3 +1576,15 @@ the installed documents. This log is not a separate approval process.
   Python. The existing rule covers that moment: after any dependency or Python change, stop until the full suite passes.
 - **To tell the reviewer** in the covering note of the next code submission (its R-2 reproduction right needs to know
   which interpreter the evidence comes from). Earlier evidence on two Pythons stays as it was recorded.
+
+## 104. 19 November 2026, 22:40 - OWNER DECISION: no monthly restore test
+
+- **The owner's words (22:40):** "we forego a monthly restore test."
+- **What it changes:** the direction document's section 9 (agreed 2 November 2026) says backups of `source_data/` and
+  `results/` after every weekly session and before every install, to a second drive, "with a monthly restore test".
+  The monthly restore test is dropped. The rest of that paragraph is replaced in substance by the snapshot decisions D7
+  to D10 (EX_243) and the restore method of entry 100; the ratified text is amended with the integrated package's
+  document changes.
+- **Claude's reading, not a new decision:** the one restore that T017 rehearses in a scratch folder (H-1 v6 section 10
+  item 4; EX_246 Q3) stays planned, because it is the only check that a snapshot can actually be restored and that
+  File Explorer opens it. If the owner did not mean to keep that, a correcting entry follows.
