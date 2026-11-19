@@ -1,0 +1,10 @@
+1c1
+< # Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v7
+---
+> # Introductory blurb for a new Claude chat (primary designer and coder) - goes with H-1 v7r1
+29,30c29,30
+< - the handover **H-1 v7** (`exchange/CLAUDE_WEB_TOOLS/h1v7/out/Claude_Primary_Handover_H1_v7_CANDIDATE.md` while it is a
+<   candidate; `doc/HANDOVER/Claude_Primary_Handover_H1_v7.md` once ratified; H-1 v6 in `doc/HANDOVER/` is the installed
+---
+> - the handover **H-1 v7r1** (`exchange/CLAUDE_WEB_TOOLS/h1v7/out_r1/Claude_Primary_Handover_H1_v7r1_CANDIDATE.md` while it is a
+>   candidate; `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md` once ratified; H-1 v6 in `doc/HANDOVER/` is the installed

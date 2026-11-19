@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 19 November 2026, 22:48 Australia/Adelaide (H-1 v7 CANDIDATE written at the owner's go, entry 105; the owner's decisions of the evening: Python 3.15 only, no monthly restore test, no replay comparison, entries 103 to 105). **Next: the owner ratifies H-1 v7 (or not); the go for the deployment design note is still not given.**
+**Last updated:** 19 November 2026, 23:12 Australia/Adelaide (H-1 v7r1 CANDIDATE, the reviewer's two corrections to v7). **Next: the owner ratifies H-1 v7r1; the go for the deployment design note is still not given.**
 
 ## For the owner: NOW
 
+- **H-1 v7r1 CANDIDATE (23:12): the one to ratify.** The reviewer supported v7 and asked (relayed by the owner at 23:11)
+  for two narrow corrections only: section 0 steps 1 and 3 (the obsolete prohibition on reading `source_data/` and
+  records removed, RAT-34) and section 7.5 (the updater has run live once per game). Files:
+  `exchange/CLAUDE_WEB_TOOLS/h1v7/out_r1/` (builder `make_h1_v7r1.py`; diff `H1_v7_TO_v7r1.diff`, 18 lines). The owner
+  intends to ratify it.
 - **H-1 v7 CANDIDATE (19 November 2026; entry 105)** in `exchange/CLAUDE_WEB_TOOLS/h1v7/out/` (builder `make_h1_v7.py`, the
   diffs from v6 beside it): a full edition from H-1 v6's ratified bytes folding in everything decided since v6 (its
   section 0B item 13 and Appendix B). **Waiting on the owner's ratification**; on ratification only its status line
