@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 19 November 2026, 23:26 Australia/Adelaide (RAT-39: H-1 v7r1 ratified after the reviewer's PASS and installed in `doc/HANDOVER/`; entry 106). **Next: the owner's go for the deployment design note (not given).**
+**Last updated:** 20 November 2026, 00:10 Australia/Adelaide (the deployment design note DRAFT v0.1 sent to the reviewer as EX_247, on the owner's go of entry 107; entry 108). **Next: the reviewer's design review (EX_248); then the owner's choices and ratification. No code.**
 
 ## For the owner: NOW
 
+- **THE DEPLOYMENT DESIGN NOTE IS WITH THE REVIEWER (entries 107, 108; 20 November 2026).** The owner's go (19 November,
+  23:50) covered the design note only. Draft v0.1: `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_1.md`;
+  sent as `exchange/EX_247_Claude.md`; the reviewer's reply will be EX_248. **Waiting on the reviewer's design review;
+  then on the owner: seven choices (note section 15), two folder names, and ratification.** No code, package, task
+  file, Windows step, install, restore or run is authorised. The Fable task is finished (Opus until the review).
 - **RAT-39 (entry 106, 19 November 2026, 23:25): H-1 v7r1 RATIFIED AND INSTALLED** after the reviewer's PASS:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md` (SHA-256 `6f968eef...771c97cd`; status line finalised) and its blurb
   (`76be41b0...d41992a6`). It is the installed Claude handover; H-1 v6 is history. **Nothing else is authorised: the
@@ -163,7 +168,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). **Awaited: nothing until the deployment design note is sent.** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). **Awaited: the reviewer's design-stage review of the deployment design note (EX_247; its reply EX_248).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state

@@ -1,0 +1,5 @@
+python 3.15.0b4; files 81500; bytes 225743890 (215 MB)
+zip bytes 146671984 (140 MB); entries 81502; ZIP64 end records present: True
+read-back mismatches 0; unexpected members 0; empty folder restored: True
+restored tree equals the manifest: True
+seconds: make tree 19; write zip 9; read-back check 3; extract and compare 5

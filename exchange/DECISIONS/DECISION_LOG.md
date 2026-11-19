@@ -1643,3 +1643,27 @@ the installed documents. This log is not a separate approval process.
   stage requires its separate GO."
 - **So:** Claude writes the design note (reading the installed and staged code first), commits it under `exchange/` and
   sends it to the reviewer as an EX message. No code, package, task file or run. The owner ratifies after the review.
+
+## 108. 20 November 2026, 00:10 - the deployment design note, DRAFT v0.1, sent to the reviewer (EX_247); no owner decision
+
+- **Done under entry 107's go (Fable, High; design only, no code):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_1.md`, sent to the reviewer as
+  `exchange/EX_247_Claude.md` for a design-stage review before any code.
+- **In short:** production on G: with no Git; one tool in the development clone with the modes `check`, `init`, `update`,
+  `export` and `restore`; a release is a named commit proved by a reviewed digest of its file hashes; `update` keeps
+  Appendix J's process check, barriers U and P, suite before release and the meaning of the two records, with the Git
+  tests replaced by hashing every file; a snapshot is one ordinary zip of everything but `.venv`, read back and
+  hash-checked, with a `SNAPSHOT_DUE` flag; restore by the owner's method (entry 100), then ordinary replay (EX_244);
+  a fixed rule (F-A, F-B, F-C) for the formal OV-1 claim after a restore, with nothing carried forward and nothing
+  blocked; a marker file every launcher needs.
+- **What reading the installed code showed:** the install and release records live under `src/` and are written with
+  production's clock, so they are born in production and return to the clone by `export`; the suite reads repository
+  files outside `src/` and `tests/`, so it runs in a temporary export of the release commit with production's Python.
+- **A probe on invented files** (`zip_probe.py`): `zipfile` writes ZIP64 by itself past 65,535 entries; a
+  manifest-checked round trip of 81,500 files gave back every byte. Nothing about File Explorer or the owner's drives.
+- **Waiting for the owner later, after the review (note section 15; none decided, none assumed):** whether `.venv` is
+  in a snapshot; when `SNAPSHOT_DUE` is written; a job that cannot make an overdue snapshot; the orphan marker at a
+  restore; the formal OV-1 rule; where the marker guard sits; `restore` as a fifth mode; the two folder names; an
+  optional early File Explorer check on his PC (its own go).
+- **Model (MC-1):** the Fable task is finished. Opus is enough until the reviewer replies; Fable again for a revision
+  that touches the formal OV-1 rule, the barriers or the release identity.
