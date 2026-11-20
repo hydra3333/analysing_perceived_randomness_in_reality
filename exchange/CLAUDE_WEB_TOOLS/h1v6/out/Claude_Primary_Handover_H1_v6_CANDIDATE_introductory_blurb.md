@@ -156,4 +156,4 @@ You do not have the previous chat's cloud workspace. Please read carefully befor
   the handovers; when the chat grows long, say so and write the next handover first.
 
 Since 18 November 2026: <"see exchange/CONTINUITY_NOW.md", plus anything newer>.
-The repository commit is `<commit>`. Today's date is `<date>`.
+The repository commit is `de1aa3e3de6c31b8f3cbb7ae5a8de57f644d06ec`. Today's date is `19 November 2026`.
