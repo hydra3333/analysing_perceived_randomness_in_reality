@@ -1947,3 +1947,42 @@ the owner separately whether he wants it revisited, which would be a rule change
 - **Open with the owner (asked in the chat, not decided):** whether he wants W-23 itself revisited. Until he says so
   it stands as in entry 116.
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 121. 20 November 2026, 20:43 - EX_257 (RECHECK: F01, F02) and EX_258 (the owner's course correction) read; the owner's six decisions recorded from the reviewer's permanent record; Claude holds for the owner's go
+
+- **The permanent record, to be read in full by any chat taking over:** `exchange/DECISIONS/OWNER_DIRECTION_2026_11_20_OV1_RESTORE_METHOD_CONTINUITY.md`
+  (committed by the reviewer at main `12f8f9a`; companion to `exchange/EX_258_ChatGPT.md`, main `aac75e9`). It separates
+  the owner's direction from the reviewer's analysis. It is a direction and a review-cycle record, not a ratified
+  design; the ratified documents stand until reviewed amendments are ratified.
+- **The owner's decisions, as that record lists them (its section 7; relayed by the reviewer, not said in this chat):**
+  1. **No method and no earlier revision is retired** because another revision is released or because its performance
+     is unremarkable. "Leave them ALL working." A new revision is additional to its predecessor.
+  2. The complete historical N-1 assessment, the recomputed rankings and the TOP and WORST inspection are kept for every
+     method and revision; sustained positive or inverse signals are both of interest.
+  3. One prevailing, continuous, draw-number-based OV-1 per game; new identities join from their effective next
+     future draw; no back-fill into the prevailing score.
+  4. **A restore recreates exactly the selected verified snapshot** as the known working state. Later releases are not
+     applied automatically, nothing is retired, replaced or activated from Git or a set-aside tree, and the environment
+     is not rebuilt automatically. The lost draws are caught up in draw-number order with the snapshot's own methods
+     and revisions. Any later method or software change is a separate owner decision after that. The owner's words on
+     putting later releases back first: "that isn't a restore it is a restore being mangled."
+  5. No Python environment pinned per draw; dependencies change through the ordinary reviewed route. (W-23 is not
+     changed by this.)
+  6. Future evolutionary additions or combinations of methods are of interest; no automated retirement, culling or
+     selection engine is authorised.
+- **What this withdraws from Claude's drafts sent as EX_256:** in the amendment v0.2, a release's first draw as the
+  point where superseded variants stop (2.3), the examples 6a and 6b, and "put later releases back first" as the way
+  to keep lines supported; in the note v0.5, the same order in sections 8 and 9 and `check`'s printing of it. The
+  reviewer withdraws its acceptance of example 6b as the normal case and its assumption that later releases are
+  reinstated (EX_258 section 2).
+- **EX_257** (`exchange/EX_257_ChatGPT.md`, main `b55ceb9`): the draw-number design is accepted in principle. **F01:** the
+  2.5% bound is a CONDITIONAL claim; a structurally SUPPORTED line is software evidence, not proof of the
+  non-anticipation assumption; the report must not print "the 2.5% bound is supported" from the four checks alone; no
+  environment pin and not alternative 2b. **F02:** give an executable order of commands for a batch of new methods
+  (history, catch-up, one activation boundary), resolving that the staged `--fill` expects released variants.
+- **Claude's first reading of the code for "keep all revisions" (a finding, not a decision):** the installed registry
+  holds one active entry per (game, method, variant) chain, and `active_entry` is read in the dispatch gate, the
+  walk-forward driver, the weekly session, the report writer and Mode H; a method's code is replaced in place at a
+  revision rollover. So "old revisions keep running" is either a change through all of those, or it is met by
+  releasing a changed method as an additional variant with its own code, leaving the registry as it is.
+- **Held for the owner's go (MC-1: Fable, High):** the amendment v0.3 and the note v0.6, to be EX_259. No code.

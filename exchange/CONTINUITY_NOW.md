@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 20 November 2026, 19:47 Australia/Adelaide (the owner's decisions of entry 119; the OV-1 amendment DRAFT v0.2 and the deployment note DRAFT v0.5 sent as EX_256, entry 120). **Next: the reviewer's recheck (EX_257); then the owner's ratification of both; then H-1 v8 and a new Claude chat for the code round, on its own go. No code.**
+**Last updated:** 20 November 2026, 20:43 Australia/Adelaide (EX_257: RECHECK, F01 and F02; EX_258: the owner's course correction with its permanent record; entry 121). **Next: on the owner's go, the amendment v0.3 and the note v0.6 as EX_259. No code.**
 
 ## For the owner: NOW
 
+- **READ THIS RECORD IN FULL BEFORE ANY DESIGN OR CODE WORK ON OV-1, RELEASES OR RESTORE:**
+  `exchange/DECISIONS/OWNER_DIRECTION_2026_11_20_OV1_RESTORE_METHOD_CONTINUITY.md` (the owner's direction of 20 November 2026 and the review cycle EX_252 to EX_257, kept by the reviewer; decision
+  log entry 121 lists its six owner decisions). In short: **no method or earlier revision is ever retired
+  automatically; a new revision is additional. A restore recreates exactly the verified snapshot and catches up with
+  its own methods; later releases are never put back automatically. One draw-number OV-1 per game. No environment pin.
+  W-23 unchanged.**
+- **EX_257 AND EX_258 ARE IN; CLAUDE HOLDS FOR THE OWNER'S GO (entry 121; 20:43).** To write: the amendment v0.3 and the
+  note v0.6 (EX_259), covering EX_258 section 6 A to E: keep-all-revisions semantics; the exact restore; the batch
+  order for new methods (EX_257 F02); the conditional wording of the 2.5% claim (F01). The drafts v0.2 and v0.5 just
+  below are superseded in the parts entry 121 names.
 - **THE CORRECTED DESIGN DOCUMENTS ARE WITH THE REVIEWER (entries 119 and 120; 20 November 2026, 19:47).**
   (1) **The OV-1 amendment, DRAFT v0.2:** `exchange/CLAUDE_WEB_TOOLS/mhupb/ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_2.md`.
   One prevailing score per game. **Who counts at a draw is decided by draw numbers only:** each release record carries
@@ -240,7 +250,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). **Awaited: the recheck of the OV-1 amendment v0.2 and the deployment note v0.5 (EX_256; its reply EX_257).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). EX_257 (RECHECK: F01, F02). EX_258 (the owner's course correction; permanent record in `exchange/DECISIONS/`). **Awaited: the owner's go for the amendment v0.3 and the note v0.6 (to be EX_259).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
