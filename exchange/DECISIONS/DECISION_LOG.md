@@ -1724,3 +1724,40 @@ the installed documents. This log is not a separate approval process.
   probes left unguarded; E the optional early File Explorer check on his PC (its own go).
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies; Fable again if the recheck touches
   section 8's orphan rule or section 9.
+
+## 112. 20 November 2026, 16:30 - EX_250 (the design note v0.2: a narrow RECHECK; the owner's new backup and recovery decisions); the owner's answers on A to G
+
+- **EX_250 (the reviewer's commit `53c4592`): R-3 RECHECK, narrowly focused.** v0.2's six corrections are accepted in
+  principle (B01 to B06, the OV-1 trace and its recorder check included). The owner's later decisions, made in his
+  conversation with the reviewer and transmitted in EX_250 section 1, supersede v0.2's sections 6 to 8: (1) every
+  snapshot is the COMPLETE tree under `G:\a_p_r_i_r`, `.venv` included, with only the two temporary snapshot-control
+  files left out (this supersedes entry 110 item 1); (2) restore is a plain full-tree extraction to the same path,
+  with no routine rebuild of the environment; (3) each `update` attempts a full PRE-deployment and a full
+  POST-deployment snapshot (`init`: POST only), the ordinary end-of-job snapshots staying; (4) a separate, versioned,
+  date-and-time-named, hash-verified recovery kit ZIP on T: per release, so an emergency restore does not depend on E:
+  (R3-C01), with a process check that needs neither a readable G: nor E:; (5) the owner copies the whole T: backup
+  folder to USB3 drives and the cloud himself; (6) storage is not the limit (about 3.4 TB free on G:, 2.43 TB on T:).
+  Two findings for v0.3: R3-C01 (E: must not be a recovery dependency) and R3-C02 (complete, consistently verified
+  full-tree ZIPs; a quiet-state or write-exclusion rule; PRE and POST deployment snapshots).
+- **How these six are recorded:** EX_250 is the record of them (the owner settled them with the reviewer). Claude listed
+  them to the owner at 15:50 and asked for confirmation; his reply (below) did not restate them and did not
+  contradict them. If any is not as he meant, a correcting entry follows.
+- **The owner's words to Claude (16:29):** "in the worst case a simple unzip by the human into the right place gets it
+  done. yes to A through E.  I assume there is a way to invoke a backup whenever I feel the urge (outside running
+  anything else) ?   Yes F; T: must be available, if it is not then I have worse problems than this project failing ...
+  For G: whatever python is currently installed for that user.  From time to time I may independently update the venv
+  in dev and then prod, say if a new python is installed, presumably by deleting the .venv subfolders and rein the
+  right folder simply running install_upgrade_dependencies_into_venv.bat which calls the local activate_venv.bat ."
+- **Decided by the owner:** A: single owner commands rely on their run sheet (mark the snapshot as due first; end with
+  the snapshot command). B: a stale orphan marker at a restore needs a checked restart, a clean process check and his
+  typed acknowledgement; without a restart, the existing per-incident clearance. C: the one objective check in the
+  OV-1 recorder and `register` refusing after a lost registration. D: only the two named proof-of-concept probes stay
+  unguarded. E: the early File Explorer check, yes (its own go still to come). F: `update` and `init` stop if the
+  recovery kit cannot be written and verified on T:. G: an emergency restore runs on whatever Python is installed
+  for that user. Also: a snapshot can be taken by hand at any time; and, as the last resort, a restore is a plain
+  unzip into the right place by hand.
+- **Raised by the owner, NOT yet decided:** he may rebuild the environment himself, in development and then in
+  production, by deleting `.venv` and running his own installer. v0.2 instead builds production's environment from a
+  pinned lock and a wheel folder. Claude puts the choice to him before writing v0.3.
+- **Earlier the same day (09:33):** the owner agreed to a new Claude chat once the design note is settled ("I agree with
+  the new chat once this is settled"): H-1 v8 first, then the code round in a fresh chat on its own go.
