@@ -1798,3 +1798,34 @@ the installed documents. This log is not a separate approval process.
   `.venv\ENVIRONMENT_VERIFIED.json` (a launcher refuses on an environment not yet verified); and
   `Restore_Production.bat --after-hand-unzip` (a restore done by hand still gets its record and notices).
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 115. 20 November 2026, 18:15 - EX_252 (R-3 RECHECK of the deployment note v0.3, narrow) and EX_253 (the owner's scientific direction on OV-1, relayed by the reviewer) read; Claude's reading recorded; no new owner decision recorded by this chat yet
+
+- **EX_252** (`exchange/EX_252_ChatGPT.md`, main `844ebf2`): v0.3's architecture accepted (full snapshots with `.venv`, the
+  recovery kit, PRE and POST deployment snapshots, the plain restore, the narrowed quiet check). Still to correct, all
+  bounded: (1) the tools run without a launcher that WRITE locks or records refuse while a snapshot is in progress,
+  and the read-only quiet check stays allowed; (2) **R3-D01:** the restore's "nothing extra" check cannot pass as
+  ordered: define the snapshot payload and the exact allowed additions; (3) `ENVIRONMENT_VERIFIED.json` is kept, but
+  names and versions alone do not detect a same-version reinstall: use the existing environment inventory digest at a
+  job boundary; a failed verification leaves no marker; (4) **W-23 is not replaced by H1:** a dependency upgrade keeps
+  its independent review, the owner's go and its regression evidence before real production use; (5) the hand unzip:
+  into an empty folder at the same path; a live orphan marker is never silently bypassed; (6) two wording clean-ups.
+- **EX_253** (`exchange/EX_253_ChatGPT.md`, main `4997c6b`): the reviewer relays that the owner accepts a simplified OV-1:
+  one prevailing forward stream per game with the kernel, the six lambdas and the bar of 40 kept; a new method gets its
+  full historical N-1 walk-forward and the historical rankings are recomputed with it included, and it joins the
+  prevailing stream at its first eligible future draw, never by back-fill; all methods are evaluated impartially;
+  everything is reproducible chronological N-1 computation, so a restored backup is simply walked forward. Proposed for
+  removal: the registration ceremony, the pre-draw eligibility witness, the wall-clock cut-off with MISSED and STOP,
+  the restore notices and the after-hand-unzip reconciliation. **It is a direction, not a ratification; supplement
+  v0.8's rules stand until a reviewed amendment is ratified. It supersedes only the formal-OV-1 part of EX_252.**
+  It asks Claude for a focused scientific design amendment (its section 5, A to F) before the code round.
+- **What Claude found on reading the ratified design and the passed code (a finding, not a decision):** the weekly
+  session already separates, for a draw caught up after the fact, a variant released before that draw's date (run mode
+  `CATCH_UP`) from one released on or after it (`REAL_DEVELOPMENT`): `weekly_session.py`, by the release record's date.
+  So an objective participation rule for one prevailing stream exists without any new clock rule: a variant counts at a
+  target if its one weekly-tier record for it is a complete pair of class `PROSPECTIVE`, `LATE_PRE_DRAW` or `CATCH_UP`.
+  Under that rule a missed week, and a draw lost and replayed after a restore, are counted in the ordinary way; no
+  target is "missed" because of the clock; a new method's back-history never enters.
+- **Proposed next step, held for the owner's go in this chat (MC-1: Fable, High; a statistical design):** one amendment
+  to supplement v0.8 sections 6 and 7 with worked invented examples, and the deployment note v0.4 carrying EX_252's
+  corrections with its OV-1 restore section removed; both to the reviewer as EX_254. No code.

@@ -4,10 +4,25 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 20 November 2026, 16:40 Australia/Adelaide (EX_250: a narrow RECHECK with the owner's new backup and recovery decisions, entries 112 and 113; the design note DRAFT v0.3 sent as EX_251, entry 114). **Next: the reviewer's focused recheck (EX_252); then the owner's ratification; then H-1 v8 and a new Claude chat for the code round, on its own go. No code.**
+**Last updated:** 20 November 2026, 18:15 Australia/Adelaide (EX_252: narrow RECHECK of the deployment note v0.3; EX_253: the owner's direction to simplify OV-1 to one prevailing forward stream per game, relayed by the reviewer; entry 115). **Next: on the owner's go, Claude writes the OV-1 design amendment and the deployment note v0.4 and sends both as EX_254. No code.**
 
 ## For the owner: NOW
 
+- **TWO REVIEWER MESSAGES ARE IN; CLAUDE HOLDS FOR THE OWNER'S GO (entry 115; 20 November 2026, 18:15).**
+  **EX_252:** the deployment note v0.3 is accepted in its architecture; six bounded corrections remain (the restore's
+  exact payload check, R3-D01; the environment marker checked by the full inventory digest at a job boundary; W-23
+  kept for every dependency upgrade; two snapshot-lock refusals; the hand unzip's limits; wording).
+  **EX_253:** the owner's direction, relayed: OV-1 becomes ONE prevailing forward stream per game (kernel, six lambdas
+  and the bar of 40 kept); the registration ceremony, the pre-draw witness lines, the wall-clock cut-off with MISSED
+  and STOP, and every restore-specific OV-1 rule are proposed for removal; a new method gets its full historical
+  walk-forward and the rankings are recomputed with it in, but its back-history never enters the prevailing stream.
+  **Supplement v0.8 stands until a reviewed amendment is ratified.** Claude's finding for the amendment: the weekly
+  code already tells `CATCH_UP` (variant released before the draw's date) from `REAL_DEVELOPMENT`, so the stream can
+  count the weekly tier (`PROSPECTIVE`, `LATE_PRE_DRAW`, `CATCH_UP`) with no new clock rule; a restore then has no
+  OV-1 side effect at all. **Next, on the owner's go (Fable, High): the OV-1 amendment with invented worked examples,
+  and the deployment note v0.4 (EX_252's corrections; its section 9 on formal OV-1 after a restore removed); both as
+  EX_254.** Then the reviewer, the owner's ratification, H-1 v8, and the code round in a new Claude chat on its own
+  go. The entry just below (v0.3 with the reviewer) is now history.
 - **THE DEPLOYMENT DESIGN NOTE, DRAFT v0.3, IS WITH THE REVIEWER FOR ITS FOCUSED RECHECK (entries 112 to 114; 20 November
   2026).** EX_250 accepted v0.2's corrections in principle and carried the owner's new decisions: full snapshots with
   `.venv`; a plain same-path restore; PRE and POST deployment snapshots; a recovery kit zip on T: so that a restore
@@ -186,7 +201,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). **Awaited: the focused R-3 recheck of the design note v0.3 (EX_251; its reply EX_252).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). **Awaited: the owner's go for the OV-1 amendment and the note v0.4 (to be EX_254).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
