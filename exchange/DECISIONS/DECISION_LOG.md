@@ -1761,3 +1761,22 @@ the installed documents. This log is not a separate approval process.
   pinned lock and a wheel folder. Claude puts the choice to him before writing v0.3.
 - **Earlier the same day (09:33):** the owner agreed to a new Claude chat once the design note is settled ("I agree with
   the new chat once this is settled"): H-1 v8 first, then the code round in a fresh chat on its own go.
+
+## 113. 20 November 2026, 16:35 - OWNER DECISIONS: production's environment is built his way (H1); "no Python at all" for an emergency restore
+
+- **The owner's words (16:33):** "Yes to H1. Will test in dev first to see what happens, and presumably some sort of
+  \"verification command\" presumably there is a way to do that. Yes to \"no Python program at all may be running on the
+  PC, apart from the restore tool itself.\""
+- **H1, decided:** production's Python environment is made as the development one is, by the owner with his own scripts
+  (delete `.venv`; `create_venv.bat`; `install_upgrade_dependencies_into_venv.bat`), in development first, then in
+  production. The pinned lock file and the wheel folder of design note v0.2 section 6 are dropped. One rule stays:
+  after any environment build or change in production, the test suite must pass with production's own Python before
+  any real-data job; the deploy tool does that verification (the "verification command") and snapshots are taken
+  before and after. Claude told him the cost first: production's package versions are whatever `pip` gives that day,
+  not a pinned list; all 39 of the installer's packages go into production; an old snapshot restored after a major
+  Python change may hold an environment that no longer starts (the fix: the same rebuild, then the verification).
+- **The process rule for an emergency restore, decided:** no Python program at all may be running on the PC, apart
+  from the restore tool itself. It needs nothing from G: or E: and no extra package. Before a restore the owner closes
+  everything that uses Python. It applies to `restore` only.
+- **Taken as the go for v0.3** of the design note under entry 107's go (the design note and its submission for review),
+  as EX_250 section 7 asks. Design only: no code, package, Windows step, install, restore or run.
