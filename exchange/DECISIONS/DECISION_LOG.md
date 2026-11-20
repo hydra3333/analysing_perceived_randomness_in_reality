@@ -1853,3 +1853,22 @@ The owner, in the Claude web chat at 18:33, answering Claude's five points (his 
 the OV-1 amendment and the deployment note v0.4, to the reviewer as EX_254. **Design only. No code, package, task file,
 Windows step, install or run is authorised.** Supplement v0.8 stays in force until the amendment is reviewed and
 ratified.
+
+## 117. 20 November 2026, 18:41 - the OV-1 simplification amendment (DRAFT v0.1) and the deployment design note (DRAFT v0.4) sent for independent review (EX_254); no owner decision
+
+- **Done under entry 116's go (Fable, High; design only, no code):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_1.md` (with `ov1_prevailing_examples.py` and its output: invented draws and toy methods through the passed kernel);
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_4.md` (exact diff `NOTE_v0_3_TO_v0_4.diff`; builder `make_note_v0_4.py`). Sent as `exchange/EX_254_Claude.md`.
+- **The amendment's rule:** one prevailing score per game; a variant counts at a target if its one weekly-tier record for
+  it is a complete pair of class `PROSPECTIVE`, `LATE_PRE_DRAW` or `CATCH_UP`; the start is a draw number per game fixed
+  at ratification (Oz Lotto 1710, Powerball 1593 if before 24 November 2026); every draw once, in order; factor 1 only
+  for no counted pair or V = 0; one append-only line per draw that must equal its rebuild; blocked, never stopped.
+  Deleted: registration, the pre-outcome witness line, the cut-off, MISSED, STOP, every restore-specific rule. A new
+  variant's back-history goes to the league table, the reconstruction file (made automatic) and the exploratory view,
+  never into the score. The guarantee is stated under four conditions (isolation; released first; every draw once;
+  honest operation, including that the choice of backup is never made to move a score).
+- **The note v0.4:** EX_252's corrections (the restore's payload and exact allowed difference; the environment marker
+  with the full digest at each job boundary; W-23 as five ordered steps; the snapshot-lock refusals; the hand unzip);
+  section 9 replaced by "nothing special"; it depends on the amendment and is to be ratified with it or after it.
+- **The owner's condition on point 1 (caught-up draws count "if reviewer concurs") is put to the reviewer in EX_254.**
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.

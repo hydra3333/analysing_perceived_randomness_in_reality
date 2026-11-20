@@ -1,0 +1,49 @@
+=== 1. Ordinary weeks: five variants, draws 101 to 108, each forecast before its draw
+
+  draw 101: 5 variants (5 before, 0 caught up), X=+1 Z=0.341, score 0.992323
+  draw 102: 5 variants (5 before, 0 caught up), X=-3 Z=-0.987, score 0.986354
+  draw 103: 5 variants (5 before, 0 caught up), X=-3 Z=-1.114, score 1.000511
+  draw 104: 5 variants (5 before, 0 caught up), X=+2 Z=0.696, score 0.975472
+  draw 105: 5 variants (5 before, 0 caught up), X=+1 Z=0.318, score 0.962513
+  draw 106: 5 variants (5 before, 0 caught up), X=-3 Z=-0.896, score 0.971629
+  draw 107: 5 variants (5 before, 0 caught up), X=-4 Z=-1.195, score 1.006548
+  draw 108: 5 variants (5 before, 0 caught up), X=-2 Z=-0.557, score 1.025988
+
+=== 2. NEW is released after draw 108. Spectacular on the draws its designer had seen, ordinary afterwards
+  (a) the ranking is recomputed with NEW in it. TOP ticket, hits and chance (7*7/35 = 1.4 a draw):
+      draws 101-108 (NEW: back-history, development evidence): NEW 56 hits (7.00 a draw), A5 12 hits (1.50 a draw), A4 12 hits (1.50 a draw), A2 10 hits (1.25 a draw), A1 10 hits (1.25 a draw), A3 6 hits (0.75 a draw)
+      draws 109-116 (NEW: forward): A5 15 hits (1.88 a draw), A4 14 hits (1.75 a draw), NEW 11 hits (1.38 a draw), A3 10 hits (1.25 a draw), A2 7 hits (0.88 a draw), A1 7 hits (0.88 a draw)
+  (b) prevailing stream, draws 101-108, before and after NEW was released: identical = True
+  (c) prevailing stream, NEW counted from draw 109:
+  draw 108: 5 variants (5 before, 0 caught up), X=-2 Z=-0.557, score 1.025988
+  draw 109: 6 variants (6 before, 0 caught up), X=+4 Z=0.899, score 0.974794
+  draw 110: 6 variants (6 before, 0 caught up), X=-2 Z=-0.513, score 0.988442
+  draw 116: 6 variants (6 before, 0 caught up), X=+0 Z=0.000, score 1.008405
+  (d) EXPLORATORY retrospective view with NEW back-filled from 101 (never the prevailing score): score after 108 = 3.155332, after 116 = 2.466704; bar of 40 reached at some draw = False
+      the prevailing score after 108 = 1.025988, after 116 = 1.008405
+
+=== 3. A missed week: draw 111 was not forecast beforehand; the next session catches it up
+  the factors and the score are the same as if it had been forecast beforehand: True
+
+  draw 110: 6 variants (6 before, 0 caught up), X=-2 Z=-0.513, score 0.988442
+  draw 111: 6 variants (0 before, 6 caught up), X=-1 Z=-0.259, score 0.992544
+  draw 112: 6 variants (6 before, 0 caught up), X=+5 Z=1.540, score 0.926326
+  (supplement v0.8 would have given draw 111 the factor 1: MISSED_NO_FREEZE)
+
+=== 4. A forecast that is really missing: A3 has only a failure record for draw 113; no variant has a pair for 114
+
+  draw 112: 6 variants (6 before, 0 caught up), X=+5 Z=1.540, score 0.926326
+  draw 113: 5 variants (5 before, 0 caught up), X=+2 Z=0.565, score 0.907051
+  draw 114: 0 variants (0 before, 0 caught up), factor 1 (NO_COUNTED_PAIR), score 0.907051
+  draw 115: 6 variants (6 before, 0 caught up), X=-8 Z=-2.033, score 0.963811
+
+=== 5. A restore. The backup was taken after draw 110 was scored; draws 111 to 116 are replayed (N-1)
+  replayed factors and score, draws 111-116, equal the lost originals: True; final score 1.008405 (lost original 1.008405)
+  5b. An OLDER backup, taken after draw 107, before NEW was released. NEW is installed again after the restore,
+      so its first eligible draw is now 117:
+      draws 108-116 replayed without NEW: final score 0.963251 (lost original 1.008405); draws 101-107 untouched: True
+  5c. The same replay as 5, but variant A2 now computes differently (as after a changed Python package):
+      final score 0.985090 (lost original 1.008405); every weight still came from history before its draw
+
+=== 6. The kernel's own check on every table used above: the stored factors have a fair-draw mean of at most 1
+  (factor_table refuses otherwise; none refused)

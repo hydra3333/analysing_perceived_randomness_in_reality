@@ -1,0 +1,434 @@
+1c1
+< # MHUP-B deployment design note - DRAFT v0.3
+---
+> # MHUP-B deployment design note - DRAFT v0.4
+3,8c3,8
+< **Status:** DRAFT v0.3 for the reviewer's focused R-3 recheck. Not ratified. It authorises nothing. It answers EX_250
+< (a narrow RECHECK: R3-C01, R3-C02) and carries the owner's decisions of 20 November 2026 on full backups, the
+< recovery kit and the environment (decision log entries 112 and 113). Section 18 says where each finding landed.
+< v0.1 (EX_247) and v0.2 (EX_249) are kept beside it; `NOTE_v0_2_TO_v0_3.diff` is exact.
+< **Written:** 20 November 2026, 16:40 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+< owner's go of 19 November 2026 for the design note (decision log entry 107; entries 110 and 113). Fable (High).
+---
+> **Status:** DRAFT v0.4 for the reviewer's recheck. Not ratified. It authorises nothing. It makes the bounded
+> corrections of EX_252 (the narrow RECHECK of v0.3) and, following the owner's direction in EX_253, removes every
+> restore-specific OV-1 rule: section 9 is now one short section that rests on the OV-1 simplification amendment sent
+> with it. Section 18 says where each finding landed. v0.1 to v0.3 are kept beside it; `NOTE_v0_3_TO_v0_4.diff` is exact.
+> **Written:** 20 November 2026, 18:40 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+> owner's go of 19 November 2026 for the design note (decision log entry 107) and his decisions of entry 116. Fable (High).
+10,11c10,11
+< **Risk tier:** HIGH (it replaces part of a ratified install procedure, design Appendix J; it touches gates, installs
+< and the formal OV-1 claim). **Base:** `main` at `4a72269`; staged slices as passed (EX_231, EX_237, EX_242).
+---
+> **Risk tier:** HIGH (it replaces part of a ratified install procedure, design Appendix J; it touches gates and
+> installs). **Base:** `main` at `cf46862`; staged slices as passed (EX_231, EX_237, EX_242).
+53,58c53,57
+<    can unzip a snapshot by hand; the kit's instructions say what to run afterwards.
+< 8. **The formal OV-1 claim is kept apart, with no human choice.** A trace of the passed code (section 9) shows the one
+<    thing a restore changes: a draw that was counted before the restore can come back as "missed". The fix is one
+<    objective check in the recorder, fed by a small restore notice: such a draw makes the *registered formal claim*
+<    read "not established from draw T". Forecasting, scoring, league tables and the descriptive OV-1 view never wait
+<    for it and are never changed by it.
+---
+>    can unzip a snapshot by hand into an empty folder at the same path; the kit's instructions say how, and what to
+>    run afterwards so the files are checked.
+> 8. **OV-1 needs nothing special after a restore.** Under the OV-1 simplification amendment sent with this note, a
+>    draw replayed after a restore is counted like any caught-up draw, and the score is the same. The restore notices
+>    and the extra stop of v0.3 are withdrawn (section 9).
+97,102c96,99
+<   8. The staged weekly sequencer already treats a stopped formal OV-1 stream as an expected state and goes on; the
+<      recorder's owner stop (`Method_OV1.py stop`) exists and lands at the stream's open target.
+<   9. **The trace of section 9** (the passed slice 3 tree run on the invented weekly project; section 14): after a
+<      restore the recorder re-derives a lost FACTOR line with all 17 fields equal; it records a formerly counted draw as
+<      MISSED when its pre-cut-off freeze line is not in the snapshot and its cut-off has passed; its own `verify` then
+<      passes; and in a tree whose snapshot predates the registration a second `register` is accepted.
+---
+>   8. (v0.4) Facts 8 and 9 of v0.3 concerned the staged OV-1 recorder's stopped state and its behaviour after a
+>      restore. This note no longer rests on them (section 9).
+>   9. The weekly session computes the environment's full digest when it opens a session (`open_session` calls the
+>      closure and environment inventory), and `environment_inventory()` exists in `src/methods/_common/closure.py`.
+236c233
+< | 9 | The environment: never built by the tool. If it is not the verified one, the environment inventory is run here and, after step 10 passes, `ENVIRONMENT_VERIFIED.json` is written (section 6) | new (D6; H1) |
+---
+> | 9 | The environment: never built by the tool. Its full inventory digest is computed. If it is not the verified one, any older `ENVIRONMENT_VERIFIED.json` is removed here, and a new one is written only after step 10 passes (section 6). A verification-only `update` on the release already deployed runs steps 1 to 5 and 9 to 14 and copies nothing | new (D6; H1; EX_252 section 3) |
+346c343
+< ## 6. Production's Python environment (D6; the owner's decision H1, decision log entry 113)
+---
+> ## 6. Production's Python environment (D6; the owner's decision H1, entry 113; EX_252 sections 3 and 4; entry 116)
+353,365c350,382
+< - **One rule: verified before use.** After any build or change the owner runs `update` (the same command; with no new
+<   release it changes no code). It sees that the environment is not the verified one and: (1) runs the existing
+<   environment inventory, which refuses an orphan file; (2) runs the whole suite in a temporary export of the release
+<   commit with production's Python; (3) on a pass writes `.venv\ENVIRONMENT_VERIFIED.json` (the environment's digest,
+<   the installed distributions and versions, the release, the time) and a deployment-log line, and takes the
+<   POST-deployment snapshot. **This is the "verification command".**
+< - **Until then no launcher runs.** The production guard (section 10) requires that file, and requires the installed
+<   distributions (names and versions, read from the folder names in `site-packages`: one directory listing) to equal
+<   its list. A deleted and rebuilt `.venv` has no such file; an upgrade in place changes the list. Either way every
+<   real-data launcher refuses and says: run `update` to verify the environment.
+< - **The owner's procedure for an environment change** (a new Python, say), each time on his own go as a dependency
+<   change (W-23): in the E: clone first (rebuild; the suite by a Claude Code task, as T024 did). Then in production:
+<   `Run_Production_Snapshot.bat` (the "before" snapshot); rebuild; `update` (the verification and the "after" snapshot).
+---
+> - **One rule: verified before use.** After any build or change the owner runs `update` (the same command; **a
+>   verification-only `update` on the release already deployed is allowed** and changes no code). It finds that the
+>   environment is not the verified one and: (1) removes any older `ENVIRONMENT_VERIFIED.json` first; (2) runs the
+>   existing environment inventory (`environment_inventory()` in `src/methods/_common/closure.py`), which refuses an
+>   orphan file and gives the environment's full digest; (3) runs the whole suite in a temporary export of the release
+>   commit with production's Python; (4) only on a pass writes `.venv\ENVIRONMENT_VERIFIED.json` (that full digest, the
+>   installed distributions and versions, the release, the time) and a deployment-log line, and takes the
+>   POST-deployment snapshot. **A failed verification leaves no marker.** This is the "verification command".
+> - **How an unverified environment is kept from real work: two checks, each stated for what it is.**
+>   1. *At every launch, a cheap first gate:* the production guard (section 10) requires the marker file and requires the
+>      installed distributions (names and versions: one directory listing) to equal its list. This catches a deleted and
+>      rebuilt `.venv` and any upgrade that changes a version. **It does not catch a reinstall of the same version or a
+>      changed file inside a package,** and is not described as doing so.
+>   2. *At every job boundary, the full identity:* the weekly and development sequencers, and the deploy tool's `update`
+>      and `check`, compute the full inventory digest and refuse if it is not the marker's. (The weekly session already
+>      computes this digest when it opens a session, so this adds a comparison, not a scan.)
+>   3. *The owner's script removes the marker before it changes anything* (the owner's yes, entry 116 item 5): one line
+>      added to `install_upgrade_dependencies_into_venv.bat`, in its installing modes only (its `VERIFY` mode reads only).
+>   **What is left, stated:** `pip` typed by hand, reinstalling the same versions, followed by a single owner command
+>   typed before any job or `update`. The next job boundary refuses.
+> - **W-23 is unchanged (EX_252 section 4; the owner, entry 116 item 4).** H1 changes how the environment is built. It
+>   does not change who must look first. Every dependency upgrade keeps the always-review rule (H-1 v7r1 sections 1.5
+>   and 5.4), in this order, each time:
+>   1. The owner says what he means to upgrade; the reviewer assesses it; the owner gives that upgrade's go.
+>   2. The E: clone is rebuilt. The evidence H-1 5.4 names is produced there by a Claude Code task: the offline suites,
+>      the numerical and N-1 tests, the W-suite including W-23, and every E_1 golden, with no golden recalibrated. Any
+>      exclusion is named and needs the owner's explicit acceptance.
+>   3. The reviewer sees that report.
+>   4. Production: `Run_Production_Snapshot.bat` (the "before" snapshot); the rebuild; `update` (the same evidence with
+>      production's own Python, the marker, the "after" snapshot).
+>   5. Only then a real job. Until step 4 passes the guard refuses anyway.
+>   T024's acceptance of 14 November 2026 covered that one change and is no waiver. The owner may revise W-23 after a
+>   review; this note does not.
+376,378c393,395
+< would work around; he chose H1. (2) No `ENVIRONMENT_VERIFIED.json`, the rule kept by procedure only: simpler by one
+< small file and one directory listing per launch, but a real job on an untested environment would go unnoticed. I
+< recommend keeping the file; the reviewer may judge it unnecessary.
+---
+> would work around; he chose H1. (2) No marker, the rule kept by procedure only: the reviewer judged the marker worth
+> keeping (EX_252 section 3). (3) The full digest at every launch: exact, but a scan of the whole environment before
+> every inner method run, for a case the job boundary already catches.
+403,404c420,423
+<      inside the folder and name it. One new read-only command in the process tool. Any process listed, or one that
+<      cannot be read: not quiet, no snapshot.
+---
+>      inside the folder and name it (a production child whose executable is the shared base interpreter is listed
+>      through its launcher ancestor; a test shows it). One new read-only command in the process tool. Any process
+>      listed, or one that cannot be read: not quiet, no snapshot. **The original install and safety check of design
+>      6.1 and the coordinator's orphan rule are not relaxed.**
+405a425,432
+>   **What this is and is not** (EX_252 section 1). It is a sound operating rule for the project's own controlled
+>   writers. It is not a guarantee against an arbitrary program that is not Python, or against a change made and
+>   undone between the two readings, and is not described as one.
+>   **While `SNAPSHOT_IN_PROGRESS.lock` exists,** the commands of `process_check.py` and `install_records.py` that
+>   write a lock or a record also refuse, as the guarded launchers do. The snapshot's own read-only quiet check stays
+>   allowed, or a snapshot would block itself.
+>   **A file named `SNAPSHOT_MANIFEST.json` at production's root** (left there only by an unzip by hand, section 8)
+>   stops a snapshot being made, with the standing warning, until `--after-hand-unzip` has checked the tree and moved it.
+426,427c453,454
+<   | `Run_Production_Snapshot.bat` | **a snapshot by hand, at any time, by itself** (the owner's question of 20 November 2026). With `--mark-due` it only sets the flag |
+<   | single owner commands through the general launchers (`declare-developed`; OV-1's `register` and `stop`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic** (the owner's decision A, entry 112). Their run sheets begin with `Run_Production_Snapshot.bat --mark-due` and end with `Run_Production_Snapshot.bat`. Between the command and that snapshot its change is in no snapshot; the one that matters most is `register`, which cannot be made again if lost (section 9) |
+---
+>   | `Run_Production_Snapshot.bat` | **a snapshot can be asked for by hand at any time, by itself** (the owner's question of 20 November 2026). It is made, and called verified, only if the quiet checks above pass. With `--mark-due` it only sets the flag |
+>   | single owner commands through the general launchers (`declare-developed`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic** (the owner's decision A, entry 112). Their run sheets begin with `Run_Production_Snapshot.bat --mark-due` and end with `Run_Production_Snapshot.bat`. Between the command and that snapshot its change is in no snapshot |
+443,444c470,471
+<   verified snapshot; a restore then replays everything since. That costs time, never research validity. It can cost a
+<   game's formal OV-1 claim if a counted draw's records exist only in the unsnapshotted stretch (section 9).
+---
+>   verified snapshot; a restore then replays everything since. That costs time, never research validity, and under
+>   the OV-1 amendment it does not change the OV-1 score either (section 9).
+472a500,504
+> **Words used below.** A snapshot's **payload** is every member of the archive except `SNAPSHOT_MANIFEST.json`. The
+> manifest is the archive's own list; the tool reads it and never unpacks it into production. Two payload members are
+> handled by name: the production marker `PRODUCTION_ROOT.json` (written last) and an orphan marker, if the snapshot
+> holds one (never unpacked to its live place; see below).
+> 
+475,477c507,509
+< 1. **Looks at the old tree, best effort, for the record only:** locks and barriers left behind; an orphan marker;
+<    whether each game's weekly folder holds an OV-1 registration. Whatever cannot be read is recorded as "could not be
+<    read". Nothing found here stops the restore, except the orphan marker's condition.
+---
+> 1. **Looks at the old tree, best effort, for the record only:** locks and barriers left behind; an orphan marker.
+>    Whatever cannot be read is recorded as "could not be read". Nothing found here stops the restore, except the orphan
+>    marker's condition.
+482,490c514,528
+< 3. **Makes a fresh, empty `G:\a_p_r_i_r`,** writes `RESTORE_IN_PROGRESS.json` in it first, and unpacks **every**
+<    member, the environment included, hashing each file against the list as it is written. Nothing is merged,
+<    skipped or rebuilt. An orphan marker inside the snapshot is the one member not unpacked to its place (below).
+< 4. **Writes the restore record** `production_records\RESTORE_<date>_<time>.json` (create-only: the snapshot's name,
+<    SHA-256 and time; the kit used; the set-aside tree's name; what step 1 found; the times) **and the two restore
+<    notices** of section 9.
+< 5. **Verifies the whole fresh tree again:** every file against the list, nothing missing and nothing extra, and the
+<    code against the hash list of its release, which the snapshot itself carries.
+< 6. **Writes the production marker last** and removes `RESTORE_IN_PROGRESS.json`.
+---
+> 3. **Makes a fresh, empty `G:\a_p_r_i_r`,** writes `RESTORE_IN_PROGRESS.json` in it first, and unpacks every payload
+>    member except the two handled by name, hashing each file against the list as it is written. Nothing is merged,
+>    skipped or rebuilt.
+> 4. **Verifies the payload, exactly** (EX_252 R3-D01). Every file now in the fresh tree is read again and must equal
+>    the list, and the set of files and empty folders must be exactly: the payload, less the production marker, less the
+>    orphan marker if there is one, plus `RESTORE_IN_PROGRESS.json`. One file missing, extra or different refuses. The
+>    code is also checked against the hash list of its release, which the snapshot itself carries.
+> 5. **Adds what a restore adds, each by name, and nothing else:** the restore record
+>    `production_records\RESTORE_<date>_<time>.json` (create-only: the snapshot's name, SHA-256 and time; the kit used;
+>    the set-aside tree's name; what step 1 found; the times); and, only if the snapshot held an orphan marker, its
+>    bytes at `production_records\RESTORE_<date>_<time>_ORPHAN_MARKER.json`.
+> 6. **Writes the production marker last,** from the snapshot's own bytes, checked against the list, and removes
+>    `RESTORE_IN_PROGRESS.json`. A last listing confirms the tree is exactly: **the payload, plus the restore record,
+>    plus the orphan evidence file if any, less the live orphan marker if any.** That sentence is the whole allowed
+>    difference, and the tests show the check passing on a correct restore.
+503,508c541,554
+< snapshot is an ordinary zip, so with no tool at all the owner can rename the old folder and extract the snapshot to
+< `G:\a_p_r_i_r` in File Explorer. That skips the process check, the verification, the restore record and the restore
+< notices. So `HOW_TO_RESTORE.txt` says: first close everything that uses Python; afterwards, as soon as a kit can be
+< run, `Restore_Production.bat --after-hand-unzip --snapshot <zip>`, which verifies the tree against that snapshot's
+< list and writes the restore record and the notices (with the time of that moment). Until that is done the formal
+< OV-1 check of section 9 cannot know a restore happened; ordinary work is unaffected either way.
+---
+> snapshot is an ordinary zip, so with no tool at all the owner can restore in File Explorer. `HOW_TO_RESTORE.txt` says,
+> in this order: close everything that uses Python; rename the old folder; make a new **empty** folder at the **same
+> path**, `G:\a_p_r_i_r`; extract the snapshot into it. What that leaves, stated truthfully:
+> - Nothing was checked: not the processes, not the files.
+> - `SNAPSHOT_MANIFEST.json` now sits at production's root. While it is there no new snapshot is made (the name is the
+>   archive's own), and every job says so in its standing snapshot warning.
+> - **If the snapshot held an orphan marker it is now live, and it blocks every launch as it always does.** Nothing
+>   bypasses it: the owner's ordinary clearance applies.
+> - `Restore_Production.bat --after-hand-unzip --snapshot <zip>` puts this right when a kit can be run: the same process
+>   check; every file against that snapshot's list, exactly the payload plus the manifest; then the restore record, in
+>   which the time is labelled **"reconciliation recorded at"**, never as the time of the unzip, which the tool cannot
+>   know; and the manifest is moved beside the record. It changes no other file.
+> - It has no bearing on OV-1 or on any research result (section 9). Its only purposes are the check of the files and
+>   the next snapshot.
+546c592,593
+< a forecast made after its draw is catch-up or development evidence, not prospective. **One plain consequence, stated
+---
+> a forecast made after its draw is catch-up or development evidence, not prospective. (Under the OV-1 amendment a
+> catch-up forecast is counted in the OV-1 score all the same; section 9.) **One plain consequence, stated
+553c600,619
+< ## 9. The formal OV-1 claim after a restore (EX_248 B03)
+---
+> ## 9. OV-1 after a restore: nothing special (EX_253; the OV-1 simplification amendment; entry 116)
+> 
+> v0.3's section 9 answered a problem of the ratified rule: OV-1's formal stream counted only forecasts frozen before
+> their draw by the clock, so a draw counted before a restore could come back as "missed". It proposed restore notices, a
+> new stop cause and a refusal of a second registration.
+> 
+> The owner has since directed that OV-1 be simplified to one prevailing score per game (EX_253), and the amendment sent
+> with this note (`ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_1.md`) proposes the rule: a variant counts at
+> a draw if it was released before that draw and forecast it under N-1 isolation, whether before the draw or afterwards
+> by catch-up. Under that rule:
+> 
+> - **A restore has no OV-1 side effect.** The score's ledger comes back as it was in the snapshot. The ordinary session
+>   catches up the lost draws; they are counted by the standing rule; each line records that its forecasts were caught
+>   up. The amendment's invented example 5 shows the replayed lines equal to the lost ones.
+> - **Withdrawn from this note:** the restore notices; the stop cause `NOT_ESTABLISHED_AFTER_RESTORE`; the refusal of
+>   `register` after a lost registration; the look inside the set-aside tree for a registration; any OV-1 purpose of
+>   `--after-hand-unzip`; the edits to `ov1.py` and `consolidated_report.py` that v0.3 listed; and v0.3's tests of them.
+> - **The one thing left to say is about conduct, not machinery** (the amendment's section 8, condition 4): which
+>   backup to restore is never chosen in order to move a score.
+> - The trace made for v0.2 (section 14) stays beside this note as the record of what the old rule did.
+555,644c621,622
+< **Nothing ordinary is at stake** (EX_248 section 1). All eligible methods and revisions run impartially; a restore and
+< replay are the same chronological process; the ordinary forecasts, scores, rankings and the retrospective OV-1 X, Z,
+< factors and trajectory are valid research; no rule here guards against choosing methods to suit results, because the
+< system has no such mechanism. The one question is narrow: what can the restored tree still certify about the claim
+< labelled "REGISTERED FORMAL PROSPECTIVE OV-1, 2.5% per game", whose ratified rule requires, for every counted draw, a
+< freeze line and an eligibility line made before that draw's cut-off (supplement v0.8 section 6.8)?
+< 
+< ### 9.1 The trace: what the passed code does today
+< 
+< The passed slice 3 tree, run on the invented weekly project of its own tests (section 14). M is the first registered
+< target. "Restore" means: the project folder renamed aside and an earlier copy put back, the clock left at the real,
+< later time.
+< 
+< | Case | Before the restore | The restore | What the recorder then appends | What the report's formal view shows |
+< |---|---|---|---|---|
+< | (a) nothing lost | M and M+1 counted; M+2 eligible | to the snapshot from the end of that job | Nothing differs: the ledger is byte-identical after the restore; the next week appends FACTOR M+2 and ELIGIBILITY M+3 (counted 3, score 0.979739214220) | RUNNING, as if no restore had happened |
+< | (b) only a factor line lost | M counted; M+1's factor written by the job that then broke | to the snapshot from the job before (it holds M+1's confirmed eligibility line), before M+2's cut-off | FACTOR M+1 again, 17 of 17 fields equal to the lost line's; then ELIGIBILITY M+2 (counted 2, score 0.988226352101, before and after) | RUNNING, the same figures |
+< | (c) a counted draw's pre-cut-off records lost | M, M+1 and M+2 counted (score 0.979739214220); M+3 eligible | to the snapshot from before M+2 was frozen, after M+2's cut-off | FACTOR M+1 again; **MISSED M+2** (reason `MISSED_NO_FREEZE`, label `RECORDED_AFTER_THE_CUTOFF_FROM_LOCAL_RECORDS`); ELIGIBILITY M+3 (counted 2, missed 1, score 0.988226352101). `verify` passes | RUNNING, one counted draw fewer and another score, with nothing to say it changed |
+< | (d) the registration lost | registered; M counted | to a snapshot older than the registration | Nothing: no registration, no ledger; `record` answers NOT_REGISTERED. A second `register` typed before the next session is ACCEPTED (after a session it is refused only because the next draw is already frozen) | "not registered yet" |
+< | (e) the old tree unreadable | as (c) | as (c) | Exactly as (c): the recorder never reads the old tree | as (c) |
+< 
+< In (c) the replay's ordinary scores for M+2 equal the old tree's for all three invented variants, classed CATCH_UP:
+< the research is the same. Only the formal bookkeeping moved.
+< 
+< **The code-level reason.** (c): in `ov1.py`, `_due`, when the forecast ledger holds no next-draw freeze line frozen
+< before C(T) and the clock is past C(T), the recorder calls `reconcile` and appends MISSED. After a restore the tree is
+< consistent with itself, so `reconcile` passes. The line is truthful about the tree it is in, but the registered
+< sequence of opportunities has changed, and the missed rule's own stated assumption (no eligible freeze line is removed
+< after the fact; supplement 6.8) no longer holds, with nothing in the tree to say so. (d): `register` can only check
+< the tree it is in.
+< 
+< ### 9.2 The smallest objective classification
+< 
+< Two times are known in the restored tree without the old one: **S**, when the snapshot's copying began (in its
+< manifest), and **R**, when the restore finished. C(T) is a fixed instant (01:30 UTC on the draw's date). For a target T:
+< 
+< - **C(T) at or before S:** everything that existed before the cut-off is in the snapshot. Counted or missed, as the
+<   snapshot shows. Certifiable.
+< - **C(T) after R:** everything about T is made afresh, before any outcome exists. Certifiable.
+< - **S before C(T), and C(T) at or before R:** only what the snapshot holds is known.
+<   - It holds T's freeze line and its confirmed eligibility line: counted; the factor is looked up again in the table
+<     sealed before the outcome (case b). Certifiable.
+<   - It holds the freeze line without a confirmed eligibility line: the passed recorder already stops
+<     (`ELIGIBILITY_NOT_VERIFIED`).
+<   - **It holds no pre-cut-off freeze line for T:** the tree cannot tell "missed" from "counted, then lost". The honest
+<     status is **not established from T**. This is the one place where today's code states something it cannot know.
+< 
+< The classification uses three times and the snapshot's contents. No person decides it, no outcome enters it, and the
+< old tree is not read.
+< 
+< ### 9.3 The mechanism (recommended)
+< 
+< 1. **A restore notice.** `restore` writes, create-only, in each game's weekly folder,
+<    `RESTORE_NOTICE_<date>_<time>.json`: S, R, the snapshot's name and SHA-256, and `registration_before_restore`:
+<    `YES`, `NO` or `COULD_NOT_BE_READ` (whether the old tree's weekly folder held a registration that the snapshot
+<    lacks; from step 1 of the restore, best effort). For both games, at every restore, registered or not.
+< 2. **One check in the recorder.** Where it is about to append MISSED for T: if a notice has S before C(T) and C(T) at
+<    or before R, it appends instead a STOP line with the new cause `NOT_ESTABLISHED_AFTER_RESTORE` and the detail
+<    "FORMAL CLAIM NOT ESTABLISHED FROM DRAW T: production was restored at R from a snapshot of S; whether draw T was
+<    frozen before its cut-off cannot be verified from this tree". Because targets are taken in order, the stop is at
+<    the **earliest** such draw, not at whatever target is open when someone notices. Every report then shows it by code
+<    that has already passed (state STOPPED, the cause, the detail). `verify` applies the same check.
+< 3. **`register` after a lost registration.** With a notice that says `YES` or `COULD_NOT_BE_READ` for the game,
+<    `register` refuses: "a registration made before the restore of R is not in this tree (or could not be checked);
+<    there is no second registration (OD-4)". The report's formal view then reads "NOT ESTABLISHED: the registration was
+<    made before a restore and is not in this tree" instead of "not registered yet". A fresh formal test after that
+<    would be a new, separately reviewed decision of the owner (EX_219 C1); nothing here provides one.
+< 4. **Nothing else changes.** No existing line is rewritten; no time is altered or invented; the kernel
+<    (`ov1_numeric.py`) is untouched; cases (a) and (b) behave exactly as traced.
+< 
+< **What never waits and never changes:** forecasting, scoring, the league table and the retrospective OV-1 view. The
+< weekly sequencer already treats a stopped formal stream as an expected state and goes on (it prints that forecasting,
+< scoring and the league table continue), and the retrospective view computes X, Z, the factors and the trajectory over
+< every draw, the replayed ones included, under its descriptive label. The tests show these outputs byte-identical with
+< and without the new check (section 12).
+< 
+< **Why this is sound, and not a new test.** The change can only stop a stream; it never adds a counted draw, changes a
+< factor or restarts anything. Stopping cannot raise the chance of ever reaching the bar. Whichever snapshot is restored
+< and whenever, the counted draws that remain have exactly their original factors (case b). The stop cause becomes part
+< of the rule each stream is registered under; no stream is registered yet, so none is changed after the event. It is
+< recorded as a short amendment to supplement 6.8, ratified with the package.
+< 
+< **Its cost.** It is conservative in one way: a draw that was genuinely missed, with its cut-off between S and R, also
+< reads "not established". And the stretch between S and R is longer whenever snapshots were not made (section 7).
+< 
+< **Alternatives.** (1) The mechanism above: recommended. (2) Leave the recorder alone and let the report print "not
+< established from draw T" beside a ledger that keeps counting: no edit to slice 2, but two voices about one stream,
+< and a later crossing would sit in a ledger the report disowns. (3) Do nothing: case (c) shows the silent change.
+< (4) v0.1's list applied by the owner and Claude after a restore: withdrawn (EX_248 B03: discretionary, and it needed
+< the old tree).
+---
+> **Order of ratification.** This section depends on the amendment. This note is to be ratified with the amendment or
+> after it, not before. If the amendment were not ratified, v0.3's section 9 would return.
+655c633,634
+<   section 7); `.venv\ENVIRONMENT_VERIFIED.json` missing, or its list not the installed distributions (section 6).
+---
+>   section 7); `.venv\ENVIRONMENT_VERIFIED.json` missing, or its list not the installed distributions. That second
+>   test is a cheap first gate only; the full environment digest is compared at each job boundary (section 6).
+658c637,638
+<   outside production (EX_250 section 4, B06); the tests' invented folders carry an invented marker.
+---
+>   outside production (EX_250 section 4, B06); the tests' invented folders carry an invented marker. Their writing
+>   commands also refuse while a snapshot is in progress; their read-only commands do not (section 7; EX_252 section 1).
+688,692c668,672
+< | `Weekly_Session_Orchestrator.py`, `Development_Batch_Orchestrator.py` (slice 3) | `main` wrapped: guard and overdue snapshot before, snapshot and exit status after; `SNAPSHOT_DUE` written before the first writing child. The sequence itself is untouched |
+< | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git` and requires the production marker (section 10); one new read-only command, the quiet check of section 7 (design 6.1's rule without the shared-interpreter clause). `restore` does not use this tool |
+< | `src/evaluation/ov1.py` (slice 2; the recorder, not the kernel) | reads the restore notices in its own weekly folder; one new stop cause where it would otherwise write MISSED; `register` refuses after a lost registration (section 9) |
+< | `src/evaluation/consolidated_report.py` (slice 3) | the formal view's wording when a registration was lost (section 9) |
+< | `src/package_tools/install_records.py` (installed) | the root test likewise (no `.git`; the production marker); `_committed` and `_tracked_changes` replaced by the hash check of section 4.3 step 13 |
+---
+> | `Weekly_Session_Orchestrator.py`, `Development_Batch_Orchestrator.py` (slice 3) | `main` wrapped: guard and overdue snapshot before, snapshot and exit status after; `SNAPSHOT_DUE` written before the first writing child; the environment's full digest compared with the verified marker before anything is written (section 6). The sequence itself is untouched |
+> | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git` and requires the production marker (section 10); one new read-only command, the quiet check of section 7 (design 6.1's rule without the shared-interpreter clause); its writing commands refuse while a snapshot is in progress. `restore` does not use this tool |
+> | `src/evaluation/ov1.py`, `src/evaluation/consolidated_report.py` | **none from this note** (v0.3's two edits are withdrawn; the OV-1 amendment lists its own changes) |
+> | `install_upgrade_dependencies_into_venv.bat` (the owner's script; installed) | one line, in its installing modes only: remove `.venv\ENVIRONMENT_VERIFIED.json` before anything changes (the owner's yes, entry 116 item 5) |
+> | `src/package_tools/install_records.py` (installed) | the root test likewise (no `.git`; the production marker; its writing commands refuse while a snapshot is in progress); `_committed` and `_tracked_changes` replaced by the hash check of section 4.3 step 13 |
+721c701
+<   extra; with the old tree absent, half missing, without a `.venv`, with an unreadable OV-1 ledger: the restore
+---
+>   extra; with the old tree absent, half missing, without a `.venv`, with unreadable records: the restore
+731,735c711,718
+< - **Formal OV-1 after a restore** (the five cases of section 9, on the invented weekly project): (a) and (b)
+<   unchanged ledgers and equal factors; (c) the new stop at the earliest unverifiable draw, never a MISSED line, with
+<   forecasting, scoring, the league table and the retrospective view identical to a run without the check; a draw
+<   whose cut-off is before the snapshot or after the restore still becomes MISSED as today; (d) the report's wording
+<   and `register` refusing; (e) the same as (c) with the old tree deleted. One planted defect per rule.
+---
+> - **OV-1 after a restore:** nothing in this layer. The OV-1 amendment's own tests show a replay giving the same lines.
+> - **EX_252's named tests:** a writing command of each of the two unlaunched tools refuses during a snapshot, and the
+>   read-only quiet check runs during it; a production child whose executable is the shared base interpreter is listed
+>   through its launcher ancestor; the restore's exact-set check **passes** on a correct restore and refuses one
+>   file missing, one extra and one changed; a same-version reinstall and a same-version changed file are refused at
+>   the job boundary though the launch gate passes; a failed suite leaves no marker and removes an older one; a
+>   verification-only `update`; `--after-hand-unzip` run late (its record says "reconciliation recorded at"); a
+>   snapshot holding an orphan marker unzipped by hand: every launch refuses.
+760c743
+< path with nothing installed, then a catch-up over the lost draws and the formal view's "not established" line; an
+---
+> path with nothing installed, then a catch-up over the lost draws; an
+778c761,762
+< place, with the clock left at the real later time. Section 9 quotes its five cases. It is a trace of existing code on
+---
+> place, with the clock left at the real later time. v0.3's section 9 quoted its five cases; under the OV-1 amendment it is kept only as the record of what the
+> old rule did. It is a trace of existing code on
+798c782
+< | C | Formal OV-1: the one objective check in the recorder; `register` refuses after a lost registration | 9 |
+---
+> | C | OV-1 after a restore: nothing special, under the OV-1 simplification amendment (entry 116; replaces the earlier C) | 9 |
+805,810c789,795
+< | - | A snapshot by hand at any time; and, as the last resort, an unzip by hand | 7, 8 |
+< 
+< **Two small things I added that you have not been asked about; say if either is unwelcome.** (1) The file
+< `.venv\ENVIRONMENT_VERIFIED.json`, so that a launcher refuses on an environment that was rebuilt or upgraded and not
+< yet verified (section 6). (2) `Restore_Production.bat --after-hand-unzip`, so that a restore done by hand still gets
+< its restore record and notices (section 8).
+---
+> | - | A snapshot can be asked for by hand at any time (verified only when the quiet checks pass); and, as the last resort, an unzip by hand | 7, 8 |
+> | - | W-23 is kept for every dependency upgrade: the reviewer's look and the owner's go before real production use (entry 116 item 4) | 6 |
+> | - | One line added to `install_upgrade_dependencies_into_venv.bat` (entry 116 item 5) | 6, 11 |
+> 
+> **Two small things I added in v0.3.** (1) The file `.venv\ENVIRONMENT_VERIFIED.json`: the reviewer judged it worth
+> keeping (EX_252 section 3), with the full digest checked at each job. (2) `Restore_Production.bat
+> --after-hand-unzip`: kept, now only to check a tree unzipped by hand and to let snapshots resume (section 8).
+827,828c812,813
+< - **Supplement v0.8 section 6.8** (and code plan v0.3 L5): the restore notice; one more stop cause; `register` after a
+<   lost registration (section 9). **The orphan-marker rule** (Architecture 5C, a protected block, amended by
+---
+> - **Supplement v0.8 section 6:** nothing from this note; the OV-1 simplification amendment is its own document.
+>   **The orphan-marker rule** (Architecture 5C, a protected block, amended by
+837c822
+< - The run sheets for the first deployment, `declare-developed` and the registrations.
+---
+> - The run sheets for the first deployment and `declare-developed`.
+845,846d829
+< - **Section 9's check is conservative in one way:** a draw that was genuinely missed, whose cut-off lies between the
+<   snapshot and the restore, also reads "not established", because the restored tree cannot tell the two apart.
+860c843
+< ## 18. Where each finding of EX_248 and EX_250 landed
+---
+> ## 18. Where each finding of EX_248, EX_250 and EX_252 landed
+866c849
+< | B03 formal OV-1 | The staged recorder turns a formerly counted draw into MISSED after a restore, and accepts a second registration | Traced on the passed code (five cases); an objective classification from three times and the snapshot's contents; one new stop cause at the earliest unverifiable draw; `register` refuses after a lost registration; v0.1's list applied by people withdrawn | 9, 14 |
+---
+> | B03 formal OV-1 | The staged recorder turns a formerly counted draw into MISSED after a restore, and accepts a second registration | **Superseded** (EX_253): the rule that caused it is replaced by the OV-1 amendment, under which a replayed draw is counted. v0.2's and v0.3's notices, stop cause and refusal are withdrawn | 9 |
+868c851
+< | B05 snapshots | Which commands snapshot; a coherent single state; the old release's own lock and wheels; the changed choice on an overdue snapshot | A table of commands, the updater's launcher included; a second reading of the source; each release's lock kept in production and so in every snapshot, wheels of every lock kept, and no "restored" before the environment is verified; all jobs go on with a standing warning, the risk stated | 6, 7 |
+---
+> | B05 snapshots | Which commands snapshot; a coherent single state; what a restore needs of the environment; the changed choice on an overdue snapshot | A table of commands, the updater's launcher included; every snapshot the full tree with `.venv`; quiet by three things; a recovery kit per release; `PRE_DEPLOY` and `POST_DEPLOY`; no "ready" before the environment is shown to start; all jobs go on with a standing warning when a snapshot cannot be made (v0.2's lock and wheels are withdrawn) | 4.7, 6, 7, 8 |
+874a858,864
+> | EX_252 section 1, quiet | The unlaunched tools could write during a snapshot; the claim could be read as tamper-proof | Their writing commands refuse during a snapshot, the read-only quiet check does not; the rule is stated as operational, not adversarial; the base-interpreter child is tested | 7, 10, 12 |
+> | EX_252 R3-D01 | The restore's "nothing extra" check could not pass: the progress file, the record and the marker were not in the list | The payload is defined; it is verified before anything is added; the additions are named; the marker is last; one sentence states the whole allowed difference; a test shows the check passing | 8, 12 |
+> | EX_252 section 3, the marker | Names and versions miss a same-version reinstall; a failed verification could leave a marker | The full inventory digest at every job boundary; the launch test called a first gate only; the owner's script removes the marker first; no marker survives a failed verification; a verification-only `update` | 4.3, 6, 10 |
+> | EX_252 section 4, W-23 | H1 could be read as replacing the always-review rule | It does not: the five steps of section 6, each upgrade, with the evidence H-1 5.4 names; the owner confirmed (entry 116) | 6 |
+> | EX_252 section 5, hand unzip | Ordinary work before reconciliation could change the formal stream; a live orphan marker | The OV-1 part falls away with the amendment; unzip into an empty folder at the same path; "reconciliation recorded at"; a live orphan marker blocks as always; no snapshot until reconciled | 7, 8 |
+> | EX_252 section 6, wording | The B05 row; "a snapshot by hand at any time" | Both corrected | 7, 15, 18 |
+> | EX_253 | The owner's direction: no restore-specific OV-1 rules | Section 9 replaced; the amendment sent with this note | 9 |
+876,877c866,867
+< Unchanged in substance since v0.2, and accepted in principle in EX_250: sections 4.4 (export), 9 (formal OV-1) and the
+< orphan-marker rule of section 8. B05's wheel-and-lock part is superseded by section 6.
+---
+> Unchanged in substance since v0.2, and accepted in principle in EX_250: section 4.4 (export) and the orphan-marker
+> rule of section 8. Accepted in EX_252 and unchanged here: the architecture of sections 2 to 5, 4.7 and 7.
