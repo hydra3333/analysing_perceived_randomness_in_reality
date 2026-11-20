@@ -1,0 +1,56 @@
+=== 1. Ordinary weeks: five variants, draws 101 to 108, each forecast before its draw
+  draw 101: 5 variants (5 before, 0 caught up), X=+1 Z=0.341, score 0.992323, SUPPORTED
+  draw 102: 5 variants (5 before, 0 caught up), X=-3 Z=-0.987, score 0.986354, SUPPORTED
+  draw 103: 5 variants (5 before, 0 caught up), X=-3 Z=-1.114, score 1.000511, SUPPORTED
+  draw 104: 5 variants (5 before, 0 caught up), X=+2 Z=0.696, score 0.975472, SUPPORTED
+  draw 105: 5 variants (5 before, 0 caught up), X=+1 Z=0.318, score 0.962513, SUPPORTED
+  draw 106: 5 variants (5 before, 0 caught up), X=-3 Z=-0.896, score 0.971629, SUPPORTED
+  draw 107: 5 variants (5 before, 0 caught up), X=-4 Z=-1.195, score 1.006548, SUPPORTED
+  draw 108: 5 variants (5 before, 0 caught up), X=-2 Z=-0.557, score 1.025988, SUPPORTED
+
+=== 2. NEW is released when the last draw on file is 108: its release record says first draw 109
+  (a) the ranking is recomputed with NEW in it. TOP ticket, hits and chance (7*7/35 = 1.4 a draw):
+      draws 101-108 (NEW: back-history, development evidence): NEW 56 hits (7.00 a draw), A5 12 hits (1.50 a draw), A4 12 hits (1.50 a draw), A2 10 hits (1.25 a draw), A1 10 hits (1.25 a draw), A3 6 hits (0.75 a draw)
+      draws 109-116 (NEW: forward): A5 15 hits (1.88 a draw), A4 14 hits (1.75 a draw), NEW 11 hits (1.38 a draw), A3 10 hits (1.25 a draw), A2 7 hits (0.88 a draw), A1 7 hits (0.88 a draw)
+  (b) prevailing stream, draws 101-108, before and after NEW was released: identical = True
+  (c) prevailing stream, NEW counted from draw 109:
+  draw 108: 5 variants (5 before, 0 caught up), X=-2 Z=-0.557, score 1.025988, SUPPORTED
+  draw 109: 6 variants (6 before, 0 caught up), X=+4 Z=0.899, score 0.974794, SUPPORTED
+  draw 116: 6 variants (6 before, 0 caught up), X=+0 Z=0.000, score 1.008405, SUPPORTED
+  (d) EXPLORATORY retrospective view with NEW back-filled from 101 (never the prevailing score): score after 108 = 3.155332, after 116 = 2.466704
+      the prevailing score after 108 = 1.025988, after 116 = 1.008405; the 2.5% bound is supported for the whole stream
+
+=== 3. A missed week: draw 111 was not forecast beforehand; the next session catches it up
+  factors and score the same as if forecast beforehand: True; the 2.5% bound is supported for the whole stream
+  draw 111: 6 variants (0 before, 6 caught up), X=-1 Z=-0.259, score 0.992544, SUPPORTED
+
+=== 4. Forecasts that are really missing
+  4a. failure records made BEFORE the draws (A3 at 113; every variant at 114):
+  draw 113: 5 variants (5 before, 0 caught up), X=+2 Z=0.565, score 0.907051, SUPPORTED
+  draw 114: 0 variants (0 before, 0 caught up), factor 1 (NO_COUNTED_PAIR), score 0.907051, SUPPORTED
+      the 2.5% bound is supported for the whole stream
+  4b. draw 115 is caught up after its result is on file, and A3 fails in that catch-up:
+  draw 115: 5 variants (0 before, 5 caught up), X=-7 Z=-1.952, score 1.012235, QUALIFIED (a failure record made after the result was on file)
+  draw 116: 6 variants (6 before, 0 caught up), X=+0 Z=0.000, score 1.003321, SUPPORTED
+      the 2.5% bound is NOT certified from draw 115 (1 qualified lines)
+
+=== 5. Restores (the lost draws are replayed under N-1 by the ordinary session)
+  5a. backup taken after draw 110: replay of 111-116 equals the lost originals: True; the 2.5% bound is supported for the whole stream
+  5b-i. OLDER backup, after draw 107, before NEW's release. NEW's release is put back from its saved record FIRST
+        (its first draw stays 109), then the catch-up runs: equals the lost originals: True; the 2.5% bound is supported for the whole stream
+  5b-ii. the same backup, but the catch-up is run BEFORE the release is put back: final score 0.963251 (lost original 1.008405);
+  draw 108: 5 variants (0 before, 5 caught up), X=-2 Z=-0.557, score 1.025988, SUPPORTED
+  draw 109: 5 variants (0 before, 5 caught up), X=+3 Z=0.770, score 0.979991, QUALIFIED (cohort by the release records is not the set that was run: missing NEW)
+        the 2.5% bound is NOT certified from draw 109 (8 qualified lines)
+  5c. as 5a, but A2 computes differently after a changed Python package: final score 0.985090 (lost original 1.008405); the 2.5% bound is supported for the whole stream
+
+=== 6. A revision is superseded: the release with first draw 113 retires A2 and adds A2R
+  6a. ordinary operation: A2 counts through draw 112, A2R from 113:
+  draw 112: 6 variants (6 before, 0 caught up), X=+5 Z=1.540, score 0.926326, SUPPORTED
+  draw 113: 6 variants (6 before, 0 caught up), X=+2 Z=0.508, score 0.908023, SUPPORTED
+      the 2.5% bound is supported for the whole stream
+  6b. restore from a backup taken after draw 110; the superseding release is put back, so A2's old code cannot run:
+  draw 111: 5 variants (0 before, 5 caught up), X=-1 Z=-0.318, score 0.995522, QUALIFIED (cohort by the release records is not the set that was run: missing A2)
+  draw 112: 5 variants (0 before, 5 caught up), X=+4 Z=1.393, score 0.931825, QUALIFIED (cohort by the release records is not the set that was run: missing A2)
+  draw 113: 6 variants (0 before, 6 caught up), X=+2 Z=0.508, score 0.911901, SUPPORTED
+      the 2.5% bound is NOT certified from draw 111 (2 qualified lines)

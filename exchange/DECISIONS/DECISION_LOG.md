@@ -1924,3 +1924,26 @@ Taken with EX_255's relayed clarification (entry 118: draw numbers, not dates, d
 as the go for the corrected amendment (v0.2) and deployment note (v0.5), to the reviewer as EX_256 (Fable, High).
 **Design only.** Entry 116 item 4 (W-23 kept for every dependency upgrade) is not changed by this entry; Claude asks
 the owner separately whether he wants it revisited, which would be a rule change for the reviewer.
+
+## 120. 20 November 2026, 19:47 - the OV-1 amendment DRAFT v0.2 and the deployment note DRAFT v0.5 sent for the recheck (EX_256); no owner decision
+
+- **Done under entry 119's go (Fable, High; design only, no code):** `exchange/CLAUDE_WEB_TOOLS/mhupb/ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_2.md`
+  (exact diff `AMENDMENT_v0_1_TO_v0_2.diff`; `ov1_prevailing_examples_v2.py` and its output) and
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_5.md` (exact diff `NOTE_v0_4_TO_v0_5.diff`; builder `make_note_v0_5.py`).
+  Sent as `exchange/EX_256_Claude.md`. All four findings of EX_255 accepted.
+- **E01:** one field in the existing release record, `effective_first_draw` (a number for each game): where its variants
+  start and where the variants it retires or supersedes stop; set by the release step as the last draw on file plus
+  one, after the catch-up; never recomputed; kept when a release is put back after a restore; the two existing
+  records named in the code with 1587 and 1704. The date test is removed as a gate in every place it occurs
+  (`weekly_session.py`, `weekly_records.py`, `contract_dispatch.py`, `walk_forward.py`; inventory in the amendment's
+  section 5). Dates stay for labels, backups and administration.
+- **E02:** each line's standing, SUPPORTED or QUALIFIED, by an objective rule, derived from the line and the release
+  records and never stored; nothing stops; the report says whether the 2.5% bound is supported or not certified from a
+  named draw. The guarantee has four software-checked conditions and separately listed ordinary assumptions.
+  **The environment is not pinned (the owner, entry 119): stated as an ordinary assumption; the reviewer is asked to
+  judge whether the claim can stand on that.**
+- **E03:** the start is the first-draw numbers of the release that first installs the recorder in production.
+- **E04:** the note states when a replay equals the lost score and when it does not, and the order after a restore.
+- **Open with the owner (asked in the chat, not decided):** whether he wants W-23 itself revisited. Until he says so
+  it stands as in entry 116.
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.

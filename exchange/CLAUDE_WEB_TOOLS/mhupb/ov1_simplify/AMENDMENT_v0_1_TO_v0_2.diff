@@ -1,0 +1,421 @@
+1c1
+< # MHUP-B: the OV-1 simplification amendment - DRAFT v0.1
+---
+> # MHUP-B: the OV-1 simplification amendment - DRAFT v0.2
+3,6c3,7
+< **Status:** DRAFT v0.1 for independent review. Not ratified. It authorises nothing. Until it is reviewed and the project
+< owner ratifies it, MHUP-B design supplement v0.8 stands exactly as it is.
+< **Written:** 20 November 2026, 18:37 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+< direction relayed in EX_253 and his decisions of 20 November 2026 (decision log entry 116). Fable (High).
+---
+> **Status:** DRAFT v0.2 for the reviewer's recheck. Not ratified. It authorises nothing. It answers EX_255 (R-3 RECHECK of
+> v0.1: E01 to E03; E04 is in the deployment note v0.5). Until it is reviewed and the project owner ratifies it, MHUP-B
+> design supplement v0.8 stands exactly as it is. v0.1 is kept beside it; `AMENDMENT_v0_1_TO_v0_2.diff` is exact.
+> **Written:** 20 November 2026, 19:45 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+> direction relayed in EX_253 and EX_255 and his decisions of 20 November 2026 (decision log entries 116 and 119). Fable (High).
+9,12c10,13
+< **Amends:** `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` sections 5.3, 6 and 7.3 (section 5 below gives each
+< change); the code plan v0.3 and the deployment design note follow it (sections 6 and 7).
+< **Answers:** EX_253 section 5, A to F. F (EX_252's deployment findings) is in the deployment note DRAFT v0.4, sent with
+< this document.
+---
+> **Amends:** `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` sections 5.3, 6, 7.2 and 7.3, and the release-date
+> test of design v0.1r7 sections 4.3 and 6.4 (section 5 below gives each change); the code plan v0.3 and the deployment design note follow it (sections 6 and 7).
+> **Answers:** EX_253 section 5, A to F, and EX_255 E01 to E03. The deployment findings (EX_252; EX_255 E04) are in the
+> deployment note DRAFT v0.5, sent with this document.
+19,26c20,35
+< 2. **What counts at a draw is simple.** A method counts at a draw if it was **released before that draw** and it
+<    forecast that draw **seeing only the draws before it**. It makes no difference whether the forecast was made before
+<    the draw, or afterwards because a week was missed or a backup was restored.
+< 3. **So nothing is ever "missed" or "stopped" because of the clock.** A missed week is caught up and counted. A
+<    restored backup is walked forward and counted. The score is the same either way.
+< 4. **A new method is tested on all of history, and the rankings are redone with it in.** Its results on draws made
+<    before it was released go into the league table, the draw-by-draw historical ranking and a separate exploratory
+<    OV-1 view. **They never go into the one prevailing score.** It joins that score at the first draw after its release.
+---
+> 2. **What counts at a draw is decided by draw numbers, never by dates.** Each release of methods records, for each
+>    game, one whole number: its **first draw**. A method counts in the score at every draw from that number on, until a
+>    later release retires or replaces it. The number is the next draw after the last one on file when the release is
+>    made. It is written once and never worked out again. Dates and times stay on backups and administrative records
+>    only.
+> 3. **The forecast must have seen only earlier draws.** It makes no difference whether it was made before the draw, or
+>    afterwards because a week was missed or a backup was restored. Nothing is ever "missed" or "stopped" by the clock.
+> 4. **A new method is tested on all of history, and the rankings are redone with it in.** Its results on draws before
+>    its first draw go into the league table, the draw-by-draw historical ranking and a separate exploratory OV-1 view.
+>    **They never go into the one prevailing score.** Several new methods or revisions can be released in one go.
+> 4a. **The score starts at the draw after the implementation:** the first draw number of the release that first installs
+>    this recorder in production.
+> 4b. **Each line of the score is plainly "supported" or "qualified".** Supported: exactly the methods the release
+>    records say should count at that draw were run. Qualified: one of them could not be run, or failed in a catch-up.
+>    A qualified line is still valid research and nothing stops; the report then says the 2.5% claim is not certified
+>    from that draw.
+32,34c41,42
+<    provided the four conditions of section 8 hold. For a draw forecast afterwards, "it could not have seen the result"
+<    rests on the software and the records, not on the result not yet existing. The report shows how many counted draws
+<    are of each kind.
+---
+>    while every line is supported and the conditions of section 8 hold. The Python environment is not pinned (the
+>    owner's decision); that is stated as an ordinary assumption, not hidden.
+38,44c46,56
+< - EX_253 (the owner's direction, relayed), EX_252, and the owner's answers in the Claude chat (decision log entry 116):
+<   caught-up draws count if the reviewer concurs; **draw numbers are the timeline**; the three decisions of 17 November
+<   2026 that this reverses are confirmed as reversed on ratification.
+< - **The timeline is the draw number, already ratified** (the owner asks that the reviewer note this): R3 v0.5, MRD-12,
+<   "The time axis is the draw number ... Dates are never used for ordering or arithmetic." This amendment states its
+<   start and its rules in draw numbers.
+< - **Read in the passed code (staged slice 3):** `weekly_session.py` already decides, for a draw caught up after the
+---
+> - EX_253 (the owner's direction, relayed), EX_252, EX_255, and the owner's answers in the Claude chat (decision log
+>   entries 116 and 119): caught-up draws count (the reviewer concurs in principle, EX_255 section 3); the three decisions
+>   of 17 November 2026 that this reverses are confirmed; the environment is not pinned for a delayed draw; the score
+>   starts at the draw after the implementation; a release's first draw is the next available draw.
+> - **Draw numbers, not dates** (the owner, relayed in EX_255 section 0, and entry 116 item 2): an effective starting
+>   draw number for each method, revision and game, fixed at release, decides when it joins the score. "Dates and
+>   timestamps may be kept for backups and appropriate administrative/operational evidence but not used in normal
+>   scientific calculations", because the actual time of a draw cannot be guaranteed. R3 v0.5 MRD-12 and 17.3.1 already
+>   make the draw number the time axis. **v0.1's use of the release record's day against a draw's derived date is
+>   withdrawn** (EX_255 E01, and its answer to my question 6: that test is a scientific gate, not a placement).
+> - **Read in the passed code (staged slice 3):** `weekly_session.py` decides, for a draw caught up after the
+46c58,60
+<   as `CATCH_UP`; any other runs as `REAL_DEVELOPMENT`. `weekly_records.effective_class` then gives the classes
+---
+>   as `CATCH_UP`; any other runs as `REAL_DEVELOPMENT`. The same date test is in `weekly_records.py` (validation) and
+>   `contract_dispatch.py` (the gate), and the routine fill's rule 2A compares a freeze time with a release instant
+>   (`walk_forward.py`, `contract_dispatch.py`). Section 5 lists each; all become draw-number tests. `weekly_records.effective_class` then gives the classes
+49,50c63,66
+< - **Run for this document:** `ov1_prevailing_examples.py` and its output, beside this file. Invented draws and toy
+<   methods only; the passed kernel `ov1_numeric.py` is imported unchanged. Sections 4 and 7 quote it.
+---
+> - **The installed release records:** two, `RELEASE_BASELINE_20261031_V1.json` (80 entries) and `RELEASE_MHUP_A_V1.json`
+>   (2 entries), both made before any weekly session exists.
+> - **Run for this document:** `ov1_prevailing_examples_v2.py` and its output, beside this file (v0.1's are kept). Invented draws and toy
+>   methods only; the passed kernel `ov1_numeric.py` is imported unchanged. Sections 3 and 4 quote it.
+59,75c75,106
+< **2.2 Which records count** (replaces 6.4). For target T, a variant counts if its **one weekly-tier record for T** is
+< a complete valid pair of TOP and WORST tickets of class `PROSPECTIVE`, `LATE_PRE_DRAW` or `CATCH_UP`. By the design's
+< existing rules each of those three classes means: the variant was released before T's draw, and the forecast was made
+< by the released code under N-1 isolation. Nothing else counts: not a `DEVELOPMENT` record of any kind (a variant
+< released on or after the draw; every back-history batch; every exploratory rerun), not a Mode H record, not a failure
+< record, not half a pair. Nothing is imputed.
+< 
+< **2.3 The timeline, the start, and a release's first draw.**
+< - Everything is ordered by draw number, per game.
+< - **The start is a draw number for each game, written into this amendment at ratification and into the code as two
+<   constants:** the first draw of each game not yet made when the owner ratifies. If that is before 24 November 2026:
+<   **Oz Lotto 1710 and Powerball 1593.** No earlier draw can ever enter the score. There is no registration step and no
+<   start record to lose.
+< - **A release's first eligible draw,** per game, is the first draw made after the day of its release record. This is
+<   the test the weekly code already applies. It is the one place a calendar is used: to put a real-world event, a
+<   release, onto the draw-number axis. Nothing is ordered or computed by date.
+< - A variant counts from its first eligible draw: no probation, no preference, no back-fill.
+---
+> **2.2 Which records count** (replaces 6.4). For target T, a variant counts if (a) it is in **the cohort as of T** (2.3)
+> and (b) its one weekly-tier record for T is a complete valid pair of TOP and WORST tickets. Nothing else counts: not a
+> development record of any kind (a variant whose first draw is after T; every back-history batch; every exploratory
+> rerun), not a Mode H record, not a failure record, not half a pair. Nothing is imputed.
+> 
+> **2.3 Draw numbers: a release's first draw, the cohort as of a draw, and the start** (EX_255 E01, E03).
+> - **The release record carries the number.** Every release record made from now on has one more field,
+>   `effective_first_draw`: one whole number for each game. It applies to every variant the record releases for that
+>   game, and it is also where every variant the record retires or supersedes stops: such a variant counts at draws
+>   below that number and at none from it on. One release may carry several new methods and revisions.
+> - **How the number is set** (the owner, entry 119): by the reviewed release step itself, as **the last draw on file
+>   for that game plus one**, after the release's own walk-forward and catch-up. A release that changes the roster is
+>   made only when the weekly records are caught up to the last draw on file (it already waits for an unfinished weekly
+>   set). The owner may give a later number on the command; never an earlier one. The run sheet's first step is to bring
+>   the results up to date, so that "the next draw" has not been made: that is the best operational knowledge there is,
+>   and no draw number can prove a time.
+> - **It is immutable.** It is written once, in the create-only record, and never recomputed from a date or a clock.
+>   **A release put back after a restore keeps its original record and so its original number** (the deployment note
+>   already returns the original record, not a second one).
+> - **The two existing records** have no such field. They are named in the code with their numbers: the first draw of
+>   weekly scope for each game (Powerball 1587, Oz Lotto 1704). Every later record must carry the field.
+> - **The cohort as of T** is read from the release records alone: every variant released by a record whose first draw
+>   is at or below T, less every variant retired or superseded by a record whose first draw is at or below T. It does not
+>   depend on today's roster, on any date, or on when T is computed.
+> - **The start of the score** (the owner, entry 119: "the draw after implementation"): the first-draw numbers of the
+>   release record of the package that first installs this recorder in production. Two whole numbers, in an immutable
+>   record, fixed at the reviewed release of the complete implementation. No draw below them enters the score; such
+>   draws appear in the rankings and the exploratory view. There is no registration step.
+> - **What dates are still used for, none of it a gate on the score:** the label "forecast before the draw" or "caught
+>   up" (design Appendix I's classes, from the freeze time and the deadline); the weekly session's choice of whether
+>   there is time to forecast the next draw beforehand; the checks that the results file is well formed; backups,
+>   release records' human-readable days, and displays.
+78,80c109,111
+< one of 6.5, or exactly 1 in two cases, each decided without reading the result: no variant has a counted pair for it
+< (`NO_COUNTED_PAIR`), or the weights give V = 0 (`V_IS_ZERO`). No draw is dropped, repeated or chosen. There is no
+< reset, no restart and no second stream.
+---
+> one of 6.5, or exactly 1 in two cases, each a fixed rule: no variant has a counted pair for it (`NO_COUNTED_PAIR`), or
+> the weights give V = 0 (`V_IS_ZERO`). No draw is dropped, repeated or chosen. There is no reset, no restart and no
+> second stream.
+84,87c115,119
+< (their number, and a digest of their identities and frozen-forecast digests); **how many of them were forecast before
+< the draw and how many were caught up**; the roster members not counted, by reason; the weight of every number; V; X
+< (derived twice, from the weights and from the score lines, and the two must agree); Z; the six stored log-factors; the
+< six running sums; the pinned master version; the kernel's version. Rebuilding the whole ledger from the other records
+---
+> (their number, and a digest of their identities and frozen-forecast digests); how many of them were forecast before
+> the draw and how many were caught up; the weight of every number; V; X (derived twice, from the weights and from the
+> score lines, and the two must agree); Z; the six stored log-factors; the six running sums; the pinned master version;
+> the kernel's version; and, for anyone investigating a difference later, the digests of the code and of the Python
+> environment that the computing session recorded. Rebuilding the whole ledger from the weekly records and the scores
+92,93c124
+<   cause is fixed the recorder continues from where it was. Because every line is a function of the other records,
+<   nothing needs a permanent stop, and no person chooses a line's content.
+---
+>   cause is fixed the recorder continues from where it was. No person chooses a line's content.
+95a127,150
+> **2.5A The standing of a line** (EX_255 E02). Worked out by the report and by `verify` from the line and the release
+> records as they stand; it is not stored, so putting a release record back later changes the standing truthfully and
+> never the ledger.
+> - **SUPPORTED:** the variants that have a weekly-tier record for T are exactly the cohort as of T; and, if T's
+>   forecasts were made after its result was on file, none of them is a failure record.
+> - **QUALIFIED,** with its reason, otherwise. The reasons that can arise: a cohort member was not run (its code is no
+>   longer installed because a later release superseded it; or its release record was not in the tree when the draw was
+>   computed); a variant was run that the records now say had ended; a failure record made in a catch-up.
+> - A failure record made **before** the draw, and a variant with too little history for T, are fixed before the result
+>   exists and do not qualify a line.
+> - **Nothing stops.** The report prints, beside the score: the counted draws; how many lines are supported and how many
+>   qualified, with the first qualified draw and its reason; and either "the 2.5% bound is supported" or "the 2.5% bound
+>   is not certified from draw T". A qualified stream is a valid research calculation of lesser evidential standing.
+> - **When the cohort cannot be reproduced** the handling is this label and nothing else: the line is computed from the
+>   members that ran, the missing member is named, and no later, revised version is ever substituted for it.
+> 
+> **2.5B The Python environment is not part of the pinned rule** (the owner, entry 119). A method's code, configuration
+> and seed rule are fixed by its release and checked by identity digests. The environment is whatever production holds
+> when a draw is computed: it "should live with what it receives", is changed when the owner chooses through his own
+> tested route, and "if it breaks we restore and do something different". A delayed draw computed under a changed
+> environment can therefore differ in its number from what would have been computed earlier (example 5c). It is not
+> qualified for that: the line records the environment's digest so the difference can be investigated, and section 8
+> states the assumption this rests on.
+> 
+104c159,160
+< 1. **Released** by a reviewed install, as now. Its release record gives its first eligible draw in each game.
+---
+> 1. **Released** by a reviewed install, as now; several new methods and revisions may come in one release. The step
+>    first catches the weekly records up, then writes the release record with its first draw for each game (2.3).
+115c171,172
+< 5. **It joins the prevailing score at its first eligible draw.** The lines already in the ledger are not touched.
+---
+> 5. **It joins the prevailing score at its first draw,** forecasting it for real with every other method. The lines
+>    already in the ledger are not touched.
+117c174,175
+< **Invented example (output section 2).** NEW is released after draw 108. Its designer had seen draws 101 to 108.
+---
+> **Invented example (output section 2).** NEW is released when the last draw on file is 108, so its record says first
+> draw 109. Its designer had seen draws 101 to 108.
+126,136c184
+< ## 4. The declared rules on invented examples (EX_253 D)
+< 
+< | Case | What the rule gives | Output |
+< |---|---|---|
+< | Ordinary weeks | Each draw forecast beforehand; one line a draw | 1 |
+< | A method released later | Ranked over all history; counted from its first eligible draw; earlier lines unchanged | 2 |
+< | A missed week (draw 111) | Caught up by the next session and counted: the factors and the score are **the same** as if it had been forecast beforehand; the line records "0 before, 6 caught up". Supplement v0.8 would have given it factor 1 | 3 |
+< | A forecast really missing | A3 has only a failure record for draw 113: five variants count. No variant has a pair for draw 114: factor 1, `NO_COUNTED_PAIR`, the score unchanged, the draw not hidden | 4 |
+< | A restore, backup taken after draw 110 | Draws 111-116 replayed: factors and final score **equal** the lost originals | 5 |
+< | An older backup, taken before NEW's release | NEW is installed again after the restore, so its first eligible draw is later; draws 108-116 are replayed without it; the score differs from the one that was lost (0.963 against 1.008). Both are valid; see condition 4 of section 8 | 5b |
+< | A replay after a changed Python package | One variant computes differently; the score differs from the lost one; every weight still came from history before its draw | 5c |
+---
+> ## 4. The declared rules on invented examples (EX_253 D; EX_255 E02, E04)
+138c186,207
+< No ordinary work becomes "missed" because of today's clock, and no back-history is presented as forward evidence.
+---
+> | Case | What the rule gives | Standing | Output |
+> |---|---|---|---|
+> | Ordinary weeks | Each draw forecast beforehand; one line a draw | supported | 1 |
+> | A method released later | Ranked over all history; counted from its first draw; earlier lines unchanged | supported | 2 |
+> | A missed week (draw 111) | Caught up and counted: the factors and the score are **the same** as if forecast beforehand | supported | 3 |
+> | Failure records made before the draws | A3 fails at 113: five variants count. Every variant fails at 114: factor 1, the draw not hidden | supported | 4a |
+> | A failure made in a catch-up | Draw 115 is caught up and A3 fails then: the line is computed from the other five | **qualified** from 115 | 4b |
+> | A restore, backup taken after draw 110 | Draws 111-116 replayed: factors and final score **equal** the lost originals | supported | 5a |
+> | An older backup, from before NEW's release; the release put back first, with its original first draw 109 | The catch-up equals the lost originals | supported | 5b-i |
+> | The same backup; the catch-up run before the release is put back | Draws 109-116 were computed without NEW; the records, once back, say NEW should have counted. Final score 0.963 against the lost 1.008 | **qualified** from 109 | 5b-ii |
+> | A replay after a changed Python package | One variant computes differently; final score 0.985 against the lost 1.008 | supported (2.5B) | 5c |
+> | A revision superseded at draw 113 (A2 by A2R) | A2 counts through 112, A2R from 113 | supported | 6a |
+> | A restore across that supersession | The superseding release is put back, so A2's old code cannot run for 111 and 112 | **qualified** for 111 and 112; supported from 113 | 6b |
+> 
+> No ordinary work becomes "missed" because of today's clock. No back-history is presented as forward evidence. Where
+> the cohort that should have counted could not be reproduced, the line says so by an objective rule.
+> 
+> **The order after a restore that keeps lines supported:** put back any later release first, then catch up. The deploy
+> tool's `check` prints this. It fully restores the original score when the later release only added methods (5b-i).
+> When it superseded a revision, the draws between the backup and that release's first draw are qualified whichever
+> order is used (6b), because the old code and the new cannot both be installed. Backups are taken after every job and
+> after every release, so this arises only when a backup older than a superseding release is chosen.
+144c213
+< counted / missed / stop; `MISSED_NO_FREEZE` and its reconciliation of the forecast ledger against other records; every
+---
+> counted / missed / stop; **the release-date test as a gate (2.3);** `MISSED_NO_FREEZE` and its reconciliation of the forecast ledger against other records; every
+149c218,219
+< **Survives, unchanged:** method-facing N-1 isolation; method, revision and variant identities and release records; one
+---
+> **Survives, unchanged:** method-facing N-1 isolation; method, revision and variant identities; release records (with one
+> field added); one
+161c231
+< | 6.2 | "The tickets are frozen before the draw" becomes "Each ticket is the output of code released before the draw and given only the draws before it" |
+---
+> | 6.2 | "The tickets are frozen before the draw" becomes "Each ticket is the output of code whose release has its first draw at or below that draw, given only the draws before it" |
+163c233
+< | 6.4 | replaced by 2.2; the report prints, beside the score, the counted draws, how many variant-forecasts were made before their draw and how many were caught up, and the witness counts as now |
+---
+> | 6.4 | replaced by 2.2, 2.3 and 2.5A; the report prints, beside the score, the counted draws, how many variant-forecasts were made before their draw and how many were caught up, the supported and qualified lines, and the witness counts as now |
+167c237,238
+< | 6.8 | replaced by 2.5 |
+---
+> | 6.8 | replaced by 2.5, 2.5A and 2.5B |
+> | 7.2 rule 2A | "whose weekly freeze line was written before the variant's release instant" becomes "below the variant's first draw"; the rest of the rule is unchanged |
+173,174c244,252
+< the deployment design note (section 6 below); R3's measure entry keeps its label "exact test martingale". Design
+< v0.1r7's classes and Appendix I are not changed.
+---
+> the deployment design note (section 6 below); R3's measure entry keeps its label "exact test martingale". **Design
+> v0.1r7 sections 4.3 and 6.4 and Appendix I:** the classes and their names are unchanged; the one test "released before
+> the draw's date" becomes "the target is at or above the variant's first draw". The freeze time and the deadline keep
+> deciding only the label `PROSPECTIVE` or `LATE_PRE_DRAW`.
+> 
+> **Code affected (for the later code round; nothing is coded now).** The release-record schema: `RELEASE_RECORD_V2` adds
+> `effective_first_draw` (a number for each game); the two existing `V1` records stay valid as they are and are mapped
+> by name to 1587 and 1704. No weekly session, forecast ledger or OV-1 record exists anywhere yet, so nothing else
+> needs migrating.
+176,178c254
+< **Staged code interfaces affected (for the later code round; nothing is coded now):**
+< 
+< | File (slice) | Effect |
+---
+> | File | Change |
+180,186c256,269
+< | `src/evaluation/ov1.py`, `Method_OV1.py` (2) | Much smaller: `record`, `status`, `verify` stay; `register`, `stop`, `cutoff`, `reconcile`, the registration, and the line kinds other than the one factor line go |
+< | `src/evaluation/ov1_numeric.py` (2) | none |
+< | `src/Weekly_Session_Orchestrator.py` (2) | calls `record` after scoring only; the "stopped" state and its messages go |
+< | `src/evaluation/consolidated_report.py`, `ov1_retrospective.py` (3) | labels; the prevailing score's part reads the new ledger; the before/caught-up counts |
+< | `src/Development_Batch_Orchestrator.py` (3) | writes the reconstruction file after an admitted fill |
+< | `tests/test_mhupb_ov1.py` and the report tests | rewritten for the rule above; the kernel's tests untouched |
+< | `weekly_session.py`, `weekly_records.py`, the league code | none |
+---
+> | `src/package_tools/install_records.py` (installed) | `release-record` writes `effective_first_draw` (last draw on file plus one, or a later number given on the command); for a roster change it also requires the weekly records caught up to the last draw on file |
+> | `src/methods/_common/release_records.py` (installed) | reads and validates the field (a whole number above the game's last holdout draw; never lower than an earlier record's); the two named `V1` records; `first_draws()` replaces `release_instants()`; new `cohort_as_of(game, target)`; `released_variants()` unchanged |
+> | `src/methods/_common/weekly_records.py` (slice 2) | the roster entry gains `effective_first_draw`; `validate_named_record`'s test `release date < derived date` becomes `first draw <= target` |
+> | `src/methods/_common/weekly_session.py` (slice 2) | the same test in its two places (the run mode of a caught-up target; the named record); the roster entry carries the number |
+> | `src/methods/_common/owner_records.py` (slice 2) | `release_date_of` gives way to a first-draw accessor |
+> | `src/methods/_common/contract_dispatch.py` (slice 2) | the gate's two tests: `CATCH_UP` needs `first draw <= target`; a routine fill needs `target < first draw` (in place of the freeze time against the release instant) |
+> | `src/methods/_common/walk_forward.py` (slice 3) | the routine fill's pairs by the same draw-number test |
+> | `src/evaluation/ov1.py`, `Method_OV1.py` (slice 2) | much smaller: `record`, `status`, `verify` stay; `register`, `stop`, `cutoff`, `reconcile`, the registration and the line kinds other than the one factor line go; the standing of 2.5A |
+> | `src/evaluation/ov1_numeric.py` (slice 2) | none |
+> | `src/Weekly_Session_Orchestrator.py` (slice 2) | calls `record` after scoring only; the "stopped" state and its messages go |
+> | `src/evaluation/consolidated_report.py`, `ov1_retrospective.py` (slice 3) | labels; the score's part reads the new ledger; the before and caught-up counts; supported and qualified |
+> | `src/Development_Batch_Orchestrator.py` (slice 3) | writes the reconstruction file after an admitted fill |
+> | The league table and reports | still show each variant's release day, as information; they also show its first draw |
+> | Tests | `tests/test_mhupb_ov1.py` and the report tests rewritten for these rules; the weekly, dispatch and release-record tests changed where they assert the date test; one planted defect per rule; the kernel's tests untouched |
+193c276
+< ledger comes back as it was in the backup; the lost draws are caught up by the ordinary session and counted by 2.2;
+---
+> ledger comes back as it was in the backup; the lost draws are caught up by the ordinary session and counted by 2.2, each line with its standing (2.5A);
+195c278,279
+< deployment note DRAFT v0.4, sent with this document, carries this together with EX_252's corrections.
+---
+> deployment note DRAFT v0.5, sent with this document, carries this with EX_252's corrections, and states when a replay
+> equals the lost score and when it does not (EX_255 E04).
+203,206c287,295
+< 2. **Start at the first draw after production is installed,** not after ratification. Stricter in appearance: nothing
+<    made before the recorder's code was final could count. It costs each game the draws between ratification and the
+<    install. I propose the start at ratification, because the rule, the methods and the kernel are all fixed by then,
+<    and what the later code must compute is fully determined by them. The reviewer may prefer the stricter start.
+---
+> 2. **Start the score at ratification** (v0.1's proposal). Withdrawn: the reviewer prefers the reviewed freeze of the
+>    complete implementation (EX_255 E03) and the owner chose "the draw after implementation" (entry 119).
+> 2a. **The owner types each release's first draw.** Only he knows whether this week's draw has been made. He chose the
+>    automatic "next available draw" after the catch-up; a later number can still be given on the command.
+> 2b. **Qualify a line whenever the environment's digest differs from the last session's.** Objective and cheap, but it
+>    would make the environment part of the pinned rule, which the owner has decided against (2.5B).
+> 2c. **A ceiling on the weekly session's catch-up,** so that after a restore the old code can replay up to a superseding
+>    release's first draw before that release is put back. It would turn example 6b's two qualified lines into
+>    supported ones. Not proposed: a new science-affecting option for a rare case; the label is truthful without it.
+213c302
+< ## 8. The guarantee and its limits (EX_253 E)
+---
+> ## 8. The guarantee and its limits (EX_253 E; EX_255 E02)
+218,222c307,311
+< **It holds under four conditions.**
+< 1. **Isolation.** Each counted forecast was computed by code given only the draws before its target. (Enforced by the
+<    driver; tested.)
+< 2. **Released first.** Each counted forecast is by a revision released before that draw, running the code,
+<    configuration and seed rule of that release. (The release records and identity digests; the test of 2.3.)
+---
+> **It is supported while these four hold, each checked by the software.**
+> 1. **Isolation.** Each counted forecast was computed by code given only the draws before its target. (The driver;
+>    tested.)
+> 2. **The cohort is fixed by draw number.** The variants counted at T are exactly the cohort as of T by the immutable
+>    release records, each running the code, configuration and seed rule of its release. (2.3; identity digests.)
+225,228c314
+< 4. **Honest operation.** The software and the records work as specified and are not altered. And the few decisions
+<    that can change what is computed for a draw already made but not yet in the ledger (which backup to restore;
+<    retiring a revision, or changing the Python environment, before a catch-up) are not made in order to move the
+<    score. Example 5b shows why this must be said. It is a condition on conduct; no machinery is added to police it.
+---
+> 4. **Every line is supported** (2.5A). From the first qualified line the report says the bound is not certified.
+231c317,319
+< draw's result. It does not need them to have been computed before the draw. Conditions 1 and 2 give exactly that.
+---
+> draw's result. It does not need them to have been computed before the draw. A release's first draw is fixed before
+> that draw is made; the cohort as of T follows from the records; the forecasts follow from the released code and the
+> earlier draws. Conditions 2 and 4 replace v0.1's condition about intentions with a rule (EX_255 section 3 and Q2).
+234c322,328
+< **What differs between the two kinds of counted forecast.** For one made before its draw, conditions 1 and 2 are also
+---
+> **Ordinary assumptions, stated and not policed.** The software and the records work as specified and are not altered.
+> A release's first draw has truly not been made when the release is written (the owner brings the results up to date
+> first). **The Python environment and the non-method code are changed through their ordinary reviewed routes and not
+> in order to move a score; the environment is not pinned, by the owner's decision (2.5B).** A reader who wants a
+> stricter claim can restrict it to the draws whose forecasts were made before the draw; the report gives that count.
+> 
+> **What differs between the two kinds of counted forecast.** For one made before its draw, the conditions are also
+236,238c330,331
+< isolation and on the release record. That is a weaker kind of evidence for the same condition, and the report prints
+< the split so a reader can weigh it. The local clock is no longer part of the claim except through the release record's
+< day.
+---
+> isolation and on the records. That is a weaker kind of evidence for the same conditions, and the report prints the
+> split.
+241,243c334,336
+< a product or sum over both games. A crossing challenges the fair-draw assumption for that game. It is not proof of a
+< cause and promises nothing about later draws. A strong historical effect is worth investigating whether or not this
+< claim applies to it.
+---
+> a qualified stream from its first qualified draw; a product or sum over both games. A crossing challenges the
+> fair-draw assumption for that game. It is not proof of a cause and promises nothing about later draws. A strong
+> historical effect is worth investigating whether or not this claim applies to it.
+251,255c344,350
+< - A variant retired between a draw and its catch-up is not on the roster and so is not listed in that draw's line as
+<   "not counted". Condition 4 covers the conduct; the line does not show it. I judged a retirement-aware roster too
+<   much machinery for the case; the reviewer may disagree.
+< - The draws between ratification and the first production session will all be "caught up". That is the cost of
+<   alternative 2 not being taken, and it is visible in the report.
+---
+> - **The environment** is an ordinary assumption here, not a pinned part of the rule (2.5B). EX_255 section 3 asked for
+>   the "numerical environment/policy" of a delayed draw to be defined; the definition offered is "whatever production
+>   holds, recorded by digest on the line". The reviewer may judge that insufficient for the unconditional claim; the
+>   owner's decision is on record (entry 119), and alternative 2b shows what the stricter rule would be.
+> - **"The next draw has not been made"** when a release is written rests on the results being up to date. No draw
+>   number can prove it.
+> - **A restore across a superseding release leaves qualified lines** (example 6b; alternative 2c).
+259,264c354,362
+< 1. Does the owner's condition hold: do you concur that caught-up draws count (2.2), on the argument of section 8?
+< 2. Is condition 4 stated strongly and plainly enough, without machinery?
+< 3. The start: at ratification (proposed) or at the first production install (alternative 2)?
+< 4. Is anything in "Deleted" still needed for the correctness of the number, as distinct from the old label?
+< 5. The reconstruction file made automatic (section 3, step 3): does it meet the owner's correction on historical
+<    rankings as you understood it from him?
+---
+> 1. E01: is the one field per release record, with the two existing records named in the code, the smallest schema
+>    that meets it? Is the automatic "last draw on file plus one, after the catch-up" acceptable as the conservative
+>    future target, with the results brought up to date first?
+> 2. E02: does the standing rule (2.5A) say exactly enough about when the bound is supported? Is "a failure record made
+>    in a catch-up qualifies the line" right, or too strict?
+> 3. The environment (2.5B): accepted as an ordinary assumption on the owner's decision, or does the unconditional
+>    claim need alternative 2b?
+> 4. E03: the start as the first-draw numbers of the release that first installs the recorder.
+> 5. Example 6b: is the truthful label enough, or is the ceiling of alternative 2c wanted?
+265a364
+> End of the amendment, DRAFT v0.2.

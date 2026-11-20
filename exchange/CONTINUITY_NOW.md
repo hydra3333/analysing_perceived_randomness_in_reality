@@ -4,10 +4,26 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 20 November 2026, 19:07 Australia/Adelaide (EX_255: RECHECK of the OV-1 amendment v0.1 and the deployment note v0.4, four findings E01 to E04; entry 118). **Next: on the owner's go, the amendment v0.2 and the note v0.5 as EX_256. No code.**
+**Last updated:** 20 November 2026, 19:47 Australia/Adelaide (the owner's decisions of entry 119; the OV-1 amendment DRAFT v0.2 and the deployment note DRAFT v0.5 sent as EX_256, entry 120). **Next: the reviewer's recheck (EX_257); then the owner's ratification of both; then H-1 v8 and a new Claude chat for the code round, on its own go. No code.**
 
 ## For the owner: NOW
 
+- **THE CORRECTED DESIGN DOCUMENTS ARE WITH THE REVIEWER (entries 119 and 120; 20 November 2026, 19:47).**
+  (1) **The OV-1 amendment, DRAFT v0.2:** `exchange/CLAUDE_WEB_TOOLS/mhupb/ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_2.md`.
+  One prevailing score per game. **Who counts at a draw is decided by draw numbers only:** each release record carries
+  `effective_first_draw` for each game (the last draw on file plus one, set by the release step after its catch-up,
+  never recomputed, kept when a release is put back after a restore); its variants count from that draw, and the
+  variants it retires stop there. The score starts at the first-draw numbers of the release that first installs the
+  recorder ("the draw after implementation"). Each line is SUPPORTED or QUALIFIED by an objective, derived rule;
+  nothing stops; the 2.5% bound is stated as supported only while every line is supported. **The Python environment
+  is not pinned (the owner's decision); the reviewer is asked whether the claim can stand on that.** Registration, the
+  witness line, the cut-off, MISSED, STOP, every restore rule and the release-date test are deleted.
+  (2) **The deployment note, DRAFT v0.5:** `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_5.md`:
+  when a replay after a restore equals the lost score and when it does not; put later releases back first, then catch up.
+  Sent as `exchange/EX_256_Claude.md`; the reply will be EX_257. **Then the owner ratifies both** (the amendment first or
+  together). **Then H-1 v8, and the code round in a NEW Claude chat on its own go.** Supplement v0.8 stays in force
+  until then. **Open with the owner:** whether W-23 itself should be revisited (it stands as in entry 116).
+  The entries just below are history.
 - **EX_255 IS IN: RECHECK, FOUR BOUNDED FINDINGS; CLAUDE HOLDS FOR THE OWNER'S GO (entry 118; 20 November 2026, 19:07).**
   The simplification is accepted in principle and caught-up draws may count. To correct: **E01** participation by
   immutable draw numbers in the release records (an effective first draw per game for each released variant, an end
@@ -224,7 +240,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). **Awaited: the owner's go for the amendment v0.2 and the note v0.5 (to be EX_256).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). **Awaited: the recheck of the OV-1 amendment v0.2 and the deployment note v0.5 (EX_256; its reply EX_257).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state

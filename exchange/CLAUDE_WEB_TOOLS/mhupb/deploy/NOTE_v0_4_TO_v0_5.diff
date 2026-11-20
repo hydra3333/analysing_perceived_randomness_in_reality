@@ -1,0 +1,148 @@
+1c1
+< # MHUP-B deployment design note - DRAFT v0.4
+---
+> # MHUP-B deployment design note - DRAFT v0.5
+3,8c3,8
+< **Status:** DRAFT v0.4 for the reviewer's recheck. Not ratified. It authorises nothing. It makes the bounded
+< corrections of EX_252 (the narrow RECHECK of v0.3) and, following the owner's direction in EX_253, removes every
+< restore-specific OV-1 rule: section 9 is now one short section that rests on the OV-1 simplification amendment sent
+< with it. Section 18 says where each finding landed. v0.1 to v0.3 are kept beside it; `NOTE_v0_3_TO_v0_4.diff` is exact.
+< **Written:** 20 November 2026, 18:40 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+< owner's go of 19 November 2026 for the design note (decision log entry 107) and his decisions of entry 116. Fable (High).
+---
+> **Status:** DRAFT v0.5 for the reviewer's recheck. Not ratified. It authorises nothing. It makes the corrections of
+> EX_255 that fall to this note (E04: when a replay after a restore equals the lost score and when it does not; one
+> test oracle) and follows the OV-1 amendment v0.2 (a release record's first-draw numbers). EX_255 found the rest of
+> v0.4 broadly sound, and it is unchanged. v0.1 to v0.4 are kept beside it; `NOTE_v0_4_TO_v0_5.diff` is exact.
+> **Written:** 20 November 2026, 19:46 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+> owner's go of 19 November 2026 for the design note (decision log entry 107) and his decisions of entries 116 and 119. Fable (High).
+11c11
+< installs). **Base:** `main` at `cf46862`; staged slices as passed (EX_231, EX_237, EX_242).
+---
+> installs). **Base:** `main` at `96083aa`; staged slices as passed (EX_231, EX_237, EX_242).
+56,57c56,58
+<    draw replayed after a restore is counted like any caught-up draw, and the score is the same. The restore notices
+<    and the extra stop of v0.3 are withdrawn (section 9).
+---
+>    draw replayed after a restore is counted like any caught-up draw. The replayed score equals the lost one when the
+>    same methods, code and earlier draws are reproduced, and is labelled when they are not (section 9). The restore
+>    notices and the extra stop of v0.3 are withdrawn.
+196c197
+< the environment against `ENVIRONMENT_VERIFIED.json`; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+---
+> the environment against `ENVIRONMENT_VERIFIED.json`; any release the clone holds that production lacks, with its first-draw numbers and the order of section 9; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+213c214,215
+<    no roster change). At the environment step `init` stops and asks the owner to build `.venv` with his two scripts;
+---
+>    no roster change; it carries each game's first draw, the last draw on file plus one, which is the start of the OV-1
+>    score: the OV-1 amendment 2.3). At the environment step `init` stops and asks the owner to build `.venv` with his two scripts;
+237c239
+< | 13 | The install check; remove P; the release record (it refuses while P exists, without U held by this package, with a session lock, or, for a roster change, with an unfinished weekly set: all as now; its two Git tests are replaced by "production equals its hash list and the install record validates"); validate the records; release U **last** | 14 to 18 |
+---
+> | 13 | The install check; remove P; the release record (it refuses while P exists, without U held by this package, with a session lock, or, for a roster change, with an unfinished weekly set: all as now; for a roster change it also requires the weekly records caught up to the last draw on file, and it writes each game's first draw, the last draw on file plus one or a later number given on the command (the OV-1 amendment 2.3); its two Git tests are replaced by "production equals its hash list and the install record validates"); validate the records; release U **last** | 14 to 18 |
+247c249
+< that record, and production receives the original, with its original date. This matters after a restore to a snapshot
+---
+> that record, and production receives the original, with its original date and its original first-draw numbers. This matters after a restore to a snapshot
+382a385,387
+> - **The environment is not pinned to a draw** (the owner, entry 119): it "should live with what it receives". A draw
+>   computed late runs in whatever environment production then holds; each OV-1 line records that environment's digest
+>   (section 9). The steps above are how a change is tested, not a rule tying the environment to the draw sequence.
+470,471c475,476
+<   verified snapshot; a restore then replays everything since. That costs time, never research validity, and under
+<   the OV-1 amendment it does not change the OV-1 score either (section 9).
+---
+>   verified snapshot; a restore then replays everything since. That costs time, never research validity. What a replay
+>   gives for the OV-1 score is stated in section 9.
+588c593,594
+< Ordinary work, each step on its usual go: the updater brings the results forward; the weekly session catches up one
+---
+> Ordinary work, each step on its usual go: `update` first puts back any later release from its saved record (section
+> 9); the updater brings the results forward; the weekly session catches up one
+600c606
+< ## 9. OV-1 after a restore: nothing special (EX_253; the OV-1 simplification amendment; entry 116)
+---
+> ## 9. OV-1 after a restore: no special rule, and a plain statement of what a replay gives (EX_253; EX_255 E04)
+607,613c613,632
+< with this note (`ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_1.md`) proposes the rule: a variant counts at
+< a draw if it was released before that draw and forecast it under N-1 isolation, whether before the draw or afterwards
+< by catch-up. Under that rule:
+< 
+< - **A restore has no OV-1 side effect.** The score's ledger comes back as it was in the snapshot. The ordinary session
+<   catches up the lost draws; they are counted by the standing rule; each line records that its forecasts were caught
+<   up. The amendment's invented example 5 shows the replayed lines equal to the lost ones.
+---
+> with this note (`ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_2.md`) proposes the rule: a variant counts at
+> a draw from the first-draw number in its release record, if it forecast that draw under N-1 isolation, whether before
+> the draw or afterwards by catch-up. Under that rule:
+> 
+> - **A restore needs no OV-1 rule of its own.** The score's ledger comes back as it was in the snapshot. The ordinary
+>   session catches up the lost draws and they are counted by the standing rule; each line records that its forecasts
+>   were caught up. A restored production is fully functional after that catch-up.
+> - **When the replayed score equals the one that was lost, and when it does not** (EX_255 E04). It equals it when, for
+>   every replayed draw, the same variants count (the same release records, with their original first-draw numbers), by
+>   the same code, configuration and seed rule, from the same earlier draws, in an environment that computes the same
+>   numbers (the amendment's examples 5a and 5b-i). **It is not promised otherwise.** It differs when a later release
+>   was not put back before the catch-up (5b-ii), when the environment computes differently (5c), or when a revision
+>   that should have counted can no longer run (6b). Such differences are labelled: each line has its standing,
+>   supported or qualified, by the amendment's objective rule (2.5A), and each line records the digests of the code and
+>   the environment that computed it, so a difference can be investigated.
+> - **The order that keeps the most lines supported:** restore; then `update` to put back each later release from its
+>   saved record (it keeps its original first-draw numbers: section 4.3); then the results updater and the catch-up.
+>   `check` prints this when the clone holds a release that production lacks.
+> - **The environment is not pinned** (the owner, entry 119; the amendment's 2.5B). The restore brings back the
+>   environment that was running; if the owner then rebuilds it, the replay runs in the new one.
+617,618c636,637
+< - **The one thing left to say is about conduct, not machinery** (the amendment's section 8, condition 4): which
+<   backup to restore is never chosen in order to move a score.
+---
+> - No science input is ever taken from the set-aside tree. A release is put back from its record in the clone's
+>   history, not inferred from the old folder.
+700,701c719,720
+<   apart from its renamed marker; the fresh tree equals the snapshot file for file, environment included, with nothing
+<   extra; with the old tree absent, half missing, without a `.venv`, with unreadable records: the restore
+---
+>   apart from its renamed marker; the fresh tree is exactly the allowed set of section 8 step 6 (the payload, plus the restore record, plus the orphan
+>   evidence file if any, less a live orphan marker), environment included, and one file more or fewer refuses; with the old tree absent, half missing, without a `.venv`, with unreadable records: the restore
+711c730,731
+< - **OV-1 after a restore:** nothing in this layer. The OV-1 amendment's own tests show a replay giving the same lines.
+---
+> - **OV-1 after a restore:** nothing in this layer. The OV-1 amendment's own tests show a replay giving the same lines
+>   when the cohort is reproduced, and qualified lines when it is not.
+719,720c739,741
+< - **Labels after a restore** (EX_248 section 3): an original release record brought back by `update`; a replayed
+<   forecast for a draw after that release date is CATCH-UP, never PROSPECTIVE; revisions are not pooled.
+---
+> - **Labels after a restore** (EX_248 section 3): an original release record brought back by `update` keeps its first-draw
+>   numbers; a replayed forecast for a draw at or above that number is CATCH-UP, never PROSPECTIVE, and below it is
+>   development; revisions are not pooled.
+782c803,804
+< | C | OV-1 after a restore: nothing special, under the OV-1 simplification amendment (entry 116; replaces the earlier C) | 9 |
+---
+> | C | OV-1 after a restore: no special rule; a replay equals the lost score when the cohort, code and earlier draws are reproduced, and is labelled when not (entries 116, 119) | 9 |
+> | - | The environment is not pinned to a draw (entry 119) | 6, 9 |
+830,834c852,857
+< - **A point for the reviewer's judgement (labels):** after a restore to a snapshot older than an update, `update`
+<   brings back the original install and release records with their original dates (section 4.3). So a replayed
+<   catch-up forecast by that variant, for a draw after its original release date, is labelled CATCH-UP as it would
+<   have been. I think that is truthful (the variant was released then, and the record is the original, not a new one),
+<   and it manufactures no standing; say if you read design 4.3 differently.
+---
+> - **Labels after a restore:** `update` brings back the original install and release records (section 4.3), so a
+>   variant keeps its original first-draw numbers, and a replayed forecast for a draw at or above that number is
+>   labelled CATCH-UP as it would have been. No date is consulted (the OV-1 amendment 2.3).
+> - **W-23 and "changing the environment at will".** Section 6 keeps W-23 for every dependency upgrade, as the owner
+>   decided (entry 116). His later words (entry 119) are about not pinning the environment to draws; whether he also
+>   wants W-23 itself lightened is his to say, and would be a rule change for review. This note does not change it.
+843c866
+< ## 18. Where each finding of EX_248, EX_250 and EX_252 landed
+---
+> ## 18. Where each finding of EX_248, EX_250, EX_252 and EX_255 landed
+853c876
+< | Section 3, labels | A replayed forecast for a draw after an original release date | CATCH-UP, never PROSPECTIVE; revisions never pooled; a fixture | 4.3, 12 |
+---
+> | Section 3, labels | A replayed forecast by a variant whose original release was put back | CATCH-UP at or above the release's original first draw, never PROSPECTIVE; revisions never pooled; a fixture | 4.3, 12 |
+864a888,890
+> | EX_255 E04 | "The score is the same after a restore" was said without conditions; the amendment's own examples differ | The conditions for equality are stated; differences are labelled by each line's standing and investigable by digest; the order (later releases first, then the catch-up); nothing from the set-aside tree | 0, 7, 9 |
+> | EX_255 E01, as it touches this note | A release put back after a restore must not get a newer boundary | The original record returns with its original first-draw numbers; the release step writes the numbers; `check` lists a release production lacks | 4.1, 4.2, 4.3 |
+> | EX_255 section 6, test oracle | A test still said the fresh tree is the snapshot "with nothing extra" | The oracle is the allowed set of section 8 step 6 | 12 |
