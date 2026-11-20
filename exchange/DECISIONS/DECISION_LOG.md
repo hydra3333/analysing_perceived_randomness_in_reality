@@ -1872,3 +1872,31 @@ ratified.
   section 9 replaced by "nothing special"; it depends on the amendment and is to be ratified with it or after it.
 - **The owner's condition on point 1 (caught-up draws count "if reviewer concurs") is put to the reviewer in EX_254.**
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 118. 20 November 2026, 19:07 - EX_255 (R-3 RECHECK of the OV-1 amendment v0.1 and the deployment note v0.4) read and recorded; an owner clarification relayed in it; Claude holds for the owner's go
+
+- **EX_255** (`exchange/EX_255_ChatGPT.md`, main `4c5e361`): the simplification is accepted in principle (one prevailing
+  score per game; the kernel; full historical walk-forward and recomputed rankings for a new method, the automatic
+  reconstruction file; the exploratory view; the removal of registration, the witness line, the cut-off, MISSED, STOP
+  and the restore rules; the deployment architecture of v0.4). The reviewer concurs IN PRINCIPLE that caught-up draws
+  count, conditionally (below). Four findings:
+  - **R3-E01 (blocker):** participation in the score must rest on immutable DRAW NUMBERS, not on the release record's
+    day compared with a draw's derived date. An `effective_first_draw_number` per game for each released variant, and
+    an end number for a retired or superseded one, in the existing release records; a reinstated release keeps its
+    original numbers; the existing date test in the staged weekly code must not remain as a hidden science gate.
+  - **R3-E02 (blocker to an unconditional 2.5% claim):** the as-of-target cohort and the version used for a delayed
+    draw must be fixed by pre-target records, not by today's roster; "honest operation" is an ordinary assumption and
+    not a substitute; say exactly when the bound is supported and when a line is of lesser evidential standing.
+  - **R3-E03 (major):** the start as two explicit draw numbers fixed at the reviewed freeze of the complete
+    implementation (the reviewer's preference), not at ratification.
+  - **R3-E04 (major):** the deployment note must not say a restore leaves the score unchanged without conditions (the
+    amendment's own examples 5b and 5c differ). Plus one test oracle in the note still says "nothing extra".
+- **The owner's clarification to the reviewer, relayed in EX_255 section 0:** YES to an effective starting draw number
+  for each method, revision and game, fixed when it is released, to decide when it joins the prevailing score. Dates
+  and times may be kept for backups and administrative evidence but are not used in normal scientific calculations,
+  because the actual time of a draw cannot be guaranteed even when its schedule is known.
+- **Claude's note:** EX_254 question 6 described the date test as merely placing a release on the draw-number axis.
+  The reviewer and the owner read it as a scientific gate; that reading is accepted. The note v0.4's "the score is
+  the same" overstated what the amendment's own example 5b showed.
+- **Held for the owner's go (MC-1: Fable, High):** the corrected amendment (v0.2) and deployment note (v0.5), to be
+  EX_256. No code.
