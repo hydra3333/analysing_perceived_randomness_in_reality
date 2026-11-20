@@ -1829,3 +1829,27 @@ the installed documents. This log is not a separate approval process.
 - **Proposed next step, held for the owner's go in this chat (MC-1: Fable, High; a statistical design):** one amendment
   to supplement v0.8 sections 6 and 7 with worked invented examples, and the deployment note v0.4 carrying EX_252's
   corrections with its OV-1 restore section removed; both to the reviewer as EX_254. No code.
+
+## 116. 20 November 2026, 18:35 - the owner's decisions on the OV-1 simplification and on EX_252's two open points; go for the amendment and the deployment note v0.4 (design only)
+
+The owner, in the Claude web chat at 18:33, answering Claude's five points (his words in quotation marks):
+
+1. **Caught-up draws count in the one prevailing score:** "yes if reviewer concurs". (A method counts at a draw if it
+   was released before that draw and forecast it under N-1 isolation, whether before the draw or afterwards by
+   catch-up.)
+2. **The start, and the timeline:** "dates are useless, we already decided ages ago that draw numbers (for a game) are in
+   fact our timeline (please ensure Reviewer knows this, it was settled near beginning of project IIRC)". So the
+   stream's start is a draw number for each game, and the rule is stated on the draw-number axis. (The ratified text is
+   R3 v0.5, MRD-12: "The time axis is the draw number ... Dates are never used for ordering or arithmetic.")
+3. **Reversing three decisions of 17 November 2026 in supplement v0.8** (a missed week counts as neutral; a stopped
+   formal test stays stopped; the owner's `register` and `stop` commands): "confirmed". They fall away when the
+   amendment is ratified, not before.
+4. **W-23 is kept** for every dependency upgrade ("yes to recommendation"): the reviewer's look at the test evidence and
+   the owner's go before real production use; one step in the run sheet.
+5. **One line may be added to `install_upgrade_dependencies_into_venv.bat`** to remove the "environment verified" marker
+   before it changes anything: "yes".
+
+"Cool we have a way forward." Taken as the go for the two design documents Claude proposed in entry 115 (Fable, High):
+the OV-1 amendment and the deployment note v0.4, to the reviewer as EX_254. **Design only. No code, package, task file,
+Windows step, install or run is authorised.** Supplement v0.8 stays in force until the amendment is reviewed and
+ratified.
