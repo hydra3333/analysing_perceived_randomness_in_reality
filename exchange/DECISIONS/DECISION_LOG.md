@@ -1900,3 +1900,27 @@ ratified.
   the same" overstated what the amendment's own example 5b showed.
 - **Held for the owner's go (MC-1: Fable, High):** the corrected amendment (v0.2) and deployment note (v0.5), to be
   EX_256. No code.
+
+## 119. 20 November 2026, 19:42 - the owner's decisions on EX_255's open points; go for the amendment v0.2 and the note v0.5 (design only)
+
+The owner, in the Claude web chat at 19:40 (his words in quotation marks):
+
+1. **The Python environment is not pinned for a delayed draw.** "why ? it maybe gets tested and implemented in a
+   methodical way (eg dev the[n] prod) independently of draws. A restore could prompt the human to re-create the venv
+   with the latest python/pypi-stuff before proceeding or even do it automatically. this project pinning environments
+   begs trouble eg when an older python has been uninstalled perhaps for no-project related reasons. I think the
+   release environment should live with what it receives ... changing it basically at will - if it breaks we restore
+   and do something different."
+2. **The start of the prevailing score (EX_255 E03): the draw after the implementation.** "ok to decision 1 - via its
+   walk-forward at implementation it should have a valid prediction 'for real' and scored/ranked/ov-1 on the draw after
+   implementation."
+3. **A release's effective first draw number: the next available draw, worked out at the release, after its
+   walk-forward and catch-up; not typed by the owner as the default.** "after a walk-forward/catchup at implementation
+   the next available draw (perhaps implementation does a walkforward and then a catchup, I suppose, maybe even
+   potentially talking into account implementing a nominated bunch of new methods or newly versioned methods, in one
+   go)." One release may carry several new methods or revisions.
+
+Taken with EX_255's relayed clarification (entry 118: draw numbers, not dates, decide when a method joins the score)
+as the go for the corrected amendment (v0.2) and deployment note (v0.5), to the reviewer as EX_256 (Fable, High).
+**Design only.** Entry 116 item 4 (W-23 kept for every dependency upgrade) is not changed by this entry; Claude asks
+the owner separately whether he wants it revisited, which would be a rule change for the reviewer.
