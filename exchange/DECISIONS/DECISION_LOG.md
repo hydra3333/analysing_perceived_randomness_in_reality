@@ -1780,3 +1780,21 @@ the installed documents. This log is not a separate approval process.
   everything that uses Python. It applies to `restore` only.
 - **Taken as the go for v0.3** of the design note under entry 107's go (the design note and its submission for review),
   as EX_250 section 7 asks. Design only: no code, package, Windows step, install, restore or run.
+
+## 114. 20 November 2026, 16:40 - the deployment design note, DRAFT v0.3, sent for the focused R-3 recheck (EX_251); no owner decision
+
+- **Done under entry 107's go (Fable, High; design only, no code):**
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_3.md`
+  (a full document; exact diff `NOTE_v0_2_TO_v0_3.diff`; builder `make_note_v0_3.py`), sent as `exchange/EX_251_Claude.md`.
+  Both findings of EX_250 accepted (R3-C01, R3-C02).
+- **What changed from v0.2:** every snapshot is the complete production tree, `.venv` included; a recovery kit zip per
+  release on T:, built from release bytes, so `restore` needs neither E: nor a working production folder; `restore`
+  is a plain extraction to the same path, verified, with a health check and no rebuild; its process check is "no
+  Python program at all on the PC"; `update` takes a PRE_DEPLOY and a POST_DEPLOY snapshot and stops first if the kit
+  cannot be written; a snapshot is taken only when production is quiet (no launch during it; a process check before
+  and after; a second reading of every file); production's environment is built the owner's way and verified by the
+  suite (`update` is the verification command), with the pinned lock and the wheel folder withdrawn.
+- **Two small additions the owner was not asked about, flagged to him in the note's section 15:** the file
+  `.venv\ENVIRONMENT_VERIFIED.json` (a launcher refuses on an environment not yet verified); and
+  `Restore_Production.bat --after-hand-unzip` (a restore done by hand still gets its record and notices).
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.

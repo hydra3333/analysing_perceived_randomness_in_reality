@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 20 November 2026, 02:47 Australia/Adelaide (EX_248: RECHECK, six findings; the owner confirmed nine choices, entry 110; the design note DRAFT v0.2 sent as EX_249, entry 111). **Next: the reviewer's recheck (EX_250); then five owner choices and ratification. No code.**
+**Last updated:** 20 November 2026, 16:40 Australia/Adelaide (EX_250: a narrow RECHECK with the owner's new backup and recovery decisions, entries 112 and 113; the design note DRAFT v0.3 sent as EX_251, entry 114). **Next: the reviewer's focused recheck (EX_252); then the owner's ratification; then H-1 v8 and a new Claude chat for the code round, on its own go. No code.**
 
 ## For the owner: NOW
 
+- **THE DEPLOYMENT DESIGN NOTE, DRAFT v0.3, IS WITH THE REVIEWER FOR ITS FOCUSED RECHECK (entries 112 to 114; 20 November
+  2026).** EX_250 accepted v0.2's corrections in principle and carried the owner's new decisions: full snapshots with
+  `.venv`; a plain same-path restore; PRE and POST deployment snapshots; a recovery kit zip on T: so that a restore
+  needs neither E: nor a working production folder. The owner then decided A to G and H1 (production's environment
+  built his way and verified by the suite) and "no Python at all" for a restore (entries 112, 113). v0.3:
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/MHUPB_DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_3.md`; sent as
+  `exchange/EX_251_Claude.md`; the reply will be EX_252. **Then the owner's ratification** (it covers the amendment to
+  the orphan-marker rule, the note's section 8). **Then, as the owner agreed on 20 November: H-1 v8 first, and the
+  code round in a NEW Claude chat on its own go.** The go for the early File Explorer check (E) is not given.
+  No code, package, Windows step, install, snapshot, restore or run is authorised. v0.1, v0.2 are history.
 - **THE DEPLOYMENT DESIGN NOTE, DRAFT v0.2, IS WITH THE REVIEWER FOR ITS RECHECK (entries 110, 111; 20 November 2026).**
   EX_248 was RECHECK with six findings (B01 to B06), all accepted. The owner confirmed nine choices (entry 110: no
   `.venv` in snapshots; the flag before a job's first write; all jobs go on with a standing warning when a snapshot
@@ -176,7 +186,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). **Awaited: the R-3 recheck of the design note v0.2 (EX_249; its reply EX_250).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). **Awaited: the focused R-3 recheck of the design note v0.3 (EX_251; its reply EX_252).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state

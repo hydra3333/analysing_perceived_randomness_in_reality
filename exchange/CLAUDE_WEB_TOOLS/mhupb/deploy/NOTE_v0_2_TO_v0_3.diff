@@ -1,0 +1,641 @@
+1c1
+< # MHUP-B deployment design note - DRAFT v0.2
+---
+> # MHUP-B deployment design note - DRAFT v0.3
+3,7c3,8
+< **Status:** DRAFT v0.2 for the reviewer's R-3 RECHECK. Not ratified. It authorises nothing. It answers EX_248 (RECHECK;
+< findings B01 to B06) and carries the nine choices the owner confirmed on 20 November 2026 (decision log entry 110).
+< Section 18 says where each finding landed. v0.1 (sent as EX_247) is kept beside it; `NOTE_v0_1_TO_v0_2.diff` is exact.
+< **Written:** 20 November 2026, 02:46 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+< go of 19 November 2026, 23:50 (decision log entry 107) and his go for this revision (entry 110). Fable (High).
+---
+> **Status:** DRAFT v0.3 for the reviewer's focused R-3 recheck. Not ratified. It authorises nothing. It answers EX_250
+> (a narrow RECHECK: R3-C01, R3-C02) and carries the owner's decisions of 20 November 2026 on full backups, the
+> recovery kit and the environment (decision log entries 112 and 113). Section 18 says where each finding landed.
+> v0.1 (EX_247) and v0.2 (EX_249) are kept beside it; `NOTE_v0_2_TO_v0_3.diff` is exact.
+> **Written:** 20 November 2026, 16:40 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+> owner's go of 19 November 2026 for the design note (decision log entry 107; entries 110 and 113). Fable (High).
+10c11
+< and the formal OV-1 claim). **Base:** `main` at `9350196`; staged slices as passed (EX_231, EX_237, EX_242).
+---
+> and the formal OV-1 claim). **Base:** `main` at `4a72269`; staged slices as passed (EX_231, EX_237, EX_242).
+17c18
+< | Binds it | Owner decisions D1 to D12 (EX_243; decision log 92 to 98); EX_244 (restore and replay; governs); decision log 100 (how a restore is done), 103 (Python 3.15 only), 104 (no monthly restore test), 105 (no replay comparison), 107 (the go), 110 (the nine confirmed choices; EX_248 section 1, the owner's scientific clarification); H-1 v7r1 section 12.11 (the checklist); the working principle of 18 November 2026 |
+---
+> | Binds it | Owner decisions D1 to D12 (EX_243; decision log 92 to 98); EX_244 (restore and replay; governs); decision log 100 (how a restore is done), 103 (Python 3.15 only), 104 (no monthly restore test), 105 (no replay comparison), 107 (the go), 110 (the nine confirmed choices; EX_248 section 1, the owner's scientific clarification), 112 and 113 (EX_250: full snapshots with `.venv`, a plain restore, before-and-after deployment snapshots, the recovery kit, A to G, H1, no Python at a restore); H-1 v7r1 section 12.11 (the checklist); the working principle of 18 November 2026 |
+26c27
+< 2. **One tool, kept in the development clone, never copied to production.** It has five modes: `check` (look, change
+---
+> 2. **One tool, kept in the development clone and in each recovery kit, never copied into production.** It has five modes: `check` (look, change
+36,47c37,54
+< 5. **A snapshot is one ordinary `.zip`** of the whole production folder except its Python environment, written by
+<    Python's own `zipfile`, checked twice before it counts (the archive read back; the files read again), named with
+<    the date and time, in `T:\a_p_r_i_r_backups`. Every production job ends with one. A "snapshot due" file, written
+<    before a job's first write, makes the next job take a missed one first. If it cannot be made (T: missing), every
+<    job goes on with a loud warning that stays until one is made: your decision, with its risk stated in section 7.
+< 6. **Restore** works even when production is damaged: it needs only a verified snapshot, a clean process check and
+<    your go. It renames the old tree aside (kept), unpacks the snapshot into a fresh tree at `G:\a_p_r_i_r`, rebuilds
+<    the Python environment from that release's own locked wheels and writes a restore record. After that you work
+<    normally: the updater, then the weekly session, replay the missing draws one at a time from the draws before each.
+<    That is the same chronological process and valid research (EX_244; EX_248 section 1). Nothing is compared with the
+<    old tree, no timestamp proof is asked for, nothing stops.
+< 7. **The formal OV-1 claim is kept apart, with no human choice.** A trace of the passed code (section 9) shows the one
+---
+> 5. **A snapshot is one ordinary `.zip` of the COMPLETE production folder,** its Python environment included; only two
+>    temporary control files are left out. It is written by Python's own `zipfile`, taken only when production is quiet,
+>    and checked twice before it counts (the archive read back; the files read again). It goes to
+>    `T:\a_p_r_i_r_backups`, named with the date and time. Every production job ends with one, `update` also takes one
+>    before it changes anything, and `Run_Production_Snapshot.bat` takes one whenever you like. A "snapshot due" file,
+>    written before a job's first write, makes the next job take a missed one first. If one cannot be made, every job
+>    goes on with a loud warning that stays until one is made (your decision; the risk is stated in section 7).
+> 6. **A recovery kit** for each release: a small, separate, dated, hash-checked `.zip` on T: holding the restore tool,
+>    the release's hash list and plain instructions. An emergency restore runs from the kit with whatever Python is
+>    installed; it needs neither the E: clone nor a working production folder. `update` and `init` stop if the kit
+>    cannot be written to T:.
+> 7. **Restore** is plain: verify the snapshot, check that no Python program is running on the PC, rename the old tree
+>    aside (kept), unpack the whole snapshot at `G:\a_p_r_i_r`, verify every file, and it is ready to run, environment
+>    and all. Then you work normally: the updater, then the weekly session, replay the missing draws one at a time from
+>    the draws before each. That is the same chronological process and valid research (EX_244; EX_248 section 1).
+>    Nothing is compared with the old tree, no timestamp proof is asked for, nothing stops. As the very last resort you
+>    can unzip a snapshot by hand; the kit's instructions say what to run afterwards.
+> 8. **The formal OV-1 claim is kept apart, with no human choice.** A trace of the passed code (section 9) shows the one
+52c59
+< 8. **A marker file** at the production root, checked with its path at every real-data launch, so nothing real starts
+---
+> 9. **A marker file** at the production root, checked with its path at every real-data launch, so nothing real starts
+54,55c61,64
+< 9. **A stale orphan marker never blocks a restore for ever and is never copied back as a live block:** restart the PC
+<    (recommended and checked), a fresh clean process check, and your typed acknowledgement (section 8).
+---
+> 10. **A stale orphan marker never blocks a restore for ever and is never copied back as a live block:** restart the PC
+>     (checked), a clean process check, and your typed acknowledgement (section 8).
+> 11. **Production's Python environment is built your way,** with your own scripts, as on E:. After any build or change,
+>     one command verifies it (the whole test suite with production's own Python); until then no launcher runs.
+57c66
+< The nine choices you confirmed are recorded in section 15, with five smaller ones still yours.
+---
+> Every choice put to you so far is confirmed and listed in section 15.
+102c111
+< ## 2. The production folder
+---
+> ## 2. The production folder and the backup folder
+104c113
+<     G:\a_p_r_i_r\                    (the owner's choice; backups in T:\a_p_r_i_r_backups\)
+---
+>     G:\a_p_r_i_r\                    PRODUCTION. Everything here is in every snapshot, except the two files marked *.
+107,108c116
+<       PRODUCTION_SETTINGS.json       the owner's settings: the backup folder, the wheel folder (section 6).
+<                                      Plain JSON the owner may edit.
+---
+>       PRODUCTION_SETTINGS.json       the owner's settings: the backup folder. Plain JSON the owner may edit.
+109a118,119
+>       create_venv.bat, install_upgrade_dependencies_into_venv.bat, activate_venv.bat, deactivate_venv.bat
+>                                      the owner's own environment scripts (release), used as on E: (section 6)
+115d124
+<                                      LOCK_<digest>.txt (the Python lock of each release deployed; section 6),
+118,124c127,143
+<                                      and two working files that are never put in a snapshot: SNAPSHOT_DUE and
+<                                      SNAPSHOT_IN_PROGRESS.lock
+<       .venv\                         production's own Python environment (not in snapshots; section 6)
+< 
+< Not in production: `.git`, `tests/`, `doc/`, `exchange/`, `review/`, `archive/`, `GAIS/`, the runner's folder, the
+< venv helper `.bat` files and the dependency installer. No installed program reads any of them (CODE-3's static rule
+< already forbids `src/` to refer to `archive/`).
+---
+>                                      * SNAPSHOT_DUE and * SNAPSHOT_IN_PROGRESS.lock (never in a snapshot)
+>       .venv\                         production's own Python environment, with ENVIRONMENT_VERIFIED.json (section 6)
+> 
+>     T:\a_p_r_i_r_backups\            BACKUPS. Nothing here is pruned by any tool. The owner copies this whole folder
+>                                      to his USB3 drives and the cloud himself; no tool does that.
+>       PRODUCTION_<date>_<time>_<JOB>.zip          a verified snapshot, with <same name>.zip.sha256 beside it
+>       DEPLOY_KIT_<date>_<time>_<release>.zip      a recovery kit (section 4.7), with its .sha256 beside it
+>       <anything>.partial             an unfinished file: NOT a backup
+>       the Python installer file      kept there by the owner (one file), in case Python itself must be put back
+> 
+> Not in production: `.git`, `tests/`, `doc/`, `exchange/`, `review/`, `archive/`, `GAIS/`, the runner's folder. No
+> installed program reads any of them (CODE-3's static rule already forbids `src/` to refer to `archive/`).
+> 
+> **What is where, in one line each.** Inside a snapshot: all of `G:\a_p_r_i_r`, the environment, the settings, the
+> marker and every record included. Separate on T:, never inside a snapshot: the recovery kits and the `.sha256`
+> files. For a restore the owner needs one snapshot, its matching kit and a Python installation; nothing from E: and
+> nothing from the internet.
+132c151,153
+<   `Run_*.bat` (today 487 and 5). Bytes: the commit's own stored bytes, except that `.bat` files are written with CRLF,
+---
+>   `Run_*.bat`, and the owner's four environment scripts (`create_venv.bat`,
+>   `install_upgrade_dependencies_into_venv.bat`, `activate_venv.bat`, `deactivate_venv.bat`), as they are (today 487, 5
+>   and 4). Bytes: the commit's own stored bytes, except that `.bat` files are written with CRLF,
+137,138c158
+<   (`release_entries`, `retires`, `registry_entries_added`); the expected digest of the release hash list; the name and
+<   digest of the Python lock file (section 6).
+---
+>   (`release_entries`, `retires`, `registry_entries_added`); the expected digest of the release hash list.
+161,162c181,183
+< starts three kinds of child process: `git` (on the E: side only), `pip` (section 6) and the project's own reviewed
+< tools. It is reviewed code, installed into `main` by the package, and is not part of the release set. Every mode names
+---
+> starts two kinds of child process: `git` (on the E: side only, and never in `restore`) and the project's own reviewed
+> tools. It is reviewed code, installed into `main` by the package, and is not part of the release set; a copy travels
+> in every recovery kit (section 4.7). Every mode names
+165,166c186,188
+< **The process check** is always the reviewed `process_check.py`, verified by hash before it is run: with production's
+< Python when production's environment exists and is verified, otherwise with the development environment's.
+---
+> **The process check** of `init` and `update` is the reviewed `process_check.py`, verified by hash before it is run, with
+> production's Python (for `init`, before production's environment exists, the development environment's). `restore`
+> uses its own stricter check, which needs neither (section 8).
+177c199
+< the environment against the lock; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+---
+> the environment against `ENVIRONMENT_VERIFIED.json`; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+190c212
+< 2. Create the folder. Copy `source_data/`, `results/` and `transitory_data/` whole, the git-ignored run folders
+---
+> 2. Write and verify the recovery kit on T: (section 4.7); stop if it cannot be written. Create the folder. Copy `source_data/`, `results/` and `transitory_data/` whole, the git-ignored run folders
+194c216,217
+<    no roster change).
+---
+>    no roster change). At the environment step `init` stops and asks the owner to build `.venv` with his two scripts;
+>    the same command typed again goes on (section 6).
+196c219
+< 5. Take the first snapshot.
+---
+> 5. Take the first snapshot (`INIT_<release>`). There is no earlier G: tree, so there is none before.
+205c228
+< | 1 | `check`: production equals its recorded release (no drift); the named commit's hash list equals the package's expected digest; the new release descends from the deployed one (an older one is refused: going back is a restore) | 0, 1 (PRE; "replaced files at base bytes") |
+---
+> | 1 | The recovery kit for this release is written and verified on T:, or the update stops there (section 4.7). `check`: production equals its recorded release (no drift); the named commit's hash list equals the package's expected digest; the new release descends from the deployed one (an older one is refused: going back is a restore) | 0, 1 (PRE; "replaced files at base bytes") |
+207c230
+< | 3 | If `SNAPSHOT_DUE` exists: the overdue snapshot first (section 7) | new (D8) |
+---
+> | 3 | The `PRE_DEPLOY` snapshot of the whole tree, always attempted, while the old release is whole and quiet (section 7). If it cannot be made the update goes on with the warning NO ROLLBACK POINT WAS CREATED FOR THIS UPDATE | new (D8; EX_250 R3-C02) |
+213c236
+< | 9 | The environment: built or rebuilt only if the lock changed, then verified (section 6) | new (D6) |
+---
+> | 9 | The environment: never built by the tool. If it is not the verified one, the environment inventory is run here and, after step 10 passes, `ENVIRONMENT_VERIFIED.json` is written (section 6) | new (D6; H1) |
+218c241
+< | 14 | The end-of-job snapshot, verified; `SNAPSHOT_DUE` removed. Then the owner runs `export` and commits the two records in the clone | new (D8); 17, 19 (the two commits and the push become one export and one commit) |
+---
+> | 14 | The `POST_DEPLOY` snapshot of the whole tree, verified; `SNAPSHOT_DUE` removed. Then the owner runs `export` and commits the two records in the clone | new (D8); 17, 19 (the two commits and the push become one export and one commit) |
+222c245
+< be completed is abandoned by restoring the last verified snapshot (D10), on the owner's go, with steps written for
+---
+> be completed is abandoned by restoring the `PRE_DEPLOY` snapshot, or the last verified one (D10), on the owner's go, with steps written for
+268c291
+< While `update`, `restore`, `init` or a session resume runs its process check: no Claude Code task and no other Python
+---
+> While `update`, `init` or a session resume runs its process check: no Claude Code task and no other Python
+271a295,329
+> ### 4.7 The recovery kit (EX_250 R3-C01; decision log entry 112, item F)
+> 
+> - **Why.** The E: clone is a working place: its files may be edited, its environment broken, or the drive gone, at
+>   exactly the moment a restore is needed. So the restore must not need it.
+> - **What it is.** `T:\a_p_r_i_r_backups\DEPLOY_KIT_<YYYYMMDD>_<HHMMSS>_<release>.zip`, made by `init` and by every
+>   `update` **from the release commit's own bytes** (Git's objects, as for the release itself; never working files).
+>   A few small files:
+>   - the deploy tool itself (the same reviewed file; in a kit only `restore` and `check` are of use, because the
+>     others need Git);
+>   - `Restore_Production.bat`, which starts it with whatever Python is installed for the user (the `py` launcher, or
+>     `python`);
+>   - `HOW_TO_RESTORE.txt`: the steps in plain English, the last-resort unzip by hand included;
+>   - the release's hash list (`RELEASE_<commit>.json`) and the release description;
+>   - `KIT_MANIFEST.json`: the kit's own identity (release, time, the tool's version) and the SHA-256 of every file in it.
+>   Beside the zip, `<name>.zip.sha256` holds the zip's own SHA-256.
+> - **Nothing in it needs installing.** The tool uses the standard library only. In particular its restore-time process
+>   check uses no third-party package (section 8), so any Python 3 the user has will run it.
+> - **How it is trusted.** Before doing anything, the tool run from an unpacked kit checks its own files against
+>   `KIT_MANIFEST.json`, and the kit zip against its `.sha256` when the zip is at hand, and prints the kit's identity.
+>   A digest shows accidental change or a wrong file; it is not a signature and proves nothing against a deliberate
+>   attacker. That is stated, not hidden.
+> - **Which kit for which snapshot.** Every snapshot's manifest names the release it holds and the kit made for that
+>   release. The matching kit is the recommended one. Because a restore is "verify, rename, unpack, verify", a newer
+>   kit can restore an older snapshot; the tool says when the two do not match and goes on only if the snapshot's
+>   format version is one it knows.
+> - **`update` and `init` stop if the kit cannot be written and verified on T:** (the owner: "T: must be available").
+>   This is checked first, before anything in production changes. It is separate from the rule for a snapshot that
+>   cannot be made, where jobs go on.
+> - **If something is missing at a restore** (no kit, no Python at all, a kit that fails its own check): the tool does
+>   not start, or stops before touching anything, and says what is missing. The owner's copies of T: on USB3 and in the
+>   cloud hold every kit and snapshot; the Python installer kept on T: puts Python back. Beyond that, the last resort
+>   is the unzip by hand (section 8).
+> - **Not a second tool.** One program, shipped twice: in the clone for `init`, `update` and `export`; in the kit for
+>   `restore`.
+> 
+282c340
+< | 7. A reproducible environment | New, section 6 |
+---
+> | 7. A verified environment | Section 6: built the owner's way; verified by the suite with production's own Python before any launcher runs; the exact environment is inside every snapshot. v0.2's pinned lock is withdrawn (H1) |
+288c346
+< ## 6. Production's Python environment (D6)
+---
+> ## 6. Production's Python environment (D6; the owner's decision H1, decision log entry 113)
+290,318c348,391
+< - **Made fresh**, never copied: `python -m venv` from the same base installation the development environment uses,
+<   then `pip install --no-index --find-links <wheel folder> --require-hashes -r <lock file>`. No network.
+< - **The lock file** (`deploy/PRODUCTION_REQUIREMENTS_LOCK.txt`, reviewed, in the clone) pins the exact version and
+<   SHA-256 of every wheel. It lists only what the installed code imports and what those need (fact 7), at the versions
+<   of the development environment the suite passed on. Other work's packages stay out, so they can no longer change
+<   production's environment.
+< - **Each release has its own lock.** `update` and `init` copy the release's lock file into
+<   `production_records/LOCK_<digest>.txt`, so **every snapshot carries the exact lock of the release it holds**.
+< - **The wheel folder** (recommended: `T:\a_p_r_i_r_backups\wheels`, a setting) holds the wheel files of every lock
+<   ever deployed. Nothing prunes it. It is not evidence (every wheel is hash-checked against the lock when installed),
+<   so it lives outside Git and outside the snapshots.
+< - **A restore rebuilds the environment from the snapshot's own lock,** not from whatever lock is newest on E:. If a
+<   wheel that lock names is missing or has another hash, the tool lists exactly which, writes no marker (so nothing
+<   runs in the fresh tree) and reports RESTORE NOT COMPLETE: ENVIRONMENT NOT BUILT. The owner puts the wheels back (the
+<   same pinned versions fetched again, on a dependency go; they are hash-checked) and types the command again. An old
+<   lock also needs the Python version it was made for; the tool says so if the base Python no longer matches.
+< - **Making the lock and the wheel folder** needs the internet once per dependency change (`pip download`). It is a
+<   dependency step: its own short reviewed procedure and its own owner go, as D6 says. Not designed further here.
+< - **Verified after every build:** the installed distributions equal the lock; the existing environment inventory
+<   refuses an orphan file; the digest goes into the deployment log. Step 10 then runs the suite with this environment.
+< - **A changed base Python** (say 3.15.3) changes both environments. The existing rule holds: stop until the suite
+<   passes; here, an `update` run rebuilds and re-verifies.
+< 
+< ## 7. Snapshots (D7 to D9)
+< 
+< - **What is in one:** every file and every empty folder under the production root, except `.venv\` and the two
+<   working files `SNAPSHOT_DUE` and `SNAPSHOT_IN_PROGRESS.lock`. That includes the git-ignored run folders, the ledgers,
+<   the registries and release records, the sealed Mode H archive, `production_records\`, the marker and settings, and
+<   any lock or orphan marker present at that moment, as they are.
+---
+> - **Built by the owner, his way, as on E:.** `create_venv.bat`, then `install_upgrade_dependencies_into_venv.bat`, run
+>   in `G:\a_p_r_i_r` (both are in the release, with the two activate scripts they call). That step needs the internet,
+>   as it does on E: today. **v0.2's lock file and wheel folder are withdrawn.**
+> - **It is in every snapshot** (section 7), so a restore brings back the very environment that was running. Nothing is
+>   rebuilt at a restore.
+> - **One rule: verified before use.** After any build or change the owner runs `update` (the same command; with no new
+>   release it changes no code). It sees that the environment is not the verified one and: (1) runs the existing
+>   environment inventory, which refuses an orphan file; (2) runs the whole suite in a temporary export of the release
+>   commit with production's Python; (3) on a pass writes `.venv\ENVIRONMENT_VERIFIED.json` (the environment's digest,
+>   the installed distributions and versions, the release, the time) and a deployment-log line, and takes the
+>   POST-deployment snapshot. **This is the "verification command".**
+> - **Until then no launcher runs.** The production guard (section 10) requires that file, and requires the installed
+>   distributions (names and versions, read from the folder names in `site-packages`: one directory listing) to equal
+>   its list. A deleted and rebuilt `.venv` has no such file; an upgrade in place changes the list. Either way every
+>   real-data launcher refuses and says: run `update` to verify the environment.
+> - **The owner's procedure for an environment change** (a new Python, say), each time on his own go as a dependency
+>   change (W-23): in the E: clone first (rebuild; the suite by a Claude Code task, as T024 did). Then in production:
+>   `Run_Production_Snapshot.bat` (the "before" snapshot); rebuild; `update` (the verification and the "after" snapshot).
+> - **At `init`:** after the data and the code are in place, `init` stops and asks the owner to build the environment
+>   with his two scripts; the same `init` command typed again goes on with the verification.
+> - **What this gives up, stated plainly.** Production's package versions are whatever `pip` resolves that day and may
+>   differ from E:'s. The evidence is the suite passing in production's own environment, and the snapshot holds the
+>   exact files. All of the installer's 39 packages are installed, not only the five this project imports.
+> - **An old snapshot after a major Python change** may hold an environment that no longer starts, because a Windows
+>   environment depends on the base Python being where it was. The restore says so and does not call it ready
+>   (section 8); the fix is the same rebuild and `update`.
+> 
+> **Alternatives.** (1) The pinned lock and wheel folder of v0.2: reproducible and offline, but machinery the owner
+> would work around; he chose H1. (2) No `ENVIRONMENT_VERIFIED.json`, the rule kept by procedure only: simpler by one
+> small file and one directory listing per launch, but a real job on an untested environment would go unnoticed. I
+> recommend keeping the file; the reviewer may judge it unnecessary.
+> 
+> ## 7. Snapshots (D7 to D9; EX_250 R3-C02; decision log entries 110 and 112)
+> 
+> - **What is in one: everything.** Every file and every empty folder under `G:\a_p_r_i_r`, the `.venv` included. Only
+>   the two control files `SNAPSHOT_DUE` and `SNAPSHOT_IN_PROGRESS.lock` are left out. No other exclusion of any kind:
+>   not by file type, not by `.gitignore`, not by size.
+> - **What an ordinary zip keeps, and what it does not.** It keeps every file's bytes exactly (CRLF and LF untouched),
+>   every name, the folder tree, empty folders, and modification times to two seconds. It does not keep: Windows
+>   permissions (restored files take the permissions of the folder they are unpacked into, which on the same PC and
+>   path is what they had by inheritance); alternate data streams; hard links as links (each comes back as an ordinary
+>   file; production's records have one link each); or links to other places. If the snapshot meets a link to another
+>   place (a symbolic link or junction) it fails rather than write something it cannot restore; an environment made by
+>   `python -m venv` on Windows has none. T017 shows a restored tree runs at the same path.
+320c393,405
+<   its SHA-256 goes into a list stored as the last member (`SNAPSHOT_MANIFEST.json`), with the time the copying began.
+---
+>   its SHA-256 goes into a list stored as the last member (`SNAPSHOT_MANIFEST.json`), with the time the copying began,
+>   the release production holds and the name of that release's recovery kit.
+> - **Quiet, by three things together** (EX_250 R3-C02):
+>   1. *Nothing can start.* While `SNAPSHOT_IN_PROGRESS.lock` exists, the production guard refuses every launch.
+>   2. *Nothing is running, at the start and at the end.* Before the first reading and after the second, the process
+>      tool lists any Python process that belongs to this production folder (its executable is production's own, or
+>      its working folder is under `G:\a_p_r_i_r`, or its command line or an ancestor's names that folder), other than
+>      the snapshot's own chain. This is the rule of design 6.1 without its one clause about the shared base
+>      interpreter, so that unrelated Python work on the PC (an OUTLANDISH job, a Claude Code task on E:) does not stop
+>      routine snapshots; every launcher-run program of production is still listed, because the launchers start them
+>      inside the folder and name it. One new read-only command in the process tool. Any process listed, or one that
+>      cannot be read: not quiet, no snapshot.
+>   3. *No file differs.* The second reading below.
+323,329c408,414
+<   hashed **again** and must equal the list, and the set of files must be the same. Production's records are created,
+<   grow, or are replaced by newer ones; none returns to earlier bytes. So files equal at both readings were the same
+<   in between: the snapshot is one state, the state at the moment between the two readings. A file that changed, appeared or vanished fails the snapshot. Only
+<   then is the file renamed to `<name>.zip` (never over an existing name), a line appended to `SNAPSHOT_LOG.jsonl`, and
+<   `SNAPSHOT_DUE` removed. A `.partial` file is never a snapshot. A lock file stops two snapshots running at once.
+< - **Name:** `PRODUCTION_<YYYYMMDD>_<HHMMSS>_<JOB>.zip`, local time, for example `..._WEEKLY_OZLOTTO.zip`; the UTC time is
+<   inside.
+---
+>   hashed **again** and must equal the list, and the set of files must be the same. Only then is the file renamed to
+>   `<name>.zip` (never over an existing name), its `.sha256` written beside it, a line appended to
+>   `SNAPSHOT_LOG.jsonl`, and `SNAPSHOT_DUE` removed. A `.partial` file is never a snapshot, and a snapshot that failed
+>   any check is never called verified.
+> - **Names.** `PRODUCTION_<YYYYMMDD>_<HHMMSS>_<JOB>.zip`, local time (the UTC time is inside). `<JOB>` is one of
+>   `WEEKLY_OZLOTTO`, `WEEKLY_POWERBALL`, `DEV_BATCH`, `RESULTS_UPDATE`, `MANUAL`, `INIT_<release>`,
+>   `PRE_DEPLOY_<release>`, `POST_DEPLOY_<release>`. Every one is a full snapshot; none is a difference from another.
+332c417
+<   process tool. A launcher `Run_Production_Snapshot.bat` lets the owner take one by hand.
+---
+>   process tool.
+338,342c423,428
+<   | `Run_Results_Updater.bat update` | automatic, in the launcher: flag, the updater, then the snapshot. The updater's own file is not touched. So the first backup after a results update exists even if no weekly session follows |
+<   | the deploy tool's `init` and `update` | automatic |
+<   | `Run_Production_Snapshot.bat` | the snapshot, by hand, at any time |
+<   | single owner commands through the general launchers (`declare-developed`; OV-1's `register` and `stop`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic.** Their run sheets end with `Run_Production_Snapshot.bat`. Until then their change is in no snapshot. This is an exception for the owner's explicit acceptance (section 15, item A) |
+<   | `restore`; `export`; `check`; any read-only command | none (nothing in production changes, or the tree is the snapshot just read) |
+---
+>   | `Run_Results_Updater.bat update` | automatic, in the launcher: flag, the updater, then the snapshot. The updater's own file is not touched |
+>   | the deploy tool's `update` | **two:** `PRE_DEPLOY` before anything in production changes, while the old release is whole and quiet; `POST_DEPLOY` after the code, the two records and the environment check are complete and the barriers are gone. Both always attempted |
+>   | the deploy tool's `init` | one, `INIT`, at the end. There is no earlier G: tree, so there is nothing to snapshot before |
+>   | `Run_Production_Snapshot.bat` | **a snapshot by hand, at any time, by itself** (the owner's question of 20 November 2026). With `--mark-due` it only sets the flag |
+>   | single owner commands through the general launchers (`declare-developed`; OV-1's `register` and `stop`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic** (the owner's decision A, entry 112). Their run sheets begin with `Run_Production_Snapshot.bat --mark-due` and end with `Run_Production_Snapshot.bat`. Between the command and that snapshot its change is in no snapshot; the one that matters most is `register`, which cannot be made again if lost (section 9) |
+>   | `restore`; `export`; `check`; any read-only command | none |
+348,352c434,441
+< - **If a snapshot cannot be made** (T: unplugged, disk full, a check fails), at the start or at the end of a job:
+<   **every job goes on** (the owner's decision, entry 110, item 3). The flag stays. Nothing claims a snapshot was made.
+<   A warning in capitals is printed at the start and again as the last lines of the job, by every job, until a
+<   verified snapshot exists; the job's exit status says so (a new status "complete, snapshot not made" when everything
+<   else was complete; otherwise the job's own status, with the warning). The live path comes first.
+---
+> - **If a snapshot cannot be made** (T: unplugged, disk full, not quiet, a check fails), at the start or at the end of
+>   a job, or before or after an `update`: **every job goes on** (the owner's decision, entry 110, item 3). The flag
+>   stays. Nothing claims a snapshot was made. A warning in capitals is printed at the start and again as the last lines
+>   of the job, by every job, until a verified snapshot exists; the job's exit status says so (a new status "complete,
+>   snapshot not made" when everything else was complete; otherwise the job's own status, with the warning). The live
+>   path comes first. **For `update` the warning is: NO ROLLBACK POINT WAS CREATED FOR THIS UPDATE,** with the date of
+>   the last verified snapshot. (An `update` has already stopped if T: itself cannot be reached, because the recovery
+>   kit is written first, section 4.7; so this case is a snapshot that failed a check, not a missing drive.)
+355,357c444
+<   game's formal OV-1 claim if a counted draw's records exist only in the unsnapshotted stretch (section 9). The
+<   exposure is largest before `update`, which changes the code with no fresh snapshot of the old state; `update` prints
+<   that sentence and the date of the last verified snapshot before it goes on.
+---
+>   game's formal OV-1 claim if a counted draw's records exist only in the unsnapshotted stretch (section 9).
+360,367c447,457
+< - **More than 65,535 entries** needs the ZIP64 form, which `zipfile` writes by itself (section 14). Whether File
+<   Explorer opens it is to be shown on the owner's PC. **Fallback if it does not:** several ordinary zips per snapshot,
+<   each under 65,535 entries, under one manifest. Not designed unless needed.
+< 
+< ## 8. Restore (D10; decision log entries 100 and 110; EX_244; EX_248 B01 and B02)
+< 
+< `restore --snapshot <zip>`, on the owner's own go each time. **It asks nothing of the damaged tree.** It does not run
+< `check`, does not use production's Python, and does not need any file of the old tree to be readable.
+---
+> - **Size and time.** With the environment inside, a snapshot has more entries and is larger than v0.2's. No estimate
+>   is given here; the owner has said storage is not the limit (decision log entry 112), and T017 measures it. More than
+>   65,535 entries needs the ZIP64 form, which `zipfile` writes by itself (section 14). Whether File Explorer opens it is
+>   to be shown on the owner's PC, on a tree of the real size. **Fallback if it does not:** several ordinary zips per
+>   snapshot, each under 65,535 entries, under one manifest. Not designed unless needed.
+> 
+> ## 8. Restore (D10; decision log entries 100, 110, 112 and 113; EX_244; EX_248 B01, B02; EX_250 R3-C01, R3-C02)
+> 
+> `restore --snapshot <zip>`, run from an unpacked recovery kit (section 4.7) with whatever Python is installed, on the
+> owner's own go each time. **It asks nothing of the damaged tree and nothing of E:.** It does not run `check`, does not
+> use production's Python, reads no file of the E: clone, and does not need any file of the old tree to be readable.
+372,376c462,470
+< 2. The snapshot verified in full, every member against its list, before anything is touched.
+< 3. Process safety, checked independently of production: the reviewed process tool, from the clone's hash-verified
+<    copy, run with the development environment's Python, applied to the production path whether or not the folder is
+<    whole. Any project Python process, or one whose details cannot be read, is a refusal. Nothing is terminated, and no
+<    acknowledgement overrides it: an uncertain process is treated as alive and the restore waits.
+---
+> 2. The kit's own check (section 4.7), and the snapshot verified in full, every member against its list, before
+>    anything is touched.
+> 3. **No Python program running on the PC, apart from the restore tool itself** (the owner's decision, entry 113).
+>    The tool reads Windows' own process table with the standard library and lists every process named `python*.exe`,
+>    `pythonw*.exe` or `py.exe` outside its own chain. Any one listed, or a table that cannot be read completely, is a
+>    refusal. It needs no path on G: or E: and no extra package, so it cannot be misled by a damaged tree. It is made
+>    twice: before the rename, and again straight after it, before anything is unpacked. Nothing is terminated, and no
+>    acknowledgement stands in for it: the owner closes what is listed, and the restore waits. (Windows' own refusal to
+>    rename a folder with a file open in it remains as a second barrier.)
+387,390c481,484
+<    set-aside tree, if there is one, is renamed, so no launcher runs there.
+< 3. **Makes a fresh, empty `G:\a_p_r_i_r`,** writes `RESTORE_IN_PROGRESS.json` in it first, and unpacks every member,
+<    hashing each file against the list as it is written. An orphan marker inside the snapshot is not unpacked to its
+<    active place (below).
+---
+>    set-aside tree, if there is one, is renamed, so no launcher runs there. Then the second process check.
+> 3. **Makes a fresh, empty `G:\a_p_r_i_r`,** writes `RESTORE_IN_PROGRESS.json` in it first, and unpacks **every**
+>    member, the environment included, hashing each file against the list as it is written. Nothing is merged,
+>    skipped or rebuilt. An orphan marker inside the snapshot is the one member not unpacked to its place (below).
+392,402c486,499
+<    SHA-256 and time; the set-aside tree's name; what step 1 found; the times) **and the two restore notices** of
+<    section 9.
+< 5. **Rebuilds the environment from the snapshot's own lock** (section 6) and verifies it; checks the code against the
+<    snapshot's own hash list.
+< 6. **Writes the production marker last** and removes `RESTORE_IN_PROGRESS.json`. Until then no launcher runs there, and
+<    the tool does not say the restore succeeded.
+< 7. No snapshot is taken: the restored tree is the snapshot just read.
+< 
+< **If it stops half-way,** the same command again. A fresh tree still holding `RESTORE_IN_PROGRESS.json` whose
+< unpacking did not finish is itself renamed aside (`..._PARTIAL_RESTORE_...`) and the unpacking starts again. If only
+< the environment failed (a wheel missing), the command continues from step 5. The first set-aside tree is never touched
+---
+>    SHA-256 and time; the kit used; the set-aside tree's name; what step 1 found; the times) **and the two restore
+>    notices** of section 9.
+> 5. **Verifies the whole fresh tree again:** every file against the list, nothing missing and nothing extra, and the
+>    code against the hash list of its release, which the snapshot itself carries.
+> 6. **Writes the production marker last** and removes `RESTORE_IN_PROGRESS.json`.
+> 7. **A short health check:** it starts the restored environment's own Python once, has it import the third-party
+>    modules the project uses, and compares the installed distributions with `ENVIRONMENT_VERIFIED.json`. Pass:
+>    **RESTORED AND READY TO RUN.** Fail: **RESTORED; ENVIRONMENT NOT READY** (the files are all back and verified, but
+>    this PC's Python is not what it was when the snapshot was taken): the launchers will refuse by themselves, and the
+>    way forward is the owner's rebuild and `update` (section 6). The tool never says "ready" in that case.
+> 8. No snapshot is taken: the restored tree is the snapshot just read.
+> 
+> **If it stops half-way,** the same command again. A fresh tree still holding `RESTORE_IN_PROGRESS.json` is itself
+> renamed aside (`..._PARTIAL_RESTORE_...`) and the unpacking starts again. The first set-aside tree is never touched
+404a502,509
+> **The last resort, in the owner's words: "a simple unzip by the human into the right place gets it done".** A
+> snapshot is an ordinary zip, so with no tool at all the owner can rename the old folder and extract the snapshot to
+> `G:\a_p_r_i_r` in File Explorer. That skips the process check, the verification, the restore record and the restore
+> notices. So `HOW_TO_RESTORE.txt` says: first close everything that uses Python; afterwards, as soon as a kit can be
+> run, `Restore_Production.bat --after-hand-unzip --snapshot <zip>`, which verifies the tree against that snapshot's
+> list and writes the restore record and the notices (with the time of that moment). Until that is done the formal
+> OV-1 check of section 9 cannot know a restore happened; ordinary work is unaffected either way.
+> 
+422c527,528
+<   shows the old processes are gone, not that nothing new was started since.
+---
+>   shows the old processes are gone, not that nothing new was started since. Here (c) is the restore's own check: no Python program at all. The start
+>   time is read from Windows with the standard library.
+547a654,658
+> - **Two more things the same pre-check refuses on:** `SNAPSHOT_IN_PROGRESS.lock` present (a snapshot is being taken;
+>   section 7); `.venv\ENVIRONMENT_VERIFIED.json` missing, or its list not the installed distributions (section 6).
+> - **The two tools that run without a launcher** (`process_check.py`, `install_records.py`) change real files (locks,
+>   the two records). They apply the same marker-and-path test to the folder they are given, so they too refuse
+>   outside production (EX_250 section 4, B06); the tests' invented folders carry an invented marker.
+578c689
+< | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git`; for `restore` only, the listing rule is applied to the production path even when the folder is missing or damaged (the rule itself is unchanged) |
+---
+> | `src/package_tools/process_check.py` (installed) | the root test no longer requires `.git` and requires the production marker (section 10); one new read-only command, the quiet check of section 7 (design 6.1's rule without the shared-interpreter clause). `restore` does not use this tool |
+581,582c692,693
+< | `src/package_tools/install_records.py` (installed) | the root test likewise; `_committed` and `_tracked_changes` replaced by the hash check of section 4.3 step 13 |
+< | New | `deploy/Deploy_Production.py` and its launcher; `deploy/RELEASE.json`; the lock file; `src/package_tools/production_snapshot.py`; `src/package_tools/production_guard.py` (the pre-check); `Run_Production_Snapshot.bat` |
+---
+> | `src/package_tools/install_records.py` (installed) | the root test likewise (no `.git`; the production marker); `_committed` and `_tracked_changes` replaced by the hash check of section 4.3 step 13 |
+> | New | `deploy/Deploy_Production.py` and its launcher; `deploy/RELEASE.json`; the kit's `Restore_Production.bat` and `HOW_TO_RESTORE.txt`; `src/package_tools/production_snapshot.py`; `src/package_tools/production_guard.py` (the pre-check); `Run_Production_Snapshot.bat` |
+593c704,705
+< - **`update`:** every refusal Appendix J's negative tests list that still applies (a live process, an unreadable one, a
+---
+> - **`update`:** a `PRE_DEPLOY` and a `POST_DEPLOY` snapshot, each full and each naming the release and its kit; the
+>   PRE one failing: the update goes on and prints that no rollback point was created; every refusal Appendix J's negative tests list that still applies (a live process, an unreadable one, a
+597c709,711
+<   the archive, a file changed, added or removed during the snapshot (a same-size rewrite included), a full or
+---
+>   the archive, a file changed, added or removed during the snapshot (a same-size rewrite included), a project
+>   process listed before or after (not quiet), a launch attempted during the snapshot (refused), a link to another
+>   place in the tree, a full or
+601,604c715,727
+< - **Restore:** onto an invented production tree; the set-aside tree is byte-identical to the tree before, apart from
+<   its renamed marker; with the old tree absent, half missing, without a `.venv`, with an unreadable OV-1 ledger: the
+<   restore completes; a process listed refuses and no acknowledgement overrides it; extraction stopped half-way, then
+<   the command again; a wheel missing: no marker, RESTORE NOT COMPLETE, then complete after the wheel is put back.
+---
+> - **The kit:** built from a commit's bytes whatever the working files hold; a changed, missing or extra file in an
+>   unpacked kit, and a zip that is not its `.sha256`, each refuse; `update` and `init` stop before touching production
+>   when the kit cannot be written.
+> - **Restore:** run from an unpacked kit by a bare Python with no third-party package, with no E: clone present, onto
+>   an invented production tree with an environment in it; the set-aside tree is byte-identical to the tree before,
+>   apart from its renamed marker; the fresh tree equals the snapshot file for file, environment included, with nothing
+>   extra; with the old tree absent, half missing, without a `.venv`, with an unreadable OV-1 ledger: the restore
+>   completes; any Python process in a stand-in process table refuses, an unreadable table refuses, and no
+>   acknowledgement overrides either; a process appearing between the two checks stops it after the rename with
+>   nothing unpacked; extraction stopped half-way, then the command again; the health check READY, and NOT READY when
+>   the environment cannot start (never "ready"); `--after-hand-unzip` on a tree unzipped by hand.
+> - **The environment:** a rebuilt `.venv` and an upgrade in place each make every real-data launcher refuse until
+>   `update` has verified it; a failing suite writes no `ENVIRONMENT_VERIFIED.json`.
+630c753,754
+< clone into a scratch production folder (with the offline environment build); a launcher refusing in the clone and
+---
+> clone into a scratch production folder (its environment built by the owner with his two scripts: the runner never
+> runs `pip`); a launcher refusing in the clone and
+632c756
+< opened in **File Explorer by the owner** (the only step the runner cannot do) and its size and time recorded; an
+---
+> of a tree of the real size, environment included, opened in **File Explorer by the owner** (the only step the runner cannot do) and its size and time recorded; an
+635c759,762
+< PC by the owner, then a catch-up over the lost draws and the formal view's "not established" line; an `export` and what it prints; records made in one folder read in another (the open
+---
+> PC by the owner, run from an unpacked recovery kit with the task clone out of reach, the restored environment running at the same
+> path with nothing installed, then a catch-up over the lost draws and the formal view's "not established" line; an
+> environment rebuilt with the owner's two scripts, refused by a launcher until `update` verifies it; the restore's
+> process table and start time read on Windows; an `export` and what it prints; records made in one folder read in another (the open
+654c781
+< ## 15. The owner's choices
+---
+> ## 15. The owner's choices: all confirmed
+656,657c783,810
+< **Confirmed by the owner on 20 November 2026 (decision log entry 110; relayed in EX_248 section 4). Built into this
+< draft; listed so the ratification covers them:**
+---
+> Nothing in this draft waits on a choice. For the ratification, in one place (decision log entries 110, 112, 113):
+> 
+> | # | Decided | Where |
+> |---|---|---|
+> | 1 | Every snapshot is the complete `G:\a_p_r_i_r`, `.venv` included; only the two control files are left out (replaces the earlier "no `.venv`") | 7 |
+> | 2 | Restore is plain: verify, rename the old tree aside, unpack everything at the same path, verify; nothing rebuilt | 8 |
+> | 3 | `update` takes a snapshot before and after; `init` takes one at its end; ordinary end-of-job snapshots stay | 4.3, 7 |
+> | 4 | A recovery kit zip on T: for each release; an emergency restore needs neither E: nor a working production folder | 4.7, 8 |
+> | 5 | The owner copies the whole T: backup folder to USB3 drives and the cloud himself | 2 |
+> | 6 | `SNAPSHOT_DUE` is written just before a job's first write | 7 |
+> | 7 | When a snapshot cannot be made, all jobs go on with a standing warning; the risk is accepted | 7 |
+> | 8 | `restore` is a fifth mode of the one tool | 4 |
+> | 9 | Production `G:\a_p_r_i_r`; backups `T:\a_p_r_i_r_backups` | 2 |
+> | A | Single owner commands: the run sheet marks the snapshot as due first and ends with the snapshot command | 7 |
+> | B | A stale orphan marker at a restore: a checked restart, a clean process check, the typed acknowledgement; otherwise the existing per-incident clearance | 8 |
+> | C | Formal OV-1: the one objective check in the recorder; `register` refuses after a lost registration | 9 |
+> | D | Only the two named proof-of-concept probes stay unguarded; the guard checks the path | 10 |
+> | E | The early File Explorer check: yes, **on its own go, not yet given** | 14 |
+> | F | `update` and `init` stop if the recovery kit cannot be written to T: | 4.7 |
+> | G | An emergency restore runs on whatever Python is installed for the user | 4.7, 8 |
+> | H | Production's environment is built the owner's way and verified by the suite before use (H1) | 6 |
+> | - | For a restore: no Python program at all may be running on the PC | 8 |
+> | - | A snapshot by hand at any time; and, as the last resort, an unzip by hand | 7, 8 |
+> 
+> **Two small things I added that you have not been asked about; say if either is unwelcome.** (1) The file
+> `.venv\ENVIRONMENT_VERIFIED.json`, so that a launcher refuses on an environment that was rebuilt or upgraded and not
+> yet verified (section 6). (2) `Restore_Production.bat --after-hand-unzip`, so that a restore done by hand still gets
+> its restore record and notices (section 8).
+659,695c812,813
+< 1. `.venv` is not in snapshots; it is rebuilt at a restore from the exact locked wheels of that release (section 6).
+< 2. `SNAPSHOT_DUE` is written just before a job's first write (section 7).
+< 3. When a snapshot that is due cannot be made, **all** jobs go on with a loud warning that stays until one is made.
+<    This relaxes D8's "the next job makes it first" (entry 97) for the case where it cannot be made; the risk is
+<    written in section 7 and printed by `update`.
+< 4. An orphan marker neither refuses a restore outright nor is copied into the restored tree as a live block
+<    (section 8).
+< 5. Formal OV-1: no difference for the research; the passed code traced; the registered claim reported truthfully
+<    (section 9).
+< 6. The production guard checks the path, not only the marker's presence (section 10).
+< 7. `restore` is a fifth mode of the one tool.
+< 8. Production: `G:\a_p_r_i_r`. 9. Backups: `T:\a_p_r_i_r_backups`.
+< 
+< **Still yours, each with the options and my recommendation:**
+< 
+< - **A. Single owner commands and snapshots** (section 7's table). `declare-developed`, OV-1's `register` and `stop`,
+<   and the few other commands typed by hand through the general launchers do not take a snapshot by themselves. (a)
+<   Their run sheets end with `Run_Production_Snapshot.bat`, and you accept that until then their change is in no
+<   snapshot (recommended: these are rare, each already has a reviewed run sheet and its own go, and hooking the general
+<   launchers would touch every one of the thousands of runs inside a session). (b) A wrapper launcher for owner
+<   commands that sets the flag and takes the snapshot: one more launcher to keep right. The one that matters most is
+<   `register`: a registration lost by a restore cannot be made again (section 9).
+< - **B. The exact condition for a stale orphan marker at a restore** (section 8's boxed text). You confirmed the
+<   principle. The draft makes the restart a checked condition of this route, and leaves "identify and close the
+<   processes" to the existing per-incident clearance procedure. (a) As drafted (recommended: a restart is the one fact
+<   about old processes a tool can verify). (b) Also let the tool accept, without a restart, that every process
+<   identity recorded in the marker is gone: more code in an always-review area, and it cannot work on a marker that
+<   cannot be read.
+< - **C. The formal OV-1 check** (section 9.3). (a) One check in the recorder and one in `register`, fed by the restore
+<   notice (recommended). (b) A report label only. It is a small change to code that has passed review, and to
+<   supplement 6.8, so it needs your ratification with the reviewer's view.
+< - **D. The proof-of-concept suite and the guard** (section 10). (a) The two proof-of-concept probes stay unguarded, so
+<   the suite runs in the clone as today (recommended). (b) Guard everything and run that suite in a marked folder.
+< - **E. Optional, early, on its own go** (the reviewer recommends it, EX_248 section 3): run the probe of section 14
+<   once on your PC and open its zip in File Explorer (about five minutes, invented files only). If Explorer cannot
+<   open it, the fallback of section 7 changes the snapshot format, and it is cheaper to know before the code is
+<   written.
+---
+> **Still needing your word, later:** the ratification of this note after the reviewer's recheck; the go for E; and the
+> amendment to the orphan-marker rule (section 8's boxed text), which is part of what the ratification covers.
+702c820,821
+< - **Direction document v0.3r1 section 9:** the backup paragraph replaced by D7 to D10 and the restore method; no
+---
+> - **Direction document v0.3r1 section 9:** the backup paragraph replaced by D7 to D10, full snapshots, the recovery kit
+>   and the restore method; no
+705a825,826
+> - **Design 6.1** (the process rule): the quiet check of section 7 and the restore's own rule of section 8, each named
+>   beside the existing rule, which is not changed.
+715c836
+< - The dependency procedure (lock and wheel folder): its own reviewed step.
+---
+> - The run sheet for an environment change (section 6): written and reviewed with the package.
+718,720c839,844
+< - **A restore by hand in File Explorer** is possible because a snapshot is an ordinary zip, but it writes no restore
+<   record and no restore notice, so the formal check of section 9 would not see it. It is therefore not a supported
+<   procedure: if the tool cannot be used, the steps are written and reviewed for that case.
+---
+> - **Not shown anywhere yet (T017):** reading Windows' process table and start time with the standard library; an
+>   environment restored from a zip running at the same path; File Explorer on an archive of the real size; the time a
+>   full snapshot takes with the environment inside.
+> - **The quiet check narrows an always-review rule** for snapshots only (it drops the shared-interpreter clause). I
+>   believe every launcher-run program is still listed; the reviewer should judge that, and the alternative is to keep
+>   the full rule and accept that an unrelated Python job on the PC stops routine snapshots.
+736c860
+< ## 18. Where each finding of EX_248 landed
+---
+> ## 18. Where each finding of EX_248 and EX_250 landed
+746a871,874
+> | EX_250 R3-C01 the E: dependency | The restore needed the E: clone's tool and Python at the moment E: may be broken; the process tool reads the damaged tree's `pyvenv.cfg` | A recovery kit zip per release on T:, built from release bytes, self-checking, standard library only; `restore` runs from it on any installed Python; its process check is "no Python program at all", read from Windows' process table, made before and after the rename | 4.7, 8 |
+> | EX_250 R3-C02 full-tree snapshots | `.venv` was left out and rebuilt; one snapshot around a deployment; a double scan alone as the quiet proof | Everything under the root, `.venv` included; what a zip keeps and does not; quiet by three things (no launch during a snapshot, a process check before and after, the second reading); `PRE_DEPLOY` and `POST_DEPLOY`; a plain same-path restore with a health check and no false "ready" | 6, 7, 8 |
+> | EX_250 section 1, the environment | Rebuilt from pinned wheels at every restore | Withdrawn. Built the owner's way (H1), verified by the suite before any launcher runs, and carried in every snapshot | 6 |
+> | EX_250 section 4, B06 note | Direct commands that change real files | The two tools run without a launcher apply the same marker-and-path test | 10 |
+748,749c876,877
+< Not changed from v0.1: sections 3 (the release and its proof), 4.2, 4.3 and 5 (init, update, Appendix J's properties),
+< which EX_248 supported.
+---
+> Unchanged in substance since v0.2, and accepted in principle in EX_250: sections 4.4 (export), 9 (formal OV-1) and the
+> orphan-marker rule of section 8. B05's wheel-and-lock part is superseded by section 6.
