@@ -2523,3 +2523,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   is it).
 - **Next:** the reviewer's reply, EX_267. Then corrections until PASS; the owner's ratification (RAT-40); H-1 v8.
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 139. 21 November 2026, 23:11 - OWNER: the phase 1 file list is to be folded into the specification itself
+
+- **The owner asked (23:09)** whether the restructuring of every method into the family and variant folder layout, with
+  the Python import work that goes with it, in DEV first, is early in the new plan. **Claude's answer:** yes; it is
+  phase 1, the first implementation step, in DEV only (specification v0.4 sections 3.2 and 17.3), after ratification,
+  H-1 v8 and the owner's ZIP. Claude pointed out a weakness: section 17.3 only points to section 10 of the superseded
+  simplification design v0.1 for the file-by-file list, and one line of that list is out of date ("installed in the E:
+  clone by the existing procedure").
+- **The owner's decision (23:10, his words):** "yes to folding the phase 1 list into the specification, corrected, in
+  the revision that answers the reviewer's EX_267, so the \"complete\" specification really is complete on this point."
+- **To do, in the revision that answers EX_267:** specification section 17.3 gains the corrected phase 1 list (E_2 to
+  E_19: `contract.py` and the family's own modules become the family's core file, one folder per variant with
+  `method.py`; E_1's adapter becomes `E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py`; the three shared helpers move to
+  `_shared/` with `_v1` names; imports follow, tests included; the runner's table of methods is built from the folder
+  tree), with the phase 2 list checked at the same time, and the pointer to the design v0.1 removed.
