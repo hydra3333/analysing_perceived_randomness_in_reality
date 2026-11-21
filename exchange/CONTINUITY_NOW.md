@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 23:40 Australia/Adelaide (entry 138: EX_266 sent: the system specification DRAFT v0.4 and the deployment design DRAFT v0.10). **Next: the reviewer's review (EX_267); corrections until PASS; then the owner's ratification. No code.**
+**Last updated:** 21 November 2026, 22:59 Australia/Adelaide (entry 138: EX_266 sent: the system specification DRAFT v0.4 and the deployment design DRAFT v0.10). **Next: the reviewer's review (EX_267); corrections until PASS; then the owner's ratification. No code.**
 
 ## For the owner: NOW
 
