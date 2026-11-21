@@ -2635,3 +2635,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
   matters."
 - **Awaited from the owner:** his explicit confirmation of the defect-only exception to entry 127 item 3 (entry 141
   recorded a conditional preference; Claude and the reviewer now both support it). Then EX_268 on his go.
+
+## 143. 22 November 2026, 00:16 - OWNER DECISIONS: the defect-only correction of shared code in place (replaces entry 127 item 3 for defects); the four-step build order; EX_268 to proceed
+
+- **The owner, in the Claude chat at 00:14 (his words),** to Claude's two questions: "1. yes. 2. yes. I am just keen to get
+  on with it. blurb given to reviewer now."
+- **Decided (1): the correction of defective shared code in place** (entries 141, 142; the reviewer supports it).
+  Defective shared code (forecast-producing infrastructure, `_shared` helpers, a family's core file) is corrected in
+  place by its own explicit command and confirmation, never by the ordinary install question. Every variant the
+  corrected code can affect is held until the owner runs the historical walk-forward rerun over its whole history;
+  what the rerun replaces is first saved in a verified, clearly named ZIP; the names stay. **This replaces entry 127
+  item 3 ("no in-place update of an installed helper") for defects only.** Unchanged: a variant's own files never
+  change (a corrected method is a new variant); a changed idea in shared code is a new versioned helper with
+  successor variants, old and new both running; `Who_Uses.bat`, `Make_Successors.bat` and batch marking, unmarking and
+  withdrawal stay.
+- **Decided (2): one ratified design, built in four steps, each on its own go:** (i) the folder layout (phase 1);
+  (ii) the research engine in DEV (the lists, the job, scoring, the reports, both OV-1 scores, the status file and
+  withdrawal); (iii) trees, installs, backups and restore, so that PROD exists and forecasts every week; (iv) the
+  laboratory tools (the QA software replacement, the research-data reseeding, the rerun, the correction).
+- **Go:** Claude takes "I am just keen to get on with it", after his "address the findings in the usual exchange
+  process" of 23:22, as the go for EX_268 (Fable, High; design only) and has told him so.
+- **Claude's closure plan for EX_268 (so that it is not lost if this chat ends; design intentions, not decisions):**
+  R6-F01: a new command `Correct_Shared_Code.bat`; every list's header records the identity of the shared forecasting
+  code (the digest of the manifest's `forecast`-class files) beside the variant's fingerprint, and a list whose header
+  does not match what is installed is foreign and held; the ordinary infrastructure reinstall refuses any plan that
+  changes a `forecast`-class file. R6-F02: the derived check compares a defined list of scientific fields only; one
+  small cutoff file per game says from which draw derived results are not current, and report files from that draw on
+  are moved out of the active reports folder. R6-F03: a table of exactly which files each rerun mode may change;
+  derived-only changes no forecast byte and takes only a game and a first draw; every rerun first writes one verified
+  archive ZIP of what it will replace, and does nothing if that fails. R6-F04: every file read from PROD, status files
+  included, hashed at the first reading and again at the second; "no program writes to PROD", with Windows'
+  last-access times named as outside that promise. R6-F05: the copy takes the destination's job lock before reading
+  PROD and holds it to the end. R6-F06: an unexpected derived difference stops; an accepted, named derived correction
+  is reported and leaves those results not current. R6-F07: a withdrawal holds the job lock and the updater's lock
+  from display to write. Also: the phase 1 file list (entry 139) and the four-step build order in section 17.

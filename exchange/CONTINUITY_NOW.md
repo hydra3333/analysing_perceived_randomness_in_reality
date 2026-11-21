@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 00:12 Australia/Adelaide (entry 142: the reviewer supports the owner's R6-F01 preference; OV-1 timing point re-closed). **Next: the owner's explicit confirmation; then EX_268 on his go (Fable, High). No code.**
+**Last updated:** 22 November 2026, 00:16 Australia/Adelaide (entry 143: the owner's decisions on the correction of shared code and the four-step build order). **Now: Claude is writing EX_268 (Fable, High); its closure plan is in entry 143. No code.**
 
 ## For the owner: NOW
 
+- **DECIDED (entry 143):** defective shared code is corrected in place, then the affected variants are recomputed
+  (replaces entry 127 item 3 for defects); and the design is built in four steps (layout; the research engine in DEV;
+  trees, installs, backups and restore; the laboratory tools). **EX_268 is being written; entry 143 holds Claude's
+  closure plan for every finding of EX_267, so a successor chat could write it.**
 - **R6-F01: THE REVIEWER SUPPORTS THE OWNER'S PREFERENCE (entry 142; handback
   `exchange/ChatGPT_to_Claude_R6_F01_Slipstream_Correction_OV1_Reclosed_2026_11_22.md`, main `dd39845`), with conditions
   for EX_268 and a verified, clearly named correction archive ZIP made before anything is shortened. **The OV-1
