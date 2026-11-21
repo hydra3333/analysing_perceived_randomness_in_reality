@@ -2182,3 +2182,27 @@ deletion or restore is authorised.
   infrastructure). None is decided.
 - **Claude's note:** the first design took "QA verification is required" as a gate between trees; the owner wanted a
   place to look. A clarifying question first would have saved a round.
+
+## 127. 21 November 2026, 15:10 - the owner's decisions on the infrastructure marker, the manifest's name, helpers and the DEV conveniences; EX_263 revised a second time at his request
+
+In the Claude web chat, 14:45 to 15:08, before passing EX_263 to the reviewer, the owner asked how marking, the
+infrastructure list and shared code work, and decided (his words in quotation marks):
+
+1. **A readiness marker for the infrastructure: yes.** "I like it." (Former choice F of EX_263 is closed.)
+2. **The infrastructure list is `deploy\INFRA_MANIFEST.ini`:** "that would be deploy\INFRA_MANIFEST.ini to denote it as
+   not just another human deleteable txt file." It is first written with the phase 2 package and reviewed, then
+   edited by hand to add or remove a file.
+3. **Helpers stay strictly add-only; no in-place update of an installed helper,** and a wrong helper is corrected by a
+   new versioned file with successor variants: "so we make new variants referencing the new helpers, retiring the old
+   ones and removing their I_AM_INSTALLABLE. OK. yes to option 1 Keep the rule, add three small DEV conveniences."
+   The conveniences: a listing of the variants that declare a helper; a generator of unmarked successor folders for
+   his review; batch marking, unmarking and withdrawal. (Claude had offered, as the alternative, an owner-ordered
+   correction in place with the history recomputed under the same names; not chosen. A narrower "proved harmless"
+   in-place update was also described and is not adopted now; it can be added later if needed.)
+4. **A withdrawn variant's marker is removed in DEV,** so that no tree created later receives it. (This reverses the
+   sentence in the specification v0.2 section 11 that a new tree would install it.)
+
+**Done (design only):** the system specification DRAFT v0.3 and the deployment design DRAFT v0.9, by counted
+replacements with exact diffs (`exchange/CLAUDE_WEB_TOOLS/simplify/`); `exchange/EX_263_Claude.md` rewritten in place a second time, before
+any reply (earlier versions at main `2e5c1c0` and `e3a7935`). **Five owner choices remain open:** A the updater inside
+the job; B `FORWARD_FROM`; C the cold copy's scope; D withdrawal mechanics; E nothing copied back to Git.

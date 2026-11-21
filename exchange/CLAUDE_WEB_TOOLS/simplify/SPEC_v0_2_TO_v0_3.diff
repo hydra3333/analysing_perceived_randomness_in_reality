@@ -1,0 +1,82 @@
+1c1
+< # Predictive Randomness - specification of the active research system - DRAFT v0.2
+---
+> # Predictive Randomness - specification of the active research system - DRAFT v0.3
+3,4c3,6
+< **Status:** DRAFT v0.2 for independent review (v0.1 with the owner's decision of 21 November 2026, 13:18, on installing:
+< sections 0, 2, 12, 13, 16, 18, 19; `SPEC_v0_1_TO_v0_2.diff` is exact). Not ratified. It authorises nothing. Until the project owner ratifies
+---
+> **Status:** DRAFT v0.3 for independent review. v0.2 was v0.1 with the owner's decision of 13:18 on 21 November 2026 on
+> installing; v0.3 adds his decisions of 14:49 to 15:08 (helpers stay add-only with no in-place update; three DEV
+> conveniences; the infrastructure marker; the manifest's name): sections 3.3, 4, 11, 12, 16, 18, 19. The diffs
+> `SPEC_v0_1_TO_v0_2.diff` and `SPEC_v0_2_TO_v0_3.diff` are exact. Not ratified. It authorises nothing. Until the project owner ratifies
+6,7c8,9
+< **Written:** 21 November 2026, 13:20 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+< directions of 20 and 21 November 2026 (decision log entries 121, 122, 124 and 126; EX_258, EX_259, EX_261, EX_262) and his
+---
+> **Written:** 21 November 2026, 15:10 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+> directions of 20 and 21 November 2026 (decision log entries 121, 122, 124, 126 and 127; EX_258, EX_259, EX_261, EX_262) and his
+10c12
+< **Risk tier:** HIGH. **Companion:** the deployment design DRAFT v0.8 (how the installs, backups and restores are carried
+---
+> **Risk tier:** HIGH. **Companion:** the deployment design DRAFT v0.9 (how the installs, backups and restores are carried
+95a98,104
+> **3.3A No in-place update of a helper (owner, 21 November 2026).** An installed helper is never overwritten, whether
+> or not the change would alter results. A helper found to be wrong is corrected by a new file (`..._v2.py`) and a
+> **successor variant** for each variant that used it; the old variants are withdrawn by the owner (section 11) and
+> their markers removed in DEV. The successors are new variants and begin their own place in the prevailing OV-1. Code
+> that is expected to keep improving without changing any result belongs in the infrastructure (12.4), which can be
+> updated under its "nothing may change" check.
+> 
+114a124,128
+> - **Three DEV conveniences** (owner; they touch nothing outside DEV). `Who_Uses.bat <helper>` lists every variant whose
+>   declaration names that helper. `Make_Successors.bat <old helper> <new helper>` copies each such variant to a new
+>   folder with the next version number in its name and rewrites its helper reference and declaration; it marks
+>   nothing, and the owner reviews the result. `Make_Installable.bat` accepts several variants at once, and
+>   `--unmark` removes markers.
+314c328,329
+<   registry, no status table. The owner tells the reviewer the reason in the ordinary exchange.
+---
+>   registry, no status table. The owner tells the reviewer the reason in the ordinary exchange. Several variants can be named in one command,
+>   under one confirmation.
+321,322c336,337
+<   was; it runs again in the catch-up, and nothing withdraws it again automatically. A newly created tree (section
+<   12.5) installs it and runs it until the owner withdraws it there.
+---
+>   was; it runs again in the catch-up, and nothing withdraws it again automatically. **In DEV the owner removes the withdrawn
+>   variant's marker** (`Make_Installable.bat --unmark`), so that no tree created later receives it.
+350c365
+<   hash. Any later edit to one of them un-readies it (choice F, section 19).
+---
+>   hash. Any later edit to one of them, or to the list, un-readies it (owner: yes, 21 November 2026).
+362c377,378
+< - **What it is:** the files named, one per line, in `deploy/INFRA_MANIFEST.txt`: the reader, the readout, the list and
+---
+> - **What it is:** the files named, one per line, in `deploy/INFRA_MANIFEST.ini` (the owner's name for it; first written
+>   with the phase 2 package and reviewed there; afterwards edited by hand to add or remove a file): the reader, the readout, the list and
+429c445,446
+< | DEV | `Make_Installable.bat` | mark a finished variant, or the infrastructure, ready |
+---
+> | DEV | `Make_Installable.bat` | mark finished variants, or the infrastructure, ready; `--unmark` |
+> | DEV | `Who_Uses.bat`, `Make_Successors.bat` | find the variants that use a helper; prepare their successors |
+512a530,532
+> - **Helpers and the DEV conveniences:** no command overwrites an installed helper; `Who_Uses` against planted
+>   declarations; `Make_Successors` produces unmarked folders with the new reference and leaves the originals
+>   untouched; batch marking, unmarking and withdrawal; an unmarked variant is not installed into a new tree.
+530,532d549
+< - **F. A readiness marker for infrastructure** as 12.2 (recommended: the same deliberate act as for a variant, and it
+<   stops half-edited system code being installed by accident). Or none: the shown differences and the confirmation
+<   are the whole of it.
+536a554,557
+> **Decided by the owner since DRAFT v0.2 (decision log entry 127), no longer open:** a readiness marker for the
+> infrastructure (yes); the manifest is `deploy/INFRA_MANIFEST.ini`; helpers stay strictly add-only, with no in-place
+> update route; a wrong helper is handled by successor variants, with the three DEV conveniences of section 4.
+> 
+546a568
+> 8. Any objection to 3.3A (no in-place helper update; successors) or to the three DEV conveniences?
+573a596
+> | The owner, 21 November 2026, 14:49 to 15:08: infrastructure marker; manifest name; helpers add-only; successors | 3.3A; 4; 11; 12.2; 12.4 |
+575c598
+< End of the specification, DRAFT v0.2.
+---
+> End of the specification, DRAFT v0.3.

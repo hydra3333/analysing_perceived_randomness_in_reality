@@ -1,0 +1,51 @@
+1c1
+< # Deployment design - DRAFT v0.8 (DEV, QA and PROD; local-file installs; backups; exact restore)
+---
+> # Deployment design - DRAFT v0.9 (DEV, QA and PROD; local-file installs; backups; exact restore)
+3,7c3,8
+< **Status:** DRAFT v0.8 for independent review (v0.7 with the owner's decision of 21 November 2026, 13:18: sections 0, 1,
+< 2 to 8, 11, 12, 14 to 16; `DEPLOY_v0_7_TO_v0_8.diff` is exact). Not ratified. It authorises nothing. It is the companion of the system
+< specification DRAFT v0.2 and says how that document's sections 2, 4 and 12 to 14 are carried out.
+< **Written:** 21 November 2026, 13:22 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+< directions in EX_261 and EX_262 and his decisions of 21 November 2026 on installing (decision log entries 124 and 126). Fable (High).
+---
+> **Status:** DRAFT v0.9 for independent review. v0.8 was v0.7 with the owner's decision of 13:18 on 21 November 2026; v0.9
+> adds his decisions of 14:49 to 15:08 (sections 2, 3 and 14). `DEPLOY_v0_7_TO_v0_8.diff` and `DEPLOY_v0_8_TO_v0_9.diff`
+> are exact. Not ratified. It authorises nothing. It is the companion of the system
+> specification DRAFT v0.3 and says how that document's sections 2, 4 and 12 to 14 are carried out.
+> **Written:** 21 November 2026, 15:10 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+> directions in EX_261 and EX_262 and his decisions of 21 November 2026 on installing (decision log entries 124, 126 and 127). Fable (High).
+106c107,108
+< `Install.bat`, `Reinstall_Infra.bat`, `Init_Tree.bat`, `Check_Tree.bat`, `Cold_Copy.bat`.
+---
+> `Install.bat`, `Reinstall_Infra.bat`, `Init_Tree.bat`, `Check_Tree.bat`, `Cold_Copy.bat`, and the DEV
+> conveniences `Who_Uses.bat` and `Make_Successors.bat`.
+113,115c115,119
+< - *Infrastructure:* the files listed in DEV's `deploy\INFRA_MANIFEST.txt`, one path a line, when
+<   `deploy\INFRA_IS_INSTALLABLE.json` matches them. `Make_Installable.bat INFRA` writes that marker: every manifest file
+<   and every file of the install tool, with SHA-256.
+---
+> - *Infrastructure:* the files listed in DEV's `deploy\INFRA_MANIFEST.ini` (one path a line under `[files]`; first written
+>   with the phase 2 package and reviewed; afterwards the owner adds or removes a line by hand), when
+>   `deploy\INFRA_IS_INSTALLABLE.json` matches them. `Make_Installable.bat INFRA` writes that marker: the manifest
+>   itself, every file it lists and every file of the install tool, with SHA-256. A listed file that does not exist
+>   refuses.
+129a134,138
+> **3.4 Helpers are never updated in place (owner).** No command overwrites an installed helper, proved harmless or not.
+> A wrong helper is handled in DEV: `Who_Uses.bat` finds the variants that declare it; `Make_Successors.bat` prepares
+> a successor folder for each, pointing at the corrected file; the owner reviews, marks the batch, and installs it in
+> the ordinary way; he withdraws the old variants in the tree and unmarks them in DEV (example 7).
+> 
+318a328,335
+> 7. **A wrong helper.** `_shared\recurrence_gaps_v1.py` is found to be wrong. `Who_Uses.bat _shared\recurrence_gaps_v1.py`
+>    lists twelve variants in four families. The owner writes `recurrence_gaps_v2.py` and runs
+>    `Make_Successors.bat _shared\recurrence_gaps_v1.py _shared\recurrence_gaps_v2.py`: twelve new, unmarked folders
+>    (`RECUR_MEAN_ALL_V2` beside `RECUR_MEAN_ALL_V1`, and so on). He reviews them, marks the batch, and runs
+>    `Install.bat PROD`: twelve variants and one helper are added; nothing installed is touched. He withdraws the
+>    twelve old variants in PROD with one command and one confirmation, and unmarks them in DEV. The next research job
+>    fills the successors' history; the old variants keep their records up to the withdrawal.
+> 
+369c386
+< End of the deployment design, DRAFT v0.8.
+---
+> End of the deployment design, DRAFT v0.9.

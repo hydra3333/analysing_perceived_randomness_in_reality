@@ -4,15 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 13:22 Australia/Adelaide (entry 126: the owner replaced mandatory QA with the DEV readiness marker alone; the system specification DRAFT v0.2 and the deployment design DRAFT v0.8; EX_263 revised under the same number). **Next: the reviewer's review (EX_264); the owner's ratification with six choices; then H-1 v8 and a NEW Claude chat for the code phases. No code.**
+**Last updated:** 21 November 2026, 15:10 Australia/Adelaide (entry 127: the infrastructure marker, `INFRA_MANIFEST.ini`, helpers strictly add-only with successor variants and three DEV conveniences; the system specification DRAFT v0.3 and the deployment design DRAFT v0.9; EX_263 revised a second time). **Next: the owner passes EX_263 to the reviewer (reply EX_264); ratification with five open choices; then H-1 v8 and a NEW Claude chat for the code phases. No code.**
 
 ## For the owner: NOW
 
 - **CURRENT STATE (21 November 2026, 13:08; entries 124 and 125). A CHAT TAKING OVER READS, IN THIS ORDER:**
   `exchange/EX_259_ChatGPT.md`, `exchange/EX_261_ChatGPT.md`, `exchange/EX_262_ChatGPT.md` (the owner's directions and the
-  reviewer's findings); decision log entries 121 to 126; then the two candidate documents:
-  `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_2.md` (the ONE complete specification of the active system) and
-  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_8.md`; then `exchange/EX_263_Claude.md` (revised; entry 126).
+  reviewer's findings); decision log entries 121 to 127; then the two candidate documents:
+  `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_3.md` (the ONE complete specification of the active system) and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_9.md`; then `exchange/EX_263_Claude.md` (revised twice; entries 126 and 127).
   The simplification design v0.1 and the deployment notes v0.1 to v0.6 are working history (the specification's
   section 17.3 still points to the design's section 10 as the code rounds' starting file list).
 - **Added by the owner on 21 November (entry 124):** three separate trees, DEV on E:, QA (a real test bed, on D:) and
@@ -22,8 +22,9 @@ durable EX messages are authoritative.
   by the owner only; **PROD is installed on the DEV readiness marker alone; QA is the owner's own optional test bed (entry 126 replaced
   the mandatory-QA rule of entry 124 the same day).**
 - **State:** both documents are with the reviewer (EX_263; the reply will be EX_264). Then the owner ratifies, with
-  six choices (specification section 19: A the job runs the updater; B `FORWARD_FROM`; C the cold copy's scope; D
-  withdrawal mechanics; E nothing copied back to Git; F a marker for infrastructure). Then H-1 v8 and the code phases in a NEW Claude chat.
+  five open choices (specification section 19: A the job runs the updater; B `FORWARD_FROM`; C the cold copy's scope; D
+  withdrawal mechanics; E nothing copied back to Git). Decided on 21 November (entry 127): a marker for the
+  infrastructure; helpers never updated in place, a wrong helper handled by successor variants. Then H-1 v8 and the code phases in a NEW Claude chat.
   **Nothing is authorised beyond design. The ratified documents stay in force until ratification.**
 - **THE PROJECT IS BEING SIMPLIFIED FROM THE ROOT (21 November 2026; entries 122 and 123). A CHAT TAKING OVER READS, IN
   THIS ORDER:** `exchange/EX_259_ChatGPT.md` (the owner's course correction; primary); decision log entries 121 to 123;
