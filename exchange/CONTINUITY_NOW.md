@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 22:45 Australia/Adelaide (entry 137: the owner's yes to the three design intentions; HIS GO FOR EX_266). **Now: Claude is writing EX_266 (Fable, High). Then the reviewer's review. No code.**
+**Last updated:** 21 November 2026, 23:40 Australia/Adelaide (entry 138: EX_266 sent: the system specification DRAFT v0.4 and the deployment design DRAFT v0.10). **Next: the reviewer's review (EX_267); corrections until PASS; then the owner's ratification. No code.**
 
 ## For the owner: NOW
 
+- **EX_266 IS WITH THE REVIEWER (entry 138).** `exchange/EX_266_Claude.md` opens with a traceability index. The two
+  current drafts: `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_4.md` and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_10.md` (v0.3 and v0.9 are history; exact diffs beside them).
+  **A chat taking over reads: the takeover note; this block; decision log entries 121 to 138; EX_266; the two drafts.**
+  Five mechanisms chosen by Claude with leaner alternatives are in the specification's section 19, for the review and
+  the owner's ratification. Nothing is ratified; nothing is authorised beyond design.
 - **LATEST DIRECTIONS, 21 November 2026, 22:21 (entry 136; handback
   `exchange/ChatGPT_to_Claude_QA_Scientific_Equivalence_Variant_Status_Q1_Q4_2026_11_21.md`, main `a8bcfaa`):** one science
   in every tree (DEV and QA run the installed software by their own `ENVIRONMENT.ini` exactly as PROD does; **no

@@ -2491,3 +2491,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   more results later). It recommends going straight to the complete EX_266, opening with the traceability index.
 - **Go (design only):** EX_266, the corrected complete system specification and deployment design, for independent
   review. Fable (High). No code, install, run, backup, restore, copy or deletion is authorised.
+
+## 138. 21 November 2026, 22:59 - the system specification DRAFT v0.4 and the deployment design DRAFT v0.10 sent for independent review (EX_266); no owner decision
+
+- **Done under entry 137's go (Fable, High; design only, no code):** `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_4.md`
+  (SHA-256 `e9a3befeda9382015dc1b0512040aee297937b5f2e2fc2e35a8333ac545c5358`) and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_10.md` (SHA-256
+  `3176998dfd2c04123f7ae7e1f26779363ee25111927b1770ebb7bd50999d5c39`), full new editions with exact diffs from v0.3 and
+  v0.9 beside them (each diff applied by `patch` and compared byte for byte). Sent as `exchange/EX_266_Claude.md`, which
+  opens with the traceability index (every owner decision of entries 122 to 137, every finding of EX_264 and request
+  of EX_265 and the two handbacks, and every draft contradiction S1 to S12 and D1 to D8, each with its section).
+- **The design, in short:** `VARIANT_STATUS.ini` beside each variant's software holds, per game, the withdrawal and the
+  first draw counted in the prevailing OV-1 (`prevailing_ov1_first_eligible_draw`), each set once, written only by
+  the project's commands, with a check line; the lists carry no status lines. One science in every tree: the same
+  code, rules, warnings and questions; each line's envelope says where it was computed, whether its result was on
+  file, and whether a rerun wrote it. A list that does not fit a tree's software or status is foreign: warned about,
+  ignored, its variant held until the owner clears it. The job checks every score and the prevailing ledger in full
+  at its start and withholds a game's derived results from the first differing draw. Infrastructure files have a
+  class (forecast, derived, other); a reinstall says before overwriting what it would change, never recomputes
+  history and never starts a rerun; `Check_Forecasts.bat --all` is the owner's to run. The historical walk-forward
+  rerun (`Rerun_Walk_Forward.bat`) sets old lines aside in the tree, rebuilds every dependent result, leaves status
+  files untouched, and is confirmed by typing the tree's role. The QA software replacement and the research-data
+  reseeding each read PROD twice with every file hashed and never write it. Backups and the recovery kit are
+  attempted and reported exactly, then one question defaulting to NO.
+- **Mechanisms Claude chose where no decision exists, each with a leaner alternative (specification section 19; for
+  the review and the owner's ratification):** a rerun sets aside in every tree; the derived check at every job; an
+  infrastructure change that alters stored results is installable after a plain statement and YES (a change from v0.3
+  and EX_262 section 2.3); in DEV an edited variant's list waits for a rerun; the suite runs in a target only when its
+  infrastructure is DEV's.
+- **Not done:** nothing was run; no timing is known; no independent cold read before sending (the reviewer's review
+  is it).
+- **Next:** the reviewer's reply, EX_267. Then corrections until PASS; the owner's ratification (RAT-40); H-1 v8.
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
