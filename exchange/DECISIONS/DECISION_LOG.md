@@ -2134,3 +2134,25 @@ file mechanics of a withdrawal.
 **Go:** the complete system specification and a coherent deployment design, for independent review as EX_263 (design
 only; Fable, High). No code, layout change, backup, results fetch, QA or PROD creation, install, run, migration,
 deletion or restore is authorised.
+
+## 125. 21 November 2026, 13:08 - the complete system specification (DRAFT v0.1) and the deployment design (DRAFT v0.7) sent for independent review (EX_263); no owner decision
+
+- **Done under entry 124's go (Fable, High; design only, no code):** `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_1.md`
+  (the one complete specification of the active system; replaces the simplification design v0.1 as a draft) and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_7.md` (a complete document, not a diff). Sent as `exchange/EX_263_Claude.md`.
+  F01 to F10 accepted; the specification's section 21 maps each.
+- **The owner's QA decision as designed:** a QA operation ends by testing QA as a whole (the suite with QA's Python;
+  regression of what was installed; the research job in QA) and writes a pass listing every installed file with its
+  hash and the tests and tool used. Every PROD operation makes five checks against the pass before touching anything
+  (QA unchanged since the pass; DEV's bytes are the passed bytes; PROD's infrastructure equals the pass's; every PROD
+  variant and helper is in the pass; the tests and tool are the passed ones). No option skips them.
+- **Also in the design:** three trees set by `ENVIRONMENT.ini` (a tree is what its own file says); the readiness marker
+  bound to file hashes; `Install.bat` (ready-and-absent, never overwrites), `Reinstall_Infra.bat` (an explicit manifest;
+  a full regression in QA), `Init_Tree.bat`, `Verify_Tree.bat`, `Withdraw_Variant.bat` (one line in the variant's own
+  file); a forecast line is `FORECAST` or `NO_FORECAST`; content and envelope; an explicit start for the prevailing
+  OV-1; the updater in PROD only, with QA and DEV receiving results by a checked copy; the coordinator in DEV only;
+  the cold copy of the project clone folder with a dry run; rollback only from an unpacked cold copy.
+- **Five choices for the owner at ratification (specification section 19), not decided:** A the job runs the updater
+  itself; B `FORWARD_FROM` as corrected; C the cold copy's scope; D the withdrawal mechanics; E nothing copied back
+  from PROD to DEV or Git (changes the decisions of 16 and 17 November 2026 to commit results and score records).
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
