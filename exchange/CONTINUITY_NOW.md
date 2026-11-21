@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 18:02 Australia/Adelaide (entries 131 and 132: choice C revised to the owner's own full ZIP of the E: project folder; a NEW ChatGPT reviewer chat has answered the HO-2 takeover questions correctly and Claude advised it is ready; the owner's acceptance is awaited). **Next: the owner accepts the reviewer's takeover; a short Claude takeover note; then EX_266 in a NEW Claude chat on the owner's go. No code.**
+**Last updated:** 21 November 2026, 18:08 Australia/Adelaide (entry 133: a takeover note and blurb for a new Claude chat). **Next: the owner starts a new Claude chat with the blurb (HO-2); then EX_266 on his go. No code.**
 
 ## For the owner: NOW
 
+- **A NEW CLAUDE CHAT STARTS FROM `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md`** (entry 133; its blurb is beside it). It
+  supplements the installed H-1 v7r1, whose hard rules, roles and protocol still bind and whose design sections are
+  now history. Procedure HO-2. Its first deliverable, on the owner's go: EX_266.
 - **ALL OWNER CHOICES ON THE DRAFTS ARE MADE (entry 130; 21 November 2026, 17:51):** A the research job runs the updater
   itself; B `FORWARD_FROM` after a successful results check; C the owner himself makes a full ZIP of the project folder on E: (ignored run
   folders and `.git` included) when Claude says it is time, before phase 1; no cold-copy script (entry 131); D withdrawal by one line in the variant's file; E a complete read-only copy from PROD into DEV

@@ -2314,3 +2314,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   previous reviewer had already found. That shows accurate reading, not yet an independent finding. EX_266's review
   will show the latter.
 - **Not a decision:** accepting the takeover and authorising normal review work is the owner's.
+
+## 133. 21 November 2026, 18:08 - a takeover note and blurb for a new Claude chat; the owner agrees the next steps
+
+- The owner (18:07): "ok to the next steps" (accept the new reviewer's takeover; a short Claude takeover note; EX_266 in
+  a new Claude chat on his go), and asked whether Claude's handover documents are fully up to date.
+- **Claude's answer:** the decision log, CONTINUITY_NOW, the two drafts, the EX files and the reviewer's handover v3r10
+  are current. **The installed Claude handover H-1 v7r1 is not:** its hard rules, roles and protocol still bind, but
+  its design sections describe the system being replaced. A full H-1 v8 is due after ratification. To close the gap
+  now: `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md` (reading order; state; the decisions and findings EX_266 must
+  answer; design leads; things to remember; working method; lessons) and `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21_blurb.md`
+  (the text to paste into a new Claude chat, with the hard rules). Neither is reviewed or ratified; neither replaces
+  H-1 v7r1. The ratification register, the roadmap and the reminders file were not updated in this cycle (no
+  ratification has occurred since RAT-39).
+- The new Claude chat follows HO-2: read and verify first; a first substantive reply; the reviewer's blind questions;
+  the owner's acceptance.
