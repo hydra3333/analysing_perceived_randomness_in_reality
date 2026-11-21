@@ -2156,3 +2156,29 @@ deletion or restore is authorised.
   itself; B `FORWARD_FROM` as corrected; C the cold copy's scope; D the withdrawal mechanics; E nothing copied back
   from PROD to DEV or Git (changes the decisions of 16 and 17 November 2026 to commit results and score records).
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 126. 21 November 2026, 13:22 - the owner replaces mandatory QA with the DEV readiness marker alone; his question on the settings files; EX_263 revised under the same number at his request
+
+- **The owner, in the Claude web chat at 13:18 (his words):** "'Only if all of that succeeds is a QA pass written, listing
+  every installed file with its hash' etc is great and I've been there as a DEV manager and later a QA manager and
+  know the overheads well, however I am seeking an abbreviated QA mechanism that satisfies only me, and so I'd prefer
+  revert to only using 'i am installable' marker in dev for installing to prod. Also, how do the .ini files get
+  created/configured initially and then not overwritten somehow by .bat or .py later ? can you update the EX (same
+  number) and pop the outstanding decisions options in that and update the blurb for reviewer ?"
+- **Decision recorded:** this **replaces the QA part of entry 124** (mandatory QA verification of the exact files before
+  every PROD installation, no bypass). PROD is installed on the DEV readiness marker alone. QA remains as the owner's
+  own optional test bed. The rest of entry 124 stands.
+- **Done (design only):** the system specification DRAFT v0.2 and the deployment design DRAFT v0.8, each built from the
+  previous draft by counted replacements with an exact diff (`exchange/CLAUDE_WEB_TOOLS/simplify/`): the QA pass record and the five checks
+  are withdrawn; each install checks itself in the tree it installs into (markers match; add-only; the suite with
+  that tree's Python; a sample regression after variants, a full one after infrastructure); a marker for
+  infrastructure is proposed (choice F). The settings files: DEV's is made once by the owner from a tracked example
+  and ignored by Git; a tree's is written once, create-only, by `Init_Tree.bat`; it is on no manifest and no program
+  writes it afterwards, except a restore writing the backup's own copy into a fresh tree; a later change is the
+  owner's hand edit.
+- **`exchange/EX_263_Claude.md` was rewritten in place at the owner's request,** before any reply; the first version is
+  at main `2e5c1c0`. It now lists the owner's six outstanding choices with their options (A the updater inside the
+  job; B `FORWARD_FROM`; C the cold copy's scope; D withdrawal mechanics; E nothing copied back to Git; F a marker for
+  infrastructure). None is decided.
+- **Claude's note:** the first design took "QA verification is required" as a gate between trees; the owner wanted a
+  place to look. A clarifying question first would have saved a round.

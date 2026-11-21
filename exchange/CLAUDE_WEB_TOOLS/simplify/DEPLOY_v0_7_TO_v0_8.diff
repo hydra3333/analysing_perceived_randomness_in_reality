@@ -1,0 +1,235 @@
+1c1
+< # Deployment design - DRAFT v0.7 (DEV, QA and PROD; local-file installs; backups; exact restore)
+---
+> # Deployment design - DRAFT v0.8 (DEV, QA and PROD; local-file installs; backups; exact restore)
+3,6c3,7
+< **Status:** DRAFT v0.7 for independent review. Not ratified. It authorises nothing. It is the companion of the system
+< specification DRAFT v0.1 and says how that document's sections 2, 4 and 12 to 14 are carried out.
+< **Written:** 21 November 2026, 13:07 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+< directions in EX_261 and EX_262 and his decision of 21 November 2026 on QA (decision log entry 124). Fable (High).
+---
+> **Status:** DRAFT v0.8 for independent review (v0.7 with the owner's decision of 21 November 2026, 13:18: sections 0, 1,
+> 2 to 8, 11, 12, 14 to 16; `DEPLOY_v0_7_TO_v0_8.diff` is exact). Not ratified. It authorises nothing. It is the companion of the system
+> specification DRAFT v0.2 and says how that document's sections 2, 4 and 12 to 14 are carried out.
+> **Written:** 21 November 2026, 13:22 Australia/Adelaide, by the Claude web chat (primary designer and coder), on the project owner's
+> directions in EX_261 and EX_262 and his decisions of 21 November 2026 on installing (decision log entries 124 and 126). Fable (High).
+17,19c18,20
+< 3. **QA proves, PROD copies the proof.** A QA operation ends by testing QA as a whole and writing a pass that lists
+<    every installed file with its hash. A PROD operation compares itself with that pass, file by file, before it
+<    touches anything, and no option skips the comparison.
+---
+> 3. **The marker is the whole of readiness.** A variant, or the infrastructure, is installable when its marker in DEV
+>    matches its files. QA is an optional test bed with the same commands; nothing links it to PROD. Each install
+>    checks itself in the tree it installs into.
+66a68,81
+> **How the settings files come to exist, and why nothing overwrites them** (the owner's question of 21 November 2026).
+> - **DEV's file is made once, by the owner:** he copies the tracked `ENVIRONMENT.example.ini` to `ENVIRONMENT.ini` and types
+>   his paths. Git ignores the real file, so no checkout or pull can replace it. `Check_Tree.bat` prints how the tools
+>   read it and what each check finds, and changes nothing.
+> - **A QA or PROD tree's file is written exactly once, by `Init_Tree.bat`,** from DEV's entry for that role. It is opened
+>   create-only: if a file of that name already exists the write fails and the tool refuses.
+> - **After that no program writes it.** It is not on the infrastructure manifest, so `Reinstall_Infra.bat` cannot touch
+>   it; it is not part of any variant; every launcher and tool opens it for reading only. A test searches the code for
+>   any other write and plants an attempt. The one exception is a restore, which writes the backup's own copy into a
+>   fresh, empty tree (section 12).
+> - **To change a setting later** (a new backup drive, say) the owner edits the tree's own file by hand, and DEV's entry
+>   to match. The checks below run at the next command; if the two disagree it refuses and prints both values.
+> - Every backup holds its tree's file, so a restore brings the settings back with everything else.
+> 
+79d93
+<             QA_PASS_<number>.json  QA only (section 3)
+94c108
+< ## 3. The candidate, the QA pass and the five checks (the owner's decision of 21 November 2026)
+---
+> ## 3. What can be installed, and what an install checks (the owner's decision of 21 November 2026, 13:18)
+99c113,115
+< - *Infrastructure:* the files listed in DEV's `deploy\INFRA_MANIFEST.txt`, one path a line.
+---
+> - *Infrastructure:* the files listed in DEV's `deploy\INFRA_MANIFEST.txt`, one path a line, when
+>   `deploy\INFRA_IS_INSTALLABLE.json` matches them. `Make_Installable.bat INFRA` writes that marker: every manifest file
+>   and every file of the install tool, with SHA-256.
+102,123c118,128
+< **3.2 The QA pass record,** `records\QA_PASS_<number>.json` in the QA tree, written only at the end of a QA operation
+< whose tests all succeeded:
+< - `software`: QA's complete installed list (every infrastructure, variant and helper file, with SHA-256);
+< - `infrastructure`: the manifest's paths as tested;
+< - `test_material` and `tool_material`: every file of DEV's tests and of the install tool that was used, with SHA-256;
+< - the evidence: the suite's counts and output digest; the regression (sample or full; pairs compared; differences,
+<   which must be none for a pass after a software change); the research job's summary for each game, with the
+<   `NO_FORECAST` counts of each new variant; QA's environment digest; the operation; the time.
+< 
+< **3.3 The five checks of every PROD operation** (`Install.bat PROD`, `Reinstall_Infra.bat PROD`, `Init_Tree.bat PROD`).
+< Let PASS be QA's highest-numbered pass, and AFTER the complete installed list PROD would have when the operation ends.
+< 1. QA's `INSTALLED_FILES.json` and QA's files, hashed now, equal PASS's `software`.
+< 2. For every file the operation would write: SHA-256 of DEV's file equals PASS's entry for that path.
+< 3. The infrastructure paths of AFTER are exactly PASS's `infrastructure`, with PASS's hashes.
+< 4. Every other path of AFTER (variants, helpers) is in PASS's `software` with the same hash.
+< 5. DEV's tests and install tool, and the files of the tool now running, equal PASS's `test_material` and
+<    `tool_material`.
+< Any difference refuses before anything is touched and names the first file. **There is no flag, setting, prompt or
+< environment variable that skips a check,** and a test asserts that no command line makes a PROD operation proceed
+< without a pass. What the refusals lead to: check 1, `Verify_Tree.bat QA`; checks 2 and 5, the QA operation again;
+< check 3 on a variant install, `Reinstall_Infra.bat PROD` first; check 4, DEV has drifted from what PROD holds, or QA
+< lacks something PROD has: bring QA up to date and verify it.
+---
+> **3.2 The markers are the whole of readiness (owner).** DRAFT v0.7 had a QA pass record and five comparisons of PROD
+> with QA before every PROD installation. The owner has withdrawn that: PROD is installed on the DEV markers alone.
+> There is no pass record, and no tool reads one tree in order to decide about another. QA and PROD are each installed
+> from DEV, in any order, or QA not at all.
+> 
+> **3.3 What every install checks in its own target,** and stops on:
+> 1. the markers match DEV's files now (so a file edited after marking is named and refused);
+> 2. add-only: no installed variant or helper would change; no unexpected file under `src\`;
+> 3. after copying, every installed file equals the plan;
+> 4. the whole suite, with the target's Python, on a temporary copy;
+> 5. the regression of what was already installed: a fixed sample after variants, everything after infrastructure.
+130,131c135,136
+< | 2 | The plan: the infrastructure manifest's files and every ready variant with its helpers, all hashed. **PROD:** the five checks; the batch and the pass are shown; the owner types the confirmation |
+< | 3 | The process check (section 9). The folder is created; `ENVIRONMENT.ini` and the barrier `records\INSTALL_IN_PROGRESS.json` (holding the plan) are written |
+---
+> | 2 | The plan: the infrastructure manifest's files (its marker must match) and every ready variant with its helpers, all hashed. It is shown; for PROD the owner types the confirmation |
+> | 3 | The process check (section 9). The folder is created; `ENVIRONMENT.ini` (create-only) and the barrier `records\INSTALL_IN_PROGRESS.json`, holding the plan, are written |
+137c142
+< | 9 | **QA:** the research job to its end, then `QA_PASS_1.json`, then a backup. **PROD:** the `INIT` backup; the owner then runs the research job |
+---
+> | 9 | The `INIT` backup. The owner then runs the research job |
+139c144
+< ## 5. Adding variants: `Install.bat QA|PROD`
+---
+> ## 5. Adding variants: `Install.bat PROD` (or `QA`)
+141,162c146,165
+< | Step | QA | PROD |
+< |---|---|---|
+< | 1 | Settings and role checked. The plan: ready variants the target lacks (narrowed by `--only`), their folders, and helper files the target lacks. A helper the target holds with other bytes refuses. Shown: to add; left out, each with its reason (not marked; marker does not match; already installed; already installed with different bytes). Nothing to add: end, target untouched | the same |
+< | 2 | | The five checks. The batch and the pass (its number, time and evidence) are shown; **one typed confirmation** |
+< | 3 | The process check; no job lock, updater lock, orphan marker or other unfinished install | the same |
+< | 4 | The recovery kit for the new software state (a failure warns) | the same (**a failure stops**) |
+< | 5 | The `PRE_INSTALL` backup, always attempted; if it cannot be made: NO ROLLBACK POINT WAS CREATED, and it goes on | the same |
+< | 6 | The barrier, holding the plan; the updater's own lock is taken; `SNAPSHOT_DUE` | the same |
+< | 7 | Each new file: temporary name, hash, rename. No existing file is opened for writing | the same |
+< | 8 | The whole tree's software against the old list plus the plan; nothing unexpected under `src\` | the same |
+< | 9 | The suite with QA's Python on a temporary copy | the suite with PROD's Python on a temporary copy; the sample regression, reported |
+< | 10 | `INSTALLED_FILES.json`; the log line; the updater's lock released; the barrier removed | the same |
+< | 11 | The sample regression; the research job to its end; **the new QA pass** | |
+< | 12 | The `POST_INSTALL` backup | the same. Installation is release: the owner's next `Run_Research.bat` fills the new variants' history |
+< 
+< ## 6. Updating infrastructure: `Reinstall_Infra.bat QA|PROD`
+< 
+< The same twelve steps with these differences.
+< - **Step 1:** the plan is the difference between DEV's manifest files and the target's infrastructure: files to add, to
+<   overwrite and to remove, each with both hashes; the text differences are shown. No path under a family folder or
+<   `_shared\` can be in it. No difference: end. **QA:** it refuses if QA's environment digest is not that of QA's last
+<   pass (one kind of change at a time: `Verify_Tree.bat QA` first).
+---
+> | Step | What happens |
+> |---|---|
+> | 1 | Settings and role checked. The plan: ready variants the target lacks (narrowed by `--only`), their folders, and helper files the target lacks. A helper the target holds with other bytes refuses. Shown: to add; left out, each with its reason (not marked; marker does not match its files; already installed; already installed with different bytes). Nothing to add: end, target untouched |
+> | 2 | **PROD: one typed confirmation** of the batch shown |
+> | 3 | The process check; no job lock, updater lock, orphan marker or other unfinished install |
+> | 4 | The recovery kit for the new software state (PROD: a failure stops; QA: a failure warns) |
+> | 5 | The `PRE_INSTALL` backup, always attempted; if it cannot be made: NO ROLLBACK POINT WAS CREATED, and it goes on |
+> | 6 | The barrier, holding the plan; the updater's own lock is taken; `SNAPSHOT_DUE` |
+> | 7 | Each new file: temporary name, hash, rename. No existing file is opened for writing |
+> | 8 | The whole tree's software against the old list plus the plan; nothing unexpected under `src\` |
+> | 9 | The suite with the target's Python on a temporary copy; the sample regression |
+> | 10 | `INSTALLED_FILES.json`; the log line; the updater's lock released; the barrier removed, last |
+> | 11 | The `POST_INSTALL` backup. Installation is release: the owner's next `Run_Research.bat` fills the new variants' history |
+> 
+> ## 6. Updating infrastructure: `Reinstall_Infra.bat PROD` (or `QA`)
+> 
+> The same eleven steps with these differences.
+> - **Step 1:** the infrastructure marker must match. The plan is the difference between DEV's manifest files and the
+>   target's infrastructure: files to add, to overwrite and to remove, each with both hashes; the text differences are
+>   shown. No path under a family folder or `_shared\` can be in it. No difference: end.
+164,166c167,169
+< - **Step 11, QA:** the **full** regression: every forecast and every score of every installed variant is recomputed from
+<   the permitted views and must equal the canonical files in content. One difference: no pass, the reinstall is
+<   reported as a scientific change, and the way back is the `PRE_INFRA` backup. Then the research job; then the pass.
+---
+> - **Step 9:** the **full** regression: every forecast and every score of every installed variant is recomputed from the
+>   permitted views and must equal the canonical files in content. One difference stops the install with the barrier
+>   in place: it is reported as a scientific change, and the way back is the `PRE_INFRA` backup.
+169c172
+< ## 7. Verifying a tree: `Verify_Tree.bat` (run in the tree)
+---
+> ## 7. Verifying a tree: `Verify_Tree.bat` (run in the tree, after its environment is rebuilt)
+171,177c174,177
+< - **QA:** process check; backup; the suite with QA's Python; the full regression; the research job; a new pass;
+<   `ENVIRONMENT_VERIFIED.json`; backup. After an environment change the regression's differences are recorded in the
+<   pass as environment differences for the W-23 review and do not withhold it; after no change there must be none.
+< - **PROD:** process check; backup; the suite with PROD's Python on a temporary copy of the installed software and DEV's
+<   tests (which must be the pass's: check 5); the sample regression, reported; `ENVIRONMENT_VERIFIED.json`; backup.
+< - A failed verification writes no marker and removes an older one. The owner's install script removes the marker
+<   before it changes anything.
+---
+> Process check; a backup; the suite with the tree's Python on a temporary copy of the installed software and DEV's
+> tests; the sample regression, whose differences after an environment change are **reported** for the W-23 review and
+> do not by themselves refuse; `ENVIRONMENT_VERIFIED.json`; a backup. A failed suite writes no marker and removes an
+> older one. The owner's install script removes the marker before it changes anything.
+183c183
+< | The barrier exists and its plan equals the plan now | this operation was interrupted | continues: files already in place with the right hash are skipped | restore the backup taken at step 5 |
+---
+> | The barrier exists and its plan equals the plan now | this operation was interrupted, or a check failed and the cause is now corrected | continues: files already in place with the right hash are skipped; the checks run again | restore the backup taken at step 5 |
+185d184
+< | No barrier; QA's software has no pass | QA's tests did not finish or failed | `Verify_Tree.bat QA` | return QA to its `PRE_` backup, correct DEV, install again |
+237c236
+< `KIT_MANIFEST.json`. It is built from the tool files that passed in QA (check 5). The tool checks its own files against
+---
+> `KIT_MANIFEST.json`. It is built from DEV's install tool files, as the infrastructure marker lists them. The tool checks its own files against
+265c264
+<    job, which catches up with what the backup held. Anything further is a new decision, through QA.
+---
+>    job, which catches up with what the backup held. Anything further is a new decision by the owner.
+295c294
+< ## 14. Worked examples (invented names; EX_262 section 4)
+---
+> ## 14. Worked examples (invented names; EX_262 section 4, adjusted to the owner's decision)
+298,309c297,309
+<    `E_002\RECUR_MEDIAN_ALL_V3` with no marker. `Install.bat QA` shows "to add: 2 variants, 1 helper
+<    (`_shared\recurrence_gaps_v2.py`); left out: `RECUR_MEDIAN_ALL_V3` (not marked)". It installs, tests, runs QA's job,
+<    writes `QA_PASS_7.json` and a backup.
+< 2. **One changes after QA.** The owner edits `HAZARD_BINS_C100_V2\method.py` in DEV. `Install.bat PROD` shows "to add:
+<    `RECUR_MEAN_ALL_V2`; left out: `HAZARD_BINS_C100_V2` (marker does not match its files)". If he makes the marker
+<    again, it is ready, and PROD refuses the batch at check 2: "not the QA-tested bytes:
+<    `E_017\HAZARD_BINS_C100_V2\method.py`". `Install.bat QA` reports it "already installed with different bytes". Ways
+<    forward: give the changed work a new variant name; or restore QA to its `PRE_INSTALL` backup and install again.
+< 3. **Infrastructure.** `src\evaluation\reports.py` is improved. `Reinstall_Infra.bat QA` shows one file to overwrite and
+<    no variant; the full regression finds no difference; `QA_PASS_8.json`. `Reinstall_Infra.bat PROD`: the five checks,
+<    one confirmation, `PRE_INFRA`, the file replaced, the suite, `POST_INFRA`. Had the change altered one old
+<    forecast, QA would have written no pass and PROD could not have been touched.
+---
+>    `E_002\RECUR_MEDIAN_ALL_V3` with no marker. `Install.bat QA` (the owner chooses to look first) shows "to add: 2
+>    variants, 1 helper (`_shared\recurrence_gaps_v2.py`); left out: `RECUR_MEDIAN_ALL_V3` (not marked)". It installs and
+>    checks. The owner runs QA's research job and reads its league reports.
+> 2. **One changes afterwards.** The owner edits `HAZARD_BINS_C100_V2\method.py` in DEV. `Install.bat PROD` shows "to add:
+>    `RECUR_MEAN_ALL_V2`; left out: `HAZARD_BINS_C100_V2` (marker does not match its files)". When he has finished and
+>    marked it again, the next `Install.bat PROD` adds it. QA still holds the earlier bytes under that name:
+>    `Check_Tree.bat QA` says so, and `Install.bat QA` leaves it alone ("already installed with different bytes"). QA is
+>    a test bed: it can be restored to an earlier backup or created again; PROD is not affected either way.
+> 3. **Infrastructure.** `src\evaluation\reports.py` is improved and `Make_Installable.bat INFRA` run.
+>    `Reinstall_Infra.bat PROD` shows one file to overwrite and no variant; one confirmation; `PRE_INFRA`; the file
+>    replaced; the suite; the full regression finds no difference; `POST_INFRA`. Had the change altered one old
+>    forecast, the install would have stopped there with no job able to run, and `PRE_INFRA` would be restored. Trying
+>    it in QA first would have shown the same without touching PROD.
+322,323c322,323
+< a fault planted after every step, then the command again; the four states of section 8; each of the five checks
+< with one planted difference, and no command line that avoids them; add-only (a changed, a removed and an added
+---
+> a fault planted after every step, then the command again; the three states of section 8; the two kinds of marker (matching; one file
+> edited afterwards; made by hand with a wrong hash); a settings file never written after its creation; add-only (a changed, a removed and an added
+333c333
+< roots set in a scratch settings file; `Init_Tree` for a scratch QA and a scratch PROD; an `Install` through both; a
+---
+> roots set in a scratch settings file; `Init_Tree` for a scratch QA and a scratch PROD; an `Install` into each; a
+345c345
+< note v0.6's reading table (its section 0A); every OV-1 restore rule; "later releases first" after a restore, in every
+---
+> note v0.6's reading table (its section 0A); the QA pass record and the five checks of DRAFT v0.7 (the owner's decision of 13:18); every OV-1 restore rule; "later releases first" after a restore, in every
+364c364
+<   needs, so that the temporary copy is complete; that list is part of the pass's `test_material`. Tests that served
+---
+>   needs, so that the temporary copy is complete; that list sits beside the infrastructure manifest. Tests that served
+369c369
+< End of the deployment design, DRAFT v0.7.
+---
+> End of the deployment design, DRAFT v0.8.
