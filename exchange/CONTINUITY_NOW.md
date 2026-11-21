@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 15:10 Australia/Adelaide (entry 127: the infrastructure marker, `INFRA_MANIFEST.ini`, helpers strictly add-only with successor variants and three DEV conveniences; the system specification DRAFT v0.3 and the deployment design DRAFT v0.9; EX_263 revised a second time). **Next: the owner passes EX_263 to the reviewer (reply EX_264); ratification with five open choices; then H-1 v8 and a NEW Claude chat for the code phases. No code.**
+**Last updated:** 21 November 2026, 17:28 Australia/Adelaide (entry 128: THE CHATGPT REVIEWER CHAT HAS ENDED after EX_265; EX_264 and EX_265 recorded). **Next: a new reviewer chat (its handover must be brought up to EX_265); then, on the owner's go, Claude's EX_266 (corrected specification and deployment design). No code.**
 
 ## For the owner: NOW
 
+- **THE REVIEWER CHAT ENDED ON 21 NOVEMBER 2026 AFTER EX_265 (entry 128).** A new ChatGPT reviewer chat is needed. Its
+  latest handover candidate, H-2 v3r9 in `doc/HANDOVER/`, is current only to EX_262. **Read after the list below:**
+  `exchange/EX_264_ChatGPT.md` (findings F01 to F05 on the specification v0.3 and the deployment design v0.9) and
+  `exchange/EX_265_ChatGPT.md` (the owner's decisions: choice E decided as an optional complete read-only copy of PROD's
+  research data into DEV or QA; smoke tests of new variants; manual rollback; no automatic full regression in PROD;
+  a reset/replay utility). Claude's reply EX_266 is NOT started: it waits for the owner's go and for a reviewer.
+  The owner's rule: no new EX during a discussion until he agrees to issue it.
 - **CURRENT STATE (21 November 2026, 13:08; entries 124 and 125). A CHAT TAKING OVER READS, IN THIS ORDER:**
   `exchange/EX_259_ChatGPT.md`, `exchange/EX_261_ChatGPT.md`, `exchange/EX_262_ChatGPT.md` (the owner's directions and the
   reviewer's findings); decision log entries 121 to 127; then the two candidate documents:

@@ -2206,3 +2206,43 @@ infrastructure list and shared code work, and decided (his words in quotation ma
 replacements with exact diffs (`exchange/CLAUDE_WEB_TOOLS/simplify/`); `exchange/EX_263_Claude.md` rewritten in place a second time, before
 any reply (earlier versions at main `2e5c1c0` and `e3a7935`). **Five owner choices remain open:** A the updater inside
 the job; B `FORWARD_FROM`; C the cold copy's scope; D withdrawal mechanics; E nothing copied back to Git.
+
+## 128. 21 November 2026, 17:28 - the ChatGPT reviewer chat has ended (reached its limit); EX_264 and EX_265 read and recorded; the owner's decisions relayed in EX_265
+
+- **The reviewer chat ended on 21 November 2026 after committing EX_265** (the owner, in the Claude chat at 17:27: it
+  "reached its limit and suddenly and permanently ceased to function"). Its last committed files: `exchange/EX_264_ChatGPT.md`
+  (main `1dc9916`), `exchange/EX_265_ChatGPT.md` (main `147257d`), and the handover candidate
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r9_RATIFICATION_CANDIDATE_20261121.md` with its blurb (main `0ad1e23`,
+  `6eeaa63`; current only to EX_262). **A new reviewer chat is needed before any further review.**
+- **EX_264 (R-5 RECHECK of the specification v0.3 and the deployment design v0.9):** the architecture is accepted
+  (P01 to P06). Findings: **F01** a withdrawal must override later scoring of a pending forecast; **F02** the markers'
+  exact hash closure (each marker excluded from its own hash; no cache or editor files; the same for
+  `ENVIRONMENT_VERIFIED.json`); **F03** every newly installed variant must itself be exercised by a small smoke case in
+  the destination; **F04** never promise a rollback to a backup that failed, and a destructive infrastructure overwrite
+  needs a verified restorable point; **F05** a full regression of everything at every infrastructure reinstall is not
+  proportionate. Notes N01 to N05 (among them the syntax of `INFRA_MANIFEST.ini`). The reviewer's views on the open
+  choices: A1, B1, C1 (or C2), D1 with F01.
+- **The owner's decisions relayed in EX_265 (it says they are owner-decided design directions; the mechanisms are still
+  to be designed, reviewed and ratified):**
+  1. **Choice E is decided: an optional, complete, read-only-from-PROD copy of the research data** (accepted draws and
+     their provenance, forecasts, scores, league reports, both OV-1 records) **into DEV or QA, directly replacing the
+     destination's active research data** after a printed summary and one confirmation. PROD is never written by it,
+     not even a marker, lock or log. No Git. Program code, `.venv`, settings and control records are not copied.
+     ("I mean a copy-from type utility should only read from prod never write to it.")
+  2. **F01 agreed:** a forecast pending at the withdrawal draw stays as history and is never scored.
+  3. **F02 agreed, with the least machinery:** one small utility and an ordinary hash list; no receipts or resolver.
+  4. **F03 agreed:** small, isolated smoke tests of each new variant with the destination's own environment, writing
+     only to that tree's scratch folder and never a canonical forecast, score, report or OV-1 line.
+  5. **F04 agreed: rollbacks are manual:** the owner chooses a verified last-good backup, restores exactly it, then runs
+     the updater and the catch-up. Before a destructive infrastructure reinstall the tool states truthfully which
+     verified backups exist; with none, the overwrite is refused (ordinary research jobs still go on).
+  6. **F05: no automatic full-history recomputation in PROD at an infrastructure reinstall.** Claude is to propose a
+     proportionate, science-safe rule. **A small reset/replay utility** for a chosen tree (DEV, QA; PROD only as a
+     separate, explicitly selected operation): whole derived results, or a game's draws from J onward with an
+     optional end N, one confirmation, downstream results kept consistent.
+  7. **QA is optional only in that PROD installation never refers to it;** it is to be a capable laboratory.
+  8. **Process:** no new EX is to be issued during a discussion with the owner until he agrees to issue it.
+- **Still open for the owner:** A (the job runs the updater), B (`FORWARD_FROM`), C (the cold copy's scope), D (withdrawal
+  mechanics); EX_265 says he agrees with the recommendations in principle but has not formally chosen.
+- **Requested of Claude by EX_265:** a corrected complete specification and deployment design as EX_266. **Not started;
+  held for the owner's go** (MC-1: Fable, High), and it needs a reviewer to go to.
