@@ -2329,3 +2329,44 @@ section 17.2 (unpack it into a new folder, never over the clone).
   ratification has occurred since RAT-39).
 - The new Claude chat follows HO-2: read and verify first; a first substantive reply; the reviewer's blind questions;
   the owner's acceptance.
+
+## 134. 21 November 2026, 19:20 - HO-2: the new Claude chat's takeover accepted by the owner; normal operations authorised; his answers on numbering, commit rights, the new reviewer and the drafts
+
+- **How it went (no EX numbers, at the owner's choice):** the new Claude chat started from
+  `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md` at main `cf4c602`, read the note's reading order, checked it with tools,
+  and gave its first substantive reply in the chat. The new ChatGPT reviewer chat (entry 132) sent eight blind questions
+  (Q1 to Q8), relayed by the owner at 19:12; Claude answered from the repository before seeing any assessment. The
+  reviewer's assessment, relayed at 19:18: **"PASS - Ready for EX_266"**, all eight answers PASS, "no further blind
+  takeover questions". Neither chat committed anything during the takeover.
+- **The owner's answers to Claude's first reply, 19:11 (his words):** "4. no EX numbers this time. Record the takeover in
+  the decision log, as was done for the reviewer's takeover today. 5. yes after acceptance. 6. after acceptance lets
+  explore this briefly together 7. New reviewer is accepted and working and awaiting instruction from me to query you.
+  re \"Passages in the drafts that later decisions contradict\" later decisions prevail, although after you are accepted
+  please create a .md for Reviewer to consider which outlines the contradictions from each and provenance, as a double
+  check and seeking advice by reviewer to you and I."
+- **Recorded as decided:**
+  1. This takeover uses no EX numbers. The next EX is still **EX_266 (Claude)**, as every record says.
+  2. Claude's commit rights (H-1 v7r1 section 0B item 4) apply from the acceptance.
+  3. **The new ChatGPT reviewer chat is accepted and working** (closes entry 132's "acceptance is awaited").
+  4. **Where a passage of the specification DRAFT v0.3 or the deployment design DRAFT v0.9 contradicts a later owner
+     decision, the later decision prevails.** Claude writes a document for the reviewer listing each contradiction with
+     its provenance, as a double check, asking the reviewer's advice to the owner and Claude.
+  5. R5-F04 (item 6 of Claude's reply) is to be explored briefly with the owner: still OPEN.
+- **The owner, 19:18 (his words):** "I accept that the handover is complete and you are now authorised for normal
+  operations." He added that he is "slightly disconcerted that seemingly decisions may be ahead of some documentation
+  (I had asked both chats to ensure it was up to date) but that is much better clarified than left dangling."
+- **The reviewer's three observations (its views, not owner decisions):** (1) R5-F04: entry 128 is the latest explicit
+  decision record and is the current design direction unless the owner corrects it; Claude should not silently weaken
+  the recovery safeguard. (2) Earlier committed records stay as historical evidence; no new Git-export requirement is
+  authorised (EX_265 section 8). (3) Withdrawal stays strictly owner-controlled: never by `Make_Successors`, an
+  installation or a helper inspection; successor folders are unmarked candidates for human inspection (EX_264 Q8).
+- **Record slips found by the new chat** (none changes a decision): the takeover note's "next entry 133" (133 was the
+  note's own entry; this is 134); the lower sections of `exchange/CONTINUITY_NOW.md` were stale (brought up to date with
+  this entry); H-2 v3r10 section 0.8 says A to D are open (true when written; decided in entries 130 and 131; the
+  reviewer's file, not edited); entry 128 item 5 records "with none, the overwrite is refused" as owner-agreed, where
+  EX_265 section 5 has that sentence as the reviewer's recommendation (open, item 5 above).
+- **Traced by the new chat, for the record:** the 4 November 2026 decision that choice A changed is E4 in register v0.31
+  ("The results updater stays a separate operation"). The 16 and 17 November decisions to commit records (D5, entries 47
+  and 48, commit `c7622fa`; OD-5, entry 70, commit `cc665ce`) were one-off commits of existing records, not a standing
+  export rule.
+- **Model:** the owner set Opus 5.5 at 19:18. EX_266 is Fable (High) work and waits for his go.

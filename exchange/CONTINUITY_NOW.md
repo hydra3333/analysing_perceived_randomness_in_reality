@@ -4,13 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 18:08 Australia/Adelaide (entry 133: a takeover note and blurb for a new Claude chat). **Next: the owner starts a new Claude chat with the blurb (HO-2); then EX_266 on his go. No code.**
+**Last updated:** 21 November 2026, 19:20 Australia/Adelaide (entry 134: the new Claude chat's takeover accepted; normal operations authorised). **Next: R5-F04 settled with the owner; the document of draft contradictions to the reviewer; then EX_266 on his go (Fable, High). No code.**
 
 ## For the owner: NOW
 
-- **A NEW CLAUDE CHAT STARTS FROM `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md`** (entry 133; its blurb is beside it). It
-  supplements the installed H-1 v7r1, whose hard rules, roles and protocol still bind and whose design sections are
-  now history. Procedure HO-2. Its first deliverable, on the owner's go: EX_266.
+- **BOTH CHATS ARE NEW AND ACCEPTED (21 November 2026).** The ChatGPT reviewer chat took over from H-2 v3r10 (entries 132,
+  134); the Claude chat took over from `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md` (HO-2, no EX numbers; reviewer PASS on
+  eight blind questions; the owner's acceptance at 19:18, entry 134). The installed Claude handover is still H-1 v7r1
+  (hard rules, roles, protocol); the takeover note supplements it; H-1 v8 follows ratification.
+- **Where a draft contradicts a later owner decision, the later decision prevails** (entry 134). Claude is writing a
+  document for the reviewer listing each contradiction with its provenance. **Open with the owner:** R5-F04, whether a
+  destructive infrastructure overwrite is refused when no verified backup exists (entry 128 records it as decided; in
+  EX_265 section 5 it is the reviewer's recommendation; the reviewer: entry 128 stands unless the owner corrects it).
+- **Next deliverable: EX_266** (the corrected complete specification and deployment design), on the owner's go, Fable
+  (High). It needs no further owner choice: A to F are all made (entries 127 to 131).
+- *(Done:)* the takeover note and its blurb (entry 133; its "next entry 133" should read 134).
 - **ALL OWNER CHOICES ON THE DRAFTS ARE MADE (entry 130; 21 November 2026, 17:51):** A the research job runs the updater
   itself; B `FORWARD_FROM` after a successful results check; C the owner himself makes a full ZIP of the project folder on E: (ignored run
   folders and `.git` included) when Claude says it is time, before phase 1; no cold-copy script (entry 131); D withdrawal by one line in the variant's file; E a complete read-only copy from PROD into DEV
@@ -301,7 +309,11 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
-- Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
+- **Now (21 November 2026):** a new reviewer chat, accepted (entries 132, 134). Its handover is the candidate H-2 v3r10
+  (prepared by Claude on the owner's instruction, entry 129); H-2 v3r4 (RAT-36) is the ratified one. **Open findings:
+  EX_264 R5-F01 to R5-F05 with notes N01 to N05, as refined by EX_265 (the owner's decisions); to be answered in
+  EX_266.** It has reviewed nothing of substance yet beyond the HO-2 questions of entry 134.
+- Earlier (history): open findings none at EX_242. Latest reviews then: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
   applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). EX_257 (RECHECK: F01, F02). EX_258 (the owner's course correction; permanent record in `exchange/DECISIONS/`). EX_259 (the owner's course correction; EX_259 was the reviewer's, so Claude's reply is EX_260). EX_261 (R-4 RECHECK: F01 to F07). EX_262 (the owner's supplement: F08 to F10). **Awaited: the review of the system specification v0.1 and the deployment design v0.7 (EX_263; its reply EX_264).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
@@ -312,18 +324,22 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended:** start a new Claude chat by pasting the blurb of the installed handover, H-1 v7r1 (RAT-39):
-  `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1_introductory_blurb.md`. Fill in its last lines (the commit, the date and
-  "see exchange/CONTINUITY_NOW.md"). The new chat reads H-1 v7r1's section 0B first (items 12 and 13 above all), then the
-  decision log from entry 99 on.
-- **ChatGPT reviewer chat ended:** the operative reviewer handover is **H-2 v3r4**, ratified by the owner (RAT-36; entry
-  87): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md` (the word CANDIDATE in its name
-  is frozen history). Point the new reviewer chat straight at that full file, then at `exchange/CONTINUITY_NOW.md` and
-  the newest EX messages. The separate H-2 blurbs (v3, v3r3) were not ratified and are older; H-2 v2 r1 is history.
+- **Claude chat ended (until H-1 v8 exists):** start a new Claude chat with the blurb
+  `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21_blurb.md`. It reads the takeover note (correct its "next entry 133" to the
+  log's next free number), this page's top block, H-1 v7r1 sections 0, 1, 2 and 5 for the binding rules, and the
+  decision log from entry 121 to the latest. Procedure HO-2, as in entry 134.
+- **ChatGPT reviewer chat ended:** the newest reviewer handover is the candidate **H-2 v3r10**
+  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md` and its blurb; current to EX_265;
+  its section 0.8 predates the owner's choices A to D, decided in entries 130 and 131). The ratified one is H-2 v3r4
+  (RAT-36). If the reviewer has written a later edition of its own, use that.
 
-## Resuming the MHUP-B slice work (for a new Claude chat)
+## Resuming the MHUP-B slice work (HISTORY since 21 November 2026)
 
-- **What governs:** `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (L5 section 5 and section 6 for OV-1; L6 section 5;
+**The three slices will not be installed as built (entries 122, 133).** This section stays only because the old code
+is still read: for the phase 1 oracle, for the OV-1 kernel (`slice2/slice2_new/src/evaluation/ov1_numeric.py`), and to
+build the staged slice 3 tree for reading.
+
+- **What governed:** `doc/Predictive_Randomness_MHUPB_Code_Plan_v0_3.md` (L5 section 5 and section 6 for OV-1; L6 section 5;
   sections 7, 9, 13, 14) and `doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md` (6.5 and 6.8 for OV-1), with the
   design `doc/Predictive_Randomness_ModeH_Update_Prospective_Design_v0_1r7.md`. Apply the working principle (entry 81).
 - **Where the code is:** slice 1 in full at `exchange/CLAUDE_WEB_TOOLS/mhupb/slice1/` (README, `WORKING_NOTES.md`, the
@@ -358,6 +374,10 @@ register v0.31 (`doc/RATIFICATION_REGISTER_v0_31.md`; RAT-35 to RAT-39 are in th
 v0.32). H-1 v6 (RAT-38, header CANDIDATE as frozen history), H-1 v5 (RAT-37), H-1 v4 (RAT-34), H-2 v2 r1 (RAT-31), H-1 v3 and register v0.30 stay as history. The `h1v5/out/` candidate files
 are frozen. The `h1v6/out/` candidate files are frozen too. The reviewer's H-2 v3r6 is a CANDIDATE
 (`de1aa3e`), not ratified; H-2 v3r5 was superseded by it.
+**Since then (21 November 2026), not ratified:** the reviewer's own candidates up to H-2 v3r9 (current to EX_262); H-2
+v3r10 (prepared by Claude, entry 129; current to EX_265); and Claude's takeover note
+`exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md` (entry 133), which supplements H-1 v7r1 and does not replace it. Neither
+installed handover describes the redesigned system: the decision log from entry 121 does.
 
 ## Working approach adopted 14 November 2026 (P0-P6)
 
@@ -388,6 +408,20 @@ the reviewer has still to be consulted on. The two Mode H report files' SHA-256 
 are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
+
+**From 21 November 2026 (entries 122 to 134; each step on the owner's own go; nothing below is authorised yet):**
+
+1. EX_266: the corrected complete system specification and deployment design (Fable, High). Then the reviewer's
+   review; corrections until PASS; the owner's ratification (RAT-40), which also covers the orphan-marker exception at
+   a restore (Architecture 5C is amended by ratification).
+2. H-1 v8 (and the reviewer's own H-2 edition).
+3. The owner makes his full ZIP of the project folder on E: when Claude says it is time (entry 131).
+4. Phase 1 (layout only, in DEV) as a reviewed package, with its equivalence oracle.
+5. Phase 2 (the new system) as a reviewed package; a new rulebook edition for the local runner.
+6. Creating QA and/or PROD, the transition check, the first research job: each on its own go.
+7. Then WF-1C and the methods still to do (OUTLANDISH_01 probably first), as new variants.
+
+**The order before 21 November 2026 (HISTORY):**
 
 1. Done: Mode H, the readings, D5, the approach of 16 November (in force), the MHUP-B design (RAT-33), register v0.31 and
    H-1 v4 (RAT-34), the holdout exposure record closed.
