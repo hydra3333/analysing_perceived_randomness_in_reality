@@ -2577,3 +2577,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Held for the owner's answer on R6-F01 and his go (MC-1: Fable, High):** EX_268, the specification v0.5 and the
   deployment design v0.11, with a disposition table for R6-F01 to F07 and N01 to N06, and the phase 1 file list of
   entry 139. No code.
+
+## 141. 21 November 2026, 23:50 - R6-F01: the owner's preference, conditional on the reviewer's and Claude's agreement: correct defective shared code in place, then recompute ("the brute-force slipstream")
+
+- **The owner, in the Claude chat at 23:42 (his words), on R6-F01:** "I tried to argue this case R6-F01 with previous chats
+  but did not prevail, I wanted to make it easy by a slipstream fixed code and then everything gets fixed, but the nub
+  of it is different forecasts etc may arise ... the problem is not only global shared code across methods but also
+  shared code within a family having the same issues. there is no good answer perhaps other than the brute-force one
+  which is not such a bad idea after all : slipstream the fix, delete all data/reports perhaps except draws dataset and
+  walk-forward recalculating everything on the basis it is only history anyway - from then on everything is good".
+- **Claude's assessment (23:45):** sound, and better than the "marked correction" Claude had recommended, which is
+  withdrawn. It leaves no mixed history, so one name is again one forecaster; it is the historical walk-forward rerun
+  already designed, plus one rule: after a correction to shared code nothing affected counts until the rerun is done.
+  Costs told to him: in PROD, past draws lose their made-before-the-result character, shown in the reports' counts;
+  the computing time is unmeasured; it is for a defect, not for a changed idea (which still means successor variants).
+  Claude recommended setting the old lines aside, not deleting them.
+- **The owner, at 23:50 (his words):** "I think sub-question recommended option (a) to the brute-force slipstream fix
+  method for fixing global helper code and family shared code. Unless someone finds a good reason not to, I like the
+  easiness and shape of the brute force slipstream approach. We would still retain [Who_Uses.bat, Make_Successors.bat,
+  batch marking, unmarking and withdrawal] since one day we'll need them. ... if chatgpt agrees and you agree then we
+  fold it into the design."
+- **Status: a stated preference, conditional.** Claude agrees. It becomes a decision when the reviewer has given its
+  view and the owner confirms. **If confirmed it replaces entry 127 item 3 for defects** ("no in-place update of an
+  installed helper"): defective shared code (system-wide forecasting code, `_shared` helpers, a family's core file)
+  is corrected in place by its own explicit command and confirmation, never by the ordinary install question; every
+  variant it can affect is held until the owner runs the walk-forward rerun over its whole history; old lines are set
+  aside; the names stay. Unchanged: a variant's own files never change (a corrected method is a new variant); a
+  changed idea in shared code is a new versioned helper with successor variants; the three DEV conveniences stay.

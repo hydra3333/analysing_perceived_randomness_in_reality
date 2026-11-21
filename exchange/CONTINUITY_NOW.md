@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 23:24 Australia/Adelaide (entry 140: EX_267 read: RECHECK, seven findings, all accepted by Claude). **Next: the owner's decision on R6-F01; then EX_268 on his go (Fable, High). No code.**
+**Last updated:** 21 November 2026, 23:50 Australia/Adelaide (entry 141: the owner's conditional preference on R6-F01). **Next: the reviewer's view on it; the owner's confirmation; then EX_268 on his go (Fable, High). No code.**
 
 ## For the owner: NOW
 
+- **R6-F01, THE OWNER'S PREFERENCE (entry 141; conditional on the reviewer's view and his confirmation):** defective
+  shared code (system-wide forecasting code, `_shared` helpers, a family's core file) is corrected in place by its own
+  explicit command; every variant it can affect is held until the walk-forward rerun over its whole history; old lines
+  set aside; names stay. A variant's own files still never change; a changed idea still means successor variants; the
+  three DEV conveniences stay. If confirmed it replaces entry 127 item 3 for defects. Claude agrees.
 - **EX_267 IS IN (entry 140): RECHECK of the specification v0.4 and the deployment design v0.10; R6-F01 to R6-F07, N01 to
   N06.** Claude accepts all seven. **One owner decision is open: R6-F01,** what happens when a correction to shared
   forecasting code would change what existing variants forecast (Claude's recommendation: only as a separately
