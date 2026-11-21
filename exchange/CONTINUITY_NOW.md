@@ -4,10 +4,28 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 20:52 Australia/Adelaide (entry 135: the owner's new decisions from the reviewer's handback). **Next: the owner answers Claude's clarifying questions (through the reviewer as he chooses); then EX_266 on his go (Fable, High). No code.**
+**Last updated:** 21 November 2026, 22:21 Australia/Adelaide (entry 136: the owner's directions from the reviewer's second handback; his answers to Q1 to Q4). **Next: EX_266 on the owner's explicit go (Fable, High). No owner question blocks it. No code.**
 
 ## For the owner: NOW
 
+- **LATEST DIRECTIONS, 21 November 2026, 22:21 (entry 136; handback
+  `exchange/ChatGPT_to_Claude_QA_Scientific_Equivalence_Variant_Status_Q1_Q4_2026_11_21.md`, main `a8bcfaa`):** one science
+  in every tree (DEV and QA run the installed software by their own `ENVIRONMENT.ini` exactly as PROD does; **no
+  "sandbox" OV-1 and no QA-only rule**); **a variant's status (withdrawn, from which draw, why) lives in a human-readable
+  file beside its installed software**, not in the forecast file (supersedes entry 130 D's placement); the status
+  travels with the QA software replacement from PROD, not with the research-data reseeding; backups at an install
+  (attempt kept; a missing recovery kit warns with a default-NO confirmation instead of stopping); the words are
+  restore from backup, catch-up, walk-forward and "historical walk-forward rerun" (never "reset/replay"); EX_266 opens
+  with a traceability index.
+- **EX_266's inputs, in order of authority:** the decision log entries 121 to 136; EX_264 and EX_265; the two handbacks
+  (`9f5c132`, `a8bcfaa`); `exchange/CLAUDE_WEB_TOOLS/simplify/DRAFT_CONTRADICTIONS_FOR_REVIEWER_v0_1.md` (S1 to S12, D1 to D8).
+- **Claude's design intentions for EX_266, told to the owner at 22:25 (NOT decisions; for the review):** (1) one status
+  file per variant holds both owner facts and the first draw counted in the prevailing OV-1, written only by the
+  project's commands and checked against a hand edit; (2) a withdrawal is one-way (a reinstated method is a new
+  variant, or a restore); (3) the historical walk-forward rerun is part of the installed software in every tree,
+  PROD included, and in PROD it runs only on a separate explicit confirmation, because a corrected scoring or OV-1
+  calculation otherwise could never be applied to PROD's past draws; (4) "the results step succeeded" is one rule
+  whose source is set by each tree's settings (PROD: the updater; QA and DEV: the checked copy from PROD).
 - **NEW DECISIONS, 21 November 2026 evening (entry 135; handback `exchange/ChatGPT_to_Claude_QA_and_EX266_Decisions_2026_11_21.md`,
   main `9f5c132`):** QA is an independent laboratory, never a gate; a new **QA software reset from PROD** (wipe and
   replace; QA keeps its own settings and `.venv`); the **research-data reseed from PROD** into QA or DEV is required

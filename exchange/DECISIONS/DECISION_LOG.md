@@ -2409,3 +2409,60 @@ section 17.2 (unpack it into a new folder, never over the clone).
   D8; Q-f closed (no GitHub ZIP). The reviewer's advice and the DESIGN TO RESOLVE items are not owner decisions.
 - **Open: Claude's clarifying questions to the owner of 21 November 2026, about 21:00,** before EX_266. EX_266 still
   needs the owner's explicit go (Fable, High).
+
+## 136. 21 November 2026, 22:21 - the owner's directions from the reviewer's second handback (main `a8bcfaa`): DEV and QA run the installed science exactly as PROD does; a variant's status is visible beside its software; his answers to Claude's questions Q1 to Q4
+
+- **Source and status.** `exchange/ChatGPT_to_Claude_QA_Scientific_Equivalence_Variant_Status_Q1_Q4_2026_11_21.md`,
+  committed by the owner at `a8bcfaa` (SHA-256 `1e1a632239131ae89e13ee0ae060665e45b0eeda2ffcf99bf77ef0390e734713`), and
+  his covering message in the Claude chat at 22:19. Not an EX, not a ratified design. It labels each point OWNER
+  DIRECTION, REVIEWER RECOMMENDATION or DESIGN OPEN; only the first kind is recorded here as decided.
+- **The owner's own words, in the Claude chat at 21:24 (what he had told the reviewer):** "Q1 (a) and (b) and (d) verify
+  nothing crashes, including bugfixed etc OV1 calcs, before installing into prod. Part of the thinking is incorrect - If
+  QA is a mirror of PROD (and at points it deliberately should be) then by definition no facility exists to make a
+  clearly labelled sandbox prevailing OV1 ... it is a predecessor of prod undergoing testing or it isn't, and must not be
+  a halfway mangled house." He clarified: "unless that house is in the process of verifying new things associated with
+  the project experiments rather than extra software-admin overhead controls." On wording: "what is reset/replay this is
+  not normal terminology, we have always referred to restoring from backups or walkforwards or catchups and we should
+  strive for consistency to avoid ambiguity induced decisions and bugs."
+- **Decided by the owner (handback sections in brackets):**
+  1. **One science in every tree (s1, s5).** DEV and QA act on their installed software and their own
+     `ENVIRONMENT.ini`, exactly as PROD does. No special QA version of the scientific software, no separate QA rules for
+     OV-1, no QA-only eligibility mechanism, no extra administration because a tree is QA. QA's purposes: reproduce PROD
+     when deliberately set up as its mirror; try new, corrected or changed methods and infrastructure (corrected OV-1
+     calculations included); and check that everything works and nothing crashes, before an install into PROD. QA is
+     still not a gate for PROD (entry 126).
+  2. **No "sandbox prevailing OV-1" (s1, s5).** This withdraws the sandbox wording of entry 135 item 6 and of Claude's
+     questions. What stays, in every tree alike: a result recomputed after its draw is known is never presented as a
+     forecast recorded before it, and a copied record stays attributable to where it was computed.
+  3. **Words (s2).** Restore from backup; catch-up; walk-forward. "Reset/replay" is not to be used. The handback's term
+     for an owner-requested recomputation of past draws is "historical walk-forward rerun".
+  4. **Same software and same status give the same behaviour in every tree (s2):** a variant withdrawn from draw 1601
+     is treated identically in PROD, QA and DEV, in a catch-up and in a historical walk-forward rerun.
+  5. **A variant's operational status is plainly visible in a human-readable file in the same folder as its installed
+     software (s3).** In the handback's words for his: "A method's status is intrinsically tied directly to its software
+     and must always be clearly visible in the same place its software is - no having to extra search outside places or
+     inside unfindable-to-human files." Not buried in the forecast history, not in a registry elsewhere. **This
+     supersedes the placement in entry 130 D (a `WITHDRAWN_FROM` line in the forecast file); the meaning of withdrawal,
+     its effective draw and the keeping of earlier results are unchanged.** The scientific files stay immutable; an
+     owner-authorised status change is a narrow, stated exception to "nothing in an installed variant folder changes",
+     and it does not change the variant's scientific fingerprint.
+  6. **Which operation carries a withdrawal (s4).** The status travels with the installed software: the QA software
+     replacement from PROD brings each variant's status; the research-data reseeding does not change the destination's
+     status files. This reverses Claude's Q3 recommendation of 21:00.
+  7. **Backups at an install (s6).** (i) The usual pre-change whole-tree backup is still attempted before an
+     infrastructure overwrite; a failure is reported plainly and is not a refusal. (Claude's "it costs nothing" was
+     wrong: a backup takes time and space.) (ii) If the recovery kit cannot be written, the install no longer stops:
+     a warning, a confirmation defaulting to NO, and YES proceeds; the same for an infrastructure reinstall. (iii) QA
+     uses the same warning and confirmation as PROD, being the same software. (iv) No "newest backup" line in the
+     warning; an on-demand, read-only list of backup ZIP paths may be useful, is not required, and verifies nothing.
+  8. **EX_266 opens with a short traceability index** (his message, 22:19: "I agree with the suggestion"), and no
+     further consolidated summary is written as a new authority.
+- **Not decided (the reviewer's recommendations and DESIGN OPEN items; Claude's to design, the reviewer's to check):** the
+  status file's name, format and integrity check; how its history is kept; where the first draw counted in the
+  prevailing OV-1 is recorded and what it is called (the owner wants a descriptive name; entry 135 item 6); how copied
+  lists that disagree with the destination's software or status are skipped and later recomputed; the exact file sets
+  of the QA software replacement; the proportionate tests after an infrastructure change.
+- **Confirmed unchanged (s7):** choices A, B, C, E, F; D's meaning; R5-F01, F02, F03, F05; the three separate
+  owner-invoked operations of entry 135 item 3 (now named: QA software replacement from PROD; research-data reseeding
+  from PROD; historical walk-forward rerun).
+- **EX_266:** still subject to the owner's explicit go.
