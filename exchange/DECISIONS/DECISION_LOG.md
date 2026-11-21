@@ -2265,3 +2265,26 @@ the job; B `FORWARD_FROM`; C the cold copy's scope; D withdrawal mechanics; E no
   have installed, or has in a different form: "I'd be happy with warn about them, ignore them and continue."
 - **Next:** the owner starts a new ChatGPT reviewer chat with the blurb; Claude supplies takeover questions and assesses
   the answers (HO-2, as before). The owner will then formally choose A to D. EX_266 is not started.
+
+## 130. 21 November 2026, 17:51 - the owner formally chooses A, B, C and D
+
+The owner, in the Claude web chat at 17:50 (his words): "choice A yes to your recommendation. choice B yes to your
+recommendation. choice C let me know when to do it and I will manually download a ZIP of the prevailing github project
+and save it with the date. choice D yes to your recommendation."
+
+- **A (decided): the research job runs the reviewed Lotterywest-GOV updater itself in PROD,** through the updater's own
+  unchanged launcher, with `--no-update` to leave it out. This changes his decision of 4 November 2026 that the updater
+  stays separately controlled.
+- **B (decided): `FORWARD_FROM`** is the first draw not present in the accepted results on file after a successful check
+  of the official source (specification v0.3 sections 10.2, 10.3).
+- **C (decided): the owner will himself download a ZIP of the GitHub project and save it with the date, when Claude
+  tells him it is time** (before phase 1 moves any source file in DEV). No cold-copy script is to be designed or built.
+  **Claude's caveat, put to the owner:** a GitHub ZIP holds tracked files only. The old run folders that Git ignores
+  (they hold the old forecast records that the phase 1 oracle and the transition check compare against) are not in
+  it; they then exist only in the E: clone. Phase 1 does not touch them, but there would be one copy. Copying the old
+  `results` and `transitory_data` folders by hand at the same time would cover that; it is the owner's call.
+- **D (decided): withdrawal** by one `WITHDRAWN_FROM` line in the variant's own file, by one command with one typed
+  confirmation; the owner unmarks the variant in DEV (specification v0.3 section 11), with EX_264 R5-F01's correction.
+- With E decided in EX_265 (entry 128) and F in entry 127, **no owner choice remains open** on the drafts. All of it is
+  still design: the specification and the deployment design are to be corrected (EX_266), reviewed and ratified.
+- The owner is starting the new ChatGPT reviewer chat with H-2 v3r10's blurb and Claude's takeover questions.

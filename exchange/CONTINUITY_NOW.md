@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 17:45 Australia/Adelaide (entry 129: the reviewer's handover brought up to EX_265 as H-2 v3r10 by Claude on the owner's instruction, for a new reviewer chat). **Next: the new reviewer's takeover (Claude's questions, then the owner's acceptance); the owner's formal choice of A to D; then EX_266 on his go. No code.**
+**Last updated:** 21 November 2026, 17:51 Australia/Adelaide (entry 130: the owner chose A, B, C and D; no owner choice remains open). **Next: the new reviewer's takeover answers, assessed by Claude; a short Claude takeover note; then EX_266 (corrected specification and deployment design) in a NEW Claude chat on the owner's go. No code.**
 
 ## For the owner: NOW
 
+- **ALL OWNER CHOICES ON THE DRAFTS ARE MADE (entry 130; 21 November 2026, 17:51):** A the research job runs the updater
+  itself; B `FORWARD_FROM` after a successful results check; C the owner downloads a GitHub ZIP himself when Claude
+  says it is time (before phase 1; no cold-copy script; the ignored old run folders are not in such a ZIP, see the
+  caveat in entry 130); D withdrawal by one line in the variant's file; E a complete read-only copy from PROD into DEV
+  or QA (EX_265); F a marker for the infrastructure (entry 127). **EX_266 must build these in, with EX_264's five
+  findings and EX_265's refinements. Claude advised writing EX_266 in a NEW Claude chat.**
 - **THE REVIEWER CHAT ENDED ON 21 NOVEMBER 2026 AFTER EX_265 (entry 128).** A new ChatGPT reviewer chat is needed. Its
   handover for a new chat is **H-2 v3r10** in `doc/HANDOVER/` (`ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md`
   and its blurb; prepared by Claude on the owner's instruction, entry 129; the reviewer's own last edition, v3r9, ran
