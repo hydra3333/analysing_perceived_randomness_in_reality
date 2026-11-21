@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 23:11 Australia/Adelaide (entry 139: the phase 1 file list to be folded into the specification). **Next: the reviewer's review of EX_266 (EX_267); corrections until PASS; then the owner's ratification. No code.**
+**Last updated:** 21 November 2026, 23:24 Australia/Adelaide (entry 140: EX_267 read: RECHECK, seven findings, all accepted by Claude). **Next: the owner's decision on R6-F01; then EX_268 on his go (Fable, High). No code.**
 
 ## For the owner: NOW
 
+- **EX_267 IS IN (entry 140): RECHECK of the specification v0.4 and the deployment design v0.10; R6-F01 to R6-F07, N01 to
+  N06.** Claude accepts all seven. **One owner decision is open: R6-F01,** what happens when a correction to shared
+  forecasting code would change what existing variants forecast (Claude's recommendation: only as a separately
+  commanded, visibly marked "forecast correction", never by the ordinary install question). **Then EX_268** (the
+  specification v0.5 and the deployment design v0.11, with the phase 1 file list of entry 139), on the owner's go.
 - **OWED IN THE REVISION THAT ANSWERS EX_267 (owner, entry 139):** fold the corrected phase 1 file list into the
   specification's section 17.3 and remove its pointer to the superseded simplification design v0.1.
 - **EX_266 IS WITH THE REVIEWER (entry 138).** `exchange/EX_266_Claude.md` opens with a traceability index. The two

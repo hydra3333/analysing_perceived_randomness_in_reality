@@ -2539,3 +2539,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `method.py`; E_1's adapter becomes `E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py`; the three shared helpers move to
   `_shared/` with `_v1` names; imports follow, tests included; the runner's table of methods is built from the folder
   tree), with the phase 2 list checked at the same time, and the pointer to the design v0.1 removed.
+
+## 140. 21 November 2026, 23:24 - EX_267 (R-6 RECHECK of the specification v0.4 and the deployment design v0.10: R6-F01 to R6-F07, N01 to N06) read and recorded; Claude accepts all seven; one owner decision is needed (R6-F01)
+
+- **Source.** `exchange/EX_267_ChatGPT.md`, committed by the reviewer's route at main `2fae39e` (SHA-256
+  `d54a3c4ab5c4a7161b98307092b546d404ba4e00436485cc29377619768d51c1`). It confirms the four member hashes of EX_266.
+  **Disposition: RECHECK.** It passes in principle: one science in every tree; the status file and one-way withdrawal;
+  the two read-only copies from PROD; manual rollback; the testing direction; no automatic rewrite of history at an
+  install; the traceability index (P01 to P07).
+- **The findings (the reviewer's; none is an owner decision):**
+  - **R6-F01:** specification 12.4 lets one ordinary YES install an infrastructure change that is known to change the
+    FORECASTS of an existing variant. A variant's fingerprint does not cover the shared code its forecast passes
+    through, so the same name would then mean two different forecasters. Correcting derived results (scores, OV-1)
+    from stored forecasts is a different and acceptable case. The reviewer objects to the first without a separate,
+    explicit path, and says that if a policy choice is involved it goes to the owner with its consequence stated.
+  - **R6-F02:** say exactly which fields the derived check compares (scientific content, not the provenance that
+    legitimately varies, such as the results file's hash at scoring time or a code digest); and stop reports that are
+    no longer current from sitting in the active reports folder looking current.
+  - **R6-F03:** the rerun's modes need exact, separate sets of files they may change; as written, a derived-only rerun
+    could be read as shortening forecast lists, which would replace a forecast made before its result was known.
+  - **R6-F04:** the installed-file list holds status files by name only, yet the QA software replacement says every
+    listed file is hashed against the list; a status file changed during the copy could pass unnoticed.
+  - **R6-F05:** the destination of a reseeding (and of the QA software replacement) is checked to be quiet long before
+    its barrier is written; a job started in between could have its data removed under it.
+  - **R6-F06:** specification 12.3 makes any derived difference a stop, while 12.4 allows an accepted correction that
+    is known to differ: the two contradict each other.
+  - **R6-F07:** a withdrawal must be serialised against a running job and a results step, so that the draw shown to
+    the owner is still the right one when the status file is written.
+  - Notes N01 (file classes are hints; when unsure, class a file as forecast), N02 (a held cohort member blocks the
+    prevailing line: say so plainly), N03 ("NO changes nothing" is not literally true: a backup ZIP and a log line
+    may have been written), N04, N05, N06 (measure the costs in the rehearsal).
+- **Claude's assessment, given to the owner at once:** all seven are right and are accepted; each has a small
+  correction that adds no administration. R6-F01 needs the owner: what the system does when a correction to shared
+  forecasting code would change what existing variants forecast. His own direction of entry 122 item 4 already says a
+  changed shared helper must not change an earlier variant and that only behaviour-invariant infrastructure stays
+  shared; the open point is the exception for a real defect in code that cannot be versioned per variant.
+- **Held for the owner's answer on R6-F01 and his go (MC-1: Fable, High):** EX_268, the specification v0.5 and the
+  deployment design v0.11, with a disposition table for R6-F01 to F07 and N01 to N06, and the phase 1 file list of
+  entry 139. No code.
