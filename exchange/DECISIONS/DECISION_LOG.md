@@ -1986,3 +1986,75 @@ the owner separately whether he wants it revisited, which would be a rule change
   revision rollover. So "old revisions keep running" is either a change through all of those, or it is met by
   releasing a changed method as an additional variant with its own code, leaving the registry as it is.
 - **Held for the owner's go (MC-1: Fable, High):** the amendment v0.3 and the note v0.6, to be EX_259. No code.
+
+## 122. 21 November 2026, 11:36 - the owner's course correction of 21 November 2026 (EX_259): families and variants only, a clean new baseline, one install-is-release workflow, minimum administrative software; go for the redesign documents (design only)
+
+**Sources.** `exchange/EX_259_ChatGPT.md` (main `ae4d690`; the primary instruction, self-contained), read with EX_258 and
+`exchange/DECISIONS/OWNER_DIRECTION_2026_11_20_OV1_RESTORE_METHOD_CONTINUITY.md`; and the owner's message in the Claude
+web chat of 21 November 2026, 11:32. Background only, not authority:
+`doc/Review_Checkpoint_Predictive_Randomness_EX256_EX258_2026-11-21.md` (the owner: "historical discussion context
+ONLY, not governing authority"). Where they conflict, EX_259 governs. The reviewer's updated handover candidate is
+H-2 v3r8 (main `ef32c7b`, `c62bc12`).
+
+**The owner's decisions (EX_259 marks these as owner-ratified directions; the mechanisms are for Claude and the
+reviewer to design and for the owner to ratify afterwards):**
+
+1. **Every E-method is a family, even a family of one.** One uniform source-tree structure for all. The directory
+   convention is delegated to Claude and the reviewer.
+2. **The revision is eliminated as a separate scientific identity.** A changed implementation is a new, uniquely
+   identified, independent variant of its family (or a new family if the hypothesis changes). Deliberate, even though
+   it is more redesign than keeping the old field.
+3. **Every old and new variant stays runnable and is evaluated at every draw.** No supersession, no latest-wins, no
+   culling, no automatic retirement. TOP and WORST are both kept; an inverse deviation is as interesting as a direct
+   one. Why: draws accumulate slowly, so "nothing seen yet" is not evidence of no effect.
+4. **A changed shared helper must not change an earlier variant.** A new variant embeds its own copy or uses a distinct
+   immutable versioned helper. Truly behaviour-invariant infrastructure may stay shared.
+5. **Two separately testable implementation phases:** (1) the uniform source layout, with behavioural-equivalence
+   oracles for the existing variants' forecasts; (2) the identity, registry, dispatch, forecast, score, ranking and
+   OV-1 contracts migrated and simplified.
+6. **A clean new scientific baseline.** The sealed Mode H study and the revision-based records are earlier, indicative
+   research. They are not a schema or a freeze the future system must inherit. The compatible history is recomputed
+   under the new identity. No permanent legacy reader or crosswalk. **Nothing is deleted now:** before any code,
+   migration or destructive step the owner downloads a source ZIP from GitHub, and a complete verified cold copy of
+   the old functioning state is kept. The accepted official draw masters and their provenance are retained.
+   Recomputed history is never labelled as published at the original time.
+7. **Installation is release.** One owner-approved installation of one or more variants, then four stages: install;
+   automatic missing-only historical walk-forward through the last accepted draw M, with the per-draw league reports
+   and the exploratory OV-1 regenerated, and a forecast of the assumed-pending M+1; the one reviewed Lotterywest-GOV
+   results updater; chronological catch-up over M+1..N for all installed variants, a saved cumulative league report
+   after each target, the prevailing OV-1 for each target, and always an attempt at N+1. A catch-up of zero draws is
+   normal. A long history fill may span a real draw; that is accepted. No clock deadline suppresses a forecast.
+8. **Saved per-draw cumulative league reports,** for every historical and every weekly draw, showing TOP and WORST,
+   with plain game and draw-number file names. When variants join, the current reports and the exploratory OV-1 are
+   recomputed; earlier derived editions are obsolete and need not be kept.
+9. **Two uses of OV-1:** one continuous prevailing score per game (new variants join from an objective first forward
+   draw number; earlier factors never rewritten; kernel, six lambdas and the bar of 40 unchanged), and a separately
+   labelled exploratory score rebuilt from the whole current population at any time. The 2.5% claim is conditional on
+   fair draws and on non-anticipation; software checks do not prove the second.
+10. **Minimum freeze and administrative software: protect against bugs, not fraud.** "On his own PC he could
+   edit/bypass local protections, but would have no reason to commit scientific fraud." Kept, as function: a
+   canonical forecast and score per (game, family, variant, target) with TOP and WORST; idempotent reuse; no duplicate
+   score and no partial write taken as complete; bounded crash resume; enough provenance to reproduce a surprise.
+   The process, orphan and no-kill safeguards stay. A target-wide weekly freeze set is not intrinsically necessary.
+11. **Backups and restore:** the complete verified production ZIP (code, data, results, records and `.venv`), the
+   recovery kit, and the exact-snapshot restore with no later release put back automatically (entry 121, decision 4),
+   stand. The deployment note v0.5's "update first reinstates later releases" is an error to remove.
+12. **Proportion:** an owner-operated home-PC investigation; a real null result is acceptable; stronger evidence
+   standards can be added if an extraordinary result ever warrants outside scientists.
+
+**In the Claude chat (the owner's words):** "Please critically assess the proposals rather than simply accepting every
+implementation suggestion. Where a simpler solution satisfies the scientific requirements, prefer it. Where a genuine
+mathematical, operational or safety concern exists, identify it clearly and propose the least complicated satisfactory
+solution." "I approve the design work only, including the requested two separately verifiable implementation phases
+and associated test proposals. No source-code implementation, installation, production operation, real-data run,
+migration or deletion is authorised at this stage." "My overriding intention remains: maximise useful scientific
+research capability, reproducibility and recoverability while minimising unnecessary administrative software
+complexity."
+
+**What this supersedes.** Entry 121 decision 1's "new revision is additional" becomes "there are no revisions"; the
+two questions Claude put to the owner on 20 November (a new version as a named variant; the batch order) are answered
+by decisions 2 and 7. The OV-1 amendment v0.2 and the deployment note v0.5 are superseded as drafts. **The ratified
+documents (design v0.1r7, supplement v0.8, the code plan, R3, E2R-1, H-1 v7r1) stay in force until the redesign is
+reviewed and ratified;** the three MHUP-B slices stay uninstalled.
+
+**Go:** the redesign documents for independent review as EX_260 (Fable, High). Design only.
