@@ -2370,3 +2370,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
   and 48, commit `c7622fa`; OD-5, entry 70, commit `cc665ce`) were one-off commits of existing records, not a standing
   export rule.
 - **Model:** the owner set Opus 5.5 at 19:18. EX_266 is Fable (High) work and waits for his go.
+
+## 135. 21 November 2026, 20:52 - the owner's new decisions from his discussion with the reviewer (handback `exchange/ChatGPT_to_Claude_QA_and_EX266_Decisions_2026_11_21.md`, main `9f5c132`): QA's role; a QA software reset from PROD; the research-data reseed required; complete reset/replay; `FORWARD_FROM` renamed; R5-F04 changed
+
+- **Source and status.** The reviewer's handback, committed by the owner at `9f5c132` (SHA-256
+  `64c9bc2bff9eb98ed2622980499a484550a088dc38bae909817c2a44dbd97215`), relayed to Claude by the owner at 20:50 ("I hope
+  the referenced md goes some way to clarifying outstanding matters which affect the design and perhaps 266"). It is
+  not an EX and not a ratified design. It labels each point OWNER - NEW, OWNER - EXISTING, REVIEWER ADVICE or DESIGN TO
+  RESOLVE; the owner's own words are not quoted in it. Only the OWNER - NEW points are recorded here as decisions.
+- **The owner's new decisions (handback sections in brackets):**
+  1. **QA is an independently managed experimental laboratory** (s1): not a replica of PROD and not a gate for PROD. It
+     may hold exactly PROD's software, PROD's plus new variants or infrastructure, more or fewer variants, or different
+     infrastructure, and be returned to a PROD-equivalent baseline when the owner chooses.
+  2. **A new required operation: reset QA's installed SOFTWARE from PROD** (s2), owner-invoked, wipe-and-replace of
+     QA's relevant software with what PROD has installed. PROD strictly read-only. QA keeps its own `ENVIRONMENT.ini`,
+     `.venv`, role, root and backup location. No research data is copied by it.
+  3. **Three operations, never conflated** (s1): (A) the QA software reset from PROD; (B) the complete research-data
+     reseed from PROD into QA or DEV; (C) reset/replay in a chosen tree. None invokes another.
+  4. **(B) is a required capability** (s3), its use manual and optional. **No passive-export mode.** Wipe-and-replace of
+     the destination's active research data; no permanent reference or import folder. If "warn, ignore, continue"
+     (entry 129) would need complex machinery, the owner may reconsider: Claude explains the cost first.
+  5. **(C) must reconstruct ALL dependent scientific results consistently** (s4): scores, cumulative leagues and
+     reports, pending forecasts, prevailing and exploratory OV-1; or say truthfully that results after N were cut and
+     need a later catch-up. One confirmation.
+  6. **`FORWARD_FROM` gets a descriptive name** saying it controls eligibility for the prevailing OV-1 (s5). Its PROD
+     meaning (choice B, entry 130) is unchanged. **No extra prospective-boundary ceremony in QA or DEV;** their
+     recomputations are sandbox and never claim to be formal prospective evidence.
+  7. **R5-F04 CHANGED (s6): this supersedes entry 128 item 5 ("with none, the overwrite is refused").** A destructive
+     infrastructure overwrite may proceed with no programmatic check that a backup exists or is verified. The tool
+     shows a prominent warning asking the owner to ensure a valid backup exists, and asks for confirmation **defaulting to
+     NO**; only an explicit YES proceeds. The warning covers: a failure may need a manual whole-tree restore from a
+     backup he chooses (no automatic rollback); restoring an older backup reinstates exactly that state, with nothing
+     later put back; a changed Python or `.venv` may affect usability or scientific equivalence; with no valid backup,
+     recovery may not be possible.
+- **Confirmed unchanged (s7):** choices A, C (the owner's own full ZIP of the E: project folder; no `Cold_Copy`; no second
+  GitHub ZIP), D with R5-F01, F; R5-F02, R5-F03, R5-F05; every scientific safeguard.
+- **The reviewer's dispositions of Claude's questions Q-a to Q-f (s8):** no material misattribution in S1 to S12 and D1 to
+  D8; Q-f closed (no GitHub ZIP). The reviewer's advice and the DESIGN TO RESOLVE items are not owner decisions.
+- **Open: Claude's clarifying questions to the owner of 21 November 2026, about 21:00,** before EX_266. EX_266 still
+  needs the owner's explicit go (Fable, High).

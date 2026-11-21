@@ -4,9 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 19:20 Australia/Adelaide (entry 134: the new Claude chat's takeover accepted; normal operations authorised). **Next: R5-F04 settled with the owner; the document of draft contradictions to the reviewer; then EX_266 on his go (Fable, High). No code.**
+**Last updated:** 21 November 2026, 20:52 Australia/Adelaide (entry 135: the owner's new decisions from the reviewer's handback). **Next: the owner answers Claude's clarifying questions (through the reviewer as he chooses); then EX_266 on his go (Fable, High). No code.**
 
 ## For the owner: NOW
+
+- **NEW DECISIONS, 21 November 2026 evening (entry 135; handback `exchange/ChatGPT_to_Claude_QA_and_EX266_Decisions_2026_11_21.md`,
+  main `9f5c132`):** QA is an independent laboratory, never a gate; a new **QA software reset from PROD** (wipe and
+  replace; QA keeps its own settings and `.venv`); the **research-data reseed from PROD** into QA or DEV is required
+  (no passive export); **reset/replay** rebuilds every dependent result; `FORWARD_FROM` gets a descriptive name; and
+  **R5-F04 is changed: an infrastructure overwrite asks for confirmation defaulting to NO, with a warning, and does not
+  check backups** (supersedes entry 128 item 5 and the "open" note below). EX_266's inputs: this handback, EX_264,
+  EX_265 and `exchange/CLAUDE_WEB_TOOLS/simplify/DRAFT_CONTRADICTIONS_FOR_REVIEWER_v0_1.md`.
 
 - **BOTH CHATS ARE NEW AND ACCEPTED (21 November 2026).** The ChatGPT reviewer chat took over from H-2 v3r10 (entries 132,
   134); the Claude chat took over from `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21.md` (HO-2, no EX numbers; reviewer PASS on
