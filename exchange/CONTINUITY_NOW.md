@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 22:21 Australia/Adelaide (entry 136: the owner's directions from the reviewer's second handback; his answers to Q1 to Q4). **Next: EX_266 on the owner's explicit go (Fable, High). No owner question blocks it. No code.**
+**Last updated:** 21 November 2026, 22:45 Australia/Adelaide (entry 137: the owner's yes to the three design intentions; HIS GO FOR EX_266). **Now: Claude is writing EX_266 (Fable, High). Then the reviewer's review. No code.**
 
 ## For the owner: NOW
 
@@ -19,7 +19,8 @@ durable EX messages are authoritative.
   with a traceability index.
 - **EX_266's inputs, in order of authority:** the decision log entries 121 to 136; EX_264 and EX_265; the two handbacks
   (`9f5c132`, `a8bcfaa`); `exchange/CLAUDE_WEB_TOOLS/simplify/DRAFT_CONTRADICTIONS_FOR_REVIEWER_v0_1.md` (S1 to S12, D1 to D8).
-- **Claude's design intentions for EX_266, told to the owner at 22:25 (NOT decisions; for the review):** (1) one status
+- **Intentions (1) to (3) below were agreed by the owner at 22:39 (entry 137); the reviewer passed them in principle with
+  qualifications recorded there.** Claude's design intentions for EX_266, told to the owner at 22:25: (1) one status
   file per variant holds both owner facts and the first draw counted in the prevailing OV-1, written only by the
   project's commands and checked against a hand edit; (2) a withdrawal is one-way (a reinstated method is a new
   variant, or a restore); (3) the historical walk-forward rerun is part of the installed software in every tree,

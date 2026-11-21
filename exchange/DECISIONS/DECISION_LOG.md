@@ -2466,3 +2466,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   owner-invoked operations of entry 135 item 3 (now named: QA software replacement from PROD; research-data reseeding
   from PROD; historical walk-forward rerun).
 - **EX_266:** still subject to the owner's explicit go.
+
+## 137. 21 November 2026, 22:47 - the owner's yes to Claude's three design intentions; the reviewer's assessment (pass in principle, four qualifications); THE OWNER'S GO FOR EX_266
+
+- **The owner, in the Claude chat at 22:39 (his words),** on the three intentions Claude put to him at 22:25 (entry 136's
+  continuity note): on the historical walk-forward rerun being part of the installed software in every tree, and in
+  PROD only on its own explicit confirmation: "yes to this, in PROD it is an in-last-resort mechanism which may prove
+  invaluable one day." On a withdrawal being one-way: "2. yes." On one status file per variant, written only by the
+  project's commands, a hand edit detected: "3. yes." And: **"I think we can safely say GO for 266 now."**
+- **Decided:** (1) the historical walk-forward rerun exists in DEV, QA and PROD alike; in PROD it is a last resort, run
+  only by a separate, explicit owner command with a warning and a confirmation naming PROD; recomputed lines record
+  that they were computed after the result was known. (2) A withdrawn variant stays withdrawn; a method comes back only
+  as a new variant, or by restoring a backup made before the withdrawal. (3) One human-readable status file per variant
+  beside its software holds, per game, the status and the first draw counted in the prevailing OV-1; it is written only
+  by the project's commands and a hand edit is detected.
+- **The reviewer's assessment, relayed by the owner in the same message (pasted; not a committed file): "PASS IN
+  PRINCIPLE for proceeding to EX_266 design", with qualifications (its views; to be shown in EX_266):** a rerun is never
+  started automatically by an infrastructure installation; original forecasts and prospective evidence stay
+  distinguishable from results later corrected with newer software, and are not silently rewritten; a restore keeps
+  its meaning (exactly the chosen backup, then the owner's catch-up, nothing later reinstated); the status file shows
+  each game's status, effective draw, reason and eligibility draw, changes nothing in the scientific files or their
+  fingerprint, and stays consistent with the installed-file checks, restores and walk-forwards; **an eligibility draw
+  already established and copied from PROD into QA is preserved** (PROD's 1601 never becomes 1701 because QA received
+  more results later). It recommends going straight to the complete EX_266, opening with the traceability index.
+- **Go (design only):** EX_266, the corrected complete system specification and deployment design, for independent
+  review. Fable (High). No code, install, run, backup, restore, copy or deletion is authorised.
