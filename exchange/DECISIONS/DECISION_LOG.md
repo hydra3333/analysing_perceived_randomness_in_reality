@@ -2081,3 +2081,56 @@ reviewed and ratified;** the three MHUP-B slices stay uninstalled.
 - **Claude's advice on the chats (given to the owner in the chat):** finish this design round here; after
   ratification write H-1 v8 and start the two code phases in a new Claude chat.
 - **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 124. 21 November 2026, 13:00 - EX_261 (R-4 RECHECK of the simplification design v0.1 and the note v0.6: F01 to F07) and EX_262 (the owner's supplement: DEV, QA and PROD; local-file installs; REINSTALL INFRA: F08 to F10); the owner's decisions, including mandatory QA before every PROD installation
+
+**Sources.** `exchange/EX_261_ChatGPT.md` (main `4484006`), `exchange/EX_262_ChatGPT.md` (main `918ddc6`; "SUPPLEMENTS EX_261;
+it does not close, supersede or soften any of its required findings"), and the owner's message in the Claude web chat
+of 21 November 2026, 12:54. The reviewer's handover candidate is now H-2 v3r9 (main `0ad1e23`, `6eeaa63`).
+
+**The reviewer's disposition (EX_261):** the direction of EX_260 passes in principle (P01 to P07). RECHECK on details:
+F01 the list invariants do not cover FAILED and INSUFFICIENT_HISTORY lines or metadata lines; F02 an explicit
+owner-only withdrawal must be specified; F03 `FORWARD_FROM` wording, the first job and a failed updater; F04 the cold
+copy is the PROJECT CLONE only, and "E: stays whole" was untrue once phase 1 moves code there; F05 the note v0.6 still
+gave executable steps for records that no longer exist; F06 a whole-results-file hash is audit provenance, never a
+model input or part of the forecast content identity; F07 one complete system specification.
+
+**Owner decisions (relayed in EX_261 and EX_262; the mechanisms are Claude's to propose and the owner's to ratify):**
+
+1. **One new COMPLETE, authoritative system specification** of the redesigned active system ("one new complete system
+   specification sounds better"), not a short overview that needs five obsolete documents beside it.
+2. **A defective variant may be explicitly withdrawn by the owner** through a reviewed mechanism, from a future draw
+   number. Never automatic, never by performance; code and history are kept; the corrected method is a new variant.
+3. **In QA and PROD the installed variant folder tree is the registry.** DEV differs on purpose: it must allow
+   unfinished, work-in-progress variants to be tried without touching PROD.
+4. **Readiness is a small DEV-side marker in the variant's folder** (tentatively `I_AM_INSTALLABLE.json`), made by a
+   small utility or by hand if it validates. It is not a version, a registration or a release step.
+5. **INSTALL QA and INSTALL PROD discover by themselves** the marked-ready DEV variants that the chosen target does not
+   yet hold. An optional filter is fine. Unfinished source is never swept up because it shares a folder.
+6. **Three separate trees: DEV on E:, a real, isolated QA test bed (TEST_BED, on D:), and PROD on G:.** Each has its own
+   root, data, results, Python environment and backup root, set in a plain INI. All paths are configuration. QA
+   backups may sit on D: outside the QA tree; PROD stays `G:\a_p_r_i_r` with backups in `T:\a_p_r_i_r_backups`. One
+   installer, research engine, backup and restore serve every role.
+7. **Deployment does not depend on Git commits or on GitHub.** The verified files in the local DEV tree are the source.
+   Git stays an optional development convenience. Nothing copies all tracked source into PROD.
+8. **Helpers are not scored variants.** Keep them inside variant folders where practical; otherwise stable, immutable,
+   versioned family or cross-family helpers. No dependency solver.
+9. **Shared INFRASTRUCTURE is updated by a separate, explicit command** (the owner's name: REINSTALL INFRA, because
+   infrastructure may legitimately be overwritten). Variants and versioned helpers stay add-only through every route.
+10. **DEV's documents, exchange, tests and experiments are never installed** into QA or PROD merely because they exist.
+    No production operation by an ordinary DEV research command.
+
+**The owner's decision in the Claude chat, 21 November 2026, 12:54 (his words):** "Successful QA verification is required
+before every ordinary PROD installation, including both new variant batches and REINSTALL INFRA. PROD must verify
+that the source files and required helper/infrastructure files match the exact versions successfully tested in QA.
+Changes after QA verification require another QA pass. Do not implement a QA-bypass mechanism at this stage. All
+other instructions in EX_261 and EX_262 remain unchanged. Please incorporate this decision into the complete system
+specification and deployment design." (This settles the one point EX_262 section 2.2 left open.)
+
+**Still for the owner at ratification (EX_261 section 4; not decided):** A, whether the research job runs the official
+updater itself; B, the corrected `FORWARD_FROM` rule; C, the scope of the cold copy of the old project clone; D, the
+file mechanics of a withdrawal.
+
+**Go:** the complete system specification and a coherent deployment design, for independent review as EX_263 (design
+only; Fable, High). No code, layout change, backup, results fetch, QA or PROD creation, install, run, migration,
+deletion or restore is authorised.
