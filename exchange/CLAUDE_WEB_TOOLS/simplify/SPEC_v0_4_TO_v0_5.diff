@@ -1,0 +1,699 @@
+--- SYSTEM_SPECIFICATION_DRAFT_v0_4.md
++++ SYSTEM_SPECIFICATION_DRAFT_v0_5.md
+@@ -1,13 +1,14 @@
+-# Predictive Randomness - specification of the active research system - DRAFT v0.4
++# Predictive Randomness - specification of the active research system - DRAFT v0.5
+ 
+-**Status:** DRAFT v0.4 for independent review (EX_266). It replaces DRAFT v0.3 and answers EX_264 (R5-F01 to R5-F05, N01 to
+-N05), EX_265 and the project owner's decisions in decision log entries 128 to 137. It is a full new edition: sections
+-1 and 6 are byte-identical to v0.3 and section 8 differs in one sentence; `SPEC_v0_3_TO_v0_4.diff` is exact. Not ratified. It authorises nothing. Until the
+-project owner ratifies it, every ratified document stands and nothing is coded, moved, installed, run, migrated or deleted.
+-**Written:** 21 November 2026, by the Claude web chat (primary designer and coder), on the project owner's go of 22:39
+-(decision log entry 137). Fable (High).
++**Status:** DRAFT v0.5 for independent review (EX_268). It is DRAFT v0.4 corrected for EX_267 (R6-F01 to R6-F07, N01 to N06)
++and the project owner's decisions in decision log entries 139 to 143. `SPEC_v0_4_TO_v0_5.diff` is exact: sections 7A,
++12.4 (in part), 12.8 and 17.4 are new or rewritten; the other changes are the counted ones the diff shows. Not
++ratified. It authorises nothing. Until the project owner ratifies it, every ratified document stands and nothing is
++coded, moved, installed, run, migrated or deleted.
++**Written:** 22 November 2026, by the Claude web chat (primary designer and coder), on the project owner's go of 00:14
++(decision log entry 143). Fable (High).
+ **Reviewer:** the ChatGPT reviewer chat. **Ratifier:** the project owner, after the review.
+-**Risk tier:** HIGH. **Companion:** the deployment design DRAFT v0.10 (how the installs, copies, backups and restores are
++**Risk tier:** HIGH. **Companion:** the deployment design DRAFT v0.11 (how the installs, copies, backups and restores are
+ carried out). **Marking:** "(owner)" marks a direction the owner has given, with its decision log entry. Everything else
+ is a mechanism proposed for ratification.
+ **Words used throughout (owner, entry 136):** *restore from backup* (put back exactly one chosen backup); *walk-forward*
+@@ -29,7 +30,9 @@
+    draw and why, and the first draw at which it counts in the prevailing OV-1.
+ 5. **A variant becomes installable** when a small marker file in its DEV folder says so and matches its files exactly.
+    `Install.bat PROD` adds every marked variant PROD lacks, checks it in place and asks for one confirmation. QA is
+-   never required. Shared system code is updated by a separate command, with a marker of its own.
++   never required. Shared system code is updated by a separate command, with a marker of its own. **A
++   fault in shared code is corrected in place by a third command, after which every variant it can affect is
++   computed again** (owner; 12.8).
+ 6. **One command does the research:** it works out what is missing, forecasts and scores it draw by draw from earlier
+    draws only, fetches new official results (in PROD), saves a league report after every draw, keeps the two OV-1
+    scores, and forecasts the next draw. It is safe to run at any time and after any interruption.
+@@ -122,13 +125,18 @@
+ new file with a new name (`core_v2.py`). Helpers are not scored and are not installed for their own sake: a helper
+ arrives with the first variant that names it. Prefer code inside the variant's folder. **Three things, and only
+ these, change what an installed variant folder holds:** the status file, as 3.5 says; the QA software replacement
+-from PROD, in QA only (12.7); and a restore from backup (section 14).
++from PROD, in QA only (12.7); and a restore from backup (section 14). **One command only may overwrite a helper: the
++correction of a defect (12.8).**
+ 
+-**3.3A No in-place update of a helper (owner, entry 127).** An installed helper is never overwritten, whether or not
+-the change would alter results. A helper found to be wrong is corrected by a new file (`..._v2.py`) and a **successor
+-variant** for each variant that used it. The old variants stay installed and running until the owner himself
+-withdraws each one (section 11); nothing withdraws them for him. The successors are new variants and begin their own
+-place in the prevailing OV-1. Code that is expected to keep improving belongs in the infrastructure (12.4).
++**3.3A A helper changes in exactly two ways, and the owner says which (owner, entries 127, 143).**
++- **A changed idea** (a different calculation is wanted): a new file (`..._v2.py`) and a **successor variant** for each
++  variant that is to use it. The old variants stay installed and running, beside the new, until the owner himself
++  withdraws any of them (section 11); nothing withdraws them for him. `Who_Uses.bat` and `Make_Successors.bat` do the
++  typing (section 4).
++- **A defect** (the helper does not compute what was always intended): the helper is corrected in place by the
++  correction command, and every variant that uses it is computed again over its whole history (12.8). The names
++  stay; their fingerprints change, because the fingerprint covers the helper (3.4).
++No ordinary install ever overwrites a helper.
+ 
+ **3.4 `VARIANT.json`, the scientific declaration:** the family and variant identifiers (equal to the folder names); a
+ title and one line of description; the games supported; for each, the minimum number of earlier draws needed; the
+@@ -217,10 +225,11 @@
+ 
+ Every line carries the digest of the line before it. **The research job only ever appends to them.** Lines leave a
+ list in exactly two ways, each only on the owner's own command with a confirmation: a historical walk-forward rerun,
+-which first sets the old lines aside (section 7A), and a research-data reseeding, which replaces a QA or DEV tree's
+-research data with PROD's (14.2).
++which first saves the old lines in a verified archive (section 7A), and a research-data reseeding, which replaces a
++QA or DEV tree's research data with PROD's (14.2).
+ 
+-**5.2 Lines.** Each file begins with a `HEADER`: game, family, variant and the variant's fingerprint; the forecast file's
++**5.2 Lines.** Each file begins with a `HEADER`: game, family, variant, the variant's fingerprint, and the identity
++of the shared forecasting code the list was begun under (12.4); the forecast file's
+ header also holds `first_target` (the first draw with enough earlier draws). After it come only result lines: `TARGET`
+ lines in the forecast file, one per draw from `first_target`, ascending by one; score lines in the score file. **A
+ variant's status is not kept in its lists:** it is in its status file (3.5), and only there.
+@@ -274,14 +283,19 @@
+ line for 1602 is ever written; the variant is absent from 1601's league scoring and from both OV-1 scores at 1601.
+ 
+ **5.6A A list that does not belong to this tree's software or status (owner, entry 129: "warn about them, ignore them
+-and continue").** This arises only after a research-data reseeding or a QA software replacement. A list is **foreign**
+-when its variant is not installed here, or its header's fingerprint is not the installed variant's, or it breaks
+-invariant 5 against this tree's status file. A foreign list is named in a warning at every job, is never appended
+-to, and counts in no report and in neither OV-1. If the variant is installed here it is **held**: the job computes
+-nothing for it in that game until the owner clears the foreign list by one of three things: a rerun for that variant
+-(7A; the foreign list is set aside and the variant is computed with this tree's own software), a research-data
+-reseeding, or in QA the software replacement. Nothing is moved, merged or repaired by itself, and there is no import
+-folder or second registry: the header is the whole of the mechanism.
++and continue").** A list is **foreign** when its variant is not installed here; or its header's fingerprint is not the
++installed variant's; or its header's forecasting-code identity is not that of the forecasting code installed here;
++or it breaks invariant 5 against this tree's status file. This arises after a research-data reseeding, a QA software
++replacement, or a correction of shared code (12.8). A foreign list is named in a warning at every job, is never
++appended to, and counts in no report and in neither OV-1. If the variant is installed here it is **held**: the job
++computes nothing for it in that game until the owner clears the foreign list by one of three things: a rerun for
++that variant (7A; the foreign list is archived and the variant is computed with this tree's own software), a
++research-data reseeding, or in QA the software replacement. Nothing is moved, merged or repaired by itself, and
++there is no import folder or second registry: the header is the whole of the mechanism.
++**"Ignore and continue" never means a score computed without a member it should have (EX_267 N02).** A held variant
++that belongs to the prevailing cohort blocks the prevailing line (10.4); and because the stored reports and OV-1
++records were built with the list that is now foreign, the game's derived results are marked not current from that
++variant's first draw (5.8) until the owner settles it.
+ 
+ **5.7 What to do next is read from the files and the status files, never remembered** (crash resume). For a variant
+ that is not held, with the draws on file through N, and W its withdrawal draw if it has one:
+@@ -293,16 +307,31 @@
+ for a draw is: forecast lines, score lines, the prevailing OV-1 line, the report. Each step is skipped if already
+ done, so a crash between any two is repaired by running the job again.
+ 
+-**5.8 The derived results are checked in full, because that is cheap.** Scores, league reports and both OV-1 records
+-are arithmetic on the stored forecasts, the results on file and the status files; no method runs. So at its start
+-the job recomputes, in memory, every score of the game and the whole prevailing ledger, and compares them with what
+-is stored. If they agree, it goes on. **If they differ from some draw X on** (the scoring or OV-1 code was changed;
+-the data came from a tree with other software or status; variants were added to or removed from QA), then for that
+-game the stored derived results are **withheld from X**: forecasts go on, so the next draw is never lost; but no
+-score, prevailing line or league report is written at X or beyond, and nothing stored is altered. The job says which
+-draw, puts a plain notice in the game's reports folder that the reports from X on are not current, and names the one
+-command that settles it: the derived-only rerun (7A). Nothing recomputes stored results by
+-itself. This check is exhaustive, not a sample; its cost is unmeasured (section 20).
++**5.8 The derived results are checked in full, and what is not current is made to look not current** (EX_267 R6-F02).
++- **What is stored evidence and what is only a print-out.** The score lists and the prevailing ledger are stored
++  results. The league reports, the next-draw report and the exploratory OV-1 are print-outs: they are never checked,
++  because they are made again from the lists whenever anything changes.
++- **What the check compares.** At its start the job recomputes, in memory, every score of the game and the whole
++  prevailing ledger, with the installed code, from the stored forecasts, the results on file and the status files,
++  and compares **the scientific content only**. For a score line: the target, the forecast content's digest, the
++  numbers drawn, the TOP and WORST matches for each barrel, and the prize divisions. For a prevailing line: the
++  draw, the cohort with each member counted or "no pair", the weights, V, X, Z, and the six log-factors and running
++  sums. **Not compared, because they rightly differ over time:** the version and hash of the results file quoted when
++  the line was written, any code digest, the rerun's name, where and when it was computed. Those are checked only
++  for being well formed. So a results file that has since grown, or scoring code rewritten without changing an
++  answer, raises nothing.
++- **If the content differs from some draw X on** (the scoring or OV-1 code was changed; the data came from a tree with
++  other software or status; variants were added, removed or held), the game's derived results are **not current from
++  X**. The job then: writes one small file, `results/research/<GAME>/NOT_CURRENT_FROM.json`, holding X and the reason;
++  **moves every report file for a draw at or after X, and both OV-1 print-outs, out of the active reports folder into
++  `reports/not_current/`,** so that nothing left in the active folder is stale; makes the exploratory OV-1 and the
++  league reports again only up to the draw before X; writes no score, prevailing line or report at X or beyond; and
++  alters no stored line. Forecasts go on, so the next draw is never lost. Every program that writes or reads a
++  report honours that one file. The job says which draw, and names the command that settles it: the derived-only
++  rerun (7A), which removes the file when it has finished.
++- Nothing recomputes stored results by itself. The check is exhaustive, not a sample. Its cost is unmeasured
++  (section 20); if it proves too slow to run at every job, it runs at every install and copy instead, which sets the
++  same file.
+ 
+ ## 6. Earlier draws only (N-1)
+ 
+@@ -355,76 +384,104 @@
+   draw stays 1601: the job writes one only where none exists (10.2). QA's prevailing ledger equals PROD's, line for
+   line, unless the environments differ.
+ 
+-## 7A. The historical walk-forward rerun (owner, entries 128, 135, 136, 137)
++## 7A. The historical walk-forward rerun (owner, entries 128, 135, 136, 137, 143; EX_267 R6-F03)
+ 
+ **7A.1 What it is.** The owner's command to compute again draws that are already computed, in the one tree he runs it
+ in: to try a corrected or changed method or infrastructure in QA or DEV, to rebuild derived results after a
+-correction, or, in PROD, as a last resort. It is the same walk-forward as every other run: same engine, same N-1
+-rule, same status files. It is never started by an install, a copy, a job or a schedule.
++correction, to recompute the variants a corrected shared file affects (12.8), or, in PROD, as a last resort. It is
++the same walk-forward as every other run: same engine, same N-1 rule, same status files. It is never started by an
++install, a correction, a copy, a job or a schedule.
+ 
+-**7A.2 The command.**
++**7A.2 The command and its two modes.**
+ 
+-    Rerun_Walk_Forward.bat --game <POWERBALL|OZLOTTO|BOTH> [--from J] [--to N] [--only <family>/<variant> ...] [--derived-only]
++    Rerun_Walk_Forward.bat --game <POWERBALL|OZLOTTO|BOTH> [--from J] [--to N] [--only <family>/<variant> ...]
++    Rerun_Walk_Forward.bat --game <POWERBALL|OZLOTTO|BOTH> [--from J] --derived-only
+ 
+-- Without `--from`: the whole history of the game. With `--from J`: draw J and every later draw.
+-- `--only`: forecasts and scores are recomputed for the named variants only. Without it: for every variant.
+-- `--derived-only`: no method runs. Stored forecasts are kept; scores, both OV-1 records and the reports are computed
+-  again from them. It is the cheap rerun, and the one needed after a correction to scoring or OV-1 code (5.8).
+-- `--to N`: stop the recomputation after draw N. **Said plainly before the confirmation:** "everything from J on is set
+-  aside; draws J to N are computed now; draws after N are left for the next `Run_Research.bat`, which will compute
+-  them as an ordinary catch-up. Until then this game's reports and prevailing score end at N."
+-
+-**7A.3 Everything that depends on the recomputed draws is rebuilt, always** (owner, entry 135). Whatever the scope:
+-every league report of the game from the earliest affected draw; the exploratory OV-1; and the prevailing OV-1 from
+-the earliest affected draw at or after its start. No report or OV-1 line computed from the old lines is left
+-standing as if complete. The status files are never touched: withdrawals and eligibility draws are the same after a
+-rerun as before it, so the cohort at every draw is the same.
+-
+-**7A.4 Nothing is destroyed: the old lines are set aside first.** Before any list is shortened, every file the rerun
+-will change is copied whole, and checked, into
+-
+-    results/research_set_aside/<YYYYMMDD>_<HHMMSS>_RERUN_<GAME>_from_d<J>/
+-
+-with a short `SET_ASIDE.txt` saying what was run, when, by which software, and why the owner gave. Nothing in the
+-system ever reads that folder again; it travels in every backup. In PROD it is the record of what was first
+-forecast and published. In QA and DEV the owner may delete such folders by hand whenever he likes.
+-
+-**7A.5 The steps.** (1) The process checks; the job lock. (2) The scope and everything it will set aside and rebuild
+-are shown, with 7A.2's sentence where `--to` is used, and, where forecasts made before their results were known will
+-be replaced, how many. (3) **One confirmation: the owner types the tree's role** (`QA`, `DEV` or `PROD`); anything
+-else is no. In PROD the text first says: "This is PROD. Lines of the prevailing OV-1 written when their results were
+-unknown will be replaced by lines computed now, with the results known. The first-written lines are kept in the
+-set-aside folder and in your existing backups. This cannot be undone except by a restore from backup." (4) A barrier
+-file holding the scope; while it exists every launcher of the tree refuses, except this command with the same
+-scope. (5) The set-aside copy. (6) Each affected list is rewritten to end before J (a foreign list within the
+-scope is removed whole, being in the set-aside copy, and a new list begun where the variant is installed); the prevailing ledger likewise; reports from J on are removed.
+-(7) The ordinary fill computes what is now missing, to N or to the last draw on file; then the prevailing lines and
+-the reports, draw by draw. (8) The barrier is removed; the end-of-job backup. Interrupted at any point: the same
+-command again continues, because step 6 does nothing when already done and step 7 computes only what is missing.
+-
+-**7A.6 The truth about what a rerun produces** (owner, entry 136; the reviewer's qualification, entry 137). Every line
+-a rerun writes carries, in its envelope, that its result was on file when it was computed, and the rerun's name. So,
+-in every tree, a rerun's results are retrospective and are shown as that: the league report's column of forecasts
+-made before the result was known falls accordingly, and the prevailing report says how many of its draws were
+-computed again and when (10.6). A rerun is evidence about the software that made it. It is never evidence that those
+-forecasts existed before their draws.
++Without `--from`, the whole history. **What each mode may change, and nothing else:**
++
++| | Forecast rerun | Derived-only rerun |
++|---|---|---|
++| Purpose | forecasts are computed again | scores and OV-1 are computed again from the forecasts as they stand |
++| A method runs | yes | **never** |
++| Forecast lists | of the selected variants only (all, without `--only`): lines from J on are replaced | **not one byte of any forecast list changes;** every forecast keeps its first-written line and envelope |
++| Score lists | of the selected variants: lines from J on are replaced | of every variant: lines from J on are replaced |
++| The prevailing ledger | lines from J on are replaced | lines from J on are replaced |
++| Reports and the exploratory OV-1 | made again from J on | made again from J on |
++| Status files | **never touched** | **never touched** |
++| Foreign lists | one within the selection is archived, removed, and its variant computed afresh; others stay foreign | untouched; they stay foreign and their variants held |
++| `--only`, `--to` | allowed | **refused:** it is cheap, so it always covers the whole game to the last draw on file |
++
++- **`--only` still rebuilds everything that depends on those variants:** the league reports of the game, the
++  exploratory OV-1 and the prevailing ledger from the earliest affected draw, for all variants.
++- **`--to N`** stops the recomputation after draw N. **Said plainly before the confirmation:** "everything from J on is
++  archived; draws J to N are computed now; draws after N are left for the next `Run_Research.bat`, which will compute
++  them as an ordinary catch-up. Until then this game's results are not current from draw N+1." The cutoff file of
++  5.8 is left saying N+1, so nothing after N looks current; the next job's catch-up removes it.
++
++**7A.3 Everything that depends on the recomputed draws is rebuilt, always** (owner, entry 135). No report or OV-1 line
++computed from the old lines is left standing as if complete. The status files are never touched: withdrawals and
++eligibility draws are the same after a rerun as before it, so the cohort at every draw is the same, and a rerun is
++never a way to bring a withdrawn variant back or to give a variant a new eligibility draw.
++
++**7A.4 Before anything is replaced, it is saved in one verified, clearly named ZIP (owner, entry 142).** The rerun
++first writes, into `results/research_set_aside/`, one ordinary ZIP of every file it is about to change, whole:
++
++    <ROLE>_<GAME>_<RERUN|CORRECTION>_ARCHIVE_<YYYYMMDD>_<HHMMSS>_<what>_BEFORE_RECOMPUTE.zip
++    for example  PROD_POWERBALL_CORRECTION_ARCHIVE_20270105_194200_recurrence_gaps_v1_BEFORE_RECOMPUTE.zip
++
++It holds the forecast and score lists the mode will change (a derived-only rerun archives the score lists, not the
++forecast lists it leaves alone), the prevailing ledger, the reports and OV-1 print-outs of the game, and a readable
++`ARCHIVE_CONTENTS.txt`: the tree, the game, the variants, each file's path and SHA-256, the command and scope the owner
++confirmed, his stated reason, and the identities of the software before and after. It is read back and every member
++checked against that list. **If it cannot be written or does not verify, the rerun stops and no active file has been
++touched.** It says in its own first line that it is not a backup of the tree and cannot restore one. Nothing in the
++system reads it again; it travels in every backup; nothing prunes it. In QA and DEV the owner may delete such ZIPs by
++hand. **A forecast first made before its result was known keeps that property, in the archive;** it is the line
++computed in its place that is retrospective.
++
++**7A.5 The steps.** (1) The process checks; the job lock, held to the end. (2) The scope is shown: the mode; exactly
++which lists will be replaced and which will not; what will be rebuilt; 7A.2's sentence where `--to` is used; and, in
++a forecast rerun, how many forecasts first made before their results were known will be replaced. (3) **One
++confirmation: the owner types the tree's role** (`QA`, `DEV` or `PROD`); anything else is no. In PROD the text first
++says: "This is PROD. Lines written when their results were unknown will be replaced by lines computed now, with the
++results known. The first-written lines are kept in the archive ZIP named below and in your existing backups. This
++cannot be undone except by a restore from backup." (4) A barrier file holding the scope; while it exists every
++launcher of the tree refuses, except this command with the same scope. (5) The archive of 7A.4, written and
++verified; its name and SHA-256 are then written into the barrier file. **A rerun that is continued never makes the
++archive again:** it finds the name in the barrier, checks that ZIP still verifies, and goes on, so records already
++shortened are never archived in place of the first-written ones. (6) The cutoff file of 5.8 is set to J. Then the lists the mode may change are each rewritten to end
++before J, the prevailing ledger likewise, and the reports from J on are removed. (7) The ordinary fill computes what
++is now missing (no method, in a derived-only rerun), to N or to the last draw on file; then the prevailing lines
++and the reports, draw by draw. (8) The cutoff file is removed, or moved to N+1 where `--to` was used; the barrier is
++removed; the end-of-job backup is attempted. **Interrupted at any point:** the barrier keeps every job out and the
++cutoff file says nothing from J on is current; the same command again continues: the archive is verified and
++recorded before step 6 and is reused, step 6 does nothing where already done, and step 7 computes only what is
++missing.
++
++**7A.6 The truth about what a rerun produces** (owner, entry 136; the reviewer, entries 137, 142). Every line a rerun
++writes carries, in its envelope, that its result was on file when it was computed, and the rerun's name. So, in
++every tree, a rerun's results are retrospective and are shown as that: the league report's column of forecasts made
++before the result was known falls accordingly, and the prevailing report says how many of its draws were computed
++again, when, and in which archive the first-written lines are (10.6). Nothing else about OV-1 changes: the same
++mathematics, the same conditional claim, the same words in every tree.
+ 
+ **7A.7 Examples.**
+-- *A corrected OV-1 in QA.* QA mirrors PROD. The owner installs corrected OV-1 code into QA with `Reinstall_Infra.bat
+-  QA`. QA's next job finds that the stored prevailing ledger differs from draw 1612 and withholds from there.
+-  `Rerun_Walk_Forward.bat --game POWERBALL --from 1612 --derived-only`: the old ledger and scores are set aside; scores
+-  and ledger are rebuilt from the stored forecasts; reports rebuilt. He compares QA's new figures with the set-aside
+-  ones and with PROD's. Nothing in PROD has changed.
++- *A corrected OV-1 in QA (derived-only).* QA mirrors PROD. The owner installs corrected OV-1 code into QA with
++  `Reinstall_Infra.bat QA`, having been told it changes OV-1 lines from draw 1612. QA's results are not current from
++  1612. `Rerun_Walk_Forward.bat --game POWERBALL --from 1612 --derived-only`: the score lists, the ledger and the
++  reports go into the archive; scores and ledger are rebuilt from the stored forecasts; **every forecast line,
++  including those first made before their results, is byte for byte as it was.** He compares QA's new figures with
++  the archived ones and with PROD's. Nothing in PROD has changed.
+ - *A draw range across a withdrawal.* V1 is withdrawn from 1601. `--from 1550 --to 1650`: V1 is recomputed for 1550 to
+   1600 and for nothing after; every other variant for 1550 to 1650; reports and both OV-1 records for 1550 to 1650
+-  are rebuilt with V1 absent from 1601 on; draws after 1650 wait for the next ordinary job.
++  are rebuilt with V1 absent from 1601 on; the game is not current from 1651 until the next ordinary job.
+ - *One variant after a reseeding.* QA holds its own experimental `E_002/RECUR_MEAN_ALL_V1` (other bytes than PROD's
+   variant of that name). After a reseeding, PROD's list for that name is foreign and the variant is held.
+-  `--only E_002/RECUR_MEAN_ALL_V1`: PROD's list is set aside; QA's variant is computed over its whole history; every
+-  report and both OV-1 records are rebuilt with it.
++  `--only E_002/RECUR_MEAN_ALL_V1`: PROD's list is archived; QA's variant is computed over its whole history; every
++  report and both OV-1 records of the game are rebuilt with it; no other variant's forecast list changes.
+ - *PROD, the last resort.* A scoring fault is corrected, proved in QA as in the first example, and installed into
+-  PROD. PROD's job withholds from the first differing draw. The owner runs the derived-only rerun in PROD, types
+-  `PROD`, and the prevailing report thereafter says which draws were computed again and where the first lines are.
++  PROD. The owner runs the derived-only rerun in PROD, types `PROD`, and the prevailing report thereafter says which
++  draws were computed again and in which archive the first lines are.
+ 
+ ## 8. Scoring
+ 
+@@ -514,7 +571,7 @@
+ 
+ Beside it, as plain counts taken from the envelopes: the tree that made the report; draws counted; counted forecasts
+ made before and after the result was on file; draws whose lines were written by a historical walk-forward rerun,
+-with each rerun's date and its set-aside folder; where the counted forecasts were computed (for example "PROD 812;
++with each rerun's date and its archive ZIP; where the counted forecasts were computed (for example "PROD 812;
+ QA 0"); lines with a "no pair" member, and the first such draw. There is no SUPPORTED, QUALIFIED or sandbox label:
+ the counts say what kind of evidence the score is, in the same words whichever tree prints them.
+ 
+@@ -532,7 +589,10 @@
+   judgement of performance. The corrected method is a new variant, installed in the ordinary way.
+ - **How:** `Withdraw_Variant.bat <family> <variant> --game <game|BOTH> --reason "<text>"`, in the tree concerned. It
+   shows the variant, the last draw on file and when the results were last checked, and the draw the withdrawal will
+-  take effect from: **the last draw on file plus one.** The owner types one confirmation. It then rewrites that
++  take effect from: **the last draw on file plus one.** The owner types one confirmation. **From before the draw is shown until the status file is written, the
++  command holds the tree's job lock and the updater's own lock,** so that no job and no results step can run in
++  between; under those locks it reads the last draw on file again and refuses if it is no longer the one it showed
++  (EX_267 R6-F07). It then rewrites that
+   variant's status file with `status = WITHDRAWN`, the draw and the reason (3.5), and adds one line to the tree's
+   log. That is the whole mechanism: no registry, no status table, nothing written into any list. Several variants
+   can be named in one command, under one confirmation.
+@@ -593,7 +653,12 @@
+    not run" and relies on the checks that travel with the installed software: 2, 4 and 5.
+ 4. **A fixed sample of stored forecasts** of variants already installed is recomputed and must be identical in
+    content. It is a sample: it can show a fault, it cannot show there is none.
+-5. **The derived results, in full** (5.8): every score and the whole prevailing ledger, recomputed and compared.
++5. **The derived results, in full** (5.8): every score and the whole prevailing ledger, recomputed and compared by
++   their scientific content. **An unexpected difference is a fault and stops the install.** There is one expected
++   case, and it is not this check failing: an infrastructure reinstall that the owner accepted after being told,
++   before anything was overwritten, that it changes derived results from draw X (12.4). There the tool reports the
++   difference as what was accepted, and checks instead that the tree now shows those results as not current from X
++   (5.8). It never reports "all stored values agree" when they do not (EX_267 R6-F06).
+ A failure stops the install with its barrier in place, so no job runs. The ways out are the same command after the
+ cause is corrected, or a restore from a verified backup of the owner's choosing. **The tool names the backup it took
+ just before only if that backup was in fact made and verified** (R5-F04).
+@@ -614,27 +679,31 @@
+   (neither: launchers, the guard, backup and restore, the owner's environment scripts). A test in the suite follows
+   the imports: every project file the forecasting entry point imports must be `forecast`, and every file the scoring,
+   report and OV-1 entry points import must be `forecast` or `derived`. So a wrong class is caught by a test, not
+-  trusted.
++  trusted. **A class is a careful label, not a proof** (EX_267 N01): a file whose effect on forecasts cannot be ruled out
++  is classed `forecast`, and a planted dependency from an `other` file into the forecasting path must fail the test.
++- **The identity of the forecasting code** is one SHA-256 over the `forecast`-class files, computed as a variant's
++  fingerprint is (3.4). Every list's header records it (5.2). So a list always says which shared forecasting code
++  it was made under, and a list made under other code than is installed is foreign (5.6A).
+ - `Reinstall_Infra.bat` shows every file it would add, overwrite or remove, with both hashes, its class and the
+   differences, and touches nothing under a family folder or `_shared/`.
++- **It never changes forecasting code** (EX_267 R6-F01). A plan that would add, overwrite or remove any `forecast`-class
++  file is refused by this command, which says: "this changes code that makes forecasts; that is a correction of
++  shared code: `Correct_Shared_Code.bat`" (12.8).
+ - **What it checks before it overwrites anything** (R5-F05; there is no recomputation of the whole history). On a
+   temporary copy of the software as it would be, with the target's Python and the target's own data, read only:
+   the suite; the derived results **in full** (12.3, 5); and the fixed sample of forecasts (12.3, 4). The result is
+-  shown as one of three plain statements:
++  shown as one of two plain statements:
+   - "No stored result changes." (Nothing differed.)
+-  - "**This changes stored scores or OV-1 lines,** for <game> from draw X. It is a scientific change. If you install it,
+-    this tree will withhold <game>'s scores, reports and prevailing line from draw X until you run the derived-only
+-    rerun." (Exhaustive: every such change is found.)
+-  - "**This changes forecasts.** n of the m sampled forecasts differ: <which>." Or, when a `forecast`-class file changes
+-    and the sample shows nothing: "**This reinstall changes code that makes forecasts** (<files>). The m sampled
+-    forecasts did not change. A sample cannot show that no forecast changes. `Check_Forecasts.bat --all` compares
+-    every stored forecast; it is yours to run, here or in QA, when you choose."
+-- **An infrastructure change that alters a stored result is a scientific change and is never hidden as maintenance.**
+-  The owner sees it before the confirmation and may still say yes: a reviewed correction has to be installable. If
+-  he does, stored forecasts are left exactly as they were written (each names the code that made it, as after an
+-  environment change); stored derived results are withheld until he runs the derived-only rerun (5.8, 7A). Nothing
+-  is recomputed by the install. Trying the change in QA first costs PROD nothing, and is what QA is for; it is
+-  never required.
++  - "**This changes stored scores or OV-1 lines,** for <game> from draw X. It is a scientific correction to derived
++    results. Stored forecasts are not affected. If you install it, <game>'s scores, reports and prevailing line will
++    be not current from draw X until you run the derived-only rerun." (Exhaustive: every such change is found.)
++  **A difference in the forecast sample here is a fault,** since no forecasting code is in the plan: a file is
++  wrongly classed. The reinstall stops and names the forecasts that differ.
++- **A correction to scoring, reports or OV-1 is installable, plainly stated, and is never hidden as maintenance**
++  (EX_267 R6-F01 case A, R6-F06). The owner sees the second statement before the question and may say yes. Stored
++  forecasts are untouched; the derived results are not current from X (5.8) until he runs the derived-only rerun
++  (7A). Nothing is recomputed by the install. Trying it in QA first costs PROD nothing, and is what QA is for; it
++  is never required.
+ - **`Check_Forecasts.bat`** recomputes stored forecasts with the installed software and environment and compares
+   their content. `--sample` is what the installs run; `--all`, or a game, a draw range or named variants, is the
+   owner's to run in any tree. It can be stopped and continued. It writes a report under `scratch\` and nothing else.
+@@ -653,7 +722,8 @@
+   > attempted: <result>.] [The recovery kit: <result>.] Proceed? Type YES to proceed. Anything else, Enter included,
+   > is NO."
+ 
+-  NO changes nothing. YES proceeds, whatever the backup's result: the risk is the owner's informed choice. The same
++  NO overwrites nothing; the backup and the kit just attempted may by then exist, and are logged (EX_267 N03). YES
++  proceeds, whatever the backup's result: the risk is the owner's informed choice. The same
+   text and rule apply in QA: it is the same software.
+ - A variant install (12.1) adds files and overwrites none. It attempts the same backup and writes the same kit, and
+   reports each truthfully; a failed kit is put in its confirmation ("the recovery kit could not be written: <reason>";
+@@ -672,7 +742,14 @@
+ variants and helpers, and **each variant's status file as PROD holds it** (so PROD's withdrawals and eligibility draws
+ arrive with PROD's variants). Whatever software QA held that PROD does not is removed: this is a wipe and a
+ replacement, not a merge, and it exists only for QA.
+-- **PROD is read, never written:** not a log, lock, marker or any byte; nothing of PROD's is started.
++- **PROD is read, never written:** no program of this project writes a log, lock, marker or any byte there, and nothing
++  of PROD's is started. **Every file read from PROD, each variant's status file included, is hashed at a first
++  reading and again at a second;** any difference, a status file changed by a withdrawal among them, refuses the
++  replacement (EX_267 R6-F04). Those hashes are kept in the tool's memory and in QA, never in PROD. (Windows may
++  itself record a file's last-access time when it is read; that is the operating system's, and is outside this
++  promise: section 20.)
++- **QA is reserved first:** the tool takes QA's job lock before it reads PROD and holds it to the end, so that no QA
++  job can start in between (EX_267 R6-F05).
+ - **QA keeps what makes it QA:** its `ENVIRONMENT.ini`, its `.venv`, its backup root, its own records and logs. Nothing
+   of PROD's settings, environment, records, locks or backups is copied.
+ - **No research data is copied or changed.** QA's lists, reports and ledgers stay as they were. Where they no longer
+@@ -688,6 +765,47 @@
+ The steps are in the deployment design (section 6A). It is never run for DEV or PROD, and it is no part of any
+ install into PROD.
+ 
++**12.8 Correcting defective shared code in place (owner, entries 141 to 143; EX_267 R6-F01).**
++`Correct_Shared_Code.bat PROD` (or `QA`) `--reason "<the defect>"`, run from DEV, on the owner's own command.
++- **What it is for:** shared code that does not compute what was always intended. **Shared code** is: the
++  `forecast`-class infrastructure files (12.4); a helper under `_shared/`; a helper in a family folder. It is never
++  for a variant's own files (a corrected method is a new variant) and never for a changed idea (3.3A). Which of the
++  two a change is, is the owner's judgement, given in one line of reason; nothing else is asked of him.
++- **What it changes in the target:** exactly the shared files that differ between DEV and the target: `forecast`-class
++  files as the infrastructure marker lists them, and helpers the target holds with other bytes than DEV's. DEV's
++  markers must match (the variants that use a corrected helper are marked again in DEV, since their fingerprints
++  have changed). Nothing under a variant folder is written, and no status file.
++- **Which variants it affects, taken widely** (the reviewer, entry 142): for a helper, every installed variant whose
++  declaration lists it (3.4: a variant's list is its whole dependency, so this is a look-up, not an analysis); for a
++  `forecast`-class file, every installed variant, in both games. The plan shows them by name. The fixed sample of
++  forecasts is shown as information only: a sample that happens to match excuses no variant.
++- **Its own question, never the install question:** after the plan, the kit and the backup attempt (reported as
++  always), the text says: "This is a CORRECTION OF SHARED CODE in <role> <root>: <reason>. These <n> variants will be
++  HELD: nothing of them will be forecast, scored or counted until you run the historical walk-forward rerun for
++  them, over their whole history. <game>'s results will be not current from draw <first> until then. Forecasts
++  already made stay exactly as they are until that rerun archives them. Type CORRECT <role> to proceed." Anything
++  else is no.
++- **How the hold comes about, with nothing new:** the corrected helper changes the fingerprint of each variant that
++  lists it, and corrected forecasting code changes the forecasting-code identity; either way the affected variants'
++  lists no longer match their headers, so they are foreign and their variants held (5.6A), in every later job,
++  until the rerun. The tool writes the cutoff file of 5.8 at the affected variants' earliest first draw. **No list
++  made under the old code is ever appended to under the new:** one name is one forecaster in the active record.
++- **The code being replaced is kept** (the reviewer, entry 144). Before any file is overwritten, the old bytes of every
++  file in the plan are saved in one small verified ZIP beside the reruns' archives
++  (`<ROLE>_CORRECTED_CODE_<date>_<time>_BEFORE_CORRECTION.zip`, with the reason and each file's SHA-256). If it cannot
++  be written or does not verify, nothing is overwritten. The rerun's own archive, made later, holds the old results;
++  this one holds the old code that made them.
++- **Then the owner runs the rerun** (7A), for those variants or for all, when he chooses: it archives what it replaces
++  (7A.4) and computes the affected variants' whole history; unaffected variants' forecasts are kept as they are;
++  every report and both OV-1 records of the game are rebuilt. The correction never starts the rerun itself.
++- **What it never does:** change a status file (withdrawals and eligibility draws stand; a correction is not a way to
++  bring back a withdrawn variant or to give anything a new eligibility draw); touch a list; run in PROD without
++  `PROD` typed in its question; or run half-way: it uses the install barrier, so that a tree with some files
++  corrected and others not is never runnable. The same command again finishes it.
++- **In DEV** nothing is installed: editing a helper or a forecasting file there has the same effect by the same rule
++  (the lists made under the old bytes become foreign), and the rerun clears it.
++The steps are in the deployment design (section 6C).
++
+ ## 13. The Python environment
+ 
+ - Each tree's `.venv` is built by the owner with his own scripts, in that tree. It is not pinned to a draw (owner): a
+@@ -711,7 +829,7 @@
+ 
+ **14.1 Backups and restore.**
+ - **A backup is one ordinary ZIP of a whole tree:** installed software with every status file, accepted results, lists,
+-  ledgers, reports, set-aside folders, records, `ENVIRONMENT.ini` and the complete `.venv`. Only two temporary control
++  ledgers, reports, the archives that reruns have set aside, records, `ENVIRONMENT.ini` and the complete `.venv`. Only two temporary control
+   files are left out. It is written to that tree's own backup root, checked twice (the archive read back; every
+   source file read again), and called a backup only when both checks pass and the tree was quiet throughout.
+ - **When:** at the end of every research job and every rerun; before and after every install, infrastructure
+@@ -737,9 +855,10 @@
+ destination's research data exactly PROD's.
+ - **What is copied, complete:** the accepted results with their version ledgers, verification and provenance records;
+   every forecast and score list; the league and next-draw reports; both OV-1 records. **What is not:** any software or
+-  status file, `.venv`, `ENVIRONMENT.ini`, records, logs, locks, set-aside folders or backups.
++  status file, `.venv`, `ENVIRONMENT.ini`, records, logs, locks, set-aside archives or backups.
+ - **PROD is read, never written, whatever happens:** no lock, marker, log, flag or any byte, on success, failure or
+-  interruption. No PROD program is started. With no lock allowed, PROD's stillness is established by reading: the
++  interruption. No PROD program is started. (The promise is that no program of this project writes to PROD;
++  Windows may itself record a last-access time when a file is read: section 20.) With no lock allowed, PROD's stillness is established by reading: the
+   tool refuses if PROD shows a job, an install or a backup in progress; it hashes every file as it copies; then it
+   reads and hashes all of them again; any difference means PROD changed meanwhile, and the copy is refused and
+   discarded.
+@@ -747,6 +866,8 @@
+   there, no backup first). The printed summary shows what will go and what will arrive; the owner types one
+   confirmation. A destination that is busy, or that is PROD, PROD's backup root or any other name for either, is
+   refused.
++- **The destination is reserved first:** the tool takes the destination's job lock before it reads PROD and holds it
++  until it has finished, so that no job can start there and have its data removed under it (EX_267 R6-F05).
+ - **Never a half-copied mixture:** PROD's data is first copied into a temporary folder inside the destination and
+   checked there; only then, behind a barrier file, is the old data removed and the new put in its place by renames.
+   Stopped before the barrier: the destination is unchanged. Stopped after: every launcher refuses until the same
+@@ -766,10 +887,10 @@
+ of the deployment design apply. An orphan marker blocks every launch until the owner's approved clearance. The three
+ safety switches stay False and the allowlist empty. Only the one reviewed updater contacts Lotterywest-GOV, only in
+ PROD; no AI chat and no other program contacts any lottery site. No program changes the PC's date, time or zone.
+-**Nothing run for QA or DEV, and no copy of any kind, ever writes a byte of PROD.** **Research data is never deleted in PROD by any program:** a rerun sets the old lines
+-aside in the tree first, in every tree alike. Research data is deleted in exactly one case, a reseeding, and only in
++**Nothing run for QA or DEV, and no copy of any kind, ever writes a byte of PROD.** **Research data is never deleted in PROD by any program:** a rerun first saves the old lines in a verified archive ZIP in the tree, in every tree alike, and does nothing if
++that archive cannot be made. Research data is deleted in exactly one case, a reseeding, and only in
+ its destination, which is never PROD. Installed software is removed in exactly one case, the QA software
+-replacement, and only in QA. The only other removal of bytes is a torn last line (5.7).
++replacement, and only in QA. A helper is overwritten in exactly one case, the correction of a defect (12.8). The only other removal of bytes is a torn last line (5.7).
+ 
+ ## 16. The owner's commands, and what refusals mean
+ 
+@@ -778,7 +899,8 @@
+ | DEV | `Make_Installable.bat` | mark finished variants, or the infrastructure, ready; `--unmark` |
+ | DEV | `Who_Uses.bat`, `Make_Successors.bat` | find the variants that use a helper; prepare their successors |
+ | DEV | `Install.bat PROD` (or `QA`) | add new variants |
+-| DEV | `Reinstall_Infra.bat PROD` (or `QA`) | update infrastructure |
++| DEV | `Reinstall_Infra.bat PROD` (or `QA`) | update infrastructure that makes no forecast |
++| DEV | `Correct_Shared_Code.bat PROD` (or `QA`) | correct a fault in shared code in place; the affected variants are then held until the rerun |
+ | DEV | `Init_Tree.bat QA`, `PROD` | create a tree |
+ | DEV | `Check_Tree.bat QA` or `PROD` | read-only: what is installed, each variant's status, what is ready, any drift, the backup ZIPs, locks |
+ | DEV | `Replace_QA_Software_From_PROD.bat` | QA's installed software becomes PROD's |
+@@ -797,7 +919,8 @@
+ <role>" (the settings file and the folder disagree); "results changed other than by growing"; "a status file fails
+ its check" (take it from your newest backup); "a process of this tree is running"; "orphan marker present". The main
+ warnings that are not refusals: "a list is foreign and is ignored: <variant>" (reseed, replace QA's software, or rerun
+-that variant); "derived results withheld from draw X" (the derived-only rerun); "the updater failed: nothing new was
++that variant); "results not current from draw X" (the derived-only rerun; or, after a correction of shared code, the rerun for the
++variants it names); "the updater failed: nothing new was
+ read" (run the job again later; `--no-update` to work without it). A STOP is a STOP: nothing retries by itself.
+ 
+ ## 17. From the old system to this one (owner: a clean baseline, nothing destroyed; EX_259 B; EX_261 F04, P07; entry 131)
+@@ -841,9 +964,37 @@
+   transition package, outside the infrastructure; it reads the old records in DEV or in an unpacked copy of the
+   owner's ZIP, read-only; a difference stops the transition for review. After it, no part of the new system reads an
+   old record.
+-- The file-by-file starting list for the code rounds is section 10 of the simplification design v0.1, with three
+-  changes: the coordinator and its plumbing are not installed outside DEV; install and release records and Git are
+-  gone from deployment; the install tool works from local files (deployment design).
++- **What phase 1 moves** (owner, entry 139; taken from the installed tree, where `src/` is as at commit `cc0ab73`):
++
++| Today | After phase 1 |
++|---|---|
++| `src/methods/E_002` to `E_019`: each family's `contract.py` and its own modules (for example E_6's `beta_bernoulli.py`), with `variants.py` | the family's shared core file (`core_v1.py`, and its other modules beside it) and one folder per variant holding `method.py` and `VARIANT.json` |
++| `src/methods/E_001/*` and `contract_adapters/e_001.py` | the adapter becomes `E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py`; E_1's own modules stay where the proof-of-concept suite imports them |
++| `_common/recurrence_gaps.py`, `occurrence_counts.py`, `polynomial_fits.py` | `_shared/recurrence_gaps_v1.py`, `occurrence_counts_v1.py`, `polynomial_fits_v1.py` |
++| Every `import` of a moved file, in `src/` and in the tests | follows the move; no other line changes |
++| `Method_Contract_Runner.py` (its hand-kept table of methods) and `closure.py` (its list of code folders) | the table is built from the folder tree; the folder list follows |
++
++  Phase 1 changes DEV's working files only. Nothing is installed anywhere by it: QA and PROD do not yet exist.
++- **Phase 2's starting list** is the table of kept, changed and left-out modules in section 10 of the simplification
++  design v0.1, read with this specification: the coordinator and its plumbing are not installed outside DEV; install
++  and release records and Git are gone from deployment; the install tools work from local files; and the lists, the
++  status file, the job and the tools are as specified here. Its first task is the exact list of what the coordinator
++  plumbing imports.
++
++**17.4 The build order: one ratified design, built in four steps, each on its own go (owner, entry 143).**
++1. **The folder layout:** phase 1, above.
++2. **The research engine, in DEV:** the lists, the job with its fill and catch-up, scoring, the reports, both OV-1
++   scores, the status file and withdrawal (sections 3 to 11). This is the experiment itself, running on DEV's data.
++3. **Trees, installs, backups and restore:** `Init_Tree`, `Install`, `Reinstall_Infra`, the checks, backups, the recovery
++   kit and the restore (12.1 to 12.6, 13, 14.1), then the transition check and PROD's first job. **After this step PROD
++   exists and forecasts every week,** and new methods can be added.
++4. **The laboratory tools:** the QA software replacement (12.7), the research-data reseeding (14.2), the historical
++   walk-forward rerun (7A), the correction of shared code (12.8) and `Check_Forecasts`.
++Steps 2 and 3 are built so that step 4 adds to them and does not change them: every list header carries the
++fingerprint and the forecasting-code identity from the first day, and the job's checks of 5.6A and 5.8 are in step
++2, because step 4's tools rely on them. **Until step 4 is built, a fault found in shared code is not improvised around:** the affected work is stopped
++or held (a withdrawal, or no job for that game) until the tools exist, or the owner restores a backup (the reviewer,
++entry 144).
+ 
+ ## 18. Tests the code rounds must show (functional faults, not fraud)
+ 
+@@ -889,8 +1040,8 @@
+   tree is hashed before and after) and reads no real draw.
+ - **Infrastructure (R5-F04, R5-F05, N03):** `Reinstall_Infra.bat` changes one listed file and no variant; the marker
+   stale after an edit; the manifest with a malformed line, a duplicate path, a missing file and an unknown class;
+-  the class test catching a `derived` label on a file the forecasting entry point imports; the three statements,
+-  each produced by a planted change of the right kind; a change to scoring found in full, at the right draw; **the
++  the class test catching a `derived` label on a file the forecasting entry point imports; the two statements, each produced by a planted change of the right kind; a plan holding a `forecast`-class file
++  refused and sent to the correction command; a change to scoring found in full, at the right draw; **the
+   backup attempt failing, reported as not made, never named as a way back;** NO and Enter change nothing; YES
+   proceeds with the backup failed; the kit failing warns and does not stop; an install stopped at every step, then
+   the command again; no rerun is ever started by an install.
+@@ -898,7 +1049,7 @@
+   reason a sample is never called a proof); stopped and continued; writes only its report.
+ - **The rerun (7A):** the examples of 7A.7; a range with `--to`: nothing after N is left looking complete, and the next
+   job catches up to the same bytes as a rerun without `--to`; every dependent report and both OV-1 records rebuilt;
+-  status files byte-identical before and after; the set-aside folder holds the first-written lines exactly; every
++  status files byte-identical before and after; the archive ZIP holds the first-written lines exactly and verifies; every
+   new line says its result was on file and names the rerun; stopped at every step, then the command again; a wrong
+   role typed changes nothing; the PROD warning shown only where the settings say PROD, by the same code.
+ - **The QA software replacement (12.7):** PROD holds V1, V2 and infrastructure I1; QA holds V1, an experimental V3 and
+@@ -920,6 +1071,22 @@
+   backup root inside the tree refuses; QA and PROD backups land in their own roots.
+ - **Backup and restore:** as the deployment design lists, including that a restore installs nothing afterwards and
+   brings back the status files of its day.
++- **EX_267's oracles.** *R6-F01:* a ranking change that alters a sampled forecast of V1: `Reinstall_Infra` refuses the
++  plan; `Correct_Shared_Code` holds every variant; no list made under the old code is appended to; after the rerun
++  every active forecast of V1 carries the new identity and the first-written ones are in the archive, hashed. A
++  helper used by V1 and V2 corrected: both held, V3's forecast list byte-identical throughout. A family's core
++  corrected: only that family's variants held. A corrected forecasting file whose sample happens to match: every
++  variant still held. A correction leaves every status file byte-identical, a withdrawn variant withdrawn and every
++  eligibility draw as it was. *R6-F02:* a draw appended to the results file leaves every earlier score "agreeing";
++  scoring code rewritten with the same answers agrees; one changed answer is found at its draw; a league CSV naming
++  a variant now foreign is moved out of the active folder and the cutoff file names the draw. *R6-F03:* a
++  derived-only rerun changes zero bytes of every forecast list and keeps every made-before-the-result envelope;
++  `--only V1` rebuilds every game-level report and both OV-1 records; `--to N` leaves nothing after N current;
++  `--derived-only` with `--only` or `--to` refuses; a rerun stopped after each step, then run again, gives the same
++  bytes; the archive ZIP failing to verify leaves every active file untouched. *R6-F06:* a corrected scorer that
++  changes draw X is foretold with X, installs on YES, leaves the tree not current from X, and nothing reports
++  agreement. *R6-F07:* a job, and a results step, started between the withdrawal's display and its write: each finds
++  the lock held; no score at T after a withdrawal from T; the status file is the old or the new, never between.
+ - **(real)** Phase 1's oracle; the transition check.
+ One planted defect for each rule. The whole suite before and after each install.
+ 
+@@ -939,36 +1106,31 @@
+ | - | QA never a gate; one science in every tree; no sandbox mode | 126, 136 |
+ | - | The QA software replacement from PROD; the rerun in every tree, PROD as a last resort | 135, 137 |
+ | - | Backups at installs: attempted, reported, never a condition; a confirmation defaulting to NO | 135, 136 |
++| - | Defective shared code corrected in place, the affected variants then recomputed; replaces 127's no-overwrite rule for defects only | 141, 143 |
++| - | What a rerun replaces is first saved in one verified, clearly named ZIP | 142 |
++| - | The phase 1 file list in this document; one design built in four steps | 139, 143 |
+ 
+ **Mechanisms I chose where no decision exists, each with the leaner alternative** (for the reviewer to judge and the
+ owner to ratify with the rest; none needs an answer before the review):
+-1. **A rerun sets the old lines aside in every tree** (7A.4). Leaner: delete them in QA and DEV and keep them only in
+-   PROD. I kept one behaviour everywhere, and hand deletion in QA and DEV, because a second code path for deleting is
+-   the riskier thing to own.
+-2. **The job checks the derived results in full at every start** (5.8). Leaner: only at an install or a copy, with a
+-   record that a rerun is owed. I chose the check because it needs no record to keep true, and it is what lets QA
+-   differ from PROD freely without ever counting stale figures. If it proves slow when measured, the alternative
+-   stands ready.
+-3. **An infrastructure change that alters stored results can still be installed, on a plain statement and YES**
+-   (12.4). v0.3 refused it outright. A reviewed correction to scoring or OV-1 must be installable, or the owner's
+-   purpose for QA (proving such a correction before PROD) leads nowhere.
+-4. **In DEV an edited variant's old list is foreign and waits for a rerun** (5.6A), where v0.3 moved it aside by
+-   itself. One rule in every tree; the cost is one command in DEV after an edit.
+-5. **The suite is run only where it belongs to the installed infrastructure** (12.3, 3). Leaner still would be never
+-   to run it in a target. Installing the tests with the software is the fuller answer, and the owner has ruled
+-   tests out of QA and PROD.
++1. **The job checks the derived results in full at every start** (5.8). Leaner: only at an install or a copy. If it
++   proves slow when measured, the alternative stands ready and sets the same cutoff file.
++2. **Any change to a `forecast`-class file is a correction of shared code, and holds every variant until a rerun**
++   (12.4, 12.8), even a change believed to alter nothing. That is the price of a persistent rule that needs no
++   judgement of harmlessness. Leaner in running cost, fuller in machinery: let `Check_Forecasts --all` finding every
++   stored forecast unchanged stand in for the rerun. Not designed; it can be added if such changes prove common.
++3. **In DEV an edited variant's or helper's old lists are foreign and wait for a rerun** (5.6A), where v0.3 moved them
++   aside by itself. One rule in every tree; the cost is one command in DEV after an edit.
++4. **The suite is run only where it belongs to the installed infrastructure** (12.3, 3).
+ 
+ **For the reviewer.**
+-1. Do 5.6, 5.6A and 5.7 close R5-F01 in every path, and is "foreign and held" the smallest safe answer to lists that
+-   arrive from PROD?
+-2. Is the status file's self-check enough against accidents, given that the two facts in it are each set once?
+-3. Is 12.4's rule (derived results in full; forecasts by sample with a plain statement; `Check_Forecasts --all` at the
+-   owner's choice) a sound and proportionate answer to R5-F05? Is the class test enough to trust the classes?
+-4. Does the envelope (5.4), with the counts of 10.6, keep original evidence and later recomputation apart in every
+-   tree, with no QA-only rule?
+-5. Is anything in 7A able to leave a dependent result standing that should have been rebuilt?
+-6. Is anything in 12.7 or 14.2 able to write to PROD, or to leave QA looking ready when it is not?
+-7. Choice 3 above changes the direction of v0.3 and of EX_262 section 2.3. Do you object?
++1. Does 12.8, with the header identity of 12.4 and the hold of 5.6A, close R6-F01 with no mixed history and no
++   way round it?
++2. Is the list of compared fields in 5.8 the right projection, and does moving stale reports out of the active
++   folder, with one cutoff file, close R6-F02?
++3. Does the table of 7A.2 leave any mode able to change a file it should not, or to leave a dependent result
++   standing (R6-F03)?
++4. Do 12.7 and 14.2, with the deployment design's 6A and 6B, now close R6-F04 and R6-F05?
++5. Is item 2 of the list above acceptable as the persistent rule, at its running cost?
+ 
+ ## 20. Not tested, and uncertainties
+ 
+@@ -987,6 +1149,10 @@
+   size and modification time.
+ - QA will be backed up at the end of each job like any tree. If that proves a nuisance in a laboratory used many
+   times a day, a setting in QA's own settings file to leave it out is the lean answer; not designed until measured.
++- **A correction of forecasting code holds every variant until a full rerun,** however small the change. With many or
++  slow methods that is a long computation, unmeasured. It is the owner's choice each time.
++- Step 4 of the build order comes last. A design fault found then in a step-4 tool could reach back into steps 2
++  and 3; the header identities and the two checks are put in step 2 to make that unlikely, not impossible.
+ - Section 1.2 names the binding clauses by section. An exact clause list for E2R-1 section 7 is a first task of the
+   code round.
+ 
+@@ -1024,4 +1190,16 @@
+ | Entry 136 one science in every tree; the status file; the words | 2; 3.5; 5.4; 10.6; header |
+ | Entry 137 the rerun in every tree; one-way withdrawal; one status file; eligibility preserved | 7A; 11; 3.5; 10.2 |
+ 
+-End of the specification, DRAFT v0.4.
++| EX_267 R6-F01 forecast-changing shared code | 12.8; 12.4; 3.3A; 5.2; 5.6A; 18 |
++| R6-F02 what the derived check compares; stale reports | 5.8; 18 |
++| R6-F03 the rerun's modes | 7A.2 (table), 7A.4, 7A.5; 18 |
++| R6-F04 status bytes hashed when PROD is read | 12.7; deployment design 6A |
++| R6-F05 the destination reserved before the copy | 12.7; 14.2; deployment design 6A, 6B |
++| R6-F06 an expected derived difference is not a failed check | 12.3 (5); 12.4 |
++| R6-F07 the withdrawal serialised | 11 |
++| N01 classes are labels; N02 a held member blocks; N03 what NO leaves | 12.4; 5.6A; 12.4 |
++| Entry 139 the phase 1 file list | 17.3 |
++| Entry 142 the archive ZIP | 7A.4 |
++| Entry 143 correction in place; the four-step build order | 12.8; 17.4 |
++
++End of the specification, DRAFT v0.5.

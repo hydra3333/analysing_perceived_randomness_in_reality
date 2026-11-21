@@ -2669,3 +2669,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   PROD and holds it to the end. R6-F06: an unexpected derived difference stops; an accepted, named derived correction
   is reported and leaves those results not current. R6-F07: a withdrawal holds the job lock and the updater's lock
   from display to write. Also: the phase 1 file list (entry 139) and the four-step build order in section 17.
+
+## 144. 22 November 2026, 00:21 - the reviewer agrees the archive ZIP and the build order, with two safeguards; the owner's go; EX_268 sent (the specification DRAFT v0.5 and the deployment design DRAFT v0.11)
+
+- **The reviewer's assessment, relayed by the owner at 00:18 (pasted; not a committed file; its views):** AGREE with one
+  verified ZIP before a historical recomputation, replacing the set-aside folder, and with the four-step build order.
+  **Two safeguards:** the original bytes of corrected shared code are preserved before they are overwritten, since the
+  rerun's ZIP is made later; and an interrupted rerun keeps and reuses its first verified archive, never archiving
+  records already shortened. Also: a defect found before the correction tools exist is stopped or held, not
+  improvised around; the OV-1 timing question stays closed.
+- **On priorities, in the same message (the owner's observation, which the reviewer shares):** disproportionate time has
+  gone to peripheral operational mechanisms; from here KISS, practical implementation and measured testing, with
+  review effort on scientific correctness, data integrity, reproducibility and material safety; no new
+  administrative machinery, speculative edge-case process or decision round without shown practical need. "The aim is
+  a scientifically credible, functioning research system - not an indefinitely refined deployment framework."
+- **The owner's go (his words):** "IF YOU THINK IT ALIGNS WITH MY INTRENT THEN LETS GET ON WITH IT." Claude judged that it
+  does and proceeded.
+- **Done (Fable, High; design only, no code):** `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_5.md`
+  (SHA-256 `19999abf697ec522ad9ad6bf10723de0793c4c06ca77e8f716a5eb2f556e5b28`) and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_11.md` (SHA-256
+  `9b7911ee10aaae703a6e83b98af57f9cbf26471fc286b3ce1aa80d248e7e4711`), built from v0.4 and v0.10 by counted replacements,
+  with exact diffs (each applied by `patch` and compared byte for byte). Sent as `exchange/EX_268_Claude.md`, which
+  opens with the disposition of R6-F01 to R6-F07, N01 to N06, the handback's conditions and the two safeguards.
+- **What changed, in short:** a new command `Correct_Shared_Code.bat` (specification 12.8; deployment 6C); every list's
+  header holds the identity of the shared forecasting code as well as the variant's fingerprint, so a list made
+  under other code is foreign and its variant held; the ordinary infrastructure reinstall refuses a plan holding a
+  `forecast`-class file; the derived check compares a stated list of scientific fields, and a cutoff file
+  (`NOT_CURRENT_FROM.json`) with stale reports moved out of the active folder marks what is not current; a table of
+  what each rerun mode may change (derived-only changes no forecast byte); one verified, clearly named ZIP before any
+  rerun replaces anything; both copies from PROD take the destination's job lock first and hash every PROD file,
+  status files included, at two readings; a withdrawal holds the job lock and the updater's lock; the phase 1 file
+  list (17.3) and the four-step build order (17.4).
+- **Next:** the reviewer's recheck, EX_269. After a PASS: the owner's ratification (RAT-40), H-1 v8, the owner's ZIP of
+  the project folder, then build step 1. **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.

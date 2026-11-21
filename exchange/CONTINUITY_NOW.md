@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 00:16 Australia/Adelaide (entry 143: the owner's decisions on the correction of shared code and the four-step build order). **Now: Claude is writing EX_268 (Fable, High); its closure plan is in entry 143. No code.**
+**Last updated:** 22 November 2026, 00:21 Australia/Adelaide (entry 144: EX_268 sent: the specification DRAFT v0.5 and the deployment design DRAFT v0.11). **Next: the reviewer's recheck (EX_269); after a PASS, the owner's ratification, H-1 v8, the owner's ZIP, then build step 1. No code yet.**
 
 ## For the owner: NOW
 
+- **EX_268 IS WITH THE REVIEWER (entry 144).** `exchange/EX_268_Claude.md` opens with the disposition of every EX_267
+  finding. **The current drafts are `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_5.md` and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_11.md`** (v0.4 and v0.10 are history; exact diffs beside them).
+  A chat taking over reads: the takeover note; this block; decision log entries 121 to 144; EX_267, EX_268; the two
+  drafts. **The owner and the reviewer both want effort to go to building now: no new machinery or decision round
+  without shown practical need (entry 144).** After a PASS: ratification (RAT-40); H-1 v8; the owner's ZIP of the
+  project folder; then the four build steps of specification 17.4, each on its own go.
 - **DECIDED (entry 143):** defective shared code is corrected in place, then the affected variants are recomputed
   (replaces entry 127 item 3 for defects); and the design is built in four steps (layout; the research engine in DEV;
   trees, installs, backups and restore; the laboratory tools). **EX_268 is being written; entry 143 holds Claude's
