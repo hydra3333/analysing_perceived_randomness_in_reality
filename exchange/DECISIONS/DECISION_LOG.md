@@ -2058,3 +2058,26 @@ documents (design v0.1r7, supplement v0.8, the code plan, R3, E2R-1, H-1 v7r1) s
 reviewed and ratified;** the three MHUP-B slices stay uninstalled.
 
 **Go:** the redesign documents for independent review as EX_260 (Fable, High). Design only.
+
+## 123. 21 November 2026, 11:44 - the research system simplification design (DRAFT v0.1) and the deployment design note (DRAFT v0.6) sent for independent review (EX_260); no owner decision
+
+- **Done under entry 122's go (Fable, High; design only, no code):** `exchange/CLAUDE_WEB_TOOLS/simplify/RESEARCH_SYSTEM_SIMPLIFICATION_DESIGN_DRAFT_v0_1.md`
+  (a new full document; supersedes the OV-1 amendment drafts v0.1 and v0.2) and `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_6.md`
+  (exact diff `NOTE_v0_5_TO_v0_6.diff`; builder `make_note_v0_6.py`). Sent as `exchange/EX_260_Claude.md`.
+- **The design, in short:** identity is game, family, variant, target; one source layout for every family
+  (`src/methods/<family>/<variant>/method.py`); family folders and `_shared/` are add-only, checked by the deploy tool;
+  the registry is the folder tree; the canonical record is two append-only lists per variant per game (forecasts,
+  scores); one job (`Run_Research.bat`) is the four stages and is safe to rerun; a saved cumulative league report for
+  every draw with TOP and WORST; the prevailing OV-1 counts a variant from its `FORWARD_FROM` draw (the first draw
+  whose result had not been published when the job last read the official source), the exploratory OV-1 is rebuilt
+  over all history; the 2.5% sentence is conditional; the new system writes under `results/research/` in a new
+  production tree, so the clean baseline destroys nothing; the old records are used once, by a transition checker;
+  phase 1 (moves only) and phase 2 (contracts), each with an equivalence check.
+- **The note v0.6:** nothing is put back after a restore; section 0A; `init` copies `source_data/` only; one
+  deployment-log line per release; the add-only check.
+- **Four choices put to the owner for ratification (design section 14):** the job runs the updater itself (a change to
+  his decision of 4 November 2026); `FORWARD_FROM` as designed or the simpler "plus one at installation"; the cold
+  copy of the whole E: clone by a small reviewed script or by hand; one new system specification or amendments.
+- **Claude's advice on the chats (given to the owner in the chat):** finish this design round here; after
+  ratification write H-1 v8 and start the two code phases in a new Claude chat.
+- **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.

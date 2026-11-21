@@ -1,0 +1,260 @@
+1c1
+< # MHUP-B deployment design note - DRAFT v0.5
+---
+> # Deployment design note - DRAFT v0.6
+3,8c3,9
+< **Status:** DRAFT v0.5 for the reviewer's recheck. Not ratified. It authorises nothing. It makes the corrections of
+< EX_255 that fall to this note (E04: when a replay after a restore equals the lost score and when it does not; one
+< test oracle) and follows the OV-1 amendment v0.2 (a release record's first-draw numbers). EX_255 found the rest of
+< v0.4 broadly sound, and it is unchanged. v0.1 to v0.4 are kept beside it; `NOTE_v0_4_TO_v0_5.diff` is exact.
+< **Written:** 20 November 2026, 19:46 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+< owner's go of 19 November 2026 for the design note (decision log entry 107) and his decisions of entries 116 and 119. Fable (High).
+---
+> **Status:** DRAFT v0.6 for the reviewer's recheck. Not ratified. It authorises nothing. It removes the error of v0.5
+> that the owner rejected (later releases put back after a restore: EX_258, EX_259 section 7) and points this note at
+> the simplified research system (EX_259). Section 0A says exactly what changed and how to read the rest. The backup
+> scope, the recovery kit, the exact restore, the guard and the environment rules are as the reviewer checked them in
+> v0.5. v0.1 to v0.5 are kept beside it; `NOTE_v0_5_TO_v0_6.diff` is exact.
+> **Written:** 21 November 2026, 11:43 Australia/Adelaide, by the Claude web chat (primary designer and coder), under the project
+> owner's go of 21 November 2026 for design work only (decision log entry 122). Fable (High).
+11c12
+< installs). **Base:** `main` at `96083aa`; staged slices as passed (EX_231, EX_237, EX_242).
+---
+> installs). **Base:** `main` at `e26f866`; staged slices as passed (EX_231, EX_237, EX_242).
+35,36c36
+<    lock and the install-in-progress file), the test suite before release, the same install and release records with
+<    the same meaning. What Git used to prove ("committed and clean") is proved by hashing every file instead.
+---
+>    lock and the install-in-progress file), the test suite before release, and one deployment-log line per release (installation is release; section 0A). What Git used to prove ("committed and clean") is proved by hashing every file instead.
+50,51c50,51
+<    and all. Then you work normally: the updater, then the weekly session, replay the missing draws one at a time from
+<    the draws before each. That is the same chronological process and valid research (EX_244; EX_248 section 1).
+---
+>    and all. Then you work normally: the research job fetches the results and replays the missing draws one at a time from
+>    the draws before each, with the snapshot's own variants. **No later release is put back automatically.** That is the same chronological process and valid research (EX_244; EX_248 section 1).
+55,58c55,57
+< 8. **OV-1 needs nothing special after a restore.** Under the OV-1 simplification amendment sent with this note, a
+<    draw replayed after a restore is counted like any caught-up draw. The replayed score equals the lost one when the
+<    same methods, code and earlier draws are reproduced, and is labelled when they are not (section 9). The restore
+<    notices and the extra stop of v0.3 are withdrawn.
+---
+> 8. **OV-1 needs nothing special after a restore.** The snapshot's ledger comes back and the catch-up continues it.
+>    The score may differ from the one that was lost; that is a truthful result and nothing is marked down for it
+>    (section 9).
+67a67,93
+> ## 0A. What v0.6 changes, and how to read the rest (EX_258; EX_259 sections 7 and 8 G)
+> 
+> v0.6 is v0.5 with two kinds of change, shown exactly in `NOTE_v0_5_TO_v0_6.diff`.
+> 
+> **1. An error removed.** v0.5 said that after a restore `update` first puts back any later release, and gave an order
+> to "keep lines supported". The owner rejected that: "that isn't a restore it is a restore being mangled." **A restore
+> recreates exactly the selected verified snapshot: its code, variants, data, results, records and saved environment,
+> at the same path. Nothing is put back, retired, activated, upgraded or rebuilt automatically, from Git, from the
+> clone or from the set-aside tree.** The lost draws are then caught up by the ordinary job with the snapshot's own
+> variants. Any later software or method change is a separate owner decision, after he has looked at why the restore
+> was needed. Sections 0, 4.1, 4.3, 8, 9, 12, 15, 17 and 18 are corrected accordingly.
+> 
+> **2. The system this note deploys has been simplified** (the research system simplification design DRAFT v0.1, sent
+> with it). Where a passage of this note still uses the words of the left column, read the right column. The backup,
+> recovery-kit, restore, guard and environment sections do not depend on the difference.
+> 
+> | This note says | Read |
+> |---|---|
+> | the weekly session; the development batch; their sequencers and orchestrators; `Run_Weekly_Session.bat`, `Run_Development_Batch.bat` | the one research job, `Run_Research.bat` (simplification design, section 5) |
+> | the install record and the release record, born in production under `src/`; "a roster change"; "an unfinished weekly set" | none of these exist. Installation is release. Each `update` writes one line in `production_records\DEPLOYMENT_LOG.jsonl` and `RELEASE_<commit>.json`; nothing is written under `src/` in production except the barrier file while an update runs |
+> | a session lock | the job lock |
+> | `declare-developed`; league `admit` and `repair`; a witness line | no such commands remain |
+> | catch-up, development and prospective "labels" | one fact on each forecast line: whether the result was on file when it was computed |
+> 
+> A full rewrite of this note in the simplified system's words belongs with the phase 2 package. It is not done here so
+> that the reviewer can see exactly what changed in a design already examined five times.
+> 
+197c223
+< the environment against `ENVIRONMENT_VERIFIED.json`; any release the clone holds that production lacks, with its first-draw numbers and the order of section 9; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+---
+> the environment against `ENVIRONMENT_VERIFIED.json`; locks and barriers present; whether the orphan marker exists; `SNAPSHOT_DUE`; the
+210,211c236,238
+< 2. Write and verify the recovery kit on T: (section 4.7); stop if it cannot be written. Create the folder. Copy `source_data/`, `results/` and `transitory_data/` whole, the git-ignored run folders
+<    included, each file hashed on both sides; the list is kept as `INIT_RECORD.json`. Nothing on E: is changed.
+---
+> 2. Write and verify the recovery kit on T: (section 4.7); stop if it cannot be written. Create the folder. Copy `source_data/` only (the accepted results files, their version ledgers and verification records: the clean
+>    baseline of the simplification design, section 9), each file hashed on both sides; nothing of the old `results/` or
+>    `transitory_data/` is copied; the list is kept as `INIT_RECORD.json`. Nothing on E: is changed.
+213,215c240
+<    hash list, the environment, the suite, the install record, the release record (MHUP-B's has an empty entry list:
+<    no roster change; it carries each game's first draw, the last draw on file plus one, which is the start of the OV-1
+<    score: the OV-1 amendment 2.3). At the environment step `init` stops and asks the owner to build `.venv` with his two scripts;
+---
+>    hash list, the environment, the suite, the deployment-log line. At the environment step `init` stops and asks the owner to build `.venv` with his two scripts;
+227c252
+< | 1 | The recovery kit for this release is written and verified on T:, or the update stops there (section 4.7). `check`: production equals its recorded release (no drift); the named commit's hash list equals the package's expected digest; the new release descends from the deployed one (an older one is refused: going back is a restore) | 0, 1 (PRE; "replaced files at base bytes") |
+---
+> | 1 | The recovery kit for this release is written and verified on T:, or the update stops there (section 4.7). `check`: production equals its recorded release (no drift); the named commit's hash list equals the package's expected digest; no file under `src/methods/E_*/` or `src/methods/_shared/` that the deployed hash list holds is changed or missing in the new one (the add-only rule of the simplification design, 3.2); the new release descends from the deployed one (an older one is refused: going back is a restore) | 0, 1 (PRE; "replaced files at base bytes") |
+239c264
+< | 13 | The install check; remove P; the release record (it refuses while P exists, without U held by this package, with a session lock, or, for a roster change, with an unfinished weekly set: all as now; for a roster change it also requires the weekly records caught up to the last draw on file, and it writes each game's first draw, the last draw on file plus one or a later number given on the command (the OV-1 amendment 2.3); its two Git tests are replaced by "production equals its hash list and the install record validates"); validate the records; release U **last** | 14 to 18 |
+---
+> | 13 | The install check; remove P; the release record (it refuses while P exists, without U held by this package, with a session lock, or, for a roster change, with an unfinished weekly set: all as now; its two Git tests are replaced by "production equals its hash list and the install record validates"); validate the records; release U **last** | 14 to 18 |
+247,250c272,275
+< **One rule about the two records.** `update` never writes an install or release record for a package whose record the
+< clone already holds (exported and committed after an earlier deployment). It then requires the named commit to contain
+< that record, and production receives the original, with its original date and its original first-draw numbers. This matters after a restore to a snapshot
+< older than an update: running `update` again brings back the original records, not second ones (section 17).
+---
+> **After a restore, `update` puts nothing back.** It installs a release only when the owner asks for that release as a
+> new decision. A release that had been installed after the snapshot, and is installed again later, is a new
+> installation with a new deployment-log line; its variants start new lists (section 9). The records of the lost
+> period that the clone holds are set aside by `export --after-restore`, as section 4.4 already says.
+454c479
+<   | `Run_Weekly_Session.bat`, `Run_Development_Batch.bat` | automatic, in their sequencers |
+---
+>   | `Run_Research.bat` (the one job; it runs the results updater inside it) | automatic: the flag before its first write, the snapshot at its end |
+459c484
+<   | single owner commands through the general launchers (`declare-developed`; a league `admit` or `repair` typed by hand; a witness line; an old-style walk-forward or report run typed by hand) | **not automatic** (the owner's decision A, entry 112). Their run sheets begin with `Run_Production_Snapshot.bat --mark-due` and end with `Run_Production_Snapshot.bat`. Between the command and that snapshot its change is in no snapshot |
+---
+>   | single owner commands that write | none remain in the simplified system (section 0A) |
+593,602c618,630
+< Ordinary work, each step on its usual go: `update` first puts back any later release from its saved record (section
+< 9); the updater brings the results forward; the weekly session catches up one
+< target at a time, each from the draws before it; development jobs, league tables and reports as normal. Every eligible
+< method and revision is run, impartially; rankings are outputs. This is the same chronological process as before and
+< valid research (EX_244; EX_248 section 1). Records made in the replay carry their real times and their truthful labels:
+< a forecast made after its draw is catch-up or development evidence, not prospective. (Under the OV-1 amendment a
+< catch-up forecast is counted in the OV-1 score all the same; section 9.) **One plain consequence, stated
+< so that nobody is surprised:** forecasts that were genuinely made before their draws, after the snapshot, are in the
+< set-aside tree (and in Git's history if they were exported), not in production; the replayed ones for the same draws
+< are labelled catch-up. That is truthful labelling. Nothing is merged back, compared (entry 105) or recovered.
+---
+> Ordinary work, on the owner's usual go: the research job. It fetches the results with the one reviewed updater and
+> catches up one target at a time, each from the draws before it, with exactly the variants the snapshot holds;
+> it saves a league report and an OV-1 line after each, and forecasts the next draw. This is the same chronological
+> process as before and valid research (EX_244; EX_248 section 1; EX_258).
+> 
+> **Nothing else happens by itself.** No later release is installed; no variant is added, retired or replaced; the
+> environment is not rebuilt or upgraded; nothing is read from the set-aside tree or the clone. The owner looks at why
+> the restore was needed, and decides separately, afterwards, whether to install anything. A new method, its
+> computation or a failed installation may have been the cause; it is not brought back automatically.
+> 
+> Forecasts that were made after the snapshot are in the set-aside tree only; the replayed ones for the same draws
+> record truthfully that the result was on file when they were computed. Nothing is merged back, compared (entry
+> 105) or recovered.
+606c634
+< ## 9. OV-1 after a restore: no special rule, and a plain statement of what a replay gives (EX_253; EX_255 E04)
+---
+> ## 9. OV-1 after a restore: no special rule (EX_253; EX_255 E04; EX_258 section 3; EX_259 section 7)
+608,637c636,652
+< v0.3's section 9 answered a problem of the ratified rule: OV-1's formal stream counted only forecasts frozen before
+< their draw by the clock, so a draw counted before a restore could come back as "missed". It proposed restore notices, a
+< new stop cause and a refusal of a second registration.
+< 
+< The owner has since directed that OV-1 be simplified to one prevailing score per game (EX_253), and the amendment sent
+< with this note (`ov1_simplify/MHUPB_OV1_SIMPLIFICATION_AMENDMENT_DRAFT_v0_2.md`) proposes the rule: a variant counts at
+< a draw from the first-draw number in its release record, if it forecast that draw under N-1 isolation, whether before
+< the draw or afterwards by catch-up. Under that rule:
+< 
+< - **A restore needs no OV-1 rule of its own.** The score's ledger comes back as it was in the snapshot. The ordinary
+<   session catches up the lost draws and they are counted by the standing rule; each line records that its forecasts
+<   were caught up. A restored production is fully functional after that catch-up.
+< - **When the replayed score equals the one that was lost, and when it does not** (EX_255 E04). It equals it when, for
+<   every replayed draw, the same variants count (the same release records, with their original first-draw numbers), by
+<   the same code, configuration and seed rule, from the same earlier draws, in an environment that computes the same
+<   numbers (the amendment's examples 5a and 5b-i). **It is not promised otherwise.** It differs when a later release
+<   was not put back before the catch-up (5b-ii), when the environment computes differently (5c), or when a revision
+<   that should have counted can no longer run (6b). Such differences are labelled: each line has its standing,
+<   supported or qualified, by the amendment's objective rule (2.5A), and each line records the digests of the code and
+<   the environment that computed it, so a difference can be investigated.
+< - **The order that keeps the most lines supported:** restore; then `update` to put back each later release from its
+<   saved record (it keeps its original first-draw numbers: section 4.3); then the results updater and the catch-up.
+<   `check` prints this when the clone holds a release that production lacks.
+< - **The environment is not pinned** (the owner, entry 119; the amendment's 2.5B). The restore brings back the
+<   environment that was running; if the owner then rebuilds it, the replay runs in the new one.
+< - **Withdrawn from this note:** the restore notices; the stop cause `NOT_ESTABLISHED_AFTER_RESTORE`; the refusal of
+<   `register` after a lost registration; the look inside the set-aside tree for a registration; any OV-1 purpose of
+<   `--after-hand-unzip`; the edits to `ov1.py` and `consolidated_report.py` that v0.3 listed; and v0.3's tests of them.
+< - No science input is ever taken from the set-aside tree. A release is put back from its record in the clone's
+<   history, not inferred from the old folder.
+---
+> - **The restored snapshot is the authority.** Its variants, its canonical lists and its prevailing OV-1 ledger come
+>   back as they were. The ordinary job fetches the results and catches up, draw by draw, with those variants. Each new
+>   line is computed by the standing rule (simplification design, section 7). There is no restore notice, no stop, no
+>   registration to lose, and **no qualification of any line because a restore happened** (owner).
+> - **The score after a restore may differ from the one that was lost,** and that is a truthful result, not a fault. It
+>   equals the lost one when the same variants compute the same forecasts from the same earlier draws in an environment
+>   that gives the same numbers. It differs if, for example, a variant had been installed after the snapshot (it is
+>   not there any more, so it does not count), or the environment computes differently. Nothing is put back to make the
+>   two agree.
+> - **A variant installed again later is a new installation,** by the owner's separate decision. Its lists start again;
+>   its history is refilled; it joins the prevailing score from its new `FORWARD_FROM` draw.
+> - **The claim's wording** is the fixed text of the simplification design, 7.4: conditional on fair draws and on
+>   nothing having been chosen in the light of a draw's result. The owner chooses a snapshot for its reliability,
+>   normally the latest good one; the software cannot check that, and does not pretend to.
+> - **The environment** is the snapshot's own, restored with it. It is not rebuilt, upgraded or pinned (section 6;
+>   entry 119). If it does not start, the restore reports NOT READY and the owner decides.
+> - No science input is ever taken from the set-aside tree or from the clone.
+640,641c655
+< **Order of ratification.** This section depends on the amendment. This note is to be ratified with the amendment or
+< after it, not before. If the amendment were not ratified, v0.3's section 9 would return.
+---
+> **Order of ratification.** This note is to be ratified with the simplification design or after it, not before.
+659c673,674
+<   `Run_Results_Updater.bat`, `Run_Weekly_Session.bat`, `Run_Development_Batch.bat`, `Run_Production_Snapshot.bat`.
+---
+>   `Run_Results_Updater.bat`, `Run_Research.bat`, `Run_Production_Snapshot.bat` (and, until phase 2 replaces them, the
+>   old system's launchers in the E: clone, which production never receives).
+686,687c701,702
+< | `src/sequencer_children.py` (slice 3) | a `snapshot` child kind; the marker's path check; "overdue snapshot first" and "end-of-job snapshot" in one place |
+< | `Weekly_Session_Orchestrator.py`, `Development_Batch_Orchestrator.py` (slice 3) | `main` wrapped: guard and overdue snapshot before, snapshot and exit status after; `SNAPSHOT_DUE` written before the first writing child; the environment's full digest compared with the verified marker before anything is written (section 6). The sequence itself is untouched |
+---
+> | `src/research_job.py`, `Run_Research.bat` (new in phase 2 of the simplification design) | the guard, the overdue snapshot, `SNAPSHOT_DUE` before the first write, the end-of-job snapshot and the full environment digest check are built into the one job; no sequencer |
+> | `Weekly_Session_Orchestrator.py`, `Development_Batch_Orchestrator.py`, `sequencer_children.py` (slice 3) | not installed (section 0A) |
+689c704
+< | `src/evaluation/ov1.py`, `src/evaluation/consolidated_report.py` | **none from this note** (v0.3's two edits are withdrawn; the OV-1 amendment lists its own changes) |
+---
+> | `src/evaluation/ov1.py`, `src/evaluation/consolidated_report.py` | **none from this note** (v0.3's two edits are withdrawn; the simplification design lists its own changes) |
+730,731c745,746
+< - **OV-1 after a restore:** nothing in this layer. The OV-1 amendment's own tests show a replay giving the same lines
+<   when the cohort is reproduced, and qualified lines when it is not.
+---
+> - **OV-1 after a restore:** nothing in this layer. The simplification design's own tests show the job continuing the
+>   snapshot's ledger with the snapshot's variants.
+739,741c754,757
+< - **Labels after a restore** (EX_248 section 3): an original release record brought back by `update` keeps its first-draw
+<   numbers; a replayed forecast for a draw at or above that number is CATCH-UP, never PROSPECTIVE, and below it is
+<   development; revisions are not pooled.
+---
+> - **After a restore** (EX_258; EX_259 section 7): the job continues with exactly the snapshot's variants; `check` and
+>   `update` propose and install nothing by themselves; a release installed after the snapshot is absent and stays
+>   absent; installed again later, its variants start new lists; no line is marked for the restore.
+> - **The add-only rule** in `update`: a changed, a removed and an added file under the two folders.
+782c798
+< place, with the clock left at the real later time. v0.3's section 9 quoted its five cases; under the OV-1 amendment it is kept only as the record of what the
+---
+> place, with the clock left at the real later time. v0.3's section 9 quoted its five cases; it is kept only as the record of what the
+803c819
+< | C | OV-1 after a restore: no special rule; a replay equals the lost score when the cohort, code and earlier draws are reproduced, and is labelled when not (entries 116, 119) | 9 |
+---
+> | C | A restore is exactly the snapshot; nothing is put back automatically; OV-1 has no restore rule and no restore penalty (entries 121, 122) | 0A, 8, 9 |
+844c860
+< - The run sheets for the first deployment and `declare-developed`.
+---
+> - The run sheet for the first deployment.
+852,854c868,869
+< - **Labels after a restore:** `update` brings back the original install and release records (section 4.3), so a
+<   variant keeps its original first-draw numbers, and a replayed forecast for a draw at or above that number is
+<   labelled CATCH-UP as it would have been. No date is consulted (the OV-1 amendment 2.3).
+---
+> - **This note still speaks of the old system in places** (section 0A's table). I judged an exact, small diff more
+>   useful to the reviewer now than a rewrite; the rewrite belongs with the phase 2 package.
+866c881
+< ## 18. Where each finding of EX_248, EX_250, EX_252 and EX_255 landed
+---
+> ## 18. Where each finding of EX_248, EX_250, EX_252, EX_255, EX_258 and EX_259 landed
+876c891
+< | Section 3, labels | A replayed forecast by a variant whose original release was put back | CATCH-UP at or above the release's original first draw, never PROSPECTIVE; revisions never pooled; a fixture | 4.3, 12 |
+---
+> | Section 3, labels | A replayed forecast after a restore | It records that the result was on file when it was computed; no class, no date (section 0A) | 8 |
+889c904,906
+< | EX_255 E01, as it touches this note | A release put back after a restore must not get a newer boundary | The original record returns with its original first-draw numbers; the release step writes the numbers; `check` lists a release production lacks | 4.1, 4.2, 4.3 |
+---
+> | EX_255 E01, as it touched this note | A release put back after a restore | **Withdrawn** with the practice itself (EX_258): nothing is put back | 0A, 4.3 |
+> | EX_258 section 2; EX_259 section 7 | v0.5 put later releases back before the catch-up: "a restore being mangled" | Removed everywhere: the restore is exactly the snapshot; the catch-up uses its variants; any later install is a separate owner decision; no qualification for a restore | 0, 0A, 4.1, 4.3, 8, 9, 12 |
+> | EX_259 sections 2 to 6, as they touch this note | Revisions, release records, weekly sessions and the old results are not part of the new system | `init` copies `source_data/` only; one deployment-log line per release; the add-only rule in `update`; the one job in the snapshot table | 0A, 4.2, 4.3, 7, 11 |

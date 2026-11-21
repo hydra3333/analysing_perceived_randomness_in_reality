@@ -4,10 +4,28 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 20 November 2026, 20:43 Australia/Adelaide (EX_257: RECHECK, F01 and F02; EX_258: the owner's course correction with its permanent record; entry 121). **Next: on the owner's go, the amendment v0.3 and the note v0.6 as EX_259. No code.**
+**Last updated:** 21 November 2026, 11:44 Australia/Adelaide (the owner's course correction, EX_259, entry 122; the research system simplification design DRAFT v0.1 and the deployment note DRAFT v0.6 sent as EX_260, entry 123). **Next: the reviewer's review (EX_261); the owner's ratification; then H-1 v8 and a NEW Claude chat for the two code phases, each on its own go. No code.**
 
 ## For the owner: NOW
 
+- **THE PROJECT IS BEING SIMPLIFIED FROM THE ROOT (21 November 2026; entries 122 and 123). A CHAT TAKING OVER READS, IN
+  THIS ORDER:** `exchange/EX_259_ChatGPT.md` (the owner's course correction; primary); decision log entries 121 to 123;
+  `exchange/DECISIONS/OWNER_DIRECTION_2026_11_20_OV1_RESTORE_METHOD_CONTINUITY.md`;
+  `exchange/CLAUDE_WEB_TOOLS/simplify/RESEARCH_SYSTEM_SIMPLIFICATION_DESIGN_DRAFT_v0_1.md` (the design, DRAFT v0.1);
+  `exchange/CLAUDE_WEB_TOOLS/mhupb/deploy/DEPLOYMENT_DESIGN_NOTE_DRAFT_v0_6.md` (DRAFT v0.6); `exchange/EX_260_Claude.md`.
+  `doc/Review_Checkpoint_Predictive_Randomness_EX256_EX258_2026-11-21.md` is background only, not authority.
+  **H-1 v7r1 is still the installed Claude handover but now describes a system about to be replaced: trust it for the
+  hard rules, the roles and the exchange protocol, not for the design.**
+- **The owner's directions:** every method is a family, even of one; no revisions (a changed method is a new variant);
+  nothing is ever retired or superseded automatically; a clean new baseline with the old evidence kept cold and
+  nothing deleted; installation is release, then one four-stage workflow; a saved league report for every draw with TOP
+  and WORST; a prevailing and an exploratory OV-1; minimum administrative software (bugs, not fraud); an exact-snapshot
+  restore with nothing put back; draw numbers, never dates, in any scientific gate; no environment pinned; W-23
+  unchanged. **Design work only is authorised.**
+- **State:** the design and the note are with the reviewer (EX_260; the reply will be EX_261). Then the owner ratifies,
+  with four small choices (design section 14). Then H-1 v8, and the two code phases (layout; contracts) in a NEW
+  Claude chat, each on its own go. **The ratified documents stay in force until then; the three MHUP-B slices stay
+  uninstalled and will not be installed as built.** The OV-1 amendment drafts and the note v0.1 to v0.5 are history.
 - **READ THIS RECORD IN FULL BEFORE ANY DESIGN OR CODE WORK ON OV-1, RELEASES OR RESTORE:**
   `exchange/DECISIONS/OWNER_DIRECTION_2026_11_20_OV1_RESTORE_METHOD_CONTINUITY.md` (the owner's direction of 20 November 2026 and the review cycle EX_252 to EX_257, kept by the reviewer; decision
   log entry 121 lists its six owner decisions). In short: **no method or earlier revision is ever retired
@@ -250,7 +268,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - Open findings: none. Latest reviews: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
-  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). EX_257 (RECHECK: F01, F02). EX_258 (the owner's course correction; permanent record in `exchange/DECISIONS/`). **Awaited: the owner's go for the amendment v0.3 and the note v0.6 (to be EX_259).** The joint working principle (entry 81) was agreed by chat
+  applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). EX_257 (RECHECK: F01, F02). EX_258 (the owner's course correction; permanent record in `exchange/DECISIONS/`). EX_259 (the owner's course correction; EX_259 was the reviewer's, so Claude's reply is EX_260). **Awaited: the review of the simplification design v0.1 and the deployment note v0.6 (EX_260; its reply EX_261).** The joint working principle (entry 81) was agreed by chat
   paste, with no EX number. (EX_177 B01 closed 14 November by the owner's scoped W-23 acceptance; never "W-23 PASS".)
 - EX_196 (Oz Lotto) and EX_199 (Powerball): PASS WITH EVIDENCE LIMITATIONS; nothing blocking. EX_199 C01 closed (entry 37).
 - Evidence limits: Windows results (T016, T023, T024) are runner reports, not reproduced by either AI; the live PC state
