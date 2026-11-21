@@ -4,12 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 17:28 Australia/Adelaide (entry 128: THE CHATGPT REVIEWER CHAT HAS ENDED after EX_265; EX_264 and EX_265 recorded). **Next: a new reviewer chat (its handover must be brought up to EX_265); then, on the owner's go, Claude's EX_266 (corrected specification and deployment design). No code.**
+**Last updated:** 21 November 2026, 17:45 Australia/Adelaide (entry 129: the reviewer's handover brought up to EX_265 as H-2 v3r10 by Claude on the owner's instruction, for a new reviewer chat). **Next: the new reviewer's takeover (Claude's questions, then the owner's acceptance); the owner's formal choice of A to D; then EX_266 on his go. No code.**
 
 ## For the owner: NOW
 
 - **THE REVIEWER CHAT ENDED ON 21 NOVEMBER 2026 AFTER EX_265 (entry 128).** A new ChatGPT reviewer chat is needed. Its
-  latest handover candidate, H-2 v3r9 in `doc/HANDOVER/`, is current only to EX_262. **Read after the list below:**
+  handover for a new chat is **H-2 v3r10** in `doc/HANDOVER/` (`ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md`
+  and its blurb; prepared by Claude on the owner's instruction, entry 129; the reviewer's own last edition, v3r9, ran
+  only to EX_262). **Read after the list below:**
   `exchange/EX_264_ChatGPT.md` (findings F01 to F05 on the specification v0.3 and the deployment design v0.9) and
   `exchange/EX_265_ChatGPT.md` (the owner's decisions: choice E decided as an optional complete read-only copy of PROD's
   research data into DEV or QA; smoke tests of new variants; manual rollback; no automatic full regression in PROD;

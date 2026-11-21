@@ -2246,3 +2246,22 @@ the job; B `FORWARD_FROM`; C the cold copy's scope; D withdrawal mechanics; E no
   mechanics); EX_265 says he agrees with the recommendations in principle but has not formally chosen.
 - **Requested of Claude by EX_265:** a corrected complete specification and deployment design as EX_266. **Not started;
   held for the owner's go** (MC-1: Fable, High), and it needs a reviewer to go to.
+
+## 129. 21 November 2026, 17:45 - the owner instructs Claude to bring the reviewer's handover up to date in a new edition; his decision on results left over after a copy from PROD
+
+- **The owner, in the Claude web chat at 17:42 (his words):** "go please fix chatgpt handover stuff now into new versions, I
+  trust you will do an 'independent frame of mind' job of - it we cannot progress without you updating those docs and
+  we have done this elsewhere. then we will commence handover with you asking a few question of the new chat as usual
+  and assessing their answers and advising me if they are in a position to start working effectively."
+  **This is a one-off, explicit exception to the rule that Claude never edits the reviewer's files.** Claude created NEW
+  files and edited none: `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md`
+  (SHA-256 `29b853ef246cfdb7fba212c06bf70b07bd7d8278ad297759ee010c32b685e44b`) and its `_introductory_blurb.md`. Only the header and
+  section 0 are new (through EX_265, each statement citing its committed source; three subsections carried verbatim
+  from v3r9 and marked so; a list of where Claude's own drafts are weakest). Sections 1 to 19 were copied byte for
+  byte from v3r9 by a script and checked: 73,606 bytes, SHA-256 `ddb656f3...1af1c313`; sections 2 and 3 are 7,676 bytes
+  with the protected SHA-256 `70e50dc3...bc72db`. Both files say plainly that Claude, the reviewed party, prepared them
+  and that the new reviewer must verify against the sources. H-2 v3r4 (RAT-36) remains the operative ratified handover.
+- **Decision:** after a copy of PROD's research data into DEV or QA, results for variants the destination does not
+  have installed, or has in a different form: "I'd be happy with warn about them, ignore them and continue."
+- **Next:** the owner starts a new ChatGPT reviewer chat with the blurb; Claude supplies takeover questions and assesses
+  the answers (HO-2, as before). The owner will then formally choose A to D. EX_266 is not started.
