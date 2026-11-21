@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 23:50 Australia/Adelaide (entry 141: the owner's conditional preference on R6-F01). **Next: the reviewer's view on it; the owner's confirmation; then EX_268 on his go (Fable, High). No code.**
+**Last updated:** 22 November 2026, 00:12 Australia/Adelaide (entry 142: the reviewer supports the owner's R6-F01 preference; OV-1 timing point re-closed). **Next: the owner's explicit confirmation; then EX_268 on his go (Fable, High). No code.**
 
 ## For the owner: NOW
 
+- **R6-F01: THE REVIEWER SUPPORTS THE OWNER'S PREFERENCE (entry 142; handback
+  `exchange/ChatGPT_to_Claude_R6_F01_Slipstream_Correction_OV1_Reclosed_2026_11_22.md`, main `dd39845`), with conditions
+  for EX_268 and a verified, clearly named correction archive ZIP made before anything is shortened. **The OV-1
+  timing point is re-closed: do not reopen it.** Awaited: the owner's explicit confirmation of the defect-only
+  exception to entry 127 item 3.
 - **R6-F01, THE OWNER'S PREFERENCE (entry 141; conditional on the reviewer's view and his confirmation):** defective
   shared code (system-wide forecasting code, `_shared` helpers, a family's core file) is corrected in place by its own
   explicit command; every variant it can affect is held until the walk-forward rerun over its whole history; old lines

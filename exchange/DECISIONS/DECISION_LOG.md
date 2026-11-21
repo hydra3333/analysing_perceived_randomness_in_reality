@@ -2604,3 +2604,34 @@ section 17.2 (unpack it into a new folder, never over the clone).
   variant it can affect is held until the owner runs the walk-forward rerun over its whole history; old lines are set
   aside; the names stay. Unchanged: a variant's own files never change (a corrected method is a new variant); a
   changed idea in shared code is a new versioned helper with successor variants; the three DEV conveniences stay.
+
+## 142. 22 November 2026, 00:12 - the reviewer supports the owner's R6-F01 preference (handback at main `dd39845`); the OV-1 timing point re-closed; a correction archive ZIP; the owner's explicit confirmation is awaited
+
+- **Source.** `exchange/ChatGPT_to_Claude_R6_F01_Slipstream_Correction_OV1_Reclosed_2026_11_22.md` (main `dd39845`; SHA-256
+  `78547cd90144db934219e986378b05717944b98201f94a0ffeba104148d90c8c`); not an EX, not a ratified design. Relayed by the
+  owner at 00:11.
+- **The reviewer's position (its views):** SUPPORT for "correct defective shared code in place, then recompute by a
+  historical walk-forward rerun", as a narrow exception for genuine defects in shared forecast-producing
+  infrastructure, `_shared` helpers and a family's shared core. Its conditions for EX_268: the affected variants are
+  every one whose forecast CAN depend on the corrected code (when unsure, include it); held means truly not current;
+  the whole history of the AFFECTED variants is recomputed and every dependent game-level result is rebuilt, while
+  unaffected variants' forecasts are kept; names stay and fingerprints honestly change, and corrected forecast-class
+  infrastructure must make old lists incompatible by a persistent identity check even if a sample happens to match;
+  it is never a route for a changed idea; its own science-specific warning and confirmation; no correction mark in
+  the status file, which a correction never resets; nothing half-corrected is runnable.
+- **OV-1, recorded so that it is not reopened:** the reviewer had added a condition (C2) that a recomputed prevailing
+  OV-1 could not carry the conditional 2.5% statement merely because it was computed after the draws. The owner
+  objected that this was settled; the reviewer withdrew C2. The established position stands: the time of execution
+  is not by itself a condition of the bound; the claim stays conditional as specification 10.6 words it; one engine
+  in every tree; truthful provenance. No new rule, mode or start ceremony.
+- **The owner's suggestion, relayed in the handback:** superseded results are saved in a very clearly named ZIP before
+  anything is deleted or recomputed. The reviewer supports one verified ZIP with a small readable manifest per
+  correction, made before any active record is shortened; if it cannot be made or verified, nothing is shortened. It
+  is not a whole-tree backup. The reviewer corrects Claude's phrase "past draws lose their made-before-the-result
+  character": the original forecasts keep that property, in the archive; the replacements are the retrospective ones.
+- **The owner, 00:11 (his words), on the process:** "I am forming a view that we may be starting to enter a phase which
+  may be useful but delaying actual design and development, correcting things that maybe should have been decided
+  better in the past. ... We all have spent most of our time (literally) on this project examining non core experiment
+  matters."
+- **Awaited from the owner:** his explicit confirmation of the defect-only exception to entry 127 item 3 (entry 141
+  recorded a conditional preference; Claude and the reviewer now both support it). Then EX_268 on his go.
