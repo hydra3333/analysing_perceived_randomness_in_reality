@@ -2288,3 +2288,12 @@ and save it with the date. choice D yes to your recommendation."
 - With E decided in EX_265 (entry 128) and F in entry 127, **no owner choice remains open** on the drafts. All of it is
   still design: the specification and the deployment design are to be corrected (EX_266), reviewed and ratified.
 - The owner is starting the new ChatGPT reviewer chat with H-2 v3r10's blurb and Claude's takeover questions.
+
+## 131. 21 November 2026, 17:57 - choice C revised by the owner: a full ZIP of the project folder on E:, made by him
+
+The owner, in the Claude web chat at 17:57, after the caveat of entry 130 (his words): "I will instead do a full ZIP of
+the project folder tree on E: instead and save that instead." **This replaces entry 130's C.** The owner makes the ZIP
+himself, by hand, of the whole project clone folder (ignored run folders and `.git` included), when Claude tells him
+it is time: before phase 1 moves any source file in DEV. No cold-copy script is designed or built. That ZIP is then
+the preserved copy of the old system and of the old forecast records, and the rollback of the specification's
+section 17.2 (unpack it into a new folder, never over the clone).

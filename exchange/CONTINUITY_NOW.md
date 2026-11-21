@@ -9,9 +9,8 @@ durable EX messages are authoritative.
 ## For the owner: NOW
 
 - **ALL OWNER CHOICES ON THE DRAFTS ARE MADE (entry 130; 21 November 2026, 17:51):** A the research job runs the updater
-  itself; B `FORWARD_FROM` after a successful results check; C the owner downloads a GitHub ZIP himself when Claude
-  says it is time (before phase 1; no cold-copy script; the ignored old run folders are not in such a ZIP, see the
-  caveat in entry 130); D withdrawal by one line in the variant's file; E a complete read-only copy from PROD into DEV
+  itself; B `FORWARD_FROM` after a successful results check; C the owner himself makes a full ZIP of the project folder on E: (ignored run
+  folders and `.git` included) when Claude says it is time, before phase 1; no cold-copy script (entry 131); D withdrawal by one line in the variant's file; E a complete read-only copy from PROD into DEV
   or QA (EX_265); F a marker for the infrastructure (entry 127). **EX_266 must build these in, with EX_264's five
   findings and EX_265's refinements. Claude advised writing EX_266 in a NEW Claude chat.**
 - **THE REVIEWER CHAT ENDED ON 21 NOVEMBER 2026 AFTER EX_265 (entry 128).** A new ChatGPT reviewer chat is needed. Its
