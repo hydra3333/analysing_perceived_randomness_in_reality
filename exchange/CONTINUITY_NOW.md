@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 21 November 2026, 17:51 Australia/Adelaide (entry 130: the owner chose A, B, C and D; no owner choice remains open). **Next: the new reviewer's takeover answers, assessed by Claude; a short Claude takeover note; then EX_266 (corrected specification and deployment design) in a NEW Claude chat on the owner's go. No code.**
+**Last updated:** 21 November 2026, 18:02 Australia/Adelaide (entries 131 and 132: choice C revised to the owner's own full ZIP of the E: project folder; a NEW ChatGPT reviewer chat has answered the HO-2 takeover questions correctly and Claude advised it is ready; the owner's acceptance is awaited). **Next: the owner accepts the reviewer's takeover; a short Claude takeover note; then EX_266 in a NEW Claude chat on the owner's go. No code.**
 
 ## For the owner: NOW
 

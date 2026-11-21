@@ -2297,3 +2297,20 @@ himself, by hand, of the whole project clone folder (ignored run folders and `.g
 it is time: before phase 1 moves any source file in DEV. No cold-copy script is designed or built. That ZIP is then
 the preserved copy of the old system and of the old forecast records, and the rollback of the specification's
 section 17.2 (unpack it into a new folder, never over the clone).
+
+## 132. 21 November 2026, 18:02 - the new ChatGPT reviewer chat's HO-2 takeover answers assessed by Claude; advice to the owner: ready; the owner's acceptance is awaited
+
+- The owner started a new ChatGPT reviewer chat with the H-2 v3r10 blurb and relayed Claude's eight takeover
+  questions; its answers came back at 18:01 (relayed in the Claude chat; not a committed file).
+- **Claude's assessment: all eight answers are correct against the repository, and the new chat is in a position to
+  work.** Points checked by Claude with a tool, not taken on trust: its stated main HEAD (`45f9951`) was the HEAD; its
+  v3r10 SHA-256 is the committed file's; its claim that sections 1 to 19 of v3r10 equal the ratified v3r4's is true
+  (73,606 bytes identical; Claude had not made that comparison itself and had said so in the handover).
+- **Signs of independence:** it read past the handover to the decision log and reported, unprompted, that the
+  handover's section 0 is out of date on choices A to D (decided in entries 130 and 131, after the handover was
+  written); it states it will not issue an EX without the owner's approval and will not start reviewing EX_266
+  before the owner accepts the takeover.
+- **One reservation:** asked to name something in Claude's drafts it would challenge, it chose R5-F01, which the
+  previous reviewer had already found. That shows accurate reading, not yet an independent finding. EX_266's review
+  will show the latter.
+- **Not a decision:** accepting the takeover and authorising normal review work is the owner's.
