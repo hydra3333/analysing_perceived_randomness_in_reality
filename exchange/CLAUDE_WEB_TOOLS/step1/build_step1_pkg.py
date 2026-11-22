@@ -31,7 +31,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent                       # exchange/CLAUDE_WEB_TOOLS/step1
 VERIFIER_TEMPLATE = HERE.parent / 'wf1' / 'verifier_template.py'   # the reviewed read-only verifier
 
-PACKAGE_NAME = 'STEP1_Layout_Install_v1'
+PACKAGE_NAME = 'STEP1_Layout_Install_v2'
 PACKAGE_TITLE = 'build step 1 package (the folder layout; specification 17.3 phase 1)'
 VERIFIER_NAME = 'VERIFY_STEP1_INSTALL.py'
 SHEET_NAME = 'INSTALL_AND_RUN_SHEET.md'
@@ -93,6 +93,10 @@ def sheet_text(base: str, new_count: int, modified_count: int, deleted_count: in
 
 **A STOP is a STOP.** If any step prints `STOP`, `FAIL`, an error, or anything other than what is expected: do not
 go on, do not retry, do not reset or undo anything. Send Claude the whole output.
+**The one exception** is the test suite's own report of the failures that exist today: the word `FAILED` on a
+module's line in parts 1 and 3, and the lines `FAILS IN BOTH RUNS` in part 3, are expected for as long as part 3's
+comparison ends with its `RESULT: every test that ran was identified; no module and no test changed ...` line.
+A failure that is new, a `CHANGED` line, or any STOP from the verifier or the equivalence check still stops.
 
 Nothing here contacts a lottery website, changes the PC's date or time, or ends a process. The suite and the
 equivalence check read the results masters and the old records; they write only under `{ev}`
@@ -136,11 +140,13 @@ Expected: `PRE PASS`; `{new_count + modified_count} File(s) copied`; the `git rm
 {py} -B "{p}\\tools\\compare_suite_reports.py" "{ev}\\suite_before" "{ev}\\suite_after"
 ```
 
-Expected, from the comparison: `tests before: N; after: N; same result: N` with one number three times; perhaps
-some lines `FAILS IN BOTH RUNS` (the known failures; the words `FAILURE LINES DIFFER` on `test_gitignore_lines` are
+Expected, from the comparison: two lines `before: 45 modules; unittest ran N tests; identified here: N` and
+`after: ...` with the same N four times; `tests in both runs: N; with the same result: N`; some lines
+`FAILS IN BOTH RUNS` (the failures that exist today; the words `FAILURE LINES DIFFER` on `test_gitignore_lines` are
 expected, because that test prints a set in a different order each run); **no line beginning `CHANGED`,
-`DISAPPEARED` or `NEW`;** and
-the last line `RESULT: no test changed its result, disappeared or appeared`. Any other result is a STOP.
+`DISAPPEARED`, `NEW`, `MODULE`, `NOT ALL TESTS IDENTIFIED` or `NO SUMMARY`;** and the last line
+`RESULT: every test that ran was identified; no module and no test changed its result, disappeared or appeared`.
+Any other result is a STOP.
 
 ## Part 4. The equivalence check (reads only; about 30 to 60 minutes; leave the window alone)
 
@@ -149,12 +155,17 @@ the last line `RESULT: no test changed its result, disappeared or appeared`. Any
 ```
 
 It computes every old development forecast again with the moved code, in memory, and compares content digests.
-Expected: for each game a line `old development forecasts found: ...` (on this PC the count "in old run folders"
-should be well above zero); one line for each variant, `n of n equal`; and the last line
-**`RESULT: PASS - every old development forecast found was computed again ... the same content digest.`**
-A line beginning `DIFFERENT` or `FAILED`, or `RESULT: STOP`, is a STOP: change nothing and send Claude the output.
+The tracked batch records list every forecast the old system published; the check must find an old record for
+each of them (in the rank ledgers or in your old run folders) and reproduce it.
+Expected: for each game a line `coverage: the batch records list N published forecasts; an old digest was found
+for N of them; MISSING: 0; ...`; one line for each variant, `n of n equal`; and the last line
+**`RESULT: PASS - COMPLETE - both games; every forecast the batch records list was found, computed again ... the
+same content digest.`**
+Anything else is a STOP: a line beginning `DIFFERENT` or `FAILED`, `RESULT: STOP`, a `MISSING` count above 0, or
+`RESULT: PARTIAL` (it names what was not covered). Change nothing and send Claude the output.
 (Optional, to save time: four CMD windows, each with the same command and one of `--part 1/4`, `--part 2/4`,
-`--part 3/4`, `--part 4/4`. Each then ends `RESULT: PARTIAL`; all four must end so, with no `DIFFERENT` or `FAILED`.)
+`--part 3/4`, `--part 4/4`. Each then ends `RESULT: PARTIAL` giving `--part was used` as its only reason; all four
+must end so, each with `MISSING: 0` for both games and no `DIFFERENT` or `FAILED`.)
 
 ## Part 5. Stage, commit, check, and only then push
 

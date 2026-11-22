@@ -1,0 +1,24 @@
+{
+  "family": "E_004",
+  "variant": "POLY_LS_W52_D2_V1",
+  "title": "E_4 - Occurrence-Curve Gradient Forecast",
+  "description": "Variant POLY_LS_W52_D2_V1: its fixed settings are the POLY_LS_W52_D2_V1 line of E_004/variants.py; the calculation is E_004/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 52,
+    "OZLOTTO": 52
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_004/__init__.py",
+    "E_004/core_v1.py",
+    "E_004/variants.py",
+    "_shared/polynomial_fits_v1.py"
+  ]
+}

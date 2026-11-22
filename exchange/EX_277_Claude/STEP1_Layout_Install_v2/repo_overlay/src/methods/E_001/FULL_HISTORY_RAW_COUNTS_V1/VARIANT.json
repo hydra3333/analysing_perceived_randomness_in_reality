@@ -1,0 +1,23 @@
+{
+  "family": "E_001",
+  "variant": "FULL_HISTORY_RAW_COUNTS_V1",
+  "title": "E_1 - Historical Appearance Frequency",
+  "description": "The wrapper that calls E_1's own counting function (E_001/multigame_e1.py) unchanged and checks the record against it",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 1,
+    "OZLOTTO": 1
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_001/__init__.py",
+    "E_001/e1_historical_appearance_frequency.py",
+    "E_001/multigame_e1.py"
+  ]
+}

@@ -3184,3 +3184,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   his PC also covers the never-scored forecasts in the old run folders); stage, commit, COMMITTED; push.
 - **Not authorised by this entry:** anything on the owner's PC. Next: the reviewer's reply, EX_276. Next numbers:
   EX_276 (the reviewer's), entry 161, RAT-43.
+
+## 161. 22 November 2026, 20:48 - EX_276 (RECHECK: four narrow corrections, the layout accepted) read; all four accepted and corrected; EX_277 sent with package v2 at the owner's request; no owner decision
+
+- **EX_276** (`exchange/EX_276_ChatGPT.md`, main `c0e3104`, SHA-256 `c45b3bda77ace3f9269870ea0ab96abb96d711731e5ccbef6147600edd5599c3`), relayed by the
+  owner at 20:40. Disposition: RECHECK, narrowly. The 15 moves, the 40 variant folders, the per-variant dispatch, the
+  helper relocation and the test updates are accepted, and the reviewer agrees with all five of EX_275's questions.
+  Findings: **C01** the equivalence check could report a complete PASS without the never-scored forecasts, or for
+  one game; **C02** the suite comparison identified 563 of the 571 tests; **C03** the two equivalence logs named in
+  EX_275 were not on GitHub; **C04** the sheet said any FAIL is a STOP while expecting today's known test failures.
+  Also: the reader-contract module has seven failed assertions today, not "two tests".
+- **The owner's words (20:40):** "Please read `exchange/EX_276_ChatGPT.md` at commit `c0e3104` and address findings C01-C04.
+  Keep the corrections narrow and follow the reviewer's KISS guidance. Return the corrected package for focused
+  recheck."
+- **Done, all four accepted (no file of `src/` or `tests/` differs from EX_275):**
+  - C01: the check now takes the list of every published run from the tracked batch segments (17,280 Powerball,
+    8,760 Oz Lotto) and requires an old digest for each; it prints listed, found and MISSING per game;
+    `RESULT: PASS - COMPLETE` only for both games with nothing missing; otherwise PARTIAL with its reasons. Shown in
+    a probe (complete; one game; one run folder removed; a missing receipt). The cloud's scored-only result is
+    now correctly called PARTIAL: the complete result can only come from the owner's PC.
+  - C02: the comparison identifies all 571 tests, compares each module's test count and verdict, and fails closed
+    when it cannot identify every test. On the existing reports: nothing changed. Today's failures, accurately:
+    three tests, eight failed assertions (`test_gitignore_lines` one; the reader-contract module seven).
+  - C03: Claude's error: `.gitignore` has `*.log` and `git add` skipped the two files silently. The original bytes
+    are committed as `.txt` with the hashes EX_275 gave. The EX assembly tool now hashes from Git's own bytes.
+  - C04: one paragraph in the sheet; parts 3 and 4 quote the corrected tools; no step added.
+- **Sent:** `exchange/EX_277_Claude.zip` (SHA-256 `e24782fac29e17230bfc5ee92f81eb60ab24b43c44bc4c817f1552715eb154c0`), extracted in
+  `exchange/EX_277_Claude/`; the package `STEP1_Layout_Install_v2.zip` (SHA-256
+  `f8fa81054e00f0b3ca908b8f89130f024b2ded1aec2d7973762ee0081e405051`; base `c0e3104`); package note v0.3. v2 differs from v1 only
+  in two tools, the sheet, the package's name and the verifier's base commit; rehearsed again in an LF and a CRLF
+  clone.
+- **Not authorised by this entry:** anything on the owner's PC. Next: the reviewer's focused recheck, EX_278. Next
+  numbers: EX_278 (the reviewer's), entry 162, RAT-43.

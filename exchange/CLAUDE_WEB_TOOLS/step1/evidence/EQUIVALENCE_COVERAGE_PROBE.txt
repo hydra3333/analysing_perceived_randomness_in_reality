@@ -1,0 +1,33 @@
+Coverage probe of check_layout_equivalence.py (EX_276 STEP1-C01). The probe tree is the moved tree with its tracked batch
+records cut down to one variant (E_2 RECUR_MEAN_ALL_V1) in each game, and the never-scored forecasts of that variant
+published into old-style run folders by the UNMOVED code at the batch's data version (141 Powerball, 103 Oz Lotto).
+Shown: the coverage, total and RESULT lines of each run, and its exit code.
+
+== 1. every listed forecast has an old record: the complete result
+[POWERBALL] coverage: the batch records list 432 published forecasts; an old digest was found for 432 of them; MISSING: 0; found outside the batch records: 0
+[OZLOTTO] coverage: the batch records list 219 published forecasts; an old digest was found for 219 of them; MISSING: 0; found outside the batch records: 0
+[POWERBALL] checked 432 of 432 old forecasts in 1 variants: 432 equal, 0 different, 0 could not be computed; listed by the batch records 432, MISSING here 0
+[OZLOTTO] checked 219 of 219 old forecasts in 1 variants: 219 equal, 0 different, 0 could not be computed; listed by the batch records 219, MISSING here 0
+RESULT: PASS - COMPLETE - both games; every forecast the batch records list was found, computed again with this tree's code, and has the same content digest.
+exit code 0
+
+== 2. the same tree, one game only (--game POWERBALL): never the complete result
+[POWERBALL] coverage: the batch records list 432 published forecasts; an old digest was found for 432 of them; MISSING: 0; found outside the batch records: 0
+[POWERBALL] checked 432 of 432 old forecasts in 1 variants: 432 equal, 0 different, 0 could not be computed; listed by the batch records 432, MISSING here 0
+RESULT: PARTIAL - nothing that was checked differed, but this run is NOT the complete equivalence evidence, because: only POWERBALL was checked (--game).
+exit code 3
+
+== 3. one Oz Lotto run folder removed: a listed forecast is MISSING
+[POWERBALL] coverage: the batch records list 432 published forecasts; an old digest was found for 432 of them; MISSING: 0; found outside the batch records: 0
+[OZLOTTO] coverage: the batch records list 219 published forecasts; an old digest was found for 218 of them; MISSING: 1; found outside the batch records: 0
+[OZLOTTO] missing, for example: E_2 RECUR_MEAN_ALL_V1 revision 1 target draw 1574 (listed in segment results/real/development/wf_batches/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/segment_20261031T080033143489Z_a0e25c9c.json; no rank-ledger line and no run folder for it here)
+[POWERBALL] checked 432 of 432 old forecasts in 1 variants: 432 equal, 0 different, 0 could not be computed; listed by the batch records 432, MISSING here 0
+[OZLOTTO] checked 218 of 218 old forecasts in 1 variants: 218 equal, 0 different, 0 could not be computed; listed by the batch records 219, MISSING here 1
+RESULT: PARTIAL - nothing that was checked differed, but this run is NOT the complete equivalence evidence, because: 1 OZLOTTO forecasts that the batch records list have no old record in this copy (their run folders are not here).
+exit code 3
+
+== 4. that run folder back, but without its receipt: refused
+[POWERBALL] coverage: the batch records list 432 published forecasts; an old digest was found for 432 of them; MISSING: 0; found outside the batch records: 0
+REFUSED: results/real/development/contract_runs/OZLOTTO/E_2/RECUR_MEAN_ALL_V1/mg-05172f499a1145d18a88be7301a508e7/forecast.json has no forecast_receipt.json beside it, so the data version it was computed from is not known. Stop and send this message to the Claude chat.
+RESULT: STOP - the equivalence check did not run to its end.
+exit code 2

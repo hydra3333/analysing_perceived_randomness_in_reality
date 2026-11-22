@@ -21,6 +21,14 @@ Where the old digests come from (both are read-only)
        These also hold the forecasts that were never scored (for example "not enough history" records).
     A forecast found in both places is checked once.
 
+How it knows that nothing is missing
+    The tracked batch records also list every run of the old development walk-forward:
+       results/real/development/wf_batches/<GAME>/<batch>/segment_*.json      one entry per run, with its outcome
+    Every published run in them is an old forecast that must be found and checked. The check counts, for each
+    game, how many of those it found an old digest for and how many it did not. Only when both games were checked
+    in full and none is missing does it say PASS - COMPLETE. A copy without the old run folders (a fresh clone, the
+    cloud workspace) can therefore never report the complete result: it reports PARTIAL and says what is missing.
+
 Which of the project's own modules it uses (all from the tree being checked, <tree>/src/methods)
     Method_Contract_Runner          ADAPTERS: the table of methods the project's own runner dispatches through
     _common.contract_registry       InstalledRegistry: the installed method declarations, looked up by digest
@@ -38,7 +46,8 @@ What uses it
 Usage
     python -B check_layout_equivalence.py [--tree <project root>] [--game POWERBALL|OZLOTTO|BOTH]
                                           [--part K/N] [--sample N]
-    Exit code 0 only when every old forecast was found, computed again and equal.
+    Exit code 0 only for the complete result: both games, every forecast the batch records list found, computed
+    again and equal.
 """
 from __future__ import annotations
 
@@ -65,6 +74,14 @@ RANK_LEDGER_NAME = 'rank_ledger.jsonl'         # one line per scored forecast, w
 BATCH_PLAN_NAME = 'plan.json'                  # the batch's variants and the data version it pinned
 FORECAST_RECORD_NAME = 'forecast.json'         # a run folder's frozen forecast record
 FORECAST_RECEIPT_NAME = 'forecast_receipt.json'  # its receipt: names the data version the run pinned
+BATCH_SEGMENT_PATTERN = 'segment_*.json'       # a batch's run-by-run record: every run with its outcome
+
+# In a batch segment, a run that published a forecast record has this outcome and this start of its reason.
+PUBLISHED_OUTCOME = 'SUCCESS'
+PUBLISHED_REASON_PREFIX = 'PUBLISHED'
+
+# How many missing forecasts are named one by one before the rest are only counted.
+MISSING_EXAMPLES_SHOWN = 5
 
 # The project's rule: an entry at this path blocks every launch, for both games. This check honours it.
 ORPHAN_MARKER = Path('transitory_data') / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
@@ -78,10 +95,11 @@ FILLER_RUN_ID = 'mg-' + '0' * 32
 # How often a progress line is printed (in forecasts checked), so a long run is seen to be alive.
 PROGRESS_EVERY = 500
 
-EXIT_ALL_EQUAL = 0          # every old forecast found, computed again and equal
+EXIT_ALL_EQUAL = 0          # complete: both games, every forecast the batch records list found, computed again, equal
 EXIT_DIFFERENCE = 1         # at least one forecast differed or could not be computed: STOP
 EXIT_REFUSED = 2            # the check could not start (wrong folder, missing records, orphan marker)
-EXIT_PARTIAL = 3            # --sample or --part was used: nothing differed, but this run is not the evidence
+EXIT_PARTIAL = 3            # nothing differed, but the run was not complete: one game, --sample, --part, or
+                            # forecasts the batch records list that have no old record in this copy
 
 
 class CheckRefused(Exception):
@@ -150,6 +168,41 @@ def expected_from_tracked_records(tree_root: Path, game_id: str) -> dict:
                             'found_in': f'rank ledger {ledger_path}'}
                     add_expected(expected, item)
     return expected
+
+
+def batch_inventory(tree_root: Path, game_id: str) -> dict:
+    """List every forecast the old development batches of one game published, from the tracked batch records.
+
+    tree_root: the project root being checked.
+    game_id: 'POWERBALL' or 'OZLOTTO'.
+    Returns {forecast key: where it is listed}, the key as in expected_from_tracked_records, for example
+        {('POWERBALL', 'E_2', 'RECUR_MEAN_ALL_V1', '1', 1145, 1, 'ce0a...'): 'segment results/real/...json', ...}.
+    This is the list that the old records found must cover: a published run with no old digest in this copy is
+    a missing forecast. Refuses if a game has no batch record, or a segment names a variant its plan does not hold.
+    """
+    inventory = {}
+    for plan_path in sorted((tree_root / BATCH_PLANS_FOLDER / game_id).glob(f'*/{BATCH_PLAN_NAME}')):
+        plan = read_json_file(plan_path)
+        if plan.get('run_mode') != DEVELOPMENT_RUN_MODE:
+            continue
+        revisions = {(m['method_id'], m['variant_id']): m['method_revision'] for m in plan['cohort']}
+        for segment_path in sorted(plan_path.parent.glob(BATCH_SEGMENT_PATTERN)):
+            for run in read_json_file(segment_path)['runs']:
+                if run['outcome'] != PUBLISHED_OUTCOME or not run['reason_prefix'].startswith(PUBLISHED_REASON_PREFIX):
+                    continue
+                revision = revisions.get((run['method_id'], run['variant_id']))
+                if revision is None:
+                    raise CheckRefused(f'{segment_path} lists a run of {run["method_id"]} {run["variant_id"]}, which '
+                                       f'its batch plan {plan_path} does not hold. The old records disagree with '
+                                       'each other: stop and send this message to the Claude chat.')
+                key = (game_id, run['method_id'], run['variant_id'], revision, run['target'],
+                       plan['ledger_version'], plan['master_sha256'])
+                inventory[key] = f'segment {segment_path.relative_to(tree_root).as_posix()}'
+    if not inventory:
+        raise CheckRefused(f'No batch record of {game_id} was found under {tree_root / BATCH_PLANS_FOLDER}. Git tracks '
+                           'these records, so every copy of the project has them: check that --tree names the '
+                           'project root.')
+    return inventory
 
 
 def expected_from_old_run_folders(tree_root: Path, game_id: str) -> dict:
@@ -297,8 +350,10 @@ def check_game(code: ProjectCode, game_id: str, part: tuple, sample_per_variant:
     sample_per_variant: None for the real check; a number checks only that many forecasts of each variant
         (a quick trial, never the evidence).
     Returns the counts, for example
-        {'game_id': 'POWERBALL', 'expected': 11442, 'from_run_folders': 0, 'checked': 11442, 'equal': 11442,
-         'different': 0, 'failed': 0, 'variants': 40}.
+        {'game_id': 'POWERBALL', 'listed': 17280, 'missing': 5838, 'expected': 11442, 'from_run_folders': 0,
+         'checked': 11442, 'equal': 11442, 'different': 0, 'failed': 0, 'variants': 40},
+    where 'listed' is how many forecasts the batch records say were published, 'missing' is how many of those
+    have no old digest in this copy, and 'expected' is how many old digests were found (in or outside the list).
     """
     tracked = expected_from_tracked_records(code.tree_root, game_id)
     in_run_folders = expected_from_old_run_folders(code.tree_root, game_id)
@@ -309,13 +364,16 @@ def check_game(code: ProjectCode, game_id: str, part: tuple, sample_per_variant:
         raise CheckRefused(f'No old development forecast of {game_id} was found under {code.tree_root / "results"}. '
                            f'The tracked records ({SCORE_RECORDS_FOLDER.as_posix()}) should be in every copy of '
                            'the project: check that --tree names the project root.')
+    listed = batch_inventory(code.tree_root, game_id)
+    missing = sorted(set(listed) - set(expected))
     by_variant = {}
     for key, item in expected.items():
         by_variant.setdefault(key[1:4], []).append(item)
     variant_keys = sorted(by_variant)
     part_number, part_count = part
     chosen = [v for position, v in enumerate(variant_keys) if position % part_count == part_number - 1]
-    counts = {'game_id': game_id, 'expected': len(expected), 'from_run_folders': len(in_run_folders),
+    counts = {'game_id': game_id, 'listed': len(listed), 'missing': len(missing),
+              'expected': len(expected), 'from_run_folders': len(in_run_folders),
               'only_in_run_folders': len(set(in_run_folders) - set(tracked)),
               'checked': 0, 'equal': 0, 'different': 0, 'failed': 0, 'variants': len(chosen)}
     print(f'[{game_id}] old development forecasts found: {len(expected)} '
@@ -323,6 +381,12 @@ def check_game(code: ProjectCode, game_id: str, part: tuple, sample_per_variant:
           f'{counts["only_in_run_folders"]} are in no rank ledger); variants: {len(variant_keys)}'
           + (f'; this run checks part {part_number} of {part_count}: {len(chosen)} variants' if part_count > 1 else ''),
           flush=True)
+    print(f'[{game_id}] coverage: the batch records list {len(listed)} published forecasts; an old digest was found '
+          f'for {len(listed) - len(missing)} of them; MISSING: {len(missing)}; found outside the batch records: '
+          f'{len(set(expected) - set(listed))}', flush=True)
+    for key in missing[:MISSING_EXAMPLES_SHOWN]:
+        print(f'[{game_id}] missing, for example: {key[1]} {key[2]} revision {key[3]} target draw {key[4]} '
+              f'(listed in {listed[key]}; no rank-ledger line and no run folder for it here)', flush=True)
     started = time.monotonic()
     for variant_key in chosen:
         items = sorted(by_variant[variant_key], key=lambda i: (i['target_draw_number'], i['ledger_version']))
@@ -384,7 +448,13 @@ def main(argv: list | None = None) -> int:
     arguments = parser.parse_args(argv)
     tree_root = arguments.tree.resolve()
     games = GAMES if arguments.game == 'BOTH' else (arguments.game,)
-    partial = arguments.sample is not None or arguments.part != (1, 1)
+    partial_reasons = []
+    if arguments.game != 'BOTH':
+        partial_reasons.append(f'only {arguments.game} was checked (--game)')
+    if arguments.sample is not None:
+        partial_reasons.append('--sample was used')
+    if arguments.part != (1, 1):
+        partial_reasons.append('--part was used (every part must be run)')
     print(f'Equivalence check of build step 1 (specification 17.3). Tree: {tree_root}. Games: {", ".join(games)}. '
           'It computes every old development forecast again, in memory, and compares content digests. '
           'It writes nothing.', flush=True)
@@ -402,18 +472,22 @@ def main(argv: list | None = None) -> int:
     for counts in all_counts:
         print(f'[{counts["game_id"]}] checked {counts["checked"]} of {counts["expected"]} old forecasts in '
               f'{counts["variants"]} variants: {counts["equal"]} equal, {counts["different"]} different, '
-              f'{counts["failed"]} could not be computed', flush=True)
+              f'{counts["failed"]} could not be computed; listed by the batch records {counts["listed"]}, '
+              f'MISSING here {counts["missing"]}', flush=True)
+        if counts['missing']:
+            partial_reasons.append(f'{counts["missing"]} {counts["game_id"]} forecasts that the batch records list '
+                                   'have no old record in this copy (their run folders are not here)')
     wrong = sum(c['different'] + c['failed'] for c in all_counts)
     if wrong:
         print(f'RESULT: STOP - {wrong} forecast(s) differ or could not be computed. Build step 1 is not accepted. '
               'Change nothing and retry nothing: send this whole output to the Claude chat.', flush=True)
         return EXIT_DIFFERENCE
-    if partial:
-        print('RESULT: PARTIAL - nothing differed, but --sample or --part was used, so this run alone is not the '
-              'equivalence evidence. Every part must be run, with no --sample.', flush=True)
+    if partial_reasons:
+        print('RESULT: PARTIAL - nothing that was checked differed, but this run is NOT the complete equivalence '
+              'evidence, because: ' + '; '.join(partial_reasons) + '.', flush=True)
         return EXIT_PARTIAL
-    print('RESULT: PASS - every old development forecast found was computed again with this tree\'s code and '
-          'has the same content digest.', flush=True)
+    print('RESULT: PASS - COMPLETE - both games; every forecast the batch records list was found, computed again '
+          'with this tree\'s code, and has the same content digest.', flush=True)
     return EXIT_ALL_EQUAL
 
 

@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 20:23 Australia/Adelaide (entry 160: EX_275, the build step 1 install package, is with the reviewer). **Next: the reviewer's EX_276. Then, each on the owner's own go: his ZIP of the project folder and the install and run sheet. Nothing on the owner's PC is authorised yet.**
+**Last updated:** 22 November 2026, 20:48 Australia/Adelaide (entry 161: EX_276 was RECHECK with four narrow corrections; EX_277 with package v2 is with the reviewer for a focused recheck). **Next: the reviewer's EX_278. Then, each on the owner's own go: his ZIP of the project folder and the install and run sheet. Nothing on the owner's PC is authorised yet.**
 
 ## For the owner: NOW
 
+- **EX_277 IS WITH THE REVIEWER (entry 161; 22 November 2026).** EX_276 accepted the layout and asked four narrow
+  corrections (coverage of the equivalence check; the suite comparison; two missing evidence files; one sentence of
+  the sheet); all are made. **The current package is `STEP1_Layout_Install_v2`** in `exchange/EX_277_Claude/` (v1 in
+  `EX_275_Claude/` is superseded); read `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_3.md`. The change to `src/`
+  and `tests/` is unchanged since EX_275. The equivalence check's complete result (`RESULT: PASS - COMPLETE`) can only
+  come from the owner's PC, where the old run folders are. The bullet below is history.
 - **EX_275 IS WITH THE REVIEWER (entry 160; 22 November 2026).** `exchange/EX_275_Claude.zip`, extracted in
   `exchange/EX_275_Claude/`: the message, and the install package `STEP1_Layout_Install_v1` (overlay, deletions list,
   verifier, tools, manifest, `INSTALL_AND_RUN_SHEET.md`). Start with `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_2.md`.

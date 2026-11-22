@@ -1,0 +1,49 @@
+Equivalence check of build step 1 (specification 17.3). Tree: /home/claude/ws/plant. Games: OZLOTTO. It computes every old development forecast again, in memory, and compares content digests. It writes nothing.
+[OZLOTTO] old development forecasts found: 5958 (5958 in the tracked rank ledgers; 0 in old run folders, of which 0 are in no rank ledger); variants: 40
+[OZLOTTO] E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: 2 of 2 equal
+[OZLOTTO] E_10 CONTRAST_S13_L104_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_10 CONTRAST_S26_L208_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_10 CONTRAST_S52_FULL_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_17 HAZARD_BINS_C100_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_17 HAZARD_BINS_W208_C100_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_17 HAZARD_LOGAGE_SIGN_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_18 MIX4_ALL_C10_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_18 MIX4_W104_C10_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_18 MIX4_W208_C10_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_19 PERIODIC_T2_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_19 PERIODIC_T3_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_19 PERIODIC_T4_V1 revision 1: 2 of 2 equal
+FAILED    OZLOTTO E_2 RECUR_MEAN_ALL_V1 revision 1 target draw 1578 (data version 1): could not be computed again: ValueError: E_2 check: the record differs from the recomputation in barrel MAIN; old record: rank ledger /home/claude/ws/plant/results/real/development/scores/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/rr-4be324abd2e04dfd84b3e8087e308770/rank_ledger.jsonl
+FAILED    OZLOTTO E_2 RECUR_MEAN_ALL_V1 revision 1 target draw 1579 (data version 1): could not be computed again: ValueError: E_2 check: the record differs from the recomputation in barrel MAIN; old record: rank ledger /home/claude/ws/plant/results/real/development/scores/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/rr-4be324abd2e04dfd84b3e8087e308770/rank_ledger.jsonl
+[OZLOTTO] E_2 RECUR_MEAN_ALL_V1 revision 1: 0 of 2 equal
+FAILED    OZLOTTO E_2 RECUR_MEAN_LAST8_V1 revision 1 target draw 1578 (data version 1): could not be computed again: ValueError: E_2 check: the record differs from the recomputation in barrel MAIN; old record: rank ledger /home/claude/ws/plant/results/real/development/scores/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/rr-4be324abd2e04dfd84b3e8087e308770/rank_ledger.jsonl
+FAILED    OZLOTTO E_2 RECUR_MEAN_LAST8_V1 revision 1 target draw 1579 (data version 1): could not be computed again: ValueError: E_2 check: the record differs from the recomputation in barrel MAIN; old record: rank ledger /home/claude/ws/plant/results/real/development/scores/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/rr-4be324abd2e04dfd84b3e8087e308770/rank_ledger.jsonl
+[OZLOTTO] E_2 RECUR_MEAN_LAST8_V1 revision 1: 0 of 2 equal
+[OZLOTTO] E_2 RECUR_MEDIAN_ALL_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_INTERP_W52_D4_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_LS_W104_D3_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_LS_W52_D2_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_LS_W52_D3_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_INTERP_W52_D4_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_LS_W104_D3_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_LS_W52_D2_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_LS_W52_D3_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_149_150_V1 revision 1: 2 of 2 equal
+DIFFERENT OZLOTTO E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1 target draw 1476 (data version 1): old digest 36400e6199e6e8d53e159e8c93229e8058741d5de5dbc1a180bbd5a9f7171315, new digest 9c58f345a7331b5a29ef241d1a5e3e872c02f39a2abc6aef364ed00431305ccb; old record: rank ledger /home/claude/ws/plant/results/real/development/scores/OZLOTTO/wf-a75988650fb04cc399f8f7409ea27243/rr-4be324abd2e04dfd84b3e8087e308770/rank_ledger.jsonl
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1: 1 of 2 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_FULL_MEMORY_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_7 BETA_SHRINK_FULL_C52_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_7 BETA_SHRINK_W104_C52_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_7 BETA_SHRINK_W52_C52_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_8 HIER_PERIODS_P13_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_8 HIER_PERIODS_P26_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_8 HIER_PERIODS_P52_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_9 EXP_DECAY_18_19_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_9 EXP_DECAY_37_38_V1 revision 1: 2 of 2 equal
+[OZLOTTO] E_9 EXP_DECAY_5_6_V1 revision 1: 2 of 2 equal
+[OZLOTTO] checked 80 of 5958 old forecasts in 40 variants: 75 equal, 1 different, 4 could not be computed
+RESULT: STOP - 5 forecast(s) differ or could not be computed. Build step 1 is not accepted. Change nothing and retry nothing: send this whole output to the Claude chat.

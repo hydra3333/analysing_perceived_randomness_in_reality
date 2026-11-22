@@ -1,0 +1,16 @@
+src/methods/E_002/contract.py
+src/methods/E_003/contract.py
+src/methods/E_004/contract.py
+src/methods/E_006/contract.py
+src/methods/E_007/contract.py
+src/methods/E_008/contract.py
+src/methods/E_009/contract.py
+src/methods/E_010/contract.py
+src/methods/E_017/contract.py
+src/methods/E_018/contract.py
+src/methods/E_019/contract.py
+src/methods/_common/occurrence_counts.py
+src/methods/_common/polynomial_fits.py
+src/methods/_common/recurrence_gaps.py
+src/methods/contract_adapters/__init__.py
+src/methods/contract_adapters/e_001.py

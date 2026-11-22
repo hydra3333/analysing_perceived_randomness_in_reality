@@ -1,0 +1,15 @@
+== lf checkout (core.autocrlf=unset)
+PRE PASS: clean tree; 95 new paths absent; 15 files to replace and 16 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 95 expected new paths, 15 modified files and 16 staged deletions, all with the expected bytes.
+git status --short, by first letter:      80 A       1 D      15 M      15 R 
+COMMITTED PASS: the last commit (commit) added exactly 95 files, modified 15 and deleted 16; all Git blobs match.
+== crlf checkout (core.autocrlf=true)
+PRE PASS: clean tree; 95 new paths absent; 15 files to replace and 16 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 95 expected new paths, 15 modified files and 16 staged deletions, all with the expected bytes.
+git status --short, by first letter:      80 A       1 D      15 M      15 R 
+COMMITTED PASS: the last commit (commit) added exactly 95 files, modified 15 and deleted 16; all Git blobs match.
+== cases that must STOP
+a stray file before the install:        VERIFICATION STOP: FAIL: working tree or index not clean:
+wrong bytes in a copied file:           VERIFICATION STOP: FAIL: wrong bytes: src/methods/E_002/core_v1.py
+the deletions left out:                 VERIFICATION STOP: FAIL: unexpected staged deletions: src/methods/E_00
+a results master changed:               VERIFICATION STOP: FAIL: working tree or index not clean:

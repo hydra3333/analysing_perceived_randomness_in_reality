@@ -1,0 +1,119 @@
+Equivalence check of build step 1 (specification 17.3). Tree: /home/claude/ws/dev_eq. Games: POWERBALL, OZLOTTO. It computes every old development forecast again, in memory, and compares content digests. It writes nothing.
+[POWERBALL] old development forecasts found: 11442 (11442 in the tracked rank ledgers; 0 in old run folders, of which 0 are in no rank ledger); variants: 40
+[POWERBALL] E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: 291 of 291 equal
+[POWERBALL] ... 500 checked, 5 s
+[POWERBALL] E_10 CONTRAST_S13_L104_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_10 CONTRAST_S26_L208_V1 revision 1: 225 of 225 equal
+[POWERBALL] ... 1000 checked, 12 s
+[POWERBALL] E_10 CONTRAST_S52_FULL_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_17 HAZARD_BINS_C100_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 1500 checked, 18 s
+[POWERBALL] E_17 HAZARD_BINS_W208_C100_V1 revision 1: 225 of 225 equal
+[POWERBALL] E_17 HAZARD_LOGAGE_SIGN_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 2000 checked, 105 s
+[POWERBALL] E_18 MIX4_ALL_C10_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_18 MIX4_W104_C10_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 2500 checked, 491 s
+[POWERBALL] E_18 MIX4_W208_C10_V1 revision 1: 225 of 225 equal
+[POWERBALL] ... 3000 checked, 668 s
+[POWERBALL] E_19 PERIODIC_T2_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_19 PERIODIC_T3_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 3500 checked, 682 s
+[POWERBALL] E_19 PERIODIC_T4_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_2 RECUR_MEAN_ALL_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 4000 checked, 688 s
+[POWERBALL] E_2 RECUR_MEAN_LAST8_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_2 RECUR_MEDIAN_ALL_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 4500 checked, 694 s
+[POWERBALL] E_3 POLY_INTERP_W52_D4_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 5000 checked, 764 s
+[POWERBALL] E_3 POLY_LS_W104_D3_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_3 POLY_LS_W52_D2_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 5500 checked, 827 s
+[POWERBALL] E_3 POLY_LS_W52_D3_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_3 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 6000 checked, 954 s
+[POWERBALL] E_3 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_4 POLY_INTERP_W52_D4_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 6500 checked, 1044 s
+[POWERBALL] E_4 POLY_LS_W104_D3_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 7000 checked, 1143 s
+[POWERBALL] E_4 POLY_LS_W52_D2_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_4 POLY_LS_W52_D3_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 7500 checked, 1227 s
+[POWERBALL] E_4 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_4 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 8000 checked, 1390 s
+[POWERBALL] E_6 BETA_BERNOULLI_DECAY_149_150_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 8500 checked, 1443 s
+[POWERBALL] E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_6 BETA_BERNOULLI_FULL_MEMORY_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 9000 checked, 1463 s
+[POWERBALL] E_7 BETA_SHRINK_FULL_C52_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_7 BETA_SHRINK_W104_C52_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 9500 checked, 1471 s
+[POWERBALL] E_7 BETA_SHRINK_W52_C52_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_8 HIER_PERIODS_P13_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 10000 checked, 1479 s
+[POWERBALL] E_8 HIER_PERIODS_P26_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 10500 checked, 1486 s
+[POWERBALL] E_8 HIER_PERIODS_P52_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_9 EXP_DECAY_18_19_V1 revision 1: 291 of 291 equal
+[POWERBALL] ... 11000 checked, 1513 s
+[POWERBALL] E_9 EXP_DECAY_37_38_V1 revision 1: 291 of 291 equal
+[POWERBALL] E_9 EXP_DECAY_5_6_V1 revision 1: 291 of 291 equal
+[OZLOTTO] old development forecasts found: 5958 (5958 in the tracked rank ledgers; 0 in old run folders, of which 0 are in no rank ledger); variants: 40
+[OZLOTTO] E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: 219 of 219 equal
+[OZLOTTO] E_10 CONTRAST_S13_L104_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_10 CONTRAST_S26_L208_V1 revision 1: 12 of 12 equal
+[OZLOTTO] E_10 CONTRAST_S52_FULL_V1 revision 1: 116 of 116 equal
+[OZLOTTO] ... 500 checked, 2 s
+[OZLOTTO] E_17 HAZARD_BINS_C100_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_17 HAZARD_BINS_W208_C100_V1 revision 1: 12 of 12 equal
+[OZLOTTO] E_17 HAZARD_LOGAGE_SIGN_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_18 MIX4_ALL_C10_V1 revision 1: 116 of 116 equal
+[OZLOTTO] ... 1000 checked, 132 s
+[OZLOTTO] E_18 MIX4_W104_C10_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_18 MIX4_W208_C10_V1 revision 1: 12 of 12 equal
+[OZLOTTO] E_19 PERIODIC_T2_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_19 PERIODIC_T3_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_19 PERIODIC_T4_V1 revision 1: 116 of 116 equal
+[OZLOTTO] ... 1500 checked, 175 s
+[OZLOTTO] E_2 RECUR_MEAN_ALL_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_2 RECUR_MEAN_LAST8_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_2 RECUR_MEDIAN_ALL_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_3 POLY_INTERP_W52_D4_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] ... 2000 checked, 195 s
+[OZLOTTO] E_3 POLY_LS_W104_D3_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_3 POLY_LS_W52_D2_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_3 POLY_LS_W52_D3_V1 revision 1: 168 of 168 equal
+[OZLOTTO] ... 2500 checked, 256 s
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_4 POLY_INTERP_W52_D4_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_4 POLY_LS_W104_D3_V1 revision 1: 116 of 116 equal
+[OZLOTTO] ... 3000 checked, 344 s
+[OZLOTTO] E_4 POLY_LS_W52_D2_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_4 POLY_LS_W52_D3_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] ... 3500 checked, 422 s
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_149_150_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 4000 checked, 483 s
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_FULL_MEMORY_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 4500 checked, 490 s
+[OZLOTTO] E_7 BETA_SHRINK_FULL_C52_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_7 BETA_SHRINK_W104_C52_V1 revision 1: 116 of 116 equal
+[OZLOTTO] E_7 BETA_SHRINK_W52_C52_V1 revision 1: 168 of 168 equal
+[OZLOTTO] ... 5000 checked, 493 s
+[OZLOTTO] E_8 HIER_PERIODS_P13_V1 revision 1: 194 of 194 equal
+[OZLOTTO] E_8 HIER_PERIODS_P26_V1 revision 1: 168 of 168 equal
+[OZLOTTO] E_8 HIER_PERIODS_P52_V1 revision 1: 116 of 116 equal
+[OZLOTTO] ... 5500 checked, 499 s
+[OZLOTTO] E_9 EXP_DECAY_18_19_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_9 EXP_DECAY_37_38_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_9 EXP_DECAY_5_6_V1 revision 1: 219 of 219 equal
+[POWERBALL] checked 11442 of 11442 old forecasts in 40 variants: 11442 equal, 0 different, 0 could not be computed
+[OZLOTTO] checked 5958 of 5958 old forecasts in 40 variants: 5958 equal, 0 different, 0 could not be computed
+RESULT: PASS - every old development forecast found was computed again with this tree's code and has the same content digest.
