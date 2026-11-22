@@ -1,0 +1,9 @@
+before: 45 modules; unittest ran 571 tests; identified here: 571
+after: 45 modules; unittest ran 571 tests; identified here: 571
+tests in both runs: 571; with the same result: 571
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '#   and can be added to the global gitignore or merged into this file.  For a more nuclear', '.pixi/*', '.eggs/', 'cover/', '# the rep"]
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '# Abstra', '*.py.cover', '#results/real/holdout/scores/', 'venv.bak/', '.pybuilder/', '*.mo', '# OUTLANDISH_01: track the main TOML co"]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: every test that ran was identified; no module and no test changed its result, disappeared or appeared

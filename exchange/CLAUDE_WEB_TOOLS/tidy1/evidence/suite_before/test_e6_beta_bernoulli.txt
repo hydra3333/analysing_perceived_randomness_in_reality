@@ -1,0 +1,27 @@
+test_declarations_and_entries_match_the_specification (test_e6_beta_bernoulli.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_e6_request_is_admitted_and_the_roster_says_supported (test_e6_beta_bernoulli.AsInstalled.test_every_e6_request_is_admitted_and_the_roster_says_supported) ... ok
+test_supported_but_flagged_is_still_refused (test_e6_beta_bernoulli.AsInstalled.test_supported_but_flagged_is_still_refused) ... ok
+test_the_method_folder_is_exactly_these_files (test_e6_beta_bernoulli.AsInstalled.test_the_method_folder_is_exactly_these_files) ... ok
+test_the_runner_lists_e6 (test_e6_beta_bernoulli.AsInstalled.test_the_runner_lists_e6) ... ok
+test_contract_record_groups_equal_e1_record_groups (test_e6_beta_bernoulli.E1Match.test_contract_record_groups_equal_e1_record_groups)
+Against E_1's own contract record: same equal-count groups in the same order (ties may differ). ... ok
+test_full_memory_ranks_like_e1_counts (test_e6_beta_bernoulli.E1Match.test_full_memory_ranks_like_e1_counts) ... ok
+test_compute_uses_each_variant_own_factor (test_e6_beta_bernoulli.ExactNormalisation.test_compute_uses_each_variant_own_factor)
+compute() equals the specification formula for each variant's lambda, computed here directly ... ok
+test_exact_sums_and_float_tolerance (test_e6_beta_bernoulli.ExactNormalisation.test_exact_sums_and_float_tolerance) ... ok
+test_newest_draw_has_weight_one (test_e6_beta_bernoulli.ExactNormalisation.test_newest_draw_has_weight_one) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_e6_beta_bernoulli.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_the_suffix_variants_really_differ (test_e6_beta_bernoulli.NoPeeking.test_the_suffix_variants_really_differ) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_e6_beta_bernoulli.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_every_variant_runs_publishes_and_is_consumable (test_e6_beta_bernoulli.ThroughTheContract.test_every_variant_runs_publishes_and_is_consumable) ... ok
+test_verify_refuses_a_record_that_differs (test_e6_beta_bernoulli.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_bad_inputs_are_refused (test_e6_beta_bernoulli.WorkedExample.test_bad_inputs_are_refused) ... ok
+test_decay_74_75 (test_e6_beta_bernoulli.WorkedExample.test_decay_74_75) ... ok
+test_full_memory (test_e6_beta_bernoulli.WorkedExample.test_full_memory) ... ok
+test_powerball_barrel_sums_to_one (test_e6_beta_bernoulli.WorkedExample.test_powerball_barrel_sums_to_one) ... ok
+test_variant_table_is_exactly_the_specification (test_e6_beta_bernoulli.WorkedExample.test_variant_table_is_exactly_the_specification) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 5.419s
+
+OK

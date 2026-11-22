@@ -1,0 +1,21 @@
+test_runtime (test_code3_retirement.ArchiveIsNeverExecuted.test_runtime)
+In a fresh process: import the inventory, then run E_1's contract path in both games on invented data; ... ok
+test_static (test_code3_retirement.ArchiveIsNeverExecuted.test_static) ... ok
+test_static_check_catches_constructed_paths (test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_constructed_paths)
+EX_093 B01: a path into the archive built from parts is found, whatever builds it; each case gives its own ... ok
+test_static_check_catches_loading (test_code3_retirement.ArchiveIsNeverExecuted.test_static_check_catches_loading) ... ok
+test_archive_holds_revision_1_complete (test_code3_retirement.InstalledArchive.test_archive_holds_revision_1_complete) ... ok
+test_archive_holds_revision_2_complete (test_code3_retirement.InstalledArchive.test_archive_holds_revision_2_complete)
+MHUP-A: revision 2 archived complete under r2/, its bytes equal to the pre-install live files. ... ok
+test_readme_fields (test_code3_retirement.InstalledArchive.test_readme_fields) ... ok
+test_the_archive_is_no_package_and_only_r1_and_r2_exist (test_code3_retirement.InstalledArchive.test_the_archive_is_no_package_and_only_r1_and_r2_exist) ... ok
+test_refusals (test_code3_retirement.RetirementT15.test_refusals) ... ok
+test_retire_checks_every_input_before_writing (test_code3_retirement.RetirementT15.test_retire_checks_every_input_before_writing)
+EX_093 O01: a missing or repeated input is refused before anything is created. ... ok
+test_with_git_history (test_code3_retirement.RetirementT15.test_with_git_history) ... ok
+test_without_git_history (test_code3_retirement.RetirementT15.test_without_git_history) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 5.378s
+
+OK

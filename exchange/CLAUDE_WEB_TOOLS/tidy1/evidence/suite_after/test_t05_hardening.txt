@@ -1,0 +1,8 @@
+test_every_suffix_variant_row_is_a_valid_row (test_t05_hardening.T05HardeningTests.test_every_suffix_variant_row_is_a_valid_row)
+Grammar check: load each variant's first changed row as part of an eligible prefix. ... ok
+test_intermediate_targets_and_equal_length_suffix_rewrites (test_t05_hardening.T05HardeningTests.test_intermediate_targets_and_equal_length_suffix_rewrites) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.770s
+
+OK

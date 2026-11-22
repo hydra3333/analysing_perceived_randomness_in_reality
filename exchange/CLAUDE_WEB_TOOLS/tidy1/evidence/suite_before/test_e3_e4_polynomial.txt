@@ -1,0 +1,18 @@
+test_declarations_and_entries_match_the_specification (test_e3_e4_polynomial.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_request_is_admitted_and_the_roster_says_supported (test_e3_e4_polynomial.AsInstalled.test_every_request_is_admitted_and_the_roster_says_supported) ... ok
+test_flags_absent_and_runner_lists_both (test_e3_e4_polynomial.AsInstalled.test_flags_absent_and_runner_lists_both) ... ok
+test_least_squares_and_interpolation_polynomials_sum_to_the_constant_k (test_e3_e4_polynomial.CrossLabelInvariant.test_least_squares_and_interpolation_polynomials_sum_to_the_constant_k) ... ok
+test_scores_are_the_specified_coefficients (test_e3_e4_polynomial.EachVariantsOwnFit.test_scores_are_the_specified_coefficients) ... ok
+test_method_folders_are_exactly_these_files_and_read_nothing (test_e3_e4_polynomial.FolderGuards.test_method_folders_are_exactly_these_files_and_read_nothing) ... ok
+test_fewer_draws_than_the_window_gives_an_insufficient_history_record (test_e3_e4_polynomial.InsufficientHistory.test_fewer_draws_than_the_window_gives_an_insufficient_history_record) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_e3_e4_polynomial.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_e3_e4_polynomial.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_every_variant_runs_and_is_consumable (test_e3_e4_polynomial.ThroughTheContract.test_every_variant_runs_and_is_consumable) ... ok
+test_verify_refuses_a_record_that_differs (test_e3_e4_polynomial.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_interpolation_nodes_are_the_chebyshev_formula (test_e3_e4_polynomial.Variants.test_interpolation_nodes_are_the_chebyshev_formula) ... ok
+test_tables_are_exactly_the_specification_and_identical (test_e3_e4_polynomial.Variants.test_tables_are_exactly_the_specification_and_identical) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 18.749s
+
+OK

@@ -3288,3 +3288,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   The old run folders stay until build step 3's transition check (entry 163).
 - **The owner's words (09:38):** "thank you. you are doing a good job leading me in this."
 - Next numbers: EX_279, entry 165, RAT-43.
+
+## 165. 23 November 2026, 10:21 - OWNER: THE GO FOR THE LIGHT TIDY-UP of the existing method files (RAT-40 note 3); built and proved in the cloud; not yet reviewed, not installed
+
+- **The owner's words (09:44):** "thanks. go the next step which you suggest is tidy up"
+- **What the go covers:** the work in the cloud (the wording, the builder, the proofs, the package). It authorises no
+  operation on the owner's PC; the install is on his own separate go, after the reviewer's review.
+- **Built by Claude** under `exchange/CLAUDE_WEB_TOOLS/tidy1/` (base `7be6b3a`; `src/` and `tests/` as build step 1 left
+  them): 37 existing method files get the header of the coding practices, a comment on each of the 64 functions (of
+  130) that had none, and notes on their constants; the earlier headers are kept word for word. No file added, moved
+  or deleted; 1,385 lines added and 259 removed, all comment or docstring lines. Every new word is in one file,
+  `tidy_texts.py`; `make_tidy_up.py` applies it and refuses on anything unexpected.
+- **Left alone, with the reason:** six of E_1's own modules, whose exact bytes the old system's archive tests pin
+  (`tests/test_code3_retirement.py`, `tests/test_e1r3_revision3.py`); the package's verifier guards them. **This is a
+  choice for the owner** (package note section 6; Claude recommends leaving them).
+- **Proved in the cloud:**
+  - the comments-only check (`check_comments_only.py`, new): 211 Python files under `src` and `tests` compared with the
+    base; 37 with changed text; in all 37 the code with comments and docstrings removed is identical; `RESULT: PASS`;
+  - the suite before and after, test by test: 45 modules, 571 tests, the same result for all 571 (the same three known
+    failing tests);
+  - the equivalence check of build step 1 run again on the tidied tree: 17,400 of 17,400 scored forecasts equal
+    (Powerball 11,442; Oz Lotto 5,958); no `DIFFERENT`, no `FAILED`; **`RESULT: PARTIAL`, as it must be in the cloud**
+    (the never-scored forecasts are only in the owner's run folders). The complete evidence is the owner's run;
+  - the install rehearsed in an LF clone and a `core.autocrlf=true` clone; five planted faults all STOP.
+- **The package:** `exchange/CLAUDE_WEB_TOOLS/tidy1/package/TIDY1_Method_Comments_v1.zip`, SHA-256
+  `a8d2f1136a41a361e665ef2b16e2f3ce073dff64b52e697f4588971fc812ad4c`, 44 files; its sheet beside it. The note is
+  `exchange/CLAUDE_WEB_TOOLS/tidy1/TIDY1_PACKAGE_NOTE_v0_1.md`.
+- **Corrections found by checking each citation against its document while writing:** none reached a file; four draft
+  citations and one draft comment (an error type) were corrected before the proofs were run.
+- **State:** the tidy-up is BUILT and CLOUD-PROVED; NOT REVIEWED; NOT INSTALLED. No EX has been issued.
+- **Next, each on the owner's word:** his answer on E_1's six modules; EX_279 to the reviewer when he asks for it; then
+  his install by the sheet, on his own go.
+- Next numbers: EX_279, entry 166, RAT-43.

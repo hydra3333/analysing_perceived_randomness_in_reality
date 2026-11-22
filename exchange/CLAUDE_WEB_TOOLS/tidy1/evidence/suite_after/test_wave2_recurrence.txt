@@ -1,0 +1,24 @@
+test_declarations_and_entries_match_the_specification (test_wave2_recurrence.AsInstalled.test_declarations_and_entries_match_the_specification) ... ok
+test_every_request_is_admitted_and_the_roster_says_supported (test_wave2_recurrence.AsInstalled.test_every_request_is_admitted_and_the_roster_says_supported) ... ok
+test_flags_absent_and_runner_lists_each (test_wave2_recurrence.AsInstalled.test_flags_absent_and_runner_lists_each) ... ok
+test_scores (test_wave2_recurrence.EachVariantsOwnRule.test_scores) ... ok
+test_method_folders_are_exactly_these_files_and_read_nothing (test_wave2_recurrence.FolderGuards.test_method_folders_are_exactly_these_files_and_read_nothing) ... ok
+test_exactly_the_minimum_is_enough (test_wave2_recurrence.InsufficientHistory.test_exactly_the_minimum_is_enough) ... ok
+test_too_few_draws_gives_an_insufficient_history_record (test_wave2_recurrence.InsufficientHistory.test_too_few_draws_gives_an_insufficient_history_record) ... ok
+test_record_identical_whatever_the_target_and_later_rows_say (test_wave2_recurrence.NoPeeking.test_record_identical_whatever_the_target_and_later_rows_say) ... ok
+test_e17_bins_tie_within_a_bin (test_wave2_recurrence.Relations.test_e17_bins_tie_within_a_bin) ... ok
+test_e17_log_age_ranks_purely_by_projected_age (test_wave2_recurrence.Relations.test_e17_log_age_ranks_purely_by_projected_age) ... ok
+test_e18_nests_the_fair_law (test_wave2_recurrence.Relations.test_e18_nests_the_fair_law) ... ok
+test_e19_divided_by_e17_bins_is_the_periodic_factor (test_wave2_recurrence.Relations.test_e19_divided_by_e17_bins_is_the_periodic_factor) ... ok
+test_compute_refuses_a_task_it_was_not_written_for (test_wave2_recurrence.ThroughTheContract.test_compute_refuses_a_task_it_was_not_written_for) ... ok
+test_e18_verify_refuses_weights_that_are_not_optimal (test_wave2_recurrence.ThroughTheContract.test_e18_verify_refuses_weights_that_are_not_optimal) ... ok
+test_every_variant_runs_and_is_consumable (test_wave2_recurrence.ThroughTheContract.test_every_variant_runs_and_is_consumable) ... ok
+test_verify_refuses_a_flipped_log_age_sign (test_wave2_recurrence.ThroughTheContract.test_verify_refuses_a_flipped_log_age_sign) ... ok
+test_verify_refuses_a_record_that_differs (test_wave2_recurrence.ThroughTheContract.test_verify_refuses_a_record_that_differs) ... ok
+test_tables_are_exactly_the_specification (test_wave2_recurrence.Variants.test_tables_are_exactly_the_specification) ... ok
+test_all_examples (test_wave2_recurrence.WorkedExamples.test_all_examples) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 23.140s
+
+OK

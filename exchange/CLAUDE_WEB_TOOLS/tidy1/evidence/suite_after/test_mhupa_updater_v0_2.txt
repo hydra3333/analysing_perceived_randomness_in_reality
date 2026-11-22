@@ -1,0 +1,20 @@
+test_emitted_ledger_and_master_pass_the_version_2_rules (test_mhupa_updater_v0_2.EmittedBytesReconciliation.test_emitted_ledger_and_master_pass_the_version_2_rules) ... ok
+test_emitted_no_change_row_after_the_seal_passes_too (test_mhupa_updater_v0_2.EmittedBytesReconciliation.test_emitted_no_change_row_after_the_seal_passes_too) ... ok
+test_browser_fetcher_gains_only_the_final_host_check (test_mhupa_updater_v0_2.UpdaterV02Identity.test_browser_fetcher_gains_only_the_final_host_check) ... ok
+test_check_final_url_is_pure_and_names_the_one_host (test_mhupa_updater_v0_2.UpdaterV02Identity.test_check_final_url_is_pure_and_names_the_one_host) ... ok
+test_cmd_update_gains_only_the_two_refusals_before_the_lock (test_mhupa_updater_v0_2.UpdaterV02Identity.test_cmd_update_gains_only_the_two_refusals_before_the_lock) ... ok
+test_docstring_changed_and_names_the_additions (test_mhupa_updater_v0_2.UpdaterV02Identity.test_docstring_changed_and_names_the_additions) ... ok
+test_holdout_opened_gains_only_the_freeze_field_refusal (test_mhupa_updater_v0_2.UpdaterV02Identity.test_holdout_opened_gains_only_the_freeze_field_refusal) ... ok
+test_new_readers_touch_only_value_free_paths (test_mhupa_updater_v0_2.UpdaterV02Identity.test_new_readers_touch_only_value_free_paths) ... ok
+test_reference_is_the_base_v0_1_and_v0_1_is_gone (test_mhupa_updater_v0_2.UpdaterV02Identity.test_reference_is_the_base_v0_1_and_v0_1_is_gone) ... ok
+test_self_test_gains_the_four_cases_and_the_fixture_edits (test_mhupa_updater_v0_2.UpdaterV02Identity.test_self_test_gains_the_four_cases_and_the_fixture_edits) ... ok
+test_the_self_test_passes_offline (test_mhupa_updater_v0_2.UpdaterV02Identity.test_the_self_test_passes_offline) ... ok
+test_tool_version (test_mhupa_updater_v0_2.UpdaterV02Identity.test_tool_version) ... ok
+test_top_level_names (test_mhupa_updater_v0_2.UpdaterV02Identity.test_top_level_names) ... ok
+test_unchanged_definitions_have_identical_syntax_trees (test_mhupa_updater_v0_2.UpdaterV02Identity.test_unchanged_definitions_have_identical_syntax_trees) ... ok
+test_update_game_gains_only_refusals_and_the_admission (test_mhupa_updater_v0_2.UpdaterV02Identity.test_update_game_gains_only_refusals_and_the_admission) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 7.065s
+
+OK

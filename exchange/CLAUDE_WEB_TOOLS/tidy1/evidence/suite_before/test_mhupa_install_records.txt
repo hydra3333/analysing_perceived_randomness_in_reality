@@ -1,0 +1,16 @@
+test_baseline_record_validates_against_the_installed_registry (test_mhupa_install_records.Baseline.test_baseline_record_validates_against_the_installed_registry) ... ok
+test_validate_command_and_tampering (test_mhupa_install_records.Baseline.test_validate_command_and_tampering) ... ok
+test_a_superseding_registry_entry_retires_the_old_revision (test_mhupa_install_records.Records.test_a_superseding_registry_entry_retires_the_old_revision)
+EX_148 B03 (a): a newer revision installed in the registry with no explicit retires item: the released set ... ok
+test_install_record_needs_the_barrier_and_is_create_only (test_mhupa_install_records.Records.test_install_record_needs_the_barrier_and_is_create_only) ... ok
+test_malformed_release_records_refuse (test_mhupa_install_records.Records.test_malformed_release_records_refuse)
+EX_148 B03 (c): a record whose entry has an unknown key, names an unknown game, or lacks its dates refuses. ... ok
+test_release_date_is_the_day_of_writing (test_mhupa_install_records.Records.test_release_date_is_the_day_of_writing) ... ok
+test_release_record_conditions_in_order (test_mhupa_install_records.Records.test_release_record_conditions_in_order) ... ok
+test_release_record_needs_u_held_by_this_package_and_no_flag (test_mhupa_install_records.Records.test_release_record_needs_u_held_by_this_package_and_no_flag) ... ok
+test_tool_is_standalone_and_read_only_on_git (test_mhupa_install_records.Statics.test_tool_is_standalone_and_read_only_on_git) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 5.157s
+
+OK

@@ -1,0 +1,22 @@
+test_agrees_with_installed_validator (test_wf1b_divisions.Classification.test_agrees_with_installed_validator) ... ok
+test_exhaustive_and_exclusive (test_wf1b_divisions.Classification.test_exhaustive_and_exclusive) ... ok
+test_invalid_inputs_rejected (test_wf1b_divisions.Classification.test_invalid_inputs_rejected) ... ok
+test_about_one_in_and_bits (test_wf1b_divisions.DivisionTables.test_about_one_in_and_bits) ... ok
+test_any_division (test_wf1b_divisions.DivisionTables.test_any_division) ... ok
+test_exact_fractions_equal_r3 (test_wf1b_divisions.DivisionTables.test_exact_fractions_equal_r3) ... ok
+test_formula_per_cell (test_wf1b_divisions.DivisionTables.test_formula_per_cell) ... ok
+test_integer_counts_equal_r3 (test_wf1b_divisions.DivisionTables.test_integer_counts_equal_r3) ... ok
+test_probabilities_sum_to_one (test_wf1b_divisions.DivisionTables.test_probabilities_sum_to_one) ... ok
+test_published_odds (test_wf1b_divisions.DivisionTables.test_published_odds) ... ok
+test_hypergeometric_formula (test_wf1b_divisions.FairMoments.test_hypergeometric_formula) ... ok
+test_means_and_variances (test_wf1b_divisions.FairMoments.test_means_and_variances) ... ok
+test_tail_rows (test_wf1b_divisions.FairMoments.test_tail_rows) ... ok
+test_invalid_records_rejected (test_wf1b_divisions.MatchRecords.test_invalid_records_rejected) ... ok
+test_oz_examples_and_supplementaries_never_returned (test_wf1b_divisions.MatchRecords.test_oz_examples_and_supplementaries_never_returned) ... ok
+test_powerball_examples (test_wf1b_divisions.MatchRecords.test_powerball_examples) ... ok
+test_random_invented_draws_agree_with_direct_counting (test_wf1b_divisions.MatchRecords.test_random_invented_draws_agree_with_direct_counting) ... ok
+
+----------------------------------------------------------------------
+Ran 17 tests in 0.037s
+
+OK

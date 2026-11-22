@@ -1,0 +1,10 @@
+test_e1_only_modules_live_in_the_method_folder (test_e1_align.E1AlignGuards.test_e1_only_modules_live_in_the_method_folder) ... ok
+test_e1_orphan_marker_path_unchanged (test_e1_align.E1AlignGuards.test_e1_orphan_marker_path_unchanged) ... ok
+test_e1_symbols_are_the_shared_functions (test_e1_align.E1AlignGuards.test_e1_symbols_are_the_shared_functions) ... ok
+test_shared_code_imports_no_method_code (test_e1_align.E1AlignGuards.test_shared_code_imports_no_method_code) ... ok
+test_six_encoder_copies_agree (test_e1_align.E1AlignGuards.test_six_encoder_copies_agree) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.163s
+
+OK

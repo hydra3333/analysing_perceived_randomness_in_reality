@@ -1,0 +1,20 @@
+test_admitted_and_refused (test_e1r2_revision2.DataKinds.test_admitted_and_refused)
+Revision 3 (MHUP-A): the VIEW data kinds are admitted, every run-mode name is refused, and the method has ... ok
+test_e1_is_in_the_cohort (test_e1r2_revision2.Driver.test_e1_is_in_the_cohort) ... ok
+test_r3_equals_r1_label_for_label (test_e1r2_revision2.IdentityWithRevision1.test_r3_equals_r1_label_for_label) ... ok
+test_reference_provenance (test_e1r2_revision2.IdentityWithRevision1.test_reference_provenance) ... ok
+test_each_state_admits_nothing_until_step_4_and_gives_the_tabled_reason (test_e1r2_revision2.InstallBarrier.test_each_state_admits_nothing_until_step_4_and_gives_the_tabled_reason) ... ok
+test_the_driver_in_each_state (test_e1r2_revision2.InstallBarrier.test_the_driver_in_each_state) ... ok
+test_gate_names_revision_3 (test_e1r2_revision2.LegacyRunner.test_gate_names_revision_3) ... ok
+test_withdrawn_revision_3_is_refused (test_e1r2_revision2.LegacyRunner.test_withdrawn_revision_3_is_refused) ... ok
+test_driver_forecast_equals_the_independent_oracle (test_e1r2_revision2.RealNamespaceOzLotto.test_driver_forecast_equals_the_independent_oracle) ... ok
+test_the_oracle_is_sensitive (test_e1r2_revision2.RealNamespaceOzLotto.test_the_oracle_is_sensitive)
+A changed tie order or a draw too many would be caught. ... ok
+test_driver_forecast_equals_the_legacy_function (test_e1r2_revision2.RealNamespacePowerball.test_driver_forecast_equals_the_legacy_function) ... ok
+test_a_request_pinning_revision_1_or_2_is_stale (test_e1r2_revision2.Registry.test_a_request_pinning_revision_1_or_2_is_stale) ... ok
+test_chains_and_declarations (test_e1r2_revision2.Registry.test_chains_and_declarations) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 7.882s
+
+OK

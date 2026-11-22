@@ -1,0 +1,63 @@
+test_diagnostic_receipt (test_e2r_contract.ReceiptTimestamps.test_diagnostic_receipt) ... ok
+test_forecast_freeze_receipt (test_e2r_contract.ReceiptTimestamps.test_forecast_freeze_receipt) ... ok
+test_append_only_chain (test_e2r_contract.RegistryAndDeclarations.test_append_only_chain) ... ok
+test_archive_is_not_importable (test_e2r_contract.RegistryAndDeclarations.test_archive_is_not_importable)
+E2R-R56 static guard (no archive/ exists yet): nothing under src/ or tests/ imports from archive. ... ok
+test_installed_registry (test_e2r_contract.RegistryAndDeclarations.test_installed_registry) ... ok
+test_method_task_is_frozen_and_minimal (test_e2r_contract.RegistryAndDeclarations.test_method_task_is_frozen_and_minimal) ... ok
+test_registry_loads_from_a_crlf_checkout_and_still_refuses_noncanonical_data (test_e2r_contract.RegistryAndDeclarations.test_registry_loads_from_a_crlf_checkout_and_still_refuses_noncanonical_data) ... ok
+test_nested_declaration_mutation_changes_nothing_installed (test_e2r_contract.RegistryImmutability.test_nested_declaration_mutation_changes_nothing_installed) ... ok
+test_nested_entry_mutation_changes_nothing_installed (test_e2r_contract.RegistryImmutability.test_nested_entry_mutation_changes_nothing_installed) ... ok
+test_no_writable_state (test_e2r_contract.RegistryImmutability.test_no_writable_state) ... ok
+test_c01_legacy_e1_digest_unchanged (test_e2r_contract.ReviewerScopeConditions.test_c01_legacy_e1_digest_unchanged)
+For legacy E_1 the contract's real-namespace digest is exactly the reader's frozen legacy digest. ... ok
+test_c01_view_digest_namespaces (test_e2r_contract.ReviewerScopeConditions.test_c01_view_digest_namespaces) ... ok
+test_c03_record_product_kinds_fixed_by_the_contract (test_e2r_contract.ReviewerScopeConditions.test_c03_record_product_kinds_fixed_by_the_contract) ... ok
+test_o01_placeholder_lifecycle (test_e2r_contract.ReviewerScopeConditions.test_o01_placeholder_lifecycle)
+A real variant gets its own chain; the NOT_YET_SPECIFIED placeholder is never promoted or edited. ... ok
+test_content_digest_is_checked (test_e2r_contract.T01ShapeAndNumericContracts.test_content_digest_is_checked) ... ok
+test_defects_hidden_behind_restamped_digests_still_fail (test_e2r_contract.T01ShapeAndNumericContracts.test_defects_hidden_behind_restamped_digests_still_fail)
+Each defect is planted and every digest re-stamped, so only the rule itself can catch it. ... ok
+test_encoding_rules (test_e2r_contract.T01ShapeAndNumericContracts.test_encoding_rules) ... ok
+test_order_only_strict_and_grouped (test_e2r_contract.T01ShapeAndNumericContracts.test_order_only_strict_and_grouped) ... ok
+test_planted_defects_fail (test_e2r_contract.T01ShapeAndNumericContracts.test_planted_defects_fail) ... ok
+test_valid_record_passes (test_e2r_contract.T01ShapeAndNumericContracts.test_valid_record_passes) ... ok
+test_barrel_sizes_only_from_profile (test_e2r_contract.T02ProfileSeparation.test_barrel_sizes_only_from_profile) ... ok
+test_cross_game_refused (test_e2r_contract.T02ProfileSeparation.test_cross_game_refused) ... ok
+test_probability_vector_lengths (test_e2r_contract.T02ProfileSeparation.test_probability_vector_lengths) ... ok
+test_inverse_never_manufactured (test_e2r_contract.T04TieAndWorst.test_inverse_never_manufactured) ... ok
+test_map_set_with_inverse_from_marginals_may_overlap (test_e2r_contract.T04TieAndWorst.test_map_set_with_inverse_from_marginals_may_overlap) ... ok
+test_scored_and_grouped_tie_order (test_e2r_contract.T04TieAndWorst.test_scored_and_grouped_tie_order) ... ok
+test_set_only_and_no_ranking (test_e2r_contract.T04TieAndWorst.test_set_only_and_no_ranking) ... ok
+test_runtime_oz_carries_no_powerball_or_supplementary (test_e2r_contract.T05NoPowerballOrSupplementariesInOz.test_runtime_oz_carries_no_powerball_or_supplementary) ... ok
+test_static_no_supplementary_columns (test_e2r_contract.T05NoPowerballOrSupplementariesInOz.test_static_no_supplementary_columns) ... ok
+test_benchmarks_and_is_produce_nothing (test_e2r_contract.T06ModeFirewall.test_benchmarks_and_is_produce_nothing) ... ok
+test_producible_rows_accept_and_reserved_rows_refuse (test_e2r_contract.T06ModeFirewall.test_producible_rows_accept_and_reserved_rows_refuse) ... ok
+test_real_development_row_accepted_on_synthetic_bytes (test_e2r_contract.T06ModeFirewall.test_real_development_row_accepted_on_synthetic_bytes)
+The REAL_DEVELOPMENT row is exercised on an invented master: no real data is read. ... ok
+test_records_with_wrong_pairings_refused (test_e2r_contract.T06ModeFirewall.test_records_with_wrong_pairings_refused) ... ok
+test_insufficient_history_records_no_numbers (test_e2r_contract.T07NotApplicable.test_insufficient_history_records_no_numbers) ... ok
+test_rows (test_e2r_contract.T07NotApplicable.test_rows) ... ok
+test_installed_declarations_and_supported_entries (test_e2r_contract.T08ExtensionPoints.test_installed_declarations_and_supported_entries) ... ok
+test_static_no_reserved_engines (test_e2r_contract.T08ExtensionPoints.test_static_no_reserved_engines) ... ok
+test_stochastic_placeholder_and_supported_refusal (test_e2r_contract.T08ExtensionPoints.test_stochastic_placeholder_and_supported_refusal) ... ok
+test_e1_method_forecast_v1_equals_legacy (test_e2r_contract.T09VersioningAndMigration.test_e1_method_forecast_v1_equals_legacy) ... ok
+test_legacy_goldens_reproduce (test_e2r_contract.T09VersioningAndMigration.test_legacy_goldens_reproduce) ... ok
+test_legacy_schemas_refused_for_writing (test_e2r_contract.T09VersioningAndMigration.test_legacy_schemas_refused_for_writing) ... ok
+test_no_data_path_and_no_predictor_import (test_e2r_contract.T11PostOutcomeRecord.test_no_data_path_and_no_predictor_import) ... ok
+test_type_validates_and_keys_never_collide (test_e2r_contract.T11PostOutcomeRecord.test_type_validates_and_keys_never_collide) ... ok
+test_two_runs_and_worker_counts (test_e2r_contract.T12Determinism.test_two_runs_and_worker_counts) ... ok
+test_changed_helper_needs_successor_revisions (test_e2r_contract.T13RevisionRollover.test_changed_helper_needs_successor_revisions) ... ok
+test_no_path_hash_or_commit_in_declarations (test_e2r_contract.T13RevisionRollover.test_no_path_hash_or_commit_in_declarations) ... ok
+test_structural_exception_only_for_its_own_package (test_e2r_contract.T13RevisionRollover.test_structural_exception_only_for_its_own_package) ... ok
+test_consumption_rules_and_files_untouched (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_consumption_rules_and_files_untouched) ... ok
+test_receipt_validates_and_has_no_scoring_field (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_receipt_validates_and_has_no_scoring_field) ... ok
+test_terminal_record_rules (test_e2r_contract.T16ReceiptsAndTerminalRecords.test_terminal_record_rules) ... ok
+test_all_publications_retained_and_none_chosen_after_outcome (test_e2r_contract.T17MultiplePublications.test_all_publications_retained_and_none_chosen_after_outcome) ... ok
+test_a_new_root_is_a_new_declaration (test_e2r_contract.T18SeedPolicyStages.test_a_new_root_is_a_new_declaration) ... ok
+test_no_policy_is_approved_and_nothing_falls_back (test_e2r_contract.T18SeedPolicyStages.test_no_policy_is_approved_and_nothing_falls_back) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 2.577s
+
+OK

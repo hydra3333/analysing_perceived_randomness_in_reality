@@ -1,0 +1,16 @@
+test_a_wrong_guide_falls_back_to_the_exact_bisection (test_perf1_numerics.ClopperPearson.test_a_wrong_guide_falls_back_to_the_exact_bisection) ... ok
+test_every_k_up_to_n_40 (test_perf1_numerics.ClopperPearson.test_every_k_up_to_n_40) ... ok
+test_report_sizes (test_perf1_numerics.ClopperPearson.test_report_sizes)
+MR16's n (220 and 291 targets) and N1's R; also another confidence level. ... ok
+test_the_guided_path_is_used (test_perf1_numerics.ClopperPearson.test_the_guided_path_is_used)
+At N1's size the decimal-guided search is confirmed without falling back to the exact bisection. ... ok
+test_binary_splitting_equals_horner (test_perf1_numerics.ExactSum.test_binary_splitting_equals_horner) ... ok
+test_report_size_sums (test_perf1_numerics.ExactSum.test_report_size_sums)
+n = 10,000 at a float probability (denominator 2**63), both short and long ranges. ... ok
+test_progress_lines_carry_counts_only (test_perf1_numerics.ProgressLines.test_progress_lines_carry_counts_only)
+Every progress() call in report.py formats only len(...) of something, or the search-log row number. ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 34.691s
+
+OK

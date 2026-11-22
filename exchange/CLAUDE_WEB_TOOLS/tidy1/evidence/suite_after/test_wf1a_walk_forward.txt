@@ -1,0 +1,29 @@
+test_a_new_master_pin_reruns_every_pair (test_wf1a_walk_forward.AttemptBinding.test_a_new_master_pin_reruns_every_pair) ... ok
+test_an_attempt_without_a_folder_and_junk_lines (test_wf1a_walk_forward.AttemptBinding.test_an_attempt_without_a_folder_and_junk_lines) ... ok
+test_another_batch_with_the_same_pins_is_not_reused (test_wf1a_walk_forward.AttemptBinding.test_another_batch_with_the_same_pins_is_not_reused) ... ok
+test_corrupt_or_mismatched_records_make_the_pair_run_again (test_wf1a_walk_forward.AttemptBinding.test_corrupt_or_mismatched_records_make_the_pair_run_again) ... ok
+test_forged_terminal_without_an_attempt_is_not_done (test_wf1a_walk_forward.AttemptBinding.test_forged_terminal_without_an_attempt_is_not_done)
+The reviewer's counterexample: a well-formed SUCCESS terminal with no attempt line and no records. ... ok
+test_the_stop_table (test_wf1a_walk_forward.Classification.test_the_stop_table) ... ok
+test_a_listed_method_is_named_in_the_plan_and_never_run (test_wf1a_walk_forward.NotRealCapable.test_a_listed_method_is_named_in_the_plan_and_never_run) ... ok
+test_e1_revision_3_takes_view_kinds (test_wf1a_walk_forward.NotRealCapable.test_e1_revision_3_takes_view_kinds)
+E_1 revision 3 (MHUP-A) takes the view data kind, never a run mode: the real view kind is admitted, a run ... ok
+test_supported_but_flagged_is_refused_by_name (test_wf1a_walk_forward.PlanRefusals.test_supported_but_flagged_is_refused_by_name) ... ok
+test_window_cohort_marker_and_ledger (test_wf1a_walk_forward.PlanRefusals.test_window_cohort_marker_and_ledger) ... ok
+test_changed_master_stops_with_zero_later_runs (test_wf1a_walk_forward.ResumeAndStop.test_changed_master_stops_with_zero_later_runs) ... ok
+test_ctrl_c_before_a_run_folder_then_resume (test_wf1a_walk_forward.ResumeAndStop.test_ctrl_c_before_a_run_folder_then_resume) ... ok
+test_escaping_exception_and_unknown_reason_stop (test_wf1a_walk_forward.ResumeAndStop.test_escaping_exception_and_unknown_reason_stop) ... ok
+test_interrupted_terminal_stops_and_its_pair_runs_again (test_wf1a_walk_forward.ResumeAndStop.test_interrupted_terminal_stops_and_its_pair_runs_again) ... ok
+test_marker_between_targets_stops (test_wf1a_walk_forward.ResumeAndStop.test_marker_between_targets_stops) ... ok
+test_method_failure_continues_and_is_not_retried (test_wf1a_walk_forward.ResumeAndStop.test_method_failure_continues_and_is_not_retried) ... ok
+test_start_checks_refuse_a_changed_registry_or_a_new_flag (test_wf1a_walk_forward.ResumeAndStop.test_start_checks_refuse_a_changed_registry_or_a_new_flag) ... ok
+test_switch_off_stops_before_anything (test_wf1a_walk_forward.ResumeAndStop.test_switch_off_stops_before_anything) ... ok
+test_driver_reads_no_draws_and_imports_no_evaluation (test_wf1a_walk_forward.StaticAndInstalled.test_driver_reads_no_draws_and_imports_no_evaluation) ... ok
+test_switch_on_real_run_root_and_gitignore (test_wf1a_walk_forward.StaticAndInstalled.test_switch_on_real_run_root_and_gitignore) ... ok
+test_plan_is_frozen_and_checked (test_wf1a_walk_forward.TheBatch.test_plan_is_frozen_and_checked) ... ok
+test_runs_in_order_and_every_run_is_consumable (test_wf1a_walk_forward.TheBatch.test_runs_in_order_and_every_run_is_consumable) ... ok
+
+----------------------------------------------------------------------
+Ran 22 tests in 24.595s
+
+OK

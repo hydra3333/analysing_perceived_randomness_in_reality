@@ -1,0 +1,35 @@
+test_against_lgamma_route (test_wf1b_numerics.Binomial.test_against_lgamma_route) ... ok
+test_identities_and_edges (test_wf1b_numerics.Binomial.test_identities_and_edges) ... ok
+test_published_lower (test_wf1b_numerics.Binomial.test_published_lower)
+ev_wf1_tails.txt section D: n=5000, p=51597/3362260, P(X<=0): log10 -33.582. ... ok
+test_published_sizes (test_wf1b_numerics.Binomial.test_published_sizes)
+ev_wf1_numerics2.txt section 3 (MRT-04 sizes), exact on the shorter side and fast. ... ok
+test_tail_below_float64 (test_wf1b_numerics.Binomial.test_tail_below_float64) ... ok
+test_bounds_hit_the_tails (test_wf1b_numerics.ClopperPearson.test_bounds_hit_the_tails) ... ok
+test_known_values (test_wf1b_numerics.ClopperPearson.test_known_values) ... ok
+test_refusals (test_wf1b_numerics.ClopperPearson.test_refusals) ... ok
+test_formats (test_wf1b_numerics.Display.test_formats) ... ok
+test_bound (test_wf1b_numerics.MR7Null.test_bound) ... ok
+test_published_means_and_mass (test_wf1b_numerics.MR7Null.test_published_means_and_mass)
+ev_wf1_reference.txt section 3: Powerball n=291 and 432 have 2038 and 3025 coefficients, mean 1.4 a draw; ... ok
+test_small_case_by_convolution (test_wf1b_numerics.MR7Null.test_small_case_by_convolution) ... ok
+test_weights (test_wf1b_numerics.MR7Null.test_weights) ... ok
+test_above_bound (test_wf1b_numerics.Sigma.test_above_bound) ... ok
+test_extremes (test_wf1b_numerics.Sigma.test_extremes)
+ev_wf1_tails.txt section C. ... ok
+test_mrt03_deficit_example (test_wf1b_numerics.Sigma.test_mrt03_deficit_example)
+Zero Division 9 wins in 291 Powerball draws: P_lo 0.0111058 = 2.28673 deficit sigma (MRT-03). ... ok
+test_pi_constant (test_wf1b_numerics.Sigma.test_pi_constant)
+The module's pi constant against an independent decimal computation (Machin's formula). ... ok
+test_r3_table (test_wf1b_numerics.Sigma.test_r3_table)
+R3 17.5.3's 1-6 sigma table (ev_wf1_reference.txt section 1). ... ok
+test_refusals (test_wf1b_numerics.Sigma.test_refusals) ... ok
+test_round_trip (test_wf1b_numerics.Sigma.test_round_trip)
+Q(sigma) recovers p to well below float64 resolution for ordinary values. ... ok
+test_two_routes_agree (test_wf1b_numerics.Sigma.test_two_routes_agree)
+ev_wf1_numerics2.txt section 1: series and continued fraction agree on x in [5, 6] to 1.7e-47. ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 2.481s
+
+OK

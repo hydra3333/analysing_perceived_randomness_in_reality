@@ -1,0 +1,12 @@
+test_console_binding_to_exact_published_json (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_console_binding_to_exact_published_json) ... ok
+test_failed_record_never_publishes_success (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_failed_record_never_publishes_success) ... ok
+test_matching_protocol_and_strict_order (test_multigame_console_and_synthetic_scorer.ConsoleProtocolTests.test_matching_protocol_and_strict_order) ... ok
+test_firewall_before_outcome_provider (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_firewall_before_outcome_provider) ... ok
+test_outcome_identity_and_rank_mismatch_rejected (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_outcome_identity_and_rank_mismatch_rejected) ... ok
+test_oz_one_barrel_and_native_mid_rank (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_oz_one_barrel_and_native_mid_rank) ... ok
+test_powerball_two_barrels (test_multigame_console_and_synthetic_scorer.SyntheticScorerTests.test_powerball_two_barrels) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.296s
+
+OK

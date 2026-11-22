@@ -1,0 +1,11 @@
+test_human_speed_timeout_constants (test_multigame_static_and_timing.StaticSafetyTests.test_human_speed_timeout_constants) ... ok
+test_legacy_waits_untouched_and_new_literals_named (test_multigame_static_and_timing.StaticSafetyTests.test_legacy_waits_untouched_and_new_literals_named) ... ok
+test_method_loader_import_firewall_except_accepted_legacy_e1 (test_multigame_static_and_timing.StaticSafetyTests.test_method_loader_import_firewall_except_accepted_legacy_e1) ... ok
+test_no_retired_acquisition_overlay_importable (test_multigame_static_and_timing.StaticSafetyTests.test_no_retired_acquisition_overlay_importable) ... ok
+test_protected_v06_ast_mechanically_equal (test_multigame_static_and_timing.StaticSafetyTests.test_protected_v06_ast_mechanically_equal) ... ok
+test_switches_closed_and_empty_scientific_allowlist (test_multigame_static_and_timing.StaticSafetyTests.test_switches_closed_and_empty_scientific_allowlist) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.057s
+
+OK

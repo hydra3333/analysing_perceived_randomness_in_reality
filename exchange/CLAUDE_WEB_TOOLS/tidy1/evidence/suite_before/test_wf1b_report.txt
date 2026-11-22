@@ -1,0 +1,15 @@
+test_equal_and_unequal_duplicates (test_wf1b_report.Duplicates.test_equal_and_unequal_duplicates) ... ok
+test_complete_incomplete_and_empty (test_wf1b_report.Families.test_complete_incomplete_and_empty) ... ok
+test_monte_carlo_facts_everywhere (test_wf1b_report.N1Display.test_monte_carlo_facts_everywhere) ... ok
+test_range_labels_are_kept (test_wf1b_report.N1Display.test_range_labels_are_kept) ... ok
+test_failure_after_outcomes_keeps_the_row (test_wf1b_report.Order.test_failure_after_outcomes_keeps_the_row) ... ok
+test_refusals_append_nothing (test_wf1b_report.Order.test_refusals_append_nothing) ... ok
+test_row_and_plan_precede_the_first_outcome_read (test_wf1b_report.Order.test_row_and_plan_precede_the_first_outcome_read) ... ok
+test_ledgers_and_report (test_wf1b_report.Records.test_ledgers_and_report) ... ok
+test_glossary_rows_and_n1 (test_wf1b_report.Registry.test_glossary_rows_and_n1) ... ok
+test_n1_replays_mr7_exactly_within_monte_carlo_error (test_wf1b_report.Registry.test_n1_replays_mr7_exactly_within_monte_carlo_error) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 60.820s
+
+OK

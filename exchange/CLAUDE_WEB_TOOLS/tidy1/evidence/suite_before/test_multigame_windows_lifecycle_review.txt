@@ -1,0 +1,31 @@
+test_both_scientific_and_synthetic_gates_default_false (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_both_scientific_and_synthetic_gates_default_false) ... ok
+test_cli_strict (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_cli_strict) ... usage: python -m unittest [-h] --synthetic-contract-test
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          [--timeout-seconds TIMEOUT_SECONDS]
+                          [--poll-seconds POLL_SECONDS]
+python -m unittest: error: the following arguments are required: --synthetic-contract-test, --game, --target
+usage: python -m unittest [-h] --synthetic-contract-test
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          [--timeout-seconds TIMEOUT_SECONDS]
+                          [--poll-seconds POLL_SECONDS]
+python -m unittest: error: the following arguments are required: --game, --target
+usage: python -m unittest [-h] --synthetic-contract-test
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          [--timeout-seconds TIMEOUT_SECONDS]
+                          [--poll-seconds POLL_SECONDS]
+python -m unittest: error: unrecognized arguments: --live
+usage: python -m unittest [-h] --synthetic-contract-test
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          [--timeout-seconds TIMEOUT_SECONDS]
+                          [--poll-seconds POLL_SECONDS]
+python -m unittest: error: timeout requires RELEASE_WAIT_SECONDS + 2 x poll_seconds, up to 60
+ok
+test_handshake_release_is_exact_and_create_only (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_handshake_release_is_exact_and_create_only) ... ok
+test_no_child_source_network_kill_or_science_registration (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_no_child_source_network_kill_or_science_registration) ... ok
+test_pure_eligibility_requires_live_verified_ancestry (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_pure_eligibility_requires_live_verified_ancestry) ... ok
+test_timeout_is_rejection_not_self_certification (test_multigame_windows_lifecycle_review.SyntheticLifecycleReviewTests.test_timeout_is_rejection_not_self_certification) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.109s
+
+OK

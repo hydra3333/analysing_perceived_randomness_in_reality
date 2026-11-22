@@ -1,0 +1,24 @@
+test_a_corrected_earlier_row_refuses (test_mhupa_master_versions.Grammar.test_a_corrected_earlier_row_refuses)
+A change to a row inside version 1 breaks every later version's prefix check (design 3.2 rule 2). ... ok
+test_a_good_chain_parses_and_binds_the_master (test_mhupa_master_versions.Grammar.test_a_good_chain_parses_and_binds_the_master) ... ok
+test_a_one_row_ledger_binds_the_whole_file_and_the_init_record (test_mhupa_master_versions.Grammar.test_a_one_row_ledger_binds_the_whole_file_and_the_init_record)
+A version-1-only ledger: the whole master must hash to row 1 (today's check, unchanged), and the INIT ... ok
+test_an_interrupted_update_refuses (test_mhupa_master_versions.Grammar.test_an_interrupted_update_refuses)
+Master replaced, ledger not appended (finding A7): the master matches no row; every reader refuses. ... ok
+test_each_grammar_rule_broken_once_refuses (test_mhupa_master_versions.Grammar.test_each_grammar_rule_broken_once_refuses) ... ok
+test_pins_resolve_only_to_their_own_row (test_mhupa_master_versions.Grammar.test_pins_resolve_only_to_their_own_row) ... ok
+test_prefix_oracle_and_every_row_verified (test_mhupa_master_versions.Grammar.test_prefix_oracle_and_every_row_verified) ... ok
+test_target_gate_by_version (test_mhupa_master_versions.Grammar.test_target_gate_by_version) ... ok
+test_equal_to_the_updater (test_mhupa_master_versions.LedgerColumns.test_equal_to_the_updater) ... ok
+test_version_pins_and_refusals (test_mhupa_master_versions.OutcomeReaderVersions.test_version_pins_and_refusals) ... ok
+test_crlf_master_and_a_no_change_row (test_mhupa_master_versions.ReaderOnAGrownMaster.test_crlf_master_and_a_no_change_row) ... ok
+test_holdout_targets_need_the_opening_record (test_mhupa_master_versions.ReaderOnAGrownMaster.test_holdout_targets_need_the_opening_record) ... ok
+test_the_legacy_1577_exception_is_unchanged (test_mhupa_master_versions.ReaderOnAGrownMaster.test_the_legacy_1577_exception_is_unchanged) ... ok
+test_version1_pin_and_current_pin_give_byte_identical_views_for_development_targets (test_mhupa_master_versions.ReaderOnAGrownMaster.test_version1_pin_and_current_pin_give_byte_identical_views_for_development_targets)
+T-05 extended (Appendix L): on a version-3 master, every development target's view bytes, arrays and digest ... ok
+test_only_the_readers_open_the_masters (test_mhupa_master_versions.Static.test_only_the_readers_open_the_masters) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.337s
+
+OK

@@ -1,0 +1,6 @@
+test_records_are_suffix_invariant_and_carry_no_orchestration_identity (test_e2r_prefix.T03AndT10PrefixOnlyRecords.test_records_are_suffix_invariant_and_carry_no_orchestration_identity) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 1.208s
+
+OK

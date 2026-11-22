@@ -1,0 +1,24 @@
+test_lagrange_equals_newton_and_passes_through_the_points (test_polynomial_fits.Interpolation.test_lagrange_equals_newton_and_passes_through_the_points) ... ok
+test_a_polynomial_is_reproduced_exactly (test_polynomial_fits.LeastSquares.test_a_polynomial_is_reproduced_exactly) ... ok
+test_two_algorithms_agree_and_the_normal_equations_hold (test_polynomial_fits.LeastSquares.test_two_algorithms_agree_and_the_normal_equations_hold) ... ok
+test_an_exact_polynomial_has_zero_error (test_polynomial_fits.Minimax.test_an_exact_polynomial_has_zero_error) ... ok
+test_an_intermediate_reference_with_zero_levelled_error_is_exchanged (test_polynomial_fits.Minimax.test_an_intermediate_reference_with_zero_levelled_error_is_exchanged) ... ok
+test_certificate_holds_and_minimax_beats_least_squares_on_the_worst_error (test_polynomial_fits.Minimax.test_certificate_holds_and_minimax_beats_least_squares_on_the_worst_error) ... ok
+test_certificate_refuses_a_polynomial_that_is_not_minimax (test_polynomial_fits.Minimax.test_certificate_refuses_a_polynomial_that_is_not_minimax) ... ok
+test_certificate_refuses_exactly_one_alternation_too_few (test_polynomial_fits.Minimax.test_certificate_refuses_exactly_one_alternation_too_few) ... ok
+test_the_exchange_cap_raises_rather_than_returning (test_polynomial_fits.Minimax.test_the_exchange_cap_raises_rather_than_returning) ... ok
+test_the_returned_reference_alternates_at_the_minimax_error (test_polynomial_fits.Minimax.test_the_returned_reference_alternates_at_the_minimax_error) ... ok
+test_tied_largest_errors_take_the_lowest_index (test_polynomial_fits.Minimax.test_tied_largest_errors_take_the_lowest_index) ... ok
+test_bad_inputs_are_refused (test_polynomial_fits.Refusals.test_bad_inputs_are_refused) ... ok
+test_exact_arithmetic_only_and_no_outside_access (test_polynomial_fits.StaticGuards.test_exact_arithmetic_only_and_no_outside_access) ... ok
+test_abscissae_and_smoothing (test_polynomial_fits.WorkedExamples.test_abscissae_and_smoothing) ... ok
+test_interpolation (test_polynomial_fits.WorkedExamples.test_interpolation) ... ok
+test_least_squares_flat_line (test_polynomial_fits.WorkedExamples.test_least_squares_flat_line) ... ok
+test_least_squares_rising_line_exceeds_one (test_polynomial_fits.WorkedExamples.test_least_squares_rising_line_exceeds_one) ... ok
+test_minimax_constant (test_polynomial_fits.WorkedExamples.test_minimax_constant) ... ok
+test_minimax_on_raw_alternating_data_is_the_constant_half (test_polynomial_fits.WorkedExamples.test_minimax_on_raw_alternating_data_is_the_constant_half) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.516s
+
+OK

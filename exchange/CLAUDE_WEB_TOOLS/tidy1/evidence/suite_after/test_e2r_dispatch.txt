@@ -1,0 +1,26 @@
+test_real_development_mode_is_refused_too (test_e2r_dispatch.LegacyRunnerGate.test_real_development_mode_is_refused_too) ... ok
+test_released_e1_still_runs_exactly_as_before (test_e2r_dispatch.LegacyRunnerGate.test_released_e1_still_runs_exactly_as_before)
+With the installed registry E_1 is released: the legacy goldens still reproduce (see ... ok
+test_withdrawn_or_flagged_e1_is_refused_before_anything (test_e2r_dispatch.LegacyRunnerGate.test_withdrawn_or_flagged_e1_is_refused_before_anything) ... ok
+test_flag_makes_the_roster_open (test_e2r_dispatch.Package2RosterFromRegistry.test_flag_makes_the_roster_open) ... ok
+test_same_statuses_as_the_old_fixed_roster (test_e2r_dispatch.Package2RosterFromRegistry.test_same_statuses_as_the_old_fixed_roster) ... ok
+test_e1_extra_and_withdrawn_variants (test_e2r_dispatch.RosterIsNotAdmission.test_e1_extra_and_withdrawn_variants) ... ok
+test_mixed_variants_of_a_new_method (test_e2r_dispatch.RosterIsNotAdmission.test_mixed_variants_of_a_new_method) ... ok
+test_method_folder_locator (test_e2r_dispatch.StaticCode2Guards.test_method_folder_locator) ... ok
+test_switch_open_since_wf1a_and_no_flag_in_the_tree (test_e2r_dispatch.StaticCode2Guards.test_switch_open_since_wf1a_and_no_flag_in_the_tree) ... ok
+test_wrappers_read_no_data_and_name_no_receipts (test_e2r_dispatch.StaticCode2Guards.test_wrappers_read_no_data_and_name_no_receipts) ... ok
+test_flag_removal_without_entry_never_releases (test_e2r_dispatch.T14ReleaseTransition.test_flag_removal_without_entry_never_releases) ... ok
+test_release_transition (test_e2r_dispatch.T14ReleaseTransition.test_release_transition) ... ok
+test_gate_fetches_the_registry_again_every_time (test_e2r_dispatch.T14TruthTable.test_gate_fetches_the_registry_again_every_time)
+Reviewer's EX_036 watchpoint: a caller's copy is never trusted or reused. ... ok
+test_installed_e1_admitted_and_e2_to_e62_refused (test_e2r_dispatch.T14TruthTable.test_installed_e1_admitted_and_e2_to_e62_refused) ... ok
+test_missing_stale_and_mismatched_entries (test_e2r_dispatch.T14TruthTable.test_missing_stale_and_mismatched_entries) ... ok
+test_refusal_reads_no_data_and_creates_nothing (test_e2r_dispatch.T14TruthTable.test_refusal_reads_no_data_and_creates_nothing) ... ok
+test_standalone_launcher_prints_the_refusal (test_e2r_dispatch.T14TruthTable.test_standalone_launcher_prints_the_refusal)
+Method_Contract_Runner.py itself: a refused run exits 2 and prints the gate's text only. ... ok
+test_status_times_flag (test_e2r_dispatch.T14TruthTable.test_status_times_flag) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 9.893s
+
+OK

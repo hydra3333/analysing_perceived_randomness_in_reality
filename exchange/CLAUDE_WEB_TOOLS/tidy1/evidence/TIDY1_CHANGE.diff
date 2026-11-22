@@ -1,0 +1,2460 @@
+diff --git a/src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py b/src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
+index 75f1909..9e587be 100644
+--- a/src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
++++ b/src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
+@@ -1,13 +1,37 @@
+-"""E_1 through the E_2-readiness contract: an external wrapper, outside E_1's folder (E2R-CODE-2).
+-
+-Reviewer's E2RC-C04, option (a): E_1's reviewed scientific functions are not touched. This wrapper
+-calls E_1's own multi-game function, E_001.multigame_e1.forecast, unchanged, and turns its counts
+-into a contract MethodOutput. Then verify() recomputes E_1's own result and requires the contract
+-record to equal it label for label (scores, ranking, TOP, WORST) before anything is published, so a
+-published record can never differ from what E_1 itself computes. Since E_1 revision 3 (MHUP-R, design v0.1r5
+-section 2), E_1's function takes the view data kind (SYNTHETIC_CONTRACT_TEST or REAL_HISTORICAL_DEVELOPMENT) and
+-never a run mode, with revision 1's counting, ranking and tie order.
+-The wrapper reads only the DrawView and the MethodTask it is given.
++"""E_1 variant FULL_HISTORY_RAW_COUNTS_V1: the variant's own entry file.
++
++What this file is for
++    It is the one file the research code calls for E_1's only variant. It calls E_1's own counting function
++    (E_001/multigame_e1.py, forecast) unchanged and turns its counts into the output every method returns.
++    verify() then works E_1's own result out again and requires the assembled record to equal it number for
++    number (scores, ranking, TOP and WORST), so a published record can never differ from what E_1 itself
++    computes. Until build step 1 this file was the wrapper src/methods/contract_adapters/e_001.py.
++
++Which part of the specification it carries out
++    The wrapper: doc/Predictive_Randomness_E2R_CODE2_Design_v0_1r1.md section 5.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2, and section 17.3's
++    table of what moves where.
++
++Which of the project's own modules it uses
++    E_001.multigame_e1           forecast: E_1's own count of how often each number was drawn, with its ranking
++    _common.contract_forecast    the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.contract_task        permitted_view_digest and view_data_kind: the identity of the earlier-draws view
++    _common.game_profiles        get_profile: each game's barrels
++
++What uses it
++    src/methods/_common/method_table.py imports it when it builds the runner's table of methods; and E_1's tests.
++
++The header this file had while it was that wrapper, outside E_1's folder; kept
++    E_1 through the E_2-readiness contract: an external wrapper, outside E_1's folder (E2R-CODE-2).
++
++    Reviewer's E2RC-C04, option (a): E_1's reviewed scientific functions are not touched. This wrapper
++    calls E_1's own multi-game function, E_001.multigame_e1.forecast, unchanged, and turns its counts
++    into a contract MethodOutput. Then verify() recomputes E_1's own result and requires the contract
++    record to equal it label for label (scores, ranking, TOP, WORST) before anything is published, so a
++    published record can never differ from what E_1 itself computes. Since E_1 revision 3 (MHUP-R, design v0.1r5
++    section 2), E_1's function takes the view data kind (SYNTHETIC_CONTRACT_TEST or REAL_HISTORICAL_DEVELOPMENT) and
++    never a run mode, with revision 1's counting, ranking and tie order.
++    The wrapper reads only the DrawView and the MethodTask it is given.
+ """
+ from __future__ import annotations
+ 
+@@ -16,10 +40,20 @@ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.contract_task import permitted_view_digest, view_data_kind
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID  the method's ID as the records name it
+ METHOD_ID = 'E_1'
+ 
+ 
+ def _e1_result(task, view) -> dict:
++    """Run E_1's own counting function on the earlier draws.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns E_1's own result, a dict with one entry for each barrel under 'barrels', each with 'scores' (how often
++    each number was drawn), 'ranking', 'top' and 'worst'; for example
++        {'barrels': {'MAIN': {'scores': {'1': 61, '2': 58, ...}, 'ranking': [...], 'top': [...], 'worst': [...]}}}.
++    Refuses (ValueError) a task that is not for E_1.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError('this wrapper is for E_1 only')
+     rows = [{'draw': r['draw'], 'MAIN': r['main'], **({'POWERBALL': [r['powerball']]} if 'powerball' in r else {})}
+@@ -29,6 +63,12 @@ def _e1_result(task, view) -> dict:
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute E_1's counts for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, how often each number was drawn, for example
++        MethodOutput({'MAIN': BarrelOutput(ScoredRanking({1: 61, 2: 58, ...}))}).
++    """
+     result = _e1_result(task, view)
+     return MethodOutput({bid: BarrelOutput(ScoredRanking({int(k): c for k, c in b['scores'].items()}))
+                          for bid, b in result['barrels'].items()})
+diff --git a/src/methods/E_002/__init__.py b/src/methods/E_002/__init__.py
+index f5a7d9b..20dc64f 100644
+--- a/src/methods/E_002/__init__.py
++++ b/src/methods/E_002/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_2 - Expected Recurrence-Interval Alignment (revision 1; wave 2).
++"""E_2 - Expected Recurrence-Interval Alignment: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The gaps, exposures, bins and log-age sign are in the shared, reviewed helper
+-_common/recurrence_gaps.py (revision 1), which E_2, E_17, E_18 and E_19 all use. Nothing here reads a file,
+-starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_002.core_v1 and
++    E_002.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/recurrence_gaps_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_002/core_v1.py b/src/methods/E_002/core_v1.py
+index 104f0e2..8f47deb 100644
+--- a/src/methods/E_002/core_v1.py
++++ b/src/methods/E_002/core_v1.py
+@@ -1,13 +1,34 @@
+-"""E_2 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.1.
+-Recurrence-interval alignment: c_j is the mean or median of the label's completed gaps (all, or its last
+-n), or the fair mean gap L/K if it has none; s_j = -|G_j - c_j| / c_j, G_j being its projected age.
+-Scores only: no probability vector is published (owner decision W2-4).
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_2 (Expected Recurrence-Interval Alignment): the family's shared calculation, used by every E_2 variant.
++
++What this file is for
++    It holds the whole calculation of E_2. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_002/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.1.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_002.variants              VARIANTS: each variant's fixed settings
++    _shared.recurrence_gaps_v1  each number's appearances, gaps and age at the target; exposures by age; age bins
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_002/<VARIANT>/method.py of every E_2 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.1.
++    Recurrence-interval alignment: c_j is the mean or median of the label's completed gaps (all, or its last
++    n), or the fair mean gap L/K if it has none; s_j = -|G_j - c_j| / c_j, G_j being its projected age.
++    Scores only: no probability vector is published (owner decision W2-4).
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -18,6 +39,11 @@ from _shared import recurrence_gaps_v1 as RG
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_2'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -25,6 +51,13 @@ PROVENANCE = 'E_2 r1 (Expected Recurrence-Interval Alignment): exact rational ar
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example ('mean', None, 104), which holds, in order:
++        the statistic ("mean" or "median"), the last n gaps used (None for all), the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -43,6 +76,12 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _median_by_sorting(g):
++    """The median of a list of gap lengths, by sorting them.
++
++    g: the gaps, for example [3, 9, 4].
++    Returns the middle value as a Fraction, for example Fraction(4); for an even count, the mean of the two middle
++    values, for example Fraction(7, 2) for [3, 4].
++    """
+     s = sorted(g)
+     n = len(s)
+     return Fraction(s[n // 2]) if n % 2 else Fraction(s[n // 2 - 1] + s[n // 2], 2)
+@@ -64,6 +103,16 @@ def _median_by_counting(g):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is minus the distance between the number's age at the target and its usual gap, as a share of that
++    gap.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(-2, 5), 2: Fraction(-1, 10), ...}.
++    """
+     stat, last_n, _minimum = cfg
+     fair_gap = Fraction(b.high - b.low + 1, b.selected)
+     app = RG.appearances(draws, b.low, b.high)
+@@ -105,6 +154,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_002/variants.py b/src/methods/E_002/variants.py
+index 3905792..277675b 100644
+--- a/src/methods/E_002/variants.py
++++ b/src/methods/E_002/variants.py
+@@ -1,4 +1,23 @@
+-"""E_2 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision."""
++"""E_2 (Expected Recurrence-Interval Alignment): the fixed settings of each E_2 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the statistic ("mean" or "median"), the last n gaps used
++    (None for all), the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_002/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_2 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_003/__init__.py b/src/methods/E_003/__init__.py
+index b9574a9..2aecd98 100644
+--- a/src/methods/E_003/__init__.py
++++ b/src/methods/E_003/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_3 - Occurrence-Curve Endpoint Forecast (revision 1: exact polynomial fits, including Chebyshev minimax).
++"""E_3 - Occurrence-Curve Endpoint Forecast: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md. This folder is self-contained:
+-`variants` holds the fixed variant table, `contract` connects the method to the shared contract runner. The
+-fits themselves are in the shared, reviewed helper _common/polynomial_fits.py (revision 1), which E_3 and E_4
+-both use. Neither module here reads a file, starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_003.core_v1 and
++    E_003.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/polynomial_fits_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_003/core_v1.py b/src/methods/E_003/core_v1.py
+index 3106a55..19781a7 100644
+--- a/src/methods/E_003/core_v1.py
++++ b/src/methods/E_003/core_v1.py
+@@ -1,13 +1,34 @@
+-"""E_3 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given. For each barrel and each
+-label it takes the label's 0/1 series over the last M eligible draws (t = -M..-1; the target is t = 0), fits
+-the variant's polynomial with the shared helper, and scores the label by p(0), the fitted curve's value at the target.
+-These are curve values, not chances, so no probability vector is returned (design note v0.1 section 4).
+-With fewer than M eligible draws nothing is returned and the contract records INSUFFICIENT_HISTORY.
+-verify() recomputes by a second, differently written algorithm (least squares: Forsythe recurrence;
+-interpolation: Newton divided differences; minimax: the alternation certificate) and refuses any difference.
++"""E_3 (Occurrence-Curve Endpoint Forecast): the family's shared calculation, used by every E_3 variant.
++
++What this file is for
++    It holds the whole calculation of E_3. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_003/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md sections 2 to 4.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_003.variants              VARIANTS: each variant's fixed settings
++    _shared.polynomial_fits_v1  exact polynomial fits to a short series (least squares, interpolation, minimax)
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_003/<VARIANT>/method.py of every E_3 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given. For each barrel and each
++    label it takes the label's 0/1 series over the last M eligible draws (t = -M..-1; the target is t = 0), fits
++    the variant's polynomial with the shared helper, and scores the label by p(0), the fitted curve's value at the target.
++    These are curve values, not chances, so no probability vector is returned (design note v0.1 section 4).
++    With fewer than M eligible draws nothing is returned and the contract records INSUFFICIENT_HISTORY.
++    verify() recomputes by a second, differently written algorithm (least squares: Forsythe recurrence;
++    interpolation: Newton divided differences; minimax: the alternation certificate) and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -16,12 +37,23 @@ from _shared import polynomial_fits_v1 as PF
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID         the method's ID as the records name it
++#   OBSERVATION_VIEW  the view of the earlier draws this family accepts: numbers as a set, no dates
+ METHOD_ID = 'E_3'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ SCORE_COEFFICIENT = 0                  # p(t) = a_0 + a_1 t + ...: E_3 scores a_0
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example ('LS', 52, 2, None, None), which holds, in order:
++        the kind of fit ("LS", "INTERP" or "MINIMAX"), the window M, the degree D, the smoothing half-width H, the
++        interpolation positions.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -75,10 +107,24 @@ def _fits(task, view, second_algorithm: bool):
+ 
+ 
+ def _score(coeffs):
++    """The one coefficient of a fitted polynomial that this family scores by.
++
++    coeffs: the polynomial's coefficients [a_0, a_1, ...], for example [Fraction(9, 44), Fraction(1, 300)].
++    Returns coeffs[SCORE_COEFFICIENT], for example Fraction(9, 44) for those coefficients; 0 if the polynomial is
++    too short to have that coefficient.
++    """
+     return coeffs[SCORE_COEFFICIENT] if len(coeffs) > SCORE_COEFFICIENT else 0
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2045, 2: 0.1273, ...}))}).
++    With fewer earlier draws than the variant's window it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     fits = _fits(task, view, second_algorithm=False)
+     if fits is None:
+         return MethodOutput(barrels={})                       # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_003/variants.py b/src/methods/E_003/variants.py
+index 833e84e..115add8 100644
+--- a/src/methods/E_003/variants.py
++++ b/src/methods/E_003/variants.py
+@@ -1,15 +1,34 @@
+-"""E_3 revision 1: the fixed variants (design note v0.1 section 5). Changing or adding one is a new revision.
++"""E_3 (Occurrence-Curve Endpoint Forecast): the fixed settings of each E_3 variant.
+ 
+-Each variant is (fit, window M, degree D, smoothing half-width H, interpolation node positions):
+-  LS       least squares on the raw 0/1 series (H and nodes unused)
+-  INTERP   interpolation through the smoothed series at the given window positions (the Chebyshev nodes of
+-           the first kind mapped onto 0..M-1, rounded to the nearest position; fixed here so that no floating
+-           point is used at run time; the tests recompute them from the formula)
+-  MINIMAX  Chebyshev minimax on the smoothed series
+-E_3 and E_4 use the same six configurations; their tests check that the two tables are identical.
++What this file is for
++    One table, VARIANTS, with one line for each variant: the kind of fit ("LS", "INTERP" or "MINIMAX"), the window M,
++    the degree D, the smoothing half-width H, the interpolation positions.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_003/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_3 revision 1: the fixed variants (design note v0.1 section 5). Changing or adding one is a new revision.
++
++    Each variant is (fit, window M, degree D, smoothing half-width H, interpolation node positions):
++      LS       least squares on the raw 0/1 series (H and nodes unused)
++      INTERP   interpolation through the smoothed series at the given window positions (the Chebyshev nodes of
++               the first kind mapped onto 0..M-1, rounded to the nearest position; fixed here so that no floating
++               point is used at run time; the tests recompute them from the formula)
++      MINIMAX  Chebyshev minimax on the smoothed series
++    E_3 and E_4 use the same six configurations; their tests check that the two tables are identical.
+ """
+ from types import MappingProxyType
+ 
++# variant_id: (fit; window M; degree D; smoothing half-width H, or None; interpolation positions, or None)
+ VARIANTS = MappingProxyType({
+     'POLY_LS_W52_D2_V1': ('LS', 52, 2, None, None),
+     'POLY_LS_W52_D3_V1': ('LS', 52, 3, None, None),
+diff --git a/src/methods/E_004/__init__.py b/src/methods/E_004/__init__.py
+index a73c2de..27f454c 100644
+--- a/src/methods/E_004/__init__.py
++++ b/src/methods/E_004/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_4 - Occurrence-Curve Gradient Forecast (revision 1: exact polynomial fits, including Chebyshev minimax).
++"""E_4 - Occurrence-Curve Gradient Forecast: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md. This folder is self-contained:
+-`variants` holds the fixed variant table, `contract` connects the method to the shared contract runner. The
+-fits themselves are in the shared, reviewed helper _common/polynomial_fits.py (revision 1), which E_3 and E_4
+-both use. Neither module here reads a file, starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_004.core_v1 and
++    E_004.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/polynomial_fits_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_004/core_v1.py b/src/methods/E_004/core_v1.py
+index fe664c9..5b987a9 100644
+--- a/src/methods/E_004/core_v1.py
++++ b/src/methods/E_004/core_v1.py
+@@ -1,13 +1,34 @@
+-"""E_4 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given. For each barrel and each
+-label it takes the label's 0/1 series over the last M eligible draws (t = -M..-1; the target is t = 0), fits
+-the variant's polynomial with the shared helper, and scores the label by p'(0), the fitted curve's slope at the target (per draw).
+-These are curve slopes, not chances, so no probability vector is returned (design note v0.1 section 4).
+-With fewer than M eligible draws nothing is returned and the contract records INSUFFICIENT_HISTORY.
+-verify() recomputes by a second, differently written algorithm (least squares: Forsythe recurrence;
+-interpolation: Newton divided differences; minimax: the alternation certificate) and refuses any difference.
++"""E_4 (Occurrence-Curve Gradient Forecast): the family's shared calculation, used by every E_4 variant.
++
++What this file is for
++    It holds the whole calculation of E_4. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_004/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md sections 2 to 4.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_004.variants              VARIANTS: each variant's fixed settings
++    _shared.polynomial_fits_v1  exact polynomial fits to a short series (least squares, interpolation, minimax)
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_004/<VARIANT>/method.py of every E_4 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given. For each barrel and each
++    label it takes the label's 0/1 series over the last M eligible draws (t = -M..-1; the target is t = 0), fits
++    the variant's polynomial with the shared helper, and scores the label by p'(0), the fitted curve's slope at the target (per draw).
++    These are curve slopes, not chances, so no probability vector is returned (design note v0.1 section 4).
++    With fewer than M eligible draws nothing is returned and the contract records INSUFFICIENT_HISTORY.
++    verify() recomputes by a second, differently written algorithm (least squares: Forsythe recurrence;
++    interpolation: Newton divided differences; minimax: the alternation certificate) and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -16,12 +37,23 @@ from _shared import polynomial_fits_v1 as PF
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID         the method's ID as the records name it
++#   OBSERVATION_VIEW  the view of the earlier draws this family accepts: numbers as a set, no dates
+ METHOD_ID = 'E_4'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ SCORE_COEFFICIENT = 1                  # p(t) = a_0 + a_1 t + ...: E_4 scores a_1
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example ('LS', 52, 2, None, None), which holds, in order:
++        the kind of fit ("LS", "INTERP" or "MINIMAX"), the window M, the degree D, the smoothing half-width H, the
++        interpolation positions.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -75,10 +107,24 @@ def _fits(task, view, second_algorithm: bool):
+ 
+ 
+ def _score(coeffs):
++    """The one coefficient of a fitted polynomial that this family scores by.
++
++    coeffs: the polynomial's coefficients [a_0, a_1, ...], for example [Fraction(9, 44), Fraction(1, 300)].
++    Returns coeffs[SCORE_COEFFICIENT], for example Fraction(1, 300) for those coefficients; 0 if the polynomial is
++    too short to have that coefficient.
++    """
+     return coeffs[SCORE_COEFFICIENT] if len(coeffs) > SCORE_COEFFICIENT else 0
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2045, 2: 0.1273, ...}))}).
++    With fewer earlier draws than the variant's window it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     fits = _fits(task, view, second_algorithm=False)
+     if fits is None:
+         return MethodOutput(barrels={})                       # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_004/variants.py b/src/methods/E_004/variants.py
+index 02e32b6..a331831 100644
+--- a/src/methods/E_004/variants.py
++++ b/src/methods/E_004/variants.py
+@@ -1,15 +1,34 @@
+-"""E_4 revision 1: the fixed variants (design note v0.1 section 5). Changing or adding one is a new revision.
++"""E_4 (Occurrence-Curve Gradient Forecast): the fixed settings of each E_4 variant.
+ 
+-Each variant is (fit, window M, degree D, smoothing half-width H, interpolation node positions):
+-  LS       least squares on the raw 0/1 series (H and nodes unused)
+-  INTERP   interpolation through the smoothed series at the given window positions (the Chebyshev nodes of
+-           the first kind mapped onto 0..M-1, rounded to the nearest position; fixed here so that no floating
+-           point is used at run time; the tests recompute them from the formula)
+-  MINIMAX  Chebyshev minimax on the smoothed series
+-E_3 and E_4 use the same six configurations; their tests check that the two tables are identical.
++What this file is for
++    One table, VARIANTS, with one line for each variant: the kind of fit ("LS", "INTERP" or "MINIMAX"), the window M,
++    the degree D, the smoothing half-width H, the interpolation positions.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_004/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_4 revision 1: the fixed variants (design note v0.1 section 5). Changing or adding one is a new revision.
++
++    Each variant is (fit, window M, degree D, smoothing half-width H, interpolation node positions):
++      LS       least squares on the raw 0/1 series (H and nodes unused)
++      INTERP   interpolation through the smoothed series at the given window positions (the Chebyshev nodes of
++               the first kind mapped onto 0..M-1, rounded to the nearest position; fixed here so that no floating
++               point is used at run time; the tests recompute them from the formula)
++      MINIMAX  Chebyshev minimax on the smoothed series
++    E_3 and E_4 use the same six configurations; their tests check that the two tables are identical.
+ """
+ from types import MappingProxyType
+ 
++# variant_id: (fit; window M; degree D; smoothing half-width H, or None; interpolation positions, or None)
+ VARIANTS = MappingProxyType({
+     'POLY_LS_W52_D2_V1': ('LS', 52, 2, None, None),
+     'POLY_LS_W52_D3_V1': ('LS', 52, 3, None, None),
+diff --git a/src/methods/E_006/__init__.py b/src/methods/E_006/__init__.py
+index 438d02c..775e493 100644
+--- a/src/methods/E_006/__init__.py
++++ b/src/methods/E_006/__init__.py
+@@ -1,6 +1,18 @@
+-"""E_6 - Per-Number Fitted Distribution Models (revision 1: Beta-Bernoulli posterior means).
++"""E_6 - Per-Number Fitted Distribution Models: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md, section 2.
+-This folder is self-contained: `beta_bernoulli` holds the mathematics, `contract` connects it to the
+-shared contract runner. Neither module reads a file, starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_006.core_v1 and
++    E_006.beta_bernoulli. It holds no code. Each variant has its own folder here (method.py and VARIANT.json);
++    the calculation they share is core_v1.py, and the mathematics and the variants' settings are in
++    beta_bernoulli.py. Nothing in this folder reads a file, starts a process or touches orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md section 2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_006/beta_bernoulli.py b/src/methods/E_006/beta_bernoulli.py
+index 0cf356a..010e30d 100644
+--- a/src/methods/E_006/beta_bernoulli.py
++++ b/src/methods/E_006/beta_bernoulli.py
+@@ -1,21 +1,39 @@
+-"""E_6 revision 1: per-number Beta-Bernoulli posterior means, in exact rational arithmetic.
+-
+-The mathematics only (specification section 2). It imports nothing from the project, reads nothing
+-and returns exact fractions; the caller rounds each one to a float64 exactly once.
+-
+-For one barrel with labels low..high, `selected` labels drawn per draw, and the eligible draws before
+-the target listed oldest first (the last one is the newest, N - 1):
+-  r      = selected / L, the fair-draw inclusion rate, with L = high - low + 1
+-  prior  = Beta(r, 1 - r): centred on r and worth exactly one draw
+-  w(a)   = lam ** a for a draw that is a draws older than the newest (the newest has weight 1)
+-  k_j    = sum of w over the draws in which label j was drawn;  W = sum of w over all draws
+-  p_j    = (r + k_j) / (1 + W)
+-Because every draw selects exactly `selected` labels, sum_j k_j = selected * W, so sum_j p_j equals
+-`selected` exactly (7 for a main barrel, 1 for the Powerball). Nothing is renormalised.
+-
+-For lam = 1 this is the ordinary conjugate Beta-Bernoulli posterior mean. For lam < 1 it is a discounted
+-(power-likelihood) Beta update: each draw's evidence enters with weight lam ** age, so it is not the
+-posterior of the plain independent-Bernoulli model (the reviewer's terminology note, EX_051).
++"""E_6 (Per-Number Fitted Distribution Models): the mathematics, and the fixed settings of each variant.
++
++What this file is for
++    It holds the two exact algorithms that estimate, for one barrel, how likely each number is to be drawn
++    next (posterior_means and, written differently for checking, posterior_means_by_recursion), and the table
++    VARIANTS that gives each variant its forgetting factor. Exact fractions only; the caller rounds once.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md section 2 (the variants:
++    section 2.5).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's own module
++    beside its core file).
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_006/core_v1.py, and this family's tests.
++
++The mathematics (the header this file had before the tidy-up, kept)
++    The mathematics only (specification section 2). It imports nothing from the project, reads nothing
++    and returns exact fractions; the caller rounds each one to a float64 exactly once.
++
++    For one barrel with labels low..high, `selected` labels drawn per draw, and the eligible draws before
++    the target listed oldest first (the last one is the newest, N - 1):
++      r      = selected / L, the fair-draw inclusion rate, with L = high - low + 1
++      prior  = Beta(r, 1 - r): centred on r and worth exactly one draw
++      w(a)   = lam ** a for a draw that is a draws older than the newest (the newest has weight 1)
++      k_j    = sum of w over the draws in which label j was drawn;  W = sum of w over all draws
++      p_j    = (r + k_j) / (1 + W)
++    Because every draw selects exactly `selected` labels, sum_j k_j = selected * W, so sum_j p_j equals
++    `selected` exactly (7 for a main barrel, 1 for the Powerball). Nothing is renormalised.
++
++    For lam = 1 this is the ordinary conjugate Beta-Bernoulli posterior mean. For lam < 1 it is a discounted
++    (power-likelihood) Beta update: each draw's evidence enters with weight lam ** age, so it is not the
++    posterior of the plain independent-Bernoulli model (the reviewer's terminology note, EX_051).
+ """
+ from __future__ import annotations
+ 
+@@ -33,6 +51,14 @@ VARIANTS = MappingProxyType({
+ 
+ 
+ def _check(draws: Sequence[Sequence[int]], low: int, high: int, selected: int, lam: Fraction) -> None:
++    """Refuse arguments that do not describe a barrel and its draws.
++
++    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's lowest and highest number.
++    selected: how many numbers are drawn each time.  lam: the forgetting factor.
++    Returns nothing. Refuses (ValueError) a forgetting factor that is not an exact fraction above 0 and at most 1, a
++    barrel that is not whole numbers with fewer drawn than it holds, or a draw that is not `selected` different
++    numbers of the barrel (the message names the draw).
++    """
+     if type(lam) is not Fraction or not 0 < lam <= 1:
+         raise ValueError('the forgetting factor must be an exact fraction in (0, 1]')
+     if type(low) is not int or type(high) is not int or type(selected) is not int or not 1 <= selected <= high - low:
+diff --git a/src/methods/E_006/core_v1.py b/src/methods/E_006/core_v1.py
+index 14ed67a..adf27a3 100644
+--- a/src/methods/E_006/core_v1.py
++++ b/src/methods/E_006/core_v1.py
+@@ -1,10 +1,33 @@
+-"""E_6 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
++"""E_6 (Per-Number Fitted Distribution Models): the family's shared calculation, used by every E_6 variant.
+ 
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view
+-before compute() is called. compute() reads only the
+-view and the frozen task it is given; it returns a MethodOutput with no identity fields, and the contract
+-assembles, ranks, applies ties and validates the record (E2R-R07). verify() then recomputes the scores by
+-a different exact algorithm and refuses the record if anything differs, before anything is published.
++What this file is for
++    It connects the mathematics of E_6 (beta_bernoulli.py, beside this file) to the research code. compute()
++    turns the draws before a target into one estimate for every number of every barrel; verify() works the
++    same estimates out again by a different exact algorithm and refuses the record if they differ. Each
++    variant's own method.py passes its task here, and the variant's forgetting factor is looked up, by the
++    task's variant ID, in the VARIANTS table of beta_bernoulli.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md section 2.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_006.beta_bernoulli         VARIANTS, and the two exact algorithms posterior_means and
++    posterior_means_by_recursion
++    _common.contract_forecast    the types a method returns (MethodOutput, BarrelOutput, ScoredRanking,
++    ProbabilityVector)
++    _common.game_profiles        get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_006/<VARIANT>/method.py of every E_6 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view
++    before compute() is called. compute() reads only the
++    view and the frozen task it is given; it returns a MethodOutput with no identity fields, and the contract
++    assembles, ranks, applies ties and validates the record (E2R-R07). verify() then recomputes the scores by
++    a different exact algorithm and refuses the record if anything differs, before anything is published.
+ """
+ from __future__ import annotations
+ 
+@@ -14,6 +37,10 @@ from E_006.beta_bernoulli import VARIANTS, posterior_means, posterior_means_by_r
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ProbabilityVector, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID         the method's ID as the records name it
++#   OBSERVATION_VIEW  the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PROVENANCE        the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_6'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PROVENANCE = ('E_6 r1 Beta-Bernoulli estimates (posterior means; discounted updates for the decay variants): '
+@@ -21,6 +48,12 @@ PROVENANCE = ('E_6 r1 Beta-Bernoulli estimates (posterior means; discounted upda
+ 
+ 
+ def _lam(task) -> Fraction:
++    """Check that the task is for this family and return the variant's forgetting factor.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's entry of VARIANTS, for example Fraction(74, 75) (1 means every earlier draw counts equally).
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError('this module computes E_6 only')
+     if task.variant_id not in VARIANTS:
+@@ -39,12 +72,27 @@ def _barrel_draws(view, barrel_id: str) -> list[list[int]]:
+ 
+ 
+ def _exact(task, view, method) -> dict[str, dict[int, Fraction]]:
++    """The exact estimate of every number of every barrel, by one of the two algorithms.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target).
++    method: posterior_means (the first route) or posterior_means_by_recursion (the second, for verify()).
++    Returns {barrel: {number: exact estimate}}, for example {'MAIN': {1: Fraction(41, 200), 2: Fraction(39, 200), ...}}.
++    """
+     lam = _lam(task)
+     return {b.barrel_id: method(_barrel_draws(view, b.barrel_id), b.low, b.high, b.selected, lam)
+             for b in get_profile(task.game_id).barrels}
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the estimates for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact estimate rounded once to a float64, both as
++    its score and as its published chance (the estimates of a barrel sum to the number drawn), for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.205, 2: 0.195, ...}),
++                                                   probability=ProbabilityVector([0.205, 0.195, ...], PROVENANCE))}).
++    Unlike the other families it never returns an empty output: every number of every barrel always gets an estimate.
++    """
+     out = {}
+     for bid, p in _exact(task, view, posterior_means).items():
+         floats = {j: float(pj) for j, pj in p.items()}            # correctly rounded, once
+diff --git a/src/methods/E_007/__init__.py b/src/methods/E_007/__init__.py
+index f802282..5e13007 100644
+--- a/src/methods/E_007/__init__.py
++++ b/src/methods/E_007/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_7 - Bayesian Frequency Shrinkage (revision 1; wave 1).
++"""E_7 - Bayesian Frequency Shrinkage: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The counting is in the shared, reviewed helper _common/occurrence_counts.py
+-(revision 1), which E_7, E_8, E_9 and E_10 all use. Nothing here reads a file, starts a process or touches
+-orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_007.core_v1 and
++    E_007.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/occurrence_counts_v1.py. Nothing in this folder reads a file, starts a process or
++    touches orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_007/core_v1.py b/src/methods/E_007/core_v1.py
+index b55fd4c..a94bd95 100644
+--- a/src/methods/E_007/core_v1.py
++++ b/src/methods/E_007/core_v1.py
+@@ -1,12 +1,34 @@
+-"""E_7 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.1.
+-Beta shrinkage over a window: s_j = (c r + k_j(M)) / (c + M), the posterior mean of a Beta(c r, c(1 - r))
+-prior updated by the window's counts (r = K/L, the fair-draw rate). The values sum to K exactly.
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_7 (Bayesian Frequency Shrinkage): the family's shared calculation, used by every E_7 variant.
++
++What this file is for
++    It holds the whole calculation of E_7. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_007/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.1.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_007.variants                VARIANTS: each variant's fixed settings
++    _shared.occurrence_counts_v1  how often each number was drawn in a window, in periods, or with decaying weights
++    _common.contract_forecast     the types a method returns (MethodOutput, BarrelOutput, ScoredRanking,
++                                  ProbabilityVector)
++    _common.game_profiles         get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_007/<VARIANT>/method.py of every E_7 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.1.
++    Beta shrinkage over a window: s_j = (c r + k_j(M)) / (c + M), the posterior mean of a Beta(c r, c(1 - r))
++    prior updated by the window's counts (r = K/L, the fair-draw rate). The values sum to K exactly.
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -17,6 +39,11 @@ from _shared import occurrence_counts_v1 as OC
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ProbabilityVector, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_7'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = True
+@@ -24,6 +51,13 @@ PROVENANCE = 'E_7 r1 (Bayesian Frequency Shrinkage): exact rational arithmetic,
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (52, Fraction(52), 52), which holds, in order:
++        the window M (None for all earlier draws), the prior strength c, the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -42,6 +76,15 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the number's rate in the window, pulled towards the fair rate.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(21, 104), 2: Fraction(19, 104), ...}.
++    """
+     M, c, _minimum = cfg
+     size = len(draws) if M is None else M
+     r = Fraction(b.selected, b.high - b.low + 1)
+@@ -71,6 +114,15 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, both as its
++    score and as its published chance, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_007/variants.py b/src/methods/E_007/variants.py
+index 96ad527..3360762 100644
+--- a/src/methods/E_007/variants.py
++++ b/src/methods/E_007/variants.py
+@@ -1,4 +1,23 @@
+-"""E_7 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision."""
++"""E_7 (Bayesian Frequency Shrinkage): the fixed settings of each E_7 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the window M (None for all earlier draws), the prior strength
++    c, the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_007/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_7 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_008/__init__.py b/src/methods/E_008/__init__.py
+index e23fe4e..f2a0e0c 100644
+--- a/src/methods/E_008/__init__.py
++++ b/src/methods/E_008/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_8 - Hierarchical Dirichlet-Multinomial Propensity (revision 1; wave 1).
++"""E_8 - Hierarchical Dirichlet-Multinomial Propensity: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The counting is in the shared, reviewed helper _common/occurrence_counts.py
+-(revision 1), which E_7, E_8, E_9 and E_10 all use. Nothing here reads a file, starts a process or touches
+-orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_008.core_v1 and
++    E_008.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/occurrence_counts_v1.py. Nothing in this folder reads a file, starts a process or
++    touches orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_008/core_v1.py b/src/methods/E_008/core_v1.py
+index 5721985..3cdb8ee 100644
+--- a/src/methods/E_008/core_v1.py
++++ b/src/methods/E_008/core_v1.py
+@@ -1,13 +1,35 @@
+-"""E_8 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.4.
+-Hierarchical rates across periods (beta-binomial, method of moments): the newest n*P draws in n periods
+-of P; the between-period excess variance, pooled over labels and clamped to [0, r(1 - r)], gives one
+-weight w for the latest period; s_j = w p_{j,latest} + (1 - w) m_j. The values sum to K exactly.
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_8 (Hierarchical Dirichlet-Multinomial Propensity): the family's shared calculation, used by every E_8 variant.
++
++What this file is for
++    It holds the whole calculation of E_8. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_008/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.4.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_008.variants                VARIANTS: each variant's fixed settings
++    _shared.occurrence_counts_v1  how often each number was drawn in a window, in periods, or with decaying weights
++    _common.contract_forecast     the types a method returns (MethodOutput, BarrelOutput, ScoredRanking,
++                                  ProbabilityVector)
++    _common.game_profiles         get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_008/<VARIANT>/method.py of every E_8 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.4.
++    Hierarchical rates across periods (beta-binomial, method of moments): the newest n*P draws in n periods
++    of P; the between-period excess variance, pooled over labels and clamped to [0, r(1 - r)], gives one
++    weight w for the latest period; s_j = w p_{j,latest} + (1 - w) m_j. The values sum to K exactly.
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -18,6 +40,11 @@ from _shared import occurrence_counts_v1 as OC
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ProbabilityVector, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_8'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = True
+@@ -25,6 +52,13 @@ PROVENANCE = 'E_8 r1 (Hierarchical Dirichlet-Multinomial Propensity): exact rati
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (13, 26), which holds, in order:
++        the period length P, the minimum history (2P).
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -43,6 +77,15 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is a weighted mix of the number's rate in the latest period and its rate over all periods.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(11, 52), 2: Fraction(5, 26), ...}.
++    """
+     P, _minimum = cfg
+     L = b.high - b.low + 1
+     r = Fraction(b.selected, L)
+@@ -81,6 +124,15 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, both as its
++    score and as its published chance, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_008/variants.py b/src/methods/E_008/variants.py
+index 5a5b93f..98c6dea 100644
+--- a/src/methods/E_008/variants.py
++++ b/src/methods/E_008/variants.py
+@@ -1,4 +1,22 @@
+-"""E_8 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision."""
++"""E_8 (Hierarchical Dirichlet-Multinomial Propensity): the fixed settings of each E_8 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the period length P, the minimum history (2P).
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_008/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_8 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_009/__init__.py b/src/methods/E_009/__init__.py
+index e80bdee..f1da465 100644
+--- a/src/methods/E_009/__init__.py
++++ b/src/methods/E_009/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_9 - Exponentially Decayed Occurrence Rates (revision 1; wave 1).
++"""E_9 - Exponentially Decayed Occurrence Rates: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The counting is in the shared, reviewed helper _common/occurrence_counts.py
+-(revision 1), which E_7, E_8, E_9 and E_10 all use. Nothing here reads a file, starts a process or touches
+-orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_009.core_v1 and
++    E_009.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/occurrence_counts_v1.py. Nothing in this folder reads a file, starts a process or
++    touches orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_009/core_v1.py b/src/methods/E_009/core_v1.py
+index 0f0b1a0..afa1799 100644
+--- a/src/methods/E_009/core_v1.py
++++ b/src/methods/E_009/core_v1.py
+@@ -1,12 +1,33 @@
+-"""E_9 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.2.
+-Exponentially decayed counts: s_j = the sum over the eligible draws containing j of lambda**age, the
+-newest draw weighing 1. Scores only: a weighted count is not a chance.
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_9 (Exponentially Decayed Occurrence Rates): the family's shared calculation, used by every E_9 variant.
++
++What this file is for
++    It holds the whole calculation of E_9. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_009/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.2.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_009.variants                VARIANTS: each variant's fixed settings
++    _shared.occurrence_counts_v1  how often each number was drawn in a window, in periods, or with decaying weights
++    _common.contract_forecast     the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles         get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_009/<VARIANT>/method.py of every E_9 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.2.
++    Exponentially decayed counts: s_j = the sum over the eligible draws containing j of lambda**age, the
++    newest draw weighing 1. Scores only: a weighted count is not a chance.
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -17,6 +38,11 @@ from _shared import occurrence_counts_v1 as OC
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_9'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -24,6 +50,13 @@ PROVENANCE = 'E_9 r1 (Exponentially Decayed Occurrence Rates): exact rational ar
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (Fraction(5, 6), 1), which holds, in order:
++        the decay factor lambda, the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -42,6 +75,15 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the number's count, each appearance weighted by lambda to the power of its age.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(91, 36), 2: Fraction(5, 6), ...}.
++    """
+     lam, _minimum = cfg
+     method = OC.decayed_counts_by_recursion if second else OC.decayed_counts
+     return method(draws, b.low, b.high, lam)
+@@ -57,6 +99,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_009/variants.py b/src/methods/E_009/variants.py
+index ea09a41..5352407 100644
+--- a/src/methods/E_009/variants.py
++++ b/src/methods/E_009/variants.py
+@@ -1,4 +1,22 @@
+-"""E_9 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision."""
++"""E_9 (Exponentially Decayed Occurrence Rates): the fixed settings of each E_9 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the decay factor lambda, the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_009/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_9 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_010/__init__.py b/src/methods/E_010/__init__.py
+index ad6e832..d3eb40d 100644
+--- a/src/methods/E_010/__init__.py
++++ b/src/methods/E_010/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_10 - Multi-Horizon Frequency Contrasts (revision 1; wave 1).
++"""E_10 - Multi-Horizon Frequency Contrasts: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The counting is in the shared, reviewed helper _common/occurrence_counts.py
+-(revision 1), which E_7, E_8, E_9 and E_10 all use. Nothing here reads a file, starts a process or touches
+-orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_010.core_v1 and
++    E_010.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/occurrence_counts_v1.py. Nothing in this folder reads a file, starts a process or
++    touches orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_010/core_v1.py b/src/methods/E_010/core_v1.py
+index 8d4b0f0..d0219a1 100644
+--- a/src/methods/E_010/core_v1.py
++++ b/src/methods/E_010/core_v1.py
+@@ -1,12 +1,33 @@
+-"""E_10 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.3.
+-Two-window contrast: s_j = k_j(S)/S - (k_j(Lw) - k_j(S))/(Lw - S), the rate in the newest S draws minus
+-the rate in the Lw - S draws before them. Scores only: a difference of rates is not a chance.
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_10 (Multi-Horizon Frequency Contrasts): the family's shared calculation, used by every E_10 variant.
++
++What this file is for
++    It holds the whole calculation of E_10. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_010/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.3.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_010.variants                VARIANTS: each variant's fixed settings
++    _shared.occurrence_counts_v1  how often each number was drawn in a window, in periods, or with decaying weights
++    _common.contract_forecast     the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles         get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_010/<VARIANT>/method.py of every E_10 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md section 3.3.
++    Two-window contrast: s_j = k_j(S)/S - (k_j(Lw) - k_j(S))/(Lw - S), the rate in the newest S draws minus
++    the rate in the Lw - S draws before them. Scores only: a difference of rates is not a chance.
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -17,6 +38,11 @@ from _shared import occurrence_counts_v1 as OC
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_10'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -24,6 +50,13 @@ PROVENANCE = 'E_10 r1 (Multi-Horizon Frequency Contrasts): exact rational arithm
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (13, 104, 104), which holds, in order:
++        the short window S, the long window Lw (None for all earlier draws), the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -42,6 +75,15 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the number's rate in the newest S draws minus its rate in the rest of the long window.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(3, 91), 2: Fraction(-2, 91), ...}.
++    """
+     S, Lw, _minimum = cfg
+     long = len(draws) if Lw is None else Lw
+     counts = OC.window_counts_by_prefix if second else OC.window_counts
+@@ -60,6 +102,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_010/variants.py b/src/methods/E_010/variants.py
+index ce1a32d..453d8a8 100644
+--- a/src/methods/E_010/variants.py
++++ b/src/methods/E_010/variants.py
+@@ -1,4 +1,23 @@
+-"""E_10 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision."""
++"""E_10 (Multi-Horizon Frequency Contrasts): the fixed settings of each E_10 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the short window S, the long window Lw (None for all earlier
++    draws), the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_010/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_10 revision 1: the fixed variants (design note v0.1r1 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_017/__init__.py b/src/methods/E_017/__init__.py
+index 97e11af..12e301f 100644
+--- a/src/methods/E_017/__init__.py
++++ b/src/methods/E_017/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_17 - Discrete Recurrence Hazard Curves (revision 1; wave 2).
++"""E_17 - Discrete Recurrence Hazard Curves: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The gaps, exposures, bins and log-age sign are in the shared, reviewed helper
+-_common/recurrence_gaps.py (revision 1), which E_2, E_17, E_18 and E_19 all use. Nothing here reads a file,
+-starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_017.core_v1 and
++    E_017.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/recurrence_gaps_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_017/core_v1.py b/src/methods/E_017/core_v1.py
+index 2abf6dd..10ae1a5 100644
+--- a/src/methods/E_017/core_v1.py
++++ b/src/methods/E_017/core_v1.py
+@@ -1,14 +1,35 @@
+-"""E_17 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
+-Discrete recurrence hazard (Method A as E_17). Binned: h_b = (E_b + c r)/(R_b + c) over seven log-spaced age
+-bins, s_j = h at the bin of the projected age G_j. Log-age sign (Method A's predictor, exactly in its
+-ranking): sigma = the certified sign of sum_k (n E_k - e R_k) ln k, s_j = sigma * G_j.
+-Scores only: no probability vector is published (owner decision W2-4).
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_17 (Discrete Recurrence Hazard Curves): the family's shared calculation, used by every E_17 variant.
++
++What this file is for
++    It holds the whole calculation of E_17. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_017/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_017.variants              VARIANTS: each variant's fixed settings
++    _shared.recurrence_gaps_v1  each number's appearances, gaps and age at the target; exposures by age; age bins
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_017/<VARIANT>/method.py of every E_17 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
++    Discrete recurrence hazard (Method A as E_17). Binned: h_b = (E_b + c r)/(R_b + c) over seven log-spaced age
++    bins, s_j = h at the bin of the projected age G_j. Log-age sign (Method A's predictor, exactly in its
++    ranking): sigma = the certified sign of sum_k (n E_k - e R_k) ln k, s_j = sigma * G_j.
++    Scores only: no probability vector is published (owner decision W2-4).
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -19,6 +40,11 @@ from _shared import recurrence_gaps_v1 as RG
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_17'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -26,6 +52,14 @@ PROVENANCE = 'E_17 r1 (Discrete Recurrence Hazard Curves): exact rational arithm
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example ('bins', Fraction(100), None, 52), which holds, in order:
++        the form ("bins" or "logage"), the prior strength c (None for "logage"), the window in draws (None for all), the
++        minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -67,6 +101,15 @@ def binned_hazard(draws, b, c, window, second):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the hazard at the number's age ("bins"), or its age times a certified sign ("logage").
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(41, 200), 2: Fraction(19, 100), ...}.
++    """
+     form, c, window, _minimum = cfg
+     ages = RG.projected_ages(len(draws), RG.appearances(draws, b.low, b.high))
+     if form == 'bins':
+@@ -91,6 +134,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_017/variants.py b/src/methods/E_017/variants.py
+index 7eab786..ba1628f 100644
+--- a/src/methods/E_017/variants.py
++++ b/src/methods/E_017/variants.py
+@@ -1,4 +1,23 @@
+-"""E_17 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision."""
++"""E_17 (Discrete Recurrence Hazard Curves): the fixed settings of each E_17 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the form ("bins" or "logage"), the prior strength c (None for
++    "logage"), the window in draws (None for all), the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_017/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_17 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_018/__init__.py b/src/methods/E_018/__init__.py
+index d7f6096..769ff1c 100644
+--- a/src/methods/E_018/__init__.py
++++ b/src/methods/E_018/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_18 - Mixtures of Recurrence Modes (revision 1; wave 2).
++"""E_18 - Mixtures of Recurrence Modes: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The gaps, exposures, bins and log-age sign are in the shared, reviewed helper
+-_common/recurrence_gaps.py (revision 1), which E_2, E_17, E_18 and E_19 all use. Nothing here reads a file,
+-starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_018.core_v1 and
++    E_018.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/recurrence_gaps_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_018/core_v1.py b/src/methods/E_018/core_v1.py
+index 74bc89f..b7391ed 100644
+--- a/src/methods/E_018/core_v1.py
++++ b/src/methods/E_018/core_v1.py
+@@ -1,14 +1,35 @@
+-"""E_18 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.4.
+-Mixture of recurrence modes: a fixed library of four gap laws (FAST, FAIR, SLOW, REGULAR); per-label weights
+-by an exact minimum chi-square fit of the label's binned completed gaps (shrunk by c fair pseudo-gaps) over
+-the simplex, every support tried; s_j = the mixture hazard at the projected age G_j.
+-Scores only: no probability vector is published (owner decision W2-4).
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_18 (Mixtures of Recurrence Modes): the family's shared calculation, used by every E_18 variant.
++
++What this file is for
++    It holds the whole calculation of E_18. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_018/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.4.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_018.variants              VARIANTS: each variant's fixed settings
++    _shared.recurrence_gaps_v1  each number's appearances, gaps and age at the target; exposures by age; age bins
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_018/<VARIANT>/method.py of every E_18 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.4.
++    Mixture of recurrence modes: a fixed library of four gap laws (FAST, FAIR, SLOW, REGULAR); per-label weights
++    by an exact minimum chi-square fit of the label's binned completed gaps (shrunk by c fair pseudo-gaps) over
++    the simplex, every support tried; s_j = the mixture hazard at the projected age G_j.
++    Scores only: no probability vector is published (owner decision W2-4).
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -19,6 +40,11 @@ from _shared import recurrence_gaps_v1 as RG
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_18'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -26,6 +52,13 @@ PROVENANCE = 'E_18 r1 (Mixtures of Recurrence Modes): exact rational arithmetic,
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (None, Fraction(10), 104), which holds, in order:
++        the window in draws for the completed gaps (None for all), the prior pseudo-gaps c, the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -44,10 +77,21 @@ def _barrel_draws(view, barrel_id):
+ 
+ 
+ def _surv_geom(p, G):
++    """The chance that a gap is G draws or longer, when every draw ends the gap with chance p.
++
++    p: the chance per draw, an exact fraction, for example Fraction(1, 5).  G: the gap length, 1 or more.
++    Returns (1 - p) to the power G - 1, for example Fraction(16, 25) for p = 1/5 and G = 3.
++    """
+     return (1 - p) ** (G - 1)
+ 
+ 
+ def _surv_nb2(p, G):
++    """The chance that a gap is G draws or longer, when the gap ends at the second "success" of chance p.
++
++    p: the chance per draw, an exact fraction.  G: the gap length, 1 or more.
++    Returns the chance of fewer than two successes in G - 1 draws, for example Fraction(112, 125) for p = 1/5 and
++    G = 4; 1 for G = 1.
++    """
+     return Fraction(1) if G <= 1 else (1 - p) ** (G - 1) + (G - 1) * p * (1 - p) ** (G - 2)
+ 
+ 
+@@ -76,6 +120,11 @@ def _pmf_and_survival_by_summation(i, r, G):
+ 
+ 
+ def _solve(A, rhs):
++    """Solve the square system of equations A x = rhs exactly (Gauss-Jordan elimination on fractions).
++
++    A: the matrix, a list of rows of Fractions.  rhs: the right-hand side, one Fraction for each row.
++    Returns the solution, for example [Fraction(1, 2), Fraction(3, 4)]; None if the system has no single solution.
++    """
+     n = len(A)
+     M = [row[:] + [rhs[i]] for i, row in enumerate(A)]
+     for col in range(n):
+@@ -91,6 +140,12 @@ def _solve(A, rhs):
+ 
+ 
+ def _objective(q, P, Pf, w):
++    """How far a mixture of the gap laws is from the observed gap shares (a chi-square distance).
++
++    q: the observed share of gaps in each bin.  P: for each gap law, its share in each bin.  Pf: the fair law's
++    shares, used as the weights of the distance.  w: the mixture's weight on each gap law.
++    Returns the sum over the bins of (q - the mixture's share) squared, divided by Pf, for example Fraction(3, 400).
++    """
+     return sum(((q[b] - sum(w[c] * P[c][b] for c in range(len(P)))) ** 2 / Pf[b] for b in range(len(q))), Fraction(0))
+ 
+ 
+@@ -132,6 +187,15 @@ def kkt_holds(q, P, Pf, w):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the hazard, at the number's age, of its fitted mixture of four gap laws.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(13, 64), 2: Fraction(3, 16), ...}.
++    """
+     window, c, _minimum = cfg
+     L = b.high - b.low + 1
+     r = Fraction(b.selected, L)
+@@ -175,6 +239,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_018/variants.py b/src/methods/E_018/variants.py
+index 587c4f6..0e861dc 100644
+--- a/src/methods/E_018/variants.py
++++ b/src/methods/E_018/variants.py
+@@ -1,4 +1,23 @@
+-"""E_18 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision."""
++"""E_18 (Mixtures of Recurrence Modes): the fixed settings of each E_18 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the window in draws for the completed gaps (None for all),
++    the prior pseudo-gaps c, the minimum history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_018/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_18 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/E_019/__init__.py b/src/methods/E_019/__init__.py
+index bd0a18f..8f91ad6 100644
+--- a/src/methods/E_019/__init__.py
++++ b/src/methods/E_019/__init__.py
+@@ -1,7 +1,19 @@
+-"""E_19 - Periodic Recurrence-Hazard Peaks (revision 1; wave 2).
++"""E_19 - Periodic Recurrence-Hazard Peaks: the family's folder.
+ 
+-Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md. `variants` holds the fixed variant table and `contract` connects the method to
+-the shared contract runner. The gaps, exposures, bins and log-age sign are in the shared, reviewed helper
+-_common/recurrence_gaps.py (revision 1), which E_2, E_17, E_18 and E_19 all use. Nothing here reads a file,
+-starts a process or touches orchestration.
++What this file is for
++    It makes this folder a Python package, so that the family's files can be imported as E_019.core_v1 and
++    E_019.variants. It holds no code. Each variant has its own folder here (method.py and
++    VARIANT.json); the calculation they share is core_v1.py, their fixed settings are in variants.py, and the shared
++    helper they use is _shared/recurrence_gaps_v1.py. Nothing in this folder reads a file, starts a process or touches
++    orchestration.
++
++Which part of the specification it carries out
++    doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2. The method itself:
++    doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    Python, whenever a file of this family is imported.
+ """
+diff --git a/src/methods/E_019/core_v1.py b/src/methods/E_019/core_v1.py
+index 745041d..ceea930 100644
+--- a/src/methods/E_019/core_v1.py
++++ b/src/methods/E_019/core_v1.py
+@@ -1,14 +1,35 @@
+-"""E_19 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+-
+-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.3.
+-Periodic recurrence hazard: E_17's binned hazard b(k) (prior c, all draws) as the trend, times a per-label
+-factor in age mod T shrunk by d towards the pooled one, with the label's overall level divided out:
+-s_j = b(G_j) psi_{j, G_j mod T}.
+-Scores only: no probability vector is published (owner decision W2-4).
+-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
++"""E_19 (Periodic Recurrence-Hazard Peaks): the family's shared calculation, used by every E_19 variant.
++
++What this file is for
++    It holds the whole calculation of E_19. compute() turns the draws before a target into one score for
++    every number of every barrel; verify() works the same scores out again by a second, differently written
++    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
++    variant's fixed settings are looked up, by the task's variant ID, in E_019/variants.py.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.3.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
++    core file).
++
++Which of the project's own modules it uses
++    E_019.variants              VARIANTS: each variant's fixed settings
++    _shared.recurrence_gaps_v1  each number's appearances, gaps and age at the target; exposures by age; age bins
++    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
++    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
++
++What uses it
++    E_019/<VARIANT>/method.py of every E_19 variant, and this family's tests.
++
++How it computes (the header this file had before the tidy-up, kept)
++    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
++    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
++    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.3.
++    Periodic recurrence hazard: E_17's binned hazard b(k) (prior c, all draws) as the trend, times a per-label
++    factor in age mod T shrunk by d towards the pooled one, with the label's overall level divided out:
++    s_j = b(G_j) psi_{j, G_j mod T}.
++    Scores only: no probability vector is published (owner decision W2-4).
++    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
++    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+ """
+ from __future__ import annotations
+ 
+@@ -19,6 +40,11 @@ from _shared import recurrence_gaps_v1 as RG
+ from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
+ from _common.game_profiles import get_profile
+ 
++# The fixed identity and output settings of this family; they never change:
++#   METHOD_ID                the method's ID as the records name it
++#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
++#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
++#   PROVENANCE               the text stored with the published values, saying how they were computed
+ METHOD_ID = 'E_19'
+ OBSERVATION_VIEW = 'UNORDERED_SET'
+ PUBLISHES_PROBABILITIES = False
+@@ -26,6 +52,13 @@ PROVENANCE = 'E_19 r1 (Periodic Recurrence-Hazard Peaks): exact rational arithme
+ 
+ 
+ def _config(task):
++    """Check that the task is for this family and return the variant's fixed settings.
++
++    task: the frozen MethodTask the research code built (method, variant, observation view).
++    Returns the variant's line of VARIANTS, for example (2, Fraction(100), Fraction(20), 104), which holds, in order:
++        the cycle T, the trend prior c, the shrinkage d, the minimum history.
++    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
++    """
+     if task.method_id != METHOD_ID:
+         raise ValueError(f'this module computes {METHOD_ID} only')
+     if task.variant_id not in VARIANTS:
+@@ -60,6 +93,15 @@ def _trend(per_label, b, c):
+ 
+ 
+ def _scores(draws, b, cfg, second):
++    """The exact score of every number of one barrel.
++
++    A number's score is the trend hazard at the number's age times its own factor for that age's place in the cycle.
++    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
++    b: the barrel (its lowest and highest number, and how many are drawn).
++    cfg: the variant's settings, as _config() returns them.
++    second: False for the first route; True for the second, differently written route that verify() uses.
++    Returns {number: exact score}, for example {1: Fraction(21, 100), 2: Fraction(9, 50), ...}.
++    """
+     T, c, d, _minimum = cfg
+     per_label = (RG.label_exposures_from_gaps if second else RG.label_exposures_by_walk)(draws, b.low, b.high)
+     trend = _trend(per_label, b, c)
+@@ -100,6 +142,14 @@ def _exact(task, view, second: bool):
+ 
+ 
+ def compute(task, view) -> MethodOutput:
++    """Compute the scores for one target draw, from the draws before it only.
++
++    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
++    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
++        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
++    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
++    INSUFFICIENT_HISTORY.
++    """
+     exact = _exact(task, view, second=False)
+     if exact is None:
+         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY
+diff --git a/src/methods/E_019/variants.py b/src/methods/E_019/variants.py
+index aa0b5d1..bfcc1ad 100644
+--- a/src/methods/E_019/variants.py
++++ b/src/methods/E_019/variants.py
+@@ -1,4 +1,23 @@
+-"""E_19 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision."""
++"""E_19 (Periodic Recurrence-Hazard Peaks): the fixed settings of each E_19 variant.
++
++What this file is for
++    One table, VARIANTS, with one line for each variant: the cycle T, the trend prior c, the shrinkage d, the minimum
++    history.
++    Nothing is computed here. The settings never change: a different setting is a new variant with a new name.
++
++Which part of the specification it carries out
++    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md (its section on the variants).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2.
++
++Which of the project's own modules it uses
++    None.
++
++What uses it
++    E_019/core_v1.py, which picks a variant's line by the task's variant ID; and this family's tests.
++
++The header this file had before the tidy-up, kept
++    E_19 revision 1: the fixed variants (design note v0.1r2 section 6). Changing or adding one is a new revision.
++"""
+ from fractions import Fraction
+ from types import MappingProxyType
+ 
+diff --git a/src/methods/_shared/occurrence_counts_v1.py b/src/methods/_shared/occurrence_counts_v1.py
+index 77786cd..59fc99b 100644
+--- a/src/methods/_shared/occurrence_counts_v1.py
++++ b/src/methods/_shared/occurrence_counts_v1.py
+@@ -1,20 +1,38 @@
+-"""Shared helper, revision 1: exact occurrence counts for E_7, E_8, E_9 and E_10 (wave 1 design note v0.1r1).
+-
+-Exact integers and fractions only (no floating point), so every result is the same on every platform. It
+-imports nothing from the project, reads nothing and starts nothing.
+-
+-`draws` is the list of the labels drawn in one barrel at each eligible draw, oldest first; the newest draw
+-has age 0. Labels run from `low` to `high`. Every function has a second, differently written form, which the
+-methods' verify() uses:
+-  window_counts            count of each label in the newest S draws
+-  window_counts_by_prefix  the same, from running (prefix) totals
+-  decayed_counts           sum of lambda**age over the draws containing each label (direct powers)
+-  decayed_counts_by_recursion  the same, by s <- lambda*s + x
+-  period_counts            counts of each label in consecutive periods of P draws, counted back from the
+-                           newest draw (oldest period first); any older remainder is not used
+-  period_counts_by_index   the same, by assigning each draw to its period index
+-
+-A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
++"""Shared helper, version 1: exact occurrence counts.
++
++What this file is for
++    It counts, for one barrel, how often each number was drawn: in the newest draws, in consecutive periods,
++    or with weights that shrink with age. Every count has a second, differently written form that the methods
++    use to check themselves. Exact whole numbers and fractions only, so every result is the same on every PC.
++
++Which part of the specification it carries out
++    The wave 1 design, doc/Predictive_Randomness_Wave1_E7_E8_E9_E10_Design_v0_1r1.md: section 3 (the rules
++    these counts serve) and section 11 (the package, which lists what this helper holds).
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a helper used by more
++    than one family, versioned by its name).
++
++Which of the project's own modules it uses
++    None. It also reads nothing and starts nothing.
++
++What uses it
++    E_007/core_v1.py, E_008/core_v1.py, E_009/core_v1.py and E_010/core_v1.py; and tests/test_occurrence_counts.py.
++
++The functions (the header this file had before the tidy-up, kept)
++    Exact integers and fractions only (no floating point), so every result is the same on every platform. It
++    imports nothing from the project, reads nothing and starts nothing.
++
++    `draws` is the list of the labels drawn in one barrel at each eligible draw, oldest first; the newest draw
++    has age 0. Labels run from `low` to `high`. Every function has a second, differently written form, which the
++    methods' verify() uses:
++      window_counts            count of each label in the newest S draws
++      window_counts_by_prefix  the same, from running (prefix) totals
++      decayed_counts           sum of lambda**age over the draws containing each label (direct powers)
++      decayed_counts_by_recursion  the same, by s <- lambda*s + x
++      period_counts            counts of each label in consecutive periods of P draws, counted back from the
++                               newest draw (oldest period first); any older remainder is not used
++      period_counts_by_index   the same, by assigning each draw to its period index
++
++    A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
+ """
+ from __future__ import annotations
+ 
+@@ -23,6 +41,12 @@ from fractions import Fraction
+ 
+ 
+ def _check(draws: Sequence[Sequence[int]], low: int, high: int) -> None:
++    """Refuse arguments that do not describe a barrel and its draws.
++
++    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's lowest and highest number.
++    Returns nothing. Refuses (ValueError) a range that is not positive whole numbers, or a draw holding a repeated
++    number or one outside the range.
++    """
+     if type(low) is not int or type(high) is not int or not 1 <= low <= high:
+         raise ValueError('labels must be a positive integer range')
+     for d in draws:
+@@ -31,11 +55,20 @@ def _check(draws: Sequence[Sequence[int]], low: int, high: int) -> None:
+ 
+ 
+ def _span(S: int, n: int) -> None:
++    """Refuse a window that is not a whole number from 1 to the number of draws.
++
++    S: the window, in draws.  n: how many draws there are.  Returns nothing; refuses (ValueError) otherwise.
++    """
+     if type(S) is not int or not 1 <= S <= n:
+         raise ValueError(f'the window must be an integer from 1 to the number of draws ({n})')
+ 
+ 
+ def window_counts(draws, low, high, S):
++    """How often each number was drawn in the newest S draws.
++
++    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's range.  S: the window.
++    Returns {number: count}, every number of the barrel included, for example {1: 9, 2: 12, ..., 35: 10}.
++    """
+     _check(draws, low, high)
+     _span(S, len(draws))
+     counts = {j: 0 for j in range(low, high + 1)}
+@@ -46,6 +79,11 @@ def window_counts(draws, low, high, S):
+ 
+ 
+ def window_counts_by_prefix(draws, low, high, S):
++    """The same counts as window_counts, from running totals (the second route, for checking).
++
++    draws, low, high, S: as for window_counts.
++    Returns {number: count}, for example {1: 9, 2: 12, ..., 35: 10}.
++    """
+     _check(draws, low, high)
+     _span(S, len(draws))
+     out = {}
+@@ -58,11 +96,21 @@ def window_counts_by_prefix(draws, low, high, S):
+ 
+ 
+ def _lam(lam) -> None:
++    """Refuse a decay factor that is not an exact fraction strictly between 0 and 1.
++
++    lam: the decay factor, for example Fraction(5, 6).  Returns nothing; refuses (ValueError) otherwise.
++    """
+     if type(lam) is not Fraction or not 0 < lam < 1:
+         raise ValueError('lambda must be an exact fraction strictly between 0 and 1')
+ 
+ 
+ def decayed_counts(draws, low, high, lam):
++    """Each number's count with every appearance weighted by lam to the power of its age.
++
++    draws: the numbers drawn at each earlier draw, oldest first (the newest has age 0 and weight 1).
++    low, high: the barrel's range.  lam: the decay factor.
++    Returns {number: exact weighted count}, for example {1: Fraction(91, 36), 2: Fraction(5, 6), ...}.
++    """
+     _check(draws, low, high)
+     _lam(lam)
+     newest = len(draws) - 1
+@@ -75,6 +123,12 @@ def decayed_counts(draws, low, high, lam):
+ 
+ 
+ def decayed_counts_by_recursion(draws, low, high, lam):
++    """The same weighted counts as decayed_counts, by stepping through the draws (the second route).
++
++    draws, low, high, lam: as for decayed_counts. At each draw every count is multiplied by lam, and 1 is added
++    for a number that was drawn.
++    Returns {number: exact weighted count}, for example {1: Fraction(91, 36), 2: Fraction(5, 6), ...}.
++    """
+     _check(draws, low, high)
+     _lam(lam)
+     out = {j: Fraction(0) for j in range(low, high + 1)}
+@@ -85,12 +139,24 @@ def decayed_counts_by_recursion(draws, low, high, lam):
+ 
+ 
+ def _period(P: int, n_draws: int) -> int:
++    """Check the period length and return how many whole periods the history holds.
++
++    P: the period, in draws.  n_draws: how many draws there are.
++    Returns the number of whole periods, for example 4 for P = 13 and 60 draws.
++    Refuses (ValueError) a period that is not a positive whole number, or one longer than the history.
++    """
+     if type(P) is not int or P < 1 or n_draws < P:
+         raise ValueError('the period must be a positive integer no longer than the history')
+     return n_draws // P
+ 
+ 
+ def period_counts(draws, low, high, P):
++    """How often each number was drawn in each period of P draws, counted back from the newest draw.
++
++    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's range.  P: the period.
++    Returns {number: [count in each period, oldest period first]}, for example {1: [2, 4, 3, 1], 2: [3, 3, 2, 2], ...}.
++    Draws older than the oldest whole period are not used.
++    """
+     _check(draws, low, high)
+     n = _period(P, len(draws))
+     start = len(draws) - n * P
+@@ -103,6 +169,11 @@ def period_counts(draws, low, high, P):
+ 
+ 
+ def period_counts_by_index(draws, low, high, P):
++    """The same counts as period_counts, by giving each draw its period number (the second route).
++
++    draws, low, high, P: as for period_counts.
++    Returns {number: [count in each period, oldest period first]}, for example {1: [2, 4, 3, 1], ...}.
++    """
+     _check(draws, low, high)
+     n = _period(P, len(draws))
+     out = {j: [0] * n for j in range(low, high + 1)}
+diff --git a/src/methods/_shared/polynomial_fits_v1.py b/src/methods/_shared/polynomial_fits_v1.py
+index e6539e3..b6a4080 100644
+--- a/src/methods/_shared/polynomial_fits_v1.py
++++ b/src/methods/_shared/polynomial_fits_v1.py
+@@ -1,27 +1,46 @@
+-"""Shared helper, revision 1: exact polynomial fits to a short series (E_3 and E_4; design note v0.1 section 3).
++"""Shared helper, version 1: exact polynomial fits to a short series.
+ 
+-Exact rational arithmetic only (fractions.Fraction): no floating point, no library solver, so every result is
+-the same on every platform. It imports nothing from the project, reads nothing and starts nothing.
++What this file is for
++    It fits a polynomial to a short series of values in three ways (least squares, interpolation, minimax),
++    each with a second, differently written form that the methods use to check themselves. Exact fractions
++    only: no library solver, so every result is the same on every PC.
+ 
+-A polynomial is returned as its coefficients [a_0, a_1, ..., a_D] in the variable t, so p(t) = sum a_k t^k.
+-The methods place the window's draws at t = -M..-1 and the target at t = 0, so p(0) = a_0 is the fitted value
+-at the target and p'(0) = a_1 is the fitted slope there.
++Which part of the specification it carries out
++    The E_3 and E_4 design: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md, section 3.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a helper used by more
++    than one family, versioned by its name).
+ 
+-Fits:
+-  least_squares               normal equations (one factorisation shared by every series of the same window)
+-  least_squares_by_recurrence the same result by Forsythe's orthogonal-polynomial recurrence (for verification)
+-  interpolate                 Lagrange form through D + 1 points
+-  interpolate_newton          the same result by Newton divided differences (for verification)
+-  minimax                     discrete Chebyshev (minimax) approximation by Stiefel's single-point exchange
+-  minimax_certificate         the alternation-theorem check that a polynomial is the minimax one
++Which of the project's own modules it uses
++    None. It also reads nothing and starts nothing.
+ 
+-A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
++What uses it
++    E_003/core_v1.py and E_004/core_v1.py; and tests/test_polynomial_fits.py.
++
++The fits (the header this file had before the tidy-up, kept)
++    Exact rational arithmetic only (fractions.Fraction): no floating point, no library solver, so every result is
++    the same on every platform. It imports nothing from the project, reads nothing and starts nothing.
++
++    A polynomial is returned as its coefficients [a_0, a_1, ..., a_D] in the variable t, so p(t) = sum a_k t^k.
++    The methods place the window's draws at t = -M..-1 and the target at t = 0, so p(0) = a_0 is the fitted value
++    at the target and p'(0) = a_1 is the fitted slope there.
++
++    Fits:
++      least_squares               normal equations (one factorisation shared by every series of the same window)
++      least_squares_by_recurrence the same result by Forsythe's orthogonal-polynomial recurrence (for verification)
++      interpolate                 Lagrange form through D + 1 points
++      interpolate_newton          the same result by Newton divided differences (for verification)
++      minimax                     discrete Chebyshev (minimax) approximation by Stiefel's single-point exchange
++      minimax_certificate         the alternation-theorem check that a polynomial is the minimax one
++
++    A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
+ """
+ from __future__ import annotations
+ 
+ from collections.abc import Sequence
+ from fractions import Fraction
+ 
++# The most exchange steps a minimax fit may take. A fit that has not finished by then is refused
++# (RuntimeError) rather than left to run on.
+ MINIMAX_EXCHANGE_CAP = 10000
+ 
+ 
+@@ -44,6 +63,14 @@ def smoothed(series: Sequence, half_width: int) -> list[Fraction]:
+ 
+ 
+ def _check(ts: Sequence, ys: Sequence, degree: int, need: int) -> None:
++    """Refuse arguments that do not describe points to fit a polynomial to.
++
++    ts: the positions.  ys: the values, one for each position.  degree: the polynomial's degree.
++    need: the fewest points the fit needs.
++    Returns nothing. Refuses (ValueError) a degree that is not a whole number of 0 or more, too few points, a
++    different number of values and positions, positions that are not different exact fractions, or values that
++    are not exact.
++    """
+     if type(degree) is not int or degree < 0:
+         raise ValueError('the degree must be a non-negative integer')
+     if len(ts) != len(ys) or len(ts) < need:
+@@ -55,6 +82,11 @@ def _check(ts: Sequence, ys: Sequence, degree: int, need: int) -> None:
+ 
+ 
+ def evaluate(coeffs: Sequence[Fraction], t: Fraction) -> Fraction:
++    """The value of a polynomial at one position (Horner's rule).
++
++    coeffs: the coefficients [a_0, a_1, ...].  t: the position.
++    Returns the exact value, for example Fraction(7, 4) for coeffs [1, 3] at t = Fraction(1, 4).
++    """
+     value = Fraction(0)
+     for c in reversed(coeffs):
+         value = value * t + c
+@@ -85,6 +117,11 @@ class LeastSquares:
+     """Least squares of degree D at fixed abscissae: the normal matrix is inverted once and reused."""
+ 
+     def __init__(self, ts: Sequence[Fraction], degree: int):
++        """Prepare the fit for these positions and this degree (done once, then reused for every series).
++
++        ts: the positions.  degree: the polynomial's degree.
++        Refuses (ValueError) what _check refuses.
++        """
+         _check(ts, [0] * len(ts), degree, degree + 1)
+         self.ts, self.degree = list(ts), degree
+         powers = [[t ** k for k in range(2 * degree + 1)] for t in self.ts]
+@@ -93,6 +130,11 @@ class LeastSquares:
+         self._inverse = [_solve(normal, [Fraction(int(i == j)) for i in range(degree + 1)]) for j in range(degree + 1)]
+ 
+     def fit(self, ys: Sequence) -> list[Fraction]:
++        """The least-squares coefficients for one series of values at the prepared positions.
++
++        ys: the values, one for each position.
++        Returns [a_0, ..., a_degree] as exact fractions, for example [Fraction(9, 44), Fraction(1, 300)].
++        """
+         _check(self.ts, ys, self.degree, self.degree + 1)
+         rhs = [sum(row[a] * y for row, y in zip(self._rows, ys)) for a in range(self.degree + 1)]
+         # self._inverse[j] is column j of the inverse; coefficient a = sum_j inverse[a][j] * rhs[j]
+@@ -100,6 +142,11 @@ class LeastSquares:
+ 
+ 
+ def least_squares(ts: Sequence[Fraction], ys: Sequence, degree: int) -> list[Fraction]:
++    """The least-squares polynomial of a given degree through the points.
++
++    ts: the positions.  ys: the values.  degree: the polynomial's degree.
++    Returns its coefficients [a_0, ..., a_degree] as exact fractions, for example [Fraction(9, 44), Fraction(1, 300)].
++    """
+     return LeastSquares(ts, degree).fit(ys)
+ 
+ 
+@@ -108,9 +155,11 @@ def least_squares_by_recurrence(ts: Sequence[Fraction], ys: Sequence, degree: in
+     _check(ts, ys, degree, degree + 1)
+ 
+     def at(poly, t):
++        """The value of the polynomial `poly` at position t."""
+         return evaluate(poly, t)
+ 
+     def mul_t_minus(poly, a):                     # (t - a) * poly, as coefficients
++        """The coefficients of (t - a) times the polynomial `poly`."""
+         out = [Fraction(0)] * (len(poly) + 1)
+         for k, c in enumerate(poly):
+             out[k + 1] += c
+@@ -118,6 +167,7 @@ def least_squares_by_recurrence(ts: Sequence[Fraction], ys: Sequence, degree: in
+         return out
+ 
+     def axpy(x, a, y):                            # x + a * y, padded
++        """The coefficients of x + a * y, the shorter polynomial padded with zeros."""
+         n = max(len(x), len(y))
+         x, y = x + [Fraction(0)] * (n - len(x)), y + [Fraction(0)] * (n - len(y))
+         return [xi + a * yi for xi, yi in zip(x, y)]
+@@ -207,6 +257,7 @@ def minimax(ts: Sequence[Fraction], ys: Sequence, degree: int) -> tuple[list[Fra
+         sign_h = 1 if h >= 0 else -1
+ 
+         def sigma(k):                              # the sign the error must have at reference position k
++            """Returns +1 or -1; the signs alternate from one reference position to the next."""
+             return sign_h * (1 if k % 2 == 0 else -1)
+         s = 1 if errors[worst] > 0 else -1
+         if worst < ref[0]:
+diff --git a/src/methods/_shared/recurrence_gaps_v1.py b/src/methods/_shared/recurrence_gaps_v1.py
+index d349804..d786102 100644
+--- a/src/methods/_shared/recurrence_gaps_v1.py
++++ b/src/methods/_shared/recurrence_gaps_v1.py
+@@ -1,30 +1,58 @@
+-"""Shared gaps helper, revision 1 (wave 2 design note v0.1r2 sections 3, 4.2 and 10). Exact arithmetic only.
+-
+-Used by E_2, E_17, E_18 and E_19 (revision 1 of each); a change here is a new revision of every user (E2R-R14A).
+-A history is a list of draws, oldest first; each draw is the list of labels drawn from one barrel low..high.
+-Positions run 1..W; the target is position W + 1.
+-
+-- Appearances, completed gaps, gaps inside a window, projected ages (3.1, 3.2). A never-seen label is treated as
+-  last seen at position 0, so its projected age is W + 1.
+-- Exposures by age (3.3), by two routes: a per-draw walk, and from completed gaps plus the open stretch. The
+-  stretch before a label's first appearance (unknown age) is excluded; the open stretch counts as at risk
+-  without an event.
+-- Age bins (3.4): upper edges are the distinct values ceil(f L/K), f = 1/5, 2/5, 3/5, 1, 8/5, 13/5.
+-- The certified sign of sum_k a_k ln k (4.2, 10): route 1 by prime exponents from trial division and bounds on
+-  each ln p; route 2 by its own exact-zero test (prime exponents from a smallest-prime-factor sieve) and then
+-  bounds on each ln k directly. Both refuse, as a ValueError, if MAX_TERMS series terms do not certify a sign.
+-Nothing here reads a file, starts a process or uses floating point.
++"""Shared helper, version 1: gaps between a number's appearances, exposures by age, age bins and a certified sign.
++
++What this file is for
++    For one barrel it finds where each number appeared, the gaps between its appearances, its age at the
++    target, how long numbers were "at risk" at each age and how often they then came up, the age bins, and the
++    proved sign of a sum of logarithms. Each has a second, differently written route that the methods use to
++    check themselves. Exact arithmetic only.
++
++Which part of the specification it carries out
++    The wave 2 design: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md, sections 3, 4.2 and 10.
++    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a helper used by more
++    than one family, versioned by its name).
++
++Which of the project's own modules it uses
++    None. It also reads nothing and starts nothing.
++
++What uses it
++    E_002/core_v1.py, E_017/core_v1.py, E_018/core_v1.py and E_019/core_v1.py; and tests/test_recurrence_gaps.py.
++
++What it holds (the header this file had before the tidy-up, kept)
++    Used by E_2, E_17, E_18 and E_19 (revision 1 of each); a change here is a new revision of every user (E2R-R14A).
++    A history is a list of draws, oldest first; each draw is the list of labels drawn from one barrel low..high.
++    Positions run 1..W; the target is position W + 1.
++
++    - Appearances, completed gaps, gaps inside a window, projected ages (3.1, 3.2). A never-seen label is treated as
++      last seen at position 0, so its projected age is W + 1.
++    - Exposures by age (3.3), by two routes: a per-draw walk, and from completed gaps plus the open stretch. The
++      stretch before a label's first appearance (unknown age) is excluded; the open stretch counts as at risk
++      without an event.
++    - Age bins (3.4): upper edges are the distinct values ceil(f L/K), f = 1/5, 2/5, 3/5, 1, 8/5, 13/5.
++    - The certified sign of sum_k a_k ln k (4.2, 10): route 1 by prime exponents from trial division and bounds on
++      each ln p; route 2 by its own exact-zero test (prime exponents from a smallest-prime-factor sieve) and then
++      bounds on each ln k directly. Both refuse, as a ValueError, if MAX_TERMS series terms do not certify a sign.
++    Nothing here reads a file, starts a process or uses floating point.
+ """
+ from __future__ import annotations
+ 
+ from fractions import Fraction
+ 
++# The six fixed factors f of the age bins: a bin's upper edge is ceil(f * L / K) for a barrel of L numbers
++# with K drawn (design section 3.4).
+ BIN_FACTORS = (Fraction(1, 5), Fraction(2, 5), Fraction(3, 5), Fraction(1), Fraction(8, 5), Fraction(13, 5))
++# How many series terms the first try at a certified sign uses; the number doubles at each further try.
+ FIRST_TERMS = 8
++# The most series terms tried. With no certified sign by then, the function refuses (ValueError).
+ MAX_TERMS = 1024
+ 
+ 
+ def _checked(draws, low, high):
++    """Refuse arguments that do not describe a barrel and its draws; otherwise hand the draws back.
++
++    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's lowest and highest number.
++    Returns `draws` unchanged. Refuses (ValueError) a range that is not positive whole numbers, or a draw holding
++    a repeated number or one outside the range.
++    """
+     if not (isinstance(low, int) and isinstance(high, int) and 1 <= low <= high):
+         raise ValueError('the barrel must be a range of positive whole numbers')
+     for d in draws:
+@@ -44,6 +72,11 @@ def appearances(draws, low, high):
+ 
+ 
+ def completed_gaps(app):
++    """The gaps between each number's successive appearances.
++
++    app: {number: the positions at which it appeared}, as appearances() returns it, for example {4: [2, 7, 12]}.
++    Returns {number: [gap, ...]}, for example {4: [5, 5]}; a number seen once or never has an empty list.
++    """
+     return {j: [b - a for a, b in zip(p, p[1:])] for j, p in app.items()}
+ 
+ 
+@@ -136,6 +169,12 @@ def pooled(per_label):
+ 
+ # ---------------------------------------------------------------- age bins
+ def bin_edges(L, K):
++    """The upper edges of the age bins for a barrel of L numbers with K drawn (design section 3.4).
++
++    L: how many numbers the barrel holds.  K: how many are drawn.
++    Returns the different values of ceil(f * L / K) for the six fixed factors f, in rising order, for example
++    [1, 2, 3, 5, 8, 13] for L = 35 and K = 7. Ages above the last edge fall in one further bin.
++    """
+     m = Fraction(L, K)
+     out = []
+     for f in BIN_FACTORS:
+@@ -147,6 +186,11 @@ def bin_edges(L, K):
+ 
+ 
+ def bin_of(k, edges):
++    """The number of the age bin that an age falls in.
++
++    k: the age, in draws.  edges: the bins' upper edges, as bin_edges() returns them.
++    Returns how many edges lie below k, for example 3 for k = 4 and edges [1, 2, 3, 5, 8, 13] (bins count from 0).
++    """
+     return sum(1 for e in edges if k > e)
+ 
+ 

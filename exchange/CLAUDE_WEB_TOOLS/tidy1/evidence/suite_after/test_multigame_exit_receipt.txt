@@ -1,0 +1,23 @@
+test_c1_canonical_file_opened_once_during_issuance (test_multigame_exit_receipt.ReceiptTests.test_c1_canonical_file_opened_once_during_issuance) ... ok
+test_c1_console_digest_is_bound_to_exact_single_read (test_multigame_exit_receipt.ReceiptTests.test_c1_console_digest_is_bound_to_exact_single_read) ... ok
+test_c1_rejects_spoofed_console_digest_or_result (test_multigame_exit_receipt.ReceiptTests.test_c1_rejects_spoofed_console_digest_or_result) ... ok
+test_c2_requires_exit_observed_timestamp_not_issuance_time (test_multigame_exit_receipt.ReceiptTests.test_c2_requires_exit_observed_timestamp_not_issuance_time) ... ok
+test_coordinator_exit_metadata_fails_closed (test_multigame_exit_receipt.ReceiptTests.test_coordinator_exit_metadata_fails_closed) ... ok
+test_coordinator_private_import_is_append_only_and_location_checked (test_multigame_exit_receipt.ReceiptTests.test_coordinator_private_import_is_append_only_and_location_checked) ... ok
+test_coordinator_private_module_and_noop_removed (test_multigame_exit_receipt.ReceiptTests.test_coordinator_private_module_and_noop_removed) ... ok
+test_existing_poc_gates_remain_disabled_and_original_hash_known (test_multigame_exit_receipt.ReceiptTests.test_existing_poc_gates_remain_disabled_and_original_hash_known) ... ok
+test_failed_group_and_orphan_group_block_even_with_receipt (test_multigame_exit_receipt.ReceiptTests.test_failed_group_and_orphan_group_block_even_with_receipt) ... ok
+test_integrity_before_result_open (test_multigame_exit_receipt.ReceiptTests.test_integrity_before_result_open) ... ok
+test_issuer_rejects_tampered_worker_records (test_multigame_exit_receipt.ReceiptTests.test_issuer_rejects_tampered_worker_records) ... ok
+test_preexisting_receipt_is_tamper_fail_no_overwrite (test_multigame_exit_receipt.ReceiptTests.test_preexisting_receipt_is_tamper_fail_no_overwrite) ... ok
+test_receipt_absent_or_global_marker_blocks (test_multigame_exit_receipt.ReceiptTests.test_receipt_absent_or_global_marker_blocks) ... ok
+test_status_manifest_result_late_mutations (test_multigame_exit_receipt.ReceiptTests.test_status_manifest_result_late_mutations) ... ok
+test_symlink_receipts_directory_is_refused (test_multigame_exit_receipt.ReceiptTests.test_symlink_receipts_directory_is_refused) ... ok
+test_valid_issue_and_consume (test_multigame_exit_receipt.ReceiptTests.test_valid_issue_and_consume) ... ok
+test_verifier_opens_canonical_result_once_and_returns_that_object (test_multigame_exit_receipt.ReceiptTests.test_verifier_opens_canonical_result_once_and_returns_that_object) ... ok
+test_wrong_worker_game_draw_variant_or_coordinator_digest (test_multigame_exit_receipt.ReceiptTests.test_wrong_worker_game_draw_variant_or_coordinator_digest) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 1.058s
+
+OK

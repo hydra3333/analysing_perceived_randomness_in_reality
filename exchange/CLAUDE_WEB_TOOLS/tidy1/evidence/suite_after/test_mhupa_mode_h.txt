@@ -1,0 +1,30 @@
+test_manifest_fields_and_refusals (test_mhupa_mode_h.ManifestAndOpening.test_manifest_fields_and_refusals) ... ok
+test_manifest_refuses_a_grown_ledger_an_orphan_and_sourceless_bytecode (test_mhupa_mode_h.ManifestAndOpening.test_manifest_refuses_a_grown_ledger_an_orphan_and_sourceless_bytecode) ... ok
+test_open_refuses_after_a_ledger_row_beyond_the_frozen_version (test_mhupa_mode_h.ManifestAndOpening.test_open_refuses_after_a_ledger_row_beyond_the_frozen_version) ... ok
+test_opening_record_and_the_updater_agree (test_mhupa_mode_h.ManifestAndOpening.test_opening_record_and_the_updater_agree) ... ok
+test_the_cohort_must_be_exactly_the_released_set (test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_must_be_exactly_the_released_set)
+EX_148 B03 (b), (c), (d): the full cohort (no small-cohort restriction), against the validated release records. ... ok
+test_the_cohort_refuses_a_released_variant_the_registry_no_longer_runs (test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_refuses_a_released_variant_the_registry_no_longer_runs)
+EX_148 B03 (a) at the manifest: a newer registry entry supersedes a released revision with no retires item; ... ok
+test_states (test_mhupa_mode_h.OutcomeReaderRule.test_states) ... ok
+test_oz_lotto_end_to_end_and_its_supplementary_check (test_mhupa_mode_h.OzLottoStudy.test_oz_lotto_end_to_end_and_its_supplementary_check) ... ok
+test_a_bad_ledger_never_completes (test_mhupa_mode_h.Pipeline.test_a_bad_ledger_never_completes)
+EX_148 B04: before SCORE_COMPLETE the existing ledger must be exactly the scorer's lines for the frozen ... ok
+test_a_resume_binds_the_frozen_scoring_plan_and_completion (test_mhupa_mode_h.Pipeline.test_a_resume_binds_the_frozen_scoring_plan_and_completion)
+EX_150 B05, on one started attempt: before publication, a scoring plan that is not the one SCORING_STARTED ... ok
+test_a_resumed_attempt_must_find_the_roster_it_started_with (test_mhupa_mode_h.Pipeline.test_a_resumed_attempt_must_find_the_roster_it_started_with) ... ok
+test_an_advance_after_the_plan_moves_the_admitted_pin (test_mhupa_mode_h.Pipeline.test_an_advance_after_the_plan_moves_the_admitted_pin) ... ok
+test_closure_change_after_the_plan_stops_every_step (test_mhupa_mode_h.Pipeline.test_closure_change_after_the_plan_stops_every_step) ... ok
+test_scorer_refusals_before_and_during (test_mhupa_mode_h.Pipeline.test_scorer_refusals_before_and_during) ... ok
+test_the_report_resumes_file_by_file (test_mhupa_mode_h.Pipeline.test_the_report_resumes_file_by_file)
+EX_148 B02: a stop after the report's .txt, then after its .csv; each resume verifies what exists, creates only ... ok
+test_the_study (test_mhupa_mode_h.Pipeline.test_the_study) ... ok
+test_an_extra_ledger_row_needs_a_study_version_advance (test_mhupa_mode_h.PlanRefusals.test_an_extra_ledger_row_needs_a_study_version_advance) ... ok
+test_plan_is_frozen_from_the_manifest_once (test_mhupa_mode_h.PlanRefusals.test_plan_is_frozen_from_the_manifest_once) ... ok
+test_plan_needs_the_complete_first_update (test_mhupa_mode_h.PlanRefusals.test_plan_needs_the_complete_first_update) ... ok
+test_plan_refuses_a_changed_closure_or_environment_naming_the_first_difference (test_mhupa_mode_h.PlanRefusals.test_plan_refuses_a_changed_closure_or_environment_naming_the_first_difference) ... ok
+
+----------------------------------------------------------------------
+Ran 20 tests in 280.009s
+
+OK

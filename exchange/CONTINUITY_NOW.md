@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 09:41 Australia/Adelaide (entry 164: BUILD STEP 1 INSTALLED, main `0aea10a`; the complete equivalence check passed on the owner's PC). **Next, on the owner's own go: the light tidy-up of the existing method files; then build step 2.**
+**Last updated:** 23 November 2026, 10:21 Australia/Adelaide (entry 165: the light tidy-up of the method files is BUILT and CLOUD-PROVED; not reviewed, not installed). **Next, on the owner's word: his answer on E_1's six modules; EX_279 to the reviewer when he asks; then his install by the sheet.**
 
 ## For the owner: NOW
 
+- **THE LIGHT TIDY-UP IS BUILT AND CLOUD-PROVED (entry 165; 23 November 2026); NOT REVIEWED, NOT INSTALLED.** The
+  owner's go: "thanks. go the next step which you suggest is tidy up". 37 existing method files get fuller headers
+  and comments; no code changes (the comments-only check `RESULT: PASS`; the suite identical, 571 of 571; the
+  equivalence check again, 17,400 of 17,400 scored forecasts equal, `PARTIAL` in the cloud as expected). Everything
+  is under `exchange/CLAUDE_WEB_TOOLS/tidy1/` (note `TIDY1_PACKAGE_NOTE_v0_1.md`; package
+  `package/TIDY1_Method_Comments_v1.zip`, SHA-256 `a8d2f113...8ad4c`). **Waiting on the owner:** (1) his answer on
+  leaving E_1's six pinned modules without new comments (recommended); (2) his word to issue EX_279 to the reviewer;
+  (3) after a PASS, his own go for the install (about 95 minutes, nearly all unattended).
 - **BUILD STEP 1 IS INSTALLED AND PROVED (entry 164; 23 November 2026).** The owner ran the reviewed sheet on his PC
   and pushed `main` `0aea10a`: the suite unchanged before and after (45 modules, 571 tests, the same two known failing
   modules); **the equivalence check `RESULT: PASS - COMPLETE`** (Powerball 17,280 and Oz Lotto 8,760 old development

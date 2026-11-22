@@ -1,0 +1,9 @@
+test_no_method_file_imports_the_evaluator (test_wf1b_static.Static.test_no_method_file_imports_the_evaluator) ... ok
+test_only_the_outcome_reader_touches_the_masters (test_wf1b_static.Static.test_only_the_outcome_reader_touches_the_masters) ... ok
+test_sources_are_ascii (test_wf1b_static.Static.test_sources_are_ascii) ... ok
+test_the_evaluator_imports_no_method_code (test_wf1b_static.Static.test_the_evaluator_imports_no_method_code) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.177s
+
+OK

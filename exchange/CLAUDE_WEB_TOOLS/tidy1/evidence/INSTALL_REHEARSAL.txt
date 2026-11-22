@@ -1,0 +1,20 @@
+== lf checkout (core.autocrlf=unset)
+PRE PASS: clean tree; 0 new paths absent; 37 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 0 expected new paths, 37 modified files and 0 staged deletions, all with the expected bytes.
+compared with commit 7be6b3aa8115d6a44edd9ab59180c1cdcfcda674: 211 Python files under src and tests; 37 with changed text; 0 with a problem
+RESULT: PASS - in all 37 changed files only comments and docstrings differ; the code Python runs is identical.
+git status --short, by first letter:      37 M 
+COMMITTED PASS: the last commit (commit) added exactly 0 files, modified 37 and deleted 0; all Git blobs match.
+== crlf checkout (core.autocrlf=true)
+PRE PASS: clean tree; 0 new paths absent; 37 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 0 expected new paths, 37 modified files and 0 staged deletions, all with the expected bytes.
+compared with commit 7be6b3aa8115d6a44edd9ab59180c1cdcfcda674: 211 Python files under src and tests; 37 with changed text; 0 with a problem
+RESULT: PASS - in all 37 changed files only comments and docstrings differ; the code Python runs is identical.
+git status --short, by first letter:      37 M 
+COMMITTED PASS: the last commit (commit) added exactly 0 files, modified 37 and deleted 0; all Git blobs match.
+== cases that must STOP
+a stray file before the install:        VERIFICATION STOP: FAIL: working tree or index not clean:
+wrong bytes in a copied file:           VERIFICATION STOP: FAIL: wrong bytes: src/methods/E_002/core_v1.py
+one file not copied:                    VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/E_019/
+a results master changed:               VERIFICATION STOP: FAIL: working tree or index not clean:
+a calculation changed in a copied file: CODE CHANGED: src/methods/E_004/core_v1.py|RESULT: STOP - something other than comments and docstrings differs (s|
