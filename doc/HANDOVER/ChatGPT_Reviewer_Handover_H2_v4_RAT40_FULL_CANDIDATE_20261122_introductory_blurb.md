@@ -8,8 +8,8 @@ This blurb is a copy-paste entry point, not a substitute for reading the complet
 
 **FULL H-2 v4 CANDIDATE (not ratified):** [ChatGPT reviewer H-2 v4 full handover](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/blob/main/doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md)  
 **Repository path:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
-**FULL handover SHA-256 of stored GitHub bytes (verified):** `d537263c02acbc69e787d17cb715e2d8e1768e4a7e40f3a699eba2f06ba7c828`
-**H-2 candidate commit:** [30826be](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/30826be976bb4b8821c251e92462ef248542f16d) (a Git commit, **not** an owner ratification).
+**FULL handover SHA-256 of stored GitHub bytes (verified):** `e24481b7dd088edef35080a8d98252f3da3114826c2b510589b048b7660b3c75`
+**H-2 candidate's current correction commit:** [23f02d6](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/23f02d6902ed0a5c9a25665619fcc7434597e95a) (original full candidate [30826be](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/30826be976bb4b8821c251e92462ef248542f16d); neither commit is owner ratification).
 
 ---
 
@@ -28,6 +28,8 @@ RAT-40 occurred 22 November 2026 at 13:33 Australia/Adelaide; see [decision log 
 **All FOUR ratification notes are binding:** (1) HELD/NOT CURRENT warnings at each job's START AND END with cause and exact command; (2) the coding-practices checklist checked by eye for each code package; (3) light comments/headers/dependency inventory tidy-up after proved step 1 and before QA/PROD install, with equivalence oracle repeated; (4) EX_271 section 3's QA copy/reseed report-staleness oracle owed in step 4 even when numerical scores still match.
 
 **Scientific rules:** strict N-1 target view, separate Powerball and Oz Lotto, TOP/WORST, no lottery-website fetch by reviewer, no uncertain PID kill, no old Mode H holdout permission gate in the new active system, identical science in DEV/QA/PROD, no mandatory QA gate for PROD installs. Genuine shared-code DEFECT can now be corrected in place only by the explicit owner-commanded correction route, holding every affected variant until full history rerun and archiving original code/results; changed scientific IDEA still requires new variant. Local code/status mismatches cause held foreign lists; stale reports cannot appear current. Full-tree backup is attempted and reported, not required for the owner's informed YES. Exact owner-selected restore reinstates nothing later automatically.
+
+**Standing reviewer rights:** R-1 through R-11, including R-8 through R-11, were already owner-ratified on 27 October 2026; reviewer latitude under H-2 section 3.1 is likewise owner-approved. Older wording that calls R-8..R-11 "proposed" is historical only; H-2 v4 section 0.6 clarifies this without editing the protected historical block.
 
 **OV-1 TIMING DISPUTE CLOSED:** Physical retrospective execution is not itself a mathematical disqualification. Use the ratified conditional per-game prevailing OV-1 statement, the same kernel in every tree, truthful historical provenance and descriptive exploratory OV-1. DO NOT recreate a new sandbox calculation, fresh-start requirement or another policy round merely over execution date.
 
