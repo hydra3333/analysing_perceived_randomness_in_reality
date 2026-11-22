@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 18:06 Australia/Adelaide (entry 156: RAT-42, the local runner rulebook v0.6 ratified and installed). **Everything is ready for the handover. Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 18:34 Australia/Adelaide (entry 157: the new Claude chat's takeover from H-1 v8 accepted, HO-2). **Next: build step 1 on the owner's go (its lean package and the suite baseline first). No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **START HERE (22 November 2026, after entry 157).** The new Claude chat took over from H-1 v8 and the owner accepted it
+  after the reviewer's HO-2 PASS (pasted, not committed; recorded in entry 157 with its clarifications). Normal work and
+  the same commit rights apply. **Waiting on the owner:** his go for build step 1 (folder layout; specification 17.3,
+  including the folder-built method table, `closure.py` and `VARIANT.json`); his answer on whether the coding practices
+  apply to step 1's few new files. Then: one suite baseline before the move; the lean package; his E: ZIP before he
+  installs it; the equivalence check by his own reviewed run sheet. **Later owner question (step 3):** the updater's
+  obsolete Mode H precondition against specification 7.1's "unchanged". **Owner direction:** no overhead creeps back.
+  Next numbers: EX_275, entry 158, RAT-43. The bullets below are history.
 - **START HERE (22 November 2026, after entry 156).** The new system is ratified (RAT-40) and not coded. The handovers and
   the register are ratified and installed (RAT-41). **The local runner's rulebook v0.6 is ratified and installed
   (RAT-42; `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, SHA-256 `f92f17f60db63990fc10a663778ec8d6a2b0737c9232895f1ee0af76ffdfa632`):** a restrictive baseline that allows no

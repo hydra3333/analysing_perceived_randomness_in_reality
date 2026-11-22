@@ -3078,3 +3078,58 @@ section 17.2 (unpack it into a new folder, never over the clone).
   scientific execution or any other operation. The next ratification number is RAT-43; the next EX is EX_275.
 - **This is the outgoing Claude chat's last planned entry.** The owner starts the new Claude chat with
   `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`; this chat stops committing once it starts.
+
+## 157. 22 November 2026, 18:34 - HO-2: the new Claude chat's takeover (from H-1 v8) accepted by the owner after the reviewer's PASS; normal work authorised with the same GitHub rights; the reviewer's clarifications recorded
+
+- **How it went (no EX numbers, as in entry 134):** the new Claude chat started from
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`, cloned `main` at `4229a13` with full history, read H-1
+  v8 section 0's list and checked it with tools: H-1 v8 `8230e3df...20c45e`; its carried region 102 lines, 28,169 bytes,
+  `80987a07...51764427`, found once in v7r1; 39 of the 43 hashes in its tables equal `HEAD`, the other four (the runner's
+  rulebook, H-2 v4 and its blurb, `exchange/README.md`) changed by entries 154 to 156; `src/`, `tests/`, the root `.bat`
+  files and `requirements.txt` unchanged since `cc0ab73`; the three switches False and the allowlist empty; the masters
+  448 rows (1144 to 1591) and 235 rows (1474 to 1708), consecutive. Its first reply and its answers to the reviewer's
+  three blind questions (step 1's permissions, preservation, baseline and equivalence evidence; telling old test
+  failures from regressions; an obsolete Mode H gate against a still-binding source check) were given in the chat
+  and relayed by the owner. Neither chat committed anything during the takeover.
+- **The reviewer's assessment, pasted by the owner at 18:33 (not a committed file; its views, not owner decisions):**
+  "HO-2 BLIND-QUESTION REVIEW: PASS." "I recommend that the owner accept your takeover and authorise ordinary
+  documentary/planning work. No further HO-2 questions are required." Its clarifications, accepted by Claude:
+  1. Keep the simplification: the simplest implementation that satisfies RAT-40; no obsolete MHUP-B machinery,
+     ceremonial approvals, redundant checks, new record formats or supplementary bookkeeping without a concrete
+     failure consequence; no weakening of N-1, scientific equivalence, data integrity, no-kill or owner approval.
+  2. Step 1's scope also includes what specification 17.3 names: the method table built from the folder tree, the
+     `closure.py` folder list, and the variant folders with `method.py` and `VARIANT.json`. Structural only; no change
+     to calculations, seeds, views, ranking or TOP and WORST; moved code unchanged except imports; shown in the
+     ordinary package diff.
+  3. One real baseline run of the suite before the move and the same suite in the same environment after; compare
+     test identities, results and substantive failure causes (incidental wording is not by itself a regression); the
+     ordinary test reports, no separate per-test tracking. The equivalence check stays strict: every old development
+     forecast target, every existing variant, both games, its original `canonical_content_digest` reproduced exactly.
+     Running the unmoved code as a control is only for investigating a failure, not a mandatory extra round.
+  4. The owner's full E: ZIP (with `.git` and the ignored old forecast records) made and checked before phase 1 moves
+     source on his PC, kept off E:. The equivalence check by an owner-run, reviewed run sheet, read-only against the
+     old records, so no runner permission changes for it; no separate ceremony for each command of an approved sheet.
+  5. **One genuine later owner question:** the updater still refuses an update without a Mode H opening record, but
+     specification 7.1 says it runs "unchanged". The reviewer prefers a narrowly reviewed correction in build step 3
+     removing ONLY the obsolete Mode H precondition, keeping every Lotterywest-GOV source, overlap, chronology,
+     record, ledger and concurrency check; a fresh PROD must work without fabricated or copied opening or seal
+     records. The owner decides before it is implemented; it does not hold up step 1.
+  6. Stale references settled: RAT-41 covers the refreshed H-2 v4 (entry 154; its "PENDING" wording is superseded);
+     rulebook v0.6 is installed and only a narrow amendment may be needed for a future rehearsal; `exchange/README.md`
+     is v0.6; the specification 17.3 pointer to the simplification design v0.1 is settled in the step-2 package; line
+     endings are handled where byte-bound markers are built (step 2 or 3), without rewriting every source file as
+     housekeeping.
+- **The owner's words (18:33):** "per chatgpt assessment below, you are approved to commence work with all github access
+  rights as previously approved. Please also pay attention to not letting undue \"overhead\" requirements creep back
+  into the specs given that we had very recently spent a great deal of effort stripping them out (eg \"software
+  process/controls/admin overheads\")."
+- **DECIDED (owner):** the takeover is accepted; this Claude chat is the primary designer and coder, with normal work
+  and the same commit rights as before (H-1 v8 section 0B item 4). The outgoing Claude chat commits nothing further.
+- **Standing direction restated by the owner:** no undue overhead (software process, controls, administration) is to
+  creep back into the specifications or the code. Claude applies it with the joint working principle
+  (`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`).
+- **Still open, put to the owner in the chat at 18:13:** whether the coding practices apply to the small amount of
+  genuinely new code in build step 1 (the equivalence check's run sheet program, the folder-built method table, the
+  `VARIANT.json` files), or only from build step 2 as `doc/CODING_PRACTICES_v0_1.md` says.
+- **Not authorised by this entry:** build step 1, any run on the owner's PC (the baseline included), any install. Next
+  numbers: EX_275, entry 158, RAT-43.
