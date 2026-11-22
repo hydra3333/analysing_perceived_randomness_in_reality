@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 18:34 Australia/Adelaide (entry 157: the new Claude chat's takeover from H-1 v8 accepted, HO-2). **Next: build step 1 on the owner's go (its lean package and the suite baseline first). No code is authorised yet.**
+**Last updated:** 22 November 2026, 18:38 Australia/Adelaide (entry 158: the owner's GO for build step 1; the coding practices apply to all coding). **Claude is building the step 1 package in its cloud workspace. Nothing on the owner's PC is authorised yet.**
 
 ## For the owner: NOW
 
+- **BUILD STEP 1 HAS ITS GO (entry 158; 22 November 2026, 18:36).** Claude builds the layout package in its cloud
+  workspace (suite rehearsal there first) for the reviewer. The coding practices apply to all new code, step 1's
+  included; moved method files change in their import lines only. **Still each on the owner's own go, at its
+  moment:** the suite baseline on his PC; his ZIP of the E: project folder before he installs; the install; his
+  read-only equivalence run sheet. Next numbers: EX_275, entry 159, RAT-43.
 - **START HERE (22 November 2026, after entry 157).** The new Claude chat took over from H-1 v8 and the owner accepted it
   after the reviewer's HO-2 PASS (pasted, not committed; recorded in entry 157 with its clarifications). Normal work and
   the same commit rights apply. **Waiting on the owner:** his go for build step 1 (folder layout; specification 17.3,

@@ -3133,3 +3133,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `VARIANT.json` files), or only from build step 2 as `doc/CODING_PRACTICES_v0_1.md` says.
 - **Not authorised by this entry:** build step 1, any run on the owner's PC (the baseline included), any install. Next
   numbers: EX_275, entry 158, RAT-43.
+
+## 158. 22 November 2026, 18:37 - OWNER: THE GO FOR BUILD STEP 1 (the folder layout); the coding practices apply to all coding, step 1 included
+
+- **The owner's words (18:36, repeated at 18:37):** "please apply Coding practices including step 1 i.e. all coding. Go now."
+- **DECIDED (owner): `doc/CODING_PRACTICES_v0_1.md` applies to all new code, build step 1's included** (the document's own
+  "Applies to" line says from build step 2; this entry extends it; the ratified file is not edited). In step 1 that is
+  the newly written files only: the equivalence check program, the method table built from the folder tree, the
+  `VARIANT.json` files. **The moved method files are not touched beyond their import lines** (specification 17.3); their
+  headers and comments come in the light tidy-up after step 1 is proved (RAT-40 note 3).
+- **GO (owner): build step 1** (specification 17.3 phase 1 and 17.4 step 1). As put to him at 18:34, the go covers
+  Claude's work in its own cloud workspace: a rehearsal run of the existing suite, and building the step 1 package
+  for the reviewer. **It covers nothing on the owner's PC:** the suite baseline there, his ZIP of the E: project
+  folder before he installs, the install, and his read-only equivalence run sheet are each asked of him at their
+  moment.
+- **Model:** the owner selected Fable 5.2 at 18:37. Claude's standing suggestion for step 1 is Opus (H-1 v8 section 10);
+  said to him in the chat.
+- Next numbers: EX_275, entry 159, RAT-43.
