@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 13:51 Australia/Adelaide (entry 148: the H-1 v8 CANDIDATE is written and waits for review; the reviewer's H-2 v4 candidate is in). **Next: the reviewer's review of H-1 v8; the owner's ratification of both handovers; then build step 1 on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 14:02 Australia/Adelaide (entry 149: EX_272, H-1 v8 PASSED with one pointer correction, applied). **Next: the reviewer corrects its H-2 v4; the owner ratifies both handovers (RAT-41); a NEW Claude chat then takes over (owner's decision) and build step 1 starts there on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **H-1 v8 HAS PASSED REVIEW (entry 149; `exchange/EX_272_ChatGPT.md`),** with one pointer correction, applied exactly. The
+  candidate is `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` (SHA-256 `9e8717cd758caf2e6e075b86911619bf0e04d67ec8c418347c32741ae172d335`). **The owner has decided
+  that a new Claude chat takes over once v8 is ratified.** Open: the H-2 v4 identifiers inside H-1 v8 go stale when the
+  reviewer corrects H-2 v4 (entry 149 has the suggestion); register v0.32 (when, and by which chat).
 - **BOTH HANDOVERS ARE WRITTEN, AS CANDIDATES (entry 148).** Claude's: `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md`
   with its blurb beside it (waiting for the reviewer's review, then the owner's ratification; until then H-1 v7r1 is
   the installed handover, read with decision log entries 121 to 148). The reviewer's:

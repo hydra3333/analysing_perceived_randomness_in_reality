@@ -2819,3 +2819,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the reviewer's review of the H-1 v8 candidate; the owner's ratification of it (and of H-2 v4, as he
   chooses); installation in `doc/HANDOVER/` with only the status paragraph changed; then his choice of chat for build
   step 1, and his ZIP when Claude says. The next EX is EX_272; the next ratification is RAT-41.
+
+## 149. 22 November 2026, 14:02 - EX_272: the reviewer's PASS of the H-1 v8 candidate with one pointer correction (FIX AND PROCEED), applied exactly; the owner decides a new Claude chat after v8 is ratified
+
+- **EX_272** (`exchange/EX_272_ChatGPT.md`, main `63dfeb0`, SHA-256 `eea85a848c32a8d212d0f2793c3d000f967ea71edc07f67b9a4d36555cc3592a`), relayed by the owner at 14:00. Disposition: "H-1 v8:
+  PASS WITH ONE NARROW DOCUMENTARY CORRECTION, assigned REVIEWER-DECIDED FIX AND PROCEED". The reviewer verified the
+  102-line carried region and all 34 carried lines against H-1 v7r1, and the candidate, blurb, builder and template
+  hashes. Appendix B, section 0C note 7, sections 5.2 and 5.3, the build order and the blurb passed. No further full
+  review of H-1 is asked for. The OV-1 timing question stays closed.
+- **H1-v8-C01, applied exactly as worded.** In section 4.4 only, "commits `30826be` and `18ce192`, with its blurb" became
+  "commits `30826be` (full candidate) and `6316767` (current introductory blurb)". Made in the template; rebuilt by the
+  builder against the reviewed commit `4967598`; `diff` of the old and new candidate shows those two lines and nothing
+  else; the blurb is byte-identical. **The corrected candidate:**
+  `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md`, SHA-256 `9e8717cd758caf2e6e075b86911619bf0e04d67ec8c418347c32741ae172d335` (109,728 bytes); the blurb unchanged,
+  `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66`; the template now `51b1f09ca426631515cd24ffaf915ab0ab164558e6453fc70623cf28f44d993f`. The earlier candidate (`983f27ec...1a1ae5`) is in Git at `4967598`.
+- **An observation, not acted on (outside what was authorised).** EX_272 says H-1's Appendix A "already names the
+  current H-2 blurb hash". It does not: Appendix A's row for the H-2 v4 blurb holds `436f0814...116cf3`, the bytes at
+  `18ce192`; the blurb at `6316767` is `24ecfd6cb517ca11a2af9ead57229e9adba44b6d0d7ef25ebf9708a03abc2d75`. Appendix A's list of commits also still says `18ce192`. And the
+  reviewer's own owed clarification of H-2 v4 (R-8 to R-11 already owner-ratified, 27 October 2026) will change the
+  H-2 v4 file's hash, which section 4.4 and Appendix A cite. Claude's suggestion, put to the reviewer through the
+  owner: once the reviewer has corrected H-2 v4, one build of H-1 v8 against that commit, changing only the H-2 v4
+  identifiers (two hashes and the commit names), reported with its exact diff. Until the reviewer authorises that,
+  nothing more is changed.
+- **Also recorded by the reviewer in EX_272, about its own file:** H-2 v4 needs a clarification outside its protected
+  rights text that R-8 to R-11 are already ratified. H-1 v8's section 1.4 states that correctly. Not an H-1 defect.
+- **The owner's words, 14:00:** "\"Chat for build step 1\" ok yes a new Claude chat to be created once v8 is ratified.
+  Register v0.32 I'm unsure what you are asking ... as long as it is up to date now using your experience then yes
+  to your recommendation."
+- **DECIDED (owner):** a new Claude chat takes over once H-1 v8 is ratified; build step 1 starts there.
+- **Not yet settled: register v0.32.** Claude's question was unclear to him. The fact: the register in `doc/` is v0.31
+  and does not hold RAT-35 to RAT-40; the decision log holds them all and is up to date. Claude puts the question
+  again in plain words (write a short v0.32 now, in this chat, to travel with the handovers; or leave it to the
+  first code package).
+- **Next:** the reviewer's correction of H-2 v4 and its answer on the pointers; then the owner's ratification of both
+  handovers (RAT-41), installation in `doc/HANDOVER/` with the status paragraph alone changed, and the new chat.

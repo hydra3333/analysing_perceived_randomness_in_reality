@@ -261,8 +261,8 @@ say so and ask.
 - **The reviewer's handover (H-2).** Ratified: H-2 v3r4 (RAT-36; its file name still says CANDIDATE). **The newest is
   the reviewer's own full edition current to RAT-40,**
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
-  (`{{SHA:doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md}}`; commits `30826be` and
-  `18ce192`, with its blurb): a candidate until the owner ratifies it. Its section 0 states the current position, the
+  (`{{SHA:doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md}}`; commits `30826be` (full candidate) and
+  `6316767` (current introductory blurb)): a candidate until the owner ratifies it. Its section 0 states the current position, the
   four notes of ratification, the build order and the closed OV-1 question as this file does. Before it came the
   v3r10 continuity candidate of 21 November 2026, which Claude wrote on the owner's instruction when the previous
   reviewer chat was lost. `exchange/CONTINUITY_NOW.md` names the edition in force.
