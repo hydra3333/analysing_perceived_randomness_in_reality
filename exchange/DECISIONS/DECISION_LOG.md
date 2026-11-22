@@ -2785,3 +2785,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer's own H-2 edition); whether build step 1 starts in this chat or a new one; the owner's ZIP of the project
   folder when Claude says it is time; build step 1 on his go. The next ratification number is RAT-41. The
   ratification register's next edition (v0.32) is still to be written; until then this entry is the record.
+
+## 148. 22 November 2026, 13:51 - the H-1 v8 CANDIDATE and its blurb written on the owner's go; the reviewer's own H-2 v4 candidate noted; no owner decision beyond the go
+
+- **The owner's words.** At 13:36, on Claude's paste block for the reviewer: "ok. does the blurb also mention for chatgpt
+  to fully update its handover docs now as you will be doing yours next ?" Claude gave him a firmer block asking the
+  reviewer to update its own handover fully now, at this milestone. At 13:37: "yes please H-1v8 now while I paste that
+  to chatgpt".
+- **Written (candidates; not reviewed, not ratified; they authorise nothing):**
+  `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` (SHA-256 `983f27ec645a7b22083f7f4a19493306b55323ac626d2ecc10b77174e71a1ae5`; 109698 bytes; US-ASCII, LF) and
+  `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8_introductory_blurb.md` (SHA-256 `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66`), built by
+  `exchange/CLAUDE_WEB_TOOLS/h1v8/make_h1_v8.py` (`241b866fff4545067a4fb4d3601c875d4f651ba4fef882dd83b0db5c34cb29a0`) from `H1_v8_template.md` (`e75f0cf6bd01f3180968811b9fe026ea8d971247b9d91d98b5d225443fe01d51`) beside it.
+- **What kind of edition.** A full edition, restructured and shortened (H-1 v7r1 section 8.5 allows it), for the system
+  ratified as RAT-40. H-1 v7r1's sections 1, 2 and 2A (the roles, the reviewer's rights, the review procedure, the Git
+  rules, the owner's working preferences and his foundational points) are carried byte for byte, with a short list
+  of where they are out of date placed before them; 34 further single lines are carried whole from v7r1 (the results
+  source, the scientific contract, process safety, the dependency rule that specification section 13 cites as "H-1
+  5.4", verified technical facts). Everything else is rewritten around the three ratified `doc/` files, by pointer.
+  Its Appendix B lists, section by section, what was dropped and where it now lives, and what Claude did and did
+  not re-read or verify. The blurb is the blurb of 21 November 2026 with counted changes; the owner's hard rules are
+  his words, unchanged.
+- **Also committed with it:** the builders of the last three editions of the design, which had been only in the
+  cloud workspace: `exchange/CLAUDE_WEB_TOOLS/simplify/build_v0_4_v0_10.py`, `build_v0_5_v0_11.py`, `build_v0_6_v0_12.py`, with
+  `spec_v0_4_template.md` and `deploy_v0_10_template.md`. Run again before committing, the three reproduced the committed
+  drafts v0.4 to v0.6 and v0.10 to v0.12 with no byte changed.
+- **The reviewer's handover.** While this was being written the reviewer committed its own full edition current to
+  RAT-40: `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` (SHA-256 `d537263c02acbc69e787d17cb715e2d8e1768e4a7e40f3a699eba2f06ba7c828`; main `30826be`) and
+  its blurb (main `18ce192`). A candidate until the owner ratifies it. Claude read its section 0 only: it states the
+  position, the four notes of ratification, the build order and the next numbers as Claude's records do. H-1 v8
+  names it in its section 4.4.
+- **Not an EX message** (the owner's rule: an EX only when he asks). The candidate goes to the reviewer by a pointer in
+  the owner's paste; the reviewer replies as the owner directs.
+- **Next:** the reviewer's review of the H-1 v8 candidate; the owner's ratification of it (and of H-2 v4, as he
+  chooses); installation in `doc/HANDOVER/` with only the status paragraph changed; then his choice of chat for build
+  step 1, and his ZIP when Claude says. The next EX is EX_272; the next ratification is RAT-41.

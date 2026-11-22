@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 13:34 Australia/Adelaide (entry 147: RAT-40, THE NEW DESIGN IS RATIFIED). **Next: H-1 v8; the owner's ZIP of the project folder when Claude says; then build step 1 (the folder layout) on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 13:51 Australia/Adelaide (entry 148: the H-1 v8 CANDIDATE is written and waits for review; the reviewer's H-2 v4 candidate is in). **Next: the reviewer's review of H-1 v8; the owner's ratification of both handovers; then build step 1 on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **BOTH HANDOVERS ARE WRITTEN, AS CANDIDATES (entry 148).** Claude's: `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md`
+  with its blurb beside it (waiting for the reviewer's review, then the owner's ratification; until then H-1 v7r1 is
+  the installed handover, read with decision log entries 121 to 148). The reviewer's:
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` (waiting for the owner's ratification).
+  **A Claude chat taking over now reads the H-1 v8 candidate first: its section 0 gives the reading order.** After the
+  handovers: the owner's choice of chat for build step 1; his ZIP when Claude says; build step 1 on his go.
 - **RAT-40 (entry 147; 22 November 2026, 13:33): THE NEW DESIGN IS RATIFIED.** The authority for the active system is now
   `doc/Predictive_Randomness_System_Specification_v0_6.md` with `doc/Predictive_Randomness_Deployment_Design_v0_12.md`, and
   `doc/CODING_PRACTICES_v0_1.md` for all new code. The earlier design documents are history (specification 1.3). The
