@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 13:17 Australia/Adelaide (entry 146: EX_271, the reviewer's PASS (DESIGN) of the specification v0.6 and the deployment design v0.12). **Next: the owner's ratification decision (RAT-40). Then H-1 v8, the owner's ZIP, build step 1. No code yet.**
+**Last updated:** 22 November 2026, 13:34 Australia/Adelaide (entry 147: RAT-40, THE NEW DESIGN IS RATIFIED). **Next: H-1 v8; the owner's ZIP of the project folder when Claude says; then build step 1 (the folder layout) on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **RAT-40 (entry 147; 22 November 2026, 13:33): THE NEW DESIGN IS RATIFIED.** The authority for the active system is now
+  `doc/Predictive_Randomness_System_Specification_v0_6.md` with `doc/Predictive_Randomness_Deployment_Design_v0_12.md`, and
+  `doc/CODING_PRACTICES_v0_1.md` for all new code. The earlier design documents are history (specification 1.3). The
+  drafts under `exchange/CLAUDE_WEB_TOOLS/simplify/` are the working record. **Owed:** H-1 v8 (the installed H-1 v7r1 still
+  binds for the hard rules, roles and protocol only); the light tidy-up of the existing method files after build
+  step 1; EX_271's oracle in build step 4. **The four build steps (specification 17.4) each need the owner's own go.**
+  A chat taking over reads: the takeover note; this block; decision log entries 121 to 147; the three `doc/` files.
 - **THE DESIGN HAS PASSED REVIEW (entry 146; `exchange/EX_271_ChatGPT.md`).** Waiting on the owner: ratification (RAT-40) of
   `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md` and
   `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md`. One oracle is carried into build step 4 (EX_271 section

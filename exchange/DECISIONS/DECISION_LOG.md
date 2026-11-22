@@ -2745,3 +2745,43 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `e20143102185cdf24a13b74baae8e279328000d164dda2c180a9a3c205e35714`).
 - **Not a decision:** ratification is the owner's. Claude has put to him what RAT-40 would cover and what it would not
   authorise.
+
+## 147. 22 November 2026, 13:34 - RAT-40: THE OWNER RATIFIES the system specification v0.6 and the deployment design v0.12, with notes: warnings, coding practices, a light tidy-up of the existing method files
+
+- **The owner's words.** At 13:22, on the mechanisms Claude had chosen: "ok as long as a warning message is emitted at the
+  right place" (for "any change to shared forecasting code holds every variant until a full rerun" and for "results
+  made under edited code wait for a rerun command"); and: "both are nearly ratified pending agreement on these
+  clarifications and notes about good coding practices." At 13:26: "lets briefly explore good coding practices, eg good
+  commenting inside code eg outlining the purpose of the .py and list any of our developed dependencies and what they
+  are used for, each function or self-contained block of code has good commenting clarifying in english what is
+  happening, good variable naming aligning with its purpose with minimal generic naming". **At 13:33:** "also good use of
+  constants which are declared at or near the top of the PY and well commented and parameters well commented, and
+  function returned data well commented with a good example, checks for critical data not found from .ini file(s) etc,
+  meaningful error messages saying what occurred where and why and advising likely what to do about it. yes to a light
+  tidy-up of the existing method files after step 1 is proved and before anything is installed into QA or PROD. yes to
+  yes, kept light. If you think of any more light-touch good coding practices let me know otherwise ratified now."
+- **RAT-40 (22 November 2026, 13:33).** Ratified, after the reviewer's PASS (DESIGN) in EX_271 (entry 146): the system
+  specification v0.6 and the deployment design v0.12, each the reviewed candidate with its status paragraph alone
+  changed, placed by Claude in `doc/` (SHA-256 of the installed files):
+  `doc/Predictive_Randomness_System_Specification_v0_6.md` `ee7199d0c17e8bcf877d49e25c6db1a009105c3f8da75ff1ec28b15726216ad0`;
+  `doc/Predictive_Randomness_Deployment_Design_v0_12.md` `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d`.
+  The ratification covers what Claude set out to him at 13:16 (entry 146's reply): the two documents as the one
+  authority, the earlier design documents as history with their science kept by reference (specification 1.2, 1.3);
+  the orphan-marker exception at a restore, which amends Architecture 5C by ratification (deployment design 12); the
+  mechanisms of specification section 19; the four-step build order (17.4).
+- **The notes of ratification (binding on the code):**
+  1. **Warnings.** Wherever variants are held or results are not current, the job says so plainly at its start and at
+     its end, names the cause, and gives the exact command to run.
+  2. **Coding practices:** `doc/CODING_PRACTICES_v0_1.md` (SHA-256 `d64f0101a4fdb21998b2871765bd9b3f06ccb6c7409c7a2d0e9f230cebbd7ddd`), his points set out as a one-page checklist;
+     two items added by Claude at his invitation are marked there and may be struck by him.
+  3. **A light tidy-up of the existing method files** after build step 1 is proved and before anything is installed
+     into QA or PROD: headers, dependency lists, comments where plainly missing; no calculation changes; the
+     equivalence check run again. (A variant's files can never change once installed.)
+  4. **EX_271 section 3's oracle** is owed in build step 4.
+- **Clarified by Claude before he ratified (no document change):** no tree behaves differently from another, DEV
+  included: the "wait for a rerun" rule is the same everywhere; and the test suite is run against a tree only when
+  that tree's system code is the same as DEV's, because the tests live in DEV and belong to DEV's system code.
+- **RAT-40 authorises no code, source move, install, tree, run, copy, backup or restore.** Next: H-1 v8 (and the
+  reviewer's own H-2 edition); whether build step 1 starts in this chat or a new one; the owner's ZIP of the project
+  folder when Claude says it is time; build step 1 on his go. The next ratification number is RAT-41. The
+  ratification register's next edition (v0.32) is still to be written; until then this entry is the record.
