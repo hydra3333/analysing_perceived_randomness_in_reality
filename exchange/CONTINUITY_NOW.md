@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 17:37 Australia/Adelaide (entry 153: RAT-41, BOTH HANDOVERS AND REGISTER v0.32 RATIFIED; H-1 v8 and the register installed in `doc/`). **Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 17:52 Australia/Adelaide (entries 154 and 155: RAT-41 covers the reviewer's refreshed H-2 v4; the working lists and README files are up to date; a rulebook v0.6 candidate is written). **Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **HOUSEKEEPING BEFORE THE CHAT SWITCH IS DONE (entries 154, 155).** RAT-41 covers the reviewer's refreshed H-2 v4 (main
+  `79406e4`; blurb `35a2ebf`). The owner's roadmap and reminders are up to date (**two proposals wait for his word: R-007
+  dropped, R-017 done**; new reminder R-030 lists what Claude raises during the build). `exchange/README.md` is v0.6.
+  **A local runner rulebook v0.6 CANDIDATE waits for the reviewer's review and the owner's ratification:**
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/` (candidate, cover note, builder, exact diff). The installed rulebook v0.5 is
+  unchanged and is what the runner obeys. The RAT-41 bullet below is still the place to start.
 - **RAT-41 (entry 153; 22 November 2026, 17:34): H-1 v8, THE REVIEWER'S H-2 v4 AND REGISTER v0.32 ARE RATIFIED.** Installed:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md` (SHA-256 `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e`) with its blurb, and
   `doc/RATIFICATION_REGISTER_v0_32.md` (SHA-256 `f59d1911279e7e95a952a14c3a0c68422ba0f4e67f91ffd5369eb73c606c9acb`). **Every bullet below this one is history.**

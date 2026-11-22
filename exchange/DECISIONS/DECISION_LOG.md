@@ -3008,3 +3008,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   to date; bring `exchange/README.md` and `exchange/CLAUDE_WEB_TOOLS/README.md` up to date; and, if possible, the local
   runner's rulebook. The rulebook is a ratified rule document (RAT-30) that the runner obeys, so Claude writes a
   CANDIDATE of a new edition for the reviewer and the owner and does not change the installed file.
+
+## 155. 22 November 2026, 17:52 - done at the owner's request of entry 154: the roadmap and reminders, the two README files, and a local runner rulebook v0.6 CANDIDATE (not installed)
+
+- **The owner's two working lists** (`exchange/OWNER_ROADMAP.md`, `exchange/OWNER_REMINDERS.md`; main `25868f9`). Nothing was
+  deleted. The roadmap: a new opening paragraph; a new section "The road from 22 November 2026" (steps A to I: the
+  design and the handovers done; the new chat; his ZIP; the four build steps; then new methods); the old items' status
+  words brought up to date (10c done in part, then replaced; 10d on hold; 21b overtaken). The reminders: every item
+  that was not DONE has an update line dated 22 November 2026, with a summary table at the top; five status words
+  changed where the item's own record showed it was finished or overtaken (R-012, R-015, R-018, R-026, R-028); **two
+  are PROPOSED only and wait for the owner's word: R-007 (dropped) and R-017 (done);** one new reminder, **R-030**, lists
+  what Claude must raise during the build and when (his ZIP first). Three lines of the reminders file that had LF
+  endings were made CRLF, as its header says.
+- **`exchange/README.md` is now v0.6** (main `25868f9`): brought into line with practice since RAT-34 (the reviewer commits
+  its own files; Claude also commits ratified documents into `doc/`; most messages are one `.md` naming its documents
+  by path and hash; not every message is an EX message; the decision log and the continuity page). It changes no
+  rule. The takeover of 17 November 2026 had noted a v0.6 "to be proposed for review" (entry 64, D3); it was written
+  directly on the owner's instruction, and the reviewer is told. H-1 v8's carried section 1.6 still says "v0.5": the
+  ratified file is not edited; this entry is the note.
+- **`exchange/CLAUDE_WEB_TOOLS/README.md`** (main `25868f9`): three stale statements corrected and one section added
+  describing every folder since 14 November 2026 (`simplify/`, `h1v8/`, `register/`, the MHUP-B slices and where the
+  OV-1 kernel is, and the rest) and how the document rounds were built.
+- **The local runner's rulebook: a v0.6 CANDIDATE, and no change to the installed file.**
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/CLAUDE_v0_6_CANDIDATE.md` (SHA-256 `9d2cae3c780344797e6054b1eeeee875db5efc84aa8384ea7b4fa53ca4e8830f`), built by `make_rulebook_v0_6.py` from the
+  installed v0.5 (`fa7a5fe2...acd5200`, asserted) by removing the ended section 2A whole and nine counted edits;
+  `CLAUDE_v0_5_TO_v0_6_CANDIDATE.diff` is exact (13 lines added, 34 removed); `COVER_NOTE.md` (`db8bea751dad6cb8251a510d38aa4b295ea6b0dbe18530cd60ac827208fe09af`) gives each change with
+  its reason, what was deliberately left alone, three questions for the reviewer and the owner, and three proposed
+  deny lines for `.claude/settings.json` (the owner's file; not touched). It loosens nothing: it removes the T016
+  allowance that had ended, widens rule 4 to every draw, names the new system's seventeen commands as never run,
+  and adds rule 11 (QA, PROD and their backups are never touched) and rule 12 (the PC's date and time). **The runner
+  obeys only the installed v0.5 until the owner ratifies a new edition after review.** Claude's recommendation in the
+  note: install before build step 2, when the new commands first appear in the clone.
+- **Still not brought up to date, on purpose:** `CLAUDE_CODE_WORKING_FOLDER_TREE/README.md` (the owner's page for the
+  runner; it is accurate for the installed rulebook) and `doc/METHOD_TEMPLATE/` (a new draft is owed after build step
+  3, when the new layout exists).
+- Nothing here authorises code, a build step, a run or anything on the owner's PC.
