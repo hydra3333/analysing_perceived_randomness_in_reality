@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 17:08 (entry 151 corrects a count in entry 150; no file changed); before that 16:56 Australia/Adelaide (entry 150: the register v0.32 CANDIDATE is written; H-2 v4 corrected by the reviewer). **Next: the reviewer reviews the register and answers on one small rebuild of H-1 v8; the owner ratifies the register and both handovers (RAT-41); a NEW Claude chat then takes over. No code is authorised yet.**
+**Last updated:** 22 November 2026, 17:29 Australia/Adelaide (entry 152: EX_273; H-1 v8 and register v0.32 are final candidates). **WAITING ON THE OWNER: his consideration of RAT-41 (H-1 v8, the reviewer's H-2 v4, register v0.32). Then Claude installs them in doc/ and a NEW Claude chat takes over. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **THREE DOCUMENTS ARE READY FOR THE OWNER'S CONSIDERATION OF RAT-41 (entry 152; `exchange/EX_273_ChatGPT.md`):**
+  `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` (SHA-256 `2fd38130415f4c3602ac86f6f2b4250781f27f25bf204f66269424ea2c54a1f4`) with its blurb;
+  the reviewer's `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` with its blurb; and
+  `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (SHA-256 `f508f7714693a7cfcd821ac714a475ae67f3dbc723e7924c8b2eb35168f25229`). Both of Claude's have the reviewer's
+  PASS. **This entry replaces the two bullets below it about a further H-1 v8 rebuild: that rebuild is done.** On
+  ratification: Claude finalises (status lines only), installs in `doc/`, verifies; then the new Claude chat starts
+  from `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`. A watchpoint for build steps 2 and 3 (the Mode H
+  opening record that old code and the updater still consult) is in H-1 v8 section 10 and in the register.
 - **THE REGISTER v0.32 CANDIDATE IS WRITTEN (entry 150):** `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md`
   (v0.31 plus one short section recording RAT-34's install to RAT-40). Waiting for the reviewer's review. **The H-1 v8
   candidate needs one more small rebuild before ratification** (entry 150): the reviewer corrected H-2 v4 after it was

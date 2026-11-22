@@ -2906,3 +2906,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (`2fd091f3...6d99135c`); the diff is exact, as proved by `patch` and `cmp` in entry 150. Only the description was wrong.
 - **Lesson, kept:** count with the tool that counts what the sentence says (`--numstat` for "lines added"), not with a
   hand-made pattern.
+
+## 152. 22 November 2026, 17:29 - EX_273: the register v0.32 candidate PASSED (documentary); the authorised final rebuild of H-1 v8 made; the register's dependent hashes refreshed; three documents ready for the owner's consideration of RAT-41
+
+- **EX_273** (`exchange/EX_273_ChatGPT.md`, main `6532258`, SHA-256 `dfd261eed588ece51158fe6205bb7a14e864e93608f39b3ddd818b8a48331ca9`), relayed by the owner at 17:27. **Register v0.32:
+  DOCUMENTARY PASS** as candidate content (its hashes, v0.31 preserved, the one 174-line section, the RAT table against
+  entries 63, 74, 87, 92, 101, 106 and 147, the out-of-date list), "subject to routine final identifier refresh". **H-1 v8:
+  FIX AND PROCEED** for one final rebuild confined to A, B and C below. The reviewer also updated its own H-2 v4
+  candidate and blurb (main `70719f5`, `03217df`, `adfd973`): R-8 to R-11 already owner-ratified; register v0.32 written.
+- **The opening-record point (entry 150) is confirmed by the reviewer as "an IMPLEMENTATION COMPATIBILITY WATCHPOINT, not a
+  new science policy"** (EX_273 section 2), with its guidance for build steps 2 and 3: say which old checks no longer
+  apply, test and settle it in the normal code reviews; fresh DEV, QA and PROD trees must work under RAT-40 with no
+  Mode H opening or seal as a prerequisite; "do not silently copy the obsolete study marker into a newly built tree
+  merely to satisfy old code, and do not remove genuine source/ledger checks". No design change.
+- **The H-1 v8 rebuild, exactly as authorised (main `a11db09`).** A: the H-2 v4 identifiers (section 4.4; Appendix A's two rows
+  and its commit list). B: the four statements that register v0.32 was still owed (0A item 3, 0C note 4, 4.4, 12.8
+  item 6) now say it is a written candidate, with its hash at the reviewed commit `a30b19a`. C: one paragraph in section
+  10, the watchpoint. Made in the template; the builder gained one line so that a hash can be taken at a named commit.
+  **Old candidate `9e8717cd758caf2e6e075b86911619bf0e04d67ec8c418347c32741ae172d335`; new candidate
+  `2fd38130415f4c3602ac86f6f2b4250781f27f25bf204f66269424ea2c54a1f4`** (111,330 bytes). The exact diff is `exchange/CLAUDE_WEB_TOOLS/h1v8/H1_v8_C01_TO_EX273.diff`
+  (`git diff --numstat`: 31 lines added, 14 removed; seven hunks, all inside A, B and C). The carried region is unchanged
+  (102 lines, `80987a07...51764427`); **the blurb is unchanged, `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66`.**
+- **Seen and left alone, being outside what was authorised:** section 0A item 3 still says "the newest EX is EX_271; the
+  newest decision log entry is 148", and section 12.8's "Waiting on" lines do not name the register. Both are dated
+  "at this edition" and the same item tells the reader to read the log first. The finalisation at ratification changes
+  the status paragraph only.
+- **The register's dependent hashes refreshed, as EX_273 section 1 asks.** Rebuilt by the same builder from the same
+  section file (unchanged, `c3cdb445...1a11a6031`) against the commit above. `REGISTER_v0_32_a30b19a_TO_REFRESHED.diff` shows
+  two lines changed and nothing else: the row for H-1 v8 (`9e8717cd...` to `2fd38130...`; its blurb's hash the same) and the
+  row for H-2 v4 (to `8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8` and, for its blurb, `700ca5da32494bd4d7f8da1d1c26e8ee96f784bf45501d220bff5e4b03b15a46`). Register v0.31 is not rewritten: `REGISTER_v0_31_TO_v0_32.diff` is again
+  exact by `patch` and `cmp` (175 lines added, 1 removed). **Register v0.32 candidate, refreshed: SHA-256 `f508f7714693a7cfcd821ac714a475ae67f3dbc723e7924c8b2eb35168f25229`**
+  (the reviewed snapshot at `a30b19a` was `2fd091f3...6d99135c`, which is the value H-1 v8 quotes, labelled as such).
+- **Ready for the owner's consideration of RAT-41** (the reviewer's recommendation; the owner alone ratifies):
+  1. `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` with its blurb (hashes above);
+  2. `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` with its blurb (the reviewer's files);
+  3. `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (hash above).
+  On his ratification Claude finalises H-1 v8 and the register by their status lines and the register's table cells
+  only, installs them in `doc/`, verifies the installed bytes from GitHub, and records it. Then the new Claude chat.
+- **Authorised by none of this:** code, a build step, a run, anything on the owner's PC.
