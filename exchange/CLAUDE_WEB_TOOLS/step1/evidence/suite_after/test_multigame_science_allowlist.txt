@@ -1,0 +1,11 @@
+test_forged_receipt_mode_does_not_convert_synthetic_to_science (test_multigame_science_allowlist.SyntheticSeparationTests.test_forged_receipt_mode_does_not_convert_synthetic_to_science) ... ok
+test_launcher_rejects_science_variant_as_plumbing (test_multigame_science_allowlist.SyntheticSeparationTests.test_launcher_rejects_science_variant_as_plumbing) ... ok
+test_missing_deny_flags_are_not_scientific_approval (test_multigame_science_allowlist.SyntheticSeparationTests.test_missing_deny_flags_are_not_scientific_approval) ... ok
+test_no_scientific_coordination_contract_activated (test_multigame_science_allowlist.SyntheticSeparationTests.test_no_scientific_coordination_contract_activated) ... ok
+test_synthetic_consumer_refuses_before_result_read (test_multigame_science_allowlist.SyntheticSeparationTests.test_synthetic_consumer_refuses_before_result_read) ... ok
+test_synthetic_has_four_modes_and_no_forecast_consumer (test_multigame_science_allowlist.SyntheticSeparationTests.test_synthetic_has_four_modes_and_no_forecast_consumer) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 1.024s
+
+OK

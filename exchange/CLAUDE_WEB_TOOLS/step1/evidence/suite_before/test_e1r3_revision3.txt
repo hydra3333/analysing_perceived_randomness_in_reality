@@ -1,0 +1,15 @@
+test_view_data_kind_mapping (test_e1r3_revision3.Adapter.test_view_data_kind_mapping) ... ok
+test_r3_equals_r2_label_for_label_in_both_kinds (test_e1r3_revision3.IdentityWithRevision2.test_r3_equals_r2_label_for_label_in_both_kinds) ... ok
+test_r3_still_equals_the_revision_1_reference (test_e1r3_revision3.IdentityWithRevision2.test_r3_still_equals_the_revision_1_reference)
+The chain of identity holds across both revisions: r3 equals r1's frozen synthetic records too. ... ok
+test_reference_provenance (test_e1r3_revision3.IdentityWithRevision2.test_reference_provenance) ... ok
+test_data_kind_and_view_length (test_e1r3_revision3.MethodOwnChecks.test_data_kind_and_view_length) ... ok
+test_holdout_record_equals_development_record_on_the_same_prefix (test_e1r3_revision3.OneDataKind.test_holdout_record_equals_development_record_on_the_same_prefix) ... ok
+test_effective_date_is_read_by_the_validator_only (test_e1r3_revision3.RegistryAndArchive.test_effective_date_is_read_by_the_validator_only)
+EX_142 C01 condition 3: no gate, classifier or report reads a registry entry's effective_date; the one reader ... ok
+test_revision_3_active_and_revision_2_archived (test_e1r3_revision3.RegistryAndArchive.test_revision_3_active_and_revision_2_archived) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 6.243s
+
+OK

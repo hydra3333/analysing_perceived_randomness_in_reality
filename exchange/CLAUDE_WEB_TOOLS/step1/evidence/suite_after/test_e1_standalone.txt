@@ -1,0 +1,50 @@
+test_early_started_and_success_firewall (test_e1_standalone.E1LoaderAndRun.test_early_started_and_success_firewall) ... [E_1] REFUSED before STARTED: FileExistsError: [Errno 17] File exists: '/tmp/e1_synthetic_contract__4d11hmp/runs/e1-syntheticpass001'
+ok
+test_failed_run_persists_without_pass (test_e1_standalone.E1LoaderAndRun.test_failed_run_persists_without_pass) ... [E_1] FAILED: ValueError: unexpected U-view CSV columns; drawn-order input forbidden
+ok
+test_golden_prefix_and_count (test_e1_standalone.E1LoaderAndRun.test_golden_prefix_and_count) ... ok
+test_interrupt_is_fail_closed (test_e1_standalone.E1LoaderAndRun.test_interrupt_is_fail_closed) ... [E_1] FAILED: KeyboardInterrupt: 
+ok
+test_no_future_read_and_no_whole_source_hash_leakage (test_e1_standalone.E1LoaderAndRun.test_no_future_read_and_no_whole_source_hash_leakage) ... ok
+test_original_poc_status_helper_api (test_e1_standalone.E1LoaderAndRun.test_original_poc_status_helper_api) ... ok
+test_real_gate_off_refuses_before_source_read (test_e1_standalone.E1LoaderAndRun.test_real_gate_off_refuses_before_source_read)
+Guard independently of the runner's shipped gate value. ... usage: python -m unittest [-h]
+                          --mode {synthetic-contract,historical-development}
+                          --target TARGET --source SOURCE [--run-id RUN_ID]
+                          [--synthetic-run-root SYNTHETIC_RUN_ROOT]
+python -m unittest: error: REAL HISTORICAL DEVELOPMENT DISABLED pending loader/status review and owner gate
+ok
+test_real_gate_on_rejects_invalid_targets_and_sources (test_e1_standalone.E1LoaderAndRun.test_real_gate_on_rejects_invalid_targets_and_sources)
+Patch gate ON only in-test; never inspect the actual real dataset. ... [E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] REFUSED before STARTED: ValueError: invalid target
+[E_1] FAILED: ValueError: real source must be in the trusted source_data directory
+[E_1] FAILED: ValueError: real source must have approved unordered-file name
+[E_1] FAILED: ValueError: unexpected U-view CSV columns; drawn-order input forbidden
+ok
+test_refuse_wrong_schemas_and_invalid_prefix (test_e1_standalone.E1LoaderAndRun.test_refuse_wrong_schemas_and_invalid_prefix) ... ok
+test_reject_fake_pass_failed_or_orphan (test_e1_standalone.E1LoaderAndRun.test_reject_fake_pass_failed_or_orphan) ... ok
+test_reject_holdout_and_sealed_future (test_e1_standalone.E1LoaderAndRun.test_reject_holdout_and_sealed_future) ... ok
+test_runtime_schema_is_shared_with_poc_helper (test_e1_standalone.E1LoaderAndRun.test_runtime_schema_is_shared_with_poc_helper) ... ok
+test_same_forecast_content_different_run_ids (test_e1_standalone.E1LoaderAndRun.test_same_forecast_content_different_run_ids) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.972s
+
+OK
+[E_001] STARTED run=e1-syntheticpass001 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_001] STARTED run=e1-invalidfixture01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_001] STARTED run=e1-interruptedstatus01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_001] STARTED run=e1-gatecheck-untrusted-directory mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_001] STARTED run=e1-gatecheck-wrong-filename mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_001] STARTED run=e1-gatecheck-drawn-order-header mode=REAL_HISTORICAL_DEVELOPMENT target=1152
+[E_001] STARTED run=e1-firewallchecks01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_001] STARTED run=e1-sharedruntime01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_001] STARTED run=e1-twoidentities01 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9
+[E_001] STARTED run=e1-twoidentities02 mode=SYNTHETIC_CONTRACT_TEST target=1152
+[E_1] synthetic/development result prepared; target=1152; canonical_sha256=8a7f917ac8deb9307d31100e7cd811f87897b563d907d5ab5eab911708545eb9

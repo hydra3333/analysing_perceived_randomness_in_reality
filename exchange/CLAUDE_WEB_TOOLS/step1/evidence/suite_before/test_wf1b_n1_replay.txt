@@ -1,0 +1,8 @@
+test_adaptive_rule (test_wf1b_n1_replay.AdaptiveTickets.test_adaptive_rule) ... ok
+test_oz_lotto_supplementary_branch (test_wf1b_n1_replay.FixedTickets.test_oz_lotto_supplementary_branch) ... ok
+test_powerball (test_wf1b_n1_replay.FixedTickets.test_powerball) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 9.088s
+
+OK

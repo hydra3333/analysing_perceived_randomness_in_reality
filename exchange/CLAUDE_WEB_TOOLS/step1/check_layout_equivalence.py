@@ -175,15 +175,14 @@ def expected_from_old_run_folders(tree_root: Path, game_id: str) -> dict:
             raise CheckRefused(f'{forecast_path} has no {FORECAST_RECEIPT_NAME} beside it, so the data version '
                                'it was computed from is not known. Stop and send this message to the Claude chat.')
         receipt = read_json_file(receipt_path)
-        provenance = receipt['source_provenance']
         item = {'game_id': game_id, 'method_id': forecast['method_id'], 'variant_id': forecast['variant_id'],
                 'method_revision': forecast['method_revision'],
                 'target_draw_number': forecast['target_draw_number'],
                 'declaration_digest': forecast['declaration_digest'],
                 'registry_entry_digest': receipt['registry_entry_digest'],
                 'observation_view': forecast['observation_view'], 'include_dates': forecast['include_dates'],
-                'product_kind': forecast['product_kind'], 'master_file': provenance['master_file'],
-                'ledger_version': provenance['ledger_version'], 'master_sha256': provenance['master_sha256'],
+                'product_kind': forecast['product_kind'], 'master_file': receipt['master_file'],
+                'ledger_version': receipt['ledger_version'], 'master_sha256': receipt['master_sha256'],
                 'expected_digest': forecast['canonical_content_digest'],
                 'found_in': f'run folder {forecast_path.parent}'}
         add_expected(expected, item)

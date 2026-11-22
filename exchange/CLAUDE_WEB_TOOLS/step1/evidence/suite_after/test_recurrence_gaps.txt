@@ -1,0 +1,17 @@
+test_before_first_appearance_is_excluded_and_the_open_stretch_is_at_risk (test_recurrence_gaps.Censoring.test_before_first_appearance_is_excluded_and_the_open_stretch_is_at_risk) ... ok
+test_windows (test_recurrence_gaps.Censoring.test_windows) ... ok
+test_every_small_coefficient_vector (test_recurrence_gaps.LogSign.test_every_small_coefficient_vector) ... ok
+test_ex069_witness_is_negative (test_recurrence_gaps.LogSign.test_ex069_witness_is_negative) ... ok
+test_exact_zero_in_both_routes_and_bounds_alone_refuse (test_recurrence_gaps.LogSign.test_exact_zero_in_both_routes_and_bounds_alone_refuse) ... ok
+test_ln_bounds_bracket_the_logarithm (test_recurrence_gaps.LogSign.test_ln_bounds_bracket_the_logarithm) ... ok
+test_bad_inputs_are_refused (test_recurrence_gaps.Refusals.test_bad_inputs_are_refused) ... ok
+test_exact_arithmetic_only_and_no_outside_access (test_recurrence_gaps.StaticGuards.test_exact_arithmetic_only_and_no_outside_access) ... ok
+test_counts_from_scratch (test_recurrence_gaps.TwoRoutesAgree.test_counts_from_scratch) ... ok
+test_exposures_gaps_and_signs_on_invented_histories (test_recurrence_gaps.TwoRoutesAgree.test_exposures_gaps_and_signs_on_invented_histories) ... ok
+test_bins_of_the_three_real_barrels (test_recurrence_gaps.WorkedExamples.test_bins_of_the_three_real_barrels) ... ok
+test_gaps_ages_and_exposures (test_recurrence_gaps.WorkedExamples.test_gaps_ages_and_exposures) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.411s
+
+OK

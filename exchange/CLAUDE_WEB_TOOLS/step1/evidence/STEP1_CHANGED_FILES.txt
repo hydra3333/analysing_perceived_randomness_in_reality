@@ -1,0 +1,166 @@
+Build step 1 (the folder layout): every file the package changes, from git diff -M at the base commit
+Base commit: fdb1f9199dd571dea52be4858c73c6b100dfe0f1
+
+MOVED (15): old path -> new path; lines added/removed; SHA-256 before and after
+  src/methods/contract_adapters/e_001.py -> src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
+      +0 -0  BYTES UNCHANGED
+      before ac21616499291d07d2421199e0b46067c33fcca7baf539528fec9ff802bf4bab
+      after  ac21616499291d07d2421199e0b46067c33fcca7baf539528fec9ff802bf4bab
+  src/methods/E_002/contract.py -> src/methods/E_002/core_v1.py
+      +1 -1  one import line changed
+      before b6f253131ea8d390a847f177665fefffbe57dab977596f1abb1877d73c159b4d
+      after  9c30cab5a19d61b8bd9b0e8f50ea7a43913c1428a0971a02c702dc9f658658e4
+  src/methods/E_003/contract.py -> src/methods/E_003/core_v1.py
+      +1 -1  one import line changed
+      before 8509ea3641d48ed8b3771237beaa3205d31a09a491049b1687bc09177059e87f
+      after  14927308f772e2c215dd72ee1f66e03c4579f8c355680f0cc3a7ab4df150b8db
+  src/methods/E_004/contract.py -> src/methods/E_004/core_v1.py
+      +1 -1  one import line changed
+      before 68f967e1b86d9076235d8a94c15d3098f226ad7b97b24afbfed60406ccc74043
+      after  bb8ff8c73ac0ed88c9aad30ae7fcf3a9a17f7794802bf329d9ca7069b4489d95
+  src/methods/E_006/contract.py -> src/methods/E_006/core_v1.py
+      +0 -0  BYTES UNCHANGED
+      before 1752ecc51046ffcc49ce1d8b95986872f7422c8a50feafc221c057f3ab800b4b
+      after  1752ecc51046ffcc49ce1d8b95986872f7422c8a50feafc221c057f3ab800b4b
+  src/methods/E_007/contract.py -> src/methods/E_007/core_v1.py
+      +1 -1  one import line changed
+      before 756e526776eb6a0a8e991d41bafcdd17ddd68259e5dba631dac9a4458f51487d
+      after  200d7621ee38ed4c4c8c1d58350233acc125363cb457b307efe0fade45029306
+  src/methods/E_008/contract.py -> src/methods/E_008/core_v1.py
+      +1 -1  one import line changed
+      before d5073c29e3ce6de75d53884af31133c2e77b83f1d3a40fbb234d509e885f5000
+      after  414eaf8455f705a6f358476beaf0fd4577ad5a357172a8be79952b0b4978aa45
+  src/methods/E_009/contract.py -> src/methods/E_009/core_v1.py
+      +1 -1  one import line changed
+      before 09538733263b95167dfdd1bde3e87252659df84648a3fbd7ea3205118b642dcd
+      after  0c2ed81d06edd79cde325bbcecd1f73d1297a5829b74d11a1ff08f4c73779b3b
+  src/methods/E_010/contract.py -> src/methods/E_010/core_v1.py
+      +1 -1  one import line changed
+      before 99324f3310899499633c61fe50001be8ea96938567ea0eb35610c58004e39f7a
+      after  1507ecca77aa7171d0b3bde97425e2b1f5cd8ac55f52356ef1909f16b947cfe8
+  src/methods/E_017/contract.py -> src/methods/E_017/core_v1.py
+      +1 -1  one import line changed
+      before d2a70ff1b732d7716a122a7e5a4c4e955bc4c27ab0f8ee6e819faaf96baea6dd
+      after  7352da802d85b02187be35f978a37b1317a1702d06b66116629672118ce0b2ce
+  src/methods/E_018/contract.py -> src/methods/E_018/core_v1.py
+      +1 -1  one import line changed
+      before 7eb180820cc1af4322f2d24ac35e907c6bf2eb5f248bfd4ed0a3cae3d1ebfc6e
+      after  9ff76f5c40006a4e6e73582d9346c56fd036a82e26366013e73617d5fe44edf7
+  src/methods/E_019/contract.py -> src/methods/E_019/core_v1.py
+      +1 -1  one import line changed
+      before f3945ed8d8a3fe1363ec2a6c2351bc666c64b01cd679c9e4723ec311d381f56e
+      after  7d0a85ff24452c810e4e66fe61b49ab3e8b966daa880c0f3ae79b4297cceaf11
+  src/methods/_common/occurrence_counts.py -> src/methods/_shared/occurrence_counts_v1.py
+      +0 -0  BYTES UNCHANGED
+      before 76e39bf0aeb3273d0f5a9a41391d0ceac1cfd6a7b06955cbb80518e05f5cbde9
+      after  76e39bf0aeb3273d0f5a9a41391d0ceac1cfd6a7b06955cbb80518e05f5cbde9
+  src/methods/_common/polynomial_fits.py -> src/methods/_shared/polynomial_fits_v1.py
+      +0 -0  BYTES UNCHANGED
+      before 1d1c8d1078638607c0c0f584184834a95285f6d3e00b544a2a8a103e5d831615
+      after  1d1c8d1078638607c0c0f584184834a95285f6d3e00b544a2a8a103e5d831615
+  src/methods/_common/recurrence_gaps.py -> src/methods/_shared/recurrence_gaps_v1.py
+      +0 -0  BYTES UNCHANGED
+      before 37b1be1d33bd7da5291fe36cf40272b1f12673f36a9fda8e20d7d6a26fdd1f25
+      after  37b1be1d33bd7da5291fe36cf40272b1f12673f36a9fda8e20d7d6a26fdd1f25
+
+MODIFIED IN PLACE (15): lines added/removed
+  +5 -16  src/methods/Method_Contract_Runner.py
+  +4 -4  tests/test_code3_retirement.py
+  +1 -1  tests/test_e1r2_revision2.py
+  +5 -4  tests/test_e1r3_revision3.py
+  +1 -1  tests/test_e2r_dispatch.py
+  +1 -1  tests/test_e2r_runner.py
+  +6 -6  tests/test_e3_e4_polynomial.py
+  +5 -5  tests/test_e6_beta_bernoulli.py
+  +1 -1  tests/test_mhupa_gates.py
+  +2 -2  tests/test_occurrence_counts.py
+  +2 -2  tests/test_polynomial_fits.py
+  +2 -2  tests/test_recurrence_gaps.py
+  +1 -1  tests/test_rel1_release.py
+  +7 -7  tests/test_wave1_frequency.py
+  +7 -7  tests/test_wave2_recurrence.py
+
+DELETED (1):
+  src/methods/contract_adapters/__init__.py
+
+ADDED (80): SHA-256
+  d0888954004ef500e4843c9619a1153c67effa0c0ed5d67d1b89659e15ae776f  src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/VARIANT.json
+  1d25ca8994eda581ed2380b34ba068c26ee05fc22954560c3cfc9df71e3f2c01  src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT.json
+  648ab1b44dbcd9a17ec230c3148ac1ca9942f5b7857a5e6b56601e840acbdd3d  src/methods/E_002/RECUR_MEAN_ALL_V1/method.py
+  cc37d06644a84cb7f21113fbfd788d5beb5f86a9239ae2fdd22c514d00f8354b  src/methods/E_002/RECUR_MEAN_LAST8_V1/VARIANT.json
+  99ba46e506587521aea21db21e2bb49dfdcd9b170f8fb417385328943971246e  src/methods/E_002/RECUR_MEAN_LAST8_V1/method.py
+  c107513d23de27fb96ff9b23943ce6e2d3d8fce6f645babc874bdfea9b3eb5fc  src/methods/E_002/RECUR_MEDIAN_ALL_V1/VARIANT.json
+  fb476d8c6cc76a69c6eb8f89a5d0854e76dcc99628b4acbe7d6bac0f3d3db747  src/methods/E_002/RECUR_MEDIAN_ALL_V1/method.py
+  09e644db28758dbaaf02a0483ef360d695c633905372debab057692d6216eb7e  src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+  ed46f71af59779c185a7a60dceda0857b24b91667166f73fb866e61268779117  src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/method.py
+  691b586e42eed24480892b3cac8dec00d273fc8474ea979955800fb55e3b39ee  src/methods/E_003/POLY_LS_W104_D3_V1/VARIANT.json
+  6221220e32126bf03e64510154c1527fe80a0e7980e4248bb4407431924f9fcf  src/methods/E_003/POLY_LS_W104_D3_V1/method.py
+  00ee3166e73ed1a1d62a9098b6495fe0a7cc5ba8b44385aae877c7faddbf99f3  src/methods/E_003/POLY_LS_W52_D2_V1/VARIANT.json
+  55d7b078cb109d7190932f5cb71d9cc5ce6bb1fcc4a07fe810b192e122a5798c  src/methods/E_003/POLY_LS_W52_D2_V1/method.py
+  b55bb203ed694f7eea7477e6c3268b907836d37c1f8dfcc77be2b86938d67e6d  src/methods/E_003/POLY_LS_W52_D3_V1/VARIANT.json
+  5f68925789bfd05509ec7abf5476a376e5a5a6eac8ae1a16978064c0f41e484e  src/methods/E_003/POLY_LS_W52_D3_V1/method.py
+  16af4694b563358400defa855e5579ad2b3f8c1b489b031d7658e63935723ead  src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+  c60e5a032c5306ecdd7bcc9d4430c1c71beb4f5705ec41e2591353b79b85d7b6  src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/method.py
+  2d6114ef1c2d84f7d3afe8050cc1513b5d1f4de856d08d83b4c8d638e7a510c1  src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+  84f7da1e34e178c7c9040e5f3bd6b5e9ce2eac4f3537dc7b403d0b1fd92575a5  src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/method.py
+  0bd8a76ba52c598eb4a6f350a51c06609885aca72265f2e6813bb70b53edfe8c  src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+  93a2b07b2ab822d4d7164319bb938344ec9c13cbee8c7495ce954677d319f25a  src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/method.py
+  4c4a03c546d140fc961395f6adef44aa9e1faa2905a08e46f9aaae70d5f0d507  src/methods/E_004/POLY_LS_W104_D3_V1/VARIANT.json
+  9f995ef48499d7023297f25ad84bbeee766bb508eb89a8fd7c9a9356df1e1ed5  src/methods/E_004/POLY_LS_W104_D3_V1/method.py
+  1ce90f085d0a41c03ba81c3d68c2a6135ba3adf892a3aac8c14a572f22b5a3cc  src/methods/E_004/POLY_LS_W52_D2_V1/VARIANT.json
+  0e07e60b7662f913740773e14c58b7df34af3c171d8298624ef0a5574d1ebc5b  src/methods/E_004/POLY_LS_W52_D2_V1/method.py
+  ff9ce5ea8658d6be302d09a955714be6d1e6e11cbce000440350dbfea4b661e1  src/methods/E_004/POLY_LS_W52_D3_V1/VARIANT.json
+  3df2108da19732d98f0fe33e59b1d19f80b6a9c997d22e017c6fbbcc995cb7be  src/methods/E_004/POLY_LS_W52_D3_V1/method.py
+  9fb7e0ce93ec99a7fa258513e7f488715b2dd44cfb07b70229a39675a0bcc730  src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+  29626cdcc2006a78391b2685444499ae39f2d0cf5dc13c78dfb927e8a90b6583  src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/method.py
+  08a6bc98fb3618c68e685ee69ee114e8875ae0c09282a5491cdb68454587877d  src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+  c8a01916c8cd4754f17a1061de624f7920c2d8eaa236967835011476effe87ab  src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/method.py
+  fe39169d86f2f9890120748725eac59142b54715c89a05724ef5f6d4da54f0fe  src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/VARIANT.json
+  8a401fb355fbc9a01392da4b257db18ff4bb9d9b1477d0fb73e6286a9c109ab1  src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/method.py
+  3bc2f22a2b1de70d7059b1f83b585dcbef43aef646f46f511c1357c6a0be136e  src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/VARIANT.json
+  fb9113833e0c6f761e44061ed347a668e29964a3d33f3cfc6496177c62ee6fd6  src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/method.py
+  fdf7387f42fa8f894585bc63703ca7670ee17232542d2b51ceaaf6852199d6e5  src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/VARIANT.json
+  a3da428021486450ae073def72000aae1b08d58ad64025aa6aae7169c824027f  src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/method.py
+  048f06c07924a86c2de72f6ceb53ae880025f87d0d856aeec0b3801c7f57d9ae  src/methods/E_007/BETA_SHRINK_FULL_C52_V1/VARIANT.json
+  b5d8e52743e9542996ffc4c97e622d714c4ce9ff7c9f7623684c4df01f5c6230  src/methods/E_007/BETA_SHRINK_FULL_C52_V1/method.py
+  286fc70c15d3cd484234a86a2d1e12734c088c07e04a8a3290322a73fb55f068  src/methods/E_007/BETA_SHRINK_W104_C52_V1/VARIANT.json
+  2b58dc014994b550ac4216f6080ad1985f20b953980769f527db4ca0bbb65423  src/methods/E_007/BETA_SHRINK_W104_C52_V1/method.py
+  e4d5e92f37e000efbb9894031f7b6e61c2f66982c885414413ccda6799aacd36  src/methods/E_007/BETA_SHRINK_W52_C52_V1/VARIANT.json
+  bd3a78eb52a929a874f23e88d7899e0ec60d458ce3e509ea24cd569e1c36f3b4  src/methods/E_007/BETA_SHRINK_W52_C52_V1/method.py
+  840d66dbcf1d65f8e9a5b043c0b9ebedde1e38cb7b1f4c80475571d0106e054e  src/methods/E_008/HIER_PERIODS_P13_V1/VARIANT.json
+  25ae3b7eb50a4225fd133f56e85760c6e7cdb85381d47d0cdc40518b656c5665  src/methods/E_008/HIER_PERIODS_P13_V1/method.py
+  e6bdc0a856de4fd2b02869fa1135a52ccba0daa155d6b73fc88313ae7a52fdca  src/methods/E_008/HIER_PERIODS_P26_V1/VARIANT.json
+  4c8e15981e632801f0a5255bda1a7e6b66531d22a0da57d05fcf9ada325b4f70  src/methods/E_008/HIER_PERIODS_P26_V1/method.py
+  8b398e99451cc0b8e4244f3f7146316683ef4c474b2e2734c8c24dde2ab82a7e  src/methods/E_008/HIER_PERIODS_P52_V1/VARIANT.json
+  4a4259c9da970a3b04c96f2709a840a570c1e9e1382ae8461c4ddb4750fe36f3  src/methods/E_008/HIER_PERIODS_P52_V1/method.py
+  318cf7ccdc28becdfc8afbe49935a1eadc436eb9310b3bdefb3aeb7fb724c88e  src/methods/E_009/EXP_DECAY_18_19_V1/VARIANT.json
+  9503bafdea926407f9082632b98ecbe2d6d68893edd24fc63aac8e7561e63dcf  src/methods/E_009/EXP_DECAY_18_19_V1/method.py
+  7e33b52ec20593cce0307bc57fa34f7b7650588ae2dfda834a9ae0af71f4e09c  src/methods/E_009/EXP_DECAY_37_38_V1/VARIANT.json
+  f3d0a67098f7c551306e2fcdd1a993964cf469f9fe427e31ccb6e7ec5104821d  src/methods/E_009/EXP_DECAY_37_38_V1/method.py
+  7def11103cc056a51e5ed440659c597be58ebb6caa9571d8868ff1f70cecc3df  src/methods/E_009/EXP_DECAY_5_6_V1/VARIANT.json
+  d4a3cd6b0a4ec2fee3ed1e04d2c32dac7f8330196c1e1e95d873edce3f1c8b86  src/methods/E_009/EXP_DECAY_5_6_V1/method.py
+  5c1a1b00b71169e99e158e9190676c5bb0490652318d0f334a8e09158836d81f  src/methods/E_010/CONTRAST_S13_L104_V1/VARIANT.json
+  e5dae5795a12b29c5bb6b9f8cc123ca9adea7f9a841ecded410b7167d458820c  src/methods/E_010/CONTRAST_S13_L104_V1/method.py
+  b57b13c086b63bc4f138d821968272de67b69a3c33799e785d58d3a8e6bf209f  src/methods/E_010/CONTRAST_S26_L208_V1/VARIANT.json
+  d3779011eef3e11d8253bfbbe365481ea06534f057be0862a12f02873e1732bf  src/methods/E_010/CONTRAST_S26_L208_V1/method.py
+  6e38b67c240ed4f4483546ca150e47ccf096e1132769f6e4f87a60fd5c61d44a  src/methods/E_010/CONTRAST_S52_FULL_V1/VARIANT.json
+  d181dbd0766389c12f63b3fa3a1a850d1041669bd90dd196f1ccc1343ceb09b6  src/methods/E_010/CONTRAST_S52_FULL_V1/method.py
+  eb23a97ed0ebf9ec27aef88232ffc8af6c8ae2776a9e53bd0a8749d56c1042f1  src/methods/E_017/HAZARD_BINS_C100_V1/VARIANT.json
+  a34bd6f06b51d28e1bca093fb761d3866eec8df460115e67d7174d5d35d011ff  src/methods/E_017/HAZARD_BINS_C100_V1/method.py
+  fa540521416ba99e69e376ce044078df9585dd1ffcaa13699c364304ec540532  src/methods/E_017/HAZARD_BINS_W208_C100_V1/VARIANT.json
+  f8934c435186999ad1e8e1130cdc0794959211b5ccd409075abaa8fe68ebd81c  src/methods/E_017/HAZARD_BINS_W208_C100_V1/method.py
+  1970ff0c4ef0e0af18c98d4cb2e991d1ee5399462812af3bfe13c26eb33dc4a8  src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/VARIANT.json
+  c8ea33c4cc8ba3778ae2f197f50d80980e1db25eef6b535773074dcfc9dfba4e  src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/method.py
+  ad66a059b7799ac9ea65f913137d4520fad5d2ea2bf83e6521384ddec2cc8e1d  src/methods/E_018/MIX4_ALL_C10_V1/VARIANT.json
+  86526cbf43521669e96e30f403c50ac0242a5cdb9beb64d1ffc6b811c86b6f4f  src/methods/E_018/MIX4_ALL_C10_V1/method.py
+  543302b64de29ffbbbe775594f3ede0494ff8d2c5f197463602ab4c959def36d  src/methods/E_018/MIX4_W104_C10_V1/VARIANT.json
+  13ab86f4652391f64ada648c53584434aea55d5f94f786243ea441682f839d0b  src/methods/E_018/MIX4_W104_C10_V1/method.py
+  226dee7b092383777b3fad75d7fdb9c77c6ee745506520659bff6cbf3285b540  src/methods/E_018/MIX4_W208_C10_V1/VARIANT.json
+  6e6bafbfe59f4ea420a859da80eb69f1dc80259dbf5a4bf55143442c5724fa2d  src/methods/E_018/MIX4_W208_C10_V1/method.py
+  5734f0473c7889bcf577dad4e8f7baeb2c762cdf58b3aecd73f34d5bb37541cc  src/methods/E_019/PERIODIC_T2_V1/VARIANT.json
+  44d9055eba8492eb89943ef72f90446578b806ac093fea135bf53ab38ce5b1f3  src/methods/E_019/PERIODIC_T2_V1/method.py
+  6553868b5bf12ab53946a238fb26ea8fdadd2b0db16cb9ea03e29563b0f1762d  src/methods/E_019/PERIODIC_T3_V1/VARIANT.json
+  c6a13c1de8e016b65b9e9932a4808404027e8d6bdcd326a09c01bf0d1e6b2eb6  src/methods/E_019/PERIODIC_T3_V1/method.py
+  fd4c2fe6d45de6ade24517f3a98768b9599a417136602671ee05c3fbda357fe9  src/methods/E_019/PERIODIC_T4_V1/VARIANT.json
+  5748524f2ac889bfb171d2f94979e76c6e672ccf42225fa1773a7fc0599b0a7e  src/methods/E_019/PERIODIC_T4_V1/method.py
+  ca63c367b5e9ebfdd78eb8477410aafe9f7afa0ea66a8f5f423b9eb4ba79c0eb  src/methods/_common/method_table.py

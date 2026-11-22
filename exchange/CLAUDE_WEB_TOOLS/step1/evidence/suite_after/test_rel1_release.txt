@@ -1,0 +1,11 @@
+test_release_alone_does_not_admit_real_data (test_rel1_release.EveryReleasedVariantRuns.test_release_alone_does_not_admit_real_data)
+With the real-development switch off, a released variant's REAL_DEVELOPMENT request is still refused ... ok
+test_synthetic_run_succeeds_and_is_consumable (test_rel1_release.EveryReleasedVariantRuns.test_synthetic_run_succeeds_and_is_consumable) ... ok
+test_every_released_chain_is_formula_open_then_supported (test_rel1_release.InstalledChains.test_every_released_chain_is_formula_open_then_supported) ... ok
+test_no_development_flag_remains (test_rel1_release.InstalledChains.test_no_development_flag_remains) ... ok
+test_placeholders_and_e1_are_unchanged (test_rel1_release.InstalledChains.test_placeholders_and_e1_are_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 20.804s
+
+OK

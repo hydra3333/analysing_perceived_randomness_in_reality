@@ -1,0 +1,30 @@
+test_games_with_same_draw_do_not_overlap (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_games_with_same_draw_do_not_overlap) ... ok
+test_manifest_refuses_digest_mismatch (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_manifest_refuses_digest_mismatch) ... ok
+test_manifest_rejects_wrong_status_identity (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_manifest_rejects_wrong_status_identity) ... ok
+test_no_enable_or_network_or_termination_code (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_no_enable_or_network_or_termination_code) ... ok
+test_plan_is_immutable_and_does_not_start_process (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_plan_is_immutable_and_does_not_start_process) ... ok
+test_receipt_consumer_cannot_treat_plumbing_as_forecast (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_receipt_consumer_cannot_treat_plumbing_as_forecast) ... ok
+test_reject_unsafe_roots (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_reject_unsafe_roots) ... ok
+test_run_collision_fails_closed_unchanged (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_run_collision_fails_closed_unchanged) ... usage: python -m unittest [-h] --synthetic-contract-probe
+                          [--await-coordinator-release]
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          --run-id RUN_ID --group-id GROUP_ID
+                          --worker-sequence WORKER_SEQUENCE
+                          --variant {SYNTHETIC_PLUMBING_V1}
+python -m unittest: error: run directory exists: create-only identity collision
+ok
+test_unresolved_global_orphan_blocks_launch (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_unresolved_global_orphan_blocks_launch) ... usage: python -m unittest [-h] --synthetic-contract-probe
+                          [--await-coordinator-release]
+                          --game {POWERBALL,OZLOTTO} --target TARGET
+                          --run-id RUN_ID --group-id GROUP_ID
+                          --worker-sequence WORKER_SEQUENCE
+                          --variant {SYNTHETIC_PLUMBING_V1}
+python -m unittest: error: global unresolved orphan safety stop
+ok
+test_valid_worker_is_self_report_only_and_console_exact (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_valid_worker_is_self_report_only_and_console_exact) ... ok
+test_wrong_target_and_registry_rejected_before_run_dir (test_multigame_launch_and_manifest.LaunchAndWorkerManifestTests.test_wrong_target_and_registry_rejected_before_run_dir) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 1.723s
+
+OK

@@ -1,0 +1,38 @@
+test_arithmetic (test_wf1b_measures.Bonferroni.test_arithmetic) ... ok
+test_complete_incomplete_empty (test_wf1b_measures.LabelsAndStatuses.test_complete_incomplete_empty) ... ok
+test_invalid_inputs (test_wf1b_measures.LabelsAndStatuses.test_invalid_inputs) ... ok
+test_low_n (test_wf1b_measures.LabelsAndStatuses.test_low_n) ... ok
+test_mr0_profile_and_key (test_wf1b_measures.MR0andMR1.test_mr0_profile_and_key) ... ok
+test_mr1_constants_equal_r3 (test_wf1b_measures.MR0andMR1.test_mr1_constants_equal_r3) ... ok
+test_mr1_key_is_exact (test_wf1b_measures.MR0andMR1.test_mr1_key_is_exact) ... ok
+test_mr1_values_and_labels (test_wf1b_measures.MR0andMR1.test_mr1_values_and_labels) ... ok
+test_mr1t_weights (test_wf1b_measures.MR0andMR1.test_mr1t_weights) ... ok
+test_clopper_pearson_against_independent_implementation (test_wf1b_measures.MR16.test_clopper_pearson_against_independent_implementation) ... ok
+test_reference_rows (test_wf1b_measures.MR16.test_reference_rows) ... ok
+test_threshold_unreachable (test_wf1b_measures.MR16.test_threshold_unreachable) ... ok
+test_track_rows_match_reference (test_wf1b_measures.MR16.test_track_rows_match_reference) ... ok
+test_oz_divisions_use_supplementaries (test_wf1b_measures.MR4.test_oz_divisions_use_supplementaries) ... ok
+test_sub_measures_and_sets (test_wf1b_measures.MR4.test_sub_measures_and_sets) ... ok
+test_tails_equal_oracle (test_wf1b_measures.MR4.test_tails_equal_oracle) ... ok
+test_invalid_rank_inputs (test_wf1b_measures.MR5.test_invalid_rank_inputs) ... ok
+test_measure (test_wf1b_measures.MR5.test_measure) ... ok
+test_null_variance_zero (test_wf1b_measures.MR5.test_null_variance_zero) ... ok
+test_target_fields_equal_r3_values (test_wf1b_measures.MR5.test_target_fields_equal_r3_values) ... ok
+test_above_exact_bound (test_wf1b_measures.MR7.test_above_exact_bound) ... ok
+test_exact_against_oracle (test_wf1b_measures.MR7.test_exact_against_oracle) ... ok
+test_determinism (test_wf1b_measures.PlantedAndNull.test_determinism) ... ok
+test_null_tracks_near_nominal (test_wf1b_measures.PlantedAndNull.test_null_tracks_near_nominal) ... ok
+test_planted_tilt_detected (test_wf1b_measures.PlantedAndNull.test_planted_tilt_detected) ... ok
+test_bad_rows (test_wf1b_measures.Ranking.test_bad_rows) ... ok
+test_competition_ranks_and_tie_order (test_wf1b_measures.Ranking.test_competition_ranks_and_tie_order) ... ok
+test_exact_keys (test_wf1b_measures.Ranking.test_exact_keys) ... ok
+test_measure_keys_rank (test_wf1b_measures.Ranking.test_measure_keys_rank) ... ok
+test_confidence_rounded_down_never_100 (test_wf1b_measures.Sigma.test_confidence_rounded_down_never_100) ... ok
+test_zero_wins_zero_excess_and_deficit_example (test_wf1b_measures.Sigma.test_zero_wins_zero_excess_and_deficit_example) ... ok
+test_numeric_field_types (test_wf1b_measures.UnitsAndChannels.test_numeric_field_types) ... ok
+test_units_channels_and_ids (test_wf1b_measures.UnitsAndChannels.test_units_channels_and_ids) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 5.824s
+
+OK

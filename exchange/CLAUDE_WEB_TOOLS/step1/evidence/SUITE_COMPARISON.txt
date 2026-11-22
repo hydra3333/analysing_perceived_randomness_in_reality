@@ -1,0 +1,7 @@
+tests before: 563; after: 563; same result: 563
+FAILS IN BOTH RUNS (FAILURE LINES DIFFER): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '# PyBuilder', 'sdist/', '#   JetBrains specific template is maintained in a separate JetBrains.gitignore that can', '# GAIS - entire t"]
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '#   be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore', '.streamlit/secrets.toml', 'transitory_data"]
+FAILS IN BOTH RUNS (same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: no test changed its result, disappeared or appeared

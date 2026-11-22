@@ -1,0 +1,18 @@
+test_everything_refuses_while_the_barrier_exists (test_mhupa_gates.BarrierP.test_everything_refuses_while_the_barrier_exists) ... ok
+test_diagnostic_runs (test_mhupa_gates.DiagnosticRoute.test_diagnostic_runs) ... ok
+test_command_line_rules (test_mhupa_gates.Launcher.test_command_line_rules) ... ok
+test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_refused (test_mhupa_gates.ModeHBinding.test_an_unbound_holdout_request_never_reaches_the_gate_and_an_old_pin_is_refused) ... ok
+test_refusals_one_per_rule (test_mhupa_gates.ModeHBinding.test_refusals_one_per_rule) ... ok
+test_the_full_ticketed_path_publishes_a_holdout_record (test_mhupa_gates.ModeHBinding.test_the_full_ticketed_path_publishes_a_holdout_record) ... ok
+test_the_plan_pin_is_the_ledgers_current_row (test_mhupa_gates.ModeHBinding.test_the_plan_pin_is_the_ledgers_current_row)
+walk_forward.ledger_pin (design 3.2): a new batch pins the current last row, both games. ... ok
+test_the_wrong_publication_root_is_refused_before_anything_is_read (test_mhupa_gates.ModeHBinding.test_the_wrong_publication_root_is_refused_before_anything_is_read) ... ok
+test_session_rules (test_mhupa_gates.SessionBinding.test_session_rules) ... ok
+test_mode_target_binding_rules (test_mhupa_gates.Structural.test_mode_target_binding_rules) ... ok
+test_opening_record_fields (test_mhupa_gates.TicketsAndRecords.test_opening_record_fields) ... ok
+test_tickets_and_torn_lines (test_mhupa_gates.TicketsAndRecords.test_tickets_and_torn_lines) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 14.726s
+
+OK

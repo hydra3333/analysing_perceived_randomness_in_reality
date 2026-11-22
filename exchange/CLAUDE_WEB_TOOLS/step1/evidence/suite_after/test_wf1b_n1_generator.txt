@@ -1,0 +1,15 @@
+test_key_and_first_word (test_wf1b_n1_generator.PublishedValues.test_key_and_first_word) ... ok
+test_published_draws (test_wf1b_n1_generator.PublishedValues.test_published_draws) ... ok
+test_published_match_counts (test_wf1b_n1_generator.PublishedValues.test_published_match_counts)
+R = 200 replicates x 291 targets from 1286, ticket 1..7: the published counts, exactly. ... ok
+test_determinism_and_keying (test_wf1b_n1_generator.Shape.test_determinism_and_keying) ... ok
+test_ranges (test_wf1b_n1_generator.Shape.test_ranges) ... ok
+test_rejection_and_extension (test_wf1b_n1_generator.Shape.test_rejection_and_extension)
+A stream that needs more than the first chunk extends it consistently (SHAKE prefix property). ... ok
+test_uniform_below_rule (test_wf1b_n1_generator.Shape.test_uniform_below_rule) ... ok
+test_root_and_inputs (test_wf1b_n1_generator.Validation.test_root_and_inputs) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.506s
+
+OK

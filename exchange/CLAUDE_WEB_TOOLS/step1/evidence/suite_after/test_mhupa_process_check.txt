@@ -1,0 +1,13 @@
+test_install_check (test_mhupa_process_check.LocksAndRecords.test_install_check) ... ok
+test_session_lock_resume_token_and_clearance (test_mhupa_process_check.LocksAndRecords.test_session_lock_resume_token_and_clearance) ... ok
+test_updater_lock_rules (test_mhupa_process_check.LocksAndRecords.test_updater_lock_rules) ... ok
+test_root_argument_is_validated (test_mhupa_process_check.MockedTables.test_root_argument_is_validated) ... ok
+test_the_rule_of_6_1_on_each_kind_of_process (test_mhupa_process_check.MockedTables.test_the_rule_of_6_1_on_each_kind_of_process) ... ok
+test_a_cmd_parent_naming_the_root_is_seen (test_mhupa_process_check.RealTableReader.test_a_cmd_parent_naming_the_root_is_seen) ... ok
+test_imports_and_no_terminating_call (test_mhupa_process_check.Statics.test_imports_and_no_terminating_call) ... ok
+test_writes_only_its_own_records (test_mhupa_process_check.Statics.test_writes_only_its_own_records) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.131s
+
+OK

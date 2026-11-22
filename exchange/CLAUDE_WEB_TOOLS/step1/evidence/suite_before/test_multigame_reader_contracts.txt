@@ -1,0 +1,93 @@
+test_dates_opt_in_schema_digest_and_order_evidence (test_multigame_reader_contracts.V011ReaderTests.test_dates_opt_in_schema_digest_and_order_evidence) ... ok
+test_e1_frozen_1577_forecast_only_without_dev_build (test_multigame_reader_contracts.V011ReaderTests.test_e1_frozen_1577_forecast_only_without_dev_build) ... ok
+test_existing_synthetic_e1_goldens_unchanged (test_multigame_reader_contracts.V011ReaderTests.test_existing_synthetic_e1_goldens_unchanged) ... ok
+test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) ... 
+  test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) (game='POWERBALL') ... FAIL
+  test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) (game='OZLOTTO') ... FAIL
+test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) ... 
+  test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'method_id': 'E_2'}) ... FAIL
+  test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'variant_id': 'SYNTHETIC'}) ... FAIL
+  test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'view_kind': 'PAIRED_DIAGNOSTIC'}) ... FAIL
+  test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'include_dates': True}) ... FAIL
+test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) ... FAIL
+test_poisoned_suffix_is_never_decoded_or_parsed (test_multigame_reader_contracts.V011ReaderTests.test_poisoned_suffix_is_never_decoded_or_parsed) ... ok
+test_ratified_r2_5_5_synthetic_identity_goldens (test_multigame_reader_contracts.V011ReaderTests.test_ratified_r2_5_5_synthetic_identity_goldens)
+Distinct from the later standalone-runner synthetic golden pair. ... ok
+test_reject_symlinks_and_hardlinks_and_dateload_mismatch (test_multigame_reader_contracts.V011ReaderTests.test_reject_symlinks_and_hardlinks_and_dateload_mismatch) ... ok
+test_reject_unpinned_missing_and_replaced_master (test_multigame_reader_contracts.V011ReaderTests.test_reject_unpinned_missing_and_replaced_master) ... ok
+test_t05_complete_drawview_is_suffix_independent_for_every_kind (test_multigame_reader_contracts.V011ReaderTests.test_t05_complete_drawview_is_suffix_independent_for_every_kind)
+Re-pin changed N+ rows; compare ALL method-facing slots, array bytes and digest. ... ok
+
+======================================================================
+FAIL: test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) (game='POWERBALL')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 85, in test_master_source_and_ledger_file_hashes
+    self.assertEqual(hashlib.sha256(b).hexdigest(),SHA[game])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0' != 'ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8'
+- e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0
++ ce0ae7e77e09e5a93389eb98191b455926ec44c0bb38dda0ef721b9f710d66b8
+
+
+======================================================================
+FAIL: test_master_source_and_ledger_file_hashes (test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes) (game='OZLOTTO')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 85, in test_master_source_and_ledger_file_hashes
+    self.assertEqual(hashlib.sha256(b).hexdigest(),SHA[game])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: '63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e' != '4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f'
+- 63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e
++ 4a6cecc27fb6a5b8aafc0451858f1ea00f31c0eaf83c15c6ba66a0940e83f93f
+
+
+======================================================================
+FAIL: test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'method_id': 'E_2'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 359, in test_only_legacy_e1_allowed_at_boundary
+    with self.subTest(change=change),self.assertRaises(ValueError):
+                                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'variant_id': 'SYNTHETIC'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 359, in test_only_legacy_e1_allowed_at_boundary
+    with self.subTest(change=change),self.assertRaises(ValueError):
+                                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'view_kind': 'PAIRED_DIAGNOSTIC'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 359, in test_only_legacy_e1_allowed_at_boundary
+    with self.subTest(change=change),self.assertRaises(ValueError):
+                                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary) (change={'include_dates': True})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 359, in test_only_legacy_e1_allowed_at_boundary
+    with self.subTest(change=change),self.assertRaises(ValueError):
+                                     ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_only_legacy_e1_allowed_at_boundary (test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/claude/ws/base/tests/test_multigame_reader_contracts.py", line 363, in test_only_legacy_e1_allowed_at_boundary
+    with self.assertRaises(ValueError):load_pinned_draw_view(repo_root=ROOT,run_manifest=pin('OZLOTTO',1694))
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.253s
+
+FAILED (failures=7)

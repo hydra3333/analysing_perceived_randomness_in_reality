@@ -1,0 +1,6 @@
+test_figures_are_byte_identical_to_the_linux_run (test_wf1b_crossplatform.CrossPlatform.test_figures_are_byte_identical_to_the_linux_run) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 16.654s
+
+OK

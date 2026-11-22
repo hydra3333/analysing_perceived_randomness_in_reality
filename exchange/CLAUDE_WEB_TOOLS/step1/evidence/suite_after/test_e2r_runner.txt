@@ -1,0 +1,47 @@
+test_concurrent_writers_exactly_one_wins (test_e2r_runner.AtomicCreateOnly.test_concurrent_writers_exactly_one_wins) ... ok
+test_dangling_symlink_target_is_refused (test_e2r_runner.AtomicCreateOnly.test_dangling_symlink_target_is_refused) ... ok
+test_existing_target_is_refused_and_untouched (test_e2r_runner.AtomicCreateOnly.test_existing_target_is_refused_and_untouched) ... ok
+test_no_hard_links_means_no_publication (test_e2r_runner.AtomicCreateOnly.test_no_hard_links_means_no_publication) ... ok
+test_an_active_orphan_marker_blocks_consumption (test_e2r_runner.ConsumptionGates.test_an_active_orphan_marker_blocks_consumption) ... ok
+test_coordinated_runs_are_never_consumable_here (test_e2r_runner.ConsumptionGates.test_coordinated_runs_are_never_consumable_here)
+A folder whose records claim the COORDINATED path (CODE-2 can no longer publish one; this one is ... ok
+test_declaration_and_admitting_entry_come_from_the_installed_registry (test_e2r_runner.ConsumptionGates.test_declaration_and_admitting_entry_come_from_the_installed_registry) ... ok
+test_folder_must_match_its_records (test_e2r_runner.ConsumptionGates.test_folder_must_match_its_records) ... ok
+test_no_caller_supplied_gate_or_declaration (test_e2r_runner.ConsumptionGates.test_no_caller_supplied_gate_or_declaration) ... ok
+test_e1_identity_check_refuses_a_different_record (test_e2r_runner.E1ThroughTheContract.test_e1_identity_check_refuses_a_different_record) ... ok
+test_e1_runs_and_equals_e1_own_result (test_e2r_runner.E1ThroughTheContract.test_e1_runs_and_equals_e1_own_result) ... ok
+test_e1_wrapper_refuses_non_synthetic_data (test_e2r_runner.E1ThroughTheContract.test_e1_wrapper_refuses_non_synthetic_data)
+E_1's own function refuses anything but SYNTHETIC_CONTRACT_TEST data (unchanged E_1 code). ... ok
+test_a_genuine_marker_always_refuses (test_e2r_runner.NoCallerChosenAuthority.test_a_genuine_marker_always_refuses) ... ok
+test_data_source_is_fixed (test_e2r_runner.NoCallerChosenAuthority.test_data_source_is_fixed)
+A synthetic run cannot read the project, and a real run (if the switch were on) only the project. ... ok
+test_every_run_is_standalone (test_e2r_runner.NoCallerChosenAuthority.test_every_run_is_standalone) ... ok
+test_locator_arguments_are_refused (test_e2r_runner.NoCallerChosenAuthority.test_locator_arguments_are_refused) ... ok
+test_public_signatures (test_e2r_runner.NoCallerChosenAuthority.test_public_signatures) ... ok
+test_diagnostic_only_product_through_the_library (test_e2r_runner.NoTicketAndProducts.test_diagnostic_only_product_through_the_library)
+E2R-R41/R62: a C2-only request works in the shared runner; only the command line lacks the option. ... ok
+test_insufficient_history_is_published_but_has_no_ticket (test_e2r_runner.NoTicketAndProducts.test_insufficient_history_is_published_but_has_no_ticket) ... ok
+test_no_ticket_with_a_declared_diagnostic_missing_is_invalid (test_e2r_runner.NoTicketAndProducts.test_no_ticket_with_a_declared_diagnostic_missing_is_invalid) ... ok
+test_no_ticket_with_a_diagnostic_publishes_only_c2 (test_e2r_runner.NoTicketAndProducts.test_no_ticket_with_a_diagnostic_publishes_only_c2) ... ok
+test_valid_empty_target_is_diagnostic_only_not_a_failure (test_e2r_runner.NoTicketAndProducts.test_valid_empty_target_is_diagnostic_only_not_a_failure) ... ok
+test_orphan_marker_refuses_first (test_e2r_runner.RefusalsBeforeAnything.test_orphan_marker_refuses_first) ... ok
+test_real_development_switch_is_on_since_wf1a_and_refuses_when_off (test_e2r_runner.RefusalsBeforeAnything.test_real_development_switch_is_on_since_wf1a_and_refuses_when_off) ... ok
+test_synthetic_workspace_must_stay_out_of_the_project (test_e2r_runner.RefusalsBeforeAnything.test_synthetic_workspace_must_stay_out_of_the_project) ... ok
+test_forecast_bytes_ignore_the_suffix_and_the_receipt_does_not (test_e2r_runner.RunLevelPrefixAndHygiene.test_forecast_bytes_ignore_the_suffix_and_the_receipt_does_not)
+Run-level E2R-T03: rewriting draws at and after the target changes the master and the receipt's ... ok
+test_launcher_end_to_end (test_e2r_runner.RunLevelPrefixAndHygiene.test_launcher_end_to_end)
+Method_Contract_Runner.py: pins, then a synthetic run, exit code 0, nothing printed but status. ... ok
+test_no_run_identity_or_path_in_the_forecast (test_e2r_runner.RunLevelPrefixAndHygiene.test_no_run_identity_or_path_in_the_forecast) ... ok
+test_bad_pin_is_a_data_admission_failure (test_e2r_runner.T16RunLevel.test_bad_pin_is_a_data_admission_failure) ... ok
+test_failure_after_a_receipt_names_no_receipt (test_e2r_runner.T16RunLevel.test_failure_after_a_receipt_names_no_receipt)
+C1 and D1 are published, then the diagnostic publication fails: D2 says RUNTIME_FAILURE, names ... ok
+test_interrupted_after_the_receipt_is_not_consumable (test_e2r_runner.T16RunLevel.test_interrupted_after_the_receipt_is_not_consumable)
+The run stops after D1 and before D2 (no terminal record can be written): files stay, nothing is ... ok
+test_method_failures_end_in_terminal_records (test_e2r_runner.T16RunLevel.test_method_failures_end_in_terminal_records) ... ok
+test_probe_with_diagnostic_publishes_both (test_e2r_runner.T16RunLevel.test_probe_with_diagnostic_publishes_both) ... ok
+test_publication_order_and_create_only (test_e2r_runner.T16RunLevel.test_publication_order_and_create_only) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 11.375s
+
+OK

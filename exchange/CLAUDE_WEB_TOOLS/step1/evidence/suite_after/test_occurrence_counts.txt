@@ -1,0 +1,13 @@
+test_against_a_from_scratch_count (test_occurrence_counts.Identities.test_against_a_from_scratch_count) ... ok
+test_counts_add_up (test_occurrence_counts.Identities.test_counts_add_up) ... ok
+test_bad_inputs_are_refused (test_occurrence_counts.Refusals.test_bad_inputs_are_refused) ... ok
+test_exact_arithmetic_only_and_no_outside_access (test_occurrence_counts.StaticGuards.test_exact_arithmetic_only_and_no_outside_access) ... ok
+test_every_function_equals_its_second_form (test_occurrence_counts.TwoRoutesAgree.test_every_function_equals_its_second_form) ... ok
+test_decayed_counts (test_occurrence_counts.WorkedExamples.test_decayed_counts) ... ok
+test_period_counts_newest_period_complete_and_remainder_dropped (test_occurrence_counts.WorkedExamples.test_period_counts_newest_period_complete_and_remainder_dropped) ... ok
+test_window_counts (test_occurrence_counts.WorkedExamples.test_window_counts) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.189s
+
+OK

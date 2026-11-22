@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 18:38 Australia/Adelaide (entry 158: the owner's GO for build step 1; the coding practices apply to all coding). **Claude is building the step 1 package in its cloud workspace. Nothing on the owner's PC is authorised yet.**
+**Last updated:** 22 November 2026, 19:28 Australia/Adelaide (build step 1: the change is built and author-tested in the cloud workspace; a draft package note and its evidence are committed; not reviewed, nothing installed). **Next: the install overlay, verifier and run sheet; then the reviewer (EX_275, when the owner asks). Nothing on the owner's PC is authorised yet.**
 
 ## For the owner: NOW
 
+- **BUILD STEP 1, WHERE IT STANDS (22 November 2026, after entry 158).** Built in the cloud workspace from base
+  `fdb1f91` by `exchange/CLAUDE_WEB_TOOLS/step1/make_step1_layout.py`: 15 files moved (5 byte-identical, 10 with one import
+  line changed), 80 added (39 `method.py`, 40 `VARIANT.json`, `_common/method_table.py`), the runner's table built from
+  the folders. **Read `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_DRAFT_v0_1.md` first;** evidence in `step1/evidence/`.
+  The existing suite gives the same result before and after (45 modules, 571 tests; the same two known failing
+  modules). The equivalence check (`check_layout_equivalence.py`) PASSED on the moved code for every scored
+  development forecast in the tracked rank ledgers: Powerball 11,442 and Oz Lotto 5,958. **Not done:** the install
+  overlay, its verifier and instructions; the owner's run sheet; the review (EX_275 when the owner asks); anything
+  on Windows. The never-scored forecasts (5,838 and 2,802) are only in the run folders on the owner's PC: his own
+  run of the check covers them. To rebuild: clone `fdb1f91`, run the builder on the clone, run the two tools.
 - **BUILD STEP 1 HAS ITS GO (entry 158; 22 November 2026, 18:36).** Claude builds the layout package in its cloud
   workspace (suite rehearsal there first) for the reviewer. The coding practices apply to all new code, step 1's
   included; moved method files change in their import lines only. **Still each on the owner's own go, at its
