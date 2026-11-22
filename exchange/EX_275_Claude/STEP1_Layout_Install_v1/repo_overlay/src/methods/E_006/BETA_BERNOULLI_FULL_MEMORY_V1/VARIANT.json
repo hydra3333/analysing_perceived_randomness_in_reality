@@ -1,0 +1,23 @@
+{
+  "family": "E_006",
+  "variant": "BETA_BERNOULLI_FULL_MEMORY_V1",
+  "title": "E_6 - Per-Number Fitted Distribution Models",
+  "description": "Variant BETA_BERNOULLI_FULL_MEMORY_V1: its fixed settings are the BETA_BERNOULLI_FULL_MEMORY_V1 line of E_006/beta_bernoulli.py; the calculation is E_006/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 1,
+    "OZLOTTO": 1
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_006/__init__.py",
+    "E_006/beta_bernoulli.py",
+    "E_006/core_v1.py"
+  ]
+}

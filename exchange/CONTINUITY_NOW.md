@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 19:28 Australia/Adelaide (build step 1: the change is built and author-tested in the cloud workspace; a draft package note and its evidence are committed; not reviewed, nothing installed). **Next: the install overlay, verifier and run sheet; then the reviewer (EX_275, when the owner asks). Nothing on the owner's PC is authorised yet.**
+**Last updated:** 22 November 2026, 20:23 Australia/Adelaide (entry 160: EX_275, the build step 1 install package, is with the reviewer). **Next: the reviewer's EX_276. Then, each on the owner's own go: his ZIP of the project folder and the install and run sheet. Nothing on the owner's PC is authorised yet.**
 
 ## For the owner: NOW
 
+- **EX_275 IS WITH THE REVIEWER (entry 160; 22 November 2026).** `exchange/EX_275_Claude.zip`, extracted in
+  `exchange/EX_275_Claude/`: the message, and the install package `STEP1_Layout_Install_v1` (overlay, deletions list,
+  verifier, tools, manifest, `INSTALL_AND_RUN_SHEET.md`). Start with `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_2.md`.
+  **After a PASS, on the owner's own go for each part of the sheet:** his ZIP of the project folder first; then the
+  sheet (suite before; PRE, copy, delete, POST; suite after and comparison; the equivalence check; commit; push).
+  E2R-T12 may run in Claude's cloud suite runs (entry 159). A chat taking over reads the note, EX_275 and entries
+  157 to 160; to rebuild the package: `build_step1_pkg.py <clone> <base> <out>`, then `assemble_ex275.py`.
 - **BUILD STEP 1, WHERE IT STANDS (22 November 2026, after entry 158).** Built in the cloud workspace from base
   `fdb1f91` by `exchange/CLAUDE_WEB_TOOLS/step1/make_step1_layout.py`: 15 files moved (5 byte-identical, 10 with one import
   line changed), 80 added (39 `method.py`, 40 `VARIANT.json`, `_common/method_table.py`), the runner's table built from

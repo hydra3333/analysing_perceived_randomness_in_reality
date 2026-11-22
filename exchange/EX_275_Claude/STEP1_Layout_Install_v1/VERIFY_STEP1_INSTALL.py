@@ -1,0 +1,315 @@
+#!/usr/bin/env python3
+"""Read-only installation verifier for the build step 1 package (the folder layout; specification 17.3 phase 1).
+
+Claude, 31 October 2026 (from the wave 2 package verifier; adds deleted paths). Standard library only; does not import project code, run tests, change
+files or touch Git state (every Git call uses --no-optional-locks and GIT_OPTIONAL_LOCKS=0).
+Phases:
+  pre        clean tree; HEAD descends from the base commit; src/ and tests/ in HEAD are exactly the
+             base commit's; the 95 new paths are absent; the 15 modified files and the 16 files
+             to be deleted still have their base bytes; guarded files unchanged in Git.
+  post       after copying the overlay (and the git rm step, if any): exactly the 95 new paths
+             appear, exactly the 15 modified files change and exactly the 16 deleted files are gone
+             (staged deletions), all with the expected bytes (CRLF tolerated: the comparison is on
+             LF-normalised bytes).
+  committed  after the commit: clean tree; HEAD has one parent; the last commit added exactly the
+             new paths, modified exactly the modified files and deleted exactly the deleted files,
+             all with the expected Git blobs.
+On any STOP in the committed phase, the verifier prints the identities needed to decide what
+to do (HEAD, its parent, the last commit's paths, the working-tree status). Do NOT push and do
+NOT reset: send Claude the whole output.
+Usage: python VERIFY_STEP1_INSTALL.py --repo . --phase pre|post|committed
+"""
+import argparse, hashlib, os, subprocess, sys
+from pathlib import Path
+
+BASE = '05e9afd18754b8abc20d490eeea58218920fd977'
+GIT_ENV = dict(os.environ, GIT_OPTIONAL_LOCKS='0')
+NEW = {  # path: Git-content SHA-256 (LF)
+    'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/VARIANT.json': 'd0888954004ef500e4843c9619a1153c67effa0c0ed5d67d1b89659e15ae776f',
+    'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py': 'ac21616499291d07d2421199e0b46067c33fcca7baf539528fec9ff802bf4bab',
+    'src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT.json': '1d25ca8994eda581ed2380b34ba068c26ee05fc22954560c3cfc9df71e3f2c01',
+    'src/methods/E_002/RECUR_MEAN_ALL_V1/method.py': '648ab1b44dbcd9a17ec230c3148ac1ca9942f5b7857a5e6b56601e840acbdd3d',
+    'src/methods/E_002/RECUR_MEAN_LAST8_V1/VARIANT.json': 'cc37d06644a84cb7f21113fbfd788d5beb5f86a9239ae2fdd22c514d00f8354b',
+    'src/methods/E_002/RECUR_MEAN_LAST8_V1/method.py': '99ba46e506587521aea21db21e2bb49dfdcd9b170f8fb417385328943971246e',
+    'src/methods/E_002/RECUR_MEDIAN_ALL_V1/VARIANT.json': 'c107513d23de27fb96ff9b23943ce6e2d3d8fce6f645babc874bdfea9b3eb5fc',
+    'src/methods/E_002/RECUR_MEDIAN_ALL_V1/method.py': 'fb476d8c6cc76a69c6eb8f89a5d0854e76dcc99628b4acbe7d6bac0f3d3db747',
+    'src/methods/E_002/core_v1.py': '9c30cab5a19d61b8bd9b0e8f50ea7a43913c1428a0971a02c702dc9f658658e4',
+    'src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/VARIANT.json': '09e644db28758dbaaf02a0483ef360d695c633905372debab057692d6216eb7e',
+    'src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/method.py': 'ed46f71af59779c185a7a60dceda0857b24b91667166f73fb866e61268779117',
+    'src/methods/E_003/POLY_LS_W104_D3_V1/VARIANT.json': '691b586e42eed24480892b3cac8dec00d273fc8474ea979955800fb55e3b39ee',
+    'src/methods/E_003/POLY_LS_W104_D3_V1/method.py': '6221220e32126bf03e64510154c1527fe80a0e7980e4248bb4407431924f9fcf',
+    'src/methods/E_003/POLY_LS_W52_D2_V1/VARIANT.json': '00ee3166e73ed1a1d62a9098b6495fe0a7cc5ba8b44385aae877c7faddbf99f3',
+    'src/methods/E_003/POLY_LS_W52_D2_V1/method.py': '55d7b078cb109d7190932f5cb71d9cc5ce6bb1fcc4a07fe810b192e122a5798c',
+    'src/methods/E_003/POLY_LS_W52_D3_V1/VARIANT.json': 'b55bb203ed694f7eea7477e6c3268b907836d37c1f8dfcc77be2b86938d67e6d',
+    'src/methods/E_003/POLY_LS_W52_D3_V1/method.py': '5f68925789bfd05509ec7abf5476a376e5a5a6eac8ae1a16978064c0f41e484e',
+    'src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json': '16af4694b563358400defa855e5579ad2b3f8c1b489b031d7658e63935723ead',
+    'src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/method.py': 'c60e5a032c5306ecdd7bcc9d4430c1c71beb4f5705ec41e2591353b79b85d7b6',
+    'src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json': '2d6114ef1c2d84f7d3afe8050cc1513b5d1f4de856d08d83b4c8d638e7a510c1',
+    'src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/method.py': '84f7da1e34e178c7c9040e5f3bd6b5e9ce2eac4f3537dc7b403d0b1fd92575a5',
+    'src/methods/E_003/core_v1.py': '14927308f772e2c215dd72ee1f66e03c4579f8c355680f0cc3a7ab4df150b8db',
+    'src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/VARIANT.json': '0bd8a76ba52c598eb4a6f350a51c06609885aca72265f2e6813bb70b53edfe8c',
+    'src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/method.py': '93a2b07b2ab822d4d7164319bb938344ec9c13cbee8c7495ce954677d319f25a',
+    'src/methods/E_004/POLY_LS_W104_D3_V1/VARIANT.json': '4c4a03c546d140fc961395f6adef44aa9e1faa2905a08e46f9aaae70d5f0d507',
+    'src/methods/E_004/POLY_LS_W104_D3_V1/method.py': '9f995ef48499d7023297f25ad84bbeee766bb508eb89a8fd7c9a9356df1e1ed5',
+    'src/methods/E_004/POLY_LS_W52_D2_V1/VARIANT.json': '1ce90f085d0a41c03ba81c3d68c2a6135ba3adf892a3aac8c14a572f22b5a3cc',
+    'src/methods/E_004/POLY_LS_W52_D2_V1/method.py': '0e07e60b7662f913740773e14c58b7df34af3c171d8298624ef0a5574d1ebc5b',
+    'src/methods/E_004/POLY_LS_W52_D3_V1/VARIANT.json': 'ff9ce5ea8658d6be302d09a955714be6d1e6e11cbce000440350dbfea4b661e1',
+    'src/methods/E_004/POLY_LS_W52_D3_V1/method.py': '3df2108da19732d98f0fe33e59b1d19f80b6a9c997d22e017c6fbbcc995cb7be',
+    'src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json': '9fb7e0ce93ec99a7fa258513e7f488715b2dd44cfb07b70229a39675a0bcc730',
+    'src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/method.py': '29626cdcc2006a78391b2685444499ae39f2d0cf5dc13c78dfb927e8a90b6583',
+    'src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json': '08a6bc98fb3618c68e685ee69ee114e8875ae0c09282a5491cdb68454587877d',
+    'src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/method.py': 'c8a01916c8cd4754f17a1061de624f7920c2d8eaa236967835011476effe87ab',
+    'src/methods/E_004/core_v1.py': 'bb8ff8c73ac0ed88c9aad30ae7fcf3a9a17f7794802bf329d9ca7069b4489d95',
+    'src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/VARIANT.json': 'fe39169d86f2f9890120748725eac59142b54715c89a05724ef5f6d4da54f0fe',
+    'src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/method.py': '8a401fb355fbc9a01392da4b257db18ff4bb9d9b1477d0fb73e6286a9c109ab1',
+    'src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/VARIANT.json': '3bc2f22a2b1de70d7059b1f83b585dcbef43aef646f46f511c1357c6a0be136e',
+    'src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/method.py': 'fb9113833e0c6f761e44061ed347a668e29964a3d33f3cfc6496177c62ee6fd6',
+    'src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/VARIANT.json': 'fdf7387f42fa8f894585bc63703ca7670ee17232542d2b51ceaaf6852199d6e5',
+    'src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/method.py': 'a3da428021486450ae073def72000aae1b08d58ad64025aa6aae7169c824027f',
+    'src/methods/E_006/core_v1.py': '1752ecc51046ffcc49ce1d8b95986872f7422c8a50feafc221c057f3ab800b4b',
+    'src/methods/E_007/BETA_SHRINK_FULL_C52_V1/VARIANT.json': '048f06c07924a86c2de72f6ceb53ae880025f87d0d856aeec0b3801c7f57d9ae',
+    'src/methods/E_007/BETA_SHRINK_FULL_C52_V1/method.py': 'b5d8e52743e9542996ffc4c97e622d714c4ce9ff7c9f7623684c4df01f5c6230',
+    'src/methods/E_007/BETA_SHRINK_W104_C52_V1/VARIANT.json': '286fc70c15d3cd484234a86a2d1e12734c088c07e04a8a3290322a73fb55f068',
+    'src/methods/E_007/BETA_SHRINK_W104_C52_V1/method.py': '2b58dc014994b550ac4216f6080ad1985f20b953980769f527db4ca0bbb65423',
+    'src/methods/E_007/BETA_SHRINK_W52_C52_V1/VARIANT.json': 'e4d5e92f37e000efbb9894031f7b6e61c2f66982c885414413ccda6799aacd36',
+    'src/methods/E_007/BETA_SHRINK_W52_C52_V1/method.py': 'bd3a78eb52a929a874f23e88d7899e0ec60d458ce3e509ea24cd569e1c36f3b4',
+    'src/methods/E_007/core_v1.py': '200d7621ee38ed4c4c8c1d58350233acc125363cb457b307efe0fade45029306',
+    'src/methods/E_008/HIER_PERIODS_P13_V1/VARIANT.json': '840d66dbcf1d65f8e9a5b043c0b9ebedde1e38cb7b1f4c80475571d0106e054e',
+    'src/methods/E_008/HIER_PERIODS_P13_V1/method.py': '25ae3b7eb50a4225fd133f56e85760c6e7cdb85381d47d0cdc40518b656c5665',
+    'src/methods/E_008/HIER_PERIODS_P26_V1/VARIANT.json': 'e6bdc0a856de4fd2b02869fa1135a52ccba0daa155d6b73fc88313ae7a52fdca',
+    'src/methods/E_008/HIER_PERIODS_P26_V1/method.py': '4c8e15981e632801f0a5255bda1a7e6b66531d22a0da57d05fcf9ada325b4f70',
+    'src/methods/E_008/HIER_PERIODS_P52_V1/VARIANT.json': '8b398e99451cc0b8e4244f3f7146316683ef4c474b2e2734c8c24dde2ab82a7e',
+    'src/methods/E_008/HIER_PERIODS_P52_V1/method.py': '4a4259c9da970a3b04c96f2709a840a570c1e9e1382ae8461c4ddb4750fe36f3',
+    'src/methods/E_008/core_v1.py': '414eaf8455f705a6f358476beaf0fd4577ad5a357172a8be79952b0b4978aa45',
+    'src/methods/E_009/EXP_DECAY_18_19_V1/VARIANT.json': '318cf7ccdc28becdfc8afbe49935a1eadc436eb9310b3bdefb3aeb7fb724c88e',
+    'src/methods/E_009/EXP_DECAY_18_19_V1/method.py': '9503bafdea926407f9082632b98ecbe2d6d68893edd24fc63aac8e7561e63dcf',
+    'src/methods/E_009/EXP_DECAY_37_38_V1/VARIANT.json': '7e33b52ec20593cce0307bc57fa34f7b7650588ae2dfda834a9ae0af71f4e09c',
+    'src/methods/E_009/EXP_DECAY_37_38_V1/method.py': 'f3d0a67098f7c551306e2fcdd1a993964cf469f9fe427e31ccb6e7ec5104821d',
+    'src/methods/E_009/EXP_DECAY_5_6_V1/VARIANT.json': '7def11103cc056a51e5ed440659c597be58ebb6caa9571d8868ff1f70cecc3df',
+    'src/methods/E_009/EXP_DECAY_5_6_V1/method.py': 'd4a3cd6b0a4ec2fee3ed1e04d2c32dac7f8330196c1e1e95d873edce3f1c8b86',
+    'src/methods/E_009/core_v1.py': '0c2ed81d06edd79cde325bbcecd1f73d1297a5829b74d11a1ff08f4c73779b3b',
+    'src/methods/E_010/CONTRAST_S13_L104_V1/VARIANT.json': '5c1a1b00b71169e99e158e9190676c5bb0490652318d0f334a8e09158836d81f',
+    'src/methods/E_010/CONTRAST_S13_L104_V1/method.py': 'e5dae5795a12b29c5bb6b9f8cc123ca9adea7f9a841ecded410b7167d458820c',
+    'src/methods/E_010/CONTRAST_S26_L208_V1/VARIANT.json': 'b57b13c086b63bc4f138d821968272de67b69a3c33799e785d58d3a8e6bf209f',
+    'src/methods/E_010/CONTRAST_S26_L208_V1/method.py': 'd3779011eef3e11d8253bfbbe365481ea06534f057be0862a12f02873e1732bf',
+    'src/methods/E_010/CONTRAST_S52_FULL_V1/VARIANT.json': '6e38b67c240ed4f4483546ca150e47ccf096e1132769f6e4f87a60fd5c61d44a',
+    'src/methods/E_010/CONTRAST_S52_FULL_V1/method.py': 'd181dbd0766389c12f63b3fa3a1a850d1041669bd90dd196f1ccc1343ceb09b6',
+    'src/methods/E_010/core_v1.py': '1507ecca77aa7171d0b3bde97425e2b1f5cd8ac55f52356ef1909f16b947cfe8',
+    'src/methods/E_017/HAZARD_BINS_C100_V1/VARIANT.json': 'eb23a97ed0ebf9ec27aef88232ffc8af6c8ae2776a9e53bd0a8749d56c1042f1',
+    'src/methods/E_017/HAZARD_BINS_C100_V1/method.py': 'a34bd6f06b51d28e1bca093fb761d3866eec8df460115e67d7174d5d35d011ff',
+    'src/methods/E_017/HAZARD_BINS_W208_C100_V1/VARIANT.json': 'fa540521416ba99e69e376ce044078df9585dd1ffcaa13699c364304ec540532',
+    'src/methods/E_017/HAZARD_BINS_W208_C100_V1/method.py': 'f8934c435186999ad1e8e1130cdc0794959211b5ccd409075abaa8fe68ebd81c',
+    'src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/VARIANT.json': '1970ff0c4ef0e0af18c98d4cb2e991d1ee5399462812af3bfe13c26eb33dc4a8',
+    'src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/method.py': 'c8ea33c4cc8ba3778ae2f197f50d80980e1db25eef6b535773074dcfc9dfba4e',
+    'src/methods/E_017/core_v1.py': '7352da802d85b02187be35f978a37b1317a1702d06b66116629672118ce0b2ce',
+    'src/methods/E_018/MIX4_ALL_C10_V1/VARIANT.json': 'ad66a059b7799ac9ea65f913137d4520fad5d2ea2bf83e6521384ddec2cc8e1d',
+    'src/methods/E_018/MIX4_ALL_C10_V1/method.py': '86526cbf43521669e96e30f403c50ac0242a5cdb9beb64d1ffc6b811c86b6f4f',
+    'src/methods/E_018/MIX4_W104_C10_V1/VARIANT.json': '543302b64de29ffbbbe775594f3ede0494ff8d2c5f197463602ab4c959def36d',
+    'src/methods/E_018/MIX4_W104_C10_V1/method.py': '13ab86f4652391f64ada648c53584434aea55d5f94f786243ea441682f839d0b',
+    'src/methods/E_018/MIX4_W208_C10_V1/VARIANT.json': '226dee7b092383777b3fad75d7fdb9c77c6ee745506520659bff6cbf3285b540',
+    'src/methods/E_018/MIX4_W208_C10_V1/method.py': '6e6bafbfe59f4ea420a859da80eb69f1dc80259dbf5a4bf55143442c5724fa2d',
+    'src/methods/E_018/core_v1.py': '9ff76f5c40006a4e6e73582d9346c56fd036a82e26366013e73617d5fe44edf7',
+    'src/methods/E_019/PERIODIC_T2_V1/VARIANT.json': '5734f0473c7889bcf577dad4e8f7baeb2c762cdf58b3aecd73f34d5bb37541cc',
+    'src/methods/E_019/PERIODIC_T2_V1/method.py': '44d9055eba8492eb89943ef72f90446578b806ac093fea135bf53ab38ce5b1f3',
+    'src/methods/E_019/PERIODIC_T3_V1/VARIANT.json': '6553868b5bf12ab53946a238fb26ea8fdadd2b0db16cb9ea03e29563b0f1762d',
+    'src/methods/E_019/PERIODIC_T3_V1/method.py': 'c6a13c1de8e016b65b9e9932a4808404027e8d6bdcd326a09c01bf0d1e6b2eb6',
+    'src/methods/E_019/PERIODIC_T4_V1/VARIANT.json': 'fd4c2fe6d45de6ade24517f3a98768b9599a417136602671ee05c3fbda357fe9',
+    'src/methods/E_019/PERIODIC_T4_V1/method.py': '5748524f2ac889bfb171d2f94979e76c6e672ccf42225fa1773a7fc0599b0a7e',
+    'src/methods/E_019/core_v1.py': '7d0a85ff24452c810e4e66fe61b49ab3e8b966daa880c0f3ae79b4297cceaf11',
+    'src/methods/_common/method_table.py': 'ca63c367b5e9ebfdd78eb8477410aafe9f7afa0ea66a8f5f423b9eb4ba79c0eb',
+    'src/methods/_shared/occurrence_counts_v1.py': '76e39bf0aeb3273d0f5a9a41391d0ceac1cfd6a7b06955cbb80518e05f5cbde9',
+    'src/methods/_shared/polynomial_fits_v1.py': '1d1c8d1078638607c0c0f584184834a95285f6d3e00b544a2a8a103e5d831615',
+    'src/methods/_shared/recurrence_gaps_v1.py': '37b1be1d33bd7da5291fe36cf40272b1f12673f36a9fda8e20d7d6a26fdd1f25',
+}
+MODIFIED = {  # path: (base Git-content SHA-256, new Git-content SHA-256), LF
+    'src/methods/Method_Contract_Runner.py': ('941b9058ddbc6f432de4e51469cd82a52b72669cb1dd398cce6e4f999086baf5', '89db65847b0743b7242a1f5ab2f26d5bae73ae0736d091a8f018e4d44361beb7'),
+    'tests/test_code3_retirement.py': ('cfc9100f135000cb1b09acdfde7983b33761bd79b2987c8bfc1ec8da1d48b2d0', '48d2ccfbc3d9ce50582f644513f3769aa588291709f543fec184b160ed3b8b90'),
+    'tests/test_e1r2_revision2.py': ('42f49ecbb4574518cda137a8b219d74e8e5a0d85dfeb3af5503da6e2290e089d', 'b3b60d5ddcde7788a1b06944ad69c33659625c043c111865cedbb265dc27564d'),
+    'tests/test_e1r3_revision3.py': ('f45ee5ef7274484722d28edf8ddee4a20525a076a2eb083815cf41ef802dec82', 'bb938ccf746f7f8bb6d9917f074b56f3031b28accaf2aadbc346635f019a57ff'),
+    'tests/test_e2r_dispatch.py': ('4a201243ddd57ee3a93912b32c956ae1ffb7448f5cca96f9ec549b7054381838', '9db5f7dc4a95672f05e027899c38cfc6f1df7ec9390a493f11333124a1c945cd'),
+    'tests/test_e2r_runner.py': ('06c745de435dfc3c52bad1ac6f7ee0a4cfe274d0eabd5de0e129d4423c5c08a2', 'a4847ea8629e85399c5c7ed780196060714b2ffb61e8003d9652001fb8d1e335'),
+    'tests/test_e3_e4_polynomial.py': ('31b65547a5836677a1b2a4a70f07bef3297be13169f1deafbbbb537f2ce7722e', 'a64f988f67c04bd6bd592404442267f5144b67c125044bd163f10c50bd778654'),
+    'tests/test_e6_beta_bernoulli.py': ('92764ba2bfa2540e02c6ce3d3291d810f172eb0c4cf636eca8030bd554cd640b', '351586e981495c7403a03caf4b7600cbbf61e9023330d4884acef15e606ed2b6'),
+    'tests/test_mhupa_gates.py': ('91a557c364d05b8c428dd0fd2e4d45860a8ff5d0c0a866094084ec82641cebb9', 'aaff544630a0ee009923fc4936a2d9b6f83b90b96595d695645a767e8da7bd55'),
+    'tests/test_occurrence_counts.py': ('473c33ef15c13e9d44d6c53119ff8ccf49baeb4eab33406cc257f3273a84bbdb', '7b9edfdcbe77232e7d3e91808d1c099cb947dd305e3f17b9bc66b4fc6f4c0196'),
+    'tests/test_polynomial_fits.py': ('dd2f9ce83cf00e015b375bd87fadc968af2790f3871342ebf52b7e5b017c656b', '2dd03332e0dc954f8b0d98aa38d6dc1222b8f0dda35a26673f467388a9de26b9'),
+    'tests/test_recurrence_gaps.py': ('e2e89cf3a61d5ff09861fd65b6fe4911acd968a8ac743a5dca80d295e8e7f5ad', '3fe10a4f0ba58fcddbe906656f018d83bb22e018d38aba03001530401f07bdda'),
+    'tests/test_rel1_release.py': ('14002f460520159c9b03e79d3a62bcd98ab0e09718daa8ab528e46fddf7c1c24', '80387dd8eefe86a625ca5acf823107cf3464bd95a44f18ad5bb0d5a02e212575'),
+    'tests/test_wave1_frequency.py': ('7a330dc423341d0bb3e7769754d7d7899ade59a806796c1df7d4a2da28f2900e', 'c83af93c1d01a762e8387c0d1632315917c59cd57f7269b54354abf9e7423a1a'),
+    'tests/test_wave2_recurrence.py': ('50d312c212a285d3485cabe6904e48c1720c52d5aac9064599094ab9094f521f', '363765d0f066a73dde405ab5dd397bb5f57df8162258cc435622f12dec1fddff'),
+}
+DELETED = {  # path: base Git-content SHA-256 (LF)
+    'src/methods/E_002/contract.py': 'b6f253131ea8d390a847f177665fefffbe57dab977596f1abb1877d73c159b4d',
+    'src/methods/E_003/contract.py': '8509ea3641d48ed8b3771237beaa3205d31a09a491049b1687bc09177059e87f',
+    'src/methods/E_004/contract.py': '68f967e1b86d9076235d8a94c15d3098f226ad7b97b24afbfed60406ccc74043',
+    'src/methods/E_006/contract.py': '1752ecc51046ffcc49ce1d8b95986872f7422c8a50feafc221c057f3ab800b4b',
+    'src/methods/E_007/contract.py': '756e526776eb6a0a8e991d41bafcdd17ddd68259e5dba631dac9a4458f51487d',
+    'src/methods/E_008/contract.py': 'd5073c29e3ce6de75d53884af31133c2e77b83f1d3a40fbb234d509e885f5000',
+    'src/methods/E_009/contract.py': '09538733263b95167dfdd1bde3e87252659df84648a3fbd7ea3205118b642dcd',
+    'src/methods/E_010/contract.py': '99324f3310899499633c61fe50001be8ea96938567ea0eb35610c58004e39f7a',
+    'src/methods/E_017/contract.py': 'd2a70ff1b732d7716a122a7e5a4c4e955bc4c27ab0f8ee6e819faaf96baea6dd',
+    'src/methods/E_018/contract.py': '7eb180820cc1af4322f2d24ac35e907c6bf2eb5f248bfd4ed0a3cae3d1ebfc6e',
+    'src/methods/E_019/contract.py': 'f3945ed8d8a3fe1363ec2a6c2351bc666c64b01cd679c9e4723ec311d381f56e',
+    'src/methods/_common/occurrence_counts.py': '76e39bf0aeb3273d0f5a9a41391d0ceac1cfd6a7b06955cbb80518e05f5cbde9',
+    'src/methods/_common/polynomial_fits.py': '1d1c8d1078638607c0c0f584184834a95285f6d3e00b544a2a8a103e5d831615',
+    'src/methods/_common/recurrence_gaps.py': '37b1be1d33bd7da5291fe36cf40272b1f12673f36a9fda8e20d7d6a26fdd1f25',
+    'src/methods/contract_adapters/__init__.py': '37eec72f21cd52244498674f93579a200b8021e5028163acc0ad68c8410eb3a7',
+    'src/methods/contract_adapters/e_001.py': 'ac21616499291d07d2421199e0b46067c33fcca7baf539528fec9ff802bf4bab',
+}
+GUARDED = {  # must stay byte-identical in Git (hashes of the Git blobs at the base commit)
+    'source_data/POWERBALL_results_master.csv': 'e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0',
+    'source_data/POWERBALL_results_master_ledger.csv': '23f3f8a78b8cdaaf8f10d56c1684581e54be563f263d835d90cee966a0e446dd',
+    'source_data/POWERBALL_results_master_init_verification.json': 'bc3cf72c42fd832193f8e043df63242091259abd6dbcd067152d902c2b132547',
+    'source_data/HOLDOUT_OPENED_POWERBALL.json': 'e6cd70a61cefc9aeb7913b90799e1c52489803eff280bb5c3723ea5c8b2ccd57',
+    'source_data/OZLOTTO_results_master.csv': '63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e',
+    'source_data/OZLOTTO_results_master_ledger.csv': '78ab9fdef29f8faafb10bb3d1fd2197747195b95b46640e73ff031797761a3c6',
+    'source_data/OZLOTTO_results_master_init_verification.json': '3a8decb43dbf52a5d1e2d3d621162541e327f90bcf08e066da4faa3ed41836a8',
+    'source_data/HOLDOUT_OPENED_OZLOTTO.json': '0418aebba259f5b94c06f938de0501c4ad97fabb9b0d0c083e7d5956904eb3db',
+    'src/methods/_common/game_draws_reader.py': '1de081f9c0832b3c21646383d4563572791e52ecffc987a470b818920b8e045c',
+    'src/methods/_common/game_profiles.py': 'd49e83b5f91f5a0b299c6e08ae48c598d03b969a5dec70e05932daa3e4827a9b',
+    'src/methods/_common/contract_forecast.py': '9c1498207a3b401406f27b18948b62ea0109285eb0afd4ed103fc54a5df1d16d',
+    'src/methods/_common/contract_records.py': '40f058208cd3dd7062ebee7fb058a2acdbe66326a6925fff3344f1c2a5e0bce9',
+    'src/methods/_common/contract_task.py': 'e68094199281c0722f3963514edb4f32c669d5342aa4d50ae88b51dceb0b36eb',
+    'src/methods/_common/contract_runner.py': 'f86c81306a35bef4ea3bb3fdd357ff939d16b245f6f34ca63a2bacb49476a113',
+    'src/methods/_common/contract_dispatch.py': '3c7bb22c7de8a76dae47f199393f87d93b34adc230bcf9f1a27311b3b819de4f',
+    'src/methods/_common/contract_registry.py': '00082aad1754edbf2380c2caa144b0c79a12e2b6f26eb806d85903f177f11064',
+    'src/methods/_common/walk_forward.py': 'a3f9cfa3800aa99a0c9fcf2609cee2360c6b87c375ce8411bad47d2820fd9329',
+    'src/methods/_common/master_versions.py': '57ba431edc56b350deadb60919310615c1598e1f241644890ab823b864f3e7ab',
+    'src/methods/_common/closure.py': 'e8d5114a486927292e227f599dd57de8149ff69de708dd68124759ea0f7951fc',
+    'src/methods/E_006/beta_bernoulli.py': '2c94d463f4020e7eb4f29949d12cb0cc8d0456f54dd5e1a89504c8f2d7fd976c',
+    'src/methods/E_001/multigame_e1.py': 'd766416f3144ebd80dbcd11b538dcbdf97c93e83f8c4ad907baef24c4a10762b',
+    'src/Powerball_Experiment_Coordinator.py': '6d202f5efd164c8e4a0eba97d435a0ec55787da87fcb2930af51309f573adcff',
+    'src/results_master_v0_2.py': 'b71f4ffa14ea9f8b6c3e404c0ba46f6abe313ead3178bba553ed9b4ad5e2a43f',
+    '.gitattributes': '5f824caa7fa974d37d6ad08766bbb4c59f73813be3d99bbc8be19d48d5fd708a',
+    '.gitignore': '1548c367d7ebd60077d05b9cfbfb44e87f0524c265decae722e796968db61f72',
+}
+HERE = Path(__file__).resolve().parent
+
+
+def sha(b):
+    return hashlib.sha256(b).hexdigest()
+
+
+def norm(b):
+    return b.replace(b'\r\n', b'\n')
+
+
+def run(repo, *args):
+    return subprocess.run(['git', '--no-optional-locks', '-C', str(repo), *args],
+                          stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=GIT_ENV)
+
+
+def git(repo, *args):
+    r = run(repo, *args)
+    if r.returncode != 0:
+        raise RuntimeError(f'git {" ".join(args)} failed: {r.stderr.decode(errors="replace")[:300]}')
+    return r.stdout
+
+
+def need(cond, msg):
+    if not cond:
+        raise RuntimeError('FAIL: ' + msg)
+
+
+def identities(repo):
+    """Read-only facts for deciding after a committed-phase STOP."""
+    print('--- identities for Claude (read-only) ---', file=sys.stderr)
+    for label, args in [('HEAD and parents', ['log', '-1', '--format=%H %P %s', 'HEAD']),
+                        ('last 3 commits', ['log', '--oneline', '-3']),
+                        ('last commit paths', ['diff', '--no-renames', '--name-status', 'HEAD~1', 'HEAD']),
+                        ('upstream', ['rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}']),
+                        ('commits not yet pushed', ['log', '--oneline', '@{u}..HEAD']),
+                        ('working tree and index', ['status', '--porcelain=v1', '--untracked-files=all'])]:
+        r = run(repo, *args)
+        out = (r.stdout if r.returncode == 0 else r.stderr).decode(errors='replace').rstrip()
+        print(f'[{label}]\n{out[:1500] or "(none)"}', file=sys.stderr)
+    print('--- Do NOT push. Do NOT reset. Send Claude this whole output. ---', file=sys.stderr)
+
+
+def main(a):
+    repo = a.repo.resolve()
+    need((repo / '.git').exists(), f'not a Git checkout: {repo}')
+    for p, h in [*NEW.items(), *((p, n) for p, (_o, n) in MODIFIED.items())]:  # the package must be intact
+        need(sha(norm((HERE / 'repo_overlay' / p).read_bytes())) == h, f'package file damaged: {p}')
+    head = git(repo, 'rev-parse', 'HEAD').decode().strip()
+    anc = run(repo, 'merge-base', '--is-ancestor', BASE, 'HEAD')
+    need(anc.returncode == 0, f'HEAD {head} does not descend from base {BASE}; STOP')
+    print('HEAD:', head, '(descends from base', BASE[:7] + ')')
+    for p, h in GUARDED.items():
+        need(sha(git(repo, 'show', f'HEAD:{p}')) == h, f'guarded file changed in Git: {p}')
+    print(f'{len(GUARDED)} guarded files unchanged in Git HEAD')
+    status = git(repo, 'status', '--porcelain=v1', '--untracked-files=all').decode(errors='replace')
+
+    if a.phase == 'pre':
+        need(not status.strip(), 'working tree or index not clean:\n' + status[:600])
+        diff = git(repo, 'diff', '--name-only', BASE, 'HEAD', '--', 'src', 'tests').decode().split()
+        need(not diff, 'src/ or tests/ changed since the base commit: ' + ', '.join(diff[:20]))
+        for p in NEW:
+            need(not (repo / p).exists(), f'new path already exists: {p}; STOP')
+        for p, (old, _new) in MODIFIED.items():
+            need(sha(git(repo, 'show', f'HEAD:{p}')) == old, f'file to be replaced is not its base version in Git: {p}')
+            need(sha(norm((repo / p).read_bytes())) == old, f'file to be replaced differs on disk: {p}')
+        for p, old in DELETED.items():
+            need(sha(git(repo, 'show', f'HEAD:{p}')) == old, f'file to be deleted is not its base version in Git: {p}')
+            need(sha(norm((repo / p).read_bytes())) == old, f'file to be deleted differs on disk: {p}')
+        print(f'PRE PASS: clean tree; {len(NEW)} new paths absent; {len(MODIFIED)} files to replace and {len(DELETED)} to delete '
+              'at their base version. Nothing was changed.')
+        return
+
+    if a.phase == 'post':
+        lines = status.splitlines()
+        new = {ln[3:].strip().strip('"').replace('\\', '/') for ln in lines if ln.startswith('?? ')}
+        mod = {ln[3:].strip().strip('"').replace('\\', '/') for ln in lines if ln.startswith(' M ')}
+        dele = {ln[3:].strip().strip('"').replace('\\', '/') for ln in lines if ln.startswith('D  ')}
+        need(len(new) + len(mod) + len(dele) == len(lines),
+             'changes other than new files, modified files and staged deletions:\n' + status[:600])
+        need(dele == set(DELETED), 'unexpected staged deletions: ' + ', '.join(sorted(dele ^ set(DELETED))))
+        for p in DELETED:
+            need(not (repo / p).exists(), f'deleted path still on disk: {p}')
+        need(new == set(NEW), 'unexpected new paths: ' + ', '.join(sorted(new ^ set(NEW))))
+        need(mod == set(MODIFIED), 'unexpected modified paths: ' + ', '.join(sorted(mod ^ set(MODIFIED))))
+        for p, h in [*NEW.items(), *((p, n) for p, (_o, n) in MODIFIED.items())]:
+            f = repo / p
+            need(f.is_file() and not f.is_symlink(), f'missing or symlink: {p}')
+            need(sha(norm(f.read_bytes())) == h, f'wrong bytes: {p}')
+        print(f'POST PASS: exactly the {len(NEW)} expected new paths, {len(MODIFIED)} modified files and '
+              f'{len(DELETED)} staged deletions, all with the expected bytes.')
+        return
+
+    need(not status.strip(), 'working tree or index not clean after commit:\n' + status[:600])
+    parents = git(repo, 'log', '-1', '--format=%P', 'HEAD').decode().split()
+    need(len(parents) == 1, f'HEAD has {len(parents)} parents, expected 1')
+    diff = git(repo, 'diff', '--name-only', BASE, 'HEAD~1', '--', 'src', 'tests').decode().split()
+    need(not diff, "the commit's parent has src/ or tests/ changes since the base: " + ', '.join(diff[:20]))
+    for p, h in [*NEW.items(), *((p, n) for p, (_o, n) in MODIFIED.items())]:
+        need(sha(git(repo, 'show', f'HEAD:{p}')) == h, f'wrong Git blob in HEAD: {p}')
+    for p, (old, _n) in MODIFIED.items():
+        need(sha(git(repo, 'show', f'HEAD~1:{p}')) == old, f'parent does not hold the base version: {p}')
+    for p, old in DELETED.items():
+        need(sha(git(repo, 'show', f'HEAD~1:{p}')) == old, f'parent does not hold the deleted file: {p}')
+        need(run(repo, 'cat-file', '-e', f'HEAD:{p}').returncode != 0, f'deleted file still in HEAD: {p}')
+    names = git(repo, 'diff', '--no-renames', '--name-status', 'HEAD~1', 'HEAD').decode().splitlines()
+    got = {ln.split('\t', 1)[1]: ln.split('\t', 1)[0] for ln in names if ln}
+    want = {**{p: 'A' for p in NEW}, **{p: 'M' for p in MODIFIED}, **{p: 'D' for p in DELETED}}
+    need(got == want, 'the last commit did not change exactly the expected paths; differences (path, status): ' +
+         repr(sorted(set(got.items()) ^ set(want.items()))))
+    print(f'COMMITTED PASS: the last commit ({head[:7]}) added exactly {len(NEW)} files, modified '
+          f'{len(MODIFIED)} and deleted {len(DELETED)}; all Git blobs match.')
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--repo', type=Path, required=True)
+    ap.add_argument('--phase', required=True, choices=['pre', 'post', 'committed'])
+    args = ap.parse_args()
+    try:
+        main(args)
+        print('Read-only: no project code imported, nothing run, nothing changed.')
+    except Exception as exc:
+        print('VERIFICATION STOP:', exc, file=sys.stderr)
+        if args.phase == 'committed':
+            try:
+                identities(args.repo.resolve())
+            except Exception as exc2:
+                print('(could not list identities:', exc2, ')', file=sys.stderr)
+        sys.exit(2)

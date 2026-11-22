@@ -1,0 +1,24 @@
+{
+  "family": "E_002",
+  "variant": "RECUR_MEAN_LAST8_V1",
+  "title": "E_2 - Expected Recurrence-Interval Alignment",
+  "description": "Variant RECUR_MEAN_LAST8_V1: its fixed settings are the RECUR_MEAN_LAST8_V1 line of E_002/variants.py; the calculation is E_002/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 104,
+    "OZLOTTO": 104
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_002/__init__.py",
+    "E_002/core_v1.py",
+    "E_002/variants.py",
+    "_shared/recurrence_gaps_v1.py"
+  ]
+}

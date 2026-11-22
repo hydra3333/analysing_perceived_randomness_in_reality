@@ -3161,3 +3161,26 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Also asked:** whether to relay the step 1 progress paste to the reviewer now or with EX_275. Claude's answer:
   hold it and send everything once, as EX_275, with the install package (one review round).
 - Next numbers: EX_275, entry 160, RAT-43.
+
+## 160. 22 November 2026, 20:23 - EX_275 sent at the owner's request: the build step 1 install package for independent review; no owner decision beyond the request
+
+- **The owner's words (20:03):** "please per your \"build the install package and your run sheet, then send everything to
+  the reviewer once as EX_275\" do whatever you need to generate a good EX_275 now." He stays on Fable 5.2 for now (a
+  usage reset is available to him for it and not for Opus).
+- **Sent:** `exchange/EX_275_Claude.zip` (SHA-256 `be199e65637e5f0f19cf45c5132d445b2c20e0347380e14e6b38ea2edffd39e2`), extracted
+  for reading in `exchange/EX_275_Claude/`. Its members: `EX_275_Claude.md`; the install package
+  `STEP1_Layout_Install_v1.zip` (SHA-256 `8c23dfe29695fc1b1042fba1712f281a1cc234821228e4e2ec56c34847ca575e`; 117 members) and its
+  member list. The package was built by `exchange/CLAUDE_WEB_TOOLS/step1/build_step1_pkg.py` from base `05e9afd`: an
+  overlay of 95 new paths and 15 modified files, a list of 16 deletions, the read-only verifier (the reviewed template
+  `wf1/verifier_template.py`, filled in), the three tools, the manifest and `INSTALL_AND_RUN_SHEET.md`.
+- **Evidence since entry 158, all in `exchange/CLAUDE_WEB_TOOLS/step1/evidence/`:** the existing suite gives the same result
+  before and after the move (45 modules, 571 tests; the same two known failing modules); the equivalence check PASSED
+  on the moved code for every scored development forecast in the tracked rank ledgers (Powerball 11,442; Oz Lotto
+  5,958); two planted faults were caught; the install was rehearsed in an LF and a CRLF clone (PRE, POST, COMMITTED
+  PASS; four planted cases each STOP). `STEP1_PACKAGE_NOTE_v0_2.md` beside it has the card, the seven choices with
+  their alternatives and the not-tested list.
+- **The sheet's order, for the owner when the time comes (each part on his own go):** his ZIP of the project folder; the
+  suite as it is today; PRE, copy, delete, POST; the same suite and the comparison; the equivalence check (which on
+  his PC also covers the never-scored forecasts in the old run folders); stage, commit, COMMITTED; push.
+- **Not authorised by this entry:** anything on the owner's PC. Next: the reviewer's reply, EX_276. Next numbers:
+  EX_276 (the reviewer's), entry 161, RAT-43.

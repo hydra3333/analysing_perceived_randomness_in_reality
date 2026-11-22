@@ -11,8 +11,10 @@ Which part of the specification it carries out
 Which of the project's own modules it uses
     None. It starts `python -B -m unittest -v <module>` for each tests/test_*.py of the tree it is given.
 
-Usage:  python run_suite.py <tree root> <python executable> <report folder>
-Writes: <report folder>/<module>.txt (the unittest -v output of each module) and prints one line per module.
+Usage:  python run_suite.py <tree root> <report folder>
+        (the tests run with the same Python that runs this file)
+Writes: <report folder>/<module>.txt (the unittest -v output of each module) and <report folder>/MODULES.txt
+        (the one line per module that is also printed).
 """
 import os
 import pathlib
@@ -30,8 +32,10 @@ SEARCH_PATH_FOLDERS = ('src', 'src/methods', 'tests')
 
 def main() -> int:
     """Run every test module of the tree and return 0 (the modules' own results are in the reports)."""
-    tree, python, reports = pathlib.Path(sys.argv[1]), sys.argv[2], pathlib.Path(sys.argv[3])
+    tree, reports = pathlib.Path(sys.argv[1]).resolve(), pathlib.Path(sys.argv[2]).resolve()
+    python = sys.executable
     reports.mkdir(parents=True, exist_ok=True)
+    module_lines = []
     environment = dict(os.environ, PYTHONPATH=os.pathsep.join(str(tree / folder) for folder in SEARCH_PATH_FOLDERS))
     for test_file in sorted((tree / 'tests').glob('test_*.py')):
         module = test_file.stem
@@ -44,9 +48,13 @@ def main() -> int:
         (reports / f'{module}.txt').write_text(output, encoding='utf-8')
         ran = re.search(r'^Ran (\d+) tests?', output, re.M)
         verdict = re.search(r'^(OK|FAILED)[^\n]*$', output, re.M)
-        print(f'{module}\texit={exit_code}\tran={ran.group(1) if ran else "?"}\t{verdict.group(0) if verdict else "?"}',
-              flush=True)
-    print('DONE', flush=True)
+        module_lines.append(f'{module}\texit={exit_code}\tran={ran.group(1) if ran else "?"}\t'
+                            f'{verdict.group(0) if verdict else "?"}')
+        print(module_lines[-1], flush=True)
+    total = sum(int(line.split('ran=')[1].split('\t')[0]) for line in module_lines if 'ran=?' not in line)
+    module_lines.append(f'DONE: {len(module_lines)} modules, {total} tests ran')
+    print(module_lines[-1], flush=True)
+    (reports / 'MODULES.txt').write_text('\n'.join(module_lines) + '\n', encoding='utf-8')
     return 0
 
 

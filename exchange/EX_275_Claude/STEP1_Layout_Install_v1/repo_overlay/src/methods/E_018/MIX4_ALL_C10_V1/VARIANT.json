@@ -1,0 +1,24 @@
+{
+  "family": "E_018",
+  "variant": "MIX4_ALL_C10_V1",
+  "title": "E_18 - Mixtures of Recurrence Modes",
+  "description": "Variant MIX4_ALL_C10_V1: its fixed settings are the MIX4_ALL_C10_V1 line of E_018/variants.py; the calculation is E_018/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 104,
+    "OZLOTTO": 104
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_018/__init__.py",
+    "E_018/core_v1.py",
+    "E_018/variants.py",
+    "_shared/recurrence_gaps_v1.py"
+  ]
+}
