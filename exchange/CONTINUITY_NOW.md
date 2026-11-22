@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 12:59 Australia/Adelaide (entry 145: EX_270 sent: the specification DRAFT v0.6 and the deployment design DRAFT v0.12, closing EX_269). **Next: the reviewer's recheck (EX_271); after a PASS, the owner's ratification, H-1 v8 (and a new Claude chat), the owner's ZIP, build step 1. No code yet.**
+**Last updated:** 22 November 2026, 13:17 Australia/Adelaide (entry 146: EX_271, the reviewer's PASS (DESIGN) of the specification v0.6 and the deployment design v0.12). **Next: the owner's ratification decision (RAT-40). Then H-1 v8, the owner's ZIP, build step 1. No code yet.**
 
 ## For the owner: NOW
 
+- **THE DESIGN HAS PASSED REVIEW (entry 146; `exchange/EX_271_ChatGPT.md`).** Waiting on the owner: ratification (RAT-40) of
+  `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md` and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md`. One oracle is carried into build step 4 (EX_271 section
+  3: no stale report in view when a QA software replacement or a reseeding returns). A PASS and a ratification
+  authorise no code, install or run.
 - **EX_270 IS WITH THE REVIEWER (entry 145).** **The current drafts are
   `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md` and
   `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md`** (earlier drafts are history; exact diffs beside each).

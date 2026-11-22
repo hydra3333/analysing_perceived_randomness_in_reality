@@ -2725,3 +2725,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   with a fresh process check before it changes anything; one archive ZIP for each game.
 - **Next:** the reviewer's recheck, EX_271. After a PASS: the owner's ratification (RAT-40); H-1 v8 and, on Claude's
   advice, a new Claude chat; the owner's ZIP of the project folder; build step 1.
+
+## 146. 22 November 2026, 13:17 - EX_271: the reviewer's PASS (DESIGN) of the specification DRAFT v0.6 and the deployment design DRAFT v0.12; the ratification decision (RAT-40) is put to the owner
+
+- **EX_271** (`exchange/EX_271_ChatGPT.md`, main `7492846`; SHA-256
+  `a80f1b61ed04938510a272ec9d6f0e5fcdb9ebbddb27113edab39dc947b8ca10`): **"PASS (DESIGN), with one non-blocking
+  implementation oracle. No further design recheck requested."** R7-F01 to R7-F04 and R7-N01 to N04 each PASS; the
+  correction of shared code, the identities and the hold, and the closed OV-1 question stand. It confirms the member
+  hashes of EX_270. It is a pass of a design, not of tested code.
+- **The one oracle to carry into build step 4 (EX_271 section 3; not a ratification blocker):** after a QA software
+  replacement or a research-data reseeding, the report files in the active folder must be right for the destination
+  or plainly not current as soon as the command returns, without a research job being run first, including when
+  only the report code or a variant's status differs and every number agrees. To be shown with the existing render
+  and move routines; no new mechanism.
+- **The reviewer recommends** the owner's consideration of RAT-40, then the four build steps, each on its own go.
+- **Passed for ratification:** `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md` (SHA-256
+  `9c2cab96954a14ba53e3fedf16e2ad7371577c0a6a6ecaa23882b1f018a7e5e5`) and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md` (SHA-256
+  `e20143102185cdf24a13b74baae8e279328000d164dda2c180a9a3c205e35714`).
+- **Not a decision:** ratification is the owner's. Claude has put to him what RAT-40 would cover and what it would not
+  authorise.
