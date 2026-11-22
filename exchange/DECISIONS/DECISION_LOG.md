@@ -3043,3 +3043,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   runner; it is accurate for the installed rulebook) and `doc/METHOD_TEMPLATE/` (a new draft is owed after build step
   3, when the new layout exists).
 - Nothing here authorises code, a build step, a run or anything on the owner's PC.
+
+## 156. 22 November 2026, 18:06 - RAT-42: THE OWNER RATIFIES the local runner rulebook v0.6 after the reviewer's PASS (EX_274); installed by Claude with the status change only
+
+- **EX_274** (`exchange/EX_274_ChatGPT.md`, main `cd40f40`, SHA-256 `972cc2551ec5cd12f44dcc6f19ef27dfa4cd3ebe21c0402fc524d2ef8fc937f5`): "PASS. Recommend owner ratification and
+  installation as RAT-42 now, before the new Claude chat takes over." The reviewer checked the candidate
+  (`9d2cae3c...a4e8830f`), the cover note, the installed v0.5 and the exact diff; found "no new affirmative executable
+  permission"; and answered the cover note's three questions: keep the broader rule 4; rule 11 is explicit enough; ratify
+  and install now. It adds: do not generalise the old expected-refusal permission now; when a future owner-authorised
+  task truly needs runner access, "write a narrowly scoped reviewed amendment"; and `.claude/settings.json` is not to be
+  altered under EX_274.
+- **The owner's words (18:05):** "I ratify the local runner rulebook v0.6 as RAT-42, following ChatGPT's PASS in EX_274.
+  Claude may install the reviewed rulebook with only the necessary status change, verify the installed SHA-256, and
+  record the decision. This authorises documentation-only installation. It does not authorise build step 1, a runner
+  rehearsal, scientific execution, or any other operation. We can then proceed with the new Claude chat using H-1 v8."
+- **RAT-42 is recorded** (RAT-41 was the last number used). **Installed:** `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`,
+  **SHA-256 `f92f17f60db63990fc10a663778ec8d6a2b0737c9232895f1ee0af76ffdfa632`** (12,541 bytes), written by `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/finalise_rat42.py` from the reviewed
+  candidate (asserted by hash) over the installed v0.5 (asserted by hash; Git keeps it). **One line differs from the
+  reviewed candidate, the version line's status words** (`CLAUDE_v0_6_CANDIDATE_TO_FINAL.diff`; `git diff --numstat`: 1 added,
+  1 removed): "v0.6 CANDIDATE ... NOT installed and not in force until then" became "v0.6, 22 November 2026, ratified by the
+  project owner the same day (RAT-42) after the reviewer's PASS (EX_274)". No rule text differs from what was reviewed.
+- **What v0.6 is:** a restrictive baseline. It allows nothing new. It removes the ended T016 allowance; rule 4 covers
+  every draw; rule 7 names the new system's seventeen commands as never run; rule 11 (QA, PROD and their backup
+  folders are never touched; no `ENVIRONMENT.ini`); rule 12 (the PC's date, time and zone).
+- **For the owner, when he chooses (his file; not changed by anyone else):** the three deny lines proposed in
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/COVER_NOTE.md` section 5 for `.claude/settings.json`. **A running Claude Code
+  conversation keeps the rulebook it started with:** after `git pull --ff-only`, start a new Claude Code conversation
+  before the next task.
+- **Overtaken by this entry, in ratified files that are not edited:** H-1 v8 section 8.6 and section 12.8 item 4, and
+  register v0.32's future action 5, say a new rulebook edition is owed before the first rehearsal. The baseline
+  edition now exists; what is still owed before a rehearsal is the narrowly scoped amendment for that rehearsal.
+  Brought up to date with this entry: reminder R-030 (f), the roadmap's step B, the tools README, CONTINUITY_NOW.
+- **RAT-42 authorises the documentation-only installation and nothing else:** not build step 1, a runner rehearsal,
+  scientific execution or any other operation. The next ratification number is RAT-43; the next EX is EX_275.
+- **This is the outgoing Claude chat's last planned entry.** The owner starts the new Claude chat with
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`; this chat stops committing once it starts.

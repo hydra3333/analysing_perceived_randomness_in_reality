@@ -688,8 +688,11 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   (e) The watchpoint for steps 2 and 3 (EX_273 section 2): old code and the updater still consult the Mode H opening
       record source_data/HOLDOUT_OPENED_<GAME>.json. New trees must work without it as a gate; it is not silently
       copied into a new tree to satisfy old code; no genuine source or ledger check is removed.
-  (f) A new local runner rulebook edition and your deny lines in .claude/settings.json, before the first rehearsal of
-      the new system. A candidate v0.6 was drafted on 22 November 2026 for review.
+  (f) The local runner's rulebook. v0.6 was ratified and installed on 22 November 2026 (RAT-42): a restrictive
+      baseline that allows no rehearsal. Still to come: your three deny lines in .claude/settings.json (proposed in
+      exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/COVER_NOTE.md, section 5; your edit, when you choose); and, before the
+      first rehearsal of the new system, a narrowly scoped reviewed amendment that allows exactly what that rehearsal
+      needs.
   (g) What the first rehearsal measures: the derived check at each job, a first full fill, Check_Forecasts --all, a
       rerun, and a backup of a whole tree.
   (h) A new draft of doc/METHOD_TEMPLATE/ for the new layout, after step 3.

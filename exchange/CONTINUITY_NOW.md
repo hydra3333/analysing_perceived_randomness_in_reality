@@ -4,10 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 17:52 Australia/Adelaide (entries 154 and 155: RAT-41 covers the reviewer's refreshed H-2 v4; the working lists and README files are up to date; a rulebook v0.6 candidate is written). **Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 18:06 Australia/Adelaide (entry 156: RAT-42, the local runner rulebook v0.6 ratified and installed). **Everything is ready for the handover. Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **START HERE (22 November 2026, after entry 156).** The new system is ratified (RAT-40) and not coded. The handovers and
+  the register are ratified and installed (RAT-41). **The local runner's rulebook v0.6 is ratified and installed
+  (RAT-42; `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, SHA-256 `f92f17f60db63990fc10a663778ec8d6a2b0737c9232895f1ee0af76ffdfa632`):** a restrictive baseline that allows no
+  rehearsal. **A new Claude chat takes over next:** the owner pastes
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`; the new chat follows H-1 v8 section 0.
+  **Since H-1 v8 was installed (read these with it):** entries 154 to 156. In short: H-2 v4 in force is the reviewer's
+  refreshed file (main `79406e4`); `exchange/README.md` is v0.6; the owner's roadmap and reminders are up to date
+  (reminder R-030 is the build checklist; R-007 and R-017 wait for his word); H-1 v8's "a new rulebook edition is owed"
+  now means only the narrowly scoped amendment a rehearsal will need; the owner may add three deny lines to
+  `.claude/settings.json` (cover note in `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/`). Nothing is in flight. Next numbers:
+  EX_275, decision log entry 157, RAT-43.
 - **HOUSEKEEPING BEFORE THE CHAT SWITCH IS DONE (entries 154, 155).** RAT-41 covers the reviewer's refreshed H-2 v4 (main
   `79406e4`; blurb `35a2ebf`). The owner's roadmap and reminders are up to date (**two proposals wait for his word: R-007
   dropped, R-017 done**; new reminder R-030 lists what Claude raises during the build). `exchange/README.md` is v0.6.

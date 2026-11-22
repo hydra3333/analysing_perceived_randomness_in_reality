@@ -74,7 +74,8 @@ plain-English summary is section 0 of doc/Predictive_Randomness_System_Specifica
 A. DONE - The design: the system specification v0.6 and the deployment design v0.12 (RAT-40, 22 November 2026), with
    the coding practices (doc/CODING_PRACTICES_v0_1.md).
 B. DONE - The handovers and the register brought up to date (RAT-41, 22 November 2026): H-1 v8 for Claude, H-2 v4 for
-   ChatGPT, register v0.32.
+   ChatGPT, register v0.32. And the local runner's rulebook v0.6 (RAT-42, the same evening): a restrictive baseline
+   for Claude Code that knows the new system exists and allows no rehearsal of it yet.
 C. NEXT - A new Claude chat takes over from H-1 v8 (your decision of 22 November 2026).
 D. NEXT - Your own ZIP of the whole project folder on E:, when Claude says: before build step 1 moves any file in
    your clone (reminder R-030).
