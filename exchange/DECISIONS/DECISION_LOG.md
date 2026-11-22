@@ -2890,3 +2890,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not an EX message** (the owner's rule). The register candidate goes to the reviewer by a pointer in the owner's paste.
 - **Next:** the reviewer's review of the register and its answer on the H-1 v8 rebuild; then the owner's ratification of
   the register and both handovers (the next free number is RAT-41), their installation in `doc/`, and the new Claude chat.
+
+## 151. 22 November 2026, 17:08 - correction of a count in entry 150 (found by the reviewer): the register diff adds 174 lines, not 162
+
+- **The reviewer's interim finding, relayed by the owner at 17:07:** "I found a small count discrepancy in Claude's
+  description: the diff shows 174 net added lines, not 162."
+- **The reviewer is right.** Recounted with `git diff --no-index --numstat` and `wc -l`: register v0.31 has 2,490 lines and the
+  v0.32 candidate 2,664; the diff removes 1 line and adds 175 (the replaced version line, and the 174 lines of the new
+  section, 13 of them blank). Net: 174 lines added. Entry 150's "one line replaced, 162 added" should read "one line
+  replaced, 174 lines added".
+- **Cause (Claude's):** the count was taken with a pattern that matched only added lines with text on them, so the 13
+  blank lines of the section were not counted. The same wrong figure went into Claude's chat reply and its paste block
+  for the reviewer.
+- **No file is affected.** The register candidate, its section, its builder and its diff are unchanged
+  (`2fd091f3...6d99135c`); the diff is exact, as proved by `patch` and `cmp` in entry 150. Only the description was wrong.
+- **Lesson, kept:** count with the tool that counts what the sentence says (`--numstat` for "lines added"), not with a
+  hand-made pattern.

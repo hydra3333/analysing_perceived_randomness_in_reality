@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 16:56 Australia/Adelaide (entry 150: the register v0.32 CANDIDATE is written; H-2 v4 corrected by the reviewer). **Next: the reviewer reviews the register and answers on one small rebuild of H-1 v8; the owner ratifies the register and both handovers (RAT-41); a NEW Claude chat then takes over. No code is authorised yet.**
+**Last updated:** 22 November 2026, 17:08 (entry 151 corrects a count in entry 150; no file changed); before that 16:56 Australia/Adelaide (entry 150: the register v0.32 CANDIDATE is written; H-2 v4 corrected by the reviewer). **Next: the reviewer reviews the register and answers on one small rebuild of H-1 v8; the owner ratifies the register and both handovers (RAT-41); a NEW Claude chat then takes over. No code is authorised yet.**
 
 ## For the owner: NOW
 
