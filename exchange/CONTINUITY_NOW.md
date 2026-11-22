@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 14:02 Australia/Adelaide (entry 149: EX_272, H-1 v8 PASSED with one pointer correction, applied). **Next: the reviewer corrects its H-2 v4; the owner ratifies both handovers (RAT-41); a NEW Claude chat then takes over (owner's decision) and build step 1 starts there on his go. No code is authorised yet.**
+**Last updated:** 22 November 2026, 16:56 Australia/Adelaide (entry 150: the register v0.32 CANDIDATE is written; H-2 v4 corrected by the reviewer). **Next: the reviewer reviews the register and answers on one small rebuild of H-1 v8; the owner ratifies the register and both handovers (RAT-41); a NEW Claude chat then takes over. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **THE REGISTER v0.32 CANDIDATE IS WRITTEN (entry 150):** `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md`
+  (v0.31 plus one short section recording RAT-34's install to RAT-40). Waiting for the reviewer's review. **The H-1 v8
+  candidate needs one more small rebuild before ratification** (entry 150): the reviewer corrected H-2 v4 after it was
+  built, so its H-2 v4 hashes are stale; it still says the register is owed; and it lacks one practical point for the
+  build (the opening record `source_data/HOLDOUT_OPENED_<GAME>.json`, which installed code and the updater still consult
+  and the ratified design does not name). Claude has changed nothing in H-1 v8 since EX_272's correction.
 - **H-1 v8 HAS PASSED REVIEW (entry 149; `exchange/EX_272_ChatGPT.md`),** with one pointer correction, applied exactly. The
   candidate is `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` (SHA-256 `9e8717cd758caf2e6e075b86911619bf0e04d67ec8c418347c32741ae172d335`). **The owner has decided
   that a new Claude chat takes over once v8 is ratified.** Open: the H-2 v4 identifiers inside H-1 v8 go stale when the

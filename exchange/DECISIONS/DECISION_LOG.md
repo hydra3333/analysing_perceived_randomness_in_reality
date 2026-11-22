@@ -2853,3 +2853,40 @@ section 17.2 (unpack it into a new folder, never over the clone).
   first code package).
 - **Next:** the reviewer's correction of H-2 v4 and its answer on the pointers; then the owner's ratification of both
   handovers (RAT-41), installation in `doc/HANDOVER/` with the status paragraph alone changed, and the new chat.
+
+## 150. 22 November 2026, 16:56 - the register v0.32 CANDIDATE written at the owner's choice (option 1); the reviewer's correction of H-2 v4 noted; one practical point for the build recorded
+
+- **The owner's words.** At 14:07, after Claude put the register question again as three options: "yes Register v0.32
+  option 1 please now." (Option 1: Claude writes a short v0.32 now, in this chat, to go to the reviewer with the
+  handovers.) The work was interrupted; at 16:53: "please continue".
+- **Written (a candidate; not reviewed, not ratified; it authorises nothing):**
+  `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (SHA-256 `2fd091f34ea47399693b30f51b2a677d3d4cf348d028435cbd9639366d99135c`; 369666 bytes), built by `make_register_v32.py`
+  (`f786db005a7dee0bd6536ca8fbbd0990a08574821971b4089014a3baff510858`) from the installed register v0.31 (`c6369a72...3cae6d`, asserted) by two counted insertions: the version line, and one
+  new section, `register_v32_section.md` (`c3cdb445376973fa8c96ed650f7b7f4a2487717825e72bf7c3ba76c1a11a6031`), placed before "Interpretation and verification". Nothing of v0.31 is
+  changed or removed. `REGISTER_v0_31_TO_v0_32.diff` (`5137f365ba8dbf48c462f9d5ef3df45e0547a50e45aa7b33a465e33449d0634b`) is exact (applied to v0.31 with `patch` and compared with `cmp`):
+  one line replaced, 162 added.
+- **What the new section holds, kept short:** the position at this edition; a table of RAT-34's install to RAT-40 with each
+  entry and commit; twelve numbered items indexing entries 62 to 150; RAT-40 with its four notes; what is carried into
+  the build; the out-of-date statements (above all, which documents specification 1.3 makes history and which clauses
+  1.2 keeps); a table of 27 file hashes filled from Git by the builder; and the future actions. Checked by tool: every
+  hash the decision log recorded for those files equals the builder's; every commit named exists; an EX file exists for
+  every number from 216 to 272; `cc665ce` holds ten record files and `.gitignore`.
+- **A practical point found while writing, recorded in the register and NOT a decision.** The owner decided on
+  18 November 2026 (entry 92, decision 2) that the two Mode H archive checks left in the installed code be removed; that
+  was for the MHUP-B package, which was not built. Checked today in the installed code: the opening record
+  `source_data/HOLDOUT_OPENED_<GAME>.json` is still consulted by `src/methods/_common/master_versions.py` and
+  `contract_dispatch.py`, and the updater `src/results_master_v0_2.py` refuses an update for a game without one. The
+  ratified specification and deployment design do not name that record. So build steps 2 and 3 must settle, in their
+  own packages, how reused code treats it and whether a new tree's `source_data\` holds it. **H-1 v8 does not carry
+  this point;** Claude proposes adding one line (below).
+- **The reviewer corrected its own H-2 v4 candidate** at 14:08 and 14:09 (main `23f02d6`, `9f99c76`): a clarification, outside
+  the protected rights text, that R-8 to R-11 were already owner-ratified on 27 October 2026; and its blurb refreshed.
+  The files are now `e24481b7dd088edef35080a8d98252f3da3114826c2b510589b048b7660b3c75` and (blurb) `2f93f042b81e6e3de7614ffe53119c47fb9bcb2395c99c80b7bb33454cf38768`. **So the H-2 v4 hashes inside the H-1 v8 candidate are stale** (section 4.4
+  and Appendix A; as entry 149 foresaw). The register candidate cites the current ones.
+- **Proposed by Claude, waiting for the reviewer's authorisation and the owner's word; nothing changed yet:** one rebuild
+  of the H-1 v8 candidate that changes only (a) the H-2 v4 identifiers (two hashes, the commit names); (b) the four
+  statements that say register v0.32 is still owed (section 0A item 3, section 0C note 4, section 4.4, section 12.8
+  item 6); (c) one added line carrying the opening-record point into section 10. Reported with its exact diff.
+- **Not an EX message** (the owner's rule). The register candidate goes to the reviewer by a pointer in the owner's paste.
+- **Next:** the reviewer's review of the register and its answer on the H-1 v8 rebuild; then the owner's ratification of
+  the register and both handovers (the next free number is RAT-41), their installation in `doc/`, and the new Claude chat.
