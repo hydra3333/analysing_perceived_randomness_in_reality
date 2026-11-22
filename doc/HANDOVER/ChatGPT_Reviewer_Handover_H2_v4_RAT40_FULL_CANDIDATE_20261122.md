@@ -1,12 +1,12 @@
-# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v4 (FULL RAT-40 CONTINUITY CANDIDATE, 22 November 2026)
+# Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v4 (RAT-41 IN FORCE; REFERENCE REFRESH, 22 November 2026)
 
-**Status:** NEW COMPLETE REVIEWER-AUTHORED FACTUAL HANDOVER CANDIDATE; NOT independently owner-ratified as an H-2 edition. RAT-40 HAS ratified the NEW SYSTEM DESIGN. The operative earlier ratified H-2 was v3r4 (RAT-36), until the owner promotes a successor. Do not mistake this candidate's factual completeness for a new owner authority or for permission to execute anything.
+**Status:** **H-2 v4 OWNER-RATIFIED AND IN FORCE under RAT-41**, 22 November 2026 at 17:34 Australia/Adelaide (decision-log entry 153; install commit `53b1056`). The owner ratified the prior complete H-2 v4 bytes (SHA-256 `8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8`) and its prior introductory blurb (`700ca5da32494bd4d7f8da1d1c26e8ee96f784bf45501d220bff5e4b03b15a46`). **This subsequent references/status-only refresh changes those bytes; owner confirmation that RAT-41 also covers the refreshed edition is PENDING.** It does not change rights, scientific authority or operational permissions. H-2 v3r4 (RAT-36) is superseded as operative reviewer handover, retained as history. The filename's `CANDIDATE` is historical frozen naming, not the status of the RAT-41-ratified edition.
 
 **Prepared by:** ChatGPT, the standing independent scientific and technical reviewer; Claude is primary designer/coder; the project owner ratifies and gives explicit operating GOs.
 **Repository:** `hydra3333/analysing_perceived_randomness_in_reality` on GitHub, `main`.
-**Source snapshot:** RAT-40, owner decision-log entry 147, commit `4de0fe4128edbddba5d92e60ee27000e88069059`, ratification at 13:33 Australia/Adelaide on 22 November 2026. Always inspect latest HEAD for later developments.
+**Source snapshot:** RAT-40 system design (decision entry 147, commit `4de0fe4`) and **RAT-41 handovers/register** (decision entry 153, installed at commit `53b1056`), 22 November 2026. Last shared EX at the RAT-41 checkpoint: EX_273. Always inspect latest HEAD and decisions for later developments.
 **Use:** A new reviewer chat can start with THIS complete file, without reconstructing the latest position from past H-2 fragments. Then open the three RAT-40 documents for the authoritative implementation clauses. Historical chapters 1-19 are preserved later in this very file for role rights, independent evidence and source navigation, but THEIR dated operational descriptions are NOT current where superseded by the new RAT-40 front and the ratified documents.
-**No execution authority:** Neither RAT-40 nor this handover authorises code writing, moving source files, backup/restore, new environment/tree creation, Windows run, QA or PROD action, real draw acquisition, scientific operation or test rehearsal. Each of FOUR build stages requires a SEPARATE explicit owner GO.
+**No execution authority:** Neither RAT-40 nor RAT-41 nor this references-only refresh authorises code writing, moving source files, backup/restore, new environment/tree creation, Windows run, QA or PROD action, real draw acquisition, scientific operation or test rehearsal. Each of FOUR build stages requires a SEPARATE explicit owner GO.
 
 ## 0. CURRENT STATE, PRIMARY READING AND OWNER GATES (RAT-40)
 
@@ -22,7 +22,15 @@ The owner RATIFIED the new simplified active system on 22 November 2026 as **RAT
 | `doc/Predictive_Randomness_Deployment_Design_v0_12.md` | `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d` |
 | `doc/CODING_PRACTICES_v0_1.md` | `d64f0101a4fdb21998b2871765bd9b3f06ccb6c7409c7a2d0e9f230cebbd7ddd` |
 
-Then read: `exchange/DECISIONS/DECISION_LOG.md` entries 143-147 through latest, `exchange/CONTINUITY_NOW.md` top dated status, `exchange/README.md`, and the latest H-1 if one has arrived. The system specification sections **1.2** and **1.3** determine what remains binding by reference versus what is historical. The *ratified current documents*, not historical EX drafts in `exchange/CLAUDE_WEB_TOOLS/simplify/`, govern implementation.
+**Then read the RAT-41 installed continuity documents (not candidates):**
+
+| RAT-41 installed authority | SHA-256 |
+|---|---|
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md` | `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e` |
+| `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md` | `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66` |
+| `doc/RATIFICATION_REGISTER_v0_32.md` | `f59d1911279e7e95a952a14c3a0c68422ba0f4e67f91ffd5369eb73c606c9acb` |
+
+RAT-41 also ratified **this H-2 v4** and its blurb at the *previous* SHA-256 values stated in the status paragraph. For the refreshed H-2 bytes, await the owner's explicit scope confirmation. Read `exchange/DECISIONS/DECISION_LOG.md` entries 143-153 and later, `exchange/CONTINUITY_NOW.md` top dated status, and `exchange/README.md`. The system specification sections **1.2** and **1.3** determine what remains binding by reference versus historical. The ratified current documents, NOT historical EX drafts in `exchange/CLAUDE_WEB_TOOLS/simplify/`, govern implementation.
 
 Spec 1.2 retains the following SCIENCE and SAFETY BY REFERENCE: R2 v0.5 sections 1, 2, 4 and 7 (method invariants, data contract, observation policy, 62 families); E2R-1 v0.3r3 section 7 (readout/rank/TOP/WORST, without deprecated revision/run-mode/receipt fields); R3 v0.5 sections 3, 4 and 17 (draw-number time axis, measures, game separation); OV-1 supplement v0.8 sections 6.1, 6.3 and 6.5 (numeric kernel, bar 40); the single reviewed Lotterywest-GOV updater, architecture 5C process/orphan/no-kill, three OFF safety switches/empty allowlist, and W-23. The old MHUP-B code plan and deployment drafts, obsolete revision/receipt/Mode H holdout gates and earlier system designs are HISTORY for the new active system except clauses specifically retained by reference.
 
@@ -88,17 +96,17 @@ Historical Mode H: Oz Lotto 1694-1703 and Powerball 1577-1586 were sealed 15-16 
 
 ### 0.7 Live handover work and NEXT NUMBERS
 
-**Owed at RAT-40, in addition to the stage-specific work:** 
-- **Claude H-1 v8, next.** Independently review the actual new document and introductory blurb when issued; it should reflect ratified docs and retained role/protocol rules. H-1 v7r1 was installed at RAT-39, and is historical for the retired design while relevant general safety/rules persist.
-- **This independent reviewer H-2 v4 FULL candidate** to be delivered and committed now, and an H-2 introductory blurb (a convenience entry point only). It does not ratify itself. A new chat takes over FACTUALLY from it.
-- **Ratification register v0.32 CANDIDATE WRITTEN, NOT YET RATIFIED** at `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (22 November, decision log entries 150-151). It preserves installed v0.31 and records RAT-34 through RAT-40; its initial SHA-256 is `2fd091f34ea47399693b30f51b2a677d3d4cf348d028435cbd9639366d99135c`. The reviewer checked its intact structure and RAT table. The candidate still needs the owner's RAT-41 ratification and `doc/` installation, with candidate handover hashes refreshed after the final H-1 rebuild. The prior installed v0.31 remains the operative register meanwhile.
+**RAT-41 documentary milestone complete; what remains before authorised build work:**
+- **Claude H-1 v8 DONE, OWNER-RATIFIED/INSTALLED (RAT-41):** independently reviewed in EX_272 and EX_273, installed as `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md`; H-1 v7r1 is historical. The owner decided a NEW Claude chat will take over from H-1 v8, subject to the usual HO-2 acceptance; do not treat a handover as an implementation GO.
+- **ChatGPT reviewer H-2 v4 DONE, RATIFIED/IN FORCE (RAT-41):** full edition and blurb ratified at the original hashes in the status paragraph, replacing H-2 v3r4. The current reference refresh is for the owner's separate confirmation; it is NOT a new change to the substantive reviewer rules. A new reviewer chat should use this updated full file and blurb and check RAT-41 authority.
+- **Register v0.32 DONE, OWNER-RATIFIED/INSTALLED (RAT-41):** `doc/RATIFICATION_REGISTER_v0_32.md`, SHA-256 `f59d1911279e7e95a952a14c3a0c68422ba0f4e67f91ffd5369eb73c606c9acb`. It records RAT-34 through RAT-41 and supersedes the older installed v0.31 for current register status; the earlier candidate and v0.31 remain historical. It was independently reviewed in EX_273. Do not keep describing v0.32 as owed.
 - **NEW local runner rulebook BEFORE ANY rehearsal**, and separate owner GO for every actual test/rehearsal/clone/runner operation. No inherited T016 one-shot exception.
 - **Owner's E: project-folder ZIP** before phase-1 move, including ignored run history and `.git`; do not treat this as already done.
 - **Light tidy-up** after verified stage 1, before QA/PROD installation, with equivalence check repeated.
 - **EX_271 section 3 oracle** in stage 4 for immediate copy/report freshness with numerically compatible scores.
 - Future possible performance engineering phase after full implementation: profile actual wall/CPU time, native NumPy/SciPy, multiprocessing and nested threads before choosing Cython/Numba/etc.; not a prerequisite for stage 1.
 
-As of RAT-40 commit 4de0fe4: **next EX_272**, next decision-log entry **148**, next ratification **RAT-41**. These are CURRENT-AT-SNAPSHOT counters, not commitments that those numbers remain free; check HEAD immediately before issuing another file. The latest reviewer EX was **EX_271** (PASS, commit `7492846`). The owner explicitly wants no extra general design programme: after handovers and owner approval, BUILD.
+As of RAT-41 commit `53b1056` and decision-log entry 153: **next EX_274**, next decision-log entry **154**, next ratification **RAT-42**. These are counters at that snapshot only: check the latest HEAD and decision log before using any number. Latest reviewer EX then was **EX_273** (register PASS and H-1 identifier-sync FIX AND PROCEED, commit `6532258`). The owner wants no further general design programme: following the separate step GO, BUILD.
 
 ### 0.8 New reviewer first-minute checklist
 
@@ -109,7 +117,7 @@ A replacement reviewer should:
 4. Re-state the four notes of ratification and the four build steps without confusing helper bug correction with a new scientific idea.
 5. Explain why the old Mode H freeze and QA gate are not current, but N-1 and process/no-kill still are.
 6. Explain the OV-1 retrospective-execution timing resolution accurately without recreating C2.
-7. Review H-1 v8 or stage 1 package only when the owner sends and authorises it.
+7. Treat H-1 v8 and register v0.32 as RAT-41 installed authority; review new HO-2 takeover evidence or the stage-1 package only when the owner submits/authorises it.
 8. Keep source identity/provenance, false report-current status, interrupted rerun archives, user warnings and code comments in scope as specified; avoid inventing new machinery.
 
 **Everything after the line below is the historical independent-reviewer rights, evidence, technical narrative and review lessons inherited from H-2 v3r10 (sections 1-19), not a second current-system specification. Preserved for single-file continuity. In any conflict, this RAT-40 section 0 and, above all, the ratified documents and later owner decisions GOVERN. Especially superseded in the historical chapters: H-2 dated "currently open" items; older holdout/Mode H live gates; mandatory QA; prohibition on any in-place helper defect correction; reset/replay naming; old formal OV-1 publication/registration pathways; earlier MHUP-B slice instructions; the older notion that ChatGPT cannot commit its own exchange/handover files. Do not execute historical procedures.**
