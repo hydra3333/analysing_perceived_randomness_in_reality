@@ -3216,3 +3216,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   clone.
 - **Not authorised by this entry:** anything on the owner's PC. Next: the reviewer's focused recheck, EX_278. Next
   numbers: EX_278 (the reviewer's), entry 162, RAT-43.
+
+## 162. 23 November 2026, 06:47 - EX_278: the reviewer's focused RECHECK PASS of the build step 1 package v2 (STEP1-C01 to C04 closed); the owner holds every go for his PC
+
+- **EX_278** (`exchange/EX_278_ChatGPT.md`, main `e64b401`, SHA-256 `53f6251128ab5ad1f7b089d4f0f09b68d70bf0fbba61599df451e63a6a3bddad`), relayed by the
+  owner on 23 November 2026 at 06:46. Disposition: **PASS** ("reviewed package suitable for owner consideration").
+  STEP1-C01, C02, C03 and C04 are closed; no new correction is asked; EX_275's five layout choices stay accepted. The
+  reviewer recomputed both ZIP hashes and four evidence hashes from GitHub (all match) and compared the v1 and v2
+  package ZIPs member by member: only five members differ (the sheet, the manifest's header, the verifier's base
+  commit, and the two corrected tools); the overlay is identical. (Its "177 members, 168 overlay entries" counts the
+  ZIP's folder entries too: 117 files and 60 folders; 110 overlay files and 58 folders. Checked with a tool.)
+- **The reviewer's conditions and limits (its words in substance; none is an owner decision):** it is a review PASS, not
+  an installed or scientifically verified one; the owner's ZIP of the whole E: project folder first; on his
+  Windows Python 3.15.2 the suite baseline, the install under the sheet, the same suite with all test outcomes
+  compared, and the strict equivalence check over both games ending `RESULT: PASS - COMPLETE` with `MISSING: 0` for
+  each; "any new or unexplained Windows-only baseline failure should be reported before proceeding; do not
+  automatically relabel it a known failure"; a differing digest is a STOP, with the unmoved-code control only for
+  diagnosis; no additional machinery, QA or PROD creation or wider design round.
+- **The owner's words (06:46):** "Focused RECHECK PASS. STEP1-C01 through C04 are closed. The v2 package is approved for
+  owner consideration. Await my separate authorisation before any operation on my PC."
+- **How the Windows-baseline condition is met without changing the reviewed package (Claude; told to the owner):** in
+  part 1 of the sheet the expected failing modules are exactly the two that fail on `main` in the cloud
+  (`test_mhupa_launchers`, `test_multigame_reader_contracts`). If the owner's baseline shows any other module FAILED,
+  he pauses there and sends the output before part 2; nothing has been changed on his PC at that point.
+- **State:** build step 1's package is REVIEWED (PASS). Not installed; not run on Windows. **Nothing on the owner's PC
+  is authorised:** his ZIP and each part of `INSTALL_AND_RUN_SHEET.md` wait for his own go. Next numbers: EX_279,
+  entry 163, RAT-43.

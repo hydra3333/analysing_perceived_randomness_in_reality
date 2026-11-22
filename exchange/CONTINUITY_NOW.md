@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 20:48 Australia/Adelaide (entry 161: EX_276 was RECHECK with four narrow corrections; EX_277 with package v2 is with the reviewer for a focused recheck). **Next: the reviewer's EX_278. Then, each on the owner's own go: his ZIP of the project folder and the install and run sheet. Nothing on the owner's PC is authorised yet.**
+**Last updated:** 23 November 2026, 06:47 Australia/Adelaide (entry 162: EX_278, the reviewer's focused RECHECK PASS of the build step 1 package v2). **Waiting on the owner: his own go for his ZIP of the project folder and for each part of the install and run sheet. Nothing on the owner's PC is authorised yet.**
 
 ## For the owner: NOW
 
+- **BUILD STEP 1'S PACKAGE HAS PASSED REVIEW (entry 162; EX_278; 23 November 2026).** The package is
+  `exchange/EX_277_Claude/STEP1_Layout_Install_v2.zip` (SHA-256 `f8fa81054e00f0b3ca908b8f89130f024b2ded1aec2d7973762ee0081e405051`); its sheet is
+  `exchange/EX_277_Claude/STEP1_Layout_Install_v2/INSTALL_AND_RUN_SHEET.md`. **Waiting on the owner, each on his own go:**
+  part 0, his ZIP of the whole E: project folder (kept off E:); part 1, `git pull` and the suite as it is today
+  (expected failing modules: exactly `test_mhupa_launchers` and `test_multigame_reader_contracts`; any other failing
+  module: pause and send the output before part 2); part 2, PRE, copy, delete, POST; part 3, the same suite and the
+  comparison; part 4, the equivalence check, which must end `RESULT: PASS - COMPLETE` with `MISSING: 0` for both
+  games; part 5, commit, COMMITTED, push. Then Claude verifies the commit from GitHub, and the light tidy-up of the
+  method files is the next item (its own go). The bullets below are history.
 - **EX_277 IS WITH THE REVIEWER (entry 161; 22 November 2026).** EX_276 accepted the layout and asked four narrow
   corrections (coverage of the equivalence check; the suite comparison; two missing evidence files; one sentence of
   the sheet); all are made. **The current package is `STEP1_Layout_Install_v2`** in `exchange/EX_277_Claude/` (v1 in
