@@ -1,0 +1,147 @@
+--- DEPLOYMENT_DESIGN_DRAFT_v0_11.md
++++ DEPLOYMENT_DESIGN_DRAFT_v0_12.md
+@@ -1,12 +1,11 @@
+-# Deployment design - DRAFT v0.11 (DEV, QA and PROD; local-file installs; the copies from PROD; backups; exact restore)
++# Deployment design - DRAFT v0.12 (DEV, QA and PROD; local-file installs; the copies from PROD; backups; exact restore)
+ 
+-**Status:** DRAFT v0.11 for independent review (EX_268). It is DRAFT v0.10 corrected for EX_267 (R6-F01, R6-F04 to R6-F06,
+-N03) and the project owner's decisions in decision log entries 141 to 143. Sections 6, 6A and 6B are rewritten and 6C
+-is new; the other changes are the counted ones `DEPLOY_v0_10_TO_v0_11.diff` shows. Not ratified. It authorises
+-nothing. It is the companion of the system specification DRAFT v0.5 and says how that document's sections 2 to 4
+-and 12 to 14 are carried out.
+-**Written:** 22 November 2026, by the Claude web chat (primary designer and coder), on the project owner's go of 00:14
+-(decision log entry 143). Fable (High).
++**Status:** DRAFT v0.12 for independent review (EX_270). It is DRAFT v0.11 with the focused corrections of EX_269 (R7-F02,
++R7-F04, R7-N01, R7-N02): counted changes only, in sections 3.4, 5, 6, 6A, 6B, 14, 15 and 16.
++`DEPLOY_v0_11_TO_v0_12.diff` is exact. Not ratified. It authorises nothing. It is the companion of the system
++specification DRAFT v0.6.
++**Written:** 22 November 2026, by the Claude web chat (primary designer and coder), on the project owner's request of
++12:56 (decision log entry 145).
+ **Reviewer:** the ChatGPT reviewer chat. **Ratifier:** the project owner, after the review. **Risk tier:** HIGH.
+ **It is a complete document.** Section 16 lists what is withdrawn and what is carried.
+ 
+@@ -147,11 +146,14 @@
+ 7. the derived results in full: every score and the prevailing ledger, recomputed and compared by their scientific
+    content (specification 5.8). An unexpected difference stops; the one expected case is section 6's.
+ 
+-**3.4 Helpers are never updated in place (owner).** No command overwrites an installed helper, proved harmless or not.
+-A wrong helper is handled in DEV: `Who_Uses.bat` finds the variants that declare it; `Make_Successors.bat` prepares
+-a successor folder for each, pointing at the corrected file (it refuses an existing name, changes no existing folder,
+-copies no marker and no status file, and withdraws nothing); the owner reviews, marks the batch, and installs it in
+-the ordinary way. Whether and when he withdraws each old variant is his own separate act (example 7).
++**3.4 Helpers: no install overwrites one; one command corrects a defect (owner, entries 127, 143; EX_269 R7-N01).**
++`Install.bat` and `Reinstall_Infra.bat` never overwrite an installed helper. A helper changes in two ways only
++(specification 3.3A). **A changed idea:** `Who_Uses.bat` finds the variants that declare the helper; `Make_Successors.bat`
++prepares a successor folder for each, pointing at the new file (it refuses an existing name, changes no existing
++folder, copies no marker and no status file, and withdraws nothing); the owner reviews, marks the batch, and
++installs it in the ordinary way; whether and when he withdraws each old variant is his own separate act (example
++7). **A defect:** `Correct_Shared_Code.bat` corrects the helper in place, on its own question, and the variants that
++list it are held until the rerun (section 6C; examples 14, 15).
+ 
+ ## 4. Creating a tree: `Init_Tree.bat QA|PROD`
+ 
+@@ -178,7 +180,7 @@
+ | 3 | The recovery kit for the new software state is written. A failure is noted for step 5; it does not stop the install (owner, entry 136) |
+ | 4 | The `PRE_INSTALL` backup is attempted. Its result is noted for step 5 exactly as it is: made and verified, with its name; or not made, with the reason |
+ | 5 | **One question for the whole batch:** the batch; "the backup taken just now: <result>"; "the recovery kit: <result>"; if either failed, "NO ROLLBACK POINT WAS CREATED BY THIS INSTALL" or "THE RESTORE TOOL COULD NOT BE WRITTEN: an existing kit in your backup folder still works for older backups". "Type YES to proceed. Anything else, Enter included, is NO." NO leaves the target's software untouched |
+-| 6 | The barrier, holding the plan; the updater's own lock is taken; `SNAPSHOT_DUE` |
++| 6 | **The target is reserved before anything in it is changed** (EX_269 R7-F04): the target's job lock is taken by an exclusive create, which fails if a job holds it; then a fresh process check under that lock. If a job began while the backup was being made or the owner was deciding, the install refuses here, having copied nothing, and can simply be run again when the tree is quiet; no process is ever ended. Then the barrier, holding the plan; the updater's own lock; `SNAPSHOT_DUE`. The job lock is held until the barrier is removed at step 10 |
+ | 7 | Each new file: temporary name, hash, rename. Each new variant's status file is created as `ACTIVE`. No existing file is opened for writing |
+ | 8 | The whole tree's software against the old list plus the plan; nothing unexpected under `src\` |
+ | 9 | The checks of 3.3, items 4 to 7. A failure stops here with the barrier in place |
+@@ -201,7 +203,7 @@
+ | 6 | The barrier, holding the plan and step 3's statement; the updater's own lock; `SNAPSHOT_DUE` |
+ | 7 | New files: temporary name, hash, rename. Overwritten files are replaced by rename. Removals come after all copies |
+ | 8 | The whole tree's software against the old list changed by the plan |
+-| 9 | In place, with the target's Python: the structure; every installed variant's smoke case; the suite. **The derived results:** where step 3 said nothing changes, the full comparison is run again and must agree; where step 3 foretold a change from draw X and the owner accepted it, the tool writes the cutoff file for X and moves the stale reports out (specification 5.8), and checks that this was done. It does not report agreement that does not exist |
++| 9 | In place, with the target's Python: the structure; every installed variant's smoke case; the suite. **The derived results:** where step 3 said nothing changes, the full comparison is run again and must agree; where step 3 foretold a change from draw X and the owner accepted it, the tool writes the cutoff file for X and moves the stale reports out (specification 5.8), and checks that this was done. It does not report agreement that does not exist. **If the plan held any `derived`-class file and the results agree, every league report, next-draw report and OV-1 print-out is made again with the new code here,** so that no file made by old report code is left in the active folder (EX_269 R7-F02) |
+ | 10 | `INSTALLED_FILES.json`; the log line; the updater's lock released; the barrier removed, last |
+ | 11 | The `POST_INFRA` backup is attempted and its result reported. If a change from draw X was accepted, the tool ends by naming the command the owner now owes that game: `Rerun_Walk_Forward.bat --game <game> --from <X> --derived-only` |
+ 
+@@ -229,7 +231,8 @@
+ | 10 | The swap: QA's `src\` is renamed to `src.outgoing\`; `src.incoming\` is renamed to `src\`; each root launcher is replaced by rename; `src.outgoing\` is deleted. QA's `ENVIRONMENT.ini`, `.venv\`, `source_data\`, `results\`, `records\` and `scratch\` are never opened for writing by this step |
+ | 11 | QA's software is read again and must equal the first inventory. QA's own `INSTALLED_FILES.json` is written from QA's bytes; the log line. Nothing of PROD's `records\` was copied |
+ | 12 | With QA's Python: the structure; every status file's own check; every variant's smoke case. The suite is run only if this software's infrastructure is file for file DEV's. **If any smoke case fails, QA's `ENVIRONMENT_VERIFIED.json` is removed:** the replacement is complete, but every QA launcher refuses until the owner rebuilds QA's environment and runs `Verify_Tree.bat QA` |
+-| 13 | The barrier removed; the job lock released, last. The `POST_REPLACE` backup is attempted. The tool ends by repeating which of QA's lists are now foreign and from which draw QA's results are not current, and the two commands that settle it |
++| 13 | **QA's research data is checked against the software now installed, before QA is released** (EX_269 R7-F02): the lists that are foreign are found; the derived check of specification 5.8 is run; where QA's results are not current, the cutoff file is written and the stale report files are moved out of the active folder. No list or ledger is altered |
++| 14 | The barrier removed; the job lock released, last. The `POST_REPLACE` backup is attempted. The tool ends by repeating which of QA's lists are now foreign and from which draw QA's results are not current, and the two commands that settle it |
+ 
+ Stopped before step 10: QA's software is untouched; the same command starts again. Stopped during or after step 10:
+ the barrier keeps every QA launcher out; the same command does the whole replacement again from PROD. A half-replaced
+@@ -250,7 +253,7 @@
+ | 6 | **PROD is read again (second reading):** the control-file and process check; the same set of files; every file hashed again and equal. Any difference: `reseed.incoming\` is removed, the destination is unchanged, and the tool refuses |
+ | 7 | The barrier `records\RESEED_IN_PROGRESS.json` in the destination |
+ | 8 | The destination's `results\research\` and its accepted-results set are removed; the incoming folders are renamed into their places |
+-| 9 | The destination's research data is read again and must equal PROD's hashes. The derived check of specification 5.8 is run with the destination's own software, and the cutoff file written if the copied results are not current here. The barrier removed; `SNAPSHOT_DUE`; the job lock released, last. The tool reports the counts, the lists that are foreign here, and from which draw, if any, the results are not current |
++| 9 | The destination's research data is read again and must equal PROD's hashes. The derived check of specification 5.8 is run with the destination's own software, and if the copied results are not current here the cutoff file is written and the stale report files are moved out of the active folder, before the barrier is removed. The barrier removed; `SNAPSHOT_DUE`; the job lock released, last. The tool reports the counts, the lists that are foreign here, and from which draw, if any, the results are not current |
+ 
+ - Stopped before step 7: the destination is unchanged (an `reseed.incoming\` left behind is removed by the next run).
+   Stopped after: every launcher of the destination refuses until the same command is run again, which copies afresh.
+@@ -436,7 +439,8 @@
+ 3. **Infrastructure.** `src\evaluation\reports.py` (class `derived`) is improved and `Make_Installable.bat INFRA` run.
+    `Reinstall_Infra.bat PROD` shows one file to overwrite and no variant; on a temporary copy it recomputes every
+    score and the prevailing ledger and says "No stored result changes"; the kit is written and the `PRE_INFRA` backup
+-   made, and both are reported; the warning; the owner types YES; the file is replaced; the checks in place;
++   made, and both are reported; the warning; the owner types YES; the file is replaced; the checks in place; every league report and OV-1 print-out is made again with the new
++   code;
+    `POST_INFRA`. Trying it in QA first would have shown the same without touching PROD, and is never required.
+ 4. **A wrong setting.** DEV's `[QA]` entry is mistyped as `G:\a_p_r_i_r`. `Install.bat QA` refuses at once: QA's and
+    PROD's roots are the same folder. Had only the folder been reused, its own file says `role = PROD`: refused.
+@@ -460,7 +464,9 @@
+    files of I2; arrives: V2, 4 files of I1; V1's status file arrives as PROD holds it: withdrawn from 1601; QA's
+    research data is not touched: 2 of QA's lists (V1, V3) will not match and will be ignored". The owner types YES.
+    Afterwards QA's software is V1, V2 and I1; its settings, `.venv` and backup folder are its own; PROD is unchanged to
+-   the byte. QA's next job warns that V1's list (it has scores after 1600) and V3's list are foreign and ignored.
++   the byte. Before the command returns, QA's results are marked not current from draw 1601 and the report
++   files from that draw on are moved out of the active folder. QA's next job warns that V1's list (it has scores
++   after 1600) and V3's list are foreign and ignored.
+ 9. **QA's research data reseeded from PROD, software left alone.** QA holds I2 and V3. `Reseed_Research_Data_From_PROD.bat
+    QA` shows what goes and what arrives and that no list for V3 exists in PROD. YES. QA's lists, reports and ledgers
+    are PROD's; QA's software and status files are as they were. QA's job then fills V3's history, and, because I2's
+@@ -473,7 +479,7 @@
+ 11. **A rerun of a range.** In QA: `Rerun_Walk_Forward.bat --game POWERBALL --from 1550 --to 1650`. The scope is shown,
+    with "draws after 1650 are left for the next Run_Research.bat"; the owner types `QA`. The old lines from 1550 on go
+    into a verified archive ZIP; 1550 to 1650 are computed; reports and both OV-1 records for those draws are rebuilt. The
+-   next ordinary job catches up from 1651.
++   next ordinary job catches up from 1651 and removes the cutoff file when everything to the last draw is complete.
+ 12. **An infrastructure overwrite with no backup.** T: is unplugged. `Reinstall_Infra.bat PROD` shows the plan and "No
+    stored result changes"; the kit cannot be written; the `PRE_INFRA` backup cannot be made. The warning says both,
+    in those words, and asks. Enter: nothing is overwritten. On a second run the owner types YES: the files are
+@@ -489,7 +495,8 @@
+    asks; he types `CORRECT PROD`. The helper is replaced; V1's and V2's fingerprints change; nothing else does. PROD's
+    next job forecasts V3 as usual, names V1 and V2 as held, and writes no score, report or prevailing line. He runs
+    `Rerun_Walk_Forward.bat --game BOTH --only <V1> <V2>`, types `PROD`: one ZIP,
+-   `PROD_POWERBALL_CORRECTION_ARCHIVE_..._BEFORE_RECOMPUTE.zip`, is written and verified; V1 and V2 are computed over
++   for each game (`PROD_POWERBALL_CORRECTION_ARCHIVE_..._BEFORE_RECOMPUTE.zip` and
++   `PROD_OZLOTTO_CORRECTION_ARCHIVE_..._BEFORE_RECOMPUTE.zip`), is written and verified; V1 and V2 are computed over
+    their whole history; V3's forecast list is byte for byte as it was; every report and both OV-1 records are
+    rebuilt. V1's withdrawal, had it had one, and both eligibility draws are exactly as before.
+ 15. **A fault in a family's core.** `E_002\core_v1.py` is corrected the same way: only E_002's variants list it, so only
+@@ -524,7 +531,10 @@
+ lock held and refuses, and no data is removed under a running job;** stopped before and after the
+ barrier; into QA and into DEV; the foreign-list count foretold equals the count found); backups (a member changed in
+ the archive; a file changed, added or removed during the backup; not quiet; a link; a full disk; the due flag across
+-jobs of different kinds); the kit's self-check; restore (from a kit by a bare Python with DEV and QA out of reach;
++jobs of different kinds); **an ordinary install with a job started after its first check and before step 6: the lock is refused, no file is
++copied, a second run on a quiet tree succeeds, and nothing is terminated;** a report-code change leaving no old-format
++file in the active reports folder; the QA software replacement returning with no stale report in view; the kit's
++self-check; restore (from a kit by a bare Python with DEV and QA out of reach;
+ the exact allowed set, status files included; old tree absent or damaged; a Python process present; stopped
+ half-way; READY and NOT READY; the orphan condition; the hand unzip and its reconciliation; **nothing installed
+ afterwards**).
+@@ -556,6 +566,9 @@
+ of shared code is its own command (6C); the destination of each copy holds its job lock from before PROD is read;
+ every file read from PROD, status files included, is hashed at both readings; an accepted derived change is
+ reported as that and never as agreement; "NO" is said to overwrite nothing, not to change nothing.
++**Changed in v0.12 (EX_269):** an ordinary install takes the target's job lock, with a fresh process check, before it
++changes anything; print-outs are made again when report code changes; the QA software replacement marks what is not
++current before it releases QA; section 3.4 names the one command that corrects a helper.
+ **Carried, as reviewed:** complete-tree ZIP backups, their two verifications and the quiet rule; the due flag and
+ "work goes on"; `PRE_` and `POST_` backups, now attempts whose results are reported; the recovery kit; the exact
+ restore with its payload check, its process rule, the hand unzip and the orphan-marker exception; the environment
+@@ -589,4 +602,4 @@
+ - The run sheets (creation of QA and PROD; an environment change; a withdrawal; a QA mirror; a rerun; a restore) are
+   written and reviewed with the code packages.
+ 
+-End of the deployment design, DRAFT v0.11.
++End of the deployment design, DRAFT v0.12.

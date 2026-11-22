@@ -2702,3 +2702,26 @@ section 17.2 (unpack it into a new folder, never over the clone).
   list (17.3) and the four-step build order (17.4).
 - **Next:** the reviewer's recheck, EX_269. After a PASS: the owner's ratification (RAT-40), H-1 v8, the owner's ZIP of
   the project folder, then build step 1. **Model (MC-1):** the Fable task is finished. Opus until the reviewer replies.
+
+## 145. 22 November 2026, 12:59 - EX_269 (R-7 RECHECK: four focused corrections) read; all accepted; EX_270 sent (the specification DRAFT v0.6 and the deployment design DRAFT v0.12); no owner decision
+
+- **EX_269** (`exchange/EX_269_ChatGPT.md`, main `5d22683`; SHA-256
+  `ea7badb1a8ae2e2160e1b971bbd3c852d2be01775d9221f2f3550b67c9284581`): RECHECK, substantially favourable. It accepts the
+  correction of shared code, the header identities and the hold, the compared fields and the cutoff file, the mode
+  table, the copies from PROD, and "any forecast-class change holds every variant until a rerun" as the current
+  rule. Four findings: R7-F01 a rerun stopped at draw N left a cutoff that the ordinary job could never clear; R7-F02
+  a change to report code, and the QA software replacement, could leave stale reports in view; R7-F03 a continued
+  rerun could shorten lists a second time; R7-F04 an ordinary install had a gap between its quiet check and its
+  barrier. Notes N01 to N04. It asks for no science-policy decision; OV-1 stays closed; the build order stands.
+- **The owner, relaying it at 12:56:** "Please read EX_269 in full and address these using the existing cutoff, barrier
+  and job-lock mechanisms. ... The objective is to achieve a scientifically correct, implementable design and move into
+  development without further unnecessary design rounds."
+- **Done (design only; counted changes; no new mechanism):** `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md`
+  and `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md`, with exact diffs from v0.5 and v0.11; sent as
+  `exchange/EX_270_Claude.md` (hashes in its member table). The cutoff file has two reasons (`MISMATCH`;
+  `AWAITING_CATCH_UP`, which the ordinary job catches up and clears); print-outs are made again when report code
+  changes; the QA software replacement and the reseeding mark what is not current before they release the tree; the
+  rerun's barrier holds a stage so that lists are shortened once; an ordinary install takes the target's job lock
+  with a fresh process check before it changes anything; one archive ZIP for each game.
+- **Next:** the reviewer's recheck, EX_271. After a PASS: the owner's ratification (RAT-40); H-1 v8 and, on Claude's
+  advice, a new Claude chat; the owner's ZIP of the project folder; build step 1.

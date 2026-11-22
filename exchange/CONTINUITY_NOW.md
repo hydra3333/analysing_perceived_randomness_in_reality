@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 00:21 Australia/Adelaide (entry 144: EX_268 sent: the specification DRAFT v0.5 and the deployment design DRAFT v0.11). **Next: the reviewer's recheck (EX_269); after a PASS, the owner's ratification, H-1 v8, the owner's ZIP, then build step 1. No code yet.**
+**Last updated:** 22 November 2026, 12:59 Australia/Adelaide (entry 145: EX_270 sent: the specification DRAFT v0.6 and the deployment design DRAFT v0.12, closing EX_269). **Next: the reviewer's recheck (EX_271); after a PASS, the owner's ratification, H-1 v8 (and a new Claude chat), the owner's ZIP, build step 1. No code yet.**
 
 ## For the owner: NOW
 
+- **EX_270 IS WITH THE REVIEWER (entry 145).** **The current drafts are
+  `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_6.md` and
+  `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_12.md`** (earlier drafts are history; exact diffs beside each).
+  EX_269's four findings are closed with the existing cutoff file, barrier and job lock. A chat taking over reads:
+  the takeover note; this block; decision log entries 121 to 145; EX_269, EX_270; the two drafts.
 - **EX_268 IS WITH THE REVIEWER (entry 144).** `exchange/EX_268_Claude.md` opens with the disposition of every EX_267
   finding. **The current drafts are `exchange/CLAUDE_WEB_TOOLS/simplify/SYSTEM_SPECIFICATION_DRAFT_v0_5.md` and
   `exchange/CLAUDE_WEB_TOOLS/simplify/DEPLOYMENT_DESIGN_DRAFT_v0_11.md`** (v0.4 and v0.10 are history; exact diffs beside them).
