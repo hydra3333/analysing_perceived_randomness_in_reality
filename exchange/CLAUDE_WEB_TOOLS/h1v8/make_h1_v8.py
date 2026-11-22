@@ -95,6 +95,10 @@ def main():
 
     # 4. Hashes.
     out = re.sub(r'\{\{SHA:(.+?)\}\}', lambda m: sha(git_bytes(repo, m.group(1))), out)
+    # {{SHA@<commit>:<path>}} is the hash of <path> as it was at the named commit (a reviewed snapshot).
+    out = re.sub(r'\{\{SHA@([0-9a-f]+):(.+?)\}\}',
+                 lambda m: sha(subprocess.run(['git', '-C', repo, 'show', m.group(1) + ':' + m.group(2)],
+                                              check=True, capture_output=True).stdout), out)
     rows = ['| File | SHA-256 |', '|---|---|'] + ['| `%s` | `%s` |' % (p, sha(git_bytes(repo, p))) for p in ID_PATHS]
     out = out.replace('{{IDTABLE}}', '\n'.join(rows))
     out = out.replace('{{CARRIED_1_2}}', carried)

@@ -91,8 +91,9 @@ never write the owner's personal name in anything committed (write "the project 
    install the MHUP-B slices (section 7.3).
 2. **The words DRAFT and CANDIDATE inside a ratified file are frozen wording.** A file's status paragraph and the
    decision log say what is ratified. The two design documents in `doc/` still carry DRAFT in their titles.
-3. **The register is behind.** `doc/RATIFICATION_REGISTER_v0_31.md` is the newest edition; RAT-35 to RAT-40 are recorded
-   only in the decision log. Read the log for the last RAT number, the last entry number and the last EX number
+3. **The installed register is behind.** `doc/RATIFICATION_REGISTER_v0_31.md` is the newest installed edition. Register
+   v0.32, which records RAT-34's install to RAT-40, is a written CANDIDATE (section 4.4), not installed and not
+   owner-ratified; until it is, RAT-35 to RAT-40 are recorded only in the decision log. Read the log for the last RAT number, the last entry number and the last EX number
    before using a new one. At this edition: the last RAT is RAT-40; the newest EX is EX_271; the newest decision log
    entry is 148 (this candidate).
 4. **Commit IDs changed on 6 November 2026.** A history clean-up renumbered the 27 commits of 5 and 6 November 2026.
@@ -167,7 +168,8 @@ are to this edition's sections of the same number ("section 0B, item 4" is item 
    section 12, from local files, never by Git. Where 1.6 says Claude records the reviewer's files and the owner
    uploads zips, its own first bullet is the current practice: the reviewer commits its own. The rounds of November
    2026 used plain `.md` EX files with no zip (section 12.1).
-4. **Section 1.6, the register.** v0.31 is the newest; v0.32 is owed (section 12.8).
+4. **Section 1.6, the register.** v0.31 is the newest installed; v0.32 is a written candidate, not yet ratified
+   (section 4.4).
 5. **Section 2, pushing.** The Mode H freeze it mentions ended on 16 November 2026. The rule not to push while the
    owner may have local commits waiting still applies.
 6. **Section 2, the owner's two working lists** (`OWNER_ROADMAP.md`, `OWNER_REMINDERS.md`) were last updated on 18 and
@@ -374,13 +376,17 @@ say so and ask.
 - **The reviewer's handover (H-2).** Ratified: H-2 v3r4 (RAT-36; its file name still says CANDIDATE). **The newest is
   the reviewer's own full edition current to RAT-40,**
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
-  (`d537263c02acbc69e787d17cb715e2d8e1768e4a7e40f3a699eba2f06ba7c828`; commits `30826be` (full candidate) and
-  `6316767` (current introductory blurb)): a candidate until the owner ratifies it. Its section 0 states the current position, the
+  (`8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8`; first committed at `30826be`, its
+  latest content at `70719f5`; its blurb's latest content at `adfd973`): a candidate until the owner ratifies it. Its section 0 states the current position, the
   four notes of ratification, the build order and the closed OV-1 question as this file does. Before it came the
   v3r10 continuity candidate of 21 November 2026, which Claude wrote on the owner's instruction when the previous
   reviewer chat was lost. `exchange/CONTINUITY_NOW.md` names the edition in force.
-- **The register:** `doc/RATIFICATION_REGISTER_v0_31.md` (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`), RAT-34. For
-  RAT-35 to RAT-40 the decision log is the record.
+- **The register:** `doc/RATIFICATION_REGISTER_v0_31.md` (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`), RAT-34.
+  **Register v0.32 is a written CANDIDATE,** not installed and not owner-ratified:
+  `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (SHA-256
+  `2fd091f34ea47399693b30f51b2a677d3d4cf348d028435cbd9639366d99135c` at the reviewed commit `a30b19a`; documentary PASS in
+  EX_273). Its cells for this handover and for H-2 v4 are refreshed after this edition, so its final hash is in the
+  decision log. Until it is ratified, the decision log is the record for RAT-35 to RAT-40.
 - **Protected blocks** (byte-identical through every consolidation): Architecture 5C; R2 section 7 and 4.1; R3 0.4,
   2.4 and 3; the proposal's E_1 to E_6. **Never edit a ratified file in place.**
 
@@ -743,6 +749,16 @@ owed after build step 3 (section 12.8). The owner's OUTLANDISH_01 method family 
    held, or the owner restores a backup (specification 17.4).
 8. **Then, in the owner's order:** new methods and waves; OUTLANDISH_01's family; the housekeeping of section 12.8.
 
+**A watchpoint for build steps 2 and 3** (found on 22 November 2026; register v0.32; EX_273 section 2). The installed
+code still has checks from the Mode H study that the ratified design does not make a gate:
+`src/methods/_common/contract_dispatch.py` and `master_versions.py` consult the opening record
+`source_data/HOLDOUT_OPENED_<GAME>.json` for targets at or after the former holdout, and the updater
+`src/results_master_v0_2.py` refuses an update for a game that has none. When step 2 reuses code and step 3 brings the
+updater into a new tree, say which of these checks no longer apply, test it, and settle it in that step's package.
+Fresh DEV, QA and PROD trees must work under RAT-40 with no Mode H opening or seal as a prerequisite; the obsolete
+record is not silently copied into a new tree merely to satisfy old code; and no genuine source or ledger check is
+removed. No design change.
+
 **Models (MC-1; suggestions, the owner decides):** Opus for step 1, the tidy-up, packaging, task files and records.
 Fable (High) for the core of step 2 (the list writer and its invariants, the job's fill and catch-up, the derived
 check, OV-1's integration), for the install, backup and restore state machines of step 3, for the rerun and
@@ -867,9 +883,9 @@ The live state is `exchange/CONTINUITY_NOW.md`; it overtakes this list.
   4. A new local runner rulebook edition, with the owner's deny entries, before the first rehearsal of the new
      system.
   5. The test of EX_271 section 3, in build step 4.
-  6. Register v0.32, recording RAT-35 to RAT-40 and the decisions since v0.31. Register text goes to the reviewer
-     only with a code package or the handovers (section 1.6); it was not written for this candidate, so it travels
-     with the first code package unless the owner wants it sooner.
+  6. Register v0.32, recording RAT-34's install to RAT-40: written on 22 November 2026 at the owner's choice, as a
+     candidate, and passed by the reviewer (EX_273). Still owed: the owner's ratification, and its installation in
+     `doc/` with the handovers.
   7. A new draft of `doc/METHOD_TEMPLATE/` for the new layout, after build step 3.
   8. One pass over `exchange/OWNER_REMINDERS.md` and `exchange/OWNER_ROADMAP.md`, marking each item carried, done or
      dropped under the new design, for the owner to confirm. Most reminders concern the old system.
@@ -925,8 +941,8 @@ this file's and its blurb's are in the decision log entry that records each edit
 | `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md` | `6f968eefebf3cb13212d967ee28fe76b84ed49f319d0df0121e2d746771c97cd` |
 | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r4_RATIFICATION_CANDIDATE_20261118.md` | `d75df39c097f119512feb3a6fe28f8ec9de653fdc775cf17fbf931f7afd9bbd4` |
 | `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md` | `29b853ef246cfdb7fba212c06bf70b07bd7d8278ad297759ee010c32b685e44b` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` | `d537263c02acbc69e787d17cb715e2d8e1768e4a7e40f3a699eba2f06ba7c828` |
-| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122_introductory_blurb.md` | `436f0814a7fade2ff8e3ee0974d93457f4a8400830946e50785c98b825116cf3` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` | `8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122_introductory_blurb.md` | `700ca5da32494bd4d7f8da1d1c26e8ee96f784bf45501d220bff5e4b03b15a46` |
 | `doc/HANDOVER/HANDOVER_CHANGED_AI_Roles_Agreed_v0_1r1_RATIFIED.md` | `7d572400b941ad423978a7542d6c32fb73c934f0057240dbc5138898112bd53b` |
 | `doc/HANDOVER/AI_Roles_Transition_Record_H3_v1r1.md` | `8b01c57fd8804029906e1e9c87e8ecef18edb914a269e43a45dac90880703ce5` |
 | `review/REVIEWER_FIX-and-PROCEED_RECHECK_PROCEDURE_v1.md` | `5067aa520990b8ccc8521a04f3581424100cdd94994f5b9e3cb9e37863685339` |
@@ -936,8 +952,9 @@ this file's and its blurb's are in the decision log entry that records each edit
 
 Commits named in this file: `4de0fe4` (RAT-40 installed); `cc0ab73` (the code baseline); `c7622fa` (the Mode H results
 and version-2 masters); `cc665ce` (the score records); `2e44bc2`, `1c7bd79`, `8eed779` (EX_266, EX_268, EX_270); `2fae39e`,
-`5d22683`, `7492846` (EX_267, EX_269, EX_271); `9f5c132`, `a8bcfaa`, `dd39845` (the reviewer's three handbacks); `30826be`,
-`18ce192` (the reviewer's H-2 v4 candidate and its blurb); `cf1c6d9` (the first commit after the history clean-up).
+`5d22683`, `7492846` (EX_267, EX_269, EX_271); `9f5c132`, `a8bcfaa`, `dd39845` (the reviewer's three handbacks); `30826be`
+(the reviewer's H-2 v4 candidate, first commit), `70719f5` and `adfd973` (the latest content of H-2 v4 and of its blurb);
+`cf1c6d9` (the first commit after the history clean-up).
 
 ---
 
