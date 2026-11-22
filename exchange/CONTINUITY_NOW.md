@@ -10,8 +10,10 @@ durable EX messages are authoritative.
 
 - **BUILD STEP 1'S PACKAGE HAS PASSED REVIEW (entry 162; EX_278; 23 November 2026).** The package is
   `exchange/EX_277_Claude/STEP1_Layout_Install_v2.zip` (SHA-256 `f8fa81054e00f0b3ca908b8f89130f024b2ded1aec2d7973762ee0081e405051`); its sheet is
-  `exchange/EX_277_Claude/STEP1_Layout_Install_v2/INSTALL_AND_RUN_SHEET.md`. **Waiting on the owner, each on his own go:**
-  part 0, his ZIP of the whole E: project folder (kept off E:); part 1, `git pull` and the suite as it is today
+  `exchange/EX_277_Claude/STEP1_Layout_Install_v2/INSTALL_AND_RUN_SHEET.md`. **Part 0 is done (entry 163, owner-reported,
+  23 November 2026): his ZIP of the whole E: project folder is on four external drives; his `results/` listing matches
+  the batch records run for run (26,040 development run folders, none missing, none extra).** **Waiting on the owner,
+  each on his own go:** part 1, `git pull` and the suite as it is today
   (expected failing modules: exactly `test_mhupa_launchers` and `test_multigame_reader_contracts`; any other failing
   module: pause and send the output before part 2); part 2, PRE, copy, delete, POST; part 3, the same suite and the
   comparison; part 4, the equivalence check, which must end `RESULT: PASS - COMPLETE` with `MISSING: 0` for both

@@ -3242,3 +3242,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **State:** build step 1's package is REVIEWED (PASS). Not installed; not run on Windows. **Nothing on the owner's PC
   is authorised:** his ZIP and each part of `INSTALL_AND_RUN_SHEET.md` wait for his own go. Next numbers: EX_279,
   entry 163, RAT-43.
+
+## 163. 23 November 2026, 07:30 - OWNER-REPORTED: part 0 of the step 1 sheet is done (his ZIP of the whole E: project folder, on four external drives); his listing of results/ checked against the batch records; no cleanup before the install
+
+- **The owner's words (07:30):** "'E:\\SOFTWARE-Win11\\powerball\\analysing_perceived_randomness_in_reality' fully zipped and copied
+  to 4 external USB3 drives. looking at the run sheet now." Evidence state: OWNER-REPORTED (Claude cannot see it). This is
+  part 0 of `INSTALL_AND_RUN_SHEET.md` and reminder R-030 (a); the ZIP is the preserved copy of the old system and of
+  the old forecast records that Git ignores (specification 17.2).
+- **Before it (07:26 to 07:29), his question whether the E: tree needed a cleanup first,** because a `dir /s /b` of
+  `results` was over 20 MB. He uploaded the listing (paths only). Checked by Claude with a tool: 107,665 lines; the
+  development run folders are 17,280 (Powerball) and 8,760 (Oz Lotto), every one of the 26,040 run IDs in the tracked
+  batch segments is present and no other is, each folder holds exactly its three files; 400 and 400 Mode H run
+  folders. So there are no reruns and nothing is missing by name; the listing is long because every forecast has its
+  own folder. **Claude's advice, which he followed: no cleanup before the install,** since those folders are what the
+  equivalence check must read. A cleanup is safe after the transition check of build step 3, as his own act on his
+  own say-so, with the ZIP as the archive. Not decided: when, or whether.
+- **Not authorised by this entry:** parts 1 to 5 of the sheet; each waits for his go. Next numbers: EX_279, entry 164,
+  RAT-43.
