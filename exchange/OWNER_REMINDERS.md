@@ -5,6 +5,33 @@ Claude raises each OPEN item when its "when" arrives, or whenever the owner asks
 DONE (with the date and where it was settled) or DROPPED (with the reason); items are never deleted.
 Dates are Adelaide dates. US-ASCII, CRLF.
 
+## Where each item stands after the redesign (reviewed by Claude, 22 November 2026; for the owner to confirm)
+
+The project was redesigned in November 2026. The new system was ratified on 22 November 2026 (RAT-40), and the
+handovers and register v0.32 the same evening (RAT-41). Most items below were written for the old system. Claude went
+through every item that was not DONE; each has an update line dated 22 November 2026, and this table is the summary.
+Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
+
+| Item | Now | In one line |
+|---|---|---|
+| R-001 | CARRIED | Method A is installed; Method B comes in wave 3, as new variants |
+| R-002 | CARRIED | the NL-means discussion, postponed as you left it |
+| R-003 | OPEN (optional) | the old EX copies in review/; yours, whenever convenient |
+| R-006 | SCHEDULED, NOT ACTIVE | the performance study, at the very end, when you activate it |
+| R-007 | PROPOSED: DROPPED | a check on the first study's seed record; that tool is not part of the new trees |
+| R-008 | CARRIED | the verifier's wording; comes with build step 1's package |
+| R-010 | CARRIED | the test runner's label; comes with build step 1's package |
+| R-012 | DONE, one point carried | the opening record defined only in code is now the watchpoint of R-030 (e) |
+| R-014 | OPEN (only when you ask) | your simplicity (KISS) review |
+| R-015 | DONE | Q7 replaced on 16 November; the POC rerun and the backups done |
+| R-017 | PROPOSED: DONE | the name Lotterywest-GOV is in the rulebook, the handovers and the new specification |
+| R-018 | OVERTAKEN, two points kept | "a STOP is a STOP" stands; the updater now runs inside the research job |
+| R-019 | OVERTAKEN | watchpoints for MHUP-B's weekly writer, which was never built |
+| R-023 | DONE except (d) | the OUTLANDISH chat's confirmation is yours to close |
+| R-026 | DONE | Mode H ran and was sealed in both games |
+| R-028 | DONE | its status word is corrected |
+| R-030 | NEW, OPEN | the build of the new system: what Claude raises, and when |
+
 ## R-001  The owner's two further methods, and the add-a-method process
 
 - Asked: 29 October 2026 ("I have 2 more I'd like considered later"; discuss the process for adding
@@ -22,6 +49,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Progress: the add-a-method process exists (the new-method template, used for E_6 and E_3/E_4).
 - When (owner's revised order, 30 October 2026): A in wave 2 (with E_2, E_19, E_18), right after the
   first light counting methods; B in wave 3 (with E_27), after releases and WF-1.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED. Method A is installed (E_17's log-age variant). Method B becomes E_45's specification in wave 3,
+  as new variants after build step 3 (roadmap step I).
 
 ## R-002  Pattern-spotting by non-local means (the NLMEANS idea)
 
@@ -41,6 +70,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   The owner's own view: probably not feasible, but worth discussing and recording either way.
 - When (owner's revised order, 30 October 2026): straight after wave 3 (Method B), or whenever the
   owner asks. Any method it yields joins a later wave.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED, postponed as you left it. Nothing in the redesign changes it.
 
 ## R-003  Optional tidy-up of old EX copies in review/
 
@@ -50,6 +80,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   copies in exchange/ (apart from line endings in the .md files). The owner may remove them with
   one git rm commit; Claude would give the exact commands and check the result.
 - When: whenever convenient.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): unchanged: optional, yours, whenever convenient.
 
 ## R-004  The NIST Randomness Beacon root for the first stochastic method
 
@@ -138,6 +169,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   statistics (the exact Monte Carlo uncertainty interval), fixed with bit-identical results. Profiling on
   invented data found the rest of the stage is now the N1 simulation (about 80 s) and the family-maximum loop
   (about 30 s); both are left for this study. The rest of the study stays FINAL and inactive.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): unchanged. The first rehearsal of the new system measures real run times before anything is sped up.
 
 ## R-007  EX_111 O01: cross-check the seed record's reader names
 
@@ -148,6 +180,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   sources[1].read_by equals verified_by. The approved record already matches both. Remedy: add the two
   equalities and one invented-data negative test.
 - When: in the next package that touches src/evaluation (WF-1C, or the Mode H package).
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): PROPOSED: DROPPED, for your word. It concerns the seed record of the first study's report tool,
+  which is not part of the new trees. Reopen it only if that tool is used again.
 
 ## R-008  The install verifier's wording when an expected file is missing
 
@@ -157,6 +191,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - What: when an expected new file is missing, the verifier's STOP message speaks of "unexpected new
   paths", which points the reader the wrong way. Reword it to name the missing paths.
 - When: in the next install package's verifier.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED into the verifier of the first code package for your clone (build step 1).
 
 ## R-009  The new-method template, draft 4, at wave 3
 
@@ -175,6 +210,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   already changed the runner template to "test failure output; inspect before sharing". Until then, a
   failure log is checked before it is relayed, so no restricted outcome is forwarded.
 - When: the next install package's runner (it comes from the template automatically).
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED: the runner template already has the new wording; it arrives with build step 1's package.
 
 ## R-011  Record files under results/ must never be line-ending converted
 
@@ -192,7 +228,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 
 - Asked: the owner asked for the probes on 1 November 2026; run the same day by two fresh helpers that read the
   documents only.
-- Status: PARTLY DONE. The snapshot (DOC-10, installed 7bb0bfd) settled the document findings and
+- Status: DONE, with one point carried (22 November 2026; see the update at the end). Was: PARTLY DONE. The snapshot (DOC-10, installed 7bb0bfd) settled the document findings and
   TSC-1 settled the checker finding; the rest is carried into the Mode H + update + prospective design
   (register v0.23 lists which).
 - What: Claude's list of 23 findings (gaps, ambiguities, stale text). The most important: the readers accept
@@ -209,6 +245,9 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   post-holdout draws, flagged when the catch-up scores them, staying fully valid and counted; the
   holdout is not extended) and FB-1 (if the
   week-of-9-November forecasts cannot be ready, slip a week rather than rush).
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): the version-2 reader was installed with MHUP-A. The rest was for the weekly-session design, which is
+  replaced. One finding lives on: the HOLDOUT_OPENED record is defined only in code. Old code and the updater still
+  consult it, and the new design does not name it: it is now the watchpoint for build steps 2 and 3 (R-030 (e)).
 
 ## R-013  A status line for the direction document now in doc/
 
@@ -238,11 +277,13 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   authentication and verification, and general operational simplicity. Not to be started during the Mode H
   work.
 - When: after full implementation and the follow-on work (the method waves), and only when the owner asks.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): unchanged: only when you ask. (Your course correction of 21 November 2026 was itself a large
+  simplification.)
 
 ## R-015  The owner's choices still to come for MHUP-1
 
 - Asked: recorded by Claude on 3 November 2026 from the ratified design (register v0.24, future actions).
-- Status: OPEN.
+- Status: DONE (see the update of 22 November 2026 at the end). Was: OPEN.
 - What: (a) Q7: whether, after a game's Mode H is scored, the display restriction on holdout draws is
   relaxed (recommended: keep the restriction on raw draw values in the AI chats); until decided, nothing
   changes. (b) At MHUP-A's approval: because Run_Experiment.bat gains interpreter options, either authorise
@@ -259,6 +300,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   are sealed.
 - Update (14 November 2026): (b) and (c) are now prerequisites on the readiness sheet (r2a; the reviewer's EX_168 PASS), each
   with its own go; see R-026. (a) goes into register v0.29 and H-1 v2.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): DONE. (a) Q7 was replaced by your approach of 16 November 2026 (in force from RAT-34): the AI chats may
+  read draw values. (b) The POC rerun ran and passed on 14 November 2026. (c) The backups were confirmed before Approval 1.
 
 ## R-016  The staged AI handover (HO-2) and the later ChatGPT reviewer handover
 
@@ -292,11 +335,15 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   direction document is DONE: v0.3r1 (installed at dfc2d13, 4 November 2026) uses the name.
 - Update (14 November 2026): DONE for the rulebook (v0.5 rule 1, 760e0c6), the design (v0.1r6 and v0.1r7), H-1 (v2) and
   H-2 (v1r11). Left: R3, the E2R contract specification, Architecture and the proposal, each at its next edition.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): PROPOSED: DONE, for your word. The name is used in the rulebook, the handovers and the ratified system
+  specification of the new system. No new edition of R3, the E2R contract specification, the Architecture or the proposal is
+  planned (register v0.32, future action 6); if one is ever made, it uses the name.
 
 ## R-018  The owner's decisions of 4 November 2026, to be recorded and carried into the work
 
 - Asked: the owner, 4 November 2026, during the staged handover (EX_139, EX_140).
-- Status: OPEN until each is recorded and carried into its place.
+- Status: OVERTAKEN, with two points kept (22 November 2026; see the update at the end). Was: OPEN until each is
+  recorded and carried into its place.
 - What, and where each goes:
   (a) Retrying after a STOP (the first results update in particular): a STOP is always a STOP; Claude
       reports it, diagnoses the cause and proposes the recovery; the owner explicitly authorises each retry.
@@ -330,6 +377,13 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 - Update (14 November 2026): (a) and (h) are in H-1 v2 (sections 5.1, 5.3 and 10) and the readiness sheet (section 8);
   (a), (d) and (h) go into MHUP-B's checklist when it is designed; (c) at the next template edition; (e)-(g) with the
   cross-batch report (roadmap 21b).
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): all were recorded in register v0.25. KEPT: (a) a STOP is a STOP and each retry is separately
+  authorised (a hard rule in H-1 v8). REPLACED: (h) for the new system the research job runs the updater itself in PROD
+  (your choice A, decision log entry 130). OVERTAKEN: (d), MHUP-B's checklist, was never written; the new design's own
+  rules for an interrupted operation are the deployment design's section 8. (e) to (g) are answered by the new design
+  itself: every variant's whole history is computed, there is one league report for every draw, and reports are
+  rebuilt from the result lists and are never a second score (specification sections 7 and 9). (c) the template
+  README's draft number: with the new template draft after build step 3 (R-030 (h)).
 
 ## R-019  MHUP-A slice 2: the reviewer's integration watchpoints from the slice 1 review (EX_142-EX_146)
 
@@ -365,6 +419,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   2026); the integrated package needs its own integration review.
 - Update (14 November 2026): (a), (d) and (e) installed with MHUP-A (13 November 2026; EX_164 PASS). (b) and (c) stay
   OPEN for MHUP-B (H-1 v2 section 10, item 4).
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): OVERTAKEN. (b) and (c) were for MHUP-B's weekly writer, which was never built into a package. The new
+  system's list writer has its own required tests (specification section 18).
 
 ## R-020  MHUP-A integrated package: what the package or the owner must carry (from slice 2; (d)-(f) added 6 November 2026)
 
@@ -474,6 +530,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       recommended ignored folder for large generated files under GAIS/OUTLANDISH_01/. Done by the owner with the ChatGPT
       reviewer chat (6 November 2026); the OUTLANDISH chat's confirmation is awaited.
 - When: any time; none of it blocks the integrated MHUP-A package.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): (b) is standing knowledge (the commit map; H-1 v8 section 0A item 4). (c) is standing advice. Only
+  (d), the OUTLANDISH chat's confirmation, is still open, and it is yours to close.
 
 ## R-025  The integrated MHUP-A package: F1-F9 (predecessor's cross-check) and Claude's new findings N1-N3
 
@@ -540,7 +598,7 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-026  Mode H: your readiness decisions, the preparatory checks and the four approvals per game
 
 - Asked: the owner, 13 November 2026, 22:08 (the readiness sheet; exchange/DECISIONS/OWNER_DECISIONS_2026_11_13b_MODEH_FIRST_Q7.md).
-- Status: OPEN. The sheet is reviewed (EX_167 PASS WITH CORRECTIONS; r2; EX_168 PASS; r2a at 496731c). Nothing is authorised
+- Status: DONE (15 and 16 November 2026; see the update at the end). Was: OPEN. The sheet is reviewed (EX_167 PASS WITH CORRECTIONS; r2; EX_168 PASS; r2a at 496731c). Nothing is authorised
   and nothing has run.
 - What (exchange/CLAUDE_WEB_TOOLS/modeh_readiness/APPROVAL_1_READINESS_SHEET_DRAFT.md):
   (a) Your decisions D1 to D7 (sheet section 9): D1 Oz Lotto first, from manifest to seal, then Powerball; D2 both games decided
@@ -560,6 +618,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
       in its rehearsals).
 - When: after the documentation round of 14 November 2026 is installed (R-027), whenever you choose. There is no deadline;
   every week before the weekly session exists is, for each released variant, a draw that can later count only as catch-up.
+- Update (22 November 2026, after the redesign; RAT-40 and RAT-41): DONE. Mode H ran and was sealed in both games (Oz Lotto 15 November 2026, Powerball 16 November 2026;
+  register v0.31). The sealed records are an archive, never altered and never a gate.
 
 ## R-027  The documentation round of 14 November 2026
 
@@ -580,7 +640,8 @@ Dates are Adelaide dates. US-ASCII, CRLF.
 ## R-028  Your dependency change of 14 November 2026
 
 - Asked: the owner, 14 November 2026 ("i would like to include the pip changes too"; "run it": already run on the project venv).
-- Status: OPEN. EX_177 (the previous reviewer's last message): PASS WITH CORRECTIONS. Still yours to decide (its B01): T024
+- Status: DONE (14 November 2026, as the end of this paragraph says; the status word was corrected on 22 November
+  2026). Was: OPEN. EX_177 (the previous reviewer's last message): PASS WITH CORRECTIONS. Still yours to decide (its B01): T024
   does not run the Windows W-suite, so record whether T024 plus the default POC rerun (R-015 (b), when you authorise it) is
   enough for this change, as a scoped W-23 acceptance, or name one further safe check. Its C01 is applied (readiness sheet r2c);
   its C02: keep your installer run's own output if you still have it, or authorise one read-only `pip check`.
@@ -609,9 +670,45 @@ Dates are Adelaide dates. US-ASCII, CRLF.
   its first reply to Claude; (3) paste EX_178's questions; (4) give its answers (EX_179) to Claude; Claude publishes the key as
   EX_180 with a comparison; (5) your acceptance; then EX_177's open points continue.
 
+## R-030  The build of the new system: what Claude raises, and when
+
+- Asked: the owner, 21 and 22 November 2026 (decision log entries 131, 143, 147, 149 and 153); the reviewer, EX_271 and
+  EX_273.
+- Status: OPEN.
+- What:
+  (a) Your own ZIP of the whole project folder on E:. Claude tells you when: before you install build step 1's
+      package, so before any source file moves in your clone. Include .git and the results and run folders; .venv
+      is optional; nothing of the project running; open the ZIP once to check it; keep it off E:.
+  (b) The four build steps, each on your own go (specification 17.4): the folder layout; the research engine in DEV;
+      trees, installs, backups and restore; the laboratory tools.
+  (c) The test suite's present result on main, before build step 1 changes anything.
+  (d) The four notes of RAT-40: the warnings at the start and the end of a job wherever variants are held or results
+      are not current; doc/CODING_PRACTICES_v0_1.md; the light tidy-up of the existing method files after step 1 and
+      before any install into QA or PROD; the reviewer's test of EX_271 section 3, in step 4.
+  (e) The watchpoint for steps 2 and 3 (EX_273 section 2): old code and the updater still consult the Mode H opening
+      record source_data/HOLDOUT_OPENED_<GAME>.json. New trees must work without it as a gate; it is not silently
+      copied into a new tree to satisfy old code; no genuine source or ledger check is removed.
+  (f) A new local runner rulebook edition and your deny lines in .claude/settings.json, before the first rehearsal of
+      the new system. A candidate v0.6 was drafted on 22 November 2026 for review.
+  (g) What the first rehearsal measures: the derived check at each job, a first full fill, Check_Forecasts --all, a
+      rerun, and a backup of a whole tree.
+  (h) A new draft of doc/METHOD_TEMPLATE/ for the new layout, after step 3.
+- When: each at its step; (a) and (c) come first.
+- Where it is written: doc/HANDOVER/Claude_Primary_Handover_H1_v8.md, sections 10 and 12.8.
+
 ## Standing reminders
 
-- The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in
+- The authority for the active system (from 22 November 2026): doc/Predictive_Randomness_System_Specification_v0_6.md,
+  doc/Predictive_Randomness_Deployment_Design_v0_12.md and doc/CODING_PRACTICES_v0_1.md (RAT-40). The page that is always
+  current is exchange/CONTINUITY_NOW.md.
+- Out-of-date statements (owner, 22 November 2026; decision log entry 153): when Claude detects them it is to strongly
+  consider fixing them, and not leave them because a reviewer's authorisation was narrower. It shows the exact
+  difference and says what it changed.
+- Discuss first (owner, 21 November 2026): Claude discusses the owner's queries with him first, and issues or revises
+  an EX message only when he asks.
+- The project's words (owner, 21 November 2026): restore from backup, catch-up, walk-forward, historical walk-forward
+  rerun; never "reset" or "replay". A finding code is explained in plain words, with an example.
+- (History, the old system) The stock-take round of 2 November 2026 and the owner's ratification of its positions are recorded in
   exchange/STOCKTAKE_2026_11_02_v0_8.md; the plain-English direction is
   exchange/Direction_for_operational_procedures_v0_2r1.md and the ratified MHUP-1 design is in
   exchange/EX_132_Claude/ (both in doc/ once DOC-11 is installed).

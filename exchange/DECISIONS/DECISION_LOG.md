@@ -2991,3 +2991,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **RAT-41 authorises no code, build step, run or install on the owner's PC.** Next: the owner starts the new Claude
   chat with `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`; this chat stops committing once it starts.
   The next ratification number is RAT-42; the next EX is EX_274.
+
+## 154. 22 November 2026, 17:46 - OWNER: RAT-41 covers the reviewer's refreshed H-2 v4; his request that Claude bring the working lists, the two README files and, if possible, the local runner's rulebook up to date before the chat switch
+
+- **The owner's words (17:45):** "chatgpt Reviewer \"recommendation: accept these reference-only updates under RAT-41
+  without another handover review round\" so yes I accept them. Also yes I value your experience so please do update
+  \"the first two now if you want them done before the switch\" (roadmap and reminders lists, Two README files under
+  exchange/) and if possible the third as well (The local runner's rulebook)."
+- **DECIDED (owner): RAT-41 extends to the reviewer's refreshed handover.** The reviewer committed it after RAT-41 at the
+  owner's request (entry 153): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`, main `79406e4`,
+  SHA-256 `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb, main `35a2ebf`, SHA-256 `5f113e4c4dca8648ccbf2a05e9a192bebf76d4473ad21e02c58de0b54a6bfcd5`. **These are the bytes of H-2 v4 in force.** Checked by Claude from
+  Git: every changed line of the handover is above its "HISTORICAL INHERITED H-2 CHAPTERS" heading, so the inherited
+  chapters and the rights text are untouched. (The earlier bytes, `8fa44f67...0612ba8` at `70719f5`, are the ones H-1 v8 and
+  register v0.32 cite "as ratified"; both say that a later commit may refresh H-2 v4's references. Neither is edited.)
+- **Asked of Claude, before the new Claude chat starts:** bring `exchange/OWNER_ROADMAP.md` and `exchange/OWNER_REMINDERS.md` up
+  to date; bring `exchange/README.md` and `exchange/CLAUDE_WEB_TOOLS/README.md` up to date; and, if possible, the local
+  runner's rulebook. The rulebook is a ratified rule document (RAT-30) that the runner obeys, so Claude writes a
+  CANDIDATE of a new edition for the reviewer and the owner and does not change the installed file.

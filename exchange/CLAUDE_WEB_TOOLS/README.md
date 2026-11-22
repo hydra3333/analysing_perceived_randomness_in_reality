@@ -6,6 +6,11 @@ reviewed as code, never run by the project owner or Claude Code, and nothing in 
 Copies of the build and mutation tools that shipped inside an install package are also under that package's
 `review/<PACKAGE>/tools/` folder (those are the reviewed copies). US-ASCII; the `.py` and `.sh` files keep LF.
 
+**Brought up to date on 22 November 2026.** The project was redesigned in November 2026 and the new system was ratified
+on 22 November 2026 (RAT-40; `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md` is the handover). Nothing of the new
+system is coded yet. The package tools described below are still how a code package for the owner's clone is built,
+checked and rehearsed, so they are the starting point for build step 1. The newest folders are in the last section.
+
 ## Where the tools expect things (hard-coded paths)
 
 The tools were written in one cloud workspace. Several have absolute paths near the top; edit them for a new
@@ -23,7 +28,8 @@ Scripts that take their trees and output folders as arguments have no other hidd
 ## The recipe every code package follows
 
 1. **Base tree:** `git archive <BASE_COMMIT> | tar -x -C BASE`, then delete `BASE/source_data`, `BASE/results` and
-   `BASE/transitory_data` (Claude never reads those folders).
+   `BASE/transitory_data` (packages are built without the data folders; since RAT-34 Claude may read them, and never
+   writes them).
 2. **Dev tree:** a copy of the base tree, plus the package's changes. Develop and run tests there with
    `PYTHONPATH=src:src/methods:tests python3 -B -m unittest tests.<module>`.
 3. **Mutation checks** (`<pkg>/tools/*_mutations.py DEV_TREE`): each planted defect must make a named test fail.
@@ -35,12 +41,14 @@ Scripts that take their trees and output folders as arguments have no other hidd
    counts from `test_counts.txt`) and `INSTALL_INSTRUCTIONS.md` (CRLF).
 5. **Rehearse** (`e2e_*.sh MIRROR PKGDIR WORKDIR [PYTHON]`): disposable clones of a frozen mirror of `main`, in LF
    and CRLF (`core.autocrlf=true`), each running PRE, the copy, POST, the full suite, stage, commit and COMMITTED;
-   then the negatives, each of which must STOP. Run it under Python 3.13 and 3.15.
+   then the negatives, each of which must STOP. Run it under one Python 3.15 build (owner, 19 November 2026; earlier
+   rounds also used 3.13).
 6. **Assemble the EX message** (`assemble_ex*.py`): zips the package with `exchange/EX_019_Claude/make_zip.py`
    (deterministic zip plus a member list with SHA-256 as stored and after CRLF to LF), fills the EX template's
    `@@...@@` placeholders, adds the member table, makes the EX zip and copies everything to `exchange/EX_NNN_Claude/`.
 7. **Task file for Claude Code** (`make_t0NN.py ZIP_PATH ZIP_SHA N_NEW N_MOD SUITE_N BASE OUT`), then
-   **always** `cc/check_task_vs_deny.py .claude/settings.json TASK_FILE` before committing it.
+   **always** `python3 -I check_task_commands.py REPO TASK_FILE` (the successor of `cc/check_task_vs_deny.py`) before
+   committing it.
 
 ## The tools
 
@@ -158,3 +166,28 @@ sections 8.7 and 12.2 say where each fits.
 | `mhupb/` | The MHUP-B design supplement drafts v0.1 to v0.6 and the ratified v0.7 (RAT-33) with `ov1_eprocess_check.py` and `overall_measure_check.py`; `codeplan/` (17 November 2026): the code plan draft `MHUPB_CODE_PLAN_DRAFT_v0_1.md` (EX_220), the OV-1 numerical probe `ov1_lower_bound_probe.py` (`python3 -I`; `--brute` adds the full-size brute-force oracles; invented data only), `baseline_suite.py CLONE RUNNER OUT` (the suite in a disposable clone, each module in its own process, without E2R-T12) and `evidence/` (the baseline logs at `b30919d` on Python 3.13 and 3.15; the probe's outputs; the score-record census). Since EX_224: the supplement v0.8 amendment candidate with `make_supplement_v0_8.py V0_7_FILE OUT` and its diff; in `codeplan/`, plan v0.2 with `make_plan_v0_2.py V0_1_FILE plan_v0_2_blocks OUT` and its diff, `score_census.py REPO` and `cutoff_check.py`. Since EX_226: `make_ratification_candidates.py SUP_CANDIDATE PLAN_V0_2 SUP_OUT PLAN_OUT` (EX_225's corrections) giving the supplement v0.8 and plan v0.3 ratification candidates, with their diffs. Since EX_228: `slice1/` (MHUP-B slice 1, not installed; see its README): `build_dev_slice1.sh BASE DEV TOOLS`, `run_suite.py TREE OUT [JOBS]`, `mutations_slice1.py TREE`. |
 | `register/` | Register builders (`make_register_v22.py`, `make_register_v25.py`, `make_register_v29.py` with their sections); `RATIFICATION_REGISTER_v0_29.md` and its diff from v0.28. |
 | `modeh_readiness/` | The Mode H Approval 1 readiness sheet (reviewed draft r2a), the Windows POC rerun instructions (r3), the read-only official-page check `gov_fetch_parse_smoke.py` with its development test, `modeh_dress_rehearsal.py` (the full cohort on invented data), `modeh_scale_illustration.py` and `evidence/`. Nothing here is authorised; every owner step needs its own go. |
+
+## Added since 14 November 2026 (summary written 22 November 2026, with H-1 v8)
+
+Each folder's own files (a README, working notes or a builder's docstring) are authoritative on its use.
+
+| Path | What it holds |
+|---|---|
+| `deps_2026_11_14/` | `env_freeze_check.py` (the environment inventory and digest of the owner's venv) and `make_task_t024.py` (TASK_T024, the suite after his dependency change). |
+| `doc_round_rat31/`, `doc_round_rat32/`, `doc_round_rat34/` | The document rounds of 14, 15 and 17 November 2026: the zips, `verify_doc_round.py`, and the `finalise_rat3N.py` scripts that turn reviewed candidates into the ratified files (status lines only), with the candidate-to-final diffs. |
+| `h1v3/` to `h1v7/` | Each full H-1 edition's builder (`make_h1_vN.py`: counted edits and whole-part replacements from the previous ratified bytes), its fragments, outputs, diffs and, where the status line was finalised, `finalise_rat3N.py`. |
+| `modeh_reading/` | The tools behind Claude's reading of the two Mode H reports (EX_201): `parse_report.py`, `aggregate.py`, `analyse.py`, `detail.py`; its README says how. |
+| `outlandish_export/` | `make_ozlotto_preholdout.py` (r3): the export of Oz Lotto's pre-holdout draws for the owner's OUTLANDISH_01 side project. Not evidence for this project. |
+| `mhupb/codeplan/` | The MHUP-B code plan drafts v0.1 and v0.2 and the ratified v0.3 (RAT-35), `baseline_suite.py`, `score_census.py`, the OV-1 lower-bound probe and the evidence. History since RAT-40. |
+| `mhupb/slice1/`, `slice2/`, `slice3/` | The three reviewed MHUP-B slices (EX_231, EX_237, EX_242: PASS at source level). Each has a README, working notes, `build_dev_sliceN.sh`, `apply_sliceN.py` and `edit_tests_sliceN.py` (counted edits), `sliceN_new/` (new files by their final path), a mutation tool and evidence. **Never installed, and not to be installed as built:** the new system replaces the weekly-session design. They remain a source of reviewed code and tests. **The OV-1 kernel is `mhupb/slice2/slice2_new/src/evaluation/ov1_numeric.py`,** with its tests beside it; the specification names it as the implementation of OV-1's mathematics. |
+| `mhupb/deploy/` | The deployment design note, drafts v0.1 to v0.6 with their diffs (19 to 21 November 2026). Never ratified; history. |
+| `mhupb/ov1_simplify/` | The OV-1 simplification amendment, drafts v0.1 and v0.2, with `ov1_prevailing_examples*.py` and their outputs. Never ratified; its substance is in the specification's section 10. |
+| `simplify/` | **The redesign.** Every draft of the system specification (v0.1 to v0.6) and of the deployment design (v0.7 to v0.12), the exact diff between each pair of editions, the builders (`make_spec_v0_2.py`, `make_deploy_v0_8.py`, `make_v0_3_v0_9.py`, `build_v0_4_v0_10.py`, `build_v0_5_v0_11.py`, `build_v0_6_v0_12.py`, with `spec_v0_4_template.md` and `deploy_v0_10_template.md`) and `DRAFT_CONTRADICTIONS_FOR_REVIEWER_v0_1.md`. The ratified files are in `doc/`: v0.6 and v0.12 with their status paragraphs alone changed (RAT-40). |
+| `h1v8/` | H-1 v8 (RAT-41): `H1_v8_template.md` and `make_h1_v8.py REPO` (fills hashes from Git, copies v7r1's sections 1, 2 and 2A byte for byte and 34 single lines); `out/` (the reviewed candidate and its blurb); `H1_v8_C01_TO_EX273.diff`; `finalise_rat41.py REPO` (the counted changes from the reviewed candidates to the installed H-1 v8 and register v0.32) and `H1_v8_CANDIDATE_TO_FINAL.diff`. |
+| `register/` (since v0.29) | `make_register_v30.py`, `make_register_v31.py` and `make_register_v32.py` with their section files, the candidate registers and the diffs. Each edition is the previous one plus one section, by counted insertions. `make_register_v32.py REPO OUT` fills every `@@SHA:<path>@@` in its section from Git. |
+
+**How the document rounds of 21 and 22 November 2026 were built** (use it again): each new edition comes from the
+previous one by a small Python builder of counted replacements (whitespace-tolerant; every anchor asserted to occur
+exactly once). The builder writes the new file; `diff -u` makes the diff; the diff is applied to the old file with
+`patch` and the result compared with `cmp`, which proves the diff exact. Hashes and line counts are taken from tools
+(`sha256sum`, `git diff --numstat`), never typed or estimated. The builder is committed beside its document.

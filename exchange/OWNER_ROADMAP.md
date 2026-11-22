@@ -2,7 +2,17 @@
 
 Kept by the Claude web chat; updated at each milestone. Plain English. This is a working list, not
 reviewed and not part of the rules: the ratification register is the record. US-ASCII, CRLF.
-Last updated: 18 November 2026 (late evening): MHUP-B's code has passed review in all three slices (the weekly forecasting
+Last updated: 22 November 2026 (evening): THE PROJECT WAS REDESIGNED AND THE NEW DESIGN IS RATIFIED. After Mode H you
+changed course (20 and 21 November): families and variants only, no revisions; three separate folders (DEV on E:, QA
+on D:, PROD on G:), each complete in itself; one research job that fills every missing draw in order, scores it, saves
+a league report for every draw and forecasts the next; installing is releasing; complete ZIP backups and exact
+restore. You ratified the system specification v0.6 and the deployment design v0.12 on 22 November (RAT-40), and the
+two handovers and register v0.32 the same evening (RAT-41). NONE OF THE NEW SYSTEM IS CODED YET, and nothing is
+installed: the weekly-session code (MHUP-B, item 10c below) passed review but was never made into a package, and the
+new system replaces it. Next: you start a new Claude chat (its blurb:
+doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md); then the steps in the section "The road from
+22 November 2026" below, each on your own go. The page that is always current is exchange/CONTINUITY_NOW.md.
+Earlier (18 November 2026, late evening): MHUP-B's code has passed review in all three slices (the weekly forecasting
 and scoring; the formal forward test OV-1 and the back-history runs; the league table, the weekly report and your two
 commands). Nothing is installed. You decided how production will run (decision log entries 92 to 98): from its own
 folder on G: with no Git in it; code gets there through one small deploy tool you can run again safely; a ZIP backup
@@ -31,6 +41,11 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 
 ## A few words used below
 
+(Written for the old system. In the new system: a method is a FAMILY with one or more VARIANTS; a variant's files
+never change once installed, and a changed method is a new variant; INSTALLING a variant is releasing it; there is no
+"developed" declaration and no weekly session: one research job does the catch-up and the next forecast. The
+plain-English summary is section 0 of doc/Predictive_Randomness_System_Specification_v0_6.md.)
+
 - **E_n:** the project's permanent name for method number n. The catalogue (R1 and R2) lists 62 of
   them, E_1 to E_62, each with a one-line idea. A method becomes real only when its exact rule is
   written, reviewed and coded; until then its catalogue entry is a placeholder.
@@ -51,6 +66,32 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 3. Claude Code rehearses the install on the owner's machine, in a throw-away copy.
 4. The owner installs (check, copy, check, tests, commit, check, push).
 5. Claude checks the result from GitHub; the next register edition records it.
+6. (New system, from build step 3 on.) That routine brings code into your clone on E:, which is DEV. From DEV you
+   then install into QA or PROD yourself with Install.bat, from local files, with no Git.
+
+## The road from 22 November 2026 (the new system; each step on your own go)
+
+A. DONE - The design: the system specification v0.6 and the deployment design v0.12 (RAT-40, 22 November 2026), with
+   the coding practices (doc/CODING_PRACTICES_v0_1.md).
+B. DONE - The handovers and the register brought up to date (RAT-41, 22 November 2026): H-1 v8 for Claude, H-2 v4 for
+   ChatGPT, register v0.32.
+C. NEXT - A new Claude chat takes over from H-1 v8 (your decision of 22 November 2026).
+D. NEXT - Your own ZIP of the whole project folder on E:, when Claude says: before build step 1 moves any file in
+   your clone (reminder R-030).
+E. NEXT - Build step 1, the folder layout: each method's files move into family and variant folders. No calculation
+   changes. Proved by the existing tests and by recomputing every old forecast and comparing. Then a light tidy-up of
+   the existing method files (headers and comments only), proved the same way.
+F. THEN - Build step 2, the research engine, in DEV: the result lists, the research job (fill and catch-up), scoring,
+   the league reports, both OV-1 scores, each variant's status file and withdrawal.
+G. THEN - Build step 3, trees, installs, backups and restore: QA and PROD are created; old and new forecasts are
+   compared (the transition check); PROD's first job. AFTER THIS STEP PROD FORECASTS EVERY WEEK, and new methods can
+   be added.
+H. THEN - Build step 4, the laboratory tools: the QA software replacement from PROD, the research-data reseeding from
+   PROD, the historical walk-forward rerun, the correction of shared code, and Check_Forecasts.
+I. THEN - New methods, as new variants: items 11 to 21 below, in your order (OUTLANDISH_01's family probably first).
+
+Everything below this section was written for the old system. Its DONE items are history that stands; the status
+words of its other items were brought up to date on 22 November 2026.
 
 ## Done
 
@@ -154,7 +195,9 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            - a Git line-ending rule so files under results/ are never converted on your PC;
            - the findings of the two cold-read probes (1 November 2026: the results updater, and the
              performance plan), each settled in the documents or carried into the Mode H design.
-10c. NEXT - Mode H, the results update and the prospective mode. Designed together by the new Claude
+10c. DONE IN PART, THEN REPLACED (22 November 2026: Mode H and the results update are DONE, both games sealed on
+           15 and 16 November 2026; the prospective mode, MHUP-B, passed review but is replaced by steps E to H
+           above; the rest of this item is history) - Mode H, the results update and the prospective mode. Designed together by the new Claude
            chat. Plan (your ratification, 2 November 2026): Mode H and the weekly session installed by
            about 13-15 November, so the first forecasts frozen before a draw are Oz Lotto 1709
            (Tuesday 17 November) and Powerball 1592 (Thursday 19 November); the week of 9 November is a
@@ -342,7 +385,8 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
              and tests are archived and its registry entry becomes RETIRED, but its forecasts and
              scores stay where they are, with an index pointing at them;
            then you decide whether to declare the system developed.
-10d. NEXT - WF-1C, the workers change (your decision WORKERS-1, 31 October 2026), in its own design
+10d. ON HOLD (22 November 2026: it belongs to the old walk-forward driver; whether the new research job needs
+           more workers is decided after its run time is measured in the first rehearsal) - WF-1C, the workers change (your decision WORKERS-1, 31 October 2026), in its own design
            round carrying EX_101's and EX_105's obligations: the coordinator's limit becomes 1 up to the
            machine's logical processor count (24 on your PC), default half (12); the walk-forward
            driver gets --workers (variants in parallel, same records at any worker count, clean stop);
@@ -350,13 +394,13 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
            60-worker cap, a 4 GiB memory floor, separate approvals for any real-data rerun and for
            Windows multi-process tests (EX_105 C03), and WB-3/WB-4. Until then the coordinator's
            six-worker limit stands, and the walk-forward driver runs one method run at a time.
-11. NEXT - Wave 3, look-alike past draws (with the template's draft 4, reminder R-009):
+11. LATER (after step G above; as new variants) - Wave 3, look-alike past draws (with the template's draft 4, reminder R-009):
            E_27 Nearest Neighbour of Historical Draw Sets - predict from what followed the past draws
                 most like the latest one;
            E_45 = Method B - your second idea: the same with runs of recent draws, plus the
                 never-occurring up/down patterns check;
            E_26 Draw-Level Geometry and Summary States; E_28 Markov Transitions of Draw Summaries.
-12. NEXT - Discuss the NL-means idea (reminder R-002); any method it yields joins a later wave.
+12. LATER - Discuss the NL-means idea (reminder R-002); any method it yields joins a later wave.
 13. LATER - Wave 4: E_5 (your original: one model for all numbers together), E_11 change points,
            E_15 eras, E_14 calendar (uses dates); then, each in its own package, E_13 slow drift,
            E_12 hidden modes, E_16 slightly unequal ball weights.
@@ -371,7 +415,8 @@ the stock-take record: exchange/STOCKTAKE_2026_11_02_v0_8.md.
 19. LATER - Wave 10, your pilot-wave-inspired family, one at a time: E_57, E_60, E_58, E_59, E_61, E_62.
 20. LATER - Wave 11, outside data: E_54, E_48.
 21. LAST  - Combinations of methods: E_55, E_56.
-21b. LATER - After WF-1C, two efficiency items from the stock-take (ratified 2 November 2026, not
+21b. OVERTAKEN (22 November 2026: the new design keeps one list per variant, rebuilds every report from the
+           lists, and computes every variant's whole history; reminder R-018) - After WF-1C, two efficiency items from the stock-take (ratified 2 November 2026, not
            before Mode H): a report that ranks across batches by reusing the frozen run records, so
            adding a method no longer needs every other method re-run; and the index for a retired
            revision's records. Added 4 November 2026 (your E1-E3, reminder R-018): the same design
@@ -389,6 +434,8 @@ on 31 October 2026 for the scorer's fair-draw simulator (N1); a later method tha
 gets its own seed policy the same way.
 
 ## Later (each its own package and decision)
+
+(Old-system wording below. In the new system a new variant is installed, and the next research job fills its history.)
 
 - Each new wave's methods are released and join the walk-forward batches, then the weekly session,
   as they are installed (the releases of E_6 to wave 2 were done at step 10).
