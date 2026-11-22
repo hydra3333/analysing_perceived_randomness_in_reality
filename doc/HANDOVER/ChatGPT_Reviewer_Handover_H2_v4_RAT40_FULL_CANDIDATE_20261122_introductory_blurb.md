@@ -8,8 +8,8 @@ This blurb is a copy-paste entry point, not a substitute for reading the complet
 
 **FULL H-2 v4 CANDIDATE (not ratified):** [ChatGPT reviewer H-2 v4 full handover](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/blob/main/doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md)  
 **Repository path:** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
-**FULL handover SHA-256 of stored GitHub bytes (verified):** `e24481b7dd088edef35080a8d98252f3da3114826c2b510589b048b7660b3c75`
-**H-2 candidate's current correction commit:** [23f02d6](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/23f02d6902ed0a5c9a25665619fcc7434597e95a) (original full candidate [30826be](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/30826be976bb4b8821c251e92462ef248542f16d); neither commit is owner ratification).
+**FULL handover SHA-256 of stored GitHub bytes (verified):** `8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8`
+**H-2 candidate's latest update commit:** [70719f5](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/70719f56cb397aef8b8f7217866a16f641c41dbc) (original full candidate [30826be](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/commit/30826be976bb4b8821c251e92462ef248542f16d); neither commit is owner ratification).
 
 ---
 
