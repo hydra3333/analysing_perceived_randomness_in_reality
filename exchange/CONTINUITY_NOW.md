@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 22 November 2026, 17:29 Australia/Adelaide (entry 152: EX_273; H-1 v8 and register v0.32 are final candidates). **WAITING ON THE OWNER: his consideration of RAT-41 (H-1 v8, the reviewer's H-2 v4, register v0.32). Then Claude installs them in doc/ and a NEW Claude chat takes over. No code is authorised yet.**
+**Last updated:** 22 November 2026, 17:37 Australia/Adelaide (entry 153: RAT-41, BOTH HANDOVERS AND REGISTER v0.32 RATIFIED; H-1 v8 and the register installed in `doc/`). **Next: the owner starts a NEW Claude chat from the H-1 v8 blurb; then build step 1 on his go. No code is authorised yet.**
 
 ## For the owner: NOW
 
+- **RAT-41 (entry 153; 22 November 2026, 17:34): H-1 v8, THE REVIEWER'S H-2 v4 AND REGISTER v0.32 ARE RATIFIED.** Installed:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md` (SHA-256 `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e`) with its blurb, and
+  `doc/RATIFICATION_REGISTER_v0_32.md` (SHA-256 `f59d1911279e7e95a952a14c3a0c68422ba0f4e67f91ffd5369eb73c606c9acb`). **Every bullet below this one is history.**
+  **To start the new Claude chat (the owner's decision, entry 149): paste
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`.** The new chat follows H-1 v8 section 0 (the staged
+  takeover, HO-2). Then, each on the owner's own go: his ZIP of the project folder when Claude says; build step 1.
+  The owner has asked the reviewer to check that its handover documents name these installed editions. The owner's
+  standing instruction of entry 153: out-of-date statements are to be fixed when detected.
 - **THREE DOCUMENTS ARE READY FOR THE OWNER'S CONSIDERATION OF RAT-41 (entry 152; `exchange/EX_273_ChatGPT.md`):**
   `exchange/CLAUDE_WEB_TOOLS/h1v8/out/Claude_Primary_Handover_H1_v8.md` (SHA-256 `2fd38130415f4c3602ac86f6f2b4250781f27f25bf204f66269424ea2c54a1f4`) with its blurb;
   the reviewer's `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` with its blurb; and
@@ -411,10 +419,13 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
-- **Now (21 November 2026):** a new reviewer chat, accepted (entries 132, 134). Its handover is the candidate H-2 v3r10
-  (prepared by Claude on the owner's instruction, entry 129); H-2 v3r4 (RAT-36) is the ratified one. **Open findings:
-  EX_264 R5-F01 to R5-F05 with notes N01 to N05, as refined by EX_265 (the owner's decisions); to be answered in
-  EX_266.** It has reviewed nothing of substance yet beyond the HO-2 questions of entry 134.
+- **Now (22 November 2026):** the reviewer chat that took over on 21 November 2026 (entries 132, 134). Its handover in
+  force is **H-2 v4** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`; RAT-41, entry 153). It has
+  reviewed EX_266 to EX_271 (the design: PASS, EX_271), H-1 v8 (EX_272, EX_273) and register v0.32 (EX_273). **Open
+  findings: none.** Owed to it in the build: its test of EX_271 section 3 (step 4) and the watchpoint of EX_273 section
+  2 (steps 2 and 3).
+- (History, 21 November 2026:) its handover was then the candidate H-2 v3r10, prepared by Claude on the owner's
+  instruction (entry 129); the open findings then were EX_264's, answered in EX_266.
 - Earlier (history): open findings none at EX_242. Latest reviews then: EX_213 (MHUP-B design pass), EX_215 (RAT-34 documentary pass), EX_219 (HO-2 takeover
   PASS; cautions C1 and C2 for the code plan). Since then: EX_223, EX_225 and EX_227 (code plan, PASS), EX_229 (slice 1 corrections), EX_231 (slice 1 PASS; N-231-1
   applied). EX_233 (slice 2 review), EX_234 and EX_235 (the owner's clarified model). EX_237 (slice 2 PASS). EX_240 to EX_242 (slice 3; PASS). EX_244 (restore and replay; governs, entry 101). The new Claude chat's takeover: EX_245, EX_246, PASS relayed by the owner (entry 102). EX_248 (the design note v0.1: RECHECK, B01 to B06). EX_250 (v0.2: narrow RECHECK, R3-C01 and R3-C02). EX_252 (v0.3: narrow RECHECK). EX_253 (the owner's OV-1 simplification direction, relayed). EX_255 (RECHECK: E01 to E04). EX_257 (RECHECK: F01, F02). EX_258 (the owner's course correction; permanent record in `exchange/DECISIONS/`). EX_259 (the owner's course correction; EX_259 was the reviewer's, so Claude's reply is EX_260). EX_261 (R-4 RECHECK: F01 to F07). EX_262 (the owner's supplement: F08 to F10). **Awaited: the review of the system specification v0.1 and the deployment design v0.7 (EX_263; its reply EX_264).** The joint working principle (entry 81) was agreed by chat
@@ -426,14 +437,13 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
-- **Claude chat ended (until H-1 v8 exists):** start a new Claude chat with the blurb
-  `exchange/CLAUDE_TAKEOVER_NOTE_2026_11_21_blurb.md`. It reads the takeover note (correct its "next entry 133" to the
-  log's next free number), this page's top block, H-1 v7r1 sections 0, 1, 2 and 5 for the binding rules, and the
-  decision log from entry 121 to the latest. Procedure HO-2, as in entry 134.
-- **ChatGPT reviewer chat ended:** the newest reviewer handover is the candidate **H-2 v3r10**
-  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v3r10_CONTINUITY_CANDIDATE_20261121.md` and its blurb; current to EX_265;
-  its section 0.8 predates the owner's choices A to D, decided in entries 130 and 131). The ratified one is H-2 v3r4
-  (RAT-36). If the reviewer has written a later edition of its own, use that.
+- **Claude chat ended:** start a new Claude chat with the blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`. It reads H-1 v8 (its section 0 gives the reading
+  order), this page's top block and the decision log from entry 121 to the latest. Procedure HO-2, as in H-1 v8
+  section 0 item 4. (The takeover note of 21 November 2026 and its blurb are history.)
+- **ChatGPT reviewer chat ended:** start a new one from the reviewer's handover in force, **H-2 v4**
+  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` and its blurb beside it; RAT-41). If the
+  reviewer has committed a later state of it, use that. (H-2 v3r10 and H-2 v3r4 are history.)
 
 ## Resuming the MHUP-B slice work (HISTORY since 21 November 2026)
 
@@ -468,6 +478,12 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-41 (22 November 2026, entry 153): H-1 v8 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md`, SHA-256
+`8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e`) and H-2 v4 (the reviewer;
+`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`), with register v0.32
+(`doc/RATIFICATION_REGISTER_v0_32.md`).** The design they describe is RAT-40's (entry 147). The rest of this section is
+history.
 
 **H-1 v7r1 (Claude; RAT-39, entry 106; `doc/HANDOVER/Claude_Primary_Handover_H1_v7r1.md`, SHA-256 `6f968eef...771c97cd`,
 committed by Claude on 19 November 2026 after the reviewer's PASS; status line finalised)** and **H-2 v3r4 (reviewer; RAT-36,
@@ -510,6 +526,12 @@ the reviewer has still to be consulted on. The two Mode H report files' SHA-256 
 are in `exchange/CLAUDE_WEB_TOOLS/modeh_reading/`.
 
 ## Full order from here
+
+**From RAT-41 (22 November 2026; each step on the owner's own go; nothing below is authorised yet):** a new Claude chat
+takes over from H-1 v8 (HO-2); the owner's ZIP of the project folder on E: when Claude says; build step 1 (the folder
+layout), then the light tidy-up of the existing method files; build step 2 (the research engine in DEV); build step 3
+(trees, installs, backups, restore; then PROD forecasts every week); build step 4 (the laboratory tools). H-1 v8
+section 10 has the detail and what each step needs first. The lists below are history.
 
 **From 21 November 2026 (entries 122 to 134; each step on the owner's own go; nothing below is authorised yet):**
 

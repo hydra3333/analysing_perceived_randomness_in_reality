@@ -1,0 +1,144 @@
+--- H1_v8_candidate
++++ H1_v8_final
+@@ -6,15 +6,20 @@
+ 2A are H-1 v7r1's bytes, unchanged** (the builder asserts it; section 0C says how to read them today). Everything else
+ is rewritten. Appendix B lists what was dropped from v7r1 and where it now lives. Built by
+ `exchange/CLAUDE_WEB_TOOLS/h1v8/make_h1_v8.py` from `H1_v8_template.md` beside it.
+-**Status:** CANDIDATE for independent review and the owner's ratification. It authorises nothing. Until it is
+-ratified, H-1 v7r1 (RAT-39) is the installed Claude handover, read with decision log entries 121 to the latest.
++**Status:** OWNER-RATIFIED 22 November 2026, 17:34 Australia/Adelaide (RAT-41; decision log entry 153), together with the
++reviewer's handover H-2 v4 and register v0.32, after the reviewer's PASS (EX_272, EX_273). It is the installed Claude
++handover; H-1 v7r1 (RAT-39) stays as history. It is the reviewed candidate
++(`exchange/CLAUDE_WEB_TOOLS/h1v8/out/`, SHA-256 `2fd38130415f4c3602ac86f6f2b4250781f27f25bf204f66269424ea2c54a1f4`) with this status
++paragraph changed and, on the owner's instruction given with the ratification, the statements that the ratification
++itself made out of date brought up to date; `exchange/CLAUDE_WEB_TOOLS/h1v8/H1_v8_CANDIDATE_TO_FINAL.diff` is the exact
++difference. It authorises nothing.
+ **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat; the
+ project owner.
+ **Repository:** `hydra3333/analysing_perceived_randomness_in_reality`, public GitHub, branch `main`.
+ **Baseline described:** `main` on 22 November 2026, after RAT-40 (commit `4de0fe4`). **The code on `main` is the old
+ system, and none of the new system is coded:** no file under `src/` or `tests/`, no root `.bat` and no
+ `requirements.txt` has changed since `cc0ab73` (14 November 2026; checked with `git diff` for this edition).
+-**Replaces, once ratified:** H-1 v7r1 and its blurb (RAT-39), and the takeover note of 21 November 2026 with its blurb
++**Replaces:** H-1 v7r1 and its blurb (RAT-39), and the takeover note of 21 November 2026 with its blurb
+ (a working note, never a handover). All stay where they are as history.
+ **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ. This file
+ summarises and points to them.
+@@ -33,7 +38,8 @@
+    - this file, all of it (it is short);
+    - **the three ratified documents of section 4.1:** the system specification (its section 0 first: the whole
+      system on one page), the deployment design, and the coding practices;
+-   - `exchange/DECISIONS/DECISION_LOG.md`, entries 121 to the latest (the owner's own words; entry 147 is RAT-40);
++   - `exchange/DECISIONS/DECISION_LOG.md`, entries 121 to the latest (the owner's own words; entry 147 is RAT-40, entry
++     153 is RAT-41);
+    - `exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md` (the joint working principle);
+    - the reviewer's findings on the design: `exchange/EX_267_ChatGPT.md`, `EX_269_ChatGPT.md`, `EX_271_ChatGPT.md` (they
+      show what the reviewer watches, and EX_271 section 3 holds a test still owed);
+@@ -91,11 +97,10 @@
+    install the MHUP-B slices (section 7.3).
+ 2. **The words DRAFT and CANDIDATE inside a ratified file are frozen wording.** A file's status paragraph and the
+    decision log say what is ratified. The two design documents in `doc/` still carry DRAFT in their titles.
+-3. **The installed register is behind.** `doc/RATIFICATION_REGISTER_v0_31.md` is the newest installed edition. Register
+-   v0.32, which records RAT-34's install to RAT-40, is a written CANDIDATE (section 4.4), not installed and not
+-   owner-ratified; until it is, RAT-35 to RAT-40 are recorded only in the decision log. Read the log for the last RAT number, the last entry number and the last EX number
+-   before using a new one. At this edition: the last RAT is RAT-40; the newest EX is EX_271; the newest decision log
+-   entry is 148 (this candidate).
++3. **Read the log for a number before using one.** Register v0.32 (section 4.4) is the newest edition; it records
++   RAT-34's install to RAT-40 and its own ratification. For anything later the decision log is the record. Read the
++   log for the last RAT number, the last entry number and the last EX number before using a new one. At this
++   edition: the last RAT is RAT-41; the newest EX is EX_273; the newest decision log entry is 153 (RAT-41).
+ 4. **Commit IDs changed on 6 November 2026.** A history clean-up renumbered the 27 commits of 5 and 6 November 2026.
+    A record that cites one of them uses its OLD ID, and `git show <old id>` fails. Translate with
+    `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt`. Every file hash in every record is unchanged. Commits from
+@@ -150,8 +155,9 @@
+ 8. **The chats.** This Claude chat took over on 21 November 2026 from the takeover note (HO-2 accepted, entry 134).
+    The present ChatGPT reviewer chat took over the same day, after the previous one reached its limit (entries 128,
+    132, 134); it has reviewed EX_266 to EX_271. On 22 November 2026 the owner asked both chats to bring their
+-   handovers fully up to date at this milestone; the reviewer committed its H-2 v4 candidate that afternoon
+-   (section 4.4).
++   handovers fully up to date at this milestone; the reviewer committed its H-2 v4 that afternoon (section 4.4).
++   That evening the owner ratified both handovers and register v0.32 together (RAT-41), and he has decided that a
++   new Claude chat takes over from this edition (entry 149).
+ 
+ ## 0C. Sections 1, 2 and 2A are carried unchanged: read them with these notes
+ 
+@@ -168,8 +174,7 @@
+    section 12, from local files, never by Git. Where 1.6 says Claude records the reviewer's files and the owner
+    uploads zips, its own first bullet is the current practice: the reviewer commits its own. The rounds of November
+    2026 used plain `.md` EX files with no zip (section 12.1).
+-4. **Section 1.6, the register.** v0.31 is the newest installed; v0.32 is a written candidate, not yet ratified
+-   (section 4.4).
++4. **Section 1.6, the register.** v0.32 is the newest (RAT-41; section 4.4).
+ 5. **Section 2, pushing.** The Mode H freeze it mentions ended on 16 November 2026. The rule not to push while the
+    owner may have local commits waiting still applies.
+ 6. **Section 2, the owner's two working lists** (`OWNER_ROADMAP.md`, `OWNER_REMINDERS.md`) were last updated on 18 and
+@@ -373,20 +378,20 @@
+   (`7d572400b941ad423978a7542d6c32fb73c934f0057240dbc5138898112bd53b`);
+   `review/REVIEWER_FIX-and-PROCEED_RECHECK_PROCEDURE_v1.md`
+   (`5067aa520990b8ccc8521a04f3581424100cdd94994f5b9e3cb9e37863685339`).
+-- **The reviewer's handover (H-2).** Ratified: H-2 v3r4 (RAT-36; its file name still says CANDIDATE). **The newest is
+-  the reviewer's own full edition current to RAT-40,**
++- **The reviewer's handover (H-2).** **In force: H-2 v4, the reviewer's own full edition current to RAT-40, ratified by
++  the owner on 22 November 2026 (RAT-41):**
+   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
+-  (`8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8`; first committed at `30826be`, its
+-  latest content at `70719f5`; its blurb's latest content at `adfd973`): a candidate until the owner ratifies it. Its section 0 states the current position, the
++  (`8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8` as ratified; first committed at `30826be`, that
++  content at `70719f5`; its blurb's at `adfd973`). Its file name still says CANDIDATE: frozen wording. It replaces H-2
++  v3r4 (RAT-36). With RAT-41 the owner asked the reviewer to check that its handover names the installed editions, so
++  a later commit may refresh its references. Its section 0 states the current position, the
+   four notes of ratification, the build order and the closed OV-1 question as this file does. Before it came the
+   v3r10 continuity candidate of 21 November 2026, which Claude wrote on the owner's instruction when the previous
+   reviewer chat was lost. `exchange/CONTINUITY_NOW.md` names the edition in force.
+-- **The register:** `doc/RATIFICATION_REGISTER_v0_31.md` (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`), RAT-34.
+-  **Register v0.32 is a written CANDIDATE,** not installed and not owner-ratified:
+-  `exchange/CLAUDE_WEB_TOOLS/register/RATIFICATION_REGISTER_v0_32.md` (SHA-256
+-  `2fd091f34ea47399693b30f51b2a677d3d4cf348d028435cbd9639366d99135c` at the reviewed commit `a30b19a`; documentary PASS in
+-  EX_273). Its cells for this handover and for H-2 v4 are refreshed after this edition, so its final hash is in the
+-  decision log. Until it is ratified, the decision log is the record for RAT-35 to RAT-40.
++- **The register:** `doc/RATIFICATION_REGISTER_v0_32.md`, ratified with this handover (RAT-41; documentary PASS in EX_273).
++  It is register v0.31 (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`, RAT-34) with one added section
++  that records RAT-34's install to RAT-40. A file cannot hold the hash of a file that holds its own, so register
++  v0.32's hash is in decision log entry 153. For anything after RAT-41 the decision log is the record.
+ - **Protected blocks** (byte-identical through every consolidation): Architecture 5C; R2 section 7 and 4.1; R3 0.4,
+   2.4 and 3; the proposal's E_1 to E_6. **Never edit a ratified file in place.**
+ 
+@@ -720,9 +725,10 @@
+ 
+ ## 10. Next work, in order (planned; the owner decides each step)
+ 
+-1. **This handover:** the reviewer's review; the owner's ratification; installation in `doc/HANDOVER/` with its blurb.
+-   The reviewer's own handover current to RAT-40 (H-2 v4, section 4.4) awaits the owner's ratification too.
+-2. **The owner decides whether build step 1 starts in the present Claude chat or a new one.**
++1. **Done on 22 November 2026 (RAT-41):** this handover, the reviewer's H-2 v4 and register v0.32 are ratified, and
++   this handover and the register are installed in `doc/`.
++2. **A new Claude chat takes over from this edition** (owner, entries 149 and 153), by the staged takeover of
++   section 0. Build step 1 starts there, on the owner's go.
+ 3. **Build step 1: the folder layout** (specification 17.3, phase 1), on the owner's go.
+    - First, establish the suite's present result on `main` (section 7.1).
+    - The package moves method files to the layout of specification 3.2 and changes import lines; no computation,
+@@ -873,9 +879,9 @@
+ 
+ The live state is `exchange/CONTINUITY_NOW.md`; it overtakes this list.
+ 
+-- **Waiting on the reviewer:** its review of this candidate.
+-- **Waiting on the owner:** the ratification of this edition and of the reviewer's H-2 v4 candidate; the choice of
+-  chat for build step 1; then each go of section 10.
++- **Waiting on the reviewer:** nothing, beyond the check of its own handover's references that the owner asked for
++  with RAT-41.
++- **Waiting on the owner:** starting the new Claude chat and accepting its takeover; then each go of section 10.
+ - **Owed by Claude, in order of need:**
+   1. Telling the owner when to make his ZIP (section 10, item 3).
+   2. The suite's present result on `main`, before build step 1.
+@@ -883,9 +889,8 @@
+   4. A new local runner rulebook edition, with the owner's deny entries, before the first rehearsal of the new
+      system.
+   5. The test of EX_271 section 3, in build step 4.
+-  6. Register v0.32, recording RAT-34's install to RAT-40: written on 22 November 2026 at the owner's choice, as a
+-     candidate, and passed by the reviewer (EX_273). Still owed: the owner's ratification, and its installation in
+-     `doc/` with the handovers.
++  6. The next register edition, when a code package or a handover next travels (section 1.6): it records RAT-41's
++     install and what follows. Nothing further is owed on register v0.32 (ratified and installed at RAT-41).
+   7. A new draft of `doc/METHOD_TEMPLATE/` for the new layout, after build step 3.
+   8. One pass over `exchange/OWNER_REMINDERS.md` and `exchange/OWNER_ROADMAP.md`, marking each item carried, done or
+      dropped under the new design, for the owner to confirm. Most reminders concern the old system.

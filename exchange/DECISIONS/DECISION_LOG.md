@@ -2944,3 +2944,50 @@ section 17.2 (unpack it into a new folder, never over the clone).
   On his ratification Claude finalises H-1 v8 and the register by their status lines and the register's table cells
   only, installs them in `doc/`, verifies the installed bytes from GitHub, and records it. Then the new Claude chat.
 - **Authorised by none of this:** code, a build step, a run, anything on the owner's PC.
+
+## 153. 22 November 2026, 17:37 - RAT-41: THE OWNER RATIFIES H-1 v8, the reviewer's H-2 v4 and register v0.32 together; his standing instruction on out-of-date statements; H-1 v8 and the register installed in doc/
+
+- **The owner's words (17:34), in answer to Claude's question with "ratify all three together as RAT-41" as the recommended
+  option 1:** "overriding instruction: when you detect out of date things like 'I left two small things in H-1 v8 alone
+  because they were outside what the reviewer authorised. Section 0A still names EX_271 and entry 148 as the newest, and
+  section 12.8's "waiting on" lines do not mention the register' please strongly consider fixing them. Option 1
+  approved ... all three are ratified. Can I tell chatgpt to check/update their handover docs now ensuring they
+  reference the latest versions (if so please provide an updated blurb after you have ensured everything is up to date
+  and committed)".
+- **RAT-41 is recorded** (RAT-40 was the last number used). Ratified: **H-1 v8 and its blurb** (candidate
+  `2fd38130...2c54a1f4`; the reviewer's PASS in EX_272 and EX_273); **the reviewer's H-2 v4 and its blurb**
+  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`, SHA-256 `8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8`, main `70719f5`; blurb
+  `700ca5da32494bd4d7f8da1d1c26e8ee96f784bf45501d220bff5e4b03b15a46`, main `adfd973`; the file's name still says CANDIDATE, frozen wording); **register v0.32** (candidate
+  `f508f771...68f25229`; documentary PASS in EX_273). **H-1 v8 is the installed Claude handover** (H-1 v7r1, RAT-39, stays as
+  history). **H-2 v4 is the reviewer's handover in force** (H-2 v3r4, RAT-36, stays as history).
+- **STANDING INSTRUCTION (owner, binding on Claude from now):** when Claude detects out-of-date statements, it is to
+  "strongly consider fixing them", and not leave them because a reviewer's authorisation was narrower. Claude's
+  reading: fix them, show the exact difference, and say plainly what was changed beyond the reviewed text, so that the
+  reviewer can look.
+- **Finalised under that instruction** (`exchange/CLAUDE_WEB_TOOLS/h1v8/finalise_rat41.py`: counted replacements on the
+  reviewed candidates, each asserted by SHA-256; nothing overwritten):
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md`, SHA-256 `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e`. Changed from the candidate
+    (`exchange/CLAUDE_WEB_TOOLS/h1v8/H1_v8_CANDIDATE_TO_FINAL.diff`; `git diff --numstat`: 37 lines added, 32 removed): the
+    status paragraph; "Replaces"; and the statements the ratification itself made out of date: the reading list's
+    entry numbers; 0A item 3 (the newest numbers: RAT-41, EX_273, entry 153; the register is no longer behind); 0B item
+    8; 0C note 4; section 4.4's two paragraphs on H-2 and on the register; section 10 items 1 and 2 (done; the new
+    chat); section 12.8's two "waiting on" lines and its item 6. The carried sections 1, 2 and 2A are unchanged (102
+    lines, `80987a07...51764427`, still one unbroken piece of H-1 v7r1). **These changes go beyond the reviewed text and
+    carry no reviewer PASS of their own;** the reviewer is told and may look.
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`, SHA-256 `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66`: the candidate's bytes, unchanged.
+  - `doc/RATIFICATION_REGISTER_v0_32.md`, SHA-256 `f59d1911279e7e95a952a14c3a0c68422ba0f4e67f91ffd5369eb73c606c9acb`. Changed from the candidate
+    (`exchange/CLAUDE_WEB_TOOLS/register/REGISTER_v0_32_CANDIDATE_TO_FINAL.diff`; 23 lines added, 14 removed): the version
+    line; the RAT-41 paragraph; the status cells of four table rows (H-1 v8, H-2 v4, and H-1 v7r1 and H-2 v3r4 as
+    superseded); item 12; the entry range (62 to 153); future actions 1 and 2. Register v0.31 is preserved inside it
+    byte for byte outside the version line and the new section (checked by tool).
+- **So that the hashes stop chasing each other:** H-1 v8 names the register by path only and cites H-2 v4 "as
+  ratified", saying that a later commit may refresh its references; the register cites the final H-1 v8 and the
+  ratified H-2 v4. Neither ratified file is edited again.
+- **The owner's question, answered yes:** the reviewer can now check and update its own handover documents to name the
+  installed editions. If that changes H-2 v4's bytes, the refreshed file is the reviewer's own next state of its
+  handover; whether RAT-41 extends to it is for the owner to say, and Claude records what he says.
+- **Also brought up to date with this entry:** `exchange/CONTINUITY_NOW.md` (its top block, "Reviewer status", "If a chat
+  ends", "Installed handovers" and "Full order from here").
+- **RAT-41 authorises no code, build step, run or install on the owner's PC.** Next: the owner starts the new Claude
+  chat with `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`; this chat stops committing once it starts.
+  The next ratification number is RAT-42; the next EX is EX_274.
