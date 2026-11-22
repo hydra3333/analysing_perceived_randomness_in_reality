@@ -29,7 +29,7 @@ from _common.contract_registry import InstalledRegistry
 from _common.game_draws_reader import header_for
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common.multigame_method_registry import method_status
-from E_006 import contract as E6
+from E_006 import core_v1 as E6
 from ledger_fixture import write_init_ledger
 from E_006.beta_bernoulli import VARIANTS, posterior_means, posterior_means_by_recursion
 
@@ -216,7 +216,7 @@ class E1Match(unittest.TestCase):
 
     def test_contract_record_groups_equal_e1_record_groups(self):
         """Against E_1's own contract record: same equal-count groups in the same order (ties may differ)."""
-        from contract_adapters import e_001
+        from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001
         for profile in GAMES:
             target = targets(profile)[1]
             with self.subTest(game=profile.game_id), tempfile.TemporaryDirectory() as td:
@@ -390,12 +390,12 @@ class AsInstalled(unittest.TestCase):
 
     def test_the_runner_lists_e6(self):
         import Method_Contract_Runner as M
-        self.assertIs(M.ADAPTERS['E_6'], E6)            # later methods add their own lines; none is pinned here
+        self.assertTrue(all(m.core_v1 is E6 for m in M.ADAPTERS['E_6'].variant_methods.values()))            # later methods add their own lines; none is pinned here
 
     def test_the_method_folder_is_exactly_these_files(self):
         folder = METHODS_ROOT / 'E_006'
-        self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'),
-                         ['__init__.py', 'beta_bernoulli.py', 'contract.py'])   # REL-1 removed the flag
+        self.assertEqual(sorted(p.name for p in folder.iterdir() if p.is_file()),
+                         ['__init__.py', 'beta_bernoulli.py', 'core_v1.py'])   # REL-1 removed the flag
         src = (folder / 'beta_bernoulli.py').read_text('utf-8')
         self.assertNotIn('import math', src)                          # exact arithmetic only (spec 2.4)
         self.assertNotIn('float(', src)

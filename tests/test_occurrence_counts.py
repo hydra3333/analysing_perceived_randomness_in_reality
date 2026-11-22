@@ -10,7 +10,7 @@ import hashlib
 import unittest
 
 from e2r_fixtures import ROOT
-from _common import occurrence_counts as OC
+from _shared import occurrence_counts_v1 as OC
 
 EX = [[1, 2], [1, 3], [2, 4], [1, 5]]          # the design note's example: 5 labels, K = 2, oldest first
 
@@ -95,7 +95,7 @@ class Refusals(unittest.TestCase):
 
 class StaticGuards(unittest.TestCase):
     def test_exact_arithmetic_only_and_no_outside_access(self):
-        text = (ROOT / 'src' / 'methods' / '_common' / 'occurrence_counts.py').read_text('utf-8')
+        text = (ROOT / 'src' / 'methods' / '_shared' / 'occurrence_counts_v1.py').read_text('utf-8')
         for word in ('import math', 'float(', 'numpy', 'scipy', 'open(', 'read_bytes', 'write_bytes', 'import os',
                      'subprocess', 'game_draws_reader', 'source' + '_data', 'contract_', 'random'):
             self.assertNotIn(word, text, f'occurrence_counts.py mentions {word}')

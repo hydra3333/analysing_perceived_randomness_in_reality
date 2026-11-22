@@ -262,7 +262,7 @@ class StaticCode2Guards(unittest.TestCase):
         self.assertFalse((ROOT / 'src' / 'methods' / 'E_001' / CD.FLAG_NAME).exists())
 
     def test_wrappers_read_no_data_and_name_no_receipts(self):
-        for f in sorted((ROOT / 'src' / 'methods' / 'contract_adapters').glob('*.py')):
+        for f in sorted((ROOT / 'src' / 'methods').glob('E_*/*/method.py')):
             text = f.read_text(encoding='utf-8')
             for word in ('game_draws_reader', 'source_data', 'contract_receipts', 'contract_publication',
                          'contract_runner', 'open(', 'read_bytes', 'write_bytes'):

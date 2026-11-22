@@ -32,7 +32,7 @@ from _common.contract_records import canonical, record_digest, validate_run_requ
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common import owner_records as OR
-from contract_adapters import e_001
+from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001
 
 BATCH = 'wf-' + 'a' * 32
 SESSION = 'b' * 32

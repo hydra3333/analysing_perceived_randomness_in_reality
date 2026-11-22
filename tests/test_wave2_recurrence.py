@@ -32,10 +32,10 @@ from _common.contract_records import record_digest, score_groups
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common.multigame_method_registry import method_status
-from E_002 import contract as E2
-from E_017 import contract as E17
-from E_018 import contract as E18
-from E_019 import contract as E19
+from E_002 import core_v1 as E2
+from E_017 import core_v1 as E17
+from E_018 import core_v1 as E18
+from E_019 import core_v1 as E19
 
 GAMES = (POWERBALL, OZLOTTO)
 MODULES = {'E_2': E2, 'E_17': E17, 'E_18': E18, 'E_19': E19}
@@ -462,15 +462,15 @@ class AsInstalled(unittest.TestCase):
         import Method_Contract_Runner as M
         for name, mod in MODULES.items():
             self.assertFalse((METHODS_ROOT / method_folder(name) / 'IN_DEVELOPMENT.txt').exists())   # REL-1
-            self.assertIs(M.ADAPTERS[name], mod)
+            self.assertTrue(all(m.core_v1 is mod for m in M.ADAPTERS[name].variant_methods.values()))
 
 
 class FolderGuards(unittest.TestCase):
     def test_method_folders_are_exactly_these_files_and_read_nothing(self):
         for name in MODULES:
             folder = METHODS_ROOT / method_folder(name)
-            self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'),
-                             ['__init__.py', 'contract.py', 'variants.py'])   # REL-1 removed the flag
+            self.assertEqual(sorted(p.name for p in folder.iterdir() if p.is_file()),
+                             ['__init__.py', 'core_v1.py', 'variants.py'])   # REL-1 removed the flag
             for f in sorted(folder.glob('*.py')):
                 text = f.read_text('utf-8')
                 for word in ('game_draws_reader', 'source' + '_data', 'contract_receipts', 'contract_publication',

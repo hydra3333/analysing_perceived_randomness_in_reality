@@ -65,10 +65,10 @@ IMPORT_INVENTORY = [
     '_common.contract_records', '_common.contract_registry', '_common.contract_dispatch', '_common.contract_task',
     '_common.contract_forecast', '_common.contract_receipts', '_common.contract_publication',
     '_common.contract_runner', '_common.walk_forward', '_common.master_versions', '_common.owner_records',
-    '_common.occurrence_counts', '_common.polynomial_fits',
-    '_common.recurrence_gaps', 'E_001.e1_historical_appearance_frequency', 'E_001.multigame_e1',
+    '_shared.occurrence_counts_v1', '_shared.polynomial_fits_v1',
+    '_shared.recurrence_gaps_v1', 'E_001.e1_historical_appearance_frequency', 'E_001.multigame_e1',
     'E_001.e1_training_view', 'E_001.e1_common_reader_bridge', 'E_001.e1_standalone_contract',
-    'contract_adapters.e_001', 'package_tools.method_retirement',
+    'E_001.FULL_HISTORY_RAW_COUNTS_V1.method', 'package_tools.method_retirement',
 ]
 
 
@@ -213,7 +213,7 @@ import e2r_code2_fixtures as C
 import _common.contract_runner as CR
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import get_profile
-from contract_adapters import e_001
+from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001
 from test_e6_beta_bernoulli import write_varied_master
 td = Path(tempfile.mkdtemp())
 outcomes = []

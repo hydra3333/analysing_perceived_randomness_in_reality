@@ -27,7 +27,7 @@ from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL
 
 sys.path.insert(0, str(ROOT / 'src' / 'methods'))
-from contract_adapters import e_001   # noqa: E402
+from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001   # noqa: E402
 
 
 def e1_pins(game):

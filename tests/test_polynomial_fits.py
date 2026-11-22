@@ -11,7 +11,7 @@ from pathlib import Path
 import unittest
 
 from e2r_fixtures import ROOT
-from _common import polynomial_fits as PF
+from _shared import polynomial_fits_v1 as PF
 
 
 def invented(label, n, threshold=52):
@@ -179,7 +179,7 @@ class Refusals(unittest.TestCase):
 
 class StaticGuards(unittest.TestCase):
     def test_exact_arithmetic_only_and_no_outside_access(self):
-        text = (ROOT / 'src' / 'methods' / '_common' / 'polynomial_fits.py').read_text('utf-8')
+        text = (ROOT / 'src' / 'methods' / '_shared' / 'polynomial_fits_v1.py').read_text('utf-8')
         for word in ('import math', 'float(', 'numpy', 'scipy', 'open(', 'read_bytes', 'write_bytes', 'import os',
                      'subprocess', 'game_draws_reader', 'source' + '_data', 'contract_'):
             self.assertNotIn(word, text, f'polynomial_fits.py mentions {word}')

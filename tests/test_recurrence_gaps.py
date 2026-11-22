@@ -13,7 +13,7 @@ import itertools
 import unittest
 
 from e2r_fixtures import ROOT
-from _common import recurrence_gaps as RG
+from _shared import recurrence_gaps_v1 as RG
 
 EX = [[1, 2], [3, 4], [1, 5], [2, 6], [1, 7], [3, 8], [1, 9], [2, 10], [4, 5], [1, 6], [3, 7], [1, 8]]   # 10 labels, K = 2
 ZERO_WITNESS = [[1], [1], [2], [2], [1], [1], [1], [2]]          # EX_071: a_k = 6, -12, 0, 6; the log sum is exactly 0
@@ -165,7 +165,7 @@ class Refusals(unittest.TestCase):
 
 class StaticGuards(unittest.TestCase):
     def test_exact_arithmetic_only_and_no_outside_access(self):
-        text = (ROOT / 'src' / 'methods' / '_common' / 'recurrence_gaps.py').read_text('utf-8')
+        text = (ROOT / 'src' / 'methods' / '_shared' / 'recurrence_gaps_v1.py').read_text('utf-8')
         for word in ('import math', 'float(', '**0.5', '** 0.5', 'numpy', 'scipy', 'open(', 'read_bytes', 'write_bytes',
                      'import os', 'subprocess', 'game_draws_reader', 'source' + '_data', 'contract_', 'random', 'decimal'):
             self.assertNotIn(word, text, f'recurrence_gaps.py mentions {word}')

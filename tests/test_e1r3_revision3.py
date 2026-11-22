@@ -30,7 +30,7 @@ from _common.contract_registry import InstalledRegistry
 from _common.contract_task import view_data_kind
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common import owner_records as OR
-from contract_adapters import e_001
+from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001
 
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / 'tests' / 'fixtures' / 'e1_r2_reference_v1.json'
@@ -64,8 +64,9 @@ class IdentityWithRevision2(unittest.TestCase):
             self.assertEqual(hashlib.sha256((ROOT / rel).read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
                              ref['base_r2_sources_sha256'][rel], rel)
         # And the two that did change are not the archived revision-2 bytes.
-        for rel in ('src/methods/E_001/multigame_e1.py', 'src/methods/contract_adapters/e_001.py'):
-            self.assertNotEqual(hashlib.sha256((ROOT / rel).read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
+        for rel, now in (('src/methods/E_001/multigame_e1.py', 'src/methods/E_001/multigame_e1.py'),
+                         ('src/methods/contract_adapters/e_001.py', 'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py')):
+            self.assertNotEqual(hashlib.sha256((ROOT / now).read_bytes().replace(b'\r\n', b'\n')).hexdigest(),
                                 ref['base_r2_sources_sha256'][rel], rel)
 
     def test_r3_equals_r2_label_for_label_in_both_kinds(self):
@@ -193,7 +194,7 @@ class Adapter(unittest.TestCase):
             self.assertEqual(view_data_kind(mode), 'REAL_HISTORICAL_DEVELOPMENT')
         for mode in ('SYNTHETIC_CONTRACT_TEST', 'SYNTHETIC_NULL', 'IN_SAMPLE_DIAGNOSTIC'):
             self.assertEqual(view_data_kind(mode), mode)
-        src = (ROOT / 'src' / 'methods' / 'contract_adapters' / 'e_001.py').read_text(encoding='ascii')
+        src = (ROOT / 'src' / 'methods' / 'E_001' / 'FULL_HISTORY_RAW_COUNTS_V1' / 'method.py').read_text(encoding='ascii')
         self.assertIn('data_kind=view_data_kind(task.run_mode)', src)
         self.assertNotIn('data_kind=task.run_mode', src)
         e1 = (ROOT / 'src' / 'methods' / 'E_001' / 'multigame_e1.py').read_text(encoding='ascii')

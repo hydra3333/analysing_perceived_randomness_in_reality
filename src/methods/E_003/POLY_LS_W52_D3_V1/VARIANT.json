@@ -1,0 +1,24 @@
+{
+  "family": "E_003",
+  "variant": "POLY_LS_W52_D3_V1",
+  "title": "E_3 - Occurrence-Curve Endpoint Forecast",
+  "description": "Variant POLY_LS_W52_D3_V1: its fixed settings are the POLY_LS_W52_D3_V1 line of E_003/variants.py; the calculation is E_003/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 52,
+    "OZLOTTO": 52
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_003/__init__.py",
+    "E_003/core_v1.py",
+    "E_003/variants.py",
+    "_shared/polynomial_fits_v1.py"
+  ]
+}

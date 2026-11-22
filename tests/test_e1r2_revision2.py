@@ -35,7 +35,7 @@ import _common.walk_forward as WF
 from _common.contract_records import record_digest
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
-from contract_adapters import e_001
+from E_001.FULL_HISTORY_RAW_COUNTS_V1 import method as e_001
 
 ROOT = Path(__file__).resolve().parents[1]
 REFERENCE = ROOT / 'tests' / 'fixtures' / 'e1_r1_reference_v1.json'

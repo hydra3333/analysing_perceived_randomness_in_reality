@@ -63,7 +63,7 @@ class InstalledChains(unittest.TestCase):
     def test_no_development_flag_remains(self):
         self.assertEqual(sorted(METHODS_ROOT.rglob('IN_DEVELOPMENT.txt')), [])
         for m in RELEASED:
-            self.assertTrue((METHODS_ROOT / method_folder(m) / 'contract.py').is_file())
+            self.assertTrue((METHODS_ROOT / method_folder(m) / 'core_v1.py').is_file())
 
 
 class EveryReleasedVariantRuns(unittest.TestCase):

@@ -19,7 +19,7 @@ from test_e6_beta_bernoulli import write_varied_master
 
 from _common import contract_publication as CP
 from _common import contract_runner as CR
-from _common import polynomial_fits as PF
+from _shared import polynomial_fits_v1 as PF
 from _common.contract_dispatch import DispatchRefused, dispatch_gate, METHODS_ROOT, method_folder
 from _common.contract_forecast import assemble_forecast, BarrelOutput, MethodOutput, ScoredRanking
 from _common.contract_publication import read_run
@@ -27,8 +27,8 @@ from _common.contract_records import record_digest
 from _common.contract_registry import InstalledRegistry
 from _common.game_profiles import OZLOTTO, POWERBALL, get_profile
 from _common.multigame_method_registry import method_status
-from E_003 import contract as E3
-from E_004 import contract as E4
+from E_003 import core_v1 as E3
+from E_004 import core_v1 as E4
 from E_003.variants import VARIANTS as V3
 from E_004.variants import VARIANTS as V4
 
@@ -267,15 +267,15 @@ class AsInstalled(unittest.TestCase):
         import Method_Contract_Runner as M
         for name, mod in METHODS:
             self.assertFalse((METHODS_ROOT / method_folder(name) / 'IN_DEVELOPMENT.txt').exists())   # REL-1
-            self.assertIs(M.ADAPTERS[name], mod)
+            self.assertTrue(all(m.core_v1 is mod for m in M.ADAPTERS[name].variant_methods.values()))
 
 
 class FolderGuards(unittest.TestCase):
     def test_method_folders_are_exactly_these_files_and_read_nothing(self):
         for name, _m in METHODS:
             folder = METHODS_ROOT / method_folder(name)
-            self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'),
-                             ['__init__.py', 'contract.py', 'variants.py'])   # REL-1 removed the flag
+            self.assertEqual(sorted(p.name for p in folder.iterdir() if p.is_file()),
+                             ['__init__.py', 'core_v1.py', 'variants.py'])   # REL-1 removed the flag
             for f in sorted(folder.glob('*.py')):
                 text = f.read_text('utf-8')
                 for word in ('game_draws_reader', 'source' + '_data', 'contract_receipts', 'contract_publication',
