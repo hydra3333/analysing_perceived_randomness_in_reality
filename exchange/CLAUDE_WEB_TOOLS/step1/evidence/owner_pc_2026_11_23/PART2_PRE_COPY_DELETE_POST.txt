@@ -1,0 +1,129 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe "E:\TEMP\STEP1_Layout_Install_v2\VERIFY_STEP1_INSTALL.py" --repo . --phase pre
+HEAD: 3087705a8668943331df523db78a55c930fc03ff (descends from base c0e3104)
+25 guarded files unchanged in Git HEAD
+PRE PASS: clean tree; 95 new paths absent; 15 files to replace and 16 to delete at their base version. Nothing was changed.
+Read-only: no project code imported, nothing run, nothing changed.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>xcopy "E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\*" . /E /Y
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\Method_Contract_Runner.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_001\FULL_HISTORY_RAW_COUNTS_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_001\FULL_HISTORY_RAW_COUNTS_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEAN_ALL_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEAN_ALL_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEAN_LAST8_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEAN_LAST8_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEDIAN_ALL_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_002\RECUR_MEDIAN_ALL_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_INTERP_W52_D4_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_INTERP_W52_D4_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W104_D3_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W104_D3_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W52_D2_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W52_D2_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W52_D3_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_LS_W52_D3_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_MINIMAX_W52_D2_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_MINIMAX_W52_D2_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_MINIMAX_W52_D3_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_003\POLY_MINIMAX_W52_D3_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_INTERP_W52_D4_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_INTERP_W52_D4_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W104_D3_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W104_D3_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W52_D2_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W52_D2_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W52_D3_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_LS_W52_D3_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_MINIMAX_W52_D2_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_MINIMAX_W52_D2_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_MINIMAX_W52_D3_H4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_004\POLY_MINIMAX_W52_D3_H4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_DECAY_149_150_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_DECAY_149_150_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_DECAY_74_75_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_DECAY_74_75_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_FULL_MEMORY_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_006\BETA_BERNOULLI_FULL_MEMORY_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_FULL_C52_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_FULL_C52_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_W104_C52_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_W104_C52_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_W52_C52_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_007\BETA_SHRINK_W52_C52_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P13_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P13_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P26_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P26_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P52_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_008\HIER_PERIODS_P52_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_18_19_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_18_19_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_37_38_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_37_38_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_5_6_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_009\EXP_DECAY_5_6_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S13_L104_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S13_L104_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S26_L208_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S26_L208_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S52_FULL_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_010\CONTRAST_S52_FULL_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_BINS_C100_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_BINS_C100_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_BINS_W208_C100_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_BINS_W208_C100_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_LOGAGE_SIGN_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_017\HAZARD_LOGAGE_SIGN_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_ALL_C10_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_ALL_C10_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_W104_C10_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_W104_C10_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_W208_C10_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_018\MIX4_W208_C10_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\core_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T2_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T2_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T3_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T3_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T4_V1\method.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\E_019\PERIODIC_T4_V1\VARIANT.json
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\_common\method_table.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\_shared\occurrence_counts_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\_shared\polynomial_fits_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\src\methods\_shared\recurrence_gaps_v1.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_code3_retirement.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e1r2_revision2.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e1r3_revision3.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e2r_dispatch.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e2r_runner.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e3_e4_polynomial.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_e6_beta_bernoulli.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_mhupa_gates.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_occurrence_counts.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_polynomial_fits.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_recurrence_gaps.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_rel1_release.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_wave1_frequency.py
+E:\TEMP\STEP1_Layout_Install_v2\repo_overlay\tests\test_wave2_recurrence.py
+110 File(s) copied
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rm -q --pathspec-from-file="E:\TEMP\STEP1_Layout_Install_v2\DELETE_PATHS.txt"
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe "E:\TEMP\STEP1_Layout_Install_v2\VERIFY_STEP1_INSTALL.py" --repo . --phase post
+HEAD: 3087705a8668943331df523db78a55c930fc03ff (descends from base c0e3104)
+25 guarded files unchanged in Git HEAD
+POST PASS: exactly the 95 expected new paths, 15 modified files and 16 staged deletions, all with the expected bytes.
+Read-only: no project code imported, nothing run, nothing changed.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

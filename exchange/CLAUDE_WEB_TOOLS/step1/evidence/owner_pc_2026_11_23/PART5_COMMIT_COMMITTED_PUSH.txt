@@ -1,0 +1,347 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add src tests
+warning: in the working copy of 'src/methods/Method_Contract_Runner.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_code3_retirement.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e1r2_revision2.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e1r3_revision3.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e2r_dispatch.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e2r_runner.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e3_e4_polynomial.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_e6_beta_bernoulli.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_mhupa_gates.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_occurrence_counts.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_polynomial_fits.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_recurrence_gaps.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_rel1_release.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_wave1_frequency.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/test_wave2_recurrence.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEAN_ALL_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEAN_LAST8_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEAN_LAST8_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEDIAN_ALL_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/RECUR_MEDIAN_ALL_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W104_D3_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W104_D3_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W52_D2_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W52_D2_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W52_D3_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_LS_W52_D3_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W104_D3_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W104_D3_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W52_D2_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W52_D2_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W52_D3_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_LS_W52_D3_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_FULL_C52_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_FULL_C52_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_W104_C52_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_W104_C52_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_W52_C52_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/BETA_SHRINK_W52_C52_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P13_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P13_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P26_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P26_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P52_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/HIER_PERIODS_P52_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_18_19_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_18_19_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_37_38_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_37_38_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_5_6_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/EXP_DECAY_5_6_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S13_L104_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S13_L104_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S26_L208_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S26_L208_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S52_FULL_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/CONTRAST_S52_FULL_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_BINS_C100_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_BINS_C100_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_BINS_W208_C100_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_BINS_W208_C100_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_ALL_C10_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_ALL_C10_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_W104_C10_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_W104_C10_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_W208_C10_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/MIX4_W208_C10_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T2_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T2_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T3_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T3_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T4_V1/VARIANT.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/PERIODIC_T4_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_common/method_table.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/occurrence_counts_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/polynomial_fits_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/recurrence_gaps_v1.py', LF will be replaced by CRLF the next time Git touches it
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+A  src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/VARIANT.json
+R  src/methods/contract_adapters/e_001.py -> src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
+A  src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT.json
+A  src/methods/E_002/RECUR_MEAN_ALL_V1/method.py
+A  src/methods/E_002/RECUR_MEAN_LAST8_V1/VARIANT.json
+A  src/methods/E_002/RECUR_MEAN_LAST8_V1/method.py
+A  src/methods/E_002/RECUR_MEDIAN_ALL_V1/VARIANT.json
+A  src/methods/E_002/RECUR_MEDIAN_ALL_V1/method.py
+R  src/methods/E_002/contract.py -> src/methods/E_002/core_v1.py
+A  src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+A  src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/method.py
+A  src/methods/E_003/POLY_LS_W104_D3_V1/VARIANT.json
+A  src/methods/E_003/POLY_LS_W104_D3_V1/method.py
+A  src/methods/E_003/POLY_LS_W52_D2_V1/VARIANT.json
+A  src/methods/E_003/POLY_LS_W52_D2_V1/method.py
+A  src/methods/E_003/POLY_LS_W52_D3_V1/VARIANT.json
+A  src/methods/E_003/POLY_LS_W52_D3_V1/method.py
+A  src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+A  src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/method.py
+A  src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+A  src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/method.py
+R  src/methods/E_003/contract.py -> src/methods/E_003/core_v1.py
+A  src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+A  src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/method.py
+A  src/methods/E_004/POLY_LS_W104_D3_V1/VARIANT.json
+A  src/methods/E_004/POLY_LS_W104_D3_V1/method.py
+A  src/methods/E_004/POLY_LS_W52_D2_V1/VARIANT.json
+A  src/methods/E_004/POLY_LS_W52_D2_V1/method.py
+A  src/methods/E_004/POLY_LS_W52_D3_V1/VARIANT.json
+A  src/methods/E_004/POLY_LS_W52_D3_V1/method.py
+A  src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+A  src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/method.py
+A  src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+A  src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/method.py
+R  src/methods/E_004/contract.py -> src/methods/E_004/core_v1.py
+A  src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/VARIANT.json
+A  src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/method.py
+A  src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/VARIANT.json
+A  src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/method.py
+A  src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/VARIANT.json
+A  src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/method.py
+R  src/methods/E_006/contract.py -> src/methods/E_006/core_v1.py
+A  src/methods/E_007/BETA_SHRINK_FULL_C52_V1/VARIANT.json
+A  src/methods/E_007/BETA_SHRINK_FULL_C52_V1/method.py
+A  src/methods/E_007/BETA_SHRINK_W104_C52_V1/VARIANT.json
+A  src/methods/E_007/BETA_SHRINK_W104_C52_V1/method.py
+A  src/methods/E_007/BETA_SHRINK_W52_C52_V1/VARIANT.json
+A  src/methods/E_007/BETA_SHRINK_W52_C52_V1/method.py
+R  src/methods/E_007/contract.py -> src/methods/E_007/core_v1.py
+A  src/methods/E_008/HIER_PERIODS_P13_V1/VARIANT.json
+A  src/methods/E_008/HIER_PERIODS_P13_V1/method.py
+A  src/methods/E_008/HIER_PERIODS_P26_V1/VARIANT.json
+A  src/methods/E_008/HIER_PERIODS_P26_V1/method.py
+A  src/methods/E_008/HIER_PERIODS_P52_V1/VARIANT.json
+A  src/methods/E_008/HIER_PERIODS_P52_V1/method.py
+R  src/methods/E_008/contract.py -> src/methods/E_008/core_v1.py
+A  src/methods/E_009/EXP_DECAY_18_19_V1/VARIANT.json
+A  src/methods/E_009/EXP_DECAY_18_19_V1/method.py
+A  src/methods/E_009/EXP_DECAY_37_38_V1/VARIANT.json
+A  src/methods/E_009/EXP_DECAY_37_38_V1/method.py
+A  src/methods/E_009/EXP_DECAY_5_6_V1/VARIANT.json
+A  src/methods/E_009/EXP_DECAY_5_6_V1/method.py
+R  src/methods/E_009/contract.py -> src/methods/E_009/core_v1.py
+A  src/methods/E_010/CONTRAST_S13_L104_V1/VARIANT.json
+A  src/methods/E_010/CONTRAST_S13_L104_V1/method.py
+A  src/methods/E_010/CONTRAST_S26_L208_V1/VARIANT.json
+A  src/methods/E_010/CONTRAST_S26_L208_V1/method.py
+A  src/methods/E_010/CONTRAST_S52_FULL_V1/VARIANT.json
+A  src/methods/E_010/CONTRAST_S52_FULL_V1/method.py
+R  src/methods/E_010/contract.py -> src/methods/E_010/core_v1.py
+A  src/methods/E_017/HAZARD_BINS_C100_V1/VARIANT.json
+A  src/methods/E_017/HAZARD_BINS_C100_V1/method.py
+A  src/methods/E_017/HAZARD_BINS_W208_C100_V1/VARIANT.json
+A  src/methods/E_017/HAZARD_BINS_W208_C100_V1/method.py
+A  src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/VARIANT.json
+A  src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/method.py
+R  src/methods/E_017/contract.py -> src/methods/E_017/core_v1.py
+A  src/methods/E_018/MIX4_ALL_C10_V1/VARIANT.json
+A  src/methods/E_018/MIX4_ALL_C10_V1/method.py
+A  src/methods/E_018/MIX4_W104_C10_V1/VARIANT.json
+A  src/methods/E_018/MIX4_W104_C10_V1/method.py
+A  src/methods/E_018/MIX4_W208_C10_V1/VARIANT.json
+A  src/methods/E_018/MIX4_W208_C10_V1/method.py
+R  src/methods/E_018/contract.py -> src/methods/E_018/core_v1.py
+A  src/methods/E_019/PERIODIC_T2_V1/VARIANT.json
+A  src/methods/E_019/PERIODIC_T2_V1/method.py
+A  src/methods/E_019/PERIODIC_T3_V1/VARIANT.json
+A  src/methods/E_019/PERIODIC_T3_V1/method.py
+A  src/methods/E_019/PERIODIC_T4_V1/VARIANT.json
+A  src/methods/E_019/PERIODIC_T4_V1/method.py
+R  src/methods/E_019/contract.py -> src/methods/E_019/core_v1.py
+M  src/methods/Method_Contract_Runner.py
+A  src/methods/_common/method_table.py
+R  src/methods/_common/occurrence_counts.py -> src/methods/_shared/occurrence_counts_v1.py
+R  src/methods/_common/polynomial_fits.py -> src/methods/_shared/polynomial_fits_v1.py
+R  src/methods/_common/recurrence_gaps.py -> src/methods/_shared/recurrence_gaps_v1.py
+D  src/methods/contract_adapters/__init__.py
+M  tests/test_code3_retirement.py
+M  tests/test_e1r2_revision2.py
+M  tests/test_e1r3_revision3.py
+M  tests/test_e2r_dispatch.py
+M  tests/test_e2r_runner.py
+M  tests/test_e3_e4_polynomial.py
+M  tests/test_e6_beta_bernoulli.py
+M  tests/test_mhupa_gates.py
+M  tests/test_occurrence_counts.py
+M  tests/test_polynomial_fits.py
+M  tests/test_recurrence_gaps.py
+M  tests/test_rel1_release.py
+M  tests/test_wave1_frequency.py
+M  tests/test_wave2_recurrence.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git commit -m "BUILD STEP 1: the folder layout (specification 17.3 phase 1): method files to the family and variant layout, shared helpers to _shared, the runner table built from the folder tree"
+[main 0aea10a] BUILD STEP 1: the folder layout (specification 17.3 phase 1): method files to the family and variant layout, shared helpers to _shared, the runner table built from the folder tree
+ 111 files changed, 3360 insertions(+), 73 deletions(-)
+ create mode 100644 src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/VARIANT.json
+ rename src/methods/{contract_adapters/e_001.py => E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py} (100%)
+ create mode 100644 src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT.json
+ create mode 100644 src/methods/E_002/RECUR_MEAN_ALL_V1/method.py
+ create mode 100644 src/methods/E_002/RECUR_MEAN_LAST8_V1/VARIANT.json
+ create mode 100644 src/methods/E_002/RECUR_MEAN_LAST8_V1/method.py
+ create mode 100644 src/methods/E_002/RECUR_MEDIAN_ALL_V1/VARIANT.json
+ create mode 100644 src/methods/E_002/RECUR_MEDIAN_ALL_V1/method.py
+ rename src/methods/E_002/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_INTERP_W52_D4_H4_V1/method.py
+ create mode 100644 src/methods/E_003/POLY_LS_W104_D3_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_LS_W104_D3_V1/method.py
+ create mode 100644 src/methods/E_003/POLY_LS_W52_D2_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_LS_W52_D2_V1/method.py
+ create mode 100644 src/methods/E_003/POLY_LS_W52_D3_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_LS_W52_D3_V1/method.py
+ create mode 100644 src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_MINIMAX_W52_D2_H4_V1/method.py
+ create mode 100644 src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_003/POLY_MINIMAX_W52_D3_H4_V1/method.py
+ rename src/methods/E_003/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_INTERP_W52_D4_H4_V1/method.py
+ create mode 100644 src/methods/E_004/POLY_LS_W104_D3_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_LS_W104_D3_V1/method.py
+ create mode 100644 src/methods/E_004/POLY_LS_W52_D2_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_LS_W52_D2_V1/method.py
+ create mode 100644 src/methods/E_004/POLY_LS_W52_D3_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_LS_W52_D3_V1/method.py
+ create mode 100644 src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_MINIMAX_W52_D2_H4_V1/method.py
+ create mode 100644 src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/VARIANT.json
+ create mode 100644 src/methods/E_004/POLY_MINIMAX_W52_D3_H4_V1/method.py
+ rename src/methods/E_004/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/VARIANT.json
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_DECAY_149_150_V1/method.py
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/VARIANT.json
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_DECAY_74_75_V1/method.py
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/VARIANT.json
+ create mode 100644 src/methods/E_006/BETA_BERNOULLI_FULL_MEMORY_V1/method.py
+ rename src/methods/E_006/{contract.py => core_v1.py} (100%)
+ create mode 100644 src/methods/E_007/BETA_SHRINK_FULL_C52_V1/VARIANT.json
+ create mode 100644 src/methods/E_007/BETA_SHRINK_FULL_C52_V1/method.py
+ create mode 100644 src/methods/E_007/BETA_SHRINK_W104_C52_V1/VARIANT.json
+ create mode 100644 src/methods/E_007/BETA_SHRINK_W104_C52_V1/method.py
+ create mode 100644 src/methods/E_007/BETA_SHRINK_W52_C52_V1/VARIANT.json
+ create mode 100644 src/methods/E_007/BETA_SHRINK_W52_C52_V1/method.py
+ rename src/methods/E_007/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P13_V1/VARIANT.json
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P13_V1/method.py
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P26_V1/VARIANT.json
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P26_V1/method.py
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P52_V1/VARIANT.json
+ create mode 100644 src/methods/E_008/HIER_PERIODS_P52_V1/method.py
+ rename src/methods/E_008/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_009/EXP_DECAY_18_19_V1/VARIANT.json
+ create mode 100644 src/methods/E_009/EXP_DECAY_18_19_V1/method.py
+ create mode 100644 src/methods/E_009/EXP_DECAY_37_38_V1/VARIANT.json
+ create mode 100644 src/methods/E_009/EXP_DECAY_37_38_V1/method.py
+ create mode 100644 src/methods/E_009/EXP_DECAY_5_6_V1/VARIANT.json
+ create mode 100644 src/methods/E_009/EXP_DECAY_5_6_V1/method.py
+ rename src/methods/E_009/{contract.py => core_v1.py} (98%)
+ create mode 100644 src/methods/E_010/CONTRAST_S13_L104_V1/VARIANT.json
+ create mode 100644 src/methods/E_010/CONTRAST_S13_L104_V1/method.py
+ create mode 100644 src/methods/E_010/CONTRAST_S26_L208_V1/VARIANT.json
+ create mode 100644 src/methods/E_010/CONTRAST_S26_L208_V1/method.py
+ create mode 100644 src/methods/E_010/CONTRAST_S52_FULL_V1/VARIANT.json
+ create mode 100644 src/methods/E_010/CONTRAST_S52_FULL_V1/method.py
+ rename src/methods/E_010/{contract.py => core_v1.py} (98%)
+ create mode 100644 src/methods/E_017/HAZARD_BINS_C100_V1/VARIANT.json
+ create mode 100644 src/methods/E_017/HAZARD_BINS_C100_V1/method.py
+ create mode 100644 src/methods/E_017/HAZARD_BINS_W208_C100_V1/VARIANT.json
+ create mode 100644 src/methods/E_017/HAZARD_BINS_W208_C100_V1/method.py
+ create mode 100644 src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/VARIANT.json
+ create mode 100644 src/methods/E_017/HAZARD_LOGAGE_SIGN_V1/method.py
+ rename src/methods/E_017/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_018/MIX4_ALL_C10_V1/VARIANT.json
+ create mode 100644 src/methods/E_018/MIX4_ALL_C10_V1/method.py
+ create mode 100644 src/methods/E_018/MIX4_W104_C10_V1/VARIANT.json
+ create mode 100644 src/methods/E_018/MIX4_W104_C10_V1/method.py
+ create mode 100644 src/methods/E_018/MIX4_W208_C10_V1/VARIANT.json
+ create mode 100644 src/methods/E_018/MIX4_W208_C10_V1/method.py
+ rename src/methods/E_018/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/E_019/PERIODIC_T2_V1/VARIANT.json
+ create mode 100644 src/methods/E_019/PERIODIC_T2_V1/method.py
+ create mode 100644 src/methods/E_019/PERIODIC_T3_V1/VARIANT.json
+ create mode 100644 src/methods/E_019/PERIODIC_T3_V1/method.py
+ create mode 100644 src/methods/E_019/PERIODIC_T4_V1/VARIANT.json
+ create mode 100644 src/methods/E_019/PERIODIC_T4_V1/method.py
+ rename src/methods/E_019/{contract.py => core_v1.py} (99%)
+ create mode 100644 src/methods/_common/method_table.py
+ rename src/methods/{_common/occurrence_counts.py => _shared/occurrence_counts_v1.py} (100%)
+ rename src/methods/{_common/polynomial_fits.py => _shared/polynomial_fits_v1.py} (100%)
+ rename src/methods/{_common/recurrence_gaps.py => _shared/recurrence_gaps_v1.py} (100%)
+ delete mode 100644 src/methods/contract_adapters/__init__.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe "E:\TEMP\STEP1_Layout_Install_v2\VERIFY_STEP1_INSTALL.py" --repo . --phase committed
+HEAD: 0aea10a16ad26c7e5317430994cc76e2953ef89c (descends from base c0e3104)
+25 guarded files unchanged in Git HEAD
+COMMITTED PASS: the last commit (0aea10a) added exactly 95 files, modified 15 and deleted 16; all Git blobs match.
+Read-only: no project code imported, nothing run, nothing changed.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git push
+Enumerating objects: 197, done.
+Counting objects: 100% (197/197), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (83/83), done.
+Writing objects: 100% (165/165), 36.86 KiB | 6.14 MiB/s, done.
+Total 165 (delta 98), reused 136 (delta 82), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (98/98), completed with 19 local objects.
+To https://github.com/hydra3333/analysing_perceived_randomness_in_reality.git
+   3087705..0aea10a  main -> main
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rev-parse HEAD
+0aea10a16ad26c7e5317430994cc76e2953ef89c
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

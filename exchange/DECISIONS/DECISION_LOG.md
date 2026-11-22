@@ -3259,3 +3259,32 @@ section 17.2 (unpack it into a new folder, never over the clone).
   own say-so, with the ZIP as the archive. Not decided: when, or whether.
 - **Not authorised by this entry:** parts 1 to 5 of the sheet; each waits for his go. Next numbers: EX_279, entry 164,
   RAT-43.
+
+## 164. 23 November 2026, 09:41 - BUILD STEP 1 INSTALLED by the owner (main `0aea10a`): every part of the reviewed sheet passed on his PC, including the complete equivalence check; verified by Claude from GitHub
+
+- **What the owner ran, 23 November 2026, 08:07 to 09:40, on his own go part by part** (`exchange/EX_277_Claude/STEP1_Layout_Install_v2/INSTALL_AND_RUN_SHEET.md`;
+  his outputs, unedited, in `exchange/CLAUDE_WEB_TOOLS/step1/evidence/owner_pc_2026_11_23/`):
+  - part 1, the suite as it was: 45 modules, 571 tests; FAILED exactly the two expected modules (`test_mhupa_launchers`
+    1 failure; `test_multigame_reader_contracts` 7); four skips, the four symlink tests his Windows account cannot
+    run (H-1 v8 section 6); the clone clean before and after;
+  - part 2: `PRE PASS`; 110 files copied; `POST PASS` (95 new paths, 15 modified, 16 staged deletions; 25 guarded files
+    unchanged);
+  - part 3: the same suite on the moved code, the same module lines; the comparison identified all 571 tests in both
+    runs, the same result for all 571, and "no module and no test changed" (`test_gitignore_lines` printed its
+    set in another order, as expected);
+  - **part 4, the equivalence check: `RESULT: PASS - COMPLETE`.** Powerball 17,280 of 17,280 and Oz Lotto 8,760 of 8,760
+    old development forecasts found (MISSING: 0 in both; 5,838 and 2,802 of them only in his old run folders),
+    computed again with the moved code and equal by content digest; 80 variants. About 31 and 9 minutes;
+  - part 5: `COMMITTED PASS` ("added exactly 95 files, modified 15 and deleted 16; all Git blobs match"); pushed;
+    `main` `0aea10a16ad26c7e5317430994cc76e2953ef89c`.
+- **Verified by Claude from GitHub after his push:** `0aea10a` changes only `src/` and `tests/`; all 126 manifest entries
+  match the pushed commit (95 added and 15 modified with their hashes; 16 deleted absent); its `src/` and `tests/` are
+  identical to the tree that passed the suite and the equivalence check in the cloud.
+- **State: build step 1 is INSTALLED, OWNER-WINDOWS-TESTED and complete** under specification 17.3 phase 1 (RAT-40;
+  go in entry 158; the reviewer's PASS of the package in EX_278). The owner's ZIP of the old project folder (entry 163)
+  remains the way back to the old system (specification 17.2).
+- **Next, each on the owner's own go:** the light tidy-up of the existing method files (RAT-40 note 3; headers,
+  dependency lists and missing comments; no calculation change; the equivalence check run again); then build step 2.
+  The old run folders stay until build step 3's transition check (entry 163).
+- **The owner's words (09:38):** "thank you. you are doing a good job leading me in this."
+- Next numbers: EX_279, entry 165, RAT-43.

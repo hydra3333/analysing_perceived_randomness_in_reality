@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 06:47 Australia/Adelaide (entry 162: EX_278, the reviewer's focused RECHECK PASS of the build step 1 package v2). **Waiting on the owner: his own go for his ZIP of the project folder and for each part of the install and run sheet. Nothing on the owner's PC is authorised yet.**
+**Last updated:** 23 November 2026, 09:41 Australia/Adelaide (entry 164: BUILD STEP 1 INSTALLED, main `0aea10a`; the complete equivalence check passed on the owner's PC). **Next, on the owner's own go: the light tidy-up of the existing method files; then build step 2.**
 
 ## For the owner: NOW
 
+- **BUILD STEP 1 IS INSTALLED AND PROVED (entry 164; 23 November 2026).** The owner ran the reviewed sheet on his PC
+  and pushed `main` `0aea10a`: the suite unchanged before and after (45 modules, 571 tests, the same two known failing
+  modules); **the equivalence check `RESULT: PASS - COMPLETE`** (Powerball 17,280 and Oz Lotto 8,760 old development
+  forecasts, all found and equal); `COMMITTED PASS`; Claude verified the pushed commit from GitHub. His outputs are in
+  `exchange/CLAUDE_WEB_TOOLS/step1/evidence/owner_pc_2026_11_23/`. **The code in `src/` now has the family and variant
+  layout** (`src/methods/E_0nn/<VARIANT>/method.py` and `VARIANT.json`; `_shared/`; `_common/method_table.py`).
+  **Next, each on the owner's go:** the light tidy-up of the method files (RAT-40 note 3; no calculation change; the
+  equivalence check again); then build step 2 (Fable, High, for its core). The old run folders stay until build
+  step 3's transition check. The bullets below are history.
 - **BUILD STEP 1'S PACKAGE HAS PASSED REVIEW (entry 162; EX_278; 23 November 2026).** The package is
   `exchange/EX_277_Claude/STEP1_Layout_Install_v2.zip` (SHA-256 `f8fa81054e00f0b3ca908b8f89130f024b2ded1aec2d7973762ee0081e405051`); its sheet is
   `exchange/EX_277_Claude/STEP1_Layout_Install_v2/INSTALL_AND_RUN_SHEET.md`. **Part 0 is done (entry 163, owner-reported,
