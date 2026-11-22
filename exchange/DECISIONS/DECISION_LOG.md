@@ -3150,3 +3150,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Model:** the owner selected Fable 5.2 at 18:37. Claude's standing suggestion for step 1 is Opus (H-1 v8 section 10);
   said to him in the chat.
 - Next numbers: EX_275, entry 159, RAT-43.
+
+## 159. 22 November 2026, 19:59 - OWNER: the worker-process test E2R-T12 may run in Claude's cloud workspace runs of the suite
+
+- **The owner's words (19:59):** "\"The worker-process test (E2R-T12\" yes happy for it to stay in your cloud runs."
+- **DECIDED (owner):** E2R-T12 (`tests/test_e2r_contract.py`; it starts ordinary worker processes) runs as part of the
+  suite in Claude's own cloud workspace, so the before-and-after comparisons stay complete. Claude reported that it
+  had already run in the step 1 runs (an exclusion that did not take effect; draft note v0.1). This covers the cloud
+  workspace only: a run on the owner's PC is still asked of him with its run sheet or task.
+- **Also asked:** whether to relay the step 1 progress paste to the reviewer now or with EX_275. Claude's answer:
+  hold it and send everything once, as EX_275, with the install package (one review round).
+- Next numbers: EX_275, entry 160, RAT-43.
