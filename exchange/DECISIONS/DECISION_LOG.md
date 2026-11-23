@@ -3981,3 +3981,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   committed between 21:07 and 21:12 Australia/Adelaide (Git holds each commit's time). The entries are not edited.
   From this entry on, a heading's time is read from the clock when the entry is written.
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 196; RAT-45.
+
+## 196. 23 November 2026, 21:14 - The owner's settings file and the scratch rehearsal: what was checked, one statement of entry 192 corrected, the choice put to the owner
+
+- **The owner, 21:11:** "thing 2 - tell me precisely what to change in which file." And at 21:13: "please give me a new
+  blurb for chatgpt when you are ready" (for EX_288; given in the chat).
+- **Checked against Claude Code's own documentation** (code.claude.com/docs/en/permissions and /tools-reference, read
+  23 November 2026), not from memory: a deny rule is matched before any allow rule and an allow rule cannot make an
+  exception to it; a `Bash(...)` rule is matched against the text of the command as the runner types it, `*` standing
+  for any text; it does not reach what a program started by that command does; `Read(...)` and `Edit(...)` rules
+  written without a leading `/` or `//` apply under the current directory.
+- **Correction to entry 192** (and to the lines written from it in the continuity page and reminder R-030 (f), now put
+  right): it said the settings deny "reading any `source_data` or `results` folder wherever it lies". Not so. Those
+  three `Read(**/...)` lines bind the runner's own file tools under the folder it works in, which is the
+  repository. They do not reach `D:\DELETE_ME\`, and they never bound a program the runner starts. What does stand in
+  the way of a scratch rehearsal is two lines: `"Bash(*.bat*)"` and `"Bash(*install_upgrade_dependencies*)"` (the
+  delete lines matter only for the clean-up).
+- **What the project already does about such lines:** `CLAUDE_CODE_WORKING_FOLDER_TREE/tools/cc_clone.py` is a checked
+  helper that the runner starts with one Python command and that itself does `git clone`, `git add`, `git commit`
+  and the deletion of a task clone, each of which the same settings file denies when typed; its own header says a
+  denied path "is never typed". Rulebook section 4 requires it. The deny lines stop typed commands; the project's
+  checked tools do the work after checking where they are.
+- **The choice put to the owner (his decision; nothing done):** (A) he deletes those two lines from
+  `.claude/settings.json`, which also removes the hard block on the same typed commands in the real tree, since a
+  pattern cannot tell `D:` from `E:` reliably; or (B) no change to his file, and Claude writes one more checked helper
+  in the pattern of `cc_clone.py`, which refuses any tree whose root is not under a real `D:\DELETE_ME\` and runs that
+  tree's own launchers; it goes to the reviewer with the task file. Claude recommends (B).
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 197; RAT-45.
