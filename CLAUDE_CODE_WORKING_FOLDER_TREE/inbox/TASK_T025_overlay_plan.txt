@@ -1,0 +1,5 @@
+# TASK_T025 overlay plan: STEP2_Research_Engine_v1r2 (EX_288; PASS in EX_290) onto main.
+# Read by tools/cc_clone.py overlay --plan. 2 REPLACE, 0 REMOVE; the other 33 overlay files are new.
+
+REPLACE .gitignore
+REPLACE tests/test_mhupa_master_versions.py

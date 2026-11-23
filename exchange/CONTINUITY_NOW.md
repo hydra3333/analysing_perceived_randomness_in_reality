@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:31 Australia/Adelaide (entry 198: EX_290 is the reviewer's PASS for build step 2, package v1r2; the rulebook v0.7 is installed (RAT-44); waiting on the owner's go for a scratch rehearsal or the install; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:40 Australia/Adelaide (entry 199: the owner chose to rehearse step 2 first; TASK_T025 is written and waits for his go; step 2 has the reviewer's PASS (EX_290); nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **TASK_T025 IS WRITTEN: THE STEP 2 REHEARSAL ON WINDOWS (entry 199; 23 November 2026).**
+  `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md`: the install sheet's parts 1 to 4 in a task clone, then parts 5
+  to 7 in a scratch tree under `D:\DELETE_ME\a_p_r_i_r\T025\` (about two hours). **Waiting on the owner:** his go to
+  the runner (after `git pull --ff-only`, in a new Claude Code conversation, with `D:\DELETE_ME` existing), and
+  whether the reviewer looks at the task file first. Afterwards he deletes the scratch folder himself. Then: his
+  own install in DEV (sheet parts 1 to 5), and separately DEV's first fill.
 - **BUILD STEP 2 HAS THE REVIEWER'S PASS (EX_290; entry 198; 23 November 2026).** Package
   `STEP2_Research_Engine_v1r2` (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`, with `INSTALL_AND_RUN_SHEET.md`). No
   correction is outstanding. **Waiting on the owner, each his own go:** (1) a rehearsal by the runner under

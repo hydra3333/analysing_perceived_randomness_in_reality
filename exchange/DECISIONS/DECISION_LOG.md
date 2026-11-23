@@ -4049,3 +4049,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   install: H-1 v10 (entry 183).
 - A PASS authorises no install or run. Nothing is authorised on the owner's PC.
 - Next numbers: EX_291; entry 199; RAT-45.
+
+## 199. 23 November 2026, 21:40 - The owner chooses to rehearse first; TASK_T025 written (the step 2 rehearsal on Windows); not started, not authorised to run
+
+- **The owner, 21:32, to the choice of entry 198 (a rehearsal by the runner first, or the install in DEV now):** "lets
+  do rehearse first". He did not answer the two points put with it (the scope; whether the reviewer looks at the
+  task file first), so Claude took its own proposals: the scope as proposed, and one short look by the reviewer
+  unless the owner says otherwise.
+- **Written:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md` (SHA-256 `a360c8fc2c82d14d5f90de1fbd62ca2b2c095e794ba67df0dd35d0b63f3aa5b2`), with
+  `TASK_T025_overlay_plan.txt` and `TASK_T025_ENVIRONMENT.ini`; made by `exchange/CLAUDE_WEB_TOOLS/t025/make_task_t025.py` from
+  `TASK_T025_template.md` (each long path defined once). 33 steps, about two hours on the owner's PC.
+- **What it does.** Steps 1 to 16, in a task clone with the main Python and the existing clone tool, as earlier
+  tasks: the suite as it is today, the package's verifier before the copy, the 35 files copied in, the verifier
+  after, the suite again and its comparison, the commit in the clone, the verifier's committed phase (the sheet's
+  parts 1 to 4). Steps 17 to 29, under `D:\DELETE_ME\a_p_r_i_r\T025\` by rulebook v0.7 section 2A: the clone's files
+  copied to a scratch tree, its own `.venv` built by its own two scripts, `Run_Research.bat --game BOTH --no-update`
+  twice (the first fill on the real results, then a job with nothing new), `Withdraw_Variant.bat` started with no
+  variant, the old run folders copied from DEV by reading, and the comparison with the old records (parts 5 to 7).
+- **What it leaves out, and why.** A planted interruption: on Windows it would mean ending a process, which the
+  owner's rules forbid; the suite covers crash recovery on invented data. The clean-up of the scratch folder: the
+  owner's settings deny the runner every delete, so the owner deletes `D:\DELETE_ME\a_p_r_i_r\T025` himself later.
+- **Checked by Claude, in the cloud:** the six Python one-liners compile; the 33 steps are in order; no command
+  contains a word the owner's settings deny; every D: path lies under `D:\DELETE_ME\`. **Not executed by Claude:**
+  any command of the task on Windows. A `.bat` started from Git Bash by its full path, and whether the settings'
+  `Read` lines stop the copy of step 26, are the two things most likely to stop it; step 26 says what to do if
+  refused.
+- **Not authorised by this:** running the task. It needs the owner's own go ("Do inbox\TASK_T025.md" to the runner),
+  after his `git pull --ff-only` and in a new Claude Code conversation.
+- Next numbers: EX_291; entry 200; RAT-45.
