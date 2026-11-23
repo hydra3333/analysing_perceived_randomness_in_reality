@@ -3769,3 +3769,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The candidate** (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md`, SHA-256 `7b4c424d...14d882`): a new item
   4 of section 2A says this; the items after it are renumbered. Still no force until review and RAT-44.
 - Next numbers: EX_285 (the reviewer's reply), entry 186, RAT-44.
+
+## 186. 23 November 2026, 20:32 - OWNER: the runner's report, and anything else Claude names, may leave the scratch folder into outbox; the rulebook v0.7 candidate amended
+
+- **The owner's words (20:32):** "i AGREE the runner's report AND anything else you specify as needed at any time may
+  go into in `outbox\ upon your decision to do so.`"
+- **DECIDED (owner):** what leaves `D:\DELETE_ME\` is the runner's report and anything else the web chat names in a
+  task file, and only into `outbox\`. Everything else stays there until it is deleted there.
+- **How, without new machinery:** what is named is copied into the report itself, as text under a heading that
+  names where each came from. The runner's commit tool (`tools\cc_clone.py commit-report`) commits the one report file
+  and nothing else; files beside the report wait until that tool is extended, which Claude does when a task first
+  needs it.
+- **The candidate** (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md`, SHA-256 `52797e44...e4bcdf`): section 2A
+  item 4 says this. Still no force until review and RAT-44.
+- Next numbers: EX_285 (the reviewer's reply), entry 187, RAT-44.

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:30 Australia/Adelaide (entry 185: the rulebook v0.7 candidate amended - nothing ever leaves the scratch folder on D: but the runner's report; still no force until RAT-44; waiting on EX_285).
+**Last updated:** 23 November 2026, 20:32 Australia/Adelaide (entry 186: the rulebook v0.7 candidate amended - the report and anything Claude names in a task file may leave the scratch folder into outbox; still no force until RAT-44; waiting on EX_285).
 
 ## For the owner: NOW
 
