@@ -4,17 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:08 Australia/Adelaide (entries 189 to 191: EX_288 issued, step 2 package v1r2, with the reviewer for recheck; EX_287 closed the rulebook's three findings and asked one correction of wording, made as the v0.7r2 candidate, no force until RAT-44; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:12 Australia/Adelaide (entry 192: RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **THE RUNNER'S RULEBOOK v0.7 IS RATIFIED AND INSTALLED (RAT-44; entry 192; 23 November 2026).**
+  `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, SHA-256 begins `3e6125f137e1`; it adds section 2A, the scratch folder
+  `D:\DELETE_ME\` for rehearsals. **It authorises no task.** Before a rehearsal: a task file, the owner's go, and his
+  decision on how it is run, because his `.claude/settings.json` still denies the runner every `.bat`, every delete
+  and reading `results` (entry 192). Start a new Claude Code conversation after the next pull.
 - **EX_288 IS WITH THE REVIEWER; THE RULEBOOK CANDIDATE IS NOW v0.7r2 (entries 189 and 190; 23 November 2026).**
   **Step 2:** `exchange/EX_288_Claude.zip` carries package `STEP2_Research_Engine_v1r2` for the recheck of F285-B01 (the
   number is 288 because the reviewer took EX_287 for the rulebook). **Waiting on:** the reviewer. **The rulebook:**
   EX_287 closed EX_286's three findings and asked one correction of wording (rule 11's STOP sentence), made in
-  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md` (SHA-256 begins `faed89593e49`). **Waiting on the
-  owner:** RAT-44 on those bytes; then Claude installs the candidate as the rulebook by a script. The installed
-  rulebook is still v0.6. The five link tests of step 2 stay in (owner, entry 189).
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md` (SHA-256 begins `faed89593e49`). (Done: RAT-44, entry 192; the
+  installed rulebook is v0.7.) The five link tests of step 2 stay in (owner, entry 189).
 - **THE RULEBOOK CANDIDATE IS NOW v0.7r1 (entry 188; 23 November 2026).** EX_286 was RECHECK with three corrections of
   wording, all made: `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r1_CANDIDATE.md` with its diffs. (Superseded by
   entry 190: the reviewer rechecked it as EX_287; the candidate is now v0.7r2.) The installed rulebook is still v0.6.

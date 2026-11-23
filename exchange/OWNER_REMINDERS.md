@@ -693,6 +693,11 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
       exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/COVER_NOTE.md, section 5; your edit, when you choose); and, before the
       first rehearsal of the new system, a narrowly scoped reviewed amendment that allows exactly what that rehearsal
       needs.
+      Update (23 November 2026): that amendment is made. Rulebook v0.7 was ratified and installed (RAT-44, decision
+      log entry 192): section 2A, the scratch folder D:\DELETE_ME\ for rehearsals, only when a task file says so.
+      Still yours to decide before the first rehearsal: your .claude/settings.json denies the runner every .bat,
+      every delete and reading any results folder, so the rehearsal needs either named changes to that file (your
+      edit), one reviewed Python program that runs the scratch tree's launchers, or you running it from a sheet.
   (g) What the first rehearsal measures: the derived check at each job, a first full fill, Check_Forecasts --all, a
       rerun, and a backup of a whole tree.
   (h) A new draft of doc/METHOD_TEMPLATE/ for the new layout, after step 3.

@@ -3890,3 +3890,40 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (last present at main `bf0251b`). Their content, corrected, is `EX_288_body.md` and `assemble_ex288.py`, from which
   EX_288 was made. Nothing else is removed. The only EX_287 is the reviewer's, `exchange/EX_287_ChatGPT.md`.
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 192; RAT-44.
+
+## 192. 23 November 2026, 21:12 - RAT-44: THE OWNER RATIFIES the local runner rulebook v0.7 (the candidate v0.7r2); installed by Claude with the status change only
+
+- **The owner's words (21:06):** "I ratify v0.7r2 (RAT-44)". Before them (21:01, entry 190): "I'll ratify this as soon
+  as you tell me to".
+- **What was ratified:** `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md`, SHA-256
+  `faed89593e49c60f67789955a7e54f4bf3dd7a79c3cd5e76d4d7fdc71dc00e43` (entry 190).
+- **What the reviewer had read, stated exactly:** the v0.7 candidate (EX_286: RECHECK, three corrections) and the
+  v0.7r1 candidate (EX_287: those three CLOSED, one correction of wording, F287-C01, and "The owner may then consider
+  RAT-44 on the corrected bytes, after a focused verification if desired"). **The reviewer has not read v0.7r2's three
+  edits** (the version line; rule 11's last two sentences, with Claude's phrase "beyond what sections 3 and 4 allow";
+  section 2A item 5's parenthesis). The owner was told so and offered the reviewer's look first; he ratified. The
+  reviewer is told of the final bytes by the paste block.
+- **RAT-44 is recorded** (RAT-43 was the last number used). **Installed:** `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`,
+  **SHA-256 `3e6125f137e12266a3979c4fe173d8752207bf7163ac53c11bf6f6cf14bb121f`** (21,032 bytes), written by
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/finalise_rat44.py` from the ratified candidate (asserted by hash) over the
+  installed v0.6 (asserted by hash, `f92f17f6...fdfa632`; Git keeps it). **One line differs from the ratified
+  candidate, the version line's status words** (`CLAUDE_v0_7r2_CANDIDATE_TO_FINAL.diff`, one hunk; applied to the
+  candidate with `patch` it gives the installed file byte for byte; every line after the version line is identical).
+  No rule text differs from what was ratified.
+- **What v0.7 adds:** section 2A, the scratch folder `D:\DELETE_ME\` for rehearsals of the new system's commands,
+  only when a task file says so; real results may be copied in and used there; nothing leaves it but the report
+  and the text a task file names; a scratch tree's own Python environment; rule 10's one exception for the suite's
+  known failures; rule 11 for the owner's real QA and PROD trees with its one scratch-only qualification.
+- **RAT-44 authorises the documentation-only installation and nothing else:** no runner task, no rehearsal, no
+  install or run of step 2, nothing on the owner's PC. A rehearsal needs a task file and the owner's own go.
+- **A fact for the rehearsal's design, found while installing (not acted on):** the owner's `.claude/settings.json`,
+  which only he changes, still denies the runner every command that contains `.bat`, `install_upgrade_dependencies`
+  or `activate_venv`, every `rm`, `rmdir`, `del` and `Remove-Item`, and reading any `source_data` or `results` folder
+  wherever it lies. So the rulebook now allows a scratch rehearsal that those settings would still stop. How the
+  rehearsal is to be run (the owner changes named lines of his file; or one reviewed Python program of the task
+  runs the scratch tree's launchers; or the owner runs it from a sheet) is the owner's decision, to be put to him
+  with the task file's design. Nothing is to be worked around.
+- **A running Claude Code conversation keeps the rulebook it started with:** after `git pull --ff-only`, start a new
+  Claude Code conversation before the next task.
+- **Owed at the next register edition:** RAT-41's install, RAT-42, RAT-43 and RAT-44 (register v0.32 is not edited).
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 193; RAT-45.
