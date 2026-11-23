@@ -3756,3 +3756,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **It has no force** until the reviewer has reviewed it and the owner has ratified it (RAT-44); the installed
   rulebook stays v0.6.
 - Next numbers: EX_285 (the reviewer's reply), entry 185, RAT-44.
+
+## 185. 23 November 2026, 20:30 - OWNER: nothing ever leaves the runner's scratch folder; the rulebook v0.7 candidate amended
+
+- **The owner's words (20:30):** "yes software and data etc and anything else in and created within DELETE_ME only every
+  stays within that tree and/or is deleted, it never exfiltrates."
+- **DECIDED (owner):** everything in `D:\DELETE_ME\` and everything created there stays there until it is deleted
+  there; nothing of it is copied, moved or sent anywhere else (not into the repository or a task clone, not to
+  another drive, not over the network). A step that would is a STOP. **Claude's reading, written into the candidate:**
+  the runner's report in `outbox\`, which records what the commands printed, is the one thing that leaves; without it
+  no rehearsal could be checked. The owner may say otherwise.
+- **The candidate** (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md`, SHA-256 `7b4c424d...14d882`): a new item
+  4 of section 2A says this; the items after it are renumbered. Still no force until review and RAT-44.
+- Next numbers: EX_285 (the reviewer's reply), entry 186, RAT-44.
