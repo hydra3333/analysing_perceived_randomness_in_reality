@@ -1,0 +1,455 @@
+diff -ru v1r1/repo_overlay/src/research/job_lock.py v1r2/repo_overlay/src/research/job_lock.py
+--- v1r1/repo_overlay/src/research/job_lock.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/src/research/job_lock.py	2026-10-28 20:00:00.000000000 +1030
+@@ -1,4 +1,5 @@
+-"""The job lock of a tree, the updater's own lock, and the orphan-marker check.
++"""The job lock of a tree, the updater's own lock, the orphan-marker check, and the check that the tree's working
++folders are its own.
+ 
+ What this file is for
+     Only one job may work in a tree at a time. The job lock is the file records/JOB.lock, made by an exclusive
+@@ -7,6 +8,9 @@
+     was killed is removed by the owner by hand, once he has seen that no job of the tree is running. The same
+     holds for the results updater's own lock, which this file can also take, so that a withdrawal or a checked
+     copy of the results never overlaps a results update. This file also makes the orphan-marker check.
++    And it makes one check of place (EX_285 F285-B01): the folders a job writes in, or removes its own unfinished
++    files from, must be real folders inside the tree. A folder that is a link or a junction to somewhere else
++    refuses the launch before anything is written or deleted, so that no job can touch files outside its tree.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md sections 7.1 (one job lock), 11 (a withdrawal holds
+@@ -17,7 +21,8 @@
+     None.
+ 
+ What uses it
+-    research/research_job.py, research/results_step.py and research/withdraw.py, and the engine's tests.
++    research/research_job.py, research/results_step.py, research/status_file.py and research/withdraw.py, and
++    the engine's tests.
+ """
+ from __future__ import annotations
+ 
+@@ -29,6 +34,9 @@
+ JOB_LOCK_NAME = 'JOB.lock'
+ # The results updater's own lock, exactly where the reviewed results updater makes its own.
+ UPDATER_LOCK = 'source_data/.results_master.lock'
++# The folders of a tree that a job or a withdrawal writes in (from the tree root, forward slashes). Each must be
++# a real folder of the tree, or not exist yet.
++WORKING_FOLDERS = ('records', 'records/status_staging', 'source_data', 'results', 'results/research')
+ # The old system's marker of an unresolved process. Any entry at this path blocks every launch (owner, binding).
+ ORPHAN_MARKER = 'transitory_data/poc_runs/UNRESOLVED_ORPHAN.json'
+ 
+@@ -46,6 +54,51 @@
+                             f'clearance procedure has removed it.')
+ 
+ 
++def is_link(path: Path) -> bool:
++    """True if a path is itself a symbolic link or, on Windows, a junction: a name that stands for another
++    place. False for an ordinary file or folder and for a path that does not exist."""
++    is_junction = getattr(os.path, 'isjunction', None)          # Python 3.12 and later
++    return os.path.islink(path) or bool(is_junction and is_junction(path))
++
++
++def check_real_folder(tree_root: Path, relative: str) -> Path:
++    """Check that a folder of a tree is a real folder inside that tree, or does not exist yet.
++
++    tree_root: the tree (its own real path; the settings check has seen to that).
++    relative: the folder, from the tree root, with forward slashes, for example 'records/status_staging'.
++    Returns the folder's path, for example <tree>/records/status_staging.
++    Refuses (LaunchRefused), having written and deleted nothing: the folder or a folder above it inside the tree
++    is a link or a junction; the name exists and is not a folder; or the folder's real place is not that path
++    inside the tree.
++    """
++    tree = Path(tree_root)
++    parts = relative.split('/')
++    folder = tree.joinpath(*parts)
++    step = tree
++    for name in parts:
++        step = step / name
++        if is_link(step):
++            raise LaunchRefused(f'{step} is a link or a junction to another place, not a real folder of this tree. '
++                                f'Nothing was written or deleted. Remove the link (never what it points to) and '
++                                f'run the command again.')
++    if os.path.lexists(folder):
++        real_place = os.path.normcase(os.path.realpath(folder))
++        expected = os.path.normcase(os.path.join(os.path.realpath(tree), *parts))
++        if not folder.is_dir() or real_place != expected:
++            raise LaunchRefused(f'{folder} is not a real folder of this tree (it is a file, or its real place is '
++                                f'{os.path.realpath(folder)}). Nothing was written or deleted. Put it right by '
++                                f'hand and run the command again.')
++    return folder
++
++
++def check_working_folders(tree_root: Path) -> None:
++    """Refuse (LaunchRefused) unless every working folder of the tree (WORKING_FOLDERS) is a real folder inside
++    the tree or does not exist yet. Made before the job lock is taken, so that even the lock file is never
++    created through a link."""
++    for relative in WORKING_FOLDERS:
++        check_real_folder(tree_root, relative)
++
++
+ class FileLock:
+     """A lock that is the existence of one file: made by an exclusive create, removed when the block ends.
+ 
+diff -ru v1r1/repo_overlay/src/research/research_job.py v1r2/repo_overlay/src/research/research_job.py
+--- v1r1/repo_overlay/src/research/research_job.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/src/research/research_job.py	2026-10-28 20:00:00.000000000 +1030
+@@ -48,7 +48,7 @@
+ from research.forecast_engine import FORECAST, compute_target, content_digest, view_digest_for
+ from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
+                                  load_variant_state, summarise_target_line)
+-from research.job_lock import LaunchRefused, check_no_orphan_marker, job_lock
++from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
+ from research.reader import ResultsRefused, results_on_file
+ from research.results_step import copy_results, finish_interrupted_copy
+ from research.scoring import score_content
+@@ -525,8 +525,9 @@
+     no_update: leave the results step out.  only: None, or variant identities ('E_002/RECUR_MEAN_ALL_V1') the
+     job is limited to.  now, say, checkpoint: see Job (a test passes its own).
+     Returns the exit code: 0 finished; 1 a game refused or stopped (the other game is still worked); 2 the job
+-    itself refused before any game (the settings, the orphan marker, the job lock, the manifest, a variant
+-    folder, an unknown --only name).
++    itself refused before any game (the settings, the orphan marker, a working folder that is not the tree's
++    own, the job lock, the manifest, something foreign in the status staging folder, a variant folder, an
++    unknown --only name).
+     """
+     now = now or (lambda: datetime.now(timezone.utc))
+     tree_root = Path(tree_root)
+@@ -537,9 +538,10 @@
+         say(f'About to work: {", ".join(games)}' + (' (results step left out: --no-update)' if no_update else '')
+             + (f'; limited to {", ".join(sorted(only))} (--only)' if only else ''))
+         check_no_orphan_marker(settings.tree_root)
++        check_working_folders(settings.tree_root)
+         with job_lock(settings.tree_root, 'research job', started):
+             return run_locked(settings, games, no_update, only, now, say, checkpoint)
+-    except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused) as refusal:
++    except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
+         say(f'REFUSED: {refusal}')
+         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+         return EXIT_REFUSED
+diff -ru v1r1/repo_overlay/src/research/status_file.py v1r2/repo_overlay/src/research/status_file.py
+--- v1r1/repo_overlay/src/research/status_file.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/src/research/status_file.py	2026-10-28 20:00:00.000000000 +1030
+@@ -7,15 +7,18 @@
+     variant is forecast and scored at a draw and whether it is in the prevailing cohort. This file reads it,
+     checks it, and writes it: the whole file under a temporary name, then one rename. The temporary file is made
+     in the tree's control folder, never in the variant folder, so that a write that was interrupted can never
+-    leave an undeclared file among a variant's software (EX_283 F283-B01). The last lines hold the SHA-256 of
+-    every byte above them: a check against accidents and hand edits, not a signature.
++    leave an undeclared file among a variant's software (EX_283 F283-B01). The staging folder must be a real
++    folder of the tree, and only files this writer itself makes are ever removed from it: anything else found
++    there refuses, untouched (EX_285 F285-B01). The last lines hold the SHA-256 of every byte above them: a
++    check against accidents and hand edits, not a signature.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 3.5, with 10.2 (the eligibility draw is set
+     once) and 11 (withdrawal is one-way).
+ 
+ Which of the project's own modules it uses
+-    None.
++    research.job_lock          check_real_folder, is_link: the staging folder must be a real folder of the tree
++    research.variant_folders   the patterns of a family's and a variant's folder name
+ 
+ What uses it
+     research/research_job.py (reads; creates a missing file in DEV; writes the eligibility draw),
+@@ -30,6 +33,9 @@
+ from dataclasses import dataclass
+ from pathlib import Path
+ 
++from research.job_lock import LaunchRefused, check_real_folder, is_link
++from research.variant_folders import FAMILY_FOLDER_PATTERN, VARIANT_FOLDER_PATTERN
++
+ # Where a status file is written before it is renamed into place: a folder of the tree's control folder, on the
+ # same volume as the variant folders, so that the rename is one step. From the tree root.
+ STAGING_FOLDER = 'records/status_staging'
+@@ -169,13 +175,31 @@
+ 
+     path: a status file, <tree>/src/methods/<family>/<variant>/VARIANT_STATUS.ini.
+     Returns <tree>/records/status_staging. Refuses (StatusRefused) a path that is not a status file in a variant
+-    folder of a tree: the writer must never guess where a tree's control folder is.
++    folder of a tree: the writer must never guess where a tree's control folder is. Refuses (LaunchRefused) a
++    staging folder that is not a real folder of that tree (a link or a junction to another place).
+     """
+     path = Path(path)
+     if path.name != STATUS_FILE_NAME or len(path.parts) < 6 or path.parts[-5:-3] != METHODS_PARTS:
+         raise StatusRefused(f'{path}: a status file is written only as <tree>/src/methods/<family>/<variant>/'
+                             f'{STATUS_FILE_NAME}.')
+-    return path.parents[4] / STAGING_FOLDER
++    return check_real_folder(path.parents[4], STAGING_FOLDER)
++
++
++def staged_name(family: str, variant: str) -> str:
++    """The one name under which a variant's status file is staged, for example
++    'E_901__TOY_A_V1__VARIANT_STATUS.ini.writing'."""
++    return f'{family}__{variant}__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
++
++
++def is_staged_write(tree_root: Path, entry: Path) -> bool:
++    """True if an entry of the staging folder is a file this writer could have made: an ordinary file (not a
++    link), named as staged_name names it, for a family and a variant whose folder exists in this tree."""
++    ending = f'__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
++    if is_link(entry) or not entry.is_file() or not entry.name.endswith(ending):
++        return False
++    family, separator, variant = entry.name[:-len(ending)].partition('__')
++    return bool(separator and FAMILY_FOLDER_PATTERN.match(family) and VARIANT_FOLDER_PATTERN.match(variant)
++                and Path(tree_root).joinpath(*METHODS_PARTS, family, variant).is_dir())
+ 
+ 
+ def _rename_into_place(temporary: Path, path: Path) -> None:
+@@ -194,7 +218,10 @@
+     """
+     staging = staging_folder_for(path)
+     staging.mkdir(parents=True, exist_ok=True)
+-    temporary = staging / f'{family}__{variant}__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
++    temporary = staging_folder_for(path) / staged_name(family, variant)     # checked again now that it exists
++    if is_link(temporary):
++        raise LaunchRefused(f'{temporary} is a link to another place. Nothing was written. Remove the link (never '
++                            f'what it points to) and run the command again.')
+     with open(temporary, 'wb') as stream:
+         stream.write(render(family, variant, statuses))
+         stream.flush()
+@@ -209,15 +236,23 @@
+     Returns the names removed, for example ['E_901__TOY_A_V1__VARIANT_STATUS.ini.writing']; [] if there was
+     nothing. A staged file was never a status: the status file it was meant for is still the old one, whole,
+     and whatever was being recorded is simply recorded again by the command that runs next.
+-    """
+-    staging = Path(tree_root) / STAGING_FOLDER
+-    removed = []
+-    if staging.is_dir():
+-        for leftover in sorted(staging.iterdir()):
+-            if leftover.is_file():
+-                leftover.unlink()
+-                removed.append(leftover.name)
+-    return removed
++    Refuses, having deleted nothing: (LaunchRefused) a staging folder that is not a real folder of this tree;
++    (StatusRefused) anything in it that is not a file this writer makes (is_staged_write): another file, a
++    folder, a link, or a staged name for a variant this tree does not hold. Such a thing is not the project's
++    to remove; the owner moves it away.
++    """
++    staging = check_real_folder(tree_root, STAGING_FOLDER)
++    if not staging.is_dir():
++        return []
++    entries = sorted(staging.iterdir())
++    strangers = [entry.name for entry in entries if not is_staged_write(tree_root, entry)]
++    if strangers:
++        raise StatusRefused(f'{staging} holds {len(strangers)} thing(s) that no status write of this project makes: '
++                            f'{", ".join(strangers[:5])}{" ..." if len(strangers) > 5 else ""}. Nothing was '
++                            f'deleted. Move them out of that folder by hand, then run the command again.')
++    for leftover in entries:
++        leftover.unlink()
++    return [leftover.name for leftover in entries]
+ 
+ 
+ def create_active(path: Path, family: str, variant: str, games) -> dict:
+diff -ru v1r1/repo_overlay/src/research/withdraw.py v1r2/repo_overlay/src/research/withdraw.py
+--- v1r1/repo_overlay/src/research/withdraw.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/src/research/withdraw.py	2026-10-28 20:00:00.000000000 +1030
+@@ -29,7 +29,8 @@
+ from datetime import datetime, timezone
+ from pathlib import Path
+ 
+-from research.job_lock import RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, job_lock, updater_lock
++from research.job_lock import (RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, check_working_folders,
++                               job_lock, updater_lock)
+ from research.reader import ResultsRefused, results_on_file, results_paths
+ from research.settings import SettingsRefused, read_settings
+ from research.status_file import (STATUS_FILE_NAME, StatusRefused, discard_unfinished_writes, read_status,
+@@ -113,6 +114,7 @@
+         tree_root = settings.tree_root
+         say(f'WITHDRAW A VARIANT - START - {stamp} - the {settings.role} tree at {tree_root}')
+         check_no_orphan_marker(tree_root)
++        check_working_folders(tree_root)
+         with job_lock(tree_root, 'withdrawal', stamp), updater_lock(tree_root, 'withdrawal', stamp):
+             for leftover in discard_unfinished_writes(tree_root):
+                 say(f'  An earlier status write was interrupted before it changed anything; its unfinished copy was '
+diff -ru v1r1/repo_overlay/tests/research_fixtures.py v1r2/repo_overlay/tests/research_fixtures.py
+--- v1r1/repo_overlay/tests/research_fixtures.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/tests/research_fixtures.py	2026-10-28 20:00:00.000000000 +1030
+@@ -21,6 +21,7 @@
+ import hashlib
+ import importlib
+ import json
++import os
+ import random
+ import sys
+ import tempfile
+@@ -287,6 +288,25 @@
+     path.write_bytes(b''.join(out))
+ 
+ 
++def make_folder_link(link: Path, target: Path) -> str | None:
++    """Make `link` a name for the folder `target`, as an accident or a tool might: a symbolic link where the
++    account may make one, otherwise (on Windows) a junction.
++
++    Returns 'symbolic link' or 'junction', or None if this machine allows neither (the test then skips).
++    """
++    try:
++        os.symlink(target, link, target_is_directory=True)
++        return 'symbolic link'
++    except (OSError, NotImplementedError):
++        pass
++    try:
++        import _winapi
++        _winapi.CreateJunction(str(target), str(link))
++        return 'junction'
++    except (ImportError, AttributeError, OSError):
++        return None
++
++
+ def status_path(tree: Path, family: str, variant: str) -> Path:
+     """A variant's status file in a tree."""
+     return tree / 'src' / 'methods' / family / variant / 'VARIANT_STATUS.ini'
+diff -ru v1r1/repo_overlay/tests/test_research_job.py v1r2/repo_overlay/tests/test_research_job.py
+--- v1r1/repo_overlay/tests/test_research_job.py	2026-10-28 20:00:00.000000000 +1030
++++ v1r2/repo_overlay/tests/test_research_job.py	2026-10-28 20:00:00.000000000 +1030
+@@ -9,6 +9,7 @@
+ import contextlib
+ import csv
+ import io
++import os
+ import shutil
+ import subprocess
+ import sys
+@@ -272,6 +273,143 @@
+                 self.assert_variants_whole(tree)
+ 
+ 
++class TheStagingFolderIsTheTreesOwn(fx.JobCase):
++    """EX_285 F285-B01: the cleanup removes only the status writer's own unfinished files, from a real folder of
++    this tree. Anything else refuses, with nothing deleted; a link to another place is never followed."""
++
++    REASON = 'the table was built from the wrong column'
++
++    def setUp(self):
++        """A worked tree, and a folder outside it that holds a file which is nobody's to delete."""
++        super().setUp()
++        self.tree_folder = self.tree(with_source=False)
++        self.assertEqual(fx.run_job(self.tree_folder, no_update=True)[0], 0)
++        self.outside = self.root / 'outside'
++        self.outside.mkdir()
++        self.sentinel = self.outside / 'unrelated_document.txt'
++        self.sentinel.write_bytes(b'not the project\'s: must never be deleted or changed\n')
++        self.staging = self.tree_folder / status_file.STAGING_FOLDER
++        self.before = fx.files_under(self.tree_folder)
++        self.status_before = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1').read_bytes()
++
++    def withdrawal(self) -> tuple:
++        """Try to withdraw TOY_B_V1, confirming if asked. Returns (exit code, lines said)."""
++        from research import withdraw
++        said = []
++        code = withdraw.withdraw(self.tree_folder, [('E_901', 'TOY_B_V1')], (GAME,), self.REASON,
++                                 ask=lambda question: 'WITHDRAW', say=said.append, now=lambda: fx.FIXED_TIME)
++        return code, said
++
++    def assert_both_commands_refuse(self, wanted: str) -> None:
++        """The job and the withdrawal each refuse naming `wanted`; nothing in the tree or outside it changes."""
++        from research import withdraw
++        code, said = fx.run_job(self.tree_folder, no_update=True)
++        self.assertEqual(code, 2, said)
++        self.assertTrue(any(line.startswith('REFUSED') and wanted in line and 'Nothing was' in line for line in said), said)
++        code, said = self.withdrawal()
++        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, said)
++        self.assertTrue(any(line.startswith('REFUSED') and wanted in line for line in said), said)
++        self.assertEqual(sorted(p.name for p in self.outside.iterdir()), ['unrelated_document.txt'])
++        self.assertEqual(self.sentinel.read_bytes(), b'not the project\'s: must never be deleted or changed\n')
++        self.assertEqual(fx.files_under(self.tree_folder), self.before)
++        self.assertEqual(fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1').read_bytes(), self.status_before)
++        self.assertFalse((self.tree_folder / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
++
++    def test_the_writers_own_whole_and_half_written_copies_are_removed_and_the_job_goes_on(self):
++        self.staging.mkdir(parents=True, exist_ok=True)
++        whole = fx.status_path(self.tree_folder, 'E_901', 'TOY_A_V1').read_bytes()
++        (self.staging / status_file.staged_name('E_901', 'TOY_A_V1')).write_bytes(whole)
++        (self.staging / status_file.staged_name('E_901', 'TOY_B_V1')).write_bytes(whole[:9])
++        code, said = fx.run_job(self.tree_folder, no_update=True)
++        self.assertEqual(code, 0, said)
++        self.assertEqual(sum('its unfinished copy was removed' in line for line in said), 2)
++        self.assertEqual(list(self.staging.iterdir()), [])
++        self.assertEqual(fx.files_under(self.tree_folder), self.before)
++
++    def test_anything_else_in_the_staging_folder_survives_and_refuses_both_commands(self):
++        self.staging.mkdir(parents=True, exist_ok=True)
++        own = self.staging / status_file.staged_name('E_901', 'TOY_A_V1')
++        strangers = {'an unrelated file': 'notes.txt',
++                     'a file with the ending but no variant': 'VARIANT_STATUS.ini.writing',
++                     'a staged name for a variant this tree does not hold': status_file.staged_name('E_901', 'NOT_HERE_V1'),
++                     'a staged name with a family that is none': status_file.staged_name('X_901', 'TOY_A_V1'),
++                     'a folder': 'a_folder'}
++        for what, name in strangers.items():
++            with self.subTest(what=what):
++                own.write_bytes(b'half a status')
++                stranger = self.staging / name
++                if what == 'a folder':
++                    stranger.mkdir()
++                    (stranger / 'inside.txt').write_bytes(b'kept')
++                else:
++                    stranger.write_bytes(b'kept')
++                self.assert_both_commands_refuse(name)
++                self.assertTrue(own.is_file(), 'not even the writer\'s own copy is removed while a stranger is there')
++                if what == 'a folder':
++                    self.assertEqual((stranger / 'inside.txt').read_bytes(), b'kept')
++                    (stranger / 'inside.txt').unlink()
++                    stranger.rmdir()
++                else:
++                    self.assertEqual(stranger.read_bytes(), b'kept')
++                    stranger.unlink()
++        code, said = fx.run_job(self.tree_folder, no_update=True)       # the stranger moved away: the job goes on
++        self.assertEqual(code, 0, said)
++        self.assertEqual(list(self.staging.iterdir()), [])
++
++    def test_a_staging_or_working_folder_linked_to_another_place_refuses_and_the_other_place_is_untouched(self):
++        for relative in ('records/status_staging', 'records'):
++            with self.subTest(linked=relative):
++                link = self.tree_folder / relative
++                if link.exists():
++                    shutil.rmtree(link)
++                link.parent.mkdir(parents=True, exist_ok=True)
++                kind = fx.make_folder_link(link, self.outside)
++                if kind is None:
++                    self.skipTest('this account can make neither a symbolic link nor a junction')
++                self.assertTrue(link.is_dir() and (link / 'unrelated_document.txt').is_file(), kind)
++                self.assert_both_commands_refuse('is a link or a junction')
++                os.rmdir(link) if kind == 'junction' else link.unlink()
++                self.assertTrue(self.sentinel.is_file())
++
++    def test_the_writer_refuses_a_redirected_staging_folder_before_it_creates_anything(self):
++        if self.staging.exists():
++            shutil.rmtree(self.staging)
++        self.staging.parent.mkdir(parents=True, exist_ok=True)
++        if fx.make_folder_link(self.staging, self.outside) is None:
++            self.skipTest('this account can make neither a symbolic link nor a junction')
++        path = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1')
++        with self.assertRaisesRegex(job_lock.LaunchRefused, 'is a link or a junction'):
++            write_status(path, 'E_901', 'TOY_B_V1', {GAME: GameStatus(eligible_from=1150, eligibility_recorded='x')})
++        self.assertEqual(sorted(p.name for p in self.outside.iterdir()), ['unrelated_document.txt'])
++        self.assertEqual(path.read_bytes(), self.status_before)
++
++    def test_the_writer_refuses_a_staged_name_that_is_a_link_to_a_file_elsewhere(self):
++        self.staging.mkdir(parents=True, exist_ok=True)
++        try:
++            os.symlink(self.sentinel, self.staging / status_file.staged_name('E_901', 'TOY_B_V1'))
++        except (OSError, NotImplementedError):
++            self.skipTest('this account cannot make a symbolic link to a file')
++        path = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1')
++        with self.assertRaisesRegex(job_lock.LaunchRefused, 'is a link to another place'):
++            write_status(path, 'E_901', 'TOY_B_V1', {GAME: GameStatus(eligible_from=1150, eligibility_recorded='x')})
++        self.assertEqual(self.sentinel.read_bytes(), b'not the project\'s: must never be deleted or changed\n')
++        self.assertEqual(path.read_bytes(), self.status_before)
++        self.assert_both_commands_refuse(status_file.staged_name('E_901', 'TOY_B_V1'))
++
++    def test_a_results_folder_linked_to_another_place_refuses_before_anything_is_written_there(self):
++        research = self.tree_folder / 'results' / 'research'
++        moved = self.root / 'moved_research'
++        shutil.move(str(research), str(moved))
++        if fx.make_folder_link(research, moved) is None:
++            self.skipTest('this account can make neither a symbolic link nor a junction')
++        fx.write_results(self.tree_folder, GAME, LAST_AT_START + 2, version=2)
++        before = fx.files_under(self.root, 'moved_research')
++        code, said = fx.run_job(self.tree_folder, no_update=True)
++        self.assertEqual(code, 2, said)
++        self.assertTrue(any('results' in line and 'is a link or a junction' in line for line in said), said)
++        self.assertEqual(fx.files_under(self.root, 'moved_research'), before)
++
++
+ class InterruptedResultsCopy(fx.JobCase):
+     """EX_283 F283-B02: from an accepted pair and a source that extends it, an interruption at any point of the
+     copy leaves the old pair or the new pair, never a mixture, and the next job gives the uninterrupted bytes."""

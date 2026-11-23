@@ -3783,3 +3783,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The candidate** (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md`, SHA-256 `52797e44...e4bcdf`): section 2A
   item 4 says this. Still no force until review and RAT-44.
 - Next numbers: EX_285 (the reviewer's reply), entry 187, RAT-44.
+
+## 187. 23 November 2026, 20:53 - EX_285 received (the two EX_283 blockers CLOSED; one new blocker F285-B01); fixed; package STEP2_Research_Engine_v1r2 built; EX_287 waits for the owner's word; EX_286 reserved for the rulebook review
+
+- **The owner's message (20:35), relaying the reviewer:** "ChatGPT has completed EX_285 and committed it at `b5a167a`.
+  The two original EX_283 blockers are CLOSED, and the league-report correction is accepted. EX_285 identifies one
+  new blocker, F285-B01: unrestricted deletion from `records/status_staging`, including possible deletion outside the
+  tree through a linked directory. Please consider EX_285 and prepare the smallest safe correction, with targeted
+  synthetic tests. Do not install or run anything on the owner's PC. Meanwhile, ChatGPT is separately reviewing the
+  Claude Code runner rulebook v0.7 candidate at `6a5d770`, as requested by the owner. Its review is to be EX_286, so
+  please reserve that number for the rulebook review and use the next available number for any STEP2 correction
+  exchange. The installed runner rulebook remains v0.6. Neither the candidate nor this message authorises runner
+  activity or other PC operations."
+- **Numbers:** EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate. The step 2 correction is
+  **EX_287** (EX_285 itself said "reply as EX_286"; the owner's instruction governs).
+- **F285-B01, accepted as found:** the cleanup added for F283-B01 removed every file in `records/status_staging`
+  without checking the folder or the files; through a linked folder it could have deleted files outside the tree.
+  **Corrected (code at main `469f088`):** `job_lock.check_real_folder` refuses a folder that is or lies under a link or
+  a junction or whose real place is not inside the tree; the cleanup removes only files named as the status writer
+  names them, for a variant folder the tree holds, and refuses with nothing deleted if anything else is there; the
+  writer makes the same check and refuses a staged name that is a link. One step beyond the finding, put to the
+  reviewer: the same check for the five working folders before the job lock is taken, in the job and the withdrawal.
+- **Package `STEP2_Research_Engine_v1r2`** (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`, base `469f088`; six files differ
+  from v1r1). Note v0.3. Evidence (`evidence_v1r2/`): 191 engine tests pass; all 571 old tests the same, 762 after; 36
+  of 36 planted faults caught; the install rehearsed in an LF and a CRLF clone with seven STOP cases; the corrected
+  engine run over the cloud's real fill computes nothing and rewrites no report (suggestive only). **Packages v1 and
+  v1r1 are superseded: not to be installed.**
+- **Not executed by Claude:** Windows junctions. The check does not rest on one call, and the suite exercises
+  whichever kind of link the owner's account can make when he runs the sheet.
+- EX_287 (body and assembler ready) is issued only on the owner's word. Nothing is authorised on the owner's PC.
+- Next numbers: EX_286 (the reviewer, the rulebook), EX_287 (Claude, step 2), entry 188, RAT-44.

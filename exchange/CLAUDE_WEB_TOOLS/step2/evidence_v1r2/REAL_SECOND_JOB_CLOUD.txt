@@ -1,0 +1,16 @@
+Build step 2, package v1r2: the corrected engine run over the cloud's real first fill of both games (made with package v1).
+SUGGESTIVE ONLY. Counts and times; no draw's numbers. No forecast-class file changed, so the lists are not foreign; nothing is computed and no report is rewritten.
+
+[     0.0s] RESEARCH JOB - START - 2026-11-23 20:41 - the DEV tree at <cloud tree>
+[     0.0s] About to work: POWERBALL, OZLOTTO (results step left out: --no-update)
+[     4.6s] POWERBALL: results on file through draw 1591; 40 variants installed
+[     5.8s] POWERBALL: the results step was left out (--no-update)
+[    76.1s] POWERBALL: finished. Results on file through draw 1591; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+[    78.3s] OZLOTTO: results on file through draw 1708; 40 variants installed
+[    78.7s] OZLOTTO: the results step was left out (--no-update)
+[   110.4s] OZLOTTO: finished. Results on file through draw 1708; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+[   110.4s] RESEARCH JOB - END - 2026-11-23 20:43 - the DEV tree at <cloud tree>
+[   110.4s] POWERBALL: finished. Results on file through draw 1591; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+[   110.4s] OZLOTTO: finished. Results on file through draw 1708; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+[   110.4s] The job finished.
+EXIT 0 110.4s

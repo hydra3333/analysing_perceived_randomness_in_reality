@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:32 Australia/Adelaide (entry 186: the rulebook v0.7 candidate amended - the report and anything Claude names in a task file may leave the scratch folder into outbox; still no force until RAT-44; waiting on EX_285).
+**Last updated:** 23 November 2026, 20:53 Australia/Adelaide (entry 187: EX_285 closed the two EX_283 blockers and found F285-B01; fixed; package STEP2_Research_Engine_v1r2 built; EX_287 waits for the owner's word; EX_286 is reserved for the reviewer's rulebook review; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_285 FOUND ONE NEW BLOCKER; THE CORRECTED PACKAGE v1r2 IS READY (entry 187; 23 November 2026).** F285-B01 (the
+  staging cleanup could delete files that were not its own) is fixed in `STEP2_Research_Engine_v1r2`
+  (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`); read section 0A of `STEP2_PACKAGE_NOTE_v0_3.md`. **Waiting on the owner:**
+  his word to send EX_287 (`EX_287_body.md`, `assemble_ex287.py`; stage the files, run the assembler with base
+  `469f088`). **EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate.** Packages v1 and v1r1 are
+  superseded: do not install them.
 - **THE ORDER (owner, entry 183; 23 November 2026):** EX_285 (reviewer, on package v1r1) -> the rulebook v0.7 candidate
   reviewed and ratified (RAT-44) -> the rest (proposed: a Windows rehearsal of step 2 by the runner on D:, then the
   owner's install of step 2 and DEV's first fill, then step 3). **H-1 v10 is written once step 2 is installed.**

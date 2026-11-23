@@ -1,0 +1,5 @@
+excused from the header and comment checks: src/research/ov1_numeric.py (the passed kernel, byte for byte)
+excused from the header and comment checks: src/research/reader.py (holds the old reader's definitions, copied character for character)
+excused from the header and comment checks: tests/test_research_ov1_numeric.py (the passed kernel's tests (one import line changed))
+29 Python files scanned; 0 findings
+RESULT: PASS
