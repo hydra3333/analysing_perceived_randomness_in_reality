@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 11:14 Australia/Adelaide (entry 167: the reviewer's EX_280 PASS of the tidy-up package). **Next: the owner's own go for the install by the sheet; then Claude refreshes H-1 before build step 2.**
+**Last updated:** 23 November 2026, 11:17 Australia/Adelaide (entry 168: the owner's go for the tidy-up install). **Now: the owner runs the sheet on his PC; Claude pushes nothing until he has pushed. Then Claude refreshes H-1 before build step 2.**
 
 ## For the owner: NOW
 

@@ -3350,3 +3350,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **State:** the tidy-up is BUILT, CLOUD-PROVED and REVIEWED (PASS); NOT INSTALLED. The install waits for the owner's
   own go; then Claude refreshes H-1 before build step 2 (entry 166).
 - Next numbers: EX_281, entry 168, RAT-43.
+
+## 168. 23 November 2026, 11:17 - OWNER: THE GO FOR THE INSTALL of the tidy-up package TIDY1_Method_Comments_v1 on his PC
+
+- **The owner's words (11:16):** "ok go", replying to Claude's recommendation to install first and refresh H-1 after.
+- **What the go covers:** the reviewed sheet `exchange/EX_279_Claude/TIDY1_Method_Comments_v1/INSTALL_AND_RUN_SHEET.md`,
+  parts 1 to 5, in order, on the owner's PC, with EX_280's point: a baseline failure other than the three known
+  failing tests is referred to Claude before going on. A STOP is a STOP.
+- **Claude pushes nothing to `main` from now until the owner has pushed the install commit**, so that his push in part 5
+  stays a fast-forward.
+- Next numbers: EX_281, entry 169, RAT-43.
