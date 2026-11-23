@@ -53,8 +53,8 @@ from research.reader import ResultsRefused, results_on_file
 from research.results_step import copy_results, finish_interrupted_copy
 from research.scoring import score_content
 from research.settings import SettingsRefused, TreeSettings, read_settings
-from research.status_file import (STATUS_FILE_NAME, StatusRefused, create_active, read_status, with_eligibility,
-                                  write_status)
+from research.status_file import (STATUS_FILE_NAME, StatusRefused, create_active, discard_unfinished_writes,
+                                  read_status, with_eligibility, write_status)
 from research.variant_folders import VariantRefused, find_variants, load_method
 
 # The games, in the order a job for BOTH works them. They are never pooled.
@@ -423,19 +423,34 @@ def everything_done(records: GameRecords) -> bool:
     return start is None or start + len(records.ledger_lines) > last_draw
 
 
+def write_league_reports(job: Job, records: GameRecords, writer: reports.ReportWriter, through: int) -> None:
+    """Make every league report up to a draw again from the records as they now stand, and write those whose
+    bytes differ. The reports written draw by draw during the job were made before the job's last changes (an
+    eligibility draw written at its end shows in every league report), so this pass is what leaves the folder
+    a function of the lists, the results and the status files alone."""
+    league = reports.LeagueTable(records)
+    lowest = min((state.first_target for state in records.workable), default=through + 1)
+    for draw in range(lowest, through + 1):
+        if league.add_draw(draw):
+            for name, content in zip(reports.league_names(records.game_id, draw), league.render(draw)):
+                job.counts[records.game_id]['report files'] += writer.write(name, content)
+
+
 def finish_reports(job: Job, records: GameRecords, writer: reports.ReportWriter) -> None:
-    """The End step's reports: the next-draw reports, the two OV-1 print-outs, the README and the side file of
-    making times. Under a MISMATCH marker nothing is made for the marked draw or a later one, and the
-    prevailing print-out is not made at all."""
+    """The End step's reports: every league report once more, the next-draw reports, the two OV-1 print-outs,
+    the README and the side file of making times. Under a MISMATCH marker nothing is made for the marked draw or
+    a later one, and the prevailing print-out is not made at all."""
     game_id, last_draw = records.game_id, records.results.last_draw
     mismatch_from = records.cutoff[0] if records.cutoff and records.cutoff[1] == derived_check.MISMATCH else None
+    reported_through = last_draw if mismatch_from is None else min(last_draw, mismatch_from - 1)
+    write_league_reports(job, records, writer, reported_through)
     made_before_result = sorted({target for state in records.workable for target, facts in state.targets.items()
                                  if not facts.result_on_file})
     for draw in made_before_result:
         if mismatch_from is None or draw < mismatch_from:
             for name, content in zip(reports.next_draw_names(game_id, draw), reports.next_draw_report(records, draw)):
                 job.counts[game_id]['report files'] += writer.write(name, content)
-    through = last_draw if mismatch_from is None else min(last_draw, mismatch_from - 1)
+    through = reported_through
     outcomes = {draw: derived_check.outcome_of(records, draw)[MAIN_BARREL]
                 for state in records.workable for draw in state.score_contents if draw <= through}
     series = ov1_ledger.exploratory_series(game_id, records.states, outcomes, through)
@@ -534,6 +549,9 @@ def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, c
     """The job once it holds the job lock: read the code's identities and the variants, then work each game.
     Arguments and result as for run()."""
     tree_root = settings.tree_root
+    for leftover in discard_unfinished_writes(tree_root):
+        say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
+            f'({leftover}). The status file it was meant for is as it was.')
     manifest = read_manifest(tree_root)
     variants, refused = find_variants(tree_root / METHODS_FOLDER)
     if refused and settings.role != 'DEV':

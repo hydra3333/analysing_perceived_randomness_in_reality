@@ -5,8 +5,10 @@ What this file is for
     set at most once: whether the variant is withdrawn (from which draw and why), and the first draw at which it
     counts in the prevailing OV-1. The research engine reads this file, in every tree, to decide whether a
     variant is forecast and scored at a draw and whether it is in the prevailing cohort. This file reads it,
-    checks it, and writes it (the whole file to a temporary name, then one rename). The last lines hold the
-    SHA-256 of every byte above them: a check against accidents and hand edits, not a signature.
+    checks it, and writes it: the whole file under a temporary name, then one rename. The temporary file is made
+    in the tree's control folder, never in the variant folder, so that a write that was interrupted can never
+    leave an undeclared file among a variant's software (EX_283 F283-B01). The last lines hold the SHA-256 of
+    every byte above them: a check against accidents and hand edits, not a signature.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 3.5, with 10.2 (the eligibility draw is set
@@ -28,6 +30,13 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+# Where a status file is written before it is renamed into place: a folder of the tree's control folder, on the
+# same volume as the variant folders, so that the rename is one step. From the tree root.
+STAGING_FOLDER = 'records/status_staging'
+# The ending of a file in the staging folder.
+STAGING_SUFFIX = '.writing'
+# Where the variant folders lie in a tree, as the last parts of a status file's path before family and variant.
+METHODS_PARTS = ('src', 'methods')
 # The file's name, in every variant folder of every tree.
 STATUS_FILE_NAME = 'VARIANT_STATUS.ini'
 # The section whose one key holds the SHA-256 of every byte above the section's own line.
@@ -155,18 +164,60 @@ def read_status(path: Path, games) -> dict:
     return statuses
 
 
-def write_status(path: Path, family: str, variant: str, statuses: dict) -> None:
-    """Write a status file: the whole file to a temporary name beside it, then one rename.
+def staging_folder_for(path: Path) -> Path:
+    """The staging folder of the tree a status file lies in.
 
-    path: the status file.  family, variant: its variant.  statuses: {game: GameStatus}.
-    A crash before the rename leaves the old file (or none); after it, the new file: never a mixture.
+    path: a status file, <tree>/src/methods/<family>/<variant>/VARIANT_STATUS.ini.
+    Returns <tree>/records/status_staging. Refuses (StatusRefused) a path that is not a status file in a variant
+    folder of a tree: the writer must never guess where a tree's control folder is.
     """
-    temporary = path.with_name(path.name + '.writing')
+    path = Path(path)
+    if path.name != STATUS_FILE_NAME or len(path.parts) < 6 or path.parts[-5:-3] != METHODS_PARTS:
+        raise StatusRefused(f'{path}: a status file is written only as <tree>/src/methods/<family>/<variant>/'
+                            f'{STATUS_FILE_NAME}.')
+    return path.parents[4] / STAGING_FOLDER
+
+
+def _rename_into_place(temporary: Path, path: Path) -> None:
+    """The one rename that puts a written status file in place (its own function so that a test can plant a
+    failure exactly here)."""
+    os.replace(temporary, path)
+
+
+def write_status(path: Path, family: str, variant: str, statuses: dict) -> None:
+    """Write a status file: the whole file under a temporary name in the tree's staging folder, then one rename.
+
+    path: the status file, in its variant folder.  family, variant: its variant.  statuses: {game: GameStatus}.
+    A crash or a failure before the rename leaves the old file (or none) exactly as it was, and nothing new in
+    the variant folder; after it, the new file: never a mixture. What an interrupted write leaves in the staging
+    folder is removed by discard_unfinished_writes at the next job or withdrawal.
+    """
+    staging = staging_folder_for(path)
+    staging.mkdir(parents=True, exist_ok=True)
+    temporary = staging / f'{family}__{variant}__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
     with open(temporary, 'wb') as stream:
         stream.write(render(family, variant, statuses))
         stream.flush()
         os.fsync(stream.fileno())
-    os.replace(temporary, path)
+    _rename_into_place(temporary, path)
+
+
+def discard_unfinished_writes(tree_root: Path) -> list:
+    """Remove what an interrupted status write left in a tree's staging folder.
+
+    tree_root: the tree.  Call it only while holding the tree's job lock, so that no write is in progress.
+    Returns the names removed, for example ['E_901__TOY_A_V1__VARIANT_STATUS.ini.writing']; [] if there was
+    nothing. A staged file was never a status: the status file it was meant for is still the old one, whole,
+    and whatever was being recorded is simply recorded again by the command that runs next.
+    """
+    staging = Path(tree_root) / STAGING_FOLDER
+    removed = []
+    if staging.is_dir():
+        for leftover in sorted(staging.iterdir()):
+            if leftover.is_file():
+                leftover.unlink()
+                removed.append(leftover.name)
+    return removed
 
 
 def create_active(path: Path, family: str, variant: str, games) -> dict:

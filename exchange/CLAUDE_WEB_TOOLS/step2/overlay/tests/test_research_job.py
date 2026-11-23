@@ -18,8 +18,10 @@ from unittest import mock
 
 import research_command
 import research_fixtures as fx
-from research import job_lock, reports
+from research import job_lock, reports, results_step, status_file
+from research.reader import results_on_file
 from research.status_file import GameStatus, write_status
+from research.variant_folders import find_variants
 
 GAME = fx.GAME
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -150,26 +152,259 @@ class CrashResume(fx.JobCase):
         self.assertEqual(code, 0)
         self.assertEqual(self.status(tree, 'TOY_B_V1').eligible_from, LAST_AT_START + 1)
 
-    def test_a_copy_of_the_results_interrupted_at_either_point_is_finished_or_discarded(self):
+
+class InterruptedStatusWrite(fx.JobCase):
+    """EX_283 F283-B01: an interrupted status write never leaves a file that disables a variant. After each
+    planted interruption the real variant scanner and the real job are run."""
+
+    VARIANTS = ('TOY_A_V1', 'TOY_B_V1')
+
+    def assert_variants_whole(self, tree: Path, with_status: bool = True) -> None:
+        """Each variant folder holds exactly its own files, and the scanner accepts both variants."""
+        wanted = ['VARIANT.json'] + (['VARIANT_STATUS.ini'] if with_status else []) + ['method.py']
+        for name in self.VARIANTS:
+            folder = tree / 'src/methods/E_901' / name
+            self.assertEqual(sorted(p.name for p in folder.iterdir() if p.name != '__pycache__'), wanted, name)
+        variants, refused = find_variants(tree / 'src/methods')
+        self.assertEqual((len(variants), refused), (2, []))
+
+    @staticmethod
+    def staged(tree: Path) -> list:
+        """The names in the tree's status staging folder."""
+        folder = tree / status_file.STAGING_FOLDER
+        return sorted(p.name for p in folder.iterdir()) if folder.is_dir() else []
+
+    def test_an_eligibility_write_interrupted_by_a_kill_a_failure_or_a_half_written_copy_is_continued(self):
         tree = self.tree()
-        self.source(LAST_IN_SOURCE)
-        master = tree / 'source_data' / f'{GAME}_results_master.csv'
-        ledger = tree / 'source_data' / f'{GAME}_results_master_ledger.csv'
-        old = (master.read_bytes(), ledger.read_bytes())
-        new_master = (self.root / 'source/source_data' / master.name).read_bytes()
-        new_ledger = (self.root / 'source/source_data' / ledger.name).read_bytes()
-        Path(str(master) + '.incoming').write_bytes(new_master)         # died before either file was replaced
-        Path(str(ledger) + '.incoming').write_bytes(new_ledger)
+        pristine = self.root / 'pristine'
+        shutil.copytree(tree, pristine)
+        self.assertEqual(fx.run_job(tree)[0], 0)
+        reference = {**fx.files_under(tree, leave_out=()), **fx.files_under(tree, 'src/methods')}
+        real_rename = status_file._rename_into_place
+        for how in ('killed at the first rename', 'the second rename fails', 'a half-written copy left behind'):
+            with self.subTest(how=how):
+                shutil.rmtree(tree)
+                shutil.copytree(pristine, tree)
+                calls = []
+
+                def rename(temporary, path, how=how, calls=calls):
+                    """The rename, with the interruption planted for this case."""
+                    calls.append(path)
+                    if how == 'killed at the first rename':
+                        raise Killed('at the rename')
+                    if how == 'the second rename fails' and len(calls) == 2:
+                        raise OSError('planted: the rename failed')
+                    real_rename(temporary, path)
+
+                if how == 'a half-written copy left behind':
+                    staging = tree / status_file.STAGING_FOLDER
+                    staging.mkdir(parents=True, exist_ok=True)
+                    (staging / 'E_901__TOY_A_V1__VARIANT_STATUS.ini.writing').write_bytes(b'; E_901 / TOY_A')
+                else:
+                    with mock.patch.object(status_file, '_rename_into_place', rename):
+                        if how == 'killed at the first rename':
+                            with self.assertRaises(Killed):
+                                fx.run_job(tree)
+                        else:
+                            code, said = fx.run_job(tree)
+                            self.assertEqual(code, 1)
+                            self.assertTrue(any('STOPPED by a fault' in line and 'the rename failed' in line
+                                                for line in said), said)
+                            self.assertEqual((self.status(tree, 'TOY_A_V1').eligible_from,
+                                              self.status(tree, 'TOY_B_V1').eligible_from), (LAST_AT_START + 1, None))
+                self.assertEqual(len(self.staged(tree)), 1, 'the unfinished copy lies in the staging folder only')
+                self.assert_variants_whole(tree)
+                code, said = fx.run_job(tree)
+                self.assertEqual(code, 0, said)
+                self.assertFalse(any('fails its checks' in line for line in said), said)
+                self.assertTrue(any('its unfinished copy was removed' in line for line in said), said)
+                self.assertEqual(self.staged(tree), [])
+                self.assert_variants_whole(tree)
+                again = {**fx.files_under(tree, leave_out=()), **fx.files_under(tree, 'src/methods')}
+                self.assertEqual(sorted(again), sorted(reference))
+                for name in reference:
+                    self.assertEqual(again[name], reference[name], name)
+
+    def test_in_dev_the_first_creation_of_a_status_file_interrupted_at_the_rename_is_made_again(self):
+        tree = self.tree(role='DEV', with_source=False)
+        for name in self.VARIANTS:
+            fx.status_path(tree, 'E_901', name).unlink()
+        with mock.patch.object(status_file, '_rename_into_place', side_effect=Killed('at the rename')):
+            with self.assertRaises(Killed):
+                fx.run_job(tree, no_update=True)
+        self.assertEqual(len(self.staged(tree)), 1)
+        self.assert_variants_whole(tree, with_status=False)
         code, said = fx.run_job(tree, no_update=True)
         self.assertEqual(code, 0, said)
-        self.assertEqual((master.read_bytes(), ledger.read_bytes()), old)
-        self.assertTrue(any('was discarded' in line for line in said))
-        master.write_bytes(new_master)                                  # died after the results, before the ledger
-        Path(str(ledger) + '.incoming').write_bytes(new_ledger)
-        code, said = fx.run_job(tree, no_update=True)
-        self.assertEqual(code, 0, said)
-        self.assertEqual(ledger.read_bytes(), new_ledger)
-        self.assertTrue(any('was completed' in line for line in said))
+        self.assert_variants_whole(tree)
+        for name in self.VARIANTS:
+            self.assertEqual(self.status(tree, name), GameStatus())
+            self.assertEqual(fx.list_lines(tree, 'E_901', name)[-1]['content']['target'], LAST_AT_START + 1)
+
+    def test_a_withdrawal_interrupted_at_the_rename_leaves_the_variant_active_and_whole_and_can_be_made_again(self):
+        from research import withdraw
+        for how, planted in (('killed', Killed('at the rename')), ('failed', OSError('planted: the rename failed'))):
+            with self.subTest(how=how):
+                tree = self.tree(with_source=False, name=f'tree_{how}')
+                self.assertEqual(fx.run_job(tree, no_update=True)[0], 0)
+                before = fx.status_path(tree, 'E_901', 'TOY_B_V1').read_bytes()
+                results_before = fx.files_under(tree)
+                arguments = (tree, [('E_901', 'TOY_B_V1')], (GAME,), 'wrong column')
+                options = {'ask': lambda question: 'WITHDRAW', 'now': lambda: fx.FIXED_TIME}
+                said = []
+                with mock.patch.object(status_file, '_rename_into_place', side_effect=planted):
+                    if how == 'killed':
+                        with self.assertRaises(Killed):
+                            withdraw.withdraw(*arguments, say=said.append, **options)
+                    else:
+                        self.assertEqual(withdraw.withdraw(*arguments, say=said.append, **options), withdraw.EXIT_STOPPED)
+                        self.assertIn('No status file is half-written', said[-1])
+                self.assertEqual(fx.status_path(tree, 'E_901', 'TOY_B_V1').read_bytes(), before)
+                self.assert_variants_whole(tree)
+                self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
+                code, job_said = fx.run_job(tree, no_update=True)          # a job in between: the variant runs
+                self.assertEqual(code, 0, job_said)
+                self.assertEqual(fx.files_under(tree), results_before, 'nothing scientific changed')
+                said = []
+                self.assertEqual(withdraw.withdraw(*arguments, say=said.append, **options), withdraw.EXIT_DONE)
+                self.assertEqual(self.status(tree, 'TOY_B_V1').withdrawn_from, LAST_AT_START + 1)
+                self.assertEqual(self.staged(tree), [])
+                self.assert_variants_whole(tree)
+
+
+class InterruptedResultsCopy(fx.JobCase):
+    """EX_283 F283-B02: from an accepted pair and a source that extends it, an interruption at any point of the
+    copy leaves the old pair or the new pair, never a mixture, and the next job gives the uninterrupted bytes."""
+
+    def setUp(self):
+        """A tree whose variants count from 1161, a source two draws longer, and the uninterrupted job's result."""
+        super().setUp()
+        self.tree_folder = self.tree()
+        self.assertEqual(fx.run_job(self.tree_folder)[0], 0)
+        self.source(LAST_AT_START + 2, version=2)
+        self.pristine = self.root / 'pristine'
+        shutil.copytree(self.tree_folder, self.pristine)
+        self.master = self.tree_folder / 'source_data' / f'{GAME}_results_master.csv'
+        self.ledger = self.tree_folder / 'source_data' / f'{GAME}_results_master_ledger.csv'
+        self.old_pair = (self.master.read_bytes(), self.ledger.read_bytes())
+        self.new_pair = ((self.root / 'source/source_data' / self.master.name).read_bytes(),
+                         (self.root / 'source/source_data' / self.ledger.name).read_bytes())
+        self.assertEqual(fx.run_job(self.tree_folder)[0], 0)
+        self.reference = self.everything()
+        self.assertEqual(self.pair(), self.new_pair)
+
+    def everything(self) -> dict:
+        """Every file of the tree that a job can write: research results, accepted results, status files."""
+        tree = self.tree_folder
+        return {**fx.files_under(tree, leave_out=()), **fx.files_under(tree, 'source_data'),
+                **fx.files_under(tree, 'src/methods')}
+
+    def pair(self) -> tuple:
+        """The accepted results file and ledger now on disk."""
+        return self.master.read_bytes(), self.ledger.read_bytes()
+
+    def restore(self) -> None:
+        """Put the tree back as it was before the copy."""
+        shutil.rmtree(self.tree_folder)
+        shutil.copytree(self.pristine, self.tree_folder)
+
+    def staged(self) -> list:
+        """The staged files now beside the accepted ones."""
+        return sorted(p.name for p in self.master.parent.iterdir() if p.name.endswith(results_step.INCOMING_SUFFIX))
+
+    def assert_the_next_job_gives_the_uninterrupted_bytes(self, label: str) -> None:
+        """Run the job again and compare every file with the uninterrupted run's."""
+        code, said = fx.run_job(self.tree_folder)
+        self.assertEqual(code, 0, (label, said))
+        again = self.everything()
+        self.assertEqual(sorted(again), sorted(self.reference), label)
+        for name in self.reference:
+            self.assertEqual(again[name], self.reference[name], (label, name))
+
+    def test_every_state_a_crash_can_leave_is_finished_or_discarded_to_a_consistent_pair(self):
+        new_master, new_ledger = self.new_pair
+        half = lambda data: data[:len(data) // 2]
+        states = {                                  # label: (staged results, staged ledger, results replaced, expected pair)
+            'half the results staged': (half(new_master), None, False, 'old'),
+            'the results staged': (new_master, None, False, 'old'),
+            'the results staged and half the ledger': (new_master, half(new_ledger), False, 'old'),
+            'both staged, nothing replaced': (new_master, new_ledger, False, 'old'),
+            'the results replaced, the ledger still staged': (None, new_ledger, True, 'new'),
+            'a staged ledger alone beside the OLD results (the state EX_283 found)': (None, new_ledger, False, 'old'),
+            'half a staged ledger alone beside the old results': (None, half(new_ledger), False, 'old'),
+        }
+        for label, (staged_master, staged_ledger, replaced, expected) in states.items():
+            with self.subTest(state=label):
+                self.restore()
+                if staged_master is not None:
+                    Path(str(self.master) + results_step.INCOMING_SUFFIX).write_bytes(staged_master)
+                if staged_ledger is not None:
+                    Path(str(self.ledger) + results_step.INCOMING_SUFFIX).write_bytes(staged_ledger)
+                if replaced:
+                    self.master.write_bytes(new_master)
+                said = results_step.finish_interrupted_copy(self.tree_folder, GAME)
+                self.assertIn('completed' if expected == 'new' else 'discarded', said)
+                self.assertEqual(self.staged(), [])
+                self.assertEqual(self.pair(), self.new_pair if expected == 'new' else self.old_pair, label)
+                results_on_file(self.tree_folder, GAME)                 # the accepted pair agrees with itself
+                self.assert_the_next_job_gives_the_uninterrupted_bytes(label)
+
+    def test_a_kill_or_a_failure_at_every_step_of_the_copy_never_leaves_a_mixed_pair(self):
+        real_stage, real_put = results_step._stage, results_step._put_in_place
+        steps = [('stage', 1, 'the results staged'), ('stage', 2, 'the ledger staged'),
+                 ('put', 1, 'the results put in place'), ('put', 2, 'the ledger put in place')]
+        cases = [(kind, number, label, moment, how) for kind, number, label in steps
+                 for moment in (('before', 'half-way', 'after') if kind == 'stage' else ('before', 'after'))
+                 for how in ('killed', 'failed')]
+        self.assertEqual(len(cases), 20)
+        for kind, number, label, moment, how in cases:
+            name = f'{how} {moment} "{label}"'
+            with self.subTest(case=name):
+                self.restore()
+                counts = {'stage': 0, 'put': 0}
+
+                def planted():
+                    """The planted interruption: a kill, or a failure the job survives."""
+                    return Killed(name) if how == 'killed' else OSError(f'planted: {name}')
+
+                def stage(path, data):
+                    """Stage a file, interrupted at the chosen moment of the chosen call."""
+                    counts['stage'] += 1
+                    if kind == 'stage' and counts['stage'] == number:
+                        if moment == 'before':
+                            raise planted()
+                        if moment == 'half-way':
+                            path.write_bytes(data[:len(data) // 2])
+                            raise planted()
+                        real_stage(path, data)
+                        raise planted()
+                    real_stage(path, data)
+
+                def put(staged, accepted):
+                    """Put a staged file in place, interrupted at the chosen moment of the chosen call."""
+                    counts['put'] += 1
+                    if kind == 'put' and counts['put'] == number:
+                        if moment == 'after':
+                            real_put(staged, accepted)
+                        raise planted()
+                    real_put(staged, accepted)
+
+                with mock.patch.object(results_step, '_stage', stage), mock.patch.object(results_step, '_put_in_place', put):
+                    if how == 'killed':
+                        with self.assertRaises(Killed):
+                            fx.run_job(self.tree_folder)
+                    else:
+                        code, said = fx.run_job(self.tree_folder)
+                        self.assertEqual(code, 1, said)
+                        self.assertTrue(any('STOPPED by a fault' in line for line in said), said)
+                master_now, ledger_now = self.pair()
+                self.assertIn(master_now, (self.old_pair[0], self.new_pair[0]), 'the accepted results are never partial')
+                self.assertIn(ledger_now, (self.old_pair[1], self.new_pair[1]), 'the accepted ledger is never partial')
+                self.assertNotEqual((master_now, ledger_now), (self.old_pair[0], self.new_pair[1]),
+                                    'the new ledger is never put beside the old results')
+                self.assertFalse((self.tree_folder / job_lock.UPDATER_LOCK).exists(), 'the updater\'s lock is released')
+                self.assert_the_next_job_gives_the_uninterrupted_bytes(name)
+                self.assertEqual(self.staged(), [])
 
 
 class TheExamplesOfSection72(fx.JobCase):
@@ -380,6 +615,18 @@ class Reports(fx.JobCase):
         fx.run_job(tree, no_update=True)
         self.assertEqual(fx.files_under(tree, f'results/research/{GAME}/reports'), first)
 
+    def test_an_eligibility_draw_written_at_the_end_of_a_job_shows_in_that_jobs_league_reports(self):
+        tree = self.tree()
+        code, said = fx.run_job(tree)                                   # this job writes eligibility draws 1161
+        self.assertEqual(code, 0, said)
+        for draw in (fx.FIRST_TOY_TARGET, LAST_AT_START):
+            rows = list(csv.reader(io.StringIO(fx.report_text(tree, f'league/league_{GAME}_d{draw:05d}.csv'))))
+            header = next(row for row in rows if row and row[0] == 'order_top')
+            row = dict(zip(header, next(row for row in rows if len(row) > 1 and row[1] == 'E_901/TOY_A_V1')))
+            self.assertEqual(row['prevailing_ov1_first_draw'], str(LAST_AT_START + 1), draw)
+        code, said = fx.run_job(tree)
+        self.assertTrue(any('0 report files' in line for line in said), 'the next job finds every report as it would make it')
+
     def test_a_changed_report_formatter_leaves_no_file_of_the_old_format_in_the_active_folder(self):
         tree = self.tree()
         fx.run_job(tree, no_update=True)
@@ -452,7 +699,7 @@ class StartingAndStopping(fx.JobCase):
     def test_a_job_lock_that_exists_refuses_and_is_never_removed_by_another_job(self):
         tree = self.tree()
         lock = tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME
-        lock.parent.mkdir()
+        lock.parent.mkdir(exist_ok=True)
         lock.write_text('research job; started earlier\n', encoding='ascii')
         code, said = fx.run_job(tree, no_update=True)
         self.assertEqual(code, 2)

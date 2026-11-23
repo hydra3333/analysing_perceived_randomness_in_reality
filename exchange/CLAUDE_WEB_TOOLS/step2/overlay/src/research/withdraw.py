@@ -14,7 +14,7 @@ Which of the project's own modules it uses
     research.settings          read_settings: the tree's role and root
     research.job_lock          the job lock, the updater's lock, the orphan-marker check
     research.variant_folders   read_variant: the variant and the games it supports
-    research.status_file       read_status, with_withdrawal, write_status
+    research.status_file       read_status, with_withdrawal, write_status, discard_unfinished_writes
     research.reader            results_on_file, results_paths: the last draw on file
 
 What uses it
@@ -32,7 +32,8 @@ from pathlib import Path
 from research.job_lock import RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, job_lock, updater_lock
 from research.reader import ResultsRefused, results_on_file, results_paths
 from research.settings import SettingsRefused, read_settings
-from research.status_file import STATUS_FILE_NAME, StatusRefused, read_status, with_withdrawal, write_status
+from research.status_file import (STATUS_FILE_NAME, StatusRefused, discard_unfinished_writes, read_status,
+                                  with_withdrawal, write_status)
 from research.variant_folders import VariantRefused, read_variant
 
 # The games a withdrawal can name; BOTH means each of them.
@@ -43,8 +44,9 @@ METHODS_FOLDER = 'src/methods'
 CONFIRMATION_WORD = 'WITHDRAW'
 # The tree's log of installs, replacements and withdrawals (deployment design section 2).
 TREE_LOG_NAME = 'INSTALL_LOG.jsonl'
-# The exit codes: done; refused or not confirmed (nothing written).
-EXIT_DONE, EXIT_NOTHING_WRITTEN = 0, 2
+# The exit codes: done; stopped by a fault part-way (each status file is whole, old or new); refused or not
+# confirmed (nothing written).
+EXIT_DONE, EXIT_STOPPED, EXIT_NOTHING_WRITTEN = 0, 1, 2
 
 
 class WithdrawalRefused(ValueError):
@@ -84,7 +86,9 @@ def plan_withdrawal(tree_root: Path, names, games, reason: str, stamp: str) -> l
                 raise WithdrawalRefused(f'{variant.identity} does not support {game_id}. Name the game it runs in.')
             if statuses[game_id].withdrawn_from is not None:
                 raise WithdrawalRefused(f'{variant.identity} is already withdrawn in {game_id}, from draw '
-                                        f'{statuses[game_id].withdrawn_from}. A withdrawal is set once.')
+                                        f'{statuses[game_id].withdrawn_from}. A withdrawal is set once. (If an '
+                                        f'earlier command for several variants was interrupted, run it again '
+                                        f'without this one.)')
             statuses[game_id] = with_withdrawal(statuses[game_id], last_on_file[game_id] + 1, reason,
                                                 f'{stamp}; results on file through {last_on_file[game_id]}')
         plan.append({'variant': variant, 'new_statuses': statuses,
@@ -99,7 +103,8 @@ def withdraw(tree_root: Path, names, games, reason: str, *, ask=input, say=print
     tree_root: the tree.  names: (family, variant) pairs.  games: the games.  reason: the owner's reason.
     ask: asks the owner a question and returns what he typed (a test passes its own).  say: prints one line.
     now: gives the present time (UTC); a test passes a fixed one.
-    Returns EXIT_DONE if the status files were written, EXIT_NOTHING_WRITTEN otherwise.
+    Returns EXIT_DONE if the status files were written; EXIT_NOTHING_WRITTEN if it was refused or not confirmed;
+    EXIT_STOPPED if a file operation failed part-way (each status file is then the old one or the new one).
     """
     now = now or (lambda: datetime.now(timezone.utc))
     stamp = now().astimezone().strftime('%Y-%m-%d %H:%M')
@@ -109,6 +114,9 @@ def withdraw(tree_root: Path, names, games, reason: str, *, ask=input, say=print
         say(f'WITHDRAW A VARIANT - START - {stamp} - the {settings.role} tree at {tree_root}')
         check_no_orphan_marker(tree_root)
         with job_lock(tree_root, 'withdrawal', stamp), updater_lock(tree_root, 'withdrawal', stamp):
+            for leftover in discard_unfinished_writes(tree_root):
+                say(f'  An earlier status write was interrupted before it changed anything; its unfinished copy was '
+                    f'removed ({leftover}).')
             plan = plan_withdrawal(tree_root, names, games, reason, stamp)
             for entry in plan:
                 for game_id in games:
@@ -141,6 +149,11 @@ def withdraw(tree_root: Path, names, games, reason: str, *, ask=input, say=print
         say(f'REFUSED: {refusal}')
         say('WITHDRAW A VARIANT - END - refused; no status file was changed by this command.')
         return EXIT_NOTHING_WRITTEN
+    except OSError as failure:
+        say(f'STOPPED: a file could not be written or read: {failure}')
+        say('WITHDRAW A VARIANT - END - stopped by a fault. No status file is half-written: each is the old one or '
+            'the new one, whole. Run the command again; it names any variant that is already withdrawn.')
+        return EXIT_STOPPED
     say(f'WITHDRAW A VARIANT - END - {len(plan)} variant(s) withdrawn. The next Run_Research.bat honours it.')
     return EXIT_DONE
 

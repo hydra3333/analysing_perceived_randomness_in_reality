@@ -3,8 +3,13 @@
 What this file is for
     QA and DEV never contact the lottery site. Their accepted results are copied from another tree (PROD) and
     checked to be the same file grown longer: the results already here must be the beginning, byte for byte, of
-    the results there. The source tree is only read. The copy is written beside the old files first and then
-    renamed into place, so that a crash leaves either the old pair or a state this file can finish.
+    the results there. The source tree is only read.
+    The copy is a small transaction with one unambiguous order (EX_283 F283-B02): the new results file is staged
+    beside the old one, then the new ledger; then the results file is renamed into place, then the ledger. A
+    staged results file therefore always means "nothing accepted was touched yet", and a staged ledger alone
+    means "the results file is already the new one". Recovery does not trust the names alone: a staged ledger is
+    put in place only if it names the results file that is on disk. A crash or a failure at any point leaves the
+    old pair or the new pair, never a mixture.
     In PROD the step runs the one reviewed updater through its own launcher; that arrives with build step 3,
     and until then the step is left out there.
 
@@ -23,6 +28,9 @@ What uses it
 """
 from __future__ import annotations
 
+import csv
+import hashlib
+import io
 import os
 from dataclasses import dataclass
 from pathlib import Path
@@ -61,25 +69,60 @@ def first_draw_that_differs(old: bytes, new: bytes, game_id: str) -> int:
     return first
 
 
-def finish_interrupted_copy(tree_root: Path, game_id: str) -> str | None:
-    """Finish or discard a copy that a crash interrupted, before the results are read.
+def _stage(path: Path, data: bytes) -> None:
+    """Write one staged file whole and make it durable (its own function so that a test can plant a failure
+    exactly here)."""
+    with open(path, 'wb') as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
 
-    Returns None if nothing was pending; otherwise one line saying what was done. A copy that had not yet
-    replaced the results file is discarded (the next results step copies again); one that had replaced the
-    results file but not yet its ledger is completed.
+
+def _put_in_place(staged: Path, accepted: Path) -> None:
+    """The one rename that makes a staged file the accepted one (its own function, for the same reason)."""
+    os.replace(staged, accepted)
+
+
+def ledger_names_results(ledger_bytes: bytes, results_bytes: bytes) -> bool:
+    """True if a ledger's last row names exactly these results bytes by their SHA-256.
+
+    ledger_bytes: a version ledger, whole or damaged.  results_bytes: a results file.
+    Returns False for a ledger that cannot be read, has no row, or names other bytes.
+    """
+    try:
+        rows = list(csv.reader(io.StringIO(ledger_bytes.decode('utf-8'), newline=''), strict=True))
+        named = dict(zip(rows[0], rows[-1]))['master_sha256'] if len(rows) >= 2 else None
+    except (UnicodeDecodeError, csv.Error, IndexError, KeyError):
+        return False
+    return named == hashlib.sha256(results_bytes).hexdigest()
+
+
+def finish_interrupted_copy(tree_root: Path, game_id: str) -> str | None:
+    """Finish or discard a copy that a crash or a failure interrupted, before the results are read.
+
+    Returns None if nothing was pending; otherwise one line saying what was done.
+    - A staged results file is still there: the accepted pair was not touched. Both staged files are discarded
+      (the next results step copies again).
+    - Only a staged ledger is there: it is put in place if, and only if, it names the results file now on disk
+      (the copy had already replaced the results file). A staged ledger that does not name the results on disk
+      belongs to no finished step and is discarded; the accepted pair is as it was.
     """
     master, ledger = results_paths(tree_root, game_id)
     incoming_master = master.with_name(master.name + INCOMING_SUFFIX)
     incoming_ledger = ledger.with_name(ledger.name + INCOMING_SUFFIX)
     if incoming_master.exists():
-        incoming_master.unlink()
         if incoming_ledger.exists():
             incoming_ledger.unlink()
+        incoming_master.unlink()                    # last, so that it marks "nothing was replaced" to the end
         return f'{game_id}: an interrupted copy of the results had changed nothing and was discarded'
-    if incoming_ledger.exists():
-        os.replace(incoming_ledger, ledger)
+    if not incoming_ledger.exists():
+        return None
+    if ledger_names_results(incoming_ledger.read_bytes(), master.read_bytes()):
+        _put_in_place(incoming_ledger, ledger)
         return f'{game_id}: an interrupted copy of the results was completed (its ledger was put in place)'
-    return None
+    incoming_ledger.unlink()
+    return (f'{game_id}: a leftover staged ledger that does not name the results on file was discarded; the '
+            f'accepted results and their ledger are as they were')
 
 
 def copy_results(settings: TreeSettings, game_id: str, when: str) -> ResultsStep:
@@ -119,15 +162,12 @@ def copy_results(settings: TreeSettings, game_id: str, when: str) -> ResultsStep
     incoming_master = master.with_name(master.name + INCOMING_SUFFIX)
     incoming_ledger = ledger.with_name(ledger.name + INCOMING_SUFFIX)
     with updater_lock(settings.tree_root, 'checked copy of the results', when):
-        # The ledger's copy is written first and the results file is renamed first, so that a crash leaves a
-        # state finish_interrupted_copy can tell: both waiting (nothing changed) or only the ledger waiting.
-        for path, data in ((incoming_ledger, source_ledger), (incoming_master, source.raw)):
-            with open(path, 'wb') as stream:
-                stream.write(data)
-                stream.flush()
-                os.fsync(stream.fileno())
-        os.replace(incoming_master, master)
-        os.replace(incoming_ledger, ledger)
+        # The order is the whole of the protocol (see the header): stage results, stage ledger, replace results,
+        # replace ledger. While the staged results file exists nothing accepted has been replaced.
+        _stage(incoming_master, source.raw)
+        _stage(incoming_ledger, source_ledger)
+        _put_in_place(incoming_master, master)
+        _put_in_place(incoming_ledger, ledger)
     if source.last_draw == last_here:
         return ResultsStep(True, f'{game_id}: results copied from {source_root}: no new draw (the ledger grew)')
     return ResultsStep(True, f'{game_id}: results copied from {source_root}: draws {last_here + 1} to '

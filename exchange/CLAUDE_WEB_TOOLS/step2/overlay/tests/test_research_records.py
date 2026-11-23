@@ -174,7 +174,9 @@ class TheStatusFile(unittest.TestCase):
     def setUp(self):
         """A new ACTIVE status file of an invented variant."""
         self.folder = tempfile.TemporaryDirectory()
-        self.path = Path(self.folder.name) / 'VARIANT_STATUS.ini'
+        self.tree = Path(self.folder.name) / 'tree'
+        self.path = self.tree / 'src' / 'methods' / 'E_901' / 'TOY_COUNTS_V1' / 'VARIANT_STATUS.ini'
+        self.path.parent.mkdir(parents=True)
         self.statuses = status_file.create_active(self.path, 'E_901', 'TOY_COUNTS_V1', self.GAMES)
 
     def tearDown(self):
@@ -243,15 +245,33 @@ class TheStatusFile(unittest.TestCase):
         with self.assertRaisesRegex(status_file.StatusRefused, 'not the variant'):
             status_file.read_status(self.path, ('POWERBALL',))
 
-    def test_a_crash_before_the_rename_leaves_the_old_file_and_after_it_the_new(self):
+    def test_a_failed_rename_leaves_the_old_file_and_nothing_new_in_the_variant_folder(self):
         before = self.path.read_bytes()
-        with mock.patch('research.status_file.os.replace', side_effect=OSError('planted crash before the rename')):
+        with mock.patch.object(status_file, '_rename_into_place', side_effect=OSError('planted: the rename failed')):
             with self.assertRaises(OSError):
                 status_file.write_status(self.path, 'E_901', 'TOY_COUNTS_V1', self.withdrawn_and_eligible())
         self.assertEqual(self.path.read_bytes(), before)
         self.assertEqual(status_file.read_status(self.path, self.GAMES), self.statuses)
+        self.assertEqual([p.name for p in self.path.parent.iterdir()], ['VARIANT_STATUS.ini'],
+                         'the unfinished copy is never among the variant\'s files (EX_283 F283-B01)')
+        staged = self.tree / status_file.STAGING_FOLDER
+        self.assertEqual([p.name for p in staged.iterdir()], ['E_901__TOY_COUNTS_V1__VARIANT_STATUS.ini.writing'])
+        self.assertEqual(status_file.discard_unfinished_writes(self.tree),
+                         ['E_901__TOY_COUNTS_V1__VARIANT_STATUS.ini.writing'])
+        self.assertEqual(list(staged.iterdir()), [])
+        self.assertEqual(status_file.discard_unfinished_writes(self.tree), [])
         status_file.write_status(self.path, 'E_901', 'TOY_COUNTS_V1', self.withdrawn_and_eligible())
         self.assertEqual(status_file.read_status(self.path, self.GAMES), self.withdrawn_and_eligible())
+        self.assertEqual(list(staged.iterdir()), [], 'a finished write leaves nothing staged')
+
+    def test_the_writer_refuses_a_path_that_is_not_a_status_file_in_a_variant_folder(self):
+        for wrong in (Path(self.folder.name) / 'VARIANT_STATUS.ini',
+                      self.tree / 'src' / 'methods' / 'E_901' / 'TOY_COUNTS_V1' / 'OTHER.ini',
+                      self.tree / 'src' / 'E_901' / 'TOY_COUNTS_V1' / 'VARIANT_STATUS.ini'):
+            with self.subTest(path=wrong):
+                with self.assertRaisesRegex(status_file.StatusRefused, 'is written only as'):
+                    status_file.write_status(wrong, 'E_901', 'TOY_COUNTS_V1', self.statuses)
+                self.assertFalse(wrong.exists())
 
     def test_a_file_copied_back_from_a_backup_is_accepted(self):
         backup = self.path.read_bytes()

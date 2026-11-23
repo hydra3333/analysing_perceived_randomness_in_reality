@@ -34,8 +34,9 @@ STEP1_TOOLS = HERE.parent / 'step1'                                 # the tools 
 VERIFIER_TEMPLATE = HERE.parent / 'wf1' / 'verifier_template.py'    # the reviewed read-only verifier
 OVERLAY = HERE / 'overlay'                                          # the engine's new files, as they go into the tree
 
-PACKAGE_NAME = 'STEP2_Research_Engine_v1'
-PACKAGE_TITLE = 'build step 2 package (the research engine, in DEV; specification v0.6 sections 3 to 11)'
+PACKAGE_NAME = 'STEP2_Research_Engine_v1r1'
+PACKAGE_TITLE = ('build step 2 package, corrected after EX_283 (the research engine, in DEV; specification v0.6 '
+                 'sections 3 to 11)')
 VERIFIER_NAME = 'VERIFY_STEP2_INSTALL.py'
 SHEET_NAME = 'INSTALL_AND_RUN_SHEET.md'
 MANIFEST_NAME = 'INSTALL_MANIFEST_SHA256.txt'
@@ -124,8 +125,9 @@ expected: do not go on, do not retry, do not reset or undo anything. Send Claude
 module's line in parts 1 and 3, and the lines `FAILS IN BOTH RUNS` in part 3, are expected for as long as part 3's
 comparison ends as part 3 says.
 
-Nothing here contacts a lottery website, changes the PC's date or time, or ends a process. Parts 1 to 5 read the
-results masters and write only under `{ev}` (the suite's reports) and Python's own temporary folders. Part 6, on
+Nothing here contacts a lottery website, changes the PC's date or time, or ends a process. Parts 1 to 5 run no
+research fill on the real results: the suite's tests read the results masters (as they do today, to compare views
+and digests) and write only under `{ev}` (the suite's reports) and Python's own temporary folders. Part 6, on
 its own go, is the first run of the new engine on the real results: it writes DEV's own research results under
 `results\\research\\`, the status file in each variant folder, `records\\` and nothing else; Git ignores all of
 them. Your ZIP of the project folder made before build step 1 remains the way back to the old system.
@@ -215,7 +217,8 @@ In Notepad, check that `tree_root` is this folder and `venv_dir` is its `.venv`;
 PC's paths, so there should be nothing to change. Leave the commented lines as they are (they belong to build
 step 3). Save and close. `git status --short` prints nothing: Git ignores `ENVIRONMENT.ini`.
 
-**Parts 1 to 5 install the engine and prove the install. They run nothing on real results. Stop here if you wish.**
+**Parts 1 to 5 install the engine and prove the install. They run no research fill on the real results. Stop here
+if you wish.**
 
 ## Part 6. DEV's first fill - only on your own separate go (half an hour to an hour; leave the window alone)
 

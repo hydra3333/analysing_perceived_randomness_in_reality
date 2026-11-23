@@ -32,3 +32,5 @@ git clone -q "$R" n5; cp -r "$P/repo_overlay/." n5/; echo "# x" >> n5/src/method
 echo "an old shared file changed:             $($V --repo n5 --phase post 2>&1 | $G | cut -c1-80)"
 git clone -q "$R" n6; cp -r "$P/repo_overlay/." n6/; git -C n6 checkout -q -- .gitignore
 echo "one edited file not replaced:           $($V --repo n6 --phase post 2>&1 | $G | cut -c1-80)"
+git clone -q "$R" n7; cp -r "$P/repo_overlay/." n7/; echo "x" > n7/src/methods/E_002/RECUR_MEAN_ALL_V1/VARIANT_STATUS.ini.writing
+echo "a stray file in a variant folder:       $($V --repo n7 --phase post 2>&1 | $G | cut -c1-80)"
