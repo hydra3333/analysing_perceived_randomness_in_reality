@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 14:47 Australia/Adelaide (entry 170: the H-1 v9 CANDIDATE written; not reviewed). **Next, on the owner's word: the reviewer's check of H-1 v9 (EX_281); his ratification; then build step 2 on his go.**
+**Last updated:** 23 November 2026, 15:16 Australia/Adelaide (entries 172-173: H-1 v9 candidate corrected after EX_281 PASS; the reviewer chat ended; H-2 v5r1 candidate written by Claude for a new reviewer chat). **Next: the owner starts a new reviewer chat with the H-2 v5r1 blurb; his RAT-43 decision; then build step 2 on his go.**
 
 ## For the owner: NOW
 
+- **THE REVIEWER CHAT ENDED (23 November 2026, after EX_281).** H-1 v9 candidate: EX_281 PASS, its one correction
+  applied (entry 172; SHA-256 `94307744...61948b6`). **For a new reviewer chat:** the H-2 v5r1 candidate and blurb, Claude's status
+  refresh of the reviewer's H-2 v5 (entry 173), at `exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/`. The owner pastes
+  `ChatGPT_Reviewer_Handover_H2_v5r1_CANDIDATE_20261123_introductory_blurb.md` to start it. H-1 v8 and H-2 v4 stay in force until
+  RAT-43.
 - **THE H-1 v9 CANDIDATE IS WRITTEN (entry 170; 23 November 2026, 14:47).** H-1 v8 brought up to date after build step 1
   and the tidy-up: `exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md` and its blurb, with the exact diffs.
   Not reviewed, not ratified; H-1 v8 stays installed. **Waiting on the owner:** his word to send it to the reviewer.
