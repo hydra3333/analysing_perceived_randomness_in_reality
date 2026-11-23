@@ -51,7 +51,7 @@ EDITED_PATHS = ('.gitignore', 'tests/test_mhupa_master_versions.py')
 # Where the owner extracts the package and keeps the evidence: his download folder, never the repository.
 OWNER_PACKAGE_FOLDER = rf'E:\TEMP\{PACKAGE_NAME}'
 OWNER_EVIDENCE_FOLDER = r'E:\TEMP\STEP2_evidence'
-# The suite reports the owner made this morning on exactly today's src and tests (the tidy-up's "after" run).
+# The suite reports the owner made on 23 November on exactly this src and tests (the tidy-up's "after" run).
 OWNER_EARLIER_SUITE = r'E:\TEMP\TIDY1_evidence\suite_after'
 TIDY_UP_COMMIT = 'c7e6ed8'
 
@@ -113,7 +113,7 @@ def sheet_text(base: str, new_count: int, test_modules: list, engine_tests: int)
 **What this package does.** It adds the new research engine beside the old system: {new_count} new files
 (`src\\research\\`, the program `src\\research_command.py`, the launchers `Run_Research.bat` and
 `Withdraw_Variant.bat`, `deploy\\INFRA_MANIFEST.ini`, `ENVIRONMENT.example.ini` and {len(test_modules)} test modules with their
-fixtures). It replaces two existing files: `.gitignore` (six lines added, so that Git ignores this PC's settings
+fixtures). It replaces two existing files: `.gitignore` (six patterns added, so that Git ignores this PC's settings
 file, DEV's research results, the status files and the `records` and `scratch` folders) and one old test,
 `tests\\test_mhupa_master_versions.py` (its list of the files allowed to name the results files gains the new
 reader). **No file of the old system's code or of any method is changed,** and nothing is deleted.
@@ -139,9 +139,9 @@ git diff --stat {TIDY_UP_COMMIT} HEAD -- src tests
 ```
 
 Expected: `git status --short` prints nothing; the pull says `Fast-forward` or `Already up to date`; the third
-command prints nothing (`src` and `tests` are exactly as the tidy-up left them this morning).
+command prints nothing (`src` and `tests` are exactly as the tidy-up left them on 23 November).
 
-**If the folder `{OWNER_EARLIER_SUITE}` still exists** (this morning's "after" run of the tidy-up, made on
+**If the folder `{OWNER_EARLIER_SUITE}` still exists** (the "after" run of the tidy-up on 23 November, made on
 exactly these files), it is the baseline: skip the next command and use that folder as the "before" in part 3.
 **Otherwise** make the baseline now:
 
@@ -157,12 +157,12 @@ baseline, not a STOP); a last line `DONE: 45 modules, 571 tests ran`; and `git s
 
 ```bat
 {py} "{p}\\{VERIFIER_NAME}" --repo . --phase pre
-xcopy "{p}\\repo_overlay\\*" . /E /Y /H
+xcopy "{p}\\repo_overlay\\*" . /E /Y
 {py} "{p}\\{VERIFIER_NAME}" --repo . --phase post
 ```
 
 Expected: `PRE PASS`; `{new_count + len(EDITED_PATHS)} File(s) copied`; `POST PASS` ({new_count} new paths, {len(EDITED_PATHS)} modified files, 0 staged
-deletions). (`/H` is needed because `.gitignore` is among the files copied.)
+deletions).
 
 ## Part 3. The suite again, and the comparison (about 30 minutes)
 
@@ -217,7 +217,7 @@ step 3). Save and close. `git status --short` prints nothing: Git ignores `ENVIR
 
 **Parts 1 to 5 install the engine and prove the install. They run nothing on real results. Stop here if you wish.**
 
-## Part 6. DEV's first fill - only on your own separate go (about an hour; leave the window alone)
+## Part 6. DEV's first fill - only on your own separate go (half an hour to an hour; leave the window alone)
 
 ```bat
 Run_Research.bat --game BOTH --no-update
@@ -254,21 +254,31 @@ by Git).
 ## Part 7. The early comparison with the old development records (reads only; a few minutes)
 
 ```bat
-{py} -B "{p}\\tools\\compare_fill_with_old_records.py" --tree .
+{py} -B "{p}\\tools\\compare_fill_with_old_records.py" --tree . > "{ev}\\early_comparison.txt" 2>&1
+findstr /v /e /c:" equal" "{ev}\\early_comparison.txt"
+findstr /e /c:" equal" "{ev}\\early_comparison.txt" | find /c /v ""
 ```
 
-It reads every development forecast the old system kept in its run folders and requires DEV's new lists to hold
-the same view digest, scores, ranking, TOP and WORST for the same variant and draw. It computes nothing and
-writes nothing.
-Expected: one line for each variant of each game, `n of n equal`; two summary lines for each game with
-`DIFFERENT: 0` and `of those not among the old forecasts compared: 0`; and the last line
-**`RESULT: PASS - COMPLETE - both games; all N old development forecasts ...`**
-Anything else is a STOP: a line beginning `DIFFERENT`, `RESULT: STOP`, `RESULT: PARTIAL` or `RESULT: REFUSED`.
+It compares DEV's new lists with what the old system recorded, and computes and writes nothing. Part 1: every score
+the old development walk-forward recorded must be in the new score lists with the same numbers drawn, matches and
+prize division. Part 2: every development forecast the old system kept in its run folders must be in the new
+forecast lists with the same view digest, scores, ranking, TOP and WORST.
+Expected from `findstr` (every line that is not a per-variant line), exactly seven lines: for each game one line
+`part 1: old score records (TOP and WORST): N; equal in the new score lists: N; DIFFERENT: 0`, one line
+`part 2: old development forecasts read from the run folders: N ... DIFFERENT: 0 ...` and one line
+`part 2: forecasts named by the tracked rank ledgers: N; of those not among the old forecasts compared: 0`; and the
+last line **`RESULT: PASS - COMPLETE - both games; all N old score records equal the new score lists; all N old
+development forecasts in the run folders were found in the new lists ...`** (the first N is 34800 for the score
+records that Git tracks). The third command prints **160** (for each of the 40 variants of each game, one `scores`
+line and one `forecasts` line, each `n of n equal`).
+Anything else is a STOP: a line beginning `DIFFERENT`, a `DIFFERENT:` count above 0, `RESULT: STOP`,
+`RESULT: PARTIAL` or `RESULT: REFUSED`. Change nothing and send Claude the file.
 
 ## Part 8. What to send Claude
 
 The commit ID of part 4; the comparison's text (part 3); the last twenty lines of the first job's window and the
-two times and the file `{ev}\\second_job.txt` (part 6); the text of part 7; roughly how long the first job took;
+two times and the file `{ev}\\second_job.txt` (part 6); the file `{ev}\\early_comparison.txt` (part 7); roughly
+how long the first job took;
 and, if anything was unexpected, the folder `{ev}`. Claude then verifies the commit from GitHub.
 The reports to look at, if you wish: `results\\research\\POWERBALL\\reports\\` (start with `README.txt`).
 """

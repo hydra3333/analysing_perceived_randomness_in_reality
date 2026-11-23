@@ -1,0 +1,22 @@
+Build step 2: part 2 of compare_fill_with_old_records.py tried on a sample (real results; SUGGESTIVE ONLY).
+The old run folders exist only on the owner's PC. For two Powerball variants the old forecast records were made again here with the OLD code path
+(the runner's own steps, as in check_layout_equivalence.py); each was required to have the old content digest that Git tracks: 582 records.
+They were put beside the cloud's first fill of both games, and the tool was run. PARTIAL is expected: part 2 has two variants of one game only.
+(The 80 per-variant lines of part 1 are left out here; they are in REAL_COMPARISON_CLOUD.txt.)
+
+== the sample as made
+POWERBALL: part 1: old score records (TOP and WORST): 22884; equal in the new score lists: 22884; DIFFERENT: 0
+POWERBALL  forecasts  E_1   FULL_HISTORY_RAW_COUNTS_V1: 291 of 291 equal
+POWERBALL  forecasts  E_9   EXP_DECAY_5_6_V1: 291 of 291 equal
+POWERBALL: part 2: old development forecasts read from the run folders: 582 (for 582 variant and target pairs); equal in the new lists: 582; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 14536
+POWERBALL: part 2: forecasts named by the tracked rank ledgers: 11442; of those not among the old forecasts compared: 10860 (for example ('E_10', 'CONTRAST_S13_L104_V1', 1286))
+OZLOTTO: part 1: old score records (TOP and WORST): 11916; equal in the new score lists: 11916; DIFFERENT: 0
+OZLOTTO: part 2: old development forecasts read from the run folders: 0 (for 0 variant and target pairs); equal in the new lists: 0; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 6598
+OZLOTTO: part 2: forecasts named by the tracked rank ledgers: 5958; of those not among the old forecasts compared: 5958 (for example ('E_1', 'FULL_HISTORY_RAW_COUNTS_V1', 1475))
+RESULT: PARTIAL - nothing differed (34800 old scores were compared in part 1), but the comparison is not complete: part 2 compared nothing for at least one game, because the old run folders are not in this copy of the project (they exist only on the owner's PC); the tracked rank ledgers name forecasts that are not among the old run folders read.
+
+== the same with the TOP set of one old record altered (two numbers exchanged): it must STOP
+DIFFERENT  POWERBALL E_9 EXP_DECAY_5_6_V1 target 1325: barrel MAIN: the TOP sets differ  [<cloud tree>/results/real/development/contract_runs/POWERBALL/E_9/EXP_DECAY_5_6_V1/mg-00000000000000000000000000000330]
+POWERBALL: part 2: old development forecasts read from the run folders: 582 (for 582 variant and target pairs); equal in the new lists: 581; DIFFERENT: 1; lines the new lists hold for other targets (never forecast by the old development runs): 14536
+OZLOTTO: part 2: old development forecasts read from the run folders: 0 (for 0 variant and target pairs); equal in the new lists: 0; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 6598
+RESULT: STOP - at least one old score or old development forecast is not in the new lists with the same content. Change nothing and send Claude this whole output.

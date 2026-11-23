@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 15:46 Australia/Adelaide (entry 176: the owner's go for BUILD STEP 2, the research engine in DEV; in progress in the cloud; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 17:23 Australia/Adelaide (entry 178: BUILD STEP 2 code-complete and proved in the cloud; package STEP2_Research_Engine_v1 built; EX_282 waits for the owner's word; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **BUILD STEP 2 IS CODE-COMPLETE AND PROVED IN THE CLOUD (entry 178; 23 November 2026).** Everything is in
+  `exchange/CLAUDE_WEB_TOOLS/step2/`: read `STEP2_PACKAGE_NOTE_v0_1.md` first; the package is
+  `package/STEP2_Research_Engine_v1.zip` with its sheet `package/INSTALL_AND_RUN_SHEET.md`; the evidence is in `evidence/`.
+  **Waiting on the owner:** his word to send it to the reviewer as EX_282 (`EX_282_body.md` and `assemble_ex282.py` are
+  ready: stage the files, run the assembler with base `cc8398c`, commit `exchange/EX_282_Claude.zip` and the folder).
+  After the reviewer's reply: his own go for the install (sheet parts 1 to 5) and a separate go for DEV's first fill
+  (part 6). The Fable (High) part is finished; Opus is enough for what follows.
 - **BUILD STEP 2 IN PROGRESS IN THE CLOUD (go: entry 176; 23 November 2026).** The plan, the module map and the choices
   marked RECOMMENDED are in `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_BUILD_PLAN_v0_1.md`. New code goes in a new package
   `src/research/`, beside the old system; built in three slices (A identity and records; B the job and OV-1; C reports

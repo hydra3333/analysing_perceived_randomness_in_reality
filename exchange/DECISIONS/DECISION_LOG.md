@@ -3557,3 +3557,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
   digest, scores, ranking, TOP and WORST as the old assembly for all 40 variants in both games at two targets each
   (160 forecasts, no difference; an ad hoc check, to become a test of the package).
 - Next numbers: EX_282, entry 178, RAT-44.
+
+## 178. 23 November 2026, 17:23 - build step 2 is CODE-COMPLETE and PROVED IN THE CLOUD; package STEP2_Research_Engine_v1 built; EX_282 waits for the owner's word
+
+- **What exists** (`exchange/CLAUDE_WEB_TOOLS/step2/`; code and tools at main `cc8398c`, the package, note and evidence
+  in the commit that carries this entry): the engine `src/research/` (20 files), `src/research_command.py`, the
+  launchers `Run_Research.bat` and `Withdraw_Variant.bat`, `deploy/INFRA_MANIFEST.ini` (32 files with their classes),
+  `ENVIRONMENT.example.ini`, 7 test modules with 179 tests. 33 new files and 2 edited (`.gitignore`; one line of data
+  in the old static test `tests/test_mhupa_master_versions.py`); nothing deleted; no file of the old system's code or
+  of any method changed. The package note is `STEP2_PACKAGE_NOTE_v0_1.md`; the plan as built is
+  `STEP2_BUILD_PLAN_v0_2.md` (v0.1 kept).
+- **Evidence (cloud; `evidence/`):** the engine's 179 tests pass; the whole suite before and after: all 571 old tests
+  give the same result, 52 modules and 750 tests after; the suite again on the tree after a first fill: all 750 the
+  same; 26 of 26 planted faults caught by the test named for the rule; the install rehearsed in an LF clone and a
+  `core.autocrlf=true` clone, with six cases that must STOP.
+- **Real, and only SUGGESTIVE (computed by Claude in the cloud from the real results; counts for nothing until the
+  owner's own run):** the new engine filled both games (Powerball 22 minutes, Oz Lotto 7; a job with nothing new 71
+  and 32 seconds); all 34,800 old development score records that Git tracks equal the new score lists (numbers drawn,
+  matches, prize division; 40 variants, TOP and WORST, both games); for two Powerball variants whose old forecast
+  records were made again with the old code path, 582 of 582 equal in view digest, scores, ranking, TOP and WORST.
+- **Settled in the package note, as H-1 v9 section 10 asks:** the exact clause list for E2R-1 section 7 (note section
+  6); specification 17.3's pointer to the simplification design v0.1 (note section 3: the list of what the engine
+  imports, copies and leaves out, computed from the imports); line endings left to step 3, with the reason (note
+  section 5).
+- **Choices made while building, each RECOMMENDED with its alternative** (note section 5), among them: reports made
+  again at every job and written only where the bytes differ; the job lock as a file made by an exclusive create (the
+  deployment design's wording); the job classed `derived`; until build step 4 no command clears a held variant or a
+  mismatch (in DEV the untracked `results/research/` folder is deleted by hand and filled again).
+- **Not tested:** nothing has run on Windows; the `.bat` files have never been executed. The owner's sheet
+  (`package/INSTALL_AND_RUN_SHEET.md`) installs and proves the install in parts 1 to 5, and runs DEV's first fill only
+  in part 6, on his separate go.
+- **Nothing is authorised on the owner's PC.** EX_282 (body and assembler ready beside the package) is issued to the
+  reviewer only on the owner's word.
+- **Model:** the Fable (High) part of build step 2 is finished; the owner may switch back to Opus.
+- Next numbers: EX_282, entry 179, RAT-44.

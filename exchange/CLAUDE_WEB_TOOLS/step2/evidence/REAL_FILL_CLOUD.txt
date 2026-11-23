@@ -1,0 +1,37 @@
+Build step 2: the new engine's first fill over the real results, in the cloud workspace (2 processors, Python 3.15.0b4).
+SUGGESTIVE ONLY (the owner's rule): these figures count for nothing until the owner's own run. Counts and times only; no draw's numbers.
+The time in brackets is seconds since the job began. Each game was run alone, with another job on the second processor.
+
+== POWERBALL, the first fill
+[     0.0s] RESEARCH JOB - START - 2026-11-23 16:37 - the DEV tree at <cloud tree>
+[     0.0s] About to work: POWERBALL (results step left out: --no-update)
+[     0.1s] POWERBALL: results on file through draw 1591; 40 variants installed
+[  1247.5s] POWERBALL: the results step was left out (--no-update)
+[  1314.8s] POWERBALL: finished. Results on file through draw 1591; written: 15118 forecasts, 15078 scores, 0 prevailing lines, 0 eligibility draws, 900 report files. prevailing OV-1: not started; waiting for a successful results step
+[  1314.8s] RESEARCH JOB - END - 2026-11-23 16:59 - the DEV tree at <cloud tree>
+[  1314.8s] POWERBALL: finished. Results on file through draw 1591; written: 15118 forecasts, 15078 scores, 0 prevailing lines, 0 eligibility draws, 900 report files. prevailing OV-1: not started; waiting for a successful results step
+[  1314.8s] The job finished.
+EXIT 0 1314.8s
+
+== OZLOTTO, the first fill
+[     0.0s] RESEARCH JOB - START - 2026-11-23 17:02 - the DEV tree at <cloud tree>
+[     0.0s] About to work: OZLOTTO (results step left out: --no-update)
+[     0.0s] OZLOTTO: results on file through draw 1708; 40 variants installed
+[     0.4s] OZLOTTO: worked through draw 1499 of 1708; so far 200 forecasts and 200 scores written
+[     1.1s] OZLOTTO: worked through draw 1524 of 1708; so far 425 forecasts and 425 scores written
+[    28.7s] OZLOTTO: worked through draw 1549 of 1708; so far 986 forecasts and 986 scores written
+[    54.5s] OZLOTTO: worked through draw 1574 of 1708; so far 1561 forecasts and 1561 scores written
+[   108.7s] OZLOTTO: worked through draw 1599 of 1708; so far 2444 forecasts and 2444 scores written
+[   169.1s] OZLOTTO: worked through draw 1624 of 1708; so far 3369 forecasts and 3369 scores written
+[   230.4s] OZLOTTO: worked through draw 1649 of 1708; so far 4294 forecasts and 4294 scores written
+[   292.5s] OZLOTTO: worked through draw 1674 of 1708; so far 5219 forecasts and 5219 scores written
+[   363.1s] OZLOTTO: worked through draw 1699 of 1708; so far 6198 forecasts and 6198 scores written
+[   393.1s] OZLOTTO: the results step was left out (--no-update)
+[   423.9s] OZLOTTO: finished. Results on file through draw 1708; written: 6598 forecasts, 6558 scores, 0 prevailing lines, 0 eligibility draws, 474 report files. prevailing OV-1: not started; waiting for a successful results step
+[   423.9s] RESEARCH JOB - END - 2026-11-23 17:09 - the DEV tree at <cloud tree>
+[   423.9s] OZLOTTO: finished. Results on file through draw 1708; written: 6598 forecasts, 6558 scores, 0 prevailing lines, 0 eligibility draws, 474 report files. prevailing OV-1: not started; waiting for a successful results step
+[   423.9s] The job finished.
+EXIT 0 423.9s
+
+== a second job with nothing new: POWERBALL 71.1 seconds, OZLOTTO 32.4 seconds (each ended 'written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files')
+== size on disk: POWERBALL lists 45 MB and reports 11 MB; OZLOTTO lists 19 MB and reports 4.8 MB
