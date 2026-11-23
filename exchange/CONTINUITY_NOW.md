@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 18:14 Australia/Adelaide (entry 179: EX_282 ISSUED - build step 2, package STEP2_Research_Engine_v1, for the reviewer's full review; the reply is EX_283; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 18:53 Australia/Adelaide (entry 180: the owner's answers for build step 3; EX_282 is with the reviewer, the reply is EX_283; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **FOR BUILD STEP 3, DECIDED BY THE OWNER (entry 180; 23 November 2026):** PROD at `G:\a_p_r_i_r`, QA at `T:\a_p_r_i_r`,
+  backups under `T:\a_p_r_i_r_backups` (one sub-folder a tree: proposed, awaiting his word); line endings pinned as
+  Claude recommends, consistently; no parallel runner now; Claude Code may rehearse installs in a scratch folder on
+  his D: drive once a ratified rulebook edition allows it. **Open:** the updater's Mode H remnant (his lean: a clean
+  sheet; Claude's advice: a new edition with every Mode H state removed; to be confirmed and put to the reviewer).
 - **EX_282 IS WITH THE REVIEWER (entry 179; 23 November 2026).** Build step 2, the research engine in DEV: package
   `STEP2_Research_Engine_v1`, full review, ten questions; the reply is to be EX_283. **Waiting on:** the reviewer. Then
   the owner's own go for the install (`exchange/CLAUDE_WEB_TOOLS/step2/package/INSTALL_AND_RUN_SHEET.md`, parts 1 to 5)

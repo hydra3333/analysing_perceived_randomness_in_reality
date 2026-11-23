@@ -3608,3 +3608,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Nothing is authorised on the owner's PC.** After EX_283: his own go for the install (sheet parts 1 to 5), and a
   separate go for DEV's first fill (part 6).
 - Next numbers: EX_283 (the reviewer's reply), entry 180, RAT-44.
+
+## 180. 23 November 2026, 18:53 - OWNER: answers for build step 3 (the updater's Mode H remnant; line endings; where QA, PROD and the backups live; who may rehearse); no parallel runner now
+
+- **The owner's words (18:52):** "A multi-threaded runner, OK to Recommendation: not now.  \"Decisions waiting for you in
+  step 3\":  1. re \"The updater's leftover Mode H precondition\" I thought we had got rid of mode H stuff ? What is
+  your advice ? ... my lean is clean-sheet, no hangovers.  2. yes to whatever your recommendation is as long as  we
+  are consistent.  3.  I have changed my mind,  PROD on G:\a_p_r_i_r, QA on T:\a_p_r_i_r , BACKUPS on T: in the folder
+  name we agreed to.  4. I am happy if you ask chatgpt to run them as well as you if you feel the need, or even ask
+  chatgpt to try to run them instead and report back to you, so as to save your resources - I trust that you will
+  make the right choices; also available and \"free\" and I am happy to do it if it is well logged etc is claude in my
+  VSCODE to test-install et al stuff maybe in under a D:\DELETE_ME\a_p_r_i_r  folder or something on my D: SSD drive so
+  it is \"quick\"."
+- **DECIDED (owner):** no parallel or multi-threaded runner now; looked at again only if the timings from his PC call
+  for it.
+- **The updater (item 1): the owner's lean is a clean sheet, no hangovers. Claude's advice, given in the chat, to be
+  confirmed by him and put to the reviewer with step 3:** a new edition of the updater for the new trees, with every
+  Mode H state taken out (the opening record, the seal, the quarantine dates, the session lock, the first-update
+  rule), so that it has one behaviour, the ordinary update; every Lotterywest-GOV source, parsing, overlap,
+  chronology, ledger and lock check kept character for character and proved so by comparison; `results_master_v0_2.py`
+  left untouched in DEV. Read on 23 November: as installed, the updater refuses outright for a game with no opening
+  record, so a fresh PROD could not update with it. The reviewer's stated preference (H-1 v9 section 10) is narrower:
+  remove only the precondition. Not yet decided.
+- **DECIDED (owner): line endings (item 2):** Claude's recommendation, applied consistently. The recommendation is
+  to pin LF for the project's code in `.gitattributes` as part of step 3, before the first tree is created, by a
+  proved sheet; DEV's research results are then filled again once.
+- **DECIDED (owner): the places (item 3), replacing the examples of deployment design v0.12 section 1:** PROD at
+  `G:\a_p_r_i_r`; QA at `T:\a_p_r_i_r`; backups on `T:` under the agreed name (`T:\a_p_r_i_r_backups`). **Open, asked in
+  the chat:** each tree needs its own backup root (specification 18, "QA and PROD backups land in their own roots");
+  Claude proposes `T:\a_p_r_i_r_backups\PROD` and `T:\a_p_r_i_r_backups\QA`.
+- **DECIDED (owner): rehearsals (item 4):** Claude chooses who runs what. The reviewer may be asked to run things in
+  its own workspace; Claude Code on the owner's PC may rehearse installs in a scratch folder such as
+  `D:\DELETE_ME\a_p_r_i_r`, provided it is well logged. **That needs a reviewed and ratified edition of the runner's
+  rulebook first** (v0.6 rules 3, 7 and 11 forbid it today); Claude prepares it with step 3.
+- Nothing here authorises any operation on the owner's PC.
+- Next numbers: EX_283 (the reviewer's reply), entry 181, RAT-44.
