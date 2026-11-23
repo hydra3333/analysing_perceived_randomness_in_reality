@@ -4,18 +4,24 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:54 Australia/Adelaide (entry 188: EX_286 asked three corrections of wording in the rulebook candidate; v0.7r1 candidate made, no force until RAT-44; step 2 package v1r2 ready, EX_287 waits for the owner's word; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:06 Australia/Adelaide (entries 189 and 190: EX_288 issued, step 2 package v1r2, with the reviewer for recheck; EX_287 closed the rulebook's three findings and asked one correction of wording, made as the v0.7r2 candidate, no force until RAT-44; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_288 IS WITH THE REVIEWER; THE RULEBOOK CANDIDATE IS NOW v0.7r2 (entries 189 and 190; 23 November 2026).**
+  **Step 2:** `exchange/EX_288_Claude.zip` carries package `STEP2_Research_Engine_v1r2` for the recheck of F285-B01 (the
+  number is 288 because the reviewer took EX_287 for the rulebook). **Waiting on:** the reviewer. **The rulebook:**
+  EX_287 closed EX_286's three findings and asked one correction of wording (rule 11's STOP sentence), made in
+  `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md` (SHA-256 begins `faed89593e49`). **Waiting on the
+  owner:** RAT-44 on those bytes; then Claude installs the candidate as the rulebook by a script. The installed
+  rulebook is still v0.6. The five link tests of step 2 stay in (owner, entry 189).
 - **THE RULEBOOK CANDIDATE IS NOW v0.7r1 (entry 188; 23 November 2026).** EX_286 was RECHECK with three corrections of
-  wording, all made: `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r1_CANDIDATE.md` with its diffs. **Waiting on the
-  owner:** whether the reviewer rechecks it first, then RAT-44. The installed rulebook is still v0.6.
+  wording, all made: `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r1_CANDIDATE.md` with its diffs. (Superseded by
+  entry 190: the reviewer rechecked it as EX_287; the candidate is now v0.7r2.) The installed rulebook is still v0.6.
 - **EX_285 FOUND ONE NEW BLOCKER; THE CORRECTED PACKAGE v1r2 IS READY (entry 187; 23 November 2026).** F285-B01 (the
   staging cleanup could delete files that were not its own) is fixed in `STEP2_Research_Engine_v1r2`
-  (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`); read section 0A of `STEP2_PACKAGE_NOTE_v0_3.md`. **Waiting on the owner:**
-  his word to send EX_287 (`EX_287_body.md`, `assemble_ex287.py`; stage the files, run the assembler with base
-  `469f088`). **EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate.** Packages v1 and v1r1 are
+  (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`); read section 0A of `STEP2_PACKAGE_NOTE_v0_3.md`. (Done, entry 189: sent as EX_288, because the
+  reviewer took the number EX_287 for its rulebook recheck; `EX_287_body.md` and `assemble_ex287.py` are unissued drafts.) **EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate.** Packages v1 and v1r1 are
   superseded: do not install them.
 - **THE ORDER (owner, entry 183; 23 November 2026):** EX_285 (reviewer, on package v1r1) -> the rulebook v0.7 candidate
   reviewed and ratified (RAT-44) -> the rest (proposed: a Windows rehearsal of step 2 by the runner on D:, then the

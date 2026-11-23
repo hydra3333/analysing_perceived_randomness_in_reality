@@ -3832,3 +3832,51 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **It has no force.** The installed rulebook stays v0.6 until the owner ratifies a candidate (RAT-44). EX_286 leaves
   to the owner whether a focused textual recheck comes first.
 - Next numbers: EX_287 (Claude, step 2, on the owner's word), entry 189, RAT-44.
+
+## 189. 23 November 2026, 21:05 - EX_288 issued on the owner's word (build step 2 corrected, package v1r2, for recheck); the link tests stay in
+
+- **The owner, 20:57, in answer to the two things waiting on him** (1: issue the step 2 message; 2: the five tests
+  that make a link or a junction in Python's temporary folder, recommendation to leave them in): "RE 1. ok go
+  please. 2. 2. ok to your recommendation. chatgpt is considering your blurb now."
+- **The number is EX_288, not EX_287.** While the message waited, the reviewer took EX_287 for its focused recheck of
+  the rulebook (main `4b50be8`; entry 190). A number is never reused (exchange/README.md), so the step 2 message
+  takes the next free one. New files `EX_288_body.md` and `assemble_ex288.py` (`exchange/CLAUDE_WEB_TOOLS/step2/`) were
+  made from the unissued drafts `EX_287_body.md` and `assemble_ex287.py`, which stay in the repository as they were:
+  **they were never issued and are not a message.**
+- **Issued:** `exchange/EX_288_Claude.zip` (SHA-256 `a714e930f966701ce4663f653d1a01c29e890ac1cfff62efbc49a6287e5554e2`) and the
+  folder `exchange/EX_288_Claude/` with the message, the package ZIP `STEP2_Research_Engine_v1r2.zip` (SHA-256
+  `a6c1842c3b5a67f2fcf4d7dc9aa386638582bbef15e1ee4fe2bcde602cb673ac`, the committed package byte for byte), its member list
+  and the package extracted (41 files, each equal to the member list by hash). It replies to EX_285 and asks a
+  recheck of F285-B01. Base `469f088`.
+- **The link tests stay in (owner's decision).** Five tests of the package make a link or a junction: four of the
+  class `TheStagingFolderIsTheTreesOwn` (new in v1r2) and one in `tests/test_research_identity.py` (there since v1).
+  Each works only inside Python's own temporary folder and skips if the account can make neither. The message
+  says so to the reviewer.
+- Nothing is authorised on the owner's PC. A PASS, when it comes, authorises no install or run.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 190; RAT-44.
+
+## 190. 23 November 2026, 21:06 - EX_287 received (the rulebook v0.7r1: the three findings of EX_286 CLOSED; one last correction of wording, F287-C01); the v0.7r2 candidate made
+
+- **EX_287 (reviewer; main `4b50be8`):** F286-B01, C01 and C02 CLOSED; the seven edits, both diffs and the hash
+  verified by its own application of the patches; the two additions of entry 188 accepted. **One erratum,
+  F287-C01:** rule 11 ended "If a task step names one of these places, that is a STOP", and "these places" included
+  the real DEV tree, so a step that names DEV as the place to copy from by reading (section 2A item 3; owner, entry
+  184) would be a STOP. The reviewer says the wording came partly from its own suggestion in EX_286. Also: section
+  2A item 5 still said "(rule 11 is unchanged)". It asks a corrected candidate with a diff and a hash; no wider
+  review and no test on the PC.
+- **The owner, 21:01, relaying it:** "I'll ratify this as soon as you tell me to".
+- **Made:** `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md` (SHA-256
+  `faed89593e49c60f67789955a7e54f4bf3dd7a79c3cd5e76d4d7fdc71dc00e43`), by `make_rulebook_v0_7r2.py`: three counted edits to the
+  v0.7r1 candidate as reviewed (checked by its hash): the version line; rule 11's last two sentences; the
+  parenthesis in section 2A item 5. Diffs: `CLAUDE_v0_7r1_TO_v0_7r2_CANDIDATE.diff` (3 hunks) and
+  `CLAUDE_v0_6_TO_v0_7r2_CANDIDATE.diff` (8 hunks); each, applied with `patch`, gives the candidate byte for byte.
+- **Rule 11 now ends:** "This exception never permits a write to the owner's real DEV tree beyond what sections 3
+  and 4 allow, any access to his real QA or PROD trees or their backup folders, or reading or editing a real
+  tree's `ENVIRONMENT.ini`. A task step that asks for any of those is a STOP. Copying from the real DEV tree into a
+  scratch tree by reading, which section 2A item 3 permits, is not."
+- **One phrase beyond the reviewer's example, Claude's:** "beyond what sections 3 and 4 allow". Without it the
+  sentence would, read to the letter, make the runner's own report in `outbox\` (a write in DEV that section 3
+  allows) a STOP: the same kind of fault as the one being corrected.
+- **It has no force.** The installed rulebook stays v0.6 (SHA-256 begins `f92f17f60db63990`) until the owner ratifies
+  (RAT-44). EX_287 says he may ratify the corrected bytes, after a focused verification if he wishes.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 191; RAT-44.
