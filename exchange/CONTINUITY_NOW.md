@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 23:27 Australia/Adelaide (entry 203: the owner built the scratch tree's .venv; TASK_T026, the rest of the step 2 rehearsal, is written and waits for his go; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 23:31 Australia/Adelaide (entry 204: the owner decided to run TASK_T026 now; waiting on the runner's report; the install in DEV and DEV's first fill are still his separate goes).
 
 ## For the owner: NOW
 

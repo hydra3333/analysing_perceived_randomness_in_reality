@@ -4183,3 +4183,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not authorised by this:** running the task. It needs the owner's own go to the runner, after `git pull --ff-only`,
   in a new Claude Code conversation. Whether the reviewer looks at it first is the owner's choice.
 - Next numbers: EX_293; entry 204; RAT-45.
+
+## 204. 23 November 2026, 23:31 - The owner decides to run TASK_T026 now, without a further look by the reviewer
+
+- **The owner, 23:31, to the choice of entry 203 (run now, or the reviewer first):** "run now".
+- **What that covers:** his go for TASK_T026 as committed at main `28e0bf5` (SHA-256
+  `473cd1ef8889247767603a6b107cd7891612fb62a7f82520a5a1a72413630cd8`), which he gives to the runner himself, after
+  `git pull --ff-only` and in a new Claude Code conversation. The reviewer has not read this task file; its commands
+  under test are those of TASK_T025 r1, which it passed (EX_292).
+- **Not covered:** the install of build step 2 in DEV, and DEV's first fill. Each is still his own separate go.
+- Next numbers: EX_293; entry 205; RAT-45.
