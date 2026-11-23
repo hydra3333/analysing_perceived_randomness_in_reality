@@ -327,7 +327,10 @@ S86_NEW = """  clones that cannot push, and reports what happened. Its rulebook 
   `source_data/` and `transitory_data/` (rule 5). **Before any runner rehearsal of the new system,** write a narrowly
   scoped amendment for that rehearsal, for review and ratification (EX_274). Three deny lines for
   `.claude/settings.json` are proposed in `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/COVER_NOTE.md` section 5; the file is
-  the owner's. The runner can still run the existing suite in a task clone, as task T024 did.
+  the owner's. The runner may execute a specifically authorised, rulebook-compliant test task in its clone. But the
+  present full suite prints known FAILED results: under v0.6 rule 10 the runner must STOP when they appear. Use the
+  reviewed owner-run sheet for a complete baseline unless the owner has first approved a narrowly reviewed rulebook
+  exception. T024 was historical, not a standing exception (EX_281 H1V9-C01).
 - **Build step 1 and the tidy-up did not use the runner.** Their checks read the old records under `results/`, which
   rule 5 forbids it, so they ran as reviewed owner-run sheets (section 12.3)."""
 
@@ -515,7 +518,7 @@ APPB_BODY = """### B.1 What changed from H-1 v8
 | 4.4 History and working documents | the refreshed H-2 v4 (entry 154) and the H-2 v5 candidate added |
 | 6 Verified technical facts | one line added (run times on the owner's PC and in the cloud) |
 | 7 What exists today | rewritten (the installed layout and tidy-up; the suite's known result; the records and run folders; the build's record) |
-| 8.6 The local runner | rulebook v0.6 and the narrow amendment; why the build did not use the runner |
+| 8.6 The local runner | rulebook v0.6 and the narrow amendment; why the build did not use the runner; the full suite's known failures stop the runner (EX_281) |
 | 8.8 Lessons | eight lessons from step 1 and the tidy-up added at the top; the rest unchanged |
 | 9 Adding a new method | one clause: the existing families are the worked example |
 | 10 Next work | rewritten from step 2 on; the watchpoint now names the owner's question and the reviewer's preference |

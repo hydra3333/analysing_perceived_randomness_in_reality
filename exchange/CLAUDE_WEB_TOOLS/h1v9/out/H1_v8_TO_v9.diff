@@ -314,7 +314,7 @@
  
  ---
  
-@@ -627,11 +668,15 @@
+@@ -627,11 +668,18 @@
  
  - **What it is:** Claude Code on the owner's Windows PC carries out task files that Claude writes, in disposable task
    clones that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`
@@ -329,13 +329,16 @@
 +  `source_data/` and `transitory_data/` (rule 5). **Before any runner rehearsal of the new system,** write a narrowly
 +  scoped amendment for that rehearsal, for review and ratification (EX_274). Three deny lines for
 +  `.claude/settings.json` are proposed in `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_6/COVER_NOTE.md` section 5; the file is
-+  the owner's. The runner can still run the existing suite in a task clone, as task T024 did.
++  the owner's. The runner may execute a specifically authorised, rulebook-compliant test task in its clone. But the
++  present full suite prints known FAILED results: under v0.6 rule 10 the runner must STOP when they appear. Use the
++  reviewed owner-run sheet for a complete baseline unless the owner has first approved a narrowly reviewed rulebook
++  exception. T024 was historical, not a standing exception (EX_281 H1V9-C01).
 +- **Build step 1 and the tidy-up did not use the runner.** Their checks read the old records under `results/`, which
 +  rule 5 forbids it, so they ran as reviewed owner-run sheets (section 12.3).
  - **How a task runs:** Claude writes `inbox/TASK_Tnnn.md` with every command in full, the expected PASS line of each
    step, a clean-up step and a report step, and commits it. The owner pulls, starts a **new** Claude Code conversation
    and types `Do inbox\TASK_Tnnn.md`. The runner commits `outbox/REPORT_Tnnn.md`; the owner pushes; Claude reads the
-@@ -650,6 +695,26 @@
+@@ -650,6 +698,26 @@
  
  ### 8.8 Lessons from Claude's own errors
  
@@ -362,7 +365,7 @@
  **From the redesign (20 to 22 November 2026):**
  
  - **Ask what a thing is for before designing it.** Three times a mechanism went past the owner's intent and he
-@@ -708,7 +773,8 @@
+@@ -708,7 +776,8 @@
     its variants. **Fix every variant's settings before code.** Check it against section 2A: no number suppressed,
     no veto.
  3. **Code in DEV:** a folder per variant with `method.py` and `VARIANT.json`; shared computation in the family folder
@@ -372,7 +375,7 @@
     test that changes and appends draws at and after the target; mutation checks; the coding practices. It reaches
     the owner's clone as a reviewed package (section 1.6).
  4. **Ready, then installed:** `Make_Installable.bat` writes the readiness marker; `Install.bat PROD` (or `QA`) adds the
-@@ -725,48 +791,42 @@
+@@ -725,48 +794,42 @@
  
  ## 10. Next work, in order (planned; the owner decides each step)
  
@@ -451,7 +454,7 @@
  check, OV-1's integration), for the install, backup and restore state machines of step 3, for the rerun and
  correction steps of step 4, and for any unexplained STOP. Cold reads before a review round may be helpers on Opus.
  
-@@ -794,8 +854,8 @@
+@@ -794,8 +857,8 @@
  
  ## 12. Working knowledge
  
@@ -462,7 +465,7 @@
  
  ### 12.1 The work cycle, and the exchange protocol in practice
  
-@@ -812,7 +872,10 @@
+@@ -812,7 +875,10 @@
    then `Date`, `Project`, `Replies to`, `Contents`, `Subject`. Open with the disposition of every finding answered. Say
    which reply number the reviewer should use. End with a member table (file, SHA-256) and a short "how the process
    went" note (P6). The documents themselves stay at their repository paths and are named by path and hash; no zip
@@ -474,7 +477,7 @@
  - **For the owner:** end the chat reply with a short paste-ready block for the reviewer chat.
  - **The decision log** (`exchange/DECISIONS/DECISION_LOG.md`): append-only, US-ASCII, LF; each entry numbered, dated
    and timed from the clock (`TZ=Australia/Adelaide date`), with the owner's exact words and what follows from them.
-@@ -828,23 +891,46 @@
+@@ -828,23 +894,46 @@
  `README.md` there is authoritative on names and use. Still useful for the build: the package builders and the
  verifier and suite templates (how a code package for the owner's clone is made and checked: `pre`, `post`,
  `committed`); the mutation tools; `check_task_commands.py`; `exchange/EX_019_Claude/make_zip.py` (a deterministic zip).
@@ -535,7 +538,7 @@
  
  ### 12.4 Claude Code task files
  
-@@ -874,32 +960,33 @@
+@@ -874,32 +963,33 @@
    uses the E: `.venv`. He commits it with `git add GAIS/OUTLANDISH_01/`, never `-A`.
  - If a Windows console window is clicked it can freeze a program at its next print; Esc releases it.
  - The owner is sometimes on a phone only: then give only steps that need no PC.
@@ -586,7 +589,7 @@
  
  ### 12.9 The first hour in a new chat
  
-@@ -908,7 +995,8 @@
+@@ -908,7 +998,8 @@
     report not yet read, a decision given but not recorded).
  3. **Confirm the takeover to the owner** in plain English (section 0, item 4). Do no work until he says so.
  4. Only after his authorisation, and only when a build step is given its go: set up a workspace (section 12.3) and
@@ -596,7 +599,7 @@
  
  ---
  
-@@ -922,93 +1010,90 @@
+@@ -922,93 +1013,90 @@
  | `doc/Predictive_Randomness_System_Specification_v0_6.md` | `ee7199d0c17e8bcf877d49e25c6db1a009105c3f8da75ff1ec28b15726216ad0` |
  | `doc/Predictive_Randomness_Deployment_Design_v0_12.md` | `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d` |
  | `doc/CODING_PRACTICES_v0_1.md` | `d64f0101a4fdb21998b2871765bd9b3f06ccb6c7409c7a2d0e9f230cebbd7ddd` |
@@ -716,7 +719,7 @@
 +| 4.4 History and working documents | the refreshed H-2 v4 (entry 154) and the H-2 v5 candidate added |
 +| 6 Verified technical facts | one line added (run times on the owner's PC and in the cloud) |
 +| 7 What exists today | rewritten (the installed layout and tidy-up; the suite's known result; the records and run folders; the build's record) |
-+| 8.6 The local runner | rulebook v0.6 and the narrow amendment; why the build did not use the runner |
++| 8.6 The local runner | rulebook v0.6 and the narrow amendment; why the build did not use the runner; the full suite's known failures stop the runner (EX_281) |
 +| 8.8 Lessons | eight lessons from step 1 and the tidy-up added at the top; the rest unchanged |
 +| 9 Adding a new method | one clause: the existing families are the worked example |
 +| 10 Next work | rewritten from step 2 on; the watchpoint now names the owner's question and the reviewer's preference |

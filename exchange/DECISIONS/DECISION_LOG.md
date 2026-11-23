@@ -3428,3 +3428,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   from PROD and the research-data reseeding from PROD; nothing run for QA or DEV writes to PROD). It would also
   replace the owed new draft of `doc/METHOD_TEMPLATE/` for the method section, or point to it.
 - Next numbers: EX_281 (the reviewer's reply on H-1 v9), entry 172, RAT-43.
+
+## 172. 23 November 2026, 15:14 - EX_281: the reviewer's PASS of the H-1 v9 candidate with one narrow correction (FIX AND PROCEED), applied by Claude on the owner's word; the reviewer chat lost; Claude to refresh the reviewer's H-2 v5
+
+- **EX_281** (`exchange/EX_281_ChatGPT.md`, main `f613ae7`): "PASS WITH ONE NARROW TEXT CORRECTION; FIX AND PROCEED." It
+  reproduced both diffs exactly and found sections 1, 2 and 2A unchanged. **H1V9-C01:** section 8.6 said "The runner
+  can still run the existing suite in a task clone, as task T024 did", but under rulebook v0.6 rule 10 the runner
+  must STOP on the suite's known FAILED results. **Count correction:** the v8-to-v9 diff of the reviewed candidate
+  added 307 lines and removed 222, not 304 and 203 as entry 170 says (Claude's count left out blank lines). Entry 170
+  is not edited; this entry is the correction. Section 5: the reviewer's H-2 v5 candidate predates the tidy-up's
+  install and needs a status refresh before any joint ratification.
+- **The owner's words (15:13):** "OK. chatgpt reviewer just died without warning again. Before it died, two things (1)
+  EX_281 is committed at f613ae7. PASS WITH ONE NARROW TEXT CORRECTION; FIX AND PROCEED. Please read the complete
+  review, apply the precise H-1 section 8.6 correction, and provide the resulting hash and exact diff. No broader
+  redesign or review round is required. me: so I trust you to enact it without reviewer. (2) chatgpt handover and
+  blurb were only partially completed \"There is also one separate continuity matter: my H-2 v5 candidate needs a short
+  status refresh to recognise the completed tidy-up before it could be ratified jointly with H-1 v9\", so I need you
+  to review and update them for my use in initiating a new chatgpt reviewer chat after doing (1). If you do not
+  object lets do these now please."
+- **(1) Done:** the sentence replaced with the reviewer's wording (marked "EX_281 H1V9-C01"), and the matching row of
+  Appendix B updated so that its change list stays true. Nothing else changed: the blurb and its diff are unchanged;
+  the carried region is unchanged (asserted). **H-1 v9 candidate, corrected: SHA-256
+  `943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6`** (120,172 bytes); the exact difference from the reviewed
+  candidate is `exchange/CLAUDE_WEB_TOOLS/h1v9/out/H1_v9_EX281_CORRECTION.diff` (4 lines added, 2 removed); the v8-to-v9
+  diff is regenerated (310 added, 222 removed) and both diffs reproduce the candidate by `patch` and `cmp`. Builder:
+  `make_h1_v9.py`, SHA-256 `6b3a79abf5970d87fbd6d82cd3722b786330f2ce7056d20db4192f96ac534444`.
+- **(2) Next, at the owner's request:** with the reviewer chat lost, Claude writes a refreshed reviewer handover
+  candidate from the reviewer's own H-2 v5, as it did on 21 November 2026 (the v3r10 continuity candidate). The
+  reviewer's files are not edited; the refresh is a new file.
+- **State:** H-1 v9 is a reviewed CANDIDATE (EX_281 PASS, the correction applied), not ratified; H-1 v8 stays installed.
+- Next numbers: EX_282, entry 173, RAT-43.
