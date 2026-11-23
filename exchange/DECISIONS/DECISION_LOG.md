@@ -3407,3 +3407,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next, on the owner's word:** the reviewer's check (EX_281, when he asks); then his ratification (RAT-43) and its
   installation in `doc/HANDOVER/`; then build step 2 on his go.
 - Next numbers: EX_281, entry 171, RAT-43.
+
+## 171. 23 November 2026, 15:09 - OWNER IDEA, for after implementation: a short operations manual; no decision, no work now
+
+- **The owner's words (15:09):** "while we are waiting,  i wonder about, afte implementation., an operations manual of
+  some kind with table of contents and sections/subsections of things which can be done eg perhaps on section
+  Migrations of infrastructure and methods and data (eg dev->QA, dev->prod, prod<-QA, prod<-dev), another maybe Normal
+  day-to-day PROD Operations (subsections maybe to include What are Catchups and how to do them), and maybe Restoration
+  of PROD from backup, and perhaps How to do Development/testing and Install to QA and to Prod and to Decommisions one,
+  etc etc and/or some structured thing which tells a user how to do all the things that need doing ... and a final
+  section along the lines of What is a Method and how to develop/test/QA/implement one which also mentions
+  \"contracts\" and interfaces with runners, and at least one appendix briefly outlining the structure of the system in
+  terms of draw data, infrastructure, runners, methods, data etc and how they interface ? Perhaps  you and  Reviewer at
+  the right point in time could negotiate the structure of the document and what things are in or not (it must be
+  brief human oriented \"how to\" not huge slabs of prose ). No need for a response now."
+- **Noted, not decided:** after implementation (the natural point is once build step 3 is proved, with the commands
+  real; the laboratory tools of step 4 then add their sections), Claude and the reviewer propose the manual's
+  structure and contents for the owner to decide. Brief, task-oriented "how to"; the specification and the deployment
+  design stay the authority, and the manual uses their operations and words (for example the QA software replacement
+  from PROD and the research-data reseeding from PROD; nothing run for QA or DEV writes to PROD). It would also
+  replace the owed new draft of `doc/METHOD_TEMPLATE/` for the method section, or point to it.
+- Next numbers: EX_281 (the reviewer's reply on H-1 v9), entry 172, RAT-43.
