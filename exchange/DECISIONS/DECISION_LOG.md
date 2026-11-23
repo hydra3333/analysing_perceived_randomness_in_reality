@@ -3682,3 +3682,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **EX_284** (body and assembler ready) is issued to the reviewer only on the owner's word. Nothing is authorised on
   the owner's PC.
 - Next numbers: EX_284 (Claude), entry 182, RAT-44.
+
+## 182. 23 November 2026, 20:13 - OWNER: issue EX_284; EX_284 ISSUED (build step 2 corrected, package STEP2_Research_Engine_v1r1, for RECHECK); the runner's rulebook v0.7 CANDIDATE drafted; two items for the operations manual
+
+- **The owner's words (20:11):** "i agree yes please issue EX_284 for the recheck.  ok to \"Didn't we agree on in-place
+  overwriting?\" and thanks for clarifying ... something that needs to to go ito the operations manual so all are
+  clear (and how the installable and flag files work). thanks for those robocopies.  rulebook: ok yes  to your
+  recommendations although maybe read/write/delete anywhere under 'D:\DELETE_ME\' with anything you see fit from
+  .bat files and code through to data and reports, anything at all if you see fit for a purpose, usually under
+  '`D:\DELETE_ME\a_p_r_i_r`'; yes let the runner run create_venv.bat or better still
+  install_upgrade_dependencies_into_venv.bat which apparently calls that i no venv exists and adds dependencies which
+  are probably required anyway - if you object lets discuss it."
+- **EX_284** (`exchange/EX_284_Claude.zip`, SHA-256 `00be6dea33816fc36d7744bc220eeaa7c557f856a994cf462d355375a7533696`,
+  and the folder `exchange/EX_284_Claude/`): the message, the package ZIP `STEP2_Research_Engine_v1r1.zip` (SHA-256
+  `93bafc41d749328d63cc3eb3cd18eb0b3bd25ec9962a31738d3f171a3c25e7a1`, byte for byte the committed package) and its
+  member list. Base `465758d`. It replies to EX_283: F283-B01 and F283-B02 accepted and fixed, with the oracles asked
+  for; the reply is to be EX_285. Every hash computed, none typed; the message's table of the six changed files
+  gives for v1 the same hashes the reviewer computed independently in EX_283 section 6.
+- **For the operations manual (entry 171), noted at the owner's wish:** (a) what is and is not overwritten: an
+  install never overwrites; shared code (forecasting infrastructure, `_shared` helpers, a family's own helpers) is
+  corrected in place only by `Correct_Shared_Code.bat` on its own question, and the affected variants are then held
+  until the rerun; a variant's own files are never overwritten (a corrected method is a new variant). (b) How the
+  markers and flag files work: the readiness marker `I_AM_INSTALLABLE.json` (marked once in DEV, bound to the files,
+  serves every tree), the environment marker `ENVIRONMENT_VERIFIED.json`, the status file, the job lock, the
+  install barrier and the not-current marker.
+- **The runner's rulebook, DECIDED (owner):** the scratch folder is `D:\DELETE_ME\` (anything under it, for a
+  purpose; usually `D:\DELETE_ME\a_p_r_i_r`); the runner may build a scratch tree's Python environment itself.
+  **Claude does not object, with two conditions written into the candidate:** only a scratch tree's own copies of
+  the two environment scripts are run (each works on the folder it lies in), never this repository's copies, so
+  that the main `.venv` of the owner's real runs is never changed; and invented results only, as already agreed.
+  **A correction of fact:** `install_upgrade_dependencies_into_venv.bat` does not create a missing environment (it
+  stops if there is none), so the runner runs `create_venv.bat` first and then it.
+- **The candidate:** `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md` (SHA-256 `08b1df22...f4d841`), made
+  from the installed v0.6 by `make_rulebook_v0_7.py` (nine counted edits; the exact diff beside it): a new section
+  2A and pointers to it in rules 3, 7, 9 and 10 and sections 3 and 5; rule 10 gains the one exception for the test
+  suite's known failures. **It has no force:** the installed rulebook is unchanged and stays v0.6 until the
+  reviewer has reviewed the candidate and the owner has ratified it (RAT-44). It names the commands of build step
+  3 ahead of their existence; it is to be read again when that step's package is built.
+- Nothing here authorises any operation on the owner's PC.
+- Next numbers: EX_285 (the reviewer's reply), entry 183, RAT-44.

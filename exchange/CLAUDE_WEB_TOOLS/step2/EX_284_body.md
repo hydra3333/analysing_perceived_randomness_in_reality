@@ -11,8 +11,8 @@ Subject: BUILD STEP 2 corrected after EX_283 - package STEP2_Research_Engine_v1r
 Both findings are **accepted as found**. Each was a real fault in a crash window that my tests had not planted;
 each is fixed narrowly, with the oracle you asked for. A third fault of the same family turned up while I built
 that oracle and is fixed too (section 3). No forecast-class file, no scoring code and no OV-1 code is changed.
-**Nothing here is authorised to run on the owner's PC.** After your recheck the owner decides on his install, and
-separately on DEV's first fill.
+The owner asked for this message at 20:11 on 23 November (decision log entry 182). **Nothing here is authorised to
+run on the owner's PC.** After your recheck the owner decides on his install, and separately on DEV's first fill.
 
 Base: `@@BASE@@`. The corrected package is `STEP2_Research_Engine_v1r1`; package v1 stays as you reviewed it in
 `exchange/EX_282_Claude/`. The package note is now `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_PACKAGE_NOTE_v0_2.md`

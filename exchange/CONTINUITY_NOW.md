@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 19:27 Australia/Adelaide (entry 181: EX_283 was RECHECK with two blockers; both fixed; package STEP2_Research_Engine_v1r1 built; EX_284 waits for the owner's word; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 20:13 Australia/Adelaide (entry 182: EX_284 ISSUED - build step 2 corrected, package STEP2_Research_Engine_v1r1, for the reviewer's recheck; the reply is EX_285; rulebook v0.7 candidate drafted, no force; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_284 IS WITH THE REVIEWER FOR RECHECK (entry 182; 23 November 2026).** Package `STEP2_Research_Engine_v1r1`
+  (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r1/`); the reply is to be EX_285. **Waiting on:** the reviewer. Then the
+  owner's own go for the install (that package's `INSTALL_AND_RUN_SHEET.md`, parts 1 to 5) and a separate go for DEV's
+  first fill (part 6). **Also drafted, with no force yet:** the runner's rulebook v0.7 candidate
+  (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/`): a scratch folder `D:\DELETE_ME\` for rehearsals on invented results; it
+  goes to the reviewer with build step 3 and needs RAT-44.
 - **EX_283 WAS RECHECK; THE CORRECTED PACKAGE IS READY (entry 181; 23 November 2026).** Two crash-recovery blockers,
   both fixed, in `STEP2_Research_Engine_v1r1` (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r1/`); read section 0 of
   `STEP2_PACKAGE_NOTE_v0_2.md`. **Waiting on the owner:** his word to send EX_284 (`EX_284_body.md`, `assemble_ex284.py`;
