@@ -1,27 +1,46 @@
-"""Shared helper, revision 1: exact polynomial fits to a short series (E_3 and E_4; design note v0.1 section 3).
+"""Shared helper, version 1: exact polynomial fits to a short series.
 
-Exact rational arithmetic only (fractions.Fraction): no floating point, no library solver, so every result is
-the same on every platform. It imports nothing from the project, reads nothing and starts nothing.
+What this file is for
+    It fits a polynomial to a short series of values in three ways (least squares, interpolation, minimax),
+    each with a second, differently written form that the methods use to check themselves. Exact fractions
+    only: no library solver, so every result is the same on every PC.
 
-A polynomial is returned as its coefficients [a_0, a_1, ..., a_D] in the variable t, so p(t) = sum a_k t^k.
-The methods place the window's draws at t = -M..-1 and the target at t = 0, so p(0) = a_0 is the fitted value
-at the target and p'(0) = a_1 is the fitted slope there.
+Which part of the specification it carries out
+    The E_3 and E_4 design: doc/Predictive_Randomness_E3_E4_Polynomial_Fit_Design_v0_1.md, section 3.
+    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a helper used by more
+    than one family, versioned by its name).
 
-Fits:
-  least_squares               normal equations (one factorisation shared by every series of the same window)
-  least_squares_by_recurrence the same result by Forsythe's orthogonal-polynomial recurrence (for verification)
-  interpolate                 Lagrange form through D + 1 points
-  interpolate_newton          the same result by Newton divided differences (for verification)
-  minimax                     discrete Chebyshev (minimax) approximation by Stiefel's single-point exchange
-  minimax_certificate         the alternation-theorem check that a polynomial is the minimax one
+Which of the project's own modules it uses
+    None. It also reads nothing and starts nothing.
 
-A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
+What uses it
+    E_003/core_v1.py and E_004/core_v1.py; and tests/test_polynomial_fits.py.
+
+The fits (the header this file had before the tidy-up, kept)
+    Exact rational arithmetic only (fractions.Fraction): no floating point, no library solver, so every result is
+    the same on every platform. It imports nothing from the project, reads nothing and starts nothing.
+
+    A polynomial is returned as its coefficients [a_0, a_1, ..., a_D] in the variable t, so p(t) = sum a_k t^k.
+    The methods place the window's draws at t = -M..-1 and the target at t = 0, so p(0) = a_0 is the fitted value
+    at the target and p'(0) = a_1 is the fitted slope there.
+
+    Fits:
+      least_squares               normal equations (one factorisation shared by every series of the same window)
+      least_squares_by_recurrence the same result by Forsythe's orthogonal-polynomial recurrence (for verification)
+      interpolate                 Lagrange form through D + 1 points
+      interpolate_newton          the same result by Newton divided differences (for verification)
+      minimax                     discrete Chebyshev (minimax) approximation by Stiefel's single-point exchange
+      minimax_certificate         the alternation-theorem check that a polynomial is the minimax one
+
+    A change to any behaviour here is a change to every method that uses it: each gets a new revision (E2R-R14A).
 """
 from __future__ import annotations
 
 from collections.abc import Sequence
 from fractions import Fraction
 
+# The most exchange steps a minimax fit may take. A fit that has not finished by then is refused
+# (RuntimeError) rather than left to run on.
 MINIMAX_EXCHANGE_CAP = 10000
 
 
@@ -44,6 +63,14 @@ def smoothed(series: Sequence, half_width: int) -> list[Fraction]:
 
 
 def _check(ts: Sequence, ys: Sequence, degree: int, need: int) -> None:
+    """Refuse arguments that do not describe points to fit a polynomial to.
+
+    ts: the positions.  ys: the values, one for each position.  degree: the polynomial's degree.
+    need: the fewest points the fit needs.
+    Returns nothing. Refuses (ValueError) a degree that is not a whole number of 0 or more, too few points, a
+    different number of values and positions, positions that are not different exact fractions, or values that
+    are not exact.
+    """
     if type(degree) is not int or degree < 0:
         raise ValueError('the degree must be a non-negative integer')
     if len(ts) != len(ys) or len(ts) < need:
@@ -55,6 +82,11 @@ def _check(ts: Sequence, ys: Sequence, degree: int, need: int) -> None:
 
 
 def evaluate(coeffs: Sequence[Fraction], t: Fraction) -> Fraction:
+    """The value of a polynomial at one position (Horner's rule).
+
+    coeffs: the coefficients [a_0, a_1, ...].  t: the position.
+    Returns the exact value, for example Fraction(7, 4) for coeffs [1, 3] at t = Fraction(1, 4).
+    """
     value = Fraction(0)
     for c in reversed(coeffs):
         value = value * t + c
@@ -85,6 +117,11 @@ class LeastSquares:
     """Least squares of degree D at fixed abscissae: the normal matrix is inverted once and reused."""
 
     def __init__(self, ts: Sequence[Fraction], degree: int):
+        """Prepare the fit for these positions and this degree (done once, then reused for every series).
+
+        ts: the positions.  degree: the polynomial's degree.
+        Refuses (ValueError) what _check refuses.
+        """
         _check(ts, [0] * len(ts), degree, degree + 1)
         self.ts, self.degree = list(ts), degree
         powers = [[t ** k for k in range(2 * degree + 1)] for t in self.ts]
@@ -93,6 +130,11 @@ class LeastSquares:
         self._inverse = [_solve(normal, [Fraction(int(i == j)) for i in range(degree + 1)]) for j in range(degree + 1)]
 
     def fit(self, ys: Sequence) -> list[Fraction]:
+        """The least-squares coefficients for one series of values at the prepared positions.
+
+        ys: the values, one for each position.
+        Returns [a_0, ..., a_degree] as exact fractions, for example [Fraction(9, 44), Fraction(1, 300)].
+        """
         _check(self.ts, ys, self.degree, self.degree + 1)
         rhs = [sum(row[a] * y for row, y in zip(self._rows, ys)) for a in range(self.degree + 1)]
         # self._inverse[j] is column j of the inverse; coefficient a = sum_j inverse[a][j] * rhs[j]
@@ -100,6 +142,11 @@ class LeastSquares:
 
 
 def least_squares(ts: Sequence[Fraction], ys: Sequence, degree: int) -> list[Fraction]:
+    """The least-squares polynomial of a given degree through the points.
+
+    ts: the positions.  ys: the values.  degree: the polynomial's degree.
+    Returns its coefficients [a_0, ..., a_degree] as exact fractions, for example [Fraction(9, 44), Fraction(1, 300)].
+    """
     return LeastSquares(ts, degree).fit(ys)
 
 
@@ -108,9 +155,11 @@ def least_squares_by_recurrence(ts: Sequence[Fraction], ys: Sequence, degree: in
     _check(ts, ys, degree, degree + 1)
 
     def at(poly, t):
+        """The value of the polynomial `poly` at position t."""
         return evaluate(poly, t)
 
     def mul_t_minus(poly, a):                     # (t - a) * poly, as coefficients
+        """The coefficients of (t - a) times the polynomial `poly`."""
         out = [Fraction(0)] * (len(poly) + 1)
         for k, c in enumerate(poly):
             out[k + 1] += c
@@ -118,6 +167,7 @@ def least_squares_by_recurrence(ts: Sequence[Fraction], ys: Sequence, degree: in
         return out
 
     def axpy(x, a, y):                            # x + a * y, padded
+        """The coefficients of x + a * y, the shorter polynomial padded with zeros."""
         n = max(len(x), len(y))
         x, y = x + [Fraction(0)] * (n - len(x)), y + [Fraction(0)] * (n - len(y))
         return [xi + a * yi for xi, yi in zip(x, y)]
@@ -207,6 +257,7 @@ def minimax(ts: Sequence[Fraction], ys: Sequence, degree: int) -> tuple[list[Fra
         sign_h = 1 if h >= 0 else -1
 
         def sigma(k):                              # the sign the error must have at reference position k
+            """Returns +1 or -1; the signs alternate from one reference position to the next."""
             return sign_h * (1 if k % 2 == 0 else -1)
         s = 1 if errors[worst] > 0 else -1
         if worst < ref[0]:

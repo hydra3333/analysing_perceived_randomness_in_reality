@@ -1,14 +1,35 @@
-"""E_17 revision 1 through the E_2-readiness contract: compute() and verify() for the shared runner.
+"""E_17 (Discrete Recurrence Hazard Curves): the family's shared calculation, used by every E_17 variant.
 
-The shared standalone runner has already checked the release rule and loaded the prefix-only view before
-compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
-ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
-Discrete recurrence hazard (Method A as E_17). Binned: h_b = (E_b + c r)/(R_b + c) over seven log-spaced age
-bins, s_j = h at the bin of the projected age G_j. Log-age sign (Method A's predictor, exactly in its
-ranking): sigma = the certified sign of sum_k (n E_k - e R_k) ln k, s_j = sigma * G_j.
-Scores only: no probability vector is published (owner decision W2-4).
-With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
-INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
+What this file is for
+    It holds the whole calculation of E_17. compute() turns the draws before a target into one score for
+    every number of every barrel; verify() works the same scores out again by a second, differently written
+    route and refuses the record if they differ. Each variant's own method.py passes its task here, and the
+    variant's fixed settings are looked up, by the task's variant ID, in E_017/variants.py.
+
+Which part of the specification it carries out
+    The method: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
+    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's shared
+    core file).
+
+Which of the project's own modules it uses
+    E_017.variants              VARIANTS: each variant's fixed settings
+    _shared.recurrence_gaps_v1  each number's appearances, gaps and age at the target; exposures by age; age bins
+    _common.contract_forecast   the types a method returns (MethodOutput, BarrelOutput, ScoredRanking)
+    _common.game_profiles       get_profile: each game's barrels (lowest and highest number, how many are drawn)
+
+What uses it
+    E_017/<VARIANT>/method.py of every E_17 variant, and this family's tests.
+
+How it computes (the header this file had before the tidy-up, kept)
+    The shared standalone runner has already checked the release rule and loaded the prefix-only view before
+    compute() is called. compute() reads only the view and the frozen task it is given; the contract assembles,
+    ranks, applies ties and validates the record (E2R-R07). Specification: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md section 4.2.
+    Discrete recurrence hazard (Method A as E_17). Binned: h_b = (E_b + c r)/(R_b + c) over seven log-spaced age
+    bins, s_j = h at the bin of the projected age G_j. Log-age sign (Method A's predictor, exactly in its
+    ranking): sigma = the certified sign of sum_k (n E_k - e R_k) ln k, s_j = sigma * G_j.
+    Scores only: no probability vector is published (owner decision W2-4).
+    With fewer eligible draws than the variant's minimum, nothing is returned and the contract records
+    INSUFFICIENT_HISTORY. verify() recomputes by a second, differently written route and refuses any difference.
 """
 from __future__ import annotations
 
@@ -19,6 +40,11 @@ from _shared import recurrence_gaps_v1 as RG
 from _common.contract_forecast import BarrelOutput, MethodOutput, ScoredRanking
 from _common.game_profiles import get_profile
 
+# The fixed identity and output settings of this family; they never change:
+#   METHOD_ID                the method's ID as the records name it
+#   OBSERVATION_VIEW         the view of the earlier draws this family accepts: numbers as a set, no dates
+#   PUBLISHES_PROBABILITIES  whether the scores are also published as chances (only where they sum to the number drawn)
+#   PROVENANCE               the text stored with the published values, saying how they were computed
 METHOD_ID = 'E_17'
 OBSERVATION_VIEW = 'UNORDERED_SET'
 PUBLISHES_PROBABILITIES = False
@@ -26,6 +52,14 @@ PROVENANCE = 'E_17 r1 (Discrete Recurrence Hazard Curves): exact rational arithm
 
 
 def _config(task):
+    """Check that the task is for this family and return the variant's fixed settings.
+
+    task: the frozen MethodTask the research code built (method, variant, observation view).
+    Returns the variant's line of VARIANTS, for example ('bins', Fraction(100), None, 52), which holds, in order:
+        the form ("bins" or "logage"), the prior strength c (None for "logage"), the window in draws (None for all), the
+        minimum history.
+    Refuses (ValueError) a task for another method, an unknown variant, or any view but the unordered one without dates.
+    """
     if task.method_id != METHOD_ID:
         raise ValueError(f'this module computes {METHOD_ID} only')
     if task.variant_id not in VARIANTS:
@@ -67,6 +101,15 @@ def binned_hazard(draws, b, c, window, second):
 
 
 def _scores(draws, b, cfg, second):
+    """The exact score of every number of one barrel.
+
+    A number's score is the hazard at the number's age ("bins"), or its age times a certified sign ("logage").
+    draws: the numbers drawn in this barrel at each earlier draw, oldest first.
+    b: the barrel (its lowest and highest number, and how many are drawn).
+    cfg: the variant's settings, as _config() returns them.
+    second: False for the first route; True for the second, differently written route that verify() uses.
+    Returns {number: exact score}, for example {1: Fraction(41, 200), 2: Fraction(19, 100), ...}.
+    """
     form, c, window, _minimum = cfg
     ages = RG.projected_ages(len(draws), RG.appearances(draws, b.low, b.high))
     if form == 'bins':
@@ -91,6 +134,14 @@ def _exact(task, view, second: bool):
 
 
 def compute(task, view) -> MethodOutput:
+    """Compute the scores for one target draw, from the draws before it only.
+
+    task: the frozen MethodTask.  view: the permitted view (the draws before the target, and nothing else).
+    Returns a MethodOutput holding, for each barrel, every number's exact score rounded once to a float64, for example
+        MethodOutput(barrels={'MAIN': BarrelOutput(ranking=ScoredRanking({1: 0.2019, 2: 0.1827, ...}))}).
+    With fewer earlier draws than the variant's minimum it returns MethodOutput(barrels={}), which is recorded as
+    INSUFFICIENT_HISTORY.
+    """
     exact = _exact(task, view, second=False)
     if exact is None:
         return MethodOutput(barrels={})                    # the contract records INSUFFICIENT_HISTORY

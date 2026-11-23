@@ -1,30 +1,58 @@
-"""Shared gaps helper, revision 1 (wave 2 design note v0.1r2 sections 3, 4.2 and 10). Exact arithmetic only.
+"""Shared helper, version 1: gaps between a number's appearances, exposures by age, age bins and a certified sign.
 
-Used by E_2, E_17, E_18 and E_19 (revision 1 of each); a change here is a new revision of every user (E2R-R14A).
-A history is a list of draws, oldest first; each draw is the list of labels drawn from one barrel low..high.
-Positions run 1..W; the target is position W + 1.
+What this file is for
+    For one barrel it finds where each number appeared, the gaps between its appearances, its age at the
+    target, how long numbers were "at risk" at each age and how often they then came up, the age bins, and the
+    proved sign of a sum of logarithms. Each has a second, differently written route that the methods use to
+    check themselves. Exact arithmetic only.
 
-- Appearances, completed gaps, gaps inside a window, projected ages (3.1, 3.2). A never-seen label is treated as
-  last seen at position 0, so its projected age is W + 1.
-- Exposures by age (3.3), by two routes: a per-draw walk, and from completed gaps plus the open stretch. The
-  stretch before a label's first appearance (unknown age) is excluded; the open stretch counts as at risk
-  without an event.
-- Age bins (3.4): upper edges are the distinct values ceil(f L/K), f = 1/5, 2/5, 3/5, 1, 8/5, 13/5.
-- The certified sign of sum_k a_k ln k (4.2, 10): route 1 by prime exponents from trial division and bounds on
-  each ln p; route 2 by its own exact-zero test (prime exponents from a smallest-prime-factor sieve) and then
-  bounds on each ln k directly. Both refuse, as a ValueError, if MAX_TERMS series terms do not certify a sign.
-Nothing here reads a file, starts a process or uses floating point.
+Which part of the specification it carries out
+    The wave 2 design: doc/Predictive_Randomness_Wave2_E2_E17_E18_E19_Design_v0_1r2.md, sections 3, 4.2 and 10.
+    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a helper used by more
+    than one family, versioned by its name).
+
+Which of the project's own modules it uses
+    None. It also reads nothing and starts nothing.
+
+What uses it
+    E_002/core_v1.py, E_017/core_v1.py, E_018/core_v1.py and E_019/core_v1.py; and tests/test_recurrence_gaps.py.
+
+What it holds (the header this file had before the tidy-up, kept)
+    Used by E_2, E_17, E_18 and E_19 (revision 1 of each); a change here is a new revision of every user (E2R-R14A).
+    A history is a list of draws, oldest first; each draw is the list of labels drawn from one barrel low..high.
+    Positions run 1..W; the target is position W + 1.
+
+    - Appearances, completed gaps, gaps inside a window, projected ages (3.1, 3.2). A never-seen label is treated as
+      last seen at position 0, so its projected age is W + 1.
+    - Exposures by age (3.3), by two routes: a per-draw walk, and from completed gaps plus the open stretch. The
+      stretch before a label's first appearance (unknown age) is excluded; the open stretch counts as at risk
+      without an event.
+    - Age bins (3.4): upper edges are the distinct values ceil(f L/K), f = 1/5, 2/5, 3/5, 1, 8/5, 13/5.
+    - The certified sign of sum_k a_k ln k (4.2, 10): route 1 by prime exponents from trial division and bounds on
+      each ln p; route 2 by its own exact-zero test (prime exponents from a smallest-prime-factor sieve) and then
+      bounds on each ln k directly. Both refuse, as a ValueError, if MAX_TERMS series terms do not certify a sign.
+    Nothing here reads a file, starts a process or uses floating point.
 """
 from __future__ import annotations
 
 from fractions import Fraction
 
+# The six fixed factors f of the age bins: a bin's upper edge is ceil(f * L / K) for a barrel of L numbers
+# with K drawn (design section 3.4).
 BIN_FACTORS = (Fraction(1, 5), Fraction(2, 5), Fraction(3, 5), Fraction(1), Fraction(8, 5), Fraction(13, 5))
+# How many series terms the first try at a certified sign uses; the number doubles at each further try.
 FIRST_TERMS = 8
+# The most series terms tried. With no certified sign by then, the function refuses (ValueError).
 MAX_TERMS = 1024
 
 
 def _checked(draws, low, high):
+    """Refuse arguments that do not describe a barrel and its draws; otherwise hand the draws back.
+
+    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's lowest and highest number.
+    Returns `draws` unchanged. Refuses (ValueError) a range that is not positive whole numbers, or a draw holding
+    a repeated number or one outside the range.
+    """
     if not (isinstance(low, int) and isinstance(high, int) and 1 <= low <= high):
         raise ValueError('the barrel must be a range of positive whole numbers')
     for d in draws:
@@ -44,6 +72,11 @@ def appearances(draws, low, high):
 
 
 def completed_gaps(app):
+    """The gaps between each number's successive appearances.
+
+    app: {number: the positions at which it appeared}, as appearances() returns it, for example {4: [2, 7, 12]}.
+    Returns {number: [gap, ...]}, for example {4: [5, 5]}; a number seen once or never has an empty list.
+    """
     return {j: [b - a for a, b in zip(p, p[1:])] for j, p in app.items()}
 
 
@@ -136,6 +169,12 @@ def pooled(per_label):
 
 # ---------------------------------------------------------------- age bins
 def bin_edges(L, K):
+    """The upper edges of the age bins for a barrel of L numbers with K drawn (design section 3.4).
+
+    L: how many numbers the barrel holds.  K: how many are drawn.
+    Returns the different values of ceil(f * L / K) for the six fixed factors f, in rising order, for example
+    [1, 2, 3, 5, 8, 13] for L = 35 and K = 7. Ages above the last edge fall in one further bin.
+    """
     m = Fraction(L, K)
     out = []
     for f in BIN_FACTORS:
@@ -147,6 +186,11 @@ def bin_edges(L, K):
 
 
 def bin_of(k, edges):
+    """The number of the age bin that an age falls in.
+
+    k: the age, in draws.  edges: the bins' upper edges, as bin_edges() returns them.
+    Returns how many edges lie below k, for example 3 for k = 4 and edges [1, 2, 3, 5, 8, 13] (bins count from 0).
+    """
     return sum(1 for e in edges if k > e)
 
 

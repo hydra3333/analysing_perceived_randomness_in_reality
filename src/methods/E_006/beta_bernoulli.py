@@ -1,21 +1,39 @@
-"""E_6 revision 1: per-number Beta-Bernoulli posterior means, in exact rational arithmetic.
+"""E_6 (Per-Number Fitted Distribution Models): the mathematics, and the fixed settings of each variant.
 
-The mathematics only (specification section 2). It imports nothing from the project, reads nothing
-and returns exact fractions; the caller rounds each one to a float64 exactly once.
+What this file is for
+    It holds the two exact algorithms that estimate, for one barrel, how likely each number is to be drawn
+    next (posterior_means and, written differently for checking, posterior_means_by_recursion), and the table
+    VARIANTS that gives each variant its forgetting factor. Exact fractions only; the caller rounds once.
 
-For one barrel with labels low..high, `selected` labels drawn per draw, and the eligible draws before
-the target listed oldest first (the last one is the newest, N - 1):
-  r      = selected / L, the fair-draw inclusion rate, with L = high - low + 1
-  prior  = Beta(r, 1 - r): centred on r and worth exactly one draw
-  w(a)   = lam ** a for a draw that is a draws older than the newest (the newest has weight 1)
-  k_j    = sum of w over the draws in which label j was drawn;  W = sum of w over all draws
-  p_j    = (r + k_j) / (1 + W)
-Because every draw selects exactly `selected` labels, sum_j k_j = selected * W, so sum_j p_j equals
-`selected` exactly (7 for a main barrel, 1 for the Powerball). Nothing is renormalised.
+Which part of the specification it carries out
+    The method: doc/Predictive_Randomness_E6_Specification_and_Method_Template_Design_v0_1.md section 2 (the variants:
+    section 2.5).
+    Its place in the layout: doc/Predictive_Randomness_System_Specification_v0_6.md section 3.2 (a family's own module
+    beside its core file).
 
-For lam = 1 this is the ordinary conjugate Beta-Bernoulli posterior mean. For lam < 1 it is a discounted
-(power-likelihood) Beta update: each draw's evidence enters with weight lam ** age, so it is not the
-posterior of the plain independent-Bernoulli model (the reviewer's terminology note, EX_051).
+Which of the project's own modules it uses
+    None.
+
+What uses it
+    E_006/core_v1.py, and this family's tests.
+
+The mathematics (the header this file had before the tidy-up, kept)
+    The mathematics only (specification section 2). It imports nothing from the project, reads nothing
+    and returns exact fractions; the caller rounds each one to a float64 exactly once.
+
+    For one barrel with labels low..high, `selected` labels drawn per draw, and the eligible draws before
+    the target listed oldest first (the last one is the newest, N - 1):
+      r      = selected / L, the fair-draw inclusion rate, with L = high - low + 1
+      prior  = Beta(r, 1 - r): centred on r and worth exactly one draw
+      w(a)   = lam ** a for a draw that is a draws older than the newest (the newest has weight 1)
+      k_j    = sum of w over the draws in which label j was drawn;  W = sum of w over all draws
+      p_j    = (r + k_j) / (1 + W)
+    Because every draw selects exactly `selected` labels, sum_j k_j = selected * W, so sum_j p_j equals
+    `selected` exactly (7 for a main barrel, 1 for the Powerball). Nothing is renormalised.
+
+    For lam = 1 this is the ordinary conjugate Beta-Bernoulli posterior mean. For lam < 1 it is a discounted
+    (power-likelihood) Beta update: each draw's evidence enters with weight lam ** age, so it is not the
+    posterior of the plain independent-Bernoulli model (the reviewer's terminology note, EX_051).
 """
 from __future__ import annotations
 
@@ -33,6 +51,14 @@ VARIANTS = MappingProxyType({
 
 
 def _check(draws: Sequence[Sequence[int]], low: int, high: int, selected: int, lam: Fraction) -> None:
+    """Refuse arguments that do not describe a barrel and its draws.
+
+    draws: the numbers drawn at each earlier draw, oldest first.  low, high: the barrel's lowest and highest number.
+    selected: how many numbers are drawn each time.  lam: the forgetting factor.
+    Returns nothing. Refuses (ValueError) a forgetting factor that is not an exact fraction above 0 and at most 1, a
+    barrel that is not whole numbers with fewer drawn than it holds, or a draw that is not `selected` different
+    numbers of the barrel (the message names the draw).
+    """
     if type(lam) is not Fraction or not 0 < lam <= 1:
         raise ValueError('the forgetting factor must be an exact fraction in (0, 1]')
     if type(low) is not int or type(high) is not int or type(selected) is not int or not 1 <= selected <= high - low:
