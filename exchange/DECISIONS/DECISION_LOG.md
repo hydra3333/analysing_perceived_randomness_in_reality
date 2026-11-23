@@ -4119,3 +4119,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   two hours. Afterwards: he pushes the report; Claude reads it; he deletes `D:\DELETE_ME\a_p_r_i_r\T025` when Claude
   says so. Then his own install in DEV (sheet parts 1 to 5) and, separately, DEV's first fill.
 - Next numbers: EX_293; entry 202; RAT-45.
+
+## 202. 23 November 2026, 23:19 - TASK_T025 ran on the owner's go: STOP at step 20 (the scratch tree's environment script refused); steps 1 to 19 PASSED, the install sheet's parts 1 to 4 on Windows
+
+- **The owner gave the runner the task at about 22:17** (after it answered his question on the rulebook: v0.7, RAT-44,
+  section 2A and `D:\DELETE_ME\`), and pushed its report at 23:18: `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T025.md`,
+  main `99465ff`, SHA-256 `37df8e8a6163ded0d21f15c21eea5c985d02f2578c9494ba3511e3ce69710992`. Task file at main `5ed656a` (r1, the text passed in EX_292). Windows 11, Python
+  3.15.2 in the main `.venv`.
+- **PASSED, each with the exact text and counts the task expects (steps 1 to 19):** the scratch check; the clone; 41
+  files extracted; the suite as it is today (45 modules, 571 tests, 25 min 1 s); `PRE PASS`; 35 files copied (33
+  new, 2 replaced); `POST PASS`; the suite again (52 modules, 762 tests, 28 min 41 s; the seven research modules
+  `OK`); the comparison (`tests in both runs: 571; with the same result: 571`; the three known failures and no
+  other; 198 new lines); 33 files added and 2 modified in the clone's commit; `COMMITTED PASS` (with
+  `core.autocrlf` true); the clone's files copied to `D:\DELETE_ME\a_p_r_i_r\T025\tree`; the settings file copied.
+  **So the sheet's parts 1 to 4 are proved on the owner's Windows PC, in a clone.**
+- **The link tests on Windows.** Two tests skipped, both of which need a symbolic link, which this account cannot
+  make: `...test_the_writer_refuses_a_staged_name_that_is_a_link_to_a_file_elsewhere` and
+  `test_research_identity...test_a_path_through_a_link_refuses`. The other three link tests of
+  `TheStagingFolderIsTheTreesOwn` did not skip and passed; as the account cannot make a symbolic link, they ran
+  with a junction (the fixture's second choice). An inference from the skip counts, not a line of the report.
+- **STOP at step 20:** `create_venv.bat` of the scratch tree printed `[VENV] ERROR: A virtual environment is already
+  active` and ended with code 3, having created nothing. The runner's Git Bash shell already had `VIRTUAL_ENV` set
+  to the main `.venv` before the task began (the runner's observation 1); the script refuses while any environment
+  is active, as it is written to. The runner retried nothing. **The cause is known; it is not a fault of the
+  package.** Steps 21 to 29 (the scratch `.venv`, the two launchers, the first fill, the second job, the comparison
+  with the old records) did not run: **the launchers and a real fill are still not proved on Windows.**
+- **Left in place:** `D:\DELETE_ME\a_p_r_i_r\T025` with `tree` (the clone's files after the install, and its
+  `ENVIRONMENT.ini`; no `.venv`) and `evidence`. The task clone on E: was removed (`REMOVE PASS`). The main
+  repository and the main `.venv` were not changed.
+- **The runner's own deviations, as it reports them:** it put `cd` to MAIN and, for the long steps, a `date` stamp
+  before some command lines, and added an `echo` of the exit code where the task gave none; and one of its own
+  lines mangled a paragraph of the report, which it rewrote. No command of the task was affected. For the next
+  task: give the recording of every exit code in the task's own lines, so that nothing is added.
+- **For the operations manual and build step 3 (a finding of this rehearsal):** a tree's `.venv` is built from a plain
+  CMD window with no environment active, not from a VS Code terminal or from the runner's shell.
+- **Put to the owner (his decision):** how to finish the rehearsal. Claude recommends that he builds the scratch
+  tree's `.venv` himself with its two scripts in a plain CMD window, and that a short second task then runs the
+  steps that did not run, on the scratch tree as it stands.
+- Next numbers: EX_293; entry 203; RAT-45.

@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 22:13 Australia/Adelaide (entry 201: EX_292 is the reviewer's PASS for the text of TASK_T025 r1; the task waits only for the owner's go to the runner; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 23:19 Australia/Adelaide (entry 202: TASK_T025 ran and stopped at step 20; the install sheet's parts 1 to 4 PASSED on Windows in a clone; the launchers and the fill are not yet proved; waiting on the owner's choice of how to finish the rehearsal).
 
 ## For the owner: NOW
 
+- **TASK_T025 RAN: PARTS 1 TO 4 OF THE SHEET PASSED ON WINDOWS; STOP AT STEP 20 (entry 202; 23 November 2026).**
+  Report `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T025.md` (main `99465ff`). The scratch tree's `create_venv.bat`
+  refused because the runner's shell already had the main `.venv` active (`VIRTUAL_ENV`); nothing was created. Not
+  yet proved on Windows: the two launchers and a real fill. The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` is left
+  in place (the tree after the install, with its settings file, no `.venv`): **do not delete it yet.** **Waiting on
+  the owner:** how to finish (Claude recommends: he builds that tree's `.venv` in a plain CMD window with its two
+  scripts; then a short second task runs the remaining steps).
 - **TASK_T025 IS WRITTEN: THE STEP 2 REHEARSAL ON WINDOWS (entry 199; 23 November 2026).**
   `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md`: the install sheet's parts 1 to 4 in a task clone, then parts 5
   to 7 in a scratch tree under `D:\DELETE_ME\a_p_r_i_r\T025\` (about two hours). **Waiting on the owner:** his go to
