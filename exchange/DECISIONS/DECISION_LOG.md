@@ -3458,3 +3458,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer's files are not edited; the refresh is a new file.
 - **State:** H-1 v9 is a reviewed CANDIDATE (EX_281 PASS, the correction applied), not ratified; H-1 v8 stays installed.
 - Next numbers: EX_282, entry 173, RAT-43.
+
+## 173. 23 November 2026, 15:16 - the reviewer chat ended; at the owner's request Claude refreshes the reviewer's H-2 v5 candidate and blurb as H-2 v5r1, for starting a new reviewer chat
+
+- **The owner's words:** see entry 172, item (2), and at 15:15: "i may have those version numbers wrong, also please check
+  they are the \"latest\"."
+- **Checked against `main` (`578eb1a`):** the newest editions are the specification v0.6, the deployment design v0.12, the
+  coding practices v0.1, register v0.32, the runner rulebook v0.6, `exchange/README.md` v0.6; H-1 v8 installed and H-1 v9 the
+  newest candidate; H-2 v4 in force (refreshed bytes `b2837f08...`, entry 154) and H-2 v5 the newest candidate
+  (`54ce9f3b...`, the reviewer's commit `23689ef`; blurb `5c8686db...`, `31db13b`); EX_281 the newest EX. The reviewer
+  committed nothing after EX_281. The owner's version numbers are right.
+- **What Claude does, as on 21 November 2026 (the v3r10 continuity candidate):** a new file, H-2 v5r1, built from the
+  reviewer's own H-2 v5 bytes by `exchange/CLAUDE_WEB_TOOLS/h2v5r1/make_h2_v5r1.py` with counted replacements of section 0's
+  status statements only (the tidy-up installed; the H-1 v9 candidate, EX_281 and its correction; the reviewer chat
+  ended; next numbers); the historical chapters 1-19 and the rights text byte-identical (asserted). The blurb likewise,
+  and its broken deployment-design link (`hydra333`, one `3` missing) corrected. **The reviewer's files are not changed;**
+  the candidate stays under `exchange/` until the owner ratifies it. The blurb tells the new reviewer chat that Claude
+  wrote this refresh and that it should verify it against the repository itself.
+- Next numbers: EX_282, entry 174, RAT-43.
