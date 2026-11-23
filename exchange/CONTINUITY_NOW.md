@@ -8,6 +8,11 @@ durable EX messages are authoritative.
 
 ## For the owner: NOW
 
+- **BUILD STEP 2 IN PROGRESS IN THE CLOUD (go: entry 176; 23 November 2026).** The plan, the module map and the choices
+  marked RECOMMENDED are in `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_BUILD_PLAN_v0_1.md`. New code goes in a new package
+  `src/research/`, beside the old system; built in three slices (A identity and records; B the job and OV-1; C reports
+  and launchers), reviewed as ready, installed once on the owner's own go. A later chat resumes from that plan and
+  the files beside it.
 - **NEW REVIEWER CHAT IN ROLE (entry 175; 23 November 2026).** Takeover from H-2 v5r1 accepted by the owner, with rights
   R-1 to R-11 and its repository access as before; no RAT number. Both chats now work from H-1 v9 and H-2 v5r1 (RAT-43).
   **Next: build step 2 on the owner's own go** (Fable (High) suggested for its core).
