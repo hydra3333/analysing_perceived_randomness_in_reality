@@ -1,0 +1,107 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git add src
+warning: in the working copy of 'src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_002/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_003/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_004/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/beta_bernoulli.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_006/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_007/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_008/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_009/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_010/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_017/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_018/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/__init__.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/core_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/E_019/variants.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/occurrence_counts_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/polynomial_fits_v1.py', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/methods/_shared/recurrence_gaps_v1.py', LF will be replaced by CRLF the next time Git touches it
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+M  src/methods/E_001/FULL_HISTORY_RAW_COUNTS_V1/method.py
+M  src/methods/E_002/__init__.py
+M  src/methods/E_002/core_v1.py
+M  src/methods/E_002/variants.py
+M  src/methods/E_003/__init__.py
+M  src/methods/E_003/core_v1.py
+M  src/methods/E_003/variants.py
+M  src/methods/E_004/__init__.py
+M  src/methods/E_004/core_v1.py
+M  src/methods/E_004/variants.py
+M  src/methods/E_006/__init__.py
+M  src/methods/E_006/beta_bernoulli.py
+M  src/methods/E_006/core_v1.py
+M  src/methods/E_007/__init__.py
+M  src/methods/E_007/core_v1.py
+M  src/methods/E_007/variants.py
+M  src/methods/E_008/__init__.py
+M  src/methods/E_008/core_v1.py
+M  src/methods/E_008/variants.py
+M  src/methods/E_009/__init__.py
+M  src/methods/E_009/core_v1.py
+M  src/methods/E_009/variants.py
+M  src/methods/E_010/__init__.py
+M  src/methods/E_010/core_v1.py
+M  src/methods/E_010/variants.py
+M  src/methods/E_017/__init__.py
+M  src/methods/E_017/core_v1.py
+M  src/methods/E_017/variants.py
+M  src/methods/E_018/__init__.py
+M  src/methods/E_018/core_v1.py
+M  src/methods/E_018/variants.py
+M  src/methods/E_019/__init__.py
+M  src/methods/E_019/core_v1.py
+M  src/methods/E_019/variants.py
+M  src/methods/_shared/occurrence_counts_v1.py
+M  src/methods/_shared/polynomial_fits_v1.py
+M  src/methods/_shared/recurrence_gaps_v1.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git commit -m "LIGHT TIDY-UP (RAT-40 note 3): headers, dependency lists and missing comments in the existing method files; no calculation change"
+[main c7e6ed8] LIGHT TIDY-UP (RAT-40 note 3): headers, dependency lists and missing comments in the existing method files; no calculation change
+ 37 files changed, 1385 insertions(+), 259 deletions(-)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe "E:\TEMP\TIDY1_Method_Comments_v1\VERIFY_TIDY1_INSTALL.py" --repo . --phase committed
+HEAD: c7e6ed8ec854ab50e32559062e8b73c5c5e9abd1 (descends from base 7be6b3a)
+30 guarded files unchanged in Git HEAD
+COMMITTED PASS: the last commit (c7e6ed8) added exactly 0 files, modified 37 and deleted 0; all Git blobs match.
+Read-only: no project code imported, nothing run, nothing changed.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git push
+Enumerating objects: 105, done.
+Counting objects: 100% (105/105), done.
+Delta compression using up to 24 threads
+Compressing objects: 100% (55/55), done.
+Writing objects: 100% (55/55), 28.31 KiB | 3.15 MiB/s, done.
+Total 55 (delta 45), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (45/45), completed with 21 local objects.
+To https://github.com/hydra3333/analysing_perceived_randomness_in_reality.git
+   31db13b..c7e6ed8  main -> main
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git rev-parse HEAD
+c7e6ed8ec854ab50e32559062e8b73c5c5e9abd1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull
+Already up to date.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

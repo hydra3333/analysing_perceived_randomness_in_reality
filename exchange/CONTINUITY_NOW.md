@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 11:17 Australia/Adelaide (entry 168: the owner's go for the tidy-up install). **Now: the owner runs the sheet on his PC; Claude pushes nothing until he has pushed. Then Claude refreshes H-1 before build step 2.**
+**Last updated:** 23 November 2026, 14:44 Australia/Adelaide (entry 169: THE LIGHT TIDY-UP INSTALLED, main `c7e6ed8`; the complete equivalence check passed on the owner's PC). **Next: Claude refreshes H-1 (agreed, entry 166); then build step 2 on the owner's own go.**
 
 ## For the owner: NOW
 
+- **THE LIGHT TIDY-UP IS INSTALLED AND PROVED (entry 169; 23 November 2026).** The owner ran the reviewed sheet and
+  pushed `main` `c7e6ed8`: comments-only check `RESULT: PASS`; the suite unchanged (571 of 571); **the equivalence check
+  `RESULT: PASS - COMPLETE`** (Powerball 17,280 and Oz Lotto 8,760, all equal); `COMMITTED PASS`; verified by Claude
+  from GitHub. Outputs in `exchange/CLAUDE_WEB_TOOLS/tidy1/evidence/owner_pc_2026_11_23/`. **Next: the H-1 refresh,
+  then build step 2.**
 - **EX_280: THE REVIEWER'S PASS of the tidy-up package (entry 167; 23 November 2026, 11:14).** No changes requested.
   The install waits for the owner's own go (sheet `exchange/EX_279_Claude/TIDY1_Method_Comments_v1/INSTALL_AND_RUN_SHEET.md`).
 - **EX_279 ISSUED (entry 166; 23 November 2026, 11:03):** the tidy-up package `TIDY1_Method_Comments_v1` is with the

@@ -1,0 +1,75 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+Already up to date.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe -B "E:\TEMP\TIDY1_Method_Comments_v1\tools\run_suite.py" . "E:\TEMP\TIDY1_evidence\suite_before"
+.venv\Scripts\python.exe: can't open file 'E:\\TEMP\\TIDY1_Method_Comments_v1\\tools\\run_suite.py': [Errno 2] No such file or directory
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>dir /s /b E:\TEMP\TIDY1_Method_Comments_v1
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\INSTALL_AND_RUN_SHEET.md
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\INSTALL_MANIFEST_SHA256.txt
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\tools
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\VERIFY_TIDY1_INSTALL.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_001
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_002
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_003
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_004
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_006
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_007
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_008
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_009
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_010
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_017
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_018
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_019
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\_shared
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_001\FULL_HISTORY_RAW_COUNTS_V1
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_001\FULL_HISTORY_RAW_COUNTS_V1\method.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_002\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_002\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_002\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_003\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_003\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_003\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_004\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_004\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_004\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_006\beta_bernoulli.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_006\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_006\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_007\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_007\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_007\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_008\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_008\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_008\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_009\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_009\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_009\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_010\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_010\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_010\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_017\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_017\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_017\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_018\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_018\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_018\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_019\core_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_019\variants.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\E_019\__init__.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\_shared\occurrence_counts_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\_shared\polynomial_fits_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\repo_overlay\src\methods\_shared\recurrence_gaps_v1.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\tools\check_comments_only.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\tools\check_layout_equivalence.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\tools\compare_suite_reports.py
+E:\TEMP\TIDY1_Method_Comments_v1\TIDY1_Method_Comments_v1\tools\run_suite.py
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

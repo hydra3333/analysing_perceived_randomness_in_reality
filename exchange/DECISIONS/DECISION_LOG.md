@@ -3360,3 +3360,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Claude pushes nothing to `main` from now until the owner has pushed the install commit**, so that his push in part 5
   stays a fast-forward.
 - Next numbers: EX_281, entry 169, RAT-43.
+
+## 169. 23 November 2026, 14:44 - THE LIGHT TIDY-UP INSTALLED by the owner (main `c7e6ed8`): every part of the reviewed sheet passed on his PC, including the complete equivalence check; verified by Claude from GitHub
+
+- **The owner's words (13:15, during part 3):** "I AM VERY PLEASED WITH YOUR WORK ON THIS, THANK YOU."
+- **On his PC, by the sheet of EX_279 (go in entry 168), outputs unedited in
+  `exchange/CLAUDE_WEB_TOOLS/tidy1/evidence/owner_pc_2026_11_23/`:**
+  - part 1: the first try found no package files (Windows "Extract all" had nested the folder one level deeper);
+    nothing ran and nothing changed; after re-extracting, the baseline suite: 45 modules, 571 tests, the two known
+    failing modules (three tests, eight assertions) and the four Windows symlink skips, as in build step 1;
+  - part 2: `PRE PASS` (HEAD `31db13b`, the reviewer's H-2 v5 candidate commits on top of the base, `doc/HANDOVER/`
+    only); 37 files copied; `POST PASS`; the comments-only check: 211 Python files, 37 changed, 0 problems,
+    `RESULT: PASS`;
+  - part 3: the suite again, the comparison 571 of 571 with the same result, "no module and no test changed";
+  - **part 4: `RESULT: PASS - COMPLETE`**: Powerball 17,280 of 17,280 and Oz Lotto 8,760 of 8,760 old development
+    forecasts equal by content digest, `MISSING: 0` in both;
+  - part 5: commit `c7e6ed8ec854ab50e32559062e8b73c5c5e9abd1`; `COMMITTED PASS` (0 added, 37 modified, 0 deleted);
+    pushed (`31db13b..c7e6ed8`).
+- **Verified by Claude from GitHub:** `c7e6ed8`'s parent is `31db13b`; it modifies exactly 37 files, all under
+  `src/methods/`; all 37 match the package manifest; `tests/` unchanged since the base; its `src/` equals the tree that
+  passed in the cloud.
+- **State: the light tidy-up (RAT-40 note 3) is INSTALLED, OWNER-WINDOWS-TESTED and complete.** Nothing is now
+  between the code and build step 2 but the H-1 refresh the owner agreed (entry 166).
+- **For later sheets:** say "extract to `E:\TEMP`" (the ZIP holds its own top folder), so that Windows does not nest it.
+- **Next:** Claude refreshes the H-1 handover (agreed, entry 166); then build step 2 on the owner's own go
+  (Fable (High) suggested for its core).
+- Next numbers: EX_281, entry 170, RAT-43.

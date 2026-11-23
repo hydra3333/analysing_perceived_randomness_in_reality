@@ -1,0 +1,203 @@
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe -B "E:\TEMP\TIDY1_Method_Comments_v1\tools\run_suite.py" . "E:\TEMP\TIDY1_evidence\suite_after"
+test_code3_retirement   exit=0  ran=12  OK
+test_e1_align   exit=0  ran=5   OK
+test_e1_standalone      exit=0  ran=13  OK
+test_e1r2_revision2     exit=0  ran=13  OK
+test_e1r3_revision3     exit=0  ran=8   OK
+test_e2r_contract       exit=0  ran=53  OK
+test_e2r_dispatch       exit=0  ran=18  OK
+test_e2r_prefix exit=0  ran=1   OK
+test_e2r_runner exit=0  ran=34  OK (skipped=1)
+test_e3_e4_polynomial   exit=0  ran=13  OK
+test_e6_beta_bernoulli  exit=0  ran=20  OK
+test_mhupa_gates        exit=0  ran=12  OK
+test_mhupa_install_records      exit=0  ran=9   OK
+test_mhupa_launchers    exit=1  ran=10  FAILED (failures=1)
+test_mhupa_master_versions      exit=0  ran=15  OK
+test_mhupa_method_mode_h_cli    exit=0  ran=2   OK
+test_mhupa_mode_h       exit=0  ran=20  OK
+test_mhupa_process_check        exit=0  ran=8   OK
+test_mhupa_updater_v0_2 exit=0  ran=15  OK
+test_multigame_console_and_synthetic_scorer     exit=0  ran=7   OK
+test_multigame_exit_receipt     exit=0  ran=18  OK (skipped=1)
+test_multigame_launch_and_manifest      exit=0  ran=11  OK
+test_multigame_reader_contracts exit=1  ran=10  FAILED (failures=7, skipped=1)
+test_multigame_science_allowlist        exit=0  ran=6   OK
+test_multigame_static_and_timing        exit=0  ran=6   OK
+test_multigame_windows_lifecycle_review exit=0  ran=6   OK
+test_occurrence_counts  exit=0  ran=8   OK
+test_perf1_numerics     exit=0  ran=7   OK
+test_polynomial_fits    exit=0  ran=19  OK
+test_recurrence_gaps    exit=0  ran=12  OK
+test_rel1_release       exit=0  ran=5   OK
+test_t05_hardening      exit=0  ran=2   OK
+test_wave1_frequency    exit=0  ran=18  OK
+test_wave2_recurrence   exit=0  ran=19  OK
+test_wf1a_walk_forward  exit=0  ran=22  OK
+test_wf1b_crossplatform exit=0  ran=1   OK
+test_wf1b_divisions     exit=0  ran=17  OK
+test_wf1b_measures      exit=0  ran=33  OK
+test_wf1b_n1_generator  exit=0  ran=8   OK
+test_wf1b_n1_replay     exit=0  ran=3   OK
+test_wf1b_numerics      exit=0  ran=21  OK
+test_wf1b_outcome_reader        exit=0  ran=6   OK (skipped=1)
+test_wf1b_report        exit=0  ran=10  OK
+test_wf1b_seed_policy   exit=0  ran=11  OK
+test_wf1b_static        exit=0  ran=4   OK
+DONE: 45 modules, 571 tests ran
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe -B "E:\TEMP\TIDY1_Method_Comments_v1\tools\compare_suite_reports.py" "E:\TEMP\TIDY1_evidence\suite_before" "E:\TEMP\TIDY1_evidence\suite_after"
+before: 45 modules; unittest ran 571 tests; identified here: 571
+after: 45 modules; unittest ran 571 tests; identified here: 571
+tests in both runs: 571; with the same result: 571
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '*.log', '.pytype/', '# Unit test / coverage reports', '#   install all needed dependencies.', '*.egg', 'cover/', '# pyenv', '*.egg-inf"]
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '#results/real/development/scores/', '# P3 E_1 standalone development and synthetic artifacts (NOT FINAL)', '/GAIS/OUTLANDISH_01/y-crun"]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: every test that ran was identified; no module and no test changed its result, disappeared or appeared
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>.venv\Scripts\python.exe -B "E:\TEMP\TIDY1_Method_Comments_v1\tools\check_layout_equivalence.py" --tree .
+Equivalence check of build step 1 (specification 17.3). Tree: E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality. Games: POWERBALL, OZLOTTO. It computes every old development forecast again, in memory, and compares content digests. It writes nothing.
+[POWERBALL] old development forecasts found: 17280 (11442 in the tracked rank ledgers; 17280 in old run folders, of which 5838 are in no rank ledger); variants: 40
+[POWERBALL] coverage: the batch records list 17280 published forecasts; an old digest was found for 17280 of them; MISSING: 0; found outside the batch records: 0
+[POWERBALL] E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: 432 of 432 equal
+[POWERBALL] ... 500 checked, 4 s
+[POWERBALL] E_10 CONTRAST_S13_L104_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 1000 checked, 8 s
+[POWERBALL] E_10 CONTRAST_S26_L208_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 1500 checked, 12 s
+[POWERBALL] E_10 CONTRAST_S52_FULL_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 2000 checked, 18 s
+[POWERBALL] E_17 HAZARD_BINS_C100_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 2500 checked, 23 s
+[POWERBALL] E_17 HAZARD_BINS_W208_C100_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 3000 checked, 34 s
+[POWERBALL] E_17 HAZARD_LOGAGE_SIGN_V1 revision 1: 432 of 432 equal
+[POWERBALL] E_18 MIX4_ALL_C10_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 3500 checked, 284 s
+[POWERBALL] E_18 MIX4_W104_C10_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 4000 checked, 529 s
+[POWERBALL] E_18 MIX4_W208_C10_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 4500 checked, 701 s
+[POWERBALL] E_19 PERIODIC_T2_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 5000 checked, 711 s
+[POWERBALL] E_19 PERIODIC_T3_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 5500 checked, 722 s
+[POWERBALL] E_19 PERIODIC_T4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 6000 checked, 728 s
+[POWERBALL] E_2 RECUR_MEAN_ALL_V1 revision 1: 432 of 432 equal
+[POWERBALL] E_2 RECUR_MEAN_LAST8_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 6500 checked, 732 s
+[POWERBALL] E_2 RECUR_MEDIAN_ALL_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 7000 checked, 736 s
+[POWERBALL] E_3 POLY_INTERP_W52_D4_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 7500 checked, 761 s
+[POWERBALL] E_3 POLY_LS_W104_D3_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 8000 checked, 859 s
+[POWERBALL] E_3 POLY_LS_W52_D2_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 8500 checked, 917 s
+[POWERBALL] E_3 POLY_LS_W52_D3_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 9000 checked, 1019 s
+[POWERBALL] E_3 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 9500 checked, 1198 s
+[POWERBALL] E_3 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] E_4 POLY_INTERP_W52_D4_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 10000 checked, 1208 s
+[POWERBALL] E_4 POLY_LS_W104_D3_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 10500 checked, 1313 s
+[POWERBALL] E_4 POLY_LS_W52_D2_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 11000 checked, 1367 s
+[POWERBALL] E_4 POLY_LS_W52_D3_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 11500 checked, 1458 s
+[POWERBALL] E_4 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 12000 checked, 1623 s
+[POWERBALL] E_4 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 12500 checked, 1689 s
+[POWERBALL] E_6 BETA_BERNOULLI_DECAY_149_150_V1 revision 1: 432 of 432 equal
+[POWERBALL] E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 13000 checked, 1723 s
+[POWERBALL] E_6 BETA_BERNOULLI_FULL_MEMORY_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 13500 checked, 1735 s
+[POWERBALL] E_7 BETA_SHRINK_FULL_C52_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 14000 checked, 1744 s
+[POWERBALL] E_7 BETA_SHRINK_W104_C52_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 14500 checked, 1751 s
+[POWERBALL] E_7 BETA_SHRINK_W52_C52_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 15000 checked, 1757 s
+[POWERBALL] E_8 HIER_PERIODS_P13_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 15500 checked, 1764 s
+[POWERBALL] E_8 HIER_PERIODS_P26_V1 revision 1: 432 of 432 equal
+[POWERBALL] E_8 HIER_PERIODS_P52_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 16000 checked, 1769 s
+[POWERBALL] E_9 EXP_DECAY_18_19_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 16500 checked, 1790 s
+[POWERBALL] E_9 EXP_DECAY_37_38_V1 revision 1: 432 of 432 equal
+[POWERBALL] ... 17000 checked, 1813 s
+[POWERBALL] E_9 EXP_DECAY_5_6_V1 revision 1: 432 of 432 equal
+[OZLOTTO] old development forecasts found: 8760 (5958 in the tracked rank ledgers; 8760 in old run folders, of which 2802 are in no rank ledger); variants: 40
+[OZLOTTO] coverage: the batch records list 8760 published forecasts; an old digest was found for 8760 of them; MISSING: 0; found outside the batch records: 0
+[OZLOTTO] E_1 FULL_HISTORY_RAW_COUNTS_V1 revision 2: 219 of 219 equal
+[OZLOTTO] E_10 CONTRAST_S13_L104_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 500 checked, 2 s
+[OZLOTTO] E_10 CONTRAST_S26_L208_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_10 CONTRAST_S52_FULL_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 1000 checked, 4 s
+[OZLOTTO] E_17 HAZARD_BINS_C100_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_17 HAZARD_BINS_W208_C100_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 1500 checked, 7 s
+[OZLOTTO] E_17 HAZARD_LOGAGE_SIGN_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_18 MIX4_ALL_C10_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_18 MIX4_W104_C10_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 2000 checked, 161 s
+[OZLOTTO] E_18 MIX4_W208_C10_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_19 PERIODIC_T2_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 2500 checked, 172 s
+[OZLOTTO] E_19 PERIODIC_T3_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_19 PERIODIC_T4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 3000 checked, 176 s
+[OZLOTTO] E_2 RECUR_MEAN_ALL_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_2 RECUR_MEAN_LAST8_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 3500 checked, 178 s
+[OZLOTTO] E_2 RECUR_MEDIAN_ALL_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_3 POLY_INTERP_W52_D4_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_3 POLY_LS_W104_D3_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 4000 checked, 211 s
+[OZLOTTO] E_3 POLY_LS_W52_D2_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_3 POLY_LS_W52_D3_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 4500 checked, 262 s
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_3 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 5000 checked, 349 s
+[OZLOTTO] E_4 POLY_INTERP_W52_D4_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_4 POLY_LS_W104_D3_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_4 POLY_LS_W52_D2_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 5500 checked, 392 s
+[OZLOTTO] E_4 POLY_LS_W52_D3_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D2_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 6000 checked, 466 s
+[OZLOTTO] E_4 POLY_MINIMAX_W52_D3_H4_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_149_150_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 6500 checked, 521 s
+[OZLOTTO] E_6 BETA_BERNOULLI_DECAY_74_75_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_6 BETA_BERNOULLI_FULL_MEMORY_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 7000 checked, 529 s
+[OZLOTTO] E_7 BETA_SHRINK_FULL_C52_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_7 BETA_SHRINK_W104_C52_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_7 BETA_SHRINK_W52_C52_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 7500 checked, 532 s
+[OZLOTTO] E_8 HIER_PERIODS_P13_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_8 HIER_PERIODS_P26_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 8000 checked, 535 s
+[OZLOTTO] E_8 HIER_PERIODS_P52_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_9 EXP_DECAY_18_19_V1 revision 1: 219 of 219 equal
+[OZLOTTO] ... 8500 checked, 542 s
+[OZLOTTO] E_9 EXP_DECAY_37_38_V1 revision 1: 219 of 219 equal
+[OZLOTTO] E_9 EXP_DECAY_5_6_V1 revision 1: 219 of 219 equal
+[POWERBALL] checked 17280 of 17280 old forecasts in 40 variants: 17280 equal, 0 different, 0 could not be computed; listed by the batch records 17280, MISSING here 0
+[OZLOTTO] checked 8760 of 8760 old forecasts in 40 variants: 8760 equal, 0 different, 0 could not be computed; listed by the batch records 8760, MISSING here 0
+RESULT: PASS - COMPLETE - both games; every forecast the batch records list was found, computed again with this tree's code, and has the same content digest.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
