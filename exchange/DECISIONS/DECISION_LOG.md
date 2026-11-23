@@ -4008,3 +4008,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   in the pattern of `cc_clone.py`, which refuses any tree whose root is not under a real `D:\DELETE_ME\` and runs that
   tree's own launchers; it goes to the reviewer with the task file. Claude recommends (B).
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 197; RAT-45.
+
+## 197. 23 November 2026, 21:25 - The owner chose option A: two deny lines removed from his `.claude/settings.json`; EX_288's blurb sent to the reviewer
+
+- **The owner, 21:24:** "i did option A. blurb sent to chatgpt."
+- **Checked on GitHub (his commit `664f5d3`, merged at main `92a343c`):** `.claude/settings.json` lost exactly two lines of its
+  deny list, `"Bash(*install_upgrade_dependencies*)"` and `"Bash(*.bat*)"`; nothing else in the file changed; it is valid
+  JSON with 109 deny lines. Claude changed nothing in it.
+- **What that means from now on.** The runner can type a command that names a `.bat` or the dependency script. In the
+  real tree such a command is now stopped by the rulebook (rules 7 and 9) and by the owner's own answer to the
+  approval prompt, no longer by a hard deny. The deny lines for the old coordinator, the experiment and evaluation
+  launchers, the results updater, `activate_venv`, `pip`, every delete, every push and the rest stand as before.
+- **For the task file's design:** the delete lines stand, so a scratch folder is cleaned up by the owner or left; a
+  typed command must still avoid every remaining denied word (for example `results_master`, `pip`, `conda`).
+- **Not authorised by this:** any runner task. A rehearsal needs a task file, the reviewer's PASS of what it runs
+  (rulebook section 2A item 5: "reviewed and installed"), and the owner's own go.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number (EX_290 as of now); entry 198; RAT-45.

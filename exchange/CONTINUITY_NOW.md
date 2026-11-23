@@ -4,15 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:14 Australia/Adelaide (entries 192 to 196: EX_289 is the reviewer's PASS on the ratified v0.7r2 bytes; RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:25 Australia/Adelaide (entries 192 to 197: EX_289 is the reviewer's PASS on the ratified v0.7r2 bytes; RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
 - **THE RUNNER'S RULEBOOK v0.7 IS RATIFIED AND INSTALLED (RAT-44; entry 192; 23 November 2026).**
   `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, SHA-256 begins `4416c4b57456` (entry 195); it adds section 2A, the scratch folder
   `D:\DELETE_ME\` for rehearsals. **It authorises no task.** Before a rehearsal: a task file, the owner's go, and his
-  decision on how it is run, because his `.claude/settings.json` still denies the runner every typed `.bat` (entries
-  192 and 196: he deletes two lines of it, or Claude writes a checked helper like `cc_clone.py`; Claude recommends the helper). Start a new Claude Code conversation after the next pull.
+  the reviewer's PASS of what it runs. The owner removed the two deny lines that blocked a typed `.bat` from his
+  `.claude/settings.json` (option A, entries 196 and 197; main `92a343c`); the delete lines stand. Start a new Claude Code conversation after the next pull.
   **The reviewer passed the ratified bytes (EX_289, entry 194)**, and the version line says so (entry 195).
 - **EX_288 IS WITH THE REVIEWER; THE RULEBOOK CANDIDATE IS NOW v0.7r2 (entries 189 and 190; 23 November 2026).**
   **Step 2:** `exchange/EX_288_Claude.zip` carries package `STEP2_Research_Engine_v1r2` for the recheck of F285-B01 (the

@@ -699,6 +699,8 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
       command that contains .bat, so the rehearsal needs either two lines deleted from that file (your edit), or
       one checked helper program like tools\cc_clone.py that runs the scratch tree's launchers (Claude's
       recommendation), or you running it from a sheet (decision log entry 196).
+      DONE (23 November 2026, entry 197): you deleted the two lines (your commit 664f5d3). Still to come: the task
+      file for the first rehearsal, the reviewer's PASS of what it runs, and your go.
   (g) What the first rehearsal measures: the derived check at each job, a first full fill, Check_Forecasts --all, a
       rerun, and a backup of a whole tree.
   (h) A new draft of doc/METHOD_TEMPLATE/ for the new layout, after step 3.
