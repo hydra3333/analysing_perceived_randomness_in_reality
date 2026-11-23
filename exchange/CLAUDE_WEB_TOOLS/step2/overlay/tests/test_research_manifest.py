@@ -17,8 +17,9 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 IMPORT_ROOTS = ('src', 'src/methods')
 # The entry point of the forecasting code, and the entry points of the code that makes derived results.
 FORECAST_ENTRY = 'src/research/forecast_engine.py'
-DERIVED_ENTRIES = ('src/research/scoring.py', 'src/research/variant_lists.py', 'src/research/status_file.py',
-                   'src/research/code_identity.py')
+DERIVED_ENTRIES = ('src/research/research_job.py', 'src/research/withdraw.py', 'src/research/scoring.py',
+                   'src/research/variant_lists.py', 'src/research/status_file.py', 'src/research/code_identity.py',
+                   'src/research/ov1_ledger.py', 'src/research/derived_check.py', 'src/research/reports.py')
 
 
 def project_file_of(tree: Path, module: str) -> str | None:

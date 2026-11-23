@@ -23,11 +23,22 @@ import importlib
 import json
 import random
 import sys
+import tempfile
+import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 from _common.game_profiles import get_profile
 from research.reader import header_for
 
+# The fixed time every test job runs at, so that two runs of the same work write the same bytes.
+FIXED_TIME = datetime(2026, 12, 1, 9, 40, 12, tzinfo=timezone.utc)
+# The game most tests use, and the first target of a toy variant that declares three earlier draws in it.
+GAME = 'POWERBALL'
+FIRST_TOY_TARGET = 1147
+# The last draw on file when a job test's tree is made, and the last draw of the tree its results are copied from.
+LAST_AT_START = 1160
+LAST_IN_SOURCE = 1166
 # The version ledger's columns as the fixtures write them (the reader uses the first six).
 LEDGER_COLUMNS = ('version', 'utc', 'action', 'master_sha256', 'first_draw', 'last_draw', 'draw_count')
 # The toy method every toy variant uses; BEHAVIOUR is replaced by the planted behaviour of each variant.
@@ -52,6 +63,16 @@ def _counts(task, view):
     return out
 
 
+def _scores(counts):
+    """The toy's score for each number of one barrel, from the counts: the count times the planted 'scale'. With
+    'reverse' planted a number scores by how far it is below the largest count (the order the other way round);
+    with 'rotate': k planted, number j takes the count of the number k places further on (another order again)."""
+    numbers = sorted(counts)
+    turn, most = BEHAVIOUR.get('rotate', 0), max(counts.values())
+    turned = {j: counts[numbers[(index + turn) % len(numbers)]] for index, j in enumerate(numbers)}
+    return {j: BEHAVIOUR.get('scale', 1.0) * ((most - c) if BEHAVIOUR.get('reverse') else c) for j, c in turned.items()}
+
+
 def compute(task, view):
     """The toy forecast, or the behaviour planted for this target."""
     target = task.target_draw_number
@@ -64,8 +85,7 @@ def compute(task, view):
     counts = _counts(task, view)
     if target in BEHAVIOUR.get('bad_output_at', ()):
         counts.pop('MAIN')
-    scale = BEHAVIOUR.get('scale', 1.0)
-    return MethodOutput(barrels={barrel: BarrelOutput(ranking=ScoredRanking({j: scale * c for j, c in s.items()}))
+    return MethodOutput(barrels={barrel: BarrelOutput(ranking=ScoredRanking(_scores(s)))
                                  for barrel, s in counts.items()})
 
 
@@ -77,9 +97,9 @@ def verify(task, view, forecast, diagnostic):
         if forecast['record_status'] != 'INSUFFICIENT_HISTORY':
             raise ValueError('toy: too few draws, but the record is not INSUFFICIENT_HISTORY')
         return
-    scale = BEHAVIOUR.get('scale', 1.0)
     for barrel, s in _counts(task, view).items():
-        if forecast['barrels'][barrel]['scores'] != [scale * s[j] for j in sorted(s)]:
+        expected = _scores(s)
+        if forecast['barrels'][barrel]['scores'] != [expected[j] for j in sorted(expected)]:
             raise ValueError('toy: the record differs from the recomputation')
 '''
 
@@ -166,7 +186,8 @@ def add_toy_variant(tree: Path, family: str, variant: str, games=('POWERBALL', '
 
     family, variant: for example 'E_901' and 'TOY_COUNTS_V1'.  minimum: the earlier draws it declares it needs.
     behaviour: what is planted, by target: {'fail_at': [...], 'crash_at': [...], 'bad_output_at': [...],
-    'verify_fail_at': [...], 'short_below': n, 'scale': x}.  helpers: helper paths its declaration lists.
+    'verify_fail_at': [...], 'short_below': n, 'scale': x, 'reverse': True, 'rotate': k}.  helpers: helper paths
+    its declaration lists.
     """
     folder = tree / 'src' / 'methods' / family / variant
     folder.mkdir(parents=True)
@@ -210,3 +231,123 @@ class ImportPath:
         for name in [n for n in sys.modules if n.startswith('E_9')]:
             del sys.modules[name]
         importlib.invalidate_caches()
+
+
+def run_job(tree: Path, games=(GAME,), **options) -> tuple:
+    """Run the research job in an invented tree at the fixed time.
+
+    tree: the tree.  games: the games to work.  options: run()'s other arguments (no_update, only, checkpoint).
+    Returns (the exit code, the lines the job said), for example (0, ['RESEARCH JOB - START - ...', ...]).
+    """
+    from research import research_job
+    said = []
+    with ImportPath(tree):
+        code = research_job.run(tree, games, now=lambda: FIXED_TIME, say=said.append, **options)
+    return code, said
+
+
+def files_under(tree: Path, folder: str = 'results/research', leave_out=('made_times.csv',)) -> dict:
+    """Every file under a folder of a tree with its bytes: {path from the tree, forward slashes: bytes}.
+
+    leave_out: file names not to include (the side file of making times, by default).
+    """
+    top = tree / folder
+    return {path.relative_to(tree).as_posix(): path.read_bytes() for path in sorted(top.rglob('*'))
+            if path.is_file() and path.name not in leave_out}
+
+
+def list_lines(tree: Path, family: str, variant: str, which: str = 'forecasts', game_id: str = GAME) -> list:
+    """The lines of a variant's list after the header, as records; which is 'forecasts' or 'scores'."""
+    path = tree / 'results' / 'research' / game_id / 'variants' / family / variant / f'{which}.jsonl'
+    return [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()][1:] if path.is_file() else []
+
+
+def ledger_lines(tree: Path, game_id: str = GAME) -> list:
+    """The lines of a game's prevailing ledger after the header, as records ([] if the ledger is not begun)."""
+    path = tree / 'results' / 'research' / game_id / 'ov1' / 'prevailing.jsonl'
+    return [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()][1:] if path.is_file() else []
+
+
+def alter_list_line(path: Path, position: int, change) -> None:
+    """Alter one line of a list file and chain the file again, as a careful forger would: the chain stays
+    unbroken, so that only a comparison of the content can find the change.
+
+    path: the list file.  position: which line after the header, from 0.  change: called with that line's record,
+    which it alters in place.
+    """
+    from _common.canonical_encoding import canonical_bytes
+    records = [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()]
+    change(records[position + 1])
+    out, previous = [], None
+    for record in records:
+        record['prev'] = previous
+        raw = canonical_bytes(record)
+        previous = hashlib.sha256(raw).hexdigest()
+        out.append(raw)
+    path.write_bytes(b''.join(out))
+
+
+def status_path(tree: Path, family: str, variant: str) -> Path:
+    """A variant's status file in a tree."""
+    return tree / 'src' / 'methods' / family / variant / 'VARIANT_STATUS.ini'
+
+
+def report_text(tree: Path, name: str, game_id: str = GAME) -> str:
+    """The text of one report file of a game, by its name from the reports folder, for example
+    'league/league_POWERBALL_d01161.txt'."""
+    return (tree / 'results' / 'research' / game_id / 'reports' / name).read_text(encoding='ascii')
+
+
+class JobCase(unittest.TestCase):
+    """A temporary folder with a QA tree and the tree its results are copied from."""
+
+    def setUp(self):
+        """Make the folder; the trees are made by each test."""
+        self._temporary = tempfile.TemporaryDirectory()
+        self.root = Path(self._temporary.name).resolve()
+
+    def tearDown(self):
+        """Remove the folder."""
+        self._temporary.cleanup()
+
+    def source(self, last_draw: int = LAST_IN_SOURCE, version: int = 2, game_id: str = GAME, **generator) -> Path:
+        """Make or regrow the tree whose results are copied (it holds results only). Returns its folder."""
+        folder = self.root / 'source'
+        folder.mkdir(exist_ok=True)
+        write_results(folder, game_id, last_draw, version=version, **generator)
+        return folder
+
+    def tree(self, variants=('TOY_A_V1', 'TOY_B_V1'), role: str = 'QA', last_draw: int = LAST_AT_START,
+             with_source: bool = True, name: str = 'tree') -> Path:
+        """Make a tree with invented results and toy variants of family E_901, each ACTIVE. Returns its folder.
+
+        variants: names, or (name, behaviour) pairs; TOY_B_V1 is given the reversed order unless a behaviour is
+        named.  with_source: whether its settings name the source tree to copy results from.
+        """
+        folder = self.root / name
+        folder.mkdir()
+        copy_from = None
+        if with_source:
+            copy_from = self.root / 'source'
+            if not copy_from.exists():
+                self.source(last_draw, version=1)
+        tree = make_tree(folder, role=role, copy_from=copy_from)
+        write_results(tree, GAME, last_draw)
+        for entry in variants:
+            self.add_variant(tree, *((entry,) if isinstance(entry, str) else entry))
+        return tree
+
+    @staticmethod
+    def add_variant(tree: Path, name: str, behaviour: dict | None = None, family: str = 'E_901',
+                    games=(GAME,), minimum: int = 3) -> None:
+        """Add one toy variant with its ACTIVE status file, as an install would leave it."""
+        if behaviour is None:
+            behaviour = {'reverse': True} if name == 'TOY_B_V1' else {}
+        add_toy_variant(tree, family, name, games=games, minimum=minimum, behaviour=behaviour)
+        from research.status_file import create_active
+        create_active(status_path(tree, family, name), family, name, list(games))
+
+    def status(self, tree: Path, name: str, family: str = 'E_901'):
+        """A variant's status in the test game, read from its status file."""
+        from research.status_file import read_status
+        return read_status(status_path(tree, family, name), [GAME])[GAME]

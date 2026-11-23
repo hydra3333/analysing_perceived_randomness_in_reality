@@ -39,10 +39,14 @@ SCORES_NAME = 'scores.jsonl'
 LIST_FORMAT = 'RESEARCH_LIST_V1'
 FORECASTS_KIND = 'FORECASTS'
 SCORES_KIND = 'SCORES'
-# The three kinds of line.
+# The prevailing OV-1 ledger of a game is a list of the same form (research/ov1_ledger.py writes its lines).
+PREVAILING_KIND = 'PREVAILING'
+# The kinds of line: a header, and the one kind of line each kind of list holds after it.
 HEADER_LINE = 'HEADER'
 TARGET_LINE = 'TARGET'
 SCORE_LINE = 'SCORE'
+PREVAILING_LINE = 'PREVAILING'
+LINE_OF_LIST = {FORECASTS_KIND: TARGET_LINE, SCORES_KIND: SCORE_LINE, PREVAILING_KIND: PREVAILING_LINE}
 
 
 class ListFault(ValueError):
@@ -93,7 +97,7 @@ def make_header(kind: str, game_id: str, family: str, variant: str, variant_fing
 def read_list(path: Path, kind: str) -> ListOnFile | None:
     """Read a list file and check its chain (invariant 1).
 
-    path: the file.  kind: FORECASTS_KIND or SCORES_KIND, which the header must name.
+    path: the file.  kind: FORECASTS_KIND, SCORES_KIND or PREVAILING_KIND, which the header must name.
     Returns None if the file does not exist or holds no complete line (a crash before the header was written;
     create_list then starts it afresh). Otherwise the ListOnFile; a last line without its line ending is a torn
     line: it is not among the lines and its length is in torn_bytes.
@@ -107,7 +111,7 @@ def read_list(path: Path, kind: str) -> ListOnFile | None:
     torn = pieces.pop()                       # b'' when the file ends with a line ending
     if not pieces:
         return None
-    wanted_line = TARGET_LINE if kind == FORECASTS_KIND else SCORE_LINE
+    wanted_line = LINE_OF_LIST[kind]
     listed = ListOnFile(path=path, header={}, torn_bytes=len(torn))
     previous_digest = None
     for number, piece in enumerate(pieces, start=1):

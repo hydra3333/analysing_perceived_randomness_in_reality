@@ -70,6 +70,18 @@ def content_digest(content: dict) -> str:
     return record_digest(content)
 
 
+def view_digest_for(variant: Variant, results: ResultsOnFile, target: int) -> str:
+    """The digest of the permitted view a variant is given for a target: the draws before it, and nothing else.
+
+    The job compares it with the digest a stored TARGET line holds, to find results that changed other than by
+    growing. Returns 64 hexadecimal characters.
+    """
+    task = make_task(variant, results.game_id, target)
+    view = permitted_view(results, method_id=variant.method_id, variant_id=variant.variant, target=target,
+                          observation_view=task.observation_view, include_dates=False)
+    return permitted_view_digest(view, task.run_mode)
+
+
 def compute_target(variant: Variant, method, results: ResultsOnFile, target: int) -> tuple:
     """Compute one variant's TARGET-line content for one target, from the draws before it only.
 
