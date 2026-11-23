@@ -4,17 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 23:19 Australia/Adelaide (entry 202: TASK_T025 ran and stopped at step 20; the install sheet's parts 1 to 4 PASSED on Windows in a clone; the launchers and the fill are not yet proved; waiting on the owner's choice of how to finish the rehearsal).
+**Last updated:** 23 November 2026, 23:27 Australia/Adelaide (entry 203: the owner built the scratch tree's .venv; TASK_T026, the rest of the step 2 rehearsal, is written and waits for his go; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **TASK_T026 IS WRITTEN: THE REST OF THE STEP 2 REHEARSAL (entry 203; 23 November 2026).** The owner built the
+  scratch tree's `.venv` himself (plain CMD, its own two scripts; 39 packages). `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T026.md`
+  runs TASK_T025's steps 22 to 29 on that tree (`D:\DELETE_ME\a_p_r_i_r\T025\tree`): the launchers, the first fill, a
+  second job, the comparison; about an hour. **Waiting on the owner:** his go to the runner (after `git pull
+  --ff-only`, in a new Claude Code conversation). **Do not delete the scratch folder yet.**
 - **TASK_T025 RAN: PARTS 1 TO 4 OF THE SHEET PASSED ON WINDOWS; STOP AT STEP 20 (entry 202; 23 November 2026).**
   Report `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T025.md` (main `99465ff`). The scratch tree's `create_venv.bat`
   refused because the runner's shell already had the main `.venv` active (`VIRTUAL_ENV`); nothing was created. Not
   yet proved on Windows: the two launchers and a real fill. The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` is left
-  in place (the tree after the install, with its settings file, no `.venv`): **do not delete it yet.** **Waiting on
-  the owner:** how to finish (Claude recommends: he builds that tree's `.venv` in a plain CMD window with its two
-  scripts; then a short second task runs the remaining steps).
+  in place (the tree after the install, with its settings file, no `.venv`): **do not delete it yet.** (He built that tree's `.venv` himself; the remaining steps are
+  TASK_T026, entry 203.)
 - **TASK_T025 IS WRITTEN: THE STEP 2 REHEARSAL ON WINDOWS (entry 199; 23 November 2026).**
   `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md`: the install sheet's parts 1 to 4 in a task clone, then parts 5
   to 7 in a scratch tree under `D:\DELETE_ME\a_p_r_i_r\T025\` (about two hours). **Waiting on the owner:** his go to

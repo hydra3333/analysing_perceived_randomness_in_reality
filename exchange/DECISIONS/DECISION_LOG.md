@@ -4157,3 +4157,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   tree's `.venv` himself with its two scripts in a plain CMD window, and that a short second task then runs the
   steps that did not run, on the scratch tree as it stands.
 - Next numbers: EX_293; entry 203; RAT-45.
+
+## 203. 23 November 2026, 23:27 - The owner built the scratch tree's `.venv` himself; TASK_T026 written (the steps of TASK_T025 that did not run); not started
+
+- **The owner, 23:25, taking the recommendation of entry 202:** "just did: cd /d D:\DELETE_ME\a_p_r_i_r\T025\tree
+  create_venv.bat install_upgrade_dependencies_into_venv.bat INSTALL ... [DEPS] Generated environment snapshot:
+  "D:\DELETE_ME\a_p_r_i_r\T025\tree\transitory_data\dependency_snapshots\environment_12633_6520.txt" [DEPS] SUCCESS.
+  All 39 direct requirements installed; research compatibility tests remain required." (His own commands, in his own
+  CMD window, in the scratch tree only.)
+- **Written:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T026.md` (SHA-256 `473cd1ef8889247767603a6b107cd7891612fb62a7f82520a5a1a72413630cd8`), by
+  `exchange/CLAUDE_WEB_TOOLS/t026/make_task_t026.py` from `TASK_T026_template.md`. 15 steps, about an hour. It works in
+  TASK_T025's scratch folder `D:\DELETE_ME\a_p_r_i_r\T025\`, makes no task clone, builds no environment and has no
+  network use.
+- **Its steps 4 to 11 are TASK_T025 r1's steps 22 to 29**, the text the reviewer passed in EX_292: the scratch tree's
+  Python; `Run_Research.bat --game BOTH --no-update` (the first fill); the same once more; `Withdraw_Variant.bat
+  --help`; the old run folders copied from DEV by reading; the comparison with the old records and its criteria.
+  The builder asserts that the 14 command lines of steps 4 to 10 equal those of the passed task, character for
+  character, and that the passed task has the hash of EX_292.
+- **New in it:** step 3 checks, before anything is written, that `D:\DELETE_ME` is an ordinary folder, that the
+  scratch tree holds its settings file, its two launchers, the command program and its own Python, and that no
+  research job has run in it yet; and the recording rules now say what the runner may add to a task line (`cd` to
+  MAIN, an `echo` of the exit code, `date` with a format in Git Bash to print the time), after entry 202's deviations.
+- **Already known from TASK_T025's step 20:** a `.bat` started from Git Bash by its full path runs and returns its
+  own exit code (it printed its refusal and code 3).
+- **Not authorised by this:** running the task. It needs the owner's own go to the runner, after `git pull --ff-only`,
+  in a new Claude Code conversation. Whether the reviewer looks at it first is the owner's choice.
+- Next numbers: EX_293; entry 204; RAT-45.
