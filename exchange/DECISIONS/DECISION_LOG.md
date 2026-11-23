@@ -3476,3 +3476,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the candidate stays under `exchange/` until the owner ratifies it. The blurb tells the new reviewer chat that Claude
   wrote this refresh and that it should verify it against the repository itself.
 - Next numbers: EX_282, entry 174, RAT-43.
+
+## 174. 23 November 2026, 15:20 - RAT-43: THE OWNER RATIFIES H-1 v9 and H-2 v5r1; both installed in doc/HANDOVER/ with status statements changed
+
+- **The owner's words (15:18):** "ratified since i have not a lot of choise."
+- **Read by Claude as RAT-43 covering both candidates** (Claude's previous message offered H-1 v9 alone or the two
+  together), said in the chat before installing. Claude also said that he does have a choice and that ratifying closes
+  nothing off: H-1 v9 has the reviewer's PASS (EX_281) with its correction; H-2 v5r1 is the part without an independent
+  check, because Claude wrote it after the reviewer chat ended; if the new reviewer chat finds a problem in it, that
+  becomes a later refresh.
+- **Ratified (RAT-43, 15:18):** the H-1 v9 candidate (SHA-256 `943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6`) and the H-2 v5r1 candidate
+  (`4703f51af2bb2fa5f7144ecc209a720adada2902ce51cc5fa9a0b0a28acc3d84`) with their blurbs (`1cbe95bedb9741a610760b25de80e24eb3c798d9814287a4d28d8256c551dbe5`, `c3335aa814dfbbc2424c0e0edec67092cd3a59666c1ff5702d9664832e5a1634`).
+- **Installed by Claude** with `exchange/CLAUDE_WEB_TOOLS/rat43/finalise_rat43.py` (each candidate asserted by hash; counted
+  replacements of the status statements and of the statements RAT-43 itself made out of date, under the owner's
+  standing instruction of entry 153):
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v9.md`, SHA-256 **`8c28f82c0662be75d683bd37b13d6b0596b3b6424584d5674f09f1d965b182b1`** (`H1_v9_CANDIDATE_TO_FINAL.diff`:
+    24 lines added, 14 removed: the version and status lines, "Replaces", the newest numbers, the chats, section
+    4.4's handover in force, section 10 item 2, section 12.8's waiting items); its carried sections 1, 2 and 2A unchanged
+    (`80987a07...51764427`);
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v9_introductory_blurb.md`, the candidate's bytes unchanged (`1cbe95be...51dbe5`);
+  - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md`, SHA-256 **`234e5917c2b980cc50a1a0f08fc77af320febdd0ee05f595abff32564714edc8`**
+    (`H2_v5r1_CANDIDATE_TO_FINAL.diff`: 7 added, 4 removed, all in the status paragraph and section 0.10, 0.11 and the
+    next numbers); its historical chapters 1-19 and rights text unchanged (asserted);
+  - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md`, SHA-256 **`f195212e0de626608b2fb7f96c71d3244b3770394baa28eb372449707f6f20aa`**
+    (`H2_v5r1_blurb_CANDIDATE_TO_FINAL.diff`: 7 and 7): it now links to the installed handover and names its hash.
+  Each diff reproduces its installed file by `patch` and `cmp`.
+- **In force from now:** H-1 v9 and H-2 v5r1. H-1 v8, H-2 v4 and the reviewer's H-2 v5 stay where they are as history.
+  The next register edition records RAT-41's install to RAT-43 (owed, H-1 v9 section 12.8).
+- **Next, on the owner's word:** he starts a new ChatGPT reviewer chat by pasting the installed H-2 v5r1 blurb; its
+  takeover reply; then build step 2 on his own go (Fable (High) suggested for its core).
+- **RAT-43 authorises the documentary installation and nothing else.** Next numbers: EX_282, entry 175, RAT-44.

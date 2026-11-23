@@ -1,0 +1,95 @@
+--- H1_v9_CANDIDATE
++++ H1_v9_FINAL
+@@ -1,13 +1,17 @@
+ # H-1 - Claude primary designer and coder handover - Predictive Randomness project, v9
+ 
+ **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
+-**Version:** v9 CANDIDATE, 23 November 2026 (Adelaide, UTC+10:30). **H-1 v8 brought up to date** after build step 1
++**Version:** v9, 23 November 2026 (Adelaide, UTC+10:30). **H-1 v8 brought up to date** after build step 1
+ and the light tidy-up were installed, as the owner agreed (decision log entry 166). Built from the installed H-1 v8's
+ Git bytes by `exchange/CLAUDE_WEB_TOOLS/h1v9/make_h1_v9.py`, with counted replacements; `H1_v8_TO_v9.diff` beside it is
+ the exact difference. **Sections 1, 2 and 2A are still H-1 v7r1's bytes, unchanged** (the builder asserts it). The
+ sections rewritten are listed in Appendix B; everything else is v8's text.
+-**Status:** CANDIDATE, NOT RATIFIED. The installed Claude handover is H-1 v8 (RAT-41) until the owner ratifies this
+-edition. It authorises nothing.
++**Status:** OWNER-RATIFIED 23 November 2026, 15:18 Australia/Adelaide (RAT-43; decision log entry 174), together with the
++reviewer handover H-2 v5r1, after the reviewer's PASS (EX_281) and its one correction. It is the installed Claude
++handover; H-1 v8 (RAT-41) stays as history. It is the reviewed candidate (`exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md`,
++SHA-256 `943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6`) with this status paragraph and the statements the ratification made out of
++date changed; `exchange/CLAUDE_WEB_TOOLS/rat43/H1_v9_CANDIDATE_TO_FINAL.diff` is the exact difference. It
++authorises nothing.
+ **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat; the
+ project owner.
+ **Repository:** `hydra3333/analysing_perceived_randomness_in_reality`, public GitHub, branch `main`.
+@@ -15,7 +19,7 @@
+ **The method files are now in the new layout** (build step 1, `0aea10a`) **and commented** (the tidy-up, `c7e6ed8`);
+ everything else under `src/` and `tests/`, the root `.bat` files and `requirements.txt` is still the old system, as at
+ `cc0ab73`. Nothing of the new system's engine, trees or commands is coded.
+-**Replaces, once ratified:** H-1 v8 and its blurb (RAT-41), which stay where they are as history.
++**Replaces:** H-1 v8 and its blurb (RAT-41), which stay where they are as history.
+ **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ. This file
+ summarises and points to them.
+ **Draw values:** none appear in this file.
+@@ -100,8 +104,8 @@
+ 3. **Read the log for a number before using one.** Register v0.32 (section 4.4) is the newest edition; it records
+    RAT-34's install to RAT-40 and its own ratification. For anything later the decision log is the record. Read the
+    log for the last RAT number, the last entry number and the last EX number before using a new one. At this
+-   edition: the last RAT is RAT-42 (the runner's rulebook v0.6); the newest EX is EX_280; the newest decision log
+-   entry is 169 (the tidy-up installed), and entry 170 records this candidate.
++   edition: the last RAT is RAT-43 (this handover and H-2 v5r1); the newest EX is EX_281; the newest decision log
++   entry is 174 (RAT-43).
+ 4. **Commit IDs changed on 6 November 2026.** A history clean-up renumbered the 27 commits of 5 and 6 November 2026.
+    A record that cites one of them uses its OLD ID, and `git show <old id>` fails. Translate with
+    `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt`. Every file hash in every record is unchanged. Commits from
+@@ -171,9 +175,11 @@
+    every install and every run on his PC.
+ 9. **What is owed** is listed once, in section 12.8.
+ 10. **The chats.** This Claude chat took over on 22 November 2026 from H-1 v8 (HO-2 accepted, entry 157) and did build
+-    step 1 and the tidy-up. The ChatGPT reviewer chat is the one that took over on 21 November 2026; it reviewed EX_266
+-    to EX_280. On 23 November 2026 the reviewer committed its own H-2 v5 candidate (section 4.4), and the owner agreed
+-    that Claude refresh H-1 before build step 2 (entry 166): this edition. The owner has not decided on a chat switch.
++    step 1 and the tidy-up. The ChatGPT reviewer chat that took over on 21 November 2026 reviewed EX_266 to EX_281 and
++    ended on 23 November 2026, after committing its H-2 v5 candidate. At the owner's request Claude refreshed that
++    candidate as H-2 v5r1 (entry 173), and the owner ratified it with this edition (RAT-43). A new reviewer chat
++    starts from H-2 v5r1 and should verify it against the repository (section 4.4). The owner has not decided on a
++    Claude chat switch.
+ 
+ ## 0C. Sections 1, 2 and 2A are carried unchanged: read them with these notes
+ 
+@@ -407,9 +413,11 @@
+   v3r10 continuity candidate of 21 November 2026, which Claude wrote on the owner's instruction when the previous
+   reviewer chat was lost. **RAT-41 also covers the reviewer's refreshed H-2 v4** (entry 154: main `79406e4`, SHA-256
+   `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those are the bytes in force.
+-  **H-2 v5** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5_CANDIDATE_20261123.md` and its blurb, committed by the
+-  reviewer on 23 November 2026 at `23689ef` and `31db13b`) is a candidate, not ratified. `exchange/CONTINUITY_NOW.md`
+-  names the edition in force.
++  **In force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
++  reviewer's own H-2 v5 (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5_CANDIDATE_20261123.md`, committed at `23689ef`
++  and `31db13b`) with its status statements refreshed by Claude after the reviewer chat ended (entry 173); its rights
++  text and historical chapters are the reviewer's bytes. H-2 v4 and v5 stay as history.
++  `exchange/CONTINUITY_NOW.md` names the edition in force.
+ - **The register:** `doc/RATIFICATION_REGISTER_v0_32.md`, ratified with this handover (RAT-41; documentary PASS in EX_273).
+   It is register v0.31 (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`, RAT-34) with one added section
+   that records RAT-34's install to RAT-40. A file cannot hold the hash of a file that holds its own, so register
+@@ -796,8 +804,8 @@
+ 
+ 1. **Done:** H-1 v8, H-2 v4 and register v0.32 ratified (RAT-41); rulebook v0.6 (RAT-42); the takeover of this chat
+    (entry 157); **build step 1** (entry 164, `0aea10a`); **the light tidy-up** (entry 169, `c7e6ed8`).
+-2. **This edition** (H-1 v9), for the reviewer's check and the owner's ratification, as with v8. The reviewer's own
+-   H-2 v5 candidate is its business; ratifying the two together is the owner's choice.
++2. **Done: this edition and H-2 v5r1 ratified (RAT-43, entry 174)** after EX_281; the reviewer chat ended and a
++   new one starts from H-2 v5r1.
+ 3. **Build step 2: the research engine, in DEV** (specification sections 3 to 11), on the owner's own go: the lists,
+    the job with its fill and catch-up, scoring, the reports, both OV-1 scores (with the kernel of section 7.3), the
+    status file and withdrawal; the checks of 5.6A and 5.8 and both header identities from the first day; RAT-40's
+@@ -970,8 +978,8 @@
+ 
+ The live state is `exchange/CONTINUITY_NOW.md`; it overtakes this list.
+ 
+-- **Waiting on the reviewer:** its check of this candidate, when the owner asks.
+-- **Waiting on the owner:** ratification of this edition; his go for build step 2; his word on reminders R-007
++- **Waiting on the reviewer:** a new reviewer chat, started by the owner from H-2 v5r1; its takeover reply.
++- **Waiting on the owner:** starting the new reviewer chat; his go for build step 2; his word on reminders R-007
+   (proposed dropped) and R-017 (proposed done) (entry 155); the three deny lines for `.claude/settings.json` when he
+   chooses (entry 156).
+ - **Owed by Claude, in order of need:**

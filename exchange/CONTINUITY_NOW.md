@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 15:16 Australia/Adelaide (entries 172-173: H-1 v9 candidate corrected after EX_281 PASS; the reviewer chat ended; H-2 v5r1 candidate written by Claude for a new reviewer chat). **Next: the owner starts a new reviewer chat with the H-2 v5r1 blurb; his RAT-43 decision; then build step 2 on his go.**
+**Last updated:** 23 November 2026, 15:20 Australia/Adelaide (entry 174: RAT-43, H-1 v9 and H-2 v5r1 ratified and installed in doc/HANDOVER/). **Next: the owner starts a new reviewer chat with the installed H-2 v5r1 blurb; then build step 2 on his go.**
 
 ## For the owner: NOW
 
+- **RAT-43 (entry 174; 23 November 2026, 15:18): H-1 v9 and H-2 v5r1 RATIFIED and INSTALLED.** In force:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v9.md` (`8c28f82c...b182b1`) and
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` (`234e5917...14edc8`). **To start the new reviewer chat:** paste
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md`. H-1 v8, H-2 v4 and H-2 v5 are history.
 - **THE REVIEWER CHAT ENDED (23 November 2026, after EX_281).** H-1 v9 candidate: EX_281 PASS, its one correction
   applied (entry 172; SHA-256 `94307744...61948b6`). **For a new reviewer chat:** the H-2 v5r1 candidate and blurb, Claude's status
   refresh of the reviewer's H-2 v5 (entry 173), at `exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/`. The owner pastes

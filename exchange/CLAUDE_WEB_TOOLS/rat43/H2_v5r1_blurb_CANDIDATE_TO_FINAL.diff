@@ -1,0 +1,35 @@
+--- H2_v5r1_blurb_CANDIDATE
++++ H2_v5r1_blurb_FINAL
+@@ -1,10 +1,10 @@
+-# ChatGPT Independent Reviewer - H-2 v5r1 complete takeover blurb (23 November 2026; OWNER-REVIEW CANDIDATE)
++# ChatGPT Independent Reviewer - H-2 v5r1 complete takeover blurb (23 November 2026; OWNER-RATIFIED, RAT-43)
+ 
+-**STATUS:** The owner requested a complete reviewer-handover refresh before build step 2. This H-2 v5r1 and blurb are CANDIDATES pending the owner's acceptance/ratification. **The previous reviewer chat wrote H-2 v5 and ended on 23 November 2026 after EX_281; Claude made this v5r1 status refresh of it at the owner's request (decision log entry 173), changing only status statements. Verify it against the repository yourself; do not trust it because Claude wrote it.** The currently ratified and operative reviewer handover remains H-2 v4 under RAT-41, with the owner's explicit approval of its refreshed reference edition (decision-log entries 153-154). Do NOT describe v5 or v5r1 as ratified, installed or in force until the owner says so. This candidate alters NO reviewer rights, scientific rules or owner GO permissions.
++**STATUS:** The owner requested a complete reviewer-handover refresh before build step 2. The owner ratified H-2 v5r1 with Claude's H-1 v9 on 23 November 2026, 15:18 (RAT-43, decision log entry 174). **The previous reviewer chat wrote H-2 v5 and ended on 23 November 2026 after EX_281; Claude made this v5r1 status refresh of it at the owner's request (decision log entry 173), changing only status statements. Verify it against the repository yourself; do not trust it because Claude wrote it.** H-2 v5r1 is the operative reviewer handover; H-2 v4 (RAT-41) and the reviewer's v5 are history. This candidate alters NO reviewer rights, scientific rules or owner GO permissions.
+ 
+-**READ THIS COMPLETE REVIEWER HANDOVER:** [H-2 v5r1 complete candidate](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/blob/main/exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/ChatGPT_Reviewer_Handover_H2_v5r1_CANDIDATE_20261123.md).
+-Repository path: exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/ChatGPT_Reviewer_Handover_H2_v5r1_CANDIDATE_20261123.md
+-H-2 v5r1 SHA-256 of stored GitHub bytes: 4703f51af2bb2fa5f7144ecc209a720adada2902ce51cc5fa9a0b0a28acc3d84. It is the reviewer's H-2 v5 (54ce9f3bd62ea0bac4e591d03904af34bf3ae444e5510af2aafc62057204a8af) with its status statements refreshed; the exact difference is `H2_v5_TO_v5r1.diff` beside it.
++**READ THIS COMPLETE REVIEWER HANDOVER:** [H-2 v5r1](https://github.com/hydra3333/analysing_perceived_randomness_in_reality/blob/main/doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md).
++Repository path: doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md
++H-2 v5r1 SHA-256 of stored GitHub bytes: 234e5917c2b980cc50a1a0f08fc77af320febdd0ee05f595abff32564714edc8. (The candidate the owner ratified, exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/ChatGPT_Reviewer_Handover_H2_v5r1_CANDIDATE_20261123.md, SHA-256 4703f51af2bb2fa5f7144ecc209a720adada2902ce51cc5fa9a0b0a28acc3d84, differs from it only in status statements; exchange/CLAUDE_WEB_TOOLS/rat43/H2_v5r1_CANDIDATE_TO_FINAL.diff.) It is the reviewer's H-2 v5 (54ce9f3bd62ea0bac4e591d03904af34bf3ae444e5510af2aafc62057204a8af) with its status statements refreshed; the exact difference is exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/H2_v5_TO_v5r1.diff.
+ Its live section 0 is current through main afda9fec80625de201d344bfde5f0d144fe94e04, decision-log entry 173 and reviewer EX_281. All protected reviewer rights and the inherited historical chapters 1-19 from the RAT-41 H-2 v4 are carried VERBATIM. This is one COMPLETE file, not a supplementary delta.
+ 
+ ## Your role and reading order
+@@ -26,7 +26,7 @@
+ 
+ **THE LIGHT TIDY-UP IS INSTALLED AND WINDOWS-PROVED** (main c7e6ed8, entry 169: comments-only check PASS, the suite unchanged, the complete equivalence check PASS - COMPLETE, 26,040/26,040). Its review record: EX_279 and EX_280 cover TIDY1_Method_Comments_v1: 37 headers/comments-only files, direct AST code identity PASS, all 571 suite outcomes unchanged, and all 17,400 scored forecasts equal in cloud (correctly PARTIAL there). Six hash-pinned E_1 historical modules must remain untouched (owner entry 166). Reviewer EX_280 PASS was not a Windows install GO; the owner gave his own GO (entry 168) and ran the sheet.
+ 
+-**The H-1 refresh:** Claude wrote the H-1 v9 candidate (entry 170; exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md); EX_281 passed it with one narrow correction (section 8.6: the runner must STOP on the suite's known FAILED results under rulebook v0.6 rule 10), applied on the owner's word (entry 172); SHA-256 943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6. It awaits the owner's RAT-43 decision; H-1 v8 stays the installed Claude handover until then.
++**The H-1 refresh:** Claude wrote the H-1 v9 candidate (entry 170; exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md); EX_281 passed it with one narrow correction (section 8.6: the runner must STOP on the suite's known FAILED results under rulebook v0.6 rule 10), applied on the owner's word (entry 172); SHA-256 943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6. The owner ratified it with this H-2 v5r1 (RAT-43); it is installed as doc/HANDOVER/Claude_Primary_Handover_H1_v9.md.
+ 
+ **BUILD STEPS 2, 3 and 4 ARE NOT YET CODED/INSTALLED UNDER RAT-40.** Each needs separate owner authority. Stage 2 builds the genuine DEV research engine; stage 3 adds QA/PROD trees, readiness, installation, verified snapshots and restores, then authorised production runs; stage 4 adds QA software copy, optional full PROD research-data reseed, reruns and the owner-controlled shared-code defect-correction route. There is no obligatory QA approval gate for PROD. The previous MHUP-B slice sources are HISTORY, except the RAT-40 designated numeric OV-1 kernel used as reviewed input.
+ 
+@@ -38,6 +38,6 @@
+ 
+ **KISS:** Maintain full scientific fidelity, strict N-1, exact TOP/WORST, reproducible record chains, honest real-time vs retrospective claims, safe data acquisition and no-kill. Avoid new bureaucracy, defensive layers, duplicative test frameworks or speculative recovery mechanisms without a concrete probable harmful failure. Report what was actually run; no source review PASS is a Windows install PASS.
+ 
+-**Next numbers at the last data snapshot (not reserved):** EX_282, decision-log entry 174, RAT-43. Always recheck GitHub after any commit; this very documentary round will advance EX.
++**Next numbers at the last data snapshot (not reserved):** EX_282, decision-log entry 175, RAT-44. Always recheck GitHub after any commit; this very documentary round will advance EX.
+ 
+ No implementation, runner action, Windows operation or owner ratification is granted by this handover or its introductory blurb.

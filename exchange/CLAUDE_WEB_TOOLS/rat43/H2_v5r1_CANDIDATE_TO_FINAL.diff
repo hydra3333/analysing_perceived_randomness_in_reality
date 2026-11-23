@@ -1,0 +1,40 @@
+--- H2_v5r1_CANDIDATE
++++ H2_v5r1_FINAL
+@@ -1,6 +1,9 @@
+ # Predictive Randomness - ChatGPT Independent Reviewer Handover H-2 v5r1 (COMPLETE CANDIDATE; 23 November 2026)
+ 
+-**Status: H-2 v5r1 OWNER-REVIEW CANDIDATE; NOT YET RATIFIED.** H-2 v5 was prepared by ChatGPT at the owner's express request to completely refresh the reviewer handover ahead of build step 2. **v5r1 is a status refresh of it made by Claude at the owner's request (decision log entry 173)** after the reviewer chat ended on 23 November 2026, following EX_281, in which it said its v5 "needs a short status refresh to recognise the completed tidy-up". Only status statements of this section 0 changed; the historical chapters 1-19, the rights text and every rule are the reviewer's v5 bytes (SHA-256 54ce9f3bd62ea0bac4e591d03904af34bf3ae444e5510af2aafc62057204a8af), asserted by the builder `exchange/CLAUDE_WEB_TOOLS/h2v5r1/make_h2_v5r1.py`; `H2_v5_TO_v5r1.diff` beside this file is the exact difference. **A new reviewer chat should verify this refresh against the repository itself** rather than trust it because Claude wrote it. The **operative, owner-ratified handover remains H-2 v4**, extended by the owner under RAT-41 (decision-log entries 153 and 154), stored at doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md. Its current SHA-256 is b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b; it and its prior introductory blurb have NOT been altered or superseded merely by publishing this candidate. The candidate changes no reviewer right, scientific rule, source-file authority, owner GO or deployment permission. Only the owner may decide to adopt this edition.
++**Status: OWNER-RATIFIED 23 November 2026, 15:18 Australia/Adelaide (RAT-43; decision log entry 174), together with Claude's
++H-1 v9; installed by Claude in doc/HANDOVER/ with only status statements changed (exact difference:
++exchange/CLAUDE_WEB_TOOLS/rat43/H2_v5r1_CANDIDATE_TO_FINAL.diff; the reviewed-by-owner candidate is exchange/CLAUDE_WEB_TOOLS/h2v5r1/out/ChatGPT_Reviewer_Handover_H2_v5r1_CANDIDATE_20261123.md,
++SHA-256 4703f51af2bb2fa5f7144ecc209a720adada2902ce51cc5fa9a0b0a28acc3d84). It is the operative reviewer handover; H-2 v4 and v5 stay as history.** H-2 v5 was prepared by ChatGPT at the owner's express request to completely refresh the reviewer handover ahead of build step 2. **v5r1 is a status refresh of it made by Claude at the owner's request (decision log entry 173)** after the reviewer chat ended on 23 November 2026, following EX_281, in which it said its v5 "needs a short status refresh to recognise the completed tidy-up". Only status statements of this section 0 changed; the historical chapters 1-19, the rights text and every rule are the reviewer's v5 bytes (SHA-256 54ce9f3bd62ea0bac4e591d03904af34bf3ae444e5510af2aafc62057204a8af), asserted by the builder `exchange/CLAUDE_WEB_TOOLS/h2v5r1/make_h2_v5r1.py`; `H2_v5_TO_v5r1.diff` beside this file is the exact difference. **A new reviewer chat should verify this refresh against the repository itself** rather than trust it because Claude wrote it. Until RAT-43 the operative, owner-ratified handover was H-2 v4, extended by the owner under RAT-41 (decision-log entries 153 and 154), stored at doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md. Its current SHA-256 is b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b; it and its introductory blurb were not altered; RAT-43 superseded them. The candidate changes no reviewer right, scientific rule, source-file authority, owner GO or deployment permission. The owner adopted this edition by RAT-43.
+ 
+ **Evidence/status cutoff:** GitHub main afda9fec80625de201d344bfde5f0d144fe94e04 (23 November 2026), decision log through entry 173, reviewer EX_281. The latest state recorded there is: step 1 INSTALLED and Windows-proved; **the 37-file tidy-up INSTALLED and Windows-proved** (main c7e6ed8, entry 169); **the H-1 v9 candidate** (Claude's refresh of H-1 v8) reviewed in EX_281 (PASS WITH ONE NARROW TEXT CORRECTION; FIX AND PROCEED), the correction applied on the owner's word (entry 172), SHA-256 943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6, awaiting the owner's RAT-43 decision. Read any newer commits and decisions as authoritative.
+ 
+@@ -131,7 +134,7 @@
+ 
+ **OPEN / NEXT only:**
+ 1. DONE: the tidy-up installed and Windows-proved with the complete 26,040/26,040 equivalence (entry 169).
+-2. The owner's RAT-43 decision on the H-1 v9 candidate (exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md, SHA-256 943077447a2b05c6eecd4a22381cf9a6591685211ec45dd1697db2d8861948b6, EX_281 PASS with its correction applied) and, if he chooses, on this H-2 v5r1 candidate jointly. Only after ratification are they installed in doc/HANDOVER/.
++2. DONE: RAT-43 (23 November 2026, 15:18, entry 174) ratified H-1 v9 and this H-2 v5r1 together; both installed in doc/HANDOVER/ (doc/HANDOVER/Claude_Primary_Handover_H1_v9.md and doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md). A new reviewer chat starts from this handover and should verify it against the repository.
+ 3. Owner's separate GO for DEV stage 2; then normal code package and independent review. No programming on owner's PC is authorised merely by this handover.
+ 4. Stage 3 eventually: one owner decision on legacy updater Mode H study checks versus spec 7.1's "unchanged" phrase, preserving genuine acquisition integrity; readiness-marker CRLF consideration. Stage 4: EX_271 section 3 report staleness and replacement/reseed oracles.
+ 5. Deferred after full new system: optional performance profiling of actual wall/CPU time including NumPy/SciPy native, multiprocessing and library threads before deciding Numba/Cython/other acceleration; and new method candidates (OUTLANDISH_01 first among likely backlog) only on owner request.
+@@ -141,7 +144,7 @@
+ ### 0.11 Reviewer first-minute and handback checklist
+ 
+ 1. Before writing a reviewer response, fetch GitHub current HEAD and read current decision log, latest EX, source files, manifest and complete diff. At the cutoff this is entry 173 and EX_281, but timestamps and EX counters expire immediately on a new commit.
+-2. Verify which handover is ratified: at the snapshot H-2 v4 remains IN FORCE, and H-2 v5 and this v5r1 are OWNER-REVIEW CANDIDATES. Claude's H-1 v8 is installed; the H-1 v9 candidate is reviewed (EX_281) and awaits RAT-43.
++2. Verify which handover is ratified: since RAT-43 (entry 174) this H-2 v5r1 and Claude's H-1 v9 are IN FORCE and installed in doc/HANDOVER/; H-2 v4, H-2 v5 and H-1 v8 are history.
+ 3. Maintain independent provenance: distinguish design ACCEPTED vs source REVIEW PASS vs owner-GO vs Windows RUN PASS vs installed/PROD operating.
+ 4. Apply RAT-40's four notes and four build stages, including KISS, not the old MHUP-B design stack as an implementation checklist.
+ 5. For source reviews check true file/ZIP identities, substantive code, author evidence/limits and source-specified invariants. Do not demand a new test or protocol unless a concrete consequential failure is demonstrable.
+@@ -149,7 +152,7 @@
+ 7. Ensure currentness/foreign HOLD, dual OV-1 interpretation, strict N-1, TOP/WORST and accepted results integrity are neither waived nor overengineered.
+ 8. Preserve historical rights text below unchanged, including R-1 through R-11, rather than silently replacing it with a summary.
+ 
+-**Next-number checkpoint, not an allocation:** as of entry 173: next EX_282, next decision entry 174, next ratification RAT-43. Publishing a reviewer EX or new decision immediately advances its own counter; verify main immediately before use.
++**Next-number checkpoint, not an allocation:** as of entry 174: next EX_282, next decision entry 175, next ratification RAT-44. Publishing a reviewer EX or new decision immediately advances its own counter; verify main immediately before use.
+ 
+ ### 0.12 Binding working principle: scientific correctness and KISS, not artificial bureaucracy
+ 
