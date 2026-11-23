@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 17:23 Australia/Adelaide (entry 178: BUILD STEP 2 code-complete and proved in the cloud; package STEP2_Research_Engine_v1 built; EX_282 waits for the owner's word; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 18:14 Australia/Adelaide (entry 179: EX_282 ISSUED - build step 2, package STEP2_Research_Engine_v1, for the reviewer's full review; the reply is EX_283; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_282 IS WITH THE REVIEWER (entry 179; 23 November 2026).** Build step 2, the research engine in DEV: package
+  `STEP2_Research_Engine_v1`, full review, ten questions; the reply is to be EX_283. **Waiting on:** the reviewer. Then
+  the owner's own go for the install (`exchange/CLAUDE_WEB_TOOLS/step2/package/INSTALL_AND_RUN_SHEET.md`, parts 1 to 5)
+  and a separate go for DEV's first fill (part 6). Opus is enough for what follows.
 - **BUILD STEP 2 IS CODE-COMPLETE AND PROVED IN THE CLOUD (entry 178; 23 November 2026).** Everything is in
   `exchange/CLAUDE_WEB_TOOLS/step2/`: read `STEP2_PACKAGE_NOTE_v0_1.md` first; the package is
   `package/STEP2_Research_Engine_v1.zip` with its sheet `package/INSTALL_AND_RUN_SHEET.md`; the evidence is in `evidence/`.

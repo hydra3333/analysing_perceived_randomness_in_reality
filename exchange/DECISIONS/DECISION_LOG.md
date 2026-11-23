@@ -3591,3 +3591,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer only on the owner's word.
 - **Model:** the Fable (High) part of build step 2 is finished; the owner may switch back to Opus.
 - Next numbers: EX_282, entry 179, RAT-44.
+
+## 179. 23 November 2026, 18:14 - OWNER: issue EX_282; EX_282 ISSUED (build step 2, package STEP2_Research_Engine_v1, for full review)
+
+- **The owner's words (18:13):** "Yes, now. I assemble and commit EX_282 and give you the paste block." (his choice
+  of the first of the three options put to him after entry 178.)
+- **EX_282** (`exchange/EX_282_Claude.zip`, SHA-256 `2e0df75a459cfaa7e2b8ccffbd498893bbb03bf1cffb017f1b9fc6c1f75da7a7`,
+  and the folder `exchange/EX_282_Claude/`): the message, the package ZIP `STEP2_Research_Engine_v1.zip` (SHA-256
+  `829e2687842e715c9d8dcd61dcb4185d4219457e0def7acc20118b28b3855116`, byte for byte the committed package) and its
+  member list. Base `cc8398c`. Risk tier HIGH; a full review is asked, with ten questions (Q1 to Q10); the reply is
+  to be EX_283. Assembled by `exchange/CLAUDE_WEB_TOOLS/step2/assemble_ex282.py`; every hash computed, none typed.
+- **Noted:** the owner's commit `5574d86` put a copy of the package note at
+  `doc/how_things_work/STEP2_PACKAGE_NOTE_v0_1.md`. It changes nothing under `src/` or `tests/`, so the package's base
+  stays valid. The working original remains `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_PACKAGE_NOTE_v0_1.md`; if the
+  review changes the note, the copy is the owner's to refresh.
+- **Nothing is authorised on the owner's PC.** After EX_283: his own go for the install (sheet parts 1 to 5), and a
+  separate go for DEV's first fill (part 6).
+- Next numbers: EX_283 (the reviewer's reply), entry 180, RAT-44.

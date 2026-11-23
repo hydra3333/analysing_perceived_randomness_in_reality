@@ -12,7 +12,8 @@ A review of build step 2 of specification 17.4: the lists, the research job with
 the reports, both OV-1 scores, the status file and the withdrawal. The owner gave the go for the build at 15:45 on
 23 November (decision log entry 176) and answered two questions at entry 177 (DEV's research results are not
 tracked by Git; review in slices was left to me: the three slices of the plan are sent together, because slices B
-and C turned out to be one piece of work around the job). **Nothing here is authorised to run on the owner's PC.**
+and C turned out to be one piece of work around the job). At 18:13 he asked for this message (entry 179).
+**Nothing here is authorised to run on the owner's PC.**
 His install is on his own go after your review, and DEV's first fill on a further, separate go.
 
 Base: `@@BASE@@` (`src/` and `tests/` exactly as the light tidy-up left them at `c7e6ed8`).
