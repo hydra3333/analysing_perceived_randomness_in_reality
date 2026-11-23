@@ -4266,3 +4266,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (`D:\DELETE_ME\a_p_r_i_r\T025`, which stays in place); then his install in DEV from v1r3's sheet; then,
   separately, DEV's first fill.
 - Next numbers: EX_294 (the reviewer's); entry 207; RAT-45.
+
+## 207. 24 November 2026, 06:10 - EX_294 received: PASS for package STEP2_Research_Engine_v1r3 (the corrected comparison tool); TASK_T027 written (the comparison alone, once more); not started
+
+- **EX_294 (reviewer; main `7d74ee1`; `exchange/EX_294_ChatGPT.md`, SHA-256
+  `9f59ae4fd1318e6c36bd639221df442ec9566222b40723975b99ed08ba5c8ce1`), relayed by the owner at 06:08:** "FOCUSED RECHECK
+  PASS for v1r3's comparison tool, revised install sheet and one-line manifest revision." It verified the
+  three-file diff, that the 35 files of `repo_overlay` are unchanged, and both ZIP hashes. **On the question of
+  EX_293 section 3: yes.** An old `INSUFFICIENT_HISTORY` record below the new list's `first_target`, with no new line
+  there, is reconciled, not different; such records stay counted apart, as v1r3 does, need not force `PARTIAL`, and
+  are not claimed as matching forecasts. **The cause of the 2802 remains an inference** until the corrected tool has
+  read the owner's real run folders: "do not relabel the result". It has not read TASK_T026 as a task file.
+- **So the package to install is `STEP2_Research_Engine_v1r3`** (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/`, ZIP
+  SHA-256 `e80e87ae4d0d9e9baaa15b8f2a405df717f66eb6be7de4126b734ad374bc6926`), with its own sheet.
+- **Written, as the reviewer recommends:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T027.md` (SHA-256 `a2252015fc88ee8cf9ee98d533425dd2644d9988927be567d207ccc1964bf1cd`), by
+  `exchange/CLAUDE_WEB_TOOLS/t027/make_task_t027.py`. 11 steps, about ten minutes, in the scratch folder
+  `D:\DELETE_ME\a_p_r_i_r\T025\` as TASK_T026 left it. It checks the scratch tree; copies the corrected tool from the
+  repository's `exchange\EX_293_Claude\` into the scratch evidence folder and checks its hash (`b4135af7...241ada6`
+  after CRLF is made LF: the tool the reviewer passed); runs it with the scratch tree's own Python; and requires
+  the exact lines, with their numbers: 17280 and 8760 read, 14478 and 5958 equal, 2802 and 2802 before the first
+  target, `DIFFERENT: 0`, 640 and 640, `RESULT: PASS - COMPLETE` with 34800, 20436 and 5604, exit code 0, 160
+  per-variant lines, no `DIFFERENT` line. Any other number is a STOP. The builder asserts that those expected lines
+  are the lines the corrected tool printed in the cloud's check. It runs no research job and no launcher.
+- **Not authorised by this:** running the task; the install in DEV; DEV's first fill. Each is the owner's own go.
+- Next numbers: EX_295; entry 208; RAT-45.
