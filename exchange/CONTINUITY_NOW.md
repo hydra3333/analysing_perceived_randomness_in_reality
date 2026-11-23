@@ -4,15 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 06:10 Australia/Adelaide (entry 207: EX_294 is the reviewer's PASS for package v1r3; TASK_T027, the comparison alone with the corrected tool, is written and waits for the owner's go; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 06:29 Australia/Adelaide (entry 208: TASK_T027 PASSED; the Windows rehearsal of build step 2 is complete; waiting on the owner's own go for the install in DEV from package v1r3's sheet; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **THE WINDOWS REHEARSAL OF BUILD STEP 2 IS COMPLETE AND PASSED (entry 208; 24 November 2026).** TASK_T027: the
+  corrected comparison tool on the real old run folders gave `PASS - COMPLETE` (20436 old forecasts equal; the 2802
+  per game were the old system's insufficient-history records). **Waiting on the owner, each his own go:** (1) the
+  install in DEV from `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/INSTALL_AND_RUN_SHEET.md`, parts 1 to 5 (the ZIP
+  beside it goes to `E:\TEMP`; the two suite runs take about 25 and 29 minutes); (2) separately, DEV's first fill,
+  part 6 (46 minutes in the rehearsal) and part 7. Then H-1 v10. The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` may
+  be deleted by the owner once DEV's part 7 has passed.
 - **PACKAGE v1r3 HAS THE REVIEWER'S PASS (EX_294); TASK_T027 IS WRITTEN (entry 207; 24 November 2026).** The package
   to install is `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/` with its own sheet. `inbox/TASK_T027.md` runs only the
   corrected comparison in the scratch tree (about ten minutes) and requires `PASS - COMPLETE` with exact numbers;
-  until it passes, the cause of TASK_T026's stop is an inference. **Waiting on the owner:** his go to the runner
-  (after `git pull --ff-only`, in a new Claude Code conversation). Then, each his own go: the install in DEV (sheet
+  until it passes, the cause of TASK_T026's stop is an inference. (Run and PASSED: entry 208.) Then, each his own go: the install in DEV (sheet
   parts 1 to 5), DEV's first fill, and H-1 v10. **Keep `D:\DELETE_ME\a_p_r_i_r\T025` until Claude says.**
 - **EX_293 IS WITH THE REVIEWER: PACKAGE v1r3 (entry 206; 24 November 2026).** One tool corrected
   (`tools/compare_fill_with_old_records.py`) and the sheet's part 7; `repo_overlay` is byte for byte the 35 files

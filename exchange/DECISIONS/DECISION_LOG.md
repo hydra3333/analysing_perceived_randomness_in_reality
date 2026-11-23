@@ -4290,3 +4290,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   are the lines the corrected tool printed in the cloud's check. It runs no research job and no launcher.
 - **Not authorised by this:** running the task; the install in DEV; DEV's first fill. Each is the owner's own go.
 - Next numbers: EX_295; entry 208; RAT-45.
+
+## 208. 24 November 2026, 06:29 - TASK_T027 PASSED: the corrected comparison tool on the owner's real run folders gives PASS - COMPLETE; the cause of TASK_T026's stop is confirmed; the Windows rehearsal of build step 2 is complete
+
+- **The report:** `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T027.md`, main `815bda8`, SHA-256
+  `66c0579d26beb3d2bfabec68e29dd0d9ad42df6a12aa7b162f23674d9aae38df`; task file at main `a7cb779`; run 24 November 06:21
+  to 06:24; the owner relayed the result at 06:29. The reviewer had not read this task file (the owner ran it on
+  his own go, as TASK_T026).
+- **What it shows.** The tool copied into the scratch folder has the hash of the tool the reviewer passed
+  (`b4135af7ea925caba020bcbc77185999f51837bff0dcedddeb295ff0d241ada6` after CRLF is made LF). Run on the scratch tree's fill
+  and on the old run folders copied from DEV, it printed, in 2 minutes 8 seconds, exactly the eight lines the task
+  required, every number included: POWERBALL 17280 old records read, 14478 forecasts equal, 2802 `INSUFFICIENT_HISTORY`
+  records before the variant's first target, `DIFFERENT: 0`, 640 new lines for other targets; OZLOTTO 8760, 5958,
+  2802, 0, 640; part 1 as before (22884 and 11916 old scores, all equal); `RESULT: PASS - COMPLETE - both games; all
+  34800 old score records ...; all 20436 old development forecasts ...; the 5604 old INSUFFICIENT_HISTORY records all
+  lie before their variants' first targets`; exit code 0; 160 per-variant lines; no `DIFFERENT` line.
+- **So entry 205's explanation is no longer an inference:** the 2802 of TASK_T026 were the old system's
+  insufficient-history records, 2802 in each game, and nothing else. Every forecast the old development runs kept
+  on the owner's PC is in the new lists with the same view digest, scores, ranking, TOP and WORST.
+- **One deviation, the runner's own:** it wrote its report in two blocks and not after each step. No command was
+  changed.
+- **The Windows rehearsal of build step 2 is complete (TASK_T025, T026, T027):** the install sheet's parts 1 to 4 in
+  a clone; both launchers; the first fill of both games in 46 minutes with the cloud's counts; a second job with
+  nothing to do in 3 minutes; the comparison with the old records, complete. Three things it found: the runner's
+  shell has the main `.venv` active, so a tree's `.venv` is built from a plain CMD window; the comparison tool's
+  fault (corrected in package v1r3); and that the first fill takes 46 minutes on this PC.
+- **What a scratch run computes is a rehearsal, not a result of the project.** DEV has no research results yet.
+- **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025`** is no longer needed by any task. Claude's suggestion: keep it
+  until DEV's own first fill has passed the sheet's part 7, then the owner deletes it.
+- **Next, each the owner's own go, none given:** the install in DEV from the sheet of package v1r3
+  (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/`), parts 1 to 5; separately DEV's first fill (part 6) and part 7;
+  then H-1 v10 (entry 183).
+- Next numbers: EX_295; entry 209; RAT-45.
