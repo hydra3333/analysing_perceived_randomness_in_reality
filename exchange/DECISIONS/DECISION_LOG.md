@@ -3813,3 +3813,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   whichever kind of link the owner's account can make when he runs the sheet.
 - EX_287 (body and assembler ready) is issued only on the owner's word. Nothing is authorised on the owner's PC.
 - Next numbers: EX_286 (the reviewer, the rulebook), EX_287 (Claude, step 2), entry 188, RAT-44.
+
+## 188. 23 November 2026, 20:54 - EX_286 received (the rulebook v0.7 candidate: RECHECK, three narrow corrections of wording); the v0.7r1 candidate made
+
+- **EX_286 (reviewer; main `10108e2`):** RECHECK, not PASS for RAT-44 as written; the scratch-runner capability is
+  supported subject to three corrections of text. F286-B01 (BLOCKER): rule 11 still said "Never read or edit an
+  ENVIRONMENT.ini file. Never create a tree", which section 2A's scratch trees contradict. F286-C01: section 7's
+  exception was narrower than the owner's decision of entry 186. F286-C02: say that what the two scratch
+  environment scripts call themselves (activation, pip) is part of running them. The four questions put to it were
+  accepted: the D: boundary in principle, the package downloads, the rule 10 exception, the step 3 names as inert.
+- **All three accepted and made:** `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r1_CANDIDATE.md` (SHA-256
+  `a0fd3526...dceb11`), by `make_rulebook_v0_7r1.py` (seven counted edits to the v0.7 candidate as reviewed, checked by
+  its hash), with the exact diffs from the installed v0.6 and from the v0.7 candidate. Rule 11 now names the owner's
+  real QA and PROD trees, keeps them out of reach without exception, and has the one scratch-only qualification
+  for a tree and its settings file, in the reviewer's words. **Two additions of Claude's:** rule 11's example places
+  are brought up to date (entry 181: `T:\a_p_r_i_r`, `G:\a_p_r_i_r`, `T:\a_p_r_i_r_backups`); and section 2A says that a
+  command's name in the list is no permission by itself (the reviewer's answer (d)).
+- **It has no force.** The installed rulebook stays v0.6 until the owner ratifies a candidate (RAT-44). EX_286 leaves
+  to the owner whether a focused textual recheck comes first.
+- Next numbers: EX_287 (Claude, step 2, on the owner's word), entry 189, RAT-44.

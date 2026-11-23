@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:53 Australia/Adelaide (entry 187: EX_285 closed the two EX_283 blockers and found F285-B01; fixed; package STEP2_Research_Engine_v1r2 built; EX_287 waits for the owner's word; EX_286 is reserved for the reviewer's rulebook review; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 20:54 Australia/Adelaide (entry 188: EX_286 asked three corrections of wording in the rulebook candidate; v0.7r1 candidate made, no force until RAT-44; step 2 package v1r2 ready, EX_287 waits for the owner's word; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **THE RULEBOOK CANDIDATE IS NOW v0.7r1 (entry 188; 23 November 2026).** EX_286 was RECHECK with three corrections of
+  wording, all made: `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r1_CANDIDATE.md` with its diffs. **Waiting on the
+  owner:** whether the reviewer rechecks it first, then RAT-44. The installed rulebook is still v0.6.
 - **EX_285 FOUND ONE NEW BLOCKER; THE CORRECTED PACKAGE v1r2 IS READY (entry 187; 23 November 2026).** F285-B01 (the
   staging cleanup could delete files that were not its own) is fixed in `STEP2_Research_Engine_v1r2`
   (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`); read section 0A of `STEP2_PACKAGE_NOTE_v0_3.md`. **Waiting on the owner:**
