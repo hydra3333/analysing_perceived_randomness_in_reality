@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:13 Australia/Adelaide (entry 182: EX_284 ISSUED - build step 2 corrected, package STEP2_Research_Engine_v1r1, for the reviewer's recheck; the reply is EX_285; rulebook v0.7 candidate drafted, no force; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 20:24 Australia/Adelaide (entry 183: the owner's order - EX_285, then the rulebook v0.7 reviewed and ratified (RAT-44), then the rest; H-1 v10 after step 2 is installed; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **THE ORDER (owner, entry 183; 23 November 2026):** EX_285 (reviewer, on package v1r1) -> the rulebook v0.7 candidate
+  reviewed and ratified (RAT-44) -> the rest (proposed: a Windows rehearsal of step 2 by the runner on D:, then the
+  owner's install of step 2 and DEV's first fill, then step 3). **H-1 v10 is written once step 2 is installed.**
 - **EX_284 IS WITH THE REVIEWER FOR RECHECK (entry 182; 23 November 2026).** Package `STEP2_Research_Engine_v1r1`
   (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r1/`); the reply is to be EX_285. **Waiting on:** the reviewer. Then the
   owner's own go for the install (that package's `INSTALL_AND_RUN_SHEET.md`, parts 1 to 5) and a separate go for DEV's

@@ -3721,3 +3721,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   3 ahead of their existence; it is to be read again when that step's package is built.
 - Nothing here authorises any operation on the owner's PC.
 - Next numbers: EX_285 (the reviewer's reply), entry 183, RAT-44.
+
+## 183. 23 November 2026, 20:24 - OWNER: the order of the next steps (EX_285, then the rulebook reviewed and ratified, then the rest); H-1 v10 after step 2 is installed
+
+- **The owner's words (20:24):** "how about Waiting on the reviewer's EX_285. then reviewer check The runner's rulebook
+  and we ratify it, then the other steps." and "ok to a full H-1 v10 once step 2 is installed".
+- **DECIDED (owner), the order:** (1) the reviewer's EX_285 on package STEP2_Research_Engine_v1r1; (2) the rulebook
+  v0.7 candidate reviewed by the reviewer and ratified by the owner (RAT-44); (3) then the other steps.
+- **Claude's proposal within that order, awaiting the owner's word:** after RAT-44, a Windows rehearsal of step 2 by
+  the runner (the suite in a task clone; a scratch tree on invented results under `D:\DELETE_ME\a_p_r_i_r\` running the
+  real launchers, with a planted interruption), before the owner's own install of step 2 and DEV's first fill. For
+  it the candidate needs one amendment: a scratch tree on D: receives code only, never `source_data`, `results` or
+  `transitory_data`; the suite stays in task clones under the existing rules.
+- **DECIDED (owner): H-1 v10,** a full refresh of the primary handover, is written once step 2 is installed.
+- Nothing here authorises any operation on the owner's PC.
+- Next numbers: EX_285 (the reviewer's reply), entry 184, RAT-44.
