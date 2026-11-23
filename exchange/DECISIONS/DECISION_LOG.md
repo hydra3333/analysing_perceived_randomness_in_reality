@@ -3543,3 +3543,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Model:** Fable (High), as suggested for the core of step 2 (H-1 v9 section 10); Claude says when the Fable part is
   finished.
 - Next numbers: EX_282, entry 177, RAT-44.
+
+## 177. 23 November 2026, 15:59 - build step 2: the plan committed; OWNER: DEV's research results stay out of Git; review in slices is Claude's choice
+
+- **The plan:** `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_BUILD_PLAN_v0_1.md` (main `1b1713a`): a new package `src/research/` beside
+  the old system, which is not edited; three slices (A identity and records; B the job and OV-1; C reports and
+  launchers); nine choices marked RECOMMENDED with their alternatives; two questions put to the owner.
+- **The owner's words (15:54):** "1. \"Should DEV's research results be left out of Git\" Yes, we call always copy results
+  back from PROD or PROD backups when needed.  2. your choice."
+- **DECIDED (owner):** DEV's research results are not tracked by Git (`.gitignore` lines travel in the step 2 package).
+  **Claude's choice, as he allowed:** review in slices as each is ready, one install at the end on his own go.
+- **Progress (cloud):** the first seven modules of slice A are written; the new forecast engine gives the same view
+  digest, scores, ranking, TOP and WORST as the old assembly for all 40 variants in both games at two targets each
+  (160 forecasts, no difference; an ad hoc check, to become a test of the package).
+- Next numbers: EX_282, entry 178, RAT-44.
