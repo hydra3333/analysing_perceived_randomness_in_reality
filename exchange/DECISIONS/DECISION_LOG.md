@@ -3941,3 +3941,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Why it was not caught before the push:** Claude looked at the list of changed files and not at the count of
   changed lines. The count is looked at before every commit from now on.
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 194; RAT-45.
+
+## 194. 23 November 2026, 21:20 - EX_289 received: the reviewer's FOCUSED RECHECK PASS on the exact v0.7r2 bytes the owner ratified
+
+- **EX_289 (reviewer; main `0a4ec56`, committed 21:08, two minutes after the owner's ratification):** "FOCUSED RECHECK
+  PASS. F287-C01 is CLOSED." It computed the candidate's SHA-256 itself (`faed8959...1dc00e43`, the ratified bytes),
+  applied both diffs and got the candidate exactly, and found no unreported change. Of Claude's added phrase it
+  says: "a sensible improvement over my example in EX_287: it preserves the runner's already authorised outbox report
+  and checked commit-report operation." It read the repository at `bf0251b`, where the installed file was still v0.6;
+  the install of entry 192 came after.
+- **So entry 192's statement is overtaken:** it said the reviewer had not read v0.7r2's three edits. That was true when
+  the owner ratified; the reviewer has since read and passed them. Every byte of the ratified rulebook has now been
+  reviewed.
+- **One line of the installed rulebook says the old thing.** Its version line reads "(the candidate v0.7r2; its last
+  three edits, which EX_287 asked for, were ratified without a further review)". No rule is affected. Changing an
+  installed, ratified rulebook is not Claude's to do unasked: put to the owner, with the recommendation to change
+  those status words to name the PASS of EX_289.
+- **Numbers:** EX_289 is the reviewer's, on the rulebook. EX_288 (step 2) is still unanswered; its reply takes the
+  next free number.
+- Nothing is authorised on the owner's PC. A rehearsal needs a task file and the owner's own go (entry 192).
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 195; RAT-45.

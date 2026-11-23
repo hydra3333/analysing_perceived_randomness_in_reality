@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:16 Australia/Adelaide (entries 192 and 193: RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:20 Australia/Adelaide (entries 192 to 194: EX_289 is the reviewer's PASS on the ratified v0.7r2 bytes; RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
@@ -13,6 +13,8 @@ durable EX messages are authoritative.
   `D:\DELETE_ME\` for rehearsals. **It authorises no task.** Before a rehearsal: a task file, the owner's go, and his
   decision on how it is run, because his `.claude/settings.json` still denies the runner every `.bat`, every delete
   and reading `results` (entry 192). Start a new Claude Code conversation after the next pull.
+  **The reviewer passed the ratified bytes (EX_289, entry 194).** Waiting on the owner: whether the version line's
+  words "ratified without a further review" are changed to name that PASS.
 - **EX_288 IS WITH THE REVIEWER; THE RULEBOOK CANDIDATE IS NOW v0.7r2 (entries 189 and 190; 23 November 2026).**
   **Step 2:** `exchange/EX_288_Claude.zip` carries package `STEP2_Research_Engine_v1r2` for the recheck of F285-B01 (the
   number is 288 because the reviewer took EX_287 for the rulebook). **Waiting on:** the reviewer. **The rulebook:**
