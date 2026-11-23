@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 15:20 Australia/Adelaide (entry 174: RAT-43, H-1 v9 and H-2 v5r1 ratified and installed in doc/HANDOVER/). **Next: the owner starts a new reviewer chat with the installed H-2 v5r1 blurb; then build step 2 on his go.**
+**Last updated:** 23 November 2026, 15:38 Australia/Adelaide (entry 175: the new ChatGPT reviewer chat's takeover accepted). **Next: build step 2 on the owner's own go.**
 
 ## For the owner: NOW
 
+- **NEW REVIEWER CHAT IN ROLE (entry 175; 23 November 2026).** Takeover from H-2 v5r1 accepted by the owner, with rights
+  R-1 to R-11 and its repository access as before; no RAT number. Both chats now work from H-1 v9 and H-2 v5r1 (RAT-43).
+  **Next: build step 2 on the owner's own go** (Fable (High) suggested for its core).
 - **RAT-43 (entry 174; 23 November 2026, 15:18): H-1 v9 and H-2 v5r1 RATIFIED and INSTALLED.** In force:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v9.md` (`8c28f82c...b182b1`) and
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` (`234e5917...14edc8`). **To start the new reviewer chat:** paste
