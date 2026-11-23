@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:12 Australia/Adelaide (entry 192: RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:16 Australia/Adelaide (entries 192 and 193: RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 

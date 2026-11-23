@@ -3927,3 +3927,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Claude Code conversation before the next task.
 - **Owed at the next register edition:** RAT-41's install, RAT-42, RAT-43 and RAT-44 (register v0.32 is not edited).
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 193; RAT-45.
+
+## 193. 23 November 2026, 21:16 - Claude's mistake in the RAT-44 commit put right: three record files had lost their CRLF line endings
+
+- **What happened.** The commit of entry 192 (main `063630f`) changed five lines of `exchange/OWNER_REMINDERS.md`, two of
+  `exchange/OWNER_ROADMAP.md` and one of `exchange/CLAUDE_WEB_TOOLS/README.md`, and Claude's script wrote all three back
+  with LF line endings where they hold CRLF. Git therefore showed nearly every line of them as changed. No wording
+  was lost or altered beyond the lines of entry 192. Claude saw it in the size of the commit, straight after the push.
+- **Put right in the next commit:** the three files are CRLF again, every line. Checked with `git diff --numstat`
+  against the commit before entry 192 (`d73ed80`): 5 lines added in the reminders, 2 added and 1 removed in the
+  roadmap, 1 added in the tools README, and nothing else. The rulebook, the decision log and the continuity page
+  were not affected (they are LF and stayed LF).
+- **Why it was not caught before the push:** Claude looked at the list of changed files and not at the count of
+  changed lines. The count is looked at before every commit from now on.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 194; RAT-45.
