@@ -3336,3 +3336,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **State:** the tidy-up is BUILT, CLOUD-PROVED and WITH THE REVIEWER; NOT INSTALLED. No operation on the owner's PC is
   authorised.
 - Next numbers: EX_280 (the reviewer), entry 167, RAT-43.
+
+## 167. 23 November 2026, 11:14 - REVIEWER: EX_280 PASS of the light tidy-up package TIDY1_Method_Comments_v1; no changes requested
+
+- **The owner's words (11:12):** "EX_280 is committed at e045f98. Independent review PASS. Please read the full
+  disposition. No changes requested; await my installation GO."
+- **EX_280 (main `e045f98`):** PASS, for the owner's consideration; no RECHECK. Hashes recomputed from GitHub match
+  EX_279. Answers: (1) the comments-only check is sufficient as the direct proof, with the suite and the equivalence
+  check as complementary evidence; (2) no material error found in the new headers or comments; (3) no change needed
+  to the sheet. One point for the install: a baseline failure other than the three known failing tests, or a
+  materially different one, is referred before going on (the sheet's existing STOP rule covers it). No new ZIP of the
+  project folder is needed.
+- **State:** the tidy-up is BUILT, CLOUD-PROVED and REVIEWED (PASS); NOT INSTALLED. The install waits for the owner's
+  own go; then Claude refreshes H-1 before build step 2 (entry 166).
+- Next numbers: EX_281, entry 168, RAT-43.

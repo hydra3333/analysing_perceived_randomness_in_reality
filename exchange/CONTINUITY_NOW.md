@@ -4,10 +4,12 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 11:03 Australia/Adelaide (entry 166: E_1's six pinned modules stay as they are; EX_279, the tidy-up package, issued to the reviewer). **Next: the reviewer's EX_280; after a PASS, the owner's own go for the install; then Claude refreshes H-1 before build step 2.**
+**Last updated:** 23 November 2026, 11:14 Australia/Adelaide (entry 167: the reviewer's EX_280 PASS of the tidy-up package). **Next: the owner's own go for the install by the sheet; then Claude refreshes H-1 before build step 2.**
 
 ## For the owner: NOW
 
+- **EX_280: THE REVIEWER'S PASS of the tidy-up package (entry 167; 23 November 2026, 11:14).** No changes requested.
+  The install waits for the owner's own go (sheet `exchange/EX_279_Claude/TIDY1_Method_Comments_v1/INSTALL_AND_RUN_SHEET.md`).
 - **EX_279 ISSUED (entry 166; 23 November 2026, 11:03):** the tidy-up package `TIDY1_Method_Comments_v1` is with the
   reviewer (reply as EX_280). The owner accepted leaving E_1's six pinned modules without new comments, and agreed that
   Claude refreshes the H-1 handover once the tidy-up is installed, before build step 2 starts. Not installed.
