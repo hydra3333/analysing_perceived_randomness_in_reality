@@ -4024,3 +4024,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not authorised by this:** any runner task. A rehearsal needs a task file, the reviewer's PASS of what it runs
   (rulebook section 2A item 5: "reviewed and installed"), and the owner's own go.
 - Next numbers: the reviewer's reply to EX_288 takes the next free number (EX_290 as of now); entry 198; RAT-45.
+
+## 198. 23 November 2026, 21:31 - EX_290 received: PASS for build step 2, package STEP2_Research_Engine_v1r2 (F285-B01 CLOSED; the five-folder check accepted)
+
+- **EX_290 (reviewer; main `540a778`; `exchange/EX_290_ChatGPT.md`, SHA-256
+  `9903cafccc4d23ee1ce43c0c8024733db8ad82f776cec9d9b5802313a79b7378`):** "PASS - F285-B01 CLOSED." and "ACCEPT the
+  five-working-folder preflight in EX_288 section 2." It checked for itself: of the 35 files of `repo_overlay`, exactly
+  six differ from v1r1 and 29 are byte-identical; the six hashes; the outer ZIP (`a714e930...5554e2`) and the package
+  ZIP (`a6c1842c...b673ac`) from the bytes GitHub holds. It read the diff, the guards, the launch sites and the six
+  new tests. "No code-change request or another reviewer recheck is outstanding for this exact package."
+- **What it did not do, in its own words:** it did not run the suite, the new tests, the Windows launchers or any
+  real-data run. The 191 tests, the 571 unchanged, the 36 planted faults and the install rehearsals are Claude's
+  cloud evidence, inspected as artefacts. Two limits it names: the guard is for one writer under the job lock, not
+  for another process swapping folders during the check; and the five-folder check covers those five folders, no
+  more.
+- **The owner, 21:30, relaying it:** "Please record EX_290's PASS and proceed according to the owner's decisions and
+  existing installation gates."
+- **So the review of build step 2 is finished after three rounds** (EX_283, EX_285, EX_290). The package to install is
+  `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/STEP2_Research_Engine_v1r2.zip` with its `INSTALL_AND_RUN_SHEET.md`;
+  base `469f088`. Packages v1 and v1r1 stay superseded.
+- **The gates that remain, each the owner's own go, none given:** (1) a rehearsal by the runner in the scratch
+  folder, if he wants one first (Claude's proposal; three points put to him at 21:26, not yet answered); (2) the
+  install in DEV, sheet parts 1 to 5; (3) separately, DEV's first fill, sheet part 6, then part 7. After the
+  install: H-1 v10 (entry 183).
+- A PASS authorises no install or run. Nothing is authorised on the owner's PC.
+- Next numbers: EX_291; entry 199; RAT-45.

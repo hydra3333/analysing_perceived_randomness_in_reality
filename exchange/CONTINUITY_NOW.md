@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:25 Australia/Adelaide (entries 192 to 197: EX_289 is the reviewer's PASS on the ratified v0.7r2 bytes; RAT-44, the runner's rulebook v0.7 ratified and installed; EX_288, step 2 package v1r2, is with the reviewer for recheck; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:31 Australia/Adelaide (entry 198: EX_290 is the reviewer's PASS for build step 2, package v1r2; the rulebook v0.7 is installed (RAT-44); waiting on the owner's go for a scratch rehearsal or the install; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **BUILD STEP 2 HAS THE REVIEWER'S PASS (EX_290; entry 198; 23 November 2026).** Package
+  `STEP2_Research_Engine_v1r2` (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`, with `INSTALL_AND_RUN_SHEET.md`). No
+  correction is outstanding. **Waiting on the owner, each his own go:** (1) a rehearsal by the runner under
+  `D:\DELETE_ME\` first, if he wants one (Claude's proposal: the sheet's parts 1 to 7 in a scratch tree; the task
+  file is not written yet); (2) the install in DEV, sheet parts 1 to 5; (3) separately, DEV's first fill (part 6)
+  and part 7. Then H-1 v10.
 - **THE RUNNER'S RULEBOOK v0.7 IS RATIFIED AND INSTALLED (RAT-44; entry 192; 23 November 2026).**
   `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, SHA-256 begins `4416c4b57456` (entry 195); it adds section 2A, the scratch folder
   `D:\DELETE_ME\` for rehearsals. **It authorises no task.** Before a rehearsal: a task file, the owner's go, and his
@@ -16,7 +22,7 @@ durable EX messages are authoritative.
   **The reviewer passed the ratified bytes (EX_289, entry 194)**, and the version line says so (entry 195).
 - **EX_288 IS WITH THE REVIEWER; THE RULEBOOK CANDIDATE IS NOW v0.7r2 (entries 189 and 190; 23 November 2026).**
   **Step 2:** `exchange/EX_288_Claude.zip` carries package `STEP2_Research_Engine_v1r2` for the recheck of F285-B01 (the
-  number is 288 because the reviewer took EX_287 for the rulebook). **Waiting on:** the reviewer. **The rulebook:**
+  number is 288 because the reviewer took EX_287 for the rulebook). (Answered: PASS, EX_290, entry 198.) **The rulebook:**
   EX_287 closed EX_286's three findings and asked one correction of wording (rule 11's STOP sentence), made in
   `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7r2_CANDIDATE.md` (SHA-256 begins `faed89593e49`). (Done: RAT-44, entry 192; the
   installed rulebook is v0.7.) The five link tests of step 2 stay in (owner, entry 189).
