@@ -3320,3 +3320,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next, each on the owner's word:** his answer on E_1's six modules; EX_279 to the reviewer when he asks for it; then
   his install by the sheet, on his own go.
 - Next numbers: EX_279, entry 166, RAT-43.
+
+## 166. 23 November 2026, 11:03 - OWNER: E_1's six pinned modules stay as they are; EX_279 issued to the reviewer; H-1 to be refreshed after the tidy-up's install
+
+- **The owner's words (11:01):** ""six of E_1's own modules get no new comments. Is that acceptable?" Yes I accept your
+  judgement in that matter. Yes to issue EX_279 to the reviewer. now please. Yes to refreshing the H-1 handover once
+  the tidy-up is installed, before step 2 starts."
+- **Decided:** the tidy-up leaves E_1's six own modules (`E_001/__init__.py`, `e1_common_reader_bridge.py`,
+  `e1_historical_appearance_frequency.py`, `e1_standalone_contract.py`, `e1_training_view.py`, `multigame_e1.py`)
+  byte for byte as they are, because the old system's archive tests pin their bytes (package note v0.1 section 6,
+  the recommended option). RAT-40 note 3 is met for the other 37 files.
+- **Issued:** EX_279 (`exchange/EX_279_Claude.zip` and `exchange/EX_279_Claude/`), the tidy-up package
+  `TIDY1_Method_Comments_v1` (unchanged, SHA-256 `a8d2f1136a41...8ad4c`) for the reviewer's review; reply as EX_280.
+- **Agreed for later:** Claude refreshes the H-1 handover once the tidy-up is installed and before build step 2 starts.
+- **State:** the tidy-up is BUILT, CLOUD-PROVED and WITH THE REVIEWER; NOT INSTALLED. No operation on the owner's PC is
+  authorised.
+- Next numbers: EX_280 (the reviewer), entry 167, RAT-43.

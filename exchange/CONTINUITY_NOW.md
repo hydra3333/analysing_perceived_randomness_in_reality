@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 10:21 Australia/Adelaide (entry 165: the light tidy-up of the method files is BUILT and CLOUD-PROVED; not reviewed, not installed). **Next, on the owner's word: his answer on E_1's six modules; EX_279 to the reviewer when he asks; then his install by the sheet.**
+**Last updated:** 23 November 2026, 11:03 Australia/Adelaide (entry 166: E_1's six pinned modules stay as they are; EX_279, the tidy-up package, issued to the reviewer). **Next: the reviewer's EX_280; after a PASS, the owner's own go for the install; then Claude refreshes H-1 before build step 2.**
 
 ## For the owner: NOW
 
+- **EX_279 ISSUED (entry 166; 23 November 2026, 11:03):** the tidy-up package `TIDY1_Method_Comments_v1` is with the
+  reviewer (reply as EX_280). The owner accepted leaving E_1's six pinned modules without new comments, and agreed that
+  Claude refreshes the H-1 handover once the tidy-up is installed, before build step 2 starts. Not installed.
 - **THE LIGHT TIDY-UP IS BUILT AND CLOUD-PROVED (entry 165; 23 November 2026); NOT REVIEWED, NOT INSTALLED.** The
   owner's go: "thanks. go the next step which you suggest is tidy up". 37 existing method files get fuller headers
   and comments; no code changes (the comments-only check `RESULT: PASS`; the suite identical, 571 of 571; the
