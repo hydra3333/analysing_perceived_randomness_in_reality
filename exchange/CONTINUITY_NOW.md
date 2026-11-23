@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 20:24 Australia/Adelaide (entry 183: the owner's order - EX_285, then the rulebook v0.7 reviewed and ratified (RAT-44), then the rest; H-1 v10 after step 2 is installed; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 20:28 Australia/Adelaide (entry 184: the rulebook v0.7 candidate amended - real results may be used in the scratch folder on D:; still no force until RAT-44; waiting on EX_285).
 
 ## For the owner: NOW
 

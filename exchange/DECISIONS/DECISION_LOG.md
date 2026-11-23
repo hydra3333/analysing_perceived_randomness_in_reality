@@ -3736,3 +3736,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **DECIDED (owner): H-1 v10,** a full refresh of the primary handover, is written once step 2 is installed.
 - Nothing here authorises any operation on the owner's PC.
 - Next numbers: EX_285 (the reviewer's reply), entry 184, RAT-44.
+
+## 184. 23 November 2026, 20:28 - OWNER: real results may be used in the runner's scratch folder; the rulebook v0.7 candidate amended
+
+- **The owner's words (20:27):** "section 2A says no real draw may be copied into the scratch folder - so lets remove
+  that and related limitations instead, there is no good reason for that can see for such things introduce
+  additional overheads we do not need."
+- **DECIDED (owner):** the candidate's "invented results only" limit and the limits that followed from it are
+  removed. Claude does not object: the limit was a carry-over of the former holdout rule, and the project's own
+  rule that only the owner's runs of the reviewed programs count already covers what a scratch run computes.
+- **The candidate as amended** (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/CLAUDE_v0_7_CANDIDATE.md`, SHA-256 `8edb63d8...95e8d5`;
+  `make_rulebook_v0_7.py`, now twelve counted edits; the diff beside it): a task may copy this repository's accepted
+  results and records into a scratch tree by reading, and under `D:\DELETE_ME\` the runner may read anything and run
+  the system on real draws; rules 4, 5 and 9 and section 7 point to section 2A for that folder only. **Kept, because
+  they protect real things and cost nothing:** nothing is ever written to this repository's `source_data`, `results`
+  or `transitory_data`; a scratch run is a rehearsal, never a result of the project, and nothing of it but the report
+  enters the repository; never the updater or any lottery website; never the real QA or PROD; the real DEV tree only
+  as a place to copy from; the main `.venv` never changed.
+- **It has no force** until the reviewer has reviewed it and the owner has ratified it (RAT-44); the installed
+  rulebook stays v0.6.
+- Next numbers: EX_285 (the reviewer's reply), entry 185, RAT-44.
