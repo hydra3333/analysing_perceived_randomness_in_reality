@@ -4105,3 +4105,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
   a round trip, where the rulebook I had just had ratified says a STOP is a STOP. The cold read caught both.
 - **Not authorised by this:** running the task. Only the owner's go to the runner starts it.
 - Next numbers: EX_292; entry 201; RAT-45.
+
+## 201. 23 November 2026, 22:13 - EX_292 received: PASS for the text of TASK_T025 r1; the task waits for the owner's go
+
+- **EX_292 (reviewer; main `6796f95`; `exchange/EX_292_ChatGPT.md`, SHA-256
+  `13a2bfd95e7989f1b737bcfe36c094d7e09ec60be875847427e764ddb3d53845`):** "PASS for the text of TASK_T025 r1. F291-B01,
+  F291-B02, F291-C01 and F291-C02 are CLOSED." It verified both hashes and rebuilt the corrected task from the diff.
+  A cold read only: it ran no command and no Windows test.
+- **The task as passed:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md`, SHA-256
+  `c9482a9a5c87edf57834d5d1118309dbab44aea553baae3ba3e1018dc5215fb5` (unchanged since main `b963cdd`; checked at `6796f95`).
+- **Still the owner's own go, not given by this:** "Do inbox\TASK_T025.md" to the runner, after `git pull --ff-only`, in a
+  new Claude Code conversation, with the folder `D:\DELETE_ME` existing and nothing of the project running. About
+  two hours. Afterwards: he pushes the report; Claude reads it; he deletes `D:\DELETE_ME\a_p_r_i_r\T025` when Claude
+  says so. Then his own install in DEV (sheet parts 1 to 5) and, separately, DEV's first fill.
+- Next numbers: EX_293; entry 202; RAT-45.

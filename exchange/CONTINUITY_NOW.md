@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 22:00 Australia/Adelaide (entry 200: EX_291 asked four corrections of TASK_T025's text, all made (r1), with the reviewer for a focused recheck; the task waits for the owner's go; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 22:13 Australia/Adelaide (entry 201: EX_292 is the reviewer's PASS for the text of TASK_T025 r1; the task waits only for the owner's go to the runner; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
@@ -12,8 +12,8 @@ durable EX messages are authoritative.
   `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md`: the install sheet's parts 1 to 4 in a task clone, then parts 5
   to 7 in a scratch tree under `D:\DELETE_ME\a_p_r_i_r\T025\` (about two hours). **Waiting on the owner:** his go to
   the runner (after `git pull --ff-only`, in a new Claude Code conversation, with `D:\DELETE_ME` existing), and
-  the reviewer's focused recheck of the corrected task (EX_291 asked four corrections of its text, all made: r1,
-  entry 200). Afterwards he deletes the scratch folder himself. Then: his
+  nothing else: the reviewer passed the corrected task's text (EX_291's four corrections made, r1, entry 200; PASS
+  in EX_292, entry 201). Afterwards he deletes the scratch folder himself. Then: his
   own install in DEV (sheet parts 1 to 5), and separately DEV's first fill.
 - **BUILD STEP 2 HAS THE REVIEWER'S PASS (EX_290; entry 198; 23 November 2026).** Package
   `STEP2_Research_Engine_v1r2` (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`, with `INSTALL_AND_RUN_SHEET.md`). No
