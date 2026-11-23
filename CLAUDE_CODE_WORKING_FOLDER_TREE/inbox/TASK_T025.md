@@ -1,6 +1,6 @@
 # TASK_T025 - Windows rehearsal of build step 2 (package STEP2_Research_Engine_v1r2): the install in a task clone, then the first research fill in a scratch tree on D:
 
-**Task ID:** T025. **Date:** 23 November 2026. **Author:** the Claude web chat. Rulebook v0.7 (RAT-44). **Section 2A applies to steps 17 to 29, and only there, in the folder `D:\DELETE_ME\a_p_r_i_r\T025\`.**
+**Task ID:** T025. **Date:** 23 November 2026 (r1: the four corrections of the reviewer's EX_291, to steps 25, 26, 28 and 30). **Author:** the Claude web chat. Rulebook v0.7 (RAT-44). **Section 2A applies to steps 17 to 29, and only there, in the folder `D:\DELETE_ME\a_p_r_i_r\T025\`.**
 
 **Purpose.** Build step 2 (the new research engine) has the reviewer's PASS (EX_290) and has never run on Windows. Before the project owner installs it in the real tree, this task does what his install sheet does, where nothing real can be harmed: parts 1 to 4 of the sheet in a disposable task clone that cannot push (the suite before and after, the verifier, the commit), and parts 5 to 7 in a scratch tree under `D:\DELETE_ME\` with its own Python environment (the two launchers' first real use, the first fill of both games on the real results, a second job, and the comparison with the old records). **What a scratch run computes is a rehearsal, not a result of the project.**
 
@@ -202,18 +202,18 @@ tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/second_job.txt"
 ```
 Expected: for each game a line with `written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files`; no line with `WARNING`, `REFUSED` or `STOP`; the line `The job finished.`; and as the last line `JOB EXIT CODE 0`. Copy the whole output into the report.
 
-**25. The withdrawal launcher answers** (it is given no variant, so it changes nothing; this shows only that the second launcher starts on Windows).
+**25. The withdrawal launcher starts** (`--help` only prints the command's help; it names no variant and changes nothing).
 ```
-"D:/DELETE_ME/a_p_r_i_r/T025/tree/Withdraw_Variant.bat" > "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_usage.txt" 2>&1; echo "WITHDRAW EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_usage.txt"
-tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_usage.txt"
+"D:/DELETE_ME/a_p_r_i_r/T025/tree/Withdraw_Variant.bat" --help > "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_help.txt" 2>&1; echo "WITHDRAW EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_help.txt"
+tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/withdraw_help.txt"
 ```
-Record the output; **this step does not stop the task** whatever it prints. Expected: a usage or refusal message of the program (not a Windows "not recognized" message), and `WITHDRAW EXIT CODE 2`. Copy the whole output into the report.
+Expected: a first line beginning `usage: Withdraw_Variant.bat`, a line `Withdraw a defective variant (specification 11).`, and as the last line `WITHDRAW EXIT CODE 0`. Anything else (a line with `REFUSED`, a Windows "not recognized" message, another exit code) is a STOP. Copy the whole output into the report.
 
 **26. (long) Copy the old system's development run folders from the main repository into the scratch tree, by reading** (rulebook section 2A item 3; nothing is written in the main repository; these folders are ignored by Git and exist only on this PC).
 ```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import os, shutil; s = r'E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\real\development\contract_runs'; d = r'D:\DELETE_ME\a_p_r_i_r\T025\tree\results\real\development\contract_runs'; there = os.path.isdir(s); there and shutil.copytree(s, d); print('OLD RUN FOLDERS COPIED' if there else 'OLD RUN FOLDERS NOT PRESENT')" > "D:/DELETE_ME/a_p_r_i_r/T025/evidence/old_runs_copy.txt" 2>&1; echo "COPY EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T025/evidence/old_runs_copy.txt"
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import os, shutil; p = r'E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\real\development'; d = r'D:\DELETE_ME\a_p_r_i_r\T025\tree\results\real\development\contract_runs'; names = [n for n in os.listdir(p) if n.lower() == 'contract_runs']; names and shutil.copytree(os.path.join(p, names[0]), d); print('OLD RUN FOLDERS COPIED' if names else 'OLD RUN FOLDERS NOT PRESENT')" > "D:/DELETE_ME/a_p_r_i_r/T025/evidence/old_runs_copy.txt" 2>&1; echo "COPY EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T025/evidence/old_runs_copy.txt"
 ```
-Expected, in `old_runs_copy.txt`: `OLD RUN FOLDERS COPIED` or `OLD RUN FOLDERS NOT PRESENT` (either is accepted; step 29 says what each means), then `COPY EXIT CODE 0`. Copy the whole file into the report. **If the permission system refuses this command, do not look for another way: record the refusal, count it as `OLD RUN FOLDERS NOT PRESENT`, and go on to step 27.** That is the one case in this task where a refused command is not a STOP; the comparison then says that its second part compared nothing.
+The command lists the folder `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\results\real\development` and looks for the name `contract_runs` in that list. Expected, in `old_runs_copy.txt`: `OLD RUN FOLDERS COPIED`, or `OLD RUN FOLDERS NOT PRESENT` when the list holds no such name (only that case is "not present"; step 29 says what each means); then `COPY EXIT CODE 0`. Copy the whole file into the report. **A STOP is: the permission system refusing this command; a traceback or any error in the file (a folder that cannot be listed or read, a copy that fails); or any other exit code. Do not look for another way to make the copy.**
 
 **27. (long) The early comparison with the old development records** (it reads only; a few minutes).
 ```
@@ -226,16 +226,20 @@ tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/early_comparison.txt" | grep 
 tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/early_comparison.txt" | grep -c " equal$"
 tr -d '\r' < "D:/DELETE_ME/a_p_r_i_r/T025/evidence/early_comparison.txt" | grep -c "^DIFFERENT"
 ```
-Copy the output of the three commands into the report. Lines beginning `DIFFERENT` are counted and never copied (they may show numbers drawn).
+Copy the output of the three commands into the report. Lines beginning `DIFFERENT` are counted and never copied (they may show numbers drawn). **The exit codes of the second and third commands:** `grep -c` prints its count and exits 0 when the count is above 0, and exits 1 when the count it prints is exactly 0. For these two commands an exit code 1 together with a printed `0` is therefore not an error. An exit code 2, no number printed, or an exit code that does not fit the number printed, is a STOP. Whether the numbers themselves are the right ones is step 29.
 
 **29. What step 28 must show.**
 - **If step 26 said `OLD RUN FOLDERS COPIED`:** for each game one line `part 1: old score records (TOP and WORST): N; equal in the new score lists: N; DIFFERENT: 0`, one line beginning `part 2: old development forecasts read from the run folders:` with `DIFFERENT: 0`, and one line `part 2: forecasts named by the tracked rank ledgers: N; of those not among the old forecasts compared: 0`; a line beginning **`RESULT: PASS - COMPLETE - both games; all 34800 old score records equal the new score lists`**; `COMPARE EXIT CODE 0`; the second command prints **160**; the third prints **0**.
-- **If step 26 said `OLD RUN FOLDERS NOT PRESENT`, or its command was refused:** the two `part 1` lines as above with `DIFFERENT: 0`; a line beginning `RESULT: PARTIAL - nothing differed (34800 old scores were compared in part 1)`; `COMPARE EXIT CODE 3`; the third command prints **0**. Record the second command's number, whatever it is.
+- **If step 26 said `OLD RUN FOLDERS NOT PRESENT`:** the two `part 1` lines as above with `DIFFERENT: 0`; a line beginning `RESULT: PARTIAL - nothing differed (34800 old scores were compared in part 1)`; `COMPARE EXIT CODE 3`; the third command prints **0**. Record the second command's number, whatever it is.
 - Anything else is a STOP: a `DIFFERENT:` count above 0, a third number above 0, `RESULT: STOP` or `RESULT: REFUSED`.
 
 ## Clean-up (always, whether the task passed or stopped)
 
-**30. Remove the task clone, the extracted package and the clone's evidence folder.**
+**30. Remove the task clone, the extracted package and the clone's evidence folder, if this task created them.** First look whether the task's folder is there:
+```
+"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import os; print('TASK FOLDER PRESENT' if os.path.lexists(r'E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\scratch\T025') else 'TASK FOLDER NOT PRESENT: nothing to remove')"
+```
+If it prints `TASK FOLDER NOT PRESENT: nothing to remove` (the task stopped before step 4 made the clone), record that and go on to step 31 without the next command. If it prints `TASK FOLDER PRESENT`, run:
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\tools\cc_clone.py" remove --task T025
 ```

@@ -4077,3 +4077,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not authorised by this:** running the task. It needs the owner's own go ("Do inbox\TASK_T025.md" to the runner),
   after his `git pull --ff-only` and in a new Claude Code conversation.
 - Next numbers: EX_291; entry 200; RAT-45.
+
+## 200. 23 November 2026, 22:00 - EX_291 received (TASK_T025 cold read: RECHECK, four corrections of the task's text); all four made (TASK_T025 r1)
+
+- **EX_291 (reviewer; main `6541c9c`), relayed by the owner at 21:58 with a clarification:** the rehearsal's design is
+  accepted (the clone and scratch separation, the scratch settings, the copy from DEV by reading, the verifier, the
+  tests, the report); no safety objection; four corrections before the owner's go. F291-B01: step 25 made an
+  argument error on purpose and then passed over it, against rule 10. F291-B02: step 26 treated a refusal by the
+  permission system as if the old run folders were absent. F291-C01: step 28's two `grep -c` commands exit 1 when
+  the right count is 0. F291-C02: step 30 tried to remove a clone that an early STOP never made, which would block
+  the report's commit.
+- **All four accepted and made, and nothing else changed:**
+  1. Step 25 runs `Withdraw_Variant.bat --help`; expected the help text and exit code 0 (the text was checked by
+     running the command's `--help` in the cloud); anything else is a STOP.
+  2. Step 26 lists the parent folder `results\real\development` and looks for the name `contract_runs` in the list.
+     Only a list without that name gives `OLD RUN FOLDERS NOT PRESENT`. A refusal by the permission system, a folder
+     that cannot be listed or read, a failed copy or another exit code is a STOP. The logic was run in the cloud in
+     three cases: present (copied, exit 0), absent (not present, exit 0), parent missing (error, exit 1).
+  3. Step 28 says that for its two count commands exit code 1 with a printed `0` is not an error; exit code 2, no
+     number, or a code that does not fit the number is a STOP. The comparison's own criteria (step 29) are unchanged.
+  4. Step 30 first prints whether the task's folder exists; if not, "nothing to remove" is recorded and the report
+     follows; otherwise the existing guarded removal. The scratch folder on D: is left alone in every case.
+- **Files:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T025.md` (SHA-256 `c9482a9a5c87edf57834d5d1118309dbab44aea553baae3ba3e1018dc5215fb5`; its header says r1); the exact
+  change `exchange/CLAUDE_WEB_TOOLS/t025/TASK_T025_TO_r1.diff` (SHA-256 `cec4a4734d43cef026c815f50a3d90b2f71c821a85f77f053b709363fabd211c`; 14 lines added, 10 removed); the plan
+  file and the settings file are unchanged. 33 steps as before.
+- **How the process went (Claude's note):** B01 and B02 were the same fault, twice: I wrote "this is not a STOP" to save
+  a round trip, where the rulebook I had just had ratified says a STOP is a STOP. The cold read caught both.
+- **Not authorised by this:** running the task. Only the owner's go to the runner starts it.
+- Next numbers: EX_292; entry 201; RAT-45.
