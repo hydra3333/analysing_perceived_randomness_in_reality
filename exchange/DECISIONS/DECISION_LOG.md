@@ -3386,3 +3386,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** Claude refreshes the H-1 handover (agreed, entry 166); then build step 2 on the owner's own go
   (Fable (High) suggested for its core).
 - Next numbers: EX_281, entry 170, RAT-43.
+
+## 170. 23 November 2026, 14:47 - the H-1 v9 CANDIDATE written (the refresh the owner agreed in entry 166); not reviewed, not ratified
+
+- **What it is:** H-1 v8 brought up to date after build step 1 and the light tidy-up were installed. Built from the
+  installed H-1 v8's Git bytes (`8230e3df...20c45e`, asserted) by `exchange/CLAUDE_WEB_TOOLS/h1v9/make_h1_v9.py` (SHA-256
+  `53ef31454652b3db3123f529d0ab55815c23001e23ae7fb58a7a11067d198010`) with counted replacements; sections 1, 2 and 2A are still H-1 v7r1's bytes (102 lines, `80987a07...51764427`,
+  asserted); Appendix A rebuilt from `HEAD`. Out: `exchange/CLAUDE_WEB_TOOLS/h1v9/out/Claude_Primary_Handover_H1_v9.md`
+  (SHA-256 `125549f5522555cb30e1a2a5ce6bc4ba68d34b000ddea2a0a96554ca4c74413b`) and its blurb (`1cbe95bedb9741a610760b25de80e24eb3c798d9814287a4d28d8256c551dbe5`), with the exact diffs `H1_v8_TO_v9.diff` (304 lines added, 203 removed) and
+  `H1_v8_TO_v9_blurb.diff`, each shown to reproduce its candidate by `patch` and `cmp`.
+- **What changed** (its Appendix B): the state (0B: build step 1 and the tidy-up installed); what exists (7: the
+  layout, the suite's known result, the records and run folders); next work (10: from build step 2, with what each
+  step must settle, and the updater watchpoint as the owner's question); the runner (8.6: rulebook v0.6 and the narrow
+  amendment); eight lessons from the build (8.8); the build practice (12.3) and tools (12.2); open items (12.8); two new
+  traps (0A items 10, 11); smaller updates in 0, 0C, 3, 4.4, 5.3, 6, 9, 12.1, 12.6, 12.9; Appendix A and B.
+- **Checked while writing:** that `src/`, `tests/`, the root `.bat` files and `requirements.txt` differ from `cc0ab73` only by
+  step 1's and the tidy-up's changes; the updater's `holdout_opened` (line 157) and its uses (lines 243, 721, 817); the
+  layout's counts (40 `VARIANT.json`, 40 `method.py`).
+- **State:** CANDIDATE, NOT REVIEWED, NOT RATIFIED. H-1 v8 stays the installed handover. Nothing is authorised.
+- **Next, on the owner's word:** the reviewer's check (EX_281, when he asks); then his ratification (RAT-43) and its
+  installation in `doc/HANDOVER/`; then build step 2 on his go.
+- Next numbers: EX_281, entry 171, RAT-43.

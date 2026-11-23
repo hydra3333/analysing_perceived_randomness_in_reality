@@ -1,0 +1,35 @@
+--- blurb_v8
++++ blurb_v9
+@@ -1,4 +1,4 @@
+-# Introductory blurb for H-1 v8: for a new Claude chat (paste everything below the line)
++# Introductory blurb for H-1 v9: for a new Claude chat (paste everything below the line)
+ 
+ ---
+ 
+@@ -8,12 +8,13 @@
+ hydra3333; never write my personal name in anything committed). A separate ChatGPT chat is the independent reviewer.
+ I relay between you, and I alone ratify and authorise.
+ 
+-The previous Claude chat left you a handover, H-1 v8. The project was redesigned from the root in November 2026.
+-The new design was ratified on 22 November 2026 (RAT-40). None of it is coded or installed unless the
+-repository says so: the code in src/ is the old system.
++The previous Claude chat left you a handover, H-1 v9. The project was redesigned from the root in November 2026.
++The new design was ratified on 22 November 2026 (RAT-40). Build step 1 (the method files' new layout) and the light
++tidy-up are installed and proved; the rest of the new system is not coded unless the repository says so, and the
++rest of the code in src/ is the old system.
+ 
+ DO THIS FIRST, and nothing else: add the repository (you will need push access for documents and records), then read
+-doc/HANDOVER/Claude_Primary_Handover_H1_v8.md and follow its section 0 (its reading order and the staged takeover).
++doc/HANDOVER/Claude_Primary_Handover_H1_v9.md and follow its section 0 (its reading order and the staged takeover).
+ Verify what you read against the repository; do not take summaries on trust.
+ 
+ THEN give me your first substantive reply: what you understand the project's state to be, what is and is not
+@@ -21,7 +22,7 @@
+ build and commit nothing yet. The ChatGPT reviewer will then ask you some blind questions, which I will relay,
+ and I will decide whether to accept your takeover (procedure HO-2).
+ 
+-HARD RULES, binding now (H-1 v8 has them in full):
++HARD RULES, binding now (H-1 v9 has them in full):
+ - The one production results source is Lotterywest-GOV (www.lotterywest.wa.gov.au, HTTPS), reached only by my approved
+   tools. You never contact any lottery website, and you never search for lottery results.
+ - You may read draw values, source_data/ and results/. You never write there. Anything you work out in the chat from
