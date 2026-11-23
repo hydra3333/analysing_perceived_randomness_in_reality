@@ -4193,3 +4193,43 @@ section 17.2 (unpack it into a new folder, never over the clone).
   under test are those of TASK_T025 r1, which it passed (EX_292).
 - **Not covered:** the install of build step 2 in DEV, and DEV's first fill. Each is still his own separate go.
 - Next numbers: EX_293; entry 205; RAT-45.
+
+## 205. 24 November 2026, 05:50 - TASK_T026 ran: the launchers and the first fill PASSED on Windows; STOP at step 11 (the comparison tool); the cause found: a fault of Claude's comparison tool, not of the engine
+
+- **The report:** `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T026.md`, main `dc0f532`, SHA-256
+  `3b009412faea0169399f36203aafe584131c195f1e2cf3f9875f349e39838799`; run 23 November 23:33 to 24 November 00:27; the owner
+  relayed the runner's result at 05:47. No deviations.
+- **PASSED (steps 1 to 8), the things never before run on Windows:** `Run_Research.bat --game BOTH --no-update` from the
+  scratch tree's own Python: the first fill of both games in 46 minutes, `The job finished.`, exit code 0, no
+  `WARNING`, `REFUSED` or `STOP`; written POWERBALL 15118 forecasts and 15078 scores, OZLOTTO 6598 and 6558, **the same
+  four counts as the cloud's fill**. The same job again: every count 0, 3 minutes. `Withdraw_Variant.bat --help`:
+  the help text, exit code 0. The old run folders copied from DEV by reading (the settings did not refuse it).
+- **The comparison (steps 9 to 11): STOP.** Part 1: all 34800 old score records equal the new score lists, `DIFFERENT: 0`
+  (22884 and 11916). Part 2, POWERBALL: 17280 old forecasts read from the run folders, 14478 equal, `DIFFERENT: 2802`;
+  OZLOTTO: 8760 read, 5958 equal, `DIFFERENT: 2802`; `RESULT: STOP`, exit code 1. The 20 `DIFFERENT` lines were counted
+  and, as the task says, not copied.
+- **The cause, worked out by Claude from the report's numbers and the cloud's copy of the same fill (not from the
+  `DIFFERENT` lines, which Claude has not seen):** the old system kept a record, status `INSUFFICIENT_HISTORY`, for every
+  target of its development walk-forward at which a variant did not yet have enough earlier draws. The new lists,
+  as specification v0.6 section 5 says ("`TARGET` lines ... one per draw from `first_target`"), begin at each
+  variant's `first_target` and hold no line before it. The comparison tool asked for a `NO_FORECAST` line for each
+  such old record and so called it different. **The count fits exactly, in both games:** the forty variants' first
+  targets lie 0 (8 variants), 25 (1), 51 (14), 103 (14) and 207 (3) draws after the old walk-forward's first target
+  (read from the list headers of the cloud's fill: 1145, 1170, 1196, 1248, 1352 for POWERBALL; 1475, 1500, 1526, 1578,
+  1682 for OZLOTTO), and 25 + 14 x 51 + 14 x 103 + 3 x 207 = 2802. The other number fits too: the new lists hold 16
+  targets per variant that the old development runs never had (the 15 draws of the former holdout and the next
+  draw), 640 lines, and 640 - 2802 = -2162, the tool's "lines the new lists hold for other targets".
+- **What follows, if that is right:** every forecast the old system actually computed and kept (14478 and 5958,
+  20436 in all) is in the new lists with the same view digest, scores, ranking, TOP and WORST. The engine did what
+  the specification says. **The fault is in `tools/compare_fill_with_old_records.py`, Claude's:** that branch was never
+  run on real run folders, because the cloud has none. **It is an inference until the corrected tool is run on the
+  owner's run folders.**
+- **Consequence for the package:** the tool is in `STEP2_Research_Engine_v1r2.zip`, and the install sheet's part 7
+  expects `RESULT: PASS - COMPLETE`, so part 7 would stop in DEV as it did here. The engine's 35 files are not
+  affected. Proposed to the owner: correct the tool (an old `INSUFFICIENT_HISTORY` record below the variant's
+  `first_target` agrees when the new list has no line for it, and is counted apart), issue it to the reviewer as a
+  new package revision with `repo_overlay` byte for byte unchanged, then rerun the comparison alone in the scratch
+  tree. An EX is issued only on his word.
+- **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` stays:** it holds the fill and the copied run folders the rerun needs.
+- **What a scratch run computes is a rehearsal, not a result of the project.**
+- Next numbers: EX_293; entry 206; RAT-45.

@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 23:31 Australia/Adelaide (entry 204: the owner decided to run TASK_T026 now; waiting on the runner's report; the install in DEV and DEV's first fill are still his separate goes).
+**Last updated:** 24 November 2026, 05:50 Australia/Adelaide (entry 205: TASK_T026 ran; the launchers and the first fill PASSED on Windows; the comparison stopped on a fault of Claude's comparison tool, not of the engine; waiting on the owner's word to correct the tool and send it to the reviewer).
 
 ## For the owner: NOW
 
+- **TASK_T026 RAN: THE LAUNCHERS AND THE FIRST FILL PASSED ON WINDOWS; THE COMPARISON STOPPED (entry 205; 24 November
+  2026).** Report `outbox/REPORT_T026.md` (main `dc0f532`). Fill: 46 minutes, the cloud's counts exactly; all 34800 old
+  scores equal. Part 2 of the comparison said `DIFFERENT: 2802` in each game. **Cause (Claude's inference, exact in
+  its arithmetic): the comparison tool, not the engine.** The old system kept `INSUFFICIENT_HISTORY` records for
+  targets before a variant's first target; the new lists rightly have no line there (specification section 5);
+  the tool wrongly asked for one. Every forecast the old system computed (20436) is equal. **Waiting on the owner:**
+  his word to correct the tool, issue the package revision to the reviewer (EX_293) and rerun the comparison in
+  the scratch tree. **Do not delete `D:\DELETE_ME\a_p_r_i_r\T025`.** The install sheet's part 7 would stop in DEV the
+  same way until the tool is corrected.
 - **TASK_T026 IS WRITTEN: THE REST OF THE STEP 2 REHEARSAL (entry 203; 23 November 2026).** The owner built the
   scratch tree's `.venv` himself (plain CMD, its own two scripts; 39 packages). `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T026.md`
   runs TASK_T025's steps 22 to 29 on that tree (`D:\DELETE_ME\a_p_r_i_r\T025\tree`): the launchers, the first fill, a
