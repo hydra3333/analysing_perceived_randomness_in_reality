@@ -3643,3 +3643,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
   rulebook first** (v0.6 rules 3, 7 and 11 forbid it today); Claude prepares it with step 3.
 - Nothing here authorises any operation on the owner's PC.
 - Next numbers: EX_283 (the reviewer's reply), entry 181, RAT-44.
+
+## 181. 23 November 2026, 19:27 - OWNER: the step 3 answers confirmed; EX_283 received (RECHECK, two crash-recovery blockers); both fixed, package STEP2_Research_Engine_v1r1 built; EX_284 waits for the owner's word
+
+- **The owner's words (19:06):** "1. The updater and Mode H : yes to your advice/recommendation \"My advice: your clean
+  sheet, done as a new edition.\"      EX_283 is available to consider in conjunction with our subsequent dialogue
+  here. 2. yes to your line endings recommendation 3.  yes to your recommendations on where things live.  Yes, I will
+  be doing regular backups of those folders (xcopy of files changed/newer) to 2 or 3 USB3 external drives; if you can
+  suggest a guaranteed safe and better robocopy line then that'd be good eg F:\a_p_r_i_r_PROD_BACKUP\ containing the
+  backup of prevailing prod (non backup) tree and F:\a_p_r_i_r_QA_BACKUP\ containing the backup of prevailing QA (non
+  backup) tree  ... my xcopy are non-deleting cumulative so guaranteed nothing is ever accidentally deleted (not
+  ideal but all my backups go there and I want to be 100% safe for my huge backup trees on those USB3 drives and
+  other drives); other USB drives F: I: Y: .   go ahead and create a new edition of the runner's rulebook but
+  allowing it to only do specific things on a specified drive (in this case D: for the run of those things?). re
+  \"Different bytes under that name\" didn't we agree on in-place install overwriting recently ?"
+- **DECIDED (owner), for build step 3:** (1) the updater: a clean sheet, as a new edition with every Mode H state
+  removed and every genuine source, parsing, overlap, chronology, ledger and lock check kept and proved unchanged;
+  `results_master_v0_2.py` stays untouched in DEV; to be put to the reviewer, whose stated preference was narrower.
+  (2) Line endings: LF pinned for the project's code in `.gitattributes` in step 3, before the first tree is created.
+  (3) The places: PROD `G:\a_p_r_i_r`; QA `T:\a_p_r_i_r`; backup roots `T:\a_p_r_i_r_backups\PROD` and
+  `T:\a_p_r_i_r_backups\QA`. His own copies to USB drives are his, outside the system; advice given in the chat.
+  (4) A new edition of the runner's rulebook is to be drafted, allowing named things only, in one named folder on
+  D:; for review and ratification (RAT-44) before it has any force.
+- **EX_283 (reviewer; main `0c4b5dd`): RECHECK, not PASS.** Two BLOCKER findings in crash windows, both accepted as
+  found. F283-B01: the status file's temporary copy lay in the variant folder, so an interrupted write left an
+  undeclared file that disabled the variant. F283-B02: an interrupted results copy could put the new ledger beside
+  the old results. Q1 to Q10 answered (accepted, some with scope; Q10 held for the corrected package).
+- **Corrected (code at main `465758d`):** the status file is staged in `<tree>/records/status_staging/` and leftovers are
+  removed under the job lock; the results copy stages results then ledger, replaces results then ledger, and puts a
+  staged ledger in place only if it names the results on file. **A third fault, found by the oracle the reviewer
+  asked for, is fixed too:** the league reports are made again at the end of each job, so that an eligibility draw
+  written at the end shows in that job's reports.
+- **Package `STEP2_Research_Engine_v1r1`** (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r1/`, base `465758d`; six files differ
+  from the reviewed v1, which is kept in `exchange/EX_282_Claude/`). Note v0.2 beside v0.1. Evidence
+  (`evidence_v1r1/`): 185 engine tests pass; all 571 old tests the same, 756 after; 31 of 31 planted faults caught;
+  the install rehearsed in an LF and a CRLF clone with seven STOP cases; the corrected engine run over the cloud's
+  real fill computes nothing and rewrites no report (suggestive only).
+- **EX_284** (body and assembler ready) is issued to the reviewer only on the owner's word. Nothing is authorised on
+  the owner's PC.
+- Next numbers: EX_284 (Claude), entry 182, RAT-44.

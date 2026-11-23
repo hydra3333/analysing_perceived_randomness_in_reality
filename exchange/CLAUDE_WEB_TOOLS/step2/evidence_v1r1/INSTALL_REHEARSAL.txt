@@ -1,0 +1,25 @@
+Build step 2: rehearsal of the install of STEP2_Research_Engine_v1r1 in disposable clones (cloud workspace).
+Package ZIP SHA-256: 93bafc41d749328d63cc3eb3cd18eb0b3bd25ec9962a31738d3f171a3c25e7a1
+
+== lf checkout (core.autocrlf=unset)
+PRE PASS: clean tree; 33 new paths absent; 2 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 33 expected new paths, 2 modified files and 0 staged deletions, all with the expected bytes.
+git status --short, by first letter:      33 A       2 M 
+COMMITTED PASS: the last commit (commit) added exactly 33 files, modified 2 and deleted 0; all Git blobs match.
+the launchers in Git and on disk: i/lf w/crlf 
+after the commit, git status --short prints 0 lines
+== crlf checkout (core.autocrlf=true)
+PRE PASS: clean tree; 33 new paths absent; 2 files to replace and 0 to delete at their base version. Nothing was changed.
+POST PASS: exactly the 33 expected new paths, 2 modified files and 0 staged deletions, all with the expected bytes.
+git status --short, by first letter:      33 A       2 M 
+COMMITTED PASS: the last commit (commit) added exactly 33 files, modified 2 and deleted 0; all Git blobs match.
+the launchers in Git and on disk: i/lf w/crlf 
+after the commit, git status --short prints 0 lines
+== cases that must STOP
+a stray file before the install:        VERIFICATION STOP: FAIL: working tree or index not clean:
+wrong bytes in a copied file:           VERIFICATION STOP: FAIL: wrong bytes: src/research/scoring.py
+one file not copied:                    VERIFICATION STOP: FAIL: unexpected new paths: src/research/withdraw.py
+a results master changed:               VERIFICATION STOP: FAIL: working tree or index not clean:
+an old shared file changed:             VERIFICATION STOP: FAIL: unexpected modified paths: src/methods/_common/contract
+one edited file not replaced:           VERIFICATION STOP: FAIL: unexpected modified paths: .gitignore
+a stray file in a variant folder:       VERIFICATION STOP: FAIL: unexpected new paths: src/methods/E_002/RECUR_MEAN_ALL_

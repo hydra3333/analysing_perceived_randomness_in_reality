@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 18:53 Australia/Adelaide (entry 180: the owner's answers for build step 3; EX_282 is with the reviewer, the reply is EX_283; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 19:27 Australia/Adelaide (entry 181: EX_283 was RECHECK with two blockers; both fixed; package STEP2_Research_Engine_v1r1 built; EX_284 waits for the owner's word; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_283 WAS RECHECK; THE CORRECTED PACKAGE IS READY (entry 181; 23 November 2026).** Two crash-recovery blockers,
+  both fixed, in `STEP2_Research_Engine_v1r1` (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r1/`); read section 0 of
+  `STEP2_PACKAGE_NOTE_v0_2.md`. **Waiting on the owner:** his word to send EX_284 (`EX_284_body.md`, `assemble_ex284.py`;
+  stage the files, run the assembler with base `465758d`). Package v1 (`package/`, EX_282) is superseded: do not install it.
+  **For step 3, decided (entry 181):** a clean-sheet new edition of the updater; LF pinned; PROD `G:\a_p_r_i_r`, QA
+  `T:\a_p_r_i_r`, backups `T:\a_p_r_i_r_backups\PROD` and `\QA`; a rulebook edition for scratch rehearsals on D: to be drafted.
 - **FOR BUILD STEP 3, DECIDED BY THE OWNER (entry 180; 23 November 2026):** PROD at `G:\a_p_r_i_r`, QA at `T:\a_p_r_i_r`,
   backups under `T:\a_p_r_i_r_backups` (one sub-folder a tree: proposed, awaiting his word); line endings pinned as
   Claude recommends, consistently; no parallel runner now; Claude Code may rehearse installs in a scratch folder on
