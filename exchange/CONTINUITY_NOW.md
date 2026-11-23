@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 21:06 Australia/Adelaide (entries 189 and 190: EX_288 issued, step 2 package v1r2, with the reviewer for recheck; EX_287 closed the rulebook's three findings and asked one correction of wording, made as the v0.7r2 candidate, no force until RAT-44; nothing on the owner's PC is authorised).
+**Last updated:** 23 November 2026, 21:08 Australia/Adelaide (entries 189 to 191: EX_288 issued, step 2 package v1r2, with the reviewer for recheck; EX_287 closed the rulebook's three findings and asked one correction of wording, made as the v0.7r2 candidate, no force until RAT-44; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
@@ -21,7 +21,7 @@ durable EX messages are authoritative.
 - **EX_285 FOUND ONE NEW BLOCKER; THE CORRECTED PACKAGE v1r2 IS READY (entry 187; 23 November 2026).** F285-B01 (the
   staging cleanup could delete files that were not its own) is fixed in `STEP2_Research_Engine_v1r2`
   (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r2/`); read section 0A of `STEP2_PACKAGE_NOTE_v0_3.md`. (Done, entry 189: sent as EX_288, because the
-  reviewer took the number EX_287 for its rulebook recheck; `EX_287_body.md` and `assemble_ex287.py` are unissued drafts.) **EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate.** Packages v1 and v1r1 are
+  reviewer took the number EX_287 for its rulebook recheck; the unissued drafts `EX_287_body.md` and `assemble_ex287.py` were removed at the owner's request, entry 191.) **EX_286 is reserved for the reviewer's review of the rulebook v0.7 candidate.** Packages v1 and v1r1 are
   superseded: do not install them.
 - **THE ORDER (owner, entry 183; 23 November 2026):** EX_285 (reviewer, on package v1r1) -> the rulebook v0.7 candidate
   reviewed and ratified (RAT-44) -> the rest (proposed: a Windows rehearsal of step 2 by the runner on D:, then the

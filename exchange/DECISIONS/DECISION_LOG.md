@@ -3880,3 +3880,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **It has no force.** The installed rulebook stays v0.6 (SHA-256 begins `f92f17f60db63990`) until the owner ratifies
   (RAT-44). EX_287 says he may ratify the corrected bytes, after a focused verification if he wishes.
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 191; RAT-44.
+
+## 191. 23 November 2026, 21:08 - The two unissued EX_287 drafts removed at the owner's request
+
+- **The owner, 21:06:** "re two unissued drafts named `EX_287_body.md` and `assemble_ex287.py` are still in the
+  repository, untouched, and the decision log says they were never a message - please remove them."
+- **Removed** from `exchange/CLAUDE_WEB_TOOLS/step2/`: `EX_287_body.md` and `assemble_ex287.py` (entry 189: Claude's drafts
+  of the step 2 message under the number the reviewer then took; never issued). Git keeps them in its history
+  (last present at main `bf0251b`). Their content, corrected, is `EX_288_body.md` and `assemble_ex288.py`, from which
+  EX_288 was made. Nothing else is removed. The only EX_287 is the reviewer's, `exchange/EX_287_ChatGPT.md`.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 192; RAT-44.
