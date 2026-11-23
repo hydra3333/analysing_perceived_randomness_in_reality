@@ -4233,3 +4233,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` stays:** it holds the fill and the copied run folders the rerun needs.
 - **What a scratch run computes is a rehearsal, not a result of the project.**
 - Next numbers: EX_293; entry 206; RAT-45.
+
+## 206. 24 November 2026, 06:00 - The comparison tool corrected; package STEP2_Research_Engine_v1r3 built (the engine's 35 files unchanged); EX_293 issued on the owner's word
+
+- **The owner, 05:54, to the recommendation of entry 205** (correct the tool; issue it to the reviewer as a package
+  revision with the engine's files unchanged; after the PASS, rerun the comparison alone in the scratch tree; then
+  his install in DEV): "yes to your recommendation".
+- **The correction** (`exchange/CLAUDE_WEB_TOOLS/step2/compare_fill_with_old_records.py`, SHA-256 `b4135af7ea925caba020bcbc77185999f51837bff0dcedddeb295ff0d241ada6`): a new
+  function reads each new list's `first_target` from its header; in part 2 an old `INSUFFICIENT_HISTORY` record whose
+  target lies below that first target, and for which the new list has no line, agrees and is counted apart; every
+  other case is judged as before. The part 2 line and the result line say the count; "lines the new lists hold for
+  other targets" is now a count of lines and can no longer go negative. Part 1 and the exit codes are unchanged.
+  The rule is specification v0.6 section 5.2 (a list's `TARGET` lines run from `first_target`).
+- **The cause is now reproduced in the cloud:** the tool as passed (package v1r2), run on old run folders made up in
+  the old form from the cloud's fill, prints the Windows report's seven lines number for number (17280 and 14478,
+  8760 and 5958, `DIFFERENT: 2802` twice, `-2162` twice, 160 per-variant lines, 20 `DIFFERENT` lines, each with the
+  reason "the new list has no line for it"). Still an inference about the owner's own folders until the rerun.
+- **Evidence for the corrected tool** (`evidence_v1r3/`; cloud, Claude's): `check_compare_tool.py` gives
+  `PASS - COMPLETE` on the made-up records (14478 and 5958 forecasts equal; 2802 and 2802 counted apart;
+  `DIFFERENT: 0`; 640 new lines for other targets in each game) and reports each of four differences planted one at
+  a time. The install rehearsed again with the new package: LF and CRLF clones, PRE, POST and COMMITTED PASS; seven
+  STOP cases stop.
+- **Package `STEP2_Research_Engine_v1r3`** (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/`; ZIP SHA-256 `e80e87ae4d0d9e9baaa15b8f2a405df717f66eb6be7de4126b734ad374bc6926`; base
+  `469f088`): three files differ from v1r2 as passed: the tool, the sheet (the package's name in its paths; part 7's
+  expected text) and the manifest's first line (the name). `repo_overlay` is byte for byte the 35 files passed in
+  EX_290; the verifier is the same file. **Package v1r2 is superseded: the owner installs from v1r3's sheet.**
+- **Issued:** `exchange/EX_293_Claude.zip` (SHA-256 `80fb7343d23ae79d9a60f23d3dd487f0039869583592a9bd3e1698d3f2fce2ef`) and the folder `exchange/EX_293_Claude/` (the message, the
+  package ZIP, its member list, the package extracted: 41 files, each equal to the member list by hash). It asks a
+  recheck of the tool's diff and of one question: whether counting those old records as agreeing is right, or
+  whether they should keep the result `PARTIAL`. It says that the reviewer has not read TASK_T026.
+- **Next, each the owner's own go:** after a PASS, a short task that reruns only the comparison in the scratch tree
+  (`D:\DELETE_ME\a_p_r_i_r\T025`, which stays in place); then his install in DEV from v1r3's sheet; then,
+  separately, DEV's first fill.
+- Next numbers: EX_294 (the reviewer's); entry 207; RAT-45.

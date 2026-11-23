@@ -4,18 +4,22 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 05:50 Australia/Adelaide (entry 205: TASK_T026 ran; the launchers and the first fill PASSED on Windows; the comparison stopped on a fault of Claude's comparison tool, not of the engine; waiting on the owner's word to correct the tool and send it to the reviewer).
+**Last updated:** 24 November 2026, 06:00 Australia/Adelaide (entry 206: the comparison tool corrected; package v1r3 built with the engine's files unchanged; EX_293 with the reviewer for recheck; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **EX_293 IS WITH THE REVIEWER: PACKAGE v1r3 (entry 206; 24 November 2026).** One tool corrected
+  (`tools/compare_fill_with_old_records.py`) and the sheet's part 7; `repo_overlay` is byte for byte the 35 files
+  passed in EX_290. Package `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/` (**v1r2 is superseded: install from v1r3's
+  sheet**). **Waiting on:** the reviewer (EX_294). **Then, each the owner's go:** a short task reruns only the
+  comparison in the scratch tree `D:\DELETE_ME\a_p_r_i_r\T025` (keep that folder); his install in DEV (sheet parts 1
+  to 5); separately DEV's first fill; then H-1 v10.
 - **TASK_T026 RAN: THE LAUNCHERS AND THE FIRST FILL PASSED ON WINDOWS; THE COMPARISON STOPPED (entry 205; 24 November
   2026).** Report `outbox/REPORT_T026.md` (main `dc0f532`). Fill: 46 minutes, the cloud's counts exactly; all 34800 old
   scores equal. Part 2 of the comparison said `DIFFERENT: 2802` in each game. **Cause (Claude's inference, exact in
   its arithmetic): the comparison tool, not the engine.** The old system kept `INSUFFICIENT_HISTORY` records for
   targets before a variant's first target; the new lists rightly have no line there (specification section 5);
-  the tool wrongly asked for one. Every forecast the old system computed (20436) is equal. **Waiting on the owner:**
-  his word to correct the tool, issue the package revision to the reviewer (EX_293) and rerun the comparison in
-  the scratch tree. **Do not delete `D:\DELETE_ME\a_p_r_i_r\T025`.** The install sheet's part 7 would stop in DEV the
+  the tool wrongly asked for one. Every forecast the old system computed (20436) is equal. (Done: the tool corrected and EX_293 issued, entry 206.) **Do not delete `D:\DELETE_ME\a_p_r_i_r\T025`.** The install sheet's part 7 would stop in DEV the
   same way until the tool is corrected.
 - **TASK_T026 IS WRITTEN: THE REST OF THE STEP 2 REHEARSAL (entry 203; 23 November 2026).** The owner built the
   scratch tree's `.venv` himself (plain CMD, its own two scripts; 39 packages). `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T026.md`

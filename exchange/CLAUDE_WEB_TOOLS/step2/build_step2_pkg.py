@@ -34,7 +34,7 @@ STEP1_TOOLS = HERE.parent / 'step1'                                 # the tools 
 VERIFIER_TEMPLATE = HERE.parent / 'wf1' / 'verifier_template.py'    # the reviewed read-only verifier
 OVERLAY = HERE / 'overlay'                                          # the engine's new files, as they go into the tree
 
-PACKAGE_NAME = 'STEP2_Research_Engine_v1r2'
+PACKAGE_NAME = 'STEP2_Research_Engine_v1r3'
 PACKAGE_TITLE = ('build step 2 package, corrected after EX_283 and EX_285 (the research engine, in DEV; specification v0.6 '
                  'sections 3 to 11)')
 VERIFIER_NAME = 'VERIFY_STEP2_INSTALL.py'
@@ -265,10 +265,15 @@ findstr /e /c:" equal" "{ev}\\early_comparison.txt" | find /c /v ""
 It compares DEV's new lists with what the old system recorded, and computes and writes nothing. Part 1: every score
 the old development walk-forward recorded must be in the new score lists with the same numbers drawn, matches and
 prize division. Part 2: every development forecast the old system kept in its run folders must be in the new
-forecast lists with the same view digest, scores, ranking, TOP and WORST.
+forecast lists with the same view digest, scores, ranking, TOP and WORST. The old system also kept a record
+`INSUFFICIENT_HISTORY` for every target at which a variant did not yet have enough earlier draws; a new list begins
+at the variant's first target and has no line before it, so those records are counted apart and are not a
+difference.
 Expected from `findstr` (every line that is not a per-variant line), exactly seven lines: for each game one line
 `part 1: old score records (TOP and WORST): N; equal in the new score lists: N; DIFFERENT: 0`, one line
-`part 2: old development forecasts read from the run folders: N ... DIFFERENT: 0 ...` and one line
+`part 2: old development forecasts read from the run folders: N ...; equal in the new lists: N;
+INSUFFICIENT_HISTORY records before the variant's first target, where the new list has no line: N; DIFFERENT: 0;
+...` and one line
 `part 2: forecasts named by the tracked rank ledgers: N; of those not among the old forecasts compared: 0`; and the
 last line **`RESULT: PASS - COMPLETE - both games; all N old score records equal the new score lists; all N old
 development forecasts in the run folders were found in the new lists ...`** (the first N is 34800 for the score

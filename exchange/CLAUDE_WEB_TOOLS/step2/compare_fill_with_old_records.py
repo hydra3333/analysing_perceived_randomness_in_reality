@@ -10,6 +10,13 @@ What this file is for
     Part 2, the forecasts: every development forecast the old system kept in its run folders must be in the new
     forecast lists with the same view digest and, for every barrel, the same scores, the same ranking and the
     same TOP and WORST sets.
+    Part 2 and insufficient history: the old system also kept a record, status INSUFFICIENT_HISTORY, for every
+    target of its walk-forward at which a variant did not yet have enough earlier draws. A new list begins at the
+    variant's first target (its header's first_target; specification 5.2) and holds no line before it. So such an
+    old record agrees with the new list when its target lies before that first target and the new list has no
+    line for it; these are counted apart and said in the findings. An old INSUFFICIENT_HISTORY record at or after
+    the first target must have a NO_FORECAST line with that reason, as before, and an old forecast must always
+    have its line.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 17.3 ("the transition check", made early and
@@ -36,8 +43,9 @@ What uses it
 Usage
     python -B compare_fill_with_old_records.py [--tree <project root>] [--game POWERBALL|OZLOTTO|BOTH]
     Exit code 0 only for the complete result: both games, every old score equal, the old run folders present,
-    every old development forecast found in the new lists and equal, and every forecast the rank ledgers name
-    among them.
+    every old development forecast found in the new lists and equal, every old INSUFFICIENT_HISTORY record
+    either before its variant's first target or matched by a NO_FORECAST line, and every forecast the rank
+    ledgers name among them.
 """
 from __future__ import annotations
 
@@ -139,6 +147,18 @@ def new_forecasts(tree_root: Path, game_id: str) -> dict:
     return found
 
 
+def new_first_targets(tree_root: Path, game_id: str) -> dict:
+    """Read each new forecast list's first target from its header: {(family folder, variant): first target}.
+
+    For example {('E_004', 'GAP_HAZARD_ALL_V1'): 1248}: that list holds no line for a target below 1248.
+    """
+    found = {}
+    for path in sorted((tree_root / NEW_LISTS / game_id / 'variants').glob(f'*/*/{NEW_FORECASTS_NAME}')):
+        header = json.loads(path.read_text(encoding='ascii').splitlines()[0])
+        found[(header['family'], header['variant'])] = header['first_target']
+    return found
+
+
 def new_scores(tree_root: Path, game_id: str) -> dict:
     """Read the new score lists of one game: {(family folder, variant, target): the score line's content}."""
     found = {}
@@ -237,18 +257,28 @@ def check_game(tree_root: Path, game_id: str) -> dict:
     """Compare one game, both parts, and print its findings.
 
     Returns {'compared': n, 'different': n, 'old_present': bool, 'new_present': bool, 'tracked_missing': n,
-    'scores_compared': n} where 'different' counts the differences of both parts.
+    'scores_compared': n, 'forecasts_equal': n, 'before_first_target': n} where 'different' counts the differences
+    of both parts, 'forecasts_equal' the old records found equal in the new lists, and 'before_first_target' the
+    old INSUFFICIENT_HISTORY records that lie before their variant's first target (where a new list has no line).
     """
     old, new = old_forecasts(tree_root, game_id), new_forecasts(tree_root, game_id)
+    first_targets = new_first_targets(tree_root, game_id)
     scores = check_scores(tree_root, game_id) if new else {'compared': 0, 'different': 0}
     tracked = tracked_forecast_keys(tree_root, game_id)
-    by_variant, shown, different, compared = {}, 0, 0, 0
+    by_variant, shown, different, compared, before_first_target = {}, 0, 0, 0, 0
     for (method_id, variant_id, target), records in sorted(old.items()):
         line = new.get((family_folder_of(method_id), variant_id, target))
+        first_target = first_targets.get((family_folder_of(method_id), variant_id))
         counts = by_variant.setdefault((method_id, variant_id), [0, 0])
         for record in records:
             compared += 1
             counts[0] += 1
+            if (record['status'] == OLD_INSUFFICIENT and line is None and first_target is not None
+                    and target < first_target):
+                # The old system recorded "not enough earlier draws"; the new list begins later and has no line.
+                before_first_target += 1
+                counts[1] += 1
+                continue
             found = difference(record, line)
             if found is None:
                 counts[1] += 1
@@ -260,15 +290,19 @@ def check_game(tree_root: Path, game_id: str) -> dict:
     for (method_id, variant_id), (total, equal) in sorted(by_variant.items()):
         print(f'{game_id}  forecasts  {method_id:5s} {variant_id}: {equal} of {total} equal')
     tracked_missing = sorted(tracked - set(old))
-    new_only = len(new) - len({(family_folder_of(m), v, t) for (m, v, t) in old})
+    new_only = len(set(new) - {(family_folder_of(m), v, t) for (m, v, t) in old})
+    forecasts_equal = compared - different - before_first_target
     print(f'{game_id}: part 2: old development forecasts read from the run folders: {compared} (for {len(old)} '
-          f'variant and target pairs); equal in the new lists: {compared - different}; DIFFERENT: {different}; '
-          f'lines the new lists hold for other targets (never forecast by the old development runs): {new_only}')
+          f'variant and target pairs); equal in the new lists: {forecasts_equal}; INSUFFICIENT_HISTORY records '
+          f'before the variant\'s first target, where the new list has no line: {before_first_target}; DIFFERENT: '
+          f'{different}; lines the new lists hold for other targets (never forecast by the old development runs): '
+          f'{new_only}')
     print(f'{game_id}: part 2: forecasts named by the tracked rank ledgers: {len(tracked)}; of those not among '
           f'the old forecasts compared: {len(tracked_missing)}'
           + (f' (for example {tracked_missing[0]})' if tracked_missing else ''))
     return {'compared': compared, 'different': different + scores['different'], 'old_present': bool(old),
-            'new_present': bool(new), 'tracked_missing': len(tracked_missing), 'scores_compared': scores['compared']}
+            'new_present': bool(new), 'tracked_missing': len(tracked_missing), 'scores_compared': scores['compared'],
+            'forecasts_equal': forecasts_equal, 'before_first_target': before_first_target}
 
 
 def main(argv: list | None = None) -> int:
@@ -306,10 +340,13 @@ def main(argv: list | None = None) -> int:
         print(f'RESULT: PARTIAL - nothing differed ({scores_total} old scores were compared in part 1), but the '
               f'comparison is not complete: ' + '; '.join(reasons) + '.')
         return EXIT_PARTIAL
-    total = sum(f['compared'] for f in findings.values())
+    total = sum(f['forecasts_equal'] for f in findings.values())
+    before = sum(f['before_first_target'] for f in findings.values())
     print(f'RESULT: PASS - COMPLETE - both games; all {scores_total} old score records equal the new score lists; '
           f'all {total} old development forecasts in the run folders were found in the new lists with the same view '
-          f'digest, scores, ranking, TOP and WORST; every forecast the tracked rank ledgers name is among them.')
+          f'digest, scores, ranking, TOP and WORST; the {before} old INSUFFICIENT_HISTORY records all lie before '
+          f'their variants\' first targets, where the new lists hold no line; every forecast the tracked rank '
+          f'ledgers name is among them.')
     return EXIT_ALL_EQUAL
 
 

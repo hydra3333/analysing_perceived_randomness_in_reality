@@ -1,0 +1,10 @@
+The package v1r2 tool (as reviewed, as run in TASK_T026), on the same made-up old records:
+POWERBALL: part 1: old score records (TOP and WORST): 22884; equal in the new score lists: 22884; DIFFERENT: 0
+POWERBALL: part 2: old development forecasts read from the run folders: 17280 (for 17280 variant and target pairs); equal in the new lists: 14478; DIFFERENT: 2802; lines the new lists hold for other targets (never forecast by the old development runs): -2162
+POWERBALL: part 2: forecasts named by the tracked rank ledgers: 11442; of those not among the old forecasts compared: 0
+OZLOTTO: part 1: old score records (TOP and WORST): 11916; equal in the new score lists: 11916; DIFFERENT: 0
+OZLOTTO: part 2: old development forecasts read from the run folders: 8760 (for 8760 variant and target pairs); equal in the new lists: 5958; DIFFERENT: 2802; lines the new lists hold for other targets (never forecast by the old development runs): -2162
+OZLOTTO: part 2: forecasts named by the tracked rank ledgers: 5958; of those not among the old forecasts compared: 0
+RESULT: STOP - at least one old score or old development forecast is not in the new lists with the same content. Change nothing and send Claude this whole output.
+lines ending " equal": 160 | lines beginning DIFFERENT: 20 | exit code 1
+reasons given on the DIFFERENT lines: ['the new list has no line for it']

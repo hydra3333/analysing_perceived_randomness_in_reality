@@ -1,0 +1,14 @@
+made up, in the old form: {'POWERBALL': {'forecasts': 14478, 'insufficient': 2802}, 'OZLOTTO': {'forecasts': 5958, 'insufficient': 2802}}
+POWERBALL: part 1: old score records (TOP and WORST): 22884; equal in the new score lists: 22884; DIFFERENT: 0
+POWERBALL: part 2: old development forecasts read from the run folders: 17280 (for 17280 variant and target pairs); equal in the new lists: 14478; INSUFFICIENT_HISTORY records before the variant's first target, where the new list has no line: 2802; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 640
+POWERBALL: part 2: forecasts named by the tracked rank ledgers: 11442; of those not among the old forecasts compared: 0
+OZLOTTO: part 1: old score records (TOP and WORST): 11916; equal in the new score lists: 11916; DIFFERENT: 0
+OZLOTTO: part 2: old development forecasts read from the run folders: 8760 (for 8760 variant and target pairs); equal in the new lists: 5958; INSUFFICIENT_HISTORY records before the variant's first target, where the new list has no line: 2802; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 640
+OZLOTTO: part 2: forecasts named by the tracked rank ledgers: 5958; of those not among the old forecasts compared: 0
+RESULT: PASS - COMPLETE - both games; all 34800 old score records equal the new score lists; all 20436 old development forecasts in the run folders were found in the new lists with the same view digest, scores, ranking, TOP and WORST; the 5604 old INSUFFICIENT_HISTORY records all lie before their variants' first targets, where the new lists hold no line; every forecast the tracked rank ledgers name is among them.
+exit code 0
+planted: an old forecast whose TOP set differs: caught (exit code 1)
+planted: an old forecast for a target before the first target (the new list has no line): caught (exit code 1)
+planted: an old INSUFFICIENT_HISTORY record at a target the new list forecasts: caught (exit code 1)
+planted: an old forecast whose view digest differs: caught (exit code 1)
+RESULT: PASS - the tool agrees with records that agree, counts the insufficient-history records apart, and reports each of the four planted differences
