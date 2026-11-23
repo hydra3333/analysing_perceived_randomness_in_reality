@@ -3961,3 +3961,50 @@ section 17.2 (unpack it into a new folder, never over the clone).
   next free number.
 - Nothing is authorised on the owner's PC. A rehearsal needs a task file and the owner's own go (entry 192).
 - Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 195; RAT-45.
+
+## 195. 23 November 2026, 21:13 - The installed rulebook's version line corrected at the owner's word (it now names the PASS of EX_289); no rule text touched
+
+- **The owner, 21:11, to the two things of entry 194:** "thing 1 - yes. thing 2 - tell me precisely what to change in
+  which file." Thing 1 was the version line; thing 2 is his `.claude/settings.json` and the scratch rehearsal (answered
+  in the chat; no file of his is changed by Claude).
+- **Done for thing 1:** `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_7/correct_rat44_status.py` checked the installed rulebook by
+  hash (`3e6125f1...14bb121f`) and made one replacement that matched once. The version line's words "(the candidate
+  v0.7r2; its last three edits, which EX_287 asked for, were ratified without a further review)" are now "(the
+  candidate v0.7r2), and passed by the reviewer in those exact bytes the same evening (EX_289)".
+- **Installed now:** `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`, **SHA-256
+  `4416c4b574567f57f40d19ba9d58a765ce7dce551cf06937430aced730325456`** (21,021 bytes). `git diff --numstat`: 1 line added, 1
+  removed. Every line after the version line equals the ratified candidate v0.7r2 (checked with `diff`). The exact
+  change is `CLAUDE_v0_7_STATUS_CORRECTION.diff`.
+- It is still rulebook v0.7 under RAT-44: a correction of a statement of fact in its status words, not a new edition.
+- **A correction of times, Claude's:** the headings of entries 192, 193 and 194 say 21:12, 21:16 and 21:20. Claude wrote
+  those times by estimate and not from the clock; they run some minutes ahead. By the clock the three were
+  committed between 21:07 and 21:12 Australia/Adelaide (Git holds each commit's time). The entries are not edited.
+  From this entry on, a heading's time is read from the clock when the entry is written.
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 196; RAT-45.
+
+## 196. 23 November 2026, 21:14 - The owner's settings file and the scratch rehearsal: what was checked, one statement of entry 192 corrected, the choice put to the owner
+
+- **The owner, 21:11:** "thing 2 - tell me precisely what to change in which file." And at 21:13: "please give me a new
+  blurb for chatgpt when you are ready" (for EX_288; given in the chat).
+- **Checked against Claude Code's own documentation** (code.claude.com/docs/en/permissions and /tools-reference, read
+  23 November 2026), not from memory: a deny rule is matched before any allow rule and an allow rule cannot make an
+  exception to it; a `Bash(...)` rule is matched against the text of the command as the runner types it, `*` standing
+  for any text; it does not reach what a program started by that command does; `Read(...)` and `Edit(...)` rules
+  written without a leading `/` or `//` apply under the current directory.
+- **Correction to entry 192** (and to the lines written from it in the continuity page and reminder R-030 (f), now put
+  right): it said the settings deny "reading any `source_data` or `results` folder wherever it lies". Not so. Those
+  three `Read(**/...)` lines bind the runner's own file tools under the folder it works in, which is the
+  repository. They do not reach `D:\DELETE_ME\`, and they never bound a program the runner starts. What does stand in
+  the way of a scratch rehearsal is two lines: `"Bash(*.bat*)"` and `"Bash(*install_upgrade_dependencies*)"` (the
+  delete lines matter only for the clean-up).
+- **What the project already does about such lines:** `CLAUDE_CODE_WORKING_FOLDER_TREE/tools/cc_clone.py` is a checked
+  helper that the runner starts with one Python command and that itself does `git clone`, `git add`, `git commit`
+  and the deletion of a task clone, each of which the same settings file denies when typed; its own header says a
+  denied path "is never typed". Rulebook section 4 requires it. The deny lines stop typed commands; the project's
+  checked tools do the work after checking where they are.
+- **The choice put to the owner (his decision; nothing done):** (A) he deletes those two lines from
+  `.claude/settings.json`, which also removes the hard block on the same typed commands in the real tree, since a
+  pattern cannot tell `D:` from `E:` reliably; or (B) no change to his file, and Claude writes one more checked helper
+  in the pattern of `cc_clone.py`, which refuses any tree whose root is not under a real `D:\DELETE_ME\` and runs that
+  tree's own launchers; it goes to the reviewer with the task file. Claude recommends (B).
+- Next numbers: the reviewer's reply to EX_288 takes the next free number; entry 197; RAT-45.
