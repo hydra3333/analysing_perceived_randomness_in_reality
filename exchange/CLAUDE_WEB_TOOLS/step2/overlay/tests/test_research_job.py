@@ -9,6 +9,7 @@ import ast
 import contextlib
 import csv
 import io
+import os
 import shutil
 import subprocess
 import sys
@@ -270,6 +271,143 @@ class InterruptedStatusWrite(fx.JobCase):
                 self.assertEqual(self.status(tree, 'TOY_B_V1').withdrawn_from, LAST_AT_START + 1)
                 self.assertEqual(self.staged(tree), [])
                 self.assert_variants_whole(tree)
+
+
+class TheStagingFolderIsTheTreesOwn(fx.JobCase):
+    """EX_285 F285-B01: the cleanup removes only the status writer's own unfinished files, from a real folder of
+    this tree. Anything else refuses, with nothing deleted; a link to another place is never followed."""
+
+    REASON = 'the table was built from the wrong column'
+
+    def setUp(self):
+        """A worked tree, and a folder outside it that holds a file which is nobody's to delete."""
+        super().setUp()
+        self.tree_folder = self.tree(with_source=False)
+        self.assertEqual(fx.run_job(self.tree_folder, no_update=True)[0], 0)
+        self.outside = self.root / 'outside'
+        self.outside.mkdir()
+        self.sentinel = self.outside / 'unrelated_document.txt'
+        self.sentinel.write_bytes(b'not the project\'s: must never be deleted or changed\n')
+        self.staging = self.tree_folder / status_file.STAGING_FOLDER
+        self.before = fx.files_under(self.tree_folder)
+        self.status_before = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1').read_bytes()
+
+    def withdrawal(self) -> tuple:
+        """Try to withdraw TOY_B_V1, confirming if asked. Returns (exit code, lines said)."""
+        from research import withdraw
+        said = []
+        code = withdraw.withdraw(self.tree_folder, [('E_901', 'TOY_B_V1')], (GAME,), self.REASON,
+                                 ask=lambda question: 'WITHDRAW', say=said.append, now=lambda: fx.FIXED_TIME)
+        return code, said
+
+    def assert_both_commands_refuse(self, wanted: str) -> None:
+        """The job and the withdrawal each refuse naming `wanted`; nothing in the tree or outside it changes."""
+        from research import withdraw
+        code, said = fx.run_job(self.tree_folder, no_update=True)
+        self.assertEqual(code, 2, said)
+        self.assertTrue(any(line.startswith('REFUSED') and wanted in line and 'Nothing was' in line for line in said), said)
+        code, said = self.withdrawal()
+        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, said)
+        self.assertTrue(any(line.startswith('REFUSED') and wanted in line for line in said), said)
+        self.assertEqual(sorted(p.name for p in self.outside.iterdir()), ['unrelated_document.txt'])
+        self.assertEqual(self.sentinel.read_bytes(), b'not the project\'s: must never be deleted or changed\n')
+        self.assertEqual(fx.files_under(self.tree_folder), self.before)
+        self.assertEqual(fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1').read_bytes(), self.status_before)
+        self.assertFalse((self.tree_folder / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
+
+    def test_the_writers_own_whole_and_half_written_copies_are_removed_and_the_job_goes_on(self):
+        self.staging.mkdir(parents=True, exist_ok=True)
+        whole = fx.status_path(self.tree_folder, 'E_901', 'TOY_A_V1').read_bytes()
+        (self.staging / status_file.staged_name('E_901', 'TOY_A_V1')).write_bytes(whole)
+        (self.staging / status_file.staged_name('E_901', 'TOY_B_V1')).write_bytes(whole[:9])
+        code, said = fx.run_job(self.tree_folder, no_update=True)
+        self.assertEqual(code, 0, said)
+        self.assertEqual(sum('its unfinished copy was removed' in line for line in said), 2)
+        self.assertEqual(list(self.staging.iterdir()), [])
+        self.assertEqual(fx.files_under(self.tree_folder), self.before)
+
+    def test_anything_else_in_the_staging_folder_survives_and_refuses_both_commands(self):
+        self.staging.mkdir(parents=True, exist_ok=True)
+        own = self.staging / status_file.staged_name('E_901', 'TOY_A_V1')
+        strangers = {'an unrelated file': 'notes.txt',
+                     'a file with the ending but no variant': 'VARIANT_STATUS.ini.writing',
+                     'a staged name for a variant this tree does not hold': status_file.staged_name('E_901', 'NOT_HERE_V1'),
+                     'a staged name with a family that is none': status_file.staged_name('X_901', 'TOY_A_V1'),
+                     'a folder': 'a_folder'}
+        for what, name in strangers.items():
+            with self.subTest(what=what):
+                own.write_bytes(b'half a status')
+                stranger = self.staging / name
+                if what == 'a folder':
+                    stranger.mkdir()
+                    (stranger / 'inside.txt').write_bytes(b'kept')
+                else:
+                    stranger.write_bytes(b'kept')
+                self.assert_both_commands_refuse(name)
+                self.assertTrue(own.is_file(), 'not even the writer\'s own copy is removed while a stranger is there')
+                if what == 'a folder':
+                    self.assertEqual((stranger / 'inside.txt').read_bytes(), b'kept')
+                    (stranger / 'inside.txt').unlink()
+                    stranger.rmdir()
+                else:
+                    self.assertEqual(stranger.read_bytes(), b'kept')
+                    stranger.unlink()
+        code, said = fx.run_job(self.tree_folder, no_update=True)       # the stranger moved away: the job goes on
+        self.assertEqual(code, 0, said)
+        self.assertEqual(list(self.staging.iterdir()), [])
+
+    def test_a_staging_or_working_folder_linked_to_another_place_refuses_and_the_other_place_is_untouched(self):
+        for relative in ('records/status_staging', 'records'):
+            with self.subTest(linked=relative):
+                link = self.tree_folder / relative
+                if link.exists():
+                    shutil.rmtree(link)
+                link.parent.mkdir(parents=True, exist_ok=True)
+                kind = fx.make_folder_link(link, self.outside)
+                if kind is None:
+                    self.skipTest('this account can make neither a symbolic link nor a junction')
+                self.assertTrue(link.is_dir() and (link / 'unrelated_document.txt').is_file(), kind)
+                self.assert_both_commands_refuse('is a link or a junction')
+                os.rmdir(link) if kind == 'junction' else link.unlink()
+                self.assertTrue(self.sentinel.is_file())
+
+    def test_the_writer_refuses_a_redirected_staging_folder_before_it_creates_anything(self):
+        if self.staging.exists():
+            shutil.rmtree(self.staging)
+        self.staging.parent.mkdir(parents=True, exist_ok=True)
+        if fx.make_folder_link(self.staging, self.outside) is None:
+            self.skipTest('this account can make neither a symbolic link nor a junction')
+        path = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1')
+        with self.assertRaisesRegex(job_lock.LaunchRefused, 'is a link or a junction'):
+            write_status(path, 'E_901', 'TOY_B_V1', {GAME: GameStatus(eligible_from=1150, eligibility_recorded='x')})
+        self.assertEqual(sorted(p.name for p in self.outside.iterdir()), ['unrelated_document.txt'])
+        self.assertEqual(path.read_bytes(), self.status_before)
+
+    def test_the_writer_refuses_a_staged_name_that_is_a_link_to_a_file_elsewhere(self):
+        self.staging.mkdir(parents=True, exist_ok=True)
+        try:
+            os.symlink(self.sentinel, self.staging / status_file.staged_name('E_901', 'TOY_B_V1'))
+        except (OSError, NotImplementedError):
+            self.skipTest('this account cannot make a symbolic link to a file')
+        path = fx.status_path(self.tree_folder, 'E_901', 'TOY_B_V1')
+        with self.assertRaisesRegex(job_lock.LaunchRefused, 'is a link to another place'):
+            write_status(path, 'E_901', 'TOY_B_V1', {GAME: GameStatus(eligible_from=1150, eligibility_recorded='x')})
+        self.assertEqual(self.sentinel.read_bytes(), b'not the project\'s: must never be deleted or changed\n')
+        self.assertEqual(path.read_bytes(), self.status_before)
+        self.assert_both_commands_refuse(status_file.staged_name('E_901', 'TOY_B_V1'))
+
+    def test_a_results_folder_linked_to_another_place_refuses_before_anything_is_written_there(self):
+        research = self.tree_folder / 'results' / 'research'
+        moved = self.root / 'moved_research'
+        shutil.move(str(research), str(moved))
+        if fx.make_folder_link(research, moved) is None:
+            self.skipTest('this account can make neither a symbolic link nor a junction')
+        fx.write_results(self.tree_folder, GAME, LAST_AT_START + 2, version=2)
+        before = fx.files_under(self.root, 'moved_research')
+        code, said = fx.run_job(self.tree_folder, no_update=True)
+        self.assertEqual(code, 2, said)
+        self.assertTrue(any('results' in line and 'is a link or a junction' in line for line in said), said)
+        self.assertEqual(fx.files_under(self.root, 'moved_research'), before)
 
 
 class InterruptedResultsCopy(fx.JobCase):

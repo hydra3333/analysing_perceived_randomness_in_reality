@@ -48,7 +48,7 @@ from research.code_identity import (ManifestRefused, derived_code_digest, enviro
 from research.forecast_engine import FORECAST, compute_target, content_digest, view_digest_for
 from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
                                  load_variant_state, summarise_target_line)
-from research.job_lock import LaunchRefused, check_no_orphan_marker, job_lock
+from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
 from research.reader import ResultsRefused, results_on_file
 from research.results_step import copy_results, finish_interrupted_copy
 from research.scoring import score_content
@@ -525,8 +525,9 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
     no_update: leave the results step out.  only: None, or variant identities ('E_002/RECUR_MEAN_ALL_V1') the
     job is limited to.  now, say, checkpoint: see Job (a test passes its own).
     Returns the exit code: 0 finished; 1 a game refused or stopped (the other game is still worked); 2 the job
-    itself refused before any game (the settings, the orphan marker, the job lock, the manifest, a variant
-    folder, an unknown --only name).
+    itself refused before any game (the settings, the orphan marker, a working folder that is not the tree's
+    own, the job lock, the manifest, something foreign in the status staging folder, a variant folder, an
+    unknown --only name).
     """
     now = now or (lambda: datetime.now(timezone.utc))
     tree_root = Path(tree_root)
@@ -537,9 +538,10 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
         say(f'About to work: {", ".join(games)}' + (' (results step left out: --no-update)' if no_update else '')
             + (f'; limited to {", ".join(sorted(only))} (--only)' if only else ''))
         check_no_orphan_marker(settings.tree_root)
+        check_working_folders(settings.tree_root)
         with job_lock(settings.tree_root, 'research job', started):
             return run_locked(settings, games, no_update, only, now, say, checkpoint)
-    except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused) as refusal:
+    except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
         return EXIT_REFUSED

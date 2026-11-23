@@ -21,6 +21,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+import os
 import random
 import sys
 import tempfile
@@ -285,6 +286,25 @@ def alter_list_line(path: Path, position: int, change) -> None:
         previous = hashlib.sha256(raw).hexdigest()
         out.append(raw)
     path.write_bytes(b''.join(out))
+
+
+def make_folder_link(link: Path, target: Path) -> str | None:
+    """Make `link` a name for the folder `target`, as an accident or a tool might: a symbolic link where the
+    account may make one, otherwise (on Windows) a junction.
+
+    Returns 'symbolic link' or 'junction', or None if this machine allows neither (the test then skips).
+    """
+    try:
+        os.symlink(target, link, target_is_directory=True)
+        return 'symbolic link'
+    except (OSError, NotImplementedError):
+        pass
+    try:
+        import _winapi
+        _winapi.CreateJunction(str(target), str(link))
+        return 'junction'
+    except (ImportError, AttributeError, OSError):
+        return None
 
 
 def status_path(tree: Path, family: str, variant: str) -> Path:

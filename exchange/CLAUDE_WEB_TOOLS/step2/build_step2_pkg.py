@@ -34,8 +34,8 @@ STEP1_TOOLS = HERE.parent / 'step1'                                 # the tools 
 VERIFIER_TEMPLATE = HERE.parent / 'wf1' / 'verifier_template.py'    # the reviewed read-only verifier
 OVERLAY = HERE / 'overlay'                                          # the engine's new files, as they go into the tree
 
-PACKAGE_NAME = 'STEP2_Research_Engine_v1r1'
-PACKAGE_TITLE = ('build step 2 package, corrected after EX_283 (the research engine, in DEV; specification v0.6 '
+PACKAGE_NAME = 'STEP2_Research_Engine_v1r2'
+PACKAGE_TITLE = ('build step 2 package, corrected after EX_283 and EX_285 (the research engine, in DEV; specification v0.6 '
                  'sections 3 to 11)')
 VERIFIER_NAME = 'VERIFY_STEP2_INSTALL.py'
 SHEET_NAME = 'INSTALL_AND_RUN_SHEET.md'

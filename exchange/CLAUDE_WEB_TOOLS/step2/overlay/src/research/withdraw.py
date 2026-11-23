@@ -29,7 +29,8 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-from research.job_lock import RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, job_lock, updater_lock
+from research.job_lock import (RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, check_working_folders,
+                               job_lock, updater_lock)
 from research.reader import ResultsRefused, results_on_file, results_paths
 from research.settings import SettingsRefused, read_settings
 from research.status_file import (STATUS_FILE_NAME, StatusRefused, discard_unfinished_writes, read_status,
@@ -113,6 +114,7 @@ def withdraw(tree_root: Path, names, games, reason: str, *, ask=input, say=print
         tree_root = settings.tree_root
         say(f'WITHDRAW A VARIANT - START - {stamp} - the {settings.role} tree at {tree_root}')
         check_no_orphan_marker(tree_root)
+        check_working_folders(tree_root)
         with job_lock(tree_root, 'withdrawal', stamp), updater_lock(tree_root, 'withdrawal', stamp):
             for leftover in discard_unfinished_writes(tree_root):
                 say(f'  An earlier status write was interrupted before it changed anything; its unfinished copy was '

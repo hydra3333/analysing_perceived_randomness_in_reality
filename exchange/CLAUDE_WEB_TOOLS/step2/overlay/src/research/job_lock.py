@@ -1,4 +1,5 @@
-"""The job lock of a tree, the updater's own lock, and the orphan-marker check.
+"""The job lock of a tree, the updater's own lock, the orphan-marker check, and the check that the tree's working
+folders are its own.
 
 What this file is for
     Only one job may work in a tree at a time. The job lock is the file records/JOB.lock, made by an exclusive
@@ -7,6 +8,9 @@ What this file is for
     was killed is removed by the owner by hand, once he has seen that no job of the tree is running. The same
     holds for the results updater's own lock, which this file can also take, so that a withdrawal or a checked
     copy of the results never overlaps a results update. This file also makes the orphan-marker check.
+    And it makes one check of place (EX_285 F285-B01): the folders a job writes in, or removes its own unfinished
+    files from, must be real folders inside the tree. A folder that is a link or a junction to somewhere else
+    refuses the launch before anything is written or deleted, so that no job can touch files outside its tree.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md sections 7.1 (one job lock), 11 (a withdrawal holds
@@ -17,7 +21,8 @@ Which of the project's own modules it uses
     None.
 
 What uses it
-    research/research_job.py, research/results_step.py and research/withdraw.py, and the engine's tests.
+    research/research_job.py, research/results_step.py, research/status_file.py and research/withdraw.py, and
+    the engine's tests.
 """
 from __future__ import annotations
 
@@ -29,6 +34,9 @@ RECORDS_FOLDER = 'records'
 JOB_LOCK_NAME = 'JOB.lock'
 # The results updater's own lock, exactly where the reviewed results updater makes its own.
 UPDATER_LOCK = 'source_data/.results_master.lock'
+# The folders of a tree that a job or a withdrawal writes in (from the tree root, forward slashes). Each must be
+# a real folder of the tree, or not exist yet.
+WORKING_FOLDERS = ('records', 'records/status_staging', 'source_data', 'results', 'results/research')
 # The old system's marker of an unresolved process. Any entry at this path blocks every launch (owner, binding).
 ORPHAN_MARKER = 'transitory_data/poc_runs/UNRESOLVED_ORPHAN.json'
 
@@ -44,6 +52,51 @@ def check_no_orphan_marker(tree_root: Path) -> None:
     if marker.exists() or marker.is_symlink():
         raise LaunchRefused(f'orphan marker present: {marker}. Every launch is blocked until the owner\'s approved '
                             f'clearance procedure has removed it.')
+
+
+def is_link(path: Path) -> bool:
+    """True if a path is itself a symbolic link or, on Windows, a junction: a name that stands for another
+    place. False for an ordinary file or folder and for a path that does not exist."""
+    is_junction = getattr(os.path, 'isjunction', None)          # Python 3.12 and later
+    return os.path.islink(path) or bool(is_junction and is_junction(path))
+
+
+def check_real_folder(tree_root: Path, relative: str) -> Path:
+    """Check that a folder of a tree is a real folder inside that tree, or does not exist yet.
+
+    tree_root: the tree (its own real path; the settings check has seen to that).
+    relative: the folder, from the tree root, with forward slashes, for example 'records/status_staging'.
+    Returns the folder's path, for example <tree>/records/status_staging.
+    Refuses (LaunchRefused), having written and deleted nothing: the folder or a folder above it inside the tree
+    is a link or a junction; the name exists and is not a folder; or the folder's real place is not that path
+    inside the tree.
+    """
+    tree = Path(tree_root)
+    parts = relative.split('/')
+    folder = tree.joinpath(*parts)
+    step = tree
+    for name in parts:
+        step = step / name
+        if is_link(step):
+            raise LaunchRefused(f'{step} is a link or a junction to another place, not a real folder of this tree. '
+                                f'Nothing was written or deleted. Remove the link (never what it points to) and '
+                                f'run the command again.')
+    if os.path.lexists(folder):
+        real_place = os.path.normcase(os.path.realpath(folder))
+        expected = os.path.normcase(os.path.join(os.path.realpath(tree), *parts))
+        if not folder.is_dir() or real_place != expected:
+            raise LaunchRefused(f'{folder} is not a real folder of this tree (it is a file, or its real place is '
+                                f'{os.path.realpath(folder)}). Nothing was written or deleted. Put it right by '
+                                f'hand and run the command again.')
+    return folder
+
+
+def check_working_folders(tree_root: Path) -> None:
+    """Refuse (LaunchRefused) unless every working folder of the tree (WORKING_FOLDERS) is a real folder inside
+    the tree or does not exist yet. Made before the job lock is taken, so that even the lock file is never
+    created through a link."""
+    for relative in WORKING_FOLDERS:
+        check_real_folder(tree_root, relative)
 
 
 class FileLock:

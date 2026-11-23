@@ -7,15 +7,18 @@ What this file is for
     variant is forecast and scored at a draw and whether it is in the prevailing cohort. This file reads it,
     checks it, and writes it: the whole file under a temporary name, then one rename. The temporary file is made
     in the tree's control folder, never in the variant folder, so that a write that was interrupted can never
-    leave an undeclared file among a variant's software (EX_283 F283-B01). The last lines hold the SHA-256 of
-    every byte above them: a check against accidents and hand edits, not a signature.
+    leave an undeclared file among a variant's software (EX_283 F283-B01). The staging folder must be a real
+    folder of the tree, and only files this writer itself makes are ever removed from it: anything else found
+    there refuses, untouched (EX_285 F285-B01). The last lines hold the SHA-256 of every byte above them: a
+    check against accidents and hand edits, not a signature.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 3.5, with 10.2 (the eligibility draw is set
     once) and 11 (withdrawal is one-way).
 
 Which of the project's own modules it uses
-    None.
+    research.job_lock          check_real_folder, is_link: the staging folder must be a real folder of the tree
+    research.variant_folders   the patterns of a family's and a variant's folder name
 
 What uses it
     research/research_job.py (reads; creates a missing file in DEV; writes the eligibility draw),
@@ -29,6 +32,9 @@ import hashlib
 import os
 from dataclasses import dataclass
 from pathlib import Path
+
+from research.job_lock import LaunchRefused, check_real_folder, is_link
+from research.variant_folders import FAMILY_FOLDER_PATTERN, VARIANT_FOLDER_PATTERN
 
 # Where a status file is written before it is renamed into place: a folder of the tree's control folder, on the
 # same volume as the variant folders, so that the rename is one step. From the tree root.
@@ -169,13 +175,31 @@ def staging_folder_for(path: Path) -> Path:
 
     path: a status file, <tree>/src/methods/<family>/<variant>/VARIANT_STATUS.ini.
     Returns <tree>/records/status_staging. Refuses (StatusRefused) a path that is not a status file in a variant
-    folder of a tree: the writer must never guess where a tree's control folder is.
+    folder of a tree: the writer must never guess where a tree's control folder is. Refuses (LaunchRefused) a
+    staging folder that is not a real folder of that tree (a link or a junction to another place).
     """
     path = Path(path)
     if path.name != STATUS_FILE_NAME or len(path.parts) < 6 or path.parts[-5:-3] != METHODS_PARTS:
         raise StatusRefused(f'{path}: a status file is written only as <tree>/src/methods/<family>/<variant>/'
                             f'{STATUS_FILE_NAME}.')
-    return path.parents[4] / STAGING_FOLDER
+    return check_real_folder(path.parents[4], STAGING_FOLDER)
+
+
+def staged_name(family: str, variant: str) -> str:
+    """The one name under which a variant's status file is staged, for example
+    'E_901__TOY_A_V1__VARIANT_STATUS.ini.writing'."""
+    return f'{family}__{variant}__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
+
+
+def is_staged_write(tree_root: Path, entry: Path) -> bool:
+    """True if an entry of the staging folder is a file this writer could have made: an ordinary file (not a
+    link), named as staged_name names it, for a family and a variant whose folder exists in this tree."""
+    ending = f'__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
+    if is_link(entry) or not entry.is_file() or not entry.name.endswith(ending):
+        return False
+    family, separator, variant = entry.name[:-len(ending)].partition('__')
+    return bool(separator and FAMILY_FOLDER_PATTERN.match(family) and VARIANT_FOLDER_PATTERN.match(variant)
+                and Path(tree_root).joinpath(*METHODS_PARTS, family, variant).is_dir())
 
 
 def _rename_into_place(temporary: Path, path: Path) -> None:
@@ -194,7 +218,10 @@ def write_status(path: Path, family: str, variant: str, statuses: dict) -> None:
     """
     staging = staging_folder_for(path)
     staging.mkdir(parents=True, exist_ok=True)
-    temporary = staging / f'{family}__{variant}__{STATUS_FILE_NAME}{STAGING_SUFFIX}'
+    temporary = staging_folder_for(path) / staged_name(family, variant)     # checked again now that it exists
+    if is_link(temporary):
+        raise LaunchRefused(f'{temporary} is a link to another place. Nothing was written. Remove the link (never '
+                            f'what it points to) and run the command again.')
     with open(temporary, 'wb') as stream:
         stream.write(render(family, variant, statuses))
         stream.flush()
@@ -209,15 +236,23 @@ def discard_unfinished_writes(tree_root: Path) -> list:
     Returns the names removed, for example ['E_901__TOY_A_V1__VARIANT_STATUS.ini.writing']; [] if there was
     nothing. A staged file was never a status: the status file it was meant for is still the old one, whole,
     and whatever was being recorded is simply recorded again by the command that runs next.
+    Refuses, having deleted nothing: (LaunchRefused) a staging folder that is not a real folder of this tree;
+    (StatusRefused) anything in it that is not a file this writer makes (is_staged_write): another file, a
+    folder, a link, or a staged name for a variant this tree does not hold. Such a thing is not the project's
+    to remove; the owner moves it away.
     """
-    staging = Path(tree_root) / STAGING_FOLDER
-    removed = []
-    if staging.is_dir():
-        for leftover in sorted(staging.iterdir()):
-            if leftover.is_file():
-                leftover.unlink()
-                removed.append(leftover.name)
-    return removed
+    staging = check_real_folder(tree_root, STAGING_FOLDER)
+    if not staging.is_dir():
+        return []
+    entries = sorted(staging.iterdir())
+    strangers = [entry.name for entry in entries if not is_staged_write(tree_root, entry)]
+    if strangers:
+        raise StatusRefused(f'{staging} holds {len(strangers)} thing(s) that no status write of this project makes: '
+                            f'{", ".join(strangers[:5])}{" ..." if len(strangers) > 5 else ""}. Nothing was '
+                            f'deleted. Move them out of that folder by hand, then run the command again.')
+    for leftover in entries:
+        leftover.unlink()
+    return [leftover.name for leftover in entries]
 
 
 def create_active(path: Path, family: str, variant: str, games) -> dict:
