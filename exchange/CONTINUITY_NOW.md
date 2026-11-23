@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 23 November 2026, 15:38 Australia/Adelaide (entry 175: the new ChatGPT reviewer chat's takeover accepted). **Next: build step 2 on the owner's own go.**
+**Last updated:** 23 November 2026, 15:46 Australia/Adelaide (entry 176: the owner's go for BUILD STEP 2, the research engine in DEV; in progress in the cloud; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 

@@ -3532,3 +3532,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   repository access as before. Sequence confirmed: entry 174 was the last; this is 175; no RAT number used.
 - **Not authorised by this entry:** build step 2, any implementation, install, real-data operation or other gated action.
 - Next numbers: EX_282, entry 176, RAT-44.
+
+## 176. 23 November 2026, 15:46 - OWNER: THE GO FOR BUILD STEP 2 (the research engine, in DEV), on Fable (High)
+
+- **The owner's words (15:45):** "switched to fable (High) now ... please go now !"
+- **What the go covers:** build step 2 of specification 17.4, in the cloud workspace: the lists, the research job with
+  its fill and catch-up, scoring, the reports, both OV-1 scores, the status file and withdrawal, with RAT-40's notes and
+  the coding practices; its tests; its package for review. As for build step 1 and the tidy-up, **it authorises no
+  operation on the owner's PC:** every install and run there is on his own separate go, after the reviewer's review.
+- **Model:** Fable (High), as suggested for the core of step 2 (H-1 v9 section 10); Claude says when the Fable part is
+  finished.
+- Next numbers: EX_282, entry 177, RAT-44.
