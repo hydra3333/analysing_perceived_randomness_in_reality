@@ -4708,3 +4708,48 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `Check_Tree`, and the launch guard.
 - Nothing is authorised on the owner's PC. TASK_T028 has not run.
 - Next numbers: EX_301; entry 223; RAT-47.
+
+## 223. 24 November 2026, 16:44 - EX_301 (reviewer): the plan v0.1r1 FOCUSED PASS; TASK_T028 cold read RECHECK, three findings, all corrected (TASK_T028 r1); not run
+
+- **EX_301** (reviewer; main `89728ff`; SHA-256 `191a06637d5a642f991c82e445855a7c36b6f19e4c3c6e51d63d02492dd82518`), read after entry 222 was written.
+  **So Claude's next number is EX_302,** not EX_301 as entries 219 to 222 say.
+  - **The build plan v0.1r1: FOCUSED PASS.** It closes EX_299's C01, C03 and C04; C02 is rightly an owner's choice.
+    A working plan, not a design and no authority on the owner's PC.
+  - **Plan section 4A: the reviewer recommends the split Claude proposed** (the restore standard library only;
+    psutil for the other checks; one narrow amendment of the deployment design section 2, to be ratified; the probe
+    to inform its wording). The owner had chosen it meanwhile (entry 222). The amendment is not yet ratified, and
+    nothing here says it is.
+  - **TASK_T028: RECHECK, not cleared to run.** Three findings, all accepted as found.
+- **T028-F01 (corrected).** Step 3 checked `D:\DELETE_ME` but not the folder between it and the task's folder, which
+  could have been a link leading elsewhere. Now every existing folder above the task's folder must be an ordinary
+  folder (no link, junction or other reparse point), the task's folder must resolve to where its name says, and
+  step 4 checks the folder it has just made the same way before it copies anything.
+- **T028-F02 (corrected).** The task said "run as a background command and wait" over a line that holds neither.
+  Now it says exactly what the line is (an ordinary line that records its own output and, last, the probe's own
+  exit status), that it is started with the runner's shell tool's run-in-background option (the way the long steps
+  of TASK_T025 to T027 ran on this PC; a shell `&` with `wait` cannot span the runner's separate shell calls), and
+  that the end of step 6 is proved by the file: step 7 first reads the file's last line, which may be repeated
+  while it is not yet `ZIP EXIT CODE <n>`, with a STOP after 30 minutes.
+- **T028-F03 (corrected, in the probe).** The part "processes" could finish as made with psutil absent. Now psutil
+  absent, or either reading not showing the probe and its own helper program, is a measurement NOT MADE: exit code
+  1, a STOP. Other programs starting or ending between the readings, and unreadable details of other processes,
+  stay findings.
+- **The ZIP measurement is named for what it now is** (EX_301 section 2; the scratch tree of TASK_T025 is deleted):
+  **an environment-only proxy,** the main `.venv` alone, read only; not a whole tree, not `source_data` or
+  `results`, not a backup. The command no longer names the deleted tree. A whole tree is measured in the joined
+  rehearsal.
+- **Written:** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T028.md` r1 (SHA-256 `96e2a6cf86873a9f6a1df1f9e9d3ec2c884e3a8f19b767395498b7ab7f88b02c`, CRLF) and
+  `inbox/TASK_T028_probe.py` r1 (SHA-256 `57fde59dc4f56526c1a73e95e006fee63b80bbffa223206740ee64776c6128bf`, LF), in place, as TASK_T025 r1 was (entry 200): neither had
+  run. The exact differences: `exchange/CLAUDE_WEB_TOOLS/t028/TASK_T028_TO_r1.diff` and `TASK_T028_probe_TO_r1.diff`.
+- **Tried in the cloud:** steps 3 and 4 as written, on made-up folders: pass with and without the middle folder;
+  STOP when the middle folder is a link, when the task's folder is there already, and when the probe's bytes
+  differ. The probe's new refusals, each with a planted case: psutil cannot be imported; psutil's reading lacks the
+  helper; the standard-library reading lacks the probe; an empty standard-library table. The part that calls
+  Windows itself still cannot be run in the cloud.
+- **A fault of Claude's in the record, stated:** commit `d103011` (pushed) carries TASK_T028 r1, the two
+  differences, entry 222 and the slice A working files, and its message names "entries 222 and 223", but this
+  entry was not in it: the script that was to write it stopped (it read this log as ASCII, and an earlier entry
+  holds a character that is not), and the commit command ran all the same. This entry and the continuity page's
+  line follow in the next commit. Nothing else was affected; the files of `d103011` are as described here.
+- **Waiting on:** the reviewer's short cold recheck of r1, then the owner's go for this task. Nothing has run.
+- Next numbers: EX_302; entry 224; RAT-47.

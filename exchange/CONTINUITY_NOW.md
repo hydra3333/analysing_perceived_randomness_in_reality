@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 16:40 Australia/Adelaide (entry 222: the owner chose option A for the process readers; the scratch tree of TASK_T025 is deleted; slice A is begun in the cloud; TASK_T028 waits for the reviewer's read and the owner's go).
+**Last updated:** 24 November 2026, 16:44 Australia/Adelaide (entries 222 and 223: option A for the process readers; slice A begun; EX_301: the plan v0.1r1 passed, TASK_T028 corrected as r1 and waiting for the reviewer's short recheck, then the owner's go).
 
 ## For the owner: NOW
 
@@ -12,7 +12,10 @@ durable EX messages are authoritative.
   restore stays standard library only; every other process check uses psutil; B (psutil for the restore too) only
   if A proves too hard, at Claude's discretion, said beforehand. The design amendment's wording still goes to the
   reviewer with slice A and to the owner for ratification. `D:\DELETE_ME\a_p_r_i_r\T025` is deleted, so TASK_T028
-  measures the main `.venv` alone (the task file provides for it). **Slice A so far** (working files in
+  measures the main `.venv` alone, named an environment-only proxy. **EX_301 (entry 223): the plan v0.1r1 has the
+  reviewer's focused PASS; TASK_T028 was corrected as r1 for its three findings** (`96e2a6cf...88b02c`; probe
+  `57fde59d...6128bf`) **and waits for the reviewer's short recheck, then the owner's go.** Claude's next numbers:
+  EX_302, entry 224, RAT-47. **Slice A so far** (working files in
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, run with `step3/sync_and_test.sh <clone> <python> <test modules>`): the
   settings of the three trees (`src/research/settings.py`, `tests/test_trees_settings.py`, 32 tests) and the
   rewritten `ENVIRONMENT.example.ini`. **Next in slice A:** the LF pin, the markers and `Make_Installable`, the
