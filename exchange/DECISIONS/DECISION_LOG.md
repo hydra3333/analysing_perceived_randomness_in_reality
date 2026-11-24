@@ -6149,3 +6149,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   entry 262 named the handover documents. It waits for the reviewer's documentary check and the owner's word
   (RAT-53); the builder's `final` mode then writes the installed file with the status words alone changed.
 - Next numbers: EX_316; entry 264; RAT-53.
+
+## 264. 25 November 2026, 07:30 - slice A resumed: its working files brought to the file-form standard and put on today's main; one open point found (where `deploy/file_form.py` belongs in the manifest)
+
+- **The owner, 07:25:** "... then resume slice A." Done so far, the routine part only; working files, not a package,
+  not reviewed, nothing installed.
+- **The eleven working files of `exchange/CLAUDE_WEB_TOOLS/step3/overlay/` are now CRLF,** as the package will deliver
+  them (checked with `deploy/file_form.py`). They were LF, written before the standard; this is the one deliberate
+  change of line endings to files that existed before 25 November 2026, made so that the overlay is byte for byte
+  what is tested and delivered.
+- **Put on today's `main`:** of the four files that also exist on `main`, three (`ENVIRONMENT.example.ini`,
+  `src/research/code_identity.py`, `src/research/settings.py`) changed on `main` in line endings only since `5f16b35`,
+  so the slice's versions stand; **`deploy/INFRA_MANIFEST.ini` is merged:** the slice's `[install_tool]` section with
+  the line `src/research/windows_text.py = derived` that the conversion added.
+- **One change of code for the standard:** the two readiness markers are text files, so `deploy/install_readiness.py`
+  now writes them with every line ending CRLF (they were LF); one assertion added to `tests/test_trees_readiness.py`.
+  The search for writes that name no line ending finds none in the slice's programs (its tests write temporary
+  fixtures only).
+- **Run in a fresh clone of `main` with the overlay copied in (the cloud; Claude's evidence):** `test_trees_settings`
+  32 OK; `test_file_form` 52 OK (the living project with the slice's files is in its form); `test_research_manifest`
+  9 OK; `test_research_identity` 25 OK; **`test_trees_readiness` 38, one failing, and rightly:**
+  `test_the_real_manifest_lists_every_install_tool_file_of_this_repository` names `deploy/file_form.py`, which the
+  conversion added and no section of the manifest lists.
+- **THE OPEN POINT, not decided by Claude.** `deploy/file_form.py` is the checker's core. The standard's section 6
+  uses it in three places: the suite in DEV, `Make_Installable` (DEV only) and **`Check_Tree`, which runs in every
+  tree.** If `Check_Tree` in QA and PROD uses it, it is infrastructure that is installed into those trees (the
+  manifest's `[files]`, with a class), not a DEV-side install tool (`[install_tool]`, never installed). Which it is,
+  and its class, goes to the owner and the reviewer with the slice.
+- **Still to write in slice A** (H-1 v12 section 0D item 7): the list of installed files, the environment's digest
+  over the fixed inventory, `Check_Tree`, the launch guard; and the checker wired into `Make_Installable` and
+  `Check_Tree`. Under the owner's model rule this next part is put to him first ("Suggest switching to Fable
+  (High) for this").
+- Next numbers: EX_316; entry 265; RAT-53.

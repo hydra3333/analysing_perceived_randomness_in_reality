@@ -52,6 +52,9 @@ STAGING_FOLDER = 'records/marker_staging'
 METHODS_FOLDER = 'src/methods'
 
 
+# The end of every line of a marker file: the Windows form the project's standard gives a text file.
+LINE_ENDING = '\r\n'
+
 class ReadinessRefused(ValueError):
     """A marker cannot be made, or a thing is not as readiness requires. The message says what was found, where,
     and what to do."""
@@ -76,10 +79,12 @@ class Readiness:
 def marker_bytes(content: dict) -> bytes:
     """The exact bytes of a marker file: the same content always gives the same bytes.
 
-    content: the marker as a dictionary.  Returns ASCII JSON, keys sorted, two spaces of indent, one line ending
-    (LF) at the end, for example b'{\\n  "files": [...],\\n  "fingerprint": "ab12...",\\n  "kind": "..."\\n}\\n'.
+    content: the marker as a dictionary.  Returns ASCII JSON, keys sorted, two spaces of indent, every line ending
+    CRLF (the project's file-form standard: a marker is a text file), for example
+    b'{\\r\\n  "files": [...],\\r\\n  "fingerprint": "ab12...",\\r\\n  "kind": "..."\\r\\n}\\r\\n'.
     """
-    return (json.dumps(content, indent=2, sort_keys=True, ensure_ascii=True) + '\n').encode('ascii')
+    text = json.dumps(content, indent=2, sort_keys=True, ensure_ascii=True) + '\n'
+    return text.replace('\n', LINE_ENDING).encode('ascii')
 
 
 def _write_whole(tree_root: Path, target: Path, data: bytes) -> None:

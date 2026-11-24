@@ -89,6 +89,9 @@ class AVariantsMarker(InventedDev):
     def test_made_twice_on_unchanged_files_the_marker_has_the_same_bytes_and_is_not_rewritten(self):
         install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
         first = self.marker.read_bytes()
+        # The marker is a text file of the project: every line ends CRLF (the file-form standard).
+        self.assertGreater(first.count(b'\r\n'), 3)
+        self.assertNotIn(b'\n', first.replace(b'\r\n', b''))
         self.marker.unlink()
         install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
         self.assertEqual(self.marker.read_bytes(), first)

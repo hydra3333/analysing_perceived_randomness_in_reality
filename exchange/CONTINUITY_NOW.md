@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:28 Australia/Adelaide (entry 263: the register v0.33 is built as a candidate and waits for the reviewer's check and the owner's RAT-53; next work: slice A of build step 3).
+**Last updated:** 25 November 2026, 07:30 Australia/Adelaide (entry 264: slice A resumed, its working files brought to the standard and put on today's main; one open point on the manifest; the register v0.33 candidate waits for RAT-53).
 
 ## For the owner: NOW
 
+- **SLICE A RESUMED (entry 264; 25 November 2026).** Its eleven working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`)
+  are CRLF and sit on today's `main`; the markers are written CRLF; 156 of its 157 tests pass in a fresh clone.
+  **Open, for the owner and the reviewer:** is `deploy/file_form.py` infrastructure installed into QA and PROD (for
+  `Check_Tree`) or a DEV-side install tool? The one failing test waits on that. **Next in the slice:** the list of
+  installed files, the environment's digest, `Check_Tree`, the launch guard (suggest Fable for it; the owner's go).
 - **H-1 v12 IS THE INSTALLED CLAUDE HANDOVER (entry 262; RAT-51; 25 November 2026).** Ratified by the owner in
   advance; **the reviewer has not yet read it** (its cold read is owed). Its section 0E holds everything since
   H-1 v11. **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md`.**
