@@ -4,13 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 12:37 Australia/Adelaide (entry 209: the owner's install of step 2 in DEV is under way: PRE PASS, 35 files copied, POST PASS, the suite 762; the sheet's comparison command names v1r2's folder by Claude's mistake, the corrected command given; not yet committed).
+**Last updated:** 24 November 2026, 13:43 Australia/Adelaide (entry 210: BUILD STEP 2 IS INSTALLED IN DEV, commit 5f16b35, COMMITTED PASS, verified from GitHub; part 5 (the settings file) and, on the owner's separate go, DEV's first fill remain; then H-1 v10).
 
 ## For the owner: NOW
 
+- **BUILD STEP 2 IS INSTALLED IN DEV (entry 210; 24 November 2026).** The owner's commit `5f16b35`, `COMMITTED PASS`,
+  pushed; Claude verified it from GitHub (the verifier, and all 35 files against the package). **Still to do, by the
+  owner:** the sheet's part 5 (`copy ENVIRONMENT.example.ini ENVIRONMENT.ini`, check it in Notepad). **Then, each his
+  own go:** part 6, DEV's first fill (`Run_Research.bat --game BOTH --no-update`, about 46 minutes, then once more
+  into a file), and part 7 (the comparison; expect the numbers of entry 208). **Then Claude writes H-1 v10.** Use the
+  sheet of package v1r3; in its part 3 the comparison command names v1r2's folder by mistake (entry 209).
 - **THE INSTALL OF BUILD STEP 2 IN DEV IS UNDER WAY (entry 209; 24 November 2026).** Done by the owner: `PRE PASS`, 35
-  files copied, `POST PASS`, the suite after (762 tests; only the two known modules `FAILED`). **Not yet done:** the
-  comparison (part 3), the commit and `COMMITTED PASS` (part 4), the push, the settings file (part 5). **A defect in
+  files copied, `POST PASS`, the suite after (762 tests; only the two known modules `FAILED`). (All done except the settings file: entry 210.) **A defect in
   v1r3's sheet, Claude's:** part 3's comparison command names `E:\TEMP\STEP2_Research_Engine_v1r2\...`; it must be
   `...v1r3\...`, and `BASELINE` must be the baseline folder (`E:\TEMP\TIDY1_evidence\suite_after`). The tree holds
   the 35 copied files, uncommitted: **nothing is to be reset or undone.**

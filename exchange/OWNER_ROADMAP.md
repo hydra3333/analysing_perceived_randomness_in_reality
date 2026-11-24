@@ -83,7 +83,8 @@ D. NEXT - Your own ZIP of the whole project folder on E:, when Claude says: befo
 E. NEXT - Build step 1, the folder layout: each method's files move into family and variant folders. No calculation
    changes. Proved by the existing tests and by recomputing every old forecast and comparing. Then a light tidy-up of
    the existing method files (headers and comments only), proved the same way.
-F. THEN - Build step 2, the research engine, in DEV: the result lists, the research job (fill and catch-up), scoring,
+F. INSTALLED IN DEV (24 November 2026, commit 5f16b35; DEV's first fill is still your separate go) - Build step 2,
+   the research engine, in DEV: the result lists, the research job (fill and catch-up), scoring,
    the league reports, both OV-1 scores, each variant's status file and withdrawal.
 G. THEN - Build step 3, trees, installs, backups and restore: QA and PROD are created; old and new forecasts are
    compared (the transition check); PROD's first job. AFTER THIS STEP PROD FORECASTS EVERY WEEK, and new methods can

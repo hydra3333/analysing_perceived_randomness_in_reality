@@ -4349,3 +4349,39 @@ section 17.2 (unpack it into a new folder, never over the clone).
   sheet differs from the issued one in that one path only (checked with `diff`). **Package v1r3 as issued and passed
   is not replaced:** its 35 files and its tools are right; only that line of its sheet is wrong.
 - Next numbers: EX_295; entry 210; RAT-45.
+
+## 210. 24 November 2026, 13:43 - BUILD STEP 2 IS INSTALLED IN DEV: the owner's commit `5f16b35`, `COMMITTED PASS`, pushed; verified by Claude from GitHub
+
+- **The owner did the sheet's parts 1 to 4 himself** (package `STEP2_Research_Engine_v1r3`), sending his console output
+  at 12:35, 13:08, 13:38, 13:40, 13:42 and 13:43. In order: `PRE PASS`; `35 File(s) copied`; `POST PASS`; the suite
+  after (52 modules, 762 tests; `FAILED` only on the two known modules); the comparison; `git pull --ff-only`;
+  33 files added and 2 modified staged; the commit; **`COMMITTED PASS: the last commit (5f16b35) added exactly 33
+  files, modified 2 and deleted 0; all Git blobs match.`**; the push `ba2cfae..5f16b35`.
+- **The commit:** `5f16b354b78bc608eefaef440042b159140a2c7d`, "BUILD STEP 2: the research engine in DEV (src/research, the two
+  launchers, the manifest, its tests); the old system is not changed"; 35 files, 8253 lines added and 1 removed
+  (the same numbers as Claude's rehearsal commits of the same files).
+- **Verified by Claude from GitHub at that commit:** the package's verifier, committed phase, gives `COMMITTED PASS`
+  and "28 guarded files unchanged"; each of the 35 files of the package's `repo_overlay` equals the committed blob.
+- **Three departures from the sheet, all recorded here:**
+  1. **The comparison command's folder** (entry 209): the sheet named package v1r2's folder; the owner ran the same
+     command from v1r3's folder.
+  2. **The baseline.** `E:\TEMP\TIDY1_evidence\suite_after` no longer existed and no baseline had been made before
+     the copy. On Claude's recommendation the owner made it from a clean clone of the repository as committed
+     (`git clone . "E:\TEMP\STEP2_baseline_clone"`, then the package's `run_suite.py` on it with the main Python):
+     `DONE: 45 modules, 571 tests ran`, `FAILED` only on the two known modules. The comparison of that run with DEV's
+     run after the copy: `tests in both runs: 571; with the same result: 571`; the three known `FAILS IN BOTH RUNS`
+     and no other; `RESULT: DIFFERENCES FOUND` (the new tests); 198 new lines: all as the sheet expects. Before that,
+     Claude had found DEV's 52 module lines equal to the rehearsal's run in a clone (TASK_T025), line for line.
+  3. **One `git pull --ff-only` before the commit**, to bring in the commit of entry 209 that Claude had pushed while
+     the install was under way. Claude should not have pushed then, and pushed nothing more until the owner's
+     commit was on GitHub.
+- **The owner's question, 13:38, before committing:** "No committing or especially pushing for the moment, I have
+  lost trust in the actual state of my local git ... how sure are you that my local git is "good" ?" Claude's
+  answer: no Git command had failed (the two failures were a Python "can't open file" and a `dir`); nothing run
+  since `POST PASS` writes into the repository; and four read-only checks to make it a fact. He ran them: `git
+  status --short` printed the 16 expected lines exactly; `HEAD` was `2b5087d`; GitHub was at `ba2cfae`; the verifier
+  printed `POST PASS` again. He then went on.
+- **Not yet done:** part 5 (this PC's `ENVIRONMENT.ini`, a copy of the example); part 6, DEV's first fill, which is
+  the owner's own separate go; part 7. DEV holds the engine and no research results. Then H-1 v10 (entry 183).
+- **Told to the reviewer by paste block:** the sheet's erratum (entry 209) and, with this entry, the install.
+- Next numbers: EX_295; entry 211; RAT-45.
