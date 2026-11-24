@@ -4903,3 +4903,45 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner:** his yes to that cost (the removal of DEV's research results is a deletion, which needs
   his own approval, given again on the day).
 - Next numbers: EX_303; entry 229; RAT-47.
+
+## 229. 24 November 2026, 17:34 - OWNER (thinking it through, not yet a decision): Windows-native line endings for everything a person writes or reads; all code to be checked against the standard once set
+
+- **The owner, 17:25, to Claude:** "let's think this through first.  We are running on Windows 11.  What is the
+  standard for Win10/win11 files especially .bat and .py files, if there are standards or usual expectations ...
+  what do we break and/or miss out on (eg vscode, VS, editors like notrpad, norepad++, running them, viewing
+  reports, printing files, etc)  ?"
+- **The owner, 17:31,** after Claude's answer (Windows-native text is CRLF; only batch files need it; modern Windows
+  tools handle LF; a new file made in a Windows editor defaults to CRLF): "if .bat should be crlf then I suggest so
+  should code files like py  json ini etc etc and reports logs txt files  etc (I do not have a full list of what are
+  created/used in this project I guess you will) too - I do not know enough about data files to suggest for
+  those.  Especially since a new file created in a Windows editor defaults to CRLF and I may or may not be doing
+  that all the time.  At one level, the number like 584 is not relevant since we need to get it right and be
+  consistent (not only the files themselves but also the git stuff which specifies converting things to/from one
+  or the other)."
+- **The owner, 17:32:** "I suppose we will need to check all out code to ensure we follow whatever standard we
+  establish."
+- **So entry 228's proposal (code LF) is not accepted;** the direction under discussion is CRLF for what people
+  write and read. Nothing is decided and nothing has been changed.
+- **Facts Claude gathered for it (from the repository, by tool):**
+  - Tracked under `src`: 172 `.py` files and 415 `.json` files; all LF in Git. Of these the new system hashes and
+    installs about 150: 32 infrastructure files, 80 files of the 40 variants (a declaration and a method each) and
+    39 helpers. 28 batch files, CRLF on disk by the existing rule, LF inside Git.
+  - **The data files are already as their writers made them, and Git stores them untouched:** each game's results
+    master and its ledger are CRLF; the verification and opening records are LF. Their bytes are fingerprinted
+    (a ledger records its master's SHA-256), so nothing may ever convert them.
+  - The engine writes its lists, ledgers, status files and reports with LF, by explicit choice in the code.
+  - Byte-pinned files of the old system must stay as they are: `src/package_tools/process_check.py` and
+    `src/results_master_v0_2.py` (tests check their bytes), the install records, the old run records under
+    `results/`, the sealed Mode H records. Several old tests already compare source files with CRLF made LF first.
+  - Documents and exchange files are mixed in Git today (about 1,990 LF, 920 CRLF, 10 mixed); no tool hashes them.
+- **Claude's view, put to the owner in the chat:** his point about the editors' default is the deciding one: the
+  person's ordinary tools should produce conforming files, and the machine side (Claude's packages, made on Linux)
+  can be made to conform and checked. Two kinds of file, one rule each: **text that people write or read** (code,
+  declarations, manifests, settings, batch files, reports, logs, read-me files): CRLF; **records whose bytes are
+  the record** (results and ledgers, lists, the OV-1 ledger, status files, markers, sealed and install records):
+  exactly as their format defines, written only by programs, never converted. **Git converts nothing** in the
+  operational folders, so that the bytes on disk are the bytes committed and the bytes GitHub shows. **The
+  project's own checker** enforces it. Proposed next step, on his word: a one-page standard with the full
+  inventory of file kinds, and a trial conversion in the cloud with the whole suite before and after, before he
+  decides.
+- Next numbers: EX_303; entry 230; RAT-47.

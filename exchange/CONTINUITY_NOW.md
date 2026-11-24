@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 17:19 Australia/Adelaide (entry 228: the owner wants no halfway house on line endings; Claude proposes consistent LF checked by Make_Installable, at the cost of one refill of DEV; waiting on his yes; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 17:34 Australia/Adelaide (entry 229: line endings are being thought through with the owner; his direction is Windows-native CRLF for everything people write or read; not decided; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -24,11 +24,13 @@ durable EX messages are authoritative.
   (DEV has 584 LF and 3 CRLF files under `src` and `deploy`, `core.autocrlf=true`; the three names are asked for),
   `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard, the design amendment's wording.
   **The owner's principle (entry 227): Git is never an operational gatekeeper or checker.** So the markers are not
-  tracked by Git and no tool of the new system consults Git. **Line endings (entry 228): he wants no halfway
-  house.** Proposed, waiting on his yes: the code is LF and batch files CRLF with no exceptions; `Make_Installable`
-  itself refuses a listed file with the wrong line endings; Git is only told to keep LF (`text eol=lf`). Cost: the
-  three CRLF files on his disk are made LF at the install, and because `game_profiles.py` is forecast-class,
-  DEV's research results are removed by hand and filled again once (47 minutes).
+  tracked by Git and no tool of the new system consults Git. **Line endings: under discussion (entries 226 to 229), not
+  decided.** He wants one consistent standard and leans to Windows-native CRLF for everything people write or
+  read (code, declarations, manifests, settings, batch files, reports, logs), with all code checked against it.
+  Claude's proposal: that, plus records whose bytes are the record left exactly as their format defines, Git
+  converting nothing in the operational folders, and the project's own checker. Next, on his word: a one-page
+  standard with the full inventory of file kinds and a trial conversion in the cloud with the whole suite.
+  Either way `game_profiles.py` changes bytes, so DEV is refilled once (47 minutes) when step 3 is installed.
 - **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
   November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
   probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)
