@@ -4,22 +4,22 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:30 Australia/Adelaide (entry 264: slice A resumed, its working files brought to the standard and put on today's main; one open point on the manifest; the register v0.33 candidate waits for RAT-53).
+**Last updated:** 25 November 2026, 07:36 Australia/Adelaide (entry 265: the register v0.33 is ratified (RAT-53) and installed; the checker is infrastructure in every tree by the owner's decision; slice A's existing tests all pass; its next part waits for the owner's go).
 
 ## For the owner: NOW
 
 - **SLICE A RESUMED (entry 264; 25 November 2026).** Its eleven working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`)
-  are CRLF and sit on today's `main`; the markers are written CRLF; 156 of its 157 tests pass in a fresh clone.
-  **Open, for the owner and the reviewer:** is `deploy/file_form.py` infrastructure installed into QA and PROD (for
-  `Check_Tree`) or a DEV-side install tool? The one failing test waits on that. **Next in the slice:** the list of
-  installed files, the environment's digest, `Check_Tree`, the launch guard (suggest Fable for it; the owner's go).
+  are CRLF and sit on today's `main`; the markers are written CRLF; all its tests pass in a fresh clone.
+  **Decided by the owner (entry 265): `deploy/file_form.py` is infrastructure, installed into every tree** (`[files]`,
+  class `other`); the reviewer concurs (EX_316). **Next in the slice:** the list of installed files, the
+  environment's digest, `Check_Tree`, the launch guard (suggest Fable for it; the owner's go).
+- **THE REGISTER v0.33 IS RATIFIED AND INSTALLED (RAT-53, entry 265):** `doc/RATIFICATION_REGISTER_v0_33.md`.
 - **H-1 v12 IS THE INSTALLED CLAUDE HANDOVER (entry 262; RAT-51; 25 November 2026).** Ratified by the owner in
   advance; **the reviewer has not yet read it** (its cold read is owed). Its section 0E holds everything since
   H-1 v11. **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md`.**
   **The reviewer's own H-2 v7 is installed too (RAT-52), likewise ratified in advance.**
-  **Next work:** slice A of build step 3, brought to the file-form standard and rebased on `main`. **The register's
-  next edition, v0.33, is a CANDIDATE** (entry 263; `exchange/CLAUDE_WEB_TOOLS/register/v0_33/`): it waits for the
-  reviewer's check and the owner's RAT-53. The owner's plan for this Claude chat ends on the night
+  **Next work:** slice A of build step 3, brought to the file-form standard and rebased on `main`. **The register
+  v0.33 is installed (RAT-53, entry 265).** The owner's plan for this Claude chat ends on the night
   of 25 November 2026.
 - **THE CONVERSION IS DONE (entry 260; 25 November 2026).** DEV is in the file-form standard: commit `691f58e`,
   pushed by the owner at 07:02 and verified by Claude from GitHub; fill, repeat run and the comparison with
@@ -917,7 +917,7 @@ build the staged slice 3 tree for reading.
 **From RAT-51 (25 November 2026, entry 262): H-1 v12 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md`,
 SHA-256 `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd`; ratified in advance, the reviewer's read owed)
 and, for the reviewer, H-2 v7 (RAT-52, entry 262; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md`), with
-register v0.32 (`doc/RATIFICATION_REGISTER_v0_32.md`; its next edition is overdue).** Between RAT-41 and this:
+register v0.33 (`doc/RATIFICATION_REGISTER_v0_33.md`; RAT-53, entry 265).** Between RAT-41 and this:
 H-1 v9 (RAT-43), v10 (RAT-45) and v11 (RAT-48); H-2 v5r1 (RAT-43) and v6 (RAT-46). The rest of this section is history.
 
 **From RAT-41 (22 November 2026, entry 153): H-1 v8 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md`, SHA-256

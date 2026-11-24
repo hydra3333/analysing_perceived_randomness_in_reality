@@ -6181,3 +6181,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `Check_Tree`. Under the owner's model rule this next part is put to him first ("Suggest switching to Fable
   (High) for this").
 - Next numbers: EX_316; entry 265; RAT-53.
+
+## 265. 25 November 2026, 07:36 - the owner: the checker is infrastructure in every tree; EX_316; RAT-53: THE OWNER RATIFIES the register v0.33, installed in doc/
+
+- **The owner's decision, 07:33,** on the question of entry 264: "yes to your recommendation option 1":
+  **`deploy/file_form.py` is infrastructure, installed into every tree** (the manifest's `[files]`, class `other`), not
+  a DEV-side install tool. One checker serves DEV's suite, `Make_Installable` and `Check_Tree` in DEV, QA and PROD.
+- **EX_316** (the reviewer, main `dc70a71`, SHA-256
+  `6ba1a5cb8ba2229728c94e98d96d1e2bd6050b99f4e9070d652dcca7ab46f191`): **the register v0.33 candidate: DOCUMENTARY
+  PASS,** subject to two small clarifications of wording to be made at installation, with no further review round:
+  the summary of the standard qualified by its own exceptions, and "the same bytes for every file" replaced by a
+  scoped statement about tracked files governed by `-text`. All fourteen hashes checked by it at their commits; both
+  hunks rebuild the candidate. **On slice A it concurs:** the checker under `[files]` as `other`; no duplicate module;
+  "a design recommendation, not an owner decision or a PASS of the unfinished slice A package".
+- **The owner, 07:34: "rat-53 ratified".** **RAT-53 is recorded** (RAT-52 was the last number used).
+- **Installed:** `doc/RATIFICATION_REGISTER_v0_33.md`, SHA-256 `94cb836c7f8776bb7916793e43591cb98f1575a1767f50a2830b7deb3ef0a2d2`
+  (CRLF, UTF-8), written by the builder's `final` mode. **It differs from the reviewed candidate**
+  (`c2c589fee55086d801b91c195aba31729b23af083804985ca6f860924e977660`, kept beside the builder) **in the status words of its
+  version line and in EX_316's two clarifications, and in nothing else:**
+  `exchange/CLAUDE_WEB_TOOLS/register/v0_33/REGISTER_v0_33_CANDIDATE_TO_FINAL_DIFFERENCE.txt`. Register v0.32 (RAT-41)
+  stays in `doc/` as history. The reviewer's read-back of the installed bytes is welcome; none was asked for.
+- **Slice A, after the owner's decision** (working files; not a package): the slice's manifest lists
+  `deploy/file_form.py = other` under `[files]`; its test now requires every program under `deploy/` to be on exactly
+  one of the two lists and the checker to be infrastructure. In a fresh clone of `main` with the overlay:
+  `test_trees_settings` 32, `test_trees_readiness` 38, `test_file_form` 52, `test_research_manifest` 9 and
+  `test_research_identity` 25, all OK. **The slice leaves the forecasting-code identity as it is and changes the
+  derived-code digest** (it changes `settings.py` and `code_identity.py`): at its install no forecast is made again;
+  new lines carry the new digest.
+- **Next in slice A, on the owner's go under his model rule:** the list of installed files, the environment's
+  digest, `Check_Tree`, the launch guard, and the checker wired into `Make_Installable` and `Check_Tree`.
+- Next numbers: EX_317; entry 266; RAT-54.

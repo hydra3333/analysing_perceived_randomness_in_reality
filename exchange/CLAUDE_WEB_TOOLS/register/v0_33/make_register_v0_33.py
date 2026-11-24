@@ -69,12 +69,16 @@ this section indexes.
   engine, with DEV's first fill). **Build step 3** (the trees QA and PROD, installs, backups, restore) has the owner's go
   for design and cloud coding only (entry 217); none of it is reviewed as a package or installed. No QA or PROD tree exists.
 - **A standard for the form of every file is in force and DEV conforms to it:** `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49).
-  Every text file of the living project is CRLF, every `.jsonl` file is LF, and Git converts nothing (`* -text`). The
-  owner converted DEV on 24 and 25 November 2026 (commit `691f58e`), and one line was corrected afterwards (`fe1c310`).
-- **From this edition on a hash in this register is the hash of the file's bytes, wherever it lies.** Git, a clone and the
-  owner's disk now hold the same bytes for every file of the project (`GAIS/` apart, which keeps its own rules). The
-  earlier sections' words "UTF-8 Git-stored file content with LF line endings" describe the files as they were
-  committed then, and those files are unchanged; a file added since 25 November 2026 is CRLF.
+  Every text file of the living project is CRLF and every `.jsonl` file is LF, with the standard's own explicit
+  exceptions (`.sh` files, frozen history, `GAIS/`, other people's files such as a tree's `.venv`, the six files it
+  leaves out by name, and tests' temporary fixtures); for the project Git converts nothing (`* -text`). The owner
+  converted DEV on 24 and 25 November 2026 (commit `691f58e`), and one line was corrected afterwards (`fe1c310`).
+- **From this edition on a hash in this register is the hash of the file's bytes as committed** (EX_316's wording). For
+  tracked files governed by `-text`, Git stores the bytes committed without line-ending conversion; a clean checkout of
+  the same commit has those bytes. `GAIS/` retains its own rules. Untracked and locally generated files are governed by
+  their own standard scopes, not by Git. The earlier sections' words "UTF-8 Git-stored file content with LF line
+  endings" describe the files as they were committed then, and those files are unchanged; a text file newly added
+  within the standard's scope takes the form the standard prescribes (normally CRLF; `.jsonl` LF).
 - **The old system's code is still in `src/` beside the new engine.** The sealed Mode H records are unchanged. No science
   switch was turned on; the allowlist is empty; no program ends another process.
 
@@ -174,6 +178,14 @@ def main(root: str, kind: str, status: str) -> int:
     difference = ''.join(difflib.unified_diff(old.splitlines(keepends=True), new.splitlines(keepends=True), V32, name))
     print(write(f'REGISTER_v0_32_TO_v0_33_{kind.upper()}_DIFFERENCE.txt', difference),
           f'REGISTER_v0_32_TO_v0_33_{kind.upper()}_DIFFERENCE.txt')
+    if kind == 'final':
+        # What ratification changed in the reviewed candidate: its bytes are read from the file committed beside this one.
+        with open(os.path.join(HERE, 'RATIFICATION_REGISTER_v0_33_CANDIDATE.md'), 'rb') as handle:
+            candidate = handle.read().decode('utf-8').replace('\r\n', '\n')
+        difference = ''.join(difflib.unified_diff(candidate.splitlines(keepends=True), new.splitlines(keepends=True),
+                                                  'RATIFICATION_REGISTER_v0_33_CANDIDATE.md', name))
+        print(write('REGISTER_v0_33_CANDIDATE_TO_FINAL_DIFFERENCE.txt', difference),
+              'REGISTER_v0_33_CANDIDATE_TO_FINAL_DIFFERENCE.txt')
     return 0
 
 

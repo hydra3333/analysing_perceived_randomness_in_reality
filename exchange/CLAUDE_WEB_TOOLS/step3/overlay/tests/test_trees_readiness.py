@@ -355,12 +355,18 @@ class TheInfrastructuresMarker(InventedDev):
         manifest = code_identity.read_manifest(REPOSITORY_ROOT)
         self.assertEqual(install_import_check.infrastructure_import_faults(REPOSITORY_ROOT, manifest), [])
 
-    def test_the_real_manifest_lists_every_install_tool_file_of_this_repository(self):
-        listed = set(code_identity.read_install_tool_list(REPOSITORY_ROOT))
-        tools = {path.relative_to(REPOSITORY_ROOT).as_posix() for path in (REPOSITORY_ROOT / 'deploy').glob('*.py')}
-        self.assertEqual(sorted(tools - listed), [])
-        self.assertIn('Make_Installable.bat', listed)
-        self.assertEqual(sorted(listed & set(code_identity.read_manifest(REPOSITORY_ROOT))), [])
+    def test_the_real_manifest_lists_every_program_under_deploy_as_infrastructure_or_as_an_install_tool(self):
+        # A program under deploy/ is either infrastructure, installed into every tree (the checker
+        # deploy/file_form.py: the owner's decision of 25 November 2026, decision log entry 265), or a DEV-side
+        # install tool, never installed. None may be on neither list.
+        tools = set(code_identity.read_install_tool_list(REPOSITORY_ROOT))
+        infrastructure = set(code_identity.read_manifest(REPOSITORY_ROOT))
+        programs = {path.relative_to(REPOSITORY_ROOT).as_posix() for path in (REPOSITORY_ROOT / 'deploy').glob('*.py')}
+        self.assertEqual(sorted(programs - tools - infrastructure), [])
+        self.assertIn('deploy/file_form.py', infrastructure)
+        self.assertNotIn('deploy/file_form.py', tools)
+        self.assertIn('Make_Installable.bat', tools)
+        self.assertEqual(sorted(tools & infrastructure), [])
 
 
 class TheCommandMakeInstallable(InventedDev):
