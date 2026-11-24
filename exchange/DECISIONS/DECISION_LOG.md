@@ -6261,3 +6261,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   own word (RAT-54). On it, the builder's `final` mode writes the installed files with the status words alone
   changed, and Claude installs them in `doc/HANDOVER/`. Not read by the reviewer.
 - Next numbers: EX_317; entry 268; RAT-54.
+
+## 268. 25 November 2026, 07:59 - RAT-54: THE OWNER RATIFIES H-1 v13, installed; RAT-55: he ratifies the reviewer's H-2 v8; a change of Claude chat follows
+
+- **The reviewer's H-2 v8 as a candidate** (its commits `666a1a6` and `a573bab`, 07:53; made on the owner's word to it,
+  "claude is updating handover docs. please also do yours now."):
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md`, SHA-256
+  `9b00a49398f8c9585d2eeaa63240d8dc92ca6ff36a7a55b42955bb455340de1c`, and its blurb
+  `ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_introductory_blurb_20261125.md`, SHA-256
+  `9ee90a8af4871484dbea09d2a3ce66de332934316df81e7cfb8a3ceb3a8240b2`. Its evidence cutoff is main `968a7e0`, entry 266, EX_316.
+- **The owner, 07:57: "do i ratify chatgpt ?"** Claude checked, and said what it had and had not checked: both hashes
+  as the reviewer gave them; both files CRLF by the project's rule; 37 lines differ from H-2 v7, all in the header
+  and chapter 0, none from chapter 1 on; what it says of the present state agrees with the repository. Claude did
+  not read it line by line and does not review or edit it. Recommendation: ratify.
+- **The owner, 07:58: "both chatgpt and claude are ratified now."**
+- **RAT-54 is recorded: H-1 v13** (RAT-53 was the last number used). **Installed:**
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v13.md`, SHA-256 `37aa0196e828ddf012c83d61c66c49f814892341ffe88d1dc976609da289bbae`;
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md`, SHA-256
+  `98544464139ca97eea0aa41c4dead034f9ea720f7cdfb7cbcb805eaff706a4fd`. Both CRLF. They are the builder's `final` output
+  (`exchange/CLAUDE_WEB_TOOLS/h1v13/out/`). **They differ from the candidate of entry 267** in the status words, in the
+  numbers that followed from two ratifications in one entry, and in what was added to name H-2 v8 (section 0E items
+  1, 9 and 13, and two identities): `out/H1_v13_CANDIDATE_TO_FINAL_DIFFERENCE.txt` and its blurb's. **Not read by the
+  reviewer before installation;** the cold read owed since H-1 v12 falls on this edition. H-1 v12 (RAT-51) stays
+  as history.
+- **RAT-55 is recorded: the reviewer's H-2 v8,** at the candidate's bytes above. **The reviewer installs its own
+  final file;** when this entry was written only the candidate was on `main`. Until the reviewer has installed it,
+  a new reviewer chat starts from the candidate and its blurb, which the owner has ratified; H-2 v7 (RAT-52)
+  becomes history.
+- **`exchange/CONTINUITY_NOW.md`:** "If a chat ends" and "Installed handovers" now name H-1 v13 and H-2 v8.
+- **The change of Claude chat.** The owner starts a new Claude chat with H-1 v13's blurb; the staged takeover (HO-2)
+  is in H-1 v13 section 0 item 4. **This Claude chat stops committing once the new one starts.** Slice A's state is
+  H-1 v13 section 0E item 14; nothing is in flight: no unanswered message, no report unread, no decision given and
+  not recorded.
+- Next numbers: EX_317; entry 269; RAT-56.

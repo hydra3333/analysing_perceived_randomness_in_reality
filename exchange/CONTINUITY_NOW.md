@@ -4,14 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:54 Australia/Adelaide (entry 267: H-1 v13 is built as a candidate for a change of Claude chat and waits for the owner's ratification (RAT-54); H-1 v12 is still the installed Claude handover).
+**Last updated:** 25 November 2026, 07:59 Australia/Adelaide (entry 268: H-1 v13 is ratified (RAT-54) and installed; the reviewer's H-2 v8 is ratified (RAT-55) and waits for the reviewer to install its final file; a new Claude chat starts from H-1 v13's blurb).
 
 ## For the owner: NOW
 
-- **A CHANGE OF CLAUDE CHAT IS BEING PREPARED (entry 267; 25 November 2026).** At the owner's request H-1 v13 is
-  built as a CANDIDATE (`exchange/CLAUDE_WEB_TOOLS/h1v13/out/`); it waits for his ratification (RAT-54), then it is
-  installed and a new chat starts from its blurb. **Until then H-1 v12 is the installed Claude handover.** Its
-  section 0E item 14 says exactly where slice A stands.
+- **A CHANGE OF CLAUDE CHAT (entry 268; 25 November 2026, 07:58). H-1 v13 IS THE INSTALLED CLAUDE HANDOVER (RAT-54).**
+  **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md`;** the staged
+  takeover is H-1 v13 section 0 item 4, and its section 0E item 14 says exactly where slice A stands. The outgoing
+  Claude chat stops committing once the new one starts. **The reviewer's H-2 v8 is ratified too (RAT-55);** the
+  reviewer installs its own final file. Neither handover has been read by the other chat. Nothing is in flight.
+  **This supersedes the bullets below that name H-1 v12 or H-2 v7 as in force.**
 - **SLICE A RESUMED (entry 264; 25 November 2026).** Its eleven working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`)
   are CRLF and sit on today's `main`; the markers are written CRLF; all its tests pass in a fresh clone.
   **Decided by the owner (entry 265): `deploy/file_form.py` is infrastructure, installed into every tree** (`[files]`,
@@ -876,15 +878,16 @@ durable EX messages are authoritative.
 ## If a chat ends
 
 - **Claude chat ended:** start a new Claude chat with the blurb
-  `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md` (RAT-51, entry 262). It reads H-1 v12 (its
-  section 0 gives the reading order; its section 0E holds everything since H-1 v11), this page's top block and the
-  decision log from entry 121 to the latest. Procedure HO-2, as in H-1 v12 section 0 item 4.
-- **ChatGPT reviewer chat ended:** the reviewer's handover in force is **H-2 v7** (RAT-52, entry 262;
-  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md` and
-  `ChatGPT_Reviewer_Handover_H2_v7_introductory_blurb_20261125.md` beside it), written and installed by the reviewer
-  on 25 November 2026, current to entry 261 and EX_315. H-2 v6 (RAT-46) and Claude's unratified refresh H-2 v6r2
-  are history. If the reviewer has committed a later handover of its own, use that.
-- (Until 25 November 2026 this section still named H-1 v8 and H-2 v4: stale since RAT-43, put right at entry 262.)
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md` (RAT-54, entry 268). It reads H-1 v13 (its
+  section 0 gives the reading order; its section 0E holds everything since H-1 v11, and items 13 to 16 of it
+  everything since H-1 v12), this page's top block and the decision log from entry 121 to the latest. Procedure
+  HO-2, as in H-1 v13 section 0 item 4.
+- **ChatGPT reviewer chat ended:** the reviewer's handover in force is **H-2 v8** (RAT-55, entry 268), written by the
+  reviewer and current to entry 266 and EX_316. Use the reviewer's installed final file in `doc/HANDOVER/` if it is
+  there (a name with `H2_v8` and without `CANDIDATE`); until the reviewer has installed it, the ratified bytes are
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md` and
+  `ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_introductory_blurb_20261125.md`. H-2 v7 (RAT-52) and earlier are history.
+  If the reviewer has committed a later handover of its own, use that.
 
 ## Resuming the MHUP-B slice work (HISTORY since 21 November 2026)
 
@@ -919,6 +922,12 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-54 and RAT-55 (25 November 2026, entry 268): H-1 v13 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v13.md`,
+SHA-256 `37aa0196e828ddf012c83d61c66c49f814892341ffe88d1dc976609da289bbae`) and, for the reviewer, H-2 v8 (ratified at the
+bytes of its candidate, SHA-256 `9b00a49398f8c9585d2eeaa63240d8dc92ca6ff36a7a55b42955bb455340de1c`; the reviewer installs its
+final file), with register v0.33 (`doc/RATIFICATION_REGISTER_v0_33.md`, RAT-53).** The paragraph below was the
+position at entry 262, and everything after it is history.
 
 **From RAT-51 (25 November 2026, entry 262): H-1 v12 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md`,
 SHA-256 `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd`; ratified in advance, the reviewer's read owed)

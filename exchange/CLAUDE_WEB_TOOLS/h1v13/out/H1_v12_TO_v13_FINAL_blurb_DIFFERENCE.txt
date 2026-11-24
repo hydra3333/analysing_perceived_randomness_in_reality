@@ -1,0 +1,26 @@
+--- doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md
++++ out/Claude_Primary_Handover_H1_v13_FINAL_introductory_blurb.md
+@@ -1,4 +1,4 @@
+-# Introductory blurb for H-1 v12: for a new Claude chat (paste everything below the line)
++# Introductory blurb for H-1 v13: for a new Claude chat (paste everything below the line)
+ 
+ ---
+ 
+@@ -8,14 +8,14 @@
+ hydra3333; never write my personal name in anything committed). A separate ChatGPT chat is the independent reviewer.
+ I relay between you, and I alone ratify and authorise.
+ 
+-The previous Claude chat left you a handover, H-1 v12 (ratified by me in advance on 25 November 2026, RAT-51: H-1 v11 brought up to date, with one new section, 0E; the reviewer had not yet read it when it was installed). The project was redesigned from the root in November 2026.
++The previous Claude chat left you a handover, H-1 v13 (ratified by me on 25 November 2026, RAT-54: H-1 v12 brought up to date the same morning; its section 0E holds everything since H-1 v11, and items 13 to 16 of that section everything since H-1 v12; the reviewer had not yet read it when it was installed). The project was redesigned from the root in November 2026.
+ The new design was ratified on 22 November 2026 (RAT-40). Build step 1 (the method files' new layout), the light
+-tidy-up and build step 2 (the research engine, in DEV) are installed and proved. Build step 3 has my go for its design and cloud coding only. A standard for the form of every file (line endings) is in force (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49), and DEV was converted to it on 24 and 25 November 2026 (RAT-50): every text file of the living project is CRLF, every .jsonl file is LF, and Git converts nothing. Step 3's first package (slice A) is the next work. The trees QA and PROD, the
++tidy-up and build step 2 (the research engine, in DEV) are installed and proved. Build step 3 has my go for its design and cloud coding only. A standard for the form of every file (line endings) is in force (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49), and DEV was converted to it on 24 and 25 November 2026 (RAT-50): every text file of the living project is CRLF, every .jsonl file is LF, and Git converts nothing. Step 3's first package (slice A) is the work in hand: part-built as working files, not reviewed, nothing installed; the handover's section 0E item 14 says exactly where it stands. The trees QA and PROD, the
+ installs, the backups and the laboratory tools are not coded unless the repository says so, and the old
+ system's code is still in src/ beside the new engine.
+ 
+ DO THIS FIRST, and nothing else: add the repository (you will need push access for documents and records), then read
+-doc/HANDOVER/Claude_Primary_Handover_H1_v12.md and follow its section 0, then read its sections 0D and 0E: 0E holds everything since H-1 v11 and prevails over every older statement (its reading order and the staged takeover).
++doc/HANDOVER/Claude_Primary_Handover_H1_v13.md and follow its section 0, then read its sections 0D and 0E: 0E holds everything since H-1 v11 and prevails over every older statement, and its items 13 to 16 are the newest (its reading order and the staged takeover).
+ Verify what you read against the repository; do not take summaries on trust.
+ 
+ THEN give me your first substantive reply: what you understand the project's state to be, what is and is not

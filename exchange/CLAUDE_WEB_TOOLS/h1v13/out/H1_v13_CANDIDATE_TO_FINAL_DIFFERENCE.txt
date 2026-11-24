@@ -1,0 +1,63 @@
+--- Claude_Primary_Handover_H1_v13_CANDIDATE.md
++++ Claude_Primary_Handover_H1_v13_FINAL.md
+@@ -1,7 +1,7 @@
+ # H-1 - Claude primary designer and coder handover - Predictive Randomness project, v13
+ 
+ **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
+-**This edition: v13, 25 November 2026, 08:00 (Adelaide, UTC+10:30). CANDIDATE: not ratified and not read by the reviewer; H-1 v12 (RAT-51) is the installed Claude handover until the owner ratifies this one.** H-1 v12 brought up to date the same
++**This edition: v13, 25 November 2026, 08:00 (Adelaide, UTC+10:30). OWNER-RATIFIED 25 November 2026, 07:58 (RAT-54; decision log entry 268): the owner's words, "both chatgpt and claude are ratified now." IT WAS NOT READ BY THE REVIEWER BEFORE IT WAS INSTALLED; the cold read owed since H-1 v12 falls on this edition, and what it finds is corrected in a next revision. This is the installed Claude handover.** H-1 v12 brought up to date the same
+ morning, at the owner's request ("lets update hour handover doc and blurb etc fully and do a handover now
+ please", 07:51; decision log entry 267), so that a new Claude chat can take over: since H-1 v12 the ratification
+ register v0.33 was ratified and installed (RAT-53), the owner decided where the file-form checker belongs, and
+@@ -449,7 +449,7 @@
+ ## 0E. After H-1 v11: the night of 24 November and 25 November 2026 (v12, with items 13 to 16 added in v13; this section prevails over every older statement, section 0D included)
+ 
+ Everything here is from the decision log (entries 244 to 268), the EX messages (EX_308 to EX_316) and the files named.
+-**Next numbers at this edition (v13): EX_317, decision log entry 269, RAT-55.** Fetch `main` and confirm before using
++**Next numbers at this edition (v13): EX_317, decision log entry 269, RAT-56.** Fetch `main` and confirm before using
+ any: the reviewer commits its own files, and did so twice on 25 November while Claude was building.
+ 
+ 1. **Records.** RAT-48: H-1 v11 (entry 244). **RAT-49: the file-form standard v0.2** (entry 253). **RAT-50** (entry
+@@ -458,7 +458,8 @@
+    advance** ("i ratify your new handover docs in advance") and so installed without the reviewer's read; that
+    read is owed. **RAT-52** (entry 262): the reviewer's own H-2 v7, which the owner ratified in advance the same
+    morning and the reviewer installed (item 9). (v13) **RAT-53** (entry 265): the ratification register v0.33,
+-   installed, which records RAT-41's install to RAT-52. **RAT-54** (entry 268): this edition, H-1 v13.
++   installed, which records RAT-41's install to RAT-52. **RAT-54** (entry 268): this edition, H-1 v13. **RAT-55**
++   (entry 268): the reviewer's own H-2 v8 (item 13).
+ 
+ 2. **THE FILE-FORM STANDARD IN FORCE IS v0.2: `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49). Read it.** v0.1 (RAT-47) is
+    history. The rule is unchanged: every text file of the living project is CRLF; **every `.jsonl` file is LF**;
+@@ -551,7 +552,8 @@
+    folder on his PC without saying how to make it again** (it is made from a clean clone: entries 210 and 260).
+ 
+ 9. **The chats.** The reviewer chat is the one that started on the evening of 24 November (EX_304 to EX_315); it
+-   commits its own EX files and handover. **In force for the reviewer: H-2 v7 (RAT-52),**
++   commits its own EX files and handover. (v13: **H-2 v8 is now ratified, RAT-55: item 13.**) **In force for the
++   reviewer when H-1 v12 was written: H-2 v7 (RAT-52),**
+    `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md` with its blurb beside it: written and installed by the
+    reviewer on 25 November 2026 at 07:17, ratified by the owner in advance, current to entry 261 and EX_315. It is
+    the reviewer's: Claude has not reviewed it and does not edit it. H-2 v6 (RAT-46) is history, and Claude's
+@@ -614,6 +616,13 @@
+       it is not to be imported into `forecast`-class code.
+     - **This edition (RAT-54, entry 268)** was asked for at 07:51 so that a new chat can take over; the reviewer's
+       cold read, owed since H-1 v12, now falls on it.
++    - **The reviewer's H-2 v8 (RAT-55, entry 268).** At the owner's word the reviewer brought its own handover up
++      to date through entry 266 and committed it as a candidate
++      (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md`, with its blurb beside it); it differs from
++      H-2 v7 in its header and its chapter 0 only. **The owner ratified it and this edition together, 07:58: "both
++      chatgpt and claude are ratified now."** The reviewer installs its own final file; when this edition was
++      installed only the candidate was on `main`. `exchange/CONTINUITY_NOW.md` names the reviewer handover in force.
++      It names H-1 v12 as the Claude handover, which was true at its cutoff; this edition replaces H-1 v12.
+ 
+ 14. **(v13) SLICE A OF BUILD STEP 3: EXACTLY WHERE IT STANDS (entries 264 to 266). Working files; not a package; not
+     reviewed; nothing installed.** The files are `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, laid out as they go into
+@@ -685,6 +694,8 @@
+ |---|---|
+ | `doc/RATIFICATION_REGISTER_v0_33.md` | `94cb836c7f8776bb7916793e43591cb98f1575a1767f50a2830b7deb3ef0a2d2` |
+ | `exchange/EX_316_ChatGPT.md` | `6ba1a5cb8ba2229728c94e98d96d1e2bd6050b99f4e9070d652dcca7ab46f191` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md` | `9b00a49398f8c9585d2eeaa63240d8dc92ca6ff36a7a55b42955bb455340de1c` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_introductory_blurb_20261125.md` | `9ee90a8af4871484dbea09d2a3ce66de332934316df81e7cfb8a3ceb3a8240b2` |
+ | `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md` | `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd` |
+ | `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md` | `ed150c814e392203d380124023692a7d60af714ec08b76e758c87bb5371f38c0` |
+ | `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md` | `6eb18f0e38279a9b68e88dec304dbea205a64b62bc8e80bfc8dc9723c39b3195` |

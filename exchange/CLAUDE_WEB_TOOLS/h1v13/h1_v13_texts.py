@@ -44,12 +44,16 @@ HANDOVER_REPLACEMENTS = [
     ("Everything here is from the decision log (entries 244 to 262), the EX messages (EX_308 to EX_315) and the files named.\n"
      "**Next numbers at this edition: EX_316, decision log entry 263, RAT-53.** Fetch `main` and confirm before using any.\n",
      "Everything here is from the decision log (entries 244 to 268), the EX messages (EX_308 to EX_316) and the files named.\n"
-     "**Next numbers at this edition (v13): EX_317, decision log entry 269, RAT-55.** Fetch `main` and confirm before using\n"
+     "**Next numbers at this edition (v13): EX_317, decision log entry 269, RAT-56.** Fetch `main` and confirm before using\n"
      "any: the reviewer commits its own files, and did so twice on 25 November while Claude was building.\n"),
     ("   morning and the reviewer installed (item 9). The register edition is overdue and records RAT-45 to RAT-52\n"
      "   (item 10).\n",
      "   morning and the reviewer installed (item 9). (v13) **RAT-53** (entry 265): the ratification register v0.33,\n"
-     "   installed, which records RAT-41's install to RAT-52. **RAT-54** (entry 268): this edition, H-1 v13.\n"),
+     "   installed, which records RAT-41's install to RAT-52. **RAT-54** (entry 268): this edition, H-1 v13. **RAT-55**\n"
+     "   (entry 268): the reviewer's own H-2 v8 (item 13).\n"),
+    ("   commits its own EX files and handover. **In force for the reviewer: H-2 v7 (RAT-52),**\n",
+     "   commits its own EX files and handover. (v13: **H-2 v8 is now ratified, RAT-55: item 13.**) **In force for the\n"
+     "   reviewer when H-1 v12 was written: H-2 v7 (RAT-52),**\n"),
     ("10. **What waits, at this edition.** On the reviewer: its cold read of this handover (item 1). On the owner:\n",
      "10. (v13: **item 15 is the present list;** in this item (a) is under way, item 14, and (c) is done, RAT-53.)\n"
      "    **What waits, at this edition.** On the reviewer: its cold read of this handover (item 1). On the owner:\n"),
@@ -72,6 +76,8 @@ INSERT_BEFORE = ("**Identities added at this edition** (SHA-256 of the Git conte
 IDENTITY_FILES = [
     'doc/RATIFICATION_REGISTER_v0_33.md',
     'exchange/EX_316_ChatGPT.md',
+    'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md',
+    'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_introductory_blurb_20261125.md',
     'doc/HANDOVER/Claude_Primary_Handover_H1_v12.md',
     'doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md',
     'exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md',
@@ -101,6 +107,13 @@ NEW_ITEMS = """13. **(v13) Since H-1 v12: the morning of 25 November 2026 (entri
       it is not to be imported into `forecast`-class code.
     - **This edition (RAT-54, entry 268)** was asked for at 07:51 so that a new chat can take over; the reviewer's
       cold read, owed since H-1 v12, now falls on it.
+    - **The reviewer's H-2 v8 (RAT-55, entry 268).** At the owner's word the reviewer brought its own handover up
+      to date through entry 266 and committed it as a candidate
+      (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_CANDIDATE_20261125.md`, with its blurb beside it); it differs from
+      H-2 v7 in its header and its chapter 0 only. **The owner ratified it and this edition together, 07:58: "both
+      chatgpt and claude are ratified now."** The reviewer installs its own final file; when this edition was
+      installed only the candidate was on `main`. `exchange/CONTINUITY_NOW.md` names the reviewer handover in force.
+      It names H-1 v12 as the Claude handover, which was true at its cutoff; this edition replaces H-1 v12.
 
 14. **(v13) SLICE A OF BUILD STEP 3: EXACTLY WHERE IT STANDS (entries 264 to 266). Working files; not a package; not
     reviewed; nothing installed.** The files are `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, laid out as they go into
