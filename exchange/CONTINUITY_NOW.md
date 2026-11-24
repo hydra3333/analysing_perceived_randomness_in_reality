@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 08:25 Australia/Adelaide (entry 271: EX_317, the reviewer's cold read of H-1 v13, PASS; its corrections wait for the next ordinary, consolidated edition; slice A continues; nothing is in flight).
+**Last updated:** 25 November 2026, 08:26 Australia/Adelaide (entry 272: the owner: the consolidated handover is written later, when Claude judges it necessary and advises him; slice A step 1 begun in the cloud).
 
 ## For the owner: NOW
 
+- **THE HANDOVER WAITS (entry 272; the owner, 25 November 2026, 08:26):** "update handover later when you consider it
+  is necessary advise me." No edition now; Claude says when one is needed. **In hand: slice A, step 1** (the cloud
+  workspace, the suite on `main` and with the overlay, the slice's code read). Then the four parts still to write.
 - **THE REVIEWER'S COLD READ OF H-1 v13 IS DONE (entry 271; EX_317): PASS,** no blocker. Four documentary corrections
   and two observations wait for H-1's next ordinary edition, which is to consolidate (the owner and the reviewer
   agree: no more layers). Two of them guide the build now: an installed tree does keep `records\INSTALLED_FILES.json`

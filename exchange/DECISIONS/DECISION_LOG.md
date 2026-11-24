@@ -6437,3 +6437,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
   of H-1 is a consolidated one (a short live chapter; history clearly labelled; rights and lessons kept); when it
   is written is put to the owner. Slice A continues within the authority of entries 217 and 270.
 - Next numbers: EX_318; entry 272; RAT-56.
+
+## 272. 25 November 2026, 08:26 - OWNER: the consolidated handover is written later, when Claude judges it necessary and advises him; slice A's first step begun
+
+- **Put to the owner by Claude** (after entry 271): when the next, consolidated edition of H-1 is written: when
+  slice A's package goes to the reviewer (recommended); now, before slice A; or only when a change of chat is near.
+- **The owner, 08:26:** "update handover later when you consider it is necessary advise me."
+- **DECIDED (owner):** no handover edition now. Claude judges when one is necessary and tells him then; it is
+  written on his word. Until then `exchange/CONTINUITY_NOW.md` and this log carry what is newer than H-1 v13.
+- **Slice A, step 1, begun in the cloud** (within entries 217 and 270; routine, no design): a workspace with Python
+  3.15, one run of the whole suite on `main` as it is and one with the slice's overlay copied in, and a reading of
+  the slice's eleven files. Nothing on the owner's PC.
+- Next numbers: EX_318; entry 273; RAT-56.
