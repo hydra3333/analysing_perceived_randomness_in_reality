@@ -4768,3 +4768,48 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on:** the owner's own go to run TASK_T028 r1 (a quarter of an hour; `git pull --ff-only`, a new Claude
   Code conversation, `Do inbox\TASK_T028.md`). Nothing has run.
 - Next numbers: EX_303; entry 225; RAT-47.
+
+## 225. 24 November 2026, 17:04 - slice A continued in the cloud: readiness (the two markers, the static import check, Make_Installable); the owner's line-ending figures for DEV
+
+- **The owner, 16:55, to Claude** (three read-only commands he ran in the project folder, at Claude's request):
+  `git config core.autocrlf` gave `true`; of the files Git tracks under `src` and `deploy`, **3 have CRLF line
+  endings on his disk and 584 have LF.**
+- **What that means for the LF pin (not yet designed in full):** almost all of DEV's code already lies on his disk
+  as LF, as the packages delivered it. With `core.autocrlf=true` and no pin, any Git operation that rewrites a file
+  would give it CRLF, change its hash, and with it a marker or the identity of the forecasting code. The pin stops
+  that. **Which three files are CRLF matters:** if one is a file the forecasting code's identity or a variant's
+  fingerprint is computed from, making it LF changes that identity in DEV. Claude has asked the owner for their
+  names.
+- **Written in the cloud** (working files in `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`; not a package, not reviewed,
+  nothing installed):
+  - `deploy/install_import_check.py`: the static import check of specification 3.4. It reads import statements and
+    runs nothing; relative imports are resolved; any use of `importlib`, `__import__`, `exec`, `eval` or `sys.path`
+    in a variant's file or a helper is a fault; an import of a project file that is on none of the variant's lists
+    and not infrastructure is a fault; and for the infrastructure, a project file it imports that is not on the
+    manifest is a fault ("an imported module not listed").
+  - `deploy/install_readiness.py`: the two markers. A variant's `I_AM_INSTALLABLE.json` (its fingerprint and the
+    hashed list it was computed from) and `deploy/INFRA_IS_INSTALLABLE.json` (the manifest, every `[files]` file
+    with its class, every `[install_tool]` file, one fingerprint). The same files always give the same bytes; a
+    marker never lists itself; a marker made by hand counts only if it holds exactly what the tool would write; a
+    marker is written whole in `records/marker_staging/` and put in place by one rename, so an interrupted write
+    leaves no undeclared file in a variant folder (the lesson of EX_283 F283-B01).
+  - `deploy/make_installable.py`, `deploy/deploy_command.py` and `Make_Installable.bat`: the command, in DEV only:
+    `INFRA`; `<family> <variant>`; several as `family/variant`; `--unmark`. One refusal does not stop the others.
+  - `src/research/code_identity.py`: also gives the manifest's `[install_tool]` list. `deploy/INFRA_MANIFEST.ini`:
+    that section added, with the five tool files.
+- **Two interpretations made, to be put to the reviewer with slice A:** (1) a variant may import its own listed
+  files as well as its helpers (specification 3.4 names "the helpers list or the infrastructure"; a second file
+  on a variant's `files` list would otherwise be unusable); (2) an infrastructure file a variant imports must be of
+  class `forecast`, refused by the tool itself and not only by the suite's test.
+- **Tested:** `tests/test_trees_readiness.py`, 38 tests, each named for its rule. Run on the real repository: the
+  40 real variants pass the import check with no fault, and the real infrastructure imports nothing that is not
+  on the real manifest. 32 faults were planted in the three files; all were caught (two only after a test was made
+  to look at the reason's words). The engine's identity (25) and manifest (9) tests and the settings tests (32)
+  still pass.
+- **A small question for the owner:** whether the markers are tracked by Git or ignored. The ratified documents do
+  not say. Claude recommends ignored, like `VARIANT_STATUS.ini`: a marker is his act on his PC, is made again in
+  seconds, and Git could otherwise deliver one he did not make.
+- **Still to come in slice A:** the LF pin, `INSTALLED_FILES.json`, the environment's digest over the fixed
+  inventory, `Check_Tree`, the launch guard, and the design amendment's wording (entry 222).
+- Nothing is authorised on the owner's PC. TASK_T028 r1 waits for his go.
+- Next numbers: EX_303; entry 226; RAT-47.

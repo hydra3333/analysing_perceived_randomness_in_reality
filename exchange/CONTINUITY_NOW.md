@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 16:54 Australia/Adelaide (entry 224: EX_302, the reviewer's cold recheck PASS of TASK_T028 r1; waiting on the owner's go to run it; slice A continues in the cloud).
+**Last updated:** 24 November 2026, 17:04 Australia/Adelaide (entry 225: slice A continued: the readiness markers, the import check and Make_Installable are written and tested in the cloud; TASK_T028 r1 waits for the owner's go).
 
 ## For the owner: NOW
 
@@ -18,8 +18,12 @@ durable EX messages are authoritative.
   numbers: EX_303, entry 225, RAT-47. **Slice A so far** (working files in
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, run with `step3/sync_and_test.sh <clone> <python> <test modules>`): the
   settings of the three trees (`src/research/settings.py`, `tests/test_trees_settings.py`, 32 tests) and the
-  rewritten `ENVIRONMENT.example.ini`. **Next in slice A:** the LF pin, the markers and `Make_Installable`, the
-  import check and `[install_tool]`, `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard.
+  rewritten `ENVIRONMENT.example.ini`; and (entry 225) readiness: `deploy/install_import_check.py`,
+  `deploy/install_readiness.py`, `deploy/make_installable.py`, `deploy/deploy_command.py`, `Make_Installable.bat`, the
+  manifest's `[install_tool]` section, `tests/test_trees_readiness.py` (38 tests). **Next in slice A:** the LF pin
+  (DEV has 584 LF and 3 CRLF files under `src` and `deploy`, `core.autocrlf=true`; the three names are asked for),
+  `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard, the design amendment's wording.
+  **Open with the owner:** markers tracked by Git or ignored (recommended: ignored).
 - **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
   November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
   probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)
