@@ -1,0 +1,58 @@
+Trial of 24 November 2026, in the cloud workspace (Linux, Python 3.15), on a clone of main at 87a5299.
+BEFORE: the clone as it is. AFTER: every tracked text file under src, deploy, tests and the repository's root made CRLF (669 files: 239 .py, 419 .json, 2 .ini, 3 .txt, 3 .md, 3 without extension; 12 were CRLF already), .gitattributes ending in '* -text', committed.
+Tool: exchange/EX_293_Claude/STEP2_Research_Engine_v1r3/tools/compare_suite_reports.py
+
+before: 52 modules; unittest ran 762 tests; identified here: 762
+after: 52 modules; unittest ran 762 tests; identified here: 762
+MODULE CHANGED: test_mhupa_install_records: ran 9, OK -> ran 9, FAILED (failures=5, errors=2)
+MODULE CHANGED: test_mhupa_method_mode_h_cli: ran 2, OK -> ran 2, FAILED (failures=1)
+MODULE CHANGED: test_mhupa_mode_h: ran 20, OK -> ran 20, FAILED (failures=2, errors=18)
+MODULE CHANGED: test_mhupa_process_check: ran 8, OK -> ran 8, FAILED (failures=1)
+MODULE CHANGED: test_mhupa_updater_v0_2: ran 15, OK -> ran 15, FAILED (failures=1)
+CHANGED: test_mhupa_install_records.Baseline.test_baseline_record_validates_against_the_installed_registry: ok -> FAIL
+CHANGED: test_mhupa_install_records.Baseline.test_validate_command_and_tampering: ok -> FAIL
+CHANGED: test_mhupa_install_records.Records.test_a_superseding_registry_entry_retires_the_old_revision: ok -> ERROR
+CHANGED: test_mhupa_install_records.Records.test_install_record_needs_the_barrier_and_is_create_only: ok -> ERROR
+CHANGED: test_mhupa_install_records.Records.test_release_date_is_the_day_of_writing: ok -> FAIL
+CHANGED: test_mhupa_install_records.Records.test_release_record_conditions_in_order: ok -> FAIL
+CHANGED: test_mhupa_install_records.Records.test_release_record_needs_u_held_by_this_package_and_no_flag: ok -> FAIL
+CHANGED: test_mhupa_method_mode_h_cli.Cli.test_the_commands_in_order_and_their_refusals: ok -> FAIL
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_manifest_fields_and_refusals: ok -> ERROR
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_manifest_refuses_a_grown_ledger_an_orphan_and_sourceless_bytecode: ok -> FAIL
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_open_refuses_after_a_ledger_row_beyond_the_frozen_version: ok -> ERROR
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_opening_record_and_the_updater_agree: ok -> ERROR
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_must_be_exactly_the_released_set: ok -> FAIL
+CHANGED: test_mhupa_mode_h.ManifestAndOpening.test_the_cohort_refuses_a_released_variant_the_registry_no_longer_runs: ok -> ERROR
+CHANGED: test_mhupa_mode_h.OutcomeReaderRule.test_states: ok -> ERROR
+CHANGED: test_mhupa_mode_h.OzLottoStudy.test_oz_lotto_end_to_end_and_its_supplementary_check: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_a_bad_ledger_never_completes: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_a_resume_binds_the_frozen_scoring_plan_and_completion: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_a_resumed_attempt_must_find_the_roster_it_started_with: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_an_advance_after_the_plan_moves_the_admitted_pin: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_closure_change_after_the_plan_stops_every_step: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_scorer_refusals_before_and_during: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_the_report_resumes_file_by_file: ok -> ERROR
+CHANGED: test_mhupa_mode_h.Pipeline.test_the_study: ok -> ERROR
+CHANGED: test_mhupa_mode_h.PlanRefusals.test_an_extra_ledger_row_needs_a_study_version_advance: ok -> ERROR
+CHANGED: test_mhupa_mode_h.PlanRefusals.test_plan_is_frozen_from_the_manifest_once: ok -> ERROR
+CHANGED: test_mhupa_mode_h.PlanRefusals.test_plan_needs_the_complete_first_update: ok -> ERROR
+CHANGED: test_mhupa_mode_h.PlanRefusals.test_plan_refuses_a_changed_closure_or_environment_naming_the_first_difference: ok -> ERROR
+CHANGED: test_mhupa_process_check.Statics.test_imports_and_no_terminating_call: ok -> FAIL
+CHANGED: test_mhupa_updater_v0_2.UpdaterV02Identity.test_reference_is_the_base_v0_1_and_v0_1_is_gone: ok -> FAIL
+tests in both runs: 762; with the same result: 732
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '.dmypy.json', 'cover/', '#   https://pdm-project.org/en/latest/usage/project/#working-with-version-control', '# PyCharm', '/GAIS/OUTLA"]
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '.scrapy', '.ruff_cache/', '# Visual Studio Code', '#   JetBrains specific template is maintained in a separate JetBrains.gitignore tha"]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: DIFFERENCES FOUND - each needs an explanation
+
+SECOND STEP: in the AFTER clone, six files put back as they were (LF): the three files under src/methods/_common/contract_data/install_records/, src/package_tools/process_check.py, src/results_master_v0_2.py and tests/fixtures/results_master_v0_1_reference.py.txt. Then, last line of each module's ru
+test_mhupa_install_records: OK
+test_mhupa_method_mode_h_cli: OK
+test_mhupa_process_check: OK
+test_mhupa_updater_v0_2: OK
+test_mhupa_mode_h: OK
+test_multigame_reader_contracts: FAILED (failures=7)
+test_mhupa_launchers: FAILED (failures=1)
+test_multigame_reader_contracts and test_mhupa_launchers: the same failing lines as BEFORE (the three known failing tests).

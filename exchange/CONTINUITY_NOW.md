@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 17:34 Australia/Adelaide (entry 229: line endings are being thought through with the owner; his direction is Windows-native CRLF for everything people write or read; not decided; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 18:02 Australia/Adelaide (entry 230: the owner directs a written standard for the form of every kind of file, everything to conform; the draft standard and a cloud trial are done; five open points are with him; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
+- **A STANDARD FOR THE FORM OF EVERY FILE, BEFORE SLICE A IS PACKAGED (entry 230; 24 November 2026).** The owner
+  directs: a written standard listing each kind of file and its exact form; everything conforms, by a conversion
+  program and its list, safely; Git's and GitHub's settings to match; a "Standards" section in the operations
+  manual. **The draft:** `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1_DRAFT.md` (`06947f84...625cd9`):
+  every text file of the living project CRLF; the hash-chained `.jsonl` lists LF by their nature; every program
+  names the ending it writes; Git converts nothing (`* -text`); the project's own checker. **The cloud's trial**
+  (`TRIAL_CRLF_SUITE_COMPARISON.txt` beside it): 669 files made CRLF, 732 of 762 tests the same, 30 failing, all in
+  five modules of the retired Mode H release machinery, tracing to six byte-pinned files. **Waiting on the owner:**
+  the draft's five open points (section 8). Then: the reviewer, ratification (RAT-47), the conversion program, the
+  engine's writers, the checker, the sheet. The sealed Mode H records are not touched.
 - **PROCESS READERS DECIDED; SLICE A BEGUN (entry 222; 24 November 2026).** The owner chose **option A**: the
   restore stays standard library only; every other process check uses psutil; B (psutil for the restore too) only
   if A proves too hard, at Claude's discretion, said beforehand. The design amendment's wording still goes to the

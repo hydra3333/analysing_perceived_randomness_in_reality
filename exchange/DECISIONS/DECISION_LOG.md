@@ -4945,3 +4945,47 @@ section 17.2 (unpack it into a new folder, never over the clone).
   inventory of file kinds, and a trial conversion in the cloud with the whole suite before and after, before he
   decides.
 - Next numbers: EX_303; entry 230; RAT-47.
+
+## 230. 24 November 2026, 18:02 - OWNER: a written standard for the form of every kind of file, everything to conform, Git and GitHub settings to match; the draft standard v0.1 and the cloud's trial conversion
+
+- **The owner, 17:42, to Claude:** "OK. we should create a spec or add to an existing spec for this - expressly have
+  a list of file types and/or data types and exactly which type they use so that there is never any ambiguity (and
+  add a section to the operations manual "standards"). "Sealed and byte-pinned old-system files stay as they are"
+  ... no they don't, everything confirms to the standards, I do not care whatsoever if it means
+  conversions/editings in-place with regenerations of fingerprints or whatever ...; whatever it takes to get it
+  done (safely) then we do it eg a conversion program and manifest or whatever you need. Also ensure our git
+  settings files stuff and github settings all do the right thing."
+- **The owner, 17:43:** "PS I dop not currently care about obsoleted Mode H stuff."
+- **So directed (owner):** a written standard, listing each kind of file and its exact form; everything conforms,
+  by conversion in place and regeneration where needed, done safely (a conversion program and its list); the Git
+  settings files and GitHub's settings to do the right thing; a "Standards" section in the operations manual (added
+  to that deferred work item, entry 220).
+- **Written, a DRAFT for his reading and decisions:** `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1_DRAFT.md`
+  (SHA-256 `06947f8470796418f4e20e280423033792535552f4277cb3e28f142dcd625cd9`). In short: every text file of the living project is CRLF, whoever wrote it; the one
+  exception by its nature is the hash-chained record lists (`.jsonl`), each line of which is the canonical encoding
+  of a record whose bytes, ending included, the chain and the content digests hash; every program names the line
+  ending it writes (Python's default differs between the owner's PC and the cloud); Git converts nothing
+  (`* -text`); the project's own checker enforces it in the suite, in `Make_Installable` and in `Check_Tree`; the
+  conversion is made by a program from a list with each file's SHA-256 before and after. Frozen history (the
+  exchange, the reviews, the archive, the ratified documents, the old system's own records) is left as it is.
+- **The trial in the cloud** (`TRIAL_CRLF_SUITE_COMPARISON.txt` beside the draft, SHA-256 `8baac6b033e2b60fb9f5f1ed6bb2f666bae4e455d7779b9db906c4da9d2e26af`): 669 text files
+  under `src`, `deploy`, `tests` and the root made CRLF in a copy; the whole suite before and after. **732 of 762
+  tests gave the same result; 30 changed from passing to failing, all in five modules of the retired Mode H release
+  machinery; every test of the new engine and of the methods' arithmetic passed unchanged.** The 30 trace to six
+  files that tests pin to their bytes (the three install and release records; `process_check.py`;
+  `results_master_v0_2.py` and the reference copy of its predecessor). With those six put back, all five modules
+  passed again and the three known failures were as before.
+- **Five open points are put to the owner** (the draft's section 8): the scope (frozen history left alone,
+  recommended); the `.jsonl` lists staying LF (recommended); `* -text` for the whole repository (recommended; one
+  refresh of his working copy on the day); the results' verification records; and the six pinned files of the
+  retired machinery (recommended: named as frozen and left, which also keeps entry 181's "`results_master_v0_2.py`
+  stays untouched in DEV"; his words of 17:42 point the other way, his words of 17:43 this way: his to say).
+- **A binding rule is not touched by any of this without his express word:** the sealed Mode H records are never
+  altered. The draft leaves them, and all the old system's records, exactly as they are.
+- **Effect on build step 3:** the standard and the conversion come before slice A is packaged, because the markers
+  and the list of installed files hash these bytes. Slice A's working files so far stand. It adds a review round
+  and an install day before the first tree, at the one time it is cheap: no tree exists yet.
+- **Not done:** nothing is converted anywhere but in Claude's trial copy; no code of the engine is changed;
+  `.gitattributes` is as it was; what GitHub's web editor does to line endings is still to be confirmed from
+  GitHub's documentation.
+- Next numbers: EX_303; entry 231; RAT-47.
