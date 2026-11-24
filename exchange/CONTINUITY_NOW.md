@@ -4,16 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:02 Australia/Adelaide (entry 212: BUILD STEP 2 IS COMPLETE IN DEV: installed (commit 5f16b35), DEV's first fill run by the owner, the comparison with the old records PASS - COMPLETE; next: H-1 v10, then build step 3; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 15:22 Australia/Adelaide (entry 213: the H-1 v10 CANDIDATE is written and waits for the reviewer; build step 2 is complete in DEV; H-1 v9 stays installed until RAT-45; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **THE H-1 v10 CANDIDATE IS WRITTEN (entry 213; 24 November 2026).**
+  `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` with its blurb and the exact diff from v9. It
+  brings the Claude handover up to date after build step 2. **Waiting on:** the reviewer's review (EX_295), then
+  the owner's ratification (RAT-45); Claude then installs it in `doc/HANDOVER/` by a script. **Until then H-1 v9 is
+  the installed handover; a new Claude chat that had to start now would read v9, this page and the candidate.**
 - **BUILD STEP 2 IS COMPLETE IN DEV (entry 212; 24 November 2026).** Installed (commit `5f16b35`); `ENVIRONMENT.ini` made;
   DEV's first fill run by the owner in 47 minutes (POWERBALL 15118 forecasts and 15078 scores, OZLOTTO 6598 and
   6558); a second job with nothing to do in 3 minutes; the comparison with the old records `PASS - COMPLETE` (34800
   old scores and 20436 old forecasts equal). DEV's research results are under `results\research\` (ignored by Git;
   start with `results\research\POWERBALL\reports\README.txt`). The prevailing OV-1 has not started (it needs build
-  step 3). **Next, Claude:** H-1 v10 (the owner's standing word, entry 183), to the reviewer, then RAT-45. **Then
+  step 3). (H-1 v10's candidate is written: entry 213.) **Then
   build step 3** (suggest Fable for its design). The owner may delete `D:\DELETE_ME\a_p_r_i_r\T025` and
   `E:\TEMP\STEP2_baseline_clone`. **For step 3:** rewrite `ENVIRONMENT.example.ini` (entry 211); a tree's `.venv` is built
   from a plain CMD window; a sheet's builder checks every path and says what must exist before starting.

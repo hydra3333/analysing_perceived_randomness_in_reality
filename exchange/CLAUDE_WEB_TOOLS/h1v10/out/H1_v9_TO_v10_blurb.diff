@@ -1,0 +1,21 @@
+--- H-1 v9 (installed)
++++ H-1 v10 (candidate)
+@@ -1 +1 @@
+-# Introductory blurb for H-1 v9: for a new Claude chat (paste everything below the line)
++# Introductory blurb for H-1 v10: for a new Claude chat (paste everything below the line)
+@@ -11,4 +11,5 @@
+-The previous Claude chat left you a handover, H-1 v9. The project was redesigned from the root in November 2026.
+-The new design was ratified on 22 November 2026 (RAT-40). Build step 1 (the method files' new layout) and the light
+-tidy-up are installed and proved; the rest of the new system is not coded unless the repository says so, and the
+-rest of the code in src/ is the old system.
++The previous Claude chat left you a handover, H-1 v10. The project was redesigned from the root in November 2026.
++The new design was ratified on 22 November 2026 (RAT-40). Build step 1 (the method files' new layout), the light
++tidy-up and build step 2 (the research engine, in DEV) are installed and proved. The trees QA and PROD, the
++installs, the backups and the laboratory tools are not coded unless the repository says so, and the old
++system's code is still in src/ beside the new engine.
+@@ -17 +18 @@
+-doc/HANDOVER/Claude_Primary_Handover_H1_v9.md and follow its section 0 (its reading order and the staged takeover).
++doc/HANDOVER/Claude_Primary_Handover_H1_v10.md and follow its section 0 (its reading order and the staged takeover).
+@@ -25 +26 @@
+-HARD RULES, binding now (H-1 v9 has them in full):
++HARD RULES, binding now (H-1 v10 has them in full):

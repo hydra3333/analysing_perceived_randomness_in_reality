@@ -4444,3 +4444,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
   may delete both.
 - **Next:** H-1 v10 (the owner, entry 183: "ok to a full H-1 v10 once step 2 is installed"), then build step 3.
 - Next numbers: EX_295; entry 213; RAT-45.
+
+## 213. 24 November 2026, 15:22 - the H-1 v10 CANDIDATE written, on the owner's word; not reviewed, not ratified
+
+- **The owner, 15:16:** "ok please do H-1 v10 now." (His standing word was entry 183: "ok to a full H-1 v10 once step 2
+  is installed".)
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` (1308 lines; SHA-256 `41a1ab749556c94e20b7ee28705b664b52183b995a140c1ebe7aec1b1164f8db`)
+  and its blurb `Claude_Primary_Handover_H1_v10_introductory_blurb.md` (SHA-256 `6c0ab5cf4133628edcfbe602e2aa7b362b13c2f9f331054bba9cf4fd4761cfb9`), built from the installed
+  H-1 v9's and its blurb's Git bytes (both asserted by hash) by `exchange/CLAUDE_WEB_TOOLS/h1v10/make_h1_v10.py` with the
+  words of `h1_v10_texts.py`: 15 short replacements, 2 insertions and 9 whole sections replaced, each old text or
+  marker found exactly once in v9; Appendix A rebuilt with every hash computed from Git at `HEAD` (v9's rows, H-1 v9
+  in place of H-1 v8, and 29 new rows). **Sections 1, 2 and 2A are carried byte for byte** (asserted). The exact
+  difference is `H1_v9_TO_v10.diff` (SHA-256 `3b2f331e2bc676dcfb32abb18140aa50e098d0c89f3d56256eb2baf42f16f10f`); applied to v9 with `patch` it gives the candidate (checked).
+- **What it brings up to date:** build step 2 reviewed, rehearsed, installed and run (sections 0B, 7 and 10); the
+  runner's rulebook v0.7, the owner's settings change and the three tasks (8.6, 12.4); the owner's decisions for
+  build step 3 (entries 180, 181); ten lessons from build step 2 (8.8); the tools, the practice and the owner's
+  machine (12.2, 12.3, 12.6); the open items (12.8). Its Appendix B lists every section's change.
+- **Its own limit, stated in it:** written by the chat that did the work, late in a long conversation; the
+  reviewer's cold read against the repository is the check on it.
+- **State:** a CANDIDATE with no force. H-1 v9 (RAT-43) stays the installed Claude handover. The reviewer's reply is
+  expected as EX_295; then the owner's ratification (RAT-45) and the install in `doc/HANDOVER/` by a script.
+- Next numbers: EX_295 (the reviewer's reply on H-1 v10); entry 214; RAT-45.
