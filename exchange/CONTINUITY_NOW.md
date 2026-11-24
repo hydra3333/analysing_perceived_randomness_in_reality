@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 08:22 Australia/Adelaide (entry 270: the new Claude chat's takeover from H-1 v13 is accepted by the owner after the reviewer's HO-2 PASS; slice A resumes in the cloud; nothing is in flight).
+**Last updated:** 25 November 2026, 08:25 Australia/Adelaide (entry 271: EX_317, the reviewer's cold read of H-1 v13, PASS; its corrections wait for the next ordinary, consolidated edition; slice A continues; nothing is in flight).
 
 ## For the owner: NOW
 
+- **THE REVIEWER'S COLD READ OF H-1 v13 IS DONE (entry 271; EX_317): PASS,** no blocker. Four documentary corrections
+  and two observations wait for H-1's next ordinary edition, which is to consolidate (the owner and the reviewer
+  agree: no more layers). Two of them guide the build now: an installed tree does keep `records\INSTALLED_FILES.json`
+  and `records\INSTALL_LOG.jsonl` (deployment design section 2); and no package is rehearsed in an LF clone and a
+  CRLF clone merely for the old `core.autocrlf` assumptions. **This supersedes "owed by the reviewer" in the bullet
+  below. Claude's next EX number is EX_318.**
 - **THE NEW CLAUDE CHAT'S TAKEOVER IS ACCEPTED (entry 270; 25 November 2026, 08:21).** The reviewer's HO-2
   assessment: PASS, all nine answers, no second round. The owner: "you are approved to proceed in this role with
   prior guthub access." Normal work, the same commit rights. **Next work: slice A's four parts still to write**
@@ -872,8 +878,8 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - **Now (25 November 2026):** the reviewer chat that started on the evening of 24 November 2026 (entries 232, 234;
   EX_304 to EX_316). Its handover in force is **H-2 v8** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md`;
-  RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: none.** Owed by
-  it: the cold read of H-1 v13, when the owner asks. Owed to it: slice A's package. Still owed to it in the build:
+  RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: none.** Its
+  cold read of H-1 v13 is done (EX_317, entry 271: PASS). Owed to it: slice A's package. Still owed to it in the build:
   its test of EX_271 section 3 (step 4) and the watchpoint of EX_273 section 2 (step 3, the updater). **The bullet
   below is the position of 22 November 2026 and is history.**
 - **Now (22 November 2026):** the reviewer chat that took over on 21 November 2026 (entries 132, 134). Its handover in

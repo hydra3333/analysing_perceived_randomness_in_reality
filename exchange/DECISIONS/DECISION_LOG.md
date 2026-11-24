@@ -6390,3 +6390,50 @@ section 17.2 (unpack it into a new folder, never over the clone).
   H-2 v8 section 0.3 says "byte-identical" likewise; that file is the reviewer's.
 - **Not authorised by this entry:** any operation on the owner's PC, any install, any runner task, any tree.
 - Next numbers: EX_317; entry 271; RAT-56.
+
+## 271. 25 November 2026, 08:25 - EX_317 (reviewer): the full cold read of H-1 v13, PASS; four documentary corrections and two observations for the next ordinary edition; the owner asks that the next edition consolidates
+
+- **A number moved:** the reviewer took EX_317 (its commit `8b8e18b`, after entry 270). Entry 270's last line gave
+  EX_317 as Claude's next; it is EX_318.
+- **EX_317** (`exchange/EX_317_ChatGPT.md`, SHA-256
+  `721d87510ff0d78f8f0dcb690efb9899ea828d8b457be10d95dc7906567339a8`, computed by Claude from Git): **"PASS for
+  continued use. No blocker, no loss of reviewer rights, no weakening of the ratified science or safety
+  contract."** The cold read owed since H-1 v12 (entries 262, 268) is complete. "Do not produce another handover
+  merely to close these findings. Record them and incorporate at the next ordinary refresh."
+- **Checked by Claude:** the thirteen hashes in EX_317's two tables equal Git at `db66065`; `src/research` holds 21
+  files; section 5.3 of H-1 v13 holds the sentence H13-C03 quotes.
+- **Its four corrections, all accepted by Claude, for the next ordinary edition:**
+  - *H13-C01, the OV-1 kernel:* the installed `src/research/ov1_numeric.py` equals the reviewed kernel exactly once
+    CRLF is read as LF (the reviewer fetched both files itself). "Byte for byte" is true of build step 2's
+    installation; since then the file is unchanged but for RAT-50's line endings. No test, edit or rerun is asked
+    for. The reviewer corrects the same words in its own handover at its next refresh.
+  - *H13-C02, hashes and line endings:* the nine Appendix A differences are all explained (eight by line endings;
+    the manifest also by the one line `src/research/windows_text.py = derived`). Old identities stay with their
+    historical commit. Present hashes are of exact bytes. The handover's older instructions written for LF and
+    `core.autocrlf` (its sections 1.6, 2, 5.1, 6, 8.5, 12.3, 12.6) are overridden by the standard in force and must
+    say so; **no rehearsal in an LF clone and a CRLF clone is demanded merely for those old assumptions;** the
+    joined rehearsal and the evidence of the real platform stay. What the conversion showed of Git is one stale
+    case and its one-off remedy, not a general rule.
+  - *H13-C03, records in an installed tree:* section 5.3's "No install or release records, and no Git, outside DEV"
+    must not be read against the deployment design's section 2: `records\INSTALLED_FILES.json` and
+    `records\INSTALL_LOG.jsonl` are required in every installed tree. No release registry and no Git there;
+    installation is release (specification 12.6). Slices A and C follow the ratified design.
+  - *H13-C04, the layers:* the next edition consolidates section 0 and the reading route instead of stacking
+    statements that supersede one another. It agrees with entry 270's eight points and adds: section 0A item 1
+    (trees "not coded"); section 0E item 1 (RAT-51 called "this handover"), item 6 (`Make_Installable` is wired,
+    entry 266) and item 10 (superseded by item 15); section 7.1 (the engine is 21 files with `windows_text.py`);
+    section 7.5 (its two runs and "nothing coded" need historical labels); stale references in sections 4.4, 10
+    and 12.8. "No substantive new authority error because 0E and the log explicitly prevail."
+- **Its two observations:** (O01) section 5.1's statement that the old two-site checker is unchanged is historical
+  (the conversion changed two lines of it and its form, and gave no permission to run it); the retired Mode H
+  machinery is not maintained. (O02) H-1 v13's header says no reviewer read it before installation: the reviewer
+  had checked the difference from H-1 v12, the hashes and the carried sections before ratification, not made the
+  full cold read. Nothing installed is edited for either.
+- **It repeats:** the one environment digest is its recommendation, not an owner decision.
+- **The owner, 08:24,** relaying it: "a pause to consider chatgpt review below", and, quoting the reviewer with
+  approval: "accumulated historical wording is becoming unnecessarily cumbersome. The next edition should
+  consolidate the current position rather than add another layer of superseding statements."
+- **What follows:** nothing is rebuilt or re-run. H-1 v13 stays the installed handover. The next ordinary edition
+  of H-1 is a consolidated one (a short live chapter; history clearly labelled; rights and lessons kept); when it
+  is written is put to the owner. Slice A continues within the authority of entries 217 and 270.
+- Next numbers: EX_318; entry 272; RAT-56.
