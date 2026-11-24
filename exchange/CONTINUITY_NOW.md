@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 17:17 Australia/Adelaide (entry 227: the owner: Git is never an operational gatekeeper; so markers are not tracked, and Git is set to store the code as it lies and never convert it; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 17:19 Australia/Adelaide (entry 228: the owner wants no halfway house on line endings; Claude proposes consistent LF checked by Make_Installable, at the cost of one refill of DEV; waiting on his yes; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -23,10 +23,12 @@ durable EX messages are authoritative.
   manifest's `[install_tool]` section, `tests/test_trees_readiness.py` (38 tests). **Next in slice A:** the LF pin
   (DEV has 584 LF and 3 CRLF files under `src` and `deploy`, `core.autocrlf=true`; the three names are asked for),
   `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard, the design amendment's wording.
-  **The owner's principle (entry 227): Git is never an operational gatekeeper or checker.** Taken from it, his to
-  overturn: the markers are not tracked by Git; Git is set to store `src/**` and `deploy/**` as they lie and never
-  convert them (`-text`), and the three files that are CRLF on his disk (`game_profiles.py`, forecast-class, among
-  them) are committed as they are, so nothing in DEV changes; no tool of the new system consults Git.
+  **The owner's principle (entry 227): Git is never an operational gatekeeper or checker.** So the markers are not
+  tracked by Git and no tool of the new system consults Git. **Line endings (entry 228): he wants no halfway
+  house.** Proposed, waiting on his yes: the code is LF and batch files CRLF with no exceptions; `Make_Installable`
+  itself refuses a listed file with the wrong line endings; Git is only told to keep LF (`text eol=lf`). Cost: the
+  three CRLF files on his disk are made LF at the install, and because `game_profiles.py` is forecast-class,
+  DEV's research results are removed by hand and filled again once (47 minutes).
 - **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
   November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
   probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)

@@ -4872,3 +4872,34 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - He has not said "option 1" in so many words; item 2 is Claude's reading of his principle and is his to overturn.
   Nothing is installed or changed by it: it reaches his PC only in a reviewed package, on his own go.
 - Next numbers: EX_303; entry 228; RAT-47.
+
+## 228. 24 November 2026, 17:19 - OWNER: no halfway house on line endings; entry 227's item 2 is overturned; Claude's proposal for consistent LF, checked by the project's own tools
+
+- **The owner, 17:18, to Claude,** on entry 227's item 2 (store the code as it lies, three files staying CRLF):
+  "option 1 leaves things in a halfway house which will most definitely catch us out later; I prefer being
+  consistent if possible."
+- **So item 2 of entry 227 is overturned.** Items 1 and 3 stand (the markers are not tracked by Git; no tool of the
+  new system consults Git).
+- **Consistency is possible.** Claude checked the repository: every one of the 587 non-empty files Git tracks
+  under `src` and `deploy` is stored with LF, and all 28 batch files are held as CRLF by the existing rule. Only
+  the three working copies on the owner's disk differ (entry 226).
+- **Claude's proposal, in line with his principle of entry 227 (the project's own tools check, not Git):**
+  1. **One rule: the project's code is LF, batch files are CRLF, no exceptions.** The three files are made LF on
+     his disk, once, by a step of the install sheet.
+  2. **The project's own tool enforces it:** `Make_Installable` refuses to mark a variant or the infrastructure
+     ready if a listed `.py`, `.json`, `.ini` or `.txt` file holds a carriage return, or a listed `.bat` file a
+     line that does not end CRLF, naming the file. Nothing with the wrong line endings can then be marked, so
+     nothing with them can be installed. Git is not asked.
+  3. **Git is only told to keep LF** (`text eol=lf` for `src/**` and `deploy/**`, the batch files' rule and the
+     existing byte-for-byte lines kept), so that Git itself never hands out a CRLF copy. That is the "LF pinned"
+     of entry 181.
+- **Its one cost, stated before he decides.** `src/methods/_common/game_profiles.py` is shared forecasting code and
+  is one of the three. Making it LF changes the identity of the forecasting code in DEV, so every list DEV holds
+  becomes foreign and every variant held (specification 5.6A), and nothing clears that before build step 4. On
+  the day step 3 is installed in DEV, DEV's research results (`results\research\`, ignored by Git, made by the
+  first fill of entry 212) would therefore be removed by hand and filled again: about 47 minutes, unattended. QA
+  and PROD are not affected: they are created afterwards and start clean. No forecast changes: the comparison
+  with the old records compares scientific content, and line endings change no calculation.
+- **Waiting on the owner:** his yes to that cost (the removal of DEV's research results is a deletion, which needs
+  his own approval, given again on the day).
+- Next numbers: EX_303; entry 229; RAT-47.
