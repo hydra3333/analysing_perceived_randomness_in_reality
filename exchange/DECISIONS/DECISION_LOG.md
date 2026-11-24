@@ -5424,3 +5424,43 @@ section 17.2 (unpack it into a new folder, never over the clone).
   unchanged. Next: the reviewer's confirmation of the narrow difference; then the owner's ratification (RAT-48);
   then installation by script in `doc/HANDOVER/`.
 - Next numbers: EX_307; entry 244; RAT-48.
+
+## 244. 24 November 2026, 20:27 - RAT-48: THE OWNER RATIFIES H-1 v11 (the candidate v11r1) after the reviewer's focused PASS (EX_307); installed in doc/HANDOVER/ with its status statements changed
+
+- **EX_307 (reviewer; main `d778d55`; SHA-256 `e808739378ee097cbcaf5c4ed03192ea6067cc00a3e97f91079d4382a7bc4462`):**
+  "FOCUSED PASS. H11-C01 and H11-C02 CLOSED. All three observations addressed. Recommend the exact H-1 v11r1
+  candidate and its blurb for owner ratification under RAT-48." It computed nine hashes itself (all match), applied
+  every hunk of the narrow and of the whole difference (each rebuilds the candidate exactly), found sections 1, 2
+  and 2A identical to the installed H-1 v10, and found the continuity through entry 243 accurate. It executed
+  nothing and reviewed neither the probe's results nor the conversion's code.
+- **The owner's ratification, 20:25, to Claude:** "ok to Recommendation for RAT-48", followed by the reviewer's
+  recommendation as he had it: "The exact candidate recommended for ratification is:
+  `bb68f9b6ea7c8ad65a3c172698c0e1ceffd274a0a0a60663cb4aa527a42e13c9` Its introductory blurb:
+  `5d7e64fe13fba2bb094707d86616664aef58f7422f99fc75fd5a612c9f4c6663`". A minute later he relayed that EX_307 was
+  committed. **Claude took "ok to" as his ratification:** they are his own words, they name RAT-48 and they stand
+  over the two exact hashes. Had he meant otherwise, the install is a document only and H-1 v10 is untouched.
+- **RAT-48 is recorded** (RAT-47 was the last number used). **Installed** by
+  `exchange/CLAUDE_WEB_TOOLS/rat48/finalise_rat48.py` from the ratified candidate and blurb (each asserted by hash):
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v11.md`, **SHA-256 `91a9c1814587bcbe0ee9ce23de51a6ed5008932d4c721e9f52c0467930c09318`** (1533 lines);
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v11_introductory_blurb.md`, **SHA-256 `16d7feedc6102bc87e62d5e6d4a464a38013ffd6f8e2262d0a80320387d9b5ec`**.
+- **Ten passages of the handover differ from the ratified candidate,** each a statement the ratification itself
+  made out of date (`rat48/H1_v11r1_CANDIDATE_TO_FINAL.diff`, SHA-256
+  `ded5bf5fec8c7aee048782224dc1f15cbd67e8b3509ae2c4473d61263fd11ddf`, 10 hunks; applied to the candidate with `patch`
+  it gives the installed file, checked with `cmp`): the title; the edition line; the status statement; the
+  "replaces" line; section 0A item 3's newest numbers; section 0D's next numbers, its records (item 1), the
+  reviewer's review (item 14) and who is waited on (item 16); and section 10 item 2, which had still called H-1
+  v10 "this edition". Sections 1, 2 and 2A are carried byte for byte (asserted). No rule or fact was changed.
+- **Three passages of the blurb differ from the ratified blurb, and that is new:** at RAT-45 the blurb was
+  installed with its bytes unchanged. This one was written to point at the candidate under `exchange/` and to call
+  it a candidate; installed, it says "ratified ... RAT-48" and points at `doc/HANDOVER/` alone
+  (`rat48/H1_v11r1_CANDIDATE_TO_FINAL_blurb.diff`, SHA-256
+  `3ae48edf43b713e8a7e609c4c6eb628605eb9acb64f3d96670a03ab3b4279222`, 3 hunks; checked the same way). The ratified
+  candidate and blurb stay under `exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/`, unchanged.
+- **H-1 v10 and its blurb stay in `doc/HANDOVER/` as history. A new Claude chat starts from the v11 blurb.**
+- **RAT-48 authorises the documentary installation and nothing else:** nothing on the owner's PC.
+- **The owner, 20:24, asked what comes next with the line endings;** Claude set out the cloud work (the list, the
+  engine's writers, the conversion program, the Git settings, a full trial), the one package to the reviewer, and
+  the two steps on his PC (a rehearsal by the runner; the day itself from a sheet), each on his own go. Surveyed
+  that minute: 681 tracked files to convert under the root, `src`, `deploy` and `tests`, and 7 others; none with a
+  stray carriage return, none that is not UTF-8, none of a kind the standard does not name.
+- Next numbers: EX_308; entry 245; RAT-49.

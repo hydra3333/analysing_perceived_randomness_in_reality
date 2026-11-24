@@ -1,0 +1,11 @@
+--- H-1 v11r1 candidate blurb (as passed in EX_307)
++++ H-1 v11 blurb (installed)
+@@ -1 +1 @@
+-# Introductory blurb for H-1 v11 CANDIDATE: for a new Claude chat (paste everything below the line)
++# Introductory blurb for H-1 v11: for a new Claude chat (paste everything below the line)
+@@ -11 +11 @@
+-The previous Claude chat left you a handover, H-1 v11 (a candidate: the installed H-1 v10 brought up to date the same day, with one new section, 0D; check it against H-1 v10 with the exact difference beside it). The project was redesigned from the root in November 2026.
++The previous Claude chat left you a handover, H-1 v11 (ratified on 24 November 2026, RAT-48: H-1 v10 brought up to date the same day, with one new section, 0D). The project was redesigned from the root in November 2026.
+@@ -18 +18 @@
+-exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1.md (or doc/HANDOVER/Claude_Primary_Handover_H1_v11.md if it has been installed there) and follow its section 0, then read its section 0D, which holds everything since H-1 v10 (its reading order and the staged takeover).
++doc/HANDOVER/Claude_Primary_Handover_H1_v11.md and follow its section 0, then read its section 0D, which holds everything since H-1 v10 (its reading order and the staged takeover).

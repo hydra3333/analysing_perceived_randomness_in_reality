@@ -4,19 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 20:18 Australia/Adelaide (entry 243: the owner keeps Deflate level 9; EX_306 passed H-1 v11 for continuity with two narrow corrections; the candidate H-1 v11r1 makes them and awaits the reviewer's confirmation, then RAT-48).
+**Last updated:** 24 November 2026, 20:27 Australia/Adelaide (entry 244: RAT-48, H-1 v11 ratified and installed after EX_307; a new Claude chat starts from its blurb in doc/HANDOVER/; next: the conversion in the cloud).
 
 ## For the owner: NOW
 
-- **THE HANDOVER TO START A NEW CLAUDE CHAT FROM IS NOW H-1 v11r1 (entry 243; 24 November 2026, evening).** Paste
-  what is below the line of
-  `exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1_introductory_blurb.md` (`5d7e64fe...4c6663`);
-  it points at the candidate beside it (`bb68f9b6...42e13c9`). EX_306 passed v11 for continuity with two narrow
-  corrections; v11r1 makes them and is up to date to entry 243. **Waiting on:** the reviewer's confirmation of
-  `H1_v11_TO_v11r1.diff`, then the owner's ratification (RAT-48), then installation by Claude. **Decided by the
-  owner (entry 243):** backups stay at Deflate level 9. **Claude's work meanwhile:** the conversion (rule module
-  and tests written under `exchange/CLAUDE_WEB_TOOLS/conversion/`; next the conversion list, the program, the
-  engine's writers). Claude's next numbers: EX_307, entry 244, RAT-48.
+- **RAT-48: H-1 v11 IS RATIFIED AND INSTALLED (entry 244; 24 November 2026, evening).** In force for a Claude chat:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v11.md` (`91a9c181...c09318`) and its blurb
+  `Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`16d7feed...9b5ec`): **a new Claude chat is started by
+  pasting what is below the line of that blurb.** For the reviewer: H-2 v6 (RAT-46), with Claude's unratified
+  refresh H-2 v6r2 for a new reviewer chat. Up to date to entry 243: TASK_T028 ran (PASS), backups stay at Deflate
+  level 9, the conversion is begun. **Nothing waits on the owner or the reviewer.** **Claude's work now:** the
+  conversion in the cloud (the list, the engine's writers, the conversion program, the Git settings, a full
+  trial), then one package to the reviewer; the rehearsal and the day on the owner's PC are each his own go.
+  Claude's next numbers: EX_308, entry 245, RAT-49.
 - **TASK_T028 r1 RAN: PASS (entries 239 and 240; 24 November 2026, evening).** Report
   `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` at `b31ec37`. In short: Windows refuses a rename, wholly,
   while anything is open in the folder; the standard library reads the process table as well as psutil does

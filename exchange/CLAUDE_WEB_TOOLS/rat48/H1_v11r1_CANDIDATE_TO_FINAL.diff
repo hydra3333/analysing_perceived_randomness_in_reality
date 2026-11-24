@@ -1,0 +1,57 @@
+--- H-1 v11r1 candidate (as passed in EX_307)
++++ H-1 v11 (installed)
+@@ -1 +1 @@
+-# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v11 CANDIDATE
++# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v11
+@@ -4,2 +4,2 @@
+-**This edition: v11 CANDIDATE, revision r1, 24 November 2026, evening (Adelaide, UTC+10:30). H-1 v10 brought up
+-to date the same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
++**This edition: v11, 24 November 2026, evening (Adelaide, UTC+10:30). OWNER-RATIFIED the same evening (RAT-48;
++decision log entry 244). H-1 v10 brought up to date the same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
+@@ -12,6 +12,11 @@
+-decision log prevail.** **It is a CANDIDATE: not ratified.** The reviewer passed v11 for continuity and preservation of authority in
+-EX_306, with two narrow corrections and three observations. **Revision r1** makes them and adds what happened
+-after v11 was written (entries 239 to 243), by `exchange/CLAUDE_WEB_TOOLS/h1v11r1/make_h1_v11r1.py`;
+-`H1_v11_TO_v11r1.diff` beside it is the exact difference for the reviewer's confirmation, and
+-`H1_v10_TO_v11r1.diff` the whole difference from the installed edition. H-1 v10 stays
+-installed and unchanged in `doc/HANDOVER/`.
++decision log prevail.** **Status: OWNER-RATIFIED 24 November 2026 (RAT-48; decision log entry 244),** after the reviewer's PASS for
++continuity and preservation of authority (EX_306, with two narrow corrections and three observations) and its
++focused PASS of the corrected candidate, revision r1 (EX_307). Revision r1 made those corrections and added
++what happened after v11 was first written (entries 239 to 243), by
++`exchange/CLAUDE_WEB_TOOLS/h1v11r1/make_h1_v11r1.py`; `H1_v10_TO_v11r1.diff` beside that builder is the whole
++difference from H-1 v10. **This is the installed Claude handover.** It is the ratified candidate
++(`exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1.md`, SHA-256
++`bb68f9b6ea7c8ad65a3c172698c0e1ceffd274a0a0a60663cb4aa527a42e13c9`) with its status statements and the
++statements the ratification made out of date changed; `exchange/CLAUDE_WEB_TOOLS/rat48/H1_v11r1_CANDIDATE_TO_FINAL.diff`
++is the exact difference. H-1 v10 (RAT-45) stays in `doc/HANDOVER/` as history. `exchange/CONTINUITY_NOW.md` with
++the decision log carries whatever is newer. It authorises nothing.
+@@ -40 +45 @@
+-**Replaces, once ratified:** H-1 v10 and its blurb (RAT-45), which stay where they are as history.
++**Replaces:** H-1 v10 and its blurb (RAT-45), which stay where they are as history.
+@@ -133,2 +138,2 @@
+-   edition: the last RAT is RAT-45 (this handover); the newest EX is EX_296 (the reviewer's focused PASS of this
+-   edition); the newest decision log entry is 215 (RAT-45).
++   edition (v11): the last RAT is RAT-48 (this handover); the newest EX is EX_307 (the reviewer's focused PASS
++   of this edition); the newest decision log entry is 244 (RAT-48).
+@@ -251 +256 @@
+-**Next numbers at this edition (r1): EX_307, decision log entry 244, RAT-48.** Fetch `main` and confirm before using any:
++**Next numbers at this edition: EX_308, decision log entry 245, RAT-49.** Fetch `main` and confirm before using any:
+@@ -254,2 +259,2 @@
+-1. **Records.** RAT-46: the reviewer's H-2 v6, ratified as its corrected candidate v6r1 (entry 216). RAT-47: the file-form standard (entry 237). The next
+-   register edition is still owed (section 12.8 item 5) and now also records RAT-45, RAT-46 and RAT-47.
++1. **Records.** RAT-46: the reviewer's H-2 v6, ratified as its corrected candidate v6r1 (entry 216). RAT-47: the file-form standard (entry 237). RAT-48: this handover (entry 244). The next
++   register edition is still owed (section 12.8 item 5) and now also records RAT-45 to RAT-48.
+@@ -368 +373,2 @@
+-    blurb (entry 234); it wrote EX_304 and EX_305. It read this handover's v11 in EX_306 (PASS for continuity; two narrow corrections, made in r1), and the
++    blurb (entry 234); it wrote EX_304 and EX_305. It read this handover's v11 in EX_306 (PASS for continuity; two narrow corrections, made in r1) and passed r1
++    in EX_307, and the
+@@ -374,2 +380,2 @@
+-16. **What waits, at this edition (r1).** On the reviewer: its confirmation of `H1_v11_TO_v11r1.diff`. On the
+-    owner: then his decision on this H-1 v11 (it would be RAT-48). On Claude, in order: the conversion (item 10); the rest of slice A, to the standard; slices
++16. **What waits, at this edition.** On the reviewer: nothing. On the owner: nothing (this handover is
++    ratified, RAT-48). On Claude, in order: the conversion (item 10); the rest of slice A, to the standard; slices
+@@ -1141 +1147,2 @@
+-2. **Done: this edition ratified (RAT-45, entry 215)** after EX_295 and EX_296. The reviewer has written its own
++2. **Done: H-1 v10 ratified (RAT-45, entry 215)** after EX_295 and EX_296, and this edition, H-1 v11, ratified
++   (RAT-48, entry 244) after EX_306 and EX_307. The reviewer has written its own
