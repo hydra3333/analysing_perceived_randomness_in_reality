@@ -4322,3 +4322,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (`exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/`), parts 1 to 5; separately DEV's first fill (part 6) and part 7;
   then H-1 v10 (entry 183).
 - Next numbers: EX_295; entry 209; RAT-45.
+
+## 209. 24 November 2026, 12:37 - The owner began the install of build step 2 in DEV (package v1r3); parts 1 to 3 as far as the suite PASSED; the sheet's comparison command names the wrong folder (Claude's defect)
+
+- **The owner, 12:35, sent his console output** (his own go, by doing it): in DEV at main `2b5087d`, a clean tree, the
+  pull up to date, `git diff --stat c7e6ed8 HEAD -- src tests` printing nothing; `PRE PASS`; `35 File(s) copied`;
+  `POST PASS`; the suite after the copy: `DONE: 52 modules, 762 tests ran`, the seven research modules `OK`, `FAILED`
+  only on `test_mhupa_launchers` (1 failure) and `test_multigame_reader_contracts` (7), the known ones. He made no new
+  baseline run, which the sheet allows when `E:\TEMP\TIDY1_evidence\suite_after` exists.
+- **Then the sheet's comparison command failed to start:** `can't open file
+  'E:\\TEMP\\STEP2_Research_Engine_v1r2\\tools\\compare_suite_reports.py'`. He stopped and sent the output, as the sheet
+  says. Nothing of the project ran in that command; the 35 files are copied and not committed.
+- **The cause is a defect in the sheet of package v1r3, Claude's:** part 3's comparison command names the folder of
+  package v1r2. The command's text comes from `comparison_expected.md`, which held that folder's name written out
+  and was not changed when the package's name changed; the builder did not check. One place only (the rest of the
+  sheet names v1r3 throughout; checked). The reviewer's EX_294 passed the sheet with it. The tool itself,
+  `tools\compare_suite_reports.py`, is byte for byte the same file in both packages.
+- **Also in his command:** the word `BASELINE` stood where the sheet asks for the baseline folder to be typed.
+- **What Claude told the owner:** the same command with the two things put right, which is the sheet's own command
+  for package v1r3: the tool from `E:\TEMP\STEP2_Research_Engine_v1r3\tools\`, the baseline
+  `E:\TEMP\TIDY1_evidence\suite_after`. It reads two report folders and writes one text file under `E:\TEMP`. Whether
+  to go on with it now is the owner's decision; the departure from the passed sheet is recorded here and the
+  reviewer is told.
+- **Put right for later packages, not rebuilt now:** `comparison_expected.md` takes the folder from the builder, and
+  `build_step2_pkg.py` now refuses a sheet that names any package but its own. Built again with that change, the
+  sheet differs from the issued one in that one path only (checked with `diff`). **Package v1r3 as issued and passed
+  is not replaced:** its 35 files and its tools are right; only that line of its sheet is wrong.
+- Next numbers: EX_295; entry 210; RAT-45.

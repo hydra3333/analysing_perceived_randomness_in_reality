@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 06:29 Australia/Adelaide (entry 208: TASK_T027 PASSED; the Windows rehearsal of build step 2 is complete; waiting on the owner's own go for the install in DEV from package v1r3's sheet; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 12:37 Australia/Adelaide (entry 209: the owner's install of step 2 in DEV is under way: PRE PASS, 35 files copied, POST PASS, the suite 762; the sheet's comparison command names v1r2's folder by Claude's mistake, the corrected command given; not yet committed).
 
 ## For the owner: NOW
 
+- **THE INSTALL OF BUILD STEP 2 IN DEV IS UNDER WAY (entry 209; 24 November 2026).** Done by the owner: `PRE PASS`, 35
+  files copied, `POST PASS`, the suite after (762 tests; only the two known modules `FAILED`). **Not yet done:** the
+  comparison (part 3), the commit and `COMMITTED PASS` (part 4), the push, the settings file (part 5). **A defect in
+  v1r3's sheet, Claude's:** part 3's comparison command names `E:\TEMP\STEP2_Research_Engine_v1r2\...`; it must be
+  `...v1r3\...`, and `BASELINE` must be the baseline folder (`E:\TEMP\TIDY1_evidence\suite_after`). The tree holds
+  the 35 copied files, uncommitted: **nothing is to be reset or undone.**
 - **THE WINDOWS REHEARSAL OF BUILD STEP 2 IS COMPLETE AND PASSED (entry 208; 24 November 2026).** TASK_T027: the
   corrected comparison tool on the real old run folders gave `PASS - COMPLETE` (20436 old forecasts equal; the 2802
   per game were the old system's insufficient-history records). **Waiting on the owner, each his own go:** (1) the

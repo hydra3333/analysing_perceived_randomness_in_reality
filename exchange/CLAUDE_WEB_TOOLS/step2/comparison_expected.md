@@ -3,7 +3,7 @@ command, type the baseline folder of part 1 in place of `BASELINE`** (`E:\TEMP\T
 `E:\TEMP\STEP2_evidence\suite_before` if you made a new one):
 
 ```bat
-.venv\Scripts\python.exe -B "E:\TEMP\STEP2_Research_Engine_v1r2\tools\compare_suite_reports.py" "BASELINE" "E:\TEMP\STEP2_evidence\suite_after" > "E:\TEMP\STEP2_evidence\comparison.txt"
+.venv\Scripts\python.exe -B "@@OWNER_PACKAGE_FOLDER@@\tools\compare_suite_reports.py" "BASELINE" "E:\TEMP\STEP2_evidence\suite_after" > "E:\TEMP\STEP2_evidence\comparison.txt"
 findstr /v /b /c:"NEW: " /c:"MODULE NEW: " "E:\TEMP\STEP2_evidence\comparison.txt"
 find /c "NEW: " "E:\TEMP\STEP2_evidence\comparison.txt"
 ```

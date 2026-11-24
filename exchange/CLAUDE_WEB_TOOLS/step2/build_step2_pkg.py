@@ -353,7 +353,10 @@ def main() -> int:
     sheet = sheet_text(base, len(new), test_modules, engine_tests)
     expected = (HERE / 'comparison_expected.md').read_text(encoding='ascii').strip() \
         if (HERE / 'comparison_expected.md').is_file() else 'COMPARISON EXPECTATIONS NOT YET WRITTEN'
-    sheet = sheet.replace('@@COMPARISON_EXPECTED@@', expected)
+    sheet = sheet.replace('@@COMPARISON_EXPECTED@@', expected).replace('@@OWNER_PACKAGE_FOLDER@@', OWNER_PACKAGE_FOLDER)
+    # The sheet of package v1r3 named v1r2's folder in one command (found at the owner's install, 24 November 2026).
+    assert '@@' not in sheet, 'a name of the sheet was not filled'
+    assert sheet.count('STEP2_Research_Engine_v') == sheet.count(PACKAGE_NAME), 'the sheet names another package'
     (out_folder / SHEET_NAME).write_bytes(sheet.replace('\n', '\r\n').encode('ascii'))
     print(f'{PACKAGE_NAME}: {len(new)} new files, {len(modified)} modified files, nothing deleted; '
           f'{len(guarded)} guarded files; {len(test_modules)} new test modules; base {base}')
