@@ -5916,3 +5916,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Its standing:** ready for the owner's ratification (RAT-50) and, separately, his go for each part of the sheet.
   Neither has been given yet. Nothing is installed or run.
 - Next numbers: EX_315; entry 258; RAT-50.
+
+## 258. 24 November 2026, 22:59 - RAT-50: THE OWNER RATIFIES the narrow change to the standard's recovery rule, the package FILE_FORM_Conversion_v2, and the dropping of the runner's rehearsal
+
+- **The owner's ratification, 22:59, to Claude, in his own words:** "I ratify RAT-50". It follows the reviewer's
+  FOCUSED PASS and recommendation of items (a), (b) and (c) (EX_314, entry 257) and his own decision of entry 256.
+- **RAT-50 is recorded** (RAT-49 was the last number used). **What it ratifies, for the one conversion of DEV; the
+  standard `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49) is not re-issued and its file is not changed:**
+  - **(a)** Section 7's rule that an interrupted conversion "is therefore simply run again" no longer applies. The
+    conversion is one attempt. On any STOP it is not resumed, and the whole project folder is put back from the
+    owner's verified whole-folder copy, on his go. A fresh attempt comes only after the cause is understood.
+  - **(b)** The package `FILE_FORM_Conversion_v2` is accepted for that attempt: ZIP SHA-256
+    `ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c`; its sheet
+    `25968638311354b0547e849f404c71bbd12b187475f7a4f6ba1bbc695f59702b`; its list
+    `40abea55b09e13f341f056a43596c334e10ef462563715c42a850175a919f2f4`. The acceptance includes the program's
+    removal of DEV's regenerable outputs (the research results and the status files, each in the copy) on the
+    owner's typed REMOVE, which settles the reading the reviewer left to his express word (EX_312, reading 5).
+  - **(c)** Section 5's sentence that the staging step "is rehearsed by the runner before the day" is waived for
+    this conversion. No rehearsal task is written or run.
+  - **Everything else stands:** the owner's copy first, the scientific protections, the files never converted, the
+    push last, and every other rule of the standard.
+- **It authorises no install and no run.** Each part of the sheet is the owner's own go. Nothing has been installed
+  or run on his PC.
+- **For the next handover edition and the next register edition:** RAT-45 to RAT-50 are not yet in the
+  ratification register; H-1 v11 stops at entry 243 and names the standard v0.1.
+- Next numbers: EX_315; entry 259; RAT-51.

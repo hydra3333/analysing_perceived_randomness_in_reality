@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 22:55 Australia/Adelaide (entry 257: EX_314, FOCUSED PASS of the package FILE_FORM_Conversion_v2; ready for the owner's RAT-50 and, separately, his go for each part of the sheet; neither given yet).
+**Last updated:** 24 November 2026, 22:59 Australia/Adelaide (entry 258: RAT-50, the owner ratifies the one-attempt recovery rule, the package FILE_FORM_Conversion_v2 and the dropping of the runner's rehearsal; no part of the sheet has his go yet).
 
 ## For the owner: NOW
 
+- **RAT-50 IS GIVEN (entry 258; 24 November 2026, 22:59).** One attempt, never resumed, the whole folder put
+  back from the owner's verified copy on any STOP; the package `FILE_FORM_Conversion_v2` (`ca5816cb...1c091c`)
+  accepted; no rehearsal by the runner. **Next: the owner's go for part 1 of the sheet** (pull, check the ZIP,
+  unpack, make and check the copy; it changes nothing in the project), then each part on its own go. The
+  reviewer's operating precautions are in EX_314 and entry 257. **Nothing is installed or run yet.**
 - **THE CONVERSION, MADE SIMPLE (entry 255; 24 November 2026, late evening).** The owner: "we have absolutely
   overengineered and wasted time and money." EX_313 (the reviewer agrees): **one attempt, never resumed; a
   verified copy of the whole project folder first; on any STOP the whole folder put back, on the owner's go.**
