@@ -34,8 +34,15 @@ import file_form                                            # noqa: E402
 # The repository this file lies in, when it does: its src/ holds the engine whose names the program shares.
 REPOSITORY_SRC = HERE.parents[3] / 'src'
 
-OLD_STATUS = (b'; E_901 / TOY_A_V1 - operating status in THIS tree.\n[POWERBALL]\nstatus = ACTIVE\n'
-              b'[check]\nsha256 = 00\n')
+
+
+def status_file(body: bytes) -> bytes:
+    """A status file in the old form (every line ending LF) with its own check over the bytes above it."""
+    return body + b'[check]\n' + f'sha256 = {hashlib.sha256(body).hexdigest()}\n'.encode('ascii')
+
+
+OLD_STATUS_BODY = b'; E_901 / TOY_A_V1 - operating status in THIS tree.\n[POWERBALL]\nstatus = ACTIVE\n'
+OLD_STATUS = status_file(OLD_STATUS_BODY)
 # The invented tree: {path: bytes}. LISTED names the files the conversion list holds.
 LISTED = {
     'deploy/file_form.py': None,                                    # filled with the rule itself, in its form
@@ -49,13 +56,15 @@ LISTED = {
     'source_data/POWERBALL_results_master_init_verification.json': b'{\n "ok": true\n}\n',
 }
 OTHER = {
-    'ENVIRONMENT.ini': b'[tree]\nrole = DEV\n',
+    'ENVIRONMENT.ini': b'',                                         # written by setUp: it names the tree's folder
     'src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini': OLD_STATUS,
     'results/research/POWERBALL/variants/E_901/TOY_A_V1/forecasts.jsonl': b'{"a":1}\n{"b":2}\n',
     'results/research/POWERBALL/reports/README.txt': b'old report\n',
     'records/INSTALL_LOG.jsonl': b'{"operation":"X"}\n',
     'source_data/POWERBALL_results_master.csv': b'Draw,Date\r\n1,2026-01-01\r\n',
     'source_data/POWERBALL_results_master_ledger.csv': b'version,sha256\r\n1,ab\r\n',
+    'source_data/OZLOTTO_results_master.csv': b'Draw,Date\r\n1,2026-01-06\r\n',
+    'source_data/OZLOTTO_results_master_ledger.csv': b'version,sha256\r\n1,cd\r\n',
     'source_data/HOLDOUT_OPENED_POWERBALL.json': b'{\n "opened": true\n}\n',
     'source_data/grabs/page.mhtml': b'anything\nat all\n',
     'src/results_master_v0_2.py': b'# left out by name\nx = 1\n',
@@ -107,6 +116,8 @@ class ConversionCase(unittest.TestCase):
         self.rule_path.write_bytes(listed['deploy/file_form.py'])
         for path, data in {**listed, **OTHER}.items():
             self.put(path, data)
+        self.settings = f'[environment]\nrole = DEV\ntree_root = {self.tree}\n'.encode('ascii')
+        self.put('ENVIRONMENT.ini', self.settings)
         entries = []
         for path, data in sorted(listed.items()):
             after = file_form.to_form(data, file_form.CRLF)
@@ -154,14 +165,14 @@ class AFirstRun(ConversionCase):
         for words in ('LISTED, to be converted now ............ 6 file(s) of the 9 listed',
                       'LISTED, in their form already .......... 3 file(s)', 'ENVIRONMENT.ini: to be converted',
                       '4 file(s): research results, status files, control-folder leftovers',
-                      'UNTOUCHED, AND PROVED UNTOUCHED ........ 2 results file(s)',
+                      'UNTOUCHED, AND PROVED UNTOUCHED ........ 4 results file(s)',
                       'IN NO CLASS, OR NOT AS EXPECTED ........ 0'):
             self.assertIn(words, before_question)
         self.assertEqual(len(self.asker.questions), 1)
 
     def test_the_trees_own_settings_file_is_converted_by_rule(self):
         self.run_it('CONVERT', 'REMOVE')
-        self.assertEqual((self.tree / 'ENVIRONMENT.ini').read_bytes(), b'[tree]\r\nrole = DEV\r\n')
+        self.assertEqual((self.tree / 'ENVIRONMENT.ini').read_bytes(), self.settings.replace(b'\n', b'\r\n'))
 
     def test_what_is_made_again_is_removed_and_not_converted(self):
         self.run_it('CONVERT', 'REMOVE')
@@ -189,7 +200,7 @@ class AFirstRun(ConversionCase):
         self.assertEqual(file_form.faults_in_bytes(data, file_form.CRLF), [])
         record = json.loads(data)
         self.assertEqual(record['originals_converted']['src/a.py'], sha(LISTED['src/a.py']))
-        self.assertEqual(record['originals_converted']['ENVIRONMENT.ini'], sha(OTHER['ENVIRONMENT.ini']))
+        self.assertEqual(record['originals_converted']['ENVIRONMENT.ini'], sha(self.settings))
         self.assertEqual(record['originals_removed']['records/INSTALL_LOG.jsonl'], sha(OTHER['records/INSTALL_LOG.jsonl']))
         self.assertEqual(record['proved_untouched']['source_data/POWERBALL_results_master.csv'],
                          sha(OTHER['source_data/POWERBALL_results_master.csv']))
@@ -203,8 +214,8 @@ class AFirstRun(ConversionCase):
         self.assertEqual(self.run_it('CONVERT', 'REMOVE', copy=archive), conversion.EXIT_DONE, self.text_said())
 
 
-class ASecondRun(ConversionCase):
-    """Standard section 7: the rule that makes a second run safe, and the watchpoint of EX_305."""
+class OneAttemptOnly(ConversionCase):
+    """EX_313, the owner's direction of 24 November 2026: the conversion is one attempt, never resumed."""
 
     def interrupt_at(self, count: int):
         """A checkpoint that lets `count` files be changed and then fails as Windows does when a file is open."""
@@ -216,73 +227,49 @@ class ASecondRun(ConversionCase):
                 raise PermissionError(13, 'The process cannot access the file', path)
         return checkpoint
 
-    def test_a_finished_tree_run_again_changes_nothing_and_asks_nothing(self):
-        self.run_it('CONVERT', 'REMOVE')
-        after_first = tree_bytes(self.tree)
-        self.said.clear()
-        self.assertEqual(self.run_it(), conversion.EXIT_DONE, self.text_said())
-        self.assertEqual(self.asker.questions, [])
-        self.assertEqual(tree_bytes(self.tree), after_first)
-        self.assertIn('Nothing is left to convert', self.text_said())
-
-    def test_a_run_interrupted_part_way_is_simply_run_again_and_ends_as_an_uninterrupted_run_does(self):
-        self.assertEqual(self.run_it('CONVERT', 'REMOVE', checkpoint=self.interrupt_at(3)), conversion.EXIT_STOPPED)
-        self.assertIn('goes on from where it stopped', self.text_said())
-        self.assertEqual((self.tree / 'src/a.py').read_bytes().count(b'\r\n')
-                         + (self.tree / 'tests/test_a.py').read_bytes().count(b'\r\n') > 0, True)
-        self.assertFalse((self.tree / conversion.JOB_LOCK).exists())
-        self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_DONE, self.text_said())
-        interrupted = tree_bytes(self.tree)
-        other = ConversionCase('run_it')
-        other.setUp()
-        self.addCleanup(other.doCleanups)
-        other.run_it('CONVERT', 'REMOVE')
-        self.assertEqual(interrupted, tree_bytes(other.tree))
-
-    def test_on_a_second_run_the_copy_is_checked_against_the_first_runs_hashes_not_the_converted_files(self):
-        self.run_it('CONVERT', 'REMOVE', checkpoint=self.interrupt_at(3))
-        # A copy made NOW, from the half-converted tree, matches every live file but is not the way back.
-        late_copy = self.root / 'late_copy'
-        shutil.copytree(self.tree, late_copy)
-        half_converted = tree_bytes(self.tree)
-        self.said.clear()
-        self.assertEqual(self.run_it('CONVERT', 'REMOVE', copy=late_copy), conversion.EXIT_STOPPED)
-        self.assertIn('your copy holds other bytes', self.text_said())
-        self.assertEqual(tree_bytes(self.tree), half_converted)
-        self.assertEqual(self.asker.questions, [])
-        self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_DONE, self.text_said())
-
-    def test_a_file_that_appeared_since_the_first_run_stops_the_second_before_anything_is_changed(self):
-        self.run_it('CONVERT', 'REMOVE', checkpoint=self.interrupt_at(3))
-        self.put('results/research/POWERBALL/reports/made_since.txt', b'not in the copy, not in the record\n')
-        (self.copy / 'results/research/POWERBALL/reports/made_since.txt').write_bytes(b'not in the copy, not in the record\n')
-        half_converted = tree_bytes(self.tree)
+    def assert_refused_as_begun_before(self):
+        """Run again; assert the refusal, that nothing was asked and that no byte of the tree changed."""
+        before = tree_bytes(self.tree)
         self.said.clear()
         self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_STOPPED)
-        self.assertIn('were not there, or not to be changed, at the first run', self.text_said())
-        self.assertEqual(tree_bytes(self.tree), half_converted)
+        self.assertIn('is one attempt and is never resumed or repeated', self.text_said())
         self.assertEqual(self.asker.questions, [])
+        self.assertEqual(tree_bytes(self.tree), before)
 
-    def test_a_removal_interrupted_part_way_is_finished_by_the_next_run(self):
-        self.assertEqual(self.run_it('CONVERT', 'REMOVE', checkpoint=self.interrupt_at(9)), conversion.EXIT_STOPPED)
-        self.assertTrue(any((self.tree / path).exists() for path in OTHER if path.startswith('results/research/')))
-        self.assertEqual(self.run_it('REMOVE'), conversion.EXIT_DONE, self.text_said())
-        self.assertFalse((self.tree / 'results/research').exists())
+    def test_a_finished_conversion_is_not_run_again(self):
+        self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_DONE, self.text_said())
+        self.assert_refused_as_begun_before()
 
-    def test_the_removal_not_confirmed_leaves_the_results_and_the_next_run_asks_only_for_it(self):
-        self.assertEqual(self.run_it('CONVERT', 'no'), conversion.EXIT_NOT_CONFIRMED)
-        self.assertTrue((self.tree / 'records/INSTALL_LOG.jsonl').is_file())
-        self.assertEqual((self.tree / 'src/a.py').read_bytes(), b'x = 1\r\ny = 2\r\n')
-        self.assertEqual(self.run_it('REMOVE'), conversion.EXIT_DONE, self.text_said())
-        self.assertEqual(len(self.asker.questions), 1)
-
-    def test_a_record_of_another_conversion_list_is_refused(self):
+    def test_results_made_after_a_finished_conversion_are_never_removed(self):
         self.run_it('CONVERT', 'REMOVE')
-        document = json.loads(self.list_path.read_bytes())
-        self.list_path.write_bytes(json.dumps(document, indent=2).encode('ascii'))
-        self.said.clear()
-        self.assertEqual(self.run_it(), conversion.EXIT_STOPPED)
-        self.assertIn('of another tree or another conversion list', self.text_said())
+        self.put('results/research/POWERBALL/reports/made_since.txt', b'made by the fill\r\n')
+        self.assert_refused_as_begun_before()
+        self.assertTrue((self.tree / 'results/research/POWERBALL/reports/made_since.txt').is_file())
+
+    def test_a_run_interrupted_part_way_says_to_put_the_folder_back_and_is_not_resumed(self):
+        self.assertEqual(self.run_it('CONVERT', 'REMOVE', checkpoint=self.interrupt_at(3)), conversion.EXIT_STOPPED)
+        self.assertIn('is not resumed', self.text_said())
+        self.assertIn('the whole project folder put back from your copy', self.text_said())
+        self.assertNotIn('run this again', self.text_said().lower())
+        self.assertFalse((self.tree / conversion.JOB_LOCK).exists())
+        self.assert_refused_as_begun_before()
+
+    def test_a_file_changed_after_the_look_is_not_removed(self):
+        target = 'results/research/POWERBALL/reports/README.txt'
+
+        def checkpoint(path):
+            if path == target:
+                (self.tree / target).write_bytes(b'written since the look\n')
+        self.assertEqual(self.run_it('CONVERT', 'REMOVE', checkpoint=checkpoint), conversion.EXIT_STOPPED)
+        self.assertIn(f'{target} is gone or changed since it was looked at; it was not removed', self.text_said())
+        self.assertEqual((self.tree / target).read_bytes(), b'written since the look\n')
+
+    def test_the_second_word_not_typed_changes_nothing_and_leaves_no_record(self):
+        before = tree_bytes(self.tree)
+        self.assertEqual(self.run_it('CONVERT', 'no'), conversion.EXIT_NOT_CONFIRMED)
+        self.assertEqual(tree_bytes(self.tree), before)
+        self.assertFalse(self.record_path.exists())
+        self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_DONE, self.text_said())
 
 
 class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
@@ -326,15 +313,15 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
         self.assert_stops_unchanged('scratch/thing.xml: a file of a kind the standard does not name')
 
     def test_a_status_file_that_holds_a_withdrawal(self):
-        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', OLD_STATUS.replace(
-            b'status = ACTIVE\n', b'status = WITHDRAWN\nwithdrawn_from_draw = 1601\n'))
+        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', status_file(OLD_STATUS_BODY.replace(
+            b'status = ACTIVE\n', b'status = WITHDRAWN\nwithdrawn_from_draw = 1601\n')))
         self.assert_stops_unchanged('VARIANT_STATUS.ini: it holds a status other than ACTIVE', 'your decision')
         for content in ('WITHDRAWN', '1601', 'withdrawn_from_draw'):
             self.assertNotIn(content, self.text_said())
 
     def test_a_status_file_that_holds_an_eligibility_draw(self):
-        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', OLD_STATUS.replace(
-            b'status = ACTIVE\n', b'status = ACTIVE\nprevailing_ov1_first_eligible_draw = 1596\n'))
+        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', status_file(OLD_STATUS_BODY.replace(
+            b'status = ACTIVE\n', b'status = ACTIVE\nprevailing_ov1_first_eligible_draw = 1596\n')))
         self.assert_stops_unchanged('VARIANT_STATUS.ini: it records a withdrawal or an eligibility draw')
         for content in ('1596', 'prevailing_ov1'):
             self.assertNotIn(content, self.text_said())
@@ -378,8 +365,37 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
         self.assert_stops_unchanged('POWERBALL_results_master.csv: must be CRLF', 'never converted')
 
     def test_a_settings_file_with_a_stray_carriage_return(self):
-        self.put('ENVIRONMENT.ini', b'[tree]\rrole = DEV\n')
+        self.put('ENVIRONMENT.ini', self.settings.replace(b'\nrole', b'\rrole'))
         self.assert_stops_unchanged('ENVIRONMENT.ini:', 'carriage return')
+
+    def test_a_status_file_whose_own_check_does_not_hold(self):
+        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', OLD_STATUS.replace(b'E_901', b'E_902'))
+        self.assert_stops_unchanged('VARIANT_STATUS.ini: its own check does not hold')
+
+    def test_a_status_file_that_holds_no_status(self):
+        self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', status_file(b'; nothing here\n'))
+        self.assert_stops_unchanged('VARIANT_STATUS.ini: it holds no status at all')
+
+    def test_a_tree_whose_settings_say_it_is_not_dev(self):
+        self.put('ENVIRONMENT.ini', self.settings.replace(b'role = DEV', b'role = PROD'))
+        self.assert_stops_unchanged('ENVIRONMENT.ini: its role is not DEV')
+
+    def test_a_tree_whose_settings_name_another_folder(self):
+        self.put('ENVIRONMENT.ini', self.settings.replace(str(self.tree).encode('ascii'),
+                                                          str(self.copy).encode('ascii')))
+        self.assert_stops_unchanged('ENVIRONMENT.ini: its tree_root is not this folder')
+
+    def test_a_tree_without_a_settings_file(self):
+        (self.tree / 'ENVIRONMENT.ini').unlink()
+        self.assert_stops_unchanged('ENVIRONMENT.ini: not in this folder')
+
+    def test_the_orphan_marker(self):
+        self.put(conversion.ORPHAN_MARKER, b'{}')
+        self.assert_stops_unchanged('the orphan marker exists')
+
+    def test_a_results_ledger_that_is_missing(self):
+        (self.tree / 'source_data/OZLOTTO_results_master_ledger.csv').unlink()
+        self.assert_stops_unchanged('OZLOTTO_results_master_ledger.csv: not in the tree')
 
     def test_a_job_lock_left_by_another_job(self):
         self.put(conversion.JOB_LOCK, b'research job\n')

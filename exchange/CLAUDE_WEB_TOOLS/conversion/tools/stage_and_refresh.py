@@ -56,6 +56,13 @@ WORD_TO_GO_ON = 'STAGE'
 TEMPORARY_SUFFIX = '.refreshing'
 # The value Git reports for the attribute "text" where the root file's "-text" governs a path.
 ATTRIBUTE_UNSET = 'unset'
+# Another project's own folder, with its own rules for Git: never a candidate here, for staging or for refreshing.
+OTHER_PROJECTS = ('GAIS/',)
+# What Git already stored byte for byte before this conversion (the old root attribute file's "-text" lines): such
+# a file's bytes on disk are Git's own already. One that differs is never put back: it is named, and the run stops.
+STORED_BYTE_FOR_BYTE_BEFORE = ('source_data/', 'results/', 'src/methods/_common/contract_data/install_records/',
+                               'src/package_tools/process_check.py',
+                               'tests/fixtures/results_master_v0_1_reference.py.txt', 'src/results_master_v0_2.py')
 # The mode of an ordinary file in Git's index; anything else (a link, a submodule) is not this program's.
 ORDINARY_MODES = ('100644', '100755')
 # How many names of a long class are printed before the rest are counted.
@@ -146,11 +153,14 @@ def make_plan(tree: Path, entries: dict, rule) -> dict:
                                     f'Run the conversion program to its end first.')
         elif tracked.get(path, (None, None))[1] != on_disk[path]:
             plan['to_stage'][path] = tracked.get(path, ('100644', None))[0]
-    others = [path for path in sorted(tracked) if path not in entries]
+    others = [path for path in sorted(tracked) if path not in entries and not path.startswith(OTHER_PROJECTS)]
     unconverted = paths_git_converts_nothing_for(tree, others)
     for path in others:
         if path not in on_disk:
             plan['problems'].append(f'{path}: tracked by Git but not on disk. Nothing may be missing; tell Claude.')
+        elif on_disk[path] != tracked[path][1] and path.startswith(STORED_BYTE_FOR_BYTE_BEFORE):
+            plan['problems'].append(f'{path}: Git stored this file byte for byte before today, and its bytes on '
+                                    f'disk are not Git\'s: it was changed here. It is not touched. Tell Claude.')
         elif on_disk[path] != tracked[path][1] and path in unconverted:
             blob = git(tree, 'cat-file', 'blob', tracked[path][1])
             if rule.differ_in_line_endings_only((tree / path).read_bytes(), blob):
@@ -159,6 +169,12 @@ def make_plan(tree: Path, entries: dict, rule) -> dict:
                 plan['problems'].append(f'{path}: its bytes on disk differ from Git\'s in more than line endings: '
                                         f'it was changed here and not committed. It is not touched. Tell Claude.')
     return plan
+
+
+def staged_paths(tree: Path) -> set:
+    """Every path whose entry in Git's index differs from the last commit: what a commit made now would change."""
+    return {name.decode('utf-8') for name in git(tree, 'diff', '--cached', '--name-only', '-z', 'HEAD').split(b'\0')
+            if name}
 
 
 def by_top_folder(paths) -> str:
@@ -203,8 +219,7 @@ def refresh_one(tree: Path, path: str, blob_id: str, rule) -> None:
     full = tree / path
     blob = git(tree, 'cat-file', 'blob', blob_id)
     if not rule.differ_in_line_endings_only(full.read_bytes(), blob):
-        raise Stopped(f'{path} changed while this program ran. It was not touched. Close every other program of '
-                      f'the project and run this again.')
+        raise Stopped(f'{path} changed while this program ran. It was not touched.')
     temporary = full.with_name(full.name + TEMPORARY_SUFFIX)
     with open(temporary, 'wb') as handle:
         handle.write(blob)
@@ -244,15 +259,15 @@ def prove(tree: Path, entries: dict, rule, say) -> None:
             faults.append(f'{path}: what is staged is not in its form')
     unstaged = [name.decode('utf-8') for name in git(tree, 'diff-files', '--name-only', '-z').split(b'\0') if name]
     faults.extend(f'{path}: Git still sees a change on disk that is not staged' for path in unstaged)
+    faults.extend(f'{path}: staged, but not on the conversion list' for path in sorted(staged_paths(tree) - set(entries)))
     remaining = len(left['to_stage']) + len(left['to_refresh']) + len(left['problems']) + len(faults)
     if remaining:
         for line in (list(left['to_stage']) + list(left['to_refresh']) + left['problems'] + faults)[:NAMES_SHOWN]:
             say(f'      {line}')
-        raise Stopped('the proof at the end did not hold; the lines above say where. Do not commit. Send this '
-                      'output to Claude.')
+        raise Stopped('the proof at the end did not hold; the lines above say where.')
     say(f'  PROVED: all {len(entries)} listed files are staged with the list\'s "after" bytes and are in their '
         f'form; every tracked file Git converts nothing for has on disk exactly the bytes Git holds; Git sees no '
-        f'change on disk that is not staged.')
+        f'change on disk that is not staged; nothing is staged that is not on the list.')
 
 
 def run(tree, list_path, look_only=False, ask=input, say=print, checkpoint=lambda path: None,
@@ -274,6 +289,11 @@ def run(tree, list_path, look_only=False, ask=input, say=print, checkpoint=lambd
         say(f'  The conversion list: {len(entries)} files; its SHA-256 is {list_sha256}')
         rule = conversion.load_rule(rule_path or Path(__file__).with_name(conversion.RULE_FILE_NAME), entries)
         plan = make_plan(tree, entries, rule)
+        already_staged = sorted(staged_paths(tree))
+        if already_staged:
+            plan['problems'].append(f'{len(already_staged)} file(s) are staged in Git already (the first: '
+                                    f'{already_staged[0]}). This program stages into an index that is exactly the '
+                                    f'last commit, so that the commit holds the conversion and nothing else.')
         describe_plan(plan, entries, say)
         if look_only:
             say('STAGE AND REFRESH - END - LOOKED ONLY; nothing was changed.'
@@ -303,9 +323,8 @@ def run(tree, list_path, look_only=False, ask=input, say=print, checkpoint=lambd
     except Stopped as stop:
         say(f'STOP: {stop}')
     except OSError as failure:
-        say(f'STOP: Windows refused to read or write a file: {failure}. Each file is the old one or the new one, '
-            f'whole. Close every other program that has a file of the project open and run this again.')
-    say('STAGE AND REFRESH - END - STOPPED. Read the STOP line above. Do not commit.')
+        say(f'STOP: Windows refused to read or write a file: {failure}.')
+    say(f'STAGE AND REFRESH - END - STOPPED. Read the STOP line above. Do not commit. {conversion.AFTER_A_STOP}')
     return EXIT_STOPPED
 
 

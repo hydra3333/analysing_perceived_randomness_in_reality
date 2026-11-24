@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Builds the conversion package FILE_FORM_Conversion_v1: the folder, its ZIP and the list of the ZIP's members.
+"""Builds the conversion package FILE_FORM_Conversion_<revision>: the folder, its ZIP and the list of the ZIP's members.
 
 What this file is for
     The owner installs and runs the conversion from one package, extracted to E:\\TEMP. This script assembles it

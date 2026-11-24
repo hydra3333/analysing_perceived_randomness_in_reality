@@ -1,0 +1,908 @@
+--- FILE_FORM_Conversion_v1/tools/convert_to_file_form.py	2026-11-24 22:09:58.928041425 +1030
++++ FILE_FORM_Conversion_v2/tools/convert_to_file_form.py	2026-11-24 22:45:53.229058927 +1030
+@@ -7,18 +7,20 @@
+     the Windows form, CRLF, and every line-record file (.jsonl) LF. This program brings an existing DEV tree to
+     it. It walks the tree's own folders itself and never asks Git anything. A link, a junction or any other
+     reparse point met there is named and is never entered or read. Before it changes anything it prints
+-    what it found, class by class, and waits for the owner's typed word. A file on the conversion list is
++    what it found, class by class, and waits for the owner's two typed words. A file on the conversion list is
+     converted only if its SHA-256 is the list's "before"; one that already has the list's "after" is passed
+     over; any other value stops the run before anything is changed. It changes line endings and nothing else,
+     and proves that for each file. DEV's research results, status files and control-folder leftovers are not
+-    converted: they are removed, on a second typed word, to be written afresh by the engine. The results masters
+-    and their ledgers are read and proved untouched. There is no undo: the way back is the owner's own copy of
+-    the project folder, which this program checks before it changes anything, and on a second run checks
+-    against the hashes recorded at the first run, not against files it has already converted.
++    converted: they are removed, each only while it still has the bytes the owner's copy holds, to be written
++    afresh by the engine. The results masters and their ledgers are read and proved untouched. It works only in
++    a tree whose settings file says it is the DEV tree in this folder, and not while the orphan marker exists.
++    **It is one attempt (EX_313, the owner's direction of 24 November 2026): it is never resumed.** A record
++    that exists already refuses the run. After any STOP the way back is the whole project folder, put back
++    from the owner's own copy, which this program checks before it changes anything.
+ 
+ Which part of the project's rules it carries out
+-    doc/FILE_FORM_STANDARD_v0_2.md section 7 (the conversion), with sections 3, 3A and 3B; the reviewer's
+-    watchpoint of EX_305 on a resumed run.
++    doc/FILE_FORM_STANDARD_v0_2.md section 7 (the conversion), with sections 3, 3A and 3B, and with the
++    owner's narrow change to its recovery rule (EX_313): no second run; whole-folder restoration.
+ 
+ Which of the project's own modules it uses
+     file_form (the copy that lies beside this program, checked by its SHA-256 against the conversion list
+@@ -37,6 +39,7 @@
+ from __future__ import annotations
+ 
+ import argparse
++import configparser
+ import hashlib
+ import json
+ import os
+@@ -59,6 +62,17 @@
+ RULE_FILE_NAME = 'file_form.py'
+ # The tree's own settings file: made by hand, in no list, converted by rule (standard section 7).
+ SETTINGS_FILE = 'ENVIRONMENT.ini'
++# The one role this conversion is for, as the settings file names it ([environment] role).
++ROLE_CONVERTED = 'DEV'
++# The old system's orphan marker, from the tree root: while it exists nothing is launched, and nothing is converted.
++ORPHAN_MARKER = 'transitory_data/poc_runs/UNRESOLVED_ORPHAN.json'
++# The four results files that must all be there and are proved unchanged.
++RESULTS_FILES = ('source_data/OZLOTTO_results_master.csv', 'source_data/OZLOTTO_results_master_ledger.csv',
++                 'source_data/POWERBALL_results_master.csv', 'source_data/POWERBALL_results_master_ledger.csv')
++# What to do after any STOP once the run has begun (EX_313): this conversion is one attempt and is never resumed.
++AFTER_A_STOP = ('This conversion is one attempt and is not resumed: run nothing again, change nothing, and send '
++                'Claude this output. The way back is the whole project folder put back from your copy, on your '
++                'own go, as the sheet\'s last part says.')
+ # The folders this program walks, from the tree root: the living project's own places (standard section 2).
+ # Nothing else of the tree is entered: not .venv, not .git, not the frozen history, not transitory_data.
+ WALKED_FOLDERS = ('src', 'deploy', 'tests', '.claude', '.vscode', 'CLAUDE_CODE_WORKING_FOLDER_TREE/tools',
+@@ -202,12 +216,46 @@
+         lines = data.decode('ascii').splitlines()
+     except UnicodeDecodeError:
+         return 'it is not plain text'
++    # The file's own check, as the engine writes it: the last two lines hold the SHA-256 of every byte above
++    # them. The old form ends each line LF, the new one CRLF.
++    for end in (b'\r\n', b'\n'):
++        body, mark, tail = data.rpartition(b'[check]' + end)
++        if mark:
++            break
++    if not mark or tail != f'sha256 = {hashlib.sha256(body).hexdigest()}'.encode('ascii') + end:
++        return 'its own check does not hold (it is damaged, or was edited by hand)'
++    statuses = 0
+     for line in lines:
+         line = line.strip()
+-        if line.startswith('status') and line != PLAIN_STATUS_LINE:
+-            return 'it holds a status other than ACTIVE'
++        if line.startswith('status'):
++            if line != PLAIN_STATUS_LINE:
++                return 'it holds a status other than ACTIVE'
++            statuses += 1
+         if line.startswith(RECORDED_FACT_PREFIXES):
+             return 'it records a withdrawal or an eligibility draw'
++    if not statuses:
++        return 'it holds no status at all'
++    return None
++
++
++def settings_problem(data: bytes, tree: Path) -> str | None:
++    """Whether the tree's settings file says anything but "this folder is the DEV tree".
++
++    data    the bytes of ENVIRONMENT.ini.  tree: the tree root.
++    Returns None when [environment] role is DEV and [environment] tree_root is this folder; otherwise a few fixed
++    words saying what was found. Nothing of the file's content is put into the words returned.
++    """
++    parser = configparser.ConfigParser(interpolation=None)
++    try:
++        parser.read_string(data.decode('ascii'))
++        role = parser.get('environment', 'role').strip()
++        root = parser.get('environment', 'tree_root').strip()
++    except (configparser.Error, UnicodeDecodeError):
++        return 'it has no readable [environment] role and tree_root'
++    if role != ROLE_CONVERTED:
++        return f'its role is not {ROLE_CONVERTED}: this conversion is for the DEV tree only'
++    if os.path.normcase(os.path.realpath(root)) != os.path.normcase(os.path.realpath(tree)):
++        return 'its tree_root is not this folder: this is a copied or moved tree'
+     return None
+ 
+ 
+@@ -257,6 +305,9 @@
+                                    f'Claude.')
+         elif path == SETTINGS_FILE:
+             data = full.read_bytes()
++            fault = settings_problem(data, tree)
++            if fault:
++                survey.problems.append(f'{path}: {fault}. Nothing is converted in such a tree. Tell Claude.')
+             try:
+                 survey.settings[path] = (sha256_of(data), sha256_of(rule.to_form(data, rule.CRLF)))
+             except rule.FileFormRefused as refusal:
+@@ -284,6 +335,17 @@
+             survey.problems.append(f'{path}: {kind} that is in no class this program knows (not on the list, not '
+                                    f'the settings file, not a result made again, not a results file). Move it '
+                                    f'out of the project folder, or tell Claude what it is.')
++    if SETTINGS_FILE not in found:
++        survey.problems.append(f'{SETTINGS_FILE}: not in this folder. A tree of the project has one, and it must say '
++                               f'that this is the DEV tree. Tell Claude.')
++    for path in RESULTS_FILES:
++        if path not in survey.proved_untouched:
++            survey.problems.append(f'{path}: not in the tree. All four results files must be there before '
++                                   f'anything is converted. Tell Claude.')
++    marker = tree / ORPHAN_MARKER
++    if marker.exists() or marker.is_symlink():
++        survey.problems.append(f'{ORPHAN_MARKER}: the orphan marker exists. It blocks every launch, and this '
++                               f'conversion too. It is cleared only by your approved manual procedure: tell Claude.')
+     return survey
+ 
+ 
+@@ -363,26 +425,6 @@
+         return digest.hexdigest()
+ 
+ 
+-def read_record(record_path: Path, tree: Path, list_sha256: str) -> dict | None:
+-    """Read the record of an earlier, unfinished or finished run, if there is one.
+-
+-    Returns the record (a dictionary), or None when there is no file. Refuses (ConversionStopped) a record that
+-    cannot be read, or that belongs to another tree or another list: it must never be mixed with this run.
+-    """
+-    if not Path(record_path).exists():
+-        return None
+-    try:
+-        record = json.loads(Path(record_path).read_bytes().decode('ascii'))
+-    except (OSError, ValueError) as error:
+-        raise ConversionStopped(f'the record {record_path} could not be read ({error}). Do not delete it: send it '
+-                                f'to Claude.') from None
+-    if (record.get('kind') != RECORD_KIND or record.get('tree') != str(tree)
+-            or record.get('conversion_list_sha256') != list_sha256):
+-        raise ConversionStopped(f'the record {record_path} is of another tree or another conversion list. Give '
+-                                f'--record the file of this conversion, or a new name for a first run.')
+-    return record
+-
+-
+ def write_record(record_path: Path, record: dict, rule) -> None:
+     """Write the record whole, in the standard's form (CRLF), under a temporary name and then one rename."""
+     text = json.dumps(record, indent=1, ensure_ascii=True, sort_keys=True) + '\n'
+@@ -400,8 +442,7 @@
+     """Check that the owner's copy holds every original this conversion changes or removes.
+ 
+     originals   {path: the SHA-256 the file had before the conversion's first run}
+-    Returns a list of problems, empty when the copy holds every file with exactly that SHA-256. On a second run
+-    the originals are the first run's recorded hashes, never the hashes of files already converted (EX_305).
++    Returns a list of problems, empty when the copy holds every file with exactly that SHA-256.
+     """
+     problems = []
+     for path, wanted in sorted(originals.items()):
+@@ -457,12 +498,11 @@
+     old = full.read_bytes()
+     if sha256_of(old) != before:
+         raise ConversionStopped(f'{path} changed while this program ran (it no longer has the SHA-256 it had '
+-                                f'when it was looked at). Nothing was written to it. Close every other program '
+-                                f'of the project and run this again.')
++                                f'when it was looked at). Nothing was written to it.')
+     new = rule.to_form(old, form)
+     if not rule.differ_in_line_endings_only(old, new) or sha256_of(new) != after:
+         raise ConversionStopped(f'{path}: the converted bytes are not the ones the conversion list expects. '
+-                                f'Nothing was written to it. Send this line to Claude.')
++                                f'Nothing was written to it.')
+     temporary = full.with_name(full.name + TEMPORARY_SUFFIX)
+     with open(temporary, 'wb') as handle:
+         handle.write(new)
+@@ -470,25 +510,26 @@
+         os.fsync(handle.fileno())
+     os.replace(temporary, full)
+     if sha256_of_file(full) != after:
+-        raise ConversionStopped(f'{path} was written but does not read back as written. Stop here and send this '
+-                                f'line to Claude; your copy holds the original.')
++        raise ConversionStopped(f'{path} was written but does not read back as written.')
+ 
+ 
+-def remove_listed(tree: Path, paths, checkpoint) -> int:
++def remove_listed(tree: Path, to_remove: dict, checkpoint) -> int:
+     """Remove exactly the named files, then every folder under the removed places that is left empty.
+ 
+-    paths       the files to remove, from the tree root
++    to_remove   {path from the tree root: the SHA-256 the file had when it was looked at (and has in the copy)}
+     checkpoint  called with each path just before it is removed (a test plants a failure here)
+-    Returns how many files were removed. A file that is already gone is passed over.
++    Returns how many files were removed. Refuses (ConversionStopped) at the first file that is gone or no longer
++    has that SHA-256: a file is removed only while it is, byte for byte, the one the owner's copy holds.
+     """
+     removed = 0
+-    for path in sorted(paths):
++    for path, recorded in sorted(to_remove.items()):
+         checkpoint(path)
+-        try:
+-            (tree / path).unlink()
+-            removed += 1
+-        except FileNotFoundError:
+-            pass
++        full = tree / path
++        if not full.is_file() or sha256_of_file(full) != recorded:
++            raise ConversionStopped(f'{path} is gone or changed since it was looked at; it was not removed. '
++                                    f'{removed} file(s) were removed before it.')
++        full.unlink()
++        removed += 1
+     for folder in REMOVED_FOLDERS:
+         for current, _folders, _names in os.walk(tree / folder, topdown=False):
+             if not os.listdir(current) and Path(current) != tree / 'records':
+@@ -520,6 +561,10 @@
+             return _look(tree, entries, rule, say)
+         if not copy_place or not record_path:
+             raise ConversionStopped('--copy and --record are both needed for a run that changes anything.')
++        if Path(record_path).exists():
++            raise ConversionStopped(f'the record {record_path} exists: a conversion was begun here before. This '
++                                    f'conversion is one attempt and is never resumed or repeated. Nothing was '
++                                    f'changed by this run. Do not delete the record: tell Claude.')
+         # A lock is a file this program writes: the folders it is written in must be the tree's own, not links
+         # to another place, before anything is written at all.
+         linked = [path for path in rule.files_and_links_under(tree, LOCK_FOLDERS, with_root_files=False)[1]
+@@ -533,10 +578,8 @@
+     except ConversionStopped as stop:
+         say(f'STOP: {stop}')
+     except OSError as failure:
+-        say(f'STOP: Windows refused to read or write a file: {failure}. Each file is the old one or the new one, '
+-            f'whole. Close every other program that has a file of the project open and run this again; it goes '
+-            f'on from where it stopped.')
+-    say('FILE-FORM CONVERSION - END - STOPPED. Read the STOP line above. Nothing is half-written.')
++        say(f'STOP: Windows refused to read or write a file: {failure}.')
++    say(f'FILE-FORM CONVERSION - END - STOPPED. Read the STOP line above. {AFTER_A_STOP}')
+     return EXIT_STOPPED
+ 
+ 
+@@ -564,41 +607,25 @@
+                                 f'the package\'s files into the tree first, as the sheet says. Nothing was changed.')
+     if survey.problems:
+         raise ConversionStopped(f'{len(survey.problems)} finding(s) above. Nothing was changed.')
+-    record = read_record(record_path, tree, list_sha256)
+-    if record is None:
+-        originals = {path: entries[path]['sha256_before'] for path in survey.to_convert}
+-        originals.update({path: now_sha for path, (now_sha, then_sha) in survey.settings.items()
+-                          if now_sha != then_sha})
+-        record = {'kind': RECORD_KIND, 'tree': str(tree), 'conversion_list_sha256': list_sha256,
+-                  'first_run_started': now().strftime('%Y-%m-%d %H:%M:%S'), 'finished': None,
+-                  'originals_converted': originals, 'originals_removed': dict(survey.to_remove),
+-                  'settings_file': {path: {'sha256_before': a, 'sha256_after': b}
+-                                    for path, (a, b) in survey.settings.items()},
+-                  'proved_untouched': dict(survey.proved_untouched)}
+-        say('  This is a first run: the SHA-256 of every file to be changed or removed is recorded before '
+-            'anything is changed.')
+-    else:
+-        say(f'  This is a second run of a conversion begun {record["first_run_started"]}: your copy is checked '
+-            f'against the hashes recorded then, not against files already converted.')
+-        unknown = [path for path in list(survey.to_convert) + list(survey.to_remove)
+-                   if path not in record['originals_converted'] and path not in record['originals_removed']]
+-        if unknown:
+-            raise ConversionStopped(f'{len(unknown)} file(s) to change now were not there, or not to be changed, '
+-                                    f'at the first run (the first: {unknown[0]}). Something was added or put '
+-                                    f'back since. Nothing was changed. Tell Claude.')
++    originals = {path: entries[path]['sha256_before'] for path in survey.to_convert}
++    originals.update({path: now_sha for path, (now_sha, then_sha) in survey.settings.items() if now_sha != then_sha})
++    record = {'kind': RECORD_KIND, 'tree': str(tree), 'conversion_list_sha256': list_sha256,
++              'started': now().strftime('%Y-%m-%d %H:%M:%S'), 'finished': None,
++              'originals_converted': originals, 'originals_removed': dict(survey.to_remove),
++              'settings_file': {path: {'sha256_before': a, 'sha256_after': b}
++                                for path, (a, b) in survey.settings.items()},
++              'proved_untouched': dict(survey.proved_untouched)}
+     copy = OwnersCopy(copy_place)
+-    problems = check_copy(copy, {**record['originals_converted'], **record['originals_removed']})
++    problems = check_copy(copy, {**originals, **survey.to_remove})
+     if problems:
+         for problem in problems[:NAMES_SHOWN]:
+             say(f'      {problem}')
+         raise ConversionStopped(f'your copy at {copy_place} does not hold {len(problems)} of the '
+-                                f'{len(record["originals_converted"]) + len(record["originals_removed"])} '
+-                                f'original file(s) this conversion changes or removes. Nothing was changed. The '
+-                                f'copy is the one way back: make it again from the project folder as it is now '
+-                                f'only if this is a first run; otherwise tell Claude.')
+-    say(f'  Your copy holds every one of the {len(record["originals_converted"])} file(s) to be converted and '
+-        f'the {len(record["originals_removed"])} to be removed, each with the SHA-256 it had before.')
+-    write_record(record_path, record, rule)
++                                f'{len(originals) + len(survey.to_remove)} original file(s) this conversion changes '
++                                f'or removes. Nothing was changed. The copy is the one way back: tell Claude.')
++    say(f'  Your copy holds every one of the {len(originals)} file(s) to be converted and the '
++        f'{len(survey.to_remove)} to be removed, each with the SHA-256 it has now.')
++    # Both words are asked for before the first change, so that "not confirmed" always means "nothing changed".
+     settings_to_convert = [path for path, (a, b) in survey.settings.items() if a != b]
+     if survey.to_convert or settings_to_convert:
+         typed = ask(f'Type {WORD_TO_CONVERT} to change the line endings of {len(survey.to_convert)} listed file(s)'
+@@ -606,27 +633,26 @@
+         if typed.strip() != WORD_TO_CONVERT:
+             say('FILE-FORM CONVERSION - END - not confirmed; nothing was changed.')
+             return EXIT_NOT_CONFIRMED
+-        for path in survey.to_convert:
+-            checkpoint(path)
+-            entry = entries[path]
+-            convert_one(tree, path, entry['form'], entry['sha256_before'], entry['sha256_after'], rule)
+-        for path in settings_to_convert:
+-            checkpoint(path)
+-            convert_one(tree, path, rule.CRLF, *survey.settings[path], rule)
+-        say(f'  Converted: {len(survey.to_convert)} listed file(s)'
+-            + (', and the settings file' if settings_to_convert else '')
+-            + '. Each differs from what it was in line endings only, and reads back as written.')
+-    else:
+-        say('  Nothing is left to convert.')
+     if survey.to_remove:
+         typed = ask(f'Type {WORD_TO_REMOVE} to remove the {len(survey.to_remove)} file(s) that are made again, not '
+-                    f'converted (each is in your copy), or anything else to stop here: ')
++                    f'converted (each is in your copy), or anything else to stop: ')
+         if typed.strip() != WORD_TO_REMOVE:
+-            say('FILE-FORM CONVERSION - END - the files are converted; the removal was not confirmed. Run this '
+-                'again to remove them; until then the research job refuses the old status files.')
++            say('FILE-FORM CONVERSION - END - not confirmed; nothing was changed.')
+             return EXIT_NOT_CONFIRMED
+-        removed = remove_listed(tree, survey.to_remove, checkpoint)
+-        say(f'  Removed: {removed} file(s), and the folders left empty.')
++    write_record(record_path, record, rule)
++    say('  The SHA-256 of every file to be changed or removed is recorded. From here on, this is the one attempt.')
++    for path in survey.to_convert:
++        checkpoint(path)
++        entry = entries[path]
++        convert_one(tree, path, entry['form'], entry['sha256_before'], entry['sha256_after'], rule)
++    for path in settings_to_convert:
++        checkpoint(path)
++        convert_one(tree, path, rule.CRLF, *survey.settings[path], rule)
++    say(f'  Converted: {len(survey.to_convert)} listed file(s)'
++        + (', and the settings file' if settings_to_convert else '')
++        + '. Each differs from what it was in line endings only, and reads back as written.')
++    removed = remove_listed(tree, survey.to_remove, checkpoint)
++    say(f'  Removed: {removed} file(s), and the folders left empty.')
+     return _prove(tree, entries, rule, record, record_path, own_locks, say, now)
+ 
+ 
+@@ -647,7 +673,7 @@
+ 
+ def _prove(tree, entries, rule, record, record_path, own_locks, say, now) -> int:
+     """The proof at the end: every listed file has the list's "after" and conforms; the results files have the
+-    SHA-256 they had at the first run; nothing made-again is left. Writes the finished record. Returns the exit
++    SHA-256 they had when the run began; nothing made-again is left. Writes the finished record. Returns the exit
+     code."""
+     survey = look_at_tree(tree, entries, _WithoutOwnLocks(rule, own_locks))
+     faults = rule.faults_of_files(tree, sorted(entries))
+@@ -661,7 +687,7 @@
+                      + [f'{path}: a results file changed' for path in changed_results])[:NAMES_SHOWN]:
+             say(f'      {line}')
+         raise ConversionStopped('the proof at the end did not hold; the lines above say where. Do not go on to '
+-                                'the next part of the sheet. Send this output to Claude.')
++                                'the next part of the sheet.')
+     record['finished'] = now().strftime('%Y-%m-%d %H:%M:%S')
+     write_record(record_path, record, rule)
+     say(f'  PROVED: all {len(entries)} listed files have the list\'s "after" SHA-256 and are in their form; the '
+--- FILE_FORM_Conversion_v1/tools/stage_and_refresh.py	2026-11-24 22:09:58.928065899 +1030
++++ FILE_FORM_Conversion_v2/tools/stage_and_refresh.py	2026-11-24 22:45:53.229099741 +1030
+@@ -56,6 +56,13 @@
+ TEMPORARY_SUFFIX = '.refreshing'
+ # The value Git reports for the attribute "text" where the root file's "-text" governs a path.
+ ATTRIBUTE_UNSET = 'unset'
++# Another project's own folder, with its own rules for Git: never a candidate here, for staging or for refreshing.
++OTHER_PROJECTS = ('GAIS/',)
++# What Git already stored byte for byte before this conversion (the old root attribute file's "-text" lines): such
++# a file's bytes on disk are Git's own already. One that differs is never put back: it is named, and the run stops.
++STORED_BYTE_FOR_BYTE_BEFORE = ('source_data/', 'results/', 'src/methods/_common/contract_data/install_records/',
++                               'src/package_tools/process_check.py',
++                               'tests/fixtures/results_master_v0_1_reference.py.txt', 'src/results_master_v0_2.py')
+ # The mode of an ordinary file in Git's index; anything else (a link, a submodule) is not this program's.
+ ORDINARY_MODES = ('100644', '100755')
+ # How many names of a long class are printed before the rest are counted.
+@@ -146,11 +153,14 @@
+                                     f'Run the conversion program to its end first.')
+         elif tracked.get(path, (None, None))[1] != on_disk[path]:
+             plan['to_stage'][path] = tracked.get(path, ('100644', None))[0]
+-    others = [path for path in sorted(tracked) if path not in entries]
++    others = [path for path in sorted(tracked) if path not in entries and not path.startswith(OTHER_PROJECTS)]
+     unconverted = paths_git_converts_nothing_for(tree, others)
+     for path in others:
+         if path not in on_disk:
+             plan['problems'].append(f'{path}: tracked by Git but not on disk. Nothing may be missing; tell Claude.')
++        elif on_disk[path] != tracked[path][1] and path.startswith(STORED_BYTE_FOR_BYTE_BEFORE):
++            plan['problems'].append(f'{path}: Git stored this file byte for byte before today, and its bytes on '
++                                    f'disk are not Git\'s: it was changed here. It is not touched. Tell Claude.')
+         elif on_disk[path] != tracked[path][1] and path in unconverted:
+             blob = git(tree, 'cat-file', 'blob', tracked[path][1])
+             if rule.differ_in_line_endings_only((tree / path).read_bytes(), blob):
+@@ -161,6 +171,12 @@
+     return plan
+ 
+ 
++def staged_paths(tree: Path) -> set:
++    """Every path whose entry in Git's index differs from the last commit: what a commit made now would change."""
++    return {name.decode('utf-8') for name in git(tree, 'diff', '--cached', '--name-only', '-z', 'HEAD').split(b'\0')
++            if name}
++
++
+ def by_top_folder(paths) -> str:
+     """Counts for the screen, by the first folder of each path: 'exchange 2,104; doc 211; (root) 3'."""
+     counts = {}
+@@ -203,8 +219,7 @@
+     full = tree / path
+     blob = git(tree, 'cat-file', 'blob', blob_id)
+     if not rule.differ_in_line_endings_only(full.read_bytes(), blob):
+-        raise Stopped(f'{path} changed while this program ran. It was not touched. Close every other program of '
+-                      f'the project and run this again.')
++        raise Stopped(f'{path} changed while this program ran. It was not touched.')
+     temporary = full.with_name(full.name + TEMPORARY_SUFFIX)
+     with open(temporary, 'wb') as handle:
+         handle.write(blob)
+@@ -244,15 +259,15 @@
+             faults.append(f'{path}: what is staged is not in its form')
+     unstaged = [name.decode('utf-8') for name in git(tree, 'diff-files', '--name-only', '-z').split(b'\0') if name]
+     faults.extend(f'{path}: Git still sees a change on disk that is not staged' for path in unstaged)
++    faults.extend(f'{path}: staged, but not on the conversion list' for path in sorted(staged_paths(tree) - set(entries)))
+     remaining = len(left['to_stage']) + len(left['to_refresh']) + len(left['problems']) + len(faults)
+     if remaining:
+         for line in (list(left['to_stage']) + list(left['to_refresh']) + left['problems'] + faults)[:NAMES_SHOWN]:
+             say(f'      {line}')
+-        raise Stopped('the proof at the end did not hold; the lines above say where. Do not commit. Send this '
+-                      'output to Claude.')
++        raise Stopped('the proof at the end did not hold; the lines above say where.')
+     say(f'  PROVED: all {len(entries)} listed files are staged with the list\'s "after" bytes and are in their '
+         f'form; every tracked file Git converts nothing for has on disk exactly the bytes Git holds; Git sees no '
+-        f'change on disk that is not staged.')
++        f'change on disk that is not staged; nothing is staged that is not on the list.')
+ 
+ 
+ def run(tree, list_path, look_only=False, ask=input, say=print, checkpoint=lambda path: None,
+@@ -274,6 +289,11 @@
+         say(f'  The conversion list: {len(entries)} files; its SHA-256 is {list_sha256}')
+         rule = conversion.load_rule(rule_path or Path(__file__).with_name(conversion.RULE_FILE_NAME), entries)
+         plan = make_plan(tree, entries, rule)
++        already_staged = sorted(staged_paths(tree))
++        if already_staged:
++            plan['problems'].append(f'{len(already_staged)} file(s) are staged in Git already (the first: '
++                                    f'{already_staged[0]}). This program stages into an index that is exactly the '
++                                    f'last commit, so that the commit holds the conversion and nothing else.')
+         describe_plan(plan, entries, say)
+         if look_only:
+             say('STAGE AND REFRESH - END - LOOKED ONLY; nothing was changed.'
+@@ -303,9 +323,8 @@
+     except Stopped as stop:
+         say(f'STOP: {stop}')
+     except OSError as failure:
+-        say(f'STOP: Windows refused to read or write a file: {failure}. Each file is the old one or the new one, '
+-            f'whole. Close every other program that has a file of the project open and run this again.')
+-    say('STAGE AND REFRESH - END - STOPPED. Read the STOP line above. Do not commit.')
++        say(f'STOP: Windows refused to read or write a file: {failure}.')
++    say(f'STAGE AND REFRESH - END - STOPPED. Read the STOP line above. Do not commit. {conversion.AFTER_A_STOP}')
+     return EXIT_STOPPED
+ 
+ 
+--- FILE_FORM_Conversion_v1/VERIFY_FILE_FORM_INSTALL.py	2026-11-24 22:09:58.928151155 +1030
++++ FILE_FORM_Conversion_v2/VERIFY_FILE_FORM_INSTALL.py	2026-11-24 22:45:53.229253115 +1030
+@@ -4,13 +4,16 @@
+ 
+ What this file is for
+     The conversion's sheet copies the package's own files into the DEV tree, runs the conversion, stages, and
+-    commits. This script is the check at three of those moments:
+-      pre        every file the package replaces still holds the content the package was built against (line
+-                 endings apart), and every file the package adds is absent;
++    commits. This script is the check at four of those moments:
++      copy       before anything else: the owner's copy of the whole project folder holds every file of the
++                 project folder, .git and .venv included, byte for byte (the copy is the one way back);
++      pre        every file of the package has the manifest's SHA-256; every file the package replaces still
++                 holds the content the package was built against (line endings apart), and every file the
++                 package adds is absent;
+       post       every one of the package's files lies in the tree with exactly the package's bytes;
+       committed  after the commit: every file of the conversion list is in the commit with exactly the list's
+                  "after" bytes, and the commit changed those paths and no others.
+-    It prints one line a finding and a last line PRE PASS, POST PASS, COMMITTED PASS or STOP.
++    It prints one line a finding and a last line COPY PASS, PRE PASS, POST PASS, COMMITTED PASS or STOP.
+ 
+ Which part of the project's rules it carries out
+     doc/FILE_FORM_STANDARD_v0_2.md sections 5 and 7 ("the commit is checked: the bytes staged for it are in the
+@@ -22,11 +25,13 @@
+ 
+ What uses it
+     The project owner, from the conversion's sheet. Usage:
++        python VERIFY_FILE_FORM_INSTALL.py --repo <tree root> --phase copy --copy <the copied folder>
+         python VERIFY_FILE_FORM_INSTALL.py --repo <tree root> --phase pre|post|committed
+ """
+ from __future__ import annotations
+ 
+ import argparse
++import filecmp
+ import hashlib
+ import json
+ import os
+@@ -82,12 +87,35 @@
+     return done.stdout
+ 
+ 
++def copy_holds_everything(repo: Path, copy: Path) -> list:
++    """Findings about the owner's copy: a file of the project folder that the copy lacks or holds with other
++    bytes. Every file under the project folder is compared whole, .git and .venv included. Reads only."""
++    if copy == repo or repo in copy.parents or not (copy / '.git').is_dir() or not (copy / 'src').is_dir():
++        return [f'{copy}: not a copy of the whole project folder outside it (it must hold .git and src, and lie '
++                f'outside {repo})']
++    findings, compared = [], 0
++    for folder, _folders, names in os.walk(repo):
++        for name in names:
++            original = Path(folder) / name
++            twin = copy / original.relative_to(repo)
++            compared += 1
++            if not twin.is_file():
++                findings.append(f'{original.relative_to(repo)}: not in the copy')
++            elif not filecmp.cmp(original, twin, shallow=False):
++                findings.append(f'{original.relative_to(repo)}: the copy holds other bytes')
++    print(f'  compared {compared} file(s) of {repo} with {copy}')
++    return findings
++
++
+ def pre(repo: Path) -> list:
+-    """Findings before the package's files are copied: a replaced file that no longer holds the content the
+-    package was built against (compared with every CRLF read as LF), and a new file that is there already."""
++    """Findings before the package's files are copied: a file of the package that has not the manifest's
++    SHA-256; a replaced file that no longer holds the content the package was built against (compared with every
++    CRLF read as LF); and a new file that is there already."""
+     findings = []
+-    for kind, _package_sha, replaced_sha, path in read_manifest():
++    for kind, package_sha, replaced_sha, path in read_manifest():
+         full = repo / path
++        if sha256_of((OVERLAY / path).read_bytes()) != package_sha:
++            findings.append(f'{path}: the package\'s own copy does not have the manifest\'s SHA-256')
+         if kind == 'N':
+             if full.exists():
+                 findings.append(f'{path}: the package adds this file, but it is in the tree already')
+@@ -137,10 +165,16 @@
+     """The command line. Returns 0 for a PASS, 1 for a STOP."""
+     parser = argparse.ArgumentParser(description='Verify the file-form conversion package against a tree.')
+     parser.add_argument('--repo', required=True, help='the tree root (the project folder)')
+-    parser.add_argument('--phase', required=True, choices=('pre', 'post', 'committed'))
++    parser.add_argument('--phase', required=True, choices=('copy', 'pre', 'post', 'committed'))
++    parser.add_argument('--copy', help='for the phase "copy": your copy of the whole project folder (a folder)')
+     options = parser.parse_args(arguments)
+     repo = Path(options.repo).resolve()
+-    findings = {'pre': pre, 'post': post, 'committed': committed}[options.phase](repo)
++    if options.phase == 'copy':
++        if not options.copy:
++            sys.exit('STOP: the phase "copy" needs --copy <the copied folder>.')
++        findings = copy_holds_everything(repo, Path(options.copy).resolve())
++    else:
++        findings = {'pre': pre, 'post': post, 'committed': committed}[options.phase](repo)
+     for finding in findings[:FINDINGS_SHOWN]:
+         print(f'  {finding}')
+     if len(findings) > FINDINGS_SHOWN:
+@@ -148,7 +182,8 @@
+     if findings:
+         print(f'STOP: {len(findings)} finding(s) in phase {options.phase}. Change nothing; send Claude this output.')
+         return 1
+-    counts = {'pre': f'{len(read_manifest())} package files checked against the tree',
++    counts = {'copy': 'your copy holds every file of the project folder, byte for byte',
++              'pre': f'{len(read_manifest())} package files checked against the tree',
+               'post': f'{len(read_manifest())} package files in the tree with the package\'s bytes',
+               'committed': 'every listed file is committed with the list\'s "after" bytes; the commit changed '
+                            'listed paths only; the working tree is clean'}[options.phase]
+--- FILE_FORM_Conversion_v1/INSTALL_AND_RUN_SHEET.md	2026-11-24 22:09:58.928170422 +1030
++++ FILE_FORM_Conversion_v2/INSTALL_AND_RUN_SHEET.md	2026-11-24 22:45:53.229271666 +1030
+@@ -1,175 +1,145 @@
+-# FILE_FORM_Conversion_v1 - the conversion of DEV to the project's file-form standard (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49): install and run sheet
++# FILE_FORM_Conversion_v2 - DEV brought to the file-form standard (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49): the sheet
+ 
+-**Only after the owner's own go for each part.** Windows CMD, in the repository root
+-(`E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality`). **Nothing of the project running:** no
+-research job, no results update, no runner task, no editor holding a file of the project open.
+-**Save the ZIP to `E:\TEMP`, not into the repository,** delete any earlier `E:\TEMP\FILE_FORM_Conversion_v1` folder, and
+-extract it **to `E:\TEMP`** (the ZIP holds its own top folder), so that
+-`E:\TEMP\FILE_FORM_Conversion_v1\VERIFY_FILE_FORM_INSTALL.py` exists. Built against commit `dd95e7db0844fe8d2ae44dee324f740be05c729e`.
+-
+-**What this package does.** It brings every text file of the living project in DEV to the Windows form (each line
+-ending CRLF), and makes Git store exactly what is on disk.
+-- It copies in 12 files of its own, already in that form: 4 new (the standard's rule
+-  `deploy\file_form.py`, the engine's helper `src\research\windows_text.py`, two test modules) and 8
+-  replaced (four engine modules whose writers now write CRLF; two lines of the old two-site checker's self-test;
+-  `deploy\INFRA_MANIFEST.ini`; `.gitattributes`; `.gitignore`).
+-- Its conversion program changes the line endings, and nothing else, of the other listed files
+-  (686 on the list in all), and of this PC's `ENVIRONMENT.ini`.
+-- **It removes DEV's research results (`results\research\`) and the status file in each variant folder,** on your
+-  second typed word: they are made again by the fill in part 6, in the new form.
+-- Its second program stages the converted files in Git and puts the working copies of the documents back to
+-  Git's own bytes.
+-- **It does not touch:** the results masters and their ledgers (it proves them unchanged), the updater's grabs and
+-  backups, the old system's records under `results\`, the six files of the retired Mode H machinery, `.venv`,
+-  `GAIS\`, or anything under `transitory_data\` except that tracked files there are put back to Git's own bytes.
+-  No calculation is changed.
+-
+-**A STOP is a STOP.** If any step prints `STOP`, `FAIL`, `REFUSED`, an error, or anything other than what is
+-expected: do not go on, do not retry, do not reset or undo anything. Send Claude the whole output.
+-**The one exception** is the test suite's own report of the failures that exist today: the word `FAILED` on a
+-module's line in part 5, and the lines `FAILS IN BOTH RUNS`, are expected for as long as the comparison ends as
+-part 5 says.
++**One attempt. Each part only on the owner's own go.** Built against commit `abfcfc962c78fad1c0f2a472681a1ebcb6d3fcb3`.
+ 
+-**There is no undo. The one way back is your own copy of the project folder (part 1).** If a part stops and Claude
+-cannot say how to go on, the project folder is put back from that copy, whole.
+-
+-Nothing here contacts a lottery website, changes the PC's date or time, or ends a process. Parts 1 to 5 and 7
+-run no research fill; part 6, on its own go, is the fill.
+-
+-## Part 1. Update, your own copy, and the suite as it is today
+-
+-```bat
++**The whole safety net is your copy of the whole project folder (part 1).** This conversion is never resumed
++(EX_313). **If anything prints `STOP`, `FAIL`, `REFUSED`, an error, or anything other than what this sheet
++expects: stop there. Run nothing again, change nothing, send Claude the whole window.** The way back is part 9:
++the whole folder put back from your copy, on your own go. A fresh attempt comes only after the cause is understood.
++(The one exception: in part 5 the word `FAILED` on a module's line and the lines `FAILS IN BOTH RUNS` are the three
++failures that exist today, and are expected as long as the comparison ends as part 5 says.)
++
++**What it does.** Copies in 12 files (4 new, 8 replaced: the engine's writers now write CRLF;
++`.gitattributes`; `.gitignore`). Changes the line endings, and nothing else, of the other listed files
++(686 on the list) and of `ENVIRONMENT.ini`. **Removes DEV's research results (`results\research\`) and the status
++file in each variant folder**, which the fill in part 6 makes again. Stages the result in Git and puts the
++documents' working copies back to Git's own bytes. **It does not touch** the results masters and their ledgers (it
++proves them unchanged), the `.jsonl` ledgers, the updater's grabs and backups, the old system's records, the six
++retired Mode H files, `.venv` or `GAIS\`. No calculation is changed. Nothing here contacts a lottery website,
++changes the PC's date or time, or ends a process.
++
++**Before you start:** nothing of the project running (no research job, no results update, no runner task), and no
++editor holding a file of the project open. Use **one CMD window** for parts 1 to 8, so that the five names set in
++part 1 stay set.
++
++## Part 1. Update, check the package, make your copy and check it (about 10 minutes)
++
++```bat
++cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
++set PY=.venv\Scripts\python.exe
++set ZIP=exchange\CLAUDE_WEB_TOOLS\conversion\package\FILE_FORM_Conversion_v2.zip
++set PKG=E:\TEMP\FILE_FORM_Conversion_v2
++set EVID=E:\TEMP\FILE_FORM_evidence_v2
++set COPY=E:\TEMP\FILE_FORM_copy_of_project
+ git status --short
+ git pull --ff-only
+ git status --short
++git log -1 --format=%h -- src tests
++certutil -hashfile "%ZIP%" SHA256
++if exist "%PKG%" echo STOP: %PKG% exists already
++if exist "%EVID%" echo STOP: %EVID% exists already
++if exist "%COPY%" echo STOP: %COPY% exists already
+ ```
+ 
+-Expected: both `git status --short` print nothing; the pull says `Fast-forward` or `Already up to date`.
++Expected: both `git status --short` print nothing; the pull says `Fast-forward` or `Already up to date`; the
++`git log` line prints **`5f16b35`** (no commit has touched `src` or `tests` since build step 2, so the suite run made
++after build step 2 is the baseline for part 5); `certutil` prints the SHA-256 **Claude gave you in the chat for
++`FILE_FORM_Conversion_v2.zip`**; and the three `if exist` lines print **nothing** (none of the three folders exists
++yet). If one prints `STOP`, tell Claude. (`COPY` may be set to any other new folder outside the project
++folder, on a drive with room for the whole project folder.)
+ 
+-**Now make your own copy of the whole project folder,** as before build step 1: a ZIP of it, or a copy of the
+-folder, somewhere outside the project folder. It must hold `src`, `tests`, `deploy`, `source_data`,
+-`results\research` and `ENVIRONMENT.ini`. **Wherever this sheet says `COPY`, type its full path** (the ZIP file, or
+-the copied folder that holds `src`).
+-
+-**The baseline suite.** If the folder `E:\TEMP\STEP2_evidence\suite_after` still exists (the suite run after build
+-step 2, made on exactly today's `src` and `tests`), it is the baseline: skip the next command. **Otherwise** make
+-it now (about 25 minutes):
++Then unpack the package and make the copy:
+ 
+ ```bat
+-.venv\Scripts\python.exe -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\run_suite.py" . "E:\TEMP\FILE_FORM_evidence\suite_before"
+-git status --short
++%PY% -I -m zipfile -e "%ZIP%" E:\TEMP
++robocopy . "%COPY%" /E /COPY:DAT /DCOPY:DAT /R:1 /W:1 /NFL /NDL /NP
++%PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase copy --copy "%COPY%"
+ ```
+ 
+-Expected: a last line `DONE: 52 modules, 762 tests ran`; `git status --short` prints nothing.
++Expected: robocopy's summary shows **0** in the columns `Mismatch` and `FAILED`; then a line
++`compared ... file(s)` and the last line **`COPY PASS (your copy holds every file of the project folder, byte for
++byte)`** (it reads every file twice: a few minutes). **Do not go on without `COPY PASS`.**
+ 
+-## Part 2. Check, copy, check (about a minute)
++## Part 2. Check, copy the package's files in, check (a minute)
+ 
+-```bat
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase pre
+-xcopy "E:\TEMP\FILE_FORM_Conversion_v1\repo_overlay\*" . /E /H /Y
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase post
+-```
+-
+-Expected: `PRE PASS`; `12 File(s) copied`; `POST PASS`.
+-
+-## Part 3. Look, then convert (a few minutes)
+-
+-First the look, which changes nothing:
++One line; each step runs only if the one before it passed:
+ 
+ ```bat
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\convert_to_file_form.py" --tree . --list "E:\TEMP\FILE_FORM_Conversion_v1\CONVERSION_LIST.json" --look
++%PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase pre && xcopy "%PKG%\repo_overlay\*" . /E /H /Y && %PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase post
+ ```
+ 
+-Expected: the second line names the list's SHA-256 `f6e13ad05ed4e5e38c94106f1909ff5b86062b3a692a642c485a36ebcc1966f6`; the line
+-`IN NO CLASS, OR NOT AS EXPECTED ........ 0`; no line `THE PACKAGE'S OWN FILES, not yet here`; and the last line
+-`FILE-FORM CONVERSION - END - LOOKED ONLY; nothing was changed. A real run would find nothing to stop it.`
+-(The counts of files to convert and to remove are what your tree holds; on 24 November they were 650 and 1,578.)
++Expected: `PRE PASS`; `12 File(s) copied`; `POST PASS`.
+ 
+-Then the conversion. **Type the path of your copy in place of `COPY`:**
++## Part 3. Convert (a few minutes)
+ 
+ ```bat
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\convert_to_file_form.py" --tree . --list "E:\TEMP\FILE_FORM_Conversion_v1\CONVERSION_LIST.json" --copy "COPY" --record "E:\TEMP\FILE_FORM_evidence\CONVERSION_RECORD.json"
++%PY% -I -B "%PKG%\tools\convert_to_file_form.py" --tree . --list "%PKG%\CONVERSION_LIST.json" --copy "%COPY%" --record "%EVID%\CONVERSION_RECORD.json"
+ ```
+ 
+-It prints what it found, class by class, as the look did; then a line saying that your copy holds every file to
+-be converted and to be removed; then it asks. **Type `CONVERT`** and press Enter. It converts, then asks again.
+-**Type `REMOVE`** and press Enter.
++It prints what it found, class by class, **before it changes anything**. Check before you type:
++the second line names the list's SHA-256 `40abea55b09e13f341f056a43596c334e10ef462563715c42a850175a919f2f4`;
++`IN NO CLASS, OR NOT AS EXPECTED ........ 0`; four results files under `UNTOUCHED, AND PROVED UNTOUCHED`; and a
++line saying your copy holds every file to be converted and to be removed. (On 24 November your look showed 650 to
++convert and 1,578 to remove; with the package's files copied in, the first number is now a little lower.)
++**Type `CONVERT`** and Enter, then **type `REMOVE`** and Enter. Nothing is changed until both are typed.
+ 
+-Expected, at the end: a line beginning `PROVED: all 686 listed files have the list's "after" SHA-256`, and
+-the last line `FILE-FORM CONVERSION - END - FINISHED. Go on with the next part of the sheet.`
+-If it stops part-way (Windows refuses a file that another program holds open), close that program and run the
+-same command again: it goes on from where it stopped, and checks your copy against what it recorded the first
+-time. If a line names a lock file, do nothing about the lock: tell Claude.
++Expected, at the end: a line beginning `PROVED: all 686 listed files have the list's "after" SHA-256`, and the
++last line `FILE-FORM CONVERSION - END - FINISHED. Go on with the next part of the sheet.`
+ 
+ ## Part 4. Stage in Git, and put the documents' working copies back (a minute or two)
+ 
+-First the look, which changes nothing:
+-
+ ```bat
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\stage_and_refresh.py" --tree . --list "E:\TEMP\FILE_FORM_Conversion_v1\CONVERSION_LIST.json" --look
++%PY% -I -B "%PKG%\tools\stage_and_refresh.py" --tree . --list "%PKG%\CONVERSION_LIST.json"
+ ```
+ 
+-Expected: `TO BE STAGED, exactly as on disk ....... 685 of the 686 listed file(s)`; a count of working
+-copies to be put back (some two thousand, most of them under `exchange`); `NOT AS EXPECTED ........................ 0`;
+-and the last line `STAGE AND REFRESH - END - LOOKED ONLY; nothing was changed.`
++It prints what it will do before it does it. Check before you type:
++`TO BE STAGED, exactly as on disk ....... 685 of the 686 listed file(s)`; some two thousand working copies to
++be put back, most under `exchange`, **none under `GAIS`, `source_data` or `results`**; and
++`NOT AS EXPECTED ........................ 0`. **Type `STAGE`** and Enter.
+ 
+-Then the run:
++Expected: a line beginning `PROVED: all 686 listed files are staged`, and the last line
++`STAGE AND REFRESH - END - FINISHED. Nothing was committed or pushed: that is the next part of the sheet.` Then:
+ 
+ ```bat
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\stage_and_refresh.py" --tree . --list "E:\TEMP\FILE_FORM_Conversion_v1\CONVERSION_LIST.json"
+ git status --short | find /c /v ""
+ git status --short | findstr /v /b /c:"M  " /c:"A  "
+ ```
+ 
+-**Type `STAGE`** and press Enter when it asks.
++Expected: the first prints **685**; the second prints **nothing**.
+ 
+-Expected: a line beginning `PROVED: all 686 listed files are staged`, and the last line
+-`STAGE AND REFRESH - END - FINISHED. Nothing was committed or pushed: that is the next part of the sheet.`
+-The first `git status` line prints **685**; the second prints **nothing** (every changed file is staged, and
+-nothing else is changed).
+-
+-## Part 5. The suite again, and the comparison (about 30 minutes)
+-
+-```bat
+-.venv\Scripts\python.exe -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\run_suite.py" . "E:\TEMP\FILE_FORM_evidence\suite_after"
+-```
+-
+-Expected: a last line `DONE: 54 modules, 830 tests ran`, and the two new modules `test_file_form` and
+-`test_research_file_form` each ending `OK`.
+-
+-Then the comparison. **In the first command, type the baseline folder of part 1 in place of `BASELINE`**
+-(`E:\TEMP\STEP2_evidence\suite_after`, or `E:\TEMP\FILE_FORM_evidence\suite_before` if you made a new one):
++## Part 5. The suite, and the comparison with the suite after build step 2 (about 30 minutes)
+ 
+ ```bat
+-.venv\Scripts\python.exe -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\compare_suite_reports.py" "BASELINE" "E:\TEMP\FILE_FORM_evidence\suite_after" > "E:\TEMP\FILE_FORM_evidence\comparison.txt"
+-findstr /v /b /c:"NEW: " /c:"MODULE NEW: " "E:\TEMP\FILE_FORM_evidence\comparison.txt"
+-find /c "NEW: " "E:\TEMP\FILE_FORM_evidence\comparison.txt"
++%PY% -B "%PKG%\tools\run_suite.py" . "%EVID%\suite_after"
++%PY% -B "%PKG%\tools\compare_suite_reports.py" "E:\TEMP\STEP2_evidence\suite_after" "%EVID%\suite_after" > "%EVID%\comparison.txt"
++findstr /v /b /c:"NEW: " /c:"MODULE NEW: " "%EVID%\comparison.txt"
++find /c "NEW: " "%EVID%\comparison.txt"
+ git status --short | findstr /v /b /c:"M  " /c:"A  "
+ ```
+ 
+-Expected from `findstr` (every line that is not about a new test), exactly these:
++(If `E:\TEMP\STEP2_evidence\suite_after` no longer exists, stop and tell Claude: the baseline is then made from
++your copy, and Claude gives the two commands.)
++
++Expected: the suite's last line `DONE: 54 modules, 830 tests ran`. From `findstr`, exactly these:
+ `before: 52 modules; unittest ran 762 tests; identified here: 762`;
+ `after: 54 modules; unittest ran 830 tests; identified here: 830`;
+ **`tests in both runs: 762; with the same result: 762`**;
+-three entries `FAILS IN BOTH RUNS` (the failures that exist today: `test_gitignore_lines`, with the words
+-`FAILURE LINES DIFFER` and its two long lines, which is expected because that test prints a set in a different
+-order each run; and two tests of `test_multigame_reader_contracts`);
+-and the last line `RESULT: DIFFERENCES FOUND - each needs an explanation`. **Here that last line is expected:** the
+-only differences are the 2 new test modules and their 68 new tests. `find /c` prints **70**.
+-The last command prints **nothing**: the suite has left no file behind and changed none.
++three entries `FAILS IN BOTH RUNS` (`test_gitignore_lines`, with the words `FAILURE LINES DIFFER` and its two long
++lines; and two tests of `test_multigame_reader_contracts`);
++and the last line `RESULT: DIFFERENCES FOUND - each needs an explanation`, **which is expected here:** the only
++differences are the 2 new test modules and their 68 new tests. `find /c` prints **70**. The last command prints
++**nothing**.
+ **A STOP is any line beginning `CHANGED`, `DISAPPEARED`, `MODULE CHANGED`, `MODULE DISAPPEARED`,
+ `NOT ALL TESTS IDENTIFIED` or `NO SUMMARY`, a `tests in both runs` line whose two numbers differ, a count other
+ than 70, or any line from the last command.**
+ 
+-## Part 6. Commit and check (not yet pushed), then DEV's fill - the fill only on your own separate go
++## Part 6. Commit and check (not pushed), then the fill - the fill on your own separate go
+ 
+ ```bat
+-git commit -m "FILE-FORM STANDARD (RAT-49): DEV converted to CRLF; the engine's writers write CRLF; Git converts nothing"
+-.venv\Scripts\python.exe -I -B "E:\TEMP\FILE_FORM_Conversion_v1\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase committed
++git commit -m "FILE-FORM STANDARD (RAT-49): DEV converted to CRLF; the engine's writers write CRLF; Git converts nothing" && %PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase committed
+ ```
+ 
+-Expected: **`COMMITTED PASS`**. **If it prints `STOP`: do not push, and do not reset or undo anything.** Send Claude
+-the whole output. **Do not push yet.**
++Expected: **`COMMITTED PASS`**. **Do not push yet.**
+ 
+ Then the fill (about 47 minutes; leave the window alone):
+ 
+@@ -179,16 +149,14 @@
+ 
+ Expected, at the end: for each game a line beginning `POWERBALL: finished. Results on file through draw` (and the
+ same for `OZLOTTO`), each ending `prevailing OV-1: not started; waiting for a successful results step`; no line
+-beginning `WARNING`; and the last line **`The job finished.`** A line with `REFUSED` or `STOPPED`, or the last line
+-`A STOP is a STOP: ...`, is a STOP: change nothing and send Claude the whole output. (If the window is closed or
+-the PC restarts part-way, the same command continues where it stopped; if it then says
+-`a process of this tree is running`, read what it says and ask Claude before deleting anything.)
++beginning `WARNING`; and the last line **`The job finished.`** A line with `REFUSED` or `STOPPED`, or a last line
++`A STOP is a STOP: ...`, is a STOP.
+ 
+ Then the same command once more, into a file (a few minutes):
+ 
+ ```bat
+-Run_Research.bat --game BOTH --no-update > "E:\TEMP\FILE_FORM_evidence\second_job.txt" 2>&1
+-type "E:\TEMP\FILE_FORM_evidence\second_job.txt"
++Run_Research.bat --game BOTH --no-update > "%EVID%\second_job.txt" 2>&1
++type "%EVID%\second_job.txt"
+ git status --short
+ ```
+ 
+@@ -198,16 +166,15 @@
+ ## Part 7. The comparison with the old development records, and the push
+ 
+ ```bat
+-.venv\Scripts\python.exe -B "E:\TEMP\FILE_FORM_Conversion_v1\tools\compare_fill_with_old_records.py" --tree . > "E:\TEMP\FILE_FORM_evidence\comparison_with_old_records.txt" 2>&1
+-findstr /v /e /c:" equal" "E:\TEMP\FILE_FORM_evidence\comparison_with_old_records.txt"
+-findstr /e /c:" equal" "E:\TEMP\FILE_FORM_evidence\comparison_with_old_records.txt" | find /c /v ""
++%PY% -B "%PKG%\tools\compare_fill_with_old_records.py" --tree . > "%EVID%\comparison_with_old_records.txt" 2>&1
++findstr /v /e /c:" equal" "%EVID%\comparison_with_old_records.txt"
++findstr /e /c:" equal" "%EVID%\comparison_with_old_records.txt" | find /c /v ""
+ ```
+ 
+ It reads only. Expected from the first `findstr`, exactly seven lines, as after build step 2: for each game the
+ two `part 1` and `part 2` lines with **`DIFFERENT: 0`** and the line about the tracked rank ledgers ending
+ `not among the old forecasts compared: 0`; and the last line beginning **`RESULT: PASS - COMPLETE - both games`**. The
+-second command prints **160**. Anything else is a STOP: a line beginning `DIFFERENT`, a `DIFFERENT:` count above
+-0, `RESULT: STOP`, `RESULT: PARTIAL` or `RESULT: REFUSED`. Change nothing and send Claude the file.
++second command prints **160**. Anything else is a STOP.
+ 
+ **Push only after that PASS:**
+ 
+@@ -218,11 +185,24 @@
+ 
+ ## Part 8. What to send Claude
+ 
+-The commit ID of part 7; the whole window of parts 2, 3 and 4 (or the lines from `FILE-FORM CONVERSION - START` and
+-`STAGE AND REFRESH - START` to their `END` lines); the comparison's text (part 5); the last twenty lines of the
+-fill's window, the file `second_job.txt` and roughly how long the fill took (part 6); the file
+-`comparison_with_old_records.txt` (part 7); and the file `E:\TEMP\FILE_FORM_evidence\CONVERSION_RECORD.json`. Claude
+-then verifies the commit from GitHub: every listed file with exactly the list's "after" bytes, and no other path
+-changed.
++The commit ID of part 7; the window of parts 1 to 4; `%EVID%\comparison.txt`; the last twenty lines of the fill's
++window and roughly how long it took; `%EVID%\second_job.txt`; `%EVID%\comparison_with_old_records.txt`; and
++`%EVID%\CONVERSION_RECORD.json`. **Keep your copy (`%COPY%`) until Claude says the conversion is proved.**
++
++## Part 9. ONLY after a STOP, and only on your own go: the whole folder put back from your copy
++
++Nothing was pushed, so GitHub is as it was. Close every program that has a file of the project open. The stopped
++folder is kept beside the project under another name, for the diagnosis; it is not deleted here.
++
++```bat
++cd /d E:\SOFTWARE-Win11\powerball
++ren analysing_perceived_randomness_in_reality analysing_perceived_randomness_in_reality_STOPPED
++robocopy "%COPY%" "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality" /E /COPY:DAT /DCOPY:DAT /R:1 /W:1 /NFL /NDL /NP
++cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
++%PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase copy --copy "%COPY%"
++git status --short
++```
+ 
+-**Keep your copy of part 1** until Claude says the conversion is proved.
++Expected: `ren` prints nothing (if it says the folder is in use, a program still holds a file: close it and give
++the same line again); robocopy shows **0** under `FAILED`; **`COPY PASS`**; and `git status --short` prints nothing.
++DEV is then exactly as it was before part 2. Send Claude the window, and keep `%EVID%` and the `_STOPPED` folder.

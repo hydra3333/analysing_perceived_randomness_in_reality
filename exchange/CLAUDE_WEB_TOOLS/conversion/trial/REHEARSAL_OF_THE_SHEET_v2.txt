@@ -1,0 +1,52 @@
+The sheet of FILE_FORM_Conversion_v2 rehearsed in the cloud from the built ZIP, 24 November 2026, late evening
+(Claude's own evidence; Git 2.43 on Linux with core.autocrlf=true set in the clone; Python 3.15; not Windows; not
+a review). In the sheet's order, one attempt.
+
+The ZIP: SHA-256 ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c, unpacked with
+"python -I -m zipfile -e", as the sheet does.
+The tree: the unconverted working copy of the first rehearsal (a clone of main at dd95e7d made with
+core.autocrlf=true and shaped like the owner's, with the workspace's fill of build step 2: results/research,
+40 status files, a settings file). Git reported it clean. The scope files of the list are the same at dd95e7d
+and at abfcfc9: the two lists differ in the one line "made_from_commit".
+
+Part 1.  the copy: a whole copy of the tree (cp -a).
+         VERIFY --phase copy:  compared 8064 file(s); COPY PASS
+Part 2.  VERIFY --phase pre:   PRE PASS (12 package files checked against the tree)
+         the 12 files copied in
+         VERIFY --phase post:  POST PASS
+Part 3.  FIRST, with the settings file still naming the folder it was copied from (a case that must stop):
+           "ENVIRONMENT.ini: its tree_root is not this folder: this is a copied or moved tree."
+           STOP: 1 finding(s) above. Nothing was changed.   No record was written; Git: 12 changed paths (the
+           package's own files), as before the run.
+         THEN, with tree_root naming the tree (in the tree and in the copy), CONVERT and REMOVE typed:
+           648 listed files to convert, 38 in their form already, the settings file to convert, 1,578 to remove,
+           4 results files, 8 untouched and not read, 0 in no class;
+           "Your copy holds every one of the 649 file(s) to be converted and the 1578 to be removed";
+           both words asked before anything was changed; converted 648 and the settings file; removed 1,578
+           (each hashed again just before it was removed; the 40 engine-made status files each passed the check
+           of its own digest and of "nothing but ACTIVE");
+           PROVED all 686 listed files at the list's "after"; the 4 results files as before; FINISHED.
+         THE SAME COMMAND ONCE MORE (must be refused):
+           "STOP: the record ... exists: a conversion was begun here before. This conversion is one attempt and
+           is never resumed or repeated. Nothing was changed by this run."
+Part 4.  STAGE typed: 685 of the 686 listed files to stage; 2,312 working copies to put back (exchange 1,701;
+         review 302; doc 242; the runner's folder 47; archive 16; transitory_data 4; none under GAIS, source_data
+         or results); 0 not as expected; staged 685; put back 2,312; PROVED, including "nothing is staged that
+         is not on the list"; FINISHED.
+         git status --short: 685 lines; none that is not a staged change.
+Part 5.  NOT RUN AGAIN. The package's repo_overlay (the 12 files that go into the living project) is byte for
+         byte the one of v1, and so are run_suite.py, compare_suite_reports.py, compare_fill_with_old_records.py
+         and file_form.py: the suite of the first rehearsal (830 tests; 762 of 762 earlier tests with the same
+         result; 68 new, passing; 70 lines "NEW: ") is the suite of this package. Only the two one-off programs,
+         the verifier and the sheet differ (package/FILE_FORM_Conversion_v1_TO_v2.diff).
+Part 6 (first half).  committed (in the rehearsal only); VERIFY --phase committed: COMMITTED PASS.
+         The fill: not run here (entry 254: the whole fill does not finish within the workspace's time).
+Part 9.  the converted and committed tree renamed aside; the whole copy copied back under the tree's name;
+         VERIFY --phase copy: COPY PASS; git status --short: no line; HEAD dd95e7d, as before part 2.
+
+The two programs' tests: 46 (conversion) and 20 (staging), all passing. The planted-fault scripts of v1 were not
+run again and are kept as v1's evidence (EX_313: no unnecessary testing).
+
+What this does not show: Windows. robocopy, xcopy, ren and CMD's "&&" are the sheet's own and were not run here;
+the conversion program's look ran on the owner's real DEV on 24 November without a finding (entry 249), and the
+way Windows refuses a rename or a replace while a file is open was measured by TASK_T028 (entry 240).

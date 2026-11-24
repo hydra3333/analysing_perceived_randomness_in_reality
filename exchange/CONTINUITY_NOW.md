@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 22:25 Australia/Adelaide (entry 254: the conversion's package FILE_FORM_Conversion_v1 is built, rehearsed in the cloud and put to the reviewer; the owner's plan ends on the night of 25 November).
+**Last updated:** 24 November 2026, 22:48 Australia/Adelaide (entry 255: the owner finds the conversion overengineered; EX_313: one attempt, no resumption, whole-folder restoration; the package FILE_FORM_Conversion_v2 is with the reviewer for a focused confirmation).
 
 ## For the owner: NOW
 
+- **THE CONVERSION, MADE SIMPLE (entry 255; 24 November 2026, late evening).** The owner: "we have absolutely
+  overengineered and wasted time and money." EX_313 (the reviewer agrees): **one attempt, never resumed; a
+  verified copy of the whole project folder first; on any STOP the whole folder put back, on the owner's go.**
+  `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2.zip` (`ca5816cb...1c091c`), its sheet
+  inside it, and `package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md`, are with the reviewer for a focused
+  confirmation. **This supersedes the bullet below about v1.** Next: the reviewer's word; the owner's RAT-50
+  (the narrow change to the standard's recovery rule, the package, and whether the runner's rehearsal is
+  dropped, as Claude recommends); then the day, part by part on his own go. Nothing is installed or run yet.
 - **THE CONVERSION'S PACKAGE IS WITH THE REVIEWER (entry 254; 24 November 2026, late evening).**
   `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v1.zip` (`75eccbe3...ddc87e`), its sheet
   inside it, and `package/FILE_FORM_Conversion_v1_REVIEW_NOTE.md`. Rehearsed in the cloud from the ZIP: every check

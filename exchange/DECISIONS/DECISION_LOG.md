@@ -5823,3 +5823,62 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The owner's plan ends on the night of 25 November.** Claude's order of work until then: the reviewer's
   findings on this package; the runner's rehearsal task; a handover edition (H-1 v11 stops at entry 243).
 - Next numbers: EX_312; entry 255; RAT-50.
+
+## 255. 24 November 2026, 22:48 - THE OWNER: THE CONVERSION IS OVERENGINEERED; EX_312 and EX_313; no resumption, whole-folder restoration; the package FILE_FORM_Conversion_v2
+
+- **The owner's words, in order (24 November 2026).** 22:26, when Claude said the day could not be finished that
+  night: "no. i am hoping to finish this tonight." 22:29: "we do the plan for as as long as I try to last in a late
+  night tonight." 22:33: **"we have absolutely overengineered and wasted time and money."** 22:34: "wait for
+  claude". 22:35, with his direction to read EX_313 before acting on EX_312: "i do not understand how simple
+  conversion of EOF could be made into such a drawn out process. there are no binary files that i know of, we could
+  more easily easily have just done the lot and rebuilt all draws and data". 22:38: "and detect/fix code that
+  creates LF files".
+- **Claude's answer, recorded as given:** he is right, and a good share of it is Claude's. The job was line endings
+  in some 650 files, one Git setting and a refill. Two things in it needed care: the short list of files that must
+  not be converted (the `.jsonl` ledgers, the four masters and ledgers, GAIS, the frozen and sealed evidence, none
+  of which can be made again), and one content-based staging step, because Git does not notice the change by
+  itself. The resume logic, the look kit, the separate verifier phases and the planted-fault scripts went beyond
+  that, and Claude should have said so when the standard was asked for. The code that wrote LF files is found and
+  corrected by the package as it was (the engine's four writers; the search in `deploy/file_form.py`, kept true by
+  `tests/test_file_form.py`).
+- **EX_312** (the reviewer, main `7be4a9f`): RECHECK REQUIRED, confined to five corrections C01 to C05; the science
+  and the serialization sound; all ten readings of the standard PASS. **EX_313** (the reviewer, main `abfcfc9`,
+  SHA-256 `0884eb2a475442838a7783dcbbbdfe22e9e317c08f8c7ef7a9bfb24224e5fda9`) **supersedes EX_312 wherever it asked
+  for engineering or tests for automatic resumption**, on the owner's direction, which it quotes: "yes. just get it
+  done safely. we have absolutely overengineered and wasted time and money." Its route: a verified whole-project
+  copy outside DEV; one attempt; on any STOP the whole folder restored on the owner's go; the small direct
+  safeguards of C01, C03 and C04 kept; no further architecture, edge-case engineering or unnecessary testing.
+- **Done: `FILE_FORM_Conversion_v2`** (`exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2.zip`,
+  SHA-256 `ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c`; list of 686 files, SHA-256
+  `40abea55b09e13f341f056a43596c334e10ef462563715c42a850175a919f2f4`, built against `abfcfc9`). v1 is kept as
+  evidence. **Small edits to the existing programs; nothing redesigned.** The 12 files that go into the living
+  project, the rule and the three suite and comparison tools are byte for byte those of v1.
+  - Conversion program: a record that exists refuses the run (no second run; `read_record` removed); both typed
+    words before the first change, the record written only then; each file hashed again just before it is removed;
+    a status file removed only if its own check holds and it holds nothing but ACTIVE; the settings file must say
+    DEV and this folder; the orphan marker stops it; all four results files must be there; every STOP says "not
+    resumed; the whole folder from your copy, on your go".
+  - Staging program: GAIS never a candidate; a path Git stored byte for byte before today that differs on disk is a
+    finding, never put back; the index must be exactly the last commit before anything is staged, and nothing may
+    be staged that is not on the list.
+  - Verifier: a new phase `copy` (the owner's whole-folder copy compared file by file, `.git` and `.venv` included);
+    phase `pre` checks the package's own files against the manifest before anything is copied.
+  - Sheet: rewritten short, around the copy; `pre`, `xcopy` and `post` on one gated line; no separate looks (each
+    program prints what it found and asks before it changes anything); the suite baseline shown to match (`5f16b35`
+    is the last commit touching `src` or `tests`); a last part 9, the whole folder put back, only on the owner's go.
+  - Tests: 46 and 20, all passing. **Rehearsed in the cloud from the built ZIP, in the sheet's order, with the
+    restoration** (`trial/REHEARSAL_OF_THE_SHEET_v2.txt`): COPY PASS, PRE PASS, POST PASS; a copied tree refused;
+    converted 648 and the settings file, removed 1,578, proved; a second run refused; staged 685, 2,312 working
+    copies put back, proved; COMMITTED PASS; restored, COPY PASS, Git clean. The whole suite and the planted-fault
+    scripts were not run again (the overlay is v1's, byte for byte). Not Windows.
+- **Not written: a rehearsal task for the runner.** The standard v0.2 says the staging step "is rehearsed by the
+  runner before the day"; EX_313 says "as appropriate". **Claude's recommendation: drop it** (with a verified whole
+  copy, a failed real attempt costs one restoration, as a failed rehearsal on a copy would). The owner's decision.
+- **Proposed for RAT-50, the owner alone ratifying** (worded in `package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md`): a
+  narrow change to the standard's section 7 for this one conversion (one attempt; no resumption; whole-folder
+  restoration), acceptance of the package v2, and, only if he so decides, the waiver of the runner's rehearsal.
+  The standard is not re-issued.
+- **Its standing:** put to the reviewer for the focused confirmation EX_313 names. Not installed. **Authorised by
+  nothing yet.** Nothing has been run on the owner's PC.
+- **Still stale, for the next handover edition:** H-1 v11 stops at entry 243 and names the standard v0.1.
+- Next numbers: EX_314; entry 256; RAT-50.

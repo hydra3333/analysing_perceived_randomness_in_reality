@@ -1,5 +1,10 @@
 # The conversion to the file-form standard: Claude's working notes (not a package; nothing here is reviewed or installed)
 
+**24 November 2026, late evening (decision log entry 255): `FILE_FORM_Conversion_v2` replaces v1 for the day.**
+One attempt, never resumed; the owner's verified whole-folder copy is the way back (EX_313). What changed and
+why: `package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md` and `package/FILE_FORM_Conversion_v1_TO_v2.diff`. Where the
+notes below speak of a second run or of a run that goes on from where it stopped, they describe v1 only.
+
 **State, 24 November 2026, late evening (decision log entry 254).** The package is built
 (`package/FILE_FORM_Conversion_v1.zip`, made by `build_package.py` from the working sources here and
 `package_sources/`) and is with the reviewer (`package/FILE_FORM_Conversion_v1_REVIEW_NOTE.md`). Nothing has run on

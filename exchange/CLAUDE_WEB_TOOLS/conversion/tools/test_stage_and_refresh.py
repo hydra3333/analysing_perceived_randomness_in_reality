@@ -202,23 +202,24 @@ class TheWholeOfIt(RepositoryCase):
             if not path.startswith('GAIS/'):
                 self.assertEqual((clone / path).read_bytes(), self.disk(path), path)
 
-    def test_a_second_run_finds_nothing_to_do_and_asks_nothing(self):
-        self.run_it('STAGE')
+    def test_it_is_one_attempt_a_second_run_is_refused_and_changes_nothing(self):
+        self.assertEqual(self.run_it('STAGE'), staging.EXIT_DONE, self.text_said())
         state = self.whole_state()
         self.said.clear()
-        self.assertEqual(self.run_it(), staging.EXIT_DONE, self.text_said())
+        self.assertEqual(self.run_it('STAGE'), staging.EXIT_STOPPED)
+        self.assertIn('are staged in Git already', self.text_said())
         self.assertEqual(self.questions, [])
         self.assertEqual(self.whole_state(), state)
 
-    def test_a_refresh_interrupted_part_way_is_finished_by_the_next_run(self):
+    def test_a_refresh_interrupted_part_way_says_to_put_the_folder_back_and_is_not_resumed(self):
         def fail_at_the_second(path, seen=[]):
             seen.append(path)
             if len(seen) == 2:
                 raise PermissionError(13, 'The process cannot access the file', path)
         self.assertEqual(self.run_it('STAGE', checkpoint=fail_at_the_second), staging.EXIT_STOPPED)
         self.assertIn('Do not commit', self.said[-1])
-        self.assertEqual(self.run_it('STAGE'), staging.EXIT_DONE, self.text_said())
-        self.assertEqual(self.git('diff-files', '--name-only'), b'')
+        self.assertIn('the whole project folder put back from your copy', self.said[-1])
+        self.assertNotIn('run this again', self.text_said().lower())
 
 
 class WhenGitTrustsWhatItRemembers(RepositoryCase):
@@ -265,6 +266,24 @@ class WhatStopsItBeforeAnythingIsChanged(RepositoryCase):
     def test_frozen_history_changed_here_in_more_than_line_endings_is_not_touched(self):
         self.put('exchange/EX_001.md', b'# history\r\nan uncommitted change\r\n')
         self.assert_stops_unchanged('exchange/EX_001.md: its bytes on disk differ from Git\'s in more than line endings')
+
+    def test_a_file_git_stored_byte_for_byte_before_that_differs_in_line_endings_only_is_not_put_back(self):
+        self.put('source_data/master.csv', COMMITTED['source_data/master.csv'].replace(b'\r\n', b'\n'))
+        self.assert_stops_unchanged('source_data/master.csv: Git stored this file byte for byte before today')
+
+    def test_something_staged_already_that_is_not_the_conversions(self):
+        self.put('doc/new_note.md', b'not of the conversion\r\n')
+        self.git('add', 'doc/new_note.md')
+        self.assert_stops_unchanged('1 file(s) are staged in Git already (the first: doc/new_note.md)')
+
+    def test_the_other_projects_folder_is_never_a_candidate_even_when_a_file_of_it_is_changed(self):
+        self.put('GAIS/notes.txt', b'another project\r\nchanged here\r\n')
+        staging_plan = staging.make_plan(self.tree, staging.conversion.read_list(self.list_path)[0],
+                                         staging.conversion.load_rule(self.rule_path, staging.conversion.read_list(
+                                             self.list_path)[0]))
+        self.assertFalse(any('GAIS/' in line for line in staging_plan['problems']))
+        self.assertFalse(any(path.startswith('GAIS/') for path in {**staging_plan['to_stage'],
+                                                                     **staging_plan['to_refresh']}))
 
     def test_a_tracked_file_that_is_missing(self):
         (self.tree / 'doc/already_crlf.md').unlink()

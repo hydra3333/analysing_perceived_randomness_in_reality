@@ -4,13 +4,16 @@ copied, and after the commit. It reads only; it changes no file and no Git state
 
 What this file is for
     The conversion's sheet copies the package's own files into the DEV tree, runs the conversion, stages, and
-    commits. This script is the check at three of those moments:
-      pre        every file the package replaces still holds the content the package was built against (line
-                 endings apart), and every file the package adds is absent;
+    commits. This script is the check at four of those moments:
+      copy       before anything else: the owner's copy of the whole project folder holds every file of the
+                 project folder, .git and .venv included, byte for byte (the copy is the one way back);
+      pre        every file of the package has the manifest's SHA-256; every file the package replaces still
+                 holds the content the package was built against (line endings apart), and every file the
+                 package adds is absent;
       post       every one of the package's files lies in the tree with exactly the package's bytes;
       committed  after the commit: every file of the conversion list is in the commit with exactly the list's
                  "after" bytes, and the commit changed those paths and no others.
-    It prints one line a finding and a last line PRE PASS, POST PASS, COMMITTED PASS or STOP.
+    It prints one line a finding and a last line COPY PASS, PRE PASS, POST PASS, COMMITTED PASS or STOP.
 
 Which part of the project's rules it carries out
     doc/FILE_FORM_STANDARD_v0_2.md sections 5 and 7 ("the commit is checked: the bytes staged for it are in the
@@ -22,11 +25,13 @@ Which of the project's own modules it uses
 
 What uses it
     The project owner, from the conversion's sheet. Usage:
+        python VERIFY_FILE_FORM_INSTALL.py --repo <tree root> --phase copy --copy <the copied folder>
         python VERIFY_FILE_FORM_INSTALL.py --repo <tree root> --phase pre|post|committed
 """
 from __future__ import annotations
 
 import argparse
+import filecmp
 import hashlib
 import json
 import os
@@ -82,12 +87,35 @@ def git(repo: Path, *arguments: str) -> bytes:
     return done.stdout
 
 
+def copy_holds_everything(repo: Path, copy: Path) -> list:
+    """Findings about the owner's copy: a file of the project folder that the copy lacks or holds with other
+    bytes. Every file under the project folder is compared whole, .git and .venv included. Reads only."""
+    if copy == repo or repo in copy.parents or not (copy / '.git').is_dir() or not (copy / 'src').is_dir():
+        return [f'{copy}: not a copy of the whole project folder outside it (it must hold .git and src, and lie '
+                f'outside {repo})']
+    findings, compared = [], 0
+    for folder, _folders, names in os.walk(repo):
+        for name in names:
+            original = Path(folder) / name
+            twin = copy / original.relative_to(repo)
+            compared += 1
+            if not twin.is_file():
+                findings.append(f'{original.relative_to(repo)}: not in the copy')
+            elif not filecmp.cmp(original, twin, shallow=False):
+                findings.append(f'{original.relative_to(repo)}: the copy holds other bytes')
+    print(f'  compared {compared} file(s) of {repo} with {copy}')
+    return findings
+
+
 def pre(repo: Path) -> list:
-    """Findings before the package's files are copied: a replaced file that no longer holds the content the
-    package was built against (compared with every CRLF read as LF), and a new file that is there already."""
+    """Findings before the package's files are copied: a file of the package that has not the manifest's
+    SHA-256; a replaced file that no longer holds the content the package was built against (compared with every
+    CRLF read as LF); and a new file that is there already."""
     findings = []
-    for kind, _package_sha, replaced_sha, path in read_manifest():
+    for kind, package_sha, replaced_sha, path in read_manifest():
         full = repo / path
+        if sha256_of((OVERLAY / path).read_bytes()) != package_sha:
+            findings.append(f'{path}: the package\'s own copy does not have the manifest\'s SHA-256')
         if kind == 'N':
             if full.exists():
                 findings.append(f'{path}: the package adds this file, but it is in the tree already')
@@ -137,10 +165,16 @@ def main(arguments) -> int:
     """The command line. Returns 0 for a PASS, 1 for a STOP."""
     parser = argparse.ArgumentParser(description='Verify the file-form conversion package against a tree.')
     parser.add_argument('--repo', required=True, help='the tree root (the project folder)')
-    parser.add_argument('--phase', required=True, choices=('pre', 'post', 'committed'))
+    parser.add_argument('--phase', required=True, choices=('copy', 'pre', 'post', 'committed'))
+    parser.add_argument('--copy', help='for the phase "copy": your copy of the whole project folder (a folder)')
     options = parser.parse_args(arguments)
     repo = Path(options.repo).resolve()
-    findings = {'pre': pre, 'post': post, 'committed': committed}[options.phase](repo)
+    if options.phase == 'copy':
+        if not options.copy:
+            sys.exit('STOP: the phase "copy" needs --copy <the copied folder>.')
+        findings = copy_holds_everything(repo, Path(options.copy).resolve())
+    else:
+        findings = {'pre': pre, 'post': post, 'committed': committed}[options.phase](repo)
     for finding in findings[:FINDINGS_SHOWN]:
         print(f'  {finding}')
     if len(findings) > FINDINGS_SHOWN:
@@ -148,7 +182,8 @@ def main(arguments) -> int:
     if findings:
         print(f'STOP: {len(findings)} finding(s) in phase {options.phase}. Change nothing; send Claude this output.')
         return 1
-    counts = {'pre': f'{len(read_manifest())} package files checked against the tree',
+    counts = {'copy': 'your copy holds every file of the project folder, byte for byte',
+              'pre': f'{len(read_manifest())} package files checked against the tree',
               'post': f'{len(read_manifest())} package files in the tree with the package\'s bytes',
               'committed': 'every listed file is committed with the list\'s "after" bytes; the commit changed '
                            'listed paths only; the working tree is clean'}[options.phase]

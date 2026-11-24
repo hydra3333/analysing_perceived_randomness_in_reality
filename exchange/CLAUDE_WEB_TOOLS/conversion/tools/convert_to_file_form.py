@@ -7,18 +7,20 @@ What this file is for
     the Windows form, CRLF, and every line-record file (.jsonl) LF. This program brings an existing DEV tree to
     it. It walks the tree's own folders itself and never asks Git anything. A link, a junction or any other
     reparse point met there is named and is never entered or read. Before it changes anything it prints
-    what it found, class by class, and waits for the owner's typed word. A file on the conversion list is
+    what it found, class by class, and waits for the owner's two typed words. A file on the conversion list is
     converted only if its SHA-256 is the list's "before"; one that already has the list's "after" is passed
     over; any other value stops the run before anything is changed. It changes line endings and nothing else,
     and proves that for each file. DEV's research results, status files and control-folder leftovers are not
-    converted: they are removed, on a second typed word, to be written afresh by the engine. The results masters
-    and their ledgers are read and proved untouched. There is no undo: the way back is the owner's own copy of
-    the project folder, which this program checks before it changes anything, and on a second run checks
-    against the hashes recorded at the first run, not against files it has already converted.
+    converted: they are removed, each only while it still has the bytes the owner's copy holds, to be written
+    afresh by the engine. The results masters and their ledgers are read and proved untouched. It works only in
+    a tree whose settings file says it is the DEV tree in this folder, and not while the orphan marker exists.
+    **It is one attempt (EX_313, the owner's direction of 24 November 2026): it is never resumed.** A record
+    that exists already refuses the run. After any STOP the way back is the whole project folder, put back
+    from the owner's own copy, which this program checks before it changes anything.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_2.md section 7 (the conversion), with sections 3, 3A and 3B; the reviewer's
-    watchpoint of EX_305 on a resumed run.
+    doc/FILE_FORM_STANDARD_v0_2.md section 7 (the conversion), with sections 3, 3A and 3B, and with the
+    owner's narrow change to its recovery rule (EX_313): no second run; whole-folder restoration.
 
 Which of the project's own modules it uses
     file_form (the copy that lies beside this program, checked by its SHA-256 against the conversion list
@@ -37,6 +39,7 @@ What uses it
 from __future__ import annotations
 
 import argparse
+import configparser
 import hashlib
 import json
 import os
@@ -59,6 +62,17 @@ RULE_MODULE = 'deploy/file_form.py'
 RULE_FILE_NAME = 'file_form.py'
 # The tree's own settings file: made by hand, in no list, converted by rule (standard section 7).
 SETTINGS_FILE = 'ENVIRONMENT.ini'
+# The one role this conversion is for, as the settings file names it ([environment] role).
+ROLE_CONVERTED = 'DEV'
+# The old system's orphan marker, from the tree root: while it exists nothing is launched, and nothing is converted.
+ORPHAN_MARKER = 'transitory_data/poc_runs/UNRESOLVED_ORPHAN.json'
+# The four results files that must all be there and are proved unchanged.
+RESULTS_FILES = ('source_data/OZLOTTO_results_master.csv', 'source_data/OZLOTTO_results_master_ledger.csv',
+                 'source_data/POWERBALL_results_master.csv', 'source_data/POWERBALL_results_master_ledger.csv')
+# What to do after any STOP once the run has begun (EX_313): this conversion is one attempt and is never resumed.
+AFTER_A_STOP = ('This conversion is one attempt and is not resumed: run nothing again, change nothing, and send '
+                'Claude this output. The way back is the whole project folder put back from your copy, on your '
+                'own go, as the sheet\'s last part says.')
 # The folders this program walks, from the tree root: the living project's own places (standard section 2).
 # Nothing else of the tree is entered: not .venv, not .git, not the frozen history, not transitory_data.
 WALKED_FOLDERS = ('src', 'deploy', 'tests', '.claude', '.vscode', 'CLAUDE_CODE_WORKING_FOLDER_TREE/tools',
@@ -202,12 +216,46 @@ def status_file_problem(data: bytes) -> str | None:
         lines = data.decode('ascii').splitlines()
     except UnicodeDecodeError:
         return 'it is not plain text'
+    # The file's own check, as the engine writes it: the last two lines hold the SHA-256 of every byte above
+    # them. The old form ends each line LF, the new one CRLF.
+    for end in (b'\r\n', b'\n'):
+        body, mark, tail = data.rpartition(b'[check]' + end)
+        if mark:
+            break
+    if not mark or tail != f'sha256 = {hashlib.sha256(body).hexdigest()}'.encode('ascii') + end:
+        return 'its own check does not hold (it is damaged, or was edited by hand)'
+    statuses = 0
     for line in lines:
         line = line.strip()
-        if line.startswith('status') and line != PLAIN_STATUS_LINE:
-            return 'it holds a status other than ACTIVE'
+        if line.startswith('status'):
+            if line != PLAIN_STATUS_LINE:
+                return 'it holds a status other than ACTIVE'
+            statuses += 1
         if line.startswith(RECORDED_FACT_PREFIXES):
             return 'it records a withdrawal or an eligibility draw'
+    if not statuses:
+        return 'it holds no status at all'
+    return None
+
+
+def settings_problem(data: bytes, tree: Path) -> str | None:
+    """Whether the tree's settings file says anything but "this folder is the DEV tree".
+
+    data    the bytes of ENVIRONMENT.ini.  tree: the tree root.
+    Returns None when [environment] role is DEV and [environment] tree_root is this folder; otherwise a few fixed
+    words saying what was found. Nothing of the file's content is put into the words returned.
+    """
+    parser = configparser.ConfigParser(interpolation=None)
+    try:
+        parser.read_string(data.decode('ascii'))
+        role = parser.get('environment', 'role').strip()
+        root = parser.get('environment', 'tree_root').strip()
+    except (configparser.Error, UnicodeDecodeError):
+        return 'it has no readable [environment] role and tree_root'
+    if role != ROLE_CONVERTED:
+        return f'its role is not {ROLE_CONVERTED}: this conversion is for the DEV tree only'
+    if os.path.normcase(os.path.realpath(root)) != os.path.normcase(os.path.realpath(tree)):
+        return 'its tree_root is not this folder: this is a copied or moved tree'
     return None
 
 
@@ -257,6 +305,9 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
                                    f'Claude.')
         elif path == SETTINGS_FILE:
             data = full.read_bytes()
+            fault = settings_problem(data, tree)
+            if fault:
+                survey.problems.append(f'{path}: {fault}. Nothing is converted in such a tree. Tell Claude.')
             try:
                 survey.settings[path] = (sha256_of(data), sha256_of(rule.to_form(data, rule.CRLF)))
             except rule.FileFormRefused as refusal:
@@ -284,6 +335,17 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
             survey.problems.append(f'{path}: {kind} that is in no class this program knows (not on the list, not '
                                    f'the settings file, not a result made again, not a results file). Move it '
                                    f'out of the project folder, or tell Claude what it is.')
+    if SETTINGS_FILE not in found:
+        survey.problems.append(f'{SETTINGS_FILE}: not in this folder. A tree of the project has one, and it must say '
+                               f'that this is the DEV tree. Tell Claude.')
+    for path in RESULTS_FILES:
+        if path not in survey.proved_untouched:
+            survey.problems.append(f'{path}: not in the tree. All four results files must be there before '
+                                   f'anything is converted. Tell Claude.')
+    marker = tree / ORPHAN_MARKER
+    if marker.exists() or marker.is_symlink():
+        survey.problems.append(f'{ORPHAN_MARKER}: the orphan marker exists. It blocks every launch, and this '
+                               f'conversion too. It is cleared only by your approved manual procedure: tell Claude.')
     return survey
 
 
@@ -363,26 +425,6 @@ class OwnersCopy:
         return digest.hexdigest()
 
 
-def read_record(record_path: Path, tree: Path, list_sha256: str) -> dict | None:
-    """Read the record of an earlier, unfinished or finished run, if there is one.
-
-    Returns the record (a dictionary), or None when there is no file. Refuses (ConversionStopped) a record that
-    cannot be read, or that belongs to another tree or another list: it must never be mixed with this run.
-    """
-    if not Path(record_path).exists():
-        return None
-    try:
-        record = json.loads(Path(record_path).read_bytes().decode('ascii'))
-    except (OSError, ValueError) as error:
-        raise ConversionStopped(f'the record {record_path} could not be read ({error}). Do not delete it: send it '
-                                f'to Claude.') from None
-    if (record.get('kind') != RECORD_KIND or record.get('tree') != str(tree)
-            or record.get('conversion_list_sha256') != list_sha256):
-        raise ConversionStopped(f'the record {record_path} is of another tree or another conversion list. Give '
-                                f'--record the file of this conversion, or a new name for a first run.')
-    return record
-
-
 def write_record(record_path: Path, record: dict, rule) -> None:
     """Write the record whole, in the standard's form (CRLF), under a temporary name and then one rename."""
     text = json.dumps(record, indent=1, ensure_ascii=True, sort_keys=True) + '\n'
@@ -400,8 +442,7 @@ def check_copy(copy: OwnersCopy, originals: dict) -> list:
     """Check that the owner's copy holds every original this conversion changes or removes.
 
     originals   {path: the SHA-256 the file had before the conversion's first run}
-    Returns a list of problems, empty when the copy holds every file with exactly that SHA-256. On a second run
-    the originals are the first run's recorded hashes, never the hashes of files already converted (EX_305).
+    Returns a list of problems, empty when the copy holds every file with exactly that SHA-256.
     """
     problems = []
     for path, wanted in sorted(originals.items()):
@@ -457,12 +498,11 @@ def convert_one(tree: Path, path: str, form: str, before: str, after: str, rule)
     old = full.read_bytes()
     if sha256_of(old) != before:
         raise ConversionStopped(f'{path} changed while this program ran (it no longer has the SHA-256 it had '
-                                f'when it was looked at). Nothing was written to it. Close every other program '
-                                f'of the project and run this again.')
+                                f'when it was looked at). Nothing was written to it.')
     new = rule.to_form(old, form)
     if not rule.differ_in_line_endings_only(old, new) or sha256_of(new) != after:
         raise ConversionStopped(f'{path}: the converted bytes are not the ones the conversion list expects. '
-                                f'Nothing was written to it. Send this line to Claude.')
+                                f'Nothing was written to it.')
     temporary = full.with_name(full.name + TEMPORARY_SUFFIX)
     with open(temporary, 'wb') as handle:
         handle.write(new)
@@ -470,25 +510,26 @@ def convert_one(tree: Path, path: str, form: str, before: str, after: str, rule)
         os.fsync(handle.fileno())
     os.replace(temporary, full)
     if sha256_of_file(full) != after:
-        raise ConversionStopped(f'{path} was written but does not read back as written. Stop here and send this '
-                                f'line to Claude; your copy holds the original.')
+        raise ConversionStopped(f'{path} was written but does not read back as written.')
 
 
-def remove_listed(tree: Path, paths, checkpoint) -> int:
+def remove_listed(tree: Path, to_remove: dict, checkpoint) -> int:
     """Remove exactly the named files, then every folder under the removed places that is left empty.
 
-    paths       the files to remove, from the tree root
+    to_remove   {path from the tree root: the SHA-256 the file had when it was looked at (and has in the copy)}
     checkpoint  called with each path just before it is removed (a test plants a failure here)
-    Returns how many files were removed. A file that is already gone is passed over.
+    Returns how many files were removed. Refuses (ConversionStopped) at the first file that is gone or no longer
+    has that SHA-256: a file is removed only while it is, byte for byte, the one the owner's copy holds.
     """
     removed = 0
-    for path in sorted(paths):
+    for path, recorded in sorted(to_remove.items()):
         checkpoint(path)
-        try:
-            (tree / path).unlink()
-            removed += 1
-        except FileNotFoundError:
-            pass
+        full = tree / path
+        if not full.is_file() or sha256_of_file(full) != recorded:
+            raise ConversionStopped(f'{path} is gone or changed since it was looked at; it was not removed. '
+                                    f'{removed} file(s) were removed before it.')
+        full.unlink()
+        removed += 1
     for folder in REMOVED_FOLDERS:
         for current, _folders, _names in os.walk(tree / folder, topdown=False):
             if not os.listdir(current) and Path(current) != tree / 'records':
@@ -520,6 +561,10 @@ def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask
             return _look(tree, entries, rule, say)
         if not copy_place or not record_path:
             raise ConversionStopped('--copy and --record are both needed for a run that changes anything.')
+        if Path(record_path).exists():
+            raise ConversionStopped(f'the record {record_path} exists: a conversion was begun here before. This '
+                                    f'conversion is one attempt and is never resumed or repeated. Nothing was '
+                                    f'changed by this run. Do not delete the record: tell Claude.')
         # A lock is a file this program writes: the folders it is written in must be the tree's own, not links
         # to another place, before anything is written at all.
         linked = [path for path in rule.files_and_links_under(tree, LOCK_FOLDERS, with_root_files=False)[1]
@@ -533,10 +578,8 @@ def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask
     except ConversionStopped as stop:
         say(f'STOP: {stop}')
     except OSError as failure:
-        say(f'STOP: Windows refused to read or write a file: {failure}. Each file is the old one or the new one, '
-            f'whole. Close every other program that has a file of the project open and run this again; it goes '
-            f'on from where it stopped.')
-    say('FILE-FORM CONVERSION - END - STOPPED. Read the STOP line above. Nothing is half-written.')
+        say(f'STOP: Windows refused to read or write a file: {failure}.')
+    say(f'FILE-FORM CONVERSION - END - STOPPED. Read the STOP line above. {AFTER_A_STOP}')
     return EXIT_STOPPED
 
 
@@ -564,41 +607,25 @@ def _convert(tree, entries, list_sha256, rule, copy_place, record_path, ask, say
                                 f'the package\'s files into the tree first, as the sheet says. Nothing was changed.')
     if survey.problems:
         raise ConversionStopped(f'{len(survey.problems)} finding(s) above. Nothing was changed.')
-    record = read_record(record_path, tree, list_sha256)
-    if record is None:
-        originals = {path: entries[path]['sha256_before'] for path in survey.to_convert}
-        originals.update({path: now_sha for path, (now_sha, then_sha) in survey.settings.items()
-                          if now_sha != then_sha})
-        record = {'kind': RECORD_KIND, 'tree': str(tree), 'conversion_list_sha256': list_sha256,
-                  'first_run_started': now().strftime('%Y-%m-%d %H:%M:%S'), 'finished': None,
-                  'originals_converted': originals, 'originals_removed': dict(survey.to_remove),
-                  'settings_file': {path: {'sha256_before': a, 'sha256_after': b}
-                                    for path, (a, b) in survey.settings.items()},
-                  'proved_untouched': dict(survey.proved_untouched)}
-        say('  This is a first run: the SHA-256 of every file to be changed or removed is recorded before '
-            'anything is changed.')
-    else:
-        say(f'  This is a second run of a conversion begun {record["first_run_started"]}: your copy is checked '
-            f'against the hashes recorded then, not against files already converted.')
-        unknown = [path for path in list(survey.to_convert) + list(survey.to_remove)
-                   if path not in record['originals_converted'] and path not in record['originals_removed']]
-        if unknown:
-            raise ConversionStopped(f'{len(unknown)} file(s) to change now were not there, or not to be changed, '
-                                    f'at the first run (the first: {unknown[0]}). Something was added or put '
-                                    f'back since. Nothing was changed. Tell Claude.')
+    originals = {path: entries[path]['sha256_before'] for path in survey.to_convert}
+    originals.update({path: now_sha for path, (now_sha, then_sha) in survey.settings.items() if now_sha != then_sha})
+    record = {'kind': RECORD_KIND, 'tree': str(tree), 'conversion_list_sha256': list_sha256,
+              'started': now().strftime('%Y-%m-%d %H:%M:%S'), 'finished': None,
+              'originals_converted': originals, 'originals_removed': dict(survey.to_remove),
+              'settings_file': {path: {'sha256_before': a, 'sha256_after': b}
+                                for path, (a, b) in survey.settings.items()},
+              'proved_untouched': dict(survey.proved_untouched)}
     copy = OwnersCopy(copy_place)
-    problems = check_copy(copy, {**record['originals_converted'], **record['originals_removed']})
+    problems = check_copy(copy, {**originals, **survey.to_remove})
     if problems:
         for problem in problems[:NAMES_SHOWN]:
             say(f'      {problem}')
         raise ConversionStopped(f'your copy at {copy_place} does not hold {len(problems)} of the '
-                                f'{len(record["originals_converted"]) + len(record["originals_removed"])} '
-                                f'original file(s) this conversion changes or removes. Nothing was changed. The '
-                                f'copy is the one way back: make it again from the project folder as it is now '
-                                f'only if this is a first run; otherwise tell Claude.')
-    say(f'  Your copy holds every one of the {len(record["originals_converted"])} file(s) to be converted and '
-        f'the {len(record["originals_removed"])} to be removed, each with the SHA-256 it had before.')
-    write_record(record_path, record, rule)
+                                f'{len(originals) + len(survey.to_remove)} original file(s) this conversion changes '
+                                f'or removes. Nothing was changed. The copy is the one way back: tell Claude.')
+    say(f'  Your copy holds every one of the {len(originals)} file(s) to be converted and the '
+        f'{len(survey.to_remove)} to be removed, each with the SHA-256 it has now.')
+    # Both words are asked for before the first change, so that "not confirmed" always means "nothing changed".
     settings_to_convert = [path for path, (a, b) in survey.settings.items() if a != b]
     if survey.to_convert or settings_to_convert:
         typed = ask(f'Type {WORD_TO_CONVERT} to change the line endings of {len(survey.to_convert)} listed file(s)'
@@ -606,27 +633,26 @@ def _convert(tree, entries, list_sha256, rule, copy_place, record_path, ask, say
         if typed.strip() != WORD_TO_CONVERT:
             say('FILE-FORM CONVERSION - END - not confirmed; nothing was changed.')
             return EXIT_NOT_CONFIRMED
-        for path in survey.to_convert:
-            checkpoint(path)
-            entry = entries[path]
-            convert_one(tree, path, entry['form'], entry['sha256_before'], entry['sha256_after'], rule)
-        for path in settings_to_convert:
-            checkpoint(path)
-            convert_one(tree, path, rule.CRLF, *survey.settings[path], rule)
-        say(f'  Converted: {len(survey.to_convert)} listed file(s)'
-            + (', and the settings file' if settings_to_convert else '')
-            + '. Each differs from what it was in line endings only, and reads back as written.')
-    else:
-        say('  Nothing is left to convert.')
     if survey.to_remove:
         typed = ask(f'Type {WORD_TO_REMOVE} to remove the {len(survey.to_remove)} file(s) that are made again, not '
-                    f'converted (each is in your copy), or anything else to stop here: ')
+                    f'converted (each is in your copy), or anything else to stop: ')
         if typed.strip() != WORD_TO_REMOVE:
-            say('FILE-FORM CONVERSION - END - the files are converted; the removal was not confirmed. Run this '
-                'again to remove them; until then the research job refuses the old status files.')
+            say('FILE-FORM CONVERSION - END - not confirmed; nothing was changed.')
             return EXIT_NOT_CONFIRMED
-        removed = remove_listed(tree, survey.to_remove, checkpoint)
-        say(f'  Removed: {removed} file(s), and the folders left empty.')
+    write_record(record_path, record, rule)
+    say('  The SHA-256 of every file to be changed or removed is recorded. From here on, this is the one attempt.')
+    for path in survey.to_convert:
+        checkpoint(path)
+        entry = entries[path]
+        convert_one(tree, path, entry['form'], entry['sha256_before'], entry['sha256_after'], rule)
+    for path in settings_to_convert:
+        checkpoint(path)
+        convert_one(tree, path, rule.CRLF, *survey.settings[path], rule)
+    say(f'  Converted: {len(survey.to_convert)} listed file(s)'
+        + (', and the settings file' if settings_to_convert else '')
+        + '. Each differs from what it was in line endings only, and reads back as written.')
+    removed = remove_listed(tree, survey.to_remove, checkpoint)
+    say(f'  Removed: {removed} file(s), and the folders left empty.')
     return _prove(tree, entries, rule, record, record_path, own_locks, say, now)
 
 
@@ -647,7 +673,7 @@ class _WithoutOwnLocks:
 
 def _prove(tree, entries, rule, record, record_path, own_locks, say, now) -> int:
     """The proof at the end: every listed file has the list's "after" and conforms; the results files have the
-    SHA-256 they had at the first run; nothing made-again is left. Writes the finished record. Returns the exit
+    SHA-256 they had when the run began; nothing made-again is left. Writes the finished record. Returns the exit
     code."""
     survey = look_at_tree(tree, entries, _WithoutOwnLocks(rule, own_locks))
     faults = rule.faults_of_files(tree, sorted(entries))
@@ -661,7 +687,7 @@ def _prove(tree, entries, rule, record, record_path, own_locks, say, now) -> int
                      + [f'{path}: a results file changed' for path in changed_results])[:NAMES_SHOWN]:
             say(f'      {line}')
         raise ConversionStopped('the proof at the end did not hold; the lines above say where. Do not go on to '
-                                'the next part of the sheet. Send this output to Claude.')
+                                'the next part of the sheet.')
     record['finished'] = now().strftime('%Y-%m-%d %H:%M:%S')
     write_record(record_path, record, rule)
     say(f'  PROVED: all {len(entries)} listed files have the list\'s "after" SHA-256 and are in their form; the '
