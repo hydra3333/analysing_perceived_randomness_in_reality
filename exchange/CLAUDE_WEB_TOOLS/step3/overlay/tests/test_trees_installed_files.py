@@ -150,10 +150,14 @@ class ATreeAgainstItsList(InventedInstalledTree):
         (self.tree / 'src' / 'toy_other.py').unlink()
         self.assertEqual(self.differences(), ['src/toy_other.py: it is on the list of installed files and is missing'])
 
-    def test_a_missing_status_file_is_named(self):
+    def test_a_status_file_is_known_to_belong_under_src_and_its_presence_is_left_to_the_jobs_own_check(self):
+        # With the status file listed by name, it is never taken for a stray file; without the name it would be.
+        unnamed = {**self.content, 'status_files': []}
+        self.assertEqual(installed_files.differences(self.tree, unnamed),
+                         [f'src/methods/{FAMILY}/{VARIANT}/VARIANT_STATUS.ini: it lies under src and is not on the '
+                          f'list of installed files'])
         self.status.unlink()
-        self.assertEqual(self.differences(), [f'src/methods/{FAMILY}/{VARIANT}/VARIANT_STATUS.ini: the status file '
-                                              f'of an installed variant is missing'])
+        self.assertEqual(self.differences(), [])
 
     def test_an_unlisted_python_file_under_src_is_named(self):
         write_crlf(self.tree / 'src' / 'stray.py', '# not installed by any command\n')

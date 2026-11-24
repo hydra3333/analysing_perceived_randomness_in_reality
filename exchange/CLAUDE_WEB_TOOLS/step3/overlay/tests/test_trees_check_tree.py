@@ -28,7 +28,7 @@ if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
 import check_tree                                           # noqa: E402  (after the path line above)
 import install_readiness                                    # noqa: E402
 import research_fixtures as fixtures                        # noqa: E402
-from research import installed_files, settings, status_file    # noqa: E402
+from research import environment_marker, installed_files, settings, status_file    # noqa: E402
 from test_trees_readiness import bring_to_form, write_crlf  # noqa: E402
 
 FAMILY, VARIANT, SECOND_VARIANT = 'E_901', 'TOY_COUNTS_V1', 'TOY_COUNTS_V2'
@@ -265,16 +265,30 @@ class TheBackupsAndTheLocks(InventedDevAndQa):
         self.assertIn('Backups: DEV has no backup folder', self.look('DEV')[1])
 
     def test_the_locks_that_are_present_are_shown_and_the_orphan_marker_is_said_to_block_every_launch(self):
-        self.assertIn('Locks: 0 present.', self.look('QA')[1])
+        self.assertIn('Locks and unfinished operations: 0 present.', self.look('QA')[1])
         (self.qa / 'records').mkdir(exist_ok=True)
         (self.qa / 'records' / 'JOB.lock').write_bytes(b'an invented job\r\n')
         marker = self.qa / 'transitory_data' / 'poc_runs' / 'UNRESOLVED_ORPHAN.json'
         marker.parent.mkdir(parents=True)
         marker.write_bytes(b'{}\r\n')
         text = self.look('QA')[1]
-        self.assertIn('Locks: 2 present.', text)
+        self.assertIn('Locks and unfinished operations: 2 present.', text)
         self.assertIn('THE ORPHAN MARKER: it blocks every launch', text)
         self.assertIn(f'{self.qa / "records" / "JOB.lock"}: the job lock', text)
+
+    def test_an_unfinished_operation_is_shown_with_what_it_means_and_the_way_on(self):
+        (self.qa / 'records' / 'INSTALL_IN_PROGRESS.json').write_bytes(b'{}\r\n')
+        text = self.look('QA')[1]
+        self.assertIn('Locks and unfinished operations: 1 present.', text)
+        self.assertIn('did not finish in this tree. Run that same command again from DEV', text)
+
+    def test_an_environment_without_its_marker_is_said_to_be_not_verified_and_one_with_it_verified(self):
+        self.assertIn('Environment: NOT VERIFIED; every launcher of this tree refuses', self.look('QA')[1])
+        environment_marker.write_marker(self.qa / '.venv')
+        code, text = self.look('QA')
+        self.assertIn('Environment: verified;', text)
+        self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
+        self.assertIn('Environment: DEV\'s environment has no verified marker', self.look('DEV')[1])
 
 
 if __name__ == '__main__':

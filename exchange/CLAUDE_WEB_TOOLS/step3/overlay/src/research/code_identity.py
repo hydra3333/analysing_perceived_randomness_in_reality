@@ -5,12 +5,12 @@ What this file is for
     `forecast` (it can change a forecast), `derived` (it can change a score, a report or an OV-1 line, never a
     forecast) or `other`. This file reads that list and computes: the identity of the forecasting code (one
     SHA-256 over the `forecast` files), which every list's header records; the digest of the code behind derived
-    results (the `forecast` and `derived` files), which score and OV-1 lines quote; and a digest of the Python
-    environment, which every forecast's envelope quotes.
+    results (the `forecast` and `derived` files), which score and OV-1 lines quote. (The digest of the tree's
+    Python environment, which every forecast's envelope quotes, is research/environment_marker.py's.)
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 12.4 (the manifest's syntax, the classes, the
-    identity of the forecasting code) and 5.4 (the envelope's code and environment digests).
+    identity of the forecasting code) and 5.4 (the envelope's code digests).
 
 Which of the project's own modules it uses
     None.
@@ -22,9 +22,6 @@ from __future__ import annotations
 
 import configparser
 import hashlib
-import importlib.metadata
-import platform
-import sys
 from pathlib import Path
 
 # The manifest's place in a tree, and its two sections (specification 12.4).
@@ -141,15 +138,3 @@ def derived_code_digest(tree_root: Path, manifest: dict | None = None) -> str:
     manifest = read_manifest(tree_root) if manifest is None else manifest
     return _digest_of_files(tree_root, [p for p, c in manifest.items() if c in ('forecast', 'derived')])
 
-
-def environment_digest() -> str:
-    """A digest of the Python environment the job runs in, quoted in every forecast's envelope.
-
-    It covers the Python implementation, version and platform, and the name and version of every installed
-    distribution. It says "computed under the same Python and the same packages", not that two environments are
-    numerically identical (W-23 and the environment's own verification cover that).
-    Returns 64 hexadecimal characters.
-    """
-    lines = [f'python\t{platform.python_implementation()}\t{sys.version}\t{platform.platform()}']
-    lines += sorted(f'{d.metadata["Name"]}\t{d.version}' for d in importlib.metadata.distributions())
-    return hashlib.sha256('\n'.join(lines).encode('utf-8')).hexdigest()

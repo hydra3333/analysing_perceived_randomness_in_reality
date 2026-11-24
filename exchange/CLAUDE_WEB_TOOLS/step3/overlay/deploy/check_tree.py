@@ -3,8 +3,9 @@
 What this file is for
     It prints, for the tree the owner names: how the settings are read; what is installed and whether the tree
     still matches its list of installed files; each variant's status; what is ready in DEV and how the tree
-    compares with DEV; whether the tree's files are in the form the project's standard gives them; the backup
-    ZIPs in its backup folder; and the locks that are present. It changes nothing in any tree: it opens files for
+    compares with DEV; whether the tree's files are in the form the project's standard gives them; whether
+    its Python environment is verified; the backup ZIPs in its backup folder; and the locks and
+    unfinished-operation files that are present. It changes nothing in any tree: it opens files for
     reading only, takes no lock and writes no record. It is run from DEV with DEV's own Python and DEV's own
     code; it runs no code of the tree it looks at.
 
@@ -22,6 +23,8 @@ Which of the project's own modules it uses
     research.status_file       read_status: a variant's operating status, with the file's own check
     research.code_identity     read_manifest, read_install_tool_list: the infrastructure's two lists
     research.job_lock          the names of the job lock, the updater's lock and the orphan marker
+    research.launch_guard      the files that mean an operation did not finish; which trees have a marker
+    research.environment_marker    read_marker: whether the tree's own Python environment is verified
     install_readiness          what is ready in DEV
     file_form                  the project's one rule for the form of a file
 
@@ -35,7 +38,8 @@ from pathlib import Path
 
 import file_form
 import install_readiness
-from research import code_identity, installed_files, job_lock, settings, status_file, variant_folders
+from research import (code_identity, environment_marker, installed_files, job_lock, launch_guard, settings,
+                      status_file, variant_folders)
 
 # What the owner may type after Check_Tree.bat.
 USAGE = ('Usage:  Check_Tree.bat DEV\n'
@@ -194,8 +198,26 @@ def _backups(backup_root: Path | None, say) -> None:
         say(f'  {backup}  {details.st_size:,} bytes  {datetime.fromtimestamp(details.st_mtime):%Y-%m-%d %H:%M}')
 
 
+def _environment(tree, say) -> None:
+    """Print whether the tree's own Python environment has its verified marker. The marker is read; the
+    environment's files are not (this command runs with DEV's Python and cannot speak for another tree's).
+
+    tree: the settings of the tree looked at.  say: the function that prints a line.
+    """
+    if tree.role not in launch_guard.INSTALLED_ROLES:
+        say('Environment: DEV\'s environment has no verified marker; none is asked of it.')
+        return
+    try:
+        marker = environment_marker.read_marker(tree.venv_dir)
+        say(f'Environment: verified; {tree.venv_dir / environment_marker.MARKER_NAME} lists '
+            f'{len(marker["distributions"])} package(s). Each job in the tree compares the files with it.')
+    except environment_marker.EnvironmentRefused as refusal:
+        say(f'Environment: NOT VERIFIED; every launcher of this tree refuses until it is. {refusal}')
+
+
 def _locks(tree_root: Path, say) -> None:
-    """Print which locks are present in the tree. A lock is a state to know of, not a fault of the tree.
+    """Print which locks and unfinished-operation files are present in the tree. Each is a state to know of, not
+    a fault of the tree.
 
     tree_root: the tree.  say: the function that prints a line.
     """
@@ -203,8 +225,9 @@ def _locks(tree_root: Path, say) -> None:
         (f'{job_lock.RECORDS_FOLDER}/{job_lock.JOB_LOCK_NAME}', 'the job lock: a job is running, or one was ended'),
         (job_lock.UPDATER_LOCK, 'the results updater\'s own lock'),
         (job_lock.ORPHAN_MARKER, 'THE ORPHAN MARKER: it blocks every launch until your approved clearance'),
+        *((name, f'{meaning}. {way_on}') for name, meaning, way_on in launch_guard.UNFINISHED_OPERATIONS),
     ) if (tree_root / name).exists()]
-    say(f'Locks: {len(present)} present.')
+    say(f'Locks and unfinished operations: {len(present)} present.')
     for name, what in present:
         say(f'  {tree_root / name}: {what}')
 
@@ -273,6 +296,7 @@ def main(arguments, view, say=print) -> int:
         findings.extend(f'{fault.path}: {fault.what}' for fault in faults)
     except (file_form.FileFormRefused, code_identity.ManifestRefused) as refusal:
         findings.append(str(refusal))
+    _environment(tree, say)
     _backups(tree.backup_root, say)
     _locks(tree_root, say)
     for finding in findings:

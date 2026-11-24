@@ -199,9 +199,10 @@ def differences(tree_root: Path, content: dict) -> list:
     Returns one sentence for each difference, sorted, empty when the tree matches its list; for example
         ['src/methods/_shared/recurrence_gaps_v1.py: its bytes are not the bytes that were installed',
          'src/research/extra.py: it lies under src and is not on the list of installed files'].
-    Found: a listed file that is missing or whose SHA-256 differs; a status file that is missing; and anything
-    under src that is neither a listed file nor a listed status file (a link and Python's cache folder among
-    them). A status file's content is not compared: it is listed by name only.
+    Found: a listed file that is missing or whose SHA-256 differs; and anything under src that is neither a
+    listed file nor a listed status file (a link and Python's cache folder among them). A status file is on the
+    list by name only, so that it is known to belong under src: its content is not compared, and whether it is
+    present and passes its own check is the research job's own check, game by game (specification 3.5).
     """
     root = Path(tree_root)
     found = []
@@ -213,9 +214,6 @@ def differences(tree_root: Path, content: dict) -> list:
         elif hashlib.sha256(file.read_bytes()).hexdigest() != installed_digest:
             found.append(f'{path}: its bytes are not the bytes that were installed')
     status_files = set(content['status_files'])
-    for path in status_files:
-        if not (root / path).is_file():
-            found.append(f'{path}: the status file of an installed variant is missing')
     files, others = _files_lying_under_src(root)
     found.extend(others)
     for path in files:
