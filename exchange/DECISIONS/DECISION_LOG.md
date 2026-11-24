@@ -4578,3 +4578,103 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer before slice A is coded.
 - No code is written. Nothing is authorised on the owner's PC.
 - Next numbers: EX_298; entry 219; RAT-47.
+
+## 219. 24 November 2026, 16:03 - OWNER: the four decisions of the build plan (one install at the end; the probe first; QA before PROD; the plan to the reviewer)
+
+- **The owner, 16:03, to Claude,** on the four questions of the build plan v0.1 section 7 (entry 218): "1 One install
+  into DEV at the end, or one per slice? answer: one at the end. 2 yes to your recommendation.  3 yes to your
+  recommendation 4 yes to your recommendation. blurb sent to  chatgpt."
+- **So decided:** (1) four reviewed slices, and **one install into DEV at the end**; (2) **a short probe task
+  first** (TASK_T028); (3) **QA before PROD**: `Init_Tree QA` and the transition check there before PROD is created;
+  (4) the plan goes to the reviewer before slice A is coded (he sent the paste; the reviewer answered with EX_299
+  and EX_300, entry 221).
+- **Not decided by this:** any run on his PC. The probe's run, every install, every tree and PROD's first job are
+  each his own go, as before.
+- **A number moved.** The reviewer has since used EX_298, EX_299 and EX_300. Claude's next number is EX_301.
+- Next numbers: EX_301; entry 220; RAT-47.
+
+## 220. 24 November 2026, 16:23 - OWNER (through the reviewer, EX_298): what the short operations manual is to be; clarifies entries 171 and 182; deferred work, no gate
+
+- **The owner, 16:10, to Claude:** "after you have finished doing what you are doing now and about await the next
+  post from me, please consider [EX_298 - Operations manual requirements and clarifications] ... Only then please
+  consider [EX_299 - Build-step-3 plan review] ..." and, at 16:19: "ex299 is supplemented by ex300."
+- **EX_298** (reviewer; main `61c5662`; SHA-256 `72a23e0dbf025e96abb9ad44042723762a3399a34718deb6c7f3811ef408b4c0`) records the owner's clarification to the
+  reviewer of his idea of 23 November (entry 171; two items added in entry 182). In summary, faithfully:
+  - **The topics he named are examples of the least it should cover, as they apply,** not a closed list of chapters
+    and not a list of commands he insists on: migration, ordinary PROD use and catch-up, backup and restore, the
+    DEV, QA and PROD installations, decommissioning, methods, contracts and runners, a short architecture appendix.
+    The real contents and command names come from the finished, installed system; some of his earlier examples of
+    directions may not be permitted operations.
+  - **Reports are a necessary topic:** where each report is and how to read and interpret it, rankings and OV-1
+    included, and where it applies the other reports and what says whether results are current.
+  - **A short command cheat sheet in an appendix is to be considered:** exact command names, one or two lines each,
+    and a pointer to the full procedure. He notes that a second summary means maintaining two things when a command
+    changes. The reviewer recommends it as an index only (no copied procedure or options), amended whenever a
+    procedure is, and no generator or other mechanism built for it; a stale cheat sheet is worse than none.
+  - **The manual is short, for a human, a practical how-to:** a table of contents, sections, the operator's actual
+    actions, what he should see, and the warnings that matter. Not a second specification.
+  - **Claude and the reviewer propose its structure and contents together, for the owner's approval,** at the right
+    time: its first version after build step 3 is finished and proved, when the commands exist; the laboratory
+    procedures of step 4 added when they exist. Nothing is written now.
+- EX_298's section 2 gives nine headings as a starting point for that later discussion only; it is not a table of
+  contents and approves nothing.
+- **Claude agrees,** and adds one thing it will bring to that discussion: the reports' own `README.txt` files (one
+  per game, written by the research job) already say where each report is; the manual should point to them and
+  explain how to read the reports, so that the places are stated once.
+- **No decision on contents, no code, and no gate on build step 3.** The work item stays in the continuity page.
+- Next numbers: EX_301; entry 221; RAT-47.
+
+## 221. 24 November 2026, 16:23 - the reviewer's check of the build plan (EX_299, narrowed by EX_300): four corrections accepted and made (plan v0.1r1); TASK_T028 written, not run; one question open for the owner
+
+- **EX_299** (reviewer; main `4264b59`; SHA-256 `a125e79a990d095fa569b4ba15c28ca7531ec346ad9ef8734e9c4059cc790879`): the four slices and the one install at the end are
+  supported; four focused corrections of the plan. **EX_300** (main `ac85564`; SHA-256 `7aad9e853c92848e593054f632069acbcb06c32411560bfff68b7e6977771539`) narrows the second after the
+  owner asked the reviewer whether the process tools really must be standard library only ("do they really ? I
+  can pop those things into my per-user python dependencies and so if it is too hard consider my approach
+  instead.", as EX_300 quotes him).
+- **Claude accepts all four; each was a fault of the plan v0.1:**
+  - **S3P-C01 (the updater's proof).** v0.1 promised byte-identical ledgers between `v0_2` and `v0_3` and a
+    syntax-tree comparison. A ledger row holds the tool's version and its own SHA-256 and times, which must differ,
+    and a clean-sheet rewrite cannot be equal by syntax tree. Corrected: the master equal byte for byte; the ledger
+    and verification records compared field by field with a written list of the only provenance fields allowed to
+    differ; old `v0_2` rows left as they are under new `v0_3` rows; no Mode H record read, written or asked for; a
+    check-by-check table with normal, edge and planted-fault cases.
+  - **S3P-C02 (the process check).** `src\package_tools\process_check.py` reads through psutil and holds the old
+    system's lock clearances; it cannot be the new system's check as a file. Kept: its rule and its refusals.
+  - **S3P-C03 (the transition).** v0.1's sequence left out QA's first fill: `Init_Tree QA` copies no forecast, so
+    the transition check would have had nothing to compare. Corrected: QA's `.venv`; `Init_Tree QA` again;
+    `Run_Research.bat --game BOTH --no-update` in QA; then the check, read-only, with the 5,604 old
+    `INSUFFICIENT_HISTORY` records counted apart from the 20,436 forecasts.
+  - **S3P-C04 (the slices joined).** A new section says what is shown, on the exact joined files in scratch trees,
+    before the one install into DEV is put to the owner.
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md` (SHA-256 `6eb18f0e38279a9b68e88dec304dbea205a64b62bc8e80bfc8dc9723c39b3195`), made from v0.1 by
+  `make_plan_v0_1r1.py` (each change one replacement that must match exactly once), with the exact difference
+  `STEP3_BUILD_PLAN_v0_1_TO_v0_1r1.diff`. v0.1 is unchanged. The owner's decisions of entry 219 are in its section 7.
+- **One question is open for the owner (plan section 4A and section 7 item 5): how Windows' processes are read.**
+  Two different questions are asked of the process table. The restore asks whether any Python program at all is
+  running: program names, parents and start times, which the standard library reads directly. Every other rule asks
+  whether another Python process of this tree is running, which needs another process's working folder and command
+  line: psutil reads those; the standard library does not, short of hand-written reading of another process's
+  memory. **Claude recommends:** the restore stays standard library only, as ratified (the kit, the backup and any
+  installed Python); every other check uses psutil, which every tree's environment and DEV's already hold; and
+  one narrow amendment of the deployment design section 2 ("standard library only" for the install tools, against
+  the same design's section 9, which gives them the rule that needs psutil), for ratification. The alternatives:
+  psutil for the restore too (one reader; a restore then needs a Python with psutil, checked before anything is
+  touched); or the standard library for everything (advised against). **Not decided.** Best answered after the
+  probe's report; needed before slice A's guard goes to the reviewer.
+- **TASK_T028 is written, and has not run.** `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T028.md` (SHA-256 `b2c3ce9477aa93f383775639304cbd2653ceff76f7d85c74142d223b7ff63778`, CRLF) and
+  its probe `inbox/TASK_T028_probe.py` (SHA-256 `1f58ac1dc7685e7d5c2ad443f7d0d7f30e770db3950ccb58e0e89e1f5c7f3211`, LF; standard library, psutil only for the comparison);
+  builder and template in `exchange/CLAUDE_WEB_TOOLS/t028/`. Rulebook v0.7 section 2A, in a new folder
+  `D:\DELETE_ME\a_p_r_i_r\T028`. Three parts: how Windows answers a rename, a replacement and a removal when a file
+  is open or another program sits in the folder; the size and time of a backup ZIP (Deflate level 9, each file
+  hashed, read back, the source read twice; level 6 beside it for comparison) of the scratch tree of TASK_T025 if
+  it is still there, otherwise of the main `.venv` alone; and what psutil and the standard library each read of the
+  PC's Python processes. It runs no program of the project, ends no process (its helper program ends by itself),
+  reads nothing under the main repository's data folders and prints no path under a user's folder.
+- **Tried in the cloud:** all three parts on Linux with a made-up tree of the real size (8,086 files, 337 MB: level
+  9 in 30 seconds to 101 MB; level 6 in 12 seconds to 102 MB; those times say nothing of the owner's drives). The
+  part that calls Windows itself cannot be run in the cloud; it was exercised through a stand-in for the Windows
+  calls, and read line by line. A fault in it would stop the task's last step, after the other two parts are
+  recorded.
+- **Before it runs:** the reviewer asked to read a probe task first (EX_299 section 2 item 2), and its run is the
+  owner's own go. **No code of build step 3 is written yet.** Nothing is authorised on the owner's PC.
+- Next numbers: EX_301; entry 222; RAT-47.

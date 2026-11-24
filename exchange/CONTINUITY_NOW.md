@@ -4,10 +4,27 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:56 Australia/Adelaide (entry 218: build step 3's build plan v0.1 is written; four decisions are with the owner; no code yet; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 16:23 Australia/Adelaide (entries 219 to 221: the owner's four decisions on the build plan; the reviewer's EX_298 to EX_300; the plan corrected as v0.1r1; the probe task TASK_T028 written, not run; one question open for the owner; no code of step 3 yet).
 
 ## For the owner: NOW
 
+- **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
+  November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
+  probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)
+  asked four corrections, all made: **the plan in force is
+  `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md`** (`6eb18f0e...c39b3195`; the difference from v0.1 is
+  beside it). **Waiting on:** the reviewer's read of `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T028.md` and its
+  probe `TASK_T028_probe.py` (and its short recheck of the plan), then **the owner's go to run TASK_T028** (a
+  quarter of an hour; scratch folder `D:\DELETE_ME\a_p_r_i_r\T028`; best with `D:\DELETE_ME\a_p_r_i_r\T025` still
+  there). **One question open for the owner (plan section 4A):** how Windows' processes are read; recommended:
+  the restore stays standard library only, every other check uses psutil, with one narrow amendment of the
+  deployment design section 2 for ratification; best answered after the probe's report. **Next for Claude:** slice
+  A (foundations) in the cloud. No code of step 3 is written yet. Claude's next numbers: EX_301, entry 222, RAT-47.
+- **THE OPERATIONS MANUAL, DEFERRED WORK (entry 220; EX_298; entries 171 and 182).** Short, for a human, a
+  practical how-to. The owner's topics are the least it covers, as they apply; **finding and reading the reports
+  (rankings, OV-1, what is current) is a necessary topic;** a short command cheat sheet as an index is to be
+  considered. Claude and the reviewer propose its structure together, for the owner's approval, **after build step
+  3 is finished and proved;** step 4's procedures are added when they exist. Nothing is written now; no gate.
 - **BUILD STEP 3 HAS THE OWNER'S GO (entry 217; 24 November 2026, 15:53).** It covers design within the ratified
   documents, coding and testing in the cloud, and the reviewed packages; not any install, run, tree creation,
   backup, restore or runner task on his PC. **The build plan is written** (entry 218):
