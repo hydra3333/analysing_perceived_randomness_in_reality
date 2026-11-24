@@ -16,6 +16,7 @@ Which of the project's own modules it uses
     research.game_state     GameRecords, MAIN_BARREL: the game's records in memory
     research.ov1_numeric    BAR, the kernel's bar, for the print-outs
     research.variant_lists  RESEARCH_FOLDER
+    research.windows_text   windows_lines, LINE_ENDING: every report file is written with each line ending CRLF
     _common.game_profiles   get_profile: the barrels' sizes
 
 What uses it
@@ -36,6 +37,7 @@ from _common.game_profiles import get_profile
 from research import ov1_numeric as kernel
 from research.game_state import MAIN_BARREL, GameRecords
 from research.variant_lists import RESEARCH_FOLDER
+from research.windows_text import LINE_ENDING, windows_lines
 
 # The folders and files of specification section 9, under results/research/<GAME>/.
 REPORTS_FOLDER = 'reports'
@@ -112,11 +114,12 @@ class ReportWriter:
     def write(self, name: str, text: str) -> bool:
         """Write one report file unless the file on disk already holds exactly these bytes.
 
-        name: the file, from the reports folder, forward slashes.  text: its content (ASCII; lines end in LF).
+        name: the file, from the reports folder, forward slashes.  text: its content as the code built it (ASCII;
+        lines end in LF). It is written in the standard's form, each line ending CRLF.
         Returns True if the file was written. The bytes go to a temporary name first and are then renamed, so a
         crash leaves the old file or the new one.
         """
-        data = text.encode('ascii')
+        data = windows_lines(text).encode('ascii')
         path = self.root / name
         if path.is_file() and path.read_bytes() == data:
             return False
@@ -128,7 +131,7 @@ class ReportWriter:
         self.written.append(name)
         # The time is noted at once, at the end of the side file, so that a job that is interrupted has still
         # recorded when it made each file; tidy_times puts the side file in order at the end of the job.
-        with open(self.root / MADE_TIMES_NAME, 'a', encoding='ascii', newline='\n') as stream:
+        with open(self.root / MADE_TIMES_NAME, 'a', encoding='ascii', newline=LINE_ENDING) as stream:
             stream.write(f'{name},{self.made}\n')
         return True
 
@@ -144,9 +147,11 @@ class ReportWriter:
                 times[row[0]] = row[1]
         text = 'file,made\n' + ''.join(f'{name},{when}\n' for name, when in sorted(times.items())
                                        if (self.root / name).is_file())
-        if path.read_text(encoding='ascii') != text:
+        data = windows_lines(text).encode('ascii')
+        # Compared as bytes, so that a side file in another form is put right as well as one in another order.
+        if path.read_bytes() != data:
             temporary = path.with_name(path.name + '.writing')
-            temporary.write_text(text, encoding='ascii', newline='\n')
+            temporary.write_bytes(data)
             os.replace(temporary, path)
 
 

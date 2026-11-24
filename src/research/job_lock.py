@@ -18,7 +18,7 @@ Which part of the specification it carries out
     sections 2 (records\\JOB.lock) and 9. The process-table rule of section 9 arrives with build step 3.
 
 Which of the project's own modules it uses
-    None.
+    research.windows_text      windows_lines: the lock file's one line is written in the standard's form
 
 What uses it
     research/research_job.py, research/results_step.py, research/status_file.py and research/withdraw.py, and
@@ -28,6 +28,8 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+
+from research.windows_text import windows_lines
 
 # The tree's control folder and the job lock in it (deployment design section 2).
 RECORDS_FOLDER = 'records'
@@ -123,7 +125,8 @@ class FileLock:
                 f'was killed and left it. Wait for the job to finish. If you are sure no job of this tree is '
                 f'running, delete that one file by hand and run the command again; nothing ends a job for '
                 f'you.') from None
-        os.write(descriptor, f'{self.purpose}; started {self.when}; process {os.getpid()}\n'.encode('ascii'))
+        os.write(descriptor,
+                 windows_lines(f'{self.purpose}; started {self.when}; process {os.getpid()}\n').encode('ascii'))
         os.close(descriptor)
         return self
 

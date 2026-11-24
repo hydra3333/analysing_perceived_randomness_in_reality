@@ -19,6 +19,7 @@ Which part of the specification it carries out
 Which of the project's own modules it uses
     research.job_lock          check_real_folder, is_link: the staging folder must be a real folder of the tree
     research.variant_folders   the patterns of a family's and a variant's folder name
+    research.windows_text      windows_lines: the file is written in the standard's form, each line ending CRLF
 
 What uses it
     research/research_job.py (reads; creates a missing file in DEV; writes the eligibility draw),
@@ -35,6 +36,7 @@ from pathlib import Path
 
 from research.job_lock import LaunchRefused, check_real_folder, is_link
 from research.variant_folders import FAMILY_FOLDER_PATTERN, VARIANT_FOLDER_PATTERN
+from research.windows_text import windows_lines
 
 # Where a status file is written before it is renamed into place: a folder of the tree's control folder, on the
 # same volume as the variant folders, so that the rename is one step. From the tree root.
@@ -47,7 +49,9 @@ METHODS_PARTS = ('src', 'methods')
 STATUS_FILE_NAME = 'VARIANT_STATUS.ini'
 # The section whose one key holds the SHA-256 of every byte above the section's own line.
 CHECK_SECTION = 'check'
-CHECK_LINE = b'[check]\n'
+CHECK_LINE = b'[check]\r\n'
+# The end of every line of the file: the Windows form the project's standard gives a settings file.
+LINE_END = b'\r\n'
 # The two values of "status".
 ACTIVE = 'ACTIVE'
 WITHDRAWN = 'WITHDRAWN'
@@ -96,8 +100,8 @@ def render(family: str, variant: str, statuses: dict) -> bytes:
 
     family, variant: the variant's identity, for the comment lines.  statuses: {game: GameStatus}, in the order
     the sections are to appear.
-    Returns the whole file, ending with the [check] section, for example beginning
-        b'; E_002 / RECUR_MEAN_ALL_V1 - operating status in THIS tree.\\n; Written only by ...'.
+    Returns the whole file, each line ending CRLF and the last lines the [check] section, for example beginning
+        b'; E_002 / RECUR_MEAN_ALL_V1 - operating status in THIS tree.\\r\\n; Written only by ...'.
     """
     lines = [f'; {family} / {variant} - operating status in THIS tree.',
              '; Written only by the project\'s commands. Do not edit by hand: a hand edit is detected and the game '
@@ -112,8 +116,8 @@ def render(family: str, variant: str, statuses: dict) -> bytes:
         if status.eligible_from is not None:
             lines += [f'prevailing_ov1_first_eligible_draw = {status.eligible_from}',
                       f'prevailing_ov1_eligibility_recorded = {status.eligibility_recorded}']
-    body = ('\n'.join(lines) + '\n').encode('ascii')
-    return body + CHECK_LINE + f'sha256 = {hashlib.sha256(body).hexdigest()}\n'.encode('ascii')
+    body = windows_lines('\n'.join(lines) + '\n').encode('ascii')
+    return body + CHECK_LINE + f'sha256 = {hashlib.sha256(body).hexdigest()}'.encode('ascii') + LINE_END
 
 
 def read_status(path: Path, games) -> dict:
@@ -136,8 +140,8 @@ def read_status(path: Path, games) -> dict:
         raise refuse('the status file is missing.')
     raw = path.read_bytes()
     body, mark, tail = raw.rpartition(CHECK_LINE)
-    if not mark or (body and not body.endswith(b'\n')):
-        raise refuse('it has no [check] section.')
+    if not mark or (body and not body.endswith(LINE_END)):
+        raise refuse('it has no [check] section in the form this file is written in (every line ending CRLF).')
     parser = configparser.ConfigParser(interpolation=None, delimiters=('=',), strict=True, comment_prefixes=(';',))
     parser.optionxform = str
     try:
@@ -145,7 +149,7 @@ def read_status(path: Path, games) -> dict:
         recorded = parser.get(CHECK_SECTION, 'sha256').strip()
     except (configparser.Error, UnicodeDecodeError) as error:
         raise refuse(f'it is not a readable status file ({error}).') from None
-    if recorded != hashlib.sha256(body).hexdigest() or tail != f'sha256 = {recorded}\n'.encode('ascii'):
+    if recorded != hashlib.sha256(body).hexdigest() or tail != f'sha256 = {recorded}'.encode('ascii') + LINE_END:
         raise refuse('its check does not match its contents: it was edited by hand or damaged.')
     if set(parser.sections()) - {CHECK_SECTION} != set(games):
         raise refuse(f'its sections {sorted(set(parser.sections()) - {CHECK_SECTION})} are not the variant\'s '

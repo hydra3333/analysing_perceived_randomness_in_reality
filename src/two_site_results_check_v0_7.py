@@ -1387,8 +1387,8 @@ def self_test() -> int:
             (root / "source_data").mkdir()
             hdr = "Draw_Number,Date," + ",".join(f"Ball_{i}" for i in range(1, 8)) + ",Powerball\n"
             ohdr = "Draw_Number,Date," + ",".join(f"Drawn_{i}" for i in range(1, 8)) + ",Powerball,Official_Source_URL\n"
-            (root / OLD_HISTORY).write_text(hdr + "1550,2026-01-29,1,2,3,4,5,6,7,9\n1577,BAD,ROW\n")
-            (root / OLD_ORDER).write_text(ohdr + "1550,2026-01-29,7,6,5,4,3,2,1,9,u\n1580,x\n")
+            (root / OLD_HISTORY).write_text(hdr + "1550,2026-01-29,1,2,3,4,5,6,7,9\n1577,BAD,ROW\n", newline="\r\n")
+            (root / OLD_ORDER).write_text(ohdr + "1550,2026-01-29,7,6,5,4,3,2,1,9,u\n1580,x\n", newline="\r\n")
             h, o, _ = old_powerball_dev_rows(root)
             assert set(h) == {1550} and set(o) == {1550}          # quarantined rows dropped unparsed
 

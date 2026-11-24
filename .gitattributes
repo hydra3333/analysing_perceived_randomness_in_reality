@@ -1,11 +1,8 @@
-*.bat text eol=crlf
-# Results masters, ledgers, grabs and backups: stored byte-for-byte (their SHA-256 values are recorded)
-source_data/** -text
-# Run records, batch plans and the search log: checked byte for byte by the project tools, so never converted
-results/** -text
-# MHUP-A install and release records: canonical JSON checked byte for byte by release_records.py, so never converted (N1)
-src/methods/_common/contract_data/install_records/** -text
-# Two files whose raw bytes tests check (a no-CR assertion; a reference SHA-256): never converted (N4)
-src/package_tools/process_check.py -text
-tests/fixtures/results_master_v0_1_reference.py.txt -text
-src/results_master_v0_2.py -text
+# The project's standard for the form of its files (doc/FILE_FORM_STANDARD_v0_2.md): Git converts no line ending
+# of this project's files, in either direction, on any PC. What is on disk is what is committed.
+* -text
+# The folder GAIS/ is another project's and is left exactly as it was. For everything under it this file says
+# nothing about text, so Git does there what it did before (GAIS's own attribute files, and each PC's settings);
+# and its batch files keep the one earlier line of this file that applied to them.
+GAIS/** !text
+GAIS/**/*.bat text eol=crlf

@@ -17,6 +17,7 @@ Which of the project's own modules it uses
     research.scoring       score_content, read_outcome
     research.ov1_ledger    draw_line, prevailing_start, prevailing_cohort, running_logs_of, Blocked
     research.variant_lists RESEARCH_FOLDER
+    research.windows_text  LINE_ENDING: the marker is written in the standard's form, each line ending CRLF
 
 What uses it
     research/research_job.py, and the engine's tests.
@@ -31,6 +32,7 @@ from research import ov1_ledger
 from research.game_state import MAIN_BARREL, GameRecords
 from research.scoring import read_outcome, score_content
 from research.variant_lists import RESEARCH_FOLDER
+from research.windows_text import LINE_ENDING
 
 # The marker file of a game, under the tree's research folder, and its two reasons (specification 5.8).
 CUTOFF_NAME = 'NOT_CURRENT_FROM.json'
@@ -70,7 +72,7 @@ def read_cutoff(tree_root: Path, game_id: str) -> tuple | None:
 
 
 def write_cutoff(tree_root: Path, game_id: str, draw: int, reason: str, detail: str) -> None:
-    """Write a game's marker: the whole file to a temporary name, then one rename.
+    """Write a game's marker, each line ending CRLF: the whole file to a temporary name, then one rename.
 
     draw: the first draw whose derived results are not current.  reason: MISMATCH or AWAITING_CATCH_UP.
     detail: one line for the reader saying what was found.
@@ -80,7 +82,7 @@ def write_cutoff(tree_root: Path, game_id: str, draw: int, reason: str, detail: 
     text = json.dumps({'not_current_from_draw': draw, 'reason': reason, 'detail': detail}, indent=1,
                       ensure_ascii=True) + '\n'
     temporary = path.with_name(path.name + '.writing')
-    with open(temporary, 'w', encoding='ascii', newline='\n') as stream:
+    with open(temporary, 'w', encoding='ascii', newline=LINE_ENDING) as stream:
         stream.write(text)
         stream.flush()
         os.fsync(stream.fileno())
