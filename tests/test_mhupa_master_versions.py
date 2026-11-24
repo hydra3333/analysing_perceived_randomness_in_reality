@@ -389,7 +389,8 @@ class Static(unittest.TestCase):
             'src/methods/Method_Contract_Runner.py', 'src/methods/_common/contract_receipts.py',
             'src/methods/_common/contract_records.py', 'src/methods/_common/contract_runner.py',
             'src/methods/_common/game_draws_reader.py', 'src/methods/_common/master_versions.py',
-            'src/methods/_common/walk_forward.py', 'src/results_master_v0_2.py'])        # MHUP-A slice 2: v0.2 (design 7)
+            'src/methods/_common/walk_forward.py', 'src/research/reader.py',             # build step 2: the new reader
+            'src/results_master_v0_2.py'])                                                 # MHUP-A slice 2: v0.2 (design 7)
         mv = (ROOT / 'src' / 'methods' / '_common' / 'master_versions.py').read_text(encoding='ascii')
         for word in ('import numpy', 'Drawn_', 'simple_rows', 'header_for', '_parse_prefix', 'DrawView('):
             self.assertNotIn(word, mv)                                # nothing of a view, no decoded draw column

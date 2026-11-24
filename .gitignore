@@ -271,3 +271,11 @@ results/real/holdout/wf_batches/**/attempts.jsonl
 #results/real/holdout/scores/
 transitory_data/lock_clearances/
 transitory_data/no_pycache_ever
+
+# The research system (RAT-40): the state of one tree, never tracked (owner, decision log entry 177).
+/ENVIRONMENT.ini
+/results/research/
+/results/research_set_aside/
+/records/
+/scratch/
+VARIANT_STATUS.ini
