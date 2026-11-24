@@ -5236,3 +5236,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   v10's text where today changed nothing in them, and where today did, they carry a "v11" note that points to
   section 0D. A full rewrite is due after the conversion and slice A, when the installed code has changed.
 - Next numbers: EX_306; entry 239; RAT-48.
+
+## 239. 24 November 2026, 19:47 - the owner's GO for TASK_T028 r1 on his PC; the runner instructions given; the H-1 v11 blurb is with the reviewer
+
+- **The owner, 19:46, to Claude:** "first, GO to execute TASK_T028 r1 on my Windows PC, exactly as reviewed and
+  passed in EX_302, under the existing RAT-44 runner rules. Please provide the runner instructions.   I have pasted
+  the blurb to chatgpt."
+- **What the go covers:** the one run of `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T028.md` r1 by the local runner,
+  with its probe `inbox/TASK_T028_probe.py` r1, under rulebook v0.7. Nothing else: no install, no tree, no
+  conversion, no other task.
+- **Checked by Claude before giving the instructions (computed, at `main` `8309961`):** the task file's SHA-256 is
+  `96e2a6cf86873a9f6a1df1f9e9d3ec2c884e3a8f19b767395498b7ab7f88b02c` and the probe's is
+  `57fde59dc4f56526c1a73e95e006fee63b80bbffa223206740ee64776c6128bf`, in the working copy and in Git alike: the two
+  values EX_302 passed. Neither file has changed since.
+- **The instructions given to the owner** (the task file's own "before the owner starts"): nothing of the project
+  running; the folder `D:\DELETE_ME` existing and `D:\DELETE_ME\a_p_r_i_r\T028` not; `git pull --ff-only` in the main
+  repository; a new Claude Code conversation there; then `Do inbox\TASK_T028.md`; afterwards `git push`, and the
+  scratch folder left in place whatever the result.
+- **What to expect, said beforehand:** about ten to fifteen minutes; two ZIP files of perhaps 100 to 300 MB each in
+  the scratch folder; the words `WINDOWS SAID NO` in step 5 are answers, not failures; step 8's reading of Windows
+  through the standard library has run nowhere, so a STOP there is possible and harmless (the other two parts are
+  recorded by then); on any STOP nothing is retried and the folder stays as it is.
+- **Claude pushes nothing from now until the owner's push of the report is on `main`,** so that his push cannot be
+  refused. Meanwhile Claude works in the cloud on the conversion program and the checker, uncommitted.
+- **The blurb pasted to the reviewer** is the paste block of entry 238 (the H-1 v11 candidate's difference to read).
+  Its answer, if one comes, would be EX_306.
+- Next numbers: EX_306; entry 240; RAT-48.

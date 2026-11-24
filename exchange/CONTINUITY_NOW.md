@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 19:44 Australia/Adelaide (entry 238: Claude's handover brought up to date as the H-1 v11 candidate; both chats can now be restarted from current blurbs; next: the conversion program and checker in the cloud; TASK_T028 r1 waits for the owner's go).
+**Last updated:** 24 November 2026, 19:47 Australia/Adelaide (entry 239: the owner's GO for TASK_T028 r1; runner instructions given; Claude pushes nothing until the report is pushed; the H-1 v11 difference is with the reviewer).
 
 ## For the owner: NOW
 
+- **TASK_T028 r1 HAS THE OWNER'S GO (entry 239; 24 November 2026, evening). To run it:** nothing of the project
+  running; `D:\DELETE_ME` exists and `D:\DELETE_ME\a_p_r_i_r\T028` does not; `git pull --ff-only` in the main
+  repository; a new Claude Code conversation; `Do inbox\TASK_T028.md`; then `git push`. The scratch folder stays
+  whatever the result. **Claude pushes nothing until that report is on `main`.** Claude's next numbers: EX_306,
+  entry 240, RAT-48.
 - **BOTH HANDOVERS CAN START A NEW CHAT FROM TODAY'S STATE (entries 232 and 238; 24 November 2026, evening).**
   **A new Claude chat:** paste what is below the line of
   `exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`1ebcb8ea...606495`); it
