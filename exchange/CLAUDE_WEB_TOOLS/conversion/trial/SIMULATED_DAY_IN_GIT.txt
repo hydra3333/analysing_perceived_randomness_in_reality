@@ -1,0 +1,42 @@
+The day's Git steps, simulated in the cloud, 24 November 2026 (Claude's own evidence; Git 2.43 on Linux with
+core.autocrlf=true set in the clone; not Windows; not a review)
+
+The simulated working copy: a clone of main made with core.autocrlf=true, so that Git wrote CRLF working copies
+of the files it stores with LF, as on the owner's PC; then every file under src, deploy and tests but three
+written back with Git's own LF bytes and re-added, as the packages' copies left them there. Git reported it
+clean. In it: 302 files stored byte for byte; 937 stored CRLF; 2,478 stored LF with a CRLF working copy outside
+src, deploy and tests; 658 LF both ways under src, deploy and tests.
+
+1. After the package's files and the conversion program (648 files converted): "git status" showed 656 changed and
+   4 new. Twenty-six listed files that were CRLF on disk all along (the root's .bat files and others) were NOT
+   shown: Git goes by each file's remembered size and time and does not read it again.
+2. Plain Git, tried and set aside:
+   - "git add --pathspec-from-file" staged the 656 and the 4; "git add --renormalize" with the same path file
+     then staged 25 more. That works on Git 2.43 but rests on two options' behaviour.
+   - "git checkout-index --force" of the frozen folders rewrote NOTHING: it too passes over a file Git believes
+     current, with or without "git update-index --really-refresh" first. 2,298 files stayed CRLF on disk against
+     LF in Git, unseen: any later touch of one would show it as changed, and a later "git add" would have put a
+     CRLF copy of frozen history into Git.
+3. The root attribute file as ratified, one line "* -text", was found to reach the other project's folder after
+   all: 173 of GAIS's 204 tracked files are not named by GAIS's own two attribute files and came under it. With
+   two more lines ("GAIS/** !text" and "GAIS/**/*.bat text eol=crlf") every GAIS file's stored form, form on disk
+   and attribute are exactly what they were before (compared file by file).
+4. The program tools/stage_and_refresh.py, with those three lines in place:
+   - look: 685 of the 686 listed files to stage (the one other is empty and unchanged); 2,298 working copies to
+     put back (exchange 1,688; review 302; doc 241; the runner's folder 47; archive 16; transitory_data 4);
+     nothing not as expected;
+   - run, with STAGE typed: staged 685; put back 2,298; its proof held (every listed file staged with the list's
+     "after" bytes and in its form; every tracked file Git converts nothing for has on disk exactly Git's bytes;
+     Git itself sees no unstaged change);
+   - "git status": 681 changed and 4 new, all staged; nothing unstaged;
+   - a second run: nothing to do, nothing asked;
+   - committed (in the simulation only): the commit holds exactly those 681 and 4; "git status" then empty;
+   - a fresh clone of the result compared with the working copy: all 4,274 tracked files outside GAIS byte for
+     byte the same; GAIS exactly as before;
+   - the suite's own file-form module in the simulated tree: 52 tests, all passing.
+5. Found on the way and corrected: Git takes a changed size for a changed file without reading it, so each
+   rewritten working copy is handed to Git once more; and a rewritten file must keep its permission bits (nine
+   executable shell scripts under exchange showed a mode change in the first simulated commit).
+6. The program's tests: 17 on an invented repository with core.autocrlf=true; planted faults 11 of 11 caught.
+
+Not covered: Git for Windows and its version on the owner's PC; his real working copy; a push.

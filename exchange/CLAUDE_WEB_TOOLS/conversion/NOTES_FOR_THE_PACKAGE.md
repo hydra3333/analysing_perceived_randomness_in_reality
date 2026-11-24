@@ -12,18 +12,18 @@ the package that carries out `doc/FILE_FORM_STANDARD_v0_1.md` section 7. Nothing
 | `make_conversion_list.py` | Makes the conversion list from Git at HEAD with the package's files laid over it |
 | `tools/convert_to_file_form.py` | The conversion program the owner runs in DEV (standard library; never calls Git) |
 | `tools/test_convert_to_file_form.py` | Its tests on an invented tree (41) |
-| `plant_faults_in_writers.py`, `plant_faults_in_conversion.py` | Plant one fault at a time and show that the tests catch it (11 of 11; 22 of 22) |
+| `tools/stage_and_refresh.py`, `tools/test_stage_and_refresh.py` | After the conversion: stages the listed files exactly as on disk and puts every other tracked file's working copy back to Git's own bytes; proves that what is on disk is what is committed; commits nothing (17 tests) |
+| `plant_faults_in_writers.py`, `plant_faults_in_conversion.py`, `plant_faults_in_staging.py` | Plant one fault at a time and show that the tests catch it (11 of 11; 22 of 22; 11 of 11) |
 | `trial/` | The cloud trial's evidence |
 | `look_kit_r1/`, `LOOK_ONLY_SHEET_r1.md`, `look_kit_TO_r1.diff`, `make_look_kit.py` | The three files (in Windows form) and the sheet for the owner's look-only run in his real DEV, before anything is packaged, corrected after the reviewer's EX_308 (decision log entries 246 and 247). `look_kit/` and `LOOK_ONLY_SHEET.md` are the first edition, kept as the reviewer read it |
 
 ## Still to do before it is a package
 
-1. **The one refresh of the owner's working copy and the commit of the converted files** (standard section 5):
-   exact commands, rehearsed by the runner. Seen in the cloud: after `.gitattributes` becomes `* -text`, Git does
-   not report a file whose bytes on disk differ from the index only in line endings until the file is touched
-   or re-added, so the commands must name what is staged (the listed paths) and must put every other tracked
-   file's working copy back to Git's own bytes. A candidate to rehearse: stage the listed paths from a path
-   file, then `git checkout-index --force --all`.
+1. **Done in the cloud (decision log entry 250): the one refresh of the owner's working copy and the staging of
+   the converted files,** as the program `tools/stage_and_refresh.py`; `trial/SIMULATED_DAY_IN_GIT.txt` says what
+   plain Git does and does not do. **Open with the owner:** the root attribute file needs two more lines so
+   that `GAIS\` is truly left as it is (a narrow amendment of the standard's section 5); `git_settings/gitattributes`
+   still holds the one ratified line.
 2. **The sheet** (the owner's copy first; the package's files; a look-only run; the run; the refresh and commit;
    the suite; the fill; the comparison with the old system's records).
 3. **The package itself:** the overlay in its form, the list, the tools, the verifying script, the manifest.
@@ -57,6 +57,8 @@ the package that carries out `doc/FILE_FORM_STANDARD_v0_1.md` section 7. Nothing
    message. DEV's are removed by the conversion; QA and PROD do not exist yet.
 8. **One new infrastructure file,** `src/research/windows_text.py` (class `derived`): the one place where the
    engine turns its texts to the standard's form.
+10. **A second program, which does call Git,** stages and refreshes after the conversion. The conversion program
+    still never calls Git. Staging a commit is what Git is for; no tree's readiness is ever asked of Git.
 9. **The list's "before" for a file the package delivers is its "after":** such a file found in any other state
    means the package's files were not copied; a real run refuses, a look reports it. The program takes the
    standard's rule from the copy beside it, checked by SHA-256 against the list, never from the tree.

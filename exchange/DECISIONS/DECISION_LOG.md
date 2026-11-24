@@ -5648,3 +5648,43 @@ section 17.2 (unpack it into a new folder, never over the clone).
   made again on the day, as the real run's first step.
 - **No go is given or implied for anything further.**
 - Next numbers: EX_310; entry 250; RAT-49.
+
+## 250. 24 November 2026, 21:41 - the day's Git steps worked out and simulated: a program to stage and refresh; A FAULT OF FACT IN THE RATIFIED STANDARD (the root attribute line does reach GAIS) put to the owner
+
+- **The owner, 21:28, on the look's output:** "why are csv untouched ?" Claude's answer: the four results files are
+  CRLF already, so they conform as they are and are only proved unchanged; the report tables under
+  `results\research\` are made again; the old system's CSV files are frozen history.
+- **The owner, 21:29:** "ok lets go now". **Claude took this as his word to go on with the next cloud work** (the
+  refresh and commit commands, the sheet, the package), which is what stood next; **not** as a go for anything
+  on his PC: nothing is packaged or reviewed, and the conversion is its own go.
+- **What plain Git does, found by simulation** (`trial/SIMULATED_DAY_IN_GIT.txt`; a clone with
+  `core.autocrlf=true`, shaped like his working copy): Git goes by each file's remembered size and time. After the
+  conversion it does not show 26 listed files that were CRLF on disk all along, and
+  `git checkout-index --force` rewrites none of the 2,298 frozen files whose working copy is CRLF against LF in Git.
+  Left so, a later touch of any of them would show it as changed and a later `git add` would put a CRLF copy
+  of frozen history into Git.
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/conversion/tools/stage_and_refresh.py` (17 tests; planted faults 11 of 11).
+  By content, not by Git's belief: it stages each listed file with exactly the bytes on disk, after checking
+  they are the list's "after"; it rewrites the working copy of every other tracked file that Git converts
+  nothing for and that differs from Git's bytes in line endings only, with Git's own bytes; it refuses a file
+  that differs in more; it prints first and waits for the typed word `STAGE`; it proves the result, asking Git
+  itself whether any unstaged change remains; it commits and pushes nothing. Unlike the conversion program it
+  calls Git: staging a commit is what Git is for (the owner's principle, entry 227, is about gating a tree).
+- **The simulated day, end to end:** the commit holds exactly the 681 changed and 4 new listed files; `git status`
+  then empty; **a fresh clone equals the working copy byte for byte in all 4,274 tracked files outside GAIS.**
+- **A FAULT OF FACT IN THE STANDARD, FOUND BY CLAUDE.** `doc/FILE_FORM_STANDARD_v0_1.md` section 5 says the root
+  `.gitattributes` "says one thing: `* -text`" and that "It does not reach `GAIS\`". **It does reach it:** GAIS's own
+  two attribute files name only some kinds of file; 173 of GAIS's 204 tracked files are named by neither and come
+  under the root line. On the owner's PC their working copies are CRLF today by his Git's setting; under the
+  one line they would be exactly the hidden difference described above, in his other project. The owner's
+  decision (entry 234) was that GAIS is out of scope and that nothing under it is changed. **Two more lines carry
+  that decision out:** `GAIS/** !text` (for GAIS the root file says nothing, so Git behaves there as before) and
+  `GAIS/**/*.bat text eol=crlf` (the old root line for batch files, kept for GAIS alone). With the three lines every
+  GAIS file's stored form, form on disk and attribute were compared, file by file, and are exactly as before.
+  **Claude's error in the standard, and the reviewer's FFS-C03 did not catch it either. It changes a ratified
+  sentence, so it is the owner's to decide:** put to him as a narrow amendment. The working files still hold
+  the one ratified line; the simulation used the three.
+- **Still to do:** the owner's decision on the attribute lines; the sheet of the day; the package and its
+  verifying script; then the reviewer; then, each on the owner's go, the runner's rehearsal (which will show his
+  Git's version) and the day.
+- Next numbers: EX_310; entry 251; RAT-49.
