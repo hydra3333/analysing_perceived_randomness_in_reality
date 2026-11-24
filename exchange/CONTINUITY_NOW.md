@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 13:43 Australia/Adelaide (entry 210: BUILD STEP 2 IS INSTALLED IN DEV, commit 5f16b35, COMMITTED PASS, verified from GitHub; part 5 (the settings file) and, on the owner's separate go, DEV's first fill remain; then H-1 v10).
+**Last updated:** 24 November 2026, 13:56 Australia/Adelaide (entries 210 and 211: BUILD STEP 2 IS INSTALLED IN DEV, commit 5f16b35, COMMITTED PASS, verified from GitHub; part 5 (the settings file) and, on the owner's separate go, DEV's first fill remain; then H-1 v10).
 
 ## For the owner: NOW
 
@@ -14,6 +14,8 @@ durable EX messages are authoritative.
   own go:** part 6, DEV's first fill (`Run_Research.bat --game BOTH --no-update`, about 46 minutes, then once more
   into a file), and part 7 (the comparison; expect the numbers of entry 208). **Then Claude writes H-1 v10.** Use the
   sheet of package v1r3; in its part 3 the comparison command names v1r2's folder by mistake (entry 209).
+  **For build step 3:** `ENVIRONMENT.example.ini` is rewritten (its comments mislead and its commented paths are out
+  of date; the owner's observation, entry 211).
 - **THE INSTALL OF BUILD STEP 2 IN DEV IS UNDER WAY (entry 209; 24 November 2026).** Done by the owner: `PRE PASS`, 35
   files copied, `POST PASS`, the suite after (762 tests; only the two known modules `FAILED`). (All done except the settings file: entry 210.) **A defect in
   v1r3's sheet, Claude's:** part 3's comparison command names `E:\TEMP\STEP2_Research_Engine_v1r2\...`; it must be

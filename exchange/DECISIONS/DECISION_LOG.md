@@ -4385,3 +4385,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the owner's own separate go; part 7. DEV holds the engine and no research results. Then H-1 v10 (entry 183).
 - **Told to the reviewer by paste block:** the sheet's erratum (entry 209) and, with this entry, the install.
 - Next numbers: EX_295; entry 211; RAT-45.
+
+## 211. 24 November 2026, 13:56 - The owner's observation on `ENVIRONMENT.example.ini`: the example's comments mislead and its commented paths are out of date; to be rewritten in build step 3
+
+- **The owner, 13:55, at the sheet's part 5 (the settings file open in Notepad):** "This does not look right in a couple
+  of ways." (1) `[environment]` holds `role`, `tree_root` and `venv_dir` but no `backup_root`, while `[QA]` and `[PROD]` hold
+  no `role` but `tree_root`, `venv_dir` and `backup_root`. (2) "The text says "The sections below are added" ... but that
+  cannot be true since if this becomes PROD's ini then the [environment] ... changes ... and role changed to PROD
+  presumably but there is no [DEV] section values which are then lost. It look mangled as an example."
+- **What the ratified design says (deployment design v0.12 section 1), which the file follows:** each tree has its
+  own settings file. `[environment]` is always the tree the file lies in. DEV has no backups, hence no `backup_root`
+  there. `[QA]` and `[PROD]` exist in DEV's file only: they are where DEV's tools find the other two trees, and the
+  section's name is the role. `[results] copy_from` is the tree whose accepted results this tree copies. A QA or
+  PROD tree's file is not made by editing this one: `Init_Tree.bat` writes it once, in that tree's folder, from DEV's
+  entry for that role, with that role in `[environment]`. So nothing of DEV is lost: DEV's file stays in DEV.
+- **Where the owner is right:** the example's comments do not say any of that, and "the sections below are added
+  when the QA and PROD trees are created" reads as if this file turned into another tree's. And its commented
+  example paths are out of date: `D:\TEST_BED` for QA, where the owner decided `T:\a_p_r_i_r` with backups under
+  `T:\a_p_r_i_r_backups\QA` and `\PROD` (entry 181). Claude's wording, in a reviewed and installed file.
+- **For today:** DEV's file needs the `[environment]` section only, and the example's three lines are right for this
+  PC. The lines that begin with `;` are comments and are not read. Nothing to change in part 5.
+- **For build step 3 (when `Init_Tree.bat` and the `[QA]` and `[PROD]` sections become real):** the example is rewritten
+  through that step's reviewed package: its head says what each section is and whose file it is, shows a QA tree's
+  file beside DEV's, and carries the owner's real places. `Check_Tree.bat` prints how a file is read.
+- Next numbers: EX_295; entry 212; RAT-45.
