@@ -6294,3 +6294,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   H-1 v13 section 0E item 14; nothing is in flight: no unanswered message, no report unread, no decision given and
   not recorded.
 - Next numbers: EX_317; entry 269; RAT-56.
+
+## 269. 25 November 2026, 08:00 - the reviewer's H-2 v8 is installed (RAT-55): its final files recorded; a correction of one minute to entry 268
+
+- **The reviewer installed its own final H-2 v8** (main `96c918f`), relayed by the owner at 07:59:
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md`, SHA-256
+  `31f1e7f169a8adc2cb7a627145150e542e0901e84baf7163d632a18c4a0934e5`, and
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_introductory_blurb_20261125.md`, SHA-256
+  `3797f0c9f9f3cd987d82897f9b7fb294911d16ca8b6a5bacf779ac346d7da801`. Both hashes computed by Claude from Git: they are as the
+  reviewer gave them. **These are the reviewer handover in force (RAT-55).** The candidate files stay beside them.
+- **A correction to entry 268 and to one sentence of H-1 v13** (section 0E item 13): each says that only the candidate
+  was on `main` when it was written. That was so when H-1 v13 was built; the reviewer's install reached `main` a
+  minute before Claude's commit of entry 268 (`96c918f` is that commit's parent). H-1 v13 is not rebuilt for it: it
+  sends the reader to `exchange/CONTINUITY_NOW.md` for the reviewer handover in force, and that page now names the
+  final files.
+- **The reviewer, in the same message:** the owner expressly ratified both handovers; "The full independent cold read
+  of H-1 v13 remains owed, but does not delay takeover."
+- **The position for the change of Claude chat:** H-1 v13 (RAT-54) and H-2 v8 (RAT-55) installed; register v0.33
+  (RAT-53); nothing in flight. This is the outgoing Claude chat's last entry unless the owner asks for more before
+  the new chat starts.
+- Next numbers: EX_317; entry 270; RAT-56.
