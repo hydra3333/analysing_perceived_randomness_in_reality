@@ -5204,3 +5204,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next for Claude, in the cloud:** the conversion list and program (the reviewer's watchpoint of entry 236 taken
   in), the engine's writers, the checker, the Git settings, the sheet and the runner's rehearsal; then slice A.
 - Next numbers: EX_306; entry 238; RAT-48.
+
+## 238. 24 November 2026, 19:44 - at the owner's request Claude brings its own handover up to date: the H-1 v11 CANDIDATE and its blurb
+
+- **The owner, 19:40, to Claude,** after Claude said a refresh of the handovers was due (entry 237): "yes please
+  update your handover stuff right now."
+- **Why now:** H-1 v10 was installed this morning (RAT-45) and knows nothing of entries 216 to 237: build step 3's go
+  and plan, the owner's decisions on it, the probe task, the process readers, his principle on Git, the file-form
+  standard (RAT-47), the change of reviewer chat. This chat is long.
+- **What Claude did:** `exchange/CLAUDE_WEB_TOOLS/h1v11/make_h1_v11.py` with `h1_v11_texts.py` reads the installed
+  H-1 v10 and its blurb from Git (each asserted by SHA-256), makes nineteen counted replacements of status
+  statements, each marked "v11" (the title and edition; what is authorised; the superseded "LF pinned" in three
+  places; the fourth ratified document in the reading list and in section 4.1; the reviewer chats and the
+  reviewer's handover in force; section 10 items 2 and 3; section 12.8), and inserts **one new section, 0D,** after
+  section 0B, with everything since H-1 v10 in seventeen items: the records; the go; the plan and its review; the
+  owner's decisions; the process readers; TASK_T028; slice A's working files; his principle on Git; the file-form
+  standard; the conversion as the next work, with the reviewer's watchpoint; what the trial showed and did not;
+  Mode H; the operations manual; the reviewer chats; the state of his PC; what waits; and seven lessons of the
+  day. It ends with a table of nine identities whose SHA-256 the builder computes from Git. Sections 1, 2 and 2A
+  are byte-identical (asserted). The blurb likewise, by five counted replacements.
+- **Written, under `exchange/CLAUDE_WEB_TOOLS/h1v11/out/`:**
+  - `Claude_Primary_Handover_H1_v11.md`, SHA-256 `71b3f08c369dd38ccbe40690fa947e8ef4e2094a33a9419e1739beb43b94e2e5`;
+  - `Claude_Primary_Handover_H1_v11_introductory_blurb.md`, SHA-256 `1ebcb8eae3660d49647004f59078900281c5c6538ab8a354d7439ae459606495`;
+  - `H1_v10_TO_v11.diff` and `H1_v10_TO_v11_blurb.diff`: each, applied with `patch` to the installed file, gives the
+    candidate byte for byte (checked with `cmp`).
+- **Its standing:** a CANDIDATE; not ratified; the reviewer has not read it. In force for a Claude chat: still H-1
+  v10 (RAT-45). **If this chat ended now, a new Claude chat can be started from the candidate's blurb at once:** it
+  points at the candidate and tells the new chat to check it against H-1 v10. The usual course: the reviewer reads
+  the difference, then the owner ratifies (that would be RAT-48), then Claude installs it in `doc/HANDOVER/`.
+- **Its limits, stated:** it is a refresh, not a rewrite. Older sections (0B, 7, 10, 12, the appendices) keep H-1
+  v10's text where today changed nothing in them, and where today did, they carry a "v11" note that points to
+  section 0D. A full rewrite is due after the conversion and slice A, when the installed code has changed.
+- Next numbers: EX_306; entry 239; RAT-48.
