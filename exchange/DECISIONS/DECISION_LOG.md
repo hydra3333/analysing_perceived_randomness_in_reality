@@ -6126,3 +6126,26 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **A correction to entry 261's last line:** it gave the next ratification as RAT-51; RAT-51 and RAT-52 are used
   here.
 - Next numbers: EX_316; entry 263; RAT-53.
+
+## 263. 25 November 2026, 07:28 - the ratification register's next edition, v0.33, as a CANDIDATE; the reviewer's acknowledgement of RAT-51 and RAT-52
+
+- **The owner, 07:25:** "lets do ratification register now then resume slice A." With it he relayed the reviewer's
+  acknowledgement (no EX message): both handovers are current and owner-ratified, H-1 v12 as RAT-51 and H-2 v7 as
+  RAT-52; "The advance ratification of H-1 v12 is valid; it does not imply that I have independently reviewed it";
+  outstanding: its cold read of H-1 v12 when the owner asks, and this register.
+- **Built: `exchange/CLAUDE_WEB_TOOLS/register/v0_33/RATIFICATION_REGISTER_v0_33_CANDIDATE.md`,** SHA-256
+  `c2c589fee55086d801b91c195aba31729b23af083804985ca6f860924e977660` (CRLF, UTF-8), by `make_register_v0_33.py` beside
+  it from the installed register v0.32's Git bytes (asserted by hash). **Two changes and no other**
+  (`REGISTER_v0_32_TO_v0_33_CANDIDATE_DIFFERENCE.txt`): the version line, and one new section before "Interpretation
+  and verification". Every line of v0.32 but its version line is carried.
+- **What the new section records:** the position at this edition; RAT-41's install and RAT-42 to RAT-52, each with
+  its entry, what was ratified, where it was reviewed, the installed file, its commit and its SHA-256 (fourteen
+  hashes, computed by the builder from Git); the five installs of code in DEV since v0.32 (build step 1 `0aea10a`,
+  the tidy-up `c7e6ed8`, build step 2 `5f16b35`, the conversion `691f58e`, the lock line `fe1c310`); the suite's
+  known result; what is recorded and not ratified (build step 3's plan; the narrow amendment of the deployment
+  design's section 2; H-2 v6r2); the owner's standing directions since v0.32; the future actions. It says that
+  from this edition a hash is the hash of the file's bytes wherever it lies.
+- **Its standing:** a candidate. **Not ratified, not installed in `doc/`:** the owner's advance ratification of
+  entry 262 named the handover documents. It waits for the reviewer's documentary check and the owner's word
+  (RAT-53); the builder's `final` mode then writes the installed file with the status words alone changed.
+- Next numbers: EX_316; entry 264; RAT-53.

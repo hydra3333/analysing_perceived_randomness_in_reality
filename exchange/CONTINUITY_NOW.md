@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:20 Australia/Adelaide (entry 262: H-1 v12 is installed, ratified by the owner in advance (RAT-51) and not yet read by the reviewer; the reviewer's H-2 v7 likewise (RAT-52); the file-form work is finished; next work: slice A of build step 3, brought to the standard).
+**Last updated:** 25 November 2026, 07:28 Australia/Adelaide (entry 263: the register v0.33 is built as a candidate and waits for the reviewer's check and the owner's RAT-53; next work: slice A of build step 3).
 
 ## For the owner: NOW
 
@@ -12,8 +12,9 @@ durable EX messages are authoritative.
   advance; **the reviewer has not yet read it** (its cold read is owed). Its section 0E holds everything since
   H-1 v11. **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md`.**
   **The reviewer's own H-2 v7 is installed too (RAT-52), likewise ratified in advance.**
-  **Next work:** slice A of build step 3, brought to the file-form standard and rebased on `main`. **Owed:** the
-  register's next edition (RAT-41's install to RAT-52). The owner's plan for this Claude chat ends on the night
+  **Next work:** slice A of build step 3, brought to the file-form standard and rebased on `main`. **The register's
+  next edition, v0.33, is a CANDIDATE** (entry 263; `exchange/CLAUDE_WEB_TOOLS/register/v0_33/`): it waits for the
+  reviewer's check and the owner's RAT-53. The owner's plan for this Claude chat ends on the night
   of 25 November 2026.
 - **THE CONVERSION IS DONE (entry 260; 25 November 2026).** DEV is in the file-form standard: commit `691f58e`,
   pushed by the owner at 07:02 and verified by Claude from GitHub; fill, repeat run and the comparison with
