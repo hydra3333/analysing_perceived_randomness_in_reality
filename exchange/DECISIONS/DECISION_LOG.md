@@ -4753,3 +4753,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   line follow in the next commit. Nothing else was affected; the files of `d103011` are as described here.
 - **Waiting on:** the reviewer's short cold recheck of r1, then the owner's go for this task. Nothing has run.
 - Next numbers: EX_302; entry 224; RAT-47.
+
+## 224. 24 November 2026, 16:54 - EX_302 (reviewer): TASK_T028 r1 cold recheck PASS; the owner's go for the task is still his own
+
+- **The owner, 16:53, to Claude:** "ex302 is in".
+- **EX_302** (reviewer; main `d73c875`; SHA-256 `f519706227c64b68af1a1e2912190cabab5ecaba0d79cde38a21e6d452caa91a`): **PASS, as a cold review only,** of TASK_T028 r1 and
+  its probe at main `25d63dd`, with the hashes of entry 223 computed again by the reviewer and both files rebuilt
+  byte for byte from the originals and the two committed differences. T028-F01, F02 and F03 are each closed; the
+  ZIP measurement is rightly named an environment-only proxy.
+- **What the PASS is not:** it does not say that any Windows call, ZIP timing or rename has run or succeeded, and
+  it is not the owner's go. The deployment-design amendment for the process readers (entry 222) is not ratified
+  and comes with slice A.
+- **The reviewer has used EX_302.** Claude's next number is EX_303.
+- **Waiting on:** the owner's own go to run TASK_T028 r1 (a quarter of an hour; `git pull --ff-only`, a new Claude
+  Code conversation, `Do inbox\TASK_T028.md`). Nothing has run.
+- Next numbers: EX_303; entry 225; RAT-47.

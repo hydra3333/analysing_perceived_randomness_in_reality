@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 16:44 Australia/Adelaide (entries 222 and 223: option A for the process readers; slice A begun; EX_301: the plan v0.1r1 passed, TASK_T028 corrected as r1 and waiting for the reviewer's short recheck, then the owner's go).
+**Last updated:** 24 November 2026, 16:54 Australia/Adelaide (entry 224: EX_302, the reviewer's cold recheck PASS of TASK_T028 r1; waiting on the owner's go to run it; slice A continues in the cloud).
 
 ## For the owner: NOW
 
@@ -14,8 +14,8 @@ durable EX messages are authoritative.
   reviewer with slice A and to the owner for ratification. `D:\DELETE_ME\a_p_r_i_r\T025` is deleted, so TASK_T028
   measures the main `.venv` alone, named an environment-only proxy. **EX_301 (entry 223): the plan v0.1r1 has the
   reviewer's focused PASS; TASK_T028 was corrected as r1 for its three findings** (`96e2a6cf...88b02c`; probe
-  `57fde59d...6128bf`) **and waits for the reviewer's short recheck, then the owner's go.** Claude's next numbers:
-  EX_302, entry 224, RAT-47. **Slice A so far** (working files in
+  `57fde59d...6128bf`) **the reviewer's cold recheck is PASS (EX_302, entry 224); it waits for the owner's go only.** Claude's next
+  numbers: EX_303, entry 225, RAT-47. **Slice A so far** (working files in
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, run with `step3/sync_and_test.sh <clone> <python> <test modules>`): the
   settings of the three trees (`src/research/settings.py`, `tests/test_trees_settings.py`, 32 tests) and the
   rewritten `ENVIRONMENT.example.ini`. **Next in slice A:** the LF pin, the markers and `Make_Installable`, the
