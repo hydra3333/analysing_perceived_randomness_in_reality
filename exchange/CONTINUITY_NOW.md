@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 18:48 Australia/Adelaide (entry 232: the reviewer chat ended after EX_303; Claude's refresh of the reviewer's handover, the H-2 v6r2 candidate, is ready for starting a new reviewer chat; EX_303 is answered next).
+**Last updated:** 24 November 2026, 18:51 Australia/Adelaide (entry 233: EX_303 answered: the file-form standard's candidate v0.1r1; one point is with the owner; a new reviewer chat is started from the H-2 v6r2 candidate's blurb; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -15,8 +15,11 @@ durable EX messages are authoritative.
   H-2 v6 with ten status statements changed and a new section 0.13 for everything since, written by Claude, **not
   ratified and not checked by a reviewer** (it asks the new chat to verify it). In force for the reviewer: still
   H-2 v6 (RAT-46). Ratifying and installing v6r2 is the owner's choice and would take the next RAT number. **EX_303**
-  (the file-form standard: FOCUSED RECHECK, four clarifications) is answered by Claude next with a v0.1r1
-  candidate; the new reviewer's likely first task is its recheck. Claude's next numbers: EX_304, entry 233, RAT-47.
+  (the file-form standard: FOCUSED RECHECK, four clarifications) **is answered (entry 233):**
+  `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1r1_CANDIDATE.md` (`5a4d8a23...f8485c`) with its exact
+  difference from v0.1. **Waiting on:** the owner's assent that `GAIS\` keeps its own Git rules (v0.1r1 section 8
+  item 6); the new reviewer's focused recheck of v0.1r1; then the owner's ratification of the standard. Claude's
+  next numbers: EX_304, entry 234, RAT-47.
 - **A STANDARD FOR THE FORM OF EVERY FILE, BEFORE SLICE A IS PACKAGED (entry 230; 24 November 2026).** The owner
   directs: a written standard listing each kind of file and its exact form; everything conforms, by a conversion
   program and its list, safely; Git's and GitHub's settings to match; a "Standards" section in the operations

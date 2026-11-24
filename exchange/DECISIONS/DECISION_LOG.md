@@ -5061,3 +5061,43 @@ section 17.2 (unpack it into a new folder, never over the clone).
   to FFS-C04): read for this refresh only; Claude answers it next, as the owner asked. **The reviewer has used
   EX_303; Claude's next number is EX_304.**
 - Next numbers: EX_304; entry 233; RAT-47.
+
+## 233. 24 November 2026, 18:51 - EX_303 (reviewer, its last message): the file-form standard FOCUSED RECHECK, four clarifications, all accepted; the candidate v0.1r1; one point put to the owner
+
+- **EX_303** (reviewer; main `27a18a2`; SHA-256 `bb88b1ca53c560c20360d949550843907c94c4b66c97e5b170b2a1fc6f90172c`): the standard's policy is supported; a FOCUSED
+  RECHECK of the candidate's wording before ratification; the six named exceptions of section 3A accepted; four
+  clarifications asked. Answered at the owner's request after the handover (entry 232).
+- **All four accepted as found, and made in v0.1r1:**
+  - **FFS-C01.** "Everything a tree holds" took in a tree's `.venv`, which is other people's packages. Now the
+    standard covers the project's own files, in named places; `.venv`, `.git`, Python's caches and what tests write
+    in temporary folders are never converted and never checked by it. And it says what becomes of DEV's own
+    untracked files at the conversion: `ENVIRONMENT.ini` is converted by rule, its hashes recorded; DEV's research
+    results, its status files and leftovers in `records\` are removed on the owner's go and written afresh (a
+    status file holding anything but `ACTIVE` stops the program for his decision); the results masters and ledgers
+    (CRLF already), the updater's grabs and backups, the Mode H opening records, the old system's records,
+    `transitory_data\`, the six files and `.venv` are untouched, the masters' and ledgers' hashes shown unchanged;
+    any other text file found stops the program. The program walks the folders itself and never calls Git. The
+    checker's three uses each have a written scope.
+  - **FFS-C02.** A row for Git's own settings files and `LICENSE` (CRLF; Claude tried Git 2.43 with CRLF `.gitignore`
+    and `.gitattributes`: both are read correctly); every `.jsonl` file is LF, the reason being the hash-chained
+    lists, without calling the logs chained; a new section 3B says exactly what conforms (no bare LF and no bare
+    CR in a CRLF file; no CR in a `.jsonl`; an empty file conforms; a last line without an ending is allowed and
+    left; a text kind must read as UTF-8 with no zero byte or it is refused, never excused as binary; binary by
+    kind alone; an unnamed kind is refused until the owner's recorded decision extends the table).
+  - **FFS-C03.** The root `* -text` does not govern `GAIS\`, which has two attribute files of its own; the standard
+    now says so. Commits come from the owner's PC or from Claude's cloud workspace, each checked for the form of
+    the staged bytes: a check of a commit, never of a tree's readiness.
+  - **FFS-C04.** A listed file whose hash is the list's "after" is passed over, "before" is converted, any third
+    value is a STOP, so an interrupted run is simply run again; it can be undone from the same list; it holds the
+    job lock and the updater's lock; the owner makes his own copy first; old lists are removed, not repaired; what
+    the cloud's trial did and did not prove is stated.
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1r1_CANDIDATE.md` (SHA-256 `5a4d8a234a02951635e1c01032007d84ee82f80befacd2806098ea4a89f8485c`), made from
+  v0.1 (`00ec02b0...236872`, asserted) by `make_standard_v0_1r1.py`; the exact difference
+  `FILE_FORM_STANDARD_v0_1_TO_v0_1r1.diff` (SHA-256 `e5dffbe3ea0db3f32ab19a78f6004c0e29b10f5ff60c0d3a490041f12a065437`) rebuilds it with `patch` (checked with `cmp`). v0.1 and
+  the trial's evidence are unchanged.
+- **One point is put to the owner (v0.1r1 section 8 item 6):** his decision 3 of entry 231 was "`* -text` for the
+  whole repository"; the root file cannot govern `GAIS\`, and Claude never writes there. Recommended: he assents to
+  "nothing converts anywhere in this project; `GAIS\` keeps that other project's own rules".
+- **Next:** the new reviewer chat's focused recheck of v0.1r1, when the owner asks; then his ratification. Nothing
+  is converted; no code is changed.
+- Next numbers: EX_304; entry 234; RAT-47.
