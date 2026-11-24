@@ -6043,3 +6043,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Stale, for the next handover edition (due now):** H-1 v11 stops at entry 243 and names the standard v0.1; the
   ratification register lacks RAT-45 to RAT-50; "the conversion" is no longer ahead but done.
 - Next numbers: EX_315; entry 261; RAT-51.
+
+## 261. 25 November 2026, 07:12 - EX_315 (FOCUSED PASS of the lock fix); installed by the owner, commit `fe1c310`, pushed; the temporary exception is closed
+
+- **EX_315** (the reviewer, main `6d994af`, SHA-256
+  `d1710c07770a5df5dd3586db227e669fcf7be26bc0a7be8b55cd98ae713b9de3`): **FOCUSED PASS** of the exact package
+  `FILE_FORM_Lock_Fix_v1`. It rebuilt the replacement bytes from the committed file and the one changed line, checked
+  the ZIP's two members and the five hashes, confirmed `job_lock.py` is class `derived` and that no research line
+  needs making again, and accepted entry 260's reported results of the conversion. "Once Windows tests pass, the
+  temporary exception can close." It was on GitHub before the install: it is the parent of the owner's commit.
+- **The owner's go, 07:07:** "ok lets do the lock thing now". **His window (07:11), each line as the sheet expects:**
+  status clean; the pull `Fast-forward` (EX_315); the ZIP's hash `744efbd3...e20318`; the file before
+  `fadb1785...0ba6a7`; `1 file(s) copied.`; the file after `efe8419e...c7853f`; `git status --short`:
+  ` M src/research/job_lock.py` and nothing else; **`Ran 116 tests in 115.629s` - `OK (skipped=3)`** (the three
+  affected modules, the lock-file test among them); the commit
+  **`fe1c3108c10b77035a824968c9760803eb1b523a`** (1 file changed, 3 insertions, 1 deletion); pushed,
+  `6d994af..fe1c310  main -> main`.
+- **Verified by Claude from GitHub:** the commit's parent is `6d994af`; it changed `src/research/job_lock.py` and
+  no other path; the committed bytes have the SHA-256 `efe8419e5927d87207fc39de0b97519c86b0b4a01f533b5751b6a6f54bc7853f`
+  of the reviewed package.
+- **The temporary exception of entry 260 is closed.** The new lock-file test passes on Windows. The suite's known
+  failures in DEV are again the three that existed before the conversion (`test_gitignore_lines` and two tests of
+  `test_multigame_reader_contracts`). The whole suite was not run again after this one line, as the reviewer asked;
+  the next whole run is the next package's.
+- **Claude pushed nothing between the owner's pull and his push** (the rule of entry 260; EX_315 asks the same of
+  both chats).
+- **A correction to entry 260:** where it says the fill's counts are "the same counts as after build step 2
+  (entry 210)", the entry that holds those counts is **212**; entry 210 holds the baseline made from a clean clone.
+- **The file-form work is finished:** the standard v0.2 (RAT-49), the conversion (RAT-50; `691f58e`), the lock line
+  (`fe1c310`). The owner may delete `E:\TEMP\FILE_FORM_copy_of_project`, `E:\TEMP\FILE_FORM_baseline_clone`,
+  `E:\TEMP\FILE_FORM_Conversion_v2` and `E:\TEMP\FILE_FORM_Lock_Fix_v1` when he likes.
+- **Due now: a handover edition.** H-1 v11 stops at entry 243, names the standard v0.1 and speaks of the conversion
+  as ahead; the ratification register lacks RAT-45 to RAT-50. Claude has recommended it to the owner and waits for
+  his word. After it: slice A's remainder brought to the standard and rebased.
+- Next numbers: EX_316; entry 262; RAT-51.
