@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:45 Australia/Adelaide (entry 266: slice A, the checker is wired into Make_Installable; all its tests pass in the cloud and all 40 real variants and the real infrastructure pass the readiness checks; still to write: the list of installed files, the environment digest's check, Check_Tree, the launch guard).
+**Last updated:** 25 November 2026, 07:54 Australia/Adelaide (entry 267: H-1 v13 is built as a candidate for a change of Claude chat and waits for the owner's ratification (RAT-54); H-1 v12 is still the installed Claude handover).
 
 ## For the owner: NOW
 
+- **A CHANGE OF CLAUDE CHAT IS BEING PREPARED (entry 267; 25 November 2026).** At the owner's request H-1 v13 is
+  built as a CANDIDATE (`exchange/CLAUDE_WEB_TOOLS/h1v13/out/`); it waits for his ratification (RAT-54), then it is
+  installed and a new chat starts from its blurb. **Until then H-1 v12 is the installed Claude handover.** Its
+  section 0E item 14 says exactly where slice A stands.
 - **SLICE A RESUMED (entry 264; 25 November 2026).** Its eleven working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`)
   are CRLF and sit on today's `main`; the markers are written CRLF; all its tests pass in a fresh clone.
   **Decided by the owner (entry 265): `deploy/file_form.py` is infrastructure, installed into every tree** (`[files]`,

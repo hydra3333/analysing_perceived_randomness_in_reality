@@ -6237,3 +6237,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Still to write in slice A:** `INSTALLED_FILES.json` (the list of installed files); the check of the environment's
   digest over the fixed inventory; `Check_Tree.bat` with the checker in it; the launch guard with the process rule.
 - Next numbers: EX_317; entry 267; RAT-54.
+
+## 267. 25 November 2026, 07:54 - the owner asks for the handover to be brought fully up to date and for a handover now; H-1 v13 built as a CANDIDATE
+
+- **The reviewer's acknowledgement of entry 266, relayed by the owner at 07:50 (no EX message):** slice A is
+  progressing on the agreed basis; it will assess the completed package when submitted, not each increment.
+- **Claude recommended** doing the four remaining parts of slice A in a fresh Claude chat (this chat is very long,
+  and they need careful reading of the ratified design). **The owner, 07:51:** "lets update hour handover doc and
+  blurb etc fully and do a handover now please."
+- **Built: H-1 v13, a candidate** (`exchange/CLAUDE_WEB_TOOLS/h1v13/`: `make_h1_v13.py`, `h1_v13_texts.py`, `out/`):
+  `out/Claude_Primary_Handover_H1_v13_CANDIDATE.md`, SHA-256 `f832dbf936cf26c426dcd64d108f43cd449c8f2bc925a0dfb0d537bd7779eeb5`,
+  and `out/Claude_Primary_Handover_H1_v13_CANDIDATE_introductory_blurb.md`, SHA-256
+  `1181921771dafce590c5cd665e695ad04c99912c9a03d1da3fd8414cc449a11c`. Both CRLF. From the installed H-1 v12's Git
+  bytes (asserted by hash): thirteen counted replacements and **four items added to section 0E (13 to 16)**;
+  sections 1, 2 and 2A unchanged (asserted); `out/H1_v12_TO_v13_CANDIDATE_DIFFERENCE.txt` is the whole difference.
+- **What the new items hold:** (13) since H-1 v12: the register v0.33 (RAT-53), the owner's decision that the
+  checker is infrastructure in every tree, and this edition; (14) **slice A, exactly where it stands:** how to work
+  on it, what is written and tested, the cloud's evidence, the four parts still to write in order with where the
+  ratified documents specify each, what goes to the reviewer with the slice, what its install will change, and two
+  things found on the way; (15) what waits now; (16) two more lessons and what changed from H-1 v12; with a table
+  of seventeen identities computed from Git.
+- **Its standing: a candidate.** The owner's advance ratification of entry 262 was for H-1 v12; this edition needs his
+  own word (RAT-54). On it, the builder's `final` mode writes the installed files with the status words alone
+  changed, and Claude installs them in `doc/HANDOVER/`. Not read by the reviewer.
+- Next numbers: EX_317; entry 268; RAT-54.

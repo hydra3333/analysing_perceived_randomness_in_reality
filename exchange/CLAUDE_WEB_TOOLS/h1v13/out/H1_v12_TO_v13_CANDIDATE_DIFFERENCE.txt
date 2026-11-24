@@ -1,0 +1,226 @@
+--- doc/HANDOVER/Claude_Primary_Handover_H1_v12.md
++++ out/Claude_Primary_Handover_H1_v13_CANDIDATE.md
+@@ -1,7 +1,18 @@
+-# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v12
++# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v13
+ 
+ **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
+-**This edition: v12, 25 November 2026, morning (Adelaide, UTC+10:30). OWNER-RATIFIED IN ADVANCE (RAT-51; decision
++**This edition: v13, 25 November 2026, 08:00 (Adelaide, UTC+10:30). CANDIDATE: not ratified and not read by the reviewer; H-1 v12 (RAT-51) is the installed Claude handover until the owner ratifies this one.** H-1 v12 brought up to date the same
++morning, at the owner's request ("lets update hour handover doc and blurb etc fully and do a handover now
++please", 07:51; decision log entry 267), so that a new Claude chat can take over: since H-1 v12 the ratification
++register v0.33 was ratified and installed (RAT-53), the owner decided where the file-form checker belongs, and
++slice A of build step 3 was resumed (entries 263 to 266). Built from the installed H-1 v12's Git bytes by
++`exchange/CLAUDE_WEB_TOOLS/h1v13/make_h1_v13.py`: counted replacements, each marked "v13", and **four items added
++to section 0E (13 to 16), which hold everything since H-1 v12**; `H1_v12_TO_v13_DIFFERENCE.txt` beside the builder
++is the exact difference. Sections 1, 2 and 2A are unchanged (the builder asserts it). **Section 0E and the
++decision log prevail over every older statement of this file, and within 0E its items 13 to 16 over the
++earlier ones.** H-1 v12 (RAT-51) and H-1 v11 (RAT-48) stay in `doc/HANDOVER/` as history.
++`exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. It authorises nothing.
++**The edition it is built from: v12, 25 November 2026, morning (Adelaide, UTC+10:30). OWNER-RATIFIED IN ADVANCE (RAT-51; decision
+ log entry 262): the owner's words, 25 November 2026, 07:15, when he asked for it: "i ratify your new handover docs
+ in advance". IT WAS NOT READ BY THE REVIEWER BEFORE IT WAS INSTALLED; the reviewer's cold read against the
+ repository is owed, and what it finds is corrected in a next revision.** H-1 v11 brought up to date after the
+@@ -12,7 +23,7 @@
+ `H1_v11_TO_v12_DIFFERENCE.txt` beside the builder is the exact difference (line endings set aside: this file is
+ CRLF, as the standard gives every new text file; H-1 v11 is LF). Sections 1, 2 and 2A are unchanged (the builder
+ asserts it). **Where section 0E and an older statement of this file disagree, section 0E and the decision log
+-prevail.** **This is the installed Claude handover.** H-1 v11 (RAT-48) stays in `doc/HANDOVER/` as history.
++prevail.** (v13: H-1 v12 was the installed Claude handover until this edition.) H-1 v11 (RAT-48) stays in `doc/HANDOVER/` as history.
+ `exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. It authorises nothing.
+ **The edition it is built from: v11, 24 November 2026, evening (Adelaide, UTC+10:30). OWNER-RATIFIED the same evening (RAT-48;
+ decision log entry 244). H-1 v10 brought up to date the same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
+@@ -56,7 +67,7 @@
+ install (`5f16b35`, entry 212). **The new system's research engine is installed in DEV and has run** (`src/research/`, the program
+ `src/research_command.py`, the launchers `Run_Research.bat` and `Withdraw_Variant.bat`). The old system's code is still
+ there beside it, unchanged. The trees QA and PROD, the installs, the backups and the laboratory tools are not coded.
+-**Replaces:** (v12) H-1 v11 and its blurb (RAT-48), which stay where they are as history, as H-1 v10 (RAT-45) does.
++**Replaces:** (v13) H-1 v12 and its blurb (RAT-51), which stay where they are as history, as H-1 v11 (RAT-48) and H-1 v10 (RAT-45) do.
+ **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ. This file
+ summarises and points to them.
+ **Draw values:** none appear in this file.
+@@ -83,7 +94,8 @@
+      213 to 216 are H-1 v10 and H-2 v6 (RAT-45, RAT-46), and **entries 217 to 243 are build step 3's go and
+      plan, the file-form standard (RAT-47, entry 237), the change of reviewer chat and the probe's run: section
+      0D**; (v12) **entries 244 to 261 are the standard v0.2 (RAT-49), the conversion of DEV (RAT-50; entries 255 to
+-     260) and the lock line (entry 261): section 0E**);
++     260) and the lock line (entry 261): section 0E**; (v13) **entries 262 to 268 are H-1 v12, the reviewer's H-2 v7
++     and the register v0.33 (RAT-51 to RAT-53), slice A resumed, and this edition: section 0E items 13 to 16**);
+    - the two installed code packages' notes, which show how a package is built, proved and installed here:
+      `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_3.md` and `exchange/CLAUDE_WEB_TOOLS/tidy1/TIDY1_PACKAGE_NOTE_v0_1.md`,
+      with the reviewer's findings on the first (`exchange/EX_276_ChatGPT.md`) and its passes (`EX_278`, `EX_280`);
+@@ -434,18 +446,19 @@
+ | `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` (r1) | `69315a498ac59f5cb558786a89d8b5bbd8c1ba98f87d3e3660c00bfc4a5be7a5` |
+ | `exchange/EX_306_ChatGPT.md` (r1) | `e8a2813a9dc1cf4754920b4d67b3eab4872da795586ec069324581136cb7704b` |
+ 
+-## 0E. After H-1 v11: the night of 24 November and 25 November 2026 (v12; this section prevails over every older statement, section 0D included)
+-
+-Everything here is from the decision log (entries 244 to 262), the EX messages (EX_308 to EX_315) and the files named.
+-**Next numbers at this edition: EX_316, decision log entry 263, RAT-53.** Fetch `main` and confirm before using any.
++## 0E. After H-1 v11: the night of 24 November and 25 November 2026 (v12, with items 13 to 16 added in v13; this section prevails over every older statement, section 0D included)
++
++Everything here is from the decision log (entries 244 to 268), the EX messages (EX_308 to EX_316) and the files named.
++**Next numbers at this edition (v13): EX_317, decision log entry 269, RAT-55.** Fetch `main` and confirm before using
++any: the reviewer commits its own files, and did so twice on 25 November while Claude was building.
+ 
+ 1. **Records.** RAT-48: H-1 v11 (entry 244). **RAT-49: the file-form standard v0.2** (entry 253). **RAT-50** (entry
+    258): for the one conversion of DEV, one attempt and no resumption; the package `FILE_FORM_Conversion_v2`
+    accepted; the runner's rehearsal dropped. **RAT-51** (entry 262): this handover, **ratified by the owner in
+    advance** ("i ratify your new handover docs in advance") and so installed without the reviewer's read; that
+    read is owed. **RAT-52** (entry 262): the reviewer's own H-2 v7, which the owner ratified in advance the same
+-   morning and the reviewer installed (item 9). The register edition is overdue and records RAT-45 to RAT-52
+-   (item 10).
++   morning and the reviewer installed (item 9). (v13) **RAT-53** (entry 265): the ratification register v0.33,
++   installed, which records RAT-41's install to RAT-52. **RAT-54** (entry 268): this edition, H-1 v13.
+ 
+ 2. **THE FILE-FORM STANDARD IN FORCE IS v0.2: `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49). Read it.** v0.1 (RAT-47) is
+    history. The rule is unchanged: every text file of the living project is CRLF; **every `.jsonl` file is LF**;
+@@ -546,7 +559,8 @@
+    **The owner's plan for this Claude chat ends on the night of 25 November 2026;** this edition is written so that
+    a new chat can take over from it.
+ 
+-10. **What waits, at this edition.** On the reviewer: its cold read of this handover (item 1). On the owner:
++10. (v13: **item 15 is the present list;** in this item (a) is under way, item 14, and (c) is done, RAT-53.)
++    **What waits, at this edition.** On the reviewer: its cold read of this handover (item 1). On the owner:
+     nothing. **On Claude, in order:**
+     (a) **slice A of build step 3** (section 0D items 2 to 7): its working files in
+     `exchange/CLAUDE_WEB_TOOLS/step3/overlay/` were written before the standard and against `main` at `5f16b35`;
+@@ -587,6 +601,105 @@
+     12.9 and Appendix A, which are H-1 v11's text; Appendix A's hashes were computed at H-1 v10 and v11 from
+     files that Git then held LF, and for files of the living project they are **no longer the hashes of the
+     present files** (the conversion changed their bytes). Compute afresh from `HEAD`.
++
++13. **(v13) Since H-1 v12: the morning of 25 November 2026 (entries 263 to 268; EX_316).**
++    - **The ratification register v0.33 is ratified and installed: `doc/RATIFICATION_REGISTER_v0_33.md` (RAT-53, entry
++      265).** It is v0.32 with its version line changed and one new section: RAT-41's install to RAT-52, each with
++      its entry, review, installed file, commit and hash; the five installs of code in DEV; what is recorded and
++      not ratified. Reviewed in EX_316 (DOCUMENTARY PASS); its two clarifications of wording were made at
++      installation (`exchange/CLAUDE_WEB_TOOLS/register/v0_33/`, with the candidate, the builder and both differences).
++    - **The owner's decision (entry 265, 07:33): `deploy/file_form.py` is infrastructure, installed into every tree**
++      (the manifest's `[files]`, class `other`), not a DEV-side install tool. One checker serves DEV's suite,
++      `Make_Installable` and `Check_Tree` in DEV, QA and PROD. The reviewer concurs (EX_316): no duplicate module, and
++      it is not to be imported into `forecast`-class code.
++    - **This edition (RAT-54, entry 268)** was asked for at 07:51 so that a new chat can take over; the reviewer's
++      cold read, owed since H-1 v12, now falls on it.
++
++14. **(v13) SLICE A OF BUILD STEP 3: EXACTLY WHERE IT STANDS (entries 264 to 266). Working files; not a package; not
++    reviewed; nothing installed.** The files are `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, laid out as they go into
++    the tree: eleven files, **all CRLF, and sitting on `main` as it is now** (the conversion changed
++    `deploy/INFRA_MANIFEST.ini`; the slice's copy is merged with it).
++    - **How to work on it:** clone `main` into a work folder, then
++      `bash exchange/CLAUDE_WEB_TOOLS/step3/sync_and_test.sh <clone> <python> <test modules>` copies the overlay in and
++      runs the modules. Never run the slice against the repository clone you commit from.
++    - **Written and tested:** `src/research/settings.py` (DEV's entries for QA and PROD, and every cross-tree check
++      of the deployment design's section 1) and the rewritten `ENVIRONMENT.example.ini`; `src/research/code_identity.py`
++      (reads the manifest's `[install_tool]` list); `deploy/install_import_check.py` (the static import check);
++      `deploy/install_readiness.py` (the two readiness markers, written CRLF, **and the file-form checker: nothing in
++      the wrong form can be marked ready, and reading readiness makes the same check**); `deploy/make_installable.py`,
++      `deploy/deploy_command.py` and `Make_Installable.bat`; the manifest, with the `[install_tool]` section and
++      `deploy/file_form.py = other` under `[files]`; the tests `tests/test_trees_settings.py` (32) and
++      `tests/test_trees_readiness.py` (40).
++    - **The cloud's evidence at entry 266** (Claude's, not Windows'): those two modules with `test_file_form` (52),
++      `test_research_manifest` (9) and `test_research_identity` (25), 158 tests, all OK in a clone of `main` with the
++      overlay; and, read-only in that clone, **all 40 real variants and the real infrastructure (34 files, 5
++      install-tool files, the manifest) pass every readiness check, the form check included.** The whole suite has
++      not been run with the slice.
++    - **STILL TO WRITE, in this order:** (1) `records\INSTALLED_FILES.json` (deployment design section 2: every
++      installed software file with its SHA-256, each variant's fingerprint, each status file by name only); (2) the
++      check of the environment's digest over the fixed inventory (specification section 13; the engine's
++      `environment_digest` exists already; on the owner's PC the inventory is 11,997 files, 150.6 seconds on first
++      reading and 5.2 when lately read, TASK_T028); (3) `Check_Tree.bat` (specification section 16; deployment design
++      sections 1 and 10: read-only; what is installed, each variant's status, what is ready, any drift, the backup
++      ZIPs, locks), **with the checker in it** (the standard's section 6: the files on the tree's list of installed
++      files, its `ENVIRONMENT.ini`, every status file, and what the project's programs have written under
++      `source_data\`, `results\research\` and `records\`, each by its kind); (4) the launch guard with the process rule
++      (deployment design section 9; the build plan's section 4A: the rule and the refusals of the reviewed
++      `src\package_tools\process_check.py` are kept, the file is not reused; psutil for every process check but the
++      restore's; **every program started from an environment is two processes and counts as one**).
++    - **To go to the reviewer with the slice:** the narrow, UNRATIFIED amendment of the deployment design's section
++      2 ("standard library only" for the install tools; section 0D item 5); and two readings of the
++      specification (a variant may import its own listed files as well as its helpers; the tool itself refuses a
++      variant that imports an infrastructure file not classed `forecast`).
++    - **What the slice changes in DEV when it is one day installed:** the forecasting-code identity stays as it is
++      (no forecast is made again); the derived-code digest changes (`settings.py` and `code_identity.py` are of that
++      class), which the engine writes into new lines and compares nowhere.
++    - **Two things found on the way, to keep in mind.** `tests/research_fixtures.py`, the engine tests' shared
++      helper, writes with Python's default line ending, which is CRLF on the owner's PC and LF in the cloud; it is
++      not changed: a test that needs files in their form brings its invented tree to form itself (`bring_to_form`
++      and `write_crlf` in `tests/test_trees_readiness.py`). And a test that edits a file "afterwards" must append a
++      line in its form, or it tests the form check and not what it means to test.
++    - **The plan is unchanged** (`step3/STEP3_BUILD_PLAN_v0_1r1.md`): slice A goes to the reviewer as its own package
++      on the owner's word; nothing is installed in DEV until slices A to D have passed and been rehearsed. The
++      reviewer has said it will assess the completed package, not each increment. The plan gives slice A's plainer
++      parts to Opus and slices B and C to Fable; the owner switches.
++
++15. **(v13) What waits now.** On the reviewer: the cold read of this handover, when the owner asks. On the owner:
++    nothing. **On Claude, in order:** the four parts of item 14 still to write; slice A's package and its note;
++    slices B, C and D; the joined rehearsal; the one install into DEV; QA, the transition check and PROD, each on
++    his go; the operations manual's skeleton after build step 3. **Before any of it, the staged takeover of
++    section 0 item 4 if this is a new chat.** Apply item 3 throughout: the simplest safe route is said first.
++
++16. **(v13) Two more lessons, and what changed from H-1 v12.** (i) Fetch `main` immediately before installing a
++    handover or a register: the reviewer installed its own H-2 v7 while H-1 v12 was being built, and H-1 v12 had
++    to be rebuilt to name it. (j) When the owner asks for something "now" and has ratified a like thing in advance
++    the same day, his advance word does not stretch to the next document: ask for it (the register, RAT-53, and
++    this edition, RAT-54, each had his own word). **Changed from H-1 v12:** the header; section 0 item 2; this
++    section's heading, its first lines, items 1 and 10, and these items 13 to 16 with their table; the line on the
++    register in section 4.4; section 12.8 item 5; Appendix B.3 and the last line. Nothing else; sections 1, 2 and
++    2A are byte for byte H-1 v12's.
++
++**Identities added in v13** (SHA-256 of the Git content at `HEAD`, computed by the builder):
++
++| File | SHA-256 |
++|---|---|
++| `doc/RATIFICATION_REGISTER_v0_33.md` | `94cb836c7f8776bb7916793e43591cb98f1575a1767f50a2830b7deb3ef0a2d2` |
++| `exchange/EX_316_ChatGPT.md` | `6ba1a5cb8ba2229728c94e98d96d1e2bd6050b99f4e9070d652dcca7ab46f191` |
++| `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md` | `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd` |
++| `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md` | `ed150c814e392203d380124023692a7d60af714ec08b76e758c87bb5371f38c0` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md` | `6eb18f0e38279a9b68e88dec304dbea205a64b62bc8e80bfc8dc9723c39b3195` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/sync_and_test.sh` | `13b2d077eb2c360119c72815df79b4b96efdc5325787b80e9a822a7e8fcc5a15` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/ENVIRONMENT.example.ini` | `f272d82d4cd7d8635a226eca8e81210c34fa0f2190963a22063dfdfca80ea67e` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/Make_Installable.bat` | `0ad61482d82d7ff41d5656e2bf981ae39f487afd9a5f8289baf5ed4d2880d758` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini` | `6c80656fc99b1958ee6a6c1cf4825c27c5f515772d537b99d1aac992ed55664e` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py` | `f5d1255eead9ab0c1322cabd623f11ea1ed55200fed33c8e2f62d3bcac8bc401` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_import_check.py` | `425121bcd439e7b5dce9b5eac7c11d35e62cf45c2ce3a679042e28401214741e` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_readiness.py` | `0bee38df8053910c4a2125d16292b3f04ef8c427f9c9cc5eecea9f689b6f5cd7` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/make_installable.py` | `90a50b43e0decf4a484849145d90fd78ed5b155ef3211dc7d01eecffda2b84b2` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/code_identity.py` | `01b97b4e9f309433af150ce367968561f2cda63c720f0296295d0ff1be9527be` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/settings.py` | `8fb85b95714cd4692939d5a678df5742ad96864dd5bf2bac192954f01955545b` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_readiness.py` | `00211eb4ad903969103172daea736a52fbfaca81325ec489022ab3414d525621` |
++| `exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_settings.py` | `48cf4b9d1384ace2dc92b9ace85f0d53a2da2bb27b8dd028ae83ba4386815cc6` |
+ 
+ **Identities added at this edition** (SHA-256 of the Git content at `HEAD`, computed by the builder):
+ 
+@@ -860,7 +973,7 @@
+   and `31db13b`) with its status statements refreshed by Claude after the reviewer chat ended (entry 173); its rights
+   text and historical chapters are the reviewer's bytes. H-2 v4 and v5 stay as history.
+   `exchange/CONTINUITY_NOW.md` names the edition in force.
+-- **The register:** `doc/RATIFICATION_REGISTER_v0_32.md`, ratified with this handover (RAT-41; documentary PASS in EX_273).
++- **The register:** (v13) `doc/RATIFICATION_REGISTER_v0_33.md` (RAT-53, entry 265; documentary PASS in EX_316), which records RAT-41's install to RAT-52 and the five installs in DEV. Before it: `doc/RATIFICATION_REGISTER_v0_32.md`, ratified with H-1 v8 (RAT-41; documentary PASS in EX_273).
+   It is register v0.31 (`c6369a72753ebda016f758e623df7a40bcb7a1300a49d503ccbb93be1b3cae6d`, RAT-34) with one added section
+   that records RAT-34's install to RAT-40. A file cannot hold the hash of a file that holds its own, so register
+   v0.32's hash is in decision log entry 153. For anything after RAT-41 the decision log is the record.
+@@ -1582,8 +1695,8 @@
+   3. The rewrite of `ENVIRONMENT.example.ini` (entry 211), in slice A. (v12: the conversion to the file-form
+      standard, which v11 listed here, is done.)
+   4. The test of EX_271 section 3, in build step 4.
+-  5. The next register edition (v12: **overdue**; it now also records RAT-45 to RAT-52, the conversion and the
+-     lock line), when a code package or a handover next travels (section 1.6): it records RAT-41's
++  5. The next register edition (v13: **done as register v0.33, RAT-53;** the edition after it records RAT-53's
++     install and RAT-54), when a code package or a handover next travels (section 1.6): it records RAT-41's
+      install, RAT-42, RAT-43, RAT-44, build steps 1 and 2, the tidy-up and what follows.
+   6. The operations manual's skeleton, agreed with the reviewer, after build step 3 (section 10 item 5).
+   7. A new draft of `doc/METHOD_TEMPLATE/` for the new layout, after build step 3.
+@@ -1742,10 +1855,10 @@
+ 
+ ### B.3 Integrity
+ 
+-(v12) US-ASCII; **CRLF** (the file-form standard: a new text file); one final line ending. The carried sections 1,
++(v12, and v13, which is built the same way from H-1 v12's bytes) US-ASCII; **CRLF** (the file-form standard: a new text file); one final line ending. The carried sections 1,
+ 2 and 2A are identical to H-1 v11's, and so to H-1 v7r1's (the builder asserts it against v11). Every
+ replacement's old text is found exactly once in H-1 v11. The builder refuses on any failure. (This paragraph
+ still described H-1 v9 and v10 in H-1 v11, whose last line read "End of H-1 v10": a stale statement, put right
+ here.)
+ 
+-End of H-1 v12.
++End of H-1 v13.
