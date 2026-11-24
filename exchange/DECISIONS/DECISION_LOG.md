@@ -5515,3 +5515,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not covered by anything yet:** Windows; the owner's real tree; the whole fill; the comparison with the old
   system's records.
 - Next numbers: EX_308; entry 246; RAT-49.
+
+## 246. 24 November 2026, 21:12 - the owner agrees to an early look-only run in his real DEV; the look kit and its sheet
+
+- **Claude's suggestion (entry 245's reply):** a look-only run of the conversion program in the owner's real DEV,
+  early: it changes nothing and shows what his tree holds that Git does not track, any of which would otherwise
+  stop the real run on the day. **The owner, 21:09:** "yes to your suggestion/recommendation".
+- **What that needed first:** as written an hour earlier, even a look refused unless the package's files had been
+  copied into the tree, because the program took the standard's rule from the tree's own `deploy\file_form.py`.
+  An early look must need nothing installed. **Changed:** the program now uses the copy of `file_form.py` that
+  lies beside it, checked by SHA-256 against the conversion list; the files the package itself delivers, when
+  not yet in the tree, are a class of their own, which a look reports and a real run refuses; and the program
+  tells Python to write no compiled copy, so a look writes nothing at all. Tests 39 (three added); planted
+  faults 18 of 18 caught (one added: a run without the package's files not stopped).
+- **The look kit,** `exchange/CLAUDE_WEB_TOOLS/conversion/look_kit/`, made by `make_look_kit.py`, each file in
+  Windows form (CRLF):
+  - `convert_to_file_form.py`, SHA-256 `dd690abe28b27aede35c1951025e8835e0d80c45de63ce1704ed254bedcaceb7`;
+  - `file_form.py`, SHA-256 `1d77cb9dd48ce50bc9d35b777b43df077303a810e1cb874466be166e1b6920cf`;
+  - `CONVERSION_LIST.json` (686 files, made from `b1093a8`), SHA-256
+    `94be7098e64976c7c15431779de2b139ba14f53b5b99a105fc69e7f219f574b6`.
+  **Why CRLF, checked:** in a scratch repository with the project's present attribute lines, a file committed
+  CRLF arrives byte for byte in a clone whose Git has `core.autocrlf=true` (Git 2.43), while a file committed LF is
+  rewritten CRLF there. So the hashes quoted are the hashes the owner's `certutil` will show. They are Claude's
+  first files committed in the standard's form.
+- **The sheet:** `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET.md`: a pull, one `certutil`, one command whose
+  output goes to `E:\TEMP\FILE_FORM_look.txt`, and what to expect. Tried in the cloud on the unconverted trial
+  copy: 662 to convert, 12 in their form, 12 of the package's own not yet there, 1,579 made again, four results
+  files, no finding.
+- **Its standing:** unreviewed. The probe of TASK_T028 was read by the reviewer before it ran; Claude recommends
+  the same here, as a short focused read of the look's path (it reads, hashes and prints; it writes nothing),
+  and gave the owner a paste for it. Whether to wait for that is the owner's choice; the run is his own go.
+- **Not authorised by this:** any run that changes anything; any install; the conversion.
+- Next numbers: EX_308; entry 247; RAT-49.

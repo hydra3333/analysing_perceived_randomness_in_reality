@@ -11,9 +11,10 @@ the package that carries out `doc/FILE_FORM_STANDARD_v0_1.md` section 7. Nothing
 | `git_settings/` | The two Git settings files the package delivers into the root, under plain names so that Git does not obey them here: `gitattributes` (`* -text`) and `gitignore` (two lines added) |
 | `make_conversion_list.py` | Makes the conversion list from Git at HEAD with the package's files laid over it |
 | `tools/convert_to_file_form.py` | The conversion program the owner runs in DEV (standard library; never calls Git) |
-| `tools/test_convert_to_file_form.py` | Its tests on an invented tree (36) |
-| `plant_faults_in_writers.py`, `plant_faults_in_conversion.py` | Plant one fault at a time and show that the tests catch it (11 of 11; 17 of 17) |
+| `tools/test_convert_to_file_form.py` | Its tests on an invented tree (39) |
+| `plant_faults_in_writers.py`, `plant_faults_in_conversion.py` | Plant one fault at a time and show that the tests catch it (11 of 11; 18 of 18) |
 | `trial/` | The cloud trial's evidence |
+| `look_kit/`, `make_look_kit.py`, `LOOK_ONLY_SHEET.md` | The three files (in Windows form) and the sheet for the owner's look-only run in his real DEV, before anything is packaged (decision log entry 246) |
 
 ## Still to do before it is a package
 
@@ -57,4 +58,5 @@ the package that carries out `doc/FILE_FORM_STANDARD_v0_1.md` section 7. Nothing
 8. **One new infrastructure file,** `src/research/windows_text.py` (class `derived`): the one place where the
    engine turns its texts to the standard's form.
 9. **The list's "before" for a file the package delivers is its "after":** such a file found in any other state
-   means the package's files were not copied, and stops the run.
+   means the package's files were not copied; a real run refuses, a look reports it. The program takes the
+   standard's rule from the copy beside it, checked by SHA-256 against the list, never from the tree.

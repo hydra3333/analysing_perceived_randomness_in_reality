@@ -20,15 +20,17 @@ Which part of the project's rules it carries out
     watchpoint of EX_305 on a resumed run.
 
 Which of the project's own modules it uses
-    file_form (the tree's deploy/file_form.py, checked by its SHA-256 against the conversion list before it is
-    used)     form_of, to_form, differ_in_line_endings_only, faults_in_bytes, faults_of_files, files_under,
-    is_left_out_by_name, describe: the standard's one rule
+    file_form (the copy that lies beside this program, checked by its SHA-256 against the conversion list
+    before it is used; it is byte for byte the deploy/file_form.py the package delivers)
+              form_of, to_form, differ_in_line_endings_only, faults_in_bytes, faults_of_files, files_under,
+              is_left_out_by_name: the standard's one rule
 
 What uses it
     The project owner, in DEV, from the conversion's sheet, on his own go; and its tests. Usage:
         python convert_to_file_form.py --tree <tree root> --list <conversion list .json>
                                        --copy <the owner's copy: a folder or a .zip> --record <record .json>
-        ... --look      print what would be done and change nothing (no copy or record is needed)
+        ... --look      print what would be done and change nothing (no copy or record is needed, and the
+                        package's files need not have been copied into the tree yet)
     Standard library only. It ends no process, changes no date or time, and contacts nothing.
 """
 from __future__ import annotations
@@ -44,11 +46,16 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
 
+# Python must leave no compiled copy of the rule beside it, in a look as in a run: a look writes nothing at all.
+sys.dont_write_bytecode = True
+
 # What the two documents say they are, so that a file of another kind is never taken for one.
 LIST_KIND = 'FILE_FORM_CONVERSION_LIST_V1'
 RECORD_KIND = 'FILE_FORM_CONVERSION_RECORD_V1'
-# The standard's rule, as the tree holds it, from the tree root. Its SHA-256 must be the list's "after".
+# The standard's rule, as the package delivers it into a tree, from the tree root. The copy this program uses
+# lies beside it under the same file name, and must have the SHA-256 the list gives for this path.
 RULE_MODULE = 'deploy/file_form.py'
+RULE_FILE_NAME = 'file_form.py'
 # The tree's own settings file: made by hand, in no list, converted by rule (standard section 7).
 SETTINGS_FILE = 'ENVIRONMENT.ini'
 # The folders this program walks, from the tree root: the living project's own places (standard section 2).
@@ -97,6 +104,8 @@ class Survey:
 
     to_convert          listed files whose SHA-256 is the list's "before", for example ['src/a.py']
     already_converted   listed files whose SHA-256 is the list's "after"
+    awaiting_package    listed files that the package itself delivers and that are not yet in this tree in
+                        that form: for a look, something to know; for a run, a problem
     settings            {'ENVIRONMENT.ini': (sha256 now, sha256 it will have)} or {} when there is none
     to_remove           files made again, not converted: {'results/research/...': sha256 now}
     proved_untouched    the results masters and ledgers: {'source_data/POWERBALL_results_master.csv': sha256}
@@ -106,6 +115,7 @@ class Survey:
     """
     to_convert: list = field(default_factory=list)
     already_converted: list = field(default_factory=list)
+    awaiting_package: list = field(default_factory=list)
     settings: dict = field(default_factory=dict)
     to_remove: dict = field(default_factory=dict)
     proved_untouched: dict = field(default_factory=dict)
@@ -151,21 +161,21 @@ def read_list(list_path: Path) -> tuple:
     return entries, sha256_of(data)
 
 
-def load_rule(tree: Path, entries: dict):
-    """Load the standard's rule from the tree, after checking that it is the file the list expects.
+def load_rule(rule_path: Path, entries: dict):
+    """Load the standard's rule, after checking that it is the file the list expects.
 
-    tree        the tree root
+    rule_path   the copy of file_form.py to use (the one beside this program)
     entries     the conversion list, as read_list returns it
-    Returns the module file_form. Refuses (ConversionStopped) when the tree's deploy/file_form.py is missing or
-    is not byte for byte the one the list names: the package's files have not been copied into this tree.
+    Returns the module file_form. Refuses (ConversionStopped) when that file is missing or is not byte for byte
+    the deploy/file_form.py the list names: the program, the rule and the list must be of one package.
     """
-    path = tree / RULE_MODULE
+    path = Path(rule_path)
     wanted = entries.get(RULE_MODULE, {}).get('sha256_after')
     found = sha256_of_file(path) if path.is_file() else None
     if wanted is None or found != wanted:
-        raise ConversionStopped(f'{path} is not the file the conversion list expects (found '
-                                f'{found or "no such file"}). Copy the package\'s files into the tree first, as the '
-                                f'sheet says, then run this again.')
+        raise ConversionStopped(f'{path} is not the rule the conversion list expects (found '
+                                f'{found or "no such file"}). Use the program, the file {RULE_FILE_NAME} beside it '
+                                f'and the list exactly as one package holds them.')
     specification = importlib.util.spec_from_file_location('file_form', path)
     module = importlib.util.module_from_spec(specification)
     sys.modules['file_form'] = module
@@ -201,11 +211,15 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
     rule        the module file_form
     Returns a Survey. Nothing is changed. A file that fits no class, a listed file that is missing or has a
     third SHA-256, a status file that holds more than ACTIVE, and a results file that is not in its form are
-    each a problem, named.
+    each a problem, named. A file the package itself delivers, not yet in the tree in that form, is set apart
+    (awaiting_package): the caller decides what that means.
     """
     survey = Survey()
     found = rule.files_under(tree, WALKED_FOLDERS, with_root_files=True)
     for path in sorted(set(entries) - set(found)):
+        if entries[path].get('delivered_by_package'):
+            survey.awaiting_package.append(path)
+            continue
         survey.problems.append(f'{path}: on the conversion list but not in the tree. Nothing may be missing; put '
                                f'the file back from your copy or tell Claude.')
     for path in found:
@@ -218,8 +232,7 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
             elif digest == entries[path]['sha256_before']:
                 survey.to_convert.append(path)
             elif entries[path].get('delivered_by_package'):
-                survey.problems.append(f'{path}: it is not the file the package delivers ({digest}). Copy the '
-                                       f'package\'s files into the tree first, as the sheet says.')
+                survey.awaiting_package.append(path)
             else:
                 survey.problems.append(f'{path}: its SHA-256 is neither the list\'s "before" nor its "after" '
                                        f'({digest}). The file differs from the one the list was made from: it '
@@ -273,6 +286,9 @@ def describe_survey(survey: Survey, entries: dict, say) -> None:
     """Print what the walk found, class by class (standard section 7: before anything is changed)."""
     say(f'  LISTED, to be converted now ............ {len(survey.to_convert)} file(s) of the {len(entries)} listed')
     say(f'  LISTED, in their form already .......... {len(survey.already_converted)} file(s) (passed over)')
+    if survey.awaiting_package:
+        say(f'  THE PACKAGE\'S OWN FILES, not yet here .. {len(survey.awaiting_package)} file(s) (the package '
+            f'delivers them in their form; they are copied in before a real run)')
     for path, (now, then) in survey.settings.items():
         say(f'  THE TREE\'S OWN SETTINGS ................ {path}: '
             + ('in its form already' if now == then else 'to be converted (line endings only)'))
@@ -466,7 +482,7 @@ def remove_listed(tree: Path, paths, checkpoint) -> int:
 
 
 def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask=input, say=print,
-        now=datetime.now, checkpoint=lambda path: None) -> int:
+        now=datetime.now, checkpoint=lambda path: None, rule_path=None) -> int:
     """The whole conversion of one tree.
 
     tree            the tree root.  list_path: the conversion list.  copy_place: the owner's copy (a folder or a
@@ -474,6 +490,7 @@ def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask
     look_only       True to print what would be done and change nothing
     ask, say        how a question is asked and a line printed (a test passes its own)
     now             gives the present time, for the record only.  checkpoint: called before each file is changed
+    rule_path       the copy of file_form.py to use; None for the one beside this program
     Returns EXIT_DONE when the tree is converted (or, with look_only, when the look found nothing to stop it);
     EXIT_NOT_CONFIRMED when the owner did not type the word; EXIT_STOPPED on anything else.
     """
@@ -483,7 +500,7 @@ def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask
     try:
         entries, list_sha256 = read_list(Path(list_path))
         say(f'  The conversion list: {len(entries)} files; its SHA-256 is {list_sha256}')
-        rule = load_rule(tree, entries)
+        rule = load_rule(rule_path or Path(__file__).with_name(RULE_FILE_NAME), entries)
         if look_only:
             return _look(tree, entries, rule, say)
         if not copy_place or not record_path:
@@ -519,6 +536,10 @@ def _convert(tree, entries, list_sha256, rule, copy_place, record_path, ask, say
     own_locks = {JOB_LOCK, UPDATER_LOCK}
     survey = look_at_tree(tree, entries, _WithoutOwnLocks(rule, own_locks))
     describe_survey(survey, entries, say)
+    if survey.awaiting_package:
+        raise ConversionStopped(f'{len(survey.awaiting_package)} of the package\'s own files are not in this tree '
+                                f'as the package delivers them (the first: {survey.awaiting_package[0]}). Copy '
+                                f'the package\'s files into the tree first, as the sheet says. Nothing was changed.')
     if survey.problems:
         raise ConversionStopped(f'{len(survey.problems)} finding(s) above. Nothing was changed.')
     record = read_record(record_path, tree, list_sha256)
@@ -610,7 +631,8 @@ def _prove(tree, entries, rule, record, record_path, own_locks, say, now) -> int
     faults = rule.faults_of_files(tree, sorted(entries))
     changed_results = [path for path, digest in record['proved_untouched'].items()
                        if survey.proved_untouched.get(path) != digest]
-    left = len(survey.to_convert) + len(survey.to_remove) + len(survey.problems) + len(faults) + len(changed_results)
+    left = (len(survey.to_convert) + len(survey.to_remove) + len(survey.problems) + len(faults)
+            + len(changed_results) + len(survey.awaiting_package))
     if left or any(a != b for a, b in survey.settings.values()):
         for line in ([f'{path}: still to convert' for path in survey.to_convert] + survey.problems
                      + [f'{fault.path}: {fault.what}' for fault in faults]
@@ -638,8 +660,11 @@ def main(arguments) -> int:
     parser.add_argument('--copy', dest='copy_place', help='your copy of the project folder: a folder or a ZIP')
     parser.add_argument('--record', dest='record_path', help='where the record is kept (outside the tree)')
     parser.add_argument('--look', action='store_true', help='print what would be done and change nothing')
+    parser.add_argument('--rule', dest='rule_path', help=f'the copy of {RULE_FILE_NAME} to use (default: beside '
+                                                         f'this program)')
     options = parser.parse_args(arguments)
-    return run(options.tree, options.list_path, options.copy_place, options.record_path, options.look)
+    return run(options.tree, options.list_path, options.copy_place, options.record_path, options.look,
+               rule_path=options.rule_path)
 
 
 if __name__ == '__main__':

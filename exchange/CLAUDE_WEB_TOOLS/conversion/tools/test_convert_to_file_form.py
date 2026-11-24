@@ -100,6 +100,10 @@ class ConversionCase(unittest.TestCase):
         self.list_path, self.record_path = self.root / 'CONVERSION_LIST.json', self.root / 'evidence' / 'RECORD.json'
         listed = dict(LISTED)
         listed['deploy/file_form.py'] = file_form.to_form(RULE_SOURCE.read_bytes(), file_form.CRLF)
+        # The rule the program uses lies in the package, beside the program; here, in a folder of its own.
+        self.rule_path = self.root / 'package' / conversion.RULE_FILE_NAME
+        self.rule_path.parent.mkdir()
+        self.rule_path.write_bytes(listed['deploy/file_form.py'])
         for path, data in {**listed, **OTHER}.items():
             self.put(path, data)
         entries = []
@@ -124,7 +128,7 @@ class ConversionCase(unittest.TestCase):
         self.said holds the lines printed and self.asker the questions asked."""
         self.asker = Asker(*words)
         return conversion.run(self.tree, self.list_path, copy or self.copy, self.record_path, look_only=look_only,
-                              ask=self.asker, say=self.said.append, checkpoint=checkpoint)
+                              ask=self.asker, say=self.said.append, checkpoint=checkpoint, rule_path=self.rule_path)
 
     def text_said(self) -> str:
         """Everything printed so far, as one text."""
@@ -302,7 +306,15 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
 
     def test_the_packages_files_not_yet_copied_into_the_tree(self):
         self.put('deploy/file_form.py', b'# an older rule\n')
-        self.assert_stops_unchanged('is not the file the conversion list expects', "Copy the package's files")
+        self.assert_stops_unchanged("1 of the package's own files are not in this tree", "Copy the package's files")
+
+    def test_a_file_the_package_delivers_that_is_missing_from_the_tree(self):
+        (self.tree / 'deploy/file_form.py').unlink()
+        self.assert_stops_unchanged("1 of the package's own files are not in this tree")
+
+    def test_a_rule_beside_the_program_that_is_not_the_one_the_list_names(self):
+        self.rule_path.write_bytes(b'# another rule\r\n')
+        self.assert_stops_unchanged('is not the rule the conversion list expects')
 
     def test_a_text_file_that_is_in_no_class(self):
         self.put('src/my_notes.txt', b'something of mine\n')
@@ -377,16 +389,28 @@ class ALookOnly(ConversionCase):
 
     def test_a_look_changes_no_byte_and_writes_no_record(self):
         before = tree_bytes(self.tree)
-        code = conversion.run(self.tree, self.list_path, look_only=True, say=self.said.append)
+        code = conversion.run(self.tree, self.list_path, look_only=True, say=self.said.append,
+                              rule_path=self.rule_path)
         self.assertEqual(code, conversion.EXIT_DONE, self.text_said())
         self.assertEqual(tree_bytes(self.tree), before)
+        self.assertEqual(tree_bytes(self.rule_path.parent), {conversion.RULE_FILE_NAME: self.rule_path.read_bytes()})
         self.assertFalse(self.record_path.exists())
         self.assertIn('LOOKED ONLY; nothing was changed', self.said[-1])
+
+    def test_a_look_before_the_packages_files_are_copied_says_so_and_is_not_stopped_by_it(self):
+        (self.tree / 'deploy/file_form.py').unlink()
+        before = tree_bytes(self.tree)
+        code = conversion.run(self.tree, self.list_path, look_only=True, say=self.said.append,
+                              rule_path=self.rule_path)
+        self.assertEqual(code, conversion.EXIT_DONE, self.text_said())
+        self.assertIn("THE PACKAGE'S OWN FILES, not yet here .. 1 file(s)", self.text_said())
+        self.assertEqual(tree_bytes(self.tree), before)
 
     def test_a_look_reports_what_would_stop_a_real_run(self):
         self.put('src/my_notes.txt', b'mine\n')
         self.put(conversion.JOB_LOCK, b'research job\n')
-        code = conversion.run(self.tree, self.list_path, look_only=True, say=self.said.append)
+        code = conversion.run(self.tree, self.list_path, look_only=True, say=self.said.append,
+                              rule_path=self.rule_path)
         self.assertEqual(code, conversion.EXIT_STOPPED)
         self.assertIn('src/my_notes.txt', self.text_said())
         self.assertIn('records/JOB.lock: a lock file exists', self.text_said())

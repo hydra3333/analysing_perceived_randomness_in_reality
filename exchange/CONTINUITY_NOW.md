@@ -4,17 +4,24 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 21:03 Australia/Adelaide (entry 245: the conversion's cloud work is written and trialled; next: the refresh and commit commands, the sheet, the package, then the reviewer).
+**Last updated:** 24 November 2026, 21:12 Australia/Adelaide (entry 246: the look kit and its sheet are ready for the owner's look-only run in his real DEV; unreviewed, Claude recommends the reviewer's short read first; it changes nothing).
 
 ## For the owner: NOW
 
+- **A LOOK-ONLY RUN IN THE REAL DEV IS READY FOR THE OWNER (entry 246; 24 November 2026, evening). It changes
+  nothing.** The sheet: `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET.md` (a pull, one `certutil`, one
+  command; the output goes to `E:\TEMP\FILE_FORM_look.txt`, to be sent to Claude). It shows what the real folder
+  holds that Git does not track, any of which would stop the conversion on the day. **Unreviewed:** Claude
+  recommends the reviewer's short read of the look's path first; the owner decides, and the run is his own go.
+  **Meanwhile, by Claude:** the refresh and commit commands, the sheet of the day, the package. Claude's next
+  numbers: EX_308, entry 247, RAT-49.
 - **THE CONVERSION'S CLOUD WORK IS WRITTEN AND TRIALLED (entry 245; 24 November 2026, evening). Working files, not
   a package.** Under `exchange/CLAUDE_WEB_TOOLS/conversion/` (start with `NOTES_FOR_THE_PACKAGE.md`): the engine's
   writers changed to CRLF, the conversion list (686 files), the conversion program with a look-only mode, the Git
   settings, and the trial's evidence (suite 762 of 762 the same; forecasts and scores unchanged on four
   variants). **Next, by Claude:** the refresh and commit commands, the sheet, the package; then the reviewer.
   **Then, each on the owner's own go:** a look-only run in his real DEV, a rehearsal by the runner, the day.
-  **Nothing waits on the owner now.** Claude's next numbers: EX_308, entry 246, RAT-49.
+  (A look-only run is ready for him: the bullet above.)
 - **RAT-48: H-1 v11 IS RATIFIED AND INSTALLED (entry 244; 24 November 2026, evening).** In force for a Claude chat:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v11.md` (`91a9c181...c09318`) and its blurb
   `Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`16d7feed...9b5ec`): **a new Claude chat is started by

@@ -5,6 +5,7 @@ file = folder / 'convert_to_file_form.py'
 MUTATIONS = [
     ("            elif digest == entries[path]['sha256_before']:\n                survey.to_convert.append(path)\n            elif entries[path].get('delivered_by_package'):",
      "            elif True:\n                survey.to_convert.append(path)\n            elif entries[path].get('delivered_by_package'):", 'a third SHA-256 taken as "before"'),
+    ("    if survey.awaiting_package:\n        raise ConversionStopped(", "    if False:\n        raise ConversionStopped(", 'a run without the package\'s files not stopped'),
     ("    problems = check_copy(copy, {**record['originals_converted'], **record['originals_removed']})",
      "    problems = check_copy(copy, {**{p: entries[p]['sha256_before'] for p in survey.to_convert}, **survey.to_remove})", 'the copy checked against what is still to do, not the first run\'s record'),
     ("        with HeldLock(tree / JOB_LOCK, rule), HeldLock(tree / UPDATER_LOCK, rule):", "        with HeldLock(tree / JOB_LOCK, rule):", 'the updater\'s lock not held'),
