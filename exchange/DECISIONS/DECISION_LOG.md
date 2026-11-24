@@ -4559,3 +4559,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Each of those is his own separate go, as before.
 - **First deliverable:** the build plan, for the owner and the reviewer, before any code.
 - Next numbers: EX_298; entry 218; RAT-47.
+
+## 218. 24 November 2026, 15:56 - build step 3: the build plan written (v0.1); four decisions put to the owner; no code yet
+
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1.md` (SHA-256 `d91def21015da725c786aadf88fb54463f293bde8ccdec53b2a90086c74105d2`), from the specification
+  (12.1 to 12.6, 13, 14.1, 17.3, 17.4) and the deployment design v0.12 (sections 1 to 12 and 15), read again for it.
+  A working plan, not a design and not a rule.
+- **What it says.** Step 3 delivers `Make_Installable`, `Check_Tree`, `Init_Tree`, `Install`, `Reinstall_Infra`,
+  `Verify_Tree`, the launch guard, backups, the recovery kit and `Restore`, the clean-sheet updater, the results step
+  in each role, the transition check and PROD's first job. **Recommended: four code slices, each reviewed by
+  itself** (A foundations; B backups, the kit and restore; C trees and installs; D the updater), then E, the
+  transition; each rehearsed by the runner in scratch trees; **one install into DEV at the end.** It lists the
+  owner's decisions already given (entries 180, 181, 211), how the updater's clean sheet is proved, and what is not
+  known until it runs on Windows.
+- **Put to the owner:** (1) four slices and one install at the end, or an install per slice; (2) a short probe task
+  first (what the standard library reads of Windows' processes; a rename over an open file; the time and size of a
+  backup with its `.venv`); (3) QA before PROD, as the specification recommends; (4) whether the plan goes to the
+  reviewer before slice A is coded.
+- No code is written. Nothing is authorised on the owner's PC.
+- Next numbers: EX_298; entry 219; RAT-47.

@@ -4,15 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:53 Australia/Adelaide (entry 217: the owner's GO for build step 3; Claude writes the build plan first, before any code; both handovers are current; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 15:56 Australia/Adelaide (entry 218: build step 3's build plan v0.1 is written; four decisions are with the owner; no code yet; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
 - **BUILD STEP 3 HAS THE OWNER'S GO (entry 217; 24 November 2026, 15:53).** It covers design within the ratified
   documents, coding and testing in the cloud, and the reviewed packages; not any install, run, tree creation,
-  backup, restore or runner task on his PC. **In progress:** the build plan
-  (`exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1.md` when written), for the owner and the reviewer, before
-  any code.
+  backup, restore or runner task on his PC. **The build plan is written** (entry 218):
+  `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1.md`: slices A (foundations), B (backups, kit, restore), C (trees
+  and installs), D (the updater, clean sheet), then E (the transition). **Waiting on the owner:** its section 7:
+  slices and one install at the end; a probe task first; QA before PROD; the plan to the reviewer before slice A.
+  No code yet.
 - **BOTH HANDOVERS ARE CURRENT (entry 216; 24 November 2026).** **For a Claude chat: H-1 v10 (RAT-45),**
   `doc/HANDOVER/Claude_Primary_Handover_H1_v10.md`, started with its blurb. **For the reviewer: H-2 v6 (RAT-46),**
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_20261124.md` (`588c52b9...f174a1`) and its blurb, installed by the
