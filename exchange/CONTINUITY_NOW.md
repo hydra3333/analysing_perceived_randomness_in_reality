@@ -4,10 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 08:00 Australia/Adelaide (entry 269: H-1 v13 (RAT-54) and the reviewer's H-2 v8 (RAT-55) are both installed; a new Claude chat starts from H-1 v13's blurb; nothing is in flight).
+**Last updated:** 25 November 2026, 08:22 Australia/Adelaide (entry 270: the new Claude chat's takeover from H-1 v13 is accepted by the owner after the reviewer's HO-2 PASS; slice A resumes in the cloud; nothing is in flight).
 
 ## For the owner: NOW
 
+- **THE NEW CLAUDE CHAT'S TAKEOVER IS ACCEPTED (entry 270; 25 November 2026, 08:21).** The reviewer's HO-2
+  assessment: PASS, all nine answers, no second round. The owner: "you are approved to proceed in this role with
+  prior guthub access." Normal work, the same commit rights. **Next work: slice A's four parts still to write**
+  (the list of installed files, the check of the environment's digest, `Check_Tree`, the launch guard), then its
+  package and note for the reviewer, on the owner's word. **One question goes to the owner with the slice:**
+  whether there is one environment digest (the reviewer's preference: one, computed once at a job's start and used
+  for verification and for new envelopes; old envelopes untouched) or the two that the installed engine and
+  specification 13 now describe. The reviewer's other recommendations (no repair command; no cache machinery; the
+  existing process rules; no DEV registry of installed files) are in entry 270, with eight points of wording for
+  H-1's next ordinary revision. **Owed by the reviewer:** its cold read of H-1 v13, when the owner asks. No PC
+  operation, install or runner task is authorised.
 - **A CHANGE OF CLAUDE CHAT (entry 268; 25 November 2026, 07:58). H-1 v13 IS THE INSTALLED CLAUDE HANDOVER (RAT-54).**
   **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md`;** the staged
   takeover is H-1 v13 section 0 item 4, and its section 0E item 14 says exactly where slice A stands. The outgoing
@@ -859,6 +870,12 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
+- **Now (25 November 2026):** the reviewer chat that started on the evening of 24 November 2026 (entries 232, 234;
+  EX_304 to EX_316). Its handover in force is **H-2 v8** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md`;
+  RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: none.** Owed by
+  it: the cold read of H-1 v13, when the owner asks. Owed to it: slice A's package. Still owed to it in the build:
+  its test of EX_271 section 3 (step 4) and the watchpoint of EX_273 section 2 (step 3, the updater). **The bullet
+  below is the position of 22 November 2026 and is history.**
 - **Now (22 November 2026):** the reviewer chat that took over on 21 November 2026 (entries 132, 134). Its handover in
   force is **H-2 v4** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`; RAT-41, entry 153). It has
   reviewed EX_266 to EX_271 (the design: PASS, EX_271), H-1 v8 (EX_272, EX_273) and register v0.32 (EX_273). **Open

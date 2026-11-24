@@ -6314,3 +6314,79 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (RAT-53); nothing in flight. This is the outgoing Claude chat's last entry unless the owner asks for more before
   the new chat starts.
 - Next numbers: EX_317; entry 270; RAT-56.
+
+## 270. 25 November 2026, 08:22 - HO-2: the new Claude chat's takeover (from H-1 v13) accepted by the owner after the reviewer's PASS; normal work with the same GitHub rights; the reviewer's recommendations on six uncertainties recorded
+
+- **How it went (no EX numbers, as in entries 134 and 157):** the new Claude chat started at 08:02 from
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md`, cloned `main` at `db66065` with full history
+  (1,043 commits), read H-1 v13 in full and checked it with tools: H-1 v13 `37aa0196...89bbae` and its blurb as entry
+  268 gives them; both H-2 v8 files as entry 269 gives them; 131 hashes in H-1 v13's tables against `HEAD`: 122 equal,
+  and nine in Appendix A not (eight differ by line endings only since the conversion, and `deploy/INFRA_MANIFEST.ini`
+  also by the one line the conversion added), as its section 0E item 12 warns; the masters 448 rows (1144 to 1591)
+  and 235 rows (1474 to 1708), consecutive, with the recorded hashes; 40 variants in 12 families; 54 test modules;
+  the manifest on `main` 33 files (forecast 13, derived 17, other 3), slice A's 34 files and five install-tool
+  files; slice A's eleven working files all CRLF; under `src`, `tests`, `deploy` and the root every tracked file CRLF
+  but the six files of the standard's section 3A and one empty file; the six tracked `.jsonl` files LF; the three
+  switches False and the allowlist empty. Its first reply and its answers to the reviewer's nine blind
+  questions (relayed by the owner at 08:12: authority and the immediate work; the list of installed files; the
+  environment's verification; the process and launch safeguards; file form and scientific identity; N-1 and what
+  OV-1 can claim; a failed backup, an interrupted reinstall and a restore with an orphan marker; the transition;
+  working discipline) were given in the chat and relayed by the owner. Neither chat committed anything during the
+  takeover, and no test or program of the project was run.
+- **Said by Claude as not read in full at the takeover:** decision log entries 121 to 261 other than 217 to 219,
+  222 and 225 (their headings were read); the three package notes; the reviewer's findings on the design and on
+  build steps 1 and 2; the file-form standard's sections 4, 5 and 7 to 11; H-2 v8's chapters 1 to 19; and the code
+  of slice A's eleven files (listed, hashed and checked for form). The slice's code and the package notes are read
+  before any work on it.
+- **The reviewer's assessment, pasted by the owner at 08:21 (not a committed file; its views, not owner
+  decisions):** "PASS. I recommend accepting the new Claude chat's takeover and authorising it to resume Slice A."
+  All nine answers PASS, the third with a clarification. "No second round of takeover questions is necessary."
+  "The full H-1 v13 documentary cold read remains outstanding; this takeover assessment does not substitute for
+  it." "No repository changes made and no new EX issued. EX_317 remains available." **Its recommendations on the
+  six uncertainties Claude had flagged, accepted by Claude:**
+  1. *A stray file in an installed tree:* "No automated repair command. Refuse, identify the file and leave any
+     manual correction to the owner."
+  2. *Python's cache folders in QA and PROD:* "Launchers must not create caches there. Retain the existing
+     variant-fingerprint exclusions, but enforce the ratified installed-tree inventory rule. No cache-removal
+     machinery."
+  3. *Two environment digests* (the installed engine's `environment_digest()` names the Python and the installed
+     distributions and is what a forecast's envelope carries; specification 13 describes a digest over the bytes
+     of a fixed inventory of the environment's files): "A genuine specification question." "My preference,
+     consistent with KISS, is one authoritative environment digest going forward, computed once at job start and
+     reused for verification and new forecast envelopes. Existing historical envelopes remain untouched." "Do not
+     introduce two permanent digest mechanisms without a concrete need." Claude examines that approach and puts
+     any narrow clarification of the specification to the owner with slice A. **Not decided.**
+  4. *The process rule across trees:* "Apply the existing process rules and T028 findings. Read the relevant
+     existing implementation before coding. No additional process-management framework."
+  5. *Where `Check_Tree` runs:* "Distinguish where the command runs from which tree it checks. Retain the owner's
+     infrastructure classification decision. No additional launcher or artificial DEV installed-file registry is
+     needed."
+  6. *OV-1's start:* "Claude's interpretation is correct. The current specification governs eligibility; the older
+     supplement supplies the retained mathematical and numerical contract."
+  Its three qualifications, accepted: TASK_T028 showed how Windows answered a rename and a replacement on that
+  day, not a universal guarantee; the eligibility draw needs a successful results step, and a first PROD job whose
+  update fails writes none merely by reaching its end (specification 7.1); results computed retrospectively remain
+  legitimate exploratory evidence and do not inherit the prevailing score's bound.
+- **The owner's words (08:21):** "you are approved to proceed in this role with prior guthub access."
+- **DECIDED (owner):** the takeover is accepted; this Claude chat is the primary designer and coder, with normal
+  work and the same commit rights as before (his hard rules; H-1 v13 section 0B item 4). The outgoing Claude chat
+  commits nothing further.
+- **How Claude reads it (said to the owner):** the reviewer's "recommended instruction to Claude" is the
+  reviewer's text; the owner's own words are the line above. Build step 3's go for design and cloud coding (entry
+  217) stands, so slice A is resumed in the cloud, within that scope. The owner's model rule is applied as entry
+  266 applied it: this chat puts "Suggest switching to Fable (High) for this" to him before the slice's design
+  work (the launch guard with the process rule; the question of the one environment digest) and waits for his go.
+- **Wording to put right at H-1's next ordinary revision (no new edition now; the reviewer and Claude agree):**
+  (a) section 0E's first lines give the next entry as 269, which entry 269 used; (b) section 0E item 13 says only
+  the candidate H-2 v8 was on `main` (entry 269 corrects it); (c) section 3 says only the method files' layout is
+  built; (d) section 7.1 gives the manifest as 32 files (16 derived), where `main` has 33 (17 derived) since the
+  conversion; (e) section 5.1 describes the old `source_data/** -text` line of `.gitattributes`, which the
+  standard's three lines replaced; (f) sections 0A item 3 and 0C item 4 call register v0.32 the newest; (g) section
+  0 item 2 calls the file short (it is 1,875 lines, in layers that each prevail over older text: the next edition
+  folds them in); (h) section 7.3 calls `src/research/ov1_numeric.py` the reviewed kernel "byte for byte" and says a
+  test asserts it: since the conversion the file is that kernel with CRLF line endings (`b5fb488f...f190d19b` as
+  stored; `2858075e...cba8d8234` with CRLF read as LF, which is the reviewed kernel's hash), and no test of the
+  suite compares the two (the step 2 install manifest pinned the hash at install). The mathematics is untouched.
+  H-2 v8 section 0.3 says "byte-identical" likewise; that file is the reviewer's.
+- **Not authorised by this entry:** any operation on the owner's PC, any install, any runner task, any tree.
+- Next numbers: EX_317; entry 271; RAT-56.
