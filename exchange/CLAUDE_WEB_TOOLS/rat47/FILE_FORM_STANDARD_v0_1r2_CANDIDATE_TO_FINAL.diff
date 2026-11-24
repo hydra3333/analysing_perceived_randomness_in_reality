@@ -1,0 +1,67 @@
+--- exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1r2_CANDIDATE.md
++++ doc/FILE_FORM_STANDARD_v0_1.md
+@@ -1,16 +1,21 @@
+-# The project's standard for the form of its text files (line endings) - v0.1r2 CANDIDATE
+-
+-**Date:** 24 November 2026. **Author:** the Claude web chat (on Fable (High)). **Status:** a CANDIDATE for the
+-reviewer's reading and then the project owner's ratification, as a note of ratification to the specification v0.6,
+-beside the coding practices. The owner has decided its five open points (section 8; decision log entry 231). It is
+-not ratified, changes nothing by itself, and authorises nothing on the owner's PC. Ratified, it replaces the words
+-"LF pinned" of decision log entry 181 and the advice in the specification's section 20 on pinning line endings in
+-`.gitattributes`. Made from the draft of the same day (`FILE_FORM_STANDARD_v0_1_DRAFT.md`, kept beside it).
++# The project's standard for the form of its text files (line endings) - v0.1 (OWNER-RATIFIED, RAT-47, 24 November 2026)
++
++**Date:** 24 November 2026. **Author:** the Claude web chat (on Fable (High)). **Status: OWNER-RATIFIED on 24 November 2026
++(RAT-47, decision log entry 237),** as a note of ratification to the specification v0.6, beside the coding
++practices, after the reviewer's FOCUSED PASS (EX_305) of the exact candidate v0.1r2 (SHA-256
++`4f515726bceb31e6d92df422c8b4c0c1e8df349a780430d28bcbf40bd9204f51`), of which this is the installed text. The
++owner decided its open points (section 8; decision log entries 231 and 234). **It changes nothing by itself and
++authorises nothing on the owner's PC:** the conversion, every install and every run are each his own go. It
++replaces the words "LF pinned" of decision log entry 181 and the advice in the specification's section 20 on
++pinning line endings in `.gitattributes`. The draft, the candidates, their exact differences, the builders and
++the trial's evidence are kept in `exchange/CLAUDE_WEB_TOOLS/standards/`; the exact difference from the ratified
++candidate to this text is `exchange/CLAUDE_WEB_TOOLS/rat47/FILE_FORM_STANDARD_v0_1r2_CANDIDATE_TO_FINAL.diff`.
+ **v0.1r1 (24 November 2026):** the four clarifications of the reviewer's EX_303 are made: FFS-C01 (sections 2,
+ 6 and 7: what is the project's own, what a tree's own untracked files become, the checker's exact scope);
+ FFS-C02 (sections 3 and 3B: two more kinds, the `.jsonl` wording, what conforming means exactly); FFS-C03
+ (section 5: `GAIS\`, and commits from the cloud); FFS-C04 (section 7: a second run, locks, a copy first,
+-what is and is not proved). One point is put to the owner (section 8 item 6). The policy is unchanged. v0.1
++what is and is not proved). One point was put to the owner (section 8 item 6); he has decided it. The policy is
++unchanged. v0.1
+ and the trial's evidence stay as they were; `FILE_FORM_STANDARD_v0_1_TO_v0_1r1.diff` is the exact difference.
+ **v0.1r2 (24 November 2026):** the one narrow correction of the reviewer's EX_304 (which passed FFS-C01, C02 and
+ C03): v0.1r1 promised that the conversion could be undone from its list alone. That is not generally true and
+@@ -134,7 +139,7 @@
+ - **The root `.gitattributes` says one thing: `* -text`.** Git then never changes a line ending, in either
+   direction, on any PC, whatever its own `core.autocrlf` setting is. The existing special lines are no longer
+   needed.
+-- **It does not reach `GAIS\`, and this standard says so** (EX_303 FFS-C03; for the owner's assent, section 8 item
++- **It does not reach `GAIS\`, and this standard says so** (EX_303 FFS-C03; the owner assented: section 8 item
+   6). That folder is another project's. It has two attribute files of its own
+   (`GAIS/OUTLANDISH_01/.gitattributes`, `GAIS/OUTLANDISH_01/OUTLANDISH_WSL/.gitattributes`), which Git obeys for the
+   paths under them, and the second tells Git to convert that project's `.py`, `.sh`, `.md` and `.bat` files.
+@@ -242,18 +247,19 @@
+ 5. **The six files of the retired release machinery** are left out by name: "yes to your recommendation ignoring
+    retired machinery and we should note that in the standard" (section 3A).
+ 
+-**Put to the owner, not yet answered (v0.1r1; EX_303 FFS-C03):**
++**Put to the owner in v0.1r1 (EX_303 FFS-C03), and decided by him on 24 November 2026, 18:59 (decision log entry
++234):**
+ 
+ 6. **`GAIS\` keeps its own Git rules.** His decision 3 was "`* -text` for the whole repository". The root file
+    cannot govern `GAIS\`, which has attribute files of its own (section 5), and Claude does not write there.
+-   Recommended: he assents to the statement of section 5 ("nothing converts anywhere in this project; `GAIS\`
+-   keeps that other project's own rules"). The other way is that he himself changes the two attribute files
+-   under `GAIS\`.
++   His words: "ok "`GAIS\`" tree is out of scope as historical subproject, so yes to your recommendation." So
++   the statement of section 5 stands: nothing converts anywhere in this project; `GAIS\` keeps that other
++   project's own rules, and nothing under it is changed.
+ 
+ ## 9. What the trial in the cloud found
+ 
+ Claude converted a copy of the repository and ran the whole suite before and after (24 November 2026; the
+-test-by-test comparison is `TRIAL_CRLF_SUITE_COMPARISON.txt` beside this file).
++test-by-test comparison is `exchange/CLAUDE_WEB_TOOLS/standards/TRIAL_CRLF_SUITE_COMPARISON.txt`).
+ 
+ - **Converted:** every tracked text file under `src`, `deploy`, `tests` and the root, 669 files (239 `.py`, 419
+   `.json` and a few others), with `.gitattributes` saying `* -text`.

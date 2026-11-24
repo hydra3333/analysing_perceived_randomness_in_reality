@@ -5171,3 +5171,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   to date and the exact difference kept.
 - **The reviewer has used EX_305.** Claude's next number is EX_306.
 - Next numbers: EX_306; entry 237; RAT-47.
+
+## 237. 24 November 2026, 19:38 - RAT-47: THE OWNER RATIFIES the file-form standard (the candidate v0.1r2); installed as doc/FILE_FORM_STANDARD_v0_1.md
+
+- **The owner, 19:36, to Claude, in his own words:** "I ratify the file-form standard v0.1r2 (RAT-47)."
+- **RAT-47 is recorded** (RAT-46 was the last number used). Ratified: the exact candidate
+  `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1r2_CANDIDATE.md`, SHA-256 `4f515726bceb31e6d92df422c8b4c0c1e8df349a780430d28bcbf40bd9204f51`, which has the
+  reviewer's FOCUSED PASS (EX_305, entry 236).
+- **Installed by Claude** with `exchange/CLAUDE_WEB_TOOLS/rat47/finalise_rat47.py` (the candidate asserted by hash; the
+  statements the ratification made out of date changed by replacements that each match exactly once; the installed
+  file must not exist already): **`doc/FILE_FORM_STANDARD_v0_1.md`, SHA-256
+  `97034474f1a7e9c54a14b9554b45666cb1fa031d566545433a0412d4312f8335`.** The exact difference from the candidate:
+  `exchange/CLAUDE_WEB_TOOLS/rat47/FILE_FORM_STANDARD_v0_1r2_CANDIDATE_TO_FINAL.diff` (SHA-256 `12fd942ce72441750b0b9708857a3e4d090a2e2009e55d7b5da2da2d002bc535`), which rebuilds the
+  installed text with `patch` (checked with `cmp`). **What differs, and nothing else:** the title; the status
+  paragraph (ratified, RAT-47, this entry; where the draft, the candidates and the evidence are kept); "one point
+  was put to the owner; he has decided it"; **section 8 item 6, now recorded as decided by him in entry 234, with
+  his words** (as the reviewer asked in EX_304 and EX_305); section 5's pointer to it; the path of the trial's
+  evidence. The candidate is unchanged.
+- **What RAT-47 is:** a note of ratification to the specification v0.6, beside the coding practices. It replaces the
+  words "LF pinned" of entry 181 and the specification's section 20 advice on pinning line endings in
+  `.gitattributes`. **What it is not:** it converts nothing and authorises no conversion, install or run; each is
+  the owner's own go.
+- **The installed file's own line endings.** It is written with LF, like every document Claude has committed so
+  far. The standard's section 5 has Claude's own new files in CRLF "from then on", that is from the day of the
+  conversion, when `* -text` is in place and the owner's working copy is refreshed; a single CRLF document
+  committed before that day would be the halfway house the standard exists to end.
+- **In force now:** the specification v0.6, the deployment design v0.12, the coding practices v0.1 (RAT-40) and
+  **the file-form standard v0.1 (RAT-47)**; the runner's rulebook v0.7 (RAT-44); H-1 v10 (RAT-45); H-2 v6
+  (RAT-46), with Claude's unratified refresh H-2 v6r2 in use by the new reviewer chat.
+- **A refresh of the handovers is due** (Claude's assessment): H-1 v10 knows nothing of build step 3's plan and
+  decisions or of this standard; the continuity page and H-2 v6r2's section 0.13 carry them meanwhile.
+- **Next for Claude, in the cloud:** the conversion list and program (the reviewer's watchpoint of entry 236 taken
+  in), the engine's writers, the checker, the Git settings, the sheet and the runner's rehearsal; then slice A.
+- Next numbers: EX_306; entry 238; RAT-48.

@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 19:36 Australia/Adelaide (entry 236: EX_305, the reviewer's FOCUSED PASS of the file-form standard v0.1r2; waiting on the owner's own ratification, RAT-47; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 19:38 Australia/Adelaide (entry 237: RAT-47, the owner ratifies the file-form standard; installed as doc/FILE_FORM_STANDARD_v0_1.md; next: the conversion program and checker in the cloud, and a refresh of the handovers; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
+- **RAT-47: THE FILE-FORM STANDARD IS RATIFIED AND INSTALLED (entry 237; 24 November 2026).**
+  **`doc/FILE_FORM_STANDARD_v0_1.md`** (`97034474...2f8335`), from the candidate v0.1r2 the reviewer passed (EX_305).
+  Every text file of the living project CRLF; `.jsonl` LF; every program names the ending it writes; Git converts
+  nothing (`* -text`; `GAIS\` keeps its own rules); the project's own checker; a conversion program working from a
+  list with each file's SHA-256 before and after, the owner's checked copy being the one way back; six files of
+  the retired Mode H release machinery left out by name; frozen history and the sealed records untouched. **It
+  converts nothing by itself.** **Next for Claude (cloud):** the conversion list and program, the engine's
+  writers, the checker, the Git settings, the sheet and a runner rehearsal, before slice A is packaged. **Each
+  step on the owner's PC is his own go.** **A refresh of the handovers is due** (H-1 v10 predates all of today's
+  step 3 work). Claude's next numbers: EX_306, entry 238, RAT-48.
 - **THE REVIEWER CHAT ENDED AFTER EX_303; A NEW ONE IS STARTED FROM CLAUDE'S REFRESH (entry 232; 24 November 2026).**
   **To start a new reviewer chat, paste what is below the divider of**
   `exchange/CLAUDE_WEB_TOOLS/h2v6r2/out/ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124_introductory_blurb.md`
