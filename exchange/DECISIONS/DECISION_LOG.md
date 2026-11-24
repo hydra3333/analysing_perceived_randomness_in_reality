@@ -4844,3 +4844,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   owner has it.
 - **Not decided.** Nothing was changed anywhere; `.gitattributes` is as it was.
 - Next numbers: EX_303; entry 227; RAT-47.
+
+## 227. 24 November 2026, 17:17 - OWNER: Git is never an operational gatekeeper or checker; what Claude takes from it for the two open questions of entries 225 and 226
+
+- **The owner, 17:16, to Claude,** on the two questions put to him (markers tracked by Git or ignored; how line
+  endings are pinned): "git should never be used as an operational gatekeeper/checker nor for gating/checking
+  deployments etc, github is a tool for managing commits and project statuses."
+- **It is already the ratified rule, and the new system keeps it.** Specification v0.6 section 2: "Git and GitHub
+  are DEV conveniences only (owner). No install, run, copy, backup or restore needs them". Deployment design v0.12
+  section 0: "Installs copy named files from the DEV folder on this PC. No Git, no network." Claude searched the
+  engine and the step 3 working files for any use of Git: there is none (one refusal's advice mentions it). What
+  decides readiness, identity and a tree's integrity is the project's own tools reading bytes on disk: the
+  markers, the identity recorded in each list, and the list of installed files.
+- **A fault in how Claude put entry 226, corrected here.** It argued for a pin by saying that disk, repository and
+  every clone would then hold the same bytes, which reads as if Git were the assurance. It is not. The only
+  purpose of a line-ending setting is to keep Git from altering DEV's files behind the tools' backs, which would
+  make a marker stop matching or, for an installed variant, be refused as "different bytes".
+- **What Claude takes from his words, and works on unless he says otherwise:**
+  1. **The markers are not tracked by Git.** They are the state of one tree, made by his own command on his PC;
+     `.gitignore` gets two lines for them, as it has for the status files.
+  2. **Git is set to store the code exactly as it lies and never to convert it** (`-text` for `src/**` and
+     `deploy/**`; entry 226's first way): Git as a plain store, doing nothing to the files. The three files that are
+     CRLF on his disk are committed as they are, once. Nothing in DEV changes. This replaces the wording "LF
+     pinned" of entry 181; its purpose is kept.
+  3. **No tool of the new system consults Git, and none will.** The sheets that install a package into DEV go on
+     using Git for what it is for: committing.
+- He has not said "option 1" in so many words; item 2 is Claude's reading of his principle and is his to overturn.
+  Nothing is installed or changed by it: it reaches his PC only in a reviewed package, on his own go.
+- Next numbers: EX_303; entry 228; RAT-47.

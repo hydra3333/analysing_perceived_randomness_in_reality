@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 17:16 Australia/Adelaide (entry 226: DEV's three CRLF files named, one of them shared forecasting code; a question is with the owner on how line endings are pinned; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 17:17 Australia/Adelaide (entry 227: the owner: Git is never an operational gatekeeper; so markers are not tracked, and Git is set to store the code as it lies and never convert it; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -23,10 +23,10 @@ durable EX messages are authoritative.
   manifest's `[install_tool]` section, `tests/test_trees_readiness.py` (38 tests). **Next in slice A:** the LF pin
   (DEV has 584 LF and 3 CRLF files under `src` and `deploy`, `core.autocrlf=true`; the three names are asked for),
   `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard, the design amendment's wording.
-  **Open with the owner:** markers tracked by Git or ignored (recommended: ignored); and (entry 226) how line
-  endings are pinned: `src/methods/_common/game_profiles.py`, forecast-class, is CRLF on his disk, so making it LF
-  would make every list in DEV foreign; recommended: pin `src/**` and `deploy/**` as they lie (`-text`) and commit
-  the three CRLF files as they are, instead of `text eol=lf`.
+  **The owner's principle (entry 227): Git is never an operational gatekeeper or checker.** Taken from it, his to
+  overturn: the markers are not tracked by Git; Git is set to store `src/**` and `deploy/**` as they lie and never
+  convert them (`-text`), and the three files that are CRLF on his disk (`game_profiles.py`, forecast-class, among
+  them) are committed as they are, so nothing in DEV changes; no tool of the new system consults Git.
 - **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
   November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
   probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)
