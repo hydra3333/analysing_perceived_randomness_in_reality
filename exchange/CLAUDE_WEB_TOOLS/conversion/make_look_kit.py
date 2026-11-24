@@ -17,7 +17,8 @@ Which of the project's own modules it uses
     make_conversion_list (beside this file)     the list
 
 What uses it
-    Claude, in the cloud workspace. Usage:  python3 -I make_look_kit.py <repository root>
+    Claude, in the cloud workspace. Usage:  python3 -I make_look_kit.py <repository root> <kit folder name>
+    (a new folder name for each edition: a kit that has been reviewed is never written over)
 """
 import hashlib
 import os
@@ -30,15 +31,16 @@ sys.path.insert(0, os.path.join(HERE, 'overlay', 'deploy'))
 import file_form                                            # noqa: E402
 import make_conversion_list                                 # noqa: E402
 
-KIT = os.path.join(HERE, 'look_kit')
 # What goes into the kit beside the list: {name in the kit: where it comes from, from this folder}.
 COPIED = {'convert_to_file_form.py': 'tools/convert_to_file_form.py', 'file_form.py': 'overlay/deploy/file_form.py'}
 LIST_NAME = 'CONVERSION_LIST.json'
 
 
-def main(root: str) -> int:
-    """Write the kit's three files and print the SHA-256 of each; return 0."""
-    os.makedirs(KIT, exist_ok=True)
+def main(root: str, kit_name: str) -> int:
+    """Write the kit's three files into a new folder beside this script and print the SHA-256 of each; return 0.
+    Refuses (FileExistsError) a folder that exists already."""
+    KIT = os.path.join(HERE, kit_name)
+    os.makedirs(KIT)
     make_conversion_list.main(root, os.path.join(HERE, 'overlay'), os.path.join(KIT, LIST_NAME))
     for name, source in COPIED.items():
         with open(os.path.join(HERE, source), 'rb') as handle:
@@ -52,4 +54,4 @@ def main(root: str) -> int:
 
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv[1]))
+    sys.exit(main(sys.argv[1], sys.argv[2]))

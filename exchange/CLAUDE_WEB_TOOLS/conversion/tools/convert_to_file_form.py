@@ -5,7 +5,8 @@
 What this file is for
     The project's standard (doc/FILE_FORM_STANDARD_v0_1.md, RAT-47) gives every text file of the living project
     the Windows form, CRLF, and every line-record file (.jsonl) LF. This program brings an existing DEV tree to
-    it. It walks the tree's own folders itself and never asks Git anything. Before it changes anything it prints
+    it. It walks the tree's own folders itself and never asks Git anything. A link, a junction or any other
+    reparse point met there is named and is never entered or read. Before it changes anything it prints
     what it found, class by class, and waits for the owner's typed word. A file on the conversion list is
     converted only if its SHA-256 is the list's "before"; one that already has the list's "after" is passed
     over; any other value stops the run before anything is changed. It changes line endings and nothing else,
@@ -22,8 +23,8 @@ Which part of the project's rules it carries out
 Which of the project's own modules it uses
     file_form (the copy that lies beside this program, checked by its SHA-256 against the conversion list
     before it is used; it is byte for byte the deploy/file_form.py the package delivers)
-              form_of, to_form, differ_in_line_endings_only, faults_in_bytes, faults_of_files, files_under,
-              is_left_out_by_name: the standard's one rule
+              form_of, to_form, differ_in_line_endings_only, faults_in_bytes, faults_of_files,
+              files_and_links_under, is_left_out_by_name: the standard's one rule
 
 What uses it
     The project owner, in DEV, from the conversion's sheet, on his own go; and its tests. Usage:
@@ -37,10 +38,10 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import importlib.util
 import json
 import os
 import sys
+import types
 import zipfile
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -79,6 +80,8 @@ UNTOUCHED_PREFIX = 'source_data/HOLDOUT_OPENED_'
 # The two locks held while the program works, exactly where the engine and the updater make their own.
 JOB_LOCK = 'records/JOB.lock'
 UPDATER_LOCK = 'source_data/.results_master.lock'
+# The folders those two lock files are written in.
+LOCK_FOLDERS = ('records', 'source_data')
 # The words the owner types.
 WORD_TO_CONVERT = 'CONVERT'
 WORD_TO_REMOVE = 'REMOVE'
@@ -166,20 +169,24 @@ def load_rule(rule_path: Path, entries: dict):
 
     rule_path   the copy of file_form.py to use (the one beside this program)
     entries     the conversion list, as read_list returns it
-    Returns the module file_form. Refuses (ConversionStopped) when that file is missing or is not byte for byte
-    the deploy/file_form.py the list names: the program, the rule and the list must be of one package.
+    Returns the module file_form, made from exactly the bytes whose SHA-256 was checked. Refuses
+    (ConversionStopped) when that file is missing or is not byte for byte the deploy/file_form.py the list
+    names: the program, the rule and the list must be of one package.
     """
     path = Path(rule_path)
     wanted = entries.get(RULE_MODULE, {}).get('sha256_after')
-    found = sha256_of_file(path) if path.is_file() else None
+    source = path.read_bytes() if path.is_file() else None
+    found = sha256_of(source) if source is not None else None
     if wanted is None or found != wanted:
         raise ConversionStopped(f'{path} is not the rule the conversion list expects (found '
                                 f'{found or "no such file"}). Use the program, the file {RULE_FILE_NAME} beside it '
                                 f'and the list exactly as one package holds them.')
-    specification = importlib.util.spec_from_file_location('file_form', path)
-    module = importlib.util.module_from_spec(specification)
+    # The module is made from exactly the bytes that were just hashed. Python's import machinery is not used,
+    # so no compiled copy lying beside the file is ever read in its place, and none is written.
+    module = types.ModuleType('file_form')
+    module.__file__ = str(path)
     sys.modules['file_form'] = module
-    specification.loader.exec_module(module)
+    exec(compile(source, str(path), 'exec'), module.__dict__)
     return module
 
 
@@ -188,7 +195,8 @@ def status_file_problem(data: bytes) -> str | None:
 
     data    the file's bytes, in the old form or the new
     Returns None when every "status" line says ACTIVE and no withdrawal or eligibility draw is recorded;
-    otherwise a few words saying what was found, for example 'it records "withdrawn_from_draw = 1601"'.
+    otherwise a few fixed words saying which kind of thing was found, for example 'it holds a status other than
+    ACTIVE'. Nothing of the file's content is ever put into the words returned: they are printed.
     """
     try:
         lines = data.decode('ascii').splitlines()
@@ -197,9 +205,9 @@ def status_file_problem(data: bytes) -> str | None:
     for line in lines:
         line = line.strip()
         if line.startswith('status') and line != PLAIN_STATUS_LINE:
-            return f'it says "{line}"'
+            return 'it holds a status other than ACTIVE'
         if line.startswith(RECORDED_FACT_PREFIXES):
-            return f'it records "{line}"'
+            return 'it records a withdrawal or an eligibility draw'
     return None
 
 
@@ -211,12 +219,18 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
     rule        the module file_form
     Returns a Survey. Nothing is changed. A file that fits no class, a listed file that is missing or has a
     third SHA-256, a status file that holds more than ACTIVE, and a results file that is not in its form are
-    each a problem, named. A file the package itself delivers, not yet in the tree in that form, is set apart
+    each a problem, named. So is every link, junction or other reparse point met: it is named, never entered
+    and never read. A file the package itself delivers, not yet in the tree in that form, is set apart
     (awaiting_package): the caller decides what that means.
     """
     survey = Survey()
-    found = rule.files_under(tree, WALKED_FOLDERS, with_root_files=True)
+    found, links = rule.files_and_links_under(tree, WALKED_FOLDERS, with_root_files=True)
+    for path in links:
+        survey.problems.append(f'{path}: a link, a junction or another reparse point. It was not entered and not '
+                               f'read, and nothing that lies behind it was looked at. Tell Claude what it is.')
     for path in sorted(set(entries) - set(found)):
+        if any(path == link or path.startswith(link + '/') for link in links):
+            continue
         if entries[path].get('delivered_by_package'):
             survey.awaiting_package.append(path)
             continue
@@ -239,8 +253,8 @@ def look_at_tree(tree: Path, entries: dict, rule) -> Survey:
                                        f'was edited here, or the tree is not at the list\'s commit.')
         elif path in (JOB_LOCK, UPDATER_LOCK):
             survey.problems.append(f'{path}: a lock file exists. A job or a results update is running, or one was '
-                                   f'killed and left it. When you are sure nothing of the project is running, '
-                                   f'delete that one file by hand and run this again.')
+                                   f'killed and left it. Do nothing about it on the strength of this line: tell '
+                                   f'Claude.')
         elif path == SETTINGS_FILE:
             data = full.read_bytes()
             try:
@@ -416,8 +430,9 @@ class HeldLock:
             descriptor = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
         except FileExistsError:
             raise ConversionStopped(f'{self.path} exists: a job or a results update is running, or one was killed '
-                                    f'and left it. When you are sure nothing of the project is running, delete '
-                                    f'that one file by hand and run this again.') from None
+                                    f'and left it. Nothing was changed. Do nothing about the lock on the strength '
+                                    f'of this line: tell Claude, and it is cleared by the project\'s own procedure '
+                                    f'for that lock.') from None
         line = f'file-form conversion; process {os.getpid()}\n'.encode('ascii')
         os.write(descriptor, self.rule.to_form(line, self.rule.CRLF))
         os.close(descriptor)
@@ -505,6 +520,13 @@ def run(tree, list_path, copy_place=None, record_path=None, look_only=False, ask
             return _look(tree, entries, rule, say)
         if not copy_place or not record_path:
             raise ConversionStopped('--copy and --record are both needed for a run that changes anything.')
+        # A lock is a file this program writes: the folders it is written in must be the tree's own, not links
+        # to another place, before anything is written at all.
+        linked = [path for path in rule.files_and_links_under(tree, LOCK_FOLDERS, with_root_files=False)[1]
+                  if path in LOCK_FOLDERS]
+        if linked:
+            raise ConversionStopped(f'{linked[0]} is a link, a junction or another reparse point, not a folder of '
+                                    f'this tree. Nothing was written. Tell Claude what it is.')
         with HeldLock(tree / JOB_LOCK, rule), HeldLock(tree / UPDATER_LOCK, rule):
             return _convert(tree, entries, list_sha256, rule, Path(copy_place), Path(record_path), ask, say, now,
                             checkpoint)
@@ -618,9 +640,9 @@ class _WithoutOwnLocks:
     def __getattr__(self, name):
         return getattr(self._rule, name)
 
-    def files_under(self, root, folders, with_root_files):
-        return [path for path in self._rule.files_under(root, folders, with_root_files)
-                if path not in self._own_locks]
+    def files_and_links_under(self, root, folders, with_root_files):
+        files, links = self._rule.files_and_links_under(root, folders, with_root_files)
+        return [path for path in files if path not in self._own_locks], links
 
 
 def _prove(tree, entries, rule, record, record_path, own_locks, say, now) -> int:

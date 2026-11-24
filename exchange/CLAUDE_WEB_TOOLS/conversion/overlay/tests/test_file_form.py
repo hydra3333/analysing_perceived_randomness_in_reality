@@ -11,10 +11,12 @@ What uses it
     The project's test suite. Its last class checks the real files of the tree the suite runs in: it fails until
     that tree has been converted to the standard, and afterwards whenever a file arrives in the wrong form.
 """
+import os
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 # The checker is imported from deploy/, as the tools that use it import it.
@@ -182,6 +184,80 @@ class CheckingFilesOfATree(unittest.TestCase):
         self.assertIn('src/b.py: must be CRLF', faulty)
         self.assertIn('.jsonl', faulty)
         self.assertIn('VS Code', faulty)
+
+
+class LinksAreNeverFollowed(unittest.TestCase):
+    """Standard section 6 with the reviewer's EX_308 LOOK-C02: the walk reads the tree's own files only. A link,
+    a junction or any other reparse point is set apart, never entered and never read."""
+
+    def setUp(self):
+        self.folder = tempfile.TemporaryDirectory()
+        self.addCleanup(self.folder.cleanup)
+        self.root = Path(self.folder.name) / 'tree'
+        self.elsewhere = Path(self.folder.name) / 'elsewhere'
+        for path in ('tree/src/a.py', 'tree/LICENSE', 'elsewhere/secret.py', 'elsewhere/deep/more.py'):
+            full = Path(self.folder.name) / path
+            full.parent.mkdir(parents=True, exist_ok=True)
+            full.write_bytes(b'x = 1\r\n')
+
+    def link(self, link: Path, target: Path) -> None:
+        """Make a link to a folder or a file; a junction where Windows allows no symbolic link. Skips the test
+        where neither can be made."""
+        link.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            os.symlink(target, link, target_is_directory=target.is_dir())
+        except (OSError, NotImplementedError):
+            if os.name != 'nt' or not target.is_dir():
+                self.skipTest('this account cannot make a symbolic link here')
+            import _winapi
+            _winapi.CreateJunction(str(target), str(link))
+
+    def walk(self, folders=('src',), with_root_files=True):
+        return file_form.files_and_links_under(self.root, folders, with_root_files)
+
+    def test_a_linked_folder_met_in_the_walk_is_set_apart_and_not_entered(self):
+        self.link(self.root / 'src' / 'linked', self.elsewhere)
+        self.assertEqual(self.walk(), (['LICENSE', 'src/a.py'], ['src/linked']))
+
+    def test_a_linked_file_is_set_apart_and_not_listed_as_a_file(self):
+        self.link(self.root / 'src' / 'b.py', self.elsewhere / 'secret.py')
+        self.assertEqual(self.walk(), (['LICENSE', 'src/a.py'], ['src/b.py']))
+
+    def test_a_named_folder_that_is_a_link_is_not_walked(self):
+        self.link(self.root / 'records', self.elsewhere)
+        self.assertEqual(self.walk(folders=('src', 'records')), (['LICENSE', 'src/a.py'], ['records']))
+
+    def test_a_named_folder_that_lies_under_a_link_is_not_walked_and_the_link_is_named(self):
+        self.link(self.root / 'results', self.elsewhere)
+        self.assertEqual(self.walk(folders=('src', 'results/deep')), (['LICENSE', 'src/a.py'], ['results']))
+
+    def test_a_link_in_the_root_where_a_file_would_stand_is_set_apart(self):
+        self.link(self.root / 'NOTES.txt', self.elsewhere / 'secret.py')
+        self.assertEqual(self.walk(), (['LICENSE', 'src/a.py'], ['NOTES.txt']))
+
+    def test_a_linked_folder_in_the_root_that_is_not_walked_is_none_of_the_walks_business(self):
+        self.link(self.root / 'other_place', self.elsewhere)
+        self.assertEqual(self.walk(), (['LICENSE', 'src/a.py'], []))
+
+    def test_the_plain_walk_refuses_when_it_meets_a_link(self):
+        self.assertEqual(file_form.files_under(self.root, ('src',), with_root_files=True), ['LICENSE', 'src/a.py'])
+        self.link(self.root / 'src' / 'linked', self.elsewhere)
+        with self.assertRaises(file_form.FileFormRefused) as refusal:
+            file_form.files_under(self.root, ('src',), with_root_files=True)
+        self.assertIn('src/linked', str(refusal.exception))
+
+    def test_the_mark_windows_puts_on_a_junction_or_any_reparse_point_counts_as_a_link(self):
+        ordinary = os.lstat(self.root / 'src' / 'a.py')
+
+        class Marked:
+            """An ordinary file's status with the reparse-point mark set, as Windows reports a junction."""
+            st_mode = ordinary.st_mode
+            st_file_attributes = file_form.REPARSE_POINT_ATTRIBUTE | 0x10
+
+        self.assertFalse(file_form.is_link(self.root / 'src' / 'a.py'))
+        with mock.patch.object(file_form.os, 'lstat', return_value=Marked()):
+            self.assertTrue(file_form.is_link(self.root / 'src' / 'a.py'))
+        self.assertFalse(file_form.is_link(self.root / 'not_there'))
 
 
 class BringingAFileToItsForm(unittest.TestCase):

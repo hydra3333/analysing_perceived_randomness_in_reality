@@ -5547,3 +5547,51 @@ section 17.2 (unpack it into a new folder, never over the clone).
   and gave the owner a paste for it. Whether to wait for that is the owner's choice; the run is his own go.
 - **Not authorised by this:** any run that changes anything; any install; the conversion.
 - Next numbers: EX_308; entry 247; RAT-49.
+
+## 247. 24 November 2026, 21:22 - EX_308 (the look's path is read-only; two narrow corrections); the look kit r1 and its sheet r1
+
+- **Relayed by the owner at 21:17:** "EX_308_ChatGPT.md is committed at main 03c9bc23879cb665f96cf19e7266869660a59628 ...
+  Two narrow corrections before recommending the real DEV look". Claude read `exchange/EX_308_ChatGPT.md` (SHA-256
+  `38d26c230513202d13728d15f27c808e0ab9ab19e7c88624a67723ff15cd2c86`).
+- **EX_308:** all three hashes of the kit match; the `--look` path "reads, hashes, computes prospective line endings
+  in memory and prints. It takes no lock, creates no record, starts no subprocess, and makes no explicit network
+  call" (a conclusion from the source, not an execution on Windows). Two corrections:
+  - **LOOK-C01:** the finding for a status file that holds more than ACTIVE printed the file's own line, while
+    the sheet promised that no content is printed. **Claude's fault: the sheet's promise was not checked against
+    every message.**
+  - **LOOK-C02:** the walk did not refuse Windows junctions and other reparse points, a named folder could itself
+    be a link, and a linked file would be read through.
+  - **Sheet precautions:** check all three hashes; no compiled copy of the rule standing in for it; nothing else
+    of the project running; on a lock finding, no deletion by hand on the look's word; the pull is a separate
+    step outside the read-only claim.
+- **Corrected** (working sources under `exchange/CLAUDE_WEB_TOOLS/conversion/`; the exact difference from the
+  reviewed kit's sources is `look_kit_TO_r1.diff`, SHA-256 `e4b03181b24807cebd7e7bd10af1fbe10c89f205d2d21509bb8519f1d9941cc8`,
+  15 hunks):
+  - **C01:** two fixed descriptions ("it holds a status other than ACTIVE"; "it records a withdrawal or an
+    eligibility draw"); nothing of a file's content is put into any message. A test asserts that the planted
+    values do not appear in the output.
+  - **C02:** in the rule module, `is_link` (a symbolic link anywhere; on Windows anything carrying the
+    reparse-point mark) and `files_and_links_under`, which never enters or reads a link: a named folder that is
+    a link or lies under one is not walked, and a folder or file met in the walk that is a link is set apart.
+    The plain `files_under` (the suite's check) refuses on any. The program names each as a finding, and before
+    a real run takes its locks it refuses a control folder that is a link, so that no lock is written through
+    one. Tests on real links (junctions where Windows allows no symbolic link) and one with Windows' mark
+    mocked.
+  - **The precautions:** the program now reads `file_form.py`, checks those bytes against the list and runs
+    exactly those bytes, without Python's import machinery, so that no compiled cache is read or written; the
+    lock messages say "tell Claude" and no longer advise deleting by hand; the sheet has three `certutil` lines,
+    says that nothing else of the project runs, and sets the pull apart.
+- **Checked:** the program's tests 41 and the rule's 52 pass; planted faults 22 of 22 caught (four added: a link
+  not reported; a lock written through a linked control folder; each of the two contents printed). A look with
+  the new kit on the unconverted trial copy with a planted link: the link named, nothing behind it listed, the
+  tree byte for byte unchanged; without the link, no finding. The two file-form test modules pass again in the
+  converted trial tree with the corrected rule (68 tests).
+- **The look kit r1,** `exchange/CLAUDE_WEB_TOOLS/conversion/look_kit_r1/` (CRLF; made from `03c9bc2`):
+  - `convert_to_file_form.py`, SHA-256 `0dc02db3fd69e23590f0ee54f59372870856b054edeaad5da937385881d05bde`;
+  - `file_form.py`, SHA-256 `e27e57b43a18108cc0a343b921a15e1f40c80fa2756e070d1cac4f4a7c78310c`;
+  - `CONVERSION_LIST.json`, SHA-256 `a60fcd78562b7903afe689bcea796fb3cc7bbb74c7b90f9fdf61d262f25544a9`.
+  **The sheet r1:** `LOOK_ONLY_SHEET_r1.md`, SHA-256 `68b8ff7d1220425f43940d486bcdf89c5df1b9925c99b767c639eee49b568ea0`.
+  The first kit (`look_kit/`) and the first sheet stay exactly as the reviewer read them.
+- **Its standing:** for the reviewer's confirmation of the narrow difference. The look itself is the owner's own
+  go, not given by a review.
+- Next numbers: EX_309; entry 248; RAT-49.

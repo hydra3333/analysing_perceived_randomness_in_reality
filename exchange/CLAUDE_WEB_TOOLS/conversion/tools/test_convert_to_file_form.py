@@ -15,6 +15,7 @@ What uses it
 """
 import hashlib
 import json
+import os
 import shutil
 import sys
 import tempfile
@@ -327,12 +328,46 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
     def test_a_status_file_that_holds_a_withdrawal(self):
         self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', OLD_STATUS.replace(
             b'status = ACTIVE\n', b'status = WITHDRAWN\nwithdrawn_from_draw = 1601\n'))
-        self.assert_stops_unchanged('VARIANT_STATUS.ini: it says "status = WITHDRAWN"', 'your decision')
+        self.assert_stops_unchanged('VARIANT_STATUS.ini: it holds a status other than ACTIVE', 'your decision')
+        for content in ('WITHDRAWN', '1601', 'withdrawn_from_draw'):
+            self.assertNotIn(content, self.text_said())
 
     def test_a_status_file_that_holds_an_eligibility_draw(self):
         self.put('src/methods/E_901/TOY_A_V1/VARIANT_STATUS.ini', OLD_STATUS.replace(
             b'status = ACTIVE\n', b'status = ACTIVE\nprevailing_ov1_first_eligible_draw = 1596\n'))
-        self.assert_stops_unchanged('it records "prevailing_ov1_first_eligible_draw = 1596"')
+        self.assert_stops_unchanged('VARIANT_STATUS.ini: it records a withdrawal or an eligibility draw')
+        for content in ('1596', 'prevailing_ov1'):
+            self.assertNotIn(content, self.text_said())
+
+    def link(self, link: Path, target: Path) -> None:
+        """Make a link to a folder; a junction where Windows allows no symbolic link. Skips the test where
+        neither can be made."""
+        try:
+            os.symlink(target, link, target_is_directory=True)
+        except (OSError, NotImplementedError):
+            if os.name != 'nt':
+                self.skipTest('this account cannot make a symbolic link here')
+            import _winapi
+            _winapi.CreateJunction(str(target), str(link))
+
+    def test_a_linked_folder_among_the_results_is_named_and_nothing_behind_it_is_read_or_removed(self):
+        elsewhere = self.root / 'elsewhere'
+        elsewhere.mkdir()
+        (elsewhere / 'not_the_trees.txt').write_bytes(b'another place\n')
+        self.link(self.tree / 'results/research/linked', elsewhere)
+        self.assert_stops_unchanged('results/research/linked: a link, a junction or another reparse point')
+        self.assertNotIn('not_the_trees.txt', self.text_said())
+        self.assertEqual((elsewhere / 'not_the_trees.txt').read_bytes(), b'another place\n')
+
+    def test_a_control_folder_that_is_a_link_stops_the_run_before_a_lock_is_written_through_it(self):
+        elsewhere = self.root / 'elsewhere'
+        elsewhere.mkdir()
+        shutil.rmtree(self.tree / 'records')
+        self.link(self.tree / 'records', elsewhere)
+        self.assertEqual(self.run_it('CONVERT', 'REMOVE'), conversion.EXIT_STOPPED)
+        self.assertIn('records is a link, a junction or another reparse point', self.text_said())
+        self.assertEqual(list(elsewhere.iterdir()), [])
+        self.assertEqual(self.asker.questions, [])
 
     def test_a_results_master_that_is_not_in_its_form_is_never_converted(self):
         self.put('source_data/POWERBALL_results_master.csv', b'Draw,Date\n1,2026-01-01\n')
@@ -414,6 +449,8 @@ class ALookOnly(ConversionCase):
         self.assertEqual(code, conversion.EXIT_STOPPED)
         self.assertIn('src/my_notes.txt', self.text_said())
         self.assertIn('records/JOB.lock: a lock file exists', self.text_said())
+        self.assertIn('tell Claude', self.text_said())
+        self.assertNotIn('by hand', self.text_said())
 
 
 @unittest.skipUnless((REPOSITORY_SRC / 'research' / 'job_lock.py').is_file(), 'not run inside the repository')

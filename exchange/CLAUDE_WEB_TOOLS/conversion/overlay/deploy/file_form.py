@@ -26,6 +26,7 @@ from __future__ import annotations
 import ast
 import os
 import re
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -78,6 +79,8 @@ LEFT_OUT_BY_NAME = (
 )
 # Folders that are never walked: Python's own cache folders, which hold nothing the project wrote.
 NEVER_WALKED_FOLDERS = ('__pycache__',)
+# The mark Windows puts on a link, a junction or any other reparse point (stat.FILE_ATTRIBUTE_REPARSE_POINT).
+REPARSE_POINT_ATTRIBUTE = 0x400
 # The rule in one paragraph, with its exception: the standard requires that the exception is said wherever the
 # rule is summarised (section 3), so every message of the checker ends with this.
 RULE_IN_SHORT = ('The standard (doc/FILE_FORM_STANDARD_v0_1.md): every text file of the project ends its lines CRLF. '
@@ -233,26 +236,83 @@ def faults_of_files(root: str | os.PathLike, relative_paths) -> list[Fault]:
     return faults
 
 
+def is_link(path: str | os.PathLike) -> bool:
+    """Whether a path is a link, a junction or any other Windows reparse point. The path is never followed.
+
+    path    a file or a folder
+    Returns True for a symbolic link anywhere and, on Windows, for anything that carries the reparse-point mark
+    (a junction, a link to a folder or a file, a placeholder of a cloud drive); False for an ordinary file or
+    folder and for a path that is not there.
+    """
+    try:
+        status = os.lstat(path)
+    except OSError:
+        return False
+    return stat.S_ISLNK(status.st_mode) or bool(getattr(status, 'st_file_attributes', 0) & REPARSE_POINT_ATTRIBUTE)
+
+
+def files_and_links_under(root: str | os.PathLike, folders, with_root_files: bool) -> tuple[list[str], list[str]]:
+    """What a walk of the disk finds: the files under the named folders and, if asked, the files that lie
+    directly in the root; and, apart, every link met on the way. Git is not asked what exists.
+
+    root              the tree's root folder
+    folders           folders from the root, for example ('src', 'results/research'); one that is not there
+                      contributes nothing
+    with_root_files   True to add the files lying directly in the root (not its other folders)
+    Returns (files, links), each a sorted list of paths from the root with forward slashes, for example
+    (['LICENSE', 'src/research/reader.py'], ['results/research']).
+    A link is never entered and never read: a named folder that is a link, or lies under one, is not walked; a
+    folder or a file met in the walk that is a link is set apart. Python's cache folders are not entered.
+    """
+    root = Path(root)
+    files, links = [], []
+    if with_root_files:
+        for entry in os.scandir(root):
+            if is_link(entry.path):
+                # A link in the root counts only if it stands where a file would: the root's other folders are
+                # not this walk's business, and a named folder is checked below.
+                if not os.path.isdir(entry.path):
+                    links.append(entry.name)
+            elif not entry.is_dir(follow_symlinks=False):
+                files.append(entry.name)
+    for folder in folders:
+        parts = [part for part in as_root_path(folder).split('/') if part not in ('', '.')]
+        linked_part = next(('/'.join(parts[:count]) for count in range(1, len(parts) + 1)
+                            if is_link(root.joinpath(*parts[:count]))), None)
+        if linked_part is not None:
+            links.append(linked_part)
+            continue
+        for current, subfolders, names in os.walk(root / folder):
+            def from_root(name: str) -> str:
+                return as_root_path(os.path.relpath(os.path.join(current, name), root))
+            kept = []
+            for name in sorted(subfolders):
+                if is_link(os.path.join(current, name)):
+                    links.append(from_root(name))
+                elif name not in NEVER_WALKED_FOLDERS:
+                    kept.append(name)
+            subfolders[:] = kept
+            for name in names:
+                (links if is_link(os.path.join(current, name)) else files).append(from_root(name))
+    return sorted(files), sorted(set(links))
+
+
 def files_under(root: str | os.PathLike, folders, with_root_files: bool) -> list[str]:
     """The files a walk of the disk finds: everything under the named folders and, if asked, the files that lie
     directly in the root. Git is not asked what exists.
 
-    root              the tree's root folder
-    folders           folders from the root, for example ('src', 'deploy', 'tests'); one that is not there
-                      contributes nothing
-    with_root_files   True to add the files lying directly in the root (not its other folders)
+    root, folders, with_root_files    as for files_and_links_under
     Returns the paths from the root with forward slashes, sorted, for example ['LICENSE', 'src/research/reader.py'].
-    Python's cache folders are not entered. A link is listed like a file and not followed.
+    Refuses (FileFormRefused) when the walk meets a link, a junction or another reparse point: the project's own
+    folders hold none, and what lies behind one is not the tree's to read.
     """
-    root = Path(root)
-    found = []
-    if with_root_files:
-        found.extend(entry.name for entry in os.scandir(root) if not entry.is_dir(follow_symlinks=False))
-    for folder in folders:
-        for current, subfolders, names in os.walk(root / folder):
-            subfolders[:] = sorted(name for name in subfolders if name not in NEVER_WALKED_FOLDERS)
-            found.extend(as_root_path(os.path.relpath(os.path.join(current, name), root)) for name in names)
-    return sorted(found)
+    files, links = files_and_links_under(root, folders, with_root_files)
+    if links:
+        raise FileFormRefused(f'{len(links)} link(s), junction(s) or other reparse point(s) lie where only the '
+                              f'project\'s own files and folders belong, the first at {links[0]}. Nothing behind a '
+                              f'link was entered or read. Remove the link (never what it points to), or tell '
+                              f'Claude what it is.')
+    return files
 
 
 def describe(faults: list[Fault]) -> str:
