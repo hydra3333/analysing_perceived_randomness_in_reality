@@ -6449,3 +6449,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   3.15, one run of the whole suite on `main` as it is and one with the slice's overlay copied in, and a reading of
   the slice's eleven files. Nothing on the owner's PC.
 - Next numbers: EX_318; entry 273; RAT-56.
+
+## 273. 25 November 2026, 08:44 - slice A, step 1 done in the cloud: the whole suite on `main` and with the slice's overlay (the first whole runs since the lock line, and the first with the slice); the owner's reminder on overheads
+
+- **The owner, 08:35:** "ps you would have noted the rule indicating not to over-engineer unnecessarily introducing
+  too many \"software admin\" type checks and overheads ?" **At 08:39** he gave the link to
+  `exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md` (read; SHA-256 as H-1 v13 Appendix A gives
+  it). **Claude's answer, which binds the rest of slice A:** only the four parts the ratified design names, each as
+  the smallest code that meets its clause; no added checks, records, repair or resumption; one test with a planted
+  fault for each rule, as the coding practices ask, and no more; anything further only with the concrete failure
+  it guards against said in a sentence or two, for his decision.
+- **The cloud workspace** (Claude's evidence, not Windows'): Linux; **Python 3.15.0b4** (the newest 3.15 the
+  workspace's installer offers; the owner's is 3.15.2); numpy 2.5.5, scipy 1.18.1, psutil 7.2.2. Two fresh clones of
+  `main` at `1e9ad25`, one with the eleven files of `exchange/CLAUDE_WEB_TOOLS/step3/overlay/` copied in by
+  `step3/sync_and_test.sh`; `step1/run_suite.py` on each, then `step1/compare_suite_reports.py`.
+- **`main` as it is: 54 modules, 830 tests; the three known tests fail, with eight failed assertions**
+  (`test_mhupa_launchers` `test_gitignore_lines`, one; `test_multigame_reader_contracts`
+  `test_master_source_and_ledger_file_hashes`, two, and `test_only_legacy_e1_allowed_at_boundary`, five); every
+  other module `OK`. This is H-1 v13 section 7.1's known result, and the first whole run since the lock line
+  (`fe1c310`), in the cloud only.
+- **With the slice's overlay: 56 modules, 902 tests.** All 830 earlier tests have the same result; the 72 new tests
+  (`test_trees_settings` 32, `test_trees_readiness` 40) are `OK`, read from the modules' own lines. The comparison's
+  last line is `RESULT: DIFFERENCES FOUND - each needs an explanation`, for two reasons, both expected: the 72 new
+  tests, and `test_gitignore_lines`, which fails in both runs with a set printed in another order each time.
+- **Read:** the slice's deploy tools, its identity and settings modules (headers and functions; the readiness
+  module line by line) and the installed launcher's start. Nothing was changed; no file of the overlay differs.
+- **Next:** step 2, the list of installed files and `Check_Tree` (routine; Opus is enough); then, on the owner's go
+  under his model rule, the environment's digest with the question of one digest or two, and the launch guard.
+- Next numbers: EX_318; entry 274; RAT-56.

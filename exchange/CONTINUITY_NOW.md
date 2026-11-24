@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 08:26 Australia/Adelaide (entry 272: the owner: the consolidated handover is written later, when Claude judges it necessary and advises him; slice A step 1 begun in the cloud).
+**Last updated:** 25 November 2026, 08:44 Australia/Adelaide (entry 273: slice A step 1 done in the cloud: the suite on main 54 modules, 830 tests, the three known failing; with the overlay 56 modules, 902 tests, all 830 the same and the 72 new OK).
 
 ## For the owner: NOW
 
+- **SLICE A, STEP 1 DONE (entry 273; 25 November 2026; the cloud's evidence).** The whole suite on `main`: 54
+  modules, 830 tests, the three known failing tests and no other. With the slice's eleven files: 56 modules, 902
+  tests, every earlier test the same, the 72 new ones OK. **Next: step 2** (the list of installed files;
+  `Check_Tree`), then on the owner's go under his model rule the environment's digest and the launch guard. The
+  owner's reminder of 08:35 (no added "software admin" checks and overheads) governs all of it.
 - **THE HANDOVER WAITS (entry 272; the owner, 25 November 2026, 08:26):** "update handover later when you consider it
   is necessary advise me." No edition now; Claude says when one is needed. **In hand: slice A, step 1** (the cloud
   workspace, the suite on `main` and with the overlay, the slice's code read). Then the four parts still to write.
