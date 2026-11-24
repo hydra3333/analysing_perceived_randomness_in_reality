@@ -1,0 +1,13 @@
+--- job_lock.py as committed by the conversion
++++ job_lock.py of this package
+@@ -118,7 +118,9 @@
+         """Take the lock, or refuse if the file exists."""
+         self.path.parent.mkdir(parents=True, exist_ok=True)
+         try:
+-            descriptor = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
++            # O_BINARY (Windows only): without it Windows opens the file in its text mode and writes a carriage
++            # return of its own before every line feed, so that the line below would end CR CR LF.
++            descriptor = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY | getattr(os, 'O_BINARY', 0))
+         except FileExistsError:
+             raise LaunchRefused(
+                 f'a process of this tree is running: {self.path} exists. Another job holds it, or an earlier job '

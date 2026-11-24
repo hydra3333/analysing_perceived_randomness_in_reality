@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 23:25 Australia/Adelaide (entry 259: THE DAY HAS BEGUN; part 1 done on the owner's go: the package checked, the whole-folder copy made and proved (COPY PASS); part 2 waits for his go).
+**Last updated:** 25 November 2026, 07:04 Australia/Adelaide (entry 260: THE CONVERSION IS DONE: commit 691f58e, pushed by the owner and verified from GitHub; one new test fails on Windows until the small package FILE_FORM_Lock_Fix_v1 is installed; that package is with the reviewer).
 
 ## For the owner: NOW
 
+- **THE CONVERSION IS DONE (entry 260; 25 November 2026).** DEV is in the file-form standard: commit `691f58e`,
+  pushed by the owner at 07:02 and verified by Claude from GitHub; fill, repeat run and the comparison with
+  the old records all PASS, with the figures of build step 2. **This supersedes every bullet below about the
+  conversion.** **Open:** one new test fails on Windows (the lock file's one line ends CR CR LF); the reviewer
+  accepted it as a temporary exception. The correction, one line, is `exchange/CLAUDE_WEB_TOOLS/lock_fix/`
+  (`FILE_FORM_Lock_Fix_v1.zip`, `744efbd3...e20318`), with the reviewer; then the owner's go (five minutes).
+  **From now on every text file Claude adds is CRLF, and Claude pushes nothing between the owner's pull and
+  his push on a day of install.** Next after that: a handover edition (H-1 v11 stops at entry 243).
 - **THE DAY HAS BEGUN (entry 259; 24 November 2026, 23:24).** Part 1 of the sheet is done: the copy of the whole
   project folder is at `E:\TEMP\FILE_FORM_copy_of_project` (107,135 files, COPY PASS). **Nothing in the project
   is changed yet.** If this chat ends here: the sheet is

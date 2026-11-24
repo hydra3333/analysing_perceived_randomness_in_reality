@@ -1,0 +1,346 @@
+The owner's CMD windows of the conversion's day, 24 and 25 November 2026, as he sent them to Claude (files
+attached to his messages), unedited. Part 4 (staging), the baseline suite in the clean clone and the push were
+pasted into the chat itself; their figures are in decision log entry 260.
+
+====================================================================================================
+PART 1 (24 November 2026, 23:00 to 23:24): update, the package checked, the copy made and proved
+====================================================================================================
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+Already up to date.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>cd /d E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>set PY=.venv\Scripts\python.exe
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>set ZIP=exchange\CLAUDE_WEB_TOOLS\conversion\package\FILE_FORM_Conversion_v2.zip
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>set PKG=E:\TEMP\FILE_FORM_Conversion_v2
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>set EVID=E:\TEMP\FILE_FORM_evidence_v2
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>set COPY=E:\TEMP\FILE_FORM_copy_of_project
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+Already up to date.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git log -1 --format=%h -- src tests
+5f16b35
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>rtutil -hashfile "%ZIP%" SHA256
+'rtutil' is not recognized as an internal or external command,
+operable program or batch file.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist "%PKG%" echo STOP: %PKG% exists already
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist "%EVID%" echo STOP: %EVID% exists already
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist "%COPY%" echo STOP: %COPY% exists already
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>certutil -hashfile "%ZIP%" SHA256
+SHA256 hash of exchange\CLAUDE_WEB_TOOLS\conversion\package\FILE_FORM_Conversion_v2.zip:
+ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c
+CertUtil: -hashfile command completed successfully.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -I -m zipfile -e "%ZIP%" E:\TEMP
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>robocopy . "%COPY%" /E /COPY:DAT /DCOPY:DAT /R:1 /W:1 /NFL /NDL /NP
+
+-------------------------------------------------------------------------------
+   ROBOCOPY     ::     Robust File Copy for Windows
+-------------------------------------------------------------------------------
+
+  Started : Tuesday, 24 November 2026 11:03:14 PM
+   Source : E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\
+     Dest : E:\TEMP\FILE_FORM_copy_of_project\
+
+    Files : *.*
+
+  Options : *.* /NDL /NFL /S /E /DCOPY:DAT /COPY:DAT /NP /R:1 /W:1
+
+------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------
+
+               Total    Copied   Skipped  Mismatch    FAILED    Extras
+    Dirs :     30629     30629         0         0         0         0
+   Files :    107135    107135         0         0         0         0
+   Bytes :  973.26 m  973.26 m         0         0         0         0
+   Times :   0:05:05   0:04:50                       0:00:00   0:00:15
+
+
+   Speed :           3,518,044 Bytes/sec.
+   Speed :             201.304 MegaBytes/min.
+   Ended : Tuesday, 24 November 2026 11:08:19 PM
+
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase copy --copy "%COPY%"
+  compared 107135 file(s) of E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality with E:\temp\FILE_FORM_copy_of_project
+COPY PASS (your copy holds every file of the project folder, byte for byte)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>findstr /b /c:"role" /c:"tree_root" ENVIRONMENT.ini
+role = DEV
+tree_root = E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if exist transitory_data\poc_runs\UNRESOLVED_ORPHAN.json echo STOP: the orphan marker exists
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+
+====================================================================================================
+THE PULL BEFORE PART 2, PARTS 2 AND 3 (23:25 to 23:30): the package's files copied in; the conversion
+====================================================================================================
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git pull --ff-only
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 6 (delta 5), reused 6 (delta 5), pack-reused 0 (from 0)
+Unpacking objects: 100% (6/6), 1.95 KiB | 14.00 KiB/s, done.
+From https://github.com/hydra3333/analysing_perceived_randomness_in_reality
+   0342235..8271419  main       -> origin/main
+Updating 0342235..8271419
+Fast-forward
+ exchange/CONTINUITY_NOW.md         |  7 ++++++-
+ exchange/DECISIONS/DECISION_LOG.md | 16 ++++++++++++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase pre && xcopy "%PKG%\repo_overlay\*" . /E /H /Y && %PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase post
+PRE PASS (12 package files checked against the tree)
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\.gitattributes
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\.gitignore
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\deploy\file_form.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\deploy\INFRA_MANIFEST.ini
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\two_site_results_check_v0_7.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\research\derived_check.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\research\job_lock.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\research\reports.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\research\status_file.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\src\research\windows_text.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\tests\test_file_form.py
+E:\TEMP\FILE_FORM_Conversion_v2\repo_overlay\tests\test_research_file_form.py
+12 File(s) copied
+POST PASS (12 package files in the tree with the package's bytes)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -I -B "%PKG%\tools\convert_to_file_form.py" --tree . --list "%PKG%\CONVERSION_LIST.json" --copy "%COPY%" --record "%EVID%\CONVERSION_RECORD.json"
+FILE-FORM CONVERSION - START - the tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+  The conversion list: 686 files; its SHA-256 is 40abea55b09e13f341f056a43596c334e10ef462563715c42a850175a919f2f4
+  LISTED, to be converted now ............ 650 file(s) of the 686 listed
+  LISTED, in their form already .......... 36 file(s) (passed over)
+  THE TREE'S OWN SETTINGS ................ ENVIRONMENT.ini: to be converted (line endings only)
+  MADE AGAIN, NOT CONVERTED (removed on your second word; the engine writes them afresh):
+      1578 file(s): research results, status files, control-folder leftovers
+      results/research/OZLOTTO/reports/README.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01475.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01475.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01476.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01476.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01477.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01477.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01478.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01478.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01479.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01479.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01480.csv
+      ... and 1566 more
+  UNTOUCHED, AND PROVED UNTOUCHED ........ 4 results file(s):
+      63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e  source_data/OZLOTTO_results_master.csv
+      78ab9fdef29f8faafb10bb3d1fd2197747195b95b46640e73ff031797761a3c6  source_data/OZLOTTO_results_master_ledger.csv
+      e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0  source_data/POWERBALL_results_master.csv
+      23f3f8a78b8cdaaf8f10d56c1684581e54be563f263d835d90cee966a0e446dd  source_data/POWERBALL_results_master_ledger.csv
+  UNTOUCHED, NOT READ .................... 12 file(s) (the six left out by name, the updater's grabs and backups, the opening records, binary kinds)
+  IN NO CLASS, OR NOT AS EXPECTED ........ 0
+  Your copy holds every one of the 651 file(s) to be converted and the 1578 to be removed, each with the SHA-256 it has now.
+Type CONVERT to change the line endings of 650 listed file(s) and the settings file, or anything else to stop: CONVERT
+Type REMOVE to remove the 1578 file(s) that are made again, not converted (each is in your copy), or anything else to stop: REMOVE
+  The SHA-256 of every file to be changed or removed is recorded. From here on, this is the one attempt.
+  Converted: 650 listed file(s), and the settings file. Each differs from what it was in line endings only, and reads back as written.
+  Removed: 1578 file(s), and the folders left empty.
+  PROVED: all 686 listed files have the list's "after" SHA-256 and are in their form; the 4 results file(s) have the SHA-256 they had before; nothing made-again is left.
+  The standard (doc/FILE_FORM_STANDARD_v0_2.md): every text file of the project ends its lines CRLF. The one exception: every .jsonl file ends its lines LF, because the line ending is part of what its hash chain is computed from.
+  The record: E:\TEMP\FILE_FORM_evidence_v2\CONVERSION_RECORD.json
+FILE-FORM CONVERSION - END - FINISHED. Go on with the next part of the sheet.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+
+====================================================================================================
+PART 5 (23:40 to 00:18): the suite in DEV after the conversion, and the comparison with the baseline
+====================================================================================================
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>if not exist "E:\TEMP\STEP2_evidence\suite_after" echo STOP: the baseline folder is missing
+STOP: the baseline folder is missing
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -B "%PKG%\tools\run_suite.py" . "%EVID%\suite_after"
+test_code3_retirement   exit=0  ran=12  OK
+test_e1_align   exit=0  ran=5   OK
+test_e1_standalone      exit=0  ran=13  OK
+test_e1r2_revision2     exit=0  ran=13  OK
+test_e1r3_revision3     exit=0  ran=8   OK
+test_e2r_contract       exit=0  ran=53  OK
+test_e2r_dispatch       exit=0  ran=18  OK
+test_e2r_prefix exit=0  ran=1   OK
+test_e2r_runner exit=0  ran=34  OK (skipped=1)
+test_e3_e4_polynomial   exit=0  ran=13  OK
+test_e6_beta_bernoulli  exit=0  ran=20  OK
+test_file_form  exit=0  ran=52  OK (skipped=2)
+test_mhupa_gates        exit=0  ran=12  OK
+test_mhupa_install_records      exit=0  ran=9   OK
+test_mhupa_launchers    exit=1  ran=10  FAILED (failures=1)
+test_mhupa_master_versions      exit=0  ran=15  OK
+test_mhupa_method_mode_h_cli    exit=0  ran=2   OK
+test_mhupa_mode_h       exit=0  ran=20  OK
+test_mhupa_process_check        exit=0  ran=8   OK
+test_mhupa_updater_v0_2 exit=0  ran=15  OK
+test_multigame_console_and_synthetic_scorer     exit=0  ran=7   OK
+test_multigame_exit_receipt     exit=0  ran=18  OK (skipped=1)
+test_multigame_launch_and_manifest      exit=0  ran=11  OK
+test_multigame_reader_contracts exit=1  ran=10  FAILED (failures=7, skipped=1)
+test_multigame_science_allowlist        exit=0  ran=6   OK
+test_multigame_static_and_timing        exit=0  ran=6   OK
+test_multigame_windows_lifecycle_review exit=0  ran=6   OK
+test_occurrence_counts  exit=0  ran=8   OK
+test_perf1_numerics     exit=0  ran=7   OK
+test_polynomial_fits    exit=0  ran=19  OK
+test_recurrence_gaps    exit=0  ran=12  OK
+test_rel1_release       exit=0  ran=5   OK
+test_research_file_form exit=1  ran=16  FAILED (failures=1)
+test_research_forecasts exit=0  ran=26  OK
+test_research_identity  exit=0  ran=25  OK (skipped=1)
+test_research_job       exit=0  ran=48  OK (skipped=1)
+test_research_manifest  exit=0  ran=9   OK
+test_research_ov1_and_checks    exit=0  ran=34  OK
+test_research_ov1_numeric       exit=0  ran=21  OK
+test_research_records   exit=0  ran=28  OK
+test_t05_hardening      exit=0  ran=2   OK
+test_wave1_frequency    exit=0  ran=18  OK
+test_wave2_recurrence   exit=0  ran=19  OK
+test_wf1a_walk_forward  exit=0  ran=22  OK
+test_wf1b_crossplatform exit=0  ran=1   OK
+test_wf1b_divisions     exit=0  ran=17  OK
+test_wf1b_measures      exit=0  ran=33  OK
+test_wf1b_n1_generator  exit=0  ran=8   OK
+test_wf1b_n1_replay     exit=0  ran=3   OK
+test_wf1b_numerics      exit=0  ran=21  OK
+test_wf1b_outcome_reader        exit=0  ran=6   OK (skipped=1)
+test_wf1b_report        exit=0  ran=10  OK
+test_wf1b_seed_policy   exit=0  ran=11  OK
+test_wf1b_static        exit=0  ran=4   OK
+DONE: 54 modules, 830 tests ran
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -B "%PKG%\tools\compare_suite_reports.py" "%EVID%\suite_before" "%EVID%\suite_after" > "%EVID%\comparison.txt"
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>findstr /v /b /c:"NEW: " /c:"MODULE NEW: " "%EVID%\comparison.txt"
+before: 52 modules; unittest ran 762 tests; identified here: 762
+after: 54 modules; unittest ran 830 tests; identified here: 830
+tests in both runs: 762; with the same result: 762
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ['AssertionError: \'results/real/holdout/scores/\' not found in {\'\', \'build/\', \'# .idea/\', \'__marimo__/\', \'wheels/\', "# WF-1A: real-development contract runs and each batch\'s attempts log (bulk; the batch']
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '# Environments', '# mkdocs/Zensical documentation', 'downloads/', 'docs/_build/', '*.aof', '#   pdm recommends including project-wide "]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: DIFFERENCES FOUND - each needs an explanation
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>find /c "NEW: " "%EVID%\comparison.txt"
+
+---------- E:\TEMP\FILE_FORM_EVIDENCE_V2\COMPARISON.TXT: 70
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short | findstr /v /b /c:"M  " /c:"A  "
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>
+
+====================================================================================================
+PART 6 AND PART 7 UP TO THE PUSH (00:20 to 01:10, and 06:52 to 07:00 on 25 November): the commit, the fill, the repeat run, the comparison with the old records
+====================================================================================================
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>findstr /b /c:"FAIL:" /c:"ERROR:" /c:"AssertionError" "%EVID%\suite_after\test_research_file_form.txt"
+FAIL: test_a_lock_file_is_one_line_ending_crlf (test_research_file_form.TheSmallFiles.test_a_lock_file_is_one_line_ending_crlf)
+AssertionError: Lists differ: ['holds 1 carriage return(s) that no line [56 chars]le)'] != []
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git commit -m "FILE-FORM STANDARD (RAT-49): DEV converted to CRLF; the engine's writers write CRLF; Git converts nothing" && %PY% -I -B "%PKG%\VERIFY_FILE_FORM_INSTALL.py" --repo . --phase committed
+[main 691f58e] FILE-FORM STANDARD (RAT-49): DEV converted to CRLF; the engine's writers write CRLF; Git converts nothing
+ 685 files changed, 56024 insertions(+), 54932 deletions(-)
+ create mode 100644 deploy/file_form.py
+ create mode 100644 src/research/windows_text.py
+ create mode 100644 tests/test_file_form.py
+ create mode 100644 tests/test_research_file_form.py
+COMMITTED PASS (every listed file is committed with the list's "after" bytes; the commit changed listed paths only; the working tree is clean)
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Research.bat --game BOTH --no-update
+RESEARCH JOB - START - 2026-11-25 00:23 - the DEV tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+About to work: POWERBALL, OZLOTTO (results step left out: --no-update)
+POWERBALL: results on file through draw 1591; 40 variants installed
+POWERBALL: worked through draw 1169 of 1591; so far 200 forecasts and 200 scores written
+POWERBALL: worked through draw 1194 of 1591; so far 425 forecasts and 425 scores written
+POWERBALL: worked through draw 1219 of 1591; so far 986 forecasts and 986 scores written
+POWERBALL: worked through draw 1244 of 1591; so far 1561 forecasts and 1561 scores written
+POWERBALL: worked through draw 1269 of 1591; so far 2444 forecasts and 2444 scores written
+POWERBALL: worked through draw 1294 of 1591; so far 3369 forecasts and 3369 scores written
+POWERBALL: worked through draw 1319 of 1591; so far 4294 forecasts and 4294 scores written
+POWERBALL: worked through draw 1344 of 1591; so far 5219 forecasts and 5219 scores written
+POWERBALL: worked through draw 1369 of 1591; so far 6198 forecasts and 6198 scores written
+POWERBALL: worked through draw 1394 of 1591; so far 7198 forecasts and 7198 scores written
+POWERBALL: worked through draw 1419 of 1591; so far 8198 forecasts and 8198 scores written
+POWERBALL: worked through draw 1444 of 1591; so far 9198 forecasts and 9198 scores written
+POWERBALL: worked through draw 1469 of 1591; so far 10198 forecasts and 10198 scores written
+POWERBALL: worked through draw 1494 of 1591; so far 11198 forecasts and 11198 scores written
+POWERBALL: worked through draw 1519 of 1591; so far 12198 forecasts and 12198 scores written
+POWERBALL: worked through draw 1544 of 1591; so far 13198 forecasts and 13198 scores written
+POWERBALL: worked through draw 1569 of 1591; so far 14198 forecasts and 14198 scores written
+POWERBALL: the results step was left out (--no-update)
+POWERBALL: finished. Results on file through draw 1591; written: 15118 forecasts, 15078 scores, 0 prevailing lines, 0 eligibility draws, 900 report files. prevailing OV-1: not started; waiting for a successful results step
+OZLOTTO: results on file through draw 1708; 40 variants installed
+OZLOTTO: worked through draw 1499 of 1708; so far 200 forecasts and 200 scores written
+OZLOTTO: worked through draw 1524 of 1708; so far 425 forecasts and 425 scores written
+OZLOTTO: worked through draw 1549 of 1708; so far 986 forecasts and 986 scores written
+OZLOTTO: worked through draw 1574 of 1708; so far 1561 forecasts and 1561 scores written
+OZLOTTO: worked through draw 1599 of 1708; so far 2444 forecasts and 2444 scores written
+OZLOTTO: worked through draw 1624 of 1708; so far 3369 forecasts and 3369 scores written
+OZLOTTO: worked through draw 1649 of 1708; so far 4294 forecasts and 4294 scores written
+OZLOTTO: worked through draw 1674 of 1708; so far 5219 forecasts and 5219 scores written
+OZLOTTO: worked through draw 1699 of 1708; so far 6198 forecasts and 6198 scores written
+OZLOTTO: the results step was left out (--no-update)
+OZLOTTO: finished. Results on file through draw 1708; written: 6598 forecasts, 6558 scores, 0 prevailing lines, 0 eligibility draws, 474 report files. prevailing OV-1: not started; waiting for a successful results step
+RESEARCH JOB - END - 2026-11-25 01:10 - the DEV tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+POWERBALL: finished. Results on file through draw 1591; written: 15118 forecasts, 15078 scores, 0 prevailing lines, 0 eligibility draws, 900 report files. prevailing OV-1: not started; waiting for a successful results step
+OZLOTTO: finished. Results on file through draw 1708; written: 6598 forecasts, 6558 scores, 0 prevailing lines, 0 eligibility draws, 474 report files. prevailing OV-1: not started; waiting for a successful results step
+The job finished.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>Run_Research.bat --game BOTH --no-update > "%EVID%\second_job.txt" 2>&1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>type "%EVID%\second_job.txt"
+RESEARCH JOB - START - 2026-11-25 06:52 - the DEV tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+About to work: POWERBALL, OZLOTTO (results step left out: --no-update)
+POWERBALL: results on file through draw 1591; 40 variants installed
+POWERBALL: the results step was left out (--no-update)
+POWERBALL: finished. Results on file through draw 1591; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+OZLOTTO: results on file through draw 1708; 40 variants installed
+OZLOTTO: the results step was left out (--no-update)
+OZLOTTO: finished. Results on file through draw 1708; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+RESEARCH JOB - END - 2026-11-25 06:55 - the DEV tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+POWERBALL: finished. Results on file through draw 1591; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+OZLOTTO: finished. Results on file through draw 1708; written: 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files. prevailing OV-1: not started; waiting for a successful results step
+The job finished.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>git status --short
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>%PY% -B "%PKG%\tools\compare_fill_with_old_records.py" --tree . > "%EVID%\comparison_with_old_records.txt" 2>&1
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>findstr /v /e /c:" equal" "%EVID%\comparison_with_old_records.txt"
+POWERBALL: part 1: old score records (TOP and WORST): 22884; equal in the new score lists: 22884; DIFFERENT: 0
+POWERBALL: part 2: old development forecasts read from the run folders: 17280 (for 17280 variant and target pairs); equal in the new lists: 14478; INSUFFICIENT_HISTORY records before the variant's first target, where the new list has no line: 2802; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 640
+POWERBALL: part 2: forecasts named by the tracked rank ledgers: 11442; of those not among the old forecasts compared: 0
+OZLOTTO: part 1: old score records (TOP and WORST): 11916; equal in the new score lists: 11916; DIFFERENT: 0
+OZLOTTO: part 2: old development forecasts read from the run folders: 8760 (for 8760 variant and target pairs); equal in the new lists: 5958; INSUFFICIENT_HISTORY records before the variant's first target, where the new list has no line: 2802; DIFFERENT: 0; lines the new lists hold for other targets (never forecast by the old development runs): 640
+OZLOTTO: part 2: forecasts named by the tracked rank ledgers: 5958; of those not among the old forecasts compared: 0
+RESULT: PASS - COMPLETE - both games; all 34800 old score records equal the new score lists; all 20436 old development forecasts in the run folders were found in the new lists with the same view digest, scores, ranking, TOP and WORST; the 5604 old INSUFFICIENT_HISTORY records all lie before their variants' first targets, where the new lists hold no line; every forecast the tracked rank ledgers name is among them.
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>findstr /e /c:" equal" "%EVID%\comparison_with_old_records.txt" | find /c /v ""
+160
+
+E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality>

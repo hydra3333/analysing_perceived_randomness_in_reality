@@ -5957,3 +5957,89 @@ section 17.2 (unpack it into a new folder, never over the clone).
   is proved.
 - **Next:** part 2 (the package's 12 files copied in: the first change to the project), on his own go.
 - Next numbers: EX_315; entry 260; RAT-51.
+
+## 260. 25 November 2026, 07:04 - THE CONVERSION IS DONE: DEV is in the file-form standard, committed `691f58e` and pushed by the owner; verified from GitHub; one new test fails on Windows (the lock file's line), accepted as a temporary exception
+
+- **Written after the owner's push.** Claude pushed nothing between 23:24 on 24 November and the owner's push (see
+  "Claude's slip" below); this entry records the night from the owner's windows, kept in
+  `exchange/CLAUDE_WEB_TOOLS/conversion/day_result/OWNERS_WINDOWS_20261124_25.txt`, and from his pastes in the chat.
+- **Claude's slip, the second of its kind (the first: entry 210's install).** Entry 259 was pushed (main `8271419`)
+  after the owner's pull of part 1, which left DEV one commit behind GitHub. The owner pulled once more before
+  part 2 (`Fast-forward`, the two record files; status clean). His copy was made before that pull and so is one
+  record commit behind; he kept it. **The rule Claude follows from here on: nothing is pushed between the owner's
+  pull and his push on a day of install.**
+- **Part 2** (his go): `PRE PASS`; 12 files copied; `POST PASS`.
+- **Part 3:** list SHA-256 `40abea55...19f2f4`; 650 listed files to convert, 36 in their form already, the settings
+  file to convert, 1,578 to remove, the four results files with the hashes of his look of entry 249, 12 untouched
+  and not read, 0 in no class; the copy holds all 651 and 1,578; `CONVERT` and `REMOVE` typed; converted 650 and
+  the settings file; removed 1,578; **PROVED; FINISHED.**
+- **Part 4:** 685 of 686 to stage; **1,873** working copies to put back (exchange 1,716; doc 104; review 32; the
+  runner's folder 21), fewer than the cloud's 2,312 because documents the owner saved and committed himself were
+  already Git's bytes on his disk; 0 not as expected; `STAGE` typed; **PROVED; FINISHED**; `git status --short`: 685
+  lines, none that is not a staged change.
+- **Part 5. The baseline folder of the sheet (`E:\TEMP\STEP2_evidence\suite_after`) no longer existed;** the sheet
+  foresaw it. As at build step 2 (entry 210), the baseline was made from a clean clone of the repository as
+  committed (`git clone . "E:\TEMP\FILE_FORM_baseline_clone"`, the package's `run_suite.py` with the main Python):
+  `DONE: 52 modules, 762 tests ran`, `FAILED` only on the two known modules. It ran at the same time as DEV's own
+  suite, in a second window (the owner's choice, on Claude's recommendation, to save half an hour). DEV after the
+  conversion: `DONE: 54 modules, 830 tests ran`. The comparison: `tests in both runs: 762; with the same result:
+  762`; the three known `FAILS IN BOTH RUNS`; `RESULT: DIFFERENCES FOUND` (the new tests); 70 lines "NEW: "; Git
+  clean: every line the sheet expects.
+- **ONE RESULT THE SHEET DID NOT NAME: a new test fails on Windows.** `test_research_file_form  exit=1  ran=16
+  FAILED (failures=1)`: `TheSmallFiles.test_a_lock_file_is_one_line_ending_crlf`, "holds 1 carriage return(s) that
+  no line feed follows". The comparison lists a new test as NEW whether it passes or fails, and the short sheet had
+  dropped v1's sentence that the two new modules end `OK`: Claude's omission; Claude saw the line in the window and
+  stopped the owner before the commit. **The cause:** `src/research/job_lock.py` opens the lock file with `os.open`
+  without `O_BINARY`; on Windows the C runtime adds a carriage return of its own before a line feed, so with the
+  conversion's CRLF line the file ends CR CR LF. Linux does not, so the cloud passed all 68; and the search for
+  writes that name no line ending passes over `os.open` by design (entry 245), which is where this hid. It is the
+  engine's only such write (`reader.py` uses `O_BINARY`). **The effect:** the lock file's one line, while a job
+  runs; the file is removed at the job's end and its content is read by nothing. No list, report, status file or
+  result is written that way.
+- **The owner's decision, 00:21:** "yes option 1": go on that night (commit, fill, comparisons, all local, the copy
+  still the way back), push only with the reviewer's agreement, and correct the line by a small follow-up package;
+  not option 2 (the folder put back, a v3, the day again).
+- **The reviewer, relayed by the owner at 00:24 (no EX message):** "Reviewer agrees with option 1. Accept the single
+  documented Windows lock-file test failure as a temporary exception. ... If all remaining checks PASS, reviewer
+  concurs with pushing the conversion. Correct the os.open binary-mode flag in a small follow-up package and rerun
+  the affected tests. Independently confirmed job_lock.py is classified as derived infrastructure. No full research
+  rebuild should be necessary for this correction. No rollback, no v3 conversion package, no unnecessary
+  repetition."
+- **Part 6:** the commit **`691f58e4e171761f47f407dce2a4b7b7a687c271`** (685 files changed), `COMMITTED PASS`. **The
+  fill,** 00:23 to 01:10 (47 minutes): no `WARNING`, `REFUSED` or `STOPPED`; POWERBALL through draw 1591: 15118
+  forecasts, 15078 scores, 900 report files; OZLOTTO through draw 1708: 6598 forecasts, 6558 scores, 474 report
+  files; "The job finished." **The same counts as after build step 2** (entry 210). **The repeat run** (06:52 on
+  25 November): 0 forecasts, 0 scores, 0 prevailing lines, 0 eligibility draws, 0 report files for each game; Git
+  clean.
+- **Part 7. The comparison with the old development records: `RESULT: PASS - COMPLETE - both games`:** all 34800 old
+  score records equal the new score lists; all 20436 old development forecasts found with the same view digest,
+  scores, ranking, TOP and WORST; `DIFFERENT: 0` in every part; the 5604 INSUFFICIENT_HISTORY records before their
+  variants' first targets; every forecast the rank ledgers name is among them; 160 lines ending "equal". The same
+  figures as after build step 2. **The owner pushed at 07:02:** `8271419..691f58e  main -> main`.
+- **Verified by Claude from GitHub at `691f58e`** (parent `8271419`): each of the 686 listed files has exactly the
+  list's "after" bytes and is in its form by `deploy/file_form.py`; the commit changed 685 paths, every one on the
+  list (the 686th, `src/evaluation/__init__.py`, has the same bytes before and after); no path under `GAIS/` and
+  no `.jsonl` file changed; the four results files are the same blobs as before, with the hashes of the owner's
+  look; `.gitattributes` holds the three lines of RAT-49. **The conversion is proved as far as GitHub can show it.**
+  The owner may delete his copy (`E:\TEMP\FILE_FORM_copy_of_project`), the baseline clone
+  (`E:\TEMP\FILE_FORM_baseline_clone`) and, when he likes, the evidence folder; that is his to do.
+- **The standard is now in force for the living project** (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49; RAT-50 for the
+  one attempt). From this commit on, every text file Claude adds is CRLF, checked before each commit with the
+  project's own rule (`.sh` and `.jsonl` apart); the files added with this entry were so checked. The decision log
+  and the continuity page are existing files and go on as they are.
+- **The follow-up package is built and put to the reviewer: `FILE_FORM_Lock_Fix_v1`**
+  (`exchange/CLAUDE_WEB_TOOLS/lock_fix/`; ZIP SHA-256
+  `744efbd3ca1ea70162d6c1dcae060836e9326625299f9116b5ac2dbb19e20318`; `NOTE_FOR_THE_REVIEWER.md`): one line of
+  `src/research/job_lock.py` gains `| getattr(os, 'O_BINARY', 0)`, with its comment; a sheet of four short parts
+  (check, copy the one file, the three affected test modules: 116 tests, commit and push). No research job and no
+  rebuild: the engine writes the digest of derived-class code into new lines and compares it nowhere. Not
+  installed. **Until it is installed the suite has four known failures in DEV, not three.**
+- **How the process went (Claude's note).** The simplification the owner demanded was right: the edits took under
+  half an hour, the day itself took his PC about two hours, and the one real fault of the night was a Windows
+  behaviour that neither the cloud nor any amount of the earlier machinery could have shown; only a Windows run
+  could. The verified whole-folder copy was never needed. Claude's own faults: the push during the day; a sheet
+  that named a baseline folder it could not know existed; and dropping the sentence that would have named the
+  failing new module.
+- **Stale, for the next handover edition (due now):** H-1 v11 stops at entry 243 and names the standard v0.1; the
+  ratification register lacks RAT-45 to RAT-50; "the conversion" is no longer ahead but done.
+- Next numbers: EX_315; entry 261; RAT-51.
