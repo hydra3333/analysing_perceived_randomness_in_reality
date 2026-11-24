@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 09:18 Australia/Adelaide (entry 274: slice A: the list of installed files and Check_Tree are written as working files; the suite with the sixteen overlay files 58 modules, 946 tests, all 830 earlier the same; two parts remain, on the owner's go).
+**Last updated:** 25 November 2026, 09:57 Australia/Adelaide (entry 275: the owner's go for slice A's last two parts; he decided option A, one environment digest, the full one, in every tree; the trees stay independent).
 
 ## For the owner: NOW
 
+- **THE OWNER'S GO AND HIS DECISION ON THE DIGEST (entry 275; 25 November 2026, 09:51 and 09:56).** Slice A's last
+  two parts are in hand (the environment's digest and marker; the launch guard with the process rule). **Decided:
+  option A:** one environment digest, the full one of specification 13, of each tree's own `.venv`, computed once
+  at the start of every job in every tree, compared with the tree's own marker in QA and PROD, written into new
+  envelopes; old lines untouched. **The trees stay independent: none reads another's environment.** This
+  supersedes "waiting on the owner" in the bullet below. The reviewer's operations-manual discussion file
+  (`exchange/ChatGPT_to_Claude_Operations_Manual_Discussion_v0_1_20261125.md`) is on `main`, unread: after step 3.
 - **SLICE A: TWO OF THE FOUR PARTS ARE WRITTEN (entry 274; 25 November 2026; working files, the cloud's evidence).**
   The list of installed files (`src/research/installed_files.py`) and `Check_Tree` (`deploy/check_tree.py`,
   `Check_Tree.bat`); the overlay is now sixteen files; the suite with it: 58 modules, 946 tests, every earlier

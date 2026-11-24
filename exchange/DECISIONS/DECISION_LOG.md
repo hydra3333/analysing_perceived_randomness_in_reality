@@ -6532,3 +6532,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Still to write in slice A, on the owner's go under his model rule:** the check of the environment's digest;
   the launch guard with the process rule.
 - Next numbers: EX_318; entry 275; RAT-56.
+
+## 275. 25 November 2026, 09:57 - OWNER: the go for slice A's last two parts; ONE ENVIRONMENT DIGEST, THE FULL ONE (option A); the trees stay independent of each other
+
+- **The owner, 09:51,** to Claude's "Suggest switching to Fable (High) for this" (the environment's digest and the
+  launch guard with the process rule; entry 274): "pl please go".
+- **The question Claude put to him first** (the reviewer's U3, entry 270): what "the environment's digest" is. The
+  installed engine writes a quick one into every forecast's envelope (the Python and the names and versions of
+  the installed packages); specification 13 describes a full one over the bytes of a fixed inventory of the
+  environment's files, for the marker `ENVIRONMENT_VERIFIED.json` (on his PC 5 seconds when the files were lately
+  read, 150 when not; TASK_T028). Options: **A** one digest, the full one, computed once at the start of every job
+  in every tree, compared with the marker in QA and PROD and written into new envelopes, old lines untouched
+  (recommended; it is what the specification says, so nothing is ratified anew); **B** the full one in QA and PROD
+  and the quick one in DEV; **C** both kept; **D** the quick one everywhere, which would change specification 13.
+- **The owner, 09:55:** "no, each environment is to not check the other in the normal course of operations, they
+  operate independently. at times QA is a copy of prod and acts like prod in a different tree, at it acts like a
+  copy of DEV and vice versa.  i don't mind one full env in each but they are to be indepndent of each other." And:
+  "that independency has been previously agreed."
+- **Claude's answer:** the question had used "environment" for a tree's own Python folder (`.venv`), and read as
+  if trees checked each other. They do not, under any option: a tree's digest is taken of its own `.venv` and
+  compared only with its own marker inside that folder. The only places one tree reads another are those the
+  ratified design already has (the results step's copy of PROD's accepted results; installs from DEV;
+  `Check_Tree`, his own read-only look run from DEV; the laboratory tools of build step 4).
+- **The owner, 09:56: "accept option A".**
+- **DECIDED (owner): option A.** One environment digest: the full one of specification 13, of the tree's own
+  `.venv`, computed once at the start of every job in every tree; in QA and PROD compared with that tree's own
+  marker; written into every new forecast's envelope. Existing lines are not touched (an envelope is audit only
+  and no rule compares it). Every job in DEV also pays the reading (5 to 150 seconds on his PC), and says what it
+  is doing while it reads.
+- **Standing, restated by the owner and already in the specification's section 2:** the trees operate
+  independently; none checks another in the normal course of operations; each has its own full environment.
+  Nothing in slice A reads another tree's environment or marker.
+- **Not read, not acted on:** the reviewer's file `exchange/ChatGPT_to_Claude_Operations_Manual_Discussion_v0_1_20261125.md`
+  (its commit `ecdfa55`, 09:12; no EX number). The operations manual comes after build step 3 (entries 171, 220);
+  Claude told the owner it is there.
+- Next numbers: EX_318; entry 276; RAT-56.
