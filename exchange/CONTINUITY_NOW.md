@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:12 Australia/Adelaide (entry 261: the lock fix is installed, commit fe1c310, pushed and verified; the file-form work is finished; a handover edition is due and waits for the owner's word).
+**Last updated:** 25 November 2026, 07:20 Australia/Adelaide (entry 262: H-1 v12 is installed, ratified by the owner in advance (RAT-51) and not yet read by the reviewer; the reviewer's H-2 v7 likewise (RAT-52); the file-form work is finished; next work: slice A of build step 3, brought to the standard).
 
 ## For the owner: NOW
 
+- **H-1 v12 IS THE INSTALLED CLAUDE HANDOVER (entry 262; RAT-51; 25 November 2026).** Ratified by the owner in
+  advance; **the reviewer has not yet read it** (its cold read is owed). Its section 0E holds everything since
+  H-1 v11. **A new Claude chat starts from `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md`.**
+  **The reviewer's own H-2 v7 is installed too (RAT-52), likewise ratified in advance.**
+  **Next work:** slice A of build step 3, brought to the file-form standard and rebased on `main`. **Owed:** the
+  register's next edition (RAT-41's install to RAT-52). The owner's plan for this Claude chat ends on the night
+  of 25 November 2026.
 - **THE CONVERSION IS DONE (entry 260; 25 November 2026).** DEV is in the file-form standard: commit `691f58e`,
   pushed by the owner at 07:02 and verified by Claude from GitHub; fill, repeat run and the comparison with
   the old records all PASS, with the figures of build step 2. **This supersedes every bullet below about the
@@ -857,12 +864,15 @@ durable EX messages are authoritative.
 ## If a chat ends
 
 - **Claude chat ended:** start a new Claude chat with the blurb
-  `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md`. It reads H-1 v8 (its section 0 gives the reading
-  order), this page's top block and the decision log from entry 121 to the latest. Procedure HO-2, as in H-1 v8
-  section 0 item 4. (The takeover note of 21 November 2026 and its blurb are history.)
-- **ChatGPT reviewer chat ended:** start a new one from the reviewer's handover in force, **H-2 v4**
-  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md` and its blurb beside it; RAT-41). If the
-  reviewer has committed a later state of it, use that. (H-2 v3r10 and H-2 v3r4 are history.)
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md` (RAT-51, entry 262). It reads H-1 v12 (its
+  section 0 gives the reading order; its section 0E holds everything since H-1 v11), this page's top block and the
+  decision log from entry 121 to the latest. Procedure HO-2, as in H-1 v12 section 0 item 4.
+- **ChatGPT reviewer chat ended:** the reviewer's handover in force is **H-2 v7** (RAT-52, entry 262;
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md` and
+  `ChatGPT_Reviewer_Handover_H2_v7_introductory_blurb_20261125.md` beside it), written and installed by the reviewer
+  on 25 November 2026, current to entry 261 and EX_315. H-2 v6 (RAT-46) and Claude's unratified refresh H-2 v6r2
+  are history. If the reviewer has committed a later handover of its own, use that.
+- (Until 25 November 2026 this section still named H-1 v8 and H-2 v4: stale since RAT-43, put right at entry 262.)
 
 ## Resuming the MHUP-B slice work (HISTORY since 21 November 2026)
 
@@ -897,6 +907,12 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-51 (25 November 2026, entry 262): H-1 v12 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md`,
+SHA-256 `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd`; ratified in advance, the reviewer's read owed)
+and, for the reviewer, H-2 v7 (RAT-52, entry 262; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md`), with
+register v0.32 (`doc/RATIFICATION_REGISTER_v0_32.md`; its next edition is overdue).** Between RAT-41 and this:
+H-1 v9 (RAT-43), v10 (RAT-45) and v11 (RAT-48); H-2 v5r1 (RAT-43) and v6 (RAT-46). The rest of this section is history.
 
 **From RAT-41 (22 November 2026, entry 153): H-1 v8 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md`, SHA-256
 `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e`) and H-2 v4 (the reviewer;

@@ -6077,3 +6077,52 @@ section 17.2 (unpack it into a new folder, never over the clone).
   as ahead; the ratification register lacks RAT-45 to RAT-50. Claude has recommended it to the owner and waits for
   his word. After it: slice A's remainder brought to the standard and rebased.
 - Next numbers: EX_316; entry 262; RAT-51.
+
+## 262. 25 November 2026, 07:20 - RAT-51: H-1 v12, RATIFIED BY THE OWNER IN ADVANCE and installed, not yet read by the reviewer; RAT-52: the reviewer's own H-2 v7, likewise ratified in advance
+
+- **The owner, 07:13,** asked what else there was besides the lock fix; Claude listed the queue and recommended a
+  handover edition first. **07:15: "very good. please update your handoiver docs and eveything else that needs it
+  now."** and, a moment later, while Claude was at work: **"i ratify your new handover docs in advance"**.
+- **RAT-51 is recorded** (RAT-50 was the last number used): H-1 v12 and its introductory blurb, ratified by the
+  owner before they were written and without the reviewer's read. His hard rule sends a document into `doc/` "only
+  once reviewed and ratified"; here he, who alone ratifies, chose to ratify first. **So that nobody takes it for
+  more than it is, the handover's own header says so, and the reviewer's cold read against the repository is
+  owed;** what it finds is corrected in a next revision.
+- **Installed:** `doc/HANDOVER/Claude_Primary_Handover_H1_v12.md`, SHA-256
+  `41a20b7ddac9fee4fcb4ed2e5592c8dafafa8b50b1cf2dae9e2c8a91deaa29cd`; and
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v12_introductory_blurb.md`, SHA-256
+  `ed150c814e392203d380124023692a7d60af714ec08b76e758c87bb5371f38c0`. Both are CRLF, as the standard gives every new text
+  file. H-1 v11 and its blurb (RAT-48) stay as history.
+- **How it was built** (`exchange/CLAUDE_WEB_TOOLS/h1v12/`: `make_h1_v12.py`, `h1_v12_texts.py`, `out/`): from the
+  installed H-1 v11's Git bytes (asserted by hash), 25 counted replacements, each old text found exactly once, and
+  **one new section, 0E, which holds everything since H-1 v11** (entries 244 to 262; EX_308 to EX_315) and prevails
+  over every older statement, section 0D included. Sections 1, 2 and 2A are unchanged (asserted).
+  `out/H1_v11_TO_v12_DIFFERENCE.txt` is the whole difference, line endings set aside. The files in `out/` are the
+  installed files, byte for byte: there is no separate candidate.
+- **What section 0E holds:** the records RAT-48 to RAT-51; the standard v0.2 and what it corrected; the owner's
+  finding that the conversion was overengineered, in his words, as a standing lesson; the conversion (`691f58e`) and
+  the lock line (`fe1c310`) with their figures; what changed in the living project; six working rules that follow
+  (every file Claude adds is CRLF; hashes compared exactly; low-level writes binary; staging by content after a
+  change of line endings; no push between the owner's pull and his push); the owner's PC now; what waits (slice A
+  first); eight lessons; and a note that Appendix A's hashes for files of the living project are no longer the
+  present files' hashes.
+- **The blurb** names v12, the standard v0.2 and the finished conversion, and gains one sentence beside "Do not
+  over-engineer": the owner's words of 24 November and "tell me the simplest safe route first". **That last
+  clause is Claude's wording in the owner's voice; it is his to strike.**
+- **Also put right:** `exchange/CONTINUITY_NOW.md`'s sections "If a chat ends" and "Installed handovers", which
+  still named H-1 v8 and H-2 v4.
+- **Not done in this pass, and said to the owner:** the ratification register's next edition (overdue: RAT-41's
+  install to RAT-51); it is a document of its own and his advance ratification named the handover.
+- **RAT-52 is recorded: the reviewer's H-2 v7.** While Claude was building H-1 v12 the reviewer wrote and
+  installed its own handover (commits `1444a9f` and `4eedbc3`, 07:17): `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md`,
+  SHA-256 `a954efc6caf0109f6575869326ed548d86b747dda9ad7c20e343e8037cc7058b`, and its blurb
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_introductory_blurb_20261125.md`, SHA-256
+  `20c4fd217a881ea98765db9d079eed632b98ad4a962ebf5f916b29c6e1ce70b7`. **The owner's words to the reviewer, as its header
+  quotes them:** "good please update your handover docs now, I ratify them in advance." Its evidence cutoff is main
+  `2001747`, entry 261, EX_315. It asserts no ratification number and asks Claude to record one: **RAT-52.** It is
+  the reviewer's document; Claude has not reviewed it and does not edit it. **It supersedes H-2 v6 (RAT-46), which
+  stays as history; Claude's refresh H-2 v6r2, never ratified, is superseded too.** H-1 v12 was rebuilt before it
+  was committed so that it names H-2 v7 (its section 0E items 1 and 9, and its table of identities).
+- **A correction to entry 261's last line:** it gave the next ratification as RAT-51; RAT-51 and RAT-52 are used
+  here.
+- Next numbers: EX_316; entry 263; RAT-53.

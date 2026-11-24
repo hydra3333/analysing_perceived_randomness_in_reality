@@ -1,0 +1,422 @@
+--- doc/HANDOVER/Claude_Primary_Handover_H1_v11.md
++++ out/Claude_Primary_Handover_H1_v12.md
+@@ -1,7 +1,20 @@
+-# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v11
++# H-1 - Claude primary designer and coder handover - Predictive Randomness project, v12
+ 
+ **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
+-**This edition: v11, 24 November 2026, evening (Adelaide, UTC+10:30). OWNER-RATIFIED the same evening (RAT-48;
++**This edition: v12, 25 November 2026, morning (Adelaide, UTC+10:30). OWNER-RATIFIED IN ADVANCE (RAT-51; decision
++log entry 262): the owner's words, 25 November 2026, 07:15, when he asked for it: "i ratify your new handover docs
++in advance". IT WAS NOT READ BY THE REVIEWER BEFORE IT WAS INSTALLED; the reviewer's cold read against the
++repository is owed, and what it finds is corrected in a next revision.** H-1 v11 brought up to date after the
++file-form standard v0.2 (RAT-49), the conversion of DEV to it (RAT-50; the owner's commit `691f58e`) and the
++correction of the lock file's line (`fe1c310`): decision log entries 244 to 261. Built from the installed H-1 v11's
++Git bytes by `exchange/CLAUDE_WEB_TOOLS/h1v12/make_h1_v12.py`: counted replacements of the statements those events
++made out of date, each marked "v12", and **one new section, 0E, which holds everything since H-1 v11**;
++`H1_v11_TO_v12_DIFFERENCE.txt` beside the builder is the exact difference (line endings set aside: this file is
++CRLF, as the standard gives every new text file; H-1 v11 is LF). Sections 1, 2 and 2A are unchanged (the builder
++asserts it). **Where section 0E and an older statement of this file disagree, section 0E and the decision log
++prevail.** **This is the installed Claude handover.** H-1 v11 (RAT-48) stays in `doc/HANDOVER/` as history.
++`exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. It authorises nothing.
++**The edition it is built from: v11, 24 November 2026, evening (Adelaide, UTC+10:30). OWNER-RATIFIED the same evening (RAT-48;
+ decision log entry 244). H-1 v10 brought up to date the same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
+ standard (RAT-47), a change of reviewer chat and the run of the probe TASK_T028 (decision log entries 216 to
+ 243). Built from the installed
+@@ -14,7 +27,7 @@
+ focused PASS of the corrected candidate, revision r1 (EX_307). Revision r1 made those corrections and added
+ what happened after v11 was first written (entries 239 to 243), by
+ `exchange/CLAUDE_WEB_TOOLS/h1v11r1/make_h1_v11r1.py`; `H1_v10_TO_v11r1.diff` beside that builder is the whole
+-difference from H-1 v10. **This is the installed Claude handover.** It is the ratified candidate
++difference from H-1 v10. (v12: H-1 v11 was the installed Claude handover until this edition.) It is the ratified candidate
+ (`exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1.md`, SHA-256
+ `bb68f9b6ea7c8ad65a3c172698c0e1ceffd274a0a0a60663cb4aa527a42e13c9`) with its status statements and the
+ statements the ratification made out of date changed; `exchange/CLAUDE_WEB_TOOLS/rat48/H1_v11r1_CANDIDATE_TO_FINAL.diff`
+@@ -38,11 +51,12 @@
+ **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat; the
+ project owner.
+ **Repository:** `hydra3333/analysing_perceived_randomness_in_reality`, public GitHub, branch `main`.
+-**Baseline described:** `main` on 24 November 2026 after build step 2's install (`5f16b35`) and its record (entry
+-212). **The new system's research engine is installed in DEV and has run** (`src/research/`, the program
++**Baseline described:** (v12) `main` on 25 November 2026 after the conversion of DEV to the file-form standard
++(`691f58e`) and the lock line (`fe1c310`), with their records (entries 260 and 261); before that, build step 2's
++install (`5f16b35`, entry 212). **The new system's research engine is installed in DEV and has run** (`src/research/`, the program
+ `src/research_command.py`, the launchers `Run_Research.bat` and `Withdraw_Variant.bat`). The old system's code is still
+ there beside it, unchanged. The trees QA and PROD, the installs, the backups and the laboratory tools are not coded.
+-**Replaces:** H-1 v10 and its blurb (RAT-45), which stay where they are as history.
++**Replaces:** (v12) H-1 v11 and its blurb (RAT-48), which stay where they are as history, as H-1 v10 (RAT-45) does.
+ **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ. This file
+ summarises and points to them.
+ **Draw values:** none appear in this file.
+@@ -60,14 +74,16 @@
+    - this file, all of it (it is short);
+    - **the three ratified documents of section 4.1:** the system specification (its section 0 first: the whole
+      system on one page), the deployment design, and the coding practices; and (v11) the fourth, the file-form standard
+-     `doc/FILE_FORM_STANDARD_v0_1.md` (RAT-47), which is short and governs every file you will write;
++     `doc/FILE_FORM_STANDARD_v0_2.md` (v12: RAT-49; v0.1, RAT-47, is history), which is short and governs every file
++     you will write, with decision log entry 258 (RAT-50, a narrow change for the one conversion, now past);
+    - `exchange/DECISIONS/DECISION_LOG.md`, entries 121 to the latest (the owner's own words; entry 147 is RAT-40, entry
+      153 is RAT-41, entry 156 is RAT-42; entries 158 to 169 are build step 1 and the tidy-up; entry 174
+      is RAT-43 and entry 175 the new reviewer chat's takeover; entries 176 to 212 are build step 2, with the
+      runner's rulebook v0.7 (RAT-44, entry 192) and the rehearsal on Windows (entries 199 to 208); (v11) entries
+      213 to 216 are H-1 v10 and H-2 v6 (RAT-45, RAT-46), and **entries 217 to 243 are build step 3's go and
+      plan, the file-form standard (RAT-47, entry 237), the change of reviewer chat and the probe's run: section
+-     0D**);
++     0D**; (v12) **entries 244 to 261 are the standard v0.2 (RAT-49), the conversion of DEV (RAT-50; entries 255 to
++     260) and the lock line (entry 261): section 0E**);
+    - the two installed code packages' notes, which show how a package is built, proved and installed here:
+      `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_3.md` and `exchange/CLAUDE_WEB_TOOLS/tidy1/TIDY1_PACKAGE_NOTE_v0_1.md`,
+      with the reviewer's findings on the first (`exchange/EX_276_ChatGPT.md`) and its passes (`EX_278`, `EX_280`);
+@@ -250,10 +266,11 @@
+     written EX_304 and EX_305: section 0D.) The owner has not decided on a Claude chat switch; this edition is written so that one
+     can happen at any time (the chat is long).
+ 
+-## 0D. After H-1 v10: 24 November 2026, afternoon and evening (v11; this section prevails over older statements)
++## 0D. After H-1 v10: 24 November 2026, afternoon and evening (v11; it prevails over older statements, and section 0E prevails over it)
+ 
+ Everything here is from the decision log (entries 216 to 243), the EX messages (EX_297 to EX_306) and the files named.
+-**Next numbers at this edition: EX_308, decision log entry 245, RAT-49.** Fetch `main` and confirm before using any:
++**Next numbers at this edition: EX_308, decision log entry 245, RAT-49** (v12: those were v11's; the present ones
++are at the head of section 0E)**.** Fetch `main` and confirm before using any:
+ the reviewer took five numbers in a row this afternoon while Claude was working.
+ 
+ 1. **Records.** RAT-46: the reviewer's H-2 v6, ratified as its corrected candidate v6r1 (entry 216). RAT-47: the file-form standard (entry 237). RAT-48: this handover (entry 244). The next
+@@ -322,7 +339,8 @@
+    nor for gating/checking deployments etc, github is a tool for managing commits and project statuses." No tool
+    of the new system consults Git. The readiness markers are not tracked by Git.
+ 
+-9. **THE FILE-FORM STANDARD, RAT-47 (entries 226 to 237): `doc/FILE_FORM_STANDARD_v0_1.md`. Read it; it replaces
++9. **THE FILE-FORM STANDARD, RAT-47 (entries 226 to 237): `doc/FILE_FORM_STANDARD_v0_1.md`** (v12: now v0.2, RAT-49,
++   which holds one fault of fact of v0.1 corrected: section 0E item 2)**. Read it; it replaces
+    "LF pinned".** How it came about: three files under `src` are CRLF on the owner's disk where Git holds LF, and
+    one of them, `src/methods/_common/game_profiles.py`, is `forecast`-class, so its bytes are part of the identity
+    every list in DEV records. The owner would not leave that as it lay, asked what Windows' own conventions are,
+@@ -335,7 +353,10 @@
+    release machinery are left out by name (its section 3A). **Reviewed** in EX_303 (four clarifications), EX_304
+    (one: no undo from the list; the way back is the owner's copy) and EX_305 (FOCUSED PASS).
+ 
+-10. **The conversion is the next work, before slice A is packaged** (the standard's section 7): a conversion list
++10. (v12: **DONE on 24 and 25 November 2026, and not as this item describes it:** one attempt with no second
++    run, the owner's whole-folder copy as the way back, no rehearsal by the runner (RAT-50). Section 0E items 3 to
++    6 have what happened; what follows is v11's text, kept as the record of what was planned.)
++    **The conversion is the next work, before slice A is packaged** (the standard's section 7): a conversion list
+     made in the cloud (each tracked file's SHA-256 before and after); a conversion program the owner runs in DEV
+     (it walks the folders itself and never calls Git; prints what it found by class and waits for his word; a
+     listed file whose hash is the "after" is passed over, "before" is converted, any third value is a STOP; it
+@@ -376,9 +397,11 @@
+ 
+ 15. **The owner's PC is as H-1 v10 describes it.** DEV at `5f16b35` with his first fill; no QA or PROD; nothing of
+     build step 3 installed; nothing converted; `.gitattributes` unchanged; the prevailing OV-1 not started.
++    (v12: no longer so: DEV is converted, filled again and at `fe1c310`; section 0E item 8.)
+ 
+ 16. **What waits, at this edition.** On the reviewer: nothing. On the owner: nothing (this handover is
+-    ratified, RAT-48). On Claude, in order: the conversion (item 10); the rest of slice A, to the standard; slices
++    ratified, RAT-48). On Claude, in order: the conversion (item 10; v12: done, so the list now begins with slice
++    A: section 0E item 10); the rest of slice A, to the standard; slices
+     B, C and D; the joined rehearsal; the one install into DEV; then QA, the transition check and PROD, each on
+     his go. Each week before PROD's first job is one draw of each game that cannot count in the prevailing OV-1.
+ 
+@@ -410,6 +433,184 @@
+ | `exchange/CLAUDE_WEB_TOOLS/standards/TRIAL_CRLF_SUITE_COMPARISON.txt` | `8baac6b033e2b60fb9f5f1ed6bb2f666bae4e455d7779b9db906c4da9d2e26af` |
+ | `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` (r1) | `69315a498ac59f5cb558786a89d8b5bbd8c1ba98f87d3e3660c00bfc4a5be7a5` |
+ | `exchange/EX_306_ChatGPT.md` (r1) | `e8a2813a9dc1cf4754920b4d67b3eab4872da795586ec069324581136cb7704b` |
++
++## 0E. After H-1 v11: the night of 24 November and 25 November 2026 (v12; this section prevails over every older statement, section 0D included)
++
++Everything here is from the decision log (entries 244 to 262), the EX messages (EX_308 to EX_315) and the files named.
++**Next numbers at this edition: EX_316, decision log entry 263, RAT-53.** Fetch `main` and confirm before using any.
++
++1. **Records.** RAT-48: H-1 v11 (entry 244). **RAT-49: the file-form standard v0.2** (entry 253). **RAT-50** (entry
++   258): for the one conversion of DEV, one attempt and no resumption; the package `FILE_FORM_Conversion_v2`
++   accepted; the runner's rehearsal dropped. **RAT-51** (entry 262): this handover, **ratified by the owner in
++   advance** ("i ratify your new handover docs in advance") and so installed without the reviewer's read; that
++   read is owed. **RAT-52** (entry 262): the reviewer's own H-2 v7, which the owner ratified in advance the same
++   morning and the reviewer installed (item 9). The register edition is overdue and records RAT-45 to RAT-52
++   (item 10).
++
++2. **THE FILE-FORM STANDARD IN FORCE IS v0.2: `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49). Read it.** v0.1 (RAT-47) is
++   history. The rule is unchanged: every text file of the living project is CRLF; **every `.jsonl` file is LF**;
++   every program names the line ending it writes; Git converts nothing; frozen history is never converted; six
++   files of the retired Mode H machinery are left out by name. **What v0.2 corrected:** v0.1 said that the one
++   line `* -text` in the root `.gitattributes` "does not reach GAIS". A simulation showed it reached 173 of
++   GAIS's 204 tracked files. The root file therefore holds **three lines**, approved by the owner (entry 251):
++   `* -text`, `GAIS/** !text` and `GAIS/**/*.bat text eol=crlf`. v0.2 also says: of 18 writes that named no line
++   ending, the 16 in the frozen `src/results_master_v0_2.py` stay and the 2 in `src/two_site_results_check_v0_7.py`
++   are corrected; the search covers programs, not tests' temporary fixtures, and "Any test that writes an actual
++   in-scope project file remains subject to the standard" (EX_310); the staging and the refresh of the owner's
++   working copy are done by a program, by content. Reviewed in EX_310 and EX_311 (FOCUSED PASS).
++
++3. **THE OWNER'S FINDING, WHICH IS NOW A STANDING LESSON (entry 255; 24 November 2026, 22:33): "we have absolutely
++   overengineered and wasted time and money."** And: "i do not understand how simple conversion of EOF could be
++   made into such a drawn out process. there are no binary files that i know of, we could more easily easily have
++   just done the lot and rebuilt all draws and data". Claude had built, for a job of line endings in some 650
++   files, one Git setting and a refill: a conversion program with resume logic, a second program, a verifier, a
++   look-only kit, 130 tests and planted-fault scripts; the reviewer's recheck (EX_312, five corrections C01 to
++   C05) asked for more of the same. **EX_313 (the reviewer, on the owner's direction) superseded it:** one
++   attempt; a verified copy of the whole project folder first; on any STOP the whole folder put back on the
++   owner's go; only the small direct safeguards kept; no resume, no recovery machinery, no further testing. The
++   edits to the existing programs took under half an hour. **What needed care in that job was two things only:**
++   the short list of files that must not be converted, and one content-based staging step in Git (item 7).
++
++4. **THE CONVERSION IS DONE (entries 255 to 260).** Package `FILE_FORM_Conversion_v2`
++   (`exchange/CLAUDE_WEB_TOOLS/conversion/package/`; reviewed in EX_314, FOCUSED PASS; v1 is kept beside it as
++   evidence). The owner ran its sheet in DEV on the night of 24 November, each part on his own go: the whole
++   project folder copied to `E:\TEMP` and proved (107,135 files, `COPY PASS`); the package's 12 files copied in
++   (`PRE PASS`, `POST PASS`); **650 listed files and `ENVIRONMENT.ini` converted, line endings only; DEV's 1,578
++   research results and status files removed** on his typed `CONVERT` and `REMOVE`; the four results masters and
++   ledgers proved unchanged; **685 files staged by content and 1,873 working copies of frozen documents put back to
++   Git's own bytes** on his typed `STAGE`; the suite compared with a baseline made from a clean clone (762 of 762
++   earlier tests with the same result); **his commit `691f58e4e171761f47f407dce2a4b7b7a687c271`**, `COMMITTED PASS`;
++   the fill (47 minutes): POWERBALL 15118 forecasts and 15078 scores through draw 1591, OZLOTTO 6598 and 6558
++   through draw 1708, **the counts of build step 2**; the repeat run wrote nothing; the comparison with the old
++   development records `RESULT: PASS - COMPLETE - both games` (34800 score records and 20436 forecasts equal,
++   `DIFFERENT: 0`); **pushed by the owner on 25 November at 07:02.** Verified by Claude from GitHub: all 686 listed
++   files at the list's "after" bytes and in their form; 685 paths changed, none off the list; no `GAIS/` path
++   and no `.jsonl` file changed. His windows: `conversion/day_result/OWNERS_WINDOWS_20261124_25.txt`. The whole-folder
++   copy was never needed.
++
++5. **One fault found that night, and corrected (entries 260, 261).** One of the 68 new tests failed on Windows
++   only: `test_research_file_form ... test_a_lock_file_is_one_line_ending_crlf`. **Cause:** `src/research/job_lock.py`
++   opened the lock file with `os.open` without `O_BINARY`; Windows' C runtime then writes a carriage return of
++   its own before a line feed, so the line ended CR CR LF. Linux does not, so the cloud passed; and the standard's
++   search for writes that name no line ending passes over `os.open` by design, which is where it hid. The owner
++   chose to go on that night and correct it afterwards, and the reviewer agreed. **`FILE_FORM_Lock_Fix_v1`**
++   (`exchange/CLAUDE_WEB_TOOLS/lock_fix/`; EX_315, FOCUSED PASS): one line gains `| getattr(os, 'O_BINARY', 0)`;
++   installed by the owner as **commit `fe1c3108c10b77035a824968c9760803eb1b523a`**, 116 tests of the three affected
++   modules `OK`, pushed. No rebuild: `job_lock.py` is class `derived`, and the engine writes that digest into new
++   lines and compares it nowhere.
++
++6. **What changed in the living project, in sum.** New: `deploy/file_form.py` (the standard's one rule, the checker's
++   core, and the search for writes that name no line ending), `src/research/windows_text.py` (`windows_lines`,
++   `LINE_ENDING`), `tests/test_file_form.py`, `tests/test_research_file_form.py`. Changed: the engine's four writers
++   of text (`reports.py`, `status_file.py`, `derived_check.py`, `job_lock.py`) write CRLF; a status file's own check
++   is over its CRLF bytes and a file in the old form is refused; two lines of the old
++   `src/two_site_results_check_v0_7.py`; `deploy/INFRA_MANIFEST.ini` (the helper, class `derived`); `.gitattributes`
++   (three lines); `.gitignore` (the two readiness markers). **No `.jsonl` writer and no calculation was touched.**
++   The conversion changed the bytes of `forecast`-class files, so the forecasting-code identity changed: that is
++   why DEV's results were removed and filled again, and DEV's lists now carry the new identity. **`Make_Installable`
++   and `Check_Tree` are not yet wired to the checker:** that is slice A's.
++
++7. **Working rules that follow. Each replaces an older habit of this file.**
++   - **Every text file Claude adds is CRLF** (`.sh` and `.jsonl` apart), checked before each commit with the
++     project's own rule, for example `file_form.faults_of_files(Path('.'), paths)` from `deploy/file_form.py`. The
++     cloud workspace has no automatic conversion: write bytes, or name the line ending. **Files that existed
++     before 25 November 2026 stay as they are:** the decision log and `exchange/CONTINUITY_NOW.md` are LF and are
++     appended to as bytes; older files under `exchange/`, `doc/` and `review/` are frozen history.
++   - **A file's bytes are now the same in Git, in a clone and on the owner's disk.** Hashes are compared exactly;
++     nothing is "normalised" first. This supersedes section 1.6's "Verifiers must tolerate CRLF working copies"
++     (a carried section, so its text stands unedited) and section 6's notes on line endings.
++   - **A package's own files are delivered in their form** (CRLF), and a sheet's `certutil` hash of a file in DEV
++     equals the hash of the Git content.
++   - **Any low-level write of text is binary** (`os.open` with `O_BINARY`, or `open(..., 'wb')`), with the line
++     ending written by the program. Only a run on Windows shows Windows' own translation.
++   - **Git does not notice a change of line endings by itself** once `* -text` is set (it trusts the size and time
++     it remembers): staging after such a change is by content (`git hash-object -w --no-filters`, then
++     `git update-index --index-info`), as `conversion/tools/stage_and_refresh.py` did. That program and the
++     conversion program are one-off tools, used once and not project code; do not reuse them.
++   - **Nothing is pushed by Claude between the owner's pull and his push on a day of install** (it happened twice,
++     entries 210 and 260; EX_315 asks the same of both chats). Records are written after his push.
++
++8. **The owner's PC now.** DEV at `fe1c310` plus the records' commits, converted, filled, Git clean; its
++   `ENVIRONMENT.ini` is CRLF. No QA or PROD; nothing of build step 3 installed; the prevailing OV-1 not started.
++   Leftovers he may delete: `E:\TEMP\FILE_FORM_copy_of_project`, `E:\TEMP\FILE_FORM_baseline_clone`,
++   `E:\TEMP\FILE_FORM_Conversion_v2`, `E:\TEMP\FILE_FORM_Lock_Fix_v1`, `E:\TEMP\FILE_FORM_evidence_v2` and
++   `D:\DELETE_ME\a_p_r_i_r\T028`. `E:\TEMP\STEP2_evidence` no longer exists: **a sheet must not name a baseline
++   folder on his PC without saying how to make it again** (it is made from a clean clone: entries 210 and 260).
++
++9. **The chats.** The reviewer chat is the one that started on the evening of 24 November (EX_304 to EX_315); it
++   commits its own EX files and handover. **In force for the reviewer: H-2 v7 (RAT-52),**
++   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md` with its blurb beside it: written and installed by the
++   reviewer on 25 November 2026 at 07:17, ratified by the owner in advance, current to entry 261 and EX_315. It is
++   the reviewer's: Claude has not reviewed it and does not edit it. H-2 v6 (RAT-46) is history, and Claude's
++   refresh H-2 v6r2, never ratified, is superseded by it.
++   **The owner's plan for this Claude chat ends on the night of 25 November 2026;** this edition is written so that
++   a new chat can take over from it.
++
++10. **What waits, at this edition.** On the reviewer: its cold read of this handover (item 1). On the owner:
++    nothing. **On Claude, in order:**
++    (a) **slice A of build step 3** (section 0D items 2 to 7): its working files in
++    `exchange/CLAUDE_WEB_TOOLS/step3/overlay/` were written before the standard and against `main` at `5f16b35`;
++    bring them to the standard (CRLF; every write names its line ending), rebase them on `main` as it is now, wire
++    `deploy/file_form.py` into `Make_Installable` and `Check_Tree`, write what section 0D item 7 lists as not yet
++    written, and put the slice to the reviewer with the unratified amendment of the deployment design's section 2
++    (how processes are read, section 0D item 5) and the two readings of the specification;
++    (b) slices B, C and D, the joined rehearsal, the one install into DEV, then QA, the transition check and PROD,
++    each on his go;
++    (c) the register edition (overdue);
++    (d) the operations manual's skeleton after build step 3; its "Standards" section names the `.jsonl` exception.
++    **Apply item 3 to all of it: say the simplest safe route first.**
++
++11. **Lessons of these two days, for whoever continues** (in the manner of section 8.8).
++    (a) For a one-off migration, begin from "a verified copy of the whole folder, one attempt, put it back on a
++    STOP". Do not build resumption. When the owner asks for a standard, tell him at once what the smallest job
++    is that would meet it.
++    (b) A reviewer's recheck can itself over-engineer. Say so to the owner, with the risk each demand guards
++    against and whether that state can exist; the decision is his.
++    (c) A comparison that lists a new test as NEW does not say whether it passes. A sheet says that each new
++    module ends `OK`, and Claude reads the suite's own lines, not only the comparison's.
++    (d) What a program prints is promised by its sheet: a finding about a file is fixed words, never the file's
++    content (EX_308).
++    (e) A statement of fact in a document for ratification is tried before it is ratified: "does not reach GAIS"
++    was written, reviewed and ratified, and was false (entry 250).
++    (f) The cloud's evidence is not Windows'. Three Windows facts cost time here: the C runtime's text mode, the
++    refusal of a rename while a file is open (TASK_T028), and that every program started from an environment is
++    two processes.
++    (g) Do not push during the owner's install (item 7).
++    (h) When the owner says stop, stop; put the options, recommend one, and do only what he chooses.
++
++12. **What changed from H-1 v11.** The header; section 0 item 2 (the standard's edition; entries 244 to 261); section
++    0D (its heading, its next numbers, items 9, 10, 15 and 16: each a note that v12 supersedes it; the text is
++    kept); section 4.1 (the standard v0.2 and its hash); section 6 (two notes on line endings); section 7.1 (the
++    suite's known result since the conversion); section 10 items 2 and 3; section 12.6; section 12.8 (its heading,
++    items 3 and 5); Appendix B.3 and the last line; and this section. Sections 1, 2 and 2A are byte for byte H-1
++    v11's. Nothing binding was dropped. **Not re-read for this edition:** sections 3, 5, 8, 9, 11, 12.1 to 12.5,
++    12.9 and Appendix A, which are H-1 v11's text; Appendix A's hashes were computed at H-1 v10 and v11 from
++    files that Git then held LF, and for files of the living project they are **no longer the hashes of the
++    present files** (the conversion changed their bytes). Compute afresh from `HEAD`.
++
++**Identities added at this edition** (SHA-256 of the Git content at `HEAD`, computed by the builder):
++
++| File | SHA-256 |
++|---|---|
++| `doc/FILE_FORM_STANDARD_v0_2.md` | `73d52529d52e743b16942ffada69df239d72cc019844f4c73476d6d38db1e680` |
++| `.gitattributes` | `f0fe9c68753286cb2e20f03b80c6ca0be2cc165682e94951e7f2e3e513c8dc47` |
++| `deploy/file_form.py` | `0d7738e542baae2be92982ff2a3981519b40cd8da554d5c50958dd1a55119cc5` |
++| `src/research/windows_text.py` | `243d246c37ffd3ef61a8412cc98b39fde34f80fd19d96e7883d4d177597fc244` |
++| `src/research/job_lock.py` | `efe8419e5927d87207fc39de0b97519c86b0b4a01f533b5751b6a6f54bc7853f` |
++| `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2.zip` | `ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c` |
++| `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2/CONVERSION_LIST.json` | `40abea55b09e13f341f056a43596c334e10ef462563715c42a850175a919f2f4` |
++| `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2/INSTALL_AND_RUN_SHEET.md` | `25968638311354b0547e849f404c71bbd12b187475f7a4f6ba1bbc695f59702b` |
++| `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md` | `fee612117f3cf84526b0b5c61350116ae73c6ff32d13d98a93a1fcf85c791d2d` |
++| `exchange/CLAUDE_WEB_TOOLS/conversion/day_result/OWNERS_WINDOWS_20261124_25.txt` | `5f28662e22ae61221df8a04b73df97937de15ebbf03d46eaf61662df21c8843a` |
++| `exchange/CLAUDE_WEB_TOOLS/lock_fix/package/FILE_FORM_Lock_Fix_v1.zip` | `744efbd3ca1ea70162d6c1dcae060836e9326625299f9116b5ac2dbb19e20318` |
++| `exchange/EX_312_ChatGPT.md` | `576973db292927b868e586c2bfed6d083aad4783d474a01be20a9dadfdf44145` |
++| `exchange/EX_313_ChatGPT.md` | `0884eb2a475442838a7783dcbbbdfe22e9e317c08f8c7ef7a9bfb24224e5fda9` |
++| `exchange/EX_314_ChatGPT.md` | `c7beffa62ffc18b9b841fbd254af8a2006e4112c019bcdee2929fa27581f82e1` |
++| `exchange/EX_315_ChatGPT.md` | `d1710c07770a5df5dd3586db227e669fcf7be26bc0a7be8b55cd98ae713b9de3` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_20261125.md` | `a954efc6caf0109f6575869326ed548d86b747dda9ad7c20e343e8037cc7058b` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v7_introductory_blurb_20261125.md` | `20c4fd217a881ea98765db9d079eed632b98ad4a962ebf5f916b29c6e1ce70b7` |
++| `doc/HANDOVER/Claude_Primary_Handover_H1_v11.md` | `91a9c1814587bcbe0ee9ce23de51a6ed5008932d4c721e9f52c0467930c09318` |
++| `doc/HANDOVER/Claude_Primary_Handover_H1_v11_introductory_blurb.md` | `16d7feedc6102bc87e62d5e6d4a464a38013ffd6f8e2262d0a80320387d9b5ec` |
+ 
+ ## 0C. Sections 1, 2 and 2A are carried unchanged: read them with these notes
+ 
+@@ -596,12 +797,15 @@
+ | `doc/Predictive_Randomness_System_Specification_v0_6.md` | `ee7199d0c17e8bcf877d49e25c6db1a009105c3f8da75ff1ec28b15726216ad0` |
+ | `doc/Predictive_Randomness_Deployment_Design_v0_12.md` | `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d` |
+ | `doc/CODING_PRACTICES_v0_1.md` | `d64f0101a4fdb21998b2871765bd9b3f06ccb6c7409c7a2d0e9f230cebbd7ddd` |
+-| `doc/FILE_FORM_STANDARD_v0_1.md` (v11: RAT-47, 24 November 2026, entry 237; a note of ratification beside the coding practices) | `97034474f1a7e9c54a14b9554b45666cb1fa031d566545433a0412d4312f8335` |
++| `doc/FILE_FORM_STANDARD_v0_2.md` (v12: RAT-49, 24 November 2026, entry 253: **the standard in force**) | `73d52529d52e743b16942ffada69df239d72cc019844f4c73476d6d38db1e680` |
++| `doc/FILE_FORM_STANDARD_v0_1.md` (v11: RAT-47, 24 November 2026, entry 237; v12: history since RAT-49) | `97034474f1a7e9c54a14b9554b45666cb1fa031d566545433a0412d4312f8335` |
+ 
+ Each of the two design documents (the specification and the deployment design) is the candidate the reviewer
+ passed in EX_271 with its status paragraph alone changed. (v11) The file-form standard is the candidate v0.1r2
+ the reviewer passed in EX_305, ratified as RAT-47, with its status statements changed at installation (the
+-exact difference is in `exchange/CLAUDE_WEB_TOOLS/rat47/`). The
++exact difference is in `exchange/CLAUDE_WEB_TOOLS/rat47/`). (v12) The standard v0.2 is the candidate v0.2r1 the
++reviewer passed in EX_311, ratified as RAT-49 and installed the same way (`exchange/CLAUDE_WEB_TOOLS/standards/rat49/`);
++RAT-50 (entry 258) changed its section 7 narrowly for the one conversion without re-issuing it. The
+ candidates and every earlier draft, with exact diffs between editions, are in `exchange/CLAUDE_WEB_TOOLS/simplify/`.
+ 
+ ### 4.2 Still binding by reference (specification 1.2: science and safety)
+@@ -774,7 +978,7 @@
+ - Windows does not kill children when the parent dies; `TerminateProcess` is asynchronous.
+ - A `.bat` launched via `Popen` runs under `cmd.exe` with CMD argument parsing (gh-114539): hence `SAFE_ARG` and `%*`.
+ - `O_NOFOLLOW` does not exist on Windows; symlink refusal there relies on `is_symlink()`. NTFS hard links: the reader's `st_nlink != 1` refusal passes on the owner's drive. The owner's account cannot create symlinks (WinError 1314), so **four** symlink tests skip on Windows (reader contracts, exit receipt, CODE-2's dangling-symlink test, and WF-1B's symlinked-master test); the suite runner allows exactly those modules. A test that creates a symlink without catching `OSError` fails there (T013); hard links work and are the portable way to test the link guard.
+-- Line endings: Git stores `.md` and `.py` as LF; `.bat` is `text eol=crlf`; `source_data/**` is `-text`. `git archive` applies the `.bat` rule, so hash `.bat` files from `git show`.
++- Line endings: (v12: superseded on 25 November 2026. Git now converts nothing in this project, `* -text`, and stores every file exactly as committed: the living project's text files CRLF, `.jsonl` LF, frozen history as it was. Section 0E items 2 and 7.) Before that: Git stores `.md` and `.py` as LF; `.bat` is `text eol=crlf`; `source_data/**` is `-text`. `git archive` applies the `.bat` rule, so hash `.bat` files from `git show`.
+ - **Python 3.15 makes UTF-8 the default text encoding (PEP 686).** No effect on the project's tests so far.
+ - **Record files and line endings:** Git stores `results/` files as text, so on the owner's `core.autocrlf=true` checkout any Git operation that rewrites one (a rebase, a checkout) gives it CRLF bytes, and a create-only record whose bytes are checked then refuses. The first Powerball report refused this way: both committed Powerball batch records (`plan.json` and the segment record) were `w/crlf` (`git ls-files --eol`), the plan 12,029 bytes against 12,028 in Git. The owner restored them (delete the files, then `git -c core.autocrlf=false checkout -- <batch folder>`), and the report then ran. Reminder R-011 adds a `results/** -text` rule.
+ - **Exact arithmetic can be slow at full size:** WF-1B's exact Clopper-Pearson bisection over 10,000-trial binomial tails took over an hour per report until PERF-1. Profile at full size on invented data before trusting a run-time estimate.
+@@ -787,7 +991,8 @@
+ - **New in H-1 v8: DEV's working files are the install source.** If Git rewrites line endings in the owner's
+   clone, file hashes change, readiness markers stop matching and a helper may be refused. That fails safe; pinning
+   line endings for `src/` in `.gitattributes` avoids it (specification section 20). The owner's checkout uses
+-  `core.autocrlf=true`.
++  `core.autocrlf=true`. (v12: settled by the file-form standard: the root `.gitattributes` says `* -text`, so that
++  setting no longer rewrites any file of the project; `GAIS/` keeps its own rules.)
+ 
+ ---
+ 
+@@ -826,6 +1031,11 @@
+   entry 211): it is rewritten in build step 3.
+ - **Everything else** under `src/` and `tests/`, the root `.bat` files and `requirements.txt` is the old system, as at
+   `cc0ab73`, apart from step 1's changes named above and the lines it changed in 14 test files for the moved paths.
++- (v12) **The suite's known result since the conversion (owner's PC, 25 November 2026): 54 modules, 830 tests:**
++  the 52 modules and 762 tests below, with the same three failing tests, and two new modules, `test_file_form`
++  (52 tests) and `test_research_file_form` (16). On the night, one of the 68 new tests failed on Windows (the
++  lock file's line); it passes since `fe1c310` (116 tests of the three affected modules run by the owner, `OK`).
++  **The whole suite has not been run since that one-line commit:** the next package's run is the first.
+ - **The suite's known result** (owner's PC and cloud, 24 November 2026): **52 modules, 762 tests** (the old 45
+   modules and 571 tests, and the engine's 7 modules and 191 tests); **three tests fail, with eight failed
+   assertions**, on `main` since before step 1: `test_mhupa_launchers` `test_gitignore_lines` (one; it prints a set, in
+@@ -1145,7 +1355,9 @@
+    H-2 v5r1 (RAT-43, entry 174); the runner's rulebook v0.7 (RAT-44, entry 192); **build step 2** (entries 176 to
+    212, `5f16b35`).
+ 2. **Done: H-1 v10 ratified (RAT-45, entry 215)** after EX_295 and EX_296, and this edition, H-1 v11, ratified
+-   (RAT-48, entry 244) after EX_306 and EX_307. The reviewer has written its own
++   (RAT-48, entry 244) after EX_306 and EX_307; (v12) **the file-form standard v0.2 (RAT-49, entry 253), the
++   conversion of DEV (RAT-50, entry 258; `691f58e`, entry 260), the lock line (`fe1c310`, entry 261) and H-1 v12
++   (RAT-51, entry 262): section 0E.** The reviewer has written its own
+    H-2 v6 as a CANDIDATE (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_CANDIDATE_20261124.md`; EX_296): (v11) the
+    reviewer corrected it as the candidate H-2 v6r1
+    (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6r1_CANDIDATE_20261124.md`; EX_297); the owner ratified that corrected
+@@ -1153,7 +1365,8 @@
+ 3. **Build step 3: trees, installs, backups and restore** (specification 12.1 to 12.6, 13, 14.1), then the transition
+    check and PROD's first job. **(v11) The owner gave his go for its design and cloud coding on 24 November 2026
+    (entry 217). Its plan, the plan's review, his decisions and where the work stands are in section 0D; the
+-   conversion to the file-form standard comes before its first package.** Every operation on his PC is still his
++   conversion to the file-form standard comes before its first package** (v12: **the conversion is done; slice A,
++   brought to the standard, is the next work: section 0E item 10**)**.** Every operation on his PC is still his
+    own go. **Already decided by the owner** (section 0B item 10): the
+    updater as a clean-sheet new edition, put to the reviewer before it is coded; (v11: not "LF pinned": the
+    file-form standard, RAT-47); the places on G: and T:; no parallel runner. **To settle or carry in that package:** the rewrite
+@@ -1335,7 +1548,8 @@
+ 
+ ### 12.6 The owner's machine
+ 
+-- Windows 11; 12 cores, 24 logical processors. Git with `core.autocrlf=true`. Downloads go to `E:\TEMP`, never into
++- Windows 11; 12 cores, 24 logical processors. Git with `core.autocrlf=true` (v12: without effect on this project
++  since `* -text`; his working copy is byte for byte what Git holds). Downloads go to `E:\TEMP`, never into
+   the repository.
+ - **DEV** is the clone at `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality`, with its `.venv`
+   (Python 3.15.2). **PROD** will be `G:\a_p_r_i_r` and **QA** `T:\a_p_r_i_r`, with backups under `T:\a_p_r_i_r_backups\PROD`
+@@ -1354,7 +1568,7 @@
+ - He saves a package ZIP to `E:\TEMP` and extracts it there; the evidence folders of a sheet are `E:\TEMP\<name>_evidence`.
+   His ZIP of the whole project folder (entry 163) is on four external drives.
+ 
+-### 12.8 Open items at this edition (24 November 2026)
++### 12.8 Open items at this edition (v12: 25 November 2026; section 0E item 10 is the current list and prevails)
+ 
+ The live state is `exchange/CONTINUITY_NOW.md`; it overtakes this list.
+ 
+@@ -1365,10 +1579,11 @@
+ - **Owed by Claude, in order of need:**
+   1. Build steps 3 and 4, each on its go, with what section 10 says each must settle.
+   2. The clean-sheet updater put to the reviewer as the owner's decision, before it is coded (section 10).
+-  3. The rewrite of `ENVIRONMENT.example.ini` (entry 211) and (v11) the conversion to the file-form standard, in
+-     place of the LF pin, before slice A is packaged.
++  3. The rewrite of `ENVIRONMENT.example.ini` (entry 211), in slice A. (v12: the conversion to the file-form
++     standard, which v11 listed here, is done.)
+   4. The test of EX_271 section 3, in build step 4.
+-  5. The next register edition, when a code package or a handover next travels (section 1.6): it records RAT-41's
++  5. The next register edition (v12: **overdue**; it now also records RAT-45 to RAT-52, the conversion and the
++     lock line), when a code package or a handover next travels (section 1.6): it records RAT-41's
+      install, RAT-42, RAT-43, RAT-44, build steps 1 and 2, the tidy-up and what follows.
+   6. The operations manual's skeleton, agreed with the reviewer, after build step 3 (section 10 item 5).
+   7. A new draft of `doc/METHOD_TEMPLATE/` for the new layout, after build step 3.
+@@ -1527,7 +1742,10 @@
+ 
+ ### B.3 Integrity
+ 
+-US-ASCII; LF; one final newline. The carried sections 1, 2 and 2A are identical to H-1 v9's (the builder asserts
+-it). Every replacement's old text is found exactly once in H-1 v9. The builder refuses on any failure.
+-
+-End of H-1 v10.
++(v12) US-ASCII; **CRLF** (the file-form standard: a new text file); one final line ending. The carried sections 1,
++2 and 2A are identical to H-1 v11's, and so to H-1 v7r1's (the builder asserts it against v11). Every
++replacement's old text is found exactly once in H-1 v11. The builder refuses on any failure. (This paragraph
++still described H-1 v9 and v10 in H-1 v11, whose last line read "End of H-1 v10": a stale statement, put right
++here.)
++
++End of H-1 v12.
