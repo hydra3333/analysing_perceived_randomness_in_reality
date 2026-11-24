@@ -342,6 +342,7 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
     def link(self, link: Path, target: Path) -> None:
         """Make a link to a folder; a junction where Windows allows no symbolic link. Skips the test where
         neither can be made."""
+        remove = link.unlink
         try:
             os.symlink(target, link, target_is_directory=True)
         except (OSError, NotImplementedError):
@@ -349,6 +350,9 @@ class WhatStopsARunBeforeAnythingIsChanged(ConversionCase):
                 self.skipTest('this account cannot make a symbolic link here')
             import _winapi
             _winapi.CreateJunction(str(target), str(link))
+            remove = lambda: os.rmdir(link)                 # a junction is removed as a folder is
+        # The link itself is removed before the temporary folder is, never what it points to.
+        self.addCleanup(remove)
 
     def test_a_linked_folder_among_the_results_is_named_and_nothing_behind_it_is_read_or_removed(self):
         elsewhere = self.root / 'elsewhere'

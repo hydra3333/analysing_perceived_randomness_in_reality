@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 22:03 Australia/Adelaide (entry 253: RAT-49, the file-form standard v0.2 ratified and installed; next, by Claude: the sheet of the day and the conversion's package, then the reviewer).
+**Last updated:** 24 November 2026, 22:25 Australia/Adelaide (entry 254: the conversion's package FILE_FORM_Conversion_v1 is built, rehearsed in the cloud and put to the reviewer; the owner's plan ends on the night of 25 November).
 
 ## For the owner: NOW
 
+- **THE CONVERSION'S PACKAGE IS WITH THE REVIEWER (entry 254; 24 November 2026, late evening).**
+  `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v1.zip` (`75eccbe3...ddc87e`), its sheet
+  inside it, and `package/FILE_FORM_Conversion_v1_REVIEW_NOTE.md`. Rehearsed in the cloud from the ZIP: every check
+  passed; the suite 830 tests, 762 of 762 the same. **Not installed; nothing authorised.** **Waiting on:** the
+  reviewer's review. **Then, by Claude:** its corrections; a rehearsal task for the runner; a handover edition.
+  **Then, each on the owner's own go:** the rehearsal, and the day. **The owner's plan ends on the night of 25
+  November:** if this chat ends first, a new Claude chat starts from the H-1 v11 blurb in `doc/HANDOVER/` and
+  reads the decision log from entry 244 and `conversion/NOTES_FOR_THE_PACKAGE.md`. Claude's next numbers: EX_312,
+  entry 255, RAT-50.
 - **RAT-49: THE FILE-FORM STANDARD v0.2 IS RATIFIED AND INSTALLED (entry 253; 24 November 2026, evening).** In
   force: `doc/FILE_FORM_STANDARD_v0_2.md` (`73d52529...b1e680`); v0.1 (RAT-47) stays as history. It differs from v0.1
   in three passages: the root `.gitattributes` holds three lines (`* -text`; `GAIS/** !text`;
@@ -15,7 +24,7 @@ durable EX messages are authoritative.
   are; and that the working copy is refreshed and the converted files staged by a program. H-1 v11 still names
   v0.1: the log prevails. **Nothing waits on the owner or the reviewer.** **Next, by Claude:** the sheet of the
   day and the conversion's package; then the reviewer; then, each on the owner's own go, the runner's rehearsal
-  and the day. Claude's next numbers: EX_312, entry 254, RAT-50.
+  and the day.
 - **THE OWNER'S LOOK-ONLY RUN IN HIS REAL DEV IS DONE: NO FINDING (entry 249; 24 November 2026, evening).** With
   the reviewed kit r1 (EX_308, EX_309): 650 listed files to convert, 24 in their form already, 1,578 old results
   and status files to be made again, the four results files exactly as Git holds them, **nothing in no class:

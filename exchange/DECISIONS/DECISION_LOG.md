@@ -5788,3 +5788,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **RAT-49 authorises the documentary installation and nothing else:** not the conversion, nor anything on the
   owner's PC.
 - Next numbers: EX_312; entry 254; RAT-50.
+
+## 254. 24 November 2026, 22:25 - the conversion's package FILE_FORM_Conversion_v1 is built and rehearsed in the cloud, and put to the reviewer
+
+- **The owner, 22:04:** "what next ?" Claude set out the order (the sheet and the package; the reviewer; a
+  rehearsal task for the runner; the day). **At 22:06:** "we need to move along my plan runs out tomorrow night."
+  **At 22:13:** "this is for the EOL conversion, right ?" Claude: yes, all of it.
+- **Built** by `exchange/CLAUDE_WEB_TOOLS/conversion/build_package.py` (every count and hash in the sheet computed,
+  none typed), against `dd95e7d`:
+  - `package/FILE_FORM_Conversion_v1.zip`, SHA-256 `75eccbe3bd58609bc0cd1bada43cbb50af2dee3ab9b21a0db1f91f6d9fddc87e`, and the same content unpacked beside it;
+  - `package/FILE_FORM_Conversion_v1_MEMBERS.txt` (each member's SHA-256), SHA-256 `7c639d08300c645cf9b30055356cff2c5dae8e6e39f4472cb8a674ae1387f5db`;
+  - `package/FILE_FORM_Conversion_v1_REVIEW_NOTE.md`, SHA-256 `4a0cc59cf2602d9af1c164fbc76b835979647e6829a2befb87b23fa57529effe`: what is put to the reviewer and what
+    Claude asks it to check.
+  It holds: 12 files of its own in CRLF (4 new, 8 replaced, the three-line `.gitattributes` among them); the
+  conversion list (686 files; SHA-256 `f6e13ad05ed4e5e38c94106f1909ff5b86062b3a692a642c485a36ebcc1966f6`); the two
+  programs and the rule; the three suite and comparison tools of build step 2, byte for byte; a verifying script
+  with the phases pre, post and committed; a manifest; and the sheet.
+- **The sheet's order:** the owner's own copy first; check, copy, check; look, then convert; look, then stage and
+  refresh; the suite and its comparison; commit and the committed check, **not yet pushed**; the fill, on its own
+  go; the comparison with the old system's records; **the push last.** Until the push, the owner's copy puts
+  everything back.
+- **Rehearsed in the cloud from the built ZIP** (`trial/REHEARSAL_OF_THE_SHEET.txt`), on a working copy shaped like
+  the owner's with `core.autocrlf=true`: PRE PASS, POST PASS; the look with no finding; converted and proved;
+  staged 685, 2,312 working copies put back, proved; COMMITTED PASS; **the whole suite: 830 tests, 762 of the 762
+  earlier tests with the same result, 68 new tests passing, 70 lines "NEW: "**, which are the numbers the sheet
+  gives; and after the whole suite Git saw nothing changed and nothing left behind.
+- **Not finished:** the whole fill of 40 variants in the cloud ran out of the workspace's time; the four-variant
+  comparison of entry 245 stands. The whole fill is the sheet's part 6, on the owner's PC.
+- **Also changed on the way:** the link tests now remove their links themselves, as the project's existing tests
+  do on Windows.
+- **Its standing:** put to the reviewer by a paste from the owner; no EX message of Claude's was asked for. Not
+  installed. **Authorised by nothing yet:** after the review come a rehearsal task for the runner and the day,
+  each the owner's own go.
+- **The owner's plan ends on the night of 25 November.** Claude's order of work until then: the reviewer's
+  findings on this package; the runner's rehearsal task; a handover edition (H-1 v11 stops at entry 243).
+- Next numbers: EX_312; entry 255; RAT-50.

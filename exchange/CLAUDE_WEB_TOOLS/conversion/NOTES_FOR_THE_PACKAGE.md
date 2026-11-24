@@ -1,7 +1,9 @@
 # The conversion to the file-form standard: Claude's working notes (not a package; nothing here is reviewed or installed)
 
-**State, 24 November 2026, evening (decision log entry 245).** Everything in this folder is working material for
-the package that carries out `doc/FILE_FORM_STANDARD_v0_2.md` section 7. Nothing has run on the owner's PC.
+**State, 24 November 2026, late evening (decision log entry 254).** The package is built
+(`package/FILE_FORM_Conversion_v1.zip`, made by `build_package.py` from the working sources here and
+`package_sources/`) and is with the reviewer (`package/FILE_FORM_Conversion_v1_REVIEW_NOTE.md`). Nothing has run on
+the owner's PC but the look-only run of entry 249.
 
 ## What is here
 

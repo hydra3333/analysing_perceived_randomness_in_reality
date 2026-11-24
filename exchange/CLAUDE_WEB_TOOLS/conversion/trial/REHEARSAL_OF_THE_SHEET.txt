@@ -1,0 +1,48 @@
+The sheet of FILE_FORM_Conversion_v1 rehearsed in the cloud from the built ZIP, 24 November 2026 (Claude's own
+evidence; Git 2.43 on Linux with core.autocrlf=true set in the clone; Python 3.15; not Windows; not a review)
+
+The tree: a clone of main at dd95e7d made with core.autocrlf=true and shaped like the owner's working copy (src,
+deploy and tests as the packages' copies left them, three files CRLF; everything else as Git's checkout wrote
+it), with the workspace's research fill of build step 2 (results/research, 40 status files) and a settings file.
+Git reported it clean. The owner's copy: a whole copy of that tree. The package: the ZIP, extracted.
+
+Part 2.  VERIFY --phase pre:  PRE PASS (12 package files checked against the tree)
+         the 12 files copied in
+         VERIFY --phase post: POST PASS (12 package files in the tree with the package's bytes)
+Part 3.  look: 648 listed files to convert, 38 in their form already, the settings file to convert, 4 results
+         files, 8 untouched and not read, 0 in no class; "A real run would find nothing to stop it."
+         run, CONVERT then REMOVE typed: PROVED all 686 listed files at the list's "after"; the 4 results files
+         as before; nothing made-again left; FINISHED.
+Part 4.  look: 685 of the 686 listed files to stage; 2,312 working copies to put back (exchange 1,701; review 302;
+         doc 242; the runner's folder 47; archive 16; transitory_data 4); 0 not as expected.
+         run, STAGE typed: staged 685; put back 2,312; PROVED; FINISHED.
+         git status --short: 685 lines; none that is not a staged change.
+Part 6 (first half).  committed (in the rehearsal only);
+         VERIFY --phase committed: COMMITTED PASS (every listed file is committed with the list's "after" bytes;
+         the commit changed listed paths only; the working tree is clean).
+Part 5 (run after the commit here, in the committed tree).  The whole suite: DONE: 54 modules, 830 tests ran.
+         The comparison with the suite before any conversion (trial/SUITE_BEFORE_MODULES.txt):
+           before: 52 modules; 762 tests.  after: 54 modules; 830 tests.
+           tests in both runs: 762; with the same result: 762
+           the three known failures, the same three; 68 new tests in 2 new modules, all passing
+           lines holding "NEW: ": 70
+         (REHEARSAL_SUITE_MODULES.txt, REHEARSAL_SUITE_COMPARISON.txt). These are the sheet's numbers.
+         After the whole suite, in that committed tree: "git status --short" printed no line at all.
+
+On the reviewer's FFS2-C01 (do the tests write only disposable fixtures?), what Claude has, and its limits:
+  - the line above: after all 54 modules had run in a committed tree, Git saw no tracked file changed and no file
+    left behind, tracked, untracked or ignored-and-listed. As the reviewer says (EX_311), that does not by itself
+    show that no test writes an in-scope file and puts it back.
+  - the suite's own check (tests/test_file_form.py) walks src, deploy, tests and the root; it passed inside that
+    whole-suite run, in the order the modules ran.
+  - a search of tests/ for writes not aimed at an obviously temporary place found nothing in a test module that
+    writes under src, deploy, tests or the root. It found helper scripts under tests/ that are not test modules
+    and are not run by the suite (tests/prepare_p3_e1_synthetic_csv_v0_1.py, the p1p2_* scripts of the old
+    Windows proofs): run by hand, they write under transitory_data\, which is not the living project's.
+    This search was by eye over a text match; it is not a proof.
+
+The whole fill of 40 variants with the changed engine was started in the cloud and NOT finished inside the
+workspace's time limit (it had reached POWERBALL draw 1494 of 1591). What stands is the earlier run on four
+variants and both games (trial/TRIAL_OF_THE_CONVERSION_PROGRAM.txt items 6 and 7: every forecast line and score
+line the same as before the conversion but for the two fields that record the changed bytes). The whole fill and
+the comparison with the old system's records are parts 6 and 7 of the sheet, on the owner's PC.

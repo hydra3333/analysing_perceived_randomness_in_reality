@@ -204,6 +204,7 @@ class LinksAreNeverFollowed(unittest.TestCase):
         """Make a link to a folder or a file; a junction where Windows allows no symbolic link. Skips the test
         where neither can be made."""
         link.parent.mkdir(parents=True, exist_ok=True)
+        remove = link.unlink
         try:
             os.symlink(target, link, target_is_directory=target.is_dir())
         except (OSError, NotImplementedError):
@@ -211,6 +212,9 @@ class LinksAreNeverFollowed(unittest.TestCase):
                 self.skipTest('this account cannot make a symbolic link here')
             import _winapi
             _winapi.CreateJunction(str(target), str(link))
+            remove = lambda: os.rmdir(link)                 # a junction is removed as a folder is
+        # The link itself is removed before the temporary folder is, never what it points to.
+        self.addCleanup(remove)
 
     def walk(self, folders=('src',), with_root_files=True):
         return file_form.files_and_links_under(self.root, folders, with_root_files)
