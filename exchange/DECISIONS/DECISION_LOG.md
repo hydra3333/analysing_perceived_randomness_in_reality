@@ -5262,3 +5262,72 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The blurb pasted to the reviewer** is the paste block of entry 238 (the H-1 v11 candidate's difference to read).
   Its answer, if one comes, would be EX_306.
 - Next numbers: EX_306; entry 240; RAT-48.
+
+## 240. 24 November 2026, 20:03 - TASK_T028 r1 ran on the owner's PC: PASS, every measurement made; what it found and what follows for build step 3; one thing the report leaves out
+
+- **The run:** by the local runner, 19:50 to 20:00, at `main` `070b7c4`; report
+  `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` (SHA-256
+  `69315a498ac59f5cb558786a89d8b5bbd8c1ba98f87d3e3660c00bfc4a5be7a5`), committed by the runner as `b31ec37` and pushed
+  by the owner. RESULT: PASS; the three parts each ended `FINISHED` with exit code 0; deviations: none stated.
+- **The owner, 20:00, while it ran:** "looks like a python error somewhere near "check the local timezone", lets see
+  what the report says I suppose." **At 20:02 he pasted what he had seen:** the output `+1030 CAST`, then a Python
+  line of the runner's own, not from the task file, that was to look through the finished report for non-ASCII
+  characters and for a user-folder path, and failed with `SyntaxError: (unicode error) 'unicodeescape' codec can't
+  decode bytes in position 2-3` (it wrote `C:\Users` in an ordinary string); exit code 1.
+- **What that was, as far as the paste shows:** two commands of the runner's own, after the task's steps: one that
+  printed the PC's offset and zone abbreviation, and a self-check of its report that never ran (a syntax error
+  stops Python before anything is done). Neither wrote anything; neither is the probe; **nothing changed the date,
+  the time or the time zone** (the probe's own start times, the runner's `date` times and the owner's messages
+  agree throughout). **But the report does not record them:** its Observations name two commands outside the
+  numbered steps and say no unexpected message was printed. The measurements are not affected. Claude does not
+  edit the runner's report; this entry is the record. **Claude's part in it:** `outbox\README.md` asks for the time
+  "with time zone" while the task file allowed only `date +%H:%M:%S`, and no task file gives the runner a command
+  to check its own report; the next task file will say how the time is to be written and give that check as a
+  written command, so that nothing needs inventing.
+- **Renames (step 5; scratch folder on D:).** Windows refused, every time, a folder's rename while a file inside
+  it was open (code 5) or while another process had its working folder inside it (code 5); it refused the
+  replacement of an open file (code 5) and its removal (code 32); the same operations went through at once after
+  the file was closed or the other process had ended. Write-a-temporary-file-then-replace, 1,000 times: never
+  refused; 0.34 seconds without forcing to disk, 1.42 seconds with `os.fsync` each time.
+- **The environment as a ZIP (steps 6 and 7; the main `.venv` alone, an environment-only proxy).** 19,059 files,
+  508.9 MB, longest full path 199 characters, no links, no file dated before 1980. The environment digest's fixed
+  inventory (specification 13): 11,997 files, 362.5 MB; **read and hashed in 150.6 seconds the first time, 5.2
+  seconds when lately read.** ZIP at Deflate level 9: 80.1 seconds, 180.2 MB (35.4%); at level 6: 20.7 seconds,
+  184.5 MB (36.2%). Read back and compared: 1.8 seconds, no difference. Source read a second time: 10.5 seconds,
+  nothing changed.
+- **Processes (step 8).** psutil 7.2.2 and the standard library's reading (never run before today) each saw 237
+  processes and the same four Python ones; the start time of Windows and the probe's own start time agree between
+  the two to the last figure shown. **Every Python program started from an environment is two processes on this
+  PC:** the environment's `python.exe`, and under it the base Python's `python.exe` (the helper appeared twice, the
+  probe likewise with its "ancestor"). psutil could not read the command lines of 125 other programs, none of
+  them Python. No `pythonw.exe` or `py.exe` was running.
+- **What follows for build step 3 (Claude's reading; coding consequences within the ratified design, no change
+  to it):**
+  1. **Process readers: option A stands** (entry 222). The standard library gives names, parents, program paths
+     and start times, and agrees with psutil. Option B is not needed.
+  2. **Two processes for one program:** every process rule counts a pair as one program and leaves out the
+     checking tool's own pair. A tree's own Python is recognised by the environment's `python.exe`; the base
+     Python under it has a program file outside every tree, so it is recognised through its parent, its working
+     folder or its command line. The old `process_check.py` already reasons this way (its rule 6.1).
+  3. **A rename that Windows refuses is whole:** nothing has moved. The swaps of the design's sections 5 to 8 can
+     treat a refusal of the first rename as a clean stop with nothing changed, and say plainly that something is
+     open in the folder (a command window standing in it is enough: the process check, which looks at Python
+     only, does not see that). The tools keep no file open and do not stand in a folder they rename. The restore
+     must not be run with the tree's own Python or from inside the tree: the design already has it run from the
+     recovery kit with the standard library.
+  4. **The digest at the start of every job** (specification 13) may take two to three minutes when the files
+     have not been read lately, which for a weekly job is the usual case: the job says what it is doing while it
+     does it. On T: and G: the time may differ; the joined rehearsal measures it.
+  5. **Each backup holds the environment** (design section 10): about 180 MB and about a minute and a half for
+     that part alone at level 9. Level 6 would save about a minute for about 4 MB more. The design says level 9;
+     Claude proposes no change now and puts the figures before the owner. A whole tree's backup is measured in
+     the joined rehearsal.
+- **Limits of the evidence:** one run, one evening, drive D: for the renames and drive E: for the environment; the
+  first reading's slowness has no cause shown (the report cannot tell a cold cache from a virus scanner); 1,000
+  replacements without a refusal do not show that one can never happen, and the tools keep treating a refusal as
+  a stop.
+- **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T028` is no longer needed** by Claude; deleting it is the owner's.
+- **The H-1 v11 candidate (entry 238) says in section 0D item 6 that this task has not run.** That is now out of
+  date by this one entry; the candidate itself says the decision log prevails. Claude corrects it when the
+  reviewer's reading is in, in the same step.
+- Next numbers: EX_306; entry 241; RAT-48.
