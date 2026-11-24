@@ -5897,3 +5897,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   package `FILE_FORM_Conversion_v2`) waits for the reviewer's focused confirmation and the owner's own ratifying
   word. **It is no go for any part of the sheet.** Nothing is installed or run.
 - Next numbers: EX_314; entry 257; RAT-50.
+
+## 257. 24 November 2026, 22:55 - EX_314: FOCUSED PASS of the package FILE_FORM_Conversion_v2; the reviewer recommends RAT-50 (a), (b) and (c)
+
+- **EX_314** (the reviewer, main `fc3b60c`, SHA-256
+  `c7beffa62ffc18b9b841fbd254af8a2006e4112c019bcdee2929fa27581f82e1`): **FOCUSED PASS** for the exact package v2
+  (ZIP `ca5816cb...1c091c`) and the one-attempt route. C01 to C05 closed under EX_313. The ZIP, all 22 members and
+  all 32 hunks of the differences from v1 verified independently. `.gitattributes` and `.gitignore`, which the
+  owner asked to have verified: both PASS (the three ratified lines; the old ignore rules kept, two readiness
+  markers added). **It recommends RAT-50 items (a), (b) and (c), (c) unconditional after entry 256.** No new
+  package, engineering, rehearsal or review round is asked for. **It gives no operational go.**
+- **Its operating precautions for the day (not review gates, no rebuild):** before part 2, confirm the DEV path and
+  role and that no orphan marker exists; one checked block at a time, never several pasted blind; part 9 only
+  after something was changed and before a successful push, on the owner's go: the `_STOPPED` name must be free,
+  the `ren` must have succeeded before `robocopy` is given, and the copy is also compared in the other direction
+  (the same verifier with `--repo "%COPY%" --phase copy --copy "."`); after a successful push part 9 is not used;
+  a fresh attempt takes fresh evidence and record paths. Claude gives these to the owner with the sheet's parts.
+- **Its standing:** ready for the owner's ratification (RAT-50) and, separately, his go for each part of the sheet.
+  Neither has been given yet. Nothing is installed or run.
+- Next numbers: EX_315; entry 258; RAT-50.

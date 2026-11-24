@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 22:51 Australia/Adelaide (entry 256: the owner drops the runner's separate rehearsal for this conversion; the package FILE_FORM_Conversion_v2 is with the reviewer for a focused confirmation; RAT-50 not yet given).
+**Last updated:** 24 November 2026, 22:55 Australia/Adelaide (entry 257: EX_314, FOCUSED PASS of the package FILE_FORM_Conversion_v2; ready for the owner's RAT-50 and, separately, his go for each part of the sheet; neither given yet).
 
 ## For the owner: NOW
 
@@ -13,7 +13,8 @@ durable EX messages are authoritative.
   verified copy of the whole project folder first; on any STOP the whole folder put back, on the owner's go.**
   `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2.zip` (`ca5816cb...1c091c`), its sheet
   inside it, and `package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md`, are with the reviewer for a focused
-  confirmation. **This supersedes the bullet below about v1.** **The owner has decided (entry 256): no separate
+  confirmation, **which it has given: EX_314, FOCUSED PASS (entry 257), with a few operating precautions for
+  the day.** **This supersedes the bullet below about v1.** **The owner has decided (entry 256): no separate
   rehearsal by the runner.** Next: the reviewer's word; the owner's RAT-50 (the narrow change to the standard's
   recovery rule, the package, the rehearsal dropped); then the day, part by part on his own go. Nothing is
   installed or run yet.
