@@ -5941,3 +5941,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **For the next handover edition and the next register edition:** RAT-45 to RAT-50 are not yet in the
   ratification register; H-1 v11 stops at entry 243 and names the standard v0.1.
 - Next numbers: EX_315; entry 259; RAT-51.
+
+## 259. 24 November 2026, 23:25 - THE DAY, part 1: the owner's go, and its result (the package checked; the whole-folder copy made and proved)
+
+- **The owner's go, 23:00:** "go part 1". Part 1 changes nothing in the project.
+- **What his window shows (sent 23:24), each as the sheet expects:** `git status --short` nothing, twice; the pull
+  `Already up to date`; the last commit touching `src` or `tests` is `5f16b35`; `certutil` on the ZIP:
+  `ca5816cb85813de1df88fbeaf37097c6bd2126fa59f0d3a36f7927783f1c091c`; none of the three folders existed; the
+  package unpacked to `E:\TEMP\FILE_FORM_Conversion_v2`; **robocopy: 107,135 files in 30,629 folders, 973.26 MB,
+  0 mismatched, 0 failed** (5 minutes); **`COPY PASS`, 107,135 files compared**; the reviewer's two extra checks
+  (EX_314): `role = DEV`, `tree_root` naming the project folder, no orphan marker.
+- **One slip of the keyboard, without effect:** the first `certutil` line reached CMD as `rtutil` and was not
+  recognised; he gave the line again and it printed the hash above.
+- **The copy:** `E:\TEMP\FILE_FORM_copy_of_project`. It is the way back (RAT-50) and is kept until the conversion
+  is proved.
+- **Next:** part 2 (the package's 12 files copied in: the first change to the project), on his own go.
+- Next numbers: EX_315; entry 260; RAT-51.

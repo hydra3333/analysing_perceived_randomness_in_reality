@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 22:59 Australia/Adelaide (entry 258: RAT-50, the owner ratifies the one-attempt recovery rule, the package FILE_FORM_Conversion_v2 and the dropping of the runner's rehearsal; no part of the sheet has his go yet).
+**Last updated:** 24 November 2026, 23:25 Australia/Adelaide (entry 259: THE DAY HAS BEGUN; part 1 done on the owner's go: the package checked, the whole-folder copy made and proved (COPY PASS); part 2 waits for his go).
 
 ## For the owner: NOW
 
+- **THE DAY HAS BEGUN (entry 259; 24 November 2026, 23:24).** Part 1 of the sheet is done: the copy of the whole
+  project folder is at `E:\TEMP\FILE_FORM_copy_of_project` (107,135 files, COPY PASS). **Nothing in the project
+  is changed yet.** If this chat ends here: the sheet is
+  `exchange/CLAUDE_WEB_TOOLS/conversion/package/FILE_FORM_Conversion_v2/INSTALL_AND_RUN_SHEET.md`; go on at part 2
+  on the owner's go; on any STOP, part 9 with the precautions of EX_314.
 - **RAT-50 IS GIVEN (entry 258; 24 November 2026, 22:59).** One attempt, never resumed, the whole folder put
   back from the owner's verified copy on any STOP; the package `FILE_FORM_Conversion_v2` (`ca5816cb...1c091c`)
   accepted; no rehearsal by the runner. **Next: the owner's go for part 1 of the sheet** (pull, check the ZIP,
