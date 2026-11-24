@@ -1,0 +1,44 @@
+--- FILE_FORM_STANDARD_v0_1r1_CANDIDATE.md
++++ FILE_FORM_STANDARD_v0_1r2_CANDIDATE.md
+@@ -1,4 +1,4 @@
+-# The project's standard for the form of its text files (line endings) - v0.1r1 CANDIDATE
++# The project's standard for the form of its text files (line endings) - v0.1r2 CANDIDATE
+ 
+ **Date:** 24 November 2026. **Author:** the Claude web chat (on Fable (High)). **Status:** a CANDIDATE for the
+ reviewer's reading and then the project owner's ratification, as a note of ratification to the specification v0.6,
+@@ -9,9 +9,13 @@
+ **v0.1r1 (24 November 2026):** the four clarifications of the reviewer's EX_303 are made: FFS-C01 (sections 2,
+ 6 and 7: what is the project's own, what a tree's own untracked files become, the checker's exact scope);
+ FFS-C02 (sections 3 and 3B: two more kinds, the `.jsonl` wording, what conforming means exactly); FFS-C03
+-(section 5: `GAIS\`, and commits from the cloud); FFS-C04 (section 7: a second run, undoing, locks, a copy first,
++(section 5: `GAIS\`, and commits from the cloud); FFS-C04 (section 7: a second run, locks, a copy first,
+ what is and is not proved). One point is put to the owner (section 8 item 6). The policy is unchanged. v0.1
+ and the trial's evidence stay as they were; `FILE_FORM_STANDARD_v0_1_TO_v0_1r1.diff` is the exact difference.
++**v0.1r2 (24 November 2026):** the one narrow correction of the reviewer's EX_304 (which passed FFS-C01, C02 and
++C03): v0.1r1 promised that the conversion could be undone from its list alone. That is not generally true and
++is removed; the way back is the owner's copy, checked before the conversion begins (section 7). Nothing else
++is changed; `FILE_FORM_STANDARD_v0_1r1_TO_v0_1r2.diff` is the exact difference.
+ 
+ **Why it exists (the owner, 24 November 2026, decision log entries 227 to 230).** "git should never be used as an
+ operational gatekeeper/checker"; "I prefer being consistent if possible"; "we should create a spec ... expressly have
+@@ -187,12 +191,16 @@
+    (the new file written under a temporary name and renamed into place, then hashed again), and the program
+    proves that the new bytes differ from the old in line endings only. **Any third value is a STOP.** A run that
+    was interrupted is therefore simply run again; the files are not claimed to change all at once.
+-   **It can be undone from the same list:** asked to undo, it turns each file whose hash is the "after" back into
+-   the "before".
++   **The way back is the owner's copy, not the list.** Recovery is from the owner's pre-conversion copy of the
++   project folder, checked before the conversion begins: the program reads the copy and goes on only if every
++   file it is about to convert, and every file that is about to be removed, is in the copy with the same
++   SHA-256 as in the tree. The "before" hashes it records verify, afterwards, that the original files have been
++   recovered exactly. **The conversion list is not itself a backup:** making line endings uniform can turn two
++   different files into the same bytes, so a path and two hashes cannot rebuild an original. No undo is built.
+    **While it runs nothing else does:** it holds the tree's job lock and the updater's own lock, so no research job
+    and no results update can start, and the sheet has the owner close everything else of the project first.
+-   **Before it runs** the owner makes his own copy of the project folder; the ways back are the undo, or that
+-   copy.
++   **Before it runs** the owner makes his own copy of the project folder. That copy is the one way back, for
++   the converted files, for DEV's own settings file and for the derived outputs that are removed.
+ 3. **Everything computed from bytes is made again** (the owner, section 8: "if hashes need redoing then do it"):
+    any hash a test holds for a converted file; every variant's fingerprint and the identity of the forecasting
+    code, by which **DEV's research results are removed by hand and filled again once** (about 47 minutes). **A

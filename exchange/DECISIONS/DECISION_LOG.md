@@ -5119,3 +5119,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on:** the new reviewer's takeover and its focused recheck of the standard v0.1r1; then the owner's
   ratification of the standard; the owner's go for TASK_T028 r1.
 - Next numbers: EX_304; entry 235; RAT-47.
+
+## 235. 24 November 2026, 19:03 - EX_304 (the new reviewer chat): the standard v0.1r1 rechecked, three PASS, one narrow correction; made as v0.1r2
+
+- **The owner, 19:02, to Claude:** "EX_304_ChatGPT.md is committed at main 87c0a9b2cd537e5faa11ebd7c028947b4bd16822.
+  FFS-C01, C02 and C03 PASS, including owner entry 234. FFS-C04 requires one narrow correction: remove the
+  unsupported independent undo promise and rely on the verified pre-conversion copy. No broader review or policy
+  change requested. Please read EX_304."
+- **EX_304** (the new reviewer chat's first message; main `87c0a9b`; SHA-256 `3e518407042125dde2a6aa33241870567fb5cfbf572152bb402be0d63df58908`): FFS-C01, FFS-C02 and
+  FFS-C03 PASS (the owner's assent of entry 234 noted; section 8 item 6's status to be brought up to date at the
+  documentary installation, with no candidate made for that alone). **FFS-C04: one narrow correction.** v0.1r1 said
+  the conversion "can be undone from the same list". The reviewer: making line endings uniform is many-to-one (a
+  file with LF then CRLF and one with CRLF then LF become the same bytes), so a path and two SHA-256 values do not
+  give back the original; the "before" hash can verify a recovery, not make one. It recommends RAT-47 after the
+  correction, with the exact difference for confirmation.
+- **Accepted as found: a fault of Claude's.** The claim was true only of a file that was uniform before, and the
+  standard stated it of every file.
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1r2_CANDIDATE.md` (SHA-256 `4f515726bceb31e6d92df422c8b4c0c1e8df349a780430d28bcbf40bd9204f51`), made from
+  v0.1r1 (`5a4d8a23...f8485c`, asserted) by `make_standard_v0_1r2.py`; the exact difference
+  `FILE_FORM_STANDARD_v0_1r1_TO_v0_1r2.diff` (SHA-256 `51b15aa9d64c4b1f9d678b901e5fdcde48f51805ea09a4ba605b52eacc6972d7`; three hunks) rebuilds it with `patch` (checked
+  with `cmp`). **What changed, and nothing else:** the title and a note of the revision; the undo promise removed;
+  in its place: recovery is from the owner's pre-conversion copy, which the program checks before it changes
+  anything (every file to be converted or removed is in the copy with the same SHA-256 as in the tree); the
+  recorded "before" hashes verify a recovery afterwards; the conversion list is not a backup; no undo is built;
+  the copy is the one way back, also for DEV's settings file and the derived outputs that are removed.
+- **Not changed in v0.1r2, as the reviewer asked:** section 8 item 6 still reads "put to the owner, not yet
+  answered"; it is decided (entry 234) and is brought up to date when the ratified text is installed.
+- **The reviewer has used EX_304.** Claude's next number is EX_305.
+- **Next:** the reviewer's confirmation of the difference; then the owner's ratification (RAT-47). Nothing is
+  converted; no code is changed.
+- Next numbers: EX_305; entry 236; RAT-47.
