@@ -5595,3 +5595,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Its standing:** for the reviewer's confirmation of the narrow difference. The look itself is the owner's own
   go, not given by a review.
 - Next numbers: EX_309; entry 248; RAT-49.
+
+## 248. 24 November 2026, 21:26 - the reviewer's FOCUSED PASS of the look kit r1, relayed by the owner; the look is now his to run on his own go
+
+- **Relayed by the owner at 21:26, the reviewer's words:** "LOOK-only kit r1: FOCUSED PASS. LOOK-C01 and LOOK-C02
+  CLOSED for the intended local, quiescent DEV survey. All five supplied SHA-256 fingerprints match. All 15 diff
+  hunks independently applied and both revised CRLF source files reconstructed exactly. Original kit unchanged.
+  All sheet precautions satisfactorily addressed. Recommend the owner proceed with LOOK_ONLY_SHEET_r1.md on his
+  own GO. This PASS does not extend to the actual conversion package." And: "Minor qualification: filesystem
+  metadata queries may resolve link targets; the tool is not a general-purpose security sandbox. This is not a
+  reason to delay the intended local survey." And: "Next EX: EX_309, not yet committed."
+- **What Claude records:** the relay, as the owner gave it. EX_309 is not on `main` at this entry (checked); when
+  it is committed it is the record of the review, and this entry is not.
+- **The qualification is true and is accepted as it stands:** the walk asks Windows whether a path is a link
+  without following it, but one question it asks about a link lying in the root (is it a folder?) is answered
+  through the link. Nothing behind a link is listed, opened or read. No change is made for it.
+- **Not given by the review:** the go. The look is the owner's own to run, from
+  `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET_r1.md`, when he chooses; Claude repeated the steps to him.
+- Next numbers: EX_309 (the reviewer's, pending); entry 249; RAT-49.

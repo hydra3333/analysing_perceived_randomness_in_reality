@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 21:22 Australia/Adelaide (entry 247: EX_308's two corrections made; the look kit r1 and sheet r1 await the reviewer's confirmation; the look is then the owner's own go).
+**Last updated:** 24 November 2026, 21:26 Australia/Adelaide (entry 248: the reviewer passed the look kit r1; the look-only run is the owner's to make on his own go, from LOOK_ONLY_SHEET_r1.md; Claude then reads its output).
 
 ## For the owner: NOW
 
@@ -13,9 +13,10 @@ durable EX messages are authoritative.
   both made: it prints no content of a status file, and it names every link, junction or reparse point without
   entering or reading it. **The sheet:** `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET_r1.md` (a pull; three
   `certutil` lines; one command whose output goes to `E:\TEMP\FILE_FORM_look.txt`, to be sent to Claude).
-  **Waiting on:** the reviewer's confirmation of `look_kit_TO_r1.diff`; then the run is the owner's own go.
+  **The reviewer passed the kit r1 (entry 248; its EX_309 was not yet committed then). Waiting on the owner:**
+  the look itself, on his own go, and its output sent to Claude.
   **Meanwhile, by Claude:** the refresh and commit commands, the sheet of the day, the package. Claude's next
-  numbers: EX_309, entry 248, RAT-49.
+  numbers: entry 249, RAT-49; the next EX after the reviewer's pending EX_309.
 - **THE CONVERSION'S CLOUD WORK IS WRITTEN AND TRIALLED (entry 245; 24 November 2026, evening). Working files, not
   a package.** Under `exchange/CLAUDE_WEB_TOOLS/conversion/` (start with `NOTES_FOR_THE_PACKAGE.md`): the engine's
   writers changed to CRLF, the conversion list (686 files), the conversion program with a look-only mode, the Git
