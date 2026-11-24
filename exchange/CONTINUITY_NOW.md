@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 18:02 Australia/Adelaide (entry 230: the owner directs a written standard for the form of every kind of file, everything to conform; the draft standard and a cloud trial are done; five open points are with him; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 18:30 Australia/Adelaide (entry 231: the owner decided the five open points of the file-form standard; its candidate v0.1 is written for the reviewer; then RAT-47; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -15,9 +15,14 @@ durable EX messages are authoritative.
   every text file of the living project CRLF; the hash-chained `.jsonl` lists LF by their nature; every program
   names the ending it writes; Git converts nothing (`* -text`); the project's own checker. **The cloud's trial**
   (`TRIAL_CRLF_SUITE_COMPARISON.txt` beside it): 669 files made CRLF, 732 of 762 tests the same, 30 failing, all in
-  five modules of the retired Mode H release machinery, tracing to six byte-pinned files. **Waiting on the owner:**
-  the draft's five open points (section 8). Then: the reviewer, ratification (RAT-47), the conversion program, the
-  engine's writers, the checker, the sheet. The sealed Mode H records are not touched.
+  five modules of the retired Mode H release machinery, tracing to six byte-pinned files. **The owner decided the
+  five open points (entry 231):** frozen history left as it is; the `.jsonl` lists LF, said so in the standard and
+  the manual; `* -text` for the whole repository; the results' verification records converted; the six files of
+  the retired machinery left out by name; hashes redone where the conversion needs it (openly: before beside
+  after). **The CANDIDATE:** `standards/FILE_FORM_STANDARD_v0_1_CANDIDATE.md` (`00ec02b0...236872`). **Waiting on:**
+  the reviewer's reading, then the owner's ratification (RAT-47). Then: the conversion program and its list, the
+  engine's writers, the checker, the Git settings, the sheet, the runner's rehearsal. The sealed Mode H records are
+  not touched. A refresh of the handovers is due when RAT-47 is recorded.
 - **PROCESS READERS DECIDED; SLICE A BEGUN (entry 222; 24 November 2026).** The owner chose **option A**: the
   restore stays standard library only; every other process check uses psutil; B (psutil for the restore too) only
   if A proves too hard, at Claude's discretion, said beforehand. The design amendment's wording still goes to the

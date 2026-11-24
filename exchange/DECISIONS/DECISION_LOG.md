@@ -4989,3 +4989,40 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `.gitattributes` is as it was; what GitHub's web editor does to line endings is still to be confirmed from
   GitHub's documentation.
 - Next numbers: EX_303; entry 231; RAT-47.
+
+## 231. 24 November 2026, 18:30 - OWNER: the five open points of the file-form standard decided; the standard's CANDIDATE v0.1 written for the reviewer
+
+- **The owner, 18:28, to Claude:** "1. ok yes to your recommendation scope freezing historical documents that are not
+  "actively used" in a DEV/QA/PROD program running sense, assuming they are "only documents to read".    2.  yes to
+  your recommendation  the `.jsonl` record lists stay LF as long as they are noted as such in the standard and
+  operations manual. 3 yes to recommendation `* -text` for the whole repository . 4. yes to your recommendations
+  converting things like results' verification records even if hashed (redo the hashes if and when needed) 5.  yes
+  to your recommendation ignoring retired machinery and we should note that in the standard.  As a principle for
+  this mass conversion, if hashes need redoing then do it even if fudging is somehow necessary - our priority is to
+  safely convert and move toward making everything operational."
+- **DECIDED (owner):** (1) frozen history is left as it is: what people only read and no program running in DEV, QA
+  or PROD uses; (2) the `.jsonl` record lists stay LF, noted as such in the standard and in the operations manual;
+  (3) `* -text` for the whole repository; (4) the results' verification records are converted with everything
+  else, hashes redone where needed; (5) the retired Mode H release machinery is left out, noted by name in the
+  standard. **The principle:** where a hash must be redone for the conversion it is redone; the priority is a safe
+  conversion and an operational system.
+- **How Claude carries out the principle, said plainly so that it is his to correct:** a hash is redone openly. The
+  conversion's own record keeps each file's SHA-256 before beside its SHA-256 after, so any hash recorded earlier
+  can still be checked by anyone; nothing is made to look as if it had always been so, and no record of the frozen
+  history is rewritten to match. Claude does not expect anything beyond that to be needed.
+- **Written:** `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_1_CANDIDATE.md` (SHA-256 `00ec02b005813b88927ae22d2afef9e83f22efae3555d760363174248c236872`), made from the
+  draft of entry 230 (kept). New in it: the status; section 3A, which names the six files of the retired machinery
+  that stay as they are, and says that the sealed Mode H records and the old system's other records are frozen
+  history and that the binding rule on the sealed records is untouched; the owner's five decisions in his words
+  (section 8); how a hash is redone (section 7); section 11, what is still to be established before the
+  conversion is packaged.
+- **Established for decision 4:** the new reader names a game's verification record and takes no hash of it; the
+  old system's runner recorded that file's SHA-256 in its run records, which are frozen history and keep the old
+  value. The results masters and their ledgers are CRLF already.
+- **Not established:** what GitHub's editor in the browser does to a file's line endings (Claude searched; nothing
+  authoritative for GitHub). The candidate therefore says that no file of the living project is edited or created
+  in the browser, and that the project's own checker is what finds a wrong form.
+- **Next:** the reviewer's reading of the candidate; then the owner's ratification (RAT-47); then the conversion
+  program and its list, the engine's writers, the checker, the Git settings, the sheet, the runner's rehearsal.
+  Nothing is converted anywhere. TASK_T028 r1 still waits for the owner's go.
+- Next numbers: EX_303; entry 232; RAT-47.
