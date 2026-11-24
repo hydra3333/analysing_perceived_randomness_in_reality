@@ -5882,3 +5882,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   nothing yet.** Nothing has been run on the owner's PC.
 - **Still stale, for the next handover edition:** H-1 v11 stops at entry 243 and names the standard v0.1.
 - Next numbers: EX_314; entry 256; RAT-50.
+
+## 256. 24 November 2026, 22:51 - the owner's decision: the runner's separate rehearsal is dropped for this conversion
+
+- **The question put to him** (entry 255): is a separate rehearsal by the runner still done before the real day?
+  The standard v0.2 says the staging step "is rehearsed by the runner before the day"; EX_313 says "as
+  appropriate". Claude recommended dropping it: with a verified whole-folder copy, a failed real attempt costs one
+  restoration, as a failed rehearsal on a copy would.
+- **The owner, 22:51:** "yes to option 1 drop it". Option 1 as put to him: "Drop it (recommended), recorded in
+  RAT-50 with the no-resume rule and acceptance of v2."
+- **What this is and is not.** It is his decision that no rehearsal task is written or run for this conversion; it
+  becomes item (c) of RAT-50 as worded in `package/FILE_FORM_Conversion_v2_REVIEW_NOTE.md`, no longer conditional.
+  **It is not yet RAT-50:** the ratification (the narrow change to the standard's section 7, and acceptance of the
+  package `FILE_FORM_Conversion_v2`) waits for the reviewer's focused confirmation and the owner's own ratifying
+  word. **It is no go for any part of the sheet.** Nothing is installed or run.
+- Next numbers: EX_314; entry 257; RAT-50.
