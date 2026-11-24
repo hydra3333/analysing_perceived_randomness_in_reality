@@ -6477,3 +6477,58 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** step 2, the list of installed files and `Check_Tree` (routine; Opus is enough); then, on the owner's go
   under his model rule, the environment's digest with the question of one digest or two, and the launch guard.
 - Next numbers: EX_318; entry 274; RAT-56.
+
+## 274. 25 November 2026, 09:18 - slice A: the list of installed files and `Check_Tree` written (working files; not a package, not reviewed, nothing installed); the owner: proceed, and say when a proposal goes to the reviewer
+
+- **The owner, 08:51:** "ok good. please proceed and when you consider it the right time then we give a blurb to the
+  reviewer to review a proposal."
+- **Written, as the two routine parts of the four** (H-1 v13 section 0E item 14; entry 273's step 2):
+  - **`src/research/installed_files.py`:** `records/INSTALLED_FILES.json` (deployment design 2; specification 4):
+    every installed software file with its SHA-256, each variant's fingerprint, each status file by name only;
+    made from the tree as it stands, written whole then renamed, read with a check of its shape, and compared
+    with the tree: a listed file missing or changed, a status file missing, and anything else under `src`
+    (Python's cache folder and a link among them) are each named. It repairs nothing. Infrastructure in every
+    tree, class `other`.
+  - **`deploy/check_tree.py` and `Check_Tree.bat`** (`Check_Tree.bat DEV|QA|PROD`, run from DEV): how the settings
+    are read; what is installed and any drift from the list; each variant's status; what is ready in DEV and how
+    the tree compares with DEV (information only); the form of the tree's files (the standard's section 6); the
+    backup ZIPs with full path, size and date, none verified; the locks present. It writes nothing in any tree,
+    takes no lock and runs no code of the tree it looks at.
+  - **One fault of the slice's own working files found and corrected:** the manifest's reader required every
+    `[install_tool]` file to exist, but those files are never installed in QA or PROD, whose manifest still names
+    them: every job there would have refused. A `[files]` path must exist in every tree; an `[install_tool]` path
+    only where that list is asked for, in DEV.
+  - `deploy/INFRA_MANIFEST.ini`: `src/research/installed_files.py = other` under `[files]`; `Check_Tree.bat` and
+    `deploy/check_tree.py` under `[install_tool]` (now seven files). `deploy/deploy_command.py`: the second command.
+- **Kept lean, as the owner asked at 08:35:** no repair, no resumption, no new record kind beyond the one the
+  design names, no registry for DEV. `Check_Tree`'s list of unfinished-operation files and its line on the
+  environment's verification wait for the two parts that define them.
+- **The cloud's evidence** (Claude's, not Windows'; Python 3.15.0b4, Linux; a fresh clone of `main` at `d89d656` with
+  the sixteen overlay files): **the whole suite 58 modules, 946 tests; all 830 earlier tests with the same result
+  (the three known failing tests and no other); the 116 new tests OK** (`test_trees_settings` 32,
+  `test_trees_readiness` 40, `test_trees_installed_files` 22, `test_trees_check_tree` 22). 23 faults planted one at a
+  time in the two programs and the manifest's reader: 23 caught. `Check_Tree DEV` on the real files of a
+  disposable clone, read-only: 40 variants, 169 files checked for form, nothing found. One test file was changed
+  after the suite's run (two appended writes now name their line ending); its module was run again, 22 OK.
+- **A mistake of Claude's on the way, with no effect on anything committed:** a workspace helper applied its edits
+  twice (its "already made" check failed where the new text holds the old), which doubled three lines of the
+  slice's manifest in the workspace; a suite run begun on that tree was stopped (Claude's own job, found by its
+  full command line) and everything run again on a clean clone. The lesson: an edit script's "already made" test
+  is "the new text is present", and `git diff --numstat` is read before a run, not only before a commit.
+- **The readings to put to the reviewer with the slice** are kept in
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_A_NOTES_FOR_THE_PACKAGE.md` (nine, each RECOMMENDED; one OPEN for the owner:
+  one environment digest or two).
+- **Committed with this entry** (SHA-256 computed from the files):
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/Check_Tree.bat` `732dc92551677b6dcd291a81739ba29225879c1d8dc56b87e7b1ed5b5b57c7de`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini` `0f4d8990c402cb0158f34567c597e4db38829838052658866e2b6cab7b86dc9a`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/check_tree.py` `881d59cc3546a8945334034324935dd0a63c42adca83a3921f40492baa9d4706`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py` `41e4d536bcad9a192f0f417028cf759529257ea64e826690d633f2bcb8dec186`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/code_identity.py` `5d1a0b63768526a73c1a431f41b5bfcbfb9e0b9ad2c570b2dbf453ebcfa7524a`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/installed_files.py` `dbb3a6c5dd19199a3699ff1c4b6bde2a711cfc4b7cb0a0fd1115b8e53a4b115e`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_check_tree.py` `76619b65a2c57e55265561273888d68ca9cf15c52a7140a028d17e4afa316961`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_installed_files.py` `d1140a1a0fa16a61dd60b360b4bcd6f6751a9a11c88c6fee23dd66af8b109f0b`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_A_NOTES_FOR_THE_PACKAGE.md` `8346fab3120d2156f6058e396cea3723350161e74677f0e90df77fbe2e7b64a0`
+  - `exchange/CLAUDE_WEB_TOOLS/step3/mutation_check_installed_files_and_check_tree.py` `c772966222bd7e3238b784cef52872f71e43d30fa429e3f29db3bf9061bbde22`
+- **Still to write in slice A, on the owner's go under his model rule:** the check of the environment's digest;
+  the launch guard with the process rule.
+- Next numbers: EX_318; entry 275; RAT-56.

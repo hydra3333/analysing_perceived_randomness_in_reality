@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 08:44 Australia/Adelaide (entry 273: slice A step 1 done in the cloud: the suite on main 54 modules, 830 tests, the three known failing; with the overlay 56 modules, 902 tests, all 830 the same and the 72 new OK).
+**Last updated:** 25 November 2026, 09:18 Australia/Adelaide (entry 274: slice A: the list of installed files and Check_Tree are written as working files; the suite with the sixteen overlay files 58 modules, 946 tests, all 830 earlier the same; two parts remain, on the owner's go).
 
 ## For the owner: NOW
 
+- **SLICE A: TWO OF THE FOUR PARTS ARE WRITTEN (entry 274; 25 November 2026; working files, the cloud's evidence).**
+  The list of installed files (`src/research/installed_files.py`) and `Check_Tree` (`deploy/check_tree.py`,
+  `Check_Tree.bat`); the overlay is now sixteen files; the suite with it: 58 modules, 946 tests, every earlier
+  test the same, the 116 new ones OK. **Where it stands, and the nine readings for the reviewer:**
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_A_NOTES_FOR_THE_PACKAGE.md`. **Waiting on the owner:** his go, under his
+  model rule ("Suggest switching to Fable (High) for this"), for the two parts left: the environment's digest
+  (with the question of one digest or two) and the launch guard with the process rule. **Then** the package and
+  its note, and a blurb for the reviewer when Claude says it is time (the owner, 08:51).
 - **SLICE A, STEP 1 DONE (entry 273; 25 November 2026; the cloud's evidence).** The whole suite on `main`: 54
   modules, 830 tests, the three known failing tests and no other. With the slice's eleven files: 56 modules, 902
   tests, every earlier test the same, the 72 new ones OK. **Next: step 2** (the list of installed files;

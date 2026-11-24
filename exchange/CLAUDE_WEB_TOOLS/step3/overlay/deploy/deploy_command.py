@@ -1,4 +1,4 @@
-"""The one program behind DEV's install launchers. In this slice: Make_Installable.bat.
+"""The one program behind DEV's install launchers. In this slice: Make_Installable.bat and Check_Tree.bat.
 
 What this file is for
     A launcher in DEV's folder starts this file with DEV's own Python and the name of a command. It puts DEV's
@@ -14,9 +14,10 @@ Which part of the specification it carries out
 Which of the project's own modules it uses
     research.settings    read_dev_view: DEV's settings and its entries for QA and PROD, every check made
     make_installable     main: the command Make_Installable
+    check_tree           main: the command Check_Tree
 
 What uses it
-    Make_Installable.bat. The launchers of the later slices of build step 3 are added to COMMANDS as they arrive.
+    Make_Installable.bat and Check_Tree.bat. The launchers of the later slices of build step 3 are added to COMMANDS as they arrive.
 """
 import os
 import sys
@@ -27,7 +28,7 @@ TREE_ROOT = Path(__file__).resolve().parents[1]
 # The folders Python imports the project's code from: the engine, the variants, and the install tools.
 IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods', TREE_ROOT / 'deploy')
 # The commands, by the word the launcher gives.
-COMMANDS = ('make-installable',)
+COMMANDS = ('make-installable', 'check-tree')
 # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
 EXIT_BAD_COMMAND = 2
 
@@ -57,6 +58,9 @@ def run_command(arguments) -> int:
         return EXIT_BAD_COMMAND
     for warning in view.warnings:
         print(warning)
+    if arguments[0] == 'check-tree':
+        from check_tree import main as check_tree
+        return check_tree(arguments[1:], view)
     from make_installable import main
     return main(arguments[1:], TREE_ROOT)
 

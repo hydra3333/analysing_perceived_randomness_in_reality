@@ -49,7 +49,9 @@ def _read_manifest_sections(tree_root: Path) -> dict:
     (an [install_tool] section that is not in the file is given as empty).
     Refuses (ManifestRefused): no manifest; a file Python's INI reader rejects (a malformed line and a path given
     twice among them); a section other than the two allowed; a path with a space or a backslash; a class that is
-    not one of the three; a path that does not exist in the tree.
+    not one of the three; a [files] path that does not exist in the tree. (Whether an [install_tool] file exists
+    is checked by read_install_tool_list alone: those files lie in DEV and are never installed in a QA or PROD
+    tree, whose manifest still names them.)
     """
     manifest_file = Path(tree_root) / MANIFEST_PATH
     if not manifest_file.is_file():
@@ -76,7 +78,7 @@ def _read_manifest_sections(tree_root: Path) -> dict:
             if file_class not in CLASSES:
                 raise ManifestRefused(f'{manifest_file}: "{path}" has the class "{file_class}"; it must be one of '
                                       f'{", ".join(CLASSES)}.')
-            if not (Path(tree_root) / path).is_file():
+            if section == FILES_SECTION and not (Path(tree_root) / path).is_file():
                 raise ManifestRefused(f'{manifest_file}: "{path}" is listed but does not exist in {tree_root}. '
                                       f'Remove the line or restore the file.')
             sections[section][path] = file_class
@@ -100,9 +102,15 @@ def read_install_tool_list(tree_root: Path) -> tuple:
     They are not infrastructure and are never installed into a QA or PROD tree; the infrastructure's readiness
     marker hashes them, and the recovery kit is built from them. tree_root: the tree's folder.
     Returns the paths from the tree root, sorted, for example ('Make_Installable.bat', 'deploy/deploy_command.py');
-    empty if the manifest has no such section. Refuses (ManifestRefused) as read_manifest does.
+    empty if the manifest has no such section. Refuses (ManifestRefused) as read_manifest does, and a listed
+    install tool file that does not exist: this is asked in DEV only, where every one of them lies.
     """
-    return tuple(sorted(_read_manifest_sections(tree_root)[INSTALL_TOOL_SECTION]))
+    tool_files = sorted(_read_manifest_sections(tree_root)[INSTALL_TOOL_SECTION])
+    for path in tool_files:
+        if not (Path(tree_root) / path).is_file():
+            raise ManifestRefused(f'{Path(tree_root) / MANIFEST_PATH}: "{path}" is listed but does not exist in '
+                                  f'{tree_root}. Remove the line or restore the file.')
+    return tuple(tool_files)
 
 
 def _digest_of_files(tree_root: Path, paths) -> str:
