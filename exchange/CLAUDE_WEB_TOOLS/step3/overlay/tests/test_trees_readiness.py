@@ -25,13 +25,29 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT / 'deploy'))
 
-import install_import_check                                 # noqa: E402  (after the path line above)
+import file_form                                            # noqa: E402  (after the path line above)
+import install_import_check                                 # noqa: E402
 import install_readiness                                    # noqa: E402
 import make_installable                                     # noqa: E402
 import research_fixtures as fixtures                        # noqa: E402
 from research import code_identity, variant_folders        # noqa: E402
 
 FAMILY, VARIANT = 'E_901', 'TOY_COUNTS_V1'
+
+
+def write_crlf(path: Path, text: str) -> None:
+    """Write one invented file with every line ending CRLF, whatever the platform: the form the project's standard
+    gives a text file, which Make_Installable now requires of everything it marks ready."""
+    path.write_bytes(text.replace('\n', '\r\n').encode('ascii'))
+
+
+def bring_to_form(tree: Path) -> None:
+    """Bring every file of an invented tree to the form the standard gives its kind (CRLF; .jsonl LF). The shared
+    fixtures write with Python's default line ending, which differs between Windows and the cloud."""
+    for path in sorted(tree.rglob('*')):
+        form = file_form.form_of(path.relative_to(tree).as_posix()) if path.is_file() else None
+        if form in (file_form.CRLF, file_form.LF):
+            path.write_bytes(file_form.to_form(path.read_bytes(), form))
 HELPER = f'{FAMILY}/toy_helper_v1.py'
 
 
@@ -44,16 +60,17 @@ class InventedDev(unittest.TestCase):
         self.methods = self.tree / 'src' / 'methods'
         self.variant_folder = fixtures.add_toy_variant(self.tree, FAMILY, VARIANT,
                                                        helpers=(f'{FAMILY}/__init__.py', HELPER))
-        (self.methods / HELPER).write_text('"""An invented helper."""\nLIMIT = 3\n', encoding='ascii')
+        write_crlf((self.methods / HELPER), '"""An invented helper."""\nLIMIT = 3\n')
         self.marker = self.variant_folder / 'I_AM_INSTALLABLE.json'
         self.infra_marker = self.tree / 'deploy' / 'INFRA_IS_INSTALLABLE.json'
+        bring_to_form(self.tree)
 
     def tearDown(self):
         self.folder.cleanup()
 
     def add_to_manifest(self, text: str) -> None:
         """Append lines to the invented tree's manifest."""
-        with open(self.tree / 'deploy' / 'INFRA_MANIFEST.ini', 'a', encoding='ascii') as handle:
+        with open(self.tree / 'deploy' / 'INFRA_MANIFEST.ini', 'a', encoding='ascii', newline='\r\n') as handle:
             handle.write(text)
 
 
@@ -80,7 +97,7 @@ class AVariantsMarker(InventedDev):
                                  f'{FAMILY}/__init__.py', HELPER]))
 
     def test_the_marker_never_lists_itself_nor_the_status_file(self):
-        (self.variant_folder / 'VARIANT_STATUS.ini').write_text('[check]\n', encoding='ascii')
+        write_crlf((self.variant_folder / 'VARIANT_STATUS.ini'), '[check]\n')
         install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
         install_readiness.mark_variant(self.tree, FAMILY, VARIANT)          # made again with the marker present
         listed = [entry['path'] for entry in json.loads(self.marker.read_text(encoding='ascii'))['files']]
@@ -106,7 +123,7 @@ class AVariantsMarker(InventedDev):
             with self.subTest(edited=edited.name):
                 install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
                 kept = edited.read_bytes()
-                edited.write_bytes(kept + b'\n')
+                edited.write_bytes(kept + b'\r\n')
                 found = install_readiness.variant_readiness(self.tree, FAMILY, VARIANT)
                 self.assertFalse(found.ready)
                 self.assertIn('does not match its files', found.reason)
@@ -117,7 +134,7 @@ class AVariantsMarker(InventedDev):
         install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
         content = json.loads(self.marker.read_text(encoding='ascii'))
         content['files'][0]['sha256'] = '0' * 64
-        self.marker.write_text(json.dumps(content), encoding='ascii')
+        write_crlf(self.marker, json.dumps(content))
         self.assertFalse(install_readiness.variant_readiness(self.tree, FAMILY, VARIANT).ready)
 
     def test_a_marker_made_by_hand_counts_only_if_it_holds_exactly_what_the_tool_writes(self):
@@ -128,13 +145,21 @@ class AVariantsMarker(InventedDev):
         for spoiled in (dict(content, fingerprint='0' * 64), dict(content, extra='x'),
                         {key: value for key, value in content.items() if key != 'kind'}, [content], 'ready'):
             with self.subTest(spoiled=str(spoiled)[:40]):
-                self.marker.write_text(json.dumps(spoiled), encoding='ascii')
+                write_crlf(self.marker, json.dumps(spoiled))
                 self.assertFalse(install_readiness.variant_readiness(self.tree, FAMILY, VARIANT).ready)
-        self.marker.write_text('this is not JSON', encoding='ascii')
+        write_crlf(self.marker, 'this is not JSON')
         self.assertFalse(install_readiness.variant_readiness(self.tree, FAMILY, VARIANT).ready)
 
+    def test_a_listed_file_that_is_not_in_the_standards_form_refuses_and_writes_no_marker(self):
+        method = self.variant_folder / 'method.py'
+        method.write_bytes(method.read_bytes().replace(b'\r\n', b'\n'))            # the whole file LF
+        with self.assertRaisesRegex(install_readiness.ReadinessRefused,
+                                    r'(?s)not in the form the project.s standard gives.*method\.py: must be CRLF'):
+            install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
+        self.assertFalse(self.marker.exists())
+
     def test_an_undeclared_file_in_the_folder_refuses_and_writes_no_marker(self):
-        (self.variant_folder / 'method.py.bak').write_text('an editor backup', encoding='ascii')
+        write_crlf((self.variant_folder / 'method.py.bak'), 'an editor backup')
         with self.assertRaisesRegex(install_readiness.ReadinessRefused, "not on the declaration's list"):
             install_readiness.mark_variant(self.tree, FAMILY, VARIANT)
         self.assertFalse(self.marker.exists())
@@ -184,7 +209,7 @@ class TheStaticImportCheck(InventedDev):
     def write_method(self, extra_lines: str) -> None:
         """Add lines of Python to the toy variant's method.py."""
         path = self.variant_folder / 'method.py'
-        path.write_text(path.read_text(encoding='ascii') + '\n' + extra_lines + '\n', encoding='ascii')
+        write_crlf(path, path.read_text(encoding='ascii') + '\n' + extra_lines + '\n')
 
     def refused_with(self, pattern: str) -> None:
         """Expect marking to refuse with `pattern`, to write no marker, and readiness to say not ready."""
@@ -200,20 +225,20 @@ class TheStaticImportCheck(InventedDev):
         self.assertTrue(self.marker.exists())
 
     def test_an_import_of_a_project_file_on_no_list_refuses_and_names_file_and_line(self):
-        (self.methods / FAMILY / 'unlisted_v1.py').write_text('VALUE = 1\n', encoding='ascii')
+        write_crlf((self.methods / FAMILY / 'unlisted_v1.py'), 'VALUE = 1\n')
         self.write_method(f'from {FAMILY} import unlisted_v1')
         self.refused_with(rf'method\.py line \d+: it imports src/methods/{FAMILY}/unlisted_v1\.py, which is neither')
 
     def test_an_unlisted_import_made_by_a_helper_or_inside_a_function_is_found_too(self):
-        (self.methods / FAMILY / 'unlisted_v1.py').write_text('VALUE = 1\n', encoding='ascii')
-        (self.methods / HELPER).write_text(f'def late():\n    import {FAMILY}.unlisted_v1\n', encoding='ascii')
+        write_crlf((self.methods / FAMILY / 'unlisted_v1.py'), 'VALUE = 1\n')
+        write_crlf((self.methods / HELPER), f'def late():\n    import {FAMILY}.unlisted_v1\n')
         self.refused_with(r'toy_helper_v1\.py line 2: it imports')
 
     def test_a_relative_import_is_resolved_and_an_unlisted_one_refuses(self):
-        (self.methods / FAMILY / 'unlisted_v1.py').write_text('VALUE = 1\n', encoding='ascii')
-        (self.methods / HELPER).write_text('from . import unlisted_v1\n', encoding='ascii')
+        write_crlf((self.methods / FAMILY / 'unlisted_v1.py'), 'VALUE = 1\n')
+        write_crlf((self.methods / HELPER), 'from . import unlisted_v1\n')
         self.refused_with(rf'it imports src/methods/{FAMILY}/unlisted_v1\.py')
-        (self.methods / HELPER).write_text('from .unlisted_v1 import VALUE\n', encoding='ascii')
+        write_crlf((self.methods / HELPER), 'from .unlisted_v1 import VALUE\n')
         self.refused_with(rf'it imports src/methods/{FAMILY}/unlisted_v1\.py')
 
     def test_an_import_of_infrastructure_passes_only_if_its_class_is_forecast(self):
@@ -225,7 +250,7 @@ class TheStaticImportCheck(InventedDev):
                 kept = (self.variant_folder / 'method.py').read_text(encoding='ascii')
                 self.write_method(f'import {module}')
                 self.refused_with(f'an infrastructure file of class {its_class}')
-                (self.variant_folder / 'method.py').write_text(kept, encoding='ascii')
+                write_crlf((self.variant_folder / 'method.py'), kept)
 
     def test_each_way_of_importing_by_a_computed_name_refuses(self):
         for lines, found in (('import importlib', 'importlib'), ('from importlib import import_module', 'importlib'),
@@ -238,14 +263,14 @@ class TheStaticImportCheck(InventedDev):
                 kept = (self.variant_folder / 'method.py').read_text(encoding='ascii')
                 self.write_method(lines)
                 self.refused_with(rf'method\.py line \d+: it uses {found}')
-                (self.variant_folder / 'method.py').write_text(kept, encoding='ascii')
+                write_crlf((self.variant_folder / 'method.py'), kept)
 
     def test_a_forbidden_construct_in_a_helper_refuses(self):
-        (self.methods / HELPER).write_text('import importlib\n', encoding='ascii')
+        write_crlf((self.methods / HELPER), 'import importlib\n')
         self.refused_with(r'toy_helper_v1\.py line 1: it uses importlib')
 
     def test_a_listed_file_that_is_not_valid_python_refuses(self):
-        (self.methods / HELPER).write_text('def broken(:\n', encoding='ascii')
+        write_crlf((self.methods / HELPER), 'def broken(:\n')
         self.refused_with('cannot be read as Python')
 
     def test_the_words_in_a_comment_or_a_text_are_not_a_use(self):
@@ -277,7 +302,7 @@ class TheInfrastructuresMarker(InventedDev):
         self.assertTrue(install_readiness.infrastructure_readiness(self.tree).ready)
 
     def test_it_hashes_the_manifest_every_listed_file_and_every_install_tool_file_and_never_itself(self):
-        (self.tree / 'deploy' / 'toy_tool.py').write_text('# an invented install tool\n', encoding='ascii')
+        write_crlf((self.tree / 'deploy' / 'toy_tool.py'), '# an invented install tool\n')
         self.add_to_manifest('[install_tool]\ndeploy/toy_tool.py = other\n')
         install_readiness.mark_infrastructure(self.tree)
         install_readiness.mark_infrastructure(self.tree)                     # made again with the marker present
@@ -302,15 +327,15 @@ class TheInfrastructuresMarker(InventedDev):
         self.assertEqual(self.infra_marker.read_bytes(), first)
 
     def test_the_manifest_or_any_listed_file_edited_afterwards_makes_it_not_ready(self):
-        (self.tree / 'deploy' / 'toy_tool.py').write_text('# an invented install tool\n', encoding='ascii')
+        write_crlf((self.tree / 'deploy' / 'toy_tool.py'), '# an invented install tool\n')
         self.add_to_manifest('[install_tool]\ndeploy/toy_tool.py = other\n')
         for edited in ('deploy/INFRA_MANIFEST.ini', 'src/toy_forecast_code.py', 'src/toy_other.py',
                        'deploy/toy_tool.py'):
             with self.subTest(edited=edited):
                 install_readiness.mark_infrastructure(self.tree)
                 kept = (self.tree / edited).read_bytes()
-                (self.tree / edited).write_bytes(kept + b'; a later change\n' if edited.endswith('.ini')
-                                                 else kept + b'# a later change\n')
+                (self.tree / edited).write_bytes(kept + b'; a later change\r\n' if edited.endswith('.ini')
+                                                 else kept + b'# a later change\r\n')
                 found = install_readiness.infrastructure_readiness(self.tree)
                 self.assertFalse(found.ready)
                 self.assertIn('does not match the files', found.reason)
@@ -321,7 +346,7 @@ class TheInfrastructuresMarker(InventedDev):
         install_readiness.mark_infrastructure(self.tree)
         content = json.loads(self.infra_marker.read_text(encoding='ascii'))
         content['files'][1]['sha256'] = '0' * 64
-        self.infra_marker.write_text(json.dumps(content), encoding='ascii')
+        write_crlf(self.infra_marker, json.dumps(content))
         self.assertFalse(install_readiness.infrastructure_readiness(self.tree).ready)
 
     def test_a_listed_file_that_does_not_exist_refuses_and_writes_no_marker(self):
@@ -331,8 +356,8 @@ class TheInfrastructuresMarker(InventedDev):
         self.assertFalse(self.infra_marker.exists())
 
     def test_an_imported_project_file_that_is_not_listed_refuses(self):
-        (self.tree / 'src' / 'toy_unlisted.py').write_text('VALUE = 1\n', encoding='ascii')
-        (self.tree / 'src' / 'toy_derived_code.py').write_text('import toy_unlisted\n', encoding='ascii')
+        write_crlf((self.tree / 'src' / 'toy_unlisted.py'), 'VALUE = 1\n')
+        write_crlf((self.tree / 'src' / 'toy_derived_code.py'), 'import toy_unlisted\n')
         with self.assertRaisesRegex(install_readiness.ReadinessRefused,
                                     r'toy_derived_code\.py line 1: it imports src/toy_unlisted\.py, which is not on'):
             install_readiness.mark_infrastructure(self.tree)
@@ -341,10 +366,18 @@ class TheInfrastructuresMarker(InventedDev):
         install_readiness.mark_infrastructure(self.tree)                     # listed, it passes
 
     def test_the_marker_or_the_manifest_listed_on_the_manifest_refuses(self):
-        self.infra_marker.write_text('{}', encoding='ascii')
+        write_crlf(self.infra_marker, '{}')
         self.add_to_manifest('deploy/INFRA_IS_INSTALLABLE.json = other\n')
         with self.assertRaisesRegex(install_readiness.ReadinessRefused, 'lists the manifest or the marker itself'):
             install_readiness.mark_infrastructure(self.tree)
+
+    def test_an_infrastructure_file_that_is_not_in_the_standards_form_refuses_and_writes_no_marker(self):
+        manifest = self.tree / 'deploy' / 'INFRA_MANIFEST.ini'
+        manifest.write_bytes(manifest.read_bytes().replace(b'\r\n', b'\n'))
+        with self.assertRaisesRegex(install_readiness.ReadinessRefused,
+                                    r'(?s)INFRA: 1 file\(s\) are not in the form.*INFRA_MANIFEST\.ini: must be CRLF'):
+            install_readiness.mark_infrastructure(self.tree)
+        self.assertFalse(self.infra_marker.exists())
 
     def test_a_file_listed_under_both_sections_refuses(self):
         self.add_to_manifest('[install_tool]\nsrc/toy_other.py = other\n')
@@ -386,7 +419,7 @@ class TheCommandMakeInstallable(InventedDev):
 
     def test_several_things_at_once_are_each_done_and_one_refusal_does_not_stop_the_others(self):
         second = fixtures.add_toy_variant(self.tree, 'E_902', 'TOY_OTHER_V1')
-        (second / 'scratch.txt').write_text('left by an editor', encoding='ascii')
+        write_crlf((second / 'scratch.txt'), 'left by an editor')
         code, said = self.run_command(f'{FAMILY}/{VARIANT}', 'E_902/TOY_OTHER_V1', 'INFRA')
         self.assertEqual(code, 1)
         self.assertTrue(self.marker.exists())

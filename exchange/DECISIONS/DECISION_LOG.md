@@ -6211,3 +6211,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next in slice A, on the owner's go under his model rule:** the list of installed files, the environment's
   digest, `Check_Tree`, the launch guard, and the checker wired into `Make_Installable` and `Check_Tree`.
 - Next numbers: EX_317; entry 266; RAT-54.
+
+## 266. 25 November 2026, 07:45 - slice A, the next part begun on the owner's go: the file-form checker wired into `Make_Installable`
+
+- **The reviewer's acknowledgement, relayed by the owner at 07:38 (no EX message):** RAT-53 closes the register's
+  update; slice A continues on the agreed basis; the cold read of H-1 v12 remains owed until asked for.
+- **The owner, 07:43: "go"** (to Claude's "Suggest switching to Fable (High) for this": the rest of slice A).
+- **Done, as the first unit: nothing in the wrong form can be marked ready** (the standard's section 6, the second of
+  the checker's three places). `deploy/install_readiness.py` checks, with the one rule `deploy/file_form.py`, exactly
+  the files the marker about to be written lists: for a variant, every file of its fingerprint; for the
+  infrastructure, the manifest, every `[files]` file and every `[install_tool]` file. A file not in its form refuses
+  with its name, what is wrong and the rule in short; no marker is written. Reading readiness makes the same check,
+  so a file that leaves its form after marking makes the thing not ready.
+- **The slice's tests:** `tests/test_trees_readiness.py` now writes its invented files CRLF on every platform (a helper
+  `write_crlf`, and `bring_to_form` over the tree the shared fixtures make: `tests/research_fixtures.py` writes with
+  Python's default line ending, which differs between Windows and the cloud, and is not changed); two tests added
+  (a variant's file in LF refuses; an infrastructure file in LF refuses); the two "edited afterwards" tests now
+  append a line in its form, so that they still test the hash and not the form.
+- **Run in a clone of `main` with the overlay (the cloud; Claude's evidence):** `test_trees_readiness` 40,
+  `test_trees_settings` 32, `test_file_form` 52, `test_research_manifest` 9, `test_research_identity` 25: all OK.
+  **And, read-only, on the real files of that clone: all 40 real variants and the real infrastructure (34 files, 5
+  install-tool files, the manifest) pass every readiness check, the form check included.** No marker was written.
+- **Its standing:** working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`); not a package, not reviewed, nothing
+  installed.
+- **Still to write in slice A:** `INSTALLED_FILES.json` (the list of installed files); the check of the environment's
+  digest over the fixed inventory; `Check_Tree.bat` with the checker in it; the launch guard with the process rule.
+- Next numbers: EX_317; entry 267; RAT-54.

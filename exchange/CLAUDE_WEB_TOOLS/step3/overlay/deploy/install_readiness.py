@@ -36,6 +36,7 @@ from pathlib import Path
 from research import code_identity, variant_folders
 from research.job_lock import check_real_folder
 
+import file_form
 import install_import_check
 
 # The marker of the infrastructure, from the tree root (deployment design 3.1). It is not on the manifest, so it
@@ -50,10 +51,9 @@ STAGING_FOLDER = 'records/marker_staging'
 # The folder of the variants and helpers, from the tree root: a marker's paths are given from here, as a
 # variant's fingerprint gives them (specification 3.4).
 METHODS_FOLDER = 'src/methods'
-
-
 # The end of every line of a marker file: the Windows form the project's standard gives a text file.
 LINE_ENDING = '\r\n'
+
 
 class ReadinessRefused(ValueError):
     """A marker cannot be made, or a thing is not as readiness requires. The message says what was found, where,
@@ -121,6 +121,21 @@ def _read_marker(path: Path):
         return 'NOT JSON'
 
 
+def _refuse_files_not_in_their_form(tree_root: Path, what: str, paths) -> None:
+    """Refuse to mark anything ready while one of its files is not in the project's file-form standard.
+
+    tree_root: DEV's folder.  what: what is being marked, for the message ('E_002/RECUR_MEAN_ALL_V1', 'INFRA').
+    paths: exactly the files the marker about to be written lists, from the tree root (standard section 6).
+    Refuses (ReadinessRefused), naming each file and what is wrong with it. Nothing in the wrong form can be
+    marked ready, so nothing in the wrong form can be installed.
+    """
+    faults = file_form.faults_of_files(Path(tree_root), sorted(paths))
+    if faults:
+        raise ReadinessRefused(f'{what}: {len(faults)} file(s) are not in the form the project\'s standard gives '
+                               f'them:\n  ' + '\n  '.join(f'{fault.path}: {fault.what}' for fault in faults)
+                               + f'\n  {file_form.RULE_IN_SHORT}')
+
+
 # ------------------------------------------------------------------------------------------------- a variant
 
 def _variant_now(tree_root: Path, family: str, variant_name: str):
@@ -144,6 +159,8 @@ def _variant_now(tree_root: Path, family: str, variant_name: str):
     if faults:
         raise ReadinessRefused(f'{family}/{variant_name}: the import check found {len(faults)} fault(s):\n  '
                                + '\n  '.join(faults))
+    _refuse_files_not_in_their_form(tree_root, f'{family}/{variant_name}',
+                                    [f'{METHODS_FOLDER}/{path}' for path, _ in variant.fingerprint_lines])
     content = {'kind': VARIANT_MARKER_KIND, 'family': family, 'variant': variant_name,
                'fingerprint': variant.fingerprint,
                'files': [{'path': path, 'sha256': digest} for path, digest in variant.fingerprint_lines]}
@@ -246,6 +263,7 @@ def _infrastructure_now(tree_root: Path) -> dict:
     if faults:
         raise ReadinessRefused(f'the infrastructure imports {len(faults)} project file(s) that are not on the '
                                f'manifest:\n  ' + '\n  '.join(faults))
+    _refuse_files_not_in_their_form(root, 'INFRA', [manifest_path] + listed)
     digest = {path: variant_folders.sha256_of_file(root / path) for path in [manifest_path] + listed}
     return {'kind': INFRA_MARKER_KIND,
             'fingerprint': variant_folders.fingerprint_of(digest.items()),

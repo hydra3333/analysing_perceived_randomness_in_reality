@@ -4,15 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 07:36 Australia/Adelaide (entry 265: the register v0.33 is ratified (RAT-53) and installed; the checker is infrastructure in every tree by the owner's decision; slice A's existing tests all pass; its next part waits for the owner's go).
+**Last updated:** 25 November 2026, 07:45 Australia/Adelaide (entry 266: slice A, the checker is wired into Make_Installable; all its tests pass in the cloud and all 40 real variants and the real infrastructure pass the readiness checks; still to write: the list of installed files, the environment digest's check, Check_Tree, the launch guard).
 
 ## For the owner: NOW
 
 - **SLICE A RESUMED (entry 264; 25 November 2026).** Its eleven working files (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`)
   are CRLF and sit on today's `main`; the markers are written CRLF; all its tests pass in a fresh clone.
   **Decided by the owner (entry 265): `deploy/file_form.py` is infrastructure, installed into every tree** (`[files]`,
-  class `other`); the reviewer concurs (EX_316). **Next in the slice:** the list of installed files, the
-  environment's digest, `Check_Tree`, the launch guard (suggest Fable for it; the owner's go).
+  class `other`); the reviewer concurs (EX_316). **On the owner's go (entry 266): the checker is wired into
+  `Make_Installable`** (nothing in the wrong form can be marked ready); 158 tests of five modules pass in the
+  cloud, and all 40 real variants and the real infrastructure pass the readiness checks. **Still to write:**
+  `INSTALLED_FILES.json`, the check of the environment's digest, `Check_Tree`, the launch guard.
 - **THE REGISTER v0.33 IS RATIFIED AND INSTALLED (RAT-53, entry 265):** `doc/RATIFICATION_REGISTER_v0_33.md`.
 - **H-1 v12 IS THE INSTALLED CLAUDE HANDOVER (entry 262; RAT-51; 25 November 2026).** Ratified by the owner in
   advance; **the reviewer has not yet read it** (its cold read is owed). Its section 0E holds everything since
