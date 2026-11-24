@@ -5688,3 +5688,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   verifying script; then the reviewer; then, each on the owner's go, the runner's rehearsal (which will show his
   Git's version) and the day.
 - Next numbers: EX_310; entry 251; RAT-49.
+
+## 251. 24 November 2026, 21:51 - the owner approves three lines in the root attribute file; the candidate v0.2 of the file-form standard (one narrow amendment, two corrections of fact)
+
+- **The owner, 21:48, on the question of entry 250:** "yes to Question: may the root attribute file hold three lines
+  instead of the one the standard ratified? yes to Recommendation: approve the three lines". The recommendation
+  he said yes to was: approve the three lines, as a narrow amendment of the ratified standard, with the
+  reviewer's check first. **So his decision is made; the amended text is not ratified until the reviewer has read
+  it and he says so (it would be RAT-49).**
+- **Done at once:** `exchange/CLAUDE_WEB_TOOLS/conversion/git_settings/gitattributes` now holds the three lines, with
+  two comments. Checked again in Windows form in a clone with `core.autocrlf=true`: every GAIS file exactly as
+  before; `src`, `exchange` and `doc` all `-text`.
+- **The candidate v0.2 of the standard,** built from the installed v0.1's Git bytes (asserted by SHA-256) by
+  `exchange/CLAUDE_WEB_TOOLS/standards/make_standard_v0_2.py`, eight counted replacements, each new passage marked
+  "v0.2":
+  - `FILE_FORM_STANDARD_v0_2_CANDIDATE.md`, SHA-256 `8a6ae261e57c467b72cfbd0b1c23dd6b4bf5a16fc6ab84d7c04de51c6b7d56c6`;
+  - `FILE_FORM_STANDARD_v0_1_TO_v0_2.diff`, SHA-256 `2bfab12b0040fd93f7431b08ce164cbdd89c89a55dae5fc91da59808f7075692`
+    (5 hunks; applied to v0.1 with `patch` it gives the candidate, checked with `cmp`).
+- **What it changes, and nothing else:**
+  - **(A) the amendment (section 5; section 8, new item 7 with the owner's words):** the root `.gitattributes` holds
+    three lines, `* -text`, `GAIS/** !text` and `GAIS/**/*.bat text eol=crlf`. It says plainly that v0.1's "does not
+    reach `GAIS\`" was wrong, why (173 of GAIS's 204 tracked files are named by neither of GAIS's own attribute
+    files), and what each line does.
+  - **(B) a correction of fact (section 4):** the writes that name no line ending are eighteen, not seventeen;
+    sixteen lie in `src/results_master_v0_2.py`, which section 3A leaves as it is, so they stay; two are
+    corrected. It also states that the search reads programs and not the tests' own code, as section 2 implies:
+    **that one sentence is a reading, marked for the reviewer.**
+  - **(C) a correction of fact (sections 5 and 11):** v0.1 said that the stale working copies "would all show as
+    changed" and that rehearsed commands would refresh them. Neither holds (entry 250); the refresh and the
+    staging are done by a program, by content, which calls Git and commits nothing.
+- **Left for the package's review, not put into this candidate:** the other readings of
+  `conversion/NOTES_FOR_THE_PACKAGE.md` (among them that the conversion program itself removes what is made again).
+- **Its standing:** a CANDIDATE. In force: v0.1 (RAT-47). Next: the reviewer's check of the difference; the
+  owner's ratification (RAT-49); installation as `doc/FILE_FORM_STANDARD_v0_2.md` with v0.1 kept as history; then
+  the working files' references to the standard are pointed at v0.2 before the package is built.
+- Next numbers: EX_310; entry 252; RAT-49.

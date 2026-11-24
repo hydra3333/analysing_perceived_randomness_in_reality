@@ -4,18 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 21:41 Australia/Adelaide (entry 250: the day's Git steps are worked out and simulated; ONE DECISION WAITS ON THE OWNER: two more lines in the root attribute file so that GAIS is truly left as it is).
+**Last updated:** 24 November 2026, 21:51 Australia/Adelaide (entry 251: the owner approved three lines in the root attribute file; the candidate v0.2 of the file-form standard awaits the reviewer's check, then RAT-49).
 
 ## For the owner: NOW
 
-- **ONE DECISION WAITS ON THE OWNER (entry 250; 24 November 2026, evening): the root `.gitattributes`.** The
-  ratified standard says it holds one line, `* -text`, and that this does not reach `GAIS\`. Claude found that it
-  does (173 of GAIS's 204 tracked files). **Recommended: three lines** (`* -text`; `GAIS/** !text`;
-  `GAIS/**/*.bat text eol=crlf`), with which every GAIS file is exactly as before (compared file by file). It
-  changes a ratified sentence: a narrow amendment, his to decide (it would be RAT-49). **Also done:** the day's
-  Git steps, as a program `tools/stage_and_refresh.py`, simulated end to end (a fresh clone equals the working
-  copy byte for byte). **Next, by Claude:** the sheet of the day and the package; then the reviewer. Claude's
-  next numbers: EX_310, entry 251, RAT-49.
+- **THE STANDARD'S CANDIDATE v0.2 AWAITS THE REVIEWER, THEN RAT-49 (entries 250 and 251; 24 November 2026,
+  evening).** The owner approved three lines in the root `.gitattributes` (`* -text`; `GAIS/** !text`;
+  `GAIS/**/*.bat text eol=crlf`): the one ratified line was found to reach `GAIS\` after all. The candidate
+  `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_2_CANDIDATE.md` (`8a6ae261...7d56c6`) is v0.1 with that
+  amendment and two corrections of fact; its exact difference is beside it. **In force: v0.1 (RAT-47).**
+  **Waiting on:** the reviewer's check of the difference, then the owner's ratification. **Also done:** the day's
+  Git steps as the program `conversion/tools/stage_and_refresh.py`, simulated end to end. **Next, by Claude:** the
+  sheet of the day and the package. Claude's next numbers: EX_310, entry 252, RAT-49.
 - **THE OWNER'S LOOK-ONLY RUN IN HIS REAL DEV IS DONE: NO FINDING (entry 249; 24 November 2026, evening).** With
   the reviewed kit r1 (EX_308, EX_309): 650 listed files to convert, 24 in their form already, 1,578 old results
   and status files to be made again, the four results files exactly as Git holds them, **nothing in no class:
