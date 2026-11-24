@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 19:03 Australia/Adelaide (entry 235: EX_304 from the new reviewer chat: three PASS and one narrow correction, made as the standard's candidate v0.1r2; then the reviewer's confirmation and the owner's ratification, RAT-47; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 19:36 Australia/Adelaide (entry 236: EX_305, the reviewer's FOCUSED PASS of the file-form standard v0.1r2; waiting on the owner's own ratification, RAT-47; TASK_T028 r1 waits for his go).
 
 ## For the owner: NOW
 
@@ -21,9 +21,11 @@ durable EX messages are authoritative.
   and **started the new reviewer chat** by pasting the blurb. **EX_304 (the new reviewer; entry 235):** FFS-C01 to
   C03 PASS; one narrow correction (no undo from the list: the way back is the owner's checked copy), made as
   **`standards/FILE_FORM_STANDARD_v0_1r2_CANDIDATE.md`** (`4f515726...204f51`) with its exact difference from v0.1r1.
-  **Waiting on:** the reviewer's confirmation of that difference; then the owner's ratification of the standard
-  (RAT-47), at whose installation section 8 item 6's status line is brought up to date. Claude's next numbers:
-  EX_305, entry 236, RAT-47.
+  **EX_305 (entry 236): FOCUSED PASS of v0.1r2; all four findings closed; recommended for ratification.**
+  **Waiting on:** the owner's own ratification of the standard (RAT-47); Claude then installs it in `doc/` by a
+  script, section 8 item 6's status line brought up to date. One watchpoint for the conversion program: on a
+  second run the owner's copy is checked against the "before" hashes recorded at the first. Claude's next
+  numbers: EX_306, entry 237, RAT-47.
 - **A STANDARD FOR THE FORM OF EVERY FILE, BEFORE SLICE A IS PACKAGED (entry 230; 24 November 2026).** The owner
   directs: a written standard listing each kind of file and its exact form; everything conforms, by a conversion
   program and its list, safely; Git's and GitHub's settings to match; a "Standards" section in the operations

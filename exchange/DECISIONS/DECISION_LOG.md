@@ -5149,3 +5149,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the reviewer's confirmation of the difference; then the owner's ratification (RAT-47). Nothing is
   converted; no code is changed.
 - Next numbers: EX_305; entry 236; RAT-47.
+
+## 236. 24 November 2026, 19:36 - EX_305 (reviewer): the file-form standard v0.1r2 FOCUSED PASS, recommended for ratification; the owner's ratification is still his to give
+
+- **The owner, 19:36, to Claude** (relaying the reviewer): "EX_305_ChatGPT.md is committed at main
+  ad682d45e39297acdd3445d1bf90af0c021fa75a. FOCUSED PASS of File Form Standard v0.1r2. All four SHA-256 checks and
+  exact three-hunk diff reconstruction PASS. FFS-C01 through FFS-C04 are CLOSED. The reviewer recommends the exact
+  v0.1r2 candidate for owner ratification under RAT-47. No further candidate revision or policy review requested.
+  One implementation watchpoint, not a ratification gate: on interrupted conversion resumption, verify the backup
+  against the original recorded before hashes, not the already-converted live files. Update section 8 item 6's
+  status at documentary installation to reflect entry 234. Existing implementation review and owner GO
+  requirements remain. Next EX: EX_306. Please read EX_305."
+- **EX_305** (reviewer; main `ad682d4`; SHA-256 `37f0642c24eb1eb59500dd2eac542a329b908d31595fd968cdeafa09f1187360`), read in full: FOCUSED PASS; all four findings of
+  EX_303 closed; the exact candidate v0.1r2 (`4f515726bceb31e6d92df422c8b4c0c1e8df349a780430d28bcbf40bd9204f51`) recommended for the owner's ratification as RAT-47.
+- **The watchpoint, taken into the conversion program's design:** when an interrupted conversion is run again, the
+  owner's copy is checked against the "before" hashes recorded at the first run, not against the tree's files,
+  some of which are by then converted.
+- **Not ratified yet.** The message above relays the reviewer's recommendation; it is not the owner's own
+  ratification, and Claude installs nothing on it (the lesson of entry 215). On his word Claude installs the
+  ratified text in `doc/` by a script, with the status lines and section 8 item 6 (decided, entry 234) brought up
+  to date and the exact difference kept.
+- **The reviewer has used EX_305.** Claude's next number is EX_306.
+- Next numbers: EX_306; entry 237; RAT-47.
