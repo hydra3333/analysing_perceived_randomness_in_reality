@@ -5347,3 +5347,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   involved; the report still does not record the line; the remedy is still Claude's (the next task file says how
   the time is written and gives the report check as a written, tested command).
 - Next numbers: EX_306; entry 242; RAT-48.
+
+## 242. 24 November 2026, 20:11 - the reviewer's first remarks on TASK_T028 (informal, relayed by the owner); two things put to the owner; the conversion's rule module begun
+
+- **Relayed by the owner at 20:07, the reviewer's words, "without conducting a formal review":** the run is "useful
+  Windows evidence for build step 3"; process detection "supports retaining option A"; "ZIP compression: level 6
+  appears preferable under our KISS principle. Approximately four times faster for only 2.4% additional storage";
+  the digest's cold and warm times are "worth retaining for deployment performance considerations. It does not
+  justify weakening verification"; the file locking "should inform interrupted-operation and recovery testing"; the
+  two unrecorded runner commands "constitute a procedural and reporting discrepancy, not an identified defect in
+  the measurements ... I see no reason on the supplied facts to request a rerun"; "The process-reader design
+  amendment remains subject to ratification"; "EX_306 remains uncommitted; the H-1 v11 review findings have
+  already been provided"; "No new review or EX issued."
+- **Put to the owner by Claude (his to decide):**
+  1. **The backup's compression level.** The ratified deployment design (section 10) says Deflate level 9. On his PC
+     level 6 took 20.7 seconds against 80.1 for 4.2 MB more (entry 240). In entry 240 Claude proposed no change
+     for now; the reviewer prefers level 6. Claude now recommends level 6, **carried in the same narrow amendment
+     of the design as the process readers** (entry 222), which has to go to the reviewer and to him anyway, so it
+     costs no step of its own. Until he decides, the design's level 9 stands.
+  2. **The reviewer's findings on the H-1 v11 candidate have not reached Claude.** The reviewer says they were
+     given; nothing is committed (`main` checked: no EX_306) and nothing was relayed. Claude asked the owner to
+     paste them or have the reviewer commit them.
+- **The conversion, begun in the cloud (working files; not a package, not reviewed, nothing installed):**
+  `exchange/CLAUDE_WEB_TOOLS/conversion/overlay/deploy/file_form.py`, the one piece of code that holds the standard's
+  rule (the list of kinds; the six files left out by name; what conforms means; changing line endings and nothing
+  else, refusing a carriage return that ends no CRLF instead of guessing; and the search of Python code for a write
+  that names no line ending), and `overlay/tests/test_file_form.py`: 44 tests. In a fresh clone 42 pass, and the two
+  that check the real tree fail as they must before any conversion (every file under `src`, `deploy` and `tests`
+  is named as LF).
+- **Found by the search of section 4, and how it differs from the standard's "17":** in the project's programs
+  (`src`, `deploy`, the runner's tools) outside the six files left out by name, **two writes** name no line ending,
+  both in the self-test of the old `src/two_site_results_check_v0_7.py`. Sixteen more are in
+  `src/results_master_v0_2.py`, which the standard's section 3A leaves exactly as it is, so they stay; its
+  successor conforms. The standard's "17 ... to be corrected" counted those as correctable: a point for the
+  reviewer when the package goes to it.
+- **A reading Claude will put to the reviewer with the package:** the search covers the project's programs, not the
+  tests' own code. The tests write their made-up files in temporary folders about 130 times without naming a line
+  ending, and the standard's section 2 puts "whatever a test writes in a temporary folder" outside itself.
+- Next numbers: EX_306; entry 243; RAT-48.

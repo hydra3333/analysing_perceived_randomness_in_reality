@@ -4,17 +4,24 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 20:03 Australia/Adelaide (entries 240 and 241: TASK_T028 r1 ran, PASS, every measurement made; findings recorded; the scratch folder may be deleted; next: the conversion program and checker in the cloud).
+**Last updated:** 24 November 2026, 20:11 Australia/Adelaide (entry 242: the reviewer's informal remarks on TASK_T028; the owner to decide the backup's compression level and to relay the reviewer's H-1 v11 findings; the conversion's rule module and its tests begun in the cloud).
 
 ## For the owner: NOW
 
+- **TWO THINGS WAIT ON THE OWNER (entry 242; 24 November 2026, evening).** (1) The backup's compression level:
+  the design says Deflate level 9; on his PC level 6 was four times faster for 4 MB more; the reviewer prefers 6
+  and Claude now recommends it, carried in the same narrow design amendment as the process readers. (2) The
+  reviewer says its findings on the H-1 v11 candidate were given; they have not reached Claude and no EX_306 is
+  committed: paste them, or have them committed. **Claude's work meanwhile:** the conversion (rule module and
+  tests written under `exchange/CLAUDE_WEB_TOOLS/conversion/`; next the conversion list, the program, the
+  engine's writers). Claude's next numbers: EX_306, entry 243, RAT-48.
 - **TASK_T028 r1 RAN: PASS (entries 239 and 240; 24 November 2026, evening).** Report
   `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` at `b31ec37`. In short: Windows refuses a rename, wholly,
   while anything is open in the folder; the standard library reads the process table as well as psutil does
   (option A stands); every Python program from an environment is two processes; the environment's digest took
   150 seconds on first reading and 5 after; the environment as a ZIP is about 180 MB and 80 seconds at level 9.
   **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T028` may be deleted by the owner.** Nothing waits on the owner from
-  this task. Claude's next numbers: EX_306, entry 242, RAT-48.
+  this task.
 - **BOTH HANDOVERS CAN START A NEW CHAT FROM TODAY'S STATE (entries 232 and 238; 24 November 2026, evening).**
   **A new Claude chat:** paste what is below the line of
   `exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`1ebcb8ea...606495`); it
