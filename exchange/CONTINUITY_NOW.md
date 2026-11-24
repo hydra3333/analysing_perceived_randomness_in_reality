@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 16:23 Australia/Adelaide (entries 219 to 221: the owner's four decisions on the build plan; the reviewer's EX_298 to EX_300; the plan corrected as v0.1r1; the probe task TASK_T028 written, not run; one question open for the owner; no code of step 3 yet).
+**Last updated:** 24 November 2026, 16:40 Australia/Adelaide (entry 222: the owner chose option A for the process readers; the scratch tree of TASK_T025 is deleted; slice A is begun in the cloud; TASK_T028 waits for the reviewer's read and the owner's go).
 
 ## For the owner: NOW
 
+- **PROCESS READERS DECIDED; SLICE A BEGUN (entry 222; 24 November 2026).** The owner chose **option A**: the
+  restore stays standard library only; every other process check uses psutil; B (psutil for the restore too) only
+  if A proves too hard, at Claude's discretion, said beforehand. The design amendment's wording still goes to the
+  reviewer with slice A and to the owner for ratification. `D:\DELETE_ME\a_p_r_i_r\T025` is deleted, so TASK_T028
+  measures the main `.venv` alone (the task file provides for it). **Slice A so far** (working files in
+  `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, run with `step3/sync_and_test.sh <clone> <python> <test modules>`): the
+  settings of the three trees (`src/research/settings.py`, `tests/test_trees_settings.py`, 32 tests) and the
+  rewritten `ENVIRONMENT.example.ini`. **Next in slice A:** the LF pin, the markers and `Make_Installable`, the
+  import check and `[install_tool]`, `INSTALLED_FILES.json`, the environment digest, `Check_Tree`, the launch guard.
 - **BUILD STEP 3: THE PLAN IS DECIDED AND CORRECTED; THE PROBE TASK IS WRITTEN, NOT RUN (entries 219 to 221; 24
   November 2026).** The owner decided (entry 219): four reviewed slices and **one install into DEV at the end**; a
   probe task first; **QA before PROD**; the plan to the reviewer. The reviewer's check (EX_299, narrowed by EX_300)

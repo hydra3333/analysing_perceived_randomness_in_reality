@@ -4678,3 +4678,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Before it runs:** the reviewer asked to read a probe task first (EX_299 section 2 item 2), and its run is the
   owner's own go. **No code of build step 3 is written yet.** Nothing is authorised on the owner's PC.
 - Next numbers: EX_301; entry 222; RAT-47.
+
+## 222. 24 November 2026, 16:40 - OWNER: the process readers decided (option A; B at Claude's discretion if A proves too hard); the scratch tree of TASK_T025 is deleted; slice A begun (the settings of the three trees)
+
+- **The owner, 16:34, to Claude:** "D:\DELETE_ME\a_p_r_i_r\T025 is deleted.  ok to A (recommended) and if that proves
+  to be too hard then consider adopting B at your discretion. blurb given to chatgpt."
+- **DECIDED (owner), the question of entry 221 and plan v0.1r1 section 4A: option A.** The restore stays standard
+  library only, with its own small reader of Windows' process table; every other process check uses psutil. **If A
+  proves too hard, Claude may adopt B** (psutil for the restore too; a restore then needs a Python that has psutil,
+  checked before anything is touched). Claude will say so, with the reason, before it does.
+- **Still to come, either way:** the narrow amendment of the deployment design (section 2's "standard library only"
+  for the install tools; under B also sections 11 and 12) is put to the reviewer with slice A and then to the owner
+  for ratification. His words above decide the direction; they are not that ratification.
+- **The scratch tree of TASK_T025 is gone,** so TASK_T028's step 6 will measure the main `.venv` folder alone, read
+  only. The task file already provides for that and is not changed (it is with the reviewer). In the cloud's
+  made-up tree of the real size the `.venv` was 257 of 337 MB and 5,912 of 8,086 files, about three quarters of a
+  tree; the rest is scaled from the cloud's figures, and a whole tree is measured later, at the rehearsal.
+- **Slice A begun, in the cloud** (`exchange/CLAUDE_WEB_TOOLS/step3/overlay/`; working files, not a package, not
+  reviewed, nothing installed): `src/research/settings.py` now also reads DEV's file as DEV's tools need it (its
+  `[QA]` and `[PROD]` entries) and makes the deployment design's section 1 checks across the three trees: three
+  separate tree roots; backup roots outside every tree and different for QA and PROD; each environment inside its
+  own tree; a tree is what its own file says, with both values printed when DEV's entry and the tree's file
+  disagree; the same-volume warning. `ENVIRONMENT.example.ini` is rewritten as entry 211 asked: whose file it is,
+  what each section is, that `Init_Tree.bat` writes QA's and PROD's files, a QA file shown for comparison, and the
+  owner's real places. **Tested:** `tests/test_trees_settings.py`, 32 tests, each named for its rule; 12 of 12
+  faults planted in the reader were caught; the engine's 25 identity tests and 48 job tests still pass.
+- **Not yet in slice A:** the LF pin, the readiness markers and `Make_Installable`, the import check and the
+  manifest's `[install_tool]` list, `INSTALLED_FILES.json`, the environment's digest over the fixed inventory,
+  `Check_Tree`, and the launch guard.
+- Nothing is authorised on the owner's PC. TASK_T028 has not run.
+- Next numbers: EX_301; entry 223; RAT-47.

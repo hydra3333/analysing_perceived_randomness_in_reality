@@ -1,0 +1,83 @@
+--- TASK_T028_probe.py
++++ TASK_T028_probe.py (r1)
+@@ -19,6 +19,10 @@
+ date or time, and writes only under the work folder given to it. It prints counts, times, sizes, program names and
+ Windows' answers: never the contents of a file, and never a path under a user's folder.
+ 
++Revision r1 (the reviewer's EX_301, T028-F03 and its section 2): the part "processes" no longer finishes as made
++when psutil is absent, or when either reading does not show this probe and its own helper program; and a ZIP of a
++`.venv` alone says of itself that it is an environment-only proxy.
++
+ Use:  python -I -B TASK_T028_probe.py <part> --work <folder> [options]      parts: rename, zip, processes
+ """
+ from __future__ import annotations
+@@ -471,8 +475,9 @@
+                 f'{megabytes(top_level[name][1])}')
+     elif otherwise_environment_of is not None and (otherwise_environment_of / '.venv' / 'pyvenv.cfg').is_file():
+         source_root, source_parts = otherwise_environment_of, ['.venv']
+-        say('Z00 the tree named by --tree-root is not there (or has no .venv); the source is the `.venv` folder alone '
+-            f'of {source_root}, read only. The research results are not in this measurement.')
++        say(f'Z00 ENVIRONMENT-ONLY PROXY: the source is the `.venv` folder alone of {source_root}, read only (no '
++            'whole tree with its own .venv was named, or it is not there). This measures an environment\'s size and '
++            'ZIP time. It does NOT measure a whole QA or PROD tree, its source_data or results, or a real backup.')
+     else:
+         raise ProbeRefused('neither the tree named by --tree-root nor the folder named by --otherwise-environment-of '
+                            'holds a `.venv` with a pyvenv.cfg. Nothing was measured. Check the two paths.')
+@@ -603,7 +608,8 @@
+ def read_table_with_psutil(scratch_root: Path, helper_folder: Path) -> dict | None:
+     """Read the process table with psutil, as the project's reviewed process tool does.
+     scratch_root: the scratch folder (to describe where a program lies). helper_folder: the helper's working folder.
+-    Returns None if psutil is not installed; otherwise a record, for example {'count': 312, 'parent_of': {...},
++    Returns None if psutil cannot be imported (the caller counts that as a measurement not made); otherwise a
++    record, for example {'count': 312, 'parent_of': {...},
+     'python': {4120: {'name': 'python.exe', 'place': '...', 'unreadable': ['cwd'], 'cwd_is_helper_folder': False,
+     'start_time': 1795500000.1}}, 'other_command_lines_unreadable': 41}. Never refuses."""
+     try:
+@@ -738,8 +744,11 @@
+     library alone, with one helper process of known place, working folder and parentage as the test object.
+     work_folder: this task's scratch folder; the part works in its new subfolder 'processes_part'.
+     scratch_root: the rehearsals' scratch folder, to describe where a program lies.
+-    Returns: how many of its measurements could not be made through a fault of the probe itself (0 when all were
+-    made). Refuses if its subfolder is there already or the helper does not start."""
++    Returns: how many of its measurements were not made (0 when all were made): psutil absent; a reading that
++    does not show this probe and its own helper program, which were certainly running; or a fault of the probe
++    itself. Other programs starting or ending between the two readings, and details of other processes that cannot
++    be read, are findings and are not counted. Refuses if its subfolder is there already or the helper does not
++    start."""
+     part_folder = fresh_folder(work_folder / 'processes_part')
+     helper_folder = part_folder / 'helper_working_folder'
+     helper_folder.mkdir()
+@@ -760,7 +769,9 @@
+         try:
+             with_psutil = read_table_with_psutil(scratch_root, helper_folder)
+             if with_psutil is None:
+-                say('P10 psutil is not installed in this Python: no comparison with it')
++                faults += 1
++                say('P10 the psutil measurements were NOT MADE: psutil cannot be imported by this Python, so the two '
++                    'readings cannot be compared. Nothing is installed by this probe; tell the Claude web chat.')
+             else:
+                 helper_ids = {helper.process.pid} | descendants_of(helper.process.pid, with_psutil['parent_of'])
+                 say(f'P10 psutil {with_psutil["version"]}: {with_psutil["count"]} processes; '
+@@ -776,6 +787,10 @@
+                 say(f'P12 psutil: the helper program appears as {len(helper_ids & set(with_psutil["python"]))} Python '
+                     f'process(es)')
+                 say(f'P13 psutil: Windows was started at {local_time_text(with_psutil["boot_time"])} (local time)')
++                if own_id not in with_psutil['python'] or not helper_ids & set(with_psutil['python']):
++                    faults += 1
++                    say('P14 psutil did NOT show this probe and its helper program among the Python processes: its '
++                        'reading is NOT a confirmation that it sees every Python process. Measurement NOT MADE.')
+         except Exception as error:
+             faults += 1
+             say(f'P19 the psutil measurements were NOT MADE, through a fault of this probe: '
+@@ -809,6 +824,11 @@
+                 f'{paths_read}, start time read for {times_read}')
+             say(f'P23 standard library: the helper program appears as {len(helper_ids & set(python_ids))} Python '
+                 f'process(es)')
++            if own_id not in python_ids or not helper_ids & set(python_ids):
++                faults += 1
++                say('P28 the standard library did NOT show this probe and its helper program among the Python '
++                    'processes: its reading is NOT a confirmation that a restore would see every Python process. '
++                    'Measurement NOT MADE.')
+             chain, ancestor = [name_of.get(own_id, '?')], parent_of.get(own_id)
+             while ancestor and ancestor in name_of and len(chain) < 12:      # 12: enough to show the shell and its starter
+                 chain.append(name_of[ancestor])

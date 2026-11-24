@@ -32,7 +32,6 @@ PATHS = {
     'PROBE': MAIN + '\\' + PROBE_IN_REPOSITORY.replace('/', '\\'),
     'SCRATCH': SCRATCH,
     'SPROBE': SCRATCH + r'\TASK_T028_probe.py',
-    'OLDTREE': r'D:\DELETE_ME\a_p_r_i_r\T025\tree',
     'ZIPOUT': SCRATCH + r'\zip_part_output.txt',
 }
 
