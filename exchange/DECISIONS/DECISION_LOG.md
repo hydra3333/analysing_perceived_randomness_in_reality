@@ -5331,3 +5331,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   date by this one entry; the candidate itself says the decision log prevails. Claude corrects it when the
   reviewer's reading is in, in the same step.
 - Next numbers: EX_306; entry 241; RAT-48.
+
+## 241. 24 November 2026, 20:04 - the exact line behind the error of entry 240, from the owner; it confirms that entry
+
+- **The owner, 20:04:** "THIS WAS THE ORIGI9NATING COMMAND THOUJGH:" followed by the line, which was one shell line
+  of three parts joined by `&&`: `cd` to the main repository; `date +"%z %Z"`; and the main venv's Python, by its
+  full path and with `-I`, running a one-line program that opens `outbox\REPORT_T028.md` for reading, lists its
+  lines holding a character above code 126, and counts mentions of a user folder.
+- **What it shows:** entry 240 called these "two commands"; they were one line. `date` with a format only prints
+  (that is the `+1030 CAST`). The Python part only reads the runner's own report and prints. It failed because the
+  line wrote the user-folder label with four backslashes and Python received one (the error message shows
+  `C:\Users`), which Python reads as the start of a Unicode escape: a quoting slip between Git Bash and Windows,
+  caught before anything ran. Because the parts were joined by `&&`, the exit code 1 is that failure's.
+- **Nothing in entry 240's reading changes:** nothing was written; the probe and its measurements are not
+  involved; the report still does not record the line; the remedy is still Claude's (the next task file says how
+  the time is written and gives the report check as a written, tested command).
+- Next numbers: EX_306; entry 242; RAT-48.

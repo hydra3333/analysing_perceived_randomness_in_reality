@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 20:03 Australia/Adelaide (entry 240: TASK_T028 r1 ran, PASS, every measurement made; findings recorded; the scratch folder may be deleted; next: the conversion program and checker in the cloud).
+**Last updated:** 24 November 2026, 20:03 Australia/Adelaide (entries 240 and 241: TASK_T028 r1 ran, PASS, every measurement made; findings recorded; the scratch folder may be deleted; next: the conversion program and checker in the cloud).
 
 ## For the owner: NOW
 
@@ -14,7 +14,7 @@ durable EX messages are authoritative.
   (option A stands); every Python program from an environment is two processes; the environment's digest took
   150 seconds on first reading and 5 after; the environment as a ZIP is about 180 MB and 80 seconds at level 9.
   **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T028` may be deleted by the owner.** Nothing waits on the owner from
-  this task. Claude's next numbers: EX_306, entry 241, RAT-48.
+  this task. Claude's next numbers: EX_306, entry 242, RAT-48.
 - **BOTH HANDOVERS CAN START A NEW CHAT FROM TODAY'S STATE (entries 232 and 238; 24 November 2026, evening).**
   **A new Claude chat:** paste what is below the line of
   `exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`1ebcb8ea...606495`); it
