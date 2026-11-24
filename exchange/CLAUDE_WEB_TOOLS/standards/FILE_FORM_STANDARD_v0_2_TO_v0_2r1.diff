@@ -1,0 +1,51 @@
+--- exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_2_CANDIDATE.md
++++ FILE_FORM_STANDARD_v0_2r1_CANDIDATE.md
+@@ -6,10 +6,13 @@
+ the one line does reach `GAIS\`, which v0.1 denied; the owner approved the three lines (decision log entry 251);
+ **(B) section 4:** how many writes name no line ending, where they are, and which can be corrected; **(C) section
+ 5 and section 11:** the refresh of the owner's working copy and the staging of the converted files are done by a
+-program, because plain Git commands do not do it. **The policy is unchanged, and nothing else is changed.**
++program, because ordinary Git commands were not reliable for it in the simulated working copy. **The policy is unchanged, and nothing else is changed.**
+ Built from v0.1's Git bytes by `exchange/CLAUDE_WEB_TOOLS/standards/make_standard_v0_2.py`;
+-`FILE_FORM_STANDARD_v0_1_TO_v0_2.diff` beside it is the exact difference. **Not ratified, and not yet read by the
+-reviewer; v0.1 stays in force until the owner ratifies this.**
++`FILE_FORM_STANDARD_v0_1_TO_v0_2.diff` beside it is the exact difference. **r1 (24 November 2026):** the reviewer's EX_310 passed (A) and (C) and (B)'s corrected count, and asked one
++narrow qualification of section 4's wording (FFS2-C01), made here together with its observation on section 5's
++wording; `FILE_FORM_STANDARD_v0_2_TO_v0_2r1.diff` is the exact difference from the candidate it read, and
++`FILE_FORM_STANDARD_v0_1_TO_v0_2r1.diff` the whole difference from v0.1. **Not ratified; v0.1 stays in force
++until the owner ratifies this.**
+ 
+ **Date of v0.1:** 24 November 2026. **Author:** the Claude web chat (on Fable (High)). **Status of v0.1: OWNER-RATIFIED on 24 November 2026
+ (RAT-47, decision log entry 237),** as a note of ratification to the specification v0.6, beside the coding
+@@ -145,8 +148,10 @@
+   corrected: 17 in the old system's code". The test's own search finds eighteen in the project's programs, all
+   in old self-tests, and none in the new engine. **Sixteen are in `src/results_master_v0_2.py`, which section 3A
+   leaves exactly as it is: they stay,** and the test leaves that file out by name with the other five. Two, in
+-  `src/two_site_results_check_v0_7.py`, are corrected. The search reads the project's programs; what a test
+-  writes in a temporary folder is outside this standard by section 2, so the tests' own code is not searched.)
++  `src/two_site_results_check_v0_7.py`, are corrected. The search covers the project's programs and excludes
++  tests' own temporary-fixture writes, which section 2 exempts. **Any test that writes an actual in-scope
++  project file remains subject to the standard** (r1; EX_310 FFS2-C01). That the tests' outputs are confined to
++  disposable fixtures is confirmed in the review of the conversion's package.)
+ - This becomes one line of the coding practices.
+ 
+ ## 5. Git and GitHub: nothing converts
+@@ -187,11 +192,13 @@
+   the project's own checker names it at the next suite run.
+ - **The owner's working copy needs one refresh,** on the day: with `core.autocrlf=true` Git has, until now, written
+   CRLF copies of files it stores as LF (every document he has pulled). **v0.2: v0.1 said that under `* -text`
+-  those copies "would all show as changed" and that rehearsed commands would refresh them. Neither holds.**
+-  Git goes by each file's remembered size and time and does not read the file again: it shows none of those
+-  copies as changed, it passes over a converted file that it believes unchanged when asked to stage it, and
+-  it rewrites no working copy that it believes current, even when told to force it (Claude's simulation,
+-  decision log entry 250). Left so, a later `git add` could put a CRLF copy of frozen history into Git. **So
++  those copies "would all show as changed" and that rehearsed commands would refresh them. Neither proved
++  reliable.** Where Git finds a file's remembered size and time unchanged it does not read the file again.
++  In Claude's simulated working copy (decision log entry 250; r1, worded as EX_310 asked) ordinary commands
++  were therefore not reliable for this migration: `git status` showed none of those copies as changed; a plain
++  `git add` passed over the converted files it believed unchanged (a second command with another option did
++  stage them); and a forced checkout rewrote none of the 2,298 stale working copies. Left so, a later
++  `git add` could put a CRLF copy of frozen history into Git. **So
+   the refresh and the staging are done by a small program of the conversion's package, by content:** it stages
+   each listed file with exactly the bytes it has on disk; it rewrites, with Git's own bytes, the working copy
+   of every other tracked file that Git converts nothing for and that differs from Git's bytes in line endings

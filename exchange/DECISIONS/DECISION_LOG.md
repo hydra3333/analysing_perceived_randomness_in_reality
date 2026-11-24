@@ -5723,3 +5723,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   owner's ratification (RAT-49); installation as `doc/FILE_FORM_STANDARD_v0_2.md` with v0.1 kept as history; then
   the working files' references to the standard are pointed at v0.2 before the package is built.
 - Next numbers: EX_310; entry 252; RAT-49.
+
+## 252. 24 November 2026, 21:59 - EX_310 (the standard's amendment: A and C PASS; one narrow qualification of wording); the candidate v0.2r1
+
+- **Relayed by the owner at 21:58:** "EX_310_ChatGPT.md committed at main 17a80fd632b3123d9d11a7770c0fc007493b1218 ...
+  Incorporate the narrow qualification before RAT-49. No broader review or additional engineering requested."
+  Claude read `exchange/EX_310_ChatGPT.md` (SHA-256
+  `a0cf164c167081a94433987d0ec9debf58688486a749b861565e73f92af9edc5`).
+- **EX_310:** every hash matches; the five hunks rebuild the candidate v0.2 exactly; no unrelated change.
+  - **A (the three attribute lines): PASS.** "The original claim that the root line did not reach GAIS was
+    incorrect; my earlier FFS-C03 review missed this too." The file-by-file comparison is Claude's evidence, not
+    rerun by the reviewer; Windows is for the rehearsal.
+  - **B: PASS** on the count (18; 16 in the frozen updater, 2 corrected), with **FFS2-C01:** section 2 exempts what
+    a test writes in a temporary folder, not every output of every test: "Any test writing an actual in-scope
+    project file remains subject to the rule." Its suggested wording is taken word for word.
+  - **C: PASS.** One observation, not a gate: Git's shortcut is conditional, so say that ordinary commands "were
+    not reliable for this migration in the simulated working copy", not that they never work.
+- **What Claude did: the candidate v0.2r1,** by `exchange/CLAUDE_WEB_TOOLS/standards/make_standard_v0_2r1.py`, four
+  counted replacements in the exact bytes of the candidate v0.2 (asserted by SHA-256): section 4 with the
+  reviewer's wording; section 5's account of what ordinary Git commands did, made conditional and exact (what
+  `git status`, a plain `git add`, the second `git add` and the forced checkout each did in the simulation); and
+  the edition's own two statements.
+  - `FILE_FORM_STANDARD_v0_2r1_CANDIDATE.md`, SHA-256 `6939095c5cd23bb1910559966bfad51d32b94a4c6d2a7d1fde2f2bb405a67a69`;
+  - `FILE_FORM_STANDARD_v0_2_TO_v0_2r1.diff`, SHA-256 `f556ce5b6e2691e642f855c63b37d24ad10c969a658473063fd78f07563d156e`
+    (3 hunks): what the reviewer confirms;
+  - `FILE_FORM_STANDARD_v0_1_TO_v0_2r1.diff`, SHA-256 `684ae76013d78d655419e81bc2181de66dfa7571be8bcb391705c4130f6ed35b`
+    (5 hunks): the whole amendment against the installed v0.1.
+  Each difference, applied with `patch`, gives the candidate byte for byte (checked with `cmp`).
+- **On the assumption FFS2-C01 names** (that the tests' outputs are disposable fixtures), one fact so far, from
+  the cloud: after the whole suite had run in the converted trial tree, Git showed no file there that the suite
+  had left behind, tracked, untracked or ignored (only the package's own four new files). The confirmation
+  proper belongs to the package's review, as EX_310 says.
+- **Its standing:** a CANDIDATE. In force: v0.1 (RAT-47). The candidate v0.2 of entry 251 stays where it is.
+- Next numbers: EX_311; entry 253; RAT-49.

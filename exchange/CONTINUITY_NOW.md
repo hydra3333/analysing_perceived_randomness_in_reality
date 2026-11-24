@@ -4,18 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 21:51 Australia/Adelaide (entry 251: the owner approved three lines in the root attribute file; the candidate v0.2 of the file-form standard awaits the reviewer's check, then RAT-49).
+**Last updated:** 24 November 2026, 21:59 Australia/Adelaide (entry 252: EX_310 passed the standard's amendment with one narrow wording qualification, made in the candidate v0.2r1; next the reviewer's confirmation of the narrow difference, then RAT-49).
 
 ## For the owner: NOW
 
-- **THE STANDARD'S CANDIDATE v0.2 AWAITS THE REVIEWER, THEN RAT-49 (entries 250 and 251; 24 November 2026,
-  evening).** The owner approved three lines in the root `.gitattributes` (`* -text`; `GAIS/** !text`;
-  `GAIS/**/*.bat text eol=crlf`): the one ratified line was found to reach `GAIS\` after all. The candidate
-  `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_2_CANDIDATE.md` (`8a6ae261...7d56c6`) is v0.1 with that
-  amendment and two corrections of fact; its exact difference is beside it. **In force: v0.1 (RAT-47).**
-  **Waiting on:** the reviewer's check of the difference, then the owner's ratification. **Also done:** the day's
-  Git steps as the program `conversion/tools/stage_and_refresh.py`, simulated end to end. **Next, by Claude:** the
-  sheet of the day and the package. Claude's next numbers: EX_310, entry 252, RAT-49.
+- **THE STANDARD'S CANDIDATE v0.2r1 IS READY FOR RAT-49 (entries 250 to 252; 24 November 2026, evening).** The
+  owner approved three lines in the root `.gitattributes` (the one ratified line reached `GAIS\` after all); the
+  reviewer (EX_310) passed the amendment and asked one narrow qualification of wording, made in
+  `exchange/CLAUDE_WEB_TOOLS/standards/FILE_FORM_STANDARD_v0_2r1_CANDIDATE.md` (`6939095c...a67a69`), with exact
+  differences from v0.2 and from the installed v0.1 beside it. **In force: v0.1 (RAT-47).** **Waiting on:** the
+  reviewer's confirmation of the narrow difference (three hunks), then the owner's ratification. **Next, by
+  Claude:** the sheet of the day and the package. Claude's next numbers: EX_311, entry 253, RAT-49.
 - **THE OWNER'S LOOK-ONLY RUN IN HIS REAL DEV IS DONE: NO FINDING (entry 249; 24 November 2026, evening).** With
   the reviewed kit r1 (EX_308, EX_309): 650 listed files to convert, 24 in their form already, 1,578 old results
   and status files to be made again, the four results files exactly as Git holds them, **nothing in no class:
