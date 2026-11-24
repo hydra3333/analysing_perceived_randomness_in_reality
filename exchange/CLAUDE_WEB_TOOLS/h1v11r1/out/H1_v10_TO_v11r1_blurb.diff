@@ -1,0 +1,35 @@
+--- doc/HANDOVER/Claude_Primary_Handover_H1_v10_introductory_blurb.md
++++ out/Claude_Primary_Handover_H1_v11r1_introductory_blurb.md
+@@ -1,4 +1,4 @@
+-# Introductory blurb for H-1 v10: for a new Claude chat (paste everything below the line)
++# Introductory blurb for H-1 v11 CANDIDATE: for a new Claude chat (paste everything below the line)
+ 
+ ---
+ 
+@@ -8,14 +8,14 @@
+ hydra3333; never write my personal name in anything committed). A separate ChatGPT chat is the independent reviewer.
+ I relay between you, and I alone ratify and authorise.
+ 
+-The previous Claude chat left you a handover, H-1 v10. The project was redesigned from the root in November 2026.
++The previous Claude chat left you a handover, H-1 v11 (a candidate: the installed H-1 v10 brought up to date the same day, with one new section, 0D; check it against H-1 v10 with the exact difference beside it). The project was redesigned from the root in November 2026.
+ The new design was ratified on 22 November 2026 (RAT-40). Build step 1 (the method files' new layout), the light
+-tidy-up and build step 2 (the research engine, in DEV) are installed and proved. The trees QA and PROD, the
++tidy-up and build step 2 (the research engine, in DEV) are installed and proved. Build step 3 has my go for its design and cloud coding only. A standard for the form of every file (line endings) was ratified on 24 November 2026 (RAT-47, doc/FILE_FORM_STANDARD_v0_1.md); converting the project to it comes before step 3's first package. The trees QA and PROD, the
+ installs, the backups and the laboratory tools are not coded unless the repository says so, and the old
+ system's code is still in src/ beside the new engine.
+ 
+ DO THIS FIRST, and nothing else: add the repository (you will need push access for documents and records), then read
+-doc/HANDOVER/Claude_Primary_Handover_H1_v10.md and follow its section 0 (its reading order and the staged takeover).
++exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1.md (or doc/HANDOVER/Claude_Primary_Handover_H1_v11.md if it has been installed there) and follow its section 0, then read its section 0D, which holds everything since H-1 v10 (its reading order and the staged takeover).
+ Verify what you read against the repository; do not take summaries on trust.
+ 
+ THEN give me your first substantive reply: what you understand the project's state to be, what is and is not
+@@ -23,7 +23,7 @@
+ build and commit nothing yet. The ChatGPT reviewer will then ask you some blind questions, which I will relay,
+ and I will decide whether to accept your takeover (procedure HO-2).
+ 
+-HARD RULES, binding now (H-1 v10 has them in full):
++HARD RULES, binding now (the handover has them in full):
+ - The one production results source is Lotterywest-GOV (www.lotterywest.wa.gov.au, HTTPS), reached only by my approved
+   tools. You never contact any lottery website, and you never search for lottery results.
+ - You may read draw values, source_data/ and results/. You never write there. Anything you work out in the chat from

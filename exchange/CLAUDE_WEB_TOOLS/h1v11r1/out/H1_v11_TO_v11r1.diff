@@ -1,0 +1,189 @@
+--- exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11.md
++++ out/Claude_Primary_Handover_H1_v11r1.md
+@@ -1,14 +1,19 @@
+ # H-1 - Claude primary designer and coder handover - Predictive Randomness project, v11 CANDIDATE
+ 
+ **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
+-**This edition: v11 CANDIDATE, 24 November 2026, evening (Adelaide, UTC+10:30). H-1 v10 brought up to date the
+-same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
+-standard (RAT-47) and a change of reviewer chat (decision log entries 216 to 238). Built from the installed
++**This edition: v11 CANDIDATE, revision r1, 24 November 2026, evening (Adelaide, UTC+10:30). H-1 v10 brought up
++to date the same day,** after the owner's go for build step 3, the review of its plan, his decisions on it, the file-form
++standard (RAT-47), a change of reviewer chat and the run of the probe TASK_T028 (decision log entries 216 to
++243). Built from the installed
+ H-1 v10's Git bytes by `exchange/CLAUDE_WEB_TOOLS/h1v11/make_h1_v11.py`: counted replacements of the status
+ statements those events made out of date, each marked "v11", and **one new section, 0D, which holds everything
+ since H-1 v10**; `H1_v10_TO_v11.diff` beside it is the exact difference. Sections 1, 2 and 2A are unchanged (the
+ builder asserts it). **Where section 0D and an older statement of this file disagree, section 0D and the
+-decision log prevail.** **It is a CANDIDATE: not ratified, and the reviewer has not read it.** H-1 v10 stays
++decision log prevail.** **It is a CANDIDATE: not ratified.** The reviewer passed v11 for continuity and preservation of authority in
++EX_306, with two narrow corrections and three observations. **Revision r1** makes them and adds what happened
++after v11 was written (entries 239 to 243), by `exchange/CLAUDE_WEB_TOOLS/h1v11r1/make_h1_v11r1.py`;
++`H1_v11_TO_v11r1.diff` beside it is the exact difference for the reviewer's confirmation, and
++`H1_v10_TO_v11r1.diff` the whole difference from the installed edition. H-1 v10 stays
+ installed and unchanged in `doc/HANDOVER/`.
+ **The edition it is built from:** v10, 24 November 2026 (Adelaide, UTC+10:30). **H-1 v9 brought up to date** after build step 2 (the
+ research engine) was reviewed, rehearsed on Windows, installed in DEV and run, as the owner agreed (decision log
+@@ -55,8 +60,9 @@
+      153 is RAT-41, entry 156 is RAT-42; entries 158 to 169 are build step 1 and the tidy-up; entry 174
+      is RAT-43 and entry 175 the new reviewer chat's takeover; entries 176 to 212 are build step 2, with the
+      runner's rulebook v0.7 (RAT-44, entry 192) and the rehearsal on Windows (entries 199 to 208); (v11) entries
+-     213 to 216 are H-1 v10 and H-2 v6 (RAT-45, RAT-46), and **entries 217 to 238 are build step 3's go and
+-     plan, the file-form standard (RAT-47, entry 237) and the change of reviewer chat: section 0D**);
++     213 to 216 are H-1 v10 and H-2 v6 (RAT-45, RAT-46), and **entries 217 to 243 are build step 3's go and
++     plan, the file-form standard (RAT-47, entry 237), the change of reviewer chat and the probe's run: section
++     0D**);
+    - the two installed code packages' notes, which show how a package is built, proved and installed here:
+      `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_3.md` and `exchange/CLAUDE_WEB_TOOLS/tidy1/TIDY1_PACKAGE_NOTE_v0_1.md`,
+      with the reviewer's findings on the first (`exchange/EX_276_ChatGPT.md`) and its passes (`EX_278`, `EX_280`);
+@@ -241,11 +247,11 @@
+ 
+ ## 0D. After H-1 v10: 24 November 2026, afternoon and evening (v11; this section prevails over older statements)
+ 
+-Everything here is from the decision log (entries 216 to 238), the EX messages (EX_297 to EX_305) and the files named.
+-**Next numbers at this edition: EX_306, decision log entry 239, RAT-48.** Fetch `main` and confirm before using any:
++Everything here is from the decision log (entries 216 to 243), the EX messages (EX_297 to EX_306) and the files named.
++**Next numbers at this edition (r1): EX_307, decision log entry 244, RAT-48.** Fetch `main` and confirm before using any:
+ the reviewer took five numbers in a row this afternoon while Claude was working.
+ 
+-1. **Records.** RAT-46: the reviewer's H-2 v6 (entry 216). RAT-47: the file-form standard (entry 237). The next
++1. **Records.** RAT-46: the reviewer's H-2 v6, ratified as its corrected candidate v6r1 (entry 216). RAT-47: the file-form standard (entry 237). The next
+    register edition is still owed (section 12.8 item 5) and now also records RAT-45, RAT-46 and RAT-47.
+ 
+ 2. **Build step 3 has the owner's GO (entry 217, 15:53): "Build step 3, go now please."** It covers design within
+@@ -257,8 +263,8 @@
+    markers and `Make_Installable`, the static import check, the list of installed files, the environment's digest,
+    `Check_Tree`, the launch guard); **B** backups, the recovery kit, the restore; **C** `Init_Tree`, `Install`,
+    `Reinstall_Infra`, `Verify_Tree` and the half-finished states; **D** the clean-sheet updater
+-   `results_master_v0_3.py`; **E** the transition (QA, its own `.venv`, `Run_Research.bat --game BOTH --no-update` in
+-   QA, the transition check there, then PROD). Its section 6A lists what the joined slices must show before the
++   `results_master_v0_3.py`; **E** the transition (`Init_Tree.bat QA`, which stops for the owner to build QA's own `.venv`; `Init_Tree.bat QA`
++   again; `Run_Research.bat --game BOTH --no-update` in QA; the transition check there; then PROD). Its section 6A lists what the joined slices must show before the
+    one install into DEV. **Reviewed:** EX_299 (four findings), narrowed by EX_300; all corrected in v0.1r1;
+    **EX_301 FOCUSED PASS.** A working plan, not a ratified design.
+ 
+@@ -271,16 +277,29 @@
+    start times from Windows; the probe has such a reader); every other process check uses psutil; psutil for the
+    restore too only if that proves too hard, said beforehand. **The narrow amendment of the deployment design
+    section 2 ("standard library only" for the install tools) is NOT ratified yet;** put its wording to the reviewer
+-   with slice A.
+-
+-6. **TASK_T028, a probe of three Windows facts: written, reviewed, NOT RUN; it waits for the owner's go.**
++   with slice A. (r1) TASK_T028 showed the standard library's reading agreeing exactly with psutil's on the owner's
++   PC: option A stands, and option B is not needed (entry 240).
++
++6. **TASK_T028, a probe of three Windows facts: RAN on the owner's PC on 24 November 2026, on his go; PASS, every
++   measurement made (r1; entries 239 to 242).**
+    `CLAUDE_CODE_WORKING_FOLDER_TREE/inbox/TASK_T028.md` r1 and `inbox/TASK_T028_probe.py` r1 (builder and template in
+    `exchange/CLAUDE_WEB_TOOLS/t028/`). EX_301 found three faults in the first edition; EX_302 passed r1. It
+    measures how Windows answers a rename, replacement or removal when something is open; the size and time of a
+    ZIP of the main `.venv` alone (an environment-only proxy: the scratch tree of TASK_T025 is deleted); and what
+-   psutil and the standard library each read of the PC's Python processes. **Its part that calls Windows through
+-   ctypes has run nowhere:** a fault there stops the task's last step after the other two are recorded. The
+-   install, backup and restore logic of slices B and C is designed around its answers.
++   psutil and the standard library each read of the PC's Python processes. The
++   install, backup and restore logic of slices B and C is designed around its answers. **What it found (entry
++   240; `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md`):** Windows refuses, wholly, a folder's rename and a
++   file's replacement or removal while a file in it is open or another process stands in the folder, and lets
++   them through at once afterwards; 1,000 write-then-replace cycles were never refused; the main `.venv` is
++   19,059 files and 508.9 MB; the environment digest's inventory took 150.6 seconds on first reading and 5.2
++   when lately read; its ZIP is 180.2 MB in 80.1 seconds at Deflate level 9 (184.5 MB in 20.7 seconds at level
++   6); the standard library's reading of the process table agrees exactly with psutil's; and **every Python
++   program started from an environment is two processes** (the environment's `python.exe` and the base Python
++   under it), so every process rule counts a pair as one program. **The owner keeps Deflate level 9** (entry
++   243), against the reviewer's informal preference for level 6. One evening, drives D: and E: only; T: and G:
++   are measured in the joined rehearsal. After the steps the runner ran one line of its own that its report
++   does not record (entries 240, 241): no measurement is affected, and the reviewer asked for no rerun. The
++   scratch folder `D:\DELETE_ME\a_p_r_i_r\T028` may be deleted by the owner.
+ 
+ 7. **Slice A's working files exist** (entries 222, 225): `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, copied into a
+    work clone and tested by `step3/sync_and_test.sh <clone> <python> <test modules>`. **Not a package, not reviewed,
+@@ -319,9 +338,15 @@
+     checks that copy against the "before" hashes recorded at the first run, not against files already
+     converted** (the reviewer's watchpoint, EX_305)); the engine's writers changed to the standard's forms; the
+     checker; `.gitattributes` and `.gitignore`; the one refresh of his working copy under `* -text`; a sheet; a
+-    rehearsal by the runner. **At the conversion `game_profiles.py` changes bytes, so every list in DEV becomes
+-    foreign: DEV's research results and its status files are removed on his own go and filled again (about 47
+-    minutes).** Claude's own new files are CRLF from that day, not before.
++    rehearsal by the runner. **The conversion of `forecast`-class files changes the forecasting-code identity, so DEV's existing research
++    lists become foreign: DEV's research results and its status files are removed on his own go and filled
++    again (about 47 minutes); a status file that holds anything but ACTIVE is a STOP for his decision, and his
++    checked pre-conversion copy is the way back.** (r1, EX_306 H11-C01: `game_profiles.py` itself is CRLF on his
++    disk already, entry 226, and need not change; it is the other `forecast`-class files that do.) **Begun
++    (entry 242), as working files, not a package:** `exchange/CLAUDE_WEB_TOOLS/conversion/overlay/` holds
++    `deploy/file_form.py`, the one piece of code with the standard's rule, and `tests/test_file_form.py` (44 tests;
++    the two that check the real tree fail until it is converted). The search for writes that name no line
++    ending found two in the project's programs outside the six files left out by name. Claude's own new files are CRLF from that day, not before.
+ 
+ 11. **What Claude's trial in the cloud showed, and did not** (`exchange/CLAUDE_WEB_TOOLS/standards/`): 669 files
+     under `src`, `deploy`, `tests` and the root made CRLF in a copy; 732 of 762 tests the same; 30 failing, all in
+@@ -333,20 +358,21 @@
+     altered is unchanged.**
+ 
+ 13. **The operations manual** (entries 220 and 230; EX_298), after build step 3 is proved: short, for a human, a
+-    practical how-to; finding and reading the reports is a necessary topic; a command cheat sheet as an index; a
++    practical how-to; finding and reading the reports is a necessary topic; a short command cheat sheet in an appendix is to be considered, not decided (r1); a
+     "Standards" section that names the `.jsonl` exception; its structure proposed by Claude and the reviewer
+     together for the owner's approval.
+ 
+ 14. **The reviewer chats.** The chat that wrote H-2 v6 ended on 24 November without notice after EX_303. At the
+     owner's request Claude refreshed H-2 v6 as the candidate H-2 v6r2 (`exchange/CLAUDE_WEB_TOOLS/h2v6r2/`; entry
+     232): unratified, and written by Claude, not by a reviewer. The owner started a new reviewer chat from its
+-    blurb (entry 234); it wrote EX_304 and EX_305. **In force for the reviewer: H-2 v6 (RAT-46).**
++    blurb (entry 234); it wrote EX_304 and EX_305. It read this handover's v11 in EX_306 (PASS for continuity; two narrow corrections, made in r1), and the
++    owner confirmed its established commit rights (entry 243). **In force for the reviewer: H-2 v6 (RAT-46).**
+ 
+ 15. **The owner's PC is as H-1 v10 describes it.** DEV at `5f16b35` with his first fill; no QA or PROD; nothing of
+     build step 3 installed; nothing converted; `.gitattributes` unchanged; the prevailing OV-1 not started.
+ 
+-16. **What waits, at this edition.** On the owner: his go for TASK_T028 r1; his decision on this H-1 v11. On the
+-    reviewer: nothing. On Claude, in order: the conversion (item 10); the rest of slice A, to the standard; slices
++16. **What waits, at this edition (r1).** On the reviewer: its confirmation of `H1_v11_TO_v11r1.diff`. On the
++    owner: then his decision on this H-1 v11 (it would be RAT-48). On Claude, in order: the conversion (item 10); the rest of slice A, to the standard; slices
+     B, C and D; the joined rehearsal; the one install into DEV; then QA, the transition check and PROD, each on
+     his go. Each week before PROD's first job is one draw of each game that cannot count in the prevailing OV-1.
+ 
+@@ -360,7 +386,8 @@
+     that a change can be undone, ask whether the change is one-to-one: making line endings uniform is not
+     (EX_304). (f) Say what a reader's summary is evidence of: a cloud trial is Claude's evidence, not the
+     reviewer's and not Windows'. (g) The owner's first answer to "which option" may be a principle; put the
+-    options again in its light instead of choosing for him (entries 227, 228).
++    options again in its light instead of choosing for him (entries 227, 228). (h, r1) A task file that leaves the runner a need unmet (how the time is to be written; a
++    check of its own report) invites an invented command: give the command in the task file (entries 240, 241).
+ 
+ **Identities added at this edition** (SHA-256 of the Git content at `HEAD`, computed by the builder):
+ 
+@@ -375,6 +402,8 @@
+ | `exchange/CLAUDE_WEB_TOOLS/h2v6r2/out/ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124.md` | `b078323351f37d370980d9a75dfcae98834f7cec7d94d0e1e6fb894da3617621` |
+ | `exchange/CLAUDE_WEB_TOOLS/h2v6r2/out/ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124_introductory_blurb.md` | `c227314861daa9994bf9e6ff9da455759ee76a89d564ed04c47816754221215b` |
+ | `exchange/CLAUDE_WEB_TOOLS/standards/TRIAL_CRLF_SUITE_COMPARISON.txt` | `8baac6b033e2b60fb9f5f1ed6bb2f666bae4e455d7779b9db906c4da9d2e26af` |
++| `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` (r1) | `69315a498ac59f5cb558786a89d8b5bbd8c1ba98f87d3e3660c00bfc4a5be7a5` |
++| `exchange/EX_306_ChatGPT.md` (r1) | `e8a2813a9dc1cf4754920b4d67b3eab4872da795586ec069324581136cb7704b` |
+ 
+ ## 0C. Sections 1, 2 and 2A are carried unchanged: read them with these notes
+ 
+@@ -563,7 +592,10 @@
+ | `doc/CODING_PRACTICES_v0_1.md` | `d64f0101a4fdb21998b2871765bd9b3f06ccb6c7409c7a2d0e9f230cebbd7ddd` |
+ | `doc/FILE_FORM_STANDARD_v0_1.md` (v11: RAT-47, 24 November 2026, entry 237; a note of ratification beside the coding practices) | `97034474f1a7e9c54a14b9554b45666cb1fa031d566545433a0412d4312f8335` |
+ 
+-Each design document is the candidate the reviewer passed in EX_271 with its status paragraph alone changed. The
++Each of the two design documents (the specification and the deployment design) is the candidate the reviewer
++passed in EX_271 with its status paragraph alone changed. (v11) The file-form standard is the candidate v0.1r2
++the reviewer passed in EX_305, ratified as RAT-47, with its status statements changed at installation (the
++exact difference is in `exchange/CLAUDE_WEB_TOOLS/rat47/`). The
+ candidates and every earlier draft, with exact diffs between editions, are in `exchange/CLAUDE_WEB_TOOLS/simplify/`.
+ 
+ ### 4.2 Still binding by reference (specification 1.2: science and safety)
+@@ -1107,8 +1139,10 @@
+    H-2 v5r1 (RAT-43, entry 174); the runner's rulebook v0.7 (RAT-44, entry 192); **build step 2** (entries 176 to
+    212, `5f16b35`).
+ 2. **Done: this edition ratified (RAT-45, entry 215)** after EX_295 and EX_296. The reviewer has written its own
+-   H-2 v6 as a CANDIDATE (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_CANDIDATE_20261124.md`; EX_296): (v11) the owner
+-   ratified it (RAT-46, entry 216) and the reviewer installed it as H-2 v6; section 0D has what followed.
++   H-2 v6 as a CANDIDATE (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_CANDIDATE_20261124.md`; EX_296): (v11) the
++   reviewer corrected it as the candidate H-2 v6r1
++   (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6r1_CANDIDATE_20261124.md`; EX_297); the owner ratified that corrected
++   candidate (RAT-46, entry 216) and the reviewer installed it as H-2 v6; section 0D has what followed.
+ 3. **Build step 3: trees, installs, backups and restore** (specification 12.1 to 12.6, 13, 14.1), then the transition
+    check and PROD's first job. **(v11) The owner gave his go for its design and cloud coding on 24 November 2026
+    (entry 217). Its plan, the plan's review, his decisions and where the work stands are in section 0D; the

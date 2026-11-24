@@ -1,0 +1,11 @@
+--- exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11_introductory_blurb.md
++++ out/Claude_Primary_Handover_H1_v11r1_introductory_blurb.md
+@@ -15,7 +15,7 @@
+ system's code is still in src/ beside the new engine.
+ 
+ DO THIS FIRST, and nothing else: add the repository (you will need push access for documents and records), then read
+-exchange/CLAUDE_WEB_TOOLS/h1v11/out/Claude_Primary_Handover_H1_v11.md (or doc/HANDOVER/Claude_Primary_Handover_H1_v11.md if it has been installed there) and follow its section 0, then read its section 0D, which holds everything since H-1 v10 (its reading order and the staged takeover).
++exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1.md (or doc/HANDOVER/Claude_Primary_Handover_H1_v11.md if it has been installed there) and follow its section 0, then read its section 0D, which holds everything since H-1 v10 (its reading order and the staged takeover).
+ Verify what you read against the repository; do not take summaries on trust.
+ 
+ THEN give me your first substantive reply: what you understand the project's state to be, what is and is not

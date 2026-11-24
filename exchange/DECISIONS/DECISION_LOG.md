@@ -5385,3 +5385,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
   tests' own code. The tests write their made-up files in temporary folders about 130 times without naming a line
   ending, and the standard's section 2 puts "whatever a test writes in a temporary folder" outside itself.
 - Next numbers: EX_306; entry 243; RAT-48.
+
+## 243. 24 November 2026, 20:18 - the owner keeps Deflate level 9; EX_306 (H-1 v11: PASS for continuity, two narrow corrections); the candidate H-1 v11r1
+
+- **The owner, 20:15, on the question of entry 242:** "yes to stay at level 9." The ratified deployment design's
+  section 10 stands as it is; no amendment for the compression level. (The narrow amendment for the process
+  readers, entry 222, is still to be put.)
+- **In the same message:** "EX_306_ChatGPT.md is now committed at main 5c6ab268c16b377af85cdc550a6d29f4bbee27ea.
+  Read-back verification PASS." and "The owner has confirmed continuation of the reviewer's established commit
+  rights." Claude read `exchange/EX_306_ChatGPT.md` (SHA-256
+  `e8a2813a9dc1cf4754920b4d67b3eab4872da795586ec069324581136cb7704b`).
+- **EX_306:** "PASS for continuity and preservation of authority. Two narrow documentary corrections before RAT-48".
+  The reviewer computed the candidate's hashes itself, applied every hunk of both differences, and found the
+  carried sections identical. It completed the review before TASK_T028 ran and held its commit back so that the
+  owner's push of the runner's report could not be refused.
+  - **H11-C01 (section 0D item 10):** Claude wrote that `game_profiles.py` changes bytes at the conversion. It does
+    not: it is CRLF on the owner's disk already (entry 226). It is the other `forecast`-class files that change,
+    and with them the forecasting-code identity. **Claude's error, and the same wrong reason stood in Claude's
+    own notes of the day;** the planned refill of DEV is right, its stated cause was wrong.
+  - **H11-C02 (section 10 item 2):** RAT-46 ratified the reviewer's corrected candidate H-2 v6r1, not the first v6
+    candidate the sentence pointed at.
+  - **Three observations:** the command cheat sheet is "to be considered" (entry 220), not settled; the QA sequence
+    should name the second `Init_Tree.bat QA` after the environment is built; section 4.1's "passed in EX_271" does
+    not hold for the file-form standard (EX_305, RAT-47).
+- **What Claude did: the candidate H-1 v11r1,** by `exchange/CLAUDE_WEB_TOOLS/h1v11r1/make_h1_v11r1.py` with
+  `h1_v11r1_texts.py`: eighteen counted replacements in the exact bytes of the candidate v11 (asserted by SHA-256).
+  They make both corrections and all three observations, and bring the candidate up to the present, as EX_306
+  asked: TASK_T028 ran and what it found (entries 239 to 242), option A confirmed, the owner's level 9, the
+  conversion's working files, the reviewer's review, what waits now, one more lesson, two more identities.
+  Sections 1, 2 and 2A are byte for byte those of the installed H-1 v10 (asserted).
+- **Written, under `exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/`:**
+  - `Claude_Primary_Handover_H1_v11r1.md`, SHA-256 `bb68f9b6ea7c8ad65a3c172698c0e1ceffd274a0a0a60663cb4aa527a42e13c9`;
+  - `Claude_Primary_Handover_H1_v11r1_introductory_blurb.md`, SHA-256 `5d7e64fe13fba2bb094707d86616664aef58f7422f99fc75fd5a612c9f4c6663` (it differs from v11's blurb in the one path it points at);
+  - `H1_v11_TO_v11r1.diff` (`da00c7145368242aac31eabfa46c33a1b43f9ab924bde9d45af2bc08e3782e5d`) and its blurb's: what the reviewer confirms;
+  - `H1_v10_TO_v11r1.diff` (`4cf3762c114ff113e28f66e3b5a19c53389d737015a7d9c122936c70c9e3de44`) and its blurb's: the whole difference from the installed edition.
+  Each of the four differences, applied with `patch`, gives its candidate byte for byte (checked with `cmp`).
+- **Its standing:** a CANDIDATE. In force: H-1 v10 (RAT-45). The candidate v11 of entry 238 stays where it is,
+  unchanged. Next: the reviewer's confirmation of the narrow difference; then the owner's ratification (RAT-48);
+  then installation by script in `doc/HANDOVER/`.
+- Next numbers: EX_307; entry 244; RAT-48.

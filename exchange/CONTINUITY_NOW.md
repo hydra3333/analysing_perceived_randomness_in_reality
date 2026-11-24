@@ -4,17 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 20:11 Australia/Adelaide (entry 242: the reviewer's informal remarks on TASK_T028; the owner to decide the backup's compression level and to relay the reviewer's H-1 v11 findings; the conversion's rule module and its tests begun in the cloud).
+**Last updated:** 24 November 2026, 20:18 Australia/Adelaide (entry 243: the owner keeps Deflate level 9; EX_306 passed H-1 v11 for continuity with two narrow corrections; the candidate H-1 v11r1 makes them and awaits the reviewer's confirmation, then RAT-48).
 
 ## For the owner: NOW
 
-- **TWO THINGS WAIT ON THE OWNER (entry 242; 24 November 2026, evening).** (1) The backup's compression level:
-  the design says Deflate level 9; on his PC level 6 was four times faster for 4 MB more; the reviewer prefers 6
-  and Claude now recommends it, carried in the same narrow design amendment as the process readers. (2) The
-  reviewer says its findings on the H-1 v11 candidate were given; they have not reached Claude and no EX_306 is
-  committed: paste them, or have them committed. **Claude's work meanwhile:** the conversion (rule module and
-  tests written under `exchange/CLAUDE_WEB_TOOLS/conversion/`; next the conversion list, the program, the
-  engine's writers). Claude's next numbers: EX_306, entry 243, RAT-48.
+- **THE HANDOVER TO START A NEW CLAUDE CHAT FROM IS NOW H-1 v11r1 (entry 243; 24 November 2026, evening).** Paste
+  what is below the line of
+  `exchange/CLAUDE_WEB_TOOLS/h1v11r1/out/Claude_Primary_Handover_H1_v11r1_introductory_blurb.md` (`5d7e64fe...4c6663`);
+  it points at the candidate beside it (`bb68f9b6...42e13c9`). EX_306 passed v11 for continuity with two narrow
+  corrections; v11r1 makes them and is up to date to entry 243. **Waiting on:** the reviewer's confirmation of
+  `H1_v11_TO_v11r1.diff`, then the owner's ratification (RAT-48), then installation by Claude. **Decided by the
+  owner (entry 243):** backups stay at Deflate level 9. **Claude's work meanwhile:** the conversion (rule module
+  and tests written under `exchange/CLAUDE_WEB_TOOLS/conversion/`; next the conversion list, the program, the
+  engine's writers). Claude's next numbers: EX_307, entry 244, RAT-48.
 - **TASK_T028 r1 RAN: PASS (entries 239 and 240; 24 November 2026, evening).** Report
   `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` at `b31ec37`. In short: Windows refuses a rename, wholly,
   while anything is open in the folder; the standard library reads the process table as well as psutil does
@@ -29,8 +31,8 @@ durable EX messages are authoritative.
   statements changed and a new section 0D for everything since. **A new reviewer chat:** the blurb of the H-2 v6r2
   candidate (the bullet below). Both are Claude's refreshes, **CANDIDATES, not ratified**; in force are H-1 v10
   (RAT-45) and H-2 v6 (RAT-46). **Waiting on:** the reviewer's reading of `H1_v10_TO_v11.diff`, then the owner's
-  ratification of H-1 v11 (it would be RAT-48), then its installation by Claude. Claude's next numbers: EX_306,
-  entry 239, RAT-48.
+  ratification of H-1 v11 (it would be RAT-48), then its installation by Claude. (Superseded the same evening by
+  the candidate v11r1: the bullet above.)
 - **RAT-47: THE FILE-FORM STANDARD IS RATIFIED AND INSTALLED (entry 237; 24 November 2026).**
   **`doc/FILE_FORM_STANDARD_v0_1.md`** (`97034474...2f8335`), from the candidate v0.1r2 the reviewer passed (EX_305).
   Every text file of the living project CRLF; `.jsonl` LF; every program names the ending it writes; Git converts
