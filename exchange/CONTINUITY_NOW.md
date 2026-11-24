@@ -4,15 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:32 Australia/Adelaide (entry 214: EX_295 asked three corrections of wording in the H-1 v10 candidate, all made; the corrected candidate waits for the reviewer's focused recheck, then RAT-45; H-1 v9 stays installed; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 15:42 Australia/Adelaide (entry 215: RAT-45, H-1 v10 ratified and installed; the reviewer's H-2 v6 is a candidate awaiting the owner's decision; build step 2 is complete in DEV; next is build step 3 on the owner's go; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **RAT-45: H-1 v10 IS RATIFIED AND INSTALLED (entry 215; 24 November 2026).** In force for a Claude chat:
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v10.md` (`824e7f25...67a69b`) and its blurb
+  `Claude_Primary_Handover_H1_v10_introductory_blurb.md`: **a new Claude chat is started by pasting that blurb.** In
+  force for the reviewer: still H-2 v5r1 (RAT-43). **The reviewer's H-2 v6 is a CANDIDATE** in `doc/HANDOVER/`
+  (EX_296); **waiting on the owner:** whether to ratify it (RAT-46), after the reviewer has brought its statements
+  about H-1 v10 up to date. **Next work:** build step 3, on the owner's own go (suggest Fable for its design).
 - **THE H-1 v10 CANDIDATE IS WRITTEN (entry 213; 24 November 2026).**
   `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` with its blurb and the exact diff from v9. It
   brings the Claude handover up to date after build step 2. EX_295 asked three corrections of wording, all made (entry 214). **Waiting on:** the reviewer's focused
-  recheck (EX_296), then the owner's ratification (RAT-45); Claude then installs it in `doc/HANDOVER/` by a script. **Until then H-1 v9 is
-  the installed handover; a new Claude chat that had to start now would read v9, this page and the candidate.**
+  recheck (EX_296), then the owner's ratification (RAT-45); Claude then installs it in `doc/HANDOVER/` by a script. (Done: RAT-45, entry 215.)
 - **BUILD STEP 2 IS COMPLETE IN DEV (entry 212; 24 November 2026).** Installed (commit `5f16b35`); `ENVIRONMENT.ini` made;
   DEV's first fill run by the owner in 47 minutes (POWERBALL 15118 forecasts and 15078 scores, OZLOTTO 6598 and
   6558); a second job with nothing to do in 3 minutes; the comparison with the old records `PASS - COMPLETE` (34800

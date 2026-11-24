@@ -1,0 +1,35 @@
+--- H-1 v10 candidate (as passed in EX_296)
++++ H-1 v10 (installed)
+@@ -10,3 +10,9 @@
+-**Status:** CANDIDATE, 24 November 2026, corrected after the reviewer's review (EX_295: three corrections of
+-wording, all made), for its focused recheck and the owner's ratification (RAT-45). Until it is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
+-carries whatever is newer. It authorises nothing.
++**Status:** OWNER-RATIFIED 24 November 2026 (RAT-45; decision log entry 215), after the reviewer's review (EX_295:
++three corrections of wording, all made) and its focused PASS (EX_296). The owner's words, given to the reviewer
++before its recheck and recorded in EX_296: "If this is any good then I ratify it now". It is the installed
++Claude handover; H-1 v9 (RAT-43) stays as history. It is the reviewed candidate
++(`exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md`, SHA-256
++`a769316d0f886595966a73e1d047173036dd4523a362921cdf18bfd15b07960b`) with this status paragraph and the
++statements the ratification made out of date changed; `exchange/CLAUDE_WEB_TOOLS/rat45/H1_v10_CANDIDATE_TO_FINAL.diff`
++is the exact difference. `exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. It
++authorises nothing.
+@@ -109,2 +115,2 @@
+-   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_295 (the reviewer's review of
+-   this edition's first candidate); the newest decision log entry is 214 (this candidate corrected).
++   edition: the last RAT is RAT-45 (this handover); the newest EX is EX_296 (the reviewer's focused PASS of this
++   edition); the newest decision log entry is 215 (RAT-45).
+@@ -947 +953,3 @@
+-2. **This edition:** to the reviewer, then the owner's ratification (RAT-45).
++2. **Done: this edition ratified (RAT-45, entry 215)** after EX_295 and EX_296. The reviewer has written its own
++   H-2 v6 as a CANDIDATE (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_CANDIDATE_20261124.md`; EX_296): it awaits the
++   owner's separate decision, and H-2 v5r1 stays the installed reviewer handover until then.
+@@ -1153,2 +1161,3 @@
+-- **Waiting on the reviewer:** its review of this candidate.
+-- **Waiting on the owner:** RAT-45 for this edition; his go for build step 3; his word on reminders R-007 (proposed
++- **Waiting on the reviewer:** nothing.
++- **Waiting on the owner:** his decision on the reviewer's H-2 v6 candidate (section 10 item 2); his go for build
++  step 3; his word on reminders R-007 (proposed
+@@ -1166 +1175,2 @@
+-  9. The reviewer's handover: H-2 v5r1 describes the state before build step 2; the reviewer writes its own.
++  9. The reviewer's handover: H-2 v5r1 describes the state before build step 2; the reviewer has written H-2 v6
++     as a candidate, which is its own to finalise once the owner decides.

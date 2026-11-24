@@ -4497,3 +4497,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **State:** a CANDIDATE with no force, waiting for the reviewer's focused recheck; then the owner's ratification
   (RAT-45). H-1 v9 stays installed.
 - Next numbers: EX_296 (the reviewer's recheck); entry 215; RAT-45.
+
+## 215. 24 November 2026, 15:42 - RAT-45: THE OWNER RATIFIES H-1 v10 after the reviewer's focused PASS (EX_296); installed in doc/HANDOVER/ with its status statements changed
+
+- **EX_296 (reviewer; main `aabe46f`; SHA-256 `e5412f53e81ca05486fa44901e169574a4fc60521b1fd24b316aacbcd9db1361`):** the
+  focused recheck of the corrected candidate at `6e13bbe`: PASS; the three findings of EX_295 CLOSED; the 15 hunks of
+  the correction rebuild the corrected candidate exactly; the hashes match; sections 1, 2 and 2A unchanged.
+- **The owner's ratification.** EX_296 records his words to the reviewer: "If this is any good then I ratify it now".
+  The reviewer passed it, and the owner relayed that to Claude at 15:40 with the request to record RAT-45 and
+  install the handover, adding in his own words: "I am getting really excited now, a live prod coming soon !".
+  **Claude took the relay as his ratification:** it is his own message, it carries his own words of ratification,
+  and it asks for the install. Had he meant otherwise, the install is a document only and Git keeps H-1 v9.
+- **RAT-45 is recorded** (RAT-44 was the last number used). **Installed:**
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v10.md`, **SHA-256 `824e7f251d0ae43a8c045c42495537fa6a8a242c531eb677132882ccb467a69b`** (1332 lines), and its blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v10_introductory_blurb.md`, SHA-256 `6c0ab5cf4133628edcfbe602e2aa7b362b13c2f9f331054bba9cf4fd4761cfb9` (the candidate's blurb, bytes
+  unchanged). Written by `exchange/CLAUDE_WEB_TOOLS/rat45/finalise_rat45.py` from the candidate the reviewer passed
+  (`a769316d...5b07960b`, asserted by hash).
+- **Five passages differ from the passed candidate,** each a statement the ratification itself made out of date
+  (`H1_v10_CANDIDATE_TO_FINAL.diff`, SHA-256 `7a79e5f31143d1d76b89aa75b001e8dd16c4898d055dd3366d149fdb7879233b`; 5 hunks; applied to the candidate with `patch` it gives the
+  installed file, checked): the status paragraph; section 0A item 3's newest numbers; section 10 item 2 (this
+  edition is ratified; the reviewer's H-2 v6 is a candidate); section 12.8's "waiting on" lines; section 12.8
+  item 9. Sections 1, 2 and 2A are carried byte for byte (asserted). No rule or fact was changed.
+- **H-1 v9 and its blurb stay in `doc/HANDOVER/` as history.** A new Claude chat starts from the v10 blurb.
+- **The reviewer's H-2 v6** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_CANDIDATE_20261124.md` and its blurb, with
+  exact diffs under `exchange/ChatGPT_REVIEWER_H2V6/`; main `154d30b` to `f53a223`) is the reviewer's own CANDIDATE.
+  **Not ratified, not installed; H-2 v5r1 (RAT-43) stays the installed reviewer handover.** Claude has not changed
+  those files. The owner asked whether to ratify it; Claude's answer is in the chat (yes, as the reviewer's own
+  act, once it has brought its statements about H-1 v10 up to date).
+- **RAT-45 authorises the documentary installation and nothing else:** not build step 3, a runner task, or anything
+  on the owner's PC.
+- Next numbers: EX_297; entry 216; RAT-46.
