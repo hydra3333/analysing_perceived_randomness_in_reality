@@ -5613,3 +5613,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not given by the review:** the go. The look is the owner's own to run, from
   `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET_r1.md`, when he chooses; Claude repeated the steps to him.
 - Next numbers: EX_309 (the reviewer's, pending); entry 249; RAT-49.
+
+## 249. 24 November 2026, 21:28 - THE OWNER'S LOOK-ONLY RUN IN HIS REAL DEV: no finding; a real run would find nothing to stop it. EX_309 committed
+
+- **EX_309 (reviewer; main `dbcd1e7`; SHA-256 `4ec19cda0d8fe5316f2ca0a1fd3d9a2031e2f5a941662c6c8b85737271d43cbc`):** the
+  focused PASS of the look kit r1 that entry 248 recorded from the owner's relay; it is now the record.
+- **The run:** by the owner himself, in CMD, at about 21:27, at `main` `63d6f1f`, exactly as
+  `LOOK_ONLY_SHEET_r1.md` gives it; he sent Claude the whole screen. His pull was a fast-forward. **His three
+  `certutil` lines printed the three SHA-256 values of the sheet,** so the kit on his disk is the kit committed
+  (the first proof on Windows that a file committed CRLF arrives byte for byte with `core.autocrlf=true`).
+- **What the look printed** (kept whole in `exchange/CLAUDE_WEB_TOOLS/conversion/look_result/OWNERS_LOOK_20261124.txt`,
+  SHA-256 `75a11d072e5d8c4f0228404699cf71d91fc1b701ecbf02ac248ba977bb9617f4`):
+  - the list: 686 files, SHA-256 `a60fcd78...5544a9`;
+  - **to be converted now: 650; in their form already: 24;** the package's own, not yet there: 12 (650 + 24 + 12
+    = 686: every listed file is at the list's "before" or its "after"; none has a third value, and none is
+    missing);
+  - the tree's own settings file: to be converted;
+  - **made again, not converted: 1,578 files** (research results and status files; nothing is left in `records\`);
+  - **the four results files, with exactly the SHA-256 values Git holds for them** (Claude computed the four from
+    Git at `dbcd1e7`: they are the same): his masters and ledgers are the repository's, and in their form;
+  - untouched, not read: 12;
+  - **in no class, or not as expected: 0.** No stray file, no link or junction, no lock, no status file holding
+    more than ACTIVE, nothing in `scratch\`.
+  - Last line: "LOOKED ONLY; nothing was changed. A real run would find nothing to stop it."
+- **What it settles:** the standard's section 11 item 3 (what his DEV holds that Git does not track): nothing the
+  conversion cannot place. And it is the first run of the program's look path and of the rule module on
+  Windows, with Python 3.15.
+- **What differs from the cloud's trial, and why it is as expected:** 24 files in their form already against 12
+  there. On his disk three files under `src` are CRLF (entry 226) and, it follows, nine more of the listed files
+  outside `src` (Git wrote them CRLF at checkout); the list's rule passes each over. The count to convert is
+  smaller by the same twelve.
+- **What it does not show:** which nine those are (the look prints counts for that class); anything about the
+  conversion itself, the refresh of his working copy or the commit. It is true of his tree tonight: the look is
+  made again on the day, as the real run's first step.
+- **No go is given or implied for anything further.**
+- Next numbers: EX_310; entry 250; RAT-49.

@@ -4,19 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 21:26 Australia/Adelaide (entry 248: the reviewer passed the look kit r1; the look-only run is the owner's to make on his own go, from LOOK_ONLY_SHEET_r1.md; Claude then reads its output).
+**Last updated:** 24 November 2026, 21:28 Australia/Adelaide (entry 249: the owner's look-only run in his real DEV found nothing that would stop the conversion; next, by Claude: the refresh and commit commands, the sheet of the day, the package).
 
 ## For the owner: NOW
 
-- **THE LOOK-ONLY RUN: USE THE KIT r1 AND THE SHEET r1 (entries 246 and 247; 24 November 2026, evening). It
-  changes nothing.** The reviewer (EX_308) found the look's path read-only and asked two narrow corrections,
-  both made: it prints no content of a status file, and it names every link, junction or reparse point without
-  entering or reading it. **The sheet:** `exchange/CLAUDE_WEB_TOOLS/conversion/LOOK_ONLY_SHEET_r1.md` (a pull; three
-  `certutil` lines; one command whose output goes to `E:\TEMP\FILE_FORM_look.txt`, to be sent to Claude).
-  **The reviewer passed the kit r1 (entry 248; its EX_309 was not yet committed then). Waiting on the owner:**
-  the look itself, on his own go, and its output sent to Claude.
-  **Meanwhile, by Claude:** the refresh and commit commands, the sheet of the day, the package. Claude's next
-  numbers: entry 249, RAT-49; the next EX after the reviewer's pending EX_309.
+- **THE OWNER'S LOOK-ONLY RUN IN HIS REAL DEV IS DONE: NO FINDING (entry 249; 24 November 2026, evening).** With
+  the reviewed kit r1 (EX_308, EX_309): 650 listed files to convert, 24 in their form already, 1,578 old results
+  and status files to be made again, the four results files exactly as Git holds them, **nothing in no class:
+  no stray file, link or lock.** Output kept in `exchange/CLAUDE_WEB_TOOLS/conversion/look_result/`. It changed
+  nothing. **Nothing waits on the owner or the reviewer.** **Next, by Claude:** the refresh and commit commands,
+  the sheet of the day, the package; then the reviewer; then, each on the owner's own go, a rehearsal by the
+  runner and the day. Claude's next numbers: EX_310, entry 250, RAT-49.
 - **THE CONVERSION'S CLOUD WORK IS WRITTEN AND TRIALLED (entry 245; 24 November 2026, evening). Working files, not
   a package.** Under `exchange/CLAUDE_WEB_TOOLS/conversion/` (start with `NOTES_FOR_THE_PACKAGE.md`): the engine's
   writers changed to CRLF, the conversion list (686 files), the conversion program with a look-only mode, the Git

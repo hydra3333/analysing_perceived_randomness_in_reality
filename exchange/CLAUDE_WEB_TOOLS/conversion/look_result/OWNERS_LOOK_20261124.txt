@@ -1,0 +1,34 @@
+The owner's look-only run in his real DEV tree, 24 November 2026, about 21:27 (Adelaide), at main 63d6f1f, with
+the look kit r1 (decision log entry 249). What follows is what the program printed, as the owner sent it to
+Claude (the content of E:\TEMP\FILE_FORM_look.txt, shown by `type`). It holds file names, counts and SHA-256
+values only. Before it, his three `certutil` lines printed the three SHA-256 values of the sheet r1.
+
+FILE-FORM CONVERSION - START - the tree at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality - LOOK ONLY: nothing will be changed
+  The conversion list: 686 files; its SHA-256 is a60fcd78562b7903afe689bcea796fb3cc7bbb74c7b90f9fdf61d262f25544a9
+  LISTED, to be converted now ............ 650 file(s) of the 686 listed
+  LISTED, in their form already .......... 24 file(s) (passed over)
+  THE PACKAGE'S OWN FILES, not yet here .. 12 file(s) (the package delivers them in their form; they are copied in before a real run)
+  THE TREE'S OWN SETTINGS ................ ENVIRONMENT.ini: to be converted (line endings only)
+  MADE AGAIN, NOT CONVERTED (removed on your second word; the engine writes them afresh):
+      1578 file(s): research results, status files, control-folder leftovers
+      results/research/OZLOTTO/reports/README.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01475.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01475.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01476.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01476.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01477.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01477.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01478.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01478.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01479.csv
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01479.txt
+      results/research/OZLOTTO/reports/league/league_OZLOTTO_d01480.csv
+      ... and 1566 more
+  UNTOUCHED, AND PROVED UNTOUCHED ........ 4 results file(s):
+      63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e  source_data/OZLOTTO_results_master.csv
+      78ab9fdef29f8faafb10bb3d1fd2197747195b95b46640e73ff031797761a3c6  source_data/OZLOTTO_results_master_ledger.csv
+      e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0  source_data/POWERBALL_results_master.csv
+      23f3f8a78b8cdaaf8f10d56c1684581e54be563f263d835d90cee966a0e446dd  source_data/POWERBALL_results_master_ledger.csv
+  UNTOUCHED, NOT READ .................... 12 file(s) (the six left out by name, the updater's grabs and backups, the opening records, binary kinds)
+  IN NO CLASS, OR NOT AS EXPECTED ........ 0
+FILE-FORM CONVERSION - END - LOOKED ONLY; nothing was changed. A real run would find nothing to stop it.
