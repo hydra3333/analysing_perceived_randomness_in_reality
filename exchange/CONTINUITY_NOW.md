@@ -4,14 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:22 Australia/Adelaide (entry 213: the H-1 v10 CANDIDATE is written and waits for the reviewer; build step 2 is complete in DEV; H-1 v9 stays installed until RAT-45; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 15:32 Australia/Adelaide (entry 214: EX_295 asked three corrections of wording in the H-1 v10 candidate, all made; the corrected candidate waits for the reviewer's focused recheck, then RAT-45; H-1 v9 stays installed; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
 - **THE H-1 v10 CANDIDATE IS WRITTEN (entry 213; 24 November 2026).**
   `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` with its blurb and the exact diff from v9. It
-  brings the Claude handover up to date after build step 2. **Waiting on:** the reviewer's review (EX_295), then
-  the owner's ratification (RAT-45); Claude then installs it in `doc/HANDOVER/` by a script. **Until then H-1 v9 is
+  brings the Claude handover up to date after build step 2. EX_295 asked three corrections of wording, all made (entry 214). **Waiting on:** the reviewer's focused
+  recheck (EX_296), then the owner's ratification (RAT-45); Claude then installs it in `doc/HANDOVER/` by a script. **Until then H-1 v9 is
   the installed handover; a new Claude chat that had to start now would read v9, this page and the candidate.**
 - **BUILD STEP 2 IS COMPLETE IN DEV (entry 212; 24 November 2026).** Installed (commit `5f16b35`); `ENVIRONMENT.ini` made;
   DEV's first fill run by the owner in 47 minutes (POWERBALL 15118 forecasts and 15078 scores, OZLOTTO 6598 and

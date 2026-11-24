@@ -21,8 +21,8 @@
 +with counted replacements; `H1_v9_TO_v10.diff` beside it is the exact difference. **Sections 1, 2 and 2A are still
 +H-1 v7r1's bytes, unchanged** (the builder asserts it against v9). The sections rewritten are listed in Appendix B;
 +everything else is v9's text.
-+**Status:** CANDIDATE, 24 November 2026, for the reviewer's review and the owner's ratification (RAT-45). Until it
-+is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
++**Status:** CANDIDATE, 24 November 2026, corrected after the reviewer's review (EX_295: three corrections of
++wording, all made), for its focused recheck and the owner's ratification (RAT-45). Until it is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
 +carries whatever is newer. It authorises nothing.
 @@ -18,5 +16,5 @@
 -**Baseline described:** `main` on 23 November 2026 after the tidy-up's install (`c7e6ed8`) and its record (`6c3a0fa`).
@@ -54,8 +54,8 @@
 @@ -107,2 +109,2 @@
 -   edition: the last RAT is RAT-43 (this handover and H-2 v5r1); the newest EX is EX_281; the newest decision log
 -   entry is 174 (RAT-43).
-+   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_294, and EX_295 is expected to
-+   be the reviewer's reply on this candidate; the newest decision log entry is 213 (this candidate written).
++   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_295 (the reviewer's review of
++   this edition's first candidate); the newest decision log entry is 214 (this candidate corrected).
 @@ -134,2 +136,13 @@
 -
 -## 0B. The state at this edition (23 November 2026)
@@ -72,7 +72,13 @@
 +    (entries 205 to 208).
 +
 +## 0B. The state at this edition (24 November 2026)
-@@ -174,9 +187,31 @@
+@@ -168,2 +181,3 @@
+-   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development forecast (Powerball 17,280, Oz Lotto
+-   8,760) computed again with the moved code and equal by `canonical_content_digest`.
++   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development target record (Powerball 17,280, Oz Lotto
++   8,760; not all of them are forecasts, section 7.2) computed again with the moved code and equal by
++   `canonical_content_digest`.
+@@ -174,9 +188,31 @@
 -8. **What is authorised now:** documents and records. Build step 2 needs the owner's own go (section 10); so does
 -   every install and every run on his PC.
 -9. **What is owed** is listed once, in section 12.8.
@@ -113,14 +119,31 @@
 +    step 1, the tidy-up and build step 2. A new ChatGPT reviewer chat took over from H-2 v5r1 on 23 November 2026
 +    (entry 175) and reviewed EX_282 to EX_294. The owner has not decided on a Claude chat switch; this edition is written so that one
 +    can happen at any time (the chat is long).
-@@ -192,3 +227,3 @@
+@@ -191,4 +227,6 @@
+-   2026 (entry 128). The chat that took over that day (0B item 8) has the same rights and independence.
 -2. **Section 1.1, the local runner.** The rulebook is now v0.6 (RAT-42, entry 156): a restrictive baseline that
 -   names the new system's commands as never run. A narrowly scoped, reviewed amendment is owed before any runner
 -   rehearsal of the new system (section 8.6).
++   2026 (entry 128). The chat that took over that day ended on 23 November 2026 and is
++   history. **The present reviewer chat took over from H-2 v5r1 on 23 November 2026** (entry 175; 0B item 13), with
++   the same rights and independence.
 +2. **Section 1.1, the local runner.** The rulebook is now v0.7 (RAT-44, entry 192): it names the new system's
 +   commands as never run, except against a scratch tree under `D:\DELETE_ME\` when a task file says so (section
 +   8.6).
-@@ -571,0 +607,17 @@
+@@ -405,2 +443,2 @@
+-- **The reviewer's handover (H-2).** **In force: H-2 v4, the reviewer's own full edition current to RAT-40, ratified by
+-  the owner on 22 November 2026 (RAT-41):**
++- **The reviewer's handover (H-2).** **Previously in force (RAT-41), now history: H-2 v4, the reviewer's own full edition current to
++  RAT-40, ratified by the owner on 22 November 2026:**
+@@ -415,2 +453,2 @@
+-  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those are the bytes in force.
+-  **In force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
++  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those were the bytes in force until RAT-43.
++  **The one installed reviewer handover now, in force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
+@@ -546 +584 @@
+-  minutes; the equivalence check of every old development forecast about 40 minutes (Powerball about 31, Oz Lotto
++  minutes; the equivalence check of every old development target record about 40 minutes (Powerball about 31, Oz Lotto
+@@ -571,0 +610,17 @@
 +- **The research engine of the new system** (build step 2, `5f16b35`): the package `src/research/`, 20 files; the
 +  program `src/research_command.py` behind both launchers; `Run_Research.bat` and `Withdraw_Variant.bat` in the root;
 +  `deploy/INFRA_MANIFEST.ini` (the 32 infrastructure files in three classes: forecast 13, derived 16, other 3);
@@ -138,7 +161,7 @@
 +  copying the example (entry 212). The launchers refuse without it, and refuse a Python that is not the tree's own
 +  `.venv`. **The example's comments mislead and its commented paths are out of date** (the owner's observation,
 +  entry 211): it is rewritten in build step 3.
-@@ -574,6 +626,9 @@
+@@ -574,6 +629,9 @@
 -- **The suite's known result** (owner's PC and cloud, 22 and 23 November 2026): 45 modules, 571 tests; **three tests
 -  fail, with eight failed assertions**, on `main` since before step 1: `test_mhupa_launchers` `test_gitignore_lines`
 -  (one; the owner un-ignored a results folder at `cc665ce`; it prints a set, in a different order each run) and in
@@ -154,22 +177,37 @@
 +  symbolic link; its three folder-link tests then run with a junction. Compare before and after with
 +  `compare_suite_reports.py` (section 12.2), test by test. The two suite runs take about 25 and 29 minutes on the
 +  owner's PC.
-@@ -595,0 +651,10 @@
+@@ -591,4 +649,6 @@
+-  development forecast: 17,280 Powerball and 8,760 Oz Lotto.
+-- **Not in Git:** the old forecast run folders (26,040 development, three files each, and 800 Mode H) and attempts
+-  ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802 Oz Lotto
+-  development forecasts were never scored, so they exist only there. The transition check of build step 3 reads them;
++  development target record: 17,280 Powerball and 8,760 Oz Lotto. Not all of them are forecasts (the last item of
++  this section).
++- **Not in Git:** the old run folders (26,040 development target records, three files each, and 800 Mode H) and
++  attempts ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802
++  Oz Lotto development target records have no score, so they exist only there: 3,036 Powerball forecasts that were
++  never scored, and 2,802 `INSUFFICIENT_HISTORY` records in each game (the last item of this section). The transition check of build step 3 reads them;
+@@ -595,0 +656,14 @@
 +- **DEV's research results** (24 November 2026; ignored by Git, on the owner's PC only): `results\research\<GAME>\`
 +  with `variants\<family>\<variant>\forecasts.jsonl` and `scores.jsonl`, the reports under `reports\` (start with
 +  `README.txt`), and `records\`. Forty variants in each game. A list begins at its variant's `first_target` and holds
 +  no line before it (specification 5.2). **The prevailing OV-1 has not started in DEV** and cannot until a tree
 +  exists to copy accepted results from (build step 3); the job says so at its end. The cloud workspace's own fill
 +  gave the same counts; it is suggestive only and is gone with the workspace.
-+- **Of the old development records, 2,802 in each game are not forecasts:** the old system kept a record
-+  `INSUFFICIENT_HISTORY` for each target at which a variant did not yet have enough earlier draws. The comparison tool
-+  counts them apart (entries 205 to 208). The old system therefore kept 14,478 Powerball and 5,958 Oz Lotto
-+  development forecasts, and all of them are in the new lists.
-@@ -605 +670,2 @@
++- **The old development records, counted exactly** (entries 205 to 208; EX_295). A "target record" is what the old
++  system kept for one variant at one target; it is a forecast or an `INSUFFICIENT_HISTORY` record. **Powerball:** 17,280
++  target records = 14,478 forecasts + 2,802 `INSUFFICIENT_HISTORY` records; the rank ledgers name 11,442 scored
++  forecasts, so 3,036 forecasts were never scored, and 5,838 target records have no score. **Oz Lotto:** 8,760 =
++  5,958 forecasts, all of them scored, + 2,802 `INSUFFICIENT_HISTORY` records. **In all:** 26,040 = 20,436 forecasts +
++  5,604. Build step 2's comparison compared the content of the 20,436 forecasts with the new lists, and separately
++  found each of the 5,604 below its variant's `first_target`, where a new list has no line: for those it compared no
++  forecast content and no view digest, because the new system has none there.
+@@ -605 +679,2 @@
 -  P1 to P8 at source level (EX_233). Build step 2 carries it into the new system: reuse it, do not rewrite it; any
 +  P1 to P8 at source level (EX_233). Build step 2 carried it into the new system byte for byte, as `src/research/ov1_numeric.py` (a test asserts the
 +  equality): do not rewrite it; any
-@@ -615,8 +681,30 @@
+@@ -615,8 +690,30 @@
 -
 -### 7.5 Not tested by anyone
 -
@@ -208,7 +246,7 @@
 +environment. Measured so far, on the owner's PC: a first fill of both games 46 to 47 minutes (nearly all of it inside
 +the methods' exact-fraction fits, E_3, E_4 and E_18); a job with nothing new 3 minutes; the comparison with the old
 +records 2 minutes.
-@@ -677,21 +765,32 @@
+@@ -677,21 +774,32 @@
 -- **What it is:** Claude Code on the owner's Windows PC carries out task files that Claude writes, in disposable task
 -  clones that cannot push, and reports what happened. Its rulebook is `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md`
 -  (v0.6, RAT-42, entry 156). Its reports are owner-machine evidence, not reviewer evidence and not acceptance.
@@ -262,12 +300,12 @@
 +  fill and the comparison; stopped on the comparison tool's fault) and T027 (the corrected comparison; PASS). The
 +  reviewer cold-read T025 (EX_291 asked four corrections of its text; EX_292 PASS); the owner ran T026 and T027 on
 +  his own go without a further look. T001 to T024 are in H-1 v7r1 section 8.6.
-@@ -699,2 +798,2 @@
+@@ -699,2 +807,2 @@
 -  tokens. Let that guide what goes to the runner. The last task run was T024; H-1 v7r1 section 8.6 has the record of
 -  T001 to T024 and the practical detail.
 +  tokens. Let that guide what goes to the runner. Never ask the runner to judge: give the exact expected lines and
 +  numbers, and say that anything else is a STOP.
-@@ -707,0 +807,30 @@
+@@ -707,0 +816,30 @@
 +
 +**From build step 2 (23 and 24 November 2026):**
 +
@@ -298,7 +336,7 @@
 +  (entry 189).
 +- **State what a claim rests on.** The cause of TASK_T026's stop was called an inference, with its arithmetic, until
 +  the corrected tool had read the real records; the reviewer asked for exactly that (EX_294).
-@@ -806,17 +935,13 @@
+@@ -806,17 +944,13 @@
 -   (entry 157); **build step 1** (entry 164, `0aea10a`); **the light tidy-up** (entry 169, `c7e6ed8`).
 -2. **Done: this edition and H-2 v5r1 ratified (RAT-43, entry 174)** after EX_281; the reviewer chat ended and a
 -   new one starts from H-2 v5r1.
@@ -329,7 +367,7 @@
 +   the measurements of section 7.5. The old run folders stay until the transition check (section 7.2). **After this
 +   step PROD exists and forecasts every week, and new methods can be added: the main game.**
 +4. **Build step 4: the laboratory tools** (specification 12.7, 14.2, 7A, 12.8, `Check_Forecasts`), with the test of
-@@ -824 +949,6 @@
+@@ -824 +958,6 @@
 -   held, or the owner restores a backup (specification 17.4).
 +   held, or the owner restores a backup (specification 17.4); build step 2's limits in section 7.5 apply.
 +5. **The operations manual, after build step 3** (the owner, entries 171 and 182): its skeleton is agreed with the
@@ -337,7 +375,7 @@
 +   corrected in place only by `Correct_Shared_Code.bat`; a variant's own files never, a corrected method is a new
 +   variant name) and how the markers and flag files work (`I_AM_INSTALLABLE.json`, `ENVIRONMENT_VERIFIED.json`, the
 +   status file, the job lock, the install barrier, the not-current marker).
-@@ -827,11 +957,8 @@
+@@ -827,11 +966,8 @@
 -**A watchpoint for build steps 2 and 3** (found on 22 November 2026; register v0.32; EX_273 section 2; entry 157 item
 -5). The installed code still has checks from the Mode H study that the ratified design does not make a gate:
 -`src/methods/_common/contract_dispatch.py` and `master_versions.py` consult the opening record
@@ -357,19 +395,19 @@
 +Put it to the reviewer as the owner's decision, with the proof that every genuine check is kept. Fresh trees must
 +work with no Mode H opening or seal as a prerequisite; the obsolete record is not copied into a new tree to satisfy
 +old code; no genuine source or ledger check is removed.
-@@ -840,3 +967,3 @@
+@@ -840,3 +976,3 @@
 -**Fable (High) for the core of step 2** (the list writer and its invariants, the job's fill and catch-up, the derived
 -check, OV-1's integration), for the install, backup and restore state machines of step 3, for the rerun and
 -correction steps of step 4, and for any unexplained STOP. Cold reads before a review round may be helpers on Opus.
 +**Fable (High) for the state machines of step 3** (the install and its barrier, the backup, the restore), for the
 +rerun and correction steps of step 4, and for any unexplained STOP. Cold reads before a review round may be helpers
 +on Opus. The owner switches models himself; say when a Fable task is finished.
-@@ -868,2 +995,2 @@
+@@ -868,2 +1004,2 @@
 -This section describes practice, not rules. Section 12.3 is now the practice of build step 1 and the tidy-up, both
 -installed; section 12.4 is carried from H-1 v7r1 in short form and was not exercised by this chat.
 +This section describes practice, not rules. Section 12.3 is the practice of build step 1, the tidy-up and build
 +step 2, all installed; section 12.4 is the practice of the three runner tasks of 23 and 24 November 2026.
-@@ -917,0 +1045,10 @@
+@@ -917,0 +1054,10 @@
 +- **`step2/`** (build step 2): `build_step2_pkg.py <repo> <base> <out> <engine tests>` (the package from a clean clone
 +  at the base commit and `overlay/`; it writes the verifier, the manifest and the sheet, and refuses a sheet that
 +  names another package), `apply_edits.py` (the two counted edits to existing files), `sync_and_test.sh`,
@@ -380,7 +418,7 @@
 +  every hash computed).
 +- **`rulebook_v0_7/`**, **`t025/`, `t026/`, `t027/`** and **`h1v10/`**: the rulebook's builders, the task files' builders
 +  (section 12.4) and this edition's.
-@@ -944,0 +1082,7 @@
+@@ -944,0 +1091,7 @@
 +- **What build step 2 added to this practice:** a code-bearing package goes to the reviewer as an EX ZIP made by an
 +  assembler (the message, the package ZIP unchanged, its member list), with the package also extracted in the
 +  `exchange/EX_nnn_Claude/` folder; a corrected package is a new name (`v1r1`, `v1r2`, `v1r3`) with the exact diff
@@ -388,7 +426,7 @@
 +  the owner's install** (section 8.6); the sheet's baseline is made in the same sitting or its folder is checked
 +  to exist; and **nothing is pushed while the owner installs** (section 0A item 13). The cloud workspace of this
 +  chat kept a filled copy of the tree, which let made-up records in the real form be built (section 8.8).
-@@ -948,3 +1092,15 @@
+@@ -948,3 +1101,15 @@
 -One task per rehearsal; commands written out in full with absolute Windows paths; each step with its expected PASS
 -line; a STOP sends the runner to clean-up and the report. Never put `.bat` or any other denied text in a task
 -command. Read the whole report: every step's command, exit code and output.
@@ -407,7 +445,7 @@
 +- **A task that follows another** takes its commands from the earlier, reviewed task by its builder, which asserts
 +  that they are the same, character for character (T026).
 +- Read the whole report: every step's command, exit code and output, and its Deviations and Observations.
-@@ -968,2 +1124,9 @@
+@@ -968,2 +1133,9 @@
 -  (Python 3.15.2). **QA** will be `D:\TEST_BED` (backups `D:\TEST_BED_backups`) and **PROD** `G:\a_p_r_i_r` (backups
 -  `T:\a_p_r_i_r_backups`): the deployment design's examples; each tree's `ENVIRONMENT.ini` decides. Neither exists yet.
 +  (Python 3.15.2). **PROD** will be `G:\a_p_r_i_r` and **QA** `T:\a_p_r_i_r`, with backups under `T:\a_p_r_i_r_backups\PROD`
@@ -419,10 +457,10 @@
 +  terminal has the main `.venv` active.
 +- **Measured there (24 November 2026):** the suite 25 minutes (571 tests) and 29 minutes (762); a first fill of
 +  both games 46 to 47 minutes; a job with nothing new 3 minutes; the comparison with the old records 2 minutes.
-@@ -977 +1140 @@
+@@ -977 +1149 @@
 -### 12.8 Open items at this edition (23 November 2026)
 +### 12.8 Open items at this edition (24 November 2026)
-@@ -981,4 +1144,3 @@
+@@ -981,4 +1153,3 @@
 -- **Waiting on the reviewer:** a new reviewer chat, started by the owner from H-2 v5r1; its takeover reply.
 -- **Waiting on the owner:** starting the new reviewer chat; his go for build step 2; his word on reminders R-007
 -  (proposed dropped) and R-017 (proposed done) (entry 155); the three deny lines for `.claude/settings.json` when he
@@ -430,14 +468,14 @@
 +- **Waiting on the reviewer:** its review of this candidate.
 +- **Waiting on the owner:** RAT-45 for this edition; his go for build step 3; his word on reminders R-007 (proposed
 +  dropped) and R-017 (proposed done) (entry 155).
-@@ -986,3 +1148,3 @@
+@@ -986,3 +1157,3 @@
 -  1. Build steps 2, 3 and 4, each on its go, with what section 10 says each must settle.
 -  2. The owner's question on the updater's Mode H precondition, before that part of step 3 is coded (section 10).
 -  3. A narrowly scoped rulebook amendment before any runner rehearsal of the new system (section 8.6).
 +  1. Build steps 3 and 4, each on its go, with what section 10 says each must settle.
 +  2. The clean-sheet updater put to the reviewer as the owner's decision, before it is coded (section 10).
 +  3. The rewrite of `ENVIRONMENT.example.ini` (entry 211) and the LF pin in `.gitattributes`, in build step 3.
-@@ -991,5 +1153,7 @@
+@@ -991,5 +1162,7 @@
 -     install, RAT-42, build step 1, the tidy-up and what follows.
 -  6. A new draft of `doc/METHOD_TEMPLATE/` for the new layout, after build step 3.
 -  7. The measurements of section 7.5, in the first rehearsal.
@@ -450,7 +488,7 @@
 +  9. The reviewer's handover: H-2 v5r1 describes the state before build step 2; the reviewer writes its own.
 +- **Done since H-1 v9:** build step 2, reviewed, rehearsed, installed and run (section 0B items 8 and 9); the narrow
 +  rulebook amendment (v0.7, RAT-44); the owner's answer on the updater (entry 181).
-@@ -997,4 +1161,6 @@
+@@ -997,4 +1170,6 @@
 -  `doc/Deferred_Performance_Engineering_Proposal_v0_1.md`: profile real run times before choosing any speed-up) and the
 -  simplicity review after full implementation (KISS-1).
 -- **Small leftovers the owner may choose to clear:** deleting `venv.bak` and Python 3.14; the duplicate exploration
@@ -461,17 +499,19 @@
 +- **Small leftovers the owner may choose to clear:** the scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` and
 +  `E:\TEMP\STEP2_baseline_clone` (no longer needed, entry 212); deleting `venv.bak` and Python 3.14; the duplicate
 +  exploration note in `doc/`; the old EX copies in `review/`; after step 3's transition check, the old run folders.
-@@ -1024,2 +1190,2 @@
+@@ -1024,2 +1199,2 @@
 -| `doc/HANDOVER/Claude_Primary_Handover_H1_v8.md` | `8230e3dfecca528d185153e46a2173ef8a7a4d8fbc41695cc3b2bbbfcb20c45e` |
 -| `doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md` | `586ececea64fca65b1ef3872a9fec60f1d7c659e0da408eb61e62d996d556d66` |
 +| `doc/HANDOVER/Claude_Primary_Handover_H1_v9.md` | `8c28f82c0662be75d683bd37b13d6b0596b3b6424584d5674f09f1d965b182b1` |
 +| `doc/HANDOVER/Claude_Primary_Handover_H1_v9_introductory_blurb.md` | `1cbe95bedb9741a610760b25de80e24eb3c798d9814287a4d28d8256c551dbe5` |
-@@ -1033 +1199 @@
+@@ -1033 +1208 @@
 -| `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` | `f92f17f60db63990fc10a663778ec8d6a2b0737c9232895f1ee0af76ffdfa632` |
 +| `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` | `4416c4b574567f57f40d19ba9d58a765ce7dce551cf06937430aced730325456` |
-@@ -1058,2 +1224,31 @@
+@@ -1058,2 +1233,34 @@
 -
 -Commits named in this file: `c7e6ed8` (the tidy-up installed) and `6c3a0fa` (its record); `0aea10a` (build
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` | `234e5917c2b980cc50a1a0f08fc77af320febdd0ee05f595abff32564714edc8` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md` | `f195212e0de626608b2fb7f96c71d3244b3770394baa28eb372449707f6f20aa` |
 +| `exchange/EX_283_ChatGPT.md` | `13994645ab0cb9a9d1dd0008dd8690db28313e2c6ccbf4c3061bcde600f30be8` |
 +| `exchange/EX_285_ChatGPT.md` | `fb42367a43891fc6a405356629dd1a0d7c967fd6872cf9da506a239037d00581` |
 +| `exchange/EX_286_ChatGPT.md` | `3f5e07f6611927b12231aa28134f69e07738a0203d121278bf3049c2350e31ff` |
@@ -482,6 +522,7 @@
 +| `exchange/EX_292_ChatGPT.md` | `13a2bfd95e7989f1b737bcfe36c094d7e09ec60be875847427e764ddb3d53845` |
 +| `exchange/EX_293_Claude/EX_293_Claude.md` | `1c693c612820b1bb9489900416c61b5e74f103d64a942bb17e127f5bd50030ba` |
 +| `exchange/EX_294_ChatGPT.md` | `9f59ae4fd1318e6c36bd639221df442ec9566222b40723975b99ed08ba5c8ce1` |
++| `exchange/EX_295_ChatGPT.md` | `983f748344d41f07207f8fdc14b185264622b2817015bf6e9810947d58a6e641` |
 +| `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_PACKAGE_NOTE_v0_3.md` | `3d14dbc9c68e406355af07e8e8d16a2b44687a74bb76851e1f5ea332eca28ccf` |
 +| `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/STEP2_Research_Engine_v1r3.zip` | `e80e87ae4d0d9e9baaa15b8f2a405df717f66eb6be7de4126b734ad374bc6926` |
 +| `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/INSTALL_AND_RUN_SHEET.md` | `9fa3ee880519d90ca497e4cabdb93c080e3cae11a664ff0ce68b7ee9dadd2310` |
@@ -503,7 +544,7 @@
 +| `ENVIRONMENT.example.ini` | `565b7f9fdef8d236600569df5c47088bac81935e2aeef78ebfd5c8798c47fdd7` |
 +
 +Commits named in this file: `5f16b35` (build step 2 installed); `c7e6ed8` (the tidy-up installed) and `6c3a0fa` (its record); `0aea10a` (build
-@@ -1067,5 +1262,5 @@
+@@ -1067,5 +1274,5 @@
 -## Appendix B. What changed from H-1 v8
 -
 -### B.1 What changed from H-1 v8
@@ -514,7 +555,7 @@
 +### B.1 What changed from H-1 v9
 +
 +| v9 section | In v10 |
-@@ -1073,5 +1268,5 @@
+@@ -1073,5 +1280,5 @@
 -| Header | rewritten for the state after the tidy-up; status CANDIDATE |
 -| 0 First actions | item 2: the newer entries and the two package notes added to the reading list, and the protocol's and rulebook's editions; item 4: the takeover of 22 November 2026 added |
 -| 0A Things that trip a new chat | item 1: the method files are in the new layout; item 3: the newest numbers; items 10 and 11 added (text-reading tests and pinned E_1 files; `.gitignore` and `*.log`) |
@@ -523,9 +564,9 @@
 +| Header | rewritten for the state after build step 2; status CANDIDATE |
 +| 0 First actions | item 2: the newer entries, build step 2's note and the reviewer's findings on it added to the reading list; the rulebook's edition |
 +| 0A Things that trip a new chat | item 1: the research engine is installed; item 3: the newest numbers; items 12 to 15 added (CRLF record files and the changed-line count; no push during an install; the reviewer takes EX numbers; the old system's insufficient-history records) |
-+| 0B The state | heading's date; items 1 to 7 kept; items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
-+| 0C Notes on sections 1, 2, 2A | item 2: rulebook v0.7 |
-@@ -1079,12 +1274,13 @@
++| 0B The state | heading's date; items 1 to 7 kept (in item 6 "target record" for "forecast", EX_295); items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
++| 0C Notes on sections 1, 2, 2A | item 1: the present reviewer chat and its takeover (EX_295); item 2: rulebook v0.7 |
+@@ -1079,12 +1286,15 @@
 -| 2B, 4.1 to 4.3, 5.1, 5.2, 5.4, 11 | unchanged |
 -| 5.3 The owner's decisions | one line: the owner's ZIP is done (entry 163) |
 -| 3 Project in one paragraph | one sentence: the layout is built |
@@ -538,9 +579,11 @@
 -| 10 Next work | rewritten from step 2 on; the watchpoint now names the owner's question and the reviewer's preference |
 -| 12 intro, 12.1, 12.2, 12.3, 12.6, 12.8, 12.9 | brought up to date; 12.3 rewritten as the practice of the two installed packages |
 -| Appendix A | rebuilt from HEAD with the files a new chat now needs |
-+| 2B, 3, 4, 5, 6, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
++| 2B, 3, 4.1 to 4.3, 5, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
++| 4.4 History and working documents | H-2 v4 labelled as history and H-2 v5r1 as the one installed reviewer handover (EX_295) |
++| 6 Verified technical facts | one phrase: "target record" for "forecast" (EX_295) |
 +| 7.1 The installed code | the research engine, the settings file and the suite's new known result (52 modules, 762 tests) |
-+| 7.2 Data and records | two items added: DEV's research results; the old insufficient-history records |
++| 7.2 Data and records | "target record" where all the old records are meant, and the never-scored counts put right (EX_295); two items added: DEV's research results; the old records counted exactly |
 +| 7.3 Staged work | one sentence: the OV-1 kernel is carried into `src/research/` byte for byte |
 +| 7.4 The build's record | `step2/`, `rulebook_v0_7/` and the three task folders added |
 +| 7.5 Not tested | rewritten: what has run, what has run only in tests, build step 2's known limits, what is still to measure |
@@ -550,13 +593,13 @@
 +| 12 intro, 12.2, 12.3, 12.6 | brought up to date (the step 2 tools; what step 2 added to building a package; the owner's places, his scratch folder and the measured times) |
 +| 12.4 Task files | rewritten as the practice of TASK_T025 to T027 |
 +| 12.8 Open items | rewritten |
-+| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, and the files a new chat now needs |
-@@ -1093,2 +1289,2 @@
++| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, H-2 v5r1 and its blurb (EX_295), and the files a new chat now needs |
+@@ -1093,2 +1303,2 @@
 -Nothing binding was dropped: every v8 passage that was replaced described a state that has since moved on, and the
 -decision log entries 154 to 169 hold the record.
 +Nothing binding was dropped: every v9 passage that was replaced described a state that has since moved on, and the
 +decision log entries 175 to 213 hold the record.
-@@ -1098,6 +1294,8 @@
+@@ -1098,6 +1308,8 @@
 -- **Verified with tools for this edition:** every hash in section 4 and Appendix A (computed by the builder from
 -  `HEAD`); that sections 1, 2 and 2A equal v8's and v7r1's bytes; the layout's counts (40 `VARIANT.json`, 40 `method.py`);
 -  the suite's and the equivalence check's results (the owner's unedited outputs, filed as evidence).
@@ -571,7 +614,7 @@
 +  reviewer's.
 +- **Written by the chat that did the work,** late in a long conversation: the reviewer's cold read of this edition
 +  against the repository is the check on it.
-@@ -1107,4 +1305,4 @@
+@@ -1107,4 +1319,4 @@
 -US-ASCII; LF; one final newline. The carried sections 1, 2 and 2A are identical to H-1 v8's and to H-1 v7r1's (the
 -builder asserts both). Every replacement's old text is found exactly once in H-1 v8. The builder refuses on any failure.
 -

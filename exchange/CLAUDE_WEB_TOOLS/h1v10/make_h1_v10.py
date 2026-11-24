@@ -59,10 +59,12 @@ ROW_PATH_CHANGES = {
     'doc/HANDOVER/Claude_Primary_Handover_H1_v8_introductory_blurb.md': V9_BLURB,
 }
 NEW_ROWS = (
+    'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md',
+    'doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md',
     'exchange/EX_283_ChatGPT.md', 'exchange/EX_285_ChatGPT.md', 'exchange/EX_286_ChatGPT.md',
     'exchange/EX_287_ChatGPT.md', 'exchange/EX_289_ChatGPT.md', 'exchange/EX_290_ChatGPT.md',
     'exchange/EX_291_ChatGPT.md', 'exchange/EX_292_ChatGPT.md', 'exchange/EX_293_Claude/EX_293_Claude.md',
-    'exchange/EX_294_ChatGPT.md',
+    'exchange/EX_294_ChatGPT.md', 'exchange/EX_295_ChatGPT.md',
     'exchange/CLAUDE_WEB_TOOLS/step2/STEP2_PACKAGE_NOTE_v0_3.md',
     'exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/STEP2_Research_Engine_v1r3.zip',
     'exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/INSTALL_AND_RUN_SHEET.md',

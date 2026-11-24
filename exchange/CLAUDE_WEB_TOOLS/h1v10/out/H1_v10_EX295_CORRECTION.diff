@@ -1,0 +1,81 @@
+--- H-1 v10 candidate as reviewed (EX_295)
++++ H-1 v10 candidate corrected
+@@ -10,2 +10,2 @@
+-**Status:** CANDIDATE, 24 November 2026, for the reviewer's review and the owner's ratification (RAT-45). Until it
+-is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
++**Status:** CANDIDATE, 24 November 2026, corrected after the reviewer's review (EX_295: three corrections of
++wording, all made), for its focused recheck and the owner's ratification (RAT-45). Until it is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
+@@ -109,2 +109,2 @@
+-   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_294, and EX_295 is expected to
+-   be the reviewer's reply on this candidate; the newest decision log entry is 213 (this candidate written).
++   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_295 (the reviewer's review of
++   this edition's first candidate); the newest decision log entry is 214 (this candidate corrected).
+@@ -181,2 +181,3 @@
+-   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development forecast (Powerball 17,280, Oz Lotto
+-   8,760) computed again with the moved code and equal by `canonical_content_digest`.
++   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development target record (Powerball 17,280, Oz Lotto
++   8,760; not all of them are forecasts, section 7.2) computed again with the moved code and equal by
++   `canonical_content_digest`.
+@@ -226 +227,3 @@
+-   2026 (entry 128). The chat that took over that day (0B item 8) has the same rights and independence.
++   2026 (entry 128). The chat that took over that day ended on 23 November 2026 and is
++   history. **The present reviewer chat took over from H-2 v5r1 on 23 November 2026** (entry 175; 0B item 13), with
++   the same rights and independence.
+@@ -440,2 +443,2 @@
+-- **The reviewer's handover (H-2).** **In force: H-2 v4, the reviewer's own full edition current to RAT-40, ratified by
+-  the owner on 22 November 2026 (RAT-41):**
++- **The reviewer's handover (H-2).** **Previously in force (RAT-41), now history: H-2 v4, the reviewer's own full edition current to
++  RAT-40, ratified by the owner on 22 November 2026:**
+@@ -450,2 +453,2 @@
+-  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those are the bytes in force.
+-  **In force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
++  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those were the bytes in force until RAT-43.
++  **The one installed reviewer handover now, in force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
+@@ -581 +584 @@
+-  minutes; the equivalence check of every old development forecast about 40 minutes (Powerball about 31, Oz Lotto
++  minutes; the equivalence check of every old development target record about 40 minutes (Powerball about 31, Oz Lotto
+@@ -646,4 +649,6 @@
+-  development forecast: 17,280 Powerball and 8,760 Oz Lotto.
+-- **Not in Git:** the old forecast run folders (26,040 development, three files each, and 800 Mode H) and attempts
+-  ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802 Oz Lotto
+-  development forecasts were never scored, so they exist only there. The transition check of build step 3 reads them;
++  development target record: 17,280 Powerball and 8,760 Oz Lotto. Not all of them are forecasts (the last item of
++  this section).
++- **Not in Git:** the old run folders (26,040 development target records, three files each, and 800 Mode H) and
++  attempts ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802
++  Oz Lotto development target records have no score, so they exist only there: 3,036 Powerball forecasts that were
++  never scored, and 2,802 `INSUFFICIENT_HISTORY` records in each game (the last item of this section). The transition check of build step 3 reads them;
+@@ -657,4 +662,8 @@
+-- **Of the old development records, 2,802 in each game are not forecasts:** the old system kept a record
+-  `INSUFFICIENT_HISTORY` for each target at which a variant did not yet have enough earlier draws. The comparison tool
+-  counts them apart (entries 205 to 208). The old system therefore kept 14,478 Powerball and 5,958 Oz Lotto
+-  development forecasts, and all of them are in the new lists.
++- **The old development records, counted exactly** (entries 205 to 208; EX_295). A "target record" is what the old
++  system kept for one variant at one target; it is a forecast or an `INSUFFICIENT_HISTORY` record. **Powerball:** 17,280
++  target records = 14,478 forecasts + 2,802 `INSUFFICIENT_HISTORY` records; the rank ledgers name 11,442 scored
++  forecasts, so 3,036 forecasts were never scored, and 5,838 target records have no score. **Oz Lotto:** 8,760 =
++  5,958 forecasts, all of them scored, + 2,802 `INSUFFICIENT_HISTORY` records. **In all:** 26,040 = 20,436 forecasts +
++  5,604. Build step 2's comparison compared the content of the 20,436 forecasts with the new lists, and separately
++  found each of the 5,604 below its variant's `first_target`, where a new list has no line: for those it compared no
++  forecast content and no view digest, because the new system has none there.
+@@ -1223,0 +1233,2 @@
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` | `234e5917c2b980cc50a1a0f08fc77af320febdd0ee05f595abff32564714edc8` |
++| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md` | `f195212e0de626608b2fb7f96c71d3244b3770394baa28eb372449707f6f20aa` |
+@@ -1233,0 +1245 @@
++| `exchange/EX_295_ChatGPT.md` | `983f748344d41f07207f8fdc14b185264622b2817015bf6e9810947d58a6e641` |
+@@ -1271,2 +1283,2 @@
+-| 0B The state | heading's date; items 1 to 7 kept; items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
+-| 0C Notes on sections 1, 2, 2A | item 2: rulebook v0.7 |
++| 0B The state | heading's date; items 1 to 7 kept (in item 6 "target record" for "forecast", EX_295); items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
++| 0C Notes on sections 1, 2, 2A | item 1: the present reviewer chat and its takeover (EX_295); item 2: rulebook v0.7 |
+@@ -1274 +1286,3 @@
+-| 2B, 3, 4, 5, 6, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
++| 2B, 3, 4.1 to 4.3, 5, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
++| 4.4 History and working documents | H-2 v4 labelled as history and H-2 v5r1 as the one installed reviewer handover (EX_295) |
++| 6 Verified technical facts | one phrase: "target record" for "forecast" (EX_295) |
+@@ -1276 +1290 @@
+-| 7.2 Data and records | two items added: DEV's research results; the old insufficient-history records |
++| 7.2 Data and records | "target record" where all the old records are meant, and the never-scored counts put right (EX_295); two items added: DEV's research results; the old records counted exactly |
+@@ -1286 +1300 @@
+-| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, and the files a new chat now needs |
++| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, H-2 v5r1 and its blurb (EX_295), and the files a new chat now needs |

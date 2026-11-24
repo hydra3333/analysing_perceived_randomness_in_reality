@@ -24,8 +24,8 @@ entries 183 and 213). Built from the installed H-1 v9's Git bytes by `exchange/C
 with counted replacements; `H1_v9_TO_v10.diff` beside it is the exact difference. **Sections 1, 2 and 2A are still
 H-1 v7r1's bytes, unchanged** (the builder asserts it against v9). The sections rewritten are listed in Appendix B;
 everything else is v9's text.
-**Status:** CANDIDATE, 24 November 2026, for the reviewer's review and the owner's ratification (RAT-45). Until it
-is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
+**Status:** CANDIDATE, 24 November 2026, corrected after the reviewer's review (EX_295: three corrections of
+wording, all made), for its focused recheck and the owner's ratification (RAT-45). Until it is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
 carries whatever is newer. It authorises nothing.
 **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat; the
 project owner.
@@ -110,10 +110,14 @@ DEV_RESULTS = r'''- **DEV's research results** (24 November 2026; ignored by Git
   no line before it (specification 5.2). **The prevailing OV-1 has not started in DEV** and cannot until a tree
   exists to copy accepted results from (build step 3); the job says so at its end. The cloud workspace's own fill
   gave the same counts; it is suggestive only and is gone with the workspace.
-- **Of the old development records, 2,802 in each game are not forecasts:** the old system kept a record
-  `INSUFFICIENT_HISTORY` for each target at which a variant did not yet have enough earlier draws. The comparison tool
-  counts them apart (entries 205 to 208). The old system therefore kept 14,478 Powerball and 5,958 Oz Lotto
-  development forecasts, and all of them are in the new lists.
+- **The old development records, counted exactly** (entries 205 to 208; EX_295). A "target record" is what the old
+  system kept for one variant at one target; it is a forecast or an `INSUFFICIENT_HISTORY` record. **Powerball:** 17,280
+  target records = 14,478 forecasts + 2,802 `INSUFFICIENT_HISTORY` records; the rank ledgers name 11,442 scored
+  forecasts, so 3,036 forecasts were never scored, and 5,838 target records have no score. **Oz Lotto:** 8,760 =
+  5,958 forecasts, all of them scored, + 2,802 `INSUFFICIENT_HISTORY` records. **In all:** 26,040 = 20,436 forecasts +
+  5,604. Build step 2's comparison compared the content of the 20,436 forecasts with the new lists, and separately
+  found each of the 5,604 below its variant's `first_target`, where a new list has no line: for those it compared no
+  forecast content and no view digest, because the new system has none there.
 '''
 
 NOT_TESTED = r'''### 7.5 What has run, and what has not been tested by anyone
@@ -316,12 +320,14 @@ APPENDIX_B = r'''## Appendix B. What changed from H-1 v9
 | Header | rewritten for the state after build step 2; status CANDIDATE |
 | 0 First actions | item 2: the newer entries, build step 2's note and the reviewer's findings on it added to the reading list; the rulebook's edition |
 | 0A Things that trip a new chat | item 1: the research engine is installed; item 3: the newest numbers; items 12 to 15 added (CRLF record files and the changed-line count; no push during an install; the reviewer takes EX numbers; the old system's insufficient-history records) |
-| 0B The state | heading's date; items 1 to 7 kept; items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
-| 0C Notes on sections 1, 2, 2A | item 2: rulebook v0.7 |
+| 0B The state | heading's date; items 1 to 7 kept (in item 6 "target record" for "forecast", EX_295); items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
+| 0C Notes on sections 1, 2, 2A | item 1: the present reviewer chat and its takeover (EX_295); item 2: rulebook v0.7 |
 | 1, 2, 2A | **carried byte for byte** (still H-1 v7r1's bytes) |
-| 2B, 3, 4, 5, 6, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
+| 2B, 3, 4.1 to 4.3, 5, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
+| 4.4 History and working documents | H-2 v4 labelled as history and H-2 v5r1 as the one installed reviewer handover (EX_295) |
+| 6 Verified technical facts | one phrase: "target record" for "forecast" (EX_295) |
 | 7.1 The installed code | the research engine, the settings file and the suite's new known result (52 modules, 762 tests) |
-| 7.2 Data and records | two items added: DEV's research results; the old insufficient-history records |
+| 7.2 Data and records | "target record" where all the old records are meant, and the never-scored counts put right (EX_295); two items added: DEV's research results; the old records counted exactly |
 | 7.3 Staged work | one sentence: the OV-1 kernel is carried into `src/research/` byte for byte |
 | 7.4 The build's record | `step2/`, `rulebook_v0_7/` and the three task folders added |
 | 7.5 Not tested | rewritten: what has run, what has run only in tests, build step 2's known limits, what is still to measure |
@@ -331,7 +337,7 @@ APPENDIX_B = r'''## Appendix B. What changed from H-1 v9
 | 12 intro, 12.2, 12.3, 12.6 | brought up to date (the step 2 tools; what step 2 added to building a package; the owner's places, his scratch folder and the measured times) |
 | 12.4 Task files | rewritten as the practice of TASK_T025 to T027 |
 | 12.8 Open items | rewritten |
-| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, and the files a new chat now needs |
+| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, H-2 v5r1 and its blurb (EX_295), and the files a new chat now needs |
 | Appendix B | this one |
 
 Nothing binding was dropped: every v9 passage that was replaced described a state that has since moved on, and the
@@ -369,7 +375,7 @@ SMALL = (
      'The ratified design\'s **research engine is installed\n   beside it** (`src/research/`, build step 2); its trees, installs, backups and laboratory tools are **not coded**.',
      'section 0A item 1'),
     ('At this\n   edition: the last RAT is RAT-43 (this handover and H-2 v5r1); the newest EX is EX_281; the newest decision log\n   entry is 174 (RAT-43).',
-     'At this\n   edition: the last RAT is RAT-44 (the runner\'s rulebook v0.7); the newest EX is EX_294, and EX_295 is expected to\n   be the reviewer\'s reply on this candidate; the newest decision log entry is 213 (this candidate written).',
+     'At this\n   edition: the last RAT is RAT-44 (the runner\'s rulebook v0.7); the newest EX is EX_295 (the reviewer\'s review of\n   this edition\'s first candidate); the newest decision log entry is 214 (this candidate corrected).',
      'section 0A item 3'),
     ('    build every hash table from the bytes Git holds (`git show :<path>`), never from the working copy (EX_276 C03).\n',
      '    build every hash table from the bytes Git holds (`git show :<path>`), never from the working copy (EX_276 C03).\n'
@@ -439,4 +445,25 @@ SMALL = (
     ('Commits named in this file: `c7e6ed8` (the tidy-up installed)',
      'Commits named in this file: `5f16b35` (build step 2 installed); `c7e6ed8` (the tidy-up installed)',
      'Appendix A: the commits'),
+    ('every old development forecast (Powerball 17,280, Oz Lotto\n   8,760) computed again with the moved code and equal by `canonical_content_digest`.',
+     'every old development target record (Powerball 17,280, Oz Lotto\n   8,760; not all of them are forecasts, section 7.2) computed again with the moved code and equal by\n   `canonical_content_digest`.',
+     'section 0B item 6 (EX_295 H1V10-C01)'),
+    ('the equivalence check of every old development forecast about 40 minutes',
+     'the equivalence check of every old development target record about 40 minutes',
+     'section 6 (EX_295 H1V10-C01)'),
+    ('which list every published\n  development forecast: 17,280 Powerball and 8,760 Oz Lotto.',
+     'which list every published\n  development target record: 17,280 Powerball and 8,760 Oz Lotto. Not all of them are forecasts (the last item of\n  this section).',
+     'section 7.2, in Git (EX_295 H1V10-C01)'),
+    ('- **Not in Git:** the old forecast run folders (26,040 development, three files each, and 800 Mode H) and attempts\n  ledgers exist only on the owner\'s PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802 Oz Lotto\n  development forecasts were never scored, so they exist only there.',
+     '- **Not in Git:** the old run folders (26,040 development target records, three files each, and 800 Mode H) and\n  attempts ledgers exist only on the owner\'s PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802\n  Oz Lotto development target records have no score, so they exist only there: 3,036 Powerball forecasts that were\n  never scored, and 2,802 `INSUFFICIENT_HISTORY` records in each game (the last item of this section).',
+     'section 7.2, not in Git (EX_295 H1V10-C01)'),
+    ('**In force: H-2 v4, the reviewer\'s own full edition current to RAT-40, ratified by\n  the owner on 22 November 2026 (RAT-41):**',
+     '**Previously in force (RAT-41), now history: H-2 v4, the reviewer\'s own full edition current to\n  RAT-40, ratified by the owner on 22 November 2026:**',
+     'section 4.4: H-2 v4 is history (EX_295 H1V10-C02)'),
+    ('those are the bytes in force.\n  **In force since RAT-43 (entry 174): H-2 v5r1,**',
+     'those were the bytes in force until RAT-43.\n  **The one installed reviewer handover now, in force since RAT-43 (entry 174): H-2 v5r1,**',
+     'section 4.4: H-2 v5r1 is the one in force (EX_295 H1V10-C02)'),
+    ('The chat that took over that day (0B item 8) has the same rights and independence.',
+     'The chat that took over that day ended on 23 November 2026 and is\n   history. **The present reviewer chat took over from H-2 v5r1 on 23 November 2026** (entry 175; 0B item 13), with\n   the same rights and independence.',
+     'section 0C item 1 (EX_295 H1V10-C03)'),
 )

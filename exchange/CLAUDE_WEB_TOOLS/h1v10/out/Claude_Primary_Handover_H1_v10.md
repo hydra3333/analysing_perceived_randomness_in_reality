@@ -7,8 +7,8 @@ entries 183 and 213). Built from the installed H-1 v9's Git bytes by `exchange/C
 with counted replacements; `H1_v9_TO_v10.diff` beside it is the exact difference. **Sections 1, 2 and 2A are still
 H-1 v7r1's bytes, unchanged** (the builder asserts it against v9). The sections rewritten are listed in Appendix B;
 everything else is v9's text.
-**Status:** CANDIDATE, 24 November 2026, for the reviewer's review and the owner's ratification (RAT-45). Until it
-is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
+**Status:** CANDIDATE, 24 November 2026, corrected after the reviewer's review (EX_295: three corrections of
+wording, all made), for its focused recheck and the owner's ratification (RAT-45). Until it is ratified, H-1 v9 (RAT-43) is the installed Claude handover, and `exchange/CONTINUITY_NOW.md` with the decision log
 carries whatever is newer. It authorises nothing.
 **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat; the
 project owner.
@@ -106,8 +106,8 @@ never write the owner's personal name in anything committed (write "the project 
 3. **Read the log for a number before using one.** Register v0.32 (section 4.4) is the newest edition; it records
    RAT-34's install to RAT-40 and its own ratification. For anything later the decision log is the record. Read the
    log for the last RAT number, the last entry number and the last EX number before using a new one. At this
-   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_294, and EX_295 is expected to
-   be the reviewer's reply on this candidate; the newest decision log entry is 213 (this candidate written).
+   edition: the last RAT is RAT-44 (the runner's rulebook v0.7); the newest EX is EX_295 (the reviewer's review of
+   this edition's first candidate); the newest decision log entry is 214 (this candidate corrected).
 4. **Commit IDs changed on 6 November 2026.** A history clean-up renumbered the 27 commits of 5 and 6 November 2026.
    A record that cites one of them uses its OLD ID, and `git show <old id>` fails. Translate with
    `exchange/HISTORY_CLEANUP_2026_11_06/commit-map.txt`. Every file hash in every record is unchanged. Commits from
@@ -178,8 +178,9 @@ never write the owner's personal name in anything committed (write "the project 
    2026). Reviewed in EX_275 to EX_278 (one RECHECK of four narrow corrections). Before it the owner made his own ZIP of
    the whole project folder on E:, with `.git` and the Git-ignored old run folders, on four external drives (entry
    163): it is the way back to the old system (specification 17.2). On his PC: the suite identical before and after;
-   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development forecast (Powerball 17,280, Oz Lotto
-   8,760) computed again with the moved code and equal by `canonical_content_digest`.
+   **the equivalence check `RESULT: PASS - COMPLETE`**: every old development target record (Powerball 17,280, Oz Lotto
+   8,760; not all of them are forecasts, section 7.2) computed again with the moved code and equal by
+   `canonical_content_digest`.
 7. **The light tidy-up is INSTALLED and proved** (entries 165 to 169; `main` `c7e6ed8`). 37 method files got the coding
    practices' headers and comments; no code changed. The owner accepted leaving E_1's six byte-pinned modules as they
    are (entry 166). Reviewed in EX_279 and EX_280 (PASS). On his PC: a new comments-only check (`RESULT: PASS`), the
@@ -223,7 +224,9 @@ the Git rules and the owner's working preferences, none of which the redesign ch
 are to this edition's sections of the same number ("section 0B, item 4" is item 4 above). Where they are out of date:
 
 1. **Section 1.1, the reviewer chats.** The "present reviewer chat" it describes reached its limit on 21 November
-   2026 (entry 128). The chat that took over that day (0B item 8) has the same rights and independence.
+   2026 (entry 128). The chat that took over that day ended on 23 November 2026 and is
+   history. **The present reviewer chat took over from H-2 v5r1 on 23 November 2026** (entry 175; 0B item 13), with
+   the same rights and independence.
 2. **Section 1.1, the local runner.** The rulebook is now v0.7 (RAT-44, entry 192): it names the new system's
    commands as never run, except against a scratch tree under `D:\DELETE_ME\` when a task file says so (section
    8.6).
@@ -437,8 +440,8 @@ say so and ask.
   (`7d572400b941ad423978a7542d6c32fb73c934f0057240dbc5138898112bd53b`);
   `review/REVIEWER_FIX-and-PROCEED_RECHECK_PROCEDURE_v1.md`
   (`5067aa520990b8ccc8521a04f3581424100cdd94994f5b9e3cb9e37863685339`).
-- **The reviewer's handover (H-2).** **In force: H-2 v4, the reviewer's own full edition current to RAT-40, ratified by
-  the owner on 22 November 2026 (RAT-41):**
+- **The reviewer's handover (H-2).** **Previously in force (RAT-41), now history: H-2 v4, the reviewer's own full edition current to
+  RAT-40, ratified by the owner on 22 November 2026:**
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v4_RAT40_FULL_CANDIDATE_20261122.md`
   (`8fa44f67fe37679c3039ae2c9676f86d2bc1269204a9e342f423e157d0612ba8` as ratified; first committed at `30826be`, that
   content at `70719f5`; its blurb's at `adfd973`). Its file name still says CANDIDATE: frozen wording. It replaces H-2
@@ -447,8 +450,8 @@ say so and ask.
   four notes of ratification, the build order and the closed OV-1 question as this file does. Before it came the
   v3r10 continuity candidate of 21 November 2026, which Claude wrote on the owner's instruction when the previous
   reviewer chat was lost. **RAT-41 also covers the reviewer's refreshed H-2 v4** (entry 154: main `79406e4`, SHA-256
-  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those are the bytes in force.
-  **In force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
+  `b2837f08f8fd89134aebfbbed5815ca28b00f0ccebd1cb54c92f2f13c50cea2b`; its blurb at `35a2ebf`): those were the bytes in force until RAT-43.
+  **The one installed reviewer handover now, in force since RAT-43 (entry 174): H-2 v5r1,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` and its blurb. It is the
   reviewer's own H-2 v5 (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5_CANDIDATE_20261123.md`, committed at `23689ef`
   and `31db13b`) with its status statements refreshed by Claude after the reviewer chat ended (entry 173); its rights
   text and historical chapters are the reviewer's bytes. H-2 v4 and v5 stay as history.
@@ -578,7 +581,7 @@ closure: true of the old code, not needed until that code is touched.
 - **Byte-code caches:** with `PYTHONPYCACHEPREFIX` set, Python reads and writes cached byte-code only under that prefix, never in the `__pycache__/` folders beside the sources; `-B` (or `PYTHONDONTWRITEBYTECODE=1`) stops the writes; `-I` ignores both environment variables, so an isolated run needs `-B -X pycache_prefix=...` given directly. A sourceless `.pyc` outside `__pycache__/` is still importable. (Reproduced on CPython by the cold-read helper, 3 November 2026; design 4.1.)
 - **Reference figures** (fair-draw model, context only, never a veto): Powerball main matches mean 1.4, SD 0.9604; P(>=4) = 0.01826; P(>=5) = 0.00121; Powerball 0.05 per draw. Oz Lotto main-match mean 49/47.
 - **Run times measured on the owner's PC (23 November 2026):** the whole suite, one module per process, about 25
-  minutes; the equivalence check of every old development forecast about 40 minutes (Powerball about 31, Oz Lotto
+  minutes; the equivalence check of every old development target record about 40 minutes (Powerball about 31, Oz Lotto
   about 9; E_18 and the minimax fits take most of it). In the cloud workspace the suite took about 10 minutes and
   the scored-only equivalence check about 35.
 - **New in H-1 v8: DEV's working files are the install source.** If Git rewrites line endings in the owner's
@@ -643,10 +646,12 @@ closure: true of the old code, not needed until that code is touched.
 - **In Git:** the sealed Mode H records and reports (`c7622fa`); the development and Mode H score records (`cc665ce`);
   the earlier ranking reports; and the development batch records
   (`results/real/development/wf_batches/<GAME>/<batch>/plan.json` and `segment_*.json`), which list every published
-  development forecast: 17,280 Powerball and 8,760 Oz Lotto.
-- **Not in Git:** the old forecast run folders (26,040 development, three files each, and 800 Mode H) and attempts
-  ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802 Oz Lotto
-  development forecasts were never scored, so they exist only there. The transition check of build step 3 reads them;
+  development target record: 17,280 Powerball and 8,760 Oz Lotto. Not all of them are forecasts (the last item of
+  this section).
+- **Not in Git:** the old run folders (26,040 development target records, three files each, and 800 Mode H) and
+  attempts ledgers exist only on the owner's PC, in his backups and in his ZIP of entry 163. 5,838 Powerball and 2,802
+  Oz Lotto development target records have no score, so they exist only there: 3,036 Powerball forecasts that were
+  never scored, and 2,802 `INSUFFICIENT_HISTORY` records in each game (the last item of this section). The transition check of build step 3 reads them;
   **they stay until then** (entry 163; their cleanup is the owner's own act).
 - **DEV's research results** (24 November 2026; ignored by Git, on the owner's PC only): `results\research\<GAME>\`
   with `variants\<family>\<variant>\forecasts.jsonl` and `scores.jsonl`, the reports under `reports\` (start with
@@ -654,10 +659,14 @@ closure: true of the old code, not needed until that code is touched.
   no line before it (specification 5.2). **The prevailing OV-1 has not started in DEV** and cannot until a tree
   exists to copy accepted results from (build step 3); the job says so at its end. The cloud workspace's own fill
   gave the same counts; it is suggestive only and is gone with the workspace.
-- **Of the old development records, 2,802 in each game are not forecasts:** the old system kept a record
-  `INSUFFICIENT_HISTORY` for each target at which a variant did not yet have enough earlier draws. The comparison tool
-  counts them apart (entries 205 to 208). The old system therefore kept 14,478 Powerball and 5,958 Oz Lotto
-  development forecasts, and all of them are in the new lists.
+- **The old development records, counted exactly** (entries 205 to 208; EX_295). A "target record" is what the old
+  system kept for one variant at one target; it is a forecast or an `INSUFFICIENT_HISTORY` record. **Powerball:** 17,280
+  target records = 14,478 forecasts + 2,802 `INSUFFICIENT_HISTORY` records; the rank ledgers name 11,442 scored
+  forecasts, so 3,036 forecasts were never scored, and 5,838 target records have no score. **Oz Lotto:** 8,760 =
+  5,958 forecasts, all of them scored, + 2,802 `INSUFFICIENT_HISTORY` records. **In all:** 26,040 = 20,436 forecasts +
+  5,604. Build step 2's comparison compared the content of the 20,436 forecasts with the new lists, and separately
+  found each of the 5,604 below its variant's `first_target`, where a new list has no line: for those it compared no
+  forecast content and no view digest, because the new system has none there.
 
 ### 7.3 Staged work that is not installed and will not be installed as built
 
@@ -1221,6 +1230,8 @@ this file's and its blurb's are in the decision log entry that records each edit
 | `src/methods/Method_Contract_Runner.py` | `89db65847b0743b7242a1f5ab2f26d5bae73ae0736d091a8f018e4d44361beb7` |
 | `source_data/POWERBALL_results_master.csv` | `e4f2feb8b18fc2dbe389583a189fa26127a648f4da940dd76219ee282170f3e0` |
 | `source_data/OZLOTTO_results_master.csv` | `63e3349333f8aa0485b7b067abe70249e39de81c6d02cda1a5710cf1041a4e9e` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123.md` | `234e5917c2b980cc50a1a0f08fc77af320febdd0ee05f595abff32564714edc8` |
+| `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v5r1_20261123_introductory_blurb.md` | `f195212e0de626608b2fb7f96c71d3244b3770394baa28eb372449707f6f20aa` |
 | `exchange/EX_283_ChatGPT.md` | `13994645ab0cb9a9d1dd0008dd8690db28313e2c6ccbf4c3061bcde600f30be8` |
 | `exchange/EX_285_ChatGPT.md` | `fb42367a43891fc6a405356629dd1a0d7c967fd6872cf9da506a239037d00581` |
 | `exchange/EX_286_ChatGPT.md` | `3f5e07f6611927b12231aa28134f69e07738a0203d121278bf3049c2350e31ff` |
@@ -1231,6 +1242,7 @@ this file's and its blurb's are in the decision log entry that records each edit
 | `exchange/EX_292_ChatGPT.md` | `13a2bfd95e7989f1b737bcfe36c094d7e09ec60be875847427e764ddb3d53845` |
 | `exchange/EX_293_Claude/EX_293_Claude.md` | `1c693c612820b1bb9489900416c61b5e74f103d64a942bb17e127f5bd50030ba` |
 | `exchange/EX_294_ChatGPT.md` | `9f59ae4fd1318e6c36bd639221df442ec9566222b40723975b99ed08ba5c8ce1` |
+| `exchange/EX_295_ChatGPT.md` | `983f748344d41f07207f8fdc14b185264622b2817015bf6e9810947d58a6e641` |
 | `exchange/CLAUDE_WEB_TOOLS/step2/STEP2_PACKAGE_NOTE_v0_3.md` | `3d14dbc9c68e406355af07e8e8d16a2b44687a74bb76851e1f5ea332eca28ccf` |
 | `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/STEP2_Research_Engine_v1r3.zip` | `e80e87ae4d0d9e9baaa15b8f2a405df717f66eb6be7de4126b734ad374bc6926` |
 | `exchange/CLAUDE_WEB_TOOLS/step2/package_v1r3/INSTALL_AND_RUN_SHEET.md` | `9fa3ee880519d90ca497e4cabdb93c080e3cae11a664ff0ce68b7ee9dadd2310` |
@@ -1268,12 +1280,14 @@ Appendix A names the commits of the design rounds.
 | Header | rewritten for the state after build step 2; status CANDIDATE |
 | 0 First actions | item 2: the newer entries, build step 2's note and the reviewer's findings on it added to the reading list; the rulebook's edition |
 | 0A Things that trip a new chat | item 1: the research engine is installed; item 3: the newest numbers; items 12 to 15 added (CRLF record files and the changed-line count; no push during an install; the reviewer takes EX numbers; the old system's insufficient-history records) |
-| 0B The state | heading's date; items 1 to 7 kept; items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
-| 0C Notes on sections 1, 2, 2A | item 2: rulebook v0.7 |
+| 0B The state | heading's date; items 1 to 7 kept (in item 6 "target record" for "forecast", EX_295); items 8 to 10 replaced by items 8 to 13 (build step 2; the rehearsal and rulebook v0.7; the owner's decisions for step 3; what is authorised; what is owed; the chats) |
+| 0C Notes on sections 1, 2, 2A | item 1: the present reviewer chat and its takeover (EX_295); item 2: rulebook v0.7 |
 | 1, 2, 2A | **carried byte for byte** (still H-1 v7r1's bytes) |
-| 2B, 3, 4, 5, 6, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
+| 2B, 3, 4.1 to 4.3, 5, 8.1 to 8.5, 8.7, 9, 11, 12.1, 12.5, 12.9 | unchanged |
+| 4.4 History and working documents | H-2 v4 labelled as history and H-2 v5r1 as the one installed reviewer handover (EX_295) |
+| 6 Verified technical facts | one phrase: "target record" for "forecast" (EX_295) |
 | 7.1 The installed code | the research engine, the settings file and the suite's new known result (52 modules, 762 tests) |
-| 7.2 Data and records | two items added: DEV's research results; the old insufficient-history records |
+| 7.2 Data and records | "target record" where all the old records are meant, and the never-scored counts put right (EX_295); two items added: DEV's research results; the old records counted exactly |
 | 7.3 Staged work | one sentence: the OV-1 kernel is carried into `src/research/` byte for byte |
 | 7.4 The build's record | `step2/`, `rulebook_v0_7/` and the three task folders added |
 | 7.5 Not tested | rewritten: what has run, what has run only in tests, build step 2's known limits, what is still to measure |
@@ -1283,7 +1297,7 @@ Appendix A names the commits of the design rounds.
 | 12 intro, 12.2, 12.3, 12.6 | brought up to date (the step 2 tools; what step 2 added to building a package; the owner's places, his scratch folder and the measured times) |
 | 12.4 Task files | rewritten as the practice of TASK_T025 to T027 |
 | 12.8 Open items | rewritten |
-| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, and the files a new chat now needs |
+| Appendix A | rebuilt from HEAD: v9's files with their hashes computed again, H-1 v9 in place of H-1 v8, H-2 v5r1 and its blurb (EX_295), and the files a new chat now needs |
 | Appendix B | this one |
 
 Nothing binding was dropped: every v9 passage that was replaced described a state that has since moved on, and the

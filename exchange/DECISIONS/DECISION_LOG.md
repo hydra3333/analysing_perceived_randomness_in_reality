@@ -4465,3 +4465,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **State:** a CANDIDATE with no force. H-1 v9 (RAT-43) stays the installed Claude handover. The reviewer's reply is
   expected as EX_295; then the owner's ratification (RAT-45) and the install in `doc/HANDOVER/` by a script.
 - Next numbers: EX_295 (the reviewer's reply on H-1 v10); entry 214; RAT-45.
+
+## 214. 24 November 2026, 15:32 - EX_295 received (the H-1 v10 candidate: RECHECK, three corrections of wording); all three made; the corrected candidate committed
+
+- **EX_295 (reviewer; main `c98bec9`; SHA-256 `983f748344d41f07207f8fdc14b185264622b2817015bf6e9810947d58a6e641`), relayed by
+  the owner at 15:30:** it verified both hashes, rebuilt v10 from the installed v9 with the diff, and confirmed that
+  sections 1, 2 and 2A are unchanged; "No binding scientific, safety, role, review-rights or owner-approval rule was
+  found missing." Three corrections. **H1V10-C01:** passages carried from v9 call all 26,040 old development records
+  "forecasts" and say 5,838 and 2,802 "forecasts were never scored", which contradicts the new text. **H1V10-C02:**
+  section 4.4 says "In force" of both H-2 v4 and H-2 v5r1, and Appendix A lacks H-2 v5r1 and its blurb. **H1V10-C03:**
+  section 0C item 1 points to "0B item 8" for the reviewer chat, which in v10 is build step 2.
+- **All three made, and nothing else** (the owner's relay: "Please make only these corrections"):
+  1. **C01.** "Target record" where all the old records are meant: section 0B item 6, section 6 (one phrase), and
+     section 7.2's two carried items; the never-scored statement put right; and Claude's own last item of 7.2
+     rewritten as the exact count. Powerball: 17,280 target records = 14,478 forecasts + 2,802
+     `INSUFFICIENT_HISTORY` records; 11,442 forecasts scored, so 3,036 forecasts never scored and 5,838 records with no
+     score. Oz Lotto: 8,760 = 5,958 forecasts, all scored, + 2,802. In all 26,040 = 20,436 + 5,604. It also says what
+     build step 2's comparison did and did not compare for the 5,604.
+  2. **C02.** Section 4.4: H-2 v4 is "previously in force (RAT-41), now history"; H-2 v5r1 is "the one installed
+     reviewer handover now". Appendix A gains H-2 v5r1 and its blurb, with hashes computed by the builder; they equal
+     the two values the reviewer computed (`234e5917...714edc8`, `f195212e...6f20aa`). No reviewer file was touched.
+  3. **C03.** Section 0C item 1: the chat of 21 November is history; the present reviewer chat took over from H-2
+     v5r1 on 23 November 2026 (entry 175; 0B item 13). The carried section 1.1 is not changed.
+  With them: the status line says the candidate is corrected; section 0A item 3's newest numbers; Appendix B's rows
+  for the sections touched; `exchange/EX_295_ChatGPT.md` added to Appendix A.
+- **The corrected candidate:** `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` (1322 lines; SHA-256
+  `a769316d0f886595966a73e1d047173036dd4523a362921cdf18bfd15b07960b`). The blurb is unchanged (`6c0ab5cf4133628edcfbe602e2aa7b362b13c2f9f331054bba9cf4fd4761cfb9`). `H1_v10_EX295_CORRECTION.diff` (SHA-256 `4ca460064f853941617cf9b3ca00fa56a2162fa1c10e57ce30dc3b1286108028`; 15 hunks) is the
+  exact difference from the candidate the reviewer read (`41a1ab74...1164f8db`, main `5ce22e8`); `H1_v9_TO_v10.diff` (SHA-256
+  `43486967d9174bc6fabac5517cce8b27bd28bed7f86d54b5d462eaad4cccc8cf`) is rebuilt. Both, applied with `patch`, give the corrected candidate (checked). Built by the same builder:
+  22 short replacements, 2 insertions, 9 sections replaced; sections 1, 2 and 2A carried byte for byte (asserted).
+- **State:** a CANDIDATE with no force, waiting for the reviewer's focused recheck; then the owner's ratification
+  (RAT-45). H-1 v9 stays installed.
+- Next numbers: EX_296 (the reviewer's recheck); entry 215; RAT-45.
