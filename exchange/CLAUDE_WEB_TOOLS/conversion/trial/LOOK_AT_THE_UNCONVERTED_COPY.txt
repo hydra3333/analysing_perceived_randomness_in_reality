@@ -1,0 +1,4 @@
+FILE-FORM CONVERSION - START - the tree at <workspace>/trial_copy - LOOK ONLY: nothing will be changed
+  The conversion list: 686 files; its SHA-256 is 7753b3fdffc6e5477aee9a850969a7e041c9995826797054d529f57bcde9b306
+STOP: <workspace>/trial_copy/deploy/file_form.py is not the file the conversion list expects (found no such file). Copy the package's files into the tree first, as the sheet says, then run this again.
+FILE-FORM CONVERSION - END - STOPPED. Read the STOP line above. Nothing is half-written.

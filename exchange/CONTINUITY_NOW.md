@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 20:27 Australia/Adelaide (entry 244: RAT-48, H-1 v11 ratified and installed after EX_307; a new Claude chat starts from its blurb in doc/HANDOVER/; next: the conversion in the cloud).
+**Last updated:** 24 November 2026, 21:03 Australia/Adelaide (entry 245: the conversion's cloud work is written and trialled; next: the refresh and commit commands, the sheet, the package, then the reviewer).
 
 ## For the owner: NOW
 
+- **THE CONVERSION'S CLOUD WORK IS WRITTEN AND TRIALLED (entry 245; 24 November 2026, evening). Working files, not
+  a package.** Under `exchange/CLAUDE_WEB_TOOLS/conversion/` (start with `NOTES_FOR_THE_PACKAGE.md`): the engine's
+  writers changed to CRLF, the conversion list (686 files), the conversion program with a look-only mode, the Git
+  settings, and the trial's evidence (suite 762 of 762 the same; forecasts and scores unchanged on four
+  variants). **Next, by Claude:** the refresh and commit commands, the sheet, the package; then the reviewer.
+  **Then, each on the owner's own go:** a look-only run in his real DEV, a rehearsal by the runner, the day.
+  **Nothing waits on the owner now.** Claude's next numbers: EX_308, entry 246, RAT-49.
 - **RAT-48: H-1 v11 IS RATIFIED AND INSTALLED (entry 244; 24 November 2026, evening).** In force for a Claude chat:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v11.md` (`91a9c181...c09318`) and its blurb
   `Claude_Primary_Handover_H1_v11_introductory_blurb.md` (`16d7feed...9b5ec`): **a new Claude chat is started by
@@ -16,7 +23,7 @@ durable EX messages are authoritative.
   level 9, the conversion is begun. **Nothing waits on the owner or the reviewer.** **Claude's work now:** the
   conversion in the cloud (the list, the engine's writers, the conversion program, the Git settings, a full
   trial), then one package to the reviewer; the rehearsal and the day on the owner's PC are each his own go.
-  Claude's next numbers: EX_308, entry 245, RAT-49.
+  (The cloud work was done the same evening: the bullet above.)
 - **TASK_T028 r1 RAN: PASS (entries 239 and 240; 24 November 2026, evening).** Report
   `CLAUDE_CODE_WORKING_FOLDER_TREE/outbox/REPORT_T028.md` at `b31ec37`. In short: Windows refuses a rename, wholly,
   while anything is open in the folder; the standard library reads the process table as well as psutil does

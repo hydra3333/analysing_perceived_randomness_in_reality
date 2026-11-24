@@ -1,0 +1,36 @@
+The cloud trial of the conversion program, 24 November 2026 (Claude's own evidence; not Windows; not a review)
+
+Tree: a fresh clone of main at 9f27bc0, made to look like DEV: the workspace's research fill of build step 2
+(1,538 files under results/research), its 40 status files, a settings file, and one leftover line in records/.
+The owner's copy: a whole copy of that tree, made before the package's files were laid over it.
+
+1. The conversion list, from Git at 9f27bc0 with the package's 12 files laid over: 686 files listed; 673 change
+   bytes; 13 are in their form already (12 delivered by the package); 6 left out by name; no binary kinds.
+   Each "after" was proved to differ from its "before" in line endings only before the list was written.
+2. Look-only run on the unconverted tree: no finding (the output is LOOK_AT_THE_UNCONVERTED_COPY.txt, made
+   afterwards on the copy, where the package's files are not laid over: it therefore shows the findings a tree
+   without the package's files gives, which is the refusal it should give).
+3. The run, with CONVERT and REMOVE typed: 662 listed files converted and the settings file; 1,579 files removed
+   (research results, 40 status files, the leftover); all 686 listed files then at the list's "after"; the four
+   results files (two masters, two ledgers) with the SHA-256 they had before; exit code 0.
+   Byte for byte unchanged, compared with the copy: src/results_master_v0_2.py, src/package_tools/process_check.py,
+   source_data/POWERBALL_results_master.csv, source_data/HOLDOUT_OPENED_POWERBALL.json.
+4. A second run on the converted tree: nothing left to convert, no question asked, the proof again, exit code 0.
+5. The whole suite in the converted tree (SUITE_AFTER_MODULES.txt), compared test by test with the suite before
+   any conversion (SUITE_BEFORE_MODULES.txt, this morning's baseline on the same src and tests):
+   762 tests in both runs, 762 with the same result; the three known failures the same three; 60 new tests, all
+   passing, among them the suite's check that every file under src, deploy, tests and the root is in its form
+   and the search for a write that names no line ending. (SUITE_COMPARISON_BEFORE_AFTER.txt; its last line says
+   DIFFERENCES FOUND because of the 60 new tests.)
+6. The changed engine, run in a copy of the converted tree on four variants and both games (E_001
+   FULL_HISTORY_RAW_COUNTS_V1, E_002 RECUR_MEAN_ALL_V1, E_006 BETA_BERNOULLI_DECAY_149_150_V1, E_017
+   HAZARD_BINS_C100_V1; 77 seconds): 1,434 files written (689 .txt, 689 .csv, 16 .jsonl, 40 .ini); the project's
+   checker found every one in its form.
+7. Those eight forecast lists and eight score lists compared line by line with the lists of the fill made before
+   the conversion: 2,424 forecast lines and 2,416 score lines; every line's content the same but for the two
+   fields that record the changed bytes (the variant's fingerprint in a forecast; the forecast's digest in a
+   score). No forecast and no score differs. (Suggestive only: computed in the cloud, on four variants.)
+8. Planted faults: 11 of 11 caught in the engine's writers; 17 of 17 in the conversion program.
+
+Not covered: Windows; the owner's real tree and what it holds that Git does not track; the refresh of his working
+copy and the commit; the whole fill of 40 variants; the comparison with the old system's records.

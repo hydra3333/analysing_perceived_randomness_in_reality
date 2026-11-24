@@ -5464,3 +5464,54 @@ section 17.2 (unpack it into a new folder, never over the clone).
   that minute: 681 tracked files to convert under the root, `src`, `deploy` and `tests`, and 7 others; none with a
   stray carriage return, none that is not UTF-8, none of a kind the standard does not name.
 - Next numbers: EX_308; entry 245; RAT-49.
+
+## 245. 24 November 2026, 21:03 - the conversion's cloud work: the engine's writers, the list, the conversion program, the Git settings, and a full trial (working files; not a package, not reviewed, nothing installed)
+
+- **The owner, 20:32, to Claude:** "good. next please." (after RAT-48; the next work being the conversion's steps in
+  the cloud, set out to him at 20:24, entry 244.)
+- **Written, under `exchange/CLAUDE_WEB_TOOLS/conversion/`** (its `NOTES_FOR_THE_PACKAGE.md` lists every file):
+  - **The engine's writers** (`overlay/src/research/`): a new helper `windows_text.py`, the one place where the engine
+    turns its texts to CRLF, and four modules changed to use it: `reports.py` (every report file, the read-me
+    files, the side file of making times), `status_file.py` (the status file, whose check is now over the CRLF
+    bytes; a file in the old form is refused), `derived_check.py` (the not-current marker) and `job_lock.py` (lock
+    files). The lists (`.jsonl`) are not touched. Two lines of the old two-site checker's self-test name their line
+    ending. `deploy/INFRA_MANIFEST.ini` gains the helper (class `derived`). New tests `test_research_file_form.py`
+    (16), one of which runs a research job and a withdrawal in an invented tree and gives every file they wrote to
+    the project's checker.
+  - **The Git settings** (`git_settings/`, under plain names so that Git does not obey them where they lie):
+    `.gitattributes` as the one line `* -text`; `.gitignore` with the two readiness markers added. Tried in Windows
+    form in a scratch repository with `core.autocrlf=true`: Git stores and shows each file's own bytes.
+  - **The list builder** `make_conversion_list.py`: from Git at HEAD with the package's files laid over; today **686
+    files, of which 673 change bytes;** six left out by name; each "after" proved to differ from its "before" in
+    line endings only.
+  - **The conversion program** `tools/convert_to_file_form.py` (standard library; never calls Git) and its 36 tests.
+    It prints what it found by class and waits for the typed word `CONVERT`; a listed file is converted only from
+    the list's "before", passed over at its "after", and any third value stops the run before a change; the
+    tree's own settings file is converted by rule; what is made again is removed on a second typed word, `REMOVE`;
+    the results masters and ledgers are proved untouched; both locks are held; the owner's copy (a folder or a
+    ZIP) is checked first, and **on a second run against the hashes recorded at the first run** (the reviewer's
+    watchpoint, EX_305); a look-only mode changes nothing.
+- **Planted faults:** 11 of 11 caught in the writers; 17 of 17 in the conversion program (one was missed at first:
+  a file that appears between two runs; a test was added and it is caught).
+- **The trial** (`trial/TRIAL_OF_THE_CONVERSION_PROGRAM.txt`; a clone of `9f27bc0` made to look like DEV with the
+  workspace's fill): 662 listed files and the settings file converted, 1,579 files removed, all 686 at the list's
+  "after", the four results files unchanged; a second run changed nothing and asked nothing. **The whole suite
+  afterwards: 762 tests in both runs, 762 with the same result,** the three known failures the same three, and
+  60 new tests passing. The changed engine, run on four variants and both games, wrote 1,434 files, every one in
+  its form; **its 2,424 forecast lines and 2,416 score lines are the same as before the conversion** but for the
+  two fields that record the changed bytes (the variant's fingerprint; the forecast's digest). Suggestive only:
+  the cloud, four variants.
+- **Found on the way, for the sheet:** after `.gitattributes` becomes `* -text`, Git does not report a file whose
+  disk bytes differ from the index only in line endings until the file is touched or re-added. The commit of the
+  converted files and the one refresh of the owner's working copy therefore need exact commands, rehearsed by the
+  runner; a candidate is to stage the listed paths from a path file and then `git checkout-index --force --all`.
+- **Nine readings of the standard** to put to the reviewer with the package (the notes file, second list): among
+  them that the search of section 4 covers programs and not the tests' own code; that sixteen of the standard's
+  "17" lie in a file section 3A freezes; and that the program itself removes what is made again, on its own
+  typed word, instead of a typed `rmdir`.
+- **Still to do before it is a package:** the refresh and commit commands; the sheet; the package and its
+  verifying script; a rehearsal by the runner and a look-only run by the owner in his real DEV (each his own go);
+  slice A's working files brought to the standard.
+- **Not covered by anything yet:** Windows; the owner's real tree; the whole fill; the comparison with the old
+  system's records.
+- Next numbers: EX_308; entry 246; RAT-49.

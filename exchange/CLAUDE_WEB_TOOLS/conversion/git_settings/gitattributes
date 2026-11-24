@@ -1,0 +1,4 @@
+# The project's standard for the form of its files (doc/FILE_FORM_STANDARD_v0_1.md, RAT-47): Git converts no line
+# ending, in either direction, on any PC. What is on disk is what is committed. The folder GAIS/ is another
+# project's and keeps its own attribute files.
+* -text
