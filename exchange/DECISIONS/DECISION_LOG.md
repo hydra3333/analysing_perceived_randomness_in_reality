@@ -4813,3 +4813,34 @@ section 17.2 (unpack it into a new folder, never over the clone).
   inventory, `Check_Tree`, the launch guard, and the design amendment's wording (entry 222).
 - Nothing is authorised on the owner's PC. TASK_T028 r1 waits for his go.
 - Next numbers: EX_303; entry 226; RAT-47.
+
+## 226. 24 November 2026, 17:16 - the three CRLF files in DEV named; one of them is shared forecasting code; a question for the owner on how line endings are pinned
+
+- **The owner, 17:14, to Claude** (the output of `git ls-files --eol src deploy | find "w/crlf"`): the three files that
+  have CRLF line endings on his disk and LF in Git are `src/methods/E_001/e1_standalone_contract.py`,
+  `src/methods/_common/game_profiles.py` and `src/scrape_australian_powerball_history_from_2018_04_19_v0_3.py`.
+- **What each is.** `game_profiles.py` is on the infrastructure manifest with the class `forecast`: it is part of
+  the identity of the forecasting code, which every list's header records. The other two are on no manifest and
+  on no variant's lists (Claude searched the manifest and every `VARIANT.json`): they affect nothing.
+- **What follows, from the ratified specification.** DEV's lists were made with `game_profiles.py` as it lies on
+  the owner's disk, with CRLF. If that file's bytes changed in DEV (to LF, say), the identity of the forecasting
+  code would change, every list in DEV would be foreign and every variant held in both games (specification
+  5.6A), and no command clears a held variant before build step 4. The way out would be to remove DEV's research
+  results by hand and fill again (47 minutes). **`Init_Tree` copies DEV's bytes as they lie,** so whatever DEV holds
+  when QA and PROD are created is what they hold.
+- **Two ways of pinning, both tried by Claude in a throwaway Git repository made to match the owner's state**
+  (`core.autocrlf=true`; a file Git itself wrote with CRLF; the stored copy LF):
+  - **As it lies (`-text` for `src/**` and `deploy/**`):** Git converts nothing, ever, in either direction. Git then
+    shows the three files as changed; committed (after `git add --renormalize`), Git holds exactly the bytes on
+    the owner's disk, and a fresh clone with `core.autocrlf=true` gets the same bytes and the same hashes. DEV is
+    untouched: no identity changes, nothing is held. Three files keep their CRLF.
+  - **To LF (`text eol=lf`), as entry 181 worded it:** Git writes LF on every checkout. A file that is CRLF on disk
+    stays CRLF until it is checked out again, and Git calls it unchanged meanwhile: disk and repository can
+    differ without notice. Making `game_profiles.py` LF in DEV has the consequence above.
+- **Claude recommends "as it lies"**, as the stronger guarantee for a system whose identities are hashes of bytes
+  on disk (disk, repository and every clone equal, also after a hand edit), and because it changes nothing in
+  DEV. It departs from the wording of the owner's decision of entry 181 ("LF pinned"), not from its purpose, so
+  it is his to decide. Before either is packaged Claude runs the whole suite in the cloud with the file as the
+  owner has it.
+- **Not decided.** Nothing was changed anywhere; `.gitattributes` is as it was.
+- Next numbers: EX_303; entry 227; RAT-47.
