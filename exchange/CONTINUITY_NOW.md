@@ -4,13 +4,21 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 13:56 Australia/Adelaide (entries 210 and 211: BUILD STEP 2 IS INSTALLED IN DEV, commit 5f16b35, COMMITTED PASS, verified from GitHub; part 5 (the settings file) and, on the owner's separate go, DEV's first fill remain; then H-1 v10).
+**Last updated:** 24 November 2026, 15:02 Australia/Adelaide (entry 212: BUILD STEP 2 IS COMPLETE IN DEV: installed (commit 5f16b35), DEV's first fill run by the owner, the comparison with the old records PASS - COMPLETE; next: H-1 v10, then build step 3; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **BUILD STEP 2 IS COMPLETE IN DEV (entry 212; 24 November 2026).** Installed (commit `5f16b35`); `ENVIRONMENT.ini` made;
+  DEV's first fill run by the owner in 47 minutes (POWERBALL 15118 forecasts and 15078 scores, OZLOTTO 6598 and
+  6558); a second job with nothing to do in 3 minutes; the comparison with the old records `PASS - COMPLETE` (34800
+  old scores and 20436 old forecasts equal). DEV's research results are under `results\research\` (ignored by Git;
+  start with `results\research\POWERBALL\reports\README.txt`). The prevailing OV-1 has not started (it needs build
+  step 3). **Next, Claude:** H-1 v10 (the owner's standing word, entry 183), to the reviewer, then RAT-45. **Then
+  build step 3** (suggest Fable for its design). The owner may delete `D:\DELETE_ME\a_p_r_i_r\T025` and
+  `E:\TEMP\STEP2_baseline_clone`. **For step 3:** rewrite `ENVIRONMENT.example.ini` (entry 211); a tree's `.venv` is built
+  from a plain CMD window; a sheet's builder checks every path and says what must exist before starting.
 - **BUILD STEP 2 IS INSTALLED IN DEV (entry 210; 24 November 2026).** The owner's commit `5f16b35`, `COMMITTED PASS`,
-  pushed; Claude verified it from GitHub (the verifier, and all 35 files against the package). **Still to do, by the
-  owner:** the sheet's part 5 (`copy ENVIRONMENT.example.ini ENVIRONMENT.ini`, check it in Notepad). **Then, each his
+  pushed; Claude verified it from GitHub (the verifier, and all 35 files against the package). (Parts 5, 6 and 7 are done too: entry 212.) **Then, each his
   own go:** part 6, DEV's first fill (`Run_Research.bat --game BOTH --no-update`, about 46 minutes, then once more
   into a file), and part 7 (the comparison; expect the numbers of entry 208). **Then Claude writes H-1 v10.** Use the
   sheet of package v1r3; in its part 3 the comparison command names v1r2's folder by mistake (entry 209).

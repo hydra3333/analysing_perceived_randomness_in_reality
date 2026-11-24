@@ -4409,3 +4409,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   through that step's reviewed package: its head says what each section is and whose file it is, shows a QA tree's
   file beside DEV's, and carries the owner's real places. `Check_Tree.bat` prints how a file is read.
 - Next numbers: EX_295; entry 212; RAT-45.
+
+## 212. 24 November 2026, 15:02 - BUILD STEP 2 IS COMPLETE IN DEV: the settings file made, DEV's first fill run by the owner, the comparison with the old records PASS - COMPLETE
+
+- **Part 5 (the owner, 13:59):** after `git pull --ff-only` (to main `ef1f0e2`), `copy ENVIRONMENT.example.ini
+  ENVIRONMENT.ini`, the file looked at in Notepad and left as it is, `git status --short` printing nothing. His
+  observation on the example's wording is entry 211.
+- **Part 6, DEV's first fill, on the owner's own go** ("let me proceed with stuff under the notepad command"; he ran it
+  himself and sent the output at 15:01). `Run_Research.bat --game BOTH --no-update`, 14:01 to 14:48 (47 minutes), in
+  the DEV tree: `POWERBALL: finished. Results on file through draw 1591; written: 15118 forecasts, 15078 scores, 0
+  prevailing lines, 0 eligibility draws, 900 report files`; `OZLOTTO: finished. Results on file through draw 1708;
+  written: 6598 forecasts, 6558 scores, 0 prevailing lines, 0 eligibility draws, 474 report files`; each
+  `prevailing OV-1: not started; waiting for a successful results step`; no `WARNING`, `REFUSED` or `STOPPED`; last line
+  `The job finished.` **The same counts as the cloud's fill and as the rehearsal's, and the same progress lines.**
+- **The same job once more,** 14:50 to 14:53 (3 minutes): for each game `written: 0 forecasts, 0 scores, 0 prevailing
+  lines, 0 eligibility draws, 0 report files`; `The job finished.`; then `git status --short` printing nothing
+  (everything the job wrote is ignored by Git).
+- **Part 7, the comparison with the old development records, with the corrected tool of package v1r3:** the seven
+  lines the sheet expects. POWERBALL: 22884 old scores, all equal; 17280 old records read from the run folders,
+  14478 forecasts equal, 2802 `INSUFFICIENT_HISTORY` records before the variant's first target, `DIFFERENT: 0`, 640
+  new lines for other targets; 11442 forecasts named by the tracked rank ledgers, none missing. OZLOTTO: 11916;
+  8760, 5958, 2802, `DIFFERENT: 0`, 640; 5958, none missing. **`RESULT: PASS - COMPLETE - both games; all 34800 old
+  score records equal the new score lists; all 20436 old development forecasts ... the same view digest, scores,
+  ranking, TOP and WORST; the 5604 old INSUFFICIENT_HISTORY records all lie before their variants' first targets`.**
+  160 per-variant lines. Every number equals the rehearsal's (entry 208).
+- **So build step 2 is complete:** reviewed (EX_283, EX_285, EX_290, EX_294), rehearsed on Windows (TASK_T025, T026,
+  T027), installed in DEV (commit `5f16b35`, entry 210) and run. DEV now holds its own research results under
+  `results\research\` (ignored by Git): the lists of forty variants for each game, the scores and the reports
+  (start with `results\research\POWERBALL\reports\README.txt`). **What they are:** DEV's development results, from the
+  reviewed programs run by the owner. The prevailing OV-1 has not started in DEV and cannot until a tree exists to
+  copy results from (build step 3). Nothing here is a claim about the lottery: the comparison shows that the new
+  engine computes what the old one computed.
+- **The scratch folder `D:\DELETE_ME\a_p_r_i_r\T025` and `E:\TEMP\STEP2_baseline_clone`** are no longer needed; the owner
+  may delete both.
+- **Next:** H-1 v10 (the owner, entry 183: "ok to a full H-1 v10 once step 2 is installed"), then build step 3.
+- Next numbers: EX_295; entry 213; RAT-45.
