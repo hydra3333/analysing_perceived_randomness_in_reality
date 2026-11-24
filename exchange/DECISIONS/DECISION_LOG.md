@@ -4548,3 +4548,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not authorised by either ratification:** build step 3, a runner task, or anything on the owner's PC. No new chat
   has been started.
 - Next numbers: EX_298; entry 217; RAT-47.
+
+## 217. 24 November 2026, 15:53 - OWNER: THE GO FOR BUILD STEP 3 (trees, installs, backups and restore; then the transition check and PROD's first job)
+
+- **The owner, 15:53,** after Claude's "Suggest switching to Fable (High) for this" and its statement that it would
+  hold until he said go and would begin with a short build plan before any code: "Build step 3, go now please."
+- **What the go covers:** designing within the ratified documents, coding in the cloud workspace, testing there, and
+  preparing the reviewed packages of build step 3 (specification 12.1 to 12.6, 13 and 14.1; deployment design
+  v0.12). **What it does not cover:** any install, run, tree creation, backup, restore or runner task on his PC.
+  Each of those is his own separate go, as before.
+- **First deliverable:** the build plan, for the owner and the reviewer, before any code.
+- Next numbers: EX_298; entry 218; RAT-47.
