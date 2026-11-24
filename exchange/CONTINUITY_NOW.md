@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 18:30 Australia/Adelaide (entry 231: the owner decided the five open points of the file-form standard; its candidate v0.1 is written for the reviewer; then RAT-47; TASK_T028 r1 waits for his go).
+**Last updated:** 24 November 2026, 18:48 Australia/Adelaide (entry 232: the reviewer chat ended after EX_303; Claude's refresh of the reviewer's handover, the H-2 v6r2 candidate, is ready for starting a new reviewer chat; EX_303 is answered next).
 
 ## For the owner: NOW
 
+- **THE REVIEWER CHAT ENDED AFTER EX_303; A NEW ONE IS STARTED FROM CLAUDE'S REFRESH (entry 232; 24 November 2026).**
+  **To start a new reviewer chat, paste what is below the divider of**
+  `exchange/CLAUDE_WEB_TOOLS/h2v6r2/out/ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124_introductory_blurb.md`
+  (`c2273148...21215b`). It sends the new chat to the H-2 v6r2 candidate beside it (`b0783233...617621`): the installed
+  H-2 v6 with ten status statements changed and a new section 0.13 for everything since, written by Claude, **not
+  ratified and not checked by a reviewer** (it asks the new chat to verify it). In force for the reviewer: still
+  H-2 v6 (RAT-46). Ratifying and installing v6r2 is the owner's choice and would take the next RAT number. **EX_303**
+  (the file-form standard: FOCUSED RECHECK, four clarifications) is answered by Claude next with a v0.1r1
+  candidate; the new reviewer's likely first task is its recheck. Claude's next numbers: EX_304, entry 233, RAT-47.
 - **A STANDARD FOR THE FORM OF EVERY FILE, BEFORE SLICE A IS PACKAGED (entry 230; 24 November 2026).** The owner
   directs: a written standard listing each kind of file and its exact form; everything conforms, by a conversion
   program and its list, safely; Git's and GitHub's settings to match; a "Standards" section in the operations

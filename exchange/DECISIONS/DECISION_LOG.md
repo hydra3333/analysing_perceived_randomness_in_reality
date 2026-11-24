@@ -5026,3 +5026,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   program and its list, the engine's writers, the checker, the Git settings, the sheet, the runner's rehearsal.
   Nothing is converted anywhere. TASK_T028 r1 still waits for the owner's go.
 - Next numbers: EX_303; entry 232; RAT-47.
+
+## 232. 24 November 2026, 18:48 - the reviewer chat ended after EX_303; at the owner's request Claude refreshes the reviewer's installed H-2 v6 as the H-2 v6r2 CANDIDATE, for starting a new reviewer chat
+
+- **The owner, 18:44, to Claude:** "before you look at ex_303, chatgpt has just died on us yet again without notice.  As
+  a priority can you please check for it's latest handover doc(s) and update them to be current so we can do a
+  handover asap; once the handover is complete, please proceed with ex_303."
+- **Checked against `main` (`27a18a2`):** the reviewer's newest handover is the installed H-2 v6 (RAT-46, entry 216;
+  SHA-256 `588c52b9c08781956330676a3c13bda99b0c8fd90211139f74c26503adf174a1`) with its blurb (`58c8f5b2b13dabc63f3739c04a42dd6bb30784fcf9c40b504e65da72c8c8efe3`); the reviewer committed
+  nothing after EX_303 (`27a18a2`, SHA-256 `bb88b1ca53c560c20360d949550843907c94c4b66c97e5b170b2a1fc6f90172c`). H-2 v6's evidence cutoff is entry 215; it knows
+  nothing of entries 216 to 231 or of EX_297 to EX_303.
+- **What Claude did, as on 21 and 23 November 2026 (H-2 v3r10, H-2 v5r1; entry 173): a new file, the reviewer's
+  files not changed.** `exchange/CLAUDE_WEB_TOOLS/h2v6r2/make_h2_v6r2.py` with `h2_v6r2_texts.py` reads the installed
+  H-2 v6 and its blurb from Git (each asserted by SHA-256), makes ten counted replacements of status statements in
+  chapter 0 (the title; a refresh notice; RAT-46 recorded as entry 216; build step 3's GO; the superseded "pin
+  LF" sentence; the housekeeping paragraph; section 0.12's first sentence), each marked "v6r2", and adds **one new
+  section, 0.13,** with everything since: the records; build step 3's GO and plan, its review and the owner's
+  decisions; the process readers; TASK_T028 r1; the operations manual; slice A's working files; the owner's
+  principle on Git; line endings and the file-form standard with its trial and his five decisions; EX_303 and its
+  four clarifications; Mode H; the state of his PC; the order of work. Sections 0.4 and 0.5 and the historical
+  chapters 1-19 are byte-identical (asserted). The blurb likewise, by seven counted replacements.
+- **Written, under `exchange/CLAUDE_WEB_TOOLS/h2v6r2/out/`:**
+  - `ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124.md`, SHA-256 `b078323351f37d370980d9a75dfcae98834f7cec7d94d0e1e6fb894da3617621`;
+  - `ChatGPT_Reviewer_Handover_H2_v6r2_CANDIDATE_20261124_introductory_blurb.md`, SHA-256 `c227314861daa9994bf9e6ff9da455759ee76a89d564ed04c47816754221215b`;
+  - `H2_v6_TO_v6r2.diff` and `H2_v6_TO_v6r2_blurb.diff`: each, applied with `patch` to the installed file, gives the
+    candidate byte for byte (checked with `cmp`). Every SHA-256 quoted in section 0.13 was checked against its
+    file by a script.
+- **Its standing:** a CANDIDATE written by Claude; not ratified; no reviewer has checked it; the blurb and the
+  refresh notice say so and ask the new reviewer chat to verify it against H-2 v6, the decision log and the
+  repository. **In force for the reviewer: still H-2 v6 (RAT-46).** The owner can start the new chat from the
+  candidate's blurb at once; ratifying and installing it in `doc/HANDOVER/` is his to choose, now or after the new
+  reviewer has checked it, and would take the next RAT number.
+- **EX_303** (FOCUSED RECHECK of the file-form standard's wording before ratification; four clarifications, FFS-C01
+  to FFS-C04): read for this refresh only; Claude answers it next, as the owner asked. **The reviewer has used
+  EX_303; Claude's next number is EX_304.**
+- Next numbers: EX_304; entry 233; RAT-47.
