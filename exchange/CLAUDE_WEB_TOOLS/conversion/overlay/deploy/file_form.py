@@ -11,7 +11,7 @@ What this file is for
     reads the disk only: it never asks Git anything, and it never looks inside a tree's .venv.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_1.md (RAT-47): section 3 (the list), 3A (the six files left out by name), 3B (what
+    doc/FILE_FORM_STANDARD_v0_2.md (RAT-49): section 3 (the list), 3A (the six files left out by name), 3B (what
     conforms means), 4 (every program says what it writes) and 6 (the checker).
 
 Which of the project's own modules it uses
@@ -83,7 +83,7 @@ NEVER_WALKED_FOLDERS = ('__pycache__',)
 REPARSE_POINT_ATTRIBUTE = 0x400
 # The rule in one paragraph, with its exception: the standard requires that the exception is said wherever the
 # rule is summarised (section 3), so every message of the checker ends with this.
-RULE_IN_SHORT = ('The standard (doc/FILE_FORM_STANDARD_v0_1.md): every text file of the project ends its lines CRLF. '
+RULE_IN_SHORT = ('The standard (doc/FILE_FORM_STANDARD_v0_2.md): every text file of the project ends its lines CRLF. '
                  'The one exception: every .jsonl file ends its lines LF, because the line ending is part of what '
                  'its hash chain is computed from.')
 # What a person does about a file in the wrong form (standard section 10).

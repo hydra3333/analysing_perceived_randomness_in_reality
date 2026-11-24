@@ -1,7 +1,7 @@
 """Tests of the conversion program of the file-form standard, on an invented tree.
 
 Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_1.md section 7; the reviewer's watchpoint of
+(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_2.md section 7; the reviewer's watchpoint of
 EX_305 on a resumed run).
 
 Which of the project's own modules it uses

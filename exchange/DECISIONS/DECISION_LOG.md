@@ -5756,3 +5756,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   proper belongs to the package's review, as EX_310 says.
 - **Its standing:** a CANDIDATE. In force: v0.1 (RAT-47). The candidate v0.2 of entry 251 stays where it is.
 - Next numbers: EX_311; entry 253; RAT-49.
+
+## 253. 24 November 2026, 22:03 - RAT-49: THE OWNER RATIFIES THE FILE-FORM STANDARD v0.2 (the candidate v0.2r1) after the reviewer's focused PASS (EX_311); installed in doc/
+
+- **EX_311 (reviewer; main `2e6c400`; SHA-256 `d8c19eb85a05f5b97d02ef675fa1a55d2ea7ad617166222619822091a583b453`):** "FOCUSED
+  PASS. FFS2-C01 CLOSED. The section 5 wording observation is addressed. Recommend the exact v0.2r1 candidate for
+  owner ratification under RAT-49." It computed six hashes itself (all match) and applied the three narrow hunks
+  and the five whole hunks (each rebuilds the candidate exactly). It reviewed neither the conversion's programs
+  nor the other readings. On entry 252's clean-tree observation: "useful Claude evidence, not by itself proof
+  that tests never write and subsequently remove or restore in-scope files."
+- **The owner's ratification, 22:01, to Claude, in his own words:** "I ratify it per EX_311_ChatGPT.md committed at
+  main 2e6c400ce217de8252cf084f1417b7f8d49d3c00."
+- **RAT-49 is recorded** (RAT-48 was the last number used). **Installed** by
+  `exchange/CLAUDE_WEB_TOOLS/rat49/finalise_rat49.py` from the ratified candidate
+  (`6939095c5cd23bb1910559966bfad51d32b94a4c6d2a7d1fde2f2bb405a67a69`, asserted by hash):
+  **`doc/FILE_FORM_STANDARD_v0_2.md`, SHA-256 `73d52529d52e743b16942ffada69df239d72cc019844f4c73476d6d38db1e680`** (363 lines).
+- **Three passages differ from the ratified candidate,** each a statement of its own standing
+  (`rat49/FILE_FORM_STANDARD_v0_2r1_CANDIDATE_TO_FINAL.diff`, SHA-256
+  `470cf7fbd9846c141992a29d437de28158a42e0abad0bf097aaa3932efff09fd`; applied to the candidate with `patch` it gives the
+  installed file, checked with `cmp`): the title; the edition and status statement, with the owner's words; and
+  the candidate's own "not ratified". No rule and no fact was changed.
+- **`doc/FILE_FORM_STANDARD_v0_1.md` (RAT-47) stays in `doc/` as history. In force from now: v0.2.** What v0.2 changes
+  against v0.1: the root `.gitattributes` holds three lines (so that `GAIS\` is truly left as it is); the count and
+  place of the writes that name no line ending, and that a test writing an actual project file remains subject
+  to the standard; and that the refresh of the working copy and the staging are done by a program.
+- **The working files of the conversion now cite v0.2** (`exchange/CLAUDE_WEB_TOOLS/conversion/`: the rule module,
+  the engine's helper, the two tools, their tests, the list builder, the two Git settings files); their tests
+  pass again. The look kits and the trial's evidence are left as they were made.
+- **H-1 v11 (RAT-48) names v0.1 as the standard in force:** out of date by this entry; the decision log and the
+  continuity page prevail, as it says itself. The next handover edition corrects it.
+- **RAT-49 authorises the documentary installation and nothing else:** not the conversion, nor anything on the
+  owner's PC.
+- Next numbers: EX_312; entry 254; RAT-50.

@@ -9,7 +9,7 @@ What this file is for
     encoding, which ends in one line feed that is part of what is hashed.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_1.md (RAT-47) sections 1, 3 and 4.
+    doc/FILE_FORM_STANDARD_v0_2.md (RAT-49) sections 1, 3 and 4.
 
 Which of the project's own modules it uses
     None.

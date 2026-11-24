@@ -1,7 +1,7 @@
 # The conversion to the file-form standard: Claude's working notes (not a package; nothing here is reviewed or installed)
 
 **State, 24 November 2026, evening (decision log entry 245).** Everything in this folder is working material for
-the package that carries out `doc/FILE_FORM_STANDARD_v0_1.md` section 7. Nothing has run on the owner's PC.
+the package that carries out `doc/FILE_FORM_STANDARD_v0_2.md` section 7. Nothing has run on the owner's PC.
 
 ## What is here
 

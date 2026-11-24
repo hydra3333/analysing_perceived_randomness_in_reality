@@ -11,7 +11,7 @@ What this file is for
     The conversion program on the owner's PC then needs nothing but this list and the disk: it never asks Git.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_1.md (RAT-47) sections 2, 3, 3A and 7.
+    doc/FILE_FORM_STANDARD_v0_2.md (RAT-49) sections 2, 3, 3A and 7.
 
 Which of the project's own modules it uses
     file_form (overlay/deploy/)     the standard's rule: form_of, to_form, differ_in_line_endings_only,
@@ -112,7 +112,7 @@ def main(root: str, overlay: str, output: str) -> int:
     assert len(left_out) == len(file_form.LEFT_OUT_BY_NAME), f'the six files left out by name: found {left_out}'
     commit = subprocess.run(['git', '-C', root, 'rev-parse', 'HEAD'], check=True, capture_output=True,
                             text=True).stdout.strip()
-    document = {'kind': LIST_KIND, 'standard': 'doc/FILE_FORM_STANDARD_v0_1.md (RAT-47)',
+    document = {'kind': LIST_KIND, 'standard': 'doc/FILE_FORM_STANDARD_v0_2.md (RAT-49)',
                 'made_from_commit': commit,
                 'left_out_by_name': left_out, 'binary_by_kind': binary, 'files': entries}
     text = json.dumps(document, indent=1, ensure_ascii=True, sort_keys=True) + '\n'

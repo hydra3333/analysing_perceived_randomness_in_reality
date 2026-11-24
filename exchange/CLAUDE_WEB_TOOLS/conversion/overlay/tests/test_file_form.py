@@ -2,7 +2,7 @@
 DEV's files keep it.
 
 Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_1.md sections 3, 3A, 3B, 4 and 6).
+(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_2.md sections 3, 3A, 3B, 4 and 6).
 
 Which of the project's own modules it uses
     file_form (deploy/)     the code under test

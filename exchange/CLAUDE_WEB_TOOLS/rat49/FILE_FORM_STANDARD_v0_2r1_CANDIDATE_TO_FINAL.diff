@@ -1,0 +1,23 @@
+--- the standard v0.2r1 candidate (as passed in EX_311)
++++ the standard v0.2 (installed)
+@@ -1,3 +1,12 @@
+-# The project's standard for the form of its text files (line endings) - v0.2 CANDIDATE (v0.1, RAT-47, with one narrow amendment and two corrections of fact)
+-
+-**This edition: v0.2 CANDIDATE, 24 November 2026, evening.** It is v0.1 with three passages changed, each marked
++# The project's standard for the form of its text files (line endings) - v0.2 (OWNER-RATIFIED, RAT-49, 24 November 2026)
++
++**This edition: v0.2, OWNER-RATIFIED on 24 November 2026 (RAT-49, decision log entry 253),** as a note of
++ratification to the specification v0.6, beside the coding practices, after the reviewer's review (EX_310) and
++its FOCUSED PASS (EX_311) of the exact candidate v0.2r1 (SHA-256
++`6939095c5cd23bb1910559966bfad51d32b94a4c6d2a7d1fde2f2bb405a67a69`), of which this is the installed text;
++`exchange/CLAUDE_WEB_TOOLS/rat49/FILE_FORM_STANDARD_v0_2r1_CANDIDATE_TO_FINAL.diff` is the exact difference. The
++owner's words: "I ratify it per EX_311_ChatGPT.md". **It replaces v0.1 (RAT-47), which stays in `doc/` as
++history. It changes nothing by itself and authorises nothing on the owner's PC:** the conversion, every install
++and every run are each his own go.
++
++**What v0.2 is:** v0.1 with three passages changed, each marked
+@@ -14,2 +23,2 @@
+-`FILE_FORM_STANDARD_v0_1_TO_v0_2r1.diff` the whole difference from v0.1. **Not ratified; v0.1 stays in force
+-until the owner ratifies this.**
++`FILE_FORM_STANDARD_v0_1_TO_v0_2r1.diff` the whole difference from v0.1. **Ratified since (RAT-49): the
++statement at the head of this file.**

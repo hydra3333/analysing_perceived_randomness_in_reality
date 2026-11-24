@@ -19,7 +19,7 @@ What this file is for
     what Git is for. It is never a check of whether a tree may run.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_1.md section 5 ("What is on disk is what is committed"; "The owner's working copy
+    doc/FILE_FORM_STANDARD_v0_2.md section 5 ("What is on disk is what is committed"; "The owner's working copy
     needs one refresh, on the day"; "the commit is checked: the bytes staged for it are in the standard's form").
 
 Which of the project's own modules it uses

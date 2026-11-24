@@ -3,7 +3,7 @@
 (line endings), safely, once.
 
 What this file is for
-    The project's standard (doc/FILE_FORM_STANDARD_v0_1.md, RAT-47) gives every text file of the living project
+    The project's standard (doc/FILE_FORM_STANDARD_v0_2.md, RAT-49) gives every text file of the living project
     the Windows form, CRLF, and every line-record file (.jsonl) LF. This program brings an existing DEV tree to
     it. It walks the tree's own folders itself and never asks Git anything. A link, a junction or any other
     reparse point met there is named and is never entered or read. Before it changes anything it prints
@@ -17,7 +17,7 @@ What this file is for
     against the hashes recorded at the first run, not against files it has already converted.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_1.md section 7 (the conversion), with sections 3, 3A and 3B; the reviewer's
+    doc/FILE_FORM_STANDARD_v0_2.md section 7 (the conversion), with sections 3, 3A and 3B; the reviewer's
     watchpoint of EX_305 on a resumed run.
 
 Which of the project's own modules it uses

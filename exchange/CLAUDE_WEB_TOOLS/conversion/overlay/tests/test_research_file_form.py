@@ -2,7 +2,7 @@
 text file with each line ending CRLF, every line-record file (.jsonl) with LF.
 
 Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_1.md sections 1, 3, 3B and 4).
+(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_2.md sections 1, 3, 3B and 4).
 
 Which of the project's own modules it uses
     research_fixtures       invented trees, toy variants and the research job run in them

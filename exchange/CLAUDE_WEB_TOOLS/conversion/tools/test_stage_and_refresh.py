@@ -2,7 +2,7 @@
 repository whose Git converts line endings as the owner's does (core.autocrlf true).
 
 Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_1.md section 5).
+(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_2.md section 5).
 
 Which of the project's own modules it uses
     stage_and_refresh, convert_to_file_form (beside this file)     the program under test and what it shares

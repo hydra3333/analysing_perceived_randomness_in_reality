@@ -280,7 +280,7 @@ transitory_data/no_pycache_ever
 /scratch/
 VARIANT_STATUS.ini
 
-# The readiness markers of build step 3 (doc/FILE_FORM_STANDARD_v0_1.md section 5): the state of one tree, never
+# The readiness markers of build step 3 (doc/FILE_FORM_STANDARD_v0_2.md section 5): the state of one tree, never
 # tracked. Their staging folder lies under /records/, which is ignored above.
 I_AM_INSTALLABLE.json
 /deploy/INFRA_IS_INSTALLABLE.json
