@@ -4,16 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 24 November 2026, 15:42 Australia/Adelaide (entry 215: RAT-45, H-1 v10 ratified and installed; the reviewer's H-2 v6 is a candidate awaiting the owner's decision; build step 2 is complete in DEV; next is build step 3 on the owner's go; nothing on the owner's PC is authorised).
+**Last updated:** 24 November 2026, 15:52 Australia/Adelaide (entry 216: RAT-46, the reviewer's H-2 v6 ratified and installed; H-1 v10 (RAT-45) confirmed; both handovers are current; next is build step 3 on the owner's go; nothing on the owner's PC is authorised).
 
 ## For the owner: NOW
 
+- **BOTH HANDOVERS ARE CURRENT (entry 216; 24 November 2026).** **For a Claude chat: H-1 v10 (RAT-45),**
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v10.md`, started with its blurb. **For the reviewer: H-2 v6 (RAT-46),**
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_20261124.md` (`588c52b9...f174a1`) and its blurb, installed by the
+  reviewer itself. H-1 v10's own lines that call H-2 v6 a candidate are overtaken by this. **Waiting on the owner:**
+  his go for build step 3 (trees, installs, backups, restore; then PROD's first job). Suggest Fable (High) for its
+  design. No new chat has been started.
 - **RAT-45: H-1 v10 IS RATIFIED AND INSTALLED (entry 215; 24 November 2026).** In force for a Claude chat:
   `doc/HANDOVER/Claude_Primary_Handover_H1_v10.md` (`824e7f25...67a69b`) and its blurb
   `Claude_Primary_Handover_H1_v10_introductory_blurb.md`: **a new Claude chat is started by pasting that blurb.** In
-  force for the reviewer: still H-2 v5r1 (RAT-43). **The reviewer's H-2 v6 is a CANDIDATE** in `doc/HANDOVER/`
-  (EX_296); **waiting on the owner:** whether to ratify it (RAT-46), after the reviewer has brought its statements
-  about H-1 v10 up to date. **Next work:** build step 3, on the owner's own go (suggest Fable for its design).
+  force for the reviewer: still H-2 v5r1 (RAT-43). (The reviewer's H-2 v6 was then ratified and installed: RAT-46, entry 216.) **Next work:** build step 3, on the owner's own go (suggest Fable for its design).
 - **THE H-1 v10 CANDIDATE IS WRITTEN (entry 213; 24 November 2026).**
   `exchange/CLAUDE_WEB_TOOLS/h1v10/out/Claude_Primary_Handover_H1_v10.md` with its blurb and the exact diff from v9. It
   brings the Claude handover up to date after build step 2. EX_295 asked three corrections of wording, all made (entry 214). **Waiting on:** the reviewer's focused

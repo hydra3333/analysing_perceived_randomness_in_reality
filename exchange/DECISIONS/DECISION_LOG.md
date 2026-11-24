@@ -4527,3 +4527,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **RAT-45 authorises the documentary installation and nothing else:** not build step 3, a runner task, or anything
   on the owner's PC.
 - Next numbers: EX_297; entry 216; RAT-46.
+
+## 216. 24 November 2026, 15:52 - OWNER: RAT-45 confirmed in his own words; RAT-46: THE OWNER RATIFIES the reviewer's handover H-2 v6, installed by the reviewer
+
+- **The owner, 15:52, to Claude:** "i ratify rat45 and rat46." That confirms entry 215 (H-1 v10, which Claude had
+  installed on his relay) in his own words, and ratifies the reviewer's handover.
+- **RAT-46.** EX_297 (reviewer; main `e431192`; SHA-256 `fe1139ad4ace1a9d656888ea4b02a721ddbc0760033b2aaa0820c1571802fbd1`) records his words to the reviewer on the corrected
+  candidate H-2 v6r1 and its blurb: "I ratify it". **RAT-46 is recorded** (RAT-45 was the last number used).
+- **The reviewer made the documentary installation itself,** of its own files (commits `8d7bb1e` to `2938f52`):
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_20261124.md`, SHA-256 `588c52b9c08781956330676a3c13bda99b0c8fd90211139f74c26503adf174a1`, and its blurb
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v6_20261124_introductory_blurb.md`, SHA-256 `58c8f5b2b13dabc63f3739c04a42dd6bb30784fcf9c40b504e65da72c8c8efe3`. Claude computed both
+  hashes from the repository at `e431192`; they equal the values in EX_297. The candidate-to-final diffs are the
+  reviewer's, under `exchange/ChatGPT_REVIEWER_H2V6/`. Claude changed none of the reviewer's files.
+- **In force now:** for a Claude chat, H-1 v10 (RAT-45); for the reviewer, **H-2 v6 (RAT-46)**. H-1 v9, H-2 v5r1 and
+  the H-2 v6 candidates stay in `doc/HANDOVER/` as history.
+- **Overtaken by this entry, in a ratified file that is not edited:** H-1 v10 says, in its section 4.4, section 10
+  item 2 and section 12.8, that H-2 v5r1 is the installed reviewer handover and that H-2 v6 is a candidate awaiting
+  the owner's decision. That was true when H-1 v10 was installed, half an hour earlier. The decision log and the
+  continuity page prevail (H-1 v10's own "Authority" line).
+- **Not authorised by either ratification:** build step 3, a runner task, or anything on the owner's PC. No new chat
+  has been started.
+- Next numbers: EX_298; entry 217; RAT-47.
