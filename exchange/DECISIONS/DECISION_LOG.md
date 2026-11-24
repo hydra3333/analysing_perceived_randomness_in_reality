@@ -5101,3 +5101,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the new reviewer chat's focused recheck of v0.1r1, when the owner asks; then his ratification. Nothing
   is converted; no code is changed.
 - Next numbers: EX_304; entry 234; RAT-47.
+
+## 234. 24 November 2026, 18:59 - OWNER: `GAIS\` is out of the file-form standard's scope and keeps its own Git rules; a new reviewer chat is started
+
+- **The owner, 18:59, to Claude,** on the one point put to him (entry 233; the standard v0.1r1 section 8 item 6):
+  "re "One question for you" I was referring to yes to your recommendation, ok "`GAIS\`" tree is out of scope as
+  historical subproject, so yes to your recommendation. New blurb pasted to chatgpt now."
+- **DECIDED (owner):** the statement of the standard's section 5 stands: Git converts nothing anywhere in this
+  project; `GAIS\`, a historical subproject outside the standard's scope, keeps its own Git attribute files and
+  their rules. Nobody changes anything under `GAIS\` for this.
+- **The candidate is not reissued for it.** v0.1r1 (`5a4d8a23...f8485c`) is with the reviewer as it is; its section 8
+  item 6 says "put to the owner, not yet answered". That status line is brought up to date when the ratified
+  text is installed, by a script with its exact difference, as is done for the handovers.
+- **A new reviewer chat is started:** the owner pasted the blurb of the H-2 v6r2 candidate (entry 232). In force
+  for the reviewer: still H-2 v6 (RAT-46); v6r2 is Claude's unratified refresh, which the new chat is asked to
+  verify.
+- **Waiting on:** the new reviewer's takeover and its focused recheck of the standard v0.1r1; then the owner's
+  ratification of the standard; the owner's go for TASK_T028 r1.
+- Next numbers: EX_304; entry 235; RAT-47.
