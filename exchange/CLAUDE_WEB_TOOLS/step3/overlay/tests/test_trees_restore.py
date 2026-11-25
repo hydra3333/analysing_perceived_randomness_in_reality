@@ -142,6 +142,14 @@ class TheRecoveryKit(ABackedUpTreeAndItsKit):
         self.assertFalse(result.made)
         self.assertTrue(result.line().startswith('RECOVERY KIT NOT WRITTEN: '))
 
+    def test_a_kit_that_does_not_read_back_as_it_was_written_is_not_a_kit(self):
+        before = sorted(entry.name for entry in self.settings.backup_root.iterdir())
+        with mock.patch.object(zipfile.ZipFile, 'read', return_value=b'not what was written'):
+            result = recovery_kit.build_kit(self.dev, self.settings.backup_root, 'cd34' * 16, now=lambda: RESTORED_AT)
+        self.assertFalse(result.made)
+        self.assertIn('the kit read back is not what was written', result.reason)
+        self.assertEqual(sorted(entry.name for entry in self.settings.backup_root.iterdir()), before)
+
     def test_a_backup_names_the_kit_of_its_software_state(self):
         fingerprint = snapshot.software_fingerprint(self.qa)
         kit = recovery_kit.build_kit(self.dev, self.settings.backup_root, fingerprint, now=lambda: RESTORED_AT)
@@ -307,6 +315,15 @@ class NothingIsTouchedUnless(ABackedUpTreeAndItsKit):
         self.backup = other
         self.refused_untouched('"src/toy_other.py" is not the file that was backed up')
 
+    def test_a_backup_that_holds_a_member_its_manifest_does_not_list_refuses(self):
+        other = self.backup.with_name('QA_20261201_101012_MANUAL.zip')
+        with zipfile.ZipFile(self.backup) as old, zipfile.ZipFile(other, 'w') as new:
+            new.writestr('src/slipped_in.py', b'# not on the list\r\n')
+            for name in old.namelist():
+                new.writestr(name, old.read(name))
+        self.backup = other
+        self.refused_untouched('it does not hold exactly the files its manifest lists')
+
     def test_a_member_whose_name_would_leave_the_tree_refuses(self):
         other = self.backup.with_name('QA_20261201_101011_MANUAL.zip')
         manifest = {'kind': restore_tool.SNAPSHOT_MANIFEST_KIND, 'tree_root': str(self.qa), 'empty_folders': [],
@@ -414,6 +431,20 @@ class AStaleOrphanMarker(ABackedUpTreeAndItsKit):
                 before = tree_as_hashes(self.qa)
                 self.assertEqual(self.with_marker(typed, 3600), restore_tool.EXIT_REFUSED)
                 self.assert_nothing_was_touched(before)
+
+    def test_a_marker_only_in_the_old_tree_asks_the_same(self):
+        self.backup = sorted(self.settings.backup_root.glob('QA_*_MANUAL.zip'))[0]    # made before the marker was
+        with zipfile.ZipFile(self.backup) as archive:
+            self.assertNotIn(ORPHAN, archive.namelist())
+        before = tree_as_hashes(self.qa)
+        self.assertEqual(self.with_marker('YES', 3600), restore_tool.EXIT_REFUSED)
+        self.assertIn(str(self.qa / ORPHAN), self.text())
+        self.assert_nothing_was_touched(before)
+        self.said.clear()
+        self.assertEqual(self.with_marker(restore_tool.ORPHAN_ACKNOWLEDGEMENT, 3600), restore_tool.EXIT_RESTORED,
+                         self.text())
+        self.assertFalse((self.qa / ORPHAN).exists())
+        self.assertEqual(sorted((self.qa / 'records').glob('RESTORE_*_ORPHAN_MARKER.json')), [])
 
     def test_a_marker_only_in_the_backup_asks_the_same(self):
         (self.qa / ORPHAN).unlink()

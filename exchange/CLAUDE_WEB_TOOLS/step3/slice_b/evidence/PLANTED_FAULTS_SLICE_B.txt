@@ -1,0 +1,54 @@
+caught   | the two control files are backed up
+caught   | a third file is left out of a backup
+caught   | empty folders are not kept
+caught   | a link in the tree is followed or passed
+caught   | the archive is not read back
+caught   | a member that reads back as other bytes passes
+caught   | the sources are not read a second time
+caught   | a file changed during the backup passes
+caught   | a file added or removed during the backup passes
+caught   | no process check before the first reading
+caught   | no process check after the second reading
+caught   | a backup is made while a job or the updater holds its lock
+caught   | the backup takes no lock
+caught   | a failed backup leaves its ".partial"
+caught   | a backup of the same name is written over
+caught   | a verified backup does not remove the note that one is owed
+caught   | a failed backup removes the note that one is owed
+caught   | a backup is made of a tree unzipped by hand and not reconciled
+caught   | a job never tries first the backup that is owed
+caught   | no standing warning when no backup could be made
+caught   | the note that a backup is owed is never written
+caught   | the job does not write the note before its first write
+caught   | the job makes no backup at its end
+caught   | the job does not try an owed backup at its start
+caught   | a kit is built from a file the marker does not list
+caught   | the kit is not read back
+caught   | the kit has no manifest the tool can check
+caught   | a damaged kit passes its self-check
+caught   | a damaged member of the backup passes
+caught   | a backup with members its manifest does not list passes
+caught   | a member that would leave the tree is unpacked
+caught   | a ".partial" is taken for a backup
+caught   | the tool's own launcher above it is listed
+caught   | a newer program with a reused number is taken for the tool's parent
+caught   | pythonw.exe, py.exe and python3.15.exe are not Python
+caught   | a program whose name only begins with python is Python
+caught   | no process check before the old tree is renamed
+caught   | no process check after the old tree is renamed
+caught   | the settings file of the tree set aside keeps its name
+caught   | an orphan marker is restored live
+caught   | the settings file is not written last
+caught   | a fresh tree that is not the payload passes
+caught   | the progress file is left in a restored tree
+caught   | the orphan marker's bytes are not kept as evidence
+caught   | the orphan exception without a restart of the PC
+caught   | the orphan exception without its fresh process check
+caught   | the orphan exception without the typed sentence
+caught   | an orphan marker inside the backup asks nothing
+caught   | an orphan marker in the old tree asks nothing
+caught   | "ready" is said of an environment that did not start
+caught   | the reconciliation passes a tree that is not the backup
+caught   | the reconciliation leaves the manifest at the root
+caught   | the reconciliation's time is labelled as a restore's
+53 faults planted; 0 survived

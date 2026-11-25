@@ -8,6 +8,10 @@ durable EX messages are authoritative.
 
 ## For the owner: NOW
 
+- **SLICE B IS WRITTEN AND PROVED IN THE CLOUD (25 November 2026; working files; not reviewed):** the backup,
+  the recovery kit and the restore, with 55 tests; suite 61 modules, 1052 tests, the three known failures and no
+  other; planted faults 53 of 53 caught. **Waiting on the owner's word:** to put it to the reviewer (the package
+  note and the exact differences are written then). Where it stands, exactly: the file named in the next bullet.
 - **SLICE B HAS THE OWNER'S GO AND IS BEGUN (entry 288; 25 November 2026): backups, the recovery kit, restore.**
   Cloud design and coding only. Its plan and running notes, with exactly where it stands, are
   `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_B_PLAN_AND_NOTES.md`; its files go into the same overlay as slice A's. **A

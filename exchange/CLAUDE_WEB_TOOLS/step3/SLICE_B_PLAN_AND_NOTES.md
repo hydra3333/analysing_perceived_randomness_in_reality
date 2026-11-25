@@ -115,9 +115,20 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
   (29 tests); four lines added to the manifest's `[install_tool]`. `snapshot.py` also refuses a backup while a
   backup's manifest lies at the tree's root (a tree unzipped by hand and not yet reconciled: design section 12).
   In the cloud `test_trees_restore` (29) and `test_trees_snapshot` (23) are OK.
-- **Still to do for the slice:** the whole suite and its comparison; planted faults for B1, B2 and B3; a last read
-  of every new file against design sections 10 to 12; then the package note, the exact differences of the files
-  slice A's review passed, and the evidence, as for slice A. Then it is put to the owner for the reviewer.
+- **THE SLICE IS WRITTEN AND PROVED IN THE CLOUD** (Linux, Python 3.15.0b4; Claude's evidence only; nothing on
+  Windows). Evidence in `slice_b/evidence/`:
+  - the whole suite in a fresh clone with the overlay of slices A and B: 61 modules, 1052 tests. Against slice A
+    as it passed review: 1000 tests in both runs, all with the same result; 52 new (23 of the backup, 29 of the
+    kit and the restore), all OK. Against `main`: 829 of 830 with the same result (one removed in slice A), 223
+    new. The three known failing tests and no other.
+  - planted faults (`mutation_check_slice_b.py`): 53, one at a time. The first run caught 50; three survived (a
+    kit not read back; a backup holding a member its manifest does not list; an orphan marker only in the old
+    tree). **Three tests were added for them** and the run made again: 53 of 53 caught. `test_trees_restore` is
+    now 32 tests; **the whole suite has not been run again since those three tests were added** (no program file
+    changed; the module itself passes).
+- **Still to do before it goes to the reviewer (on the owner's word):** the package note; the exact differences
+  of the four files that slice A's review passed and this slice changes (`research_job.py`, `research_command.py`,
+  `INFRA_MANIFEST.ini`, `tests/test_trees_launch_guard.py`); one more run of the whole suite on the final files.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 
