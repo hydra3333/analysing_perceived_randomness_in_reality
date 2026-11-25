@@ -7277,3 +7277,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Kept safe against a stop part-way:** a plan-and-notes file for the slice and its working files are committed to
   `main` under `exchange/CLAUDE_WEB_TOOLS/step3/` as the work goes; the continuity page points to them.
 - Next numbers: EX_328; entry 302; RAT-59.
+
+## 302. 25 November 2026, 18:19 - the owner: go on with slice C; and after a model reset, check that nothing was lost
+
+- **The owner, 18:16:** "it is almost certain that fable model will run out of tokens or whatever during this
+  session (currently 98% used), when it does and I guess it stops, I will apply the free "Fable reset" and ask you
+  to continue where you left off - when that happens please double check that nothing is lost or forgotten etc
+  during that transition. go on."
+- **What is done about it:** the slice's notes file gains section 0, "On resuming", a short list of checks to make
+  before any further work (the repository and `origin/main` agree; the workspace's working files agree with the
+  overlay; the notes' section 4 says what was finished and what was in hand). Each part of the slice is committed
+  and pushed when its tests pass, and section 4 is brought up to date in the same commit, so that at any stop the
+  most that can be lost is the part in hand.
+- Next numbers: EX_328; entry 303; RAT-59.

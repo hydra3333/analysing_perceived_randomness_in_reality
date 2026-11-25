@@ -5,6 +5,21 @@
 **If a chat resumes or a new one starts:** read this file, then the files it names under `overlay/`, then go on from
 section 4 ("Where it stands"). Slices A and B are reviewed (EX_321, EX_327) and lie in the same overlay (34 files).
 
+## 0. On resuming after a stop (the owner, decision log entry 302): check before any further work
+
+1. `git fetch`, then `git status -sb` in the commit clone: nothing ahead, nothing behind, nothing uncommitted that
+   matters. If something is ahead, look at it (`git show --stat`) and push it; if something uncommitted lies under
+   `overlay/`, compare it with section 4 before keeping or dropping it.
+2. The decision log's last line gives the next numbers; the last entry is the last thing recorded. Anything the
+   owner said after it is recorded first.
+3. Section 4 below says which parts are finished (committed with their tests) and what was in hand. A part that
+   section 4 does not call finished is treated as unfinished: its tests are run again before anything is built on
+   it.
+4. The cloud workspace (`/home/claude/work`) is a convenience only. If it is still there, its disposable clone for
+   slice C is `dev12` (made from `main` with the overlay laid over it by `sync_and_test.sh`). If it is gone, make it
+   again: nothing that matters lives only there.
+5. Then say to the owner, in a few lines, what was found and what is next.
+
 ## 1. What governs the slice (all ratified; nothing here is a new design)
 
 - Deployment design v0.12: section 3 (what can be installed; what every install checks), 4 (`Init_Tree`), 5

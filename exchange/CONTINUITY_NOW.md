@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 18:07 Australia/Adelaide (entry 300: EX_327, slice B PASSES; slices A and B are reviewed and not installed; nothing is in flight with the reviewer; slice C waits for the owner's go).
+**Last updated:** 25 November 2026, 18:19 Australia/Adelaide (entry 302: slice C is being written, part C1 first; after a stop, section 0 of the slice's notes).
 
 ## For the owner: NOW
 
+- **AFTER A STOP OR A MODEL RESET (entry 302; 25 November 2026):** the owner asked that nothing be lost in the
+  change. The checks to make first are section 0 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`;
+  its section 4 says which parts of slice C are finished and what was in hand.
 - **SLICE C HAS THE OWNER'S GO AND IS BEGUN (entry 301; 25 November 2026): creating a tree, the installs, verifying
   a tree.** Cloud design and coding only. Its plan and running notes, with exactly where it stands, are
   `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`; its files go into the same overlay as slices A and
