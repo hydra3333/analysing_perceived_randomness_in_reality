@@ -63,7 +63,23 @@ file; says what it would change before it asks; the cutoff file when a change fr
 
 ## 3. Readings taken (for the reviewer; RECOMMENDED unless marked)
 
-(none yet)
+- **C-R1, the smoke case's table and target.** The table runs from the game's first draw to the first draw the
+  variant declares it can forecast, and that draw is the target: the declared minimum history, and not one draw
+  more, must be enough. (The target's own row is in the table; the N-1 view does not show it.) Any answer but a
+  complete FORECAST fails, and so does any error at all while the method is imported or run.
+- **C-R2, "a fixed sample of stored forecasts".** Of each installed variant's stored lines that hold a FORECAST, in
+  each game: the first, the middle and the last. Fixed by rule, the same on every run; three a variant a game.
+- **C-R3, the derived results at an install are read as the job reads them, and nothing is written.** The reading
+  half of the job's `open_game` is now its own function `read_game` (one reviewed file changed,
+  `src/research/research_job.py`: a pure extraction); the checks call it. The check never writes or changes
+  `NOT_CURRENT_FROM.json`. A difference at or after a draw the tree's own marker already names as a MISMATCH is
+  reported as known; where a catch-up is awaited, only the draws before it are compared, as the job does.
+- **C-R4, software and data in two folders.** Each check takes the software's folder and the data's tree
+  separately, for design 6 step 3 (the software as it would be, against the target's data, writing nothing in the
+  tree). Status files are read where the software lies and are never created by a check, in any role.
+- **C-Q1, OPEN, FOR THE OWNER: where `Verify_Tree.bat` finds DEV's tests.** Design 7 has `Verify_Tree.bat` run in
+  the tree and run "the suite, if the tree's infrastructure is file for file DEV's". A QA or PROD tree's settings
+  file does not say where DEV is (design 1), and the tests live only in DEV. Not yet decided; see section 4.
 
 ## 4. Where it stands
 
@@ -88,6 +104,27 @@ file; says what it would change before it asks; the cutoff file when a change fr
     (`research_job.open_game(job, game)` builds them; see how the job makes its `Job`).
   - The tests' own invented-results generator is in `tests/`, which is not installed in QA or PROD: the smoke
     case carries its own small generator in the infrastructure.
+
+- **25 November 2026, part C1, first half: FINISHED and committed.** New in the overlay:
+  `src/research/tree_checks.py` (the smoke case, the forecast sample, the derived results; class `other` on the
+  manifest) and `tests/test_trees_checks.py` (27 tests, all pass, with `test_file_form`, `test_research_manifest`,
+  `test_research_ov1_and_checks`, `test_trees_snapshot`, `test_trees_readiness`, `test_trees_launch_guard`).
+  Changed: `src/research/research_job.py` (`read_game` extracted from `open_game`), `deploy/INFRA_MANIFEST.ini`
+  (one line). The whole suite has NOT yet been run on this state, and no planted-fault run has been made.
+- **Next, part C1, second half:** the program `src/tree_checks_command.py` (two uses: `verify`, for
+  `Verify_Tree.bat` in the tree; `checks`, started by DEV's install tools with the target's Python, software and
+  data named separately, its result written to a file the caller names), `Verify_Tree.bat`, their tests. Design 7's
+  order for `verify`: process check; a backup attempted; the structure; every installed variant's smoke case; the
+  suite; the sample (differences reported, not a refusal); the derived results; the marker; a backup attempted.
+  A failed smoke case or suite writes no marker and removes an older one. It holds the job lock while it checks
+  and attempts its backups outside the lock, as the research job does (a backup refuses while the lock is held).
+- **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
+  `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
+  through `fix/ed.py`. If the workspace is gone, take the overlay's files (strip the CR) and go on.
+- **Seen, to carry into the joined package (not slice C's):** Python 3.15 warns on
+  `src/research/environment_marker.py` line 17, a docstring that holds `Lib\site-packages` with a single
+  backslash ("\s" is an invalid escape sequence; a SyntaxWarning now, an error in some later Python). One
+  character to double, in a file slice A reviewed.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

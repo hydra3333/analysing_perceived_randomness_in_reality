@@ -192,17 +192,15 @@ def check_results_only_grew(records: GameRecords) -> None:
             f'backup; what to recompute otherwise is a reviewed decision.')
 
 
-def open_game(job: Job, game_id: str) -> GameRecords:
-    """The Start step for one game: read the results, the status files, the lists and the ledger; name what is
-    foreign; make the derived check.
+def read_game(job: Job, game_id: str) -> GameRecords:
+    """Read one game's records into memory, changing nothing: the results on file, each installed variant's
+    lists with its status, the prevailing ledger and the marker NOT_CURRENT_FROM.json.
 
-    Returns the game's records in memory. Refuses with one of GAME_REFUSALS if the game cannot be worked: see
-    the functions it calls.
+    Returns the game's records. Refuses with one of GAME_REFUSALS if they cannot be read: see the functions it
+    calls. The job's Start step (open_game) reads through here, and so do the checks of an install and of
+    Verify_Tree.bat (research/tree_checks.py), which must read exactly what the job reads and write nothing.
     """
     tree_root = job.settings.tree_root
-    unfinished = finish_interrupted_copy(tree_root, game_id)
-    if unfinished:
-        job.say(unfinished)
     results = results_on_file(tree_root, game_id)
     states = []
     for variant in job.variants:
@@ -213,12 +211,26 @@ def open_game(job: Job, game_id: str) -> GameRecords:
         states.append(load_variant_state(tree_root, game_id, variant, job.statuses[variant.identity][game_id],
                                          job.forecasting_code_identity))
     ledger, ledger_lines = ov1_ledger.read_ledger(tree_root, game_id)
-    records = GameRecords(
+    return GameRecords(
         game_id=game_id, tree_root=tree_root, role=job.settings.role, results=results, states=states,
         foreign=lists_of_variants_not_installed(tree_root, game_id, {state.variant.identity for state in states}),
         forecasting_code_identity=job.forecasting_code_identity, derived_code_digest=job.derived_code_digest,
         environment_digest=job.environment_digest, ledger=ledger, ledger_lines=ledger_lines,
         cutoff=derived_check.read_cutoff(tree_root, game_id))
+
+
+def open_game(job: Job, game_id: str) -> GameRecords:
+    """The Start step for one game: finish or discard an interrupted copy of the results; read the game's
+    records (read_game); name what is foreign; make the derived check.
+
+    Returns the game's records in memory. Refuses with one of GAME_REFUSALS if the game cannot be worked: see
+    the functions it calls.
+    """
+    unfinished = finish_interrupted_copy(job.settings.tree_root, game_id)
+    if unfinished:
+        job.say(unfinished)
+    records = read_game(job, game_id)
+    states = records.states
     for state in states:
         if state.held:
             job.warn(f'{game_id}: a list is foreign and is ignored: {state.variant.identity} '
