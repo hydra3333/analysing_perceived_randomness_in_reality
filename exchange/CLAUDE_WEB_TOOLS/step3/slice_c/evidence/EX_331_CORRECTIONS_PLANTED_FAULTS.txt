@@ -1,0 +1,13 @@
+Build step 3, slice C, the two residual corrections after EX_331: the planted faults for them only
+(exchange/CLAUDE_WEB_TOOLS/step3/mutation_check_ex331_corrections.py), one at a time in a copy of the test clone
+that holds the overlay as committed at 648f7b1f266ec7401a2b69b5d2aaaef912dfb786; tests/test_trees_reinstall.py is run
+and must fail. Cloud: Linux, Python 3.15.0b4. What it printed:
+
+caught   | C-B01 (a): the tree is not compared with what the plan was worked out from
+caught   | C-B01 (a): a barrier that appeared before the first hold is not seen
+caught   | C-B01 (a): a list changed before the first hold is not said to be one
+caught   | C-B01 (a): software changed under a new plan is not seen
+caught   | C-B01 (a): files changed under a replacing plan are not seen
+caught   | C-B01 (b): a tree with no research folder is refused
+caught   | C-B01 (b): a folder that must be there is read as empty when it is absent
+7 faults planted; 0 survived

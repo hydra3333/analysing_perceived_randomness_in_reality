@@ -229,7 +229,12 @@ file; says what it would change before it asks; the cutoff file when a change fr
   second hold, before the barrier or any file is written, one SHA-256 over everything the statement rested on
   (`what_the_statement_rests_on`: DEV's fingerprint, the tree's software, manifest, list, barrier, accepted
   results, stored research without its reports, and the environment's marker) must equal the one taken at step
-  3; otherwise it refuses, nothing overwritten, and the owner runs it afresh.
+  3; otherwise it refuses, nothing overwritten, and the owner runs it afresh. **After EX_331 (C-B01 (a) and
+  (b)):** as the first thing under the first hold, the barrier, the list and the files the plan was worked out
+  from must be as this command read them (`check_the_tree_is_as_it_was_read`), or it refuses before any
+  statement, backup or question; and a tree no job has yet run in, which has no `results/research`, is read
+  as holding nothing stored. Equal values mean that the covered bytes are equal (the environment by its
+  marker), not that no process ran.
   (b) *What is infrastructure on a tree's list:* every listed file that is not under a family folder or
   `_shared`. A plan path under either is refused.
   (c) *"Any forecast-class file" is read widely:* added, overwritten or removed, by DEV's manifest or the tree's;
@@ -419,8 +424,18 @@ file; says what it would change before it asks; the cutoff file when a change fr
   reviewer asked: the whole suite and the 250 planted faults of the slice. **The note for the reviewer is
   `slice_c/SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md`,** with the exact differences from `e404c22`
   (`SLICE_C_CORRECTIONS_AFTER_EX_329_DIFFERENCE.txt`), the hashes and the evidence beside it.
-- **What follows:** EX_330 to the reviewer, only on the owner's word (the corrections note is its substance); the
-  owner's ratification of the two amendments (RAT-59) and of H-1 v15 (RAT-60).
+- **26 November 2026: RAT-59 (both amendments) and RAT-60 (H-1 v15) ratified by the owner; EX_330 issued** (entries
+  320 and 321). **EX_331 = RECHECK confined to C-B01:** seven of the eight findings CLOSED, all five choices of
+  EX_330 section 4 accepted, two residuals in `Reinstall_Infra`'s first reading.
+- **26 November 2026: THE TWO RESIDUALS ARE CORRECTED AND PROVED IN THE CLOUD** (entry 322), in
+  `deploy/reinstall_infra.py` only, with seven tests added to `tests/test_trees_reinstall.py` (52 tests). (a) Under
+  the first hold the tree must still be what the plan was worked out from. (b) A tree with no `results/research` can
+  be reinstalled. Planted faults for the two (`mutation_check_ex331_corrections.py`): seven, none survived. The
+  overlay stands as committed at `648f7b1`. **The note for the reviewer is
+  `slice_c/SLICE_C_CORRECTIONS_AFTER_EX_331_v0_1.md`,** with the differences from `3bdd37b` and the evidence beside
+  it.
+- **What follows:** EX_332 to the reviewer, only on the owner's word. After slice C has passed: slice D on the
+  owner's go (a new subsystem: the model rule first).
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

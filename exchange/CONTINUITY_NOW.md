@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 00:06 Australia/Adelaide (entry 321: EX_330 issued; H-1 v15 installed, RAT-60).
+**Last updated:** 26 November 2026, 00:23 Australia/Adelaide (entry 322: EX_331; the two residuals corrected; EX_332 waits for the owner's word).
 
 ## For the owner: NOW
 
+- **EX_331 (entry 322; 26 November 2026): SEVEN OF SLICE C'S EIGHT FINDINGS CLOSED; the two residuals of C-B01 are
+  corrected and proved in the cloud.** The note for the reviewer is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_CORRECTIONS_AFTER_EX_331_v0_1.md`, with the differences from
+  `3bdd37b` and the evidence beside it. **Waiting on the owner:** his word to issue EX_332. **Waiting on the
+  reviewer:** nothing until EX_332. **If this chat ends here:** a new chat is started with H-1 v15's blurb, reads H-1
+  v15's chapter 0 and entries 320 onward, and asks the owner for that word.
 - **EX_330 IS WITH THE REVIEWER, AND H-1 v15 (RAT-60) IS THE HANDOVER IN FORCE (entry 321; 26 November 2026).**
   `exchange/EX_330_Claude.md`: slice C's eight corrections for the focused recheck. `doc/HANDOVER/Claude_Primary_Handover_H1_v15.md`
   with its blurb beside it. RAT-59 (the two amendments) is ratified (entry 320). **Waiting on the reviewer:**

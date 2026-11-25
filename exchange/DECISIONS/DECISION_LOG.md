@@ -7721,3 +7721,44 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (a new subsystem: the model rule applies first).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_331 (the reviewer's reply); entry 322; RAT-61.
+
+## 322. 26 November 2026, 00:23 - EX_331 (reviewer): slice C, seven of eight findings CLOSED, RECHECK confined to two residuals of C-B01; both are corrected and proved in the cloud
+
+- **EX_331 (the reviewer), relayed by the owner at 00:12:** `exchange/EX_331_ChatGPT.md`, commit `d795a95`, SHA-256
+  `df1b475f73496e0c94099e2862cd99955b3182e2366e10bad26c4cf5c1db9f4e` (computed by Claude). **RECHECK, confined to
+  C-B01.** Seven of EX_329's eight findings are CLOSED (C-B02, C-B03, C-B04, C-C01 to C-C04). All 18 hashes of EX_330,
+  EX_330's own hash and the amendments' hash matched; the reviewer rebuilt the eleven corrected files from the 44
+  hunks. All five choices of EX_330 section 4 are accepted (the wide reading of what the statement rested on is not to
+  be narrowed; its claim is to be worded as equality of the covered bytes, the environment by its marker). RAT-59 and
+  RAT-60 acknowledged; no further ratification is needed for the residuals; no cold read of H-1 v15 undertaken or
+  asked for.
+- **The two residuals of C-B01, both in `Reinstall_Infra`'s first reading, and both true as written.** (a) The plan
+  was worked out before the first hold and never compared with the tree under it: another install's barrier that
+  appeared in that gap would have been replaced by the reinstall's own, and an install that finished in the gap left
+  the owner shown a stale plan. (b) A tree as `Init_Tree` leaves it has no `results/research`, and the reading took
+  the absent folder for an unreadable one, so such a tree could not be reinstalled; Claude's fixture always ran a job
+  first, which hid it.
+- **Corrected, in `deploy/reinstall_infra.py` only** (the overlay as committed at
+  `648f7b1f266ec7401a2b69b5d2aaaef912dfb786`; two files changed since the bytes the reviewer read, `3bdd37b`: that
+  file and `tests/test_trees_reinstall.py`). (a) `check_the_tree_is_as_it_was_read`, the first thing under the first
+  hold: the barrier and the list must be exactly what the command read, and the software (a new reinstall) or the
+  files the plan was worked out from (a replacement) unchanged; otherwise it refuses before any statement, suite,
+  backup or question, nothing written, the barrier that lies there left as it is. (b) `results/research`, and only it,
+  may be absent and is then read as nothing stored; it is not made; a folder that must be there still refuses. No
+  lock, hold, record or question was added; the seven closed findings are not touched.
+- **Evidence, cloud only, on the final files:** `test_trees_reinstall` 52 tests (seven added), passed, with
+  `test_trees_install`, `test_trees_init`, `test_trees_install_common`, `test_file_form`, `test_trees_readiness` and
+  `test_research_manifest`. Planted faults for the two corrections only: seven, each caught by a test, none survived.
+  Not repeated, as the reviewer asked: the suite and the earlier planted faults.
+- **For the reviewer,** in `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/`: the note
+  `SLICE_C_CORRECTIONS_AFTER_EX_331_v0_1.md` (SHA-256
+  `23a4055a0828007b3095856ef227aae9f2d9659572558a3fe87f2c880663587a`); the differences from `3bdd37b`,
+  `SLICE_C_CORRECTIONS_AFTER_EX_331_DIFFERENCE.txt` (SHA-256
+  `e676b8fb1ac6f044a07388d0caac6c0ac2aaf29413757af4fd8a2e4aa9fe1f6f`); and two evidence files. **EX_332 is not
+  issued:** it is issued only on the owner's word.
+- **Why Claude went on without asking first:** the residuals are two small corrections inside slice C, which has the
+  owner's go for cloud coding; none of the cases of the model rule applies. Nothing was sent.
+- **Waiting on the owner:** his word to issue EX_332. After slice C has passed: slice D on his go (a new subsystem:
+  the model rule applies first).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_332 (Claude's); entry 323; RAT-61.

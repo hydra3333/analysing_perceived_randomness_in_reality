@@ -1,0 +1,11 @@
+Build step 3, slice C, the two residual corrections after EX_331: the affected test module and those that share
+its fixtures or guard the form of every file, each run by itself in the test clone that holds the overlay as
+committed at 648f7b1f266ec7401a2b69b5d2aaaef912dfb786. Cloud: Linux, Python 3.15.0b4.
+
+test_trees_reinstall: Ran 52 tests OK 
+test_trees_install: Ran 33 tests OK 
+test_trees_init: Ran 39 tests OK 
+test_trees_install_common: Ran 69 tests OK 
+test_file_form: Ran 52 tests OK 
+test_trees_readiness: Ran 41 tests OK 
+test_research_manifest: Ran 9 tests OK 
