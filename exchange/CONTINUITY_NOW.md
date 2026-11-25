@@ -4,10 +4,20 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 23:11 Australia/Adelaide (entry 317: EX_329 RECHECK; decisions for the owner).
+**Last updated:** 25 November 2026, 23:58 Australia/Adelaide (entry 319: the corrections after EX_329 are written; three things wait on the owner).
 
 ## For the owner: NOW
 
+- **THE CORRECTIONS AFTER EX_329 ARE WRITTEN AND PROVED IN THE CLOUD (entry 319; 25 November 2026).** All eight
+  findings corrected in the overlay; the note for the reviewer is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md`, with the differences from `e404c22`,
+  the hashes and the evidence beside it. **Waiting on the owner, each by his own word:** (a) to issue EX_330; (b)
+  RAT-59, the two amendments (`exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`); (c) RAT-60, H-1 v15
+  (candidate in `exchange/CLAUDE_WEB_TOOLS/h1v15/out/`; after his word, `make_h1_v15.py final RAT-60` and the two
+  files go into `doc/HANDOVER/`). **Waiting on the reviewer:** nothing until EX_330. **If this chat ends here:** a
+  new chat reads H-1 v14 (or v15's candidate), entries 301 to 319, and section 4 of the slice's working notes.
+- **The owner's three decisions after EX_329 (entry 318; 25 November 2026):** EX_329 is taken into H-1 v15 before he
+  ratifies it; the two amendments together are RAT-59 and H-1 v15 is RAT-60; the corrections were written on Fable.
 - **EX_329 (entry 317; 25 November 2026): slice C RECHECK,** four blockers (C-B01 to C-B04) and four corrections
   (C-C01 to C-C04), no redesign; the reviewer concurs with the `Verify_Tree` amendment (one wording change) and with
   reading C-R9 as a second narrow amendment. **Waiting on the owner:** the order of the ratifications (EX_329 calls

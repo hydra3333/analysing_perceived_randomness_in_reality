@@ -7616,3 +7616,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   v15) by his own word on each. (3) The corrections are written now, on Fable; EX_330 is issued only on his word.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_330 (Claude's); entry 319; RAT-59 (the amendments), RAT-60 (H-1 v15).
+
+## 319. 25 November 2026, 23:58 - the corrections EX_329 asked for in slice C are written and proved in the cloud; three things wait on the owner
+
+- **What was done** (the owner's go, entry 318, decision 3; on Fable). All eight findings of EX_329 were true as
+  written, and all eight are corrected in the overlay: C-B01 (what the owner's YES rested on is checked again under
+  the second hold, before anything is written; an ordinary install checks its base again under its reservation),
+  C-B02 (`Init_Tree` copies the results as one set, reads each copied pair as the engine does before the record,
+  and keeps its source in the plan), C-B03 (the same command finishes a reinstall that removes a file), C-B04 (a
+  replacement keeps the print-outs owed), C-C01 to C-C04. Nothing was redesigned; no record, lock or command was
+  added. 11 files of the overlay changed since the bytes the reviewer read (`e404c22`), in four commits
+  (`9692490`, `c705158`, `a085ad2`, `3bdd37b`); the overlay now stands as committed at
+  `3bdd37b07abeebad296a2edc7adb94fa5e5783c7`.
+- **Evidence, cloud only, on the final files:** the suite of an install, run by the tool on a temporary copy: 23
+  modules, 787 tests, passed (763 at EX_328). Planted faults for these corrections only: 29, each caught
+  by a test, none survived (run once before the fourth commit and again after it). Not repeated, as the reviewer
+  asked: the whole suite and the slice's 250 planted faults.
+- **For the reviewer,** in `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/`: the note
+  `SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md` (SHA-256
+  `5f137983dcecad62d54a9163260a97ebdc4efa75a8724e5c6dfece3d2d71c1ba`); the differences from `e404c22`,
+  `SLICE_C_CORRECTIONS_AFTER_EX_329_DIFFERENCE.txt` (SHA-256
+  `c230782b08cc6ab87bd9e63c6830de601f5fd5d2f2821b068a38754b639f0ea8`); the hashes of the changed files; and two
+  evidence files. **EX_330 is not issued:** it is issued only on the owner's word (entry 318).
+- **H-1 v15.** Its candidate was built again after entry 318 with EX_329 taken into chapter 0 (commit `e4ebf0b`),
+  and is built once more after this entry so that chapter 0 says that the corrections are written. The hashes entry
+  316 gave are therefore of an earlier candidate; the hashes that count are those of the files installed at its
+  ratification, recorded then.
+- **One omission put right:** `exchange/CONTINUITY_NOW.md` did not take entry 318 when it was written; it takes
+  entries 318 and 319 now.
+- **Waiting on the owner, each by his own word:** (a) to issue EX_330; (b) his ratification of the two amendments
+  as RAT-59 (`exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`, unchanged since entry 318); (c) his
+  ratification of H-1 v15 as RAT-60. The Fable task is finished: the owner may switch back to Opus.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_330 (Claude's); entry 320; RAT-59 (the amendments), RAT-60 (H-1 v15).
