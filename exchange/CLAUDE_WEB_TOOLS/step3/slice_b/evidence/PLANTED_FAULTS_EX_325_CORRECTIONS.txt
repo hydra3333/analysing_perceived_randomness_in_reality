@@ -1,0 +1,12 @@
+caught   | B-B02: a role that is neither QA nor PROD passes
+caught   | B-B02: the backup root need not be a full path
+caught   | B-B02: the environment need not be a full path
+caught   | B-B02: a path that is not a full path is taken for one
+caught   | B-B02: a path that is not its own real path passes
+caught   | B-B02: the environment may lie outside the tree
+caught   | B-C03: the job never records that it reached its first write
+caught   | B-C03: a note that could not be written is taken for a write
+caught   | B-C03: the handler goes by the note lying in the tree
+caught   | B-C03: DEV is told a note was written and a backup tried
+caught   | B-C03: the backup owed by a refused job is not tried
+11 faults planted; 0 survived

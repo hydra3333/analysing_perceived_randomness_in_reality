@@ -135,6 +135,9 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
   overlay with focused tests; what changed, the tests and the evidence are in
   `slice_b/SLICE_B_CORRECTIONS_AFTER_EX_323_v0_1.md` (the later one where it and the package note differ). They go
   back to the reviewer as EX_324 on the owner's word.
+- **After EX_325 (five findings closed; two narrow residuals, B-B02 and B-C03; entry 296):** both are corrected in
+  the overlay with focused tests; see `slice_b/SLICE_B_CORRECTIONS_AFTER_EX_325_v0_1.md`. They go back as EX_326 on
+  the owner's word.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

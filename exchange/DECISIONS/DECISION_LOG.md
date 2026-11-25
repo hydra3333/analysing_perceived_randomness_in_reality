@@ -7190,3 +7190,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   focused tests it names; they go back as EX_326 on the owner's word. No whole-suite run is asked. No install, run,
   backup or restore is authorised.
 - Next numbers: EX_326 (Claude's, the two corrections); entry 297; RAT-59.
+
+## 297. 25 November 2026, 18:00 - Slice B: EX_325's two residual corrections are made in the working files (cloud only), with focused tests
+
+- **Authority:** entries 217 and 288; EX_325's own scope ("make only the two remaining corrections").
+- **What changed, in `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`** (four files, 10 hunks from the files the reviewer
+  read at `3ca9a04`; the note is `slice_b/SLICE_B_CORRECTIONS_AFTER_EX_325_v0_1.md`, with the exact differences and
+  the evidence beside it):
+  - *B-B02:* `deploy/restore_tool.py`: before anything is touched the backup's own settings must give a role that
+    is QA or PROD, and a tree root, an environment and a backup root that are each present, a full path and their
+    own real path (as the settings reader asks), with the containment checks as before. No folder need exist; a
+    tree and a backup root that are gone do not stop a restore.
+  - *B-C03:* `src/research/research_job.py`: `run` keeps, in memory, whether THIS job reached its first write
+    (`run_locked` sets it just after the note that a backup is owed is written), and the refusal handler goes by
+    that alone: a refusal at a guard never becomes a backup attempt whatever note lies in the tree; a refusal
+    after the note tries the owed backup and says what was and was not written; DEV is told no research was
+    written, with no note and no backup. `run_locked` has one more argument.
+- **Cloud evidence (Claude's only):** the affected modules on the final files, all OK (`test_trees_snapshot` 36,
+  `test_trees_restore` 52, `test_research_job` 48, `test_file_form` 52, `test_research_manifest` 9). Planted faults
+  for the two corrections: 11 of 11 caught at the first run. The whole suite and the earlier planted-fault scripts
+  were not run again, as the reviewer asked.
+- **Waiting on the owner's word:** to issue them as EX_326.
+- Next numbers: EX_326 (Claude's, the two corrections); entry 298; RAT-59.

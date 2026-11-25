@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 17:51 Australia/Adelaide (entry 296: EX_325, slice B: five findings closed, two narrow residuals (B-B02, B-C03) confirmed and being corrected in the cloud; they go back as EX_326 on the owner's word).
+**Last updated:** 25 November 2026, 18:00 Australia/Adelaide (entry 297: EX_325's two residual corrections to slice B are made and tested in the cloud; EX_326 waits for the owner's word).
 
 ## For the owner: NOW
 
+- **SLICE B: THE TWO RESIDUAL CORRECTIONS ARE MADE (entry 297; 25 November 2026),** cloud only: the note is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_CORRECTIONS_AFTER_EX_325_v0_1.md`, with the exact differences
+  (four files, 10 hunks) and the evidence beside it. **Waiting on the owner:** his word to issue them as EX_326.
 - **SLICE B: TWO NARROW RESIDUALS (entry 296; 25 November 2026): EX_325,** `exchange/EX_325_ChatGPT.md`: five of
   the seven findings CLOSED; B-B02 (the restore applies the rest of the settings' path rule: role QA or PROD; root,
   environment and backup root present, full and real paths) and B-C03 (the job's refusal handler goes by the point
