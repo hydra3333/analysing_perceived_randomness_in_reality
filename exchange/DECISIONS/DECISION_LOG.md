@@ -7265,3 +7265,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
   slice C** (`Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree` and the half-finished states), a new
   subsystem: Claude says so and waits for the owner's go. Nothing is authorised on the owner's PC.
 - Next numbers: EX_328; entry 301; RAT-59.
+
+## 301. 25 November 2026, 18:09 - the owner's go for slice C of build step 3 (creating a tree, the installs, verifying a tree), on Fable
+
+- **The owner, 18:08,** to "Slice C ... Suggest switching to Fable (High) for this. I will wait for your go":
+  "ok please go for slice C".
+- **What the go covers:** slice C's design within the ratified documents (deployment design v0.12 sections 3 to 9;
+  specification v0.6 section 12) and its cloud coding and tests, as entry 217 allows for build step 3:
+  `Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree` and the states of an operation that stops half-way.
+  Nothing on the owner's PC: no install, run, tree, backup, restore or runner task.
+- **Kept safe against a stop part-way:** a plan-and-notes file for the slice and its working files are committed to
+  `main` under `exchange/CLAUDE_WEB_TOOLS/step3/` as the work goes; the continuity page points to them.
+- Next numbers: EX_328; entry 302; RAT-59.
