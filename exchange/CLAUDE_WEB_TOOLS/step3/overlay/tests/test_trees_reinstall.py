@@ -183,6 +183,20 @@ class AReinstallFromStartToEnd(ReinstallCase):
         self.assertTrue(said[warning + 1].startswith('The backup taken just now: BACKUP MADE AND VERIFIED: '))
         self.assertIn('_PRE_INFRA.zip', said[warning + 1])
 
+    def test_the_updaters_lock_is_let_go_before_the_barrier_is_removed_and_the_job_lock_after_it(self):
+        self.change_in_dev(OTHER)
+        seen, real = {}, common.remove_barrier
+
+        def look_then_remove(tree_root):
+            """Note what is still held at the moment the barrier is removed."""
+            seen['updater lock'] = (self.target / job_lock.UPDATER_LOCK).exists()
+            seen['job lock'] = (self.target / 'records' / job_lock.JOB_LOCK_NAME).exists()
+            real(tree_root)
+
+        with mock.patch.object(common, 'remove_barrier', look_then_remove):
+            self.assertEqual(self.reinstall(answers=['YES'])[0], reinstall.EXIT_REINSTALLED)
+        self.assertEqual(seen, {'updater lock': False, 'job lock': True})
+
     def test_no_or_enter_overwrites_nothing(self):
         self.change_in_dev(OTHER)
         before = self.software()
@@ -333,6 +347,36 @@ class TheTwoStatements(ReinstallCase):
         self.assertEqual(asked, [(False, None, True, True, True)],
                          'a folder that is not the tree; no smoke case; the sample and the derived results; DEV\'s code')
         self.assertFalse((self.target / 'scratch').exists() and list((self.target / 'scratch').iterdir()))
+
+    def test_the_folder_the_software_was_assembled_in_is_gone_afterwards_whatever_the_answer(self):
+        import tempfile
+        self.change_in_dev(OTHER)
+        made, real = [], tempfile.mkdtemp
+
+        def noting(*arguments, **options):
+            """Note every temporary folder that is made."""
+            made.append(Path(real(*arguments, **options)))
+            return str(made[-1])
+
+        with mock.patch.object(reinstall.tempfile, 'mkdtemp', noting):
+            self.reinstall(answers=['NO'], suites=(True,))
+            self.reinstall(answers=['YES'])
+        assembled = [folder for folder in made if folder.name.startswith(reinstall.ASSEMBLY_PREFIX)]
+        self.assertEqual(len(assembled), 2)
+        self.assertEqual([folder for folder in assembled if folder.exists()], [])
+        self.assertNotIn(self.target, [parent for folder in assembled for parent in folder.parents],
+                         'and it never lay in the tree')
+
+    def test_a_mark_the_tree_already_holds_from_an_earlier_draw_is_never_moved_to_a_later_one(self):
+        derived_check.write_cutoff(self.target, GAME, FORETOLD - 2, derived_check.MISMATCH, 'marked earlier')
+        statement = {'text': 'x', 'not_current_from': {GAME: FORETOLD}, 'detail': {GAME: 'foretold'}}
+        self.assertEqual(reinstall.mark_not_current(self.target, statement, say=lambda line: None), [])
+        self.assertEqual(derived_check.read_cutoff(self.target, GAME),
+                         (FORETOLD - 2, derived_check.MISMATCH, 'marked earlier'))
+        derived_check.write_cutoff(self.target, GAME, FORETOLD + 1, derived_check.MISMATCH, 'marked later')
+        reinstall.mark_not_current(self.target, statement, say=lambda line: None)
+        self.assertEqual(derived_check.read_cutoff(self.target, GAME)[:2], (FORETOLD, derived_check.MISMATCH),
+                         'a later mark is brought down to the draw foretold')
 
     def test_a_suite_that_fails_on_the_software_as_it_would_be_stops_before_any_backup(self):
         self.change_in_dev(OTHER)
