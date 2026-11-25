@@ -4,10 +4,12 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 21:38 Australia/Adelaide (entry 309: slice C parts C1 to C3 written and proved in the cloud; next C4, Install).
+**Last updated:** 25 November 2026, 21:48 Australia/Adelaide (entry 310: H-1 is refreshed when slice C is whole; part C4, Install, in hand).
 
 ## For the owner: NOW
 
+- **H-1 IS REFRESHED WHEN SLICE C IS WHOLE (the owner, entry 310; 25 November 2026),** not before. Claude says so
+  at that point and writes the next ordinary edition. **In hand: part C4, `Install`.**
 - **SLICE C: PARTS C1, C2 AND C3 ARE WRITTEN AND PROVED IN THE CLOUD (entry 309; 25 November 2026):** the checks,
   `Verify_Tree`, the shared install machinery, `Init_Tree`. **Next: part C4, `Install`, then C5,
   `Reinstall_Infra`.** Nothing waits on the owner or the reviewer. Section 4 of

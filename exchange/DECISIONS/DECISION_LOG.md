@@ -7455,3 +7455,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** part C4, `Install.bat`; then C5, `Reinstall_Infra.bat`.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 310; RAT-59.
+
+## 310. 25 November 2026, 21:48 - the owner: Claude's handover is refreshed after slice C is whole; go on with part C4
+
+- **The owner, 21:47:** "I think refresh H-1 after slice C is whole.  go on"
+- **So:** no new edition of H-1 now. When slice C is whole (parts C4 and C5 written and proved, the whole suite
+  run on the slice's final bytes), Claude says so and writes the next ordinary edition of H-1, which also takes
+  in what entry 300's list holds for it (H14-C01 to C03, the two observations, the OUTLANDISH_01 lines, H-2 v9 in
+  force, slices A and B reviewed) and this slice. Until then the recovery index is `exchange/CONTINUITY_NOW.md`
+  and section 4 of the slice's notes.
+- **Going on:** part C4, `Install.bat`.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 311; RAT-59.
