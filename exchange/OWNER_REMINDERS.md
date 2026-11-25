@@ -761,3 +761,9 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   can stay as it is whoever codes; (4) whoever codes says plainly where its tests ran, since neither cloud is the
   owner's Windows PC; (5) the science contract (N-1, games never pooled, immutable variant identity, TOP and
   WORST from one readout) binds the coder whoever it is.
+- OUTLANDISH_01 is closed (owner, 25 November 2026; decision log entry 295): it is completed and closed, null
+  under the matching criteria that were investigated, and will not be integrated into this project. It is not a
+  method family to be built here and is no longer in the method backlog. Its files under GAIS/ are the owner's and
+  stay as they are. Older lines in these lists and in the handovers that put it first among the methods still to do
+  are overtaken by this. (R-023 item (d), the OUTLANDISH chat's confirmation of an old handover, is still the
+  owner's to close or to drop.)

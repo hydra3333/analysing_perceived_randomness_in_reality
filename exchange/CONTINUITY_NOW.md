@@ -1118,7 +1118,8 @@ independent "how the process went" note from each AI, with reasoning and alterna
 - D1-D7 decided as recommended (exchange/DECISIONS/OWNER_DECISIONS_2026_11_14b_C02_AND_REVIEWER.md); EX_181 agreed.
 - Working approach P0-P6 adopted (EX_182-EX_184; exchange/DECISIONS/DECISION_LOG.md).
 - OUTLANDISH_01's methods join the method backlog, probably first among the methods still to do, through this project's
-  normal route (decision log entry 3).
+  normal route (decision log entry 3). **(Overtaken, 25 November 2026, entry 295: OUTLANDISH_01 is completed and
+  closed, null, and will not be integrated.)**
 - The owner works on OUTLANDISH_01 in GAIS/, committing with `git add GAIS/OUTLANDISH_01/`; no further package installs
   planned (he will ask Claude first).
 
@@ -1147,7 +1148,7 @@ section 10 has the detail and what each step needs first. The lists below are hi
 4. Phase 1 (layout only, in DEV) as a reviewed package, with its equivalence oracle.
 5. Phase 2 (the new system) as a reviewed package; a new rulebook edition for the local runner.
 6. Creating QA and/or PROD, the transition check, the first research job: each on its own go.
-7. Then WF-1C and the methods still to do (OUTLANDISH_01 probably first), as new variants.
+7. Then WF-1C and the methods still to do (not OUTLANDISH_01: closed, entry 295), as new variants.
 
 **The order before 21 November 2026 (HISTORY):**
 
@@ -1159,4 +1160,4 @@ section 10 has the detail and what each step needs first. The lists below are hi
    rehearsal T017 (with a full-suite run after step 18; no change to the PC's clock), the owner's install, the
    registration of OV-1 before its first forward draw, and the runs, each on its own go.
 4. Done 18 November: the reviewer's H-2 v3r4 ratified (RAT-36); H-1 v5 ratified (RAT-37).
-5. Then WF-1C, then the methods still to do (OUTLANDISH_01 probably first).
+5. Then WF-1C, then the methods still to do (not OUTLANDISH_01: closed, entry 295).

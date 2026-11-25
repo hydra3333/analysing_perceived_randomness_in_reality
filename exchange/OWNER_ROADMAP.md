@@ -91,7 +91,8 @@ G. THEN - Build step 3, trees, installs, backups and restore: QA and PROD are cr
    be added.
 H. THEN - Build step 4, the laboratory tools: the QA software replacement from PROD, the research-data reseeding from
    PROD, the historical walk-forward rerun, the correction of shared code, and Check_Forecasts.
-I. THEN - New methods, as new variants: items 11 to 21 below, in your order (OUTLANDISH_01's family probably first).
+I. THEN - New methods, as new variants: items 11 to 21 below, in your order. (OUTLANDISH_01 is not among them: it is
+   completed and closed, null, and will not be integrated; owner, 25 November 2026, decision log entry 295.)
 
 Everything below this section was written for the old system. Its DONE items are history that stands; the status
 words of its other items were brought up to date on 22 November 2026.
