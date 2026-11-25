@@ -50,10 +50,13 @@ def never_asked(prompt):
 
 def checks_in_this_process(python, software_root, tree_root, smoke, sample, derived, say=print, run=None,
                            write_marker=False) -> dict:
-    """A stand-in for the start of the tree's own Python: the same checks, made here."""
-    with fixtures.ImportPath(Path(tree_root)):
-        return tree_checks.run_checks(Path(software_root), settings.read_settings(Path(tree_root)), smoke, sample,
-                                      derived, say, write_marker)
+    """A stand-in for the start of the tree's own Python: the same checks, made here. (The word for "no smoke
+    case" is turned into what the program's own command line turns it into; and, as the program does, the
+    variants are imported from the folder the software lies in.)"""
+    with fixtures.ImportPath(Path(software_root)):
+        return tree_checks.run_checks(Path(software_root), settings.read_settings(Path(tree_root)),
+                                      None if smoke == common.NO_VARIANT else smoke, sample, derived, say,
+                                      write_marker)
 
 
 def suite_that(passes: bool):

@@ -214,6 +214,35 @@ file; says what it would change before it asks; the cutoff file when a change fr
   (f) *The suite at an install* is run only when DEV's infrastructure is marked ready and is file for file the
   tree's; otherwise the line says which, and the install goes on, as specification 12.3 item 3 has it.
   (g) *NO ends with exit code 2;* a backup and a kit may by then exist, and the closing line says so.
+- **C-R15, readings taken in `Reinstall_Infra`** (design 6; specification 12.4 and 5.8).
+  (a) *C-R9 is taken as written above:* the lock is held for step 3, let go for the kit, the backup and the
+  question, and taken again before anything is overwritten.
+  (b) *What is infrastructure on a tree's list:* every listed file that is not under a family folder or
+  `_shared`. A plan path under either is refused.
+  (c) *"Any forecast-class file" is read widely:* added, overwritten or removed, by DEV's manifest or the tree's;
+  **and two manifests that do not class the same files as forecast are refused too,** because the identity of
+  the forecasting code is taken over exactly those files: a file moved into or out of the class changes that
+  identity, and makes every list foreign, although no such file's bytes change.
+  (d) *The software as it would be* is DEV's infrastructure and the tree's own variants, helpers and status
+  files, assembled in a temporary folder outside every tree, each file checked against its hash; it does not
+  depend on the plan. The list the tree must have afterwards is likewise the tree's variants and DEV's
+  infrastructure.
+  (e) *The statement* names each game with a change and its draw. A game the tree already marks not current from
+  that draw or an earlier one is not a change of this reinstall, and the statement says that it is already
+  marked. A suite that fails at step 3, records that cannot be read, or a difference in the forecast sample,
+  each refuses before any backup, nothing overwritten.
+  (f) *Where a change was accepted,* step 9 writes the game's cutoff for that draw (never a later draw than one
+  already marked), moves the stale reports out with the engine's own function, and checks both; then the checks
+  in place treat that difference as the known one, and any other difference stops. Nothing is recomputed.
+  (g) *The print-outs are made again* whenever the plan holds a `derived`-class file, by the tree's own software
+  and Python (the new `reports` command of `src/tree_checks_command.py`), before the barrier is removed; under a
+  cutoff the job's own rule makes them only up to the draw before it.
+  (h) *The same command again* continues when the barrier holds the plan that DEV and the tree's list give now
+  (the statement accepted then is kept and said; nothing is asked). *`--replace-unfinished`* works its plan out
+  from the files as they lie in the tree (so that what the replaced plan added and DEV no longer has is
+  removed), shows the unfinished plan and the plan now, makes step 3 again, attempts the kit and the backup
+  again and asks the same question. Without the flag another plan is refused with both shown and the flag named.
+  (i) *The warning* is specification 12.4's text.
 
 ## 4. Where it stands
 
@@ -333,32 +362,22 @@ file; says what it would change before it asks; the cutoff file when a change fr
 - **25 November 2026, part C4 PROVED.** Planted faults (`mutation_check_slice_c4.py`): 31 in `install.py`; 30 caught
   at once, the last by a test added for it (`tests/test_trees_install.py` is now 29 tests). The whole suite has
   not been run on this state.
-- **NEXT: C5, `Reinstall_Infra.bat QA|PROD [--replace-unfinished]`** (design 6, eleven steps; specification 12.4).
-  What it needs, so that a chat that resumes can begin at once:
-  - *Read first:* specification 12.4 in full (the warning's exact text and the one question); specification 5.8
-    (the cutoff file `NOT_CURRENT_FROM.json`, moving stale reports out); `src/research/derived_check.py`
-    (`write_cutoff`, `settle`, `read_cutoff`), `src/research/reports.py` (how the league report, the next-draw
-    report and the OV-1 print-out are made, for step 9's "made again with the new code"), and how the research
-    job moves stale reports out when it marks a game not current.
-  - *Step 1, the plan:* the difference between DEV's manifest files (`install_common.dev_infrastructure`) and the
-    target's infrastructure on its list: add, overwrite (both hashes), remove, each with its class; the text
-    differences shown; no path under a family folder or `_shared`; no difference ends; **any `forecast`-class
-    file in the plan refuses** ("this changes code that makes forecasts: use `Correct_Shared_Code.bat`").
-  - *Step 3, before anything is overwritten:* the software as it would be, assembled in a temporary folder (the
-    target's installed files with the plan applied); with the target's Python: the suite
-    (`suite_if_it_is_the_trees`, which is DEV's by construction), then `checks_with_target_python(python,
-    <temporary folder>, <tree>, NO_VARIANT, sample=True, derived=True)`. A sample difference is a fault and
-    stops. The statement: "No stored result changes", or "This changes stored scores or OV-1 lines, for <game>
-    from draw X". It goes into the plan (`statement`) and the barrier.
-  - *Reading C-R9* for the lock around steps 3 to 6.
-  - *Steps 6 to 10* with `install_common` (`reserved`, `check_barrier(..., replace_unfinished)`, `changing`,
-    `carry_out`, `software_differences`, `finish`); step 9's smoke case of every installed variant, the suite,
-    and the derived results: agree again where nothing was foretold; where a change from X was accepted, write
-    the cutoff for X, move the stale reports out, and check that this was done; if a `derived`-class file was in
-    the plan and the results agree, make every report again.
-  - *Step 11:* `POST_INFRA`; if a change from X was accepted, name the command owed:
-    `Rerun_Walk_Forward.bat --game <game> --from <X> --derived-only`.
-  - *`--replace-unfinished`:* shows the unfinished plan and the new one and asks the same question.
+- **25 November 2026, part C5: WRITTEN and committed; its planted faults are next.** New in the overlay:
+  `deploy/reinstall_infra.py`, `Reinstall_Infra.bat`, `tests/test_trees_reinstall.py` (32 tests, pass). Before it,
+  committed on its own: the `reports` command (`src/research/tree_checks.py` `make_reports_again` and
+  `reports_main`, `src/tree_checks_command.py`, `install_common.reports_with_target_python`; `test_trees_verify`
+  is 37 tests). Changed: `deploy/deploy_command.py` (the word `reinstall-infra`), `deploy/INFRA_MANIFEST.ini` (two
+  tool lines), `deploy/SUITE_MANIFEST.ini` (`test_trees_reinstall`; 23 modules), `tests/test_trees_init.py` (its
+  stand-in for the start of the tree's Python now imports the variants from the folder the software lies in, as
+  the program does). Passing with them: `test_trees_init` (34), `test_trees_install` (29), `test_trees_suite`,
+  `test_file_form`, `test_trees_readiness`, `test_research_manifest`.
+- **NEXT, to make slice C whole:** (1) planted faults for `reinstall_infra.py` and the `reports` command; (2) the
+  whole suite on the slice's final bytes, compared with `rep_base` (main) and `rep_dev11` (slice B), and the
+  suite of an install run by the tool on a copy; (3) the two things carried from slice B (tests that make a link
+  skip where Windows refuses; "no research was written"), and the docstring escape in
+  `src/research/environment_marker.py`; (4) the package note for the reviewer with the exact differences of the
+  reviewed slice A and B files that changed (`research_job.py`, `deploy_command.py`, `INFRA_MANIFEST.ini`), the
+  amendment's wording (C-Q1) and readings C-R1 to C-R15; (5) the next edition of H-1 (entry 310).
 - **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
   `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
   through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,
