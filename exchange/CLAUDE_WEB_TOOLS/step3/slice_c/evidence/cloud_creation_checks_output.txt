@@ -1,0 +1,91 @@
+  The layout is Windows' own (Scripts, Lib\site-packages), which is where the project runs. The tests give it
+  smoke case: E_001/FULL_HISTORY_RAW_COUNTS_V1 for POWERBALL: a complete forecast
+  smoke case: E_001/FULL_HISTORY_RAW_COUNTS_V1 for OZLOTTO: a complete forecast
+  smoke case: E_002/RECUR_MEAN_ALL_V1 for POWERBALL: a complete forecast
+  smoke case: E_002/RECUR_MEAN_ALL_V1 for OZLOTTO: a complete forecast
+  smoke case: E_002/RECUR_MEAN_LAST8_V1 for POWERBALL: a complete forecast
+  smoke case: E_002/RECUR_MEAN_LAST8_V1 for OZLOTTO: a complete forecast
+  smoke case: E_002/RECUR_MEDIAN_ALL_V1 for POWERBALL: a complete forecast
+  smoke case: E_002/RECUR_MEDIAN_ALL_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_INTERP_W52_D4_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_INTERP_W52_D4_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_LS_W104_D3_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_LS_W104_D3_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_LS_W52_D2_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_LS_W52_D2_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_LS_W52_D3_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_LS_W52_D3_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_MINIMAX_W52_D2_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_MINIMAX_W52_D2_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_003/POLY_MINIMAX_W52_D3_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_003/POLY_MINIMAX_W52_D3_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_INTERP_W52_D4_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_INTERP_W52_D4_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_LS_W104_D3_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_LS_W104_D3_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_LS_W52_D2_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_LS_W52_D2_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_LS_W52_D3_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_LS_W52_D3_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_MINIMAX_W52_D2_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_MINIMAX_W52_D2_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_004/POLY_MINIMAX_W52_D3_H4_V1 for POWERBALL: a complete forecast
+  smoke case: E_004/POLY_MINIMAX_W52_D3_H4_V1 for OZLOTTO: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_DECAY_149_150_V1 for POWERBALL: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_DECAY_149_150_V1 for OZLOTTO: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_DECAY_74_75_V1 for POWERBALL: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_DECAY_74_75_V1 for OZLOTTO: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_FULL_MEMORY_V1 for POWERBALL: a complete forecast
+  smoke case: E_006/BETA_BERNOULLI_FULL_MEMORY_V1 for OZLOTTO: a complete forecast
+  smoke case: E_007/BETA_SHRINK_FULL_C52_V1 for POWERBALL: a complete forecast
+  smoke case: E_007/BETA_SHRINK_FULL_C52_V1 for OZLOTTO: a complete forecast
+  smoke case: E_007/BETA_SHRINK_W104_C52_V1 for POWERBALL: a complete forecast
+  smoke case: E_007/BETA_SHRINK_W104_C52_V1 for OZLOTTO: a complete forecast
+  smoke case: E_007/BETA_SHRINK_W52_C52_V1 for POWERBALL: a complete forecast
+  smoke case: E_007/BETA_SHRINK_W52_C52_V1 for OZLOTTO: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P13_V1 for POWERBALL: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P13_V1 for OZLOTTO: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P26_V1 for POWERBALL: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P26_V1 for OZLOTTO: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P52_V1 for POWERBALL: a complete forecast
+  smoke case: E_008/HIER_PERIODS_P52_V1 for OZLOTTO: a complete forecast
+  smoke case: E_009/EXP_DECAY_18_19_V1 for POWERBALL: a complete forecast
+  smoke case: E_009/EXP_DECAY_18_19_V1 for OZLOTTO: a complete forecast
+  smoke case: E_009/EXP_DECAY_37_38_V1 for POWERBALL: a complete forecast
+  smoke case: E_009/EXP_DECAY_37_38_V1 for OZLOTTO: a complete forecast
+  smoke case: E_009/EXP_DECAY_5_6_V1 for POWERBALL: a complete forecast
+  smoke case: E_009/EXP_DECAY_5_6_V1 for OZLOTTO: a complete forecast
+  smoke case: E_010/CONTRAST_S13_L104_V1 for POWERBALL: a complete forecast
+  smoke case: E_010/CONTRAST_S13_L104_V1 for OZLOTTO: a complete forecast
+  smoke case: E_010/CONTRAST_S26_L208_V1 for POWERBALL: a complete forecast
+  smoke case: E_010/CONTRAST_S26_L208_V1 for OZLOTTO: a complete forecast
+  smoke case: E_010/CONTRAST_S52_FULL_V1 for POWERBALL: a complete forecast
+  smoke case: E_010/CONTRAST_S52_FULL_V1 for OZLOTTO: a complete forecast
+  smoke case: E_017/HAZARD_BINS_C100_V1 for POWERBALL: a complete forecast
+  smoke case: E_017/HAZARD_BINS_C100_V1 for OZLOTTO: a complete forecast
+  smoke case: E_017/HAZARD_BINS_W208_C100_V1 for POWERBALL: a complete forecast
+  smoke case: E_017/HAZARD_BINS_W208_C100_V1 for OZLOTTO: a complete forecast
+  smoke case: E_017/HAZARD_LOGAGE_SIGN_V1 for POWERBALL: a complete forecast
+  smoke case: E_017/HAZARD_LOGAGE_SIGN_V1 for OZLOTTO: a complete forecast
+  smoke case: E_018/MIX4_ALL_C10_V1 for POWERBALL: a complete forecast
+  smoke case: E_018/MIX4_ALL_C10_V1 for OZLOTTO: a complete forecast
+  smoke case: E_018/MIX4_W104_C10_V1 for POWERBALL: a complete forecast
+  smoke case: E_018/MIX4_W104_C10_V1 for OZLOTTO: a complete forecast
+  smoke case: E_018/MIX4_W208_C10_V1 for POWERBALL: a complete forecast
+  smoke case: E_018/MIX4_W208_C10_V1 for OZLOTTO: a complete forecast
+  smoke case: E_019/PERIODIC_T2_V1 for POWERBALL: a complete forecast
+  smoke case: E_019/PERIODIC_T2_V1 for OZLOTTO: a complete forecast
+  smoke case: E_019/PERIODIC_T3_V1 for POWERBALL: a complete forecast
+  smoke case: E_019/PERIODIC_T3_V1 for OZLOTTO: a complete forecast
+  smoke case: E_019/PERIODIC_T4_V1 for POWERBALL: a complete forecast
+  smoke case: E_019/PERIODIC_T4_V1 for OZLOTTO: a complete forecast
+  forecast sample: 0 stored forecast(s) computed again; 0 differ
+  derived results: POWERBALL: every stored score and prevailing line compared is what this software computes
+  derived results: OZLOTTO: every stored score and prevailing line compared is what this software computes
+with the tree's own Python: 8.7 s
+ smoke asked: ALL ; failures: 0
+ sample: {'compared': 0, 'differences': []} ; derived: {'OZLOTTO': None, 'POWERBALL': None} ; unreadable: {} ; marker: None
+ faults that stop: []
+ scratch left: []
+REFUSED: the Python running is /home/claude/work/venv315, but the tree's settings name /home/claude/work/e2e/qa/.venv as its environment. These checks are made with the tree's own Python and no other.
+with another Python: refused: the checks could not be made with the target's Python (/home/claude/work/venv315/bin/python; exit code 2). What it printed is above. Nothing is known of the tre

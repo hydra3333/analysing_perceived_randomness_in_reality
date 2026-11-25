@@ -7429,3 +7429,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   what is not yet proved. Next EX is EX_328, from Claude, when the slice is whole.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 309; RAT-59.
+
+## 309. 25 November 2026, 21:38 - slice C part C3 written and proved in the cloud: Init_Tree; every real variant passes its smoke case under a tree's own Python
+
+- **The owner, 21:21:** "go on"
+- **Written, tested and pushed** (cloud only; working files in the overlay; not reviewed, nothing installed):
+  `deploy/init_tree.py`, `Init_Tree.bat`, `tests/test_trees_init.py` (34 tests, all pass): the nine steps of
+  deployment design section 4. The first run shows the plan and asks once, creates the folder, writes the tree's
+  own settings file (create-only), the barrier, every planned file, a status file for each variant, and copies the
+  accepted results with a record; it then pauses (exit code 3) for the owner to build the tree's `.venv`. The same
+  command again checks the software against the plan, runs the suite and every smoke case with the tree's own
+  Python, has that Python write the environment's marker, writes the kit, the list of installed files and the
+  log line, removes the barrier last and attempts the first backup. The four environment scripts are now on the
+  infrastructure manifest, so that a new tree holds them.
+- **Proved in the cloud:** 39 planted faults, all caught (three by tests added for them). A creation run from
+  the slice C tree with its real software, to its pause: all 40 real variants marked ready and planned, 168
+  files copied. Then, with a real Python environment built inside that tree, the checks program was started for
+  real by the install tool: **all 40 real variants gave a complete forecast for both games on the invented table
+  with exactly their declared minimum history** (80 smoke cases); the same call with another Python was refused.
+  The evidence is in `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/evidence/`. It holds no draw value.
+- **Kept for the Windows rehearsal, said plainly:** the second half of a creation with a real Windows environment
+  (the marker's digest takes the Windows layout), the launcher, and the suite run by the tool with a tree's
+  Windows Python. The whole suite has not been run on this state.
+- **Readings for the reviewer:** the notes' section 3, C-R13 (a) to (h).
+- **Next:** part C4, `Install.bat`; then C5, `Reinstall_Infra.bat`.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 310; RAT-59.

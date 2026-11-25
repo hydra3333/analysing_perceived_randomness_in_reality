@@ -198,6 +198,22 @@ class ACreationFromStartToEnd(CreationCase):
         positions = [next(i for i, line in enumerate(said) if line.startswith(mark)) for mark in marks]
         self.assertEqual(positions, sorted(positions), said)
 
+    def test_the_updaters_lock_is_let_go_before_the_barrier_is_removed_and_the_job_lock_after_it(self):
+        self.init(answers=['YES'])
+        self.build_environment()
+        seen, real = {}, common.remove_barrier
+
+        def look_then_remove(tree_root):
+            """Note what is still held at the moment the barrier is removed."""
+            seen['updater lock'] = (self.target / job_lock.UPDATER_LOCK).exists()
+            seen['job lock'] = (self.target / 'records' / job_lock.JOB_LOCK_NAME).exists()
+            seen['list'] = (self.target / installed_files.LIST_PATH).is_file()
+            real(tree_root)
+
+        with mock.patch.object(common, 'remove_barrier', look_then_remove):
+            self.assertEqual(self.init()[0], init_tree.EXIT_CREATED)
+        self.assertEqual(seen, {'updater lock': False, 'job lock': True, 'list': True})
+
     def test_the_research_job_runs_in_the_new_tree(self):
         self.created()
         code, said = fixtures.run_job(self.target, games=('POWERBALL',))
@@ -324,6 +340,21 @@ class TheSettingsFileIsWrittenOnce(CreationCase):
         with mock.patch('builtins.open', watching):
             self.assertEqual(self.init()[0], init_tree.EXIT_CREATED)
         self.assertEqual((opened, path.read_bytes()), ([], data))
+
+    def test_it_is_read_back_and_a_file_that_does_not_give_devs_entry_stops_before_any_software_is_copied(self):
+        real = init_tree.settings_bytes
+
+        def naming_another_backup_root(entry, copy_from):
+            """The file as it would be if it were written wrongly."""
+            return real(entry, copy_from).replace(str(self.backups).encode(), str(self.backups).encode() + b'_x')
+
+        with mock.patch.object(init_tree, 'settings_bytes', naming_another_backup_root):
+            code, said = self.init(answers=['YES'])
+        self.assertEqual(code, init_tree.EXIT_REFUSED, said)
+        self.assertIn('backup_root disagrees for the QA tree', '\n'.join(said))
+        self.assertIsNone(common.read_barrier(self.target))
+        self.assertFalse((self.target / 'src').exists())
+        self.assertFalse((self.target / 'records' / job_lock.JOB_LOCK_NAME).exists())
 
     def test_the_command_opens_it_for_writing_in_one_place_and_only_to_create_it(self):
         source = (REPOSITORY_ROOT / 'deploy' / 'init_tree.py').read_text(encoding='utf-8')

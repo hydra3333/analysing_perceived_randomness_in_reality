@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 21:21 Australia/Adelaide (entry 308: a second status blurb to the reviewer; slice C parts C1 and C2 done; next C3, Init_Tree).
+**Last updated:** 25 November 2026, 21:38 Australia/Adelaide (entry 309: slice C parts C1 to C3 written and proved in the cloud; next C4, Install).
 
 ## For the owner: NOW
 
+- **SLICE C: PARTS C1, C2 AND C3 ARE WRITTEN AND PROVED IN THE CLOUD (entry 309; 25 November 2026):** the checks,
+  `Verify_Tree`, the shared install machinery, `Init_Tree`. **Next: part C4, `Install`, then C5,
+  `Reinstall_Infra`.** Nothing waits on the owner or the reviewer. Section 4 of
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says exactly where the slice stands and what C4
+  needs; section 3 holds the readings for the reviewer (C-R1 to C-R13) and the amendment owed (C-Q1, RAT-59).
 - **SLICE C: PARTS C1 AND C2 ARE WRITTEN AND TESTED (entry 307; 25 November 2026);** head `a405c06` and this
   entry's commit. **Next: part C3, `Init_Tree`,** then C4 (`Install`) and C5 (`Reinstall_Infra`). Nothing waits on
   the owner or the reviewer. Section 4 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says exactly

@@ -1,0 +1,12 @@
+INFRA: already marked, and the marker matches the files; nothing was written
+40 variant folders; 0 refused
+marked 40
+exit code 3
+INIT TREE - START - the QA tree at /home/claude/work/e2e/qa, from DEV at /home/claude/work/dev12
+The plan (INIT into the QA tree at /home/claude/work/e2e/qa): 168 file(s) to add, 0 to overwrite, 0 to remove.
+This same creation was begun before and is being continued; files already in place are passed over.
+The target is reserved: its job lock is held, and no other Python process of the tree is running (70 processes of this PC looked at).
+Files: 0 copied (each to a temporary name, hashed, renamed); 168 already in place; 0 removed.
+Status files: 0 created as ACTIVE; 40 already there.
+The accepted results: already copied from /home/claude/work/dev12 (6 files, as the record says).
+INIT TREE - PAUSED - the QA tree's software and results are in place. NOW BUILD ITS PYTHON ENVIRONMENT: in /home/claude/work/e2e/qa run create_venv.bat, then install_upgrade_dependencies_into_venv.bat. Then type this same command again: Init_Tree.bat QA. Until it finishes, no command works in that tree.

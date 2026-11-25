@@ -293,7 +293,26 @@ file; says what it would change before it asks; the cutoff file when a change fr
   `deploy/install_common.py` (`--write-marker`), `tests/test_trees_verify.py` (33 tests). Passing with them:
   `test_trees_suite`, `test_file_form`, `test_trees_readiness`, `test_research_manifest`,
   `test_trees_install_common` (69), `test_trees_check_tree`, `test_trees_installed_files`, `test_trees_checks`.
-- **Next: C3's proof, then C4 (`Install`), C5 (`Reinstall_Infra`, with reading C-R9).**
+- **25 November 2026, part C3 PROVED in the cloud.** Planted faults (`mutation_check_slice_c3.py`): 39 in
+  `init_tree.py` and in the marker's writing; 36 caught at once, the other three by tests added for them
+  (`tests/test_trees_init.py` is now 34 tests). **The real start of a tree's own Python, which the unit tests
+  only stand in for, was made in the cloud** (`slice_c/evidence/cloud_creation_*`): a creation run from the slice C
+  tree with its REAL software, to its pause (infrastructure and all 40 real variants marked and planned; 168 files
+  copied, 40 status files, the six results files); the same command again (168 already in place, the results
+  kept by their record); then a real Python environment built inside that tree and
+  `install_common.checks_with_target_python` started on it for real: the `checks` program ran isolated under the
+  tree's own Python, **every one of the 40 real variants gave a complete forecast for both games on the invented
+  table with exactly its declared minimum history (80 smoke cases, about ten seconds),** nothing was left in
+  `scratch`, and the same call with another Python was refused by the program. **Not provable in the cloud, kept
+  for the Windows rehearsal:** the second half of a creation with a real environment (the marker's digest takes
+  the Windows layout `Scripts` and `Lib\site-packages`), `python.exe` by its Windows path, the launcher, and the
+  whole suite run by the tool with a tree's Windows Python. The whole suite has not been run on this state.
+- **Next: C4 (`Install.bat QA|PROD [--only ...]`, design 5, eleven steps), then C5 (`Reinstall_Infra`, with reading
+  C-R9).** For C4: the plan is the ready variants the target lacks (narrowed by `--only`), their files, and helper
+  files the target lacks; a helper the target holds with other bytes refuses; shown: to add, and left out each
+  with its reason (not marked; marker does not match; an undeclared file; already installed; already installed
+  with different bytes); nothing to add ends with the target untouched. Then design 5's steps 2 to 11 with
+  `install_common` (`reserved` twice: a look at step 2, the reservation at step 6).
 - **To settle in C3, seen now:** `Init_Tree` step 6 has the owner build `.venv` "with `create_venv.bat` and
   `install_upgrade_dependencies_into_venv.bat` in the new tree", and design 2 lists those and the two activation
   scripts among a tree's files. They are not on the infrastructure manifest today, so no install would put them

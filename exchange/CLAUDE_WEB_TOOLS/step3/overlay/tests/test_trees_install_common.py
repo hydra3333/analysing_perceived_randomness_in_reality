@@ -864,7 +864,10 @@ class TheChecksWithTheTargetsOwnPython(InventedDevAndQa):
 
         self.checks(run, smoke=['E_901/A_V1', 'E_901/B_V1'], sample=False, derived=False)
         self.checks(run, smoke=common.NO_VARIANT, sample=False, derived=True)
-        self.assertEqual(seen, [['--smoke', 'E_901/A_V1,E_901/B_V1'], ['--smoke', 'NONE', '--derived']])
+        common.checks_with_target_python(Path('the/python.exe'), self.qa, self.qa, common.ALL_VARIANTS, False, False,
+                                         say=lambda line: None, run=run, write_marker=True)
+        self.assertEqual(seen, [['--smoke', 'E_901/A_V1,E_901/B_V1'], ['--smoke', 'NONE', '--derived'],
+                                ['--smoke', 'ALL', '--write-marker']])
 
     def test_any_ending_but_zero_with_a_result_of_the_right_kind_is_refused_and_nothing_passes(self):
         def ending(code: int, text: str | None):
