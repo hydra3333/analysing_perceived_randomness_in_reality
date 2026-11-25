@@ -6838,3 +6838,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
   edition. The register's next ordinary edition carries RAT-54 to RAT-57. This ratification authorises no install
   and no run.
 - Next numbers: EX_322; entry 284; RAT-58.
+
+## 284. 25 November 2026, 13:46 - the owner: write the consolidated H-1 now
+
+- **The owner, 13:46,** to Claude's advice to write the consolidated H-1 next, before slice B: "yes to your
+  recommendation to fully update your handover blurb and doc(s) right now. thank you."
+- **What is written:** the next ordinary edition of the primary handover, H-1 v14, and its introductory blurb, as
+  entries 271 and 272 and EX_317 describe it: one consolidated live chapter in place of the stacked sections that
+  supersede one another; history clearly labelled; the rights, the hard rules and the lessons kept; entry 270's
+  eight points and EX_317's H13-C01 to H13-C04, O01 and O02 corrected; the reviewer's handover named as H-2 v9.
+- **Not said by the owner:** that H-1 v14 is ratified in advance. It is therefore written as a CANDIDATE under
+  `exchange/`, and its ratification and installation in `doc/` are put to him when it is ready.
+- Slice B waits until this is done.
+- Next numbers: EX_322; entry 285; RAT-58.
