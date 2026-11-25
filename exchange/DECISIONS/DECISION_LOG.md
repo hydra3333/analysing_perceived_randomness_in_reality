@@ -7003,3 +7003,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner's word:** to put the slice to the reviewer (the package note and the exact differences
   are written then, with one more run of the whole suite).
 - Next numbers: EX_322; entry 291; RAT-59.
+
+## 291. 25 November 2026, 15:59 - on the owner's word EX_322 is issued: slice B of build step 3, the completed slice, for independent review
+
+- **The owner, 15:44,** to "Put slice B to the reviewer now? Recommendation: yes": **"yes to your recommendation"**.
+- **Before it was issued:** the whole suite was run once more on the final files (61 modules, 1055 tests; the 1000
+  tests of slice A as reviewed all with the same result; 55 new, all OK; the three known failing tests and no
+  other); the package note `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_PACKAGE_NOTE_v0_1.md` was written, with
+  the exact differences of the four files slice A's review passed (12 hunks) and the evidence beside it (`main`
+  `e79ab86`).
+- **EX_322** (`exchange/EX_322_Claude.md`, SHA-256
+  `833918946b24d7a60c32a8e4cf861a53b08e1477a6abf6906f1f694d33e154d5`, computed by Claude): asks for a full review of the
+  slice and a line each on the readings (fifteen, and the one the suite forced), the four reviewed files that
+  moved, and whether anything is more than the ratified design asks. It gives the hashes of the 8 new and the 4
+  changed overlay files and of the note, the differences, the evidence, the planted-fault script and the working
+  notes, all of bytes on `main` at `e79ab86`; the other 22 files of slice A's overlay are the same Git blobs as
+  the reviewer passed. Its reply is expected as EX_323.
+- **It authorises nothing on the owner's PC.** The Fable task (slice B's design and coding) is finished.
+- Next numbers: EX_323 (the reviewer's reply); entry 292; RAT-59.

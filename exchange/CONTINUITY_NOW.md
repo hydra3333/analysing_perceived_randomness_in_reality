@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 15:28 Australia/Adelaide (entry 290: slice B of build step 3 is written and proved in the cloud, not reviewed; it waits for the owner's word to go to the reviewer; the handovers in force are H-1 v14 and H-2 v9).
+**Last updated:** 25 November 2026, 15:59 Australia/Adelaide (entry 291: EX_322 issued on the owner's word: slice B of build step 3 is with the reviewer for full review; its reply is expected as EX_323; the handovers in force are H-1 v14 and H-2 v9).
 
 ## For the owner: NOW
 
+- **SLICE B IS WITH THE REVIEWER (entry 291; 25 November 2026): EX_322,** `exchange/EX_322_Claude.md`, with the
+  package note `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_PACKAGE_NOTE_v0_1.md`, the exact differences of the
+  four files slice A's review passed, and the evidence beside it. **Waiting on the reviewer:** EX_323. **Next
+  after a PASS, on the owner's go:** slice C (`Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree`), a new
+  subsystem (the model rule applies first). **If this chat ends here:** a new chat reads H-1 v14, entries 287 to
+  291, slice B's note, and answers EX_323.
 - **SLICE B IS WRITTEN AND PROVED IN THE CLOUD (25 November 2026; working files; not reviewed):** the backup,
   the recovery kit and the restore, with 55 tests; suite 61 modules, 1052 tests, the three known failures and no
   other; planted faults 53 of 53 caught. **Waiting on the owner's word:** to put it to the reviewer (the package
