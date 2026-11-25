@@ -26,8 +26,9 @@ Which of the project's own modules it uses
     research.forecast_engine  compute_target, content_digest: the ordinary engine
     research.job_lock         is_link: the scratch folder must be a real folder
     research.reader           ResultsOnFile, check_results_bytes, first_target, header_for
-    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, read_game: a game's records as the job
-                              reads them
+    research.reports          ReportWriter: the print-outs made again after an infrastructure reinstall
+    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, finish_reports, read_game: a game's
+                              records as the job reads them, and its own making of the reports
     research.settings         TreeSettings, read_settings
     research.status_file      read_status: a status file is read here and never created
     research.variant_folders  find_variants, load_method
@@ -40,12 +41,14 @@ What uses it
 from __future__ import annotations
 
 import argparse
+import collections
 import hashlib
 import json
 import random
 import shutil
 import traceback
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 
 from _common.game_profiles import get_profile
@@ -54,7 +57,8 @@ from research.code_identity import ManifestRefused, derived_code_digest, forecas
 from research.forecast_engine import FORECAST, compute_target, content_digest
 from research.job_lock import LaunchRefused, is_link
 from research.reader import ResultsOnFile, check_results_bytes, first_target, header_for
-from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, read_game
+from research.reports import ReportWriter
+from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, finish_reports, read_game
 from research.settings import SettingsRefused, TreeSettings, read_settings
 from research.status_file import STATUS_FILE_NAME, StatusRefused, read_status
 from research.variant_folders import find_variants, load_method
@@ -254,6 +258,16 @@ def read_stored(software: Software, settings: TreeSettings, say=print) -> dict:
     return stored
 
 
+def _job_that_only_reads(software: Software, settings: TreeSettings, say, now=None) -> Job:
+    """The record the engine's own reading functions ask for, made for software that is being asked and not
+    run as a job: no results step, no scope, and an empty environment digest (no line is written with it)."""
+    statuses, refusals = read_statuses(software)
+    return Job(settings=settings, variants=software.variants, statuses=statuses, status_refusals=refusals,
+               forecasting_code_identity=software.forecasting_code_identity,
+               derived_code_digest=software.derived_code_digest, environment_digest='', only=None, no_update=True,
+               now=now, say=say)
+
+
 def read_stored_game_by_game(software: Software, settings: TreeSettings, say=print, pass_on: bool = False) -> tuple:
     """As read_stored, but a game whose records the job itself would refuse does not stop the other game.
 
@@ -263,11 +277,7 @@ def read_stored_game_by_game(software: Software, settings: TreeSettings, say=pri
     Only the refusals the job understands (research_job.GAME_REFUSALS) are caught; any other error is a fault
     and is passed on.
     """
-    statuses, refusals = read_statuses(software)
-    job = Job(settings=settings, variants=software.variants, statuses=statuses, status_refusals=refusals,
-              forecasting_code_identity=software.forecasting_code_identity,
-              derived_code_digest=software.derived_code_digest, environment_digest='', only=None, no_update=True,
-              now=None, say=say)
+    job = _job_that_only_reads(software, settings, say)
     stored, unreadable = {}, {}
     for game_id in GAMES:
         if not any(variant.supports(game_id) for variant in software.variants):
@@ -440,6 +450,63 @@ def main(arguments, software_root: Path, say=print) -> int:
         with open(chosen.result, 'x', encoding='ascii', newline='\n') as stream:
             stream.write(json.dumps(found, ensure_ascii=True, sort_keys=True) + '\n')
     except (SettingsRefused, ChecksRefused, ManifestRefused, FileExistsError, LaunchRefused) as refusal:
+        say(f'REFUSED: {refusal}')
+        return EXIT_REFUSED
+    return EXIT_RAN
+
+
+# ---------------------------------------------- the print-outs made again, after an infrastructure reinstall
+
+def make_reports_again(software: Software, settings: TreeSettings, now=None, say=print) -> dict:
+    """Make every league report, next-draw report and OV-1 print-out of each game again from the stored lists,
+    with this software, exactly as the research job's End step makes them (specification 12.4: "the print-outs
+    are made again when their code changes").
+
+    software: the tree's own software.  settings: the tree's settings.  now: gives the present time (UTC).
+    The reports are print-outs, a function of the lists, the results and the status files: no list, score or
+    prevailing line is read for writing, and none is written. A file whose bytes would not change is not
+    written. Where a game's results are marked not current from a draw, nothing is made for that draw or a
+    later one, by the job's own rule. A game whose stored records the job itself would refuse is said and left.
+    Returns {game: how many report files were written}.
+    """
+    now = now or (lambda: datetime.now(timezone.utc))
+    job = _job_that_only_reads(software, settings, say, now)
+    written = {}
+    for game_id in GAMES:
+        if not any(variant.supports(game_id) for variant in software.variants):
+            continue
+        try:
+            records = read_game(job, game_id)
+        except GAME_REFUSALS as refusal:
+            say(f'  {game_id}: its stored records could not be read, so its reports were not made again: {refusal}')
+            continue
+        job.counts[game_id] = collections.Counter()
+        finish_reports(job, records, ReportWriter(records.tree_root, game_id, job.local_time()))
+        written[game_id] = job.counts[game_id]['report files']
+        say(f'  reports: {game_id}: made again with this software; {written[game_id]} file(s) differed and were '
+            f'written')
+    return written
+
+
+def reports_main(arguments, software_root: Path, say=print) -> int:
+    """The `reports` command of src/tree_checks_command.py. No launcher starts it: an infrastructure reinstall
+    does, with the target tree's own Python, while it holds the target's job lock.
+
+    arguments: ['--data', 'G:/a_p_r_i_r'].  software_root: the folder this program's own src/ lies in, which
+    must be that tree: a tree's reports are made by its own installed software.
+    Returns EXIT_RAN when the reports were made; EXIT_REFUSED with one line saying why.
+    """
+    parser = argparse.ArgumentParser(prog='tree_checks_command.py reports',
+                                     description='Make a tree\'s print-outs again with its installed software '
+                                                 '(specification 12.4).')
+    parser.add_argument('--data', required=True, help='the tree whose reports are made again')
+    chosen = parser.parse_args(arguments)
+    try:
+        settings = read_settings(Path(chosen.data))
+        if Path(software_root).resolve() != settings.tree_root.resolve():
+            raise ChecksRefused('a tree\'s reports are made by the software that lies in the tree itself.')
+        make_reports_again(read_software(software_root), settings, say=say)
+    except (SettingsRefused, ChecksRefused, ManifestRefused, LaunchRefused) as refusal:
         say(f'REFUSED: {refusal}')
         return EXIT_REFUSED
     return EXIT_RAN

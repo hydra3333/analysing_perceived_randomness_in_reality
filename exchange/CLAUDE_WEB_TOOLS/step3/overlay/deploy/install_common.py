@@ -80,6 +80,7 @@ YES = 'YES'
 # The program of the installed software that makes the checks, from the software's root, and its command word.
 CHECKS_PROGRAM = 'src/tree_checks_command.py'
 CHECKS_WORD = 'checks'
+REPORTS_WORD = 'reports'
 # That command's own words: the kind of its result, and the words for every variant's smoke case and for none.
 CHECKS_RESULT_KIND, ALL_VARIANTS, NO_VARIANT = tree_checks.RESULT_KIND, tree_checks.ALL_VARIANTS, tree_checks.NO_VARIANT
 # The start of the name of the temporary folder a result file is written in.
@@ -661,6 +662,18 @@ def checks_with_target_python(python: Path, software_root: Path, tree_root: Path
                              f'passes.')
     say(f'The checks were made with {python}.')
     return found
+
+
+def reports_with_target_python(python: Path, tree_root: Path, say=print, run=subprocess.run) -> None:
+    """Have a tree's print-outs made again by its own installed software, with its own Python (specification
+    12.4; deployment design 6, step 9). The program is started as for the checks; it prints its own lines.
+    Refuses (InstallRefused) if it ended with any exit code but 0."""
+    words = [str(python), '-I', '-B', '-u', str(Path(tree_root) / CHECKS_PROGRAM), REPORTS_WORD,
+             '--data', str(tree_root)]
+    ended = run(words, stdin=subprocess.DEVNULL, check=False).returncode
+    if ended != 0:
+        raise InstallRefused(f'the reports could not be made again with the target\'s Python ({python}; exit code '
+                             f'{ended}). What it printed is above.')
 
 
 def faults_that_stop(found: dict) -> list:

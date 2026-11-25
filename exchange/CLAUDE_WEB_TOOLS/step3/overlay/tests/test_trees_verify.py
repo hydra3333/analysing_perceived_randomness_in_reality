@@ -411,6 +411,71 @@ class TheChecksCommand(VerifyCase):
         self.assertEqual((code, found), (tree_checks.EXIT_REFUSED, None))
 
 
+class TheReportsCommand(VerifyCase):
+    """Specification 12.4: the print-outs are made again when their code changes."""
+
+    def reports(self, tree: Path, software: Path | None = None) -> tuple:
+        """Run the command; return (the exit code, the lines said)."""
+        said = []
+        with fx.ImportPath(software or tree):
+            code = tree_checks.reports_main(['--data', str(tree)], software or tree, say=said.append)
+        return code, said
+
+    def report_files(self, tree: Path) -> dict:
+        """The active report files of the test game, with their bytes."""
+        root = tree / 'results' / 'research' / GAME / 'reports'
+        return {path.relative_to(root).as_posix(): path.read_bytes() for path in sorted(root.rglob('*'))
+                if path.is_file() and 'made_times' not in path.name}
+
+    def test_reports_that_are_what_the_software_makes_are_not_written_again_and_nothing_else_changes(self):
+        tree = self.worked()
+        before = whole_tree(tree)
+        code, said = self.reports(tree)
+        self.assertEqual(code, tree_checks.EXIT_RAN, said)
+        self.assertEqual(said, [f'  reports: {GAME}: made again with this software; 0 file(s) differed and were '
+                                f'written'])
+        after = whole_tree(tree)
+        self.assertEqual({path: digest for path, digest in after.items() if 'made_times' not in path},
+                         {path: digest for path, digest in before.items() if 'made_times' not in path})
+
+    def test_a_report_that_old_code_made_otherwise_or_that_is_missing_is_made_again_from_the_lists(self):
+        tree = self.worked()
+        wanted = self.report_files(tree)
+        names = sorted(name for name in wanted if name != 'README.txt')
+        root = tree / 'results' / 'research' / GAME / 'reports'
+        (root / names[0]).write_bytes(b'made by old report code\r\n')
+        (root / names[-1]).unlink()
+        lists = {path: digest for path, digest in whole_tree(tree).items() if '/reports/' not in path}
+        code, said = self.reports(tree)
+        self.assertEqual(code, tree_checks.EXIT_RAN)
+        self.assertIn('2 file(s) differed and were written', said[0])
+        self.assertEqual(self.report_files(tree), wanted)
+        self.assertEqual({path: digest for path, digest in whole_tree(tree).items() if '/reports/' not in path},
+                         lists, 'no list, score, ledger or status file was written')
+
+    def test_where_results_are_marked_not_current_nothing_is_made_for_that_draw_or_a_later_one(self):
+        from research import derived_check, reports
+        tree = self.worked()
+        derived_check.write_cutoff(tree, GAME, 1160, derived_check.MISMATCH, 'an invented difference')
+        reports.set_aside_from(tree, GAME, 1160)
+        code, _ = self.reports(tree)
+        self.assertEqual(code, tree_checks.EXIT_RAN)
+        active = self.report_files(tree)
+        import re
+        draws = [int(found.group(1)) for name in active if 'not_current' not in name
+                 for found in [re.search(r'_d(\d+)', name)] if found and not name.startswith('ov1/')]
+        self.assertTrue(draws and max(draws) < 1160, sorted(active))
+        self.assertFalse(any(name.startswith('ov1/') and 'prevailing' in name and 'not_current' not in name
+                             for name in active), 'the prevailing print-out is not made under a mismatch')
+
+    def test_software_that_does_not_lie_in_the_tree_is_refused(self):
+        tree = self.worked()
+        elsewhere = self.tree(name='elsewhere')
+        code, said = self.reports(tree, software=elsewhere)
+        self.assertEqual(code, tree_checks.EXIT_REFUSED)
+        self.assertIn('are made by the software that lies in the tree itself', said[0])
+
+
 class TheProgramAndItsLauncher(VerifyCase):
     """src/tree_checks_command.py and Verify_Tree.bat."""
 
@@ -433,7 +498,7 @@ class TheProgramAndItsLauncher(VerifyCase):
     def test_a_word_that_is_no_command_is_refused(self):
         code, printed = self.run_program(self.tree(), ['research'])
         self.assertEqual(code, 2)
-        self.assertIn('the first word must be one of: verify, checks', printed)
+        self.assertIn('the first word must be one of: verify, checks, reports', printed)
 
     def test_a_python_that_is_not_the_trees_own_is_refused_for_both_commands(self):
         tree = self.tree()
