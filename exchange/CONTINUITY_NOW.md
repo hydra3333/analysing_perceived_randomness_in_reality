@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 21:48 Australia/Adelaide (entry 310: H-1 is refreshed when slice C is whole; part C4, Install, in hand).
+**Last updated:** 25 November 2026, 21:57 Australia/Adelaide (entry 311: slice C parts C1 to C4 written and proved in the cloud; next C5, Reinstall_Infra).
 
 ## For the owner: NOW
 
+- **SLICE C: PARTS C1 TO C4 ARE WRITTEN AND PROVED IN THE CLOUD (entry 311; 25 November 2026).** **Next: part C5,
+  `Reinstall_Infra`, the last;** what it needs is listed in section 4 of
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`, so that a chat that resumes can begin at once. After
+  C5: the whole suite on the slice's final bytes, the package note for the reviewer (EX_328 on the owner's word),
+  and the next edition of H-1 (entry 310).
 - **H-1 IS REFRESHED WHEN SLICE C IS WHOLE (the owner, entry 310; 25 November 2026),** not before. Claude says so
   at that point and writes the next ordinary edition. **In hand: part C4, `Install`.**
 - **SLICE C: PARTS C1, C2 AND C3 ARE WRITTEN AND PROVED IN THE CLOUD (entry 309; 25 November 2026):** the checks,

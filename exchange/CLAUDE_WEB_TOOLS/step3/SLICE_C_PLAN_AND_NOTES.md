@@ -330,23 +330,35 @@ file; says what it would change before it asks; the cutoff file when a change fr
   `test_file_form`, `test_trees_readiness`, `test_research_manifest`, `test_trees_init`). Changed:
   `deploy/deploy_command.py` (the word `install`), `deploy/INFRA_MANIFEST.ini` (two tool lines),
   `deploy/SUITE_MANIFEST.ini` (`test_trees_install`; 22 modules).
-- **Next: C4's planted faults, then C5 (`Reinstall_Infra.bat QA|PROD [--replace-unfinished]`, design 6, eleven
-  steps, with reading C-R9).** (The note that follows was written before C4.) C4 (`Install.bat QA|PROD [--only ...]`,
-  design 5, eleven steps), then C5 (`Reinstall_Infra`, with reading C-R9).** For C4: the plan is the ready variants the target lacks (narrowed by `--only`), their files, and helper
-  files the target lacks; a helper the target holds with other bytes refuses; shown: to add, and left out each
-  with its reason (not marked; marker does not match; an undeclared file; already installed; already installed
-  with different bytes); nothing to add ends with the target untouched. Then design 5's steps 2 to 11 with
-  `install_common` (`reserved` twice: a look at step 2, the reservation at step 6).
-- **To settle in C3, seen now:** `Init_Tree` step 6 has the owner build `.venv` "with `create_venv.bat` and
-  `install_upgrade_dependencies_into_venv.bat` in the new tree", and design 2 lists those and the two activation
-  scripts among a tree's files. They are not on the infrastructure manifest today, so no install would put them
-  in a tree. They go onto `[files]` as class `other` (four lines), after a check that each is in the form the
-  standard gives a `.bat` in DEV.
-- (Superseded note, kept for the record.) First to settle there: design 17's own note that "the code round
-  lists exactly what the suite needs from the repository, so that the temporary copy is complete; that list sits
-  beside the infrastructure manifest. Tests that served only the old system are not part of the new suite." So
-  C2 begins with that list (which tests are the new suite; which of DEV's files they read) and DEV's tool that
-  runs them on a temporary copy with a target's Python.
+- **25 November 2026, part C4 PROVED.** Planted faults (`mutation_check_slice_c4.py`): 31 in `install.py`; 30 caught
+  at once, the last by a test added for it (`tests/test_trees_install.py` is now 29 tests). The whole suite has
+  not been run on this state.
+- **NEXT: C5, `Reinstall_Infra.bat QA|PROD [--replace-unfinished]`** (design 6, eleven steps; specification 12.4).
+  What it needs, so that a chat that resumes can begin at once:
+  - *Read first:* specification 12.4 in full (the warning's exact text and the one question); specification 5.8
+    (the cutoff file `NOT_CURRENT_FROM.json`, moving stale reports out); `src/research/derived_check.py`
+    (`write_cutoff`, `settle`, `read_cutoff`), `src/research/reports.py` (how the league report, the next-draw
+    report and the OV-1 print-out are made, for step 9's "made again with the new code"), and how the research
+    job moves stale reports out when it marks a game not current.
+  - *Step 1, the plan:* the difference between DEV's manifest files (`install_common.dev_infrastructure`) and the
+    target's infrastructure on its list: add, overwrite (both hashes), remove, each with its class; the text
+    differences shown; no path under a family folder or `_shared`; no difference ends; **any `forecast`-class
+    file in the plan refuses** ("this changes code that makes forecasts: use `Correct_Shared_Code.bat`").
+  - *Step 3, before anything is overwritten:* the software as it would be, assembled in a temporary folder (the
+    target's installed files with the plan applied); with the target's Python: the suite
+    (`suite_if_it_is_the_trees`, which is DEV's by construction), then `checks_with_target_python(python,
+    <temporary folder>, <tree>, NO_VARIANT, sample=True, derived=True)`. A sample difference is a fault and
+    stops. The statement: "No stored result changes", or "This changes stored scores or OV-1 lines, for <game>
+    from draw X". It goes into the plan (`statement`) and the barrier.
+  - *Reading C-R9* for the lock around steps 3 to 6.
+  - *Steps 6 to 10* with `install_common` (`reserved`, `check_barrier(..., replace_unfinished)`, `changing`,
+    `carry_out`, `software_differences`, `finish`); step 9's smoke case of every installed variant, the suite,
+    and the derived results: agree again where nothing was foretold; where a change from X was accepted, write
+    the cutoff for X, move the stale reports out, and check that this was done; if a `derived`-class file was in
+    the plan and the results agree, make every report again.
+  - *Step 11:* `POST_INFRA`; if a change from X was accepted, name the command owed:
+    `Rerun_Walk_Forward.bat --game <game> --from <X> --derived-only`.
+  - *`--replace-unfinished`:* shows the unfinished plan and the new one and asks the same question.
 - **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
   `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
   through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,

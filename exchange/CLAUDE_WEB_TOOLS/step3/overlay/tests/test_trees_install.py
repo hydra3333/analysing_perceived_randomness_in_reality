@@ -136,6 +136,21 @@ class AnInstallFromStartToEnd(InstallCase):
         self.assertGreater(len(fixtures.list_lines(self.target, FAMILY, SECOND)), 0,
                            'installation is release: the next job fills the new variant\'s history')
 
+    def test_the_updaters_lock_is_let_go_before_the_barrier_is_removed_and_the_job_lock_after_it(self):
+        self.add_variant(SECOND)
+        seen, real = {}, common.remove_barrier
+
+        def look_then_remove(tree_root):
+            """Note what is still held at the moment the barrier is removed."""
+            seen['updater lock'] = (self.target / job_lock.UPDATER_LOCK).exists()
+            seen['job lock'] = (self.target / 'records' / job_lock.JOB_LOCK_NAME).exists()
+            seen['new list'] = SECOND in self.variants_installed()
+            real(tree_root)
+
+        with mock.patch.object(common, 'remove_barrier', look_then_remove):
+            self.assertEqual(self.install(answers=['YES'])[0], install.EXIT_INSTALLED)
+        self.assertEqual(seen, {'updater lock': False, 'job lock': True, 'new list': True})
+
     def test_the_question_tells_the_backups_and_the_kits_results_and_comes_after_the_plan(self):
         self.add_variant(SECOND)
         code, said = self.install(answers=['YES'])

@@ -7467,3 +7467,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Going on:** part C4, `Install.bat`.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 311; RAT-59.
+
+## 311. 25 November 2026, 21:57 - slice C part C4 written and proved in the cloud: Install; the owner on the order of work
+
+- **The owner, 21:48:** "I now prefer completing C4 and C5 before refreshing H-1, provided Claude's remaining context
+  permits effective work." **And 21:49:** "that is, finish all of slide C first". This is entry 310's decision in
+  other words: all of slice C first, then H-1. Claude judges at the end of each part whether its context still
+  permits effective work and says so plainly.
+- **Written, tested and pushed** (cloud only; working files in the overlay; not reviewed, nothing installed):
+  `deploy/install.py`, `Install.bat`, `tests/test_trees_install.py` (29 tests, all pass): the eleven steps of
+  deployment design section 5. It adds the ready variants the target lacks and never changes what is installed;
+  shows what is left out and why; refuses a helper the target holds with other bytes; attempts the kit and the
+  backup and asks once; reserves the target before copying (a job that began while the owner was deciding
+  refuses the install there, nothing copied, nothing ended); stops behind its barrier on a failed check; and is
+  finished by the same command typed again.
+- **Proved:** 31 planted faults, all caught (one by a test added for it). The whole suite has not been run on
+  this state.
+- **Readings for the reviewer:** the notes' section 3, C-R14 (a) to (g).
+- **Next:** part C5, `Reinstall_Infra.bat`, the last part of the slice; what it needs is listed in the notes'
+  section 4. Then the whole suite on the slice's final bytes, the package note, and the next edition of H-1.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 312; RAT-59.
