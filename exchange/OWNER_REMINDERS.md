@@ -767,3 +767,8 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   stay as they are. Older lines in these lists and in the handovers that put it first among the methods still to do
   are overtaken by this. (R-023 item (d), the OUTLANDISH chat's confirmation of an old handover, is still the
   owner's to close or to drop.)
+- The coding practices, before new methods (owner, 25 November 2026; decision log entry 299): immediately before
+  new methods are designed or coded, Claude and the reviewer each read `doc/CODING_PRACTICES_v0_1.md` and each say
+  what they would add or change from what building the system has taught, keeping it minimal. A change to that
+  ratified document is put to the owner and ratified by him. Done together with the future-method-priorities
+  draft (entry 289) and the roles of the two AIs (entry 292).

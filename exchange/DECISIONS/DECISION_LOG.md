@@ -7223,3 +7223,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   files are the same Git blobs the reviewer read. Its reply is expected as EX_327. It authorises nothing on the
   owner's PC.
 - Next numbers: EX_327 (the reviewer's reply); entry 299; RAT-59.
+
+## 299. 25 November 2026, 18:07 - the owner: both AIs review the coding practices just before new methods are designed or coded
+
+- **The owner, 18:07:** "can we set a reminder for both you and chatgpt to review the coding practices doc just
+  before designing/coding new methods ? you may both have best practices to contribute whilst keeping it minimal
+  :)"
+- **The reminder:** immediately before the design or coding of new methods begins, Claude and the reviewer each
+  read `doc/CODING_PRACTICES_v0_1.md` (ratified with the design, RAT-40) and each say what, if anything, they
+  would add or change from what building the system has taught, **keeping it minimal**. It is a ratified document:
+  any change is put to the owner and ratified by him; it is not edited in place before that.
+- **When:** at the same moment as the two other deferred discussions: the future-method-priorities draft (entry
+  289) and the roles of the two AIs (entry 292). Nothing is done on it now.
+- It is added to the standing reminders in `exchange/OWNER_REMINDERS.md`. A note for the reviewer chat was given to
+  the owner to paste.
+- Next numbers: EX_327 (the reviewer's reply); entry 300; RAT-59.
