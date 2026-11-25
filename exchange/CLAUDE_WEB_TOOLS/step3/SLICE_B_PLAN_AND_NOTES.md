@@ -1,0 +1,76 @@
+# Build step 3, slice B (backups, the recovery kit, restore): plan and working notes
+
+**Date:** 25 November 2026. **Author:** the Claude web chat (on Fable, the owner's go: decision log entry 288).
+**Status:** working notes, kept up to date as the slice is written. Not reviewed, not ratified. It authorises nothing.
+**If a chat resumes or a new one starts:** read this file, then the files it names under `overlay/`, then go on from
+section 4 ("Where it stands").
+
+## 1. What governs the slice (all ratified; nothing here is a new design)
+
+- Deployment design v0.12: section 10 (backups), 11 (the recovery kit), 12 (restore, the reconciliation after an
+  unzip by hand, the orphan-marker exception), 9 (the process rules: a backup "before and after", no other Python
+  process of this tree; a restore, no Python program at all on the PC, read with the standard library), 2 (where
+  the files lie).
+- Specification v0.6 section 14.1.
+- The owner's decisions: restore is standard library only with its own reader of Windows' processes (entry 222);
+  ZIP level 9 (entry 243); no monthly restore test, no replay comparison; a backup that cannot be made does not
+  stop the work (a standing warning); a missing kit is a warning and a default-NO question; no program ends a
+  process; nothing prunes a backup root.
+- TASK_T028 (entry 240): on the owner's PC the standard library and psutil agree on the set of Python processes;
+  every program started from an environment is two processes; Windows refuses a rename while a file is open; a
+  level-9 ZIP of an environment alone took about 80 seconds and 180 MB.
+- The working principle: the smallest thing that carries out those clauses. No repair, no resumption beyond what
+  section 12 names ("the same command again"), no new record.
+
+## 2. The parts, in the order they are written
+
+**B1. The backup.** New `src/research/snapshot.py` (infrastructure in every tree; class `derived`, because the job
+calls it, as the guard's modules are): the inventory of the tree (everything under the root but `records/SNAPSHOT_DUE`
+and `records/SNAPSHOT_IN_PROGRESS.lock`; empty folders kept; a link refuses); the ZIP written as
+`<backup_root>/<ROLE>_<YYYYMMDD>_<HHMMSS>_<JOB>.zip.partial`, Deflate level 9, `SNAPSHOT_MANIFEST.json` the last
+member; the two verifications (the archive read back against the list; every source file read and hashed again, the
+set of files unchanged); then the rename to `.zip`, the `.sha256`, one line in `records/SNAPSHOT_LOG.jsonl`, and
+`SNAPSHOT_DUE` removed. Quiet by three things: the lock `records/SNAPSHOT_IN_PROGRESS.lock` (the launch guard already
+refuses on it), the process rule before the first reading and after the second, and the second reading. A result is
+always a plain statement: MADE AND VERIFIED, or NOT MADE with the reason; never an exception that stops a job.
+`Run_Snapshot.bat` (job name `MANUAL`) through `src/research_command.py`. The research job: `SNAPSHOT_DUE` written
+before its first write; a backup attempted at its end (`RESEARCH`); a job that finds `SNAPSHOT_DUE` tries the backup
+first; the warning in capitals at start and end while no verified backup exists. QA and PROD only: DEV has no backup
+root.
+
+**B2. The recovery kit.** New `deploy/recovery_kit.py` (an install tool, DEV): builds
+`<backup_root>/KIT_<YYYYMMDD>_<HHMMSS>_<software fingerprint>.zip` and its `.sha256` from DEV's install-tool files
+as the infrastructure marker lists them; it holds the restore tool, `Restore.bat`, `HOW_TO_RESTORE.txt` and
+`KIT_MANIFEST.json`. Slice C's commands call it; slice B delivers and tests the builder.
+
+**B3. Restore.** New `deploy/restore_tool.py`: ONE file, standard library only, runnable from an unpacked kit with
+any installed Python and no tree in reach. Its own reader of Windows' process table (program name, number, parent,
+start time; a table that cannot be read refuses). The steps of design section 12, one function each; the same
+command again after a stop; `--after-hand-unzip`; the orphan-marker exception with its four conditions.
+`Restore.bat` and `HOW_TO_RESTORE.txt` beside it.
+
+## 3. Readings taken (for the reviewer; RECOMMENDED unless marked)
+
+1. **The software fingerprint** (design sections 2, 10, 11) is not defined by a formula in the ratified text. Taken
+   as: the SHA-256 of the bytes of the tree's `records/INSTALLED_FILES.json`; its first 12 characters in a kit's file
+   name, the whole of it in the manifests.
+2. **The backup's modules are classed `derived`,** as the guard's are, because the research job calls them.
+3. **The Windows process reader of the restore cannot be run in the cloud.** The restore takes its reader as a
+   function; the tests give it invented tables; the real reader meets Windows in the joined rehearsal, where it is
+   compared with psutil again. On a system that is not Windows the tool refuses unless a test supplies a reader.
+4. **"No Python program at all on the PC but the restore tool":** a process counts when its program name is
+   `python.exe`, `pythonw.exe` or `py.exe` (case set aside), the tool's own process and the chain above it
+   excepted (an environment's python.exe is the parent of the base Python that runs the tool: TASK_T028).
+5. **A backup's time in its name** is local time, as the design's `<YYYYMMDD>_<HHMMSS>` reads; the manifest holds
+   the same moment in UTC as well.
+
+## 4. Where it stands
+
+- 25 November 2026: the ratified clauses read; this plan written; no code yet. Next: B1.
+
+## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
+
+- Every research job in QA and PROD ends with a whole backup of its tree: two full readings of the tree and a
+  level-9 ZIP. From TASK_T028's figures for an environment alone this is minutes, not seconds, and about 180 MB or
+  more each time; nothing prunes the backup root (his decision), so it grows until he copies and clears it.
+- A restore needs every Python program on the PC closed, Claude Code's among them.

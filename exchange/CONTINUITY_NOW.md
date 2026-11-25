@@ -8,6 +8,10 @@ durable EX messages are authoritative.
 
 ## For the owner: NOW
 
+- **SLICE B HAS THE OWNER'S GO AND IS BEGUN (entry 288; 25 November 2026): backups, the recovery kit, restore.**
+  Cloud design and coding only. Its plan and running notes, with exactly where it stands, are
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_B_PLAN_AND_NOTES.md`; its files go into the same overlay as slice A's. **A
+  chat that resumes or a new one reads that file and goes on from its section 4.**
 - **BOTH HANDOVERS ARE NEW AND INSTALLED (entries 283 and 286; 25 November 2026). The primary handover in force is
   H-1 v14,** `doc/HANDOVER/Claude_Primary_Handover_H1_v14.md`, with its blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v14_introductory_blurb.md` (RAT-58, ratified in advance; its chapter 0 is
