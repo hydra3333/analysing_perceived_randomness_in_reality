@@ -7542,3 +7542,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on:** the reviewer's EX_329.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 315; RAT-59.
+
+## 315. 25 November 2026, 23:07 - the owner: write H-1 v15 and its blurb now, without waiting for the reviewer
+
+- **The owner, 23:06** (on Opus): "i changed my mind, please do h1 blurb and docs now"
+- **So:** entry 314's wait is withdrawn. Claude writes the next ordinary edition, H-1 v15, and its blurb now, on
+  Opus, as a candidate under `exchange/CLAUDE_WEB_TOOLS/h1v15/`. It takes in what entry 300 listed (the reviewer's
+  cold-read corrections H14-C01 to C03 and its two observations; OUTLANDISH_01 closed; H-2 v9 in force; slices A and
+  B reviewed) and slice C, with EX_328 with the reviewer. It goes into `doc/HANDOVER/` only once the owner has
+  ratified it. The reviewer's EX_329 is answered when it comes, and the edition after this one takes it in.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 316; RAT-59.
