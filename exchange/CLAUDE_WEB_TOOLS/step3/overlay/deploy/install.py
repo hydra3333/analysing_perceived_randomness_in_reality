@@ -134,11 +134,10 @@ def check_and_finish(view, settings, plan: dict, expected: dict, release, now, s
     say(f'The tree\'s software is exactly the old list and the plan: {len(expected["files"])} files, '
         f'{len(expected["variants"])} variant(s), each with its status file, and nothing else under src.')
     python = common.target_python(settings)
-    try:
-        dev_files = common.dev_infrastructure(dev_root)['files']
-    except common.InstallRefused:
-        suite, line = None, ('The test suite: not run. DEV\'s infrastructure is not marked ready, so its tests cannot '
-                             'be said to be the tests of this tree\'s software.')
+    dev_files = common.dev_infrastructure_bytes(dev_root)
+    if dev_files is None:
+        suite, line = None, ('The test suite: not run. DEV\'s infrastructure manifest cannot be read as one, so its '
+                             'tests cannot be said to be the tests of this tree\'s software.')
     else:
         suite, line = common.suite_if_it_is_the_trees(dev_root, dev_files, expected, python, say)
     say(line)
@@ -212,7 +211,12 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                     'log lines may have been written, as said above.)')
                 return EXIT_REFUSED
         with common.reserved(settings, f'Install {role}', started, say):
-            common.check_barrier(root, plan)
+            if common.check_barrier(root, plan) != continuing or (not continuing and (
+                    installed_files.read_list(root) != current or installed_files.differences(root, current))):
+                raise common.InstallRefused(
+                    f'the {role} tree\'s installed software, or its record of an unfinished install, changed while '
+                    f'the backup was being made or the question stood (another install began or finished, or a '
+                    f'file was changed). Nothing was copied. Run the command again: it makes its plan anew.')
             with common.changing(settings, plan, started) as release:
                 began = True
                 common.carry_out(dev_root, root, plan, say)

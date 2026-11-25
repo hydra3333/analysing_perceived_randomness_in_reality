@@ -117,6 +117,22 @@ def dev_infrastructure(dev_root: Path) -> dict:
     return {'fingerprint': readiness.fingerprint, 'files': files, 'classes': dict(classes)}
 
 
+def dev_infrastructure_bytes(dev_root: Path) -> dict | None:
+    """The bytes DEV's infrastructure holds now, whether or not it is marked ready: {path: sha256} of the manifest
+    and of every file under its [files]. None if the manifest cannot be read as one (a listed file missing among
+    the reasons): then no tree's infrastructure can be said to be file for file DEV's.
+
+    An ordinary install asks this, and not the readiness marker, whether DEV's tests are the tests of the target's
+    software (specification 12.3 item 3; EX_329 C-C02): it installs no infrastructure, so it needs none marked.
+    """
+    try:
+        manifest = code_identity.read_manifest(Path(dev_root))
+    except code_identity.ManifestRefused:
+        return None
+    return {path: variant_folders.sha256_of_file(Path(dev_root) / path)
+            for path in (code_identity.MANIFEST_PATH, *manifest)}
+
+
 def dev_variants(dev_root: Path) -> tuple:
     """Every variant folder of DEV: those ready to be installed, and those that are not, each with its reason.
 

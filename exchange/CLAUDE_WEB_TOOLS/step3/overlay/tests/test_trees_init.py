@@ -408,6 +408,17 @@ class WhereTheResultsComeFrom(CreationCase):
             self.assertFalse(self.target.exists())
             (self.prod / held).unlink()
 
+    def test_a_creation_that_has_its_record_finishes_while_its_former_source_is_busy_and_reads_no_source(self):
+        self.init(answers=['YES'])
+        (self.prod / common.BARRIER_PATH).write_bytes(b'{}')
+        prod_before = whole_tree(self.prod)
+        self.build_environment()
+        with mock.patch.object(init_tree, 'results_files', side_effect=AssertionError('no source is read')):
+            code, said = self.init()
+        self.assertEqual(code, init_tree.EXIT_CREATED, said)
+        self.assertIn('each game\'s pair read as the engine reads it', '\n'.join(said))
+        self.assertEqual(whole_tree(self.prod), prod_before, 'PROD is never written')
+
     def test_a_continued_creation_keeps_the_results_it_copied_and_checks_them_against_its_record(self):
         self.init(answers=['YES'])
         copied = (self.target / 'source_data' / RESULT_NAMES[0]).read_bytes()
@@ -426,6 +437,86 @@ class WhereTheResultsComeFrom(CreationCase):
         self.assertEqual(code, init_tree.EXIT_STOPPED)
         self.assertIn('are no longer what its record', '\n'.join(said))
         self.assertIsNotNone(common.read_barrier(self.target))
+
+
+class TheResultsAreCopiedAsOneSet(CreationCase):
+    """EX_329 C-B02: six files hashed one by one are not yet one accepted pair for each game."""
+
+    def record(self) -> Path:
+        """The creation's record of what it copied."""
+        return self.target / init_tree.INIT_RECORD_PATH
+
+    def longer_results(self) -> None:
+        """The source's Powerball results grow, as an update would grow them: results and ledger together."""
+        fixtures.write_results(self.dev, 'POWERBALL', get_profile('POWERBALL').first_draw + 20, version=2)
+
+    def test_a_source_updated_between_two_copies_writes_no_record_and_the_same_command_copies_afresh(self):
+        real, copied = common.copy_into_place, []
+
+        def copy_then_the_source_is_updated(source, tree_root, relative, sha256, replace=False):
+            """After the first results file is copied, the source's results are updated."""
+            done = real(source, tree_root, relative, sha256, replace)
+            if relative.startswith('source_data/'):
+                copied.append(relative)
+                if len(copied) == 1:
+                    self.longer_results()
+            return done
+
+        with mock.patch.object(common, 'copy_into_place', copy_then_the_source_is_updated):
+            code, said = self.init(answers=['YES'])
+        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
+        self.assertIn('they were probably being updated', '\n'.join(said))
+        self.assertFalse(self.record().exists())
+        self.assertIsNotNone(common.read_barrier(self.target))
+        self.build_environment()
+        code, said = self.init()
+        self.assertEqual(code, init_tree.EXIT_CREATED, said)
+        for name in RESULT_NAMES:
+            self.assertEqual((self.target / 'source_data' / name).read_bytes(),
+                             (self.dev / 'source_data' / name).read_bytes(), name)
+        self.assertEqual(fixtures.run_job(self.target, games=('POWERBALL',))[0], 0, 'and its first job accepts them')
+
+    def test_a_pair_that_did_not_agree_when_it_was_read_is_caught_in_the_tree_before_any_record(self):
+        real, calls = init_tree.results_files, []
+        master = self.dev / 'source_data' / 'POWERBALL_results_master.csv'
+
+        def checked_then_only_the_ledger_moves(source_root):
+            """The source passes its check; then, before it is hashed, its ledger is of other results."""
+            files = real(source_root)
+            calls.append(True)
+            if len(calls) == 2:                          # the reading that the copy itself makes
+                kept = master.read_bytes()
+                self.longer_results()
+                master.write_bytes(kept)
+            return files
+
+        with mock.patch.object(init_tree, 'results_files', checked_then_only_the_ledger_moves):
+            code, said = self.init(answers=['YES'])
+        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
+        self.assertIn('are not a results file with the ledger that names it', '\n'.join(said))
+        self.assertFalse(self.record().exists(), 'each file was stable while it was copied; the pair is not one')
+        self.assertFalse((self.target / installed_files.LIST_PATH).exists())
+        self.longer_results()                            # the source is whole again
+        self.build_environment()
+        code, said = self.init()
+        self.assertEqual(code, init_tree.EXIT_CREATED, said)
+
+    def test_a_continued_creation_copies_from_the_source_the_owner_was_shown(self):
+        prod = self.target.parent / 'prod'
+        self.add_entry('PROD', prod)
+        with mock.patch.object(init_tree, 'copy_results', side_effect=OSError('an invented fault')):
+            code, said = self.init(answers=['YES'])
+        self.assertEqual(code, init_tree.EXIT_STOPPED)
+        self.assertIn(f'The accepted results will be copied from the DEV tree at {self.dev}.', said)
+        self.assertEqual(common.read_barrier(self.target)['statement'],
+                         {'results_copied_from': str(self.dev), 'results_copied_from_role': 'DEV'})
+        qa, qa_backups = self.target, self.backups
+        self.created('PROD', prod)                       # a PROD tree comes to exist meanwhile
+        self.target, self.backups = qa, qa_backups
+        self.build_environment()
+        code, said = self.init()
+        self.assertEqual(code, init_tree.EXIT_CREATED, said)
+        self.assertEqual(json.loads(self.record().read_bytes())['results_copied_from_role'], 'DEV')
 
 
 class AFailedCheckLeavesTheBarrier(CreationCase):

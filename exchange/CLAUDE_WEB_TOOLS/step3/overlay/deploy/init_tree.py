@@ -128,12 +128,12 @@ def target_state(entry, plan: dict, wanted_settings: bytes) -> str:
 
 
 def results_source(view, role: str) -> tuple:
-    """The tree the new tree's accepted results are copied from (specification 12.5): for PROD, DEV; for QA, PROD
+    """The tree a new tree's accepted results are copied from (specification 12.5): for PROD, DEV; for QA, PROD
     if a PROD tree exists, and DEV while none does.
 
-    Returns (the source tree's folder, 'DEV' or 'PROD'). Refuses a PROD tree that is not what DEV's file says
-    (SettingsRefused), and one in which an install is unfinished or a results update holds its lock
-    (InstallRefused): its results are not read while either is so.
+    Returns (the source tree's folder, 'DEV' or 'PROD'). It is chosen once, when a creation begins, shown before
+    the question and kept in the creation's plan, so that a creation continued later copies from the tree the
+    owner was shown.
     """
     dev_root = view.own.tree_root
     if role == 'PROD' or 'PROD' not in view.entries:
@@ -141,13 +141,27 @@ def results_source(view, role: str) -> tuple:
     prod_root = view.entries['PROD'].tree_root
     if not (prod_root / SETTINGS_FILE_NAME).is_file():
         return dev_root, 'DEV'
-    tree_as_dev_names_it(view, 'PROD')
+    return prod_root, 'PROD'
+
+
+def check_source_may_be_read(view, source_root: Path, source_role: str) -> None:
+    """Refuse to read a PROD tree's results while they may be changing, or if it is not the tree DEV's file names.
+
+    Refuses a PROD tree that is not what DEV's file says (SettingsRefused); one that is not the folder the
+    creation was begun with, or in which an install is unfinished or a results update holds its lock
+    (InstallRefused). Nothing is ever written to PROD to mark or lock it. DEV as the source asks nothing here.
+    """
+    if source_role != 'PROD':
+        return
+    named = tree_as_dev_names_it(view, 'PROD').tree_root
+    if os.path.normcase(os.path.realpath(named)) != os.path.normcase(os.path.realpath(source_root)):
+        raise common.InstallRefused(f'this creation was begun with the PROD tree at {source_root} as the source of '
+                                    f'its results, and DEV\'s file now names {named} as PROD. Nothing was copied.')
     for held, what in ((common.BARRIER_PATH, 'an install is unfinished there'),
                        (UPDATER_LOCK, 'a results update holds its lock there')):
-        if (prod_root / held).exists():
-            raise common.InstallRefused(f'the PROD tree at {prod_root} cannot be read for its results now: {what} '
-                                        f'({prod_root / held}). Let it finish, then run this command again.')
-    return prod_root, 'PROD'
+        if (Path(source_root) / held).exists():
+            raise common.InstallRefused(f'the PROD tree at {source_root} cannot be read for its results now: {what} '
+                                        f'({Path(source_root) / held}). Let it finish, then run this command again.')
 
 
 def results_files(source_root: Path) -> list:
@@ -185,54 +199,86 @@ def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def copy_results(source_root: Path, source_role: str, plan: dict, now, say=print) -> None:
-    """Copy the accepted results of each game into the new tree, each file hashed on both sides, and keep the
-    list as records/INIT_RECORD.json (deployment design section 4, step 5).
+def check_copied_pairs(target_root: Path) -> None:
+    """Check that each game's results as they now lie in the new tree are a results file with the ledger that
+    names it, by the engine's own reading: what the tree's first research job will ask of them.
+    Refuses (InstallRefused), naming the game."""
+    for game_id in GAMES:
+        try:
+            results_on_file(target_root, game_id)
+        except ResultsRefused as refusal:
+            raise common.InstallRefused(
+                f'the results of {game_id} as they lie in {target_root} are not a results file with the ledger that '
+                f'names it ({refusal}). The source was probably being updated while it was read. No record of the '
+                f'copy stands on them: type the same command again and they are copied afresh.') from None
 
-    source_root, source_role: results_source's answer.  plan: the creation's plan (its tree_root is the target).
-    The source's files are first checked (results_files). No forecast, score, report or OV-1 record is read or
-    copied. A creation being continued that
-    already has its record is not copied again: its files are checked against the record.
-    Refuses (InstallRefused): what results_files refuses; a source file that changed while it was copied; a
-    copied file that is no longer what the record says.
+
+def copy_results(view, source_root: Path, source_role: str, plan: dict, now, say=print) -> None:
+    """Copy the accepted results of each game into the new tree as ONE set, and keep the list as
+    records/INIT_RECORD.json (deployment design section 4, step 5; EX_329 C-B02).
+
+    view: DEV's settings.  source_root, source_role: the source kept in the creation's plan.
+    plan: the creation's plan (its tree_root is the target).
+    A creation that already has its record reads no source: the six files in the tree are checked against the
+    record, and each game's pair by the engine's reading. Otherwise: the source is checked (results_files); all
+    six files are hashed (the first reading); each is copied and its copy must have that hash; all six are
+    hashed again (the second reading) and must be unchanged; each game's copied pair must pass the engine's
+    reading; only then is the record written. Until the record is written the copied files are this creation's
+    own and a retry replaces them. No forecast, score, report or OV-1 record is read or copied, and nothing is
+    written to the source.
+    Refuses (InstallRefused): what results_files and check_source_may_be_read refuse; a source file that changed
+    between the two readings; a copied pair that fails the engine's reading; with a record, a file that is no
+    longer what the record says.
     """
     target_root = Path(plan['tree_root'])
     record_path = target_root / INIT_RECORD_PATH
+    wanted = [f'{SOURCE_FOLDER}/{name.format(game_id=game_id)}' for game_id in GAMES for name in RESULTS_FILE_NAMES]
     if record_path.exists():
         try:
             record = json.loads(record_path.read_bytes().decode('ascii'))
+            listed = [entry['path'] for entry in record['results']]
             changed = [entry['path'] for entry in record['results']
                        if not (target_root / entry['path']).is_file()
                        or _sha256(target_root / entry['path']) != entry['sha256']]
         except (OSError, ValueError, KeyError, TypeError) as fault:
             raise common.InstallRefused(f'{record_path} cannot be read as this creation\'s record '
                                         f'({fault}).') from None
-        if changed:
+        if listed != wanted or changed:
             raise common.InstallRefused(f'the results copied when this creation began are no longer what its record '
-                                        f'{record_path} says: {", ".join(changed)}. Nothing was copied again.')
+                                        f'{record_path} says: {", ".join(changed) or "it does not list the six files"}. '
+                                        f'Nothing was copied again.')
+        check_copied_pairs(target_root)
         say(f'The accepted results: already copied from {record["results_copied_from"]} '
-            f'({len(record["results"])} files, as the record says).')
+            f'({len(record["results"])} files, as the record says; each game\'s pair read as the engine reads it).')
         return
-    copied = []
-    for relative in results_files(source_root):
-        source = Path(source_root) / relative
-        digest = _sha256(source)
-        common.copy_into_place(source, target_root, relative, digest)
-        if _sha256(source) != digest:
-            raise common.InstallRefused(f'{source} changed while it was being copied. Run the command again when '
-                                        f'nothing is updating the results there.')
-        copied.append({'path': relative, 'sha256': digest})
+    check_source_may_be_read(view, source_root, source_role)
+    files = results_files(source_root)
+    first = {relative: _sha256(Path(source_root) / relative) for relative in files}
+    try:
+        for relative in files:
+            common.copy_into_place(Path(source_root) / relative, target_root, relative, first[relative], replace=True)
+    except common.InstallRefused as refusal:
+        raise common.InstallRefused(f'the accepted results could not be copied from {source_root} as they were first '
+                                    f'read; they were probably being updated. ({refusal}) Type the same command '
+                                    f'again when nothing is updating the results there.') from None
+    moved = [relative for relative in files if _sha256(Path(source_root) / relative) != first[relative]]
+    if moved:
+        raise common.InstallRefused(f'the accepted results in {source_root} changed while they were being copied '
+                                    f'({", ".join(moved)}). No record of the copy was written. Type the same command '
+                                    f'again when nothing is updating the results there; they are copied afresh.')
+    check_copied_pairs(target_root)
     record = {'kind': INIT_RECORD_KIND, 'role': plan['role'], 'tree_root': plan['tree_root'],
               'time': now().astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-              'results_copied_from': str(source_root), 'results_copied_from_role': source_role, 'results': copied}
+              'results_copied_from': str(source_root), 'results_copied_from_role': source_role,
+              'results': [{'path': relative, 'sha256': first[relative]} for relative in files]}
     temporary = record_path.with_name(record_path.name + common.INSTALLING_SUFFIX)
     with open(temporary, 'wb') as handle:
         handle.write(record_bytes(record))
         handle.flush()
         os.fsync(handle.fileno())
     os.replace(temporary, record_path)
-    say(f'The accepted results: {len(copied)} files copied from the {source_role} tree at {source_root}, each '
-        f'hashed on both sides; the list is {record_path}.')
+    say(f'The accepted results: {len(files)} files copied from the {source_role} tree at {source_root} as one set '
+        f'(hashed before and after; each game\'s pair read as the engine reads it); the list is {record_path}.')
 
 
 def make_creation_plan(dev_root: Path, entry, say=print) -> tuple:
@@ -326,9 +372,17 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
         copy_from = view.entries['PROD'].tree_root if role == 'QA' and 'PROD' in view.entries else None
         wanted_settings = settings_bytes(entry, copy_from)
         plan, infrastructure = make_creation_plan(dev_root, entry, say)
+        begun = common.read_barrier(root)
+        if begun is not None and begun.get('operation') == common.INIT and begun.get('statement'):
+            source = begun['statement']                  # a creation being continued: the source it was begun with
+        else:
+            chosen_root, chosen_role = results_source(view, role)
+            source = {'results_copied_from': str(chosen_root), 'results_copied_from_role': chosen_role}
+        plan = dict(plan, statement=source)
+        source_root, source_role = Path(source['results_copied_from']), source['results_copied_from_role']
         state = target_state(entry, plan, wanted_settings)
-        source_root, source_role = results_source(view, role)
-        if state == NEW or not (root / INIT_RECORD_PATH).exists():
+        if not (root / INIT_RECORD_PATH).exists():           # with its record, a creation reads no source again
+            check_source_may_be_read(view, source_root, source_role)
             results_files(source_root)
         if state == NEW:
             say(f'The accepted results will be copied from the {source_role} tree at {source_root}.')
@@ -355,7 +409,7 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                 common.carry_out(dev_root, root, plan, say)
                 created = common.create_status_files(root, plan)
                 say(f'Status files: {created} created as ACTIVE; {len(plan["variants"]) - created} already there.')
-                copy_results(source_root, source_role, plan, now, say)
+                copy_results(view, source_root, source_role, plan, now, say)
                 if not (entry.venv_dir / common.PROGRAMS_FOLDER / 'python.exe').is_file():
                     say(f'INIT TREE - PAUSED - the {role} tree\'s software and results are in place. NOW BUILD ITS '
                         f'PYTHON ENVIRONMENT: in {root} run create_venv.bat, then '

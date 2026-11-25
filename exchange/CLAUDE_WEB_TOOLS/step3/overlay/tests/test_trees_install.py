@@ -278,6 +278,39 @@ class WhatIsRefusedBeforeAnythingIsCopied(InstallCase):
             self.assertEqual(self.backups_made(), ['INIT'])
         self.assertEqual(self.software(), before)
 
+    def test_another_install_that_finished_or_began_while_the_owner_was_deciding_refuses_and_nothing_is_copied(self):
+        """EX_329 C-B01, for an ordinary install: it never acts on another base than the one it planned on."""
+        self.add_variant(SECOND)
+        new_folder = self.target / METHODS / FAMILY / SECOND
+
+        def another_install_finished(prompt):
+            """While the owner reads the question, another install adds a file and publishes a new list."""
+            (self.target / 'src' / 'toy_later.py').write_bytes(b'# installed meanwhile\r\n')
+            content = installed_files.read_list(self.target)
+            content['files'] = sorted(content['files'] + [{'path': 'src/toy_later.py',
+                                                           'sha256': sha(self.target / 'src' / 'toy_later.py')}],
+                                      key=lambda entry: entry['path'])
+            installed_files.write_list(self.target, content)
+            return 'YES'
+
+        code, said = self.install(ask=another_install_finished)
+        self.assertEqual(code, install.EXIT_REFUSED, said)
+        self.assertIn('changed while the backup was being made or the question stood', '\n'.join(said))
+        self.assertFalse(new_folder.exists())
+        self.assertIsNone(common.read_barrier(self.target))
+
+        def another_install_began(prompt):
+            """While the owner reads the question, another install writes its barrier."""
+            common.write_barrier(self.target, common.make_plan(common.INSTALL, 'QA', self.target, {'src/x.py': 'aa'}),
+                                 'meanwhile')
+            return 'YES'
+
+        code, said = self.install(ask=another_install_began)
+        self.assertEqual(code, install.EXIT_REFUSED, said)
+        self.assertIn('holds another plan than the plan now', '\n'.join(said))
+        self.assertFalse(new_folder.exists())
+        self.assertEqual(common.read_barrier(self.target)['add'][0]['path'], 'src/x.py', 'the other barrier is left')
+
     def test_a_job_that_began_while_the_owner_was_deciding_refuses_at_the_reservation_and_nothing_was_copied(self):
         self.add_variant(SECOND)
         before = self.software()
@@ -406,12 +439,41 @@ class TheSuiteBelongsToTheTreeOrIsNotRun(InstallCase):
         record = json.loads((self.target / common.TREE_LOG_PATH).read_text(encoding='ascii').splitlines()[-1])
         self.assertEqual(record['suite'], 'NOT RUN')
 
-    def test_when_devs_infrastructure_is_not_marked_ready_the_suite_is_not_run_and_the_line_says_why(self):
+    def test_equal_bytes_decide_not_devs_readiness_marker(self):
+        """EX_329 C-C02: an ordinary install installs no infrastructure, so it needs none marked ready."""
+        result = suite_on_copy.SuiteResult(passed=True, modules=[('test_x', 0, 3)])
         self.add_variant(SECOND)
-        install_readiness.unmark_infrastructure(self.dev)
+        install_readiness.unmark_infrastructure(self.dev)                    # no marker at all
+        with mock.patch.object(suite_on_copy, 'run_suite', return_value=result) as run:
+            code, said = self.install(answers=['YES'], suite='real')
+        self.assertEqual((code, run.call_count), (install.EXIT_INSTALLED, 1), said)
+        self.add_variant(THIRD)
+        install_readiness.mark_infrastructure(self.dev)
+        write_crlf(self.dev / 'deploy' / 'toy_tool.py', '"""A DEV-side tool that is not installed."""\n')
+        with open(self.dev / 'deploy' / 'INFRA_MANIFEST.ini', 'ab') as handle:  # only [install_tool] differs: stale
+            handle.write(b'[install_tool]\r\ndeploy/toy_tool.py = other\r\n')
+        self.assertFalse(install_readiness.infrastructure_readiness(self.dev).ready)
+        with mock.patch.object(suite_on_copy, 'run_suite', return_value=result) as run:
+            code, said = self.install(answers=['YES'], suite='real')
+        self.assertEqual((code, run.call_count), (install.EXIT_INSTALLED, 0), said)
+        self.assertIn('not run (the tree differs from DEV in: deploy/INFRA_MANIFEST.ini)', '\n'.join(said),
+                      'the manifest is one of the infrastructure files: with another manifest it is not DEV\'s')
+
+    def test_infrastructure_that_genuinely_differs_is_not_given_the_suite_marked_or_not(self):
+        self.add_variant(SECOND)
+        (self.dev / 'src' / 'toy_other.py').write_bytes(b'# newer infrastructure in DEV, not marked\r\n')
         code, said = self.run_real_decision()
         self.assertEqual(code, install.EXIT_INSTALLED, said)
-        self.assertIn('The test suite: not run. DEV\'s infrastructure is not marked ready', '\n'.join(said))
+        self.assertIn('not run (the tree differs from DEV in: src/toy_other.py)', '\n'.join(said))
+
+    def test_devs_infrastructure_bytes_are_read_without_its_marker_and_a_manifest_that_cannot_be_read_gives_none(self):
+        install_readiness.unmark_infrastructure(self.dev)
+        found = common.dev_infrastructure_bytes(self.dev)
+        self.assertEqual(sorted(found), ['deploy/INFRA_MANIFEST.ini', 'src/toy_derived_code.py',
+                                         'src/toy_forecast_code.py', 'src/toy_other.py'])
+        self.assertEqual(found['src/toy_other.py'], sha(self.dev / 'src' / 'toy_other.py'))
+        (self.dev / 'src' / 'toy_other.py').unlink()
+        self.assertIsNone(common.dev_infrastructure_bytes(self.dev), 'a listed file is missing')
 
     def test_when_the_infrastructure_is_devs_the_suite_is_run_with_the_trees_python(self):
         self.add_variant(SECOND)
