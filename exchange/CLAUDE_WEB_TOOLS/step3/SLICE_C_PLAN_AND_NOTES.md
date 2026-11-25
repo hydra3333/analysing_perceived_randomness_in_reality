@@ -56,6 +56,23 @@ file; says what it would change before it asks; the cutoff file when a change fr
   Next: C1. Before coding C1, read what the engine already offers: `src/research/derived_check.py` (the full
   check), `forecast_engine.py` and `reader.py` (how one forecast is computed from a view), `variant_lists.py` (how a
   stored forecast is read), `variant_folders.py` (a variant's declared minimum history and games).
+- **Found in the engine, for C1 (25 November 2026):**
+  - `reader.ResultsOnFile(game_id, raw, sha256, first_draw, last_draw, version)` is a plain record holding the
+    results file's bytes. **The smoke case needs no file:** it builds invented results bytes in memory (header
+    `reader.header_for(game)`; one row a draw from the game's first draw, as `tests/research_fixtures.invented_row`
+    does with `random.Random` and a fixed seed, `profile.derived_date(draw)`, `profile.barrels[0].high`), checks
+    them with `reader.check_results_bytes`, and makes a `ResultsOnFile` of them.
+  - `forecast_engine.compute_target(variant, method, results, target)` returns `(content, detail)`; a complete
+    forecast is `content['status'] == 'FORECAST'` with `content['barrels']`. The target for a smoke case:
+    `reader.first_target(game, <the variant's declared minimum history>)` plus a few draws.
+  - `variant_folders.read_variant(methods_folder, family, name)`, `.supports(game)`, `load_method`.
+  - The fixed sample: `variant_lists.read_list(path, kind)` gives the stored lines; a stored forecast is
+    recomputed with `compute_target` on `reader.results_on_file(tree, game)` and compared by
+    `forecast_engine.content_digest`.
+  - The derived results in full: `derived_check.first_mismatch(records)` on a game's `GameRecords`
+    (`research_job.open_game(job, game)` builds them; see how the job makes its `Job`).
+  - The tests' own invented-results generator is in `tests/`, which is not installed in QA or PROD: the smoke
+    case carries its own small generator in the infrastructure.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 
