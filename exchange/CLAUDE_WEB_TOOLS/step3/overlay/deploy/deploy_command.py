@@ -16,6 +16,7 @@ Which of the project's own modules it uses
     make_installable     main: the command Make_Installable
     check_tree           main: the command Check_Tree
     init_tree            main: the command Init_Tree (build step 3, slice C)
+    install              main: the command Install (build step 3, slice C)
 
 What uses it
     Make_Installable.bat and Check_Tree.bat. The launchers of the later slices of build step 3 are added to COMMANDS as they arrive.
@@ -29,7 +30,7 @@ TREE_ROOT = Path(__file__).resolve().parents[1]
 # The folders Python imports the project's code from: the engine, the variants, and the install tools.
 IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods', TREE_ROOT / 'deploy')
 # The commands, by the word the launcher gives.
-COMMANDS = ('make-installable', 'check-tree', 'init-tree')
+COMMANDS = ('make-installable', 'check-tree', 'init-tree', 'install')
 # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
 EXIT_BAD_COMMAND = 2
 
@@ -65,6 +66,9 @@ def run_command(arguments) -> int:
     if arguments[0] == 'init-tree':
         from init_tree import main as init_tree
         return init_tree(arguments[1:], view)
+    if arguments[0] == 'install':
+        from install import main as install
+        return install(arguments[1:], view)
     from make_installable import main
     return main(arguments[1:], TREE_ROOT)
 

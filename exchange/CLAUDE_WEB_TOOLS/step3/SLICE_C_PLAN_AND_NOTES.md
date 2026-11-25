@@ -196,6 +196,24 @@ file; says what it would change before it asks; the cutoff file when a change fr
   (h) *The four environment scripts* (`create_venv.bat`, `install_upgrade_dependencies_into_venv.bat`,
   `activate_venv.bat`, `deactivate_venv.bat`) are now on the manifest's `[files]`, class `other`: a change to the
   owner's dependency script therefore reaches a tree by `Make_Installable.bat INFRA` and `Reinstall_Infra.bat`.
+- **C-R14, readings taken in `Install`** (design 5).
+  (a) *A helper the target holds with other bytes refuses the whole command,* before any backup, naming the helper
+  and the variants that list it, and saying that the others can be installed by naming them after `--only`. It is
+  not one more "left out" reason: design 5 step 1 lists it apart from those.
+  (b) *`--only` takes identities,* `<family>/<variant>`, one or more; a name that is no variant folder of DEV
+  refuses.
+  (c) *Software that does not match the tree's own list refuses before the backup* (design 8, last row), every
+  difference named.
+  (d) *Step 2 is a look:* the reservation is taken and let go at once (job lock by exclusive create, process
+  check, orphan marker, updater's lock, another unfinished operation), because the backup of step 4 is made only
+  of a tree whose lock is free. Step 6 takes it again and holds it.
+  (e) *A continued install* (its barrier holds this same plan) attempts no new backup or kit and asks nothing: the
+  owner said YES to this plan, and a backup of a half-installed tree is no rollback point. It still attempts the
+  backup after. If the stop came after the list was written and before the barrier was removed, the list as it
+  was before is worked out from the barrier's plan (`list_before`), so that the plan now is the barrier's.
+  (f) *The suite at an install* is run only when DEV's infrastructure is marked ready and is file for file the
+  tree's; otherwise the line says which, and the install goes on, as specification 12.3 item 3 has it.
+  (g) *NO ends with exit code 2;* a backup and a kit may by then exist, and the closing line says so.
 
 ## 4. Where it stands
 
@@ -307,8 +325,14 @@ file; says what it would change before it asks; the cutoff file when a change fr
   for the Windows rehearsal:** the second half of a creation with a real environment (the marker's digest takes
   the Windows layout `Scripts` and `Lib\site-packages`), `python.exe` by its Windows path, the launcher, and the
   whole suite run by the tool with a tree's Windows Python. The whole suite has not been run on this state.
-- **Next: C4 (`Install.bat QA|PROD [--only ...]`, design 5, eleven steps), then C5 (`Reinstall_Infra`, with reading
-  C-R9).** For C4: the plan is the ready variants the target lacks (narrowed by `--only`), their files, and helper
+- **25 November 2026, part C4: WRITTEN and committed; its planted faults are next.** New in the overlay:
+  `deploy/install.py`, `Install.bat`, `tests/test_trees_install.py` (28 tests, pass, with `test_trees_suite`,
+  `test_file_form`, `test_trees_readiness`, `test_research_manifest`, `test_trees_init`). Changed:
+  `deploy/deploy_command.py` (the word `install`), `deploy/INFRA_MANIFEST.ini` (two tool lines),
+  `deploy/SUITE_MANIFEST.ini` (`test_trees_install`; 22 modules).
+- **Next: C4's planted faults, then C5 (`Reinstall_Infra.bat QA|PROD [--replace-unfinished]`, design 6, eleven
+  steps, with reading C-R9).** (The note that follows was written before C4.) C4 (`Install.bat QA|PROD [--only ...]`,
+  design 5, eleven steps), then C5 (`Reinstall_Infra`, with reading C-R9).** For C4: the plan is the ready variants the target lacks (narrowed by `--only`), their files, and helper
   files the target lacks; a helper the target holds with other bytes refuses; shown: to add, and left out each
   with its reason (not marked; marker does not match; an undeclared file; already installed; already installed
   with different bytes); nothing to add ends with the target untouched. Then design 5's steps 2 to 11 with
