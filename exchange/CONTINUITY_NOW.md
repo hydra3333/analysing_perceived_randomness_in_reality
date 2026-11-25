@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:20 Australia/Adelaide (entry 324: EX_332 issued; the owner's open question on the updater in QA).
+**Last updated:** 26 November 2026, 06:21 Australia/Adelaide (entry 325: EX_333, slice C PASS; the owner's open question on the updater in QA).
 
 ## For the owner: NOW
 
+- **SLICE C HAS PASSED (EX_333; entry 325; 26 November 2026).** Slices A, B and C of build step 3 have passed
+  independent review; nothing is installed. **Next: slice D (the clean-sheet updater), on the owner's go, the model
+  rule first.** **Waiting on the owner:** first his decision on the open question of entry 324 (should QA be able to
+  run the updater as PROD does?), then his go for slice D. **Waiting on the reviewer:** nothing. **If this chat ends
+  here:** a new chat is started with H-1 v15's blurb, reads H-1 v15's chapter 0 and entries 320 onward (chapter 0
+  still says slice C is with the reviewer; these entries are newer).
 - **AN OPEN QUESTION OF THE OWNER'S (entry 324; 26 November 2026), to settle before slice D is written:** should QA be
   able to run the updater as PROD does (the ratified text says PROD only)? Claude's first reading is in entry 324; not
   decided. **Waiting on the owner:** that decision. **Waiting on the reviewer:** EX_333 (slice C's two residuals,

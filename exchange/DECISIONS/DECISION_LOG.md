@@ -7803,3 +7803,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   EX_333.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_333 (the reviewer's reply); entry 325; RAT-61.
+
+## 325. 26 November 2026, 06:21 - EX_333 (reviewer): SLICE C, PASS; all eight findings of EX_329 closed; slices A, B and C have passed; slice D is next, on the owner's go
+
+- **EX_333 (the reviewer), found on `main` by Claude's fetch; the owner has not yet relayed it:**
+  `exchange/EX_333_ChatGPT.md`, commit `f7edc72`, SHA-256
+  `74791bd42d523082cc20dbcbb3bc4be96b0f4bf13aa7c029c15a267af628c82f` (computed by Claude). **PASS. Both residuals of
+  C-B01 are CLOSED; all eight findings of EX_329 are closed and none remains open for slice C.** The three points of
+  EX_332 section 4 are accepted. No further correction round, design change or ratification is asked for. It is an
+  independent static recheck of the submitted bytes and evidence (the overlay at `648f7b1`), not an independent run,
+  and not an authorisation to install or run anything.
+- **EX_332** as issued: SHA-256 `b2c81b31b862e57d7fd611063d2c1546ec495185cc324fd71ca3e693578576fb` (computed by
+  Claude; the reviewer's own computation matches).
+- **Where build step 3 stands:** slices A (EX_321), B (EX_327) and C (EX_333) have passed independent review. Nothing
+  of it is installed. Kept for the joined Windows rehearsal: everything the slices' package notes list, the elapsed
+  cost of `Reinstall_Infra`'s two readings (to be measured and told to the owner), and the three carry-forwards (the
+  link tests' skip where Windows refuses a link; "no research was written"; the docstring escape in
+  `src/research/environment_marker.py`). The cumulative suite is due on the joined final bytes.
+- **A slip, put right here:** entry 324 was written and committed while EX_333 already lay on `main` (the fetch before
+  it showed the clone one commit behind, and Claude did not look before writing). Entry 324's "waiting on the
+  reviewer: EX_333" was therefore out of date when it was pushed; its record of the owner's question stands. The
+  commit was rebased onto the reviewer's and pushed; nothing was overwritten.
+- **Next is slice D** (the clean-sheet updater), on the owner's go, with the model rule first. **The owner's open
+  question of entry 324 (the updater in QA) is to be settled before slice D is written.**
+- **Waiting on the owner:** his decision on the question of entry 324; then his go for slice D. **Waiting on the
+  reviewer:** nothing.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 326; RAT-61.
