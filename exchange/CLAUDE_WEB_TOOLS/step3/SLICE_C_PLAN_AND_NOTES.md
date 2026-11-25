@@ -137,6 +137,19 @@ file; says what it would change before it asks; the cutoff file when a change fr
   - (3) the batch file runs DEV's tool first and hands the verdict to the verification: the order of design 7
     is lost and a verdict travels on a command line. Not recommended.
   (Before the decision the code took the suite's answer from a function its caller gave; that hook is gone.)
+- **C-R8, what "the suite" of an install is, and what its temporary copy holds** (design 17: "the code round lists
+  exactly what the suite needs from the repository ... that list sits beside the infrastructure manifest. Tests
+  that served only the old system are not part of the new suite"). The list is `deploy/SUITE_MANIFEST.ini`: the
+  19 test modules whose subject is on the infrastructure manifest (`test_file_form`, every `test_research_*`,
+  every `test_trees_*`); a test in `test_trees_suite` holds the list to exactly those that exist. The copy is not
+  a second list: it is what the project's own walk already calls the project (`deploy/file_form.py`,
+  `files_under`: every file under `src/`, `deploy/`, `tests/` and the files directly in the root), except
+  `ENVIRONMENT.ini`, which no tool ever writes anywhere. Found by trial: 16 of the modules pass on a copy holding
+  only the manifest's files and the fixtures; the other three need more of DEV (`test_file_form` and
+  `test_trees_readiness` read the living project and its real variants; `test_research_forecasts` compares the
+  new reader with the first system's). Each module is run in a process of its own with the Python named, in the
+  copy; a module that fails, or that ran no test, fails the suite; the copy is removed on a pass and left, with
+  each module's output, on a failure. No time limit is put on a module.
 
 ## 4. Where it stands
 
@@ -193,7 +206,21 @@ file; says what it would change before it asks; the cutoff file when a change fr
   is 30 tests (all pass, with `test_file_form`); the planted-fault script is brought into step (47 faults; the
   23 planted in `tree_verify.py` and in the program were run again on this state, and all 23 were caught; the
   24 in `tree_checks.py`, which did not change, were caught in the run before).
-- **Next: C2** (what every install shares). First to settle there: design 17's own note that "the code round
+- **25 November 2026, part C2, first piece: FINISHED and committed: the suite on a temporary copy.** New in the
+  overlay: `deploy/SUITE_MANIFEST.ini`, `deploy/suite_on_copy.py` (both on the manifest's `[install_tool]` list),
+  `tests/test_trees_suite.py` (15 tests, pass; with `test_file_form`, `test_trees_readiness`,
+  `test_research_manifest`). **Proved with the tool itself in the cloud:** `run_suite` on the slice C tree with
+  the workspace's Python: a copy of 718 files, 19 modules, 589 tests, all passed, the copy removed; about three
+  and a half minutes. Planted faults (`mutation_check_slice_c2a.py`): 17, all caught (one only after a test was
+  made independent of the exit code). The whole suite has not been run on this state.
+- **Next, part C2, the rest:** `deploy/install_common.py` and its tests: the plan (files with hashes, from the
+  markers and the manifest); "the target's infrastructure is file for file DEV's" (the target's
+  `INSTALLED_FILES.json` against DEV's manifest files hashed now); copying a file (temporary name, hash, rename);
+  the barrier `records/INSTALL_IN_PROGRESS.json` and its comparison with the plan now (design 8); reserving the
+  target (job lock by exclusive create, process check under it, the updater's lock, `SNAPSHOT_DUE`); the kit and
+  the backup attempted and the one question; `INSTALLED_FILES.json`; the log line; starting the target's Python
+  on `src/tree_checks_command.py checks` and reading its result file. Then C3 to C5.
+- (Superseded note, kept for the record.) First to settle there: design 17's own note that "the code round
   lists exactly what the suite needs from the repository, so that the temporary copy is complete; that list sits
   beside the infrastructure manifest. Tests that served only the old system are not part of the new suite." So
   C2 begins with that list (which tests are the new suite; which of DEV's files they read) and DEV's tool that
@@ -209,8 +236,9 @@ file; says what it would change before it asks; the cutoff file when a change fr
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 
-- `Init_Tree` and `Reinstall_Infra` run the whole suite with the target's Python on a temporary copy (about ten
-  minutes in the cloud; the owner's own figure on Windows is in his install reports).
+- `Init_Tree` and `Reinstall_Infra` run the new system's suite (19 modules, not the first system's tests) with the
+  target's Python on a temporary copy: about three and a half minutes in the cloud; the owner's PC's own figure
+  comes from the rehearsal. `Verify_Tree` does not run it (entry 305).
 - Every install is preceded and followed by a whole backup of the target (slice B's cost, twice).
 - An infrastructure reinstall recomputes every score and the whole prevailing ledger twice (before the question, and
   after the overwrite).
