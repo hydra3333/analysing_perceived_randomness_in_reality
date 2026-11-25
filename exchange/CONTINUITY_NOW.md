@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 10:33 Australia/Adelaide (entry 276: slice A is written, all four parts, as working files; the suite with the twenty-five overlay files 59 modules, 984 tests, the three known failing and no other; next, on the owner's word, the package and EX_318).
+**Last updated:** 25 November 2026, 10:43 Australia/Adelaide (entry 277: EX_318 issued on the owner's word: slice A, complete, is with the reviewer for full review; its reply is expected as EX_319).
 
 ## For the owner: NOW
 
+- **SLICE A IS WITH THE REVIEWER (entry 277; 25 November 2026): EX_318,** `exchange/EX_318_Claude.md`, with the
+  package note `exchange/CLAUDE_WEB_TOOLS/step3/slice_a/SLICE_A_PACKAGE_NOTE_v0_1.md`, the exact differences from
+  `main` and the evidence beside it. **Waiting on the reviewer:** its review, as EX_319 (the disposition; the
+  fourteen readings; the narrow amendment of the deployment design's section 2; anything beyond the ratified
+  design). **Waiting on the owner's word, neither given yet:** a rehearsal on Windows by the runner (advised after
+  the reviewer's findings); the consolidated handover (advised now). **If this chat ends here:** a new chat reads
+  H-1 v13, entries 270 to 277 and the slice's note, and answers EX_319.
 - **SLICE A IS WRITTEN, ALL FOUR PARTS (entry 276; 25 November 2026; working files; the cloud's evidence).** The
   environment's digest and marker (option A), the process rule and the launch guard are written and wired into
   the job and the launcher; the overlay is twenty-five files; the suite with it: 59 modules, 984 tests, 829 of

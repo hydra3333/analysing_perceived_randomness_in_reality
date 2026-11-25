@@ -1,0 +1,718 @@
+Slice A of build step 3: the exact difference of each of the 9 overlay files that exist on main, from main's
+file to the overlay's (unified, three lines of context; line endings are CRLF in both and are not shown).
+The other 16 overlay files are new.
+
+--- main/ENVIRONMENT.example.ini
++++ overlay/ENVIRONMENT.example.ini
+@@ -1,30 +1,66 @@
+-; ENVIRONMENT.example.ini - the example of a tree's settings file (deployment design v0.12 section 1).
++; ENVIRONMENT.example.ini - the example of DEV's settings file (deployment design v0.12 section 1).
+ ;
+-; In DEV: copy this file to ENVIRONMENT.ini beside it and put this PC's real paths in the copy. Git ignores
+-; ENVIRONMENT.ini, so no checkout or pull can replace it. In QA and PROD the file is written once by Init_Tree.bat
+-; and never edited afterwards.
++; WHOSE FILE IS THIS?
++;   Every tree (DEV, QA, PROD) has its own settings file, named ENVIRONMENT.ini, in its own folder.
++;   * DEV's file is made by hand, once: copy this example to ENVIRONMENT.ini beside it and correct the paths.
++;     Git ignores ENVIRONMENT.ini, so no checkout or pull can replace it.
++;   * QA's and PROD's files are NOT made from this example and NOT by hand. Init_Tree.bat writes each of them once,
++;     in the new tree's own folder, from the [QA] or [PROD] section below. This file stays in DEV, unchanged.
++;     What such a file looks like is shown at the end of this example.
+ ;
+-; Every path is absolute. Every path below is an example.
++; WHAT EACH SECTION IS
++;   [environment]   The tree this file lies in. In DEV's file that is DEV. DEV has no backups, so there is no
++;                   backup_root here.
++;   [QA], [PROD]    Only in DEV's file. They say where the other two trees are, so that DEV's tools (Init_Tree,
++;                   Install, Reinstall_Infra, Check_Tree) can find them. The section's name is the role, so there
++;                   is no "role =" line in them. A tree named here need not exist yet: Init_Tree creates it.
++;   [results]       The tree this tree copies the accepted draw results from: PROD. Leave it out until the PROD
++;                   tree exists; without it the research job in DEV works with the results DEV already holds.
++;
++; THE RULES (every tool checks them and refuses if one is broken; Check_Tree.bat shows how the file is read)
++;   * Every path is absolute and is the real path: no link, no junction, no substituted drive.
++;   * DEV, QA and PROD are three separate folders, none inside another.
++;   * A backup root is outside every tree, and QA's and PROD's backup roots are different folders.
++;   * venv_dir is inside its own tree, so that every backup holds the Python environment.
++;   * A backup root on the same disk as its tree is allowed, with a printed warning.
++;
++; Every path below is this PC's own (the owner's decisions of 23 November 2026). Correct them if a place changes.
+ 
+ [environment]
+-; This tree's role: DEV, QA or PROD.
++; This tree's role. In this file: DEV.
+ role = DEV
+ ; The folder this file lies in. A tree that was copied or moved is refused until this says where it now is.
+ tree_root = E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality
+ ; This tree's own Python environment. It must lie inside the tree.
+ venv_dir = E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv
+ 
+-; The sections below are added when the QA and PROD trees are created (build step 3). Until then leave them out:
+-; with no [results] section the research job in DEV leaves its results step out and works with the results DEV
+-; already holds.
+-;
+-; [QA]
+-; tree_root = D:\TEST_BED
+-; backup_root = D:\TEST_BED_backups
+-; venv_dir = D:\TEST_BED\.venv
+-; [PROD]
+-; tree_root = G:\a_p_r_i_r
+-; backup_root = T:\a_p_r_i_r_backups
+-; venv_dir = G:\a_p_r_i_r\.venv
++[QA]
++; Where the QA tree is, where its backups go, and its own Python environment.
++tree_root = T:\a_p_r_i_r
++backup_root = T:\a_p_r_i_r_backups\QA
++venv_dir = T:\a_p_r_i_r\.venv
++
++[PROD]
++; Where the PROD tree is, where its backups go, and its own Python environment.
++tree_root = G:\a_p_r_i_r
++backup_root = T:\a_p_r_i_r_backups\PROD
++venv_dir = G:\a_p_r_i_r\.venv
++
++; Add this section, without the semicolons, once the PROD tree exists:
+ ; [results]
+ ; copy_from = G:\a_p_r_i_r
++
++; ----------------------------------------------------------------------------------------------------------------
++; FOR COMPARISON ONLY - do not copy: the file Init_Tree.bat writes in the QA tree, T:\a_p_r_i_r\ENVIRONMENT.ini.
++; Its [environment] section is the QA tree itself, with QA's own backup root; it has no [QA] or [PROD] section.
++;
++;     [environment]
++;     role = QA
++;     tree_root = T:\a_p_r_i_r
++;     backup_root = T:\a_p_r_i_r_backups\QA
++;     venv_dir = T:\a_p_r_i_r\.venv
++;     [results]
++;     copy_from = G:\a_p_r_i_r
++;
++; PROD's own file is the same with role = PROD and PROD's paths, and has no [results] section: PROD's results come
++; from the results updater.
+
+--- main/deploy/INFRA_MANIFEST.ini
++++ overlay/deploy/INFRA_MANIFEST.ini
+@@ -43,3 +43,20 @@
+ src/research_command.py = other
+ Run_Research.bat = other
+ Withdraw_Variant.bat = other
++deploy/file_form.py = other
++src/research/installed_files.py = derived
++src/research/environment_marker.py = derived
++src/research/process_rule.py = derived
++src/research/launch_guard.py = derived
++
++; The DEV-side install tool's own files (specification 12.4). They are NOT infrastructure: nothing here is ever
++; installed into a QA or PROD tree. The infrastructure's readiness marker hashes them too, so that a tree is always
++; installed by tools the marker names. The class is always "other".
++[install_tool]
++Make_Installable.bat = other
++deploy/deploy_command.py = other
++deploy/make_installable.py = other
++deploy/install_readiness.py = other
++deploy/install_import_check.py = other
++Check_Tree.bat = other
++deploy/check_tree.py = other
+
+--- main/src/research/code_identity.py
++++ overlay/src/research/code_identity.py
+@@ -5,12 +5,12 @@
+     `forecast` (it can change a forecast), `derived` (it can change a score, a report or an OV-1 line, never a
+     forecast) or `other`. This file reads that list and computes: the identity of the forecasting code (one
+     SHA-256 over the `forecast` files), which every list's header records; the digest of the code behind derived
+-    results (the `forecast` and `derived` files), which score and OV-1 lines quote; and a digest of the Python
+-    environment, which every forecast's envelope quotes.
++    results (the `forecast` and `derived` files), which score and OV-1 lines quote. (The digest of the tree's
++    Python environment, which every forecast's envelope quotes, is research/environment_marker.py's.)
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 12.4 (the manifest's syntax, the classes, the
+-    identity of the forecasting code) and 5.4 (the envelope's code and environment digests).
++    identity of the forecasting code) and 5.4 (the envelope's code digests).
+ 
+ Which of the project's own modules it uses
+     None.
+@@ -22,9 +22,6 @@
+ 
+ import configparser
+ import hashlib
+-import importlib.metadata
+-import platform
+-import sys
+ from pathlib import Path
+ 
+ # The manifest's place in a tree, and its two sections (specification 12.4).
+@@ -40,15 +37,18 @@
+     what was found and what to do."""
+ 
+ 
+-def read_manifest(tree_root: Path) -> dict:
+-    """Read the manifest of the tree and check every line.
++def _read_manifest_sections(tree_root: Path) -> dict:
++    """Read the manifest of the tree and check every line of both its sections.
+ 
+     tree_root: the tree's folder.
+-    Returns {path from the tree root, forward slashes: class} for the [files] section, for example
+-        {'src/research/reader.py': 'forecast', 'src/research/scoring.py': 'derived'}.
++    Returns {section name: {path from the tree root, forward slashes: class}}, always with both sections, for
++    example {'files': {'src/research/reader.py': 'forecast'}, 'install_tool': {'deploy/deploy_command.py': 'other'}}
++    (an [install_tool] section that is not in the file is given as empty).
+     Refuses (ManifestRefused): no manifest; a file Python's INI reader rejects (a malformed line and a path given
+     twice among them); a section other than the two allowed; a path with a space or a backslash; a class that is
+-    not one of the three; a path that does not exist in the tree.
++    not one of the three; a [files] path that does not exist in the tree. (Whether an [install_tool] file exists
++    is checked by read_install_tool_list alone: those files lie in DEV and are never installed in a QA or PROD
++    tree, whose manifest still names them.)
+     """
+     manifest_file = Path(tree_root) / MANIFEST_PATH
+     if not manifest_file.is_file():
+@@ -65,7 +65,7 @@
+     if unknown or not parser.has_section(FILES_SECTION):
+         raise ManifestRefused(f'{manifest_file}: it must hold a [{FILES_SECTION}] section and may hold '
+                               f'[{INSTALL_TOOL_SECTION}]; found {sorted(parser.sections())}.')
+-    files = {}
++    sections = {FILES_SECTION: {}, INSTALL_TOOL_SECTION: {}}
+     for section in parser.sections():
+         for path, file_class in parser.items(section):
+             file_class = file_class.strip()
+@@ -75,12 +75,39 @@
+             if file_class not in CLASSES:
+                 raise ManifestRefused(f'{manifest_file}: "{path}" has the class "{file_class}"; it must be one of '
+                                       f'{", ".join(CLASSES)}.')
+-            if not (Path(tree_root) / path).is_file():
++            if section == FILES_SECTION and not (Path(tree_root) / path).is_file():
+                 raise ManifestRefused(f'{manifest_file}: "{path}" is listed but does not exist in {tree_root}. '
+                                       f'Remove the line or restore the file.')
+-            if section == FILES_SECTION:
+-                files[path] = file_class
+-    return files
++            sections[section][path] = file_class
++    return sections
++
++
++def read_manifest(tree_root: Path) -> dict:
++    """The infrastructure of the tree: the manifest's [files] section, every line checked.
++
++    tree_root: the tree's folder.
++    Returns {path from the tree root, forward slashes: class}, for example
++        {'src/research/reader.py': 'forecast', 'src/research/scoring.py': 'derived'}.
++    Refuses (ManifestRefused) whatever _read_manifest_sections refuses, in either section.
++    """
++    return _read_manifest_sections(tree_root)[FILES_SECTION]
++
++
++def read_install_tool_list(tree_root: Path) -> tuple:
++    """The DEV-side install tool's own files: the manifest's [install_tool] section (specification 12.4).
++
++    They are not infrastructure and are never installed into a QA or PROD tree; the infrastructure's readiness
++    marker hashes them, and the recovery kit is built from them. tree_root: the tree's folder.
++    Returns the paths from the tree root, sorted, for example ('Make_Installable.bat', 'deploy/deploy_command.py');
++    empty if the manifest has no such section. Refuses (ManifestRefused) as read_manifest does, and a listed
++    install tool file that does not exist: this is asked in DEV only, where every one of them lies.
++    """
++    tool_files = sorted(_read_manifest_sections(tree_root)[INSTALL_TOOL_SECTION])
++    for path in tool_files:
++        if not (Path(tree_root) / path).is_file():
++            raise ManifestRefused(f'{Path(tree_root) / MANIFEST_PATH}: "{path}" is listed but does not exist in '
++                                  f'{tree_root}. Remove the line or restore the file.')
++    return tuple(tool_files)
+ 
+ 
+ def _digest_of_files(tree_root: Path, paths) -> str:
+@@ -111,15 +138,3 @@
+     manifest = read_manifest(tree_root) if manifest is None else manifest
+     return _digest_of_files(tree_root, [p for p, c in manifest.items() if c in ('forecast', 'derived')])
+ 
+-
+-def environment_digest() -> str:
+-    """A digest of the Python environment the job runs in, quoted in every forecast's envelope.
+-
+-    It covers the Python implementation, version and platform, and the name and version of every installed
+-    distribution. It says "computed under the same Python and the same packages", not that two environments are
+-    numerically identical (W-23 and the environment's own verification cover that).
+-    Returns 64 hexadecimal characters.
+-    """
+-    lines = [f'python\t{platform.python_implementation()}\t{sys.version}\t{platform.platform()}']
+-    lines += sorted(f'{d.metadata["Name"]}\t{d.version}' for d in importlib.metadata.distributions())
+-    return hashlib.sha256('\n'.join(lines).encode('utf-8')).hexdigest()
+
+--- main/src/research/research_job.py
++++ overlay/src/research/research_job.py
+@@ -11,13 +11,15 @@
+     doc/Predictive_Randomness_System_Specification_v0_6.md sections 7.1 and 7.2 (the job and its examples), 5.3
+     (what writes no line and stops the game), 5.6A (foreign lists and held variants), 5.7 (crash resume and the
+     write order of a draw), 5.8 (the derived check is honoured), 10.2 (the eligibility draw) and 10.4 (the
+-    prevailing line). Not yet here, arriving with build step 3: the tree's installed-files check, the process
+-    rule, the "backup due" flag, the end-of-job backup and the updater's launch in PROD.
++    prevailing line). The tree's own checks at the start of a job (its environment, its installed files, the
++    process rule) are the launch guard's. Not yet here, arriving with build step 3: the "backup due" flag, the
++    end-of-job backup and the updater's launch in PROD.
+ 
+ Which of the project's own modules it uses
+     research.settings          read_settings: the tree's role and paths
+     research.job_lock          the job lock and the orphan-marker check
+-    research.code_identity     the identities quoted in every line
++    research.code_identity     the code identities quoted in every line
++    research.launch_guard      check_at_job_start: the tree's own checks, and the environment's digest
+     research.variant_folders   find_variants, load_method: the installed variants
+     research.status_file       the variants' status files (read; created in DEV; the eligibility draw written)
+     research.game_state        the game's records in memory
+@@ -43,11 +45,11 @@
+ 
+ from research import derived_check, ov1_ledger, reports
+ from research import variant_lists as lists
+-from research.code_identity import (ManifestRefused, derived_code_digest, environment_digest,
+-                                    forecasting_code_identity, read_manifest)
++from research.code_identity import ManifestRefused, derived_code_digest, forecasting_code_identity, read_manifest
+ from research.forecast_engine import FORECAST, compute_target, content_digest, view_digest_for
+ from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
+                                  load_variant_state, summarise_target_line)
++from research.launch_guard import check_at_job_start
+ from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
+ from research.reader import ResultsRefused, results_on_file
+ from research.results_step import copy_results, finish_interrupted_copy
+@@ -526,7 +528,8 @@
+     job is limited to.  now, say, checkpoint: see Job (a test passes its own).
+     Returns the exit code: 0 finished; 1 a game refused or stopped (the other game is still worked); 2 the job
+     itself refused before any game (the settings, the orphan marker, a working folder that is not the tree's
+-    own, the job lock, the manifest, something foreign in the status staging folder, a variant folder, an
++    own, the job lock, the launch guard's checks of the environment, the installed files and the process rule,
++    the manifest, something foreign in the status staging folder, a variant folder, an
+     unknown --only name).
+     """
+     now = now or (lambda: datetime.now(timezone.utc))
+@@ -540,16 +543,19 @@
+         check_no_orphan_marker(settings.tree_root)
+         check_working_folders(settings.tree_root)
+         with job_lock(settings.tree_root, 'research job', started):
+-            return run_locked(settings, games, no_update, only, now, say, checkpoint)
++            environment_digest = check_at_job_start(settings, say)
++            return run_locked(settings, games, no_update, only, now, say, checkpoint, environment_digest)
+     except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
+         say(f'REFUSED: {refusal}')
+         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+         return EXIT_REFUSED
+ 
+ 
+-def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, checkpoint) -> int:
+-    """The job once it holds the job lock: read the code's identities and the variants, then work each game.
+-    Arguments and result as for run()."""
++def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, checkpoint,
++               environment_digest: str) -> int:
++    """The job once it holds the job lock and the launch guard has passed: read the code's identities and the
++    variants, then work each game. environment_digest: the digest of the tree's own Python environment, as the
++    guard computed it for this job. The other arguments and the result are as for run()."""
+     tree_root = settings.tree_root
+     for leftover in discard_unfinished_writes(tree_root):
+         say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
+@@ -567,7 +573,7 @@
+     statuses, status_refusals = read_statuses(settings, variants)
+     job = Job(settings=settings, variants=variants, statuses=statuses, status_refusals=status_refusals,
+               forecasting_code_identity=forecasting_code_identity(tree_root, manifest),
+-              derived_code_digest=derived_code_digest(tree_root, manifest), environment_digest=environment_digest(),
++              derived_code_digest=derived_code_digest(tree_root, manifest), environment_digest=environment_digest,
+               only=frozenset(only) if only else None, no_update=no_update, now=now, say=say, checkpoint=checkpoint)
+     for name, why in refused:
+         job.warn(f'the variant folder {name} fails its checks and is not run: {why}')
+
+--- main/src/research/settings.py
++++ overlay/src/research/settings.py
+@@ -1,20 +1,24 @@
+-"""A tree's own settings file, ENVIRONMENT.ini: reading it and checking it.
++"""The settings file of a tree, ENVIRONMENT.ini: reading it and checking it.
+ 
+ What this file is for
+     Every tree (DEV, QA, PROD) has one small settings file at its root that says what the tree is: its role, its
+-    own folder, where its backups go, and (in QA and DEV) where the accepted results are copied from. No path and
+-    no role is written in any program: programs read them here. This file reads the settings and makes the
+-    checks that concern one tree. It never writes a settings file.
++    own folder, where its backups go, and (in QA and DEV) where the accepted results are copied from. DEV's file
++    also says where the QA and PROD trees are, in sections named [QA] and [PROD], so that DEV's tools can find
++    them. No path and no role is written in any program: programs read them here. This file reads the settings
++    and makes every check of the deployment design's section 1: those that concern one tree (read_settings), and
++    those that concern the three trees together, as DEV's file names them (read_dev_view, tree_as_dev_names_it).
++    It never writes a settings file.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 2;
+-    doc/Predictive_Randomness_Deployment_Design_v0_12.md section 1 (the checks 1 to 4 as they apply to one tree).
++    doc/Predictive_Randomness_Deployment_Design_v0_12.md section 1, checks 1 to 5.
+ 
+ Which of the project's own modules it uses
+-    None.
++    None. (It uses the standard library only, so that the install tools and the recovery kit can use it too.)
+ 
+ What uses it
+-    research/research_job.py and research/withdraw.py (through the launchers), and the engine's tests.
++    research/research_job.py and research/withdraw.py (through the launchers); the install tools under deploy/
++    (build step 3); and the tests.
+ """
+ from __future__ import annotations
+ 
+@@ -29,6 +33,8 @@
+ EXAMPLE_FILE_NAME = 'ENVIRONMENT.example.ini'
+ # The three roles a tree can have.
+ ROLES = ('DEV', 'QA', 'PROD')
++# The two roles DEV's file can describe in a section of their own; the section's name is the role.
++OTHER_TREE_ROLES = ('QA', 'PROD')
+ 
+ 
+ class SettingsRefused(ValueError):
+@@ -50,6 +56,32 @@
+     venv_dir: Path
+     backup_root: Path | None
+     results_copy_from: Path | None
++
++
++@dataclass(frozen=True)
++class OtherTreeEntry:
++    """What DEV's settings file says of the QA tree or the PROD tree, in the section named for it.
++
++    role: 'QA' or 'PROD' (the section's name).  tree_root: that tree's folder.  venv_dir: its Python environment
++    folder.  backup_root: where its backups go.  The tree need not exist yet: Init_Tree creates it from this.
++    """
++    role: str
++    tree_root: Path
++    venv_dir: Path
++    backup_root: Path
++
++
++@dataclass(frozen=True)
++class DevView:
++    """DEV's settings file as DEV's tools read it: DEV itself, and the other trees it names.
++
++    own: DEV's own settings.  entries: {'QA': OtherTreeEntry, 'PROD': OtherTreeEntry}, holding only the roles DEV's
++    file has a section for.  warnings: lines to print, each a full sentence (for example that a backup root lies
++    on the same disk volume as its tree); empty when there is nothing to warn of.
++    """
++    own: TreeSettings
++    entries: dict
++    warnings: tuple
+ 
+ 
+ def _same_folder(a: Path, b: Path) -> bool:
+@@ -81,16 +113,12 @@
+     return path
+ 
+ 
+-def read_settings(tree_root: Path) -> TreeSettings:
+-    """Read and check the settings file of the tree at `tree_root`.
+-
+-    tree_root: the folder the launcher is in.
+-    Returns the TreeSettings, for example TreeSettings(role='DEV', tree_root=Path('E:/.../project'), venv_dir=...,
+-    backup_root=None, results_copy_from=None).
+-    Refuses (SettingsRefused): no file; a file Python's INI reader rejects; a missing section or key; a role that
+-    is not DEV, QA or PROD; a path that is relative or not real; a tree_root that is not this folder ("this tree
+-    is not what its file says"); an environment folder outside the tree; a backup root inside the tree; a
+-    [results] section in PROD; a copy_from that is this tree itself.
++def _open_settings_file(tree_root: Path):
++    """Read the settings file at a tree's root, without judging what it says.
++
++    tree_root: the tree's folder.
++    Returns (the file's path, the parsed file), for example (Path('E:/.../ENVIRONMENT.ini'), <ConfigParser>).
++    Refuses (SettingsRefused): no file there; a file Python's INI reader rejects.
+     """
+     file_path = Path(tree_root) / SETTINGS_FILE_NAME
+     if not file_path.is_file():
+@@ -103,13 +131,38 @@
+         parser.read_string(file_path.read_text(encoding='utf-8'), source=str(file_path))
+     except (configparser.Error, UnicodeDecodeError) as error:
+         raise SettingsRefused(f'{file_path}: not a readable settings file ({error}). Correct the file by hand.') from None
++    return file_path, parser
++
++
++def _value(parser, file_path: Path, section: str, key: str) -> str:
++    """One value of a parsed settings file.
++
++    parser, file_path: as _open_settings_file returned them.  section, key: for example 'QA', 'backup_root'.
++    Returns the value without surrounding blanks, for example 'T:\\a_p_r_i_r_backups\\QA'.
++    Refuses (SettingsRefused) a missing section or key, naming the file, the section and the key.
++    """
++    if not parser.has_section(section) or not parser.has_option(section, key):
++        raise SettingsRefused(f'{file_path} [{section}] {key}: this setting is missing. Add it to the file '
++                              f'(see {EXAMPLE_FILE_NAME}).')
++    return parser.get(section, key).strip()
++
++
++def read_settings(tree_root: Path) -> TreeSettings:
++    """Read and check the settings file of the tree at `tree_root`.
++
++    tree_root: the folder the launcher is in.
++    Returns the TreeSettings, for example TreeSettings(role='DEV', tree_root=Path('E:/.../project'), venv_dir=...,
++    backup_root=None, results_copy_from=None).
++    Refuses (SettingsRefused): no file; a file Python's INI reader rejects; a missing section or key; a role that
++    is not DEV, QA or PROD; a path that is relative or not real; a tree_root that is not this folder ("this tree
++    is not what its file says"); an environment folder outside the tree; a backup root inside the tree; a
++    [results] section in PROD; a copy_from that is this tree itself.
++    """
++    file_path, parser = _open_settings_file(Path(tree_root))
+ 
+     def value(section: str, key: str) -> str:
+         """One value of the file, refusing a missing section or key by name."""
+-        if not parser.has_section(section) or not parser.has_option(section, key):
+-            raise SettingsRefused(f'{file_path} [{section}] {key}: this setting is missing. Add it to the file '
+-                                  f'(see {EXAMPLE_FILE_NAME}).')
+-        return parser.get(section, key).strip()
++        return _value(parser, file_path, section, key)
+ 
+     role = value('environment', 'role')
+     if role not in ROLES:
+@@ -139,3 +192,127 @@
+             raise SettingsRefused(f'{file_path} [results] copy_from: "{copy_from}" is this tree, or lies inside '
+                                   f'or around it. It must name the other tree whose results are copied.')
+     return TreeSettings(role=role, tree_root=root, venv_dir=venv, backup_root=backup, results_copy_from=copy_from)
++
++
++def _volume_of(path: Path) -> str:
++    """Name the disk volume a path lies on, so that two paths can be compared.
++
++    path: an absolute, real path; it need not exist yet.
++    Returns a text that is equal for two paths exactly when they lie on the same volume: on Windows the drive, for
++    example 'T:' (the settings checks have already refused a link, a junction and a substituted drive, so a drive
++    letter is a volume); elsewhere the device number of the nearest folder that exists, for example 'device 2049'.
++    """
++    drive = os.path.splitdrive(str(path))[0]
++    if drive:
++        return os.path.normcase(drive)
++    nearest = Path(path)
++    while not nearest.exists() and nearest != nearest.parent:
++        nearest = nearest.parent
++    return f'device {os.stat(nearest).st_dev}'
++
++
++def read_dev_view(dev_root: Path) -> DevView:
++    """Read DEV's settings file as DEV's tools need it: DEV's own settings, and its entries for QA and PROD, with
++    every check of the deployment design's section 1 that concerns the three trees together (checks 1, 2, 3, 5).
++
++    dev_root: DEV's folder (the folder the tool is in).
++    Returns the DevView, for example DevView(own=TreeSettings(role='DEV', ...), entries={'QA': OtherTreeEntry(
++    role='QA', tree_root=Path('T:/a_p_r_i_r'), venv_dir=Path('T:/a_p_r_i_r/.venv'),
++    backup_root=Path('T:/a_p_r_i_r_backups/QA'))}, warnings=('[QA] backup_root ... lies on the same disk volume
++    ...',)). A role with no section in the file is simply not in `entries`.
++    Refuses (SettingsRefused): whatever read_settings refuses for DEV's own section; a file whose role is not DEV;
++    in a [QA] or [PROD] section a missing key, or a path that is relative or not real; an environment folder that
++    is not inside its own tree; two tree roots that are the same folder or lie one inside the other; a backup root
++    and any tree root that lie one inside the other; the same backup root for QA and for PROD.
++    """
++    own = read_settings(dev_root)
++    file_path, parser = _open_settings_file(Path(dev_root))
++    if own.role != 'DEV':
++        raise SettingsRefused(f'{file_path} [environment] role: this tree is {own.role}, not DEV. The install tools '
++                              f'run from DEV only; run this command in the DEV tree.')
++    entries = {}
++    for role in OTHER_TREE_ROLES:
++        if not parser.has_section(role):
++            continue
++        root = _real_absolute_path(_value(parser, file_path, role, 'tree_root'), f'{file_path} [{role}] tree_root')
++        venv = _real_absolute_path(_value(parser, file_path, role, 'venv_dir'), f'{file_path} [{role}] venv_dir')
++        backup = _real_absolute_path(_value(parser, file_path, role, 'backup_root'),
++                                     f'{file_path} [{role}] backup_root')
++        if not _inside(venv, root) or _same_folder(venv, root):
++            raise SettingsRefused(f'{file_path} [{role}] venv_dir: "{venv}" is not inside that tree, "{root}". The '
++                                  f'environment folder must lie inside its own tree, so that every backup holds it.')
++        entries[role] = OtherTreeEntry(role=role, tree_root=root, venv_dir=venv, backup_root=backup)
++
++    # Check 2: three different tree roots, none inside another; no backup root and tree root one inside the other.
++    roots = [('[environment] tree_root', own.tree_root)]
++    roots += [(f'[{role}] tree_root', entry.tree_root) for role, entry in entries.items()]
++    for first in range(len(roots)):
++        for second in range(first + 1, len(roots)):
++            (first_name, first_root), (second_name, second_root) = roots[first], roots[second]
++            if _inside(first_root, second_root) or _inside(second_root, first_root):
++                raise SettingsRefused(f'{file_path}: {first_name} "{first_root}" and {second_name} "{second_root}" '
++                                      f'are the same folder, or one lies inside the other. DEV, QA and PROD must be '
++                                      f'three separate folders. Correct the file.')
++    for role, entry in entries.items():
++        for root_name, root in roots:
++            if _inside(entry.backup_root, root) or _inside(root, entry.backup_root):
++                raise SettingsRefused(f'{file_path}: [{role}] backup_root "{entry.backup_root}" and {root_name} '
++                                      f'"{root}" lie one inside the other. A backup root must be outside every '
++                                      f'tree, and no tree inside a backup root. Correct the file.')
++    if len(entries) == 2 and _same_folder(entries['QA'].backup_root, entries['PROD'].backup_root):
++        raise SettingsRefused(f'{file_path}: [QA] backup_root and [PROD] backup_root are the same folder, '
++                              f'"{entries["QA"].backup_root}". Each tree needs a backup root of its own. Correct '
++                              f'the file.')
++
++    # Check 5: allowed, with a warning the tools print.
++    warnings = tuple(
++        f'WARNING: {file_path} [{role}] backup_root "{entry.backup_root}" lies on the same disk volume as that '
++        f'tree, "{entry.tree_root}". It is allowed; a failure of that one disk would take the tree and its backups '
++        f'together, so keep copies of the backup root on other media.'
++        for role, entry in entries.items() if _volume_of(entry.backup_root) == _volume_of(entry.tree_root))
++    return DevView(own=own, entries=entries, warnings=warnings)
++
++
++def entry_for(view: DevView, role: str) -> OtherTreeEntry:
++    """DEV's entry for the QA or the PROD tree, for a tool that is asked to work on that tree.
++
++    view: read_dev_view's result.  role: 'QA' or 'PROD', as the owner typed it.
++    Returns the OtherTreeEntry. Refuses (SettingsRefused) a role that is not QA or PROD, and a role DEV's file has
++    no section for, saying which sections it does have.
++    """
++    file_path = view.own.tree_root / SETTINGS_FILE_NAME
++    if role not in OTHER_TREE_ROLES:
++        raise SettingsRefused(f'"{role}" is not a tree this command can work on. Type QA or PROD.')
++    if role not in view.entries:
++        has = ', '.join(f'[{name}]' for name in view.entries) or 'neither [QA] nor [PROD]'
++        raise SettingsRefused(f'{file_path} [{role}]: DEV\'s settings file has no section for the {role} tree (it '
++                              f'has: {has}). Add the section with tree_root, backup_root and venv_dir '
++                              f'(see {EXAMPLE_FILE_NAME}).')
++    return view.entries[role]
++
++
++def tree_as_dev_names_it(view: DevView, role: str) -> TreeSettings:
++    """The settings of an existing QA or PROD tree, checked against what DEV's file says of it (deployment design
++    section 1, check 4: "a tree is what its own file says").
++
++    view: read_dev_view's result.  role: 'QA' or 'PROD'.
++    Returns that tree's own TreeSettings, read from the file in its own folder.
++    Refuses (SettingsRefused): whatever entry_for refuses; no settings file in that folder, or one that
++    read_settings refuses (a file naming another folder among them); a file that says another role; a backup root
++    or an environment folder that differs from DEV's entry, printing both values.
++    """
++    entry = entry_for(view, role)
++    dev_file = view.own.tree_root / SETTINGS_FILE_NAME
++    found = read_settings(entry.tree_root)
++    tree_file = entry.tree_root / SETTINGS_FILE_NAME
++    if found.role != role:
++        raise SettingsRefused(f'{tree_file} [environment] role: that tree\'s own file says it is {found.role}, but '
++                              f'{dev_file} names that folder as [{role}]. A tree is what its own file says; nothing '
++                              f'was done. Correct DEV\'s entry, or use the tree that is {role}.')
++    for key, in_dev, in_tree in (('backup_root', entry.backup_root, found.backup_root),
++                                 ('venv_dir', entry.venv_dir, found.venv_dir)):
++        if in_tree is None or not _same_folder(in_dev, in_tree):
++            raise SettingsRefused(f'{key} disagrees for the {role} tree: {dev_file} [{role}] says "{in_dev}"; '
++                                  f'{tree_file} [environment] says "{in_tree}". The two files must agree. Edit both '
++                                  f'by hand to the same value (deployment design section 1); nothing was done.')
++    return found
+
+--- main/src/research_command.py
++++ overlay/src/research_command.py
+@@ -9,10 +9,11 @@
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 16 (the owner's commands);
+     doc/Predictive_Randomness_Deployment_Design_v0_12.md section 2 (the launchers of a tree).
+ 
+-    It also checks that the Python running it is the tree's own environment, the one the settings file names.
++    It also makes the launch guard's checks of every launch (deployment design section 9) and checks that the
++    Python running it is the tree's own environment, the one the settings file names.
+ 
+ Which of the project's own modules it uses
+-    research.settings       read_settings: the tree's environment folder
++    research.launch_guard   check_at_launch: the settings, no unfinished operation, the environment's marker
+     research.research_job   main: the research job
+     research.withdraw       main: the withdrawal
+ 
+@@ -44,10 +45,12 @@
+               f'tree\'s folder, for example Run_Research.bat.')
+         return EXIT_BAD_COMMAND
+     sys.path[:0] = [str(folder) for folder in IMPORT_FOLDERS]
+-    from research.settings import SettingsRefused, read_settings
++    from research.job_lock import LaunchRefused
++    from research.launch_guard import check_at_launch
++    from research.settings import SettingsRefused
+     try:
+-        environment_folder = read_settings(TREE_ROOT).venv_dir
+-    except SettingsRefused as refusal:
++        environment_folder = check_at_launch(TREE_ROOT).venv_dir
++    except (SettingsRefused, LaunchRefused) as refusal:
+         print(f'REFUSED: {refusal}')
+         return EXIT_BAD_COMMAND
+     if os.path.normcase(os.path.realpath(sys.prefix)) != os.path.normcase(os.path.realpath(environment_folder)):
+
+--- main/tests/research_fixtures.py
++++ overlay/tests/research_fixtures.py
+@@ -181,6 +181,19 @@
+     return tree
+ 
+ 
++def as_installed(tree: Path) -> None:
++    """Leave an invented QA or PROD tree as the project's commands leave a real one: its list of installed files
++    made of the software as it stands, and its environment's marker written. In DEV it does nothing: DEV has
++    neither. tree: the tree. A test that changes the software afterwards, as an install or a correction would,
++    calls it again; a test of the guard itself does not."""
++    from research import environment_marker, installed_files
++    from research.settings import read_settings
++    settings = read_settings(tree)
++    if settings.role != 'DEV':
++        installed_files.write_list(tree, installed_files.software_now(tree))
++        environment_marker.write_marker(settings.venv_dir)
++
++
+ def add_toy_variant(tree: Path, family: str, variant: str, games=('POWERBALL', 'OZLOTTO'), minimum: int = 3,
+                     behaviour: dict | None = None, helpers=()) -> Path:
+     """Add a toy variant folder (method.py and VARIANT.json) to a tree; return the folder.
+@@ -355,17 +368,22 @@
+         write_results(tree, GAME, last_draw)
+         for entry in variants:
+             self.add_variant(tree, *((entry,) if isinstance(entry, str) else entry))
++        as_installed(tree)
+         return tree
+ 
+     @staticmethod
+     def add_variant(tree: Path, name: str, behaviour: dict | None = None, family: str = 'E_901',
+                     games=(GAME,), minimum: int = 3) -> None:
+-        """Add one toy variant with its ACTIVE status file, as an install would leave it."""
++        """Add one toy variant with its ACTIVE status file, as an install would leave it: its family's own
++        __init__.py is on its helper list (as every real family's is), and in QA and PROD the tree's list of
++        installed files is made again."""
+         if behaviour is None:
+             behaviour = {'reverse': True} if name == 'TOY_B_V1' else {}
+-        add_toy_variant(tree, family, name, games=games, minimum=minimum, behaviour=behaviour)
++        add_toy_variant(tree, family, name, games=games, minimum=minimum, behaviour=behaviour,
++                        helpers=(f'{family}/__init__.py',))
+         from research.status_file import create_active
+         create_active(status_path(tree, family, name), family, name, list(games))
++        as_installed(tree)
+ 
+     def status(self, tree: Path, name: str, family: str = 'E_901'):
+         """A variant's status in the test game, read from its status file."""
+
+--- main/tests/test_research_identity.py
++++ overlay/tests/test_research_identity.py
+@@ -262,10 +262,6 @@
+         (self.tree / 'src' / 'toy_forecast_code.py').write_text('# changed\n')
+         self.assertNotEqual(code_identity.forecasting_code_identity(self.tree), identity)
+ 
+-    def test_the_environment_digest_is_stable_within_a_process(self):
+-        self.assertEqual(code_identity.environment_digest(), code_identity.environment_digest())
+-        self.assertRegex(code_identity.environment_digest(), r'^[0-9a-f]{64}$')
+-
+ 
+ if __name__ == '__main__':
+     unittest.main()
+
+--- main/tests/test_research_ov1_and_checks.py
++++ overlay/tests/test_research_ov1_and_checks.py
+@@ -340,6 +340,7 @@
+         tree = self.counted_tree()
+         method = tree / 'src/methods/E_901/TOY_B_V1/method.py'
+         method.write_text(method.read_text(encoding='ascii') + '# edited after its lists were made\n', encoding='ascii')
++        fx.as_installed(tree)              # as the command that changed the software would leave the tree
+         before = fx.files_under(tree)
+         self.source(LAST_AT_START + 4, version=3)
+         code, said = fx.run_job(tree)
+@@ -364,6 +365,7 @@
+     def test_lists_made_under_other_shared_forecasting_code_are_all_foreign(self):
+         tree = self.counted_tree()
+         (tree / 'src/toy_forecast_code.py').write_text('# the forecasting code was corrected\n', encoding='ascii')
++        fx.as_installed(tree)              # as the command that changed the software would leave the tree
+         before = fx.files_under(tree, f'results/research/{GAME}/variants')
+         code, said = fx.run_job(tree)
+         self.assertEqual(code, 0, said)
+@@ -374,6 +376,7 @@
+     def test_the_list_of_a_variant_no_longer_installed_is_named_and_counts_nowhere(self):
+         tree = self.counted_tree()
+         shutil.rmtree(tree / 'src/methods/E_901/TOY_C_V1')
++        fx.as_installed(tree)              # as the command that changed the software would leave the tree
+         code, said = fx.run_job(tree)
+         self.assertEqual(code, 0, said)
+         self.assertTrue(any('a list is foreign and is ignored: E_901/TOY_C_V1 (the variant is not installed here)' in line
+@@ -447,6 +450,7 @@
+         tree = self.stopped_at_1160()
+         method = tree / 'src/methods/E_901/TOY_B_V1/method.py'
+         method.write_text(method.read_text(encoding='ascii') + '# edited\n', encoding='ascii')
++        fx.as_installed(tree)              # as the command that changed the software would leave the tree
+         code, said = fx.run_job(tree, no_update=True)
+         self.assertEqual(code, 0, said)
+         self.assertEqual((cutoff_record(tree)['not_current_from_draw'], cutoff_record(tree)['reason']),
+

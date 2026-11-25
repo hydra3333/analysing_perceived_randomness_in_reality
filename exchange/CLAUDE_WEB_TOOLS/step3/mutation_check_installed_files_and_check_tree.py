@@ -6,7 +6,6 @@ MUT = Path('/home/claude/work/mut'); PY = '/home/claude/work/venv315/bin/python'
 FAULTS = [
  ('src/research/installed_files.py', "elif hashlib.sha256(file.read_bytes()).hexdigest() != installed_digest:", "elif False:", 'a changed file is not noticed'),
  ('src/research/installed_files.py', "if not file.is_file():\r\n            found.append(f'{path}: it is on the list", "if False:\r\n            found.append(f'{path}: it is on the list", 'a missing listed file is not noticed'),
- ('src/research/installed_files.py', "if not (root / path).is_file():\r\n            found.append(f'{path}: the status file", "if False:\r\n            found.append(f'{path}: the status file", 'a missing status file is not noticed'),
  ('src/research/installed_files.py', "if path not in listed and path not in status_files:", "if False:", 'an unlisted file under src is not noticed'),
  ('src/research/installed_files.py', "elif name == CACHE_FOLDER_NAME:", "elif False:", 'the cache folder is entered, file by file'),
  ('src/research/installed_files.py', "if is_link(Path(current) / name):\r\n                others.append(f'{from_root(name)}: a link or a junction", "if False:\r\n                others.append(f'{from_root(name)}: a link or a junction", 'a folder link is entered'),

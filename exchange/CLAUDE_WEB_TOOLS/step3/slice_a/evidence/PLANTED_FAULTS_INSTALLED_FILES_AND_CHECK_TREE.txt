@@ -1,0 +1,23 @@
+caught   | a changed file is not noticed
+caught   | a missing listed file is not noticed
+caught   | an unlisted file under src is not noticed
+caught   | the cache folder is entered, file by file
+caught   | a folder link is entered
+caught   | status files are left off the list
+caught   | a broken variant folder is listed anyway
+caught   | a file of another kind is taken for the list
+caught   | the temporary file is left behind
+caught   | the manifest of an installed tree refuses for a DEV-only tool
+caught   | a missing install tool is not refused in DEV
+caught   | drift is counted but not found
+caught   | a tree whose own file says another role is looked at
+caught   | a tree not yet created is not said as such
+caught   | a status file failing its own check is not found
+caught   | a file in the wrong form is not found
+caught   | the settings file is not checked for its form
+caught   | the retired opening record is checked
+caught   | a .partial is listed as a backup
+caught   | a variant installed with other bytes is not said
+caught   | the exit code never says that something was found
+caught   | the orphan marker is not shown
+22 faults planted; 0 survived

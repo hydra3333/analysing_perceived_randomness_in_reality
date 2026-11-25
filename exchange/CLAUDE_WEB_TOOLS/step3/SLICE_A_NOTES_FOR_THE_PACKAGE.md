@@ -113,8 +113,9 @@ list of installed files.
   tests 829 have the same result and one is removed with the quick digest it tested
   (`test_the_environment_digest_is_stable_within_a_process`); the 155 new tests are OK; the three known failing
   tests fail as before and no other.**
-- Planted faults, one at a time, each caught: 23 in the list of installed files, `Check_Tree` and the manifest's
-  reader (`mutation_check_installed_files_and_check_tree.py`; run before the last two parts were written); 31 in
+- Planted faults, one at a time, each caught, on the final files: 22 in the list of installed files, `Check_Tree`
+  and the manifest's reader (`mutation_check_installed_files_and_check_tree.py`; a twenty-third, planted against
+  the list naming a missing status file, went with that check: reading 12); 31 in
   the process rule, the environment's marker, the guard and its wiring (`mutation_check_launch_guard.py`). One of
   the 31 first survived (a file that is not compiled, inside a cache folder, entered the digest unnoticed by the
   tests); the test was strengthened and it is caught.

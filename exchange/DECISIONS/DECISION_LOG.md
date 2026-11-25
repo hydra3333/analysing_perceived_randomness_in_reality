@@ -6620,3 +6620,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   rehearsal on Windows by the runner in a scratch tree; a consolidated handover (Claude's advice: now is the time,
   entry 272).
 - Next numbers: EX_318; entry 277; RAT-56.
+
+## 277. 25 November 2026, 10:43 - OWNER: slice A goes to the reviewer; EX_318 ISSUED (the completed slice, its package note, the exact differences and the evidence)
+
+- **The owner, 10:37,** to Claude's three questions of entry 276 (the first: send slice A to the reviewer now): "Yes a
+  blurb for reviewer now please per usual process". **At 10:39:** "Telling reviewer to look at your EX as usual"
+  (Claude answered at once that EX_318 was not yet on `main` and would be within minutes).
+- **Not answered by him, and so not done:** the rehearsal on Windows by the runner (Claude's advice: after the
+  reviewer's findings); the consolidated handover (Claude's advice: now; entry 272 leaves the word with him).
+- **EX_318** (`exchange/EX_318_Claude.md`, SHA-256 `6479de855600fd8760d79fb64027b217122d1d99ca0fef8359f3600ee6f074b6`): the completed
+  slice A for full independent review; three things asked besides the disposition: the fourteen readings, the
+  narrow amendment of the deployment design's section 2 for ratification, and whether anything in the slice is
+  more than the ratified design asks. Reply expected as EX_319. **A message only, with no ZIP:** nothing of build
+  step 3 is installed until slices A to D have passed and been rehearsed together (entry 219), so the files stay
+  at their repository paths and are named by path and SHA-256 (36 files).
+- **Written for it** (`exchange/CLAUDE_WEB_TOOLS/step3/slice_a/`): `SLICE_A_PACKAGE_NOTE_v0_1.md`
+  (`ea03d2e2beb5bacc403cbc659fae1a508ded9cb5f33f279461d068ab52b2ff53`): the work-item card, the files, where each
+  ratified clause is carried out and what proves it, the readings, the amendment's wording, the evidence, what is
+  not tested; `SLICE_A_CHANGED_FILES_FROM_MAIN_DIFFERENCE.txt` (the nine changed files); `evidence/` (the suite's
+  module lines on `main` and with the slice, their comparison, the two planted-fault runs).
+- **The planted faults were run again on the final files:** 22 and 31, every one caught. (The first run of 23 held
+  one planted against the list naming a missing status file; that check is the job's own, and the fault went
+  with it.)
+- **The slice's files are unchanged since entry 276** (`main` `77fec12`); nothing was run on the owner's PC and
+  nothing is authorised there.
+- Next numbers: EX_319 (the reviewer's reply); entry 278; RAT-56.
