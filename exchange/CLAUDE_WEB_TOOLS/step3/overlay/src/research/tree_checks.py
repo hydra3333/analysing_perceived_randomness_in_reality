@@ -22,6 +22,7 @@ Which of the project's own modules it uses
     _common.game_profiles     get_profile: a game's first draw and barrels, for the invented table
     research.code_identity    the identities of the software being asked
     research.derived_check    first_mismatch: the full comparison of the derived results
+    research.environment_marker  MARKER_NAME, write_marker: at a tree's creation only
     research.forecast_engine  compute_target, content_digest: the ordinary engine
     research.job_lock         is_link: the scratch folder must be a real folder
     research.reader           ResultsOnFile, check_results_bytes, first_target, header_for
@@ -48,10 +49,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from _common.game_profiles import get_profile
-from research import derived_check
+from research import derived_check, environment_marker
 from research.code_identity import ManifestRefused, derived_code_digest, forecasting_code_identity, read_manifest
 from research.forecast_engine import FORECAST, compute_target, content_digest
-from research.job_lock import is_link
+from research.job_lock import LaunchRefused, is_link
 from research.reader import ResultsOnFile, check_results_bytes, first_target, header_for
 from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, read_game
 from research.settings import SettingsRefused, TreeSettings, read_settings
@@ -354,26 +355,34 @@ def derived_results(stored: dict, say=print) -> dict:
 # ------------------------------------------------- the checks, asked by an install tool with the tree's Python
 
 def run_checks(software_root: Path, settings: TreeSettings, smoke=None, sample: bool = False, derived: bool = False,
-               say=print) -> dict:
+               say=print, write_marker: bool = False) -> dict:
     """Make the checks an install tool asks for and return what was found, as plain values.
 
     software_root: the folder the software lies in (the tree, or the software as it would be).
     settings: the settings of the tree whose data is read and whose scratch folder is used.
     smoke: None for no smoke case; ALL_VARIANTS for every variant's; or the identities to try, for example
     ['E_002/RECUR_MEAN_ALL_V1'].  sample, derived: whether the forecast sample and the derived results are asked.
+    write_marker: True only for a tree's creation, with ALL_VARIANTS: if every smoke case passed, the marker of
+    the tree's environment is written by this Python, the tree's own (the marker lists what THIS Python has
+    installed); if one failed, no marker is written and an older one is removed.
     Returns, for example,
         {'kind': 'TREE_CHECKS_V1', 'software_root': 'C:/Temp/as_it_would_be', 'data_root': 'G:/a_p_r_i_r',
-         'smoke': {'asked': 'ALL', 'failures': []},
+         'smoke': {'asked': 'ALL', 'failures': []}, 'marker': None,
          'unreadable': {},
          'sample': {'compared': 12, 'differences': []},
          'derived': {'POWERBALL': None, 'OZLOTTO': {'from_draw': 1702, 'detail': '...', 'known': False}}}
-    A check that was not asked is None. It only finds and tells: what stops an install is the tool's to decide.
+    A check that was not asked is None; 'marker' is the digest written, or None. It only finds and tells: what
+    stops an install is the tool's to decide.
     Refuses (ChecksRefused): the software cannot be read (read_software); an identity named for a smoke case
-    that the software does not hold.
+    that the software does not hold; the marker asked without every variant's smoke case, or of software that
+    does not lie in the tree itself.
     """
+    if write_marker and (smoke != ALL_VARIANTS or Path(software_root).resolve() != settings.tree_root.resolve()):
+        raise ChecksRefused('the environment\'s marker is written only after every variant\'s smoke case, made by the '
+                            'software that lies in the tree itself.')
     software = read_software(software_root)
     found = {'kind': RESULT_KIND, 'software_root': str(software_root), 'data_root': str(settings.tree_root),
-             'smoke': None, 'unreadable': None, 'sample': None, 'derived': None}
+             'smoke': None, 'marker': None, 'unreadable': None, 'sample': None, 'derived': None}
     if smoke is not None:
         only = None if smoke == ALL_VARIANTS else list(smoke)
         unknown = sorted(set(only or ()) - {variant.identity for variant in software.variants})
@@ -382,6 +391,12 @@ def run_checks(software_root: Path, settings: TreeSettings, smoke=None, sample: 
                                 f'{software_root} does not hold.')
         found['smoke'] = {'asked': smoke if only is None else only,
                           'failures': smoke_cases(software, settings.tree_root, only=only, say=say)}
+    if write_marker:
+        if found['smoke']['failures']:
+            (settings.venv_dir / environment_marker.MARKER_NAME).unlink(missing_ok=True)
+        else:
+            found['marker'] = environment_marker.write_marker(settings.venv_dir)
+            say(f'  the environment\'s marker is written: {settings.venv_dir / environment_marker.MARKER_NAME}')
     if sample or derived:
         stored, found['unreadable'] = read_stored_game_by_game(software, settings, say)
         if sample:
@@ -413,14 +428,18 @@ def main(arguments, software_root: Path, say=print) -> int:
                              f'E_002/RECUR_MEAN_ALL_V1,E_002/RECUR_MEDIAN_ALL_V1')
     parser.add_argument('--sample', action='store_true', help='compute the fixed sample of stored forecasts again')
     parser.add_argument('--derived', action='store_true', help='compare every stored score and prevailing line')
+    parser.add_argument('--write-marker', action='store_true',
+                        help='with --smoke ALL, at a tree\'s creation: write the environment\'s marker if every '
+                             'smoke case passed')
     chosen = parser.parse_args(arguments)
     smoke = {NO_VARIANT: None, ALL_VARIANTS: ALL_VARIANTS}.get(chosen.smoke, chosen.smoke.split(','))
     try:
         settings = read_settings(Path(chosen.data))
-        found = run_checks(Path(software_root), settings, smoke, chosen.sample, chosen.derived, say)
+        found = run_checks(Path(software_root), settings, smoke, chosen.sample, chosen.derived, say,
+                           chosen.write_marker)
         with open(chosen.result, 'x', encoding='ascii', newline='\n') as stream:
             stream.write(json.dumps(found, ensure_ascii=True, sort_keys=True) + '\n')
-    except (SettingsRefused, ChecksRefused, ManifestRefused, FileExistsError) as refusal:
+    except (SettingsRefused, ChecksRefused, ManifestRefused, FileExistsError, LaunchRefused) as refusal:
         say(f'REFUSED: {refusal}')
         return EXIT_REFUSED
     return EXIT_RAN

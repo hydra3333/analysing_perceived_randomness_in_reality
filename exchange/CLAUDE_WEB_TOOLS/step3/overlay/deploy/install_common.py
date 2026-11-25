@@ -625,13 +625,15 @@ def suite_if_it_is_the_trees(dev_root: Path, dev_files: dict, installed: dict, p
 
 
 def checks_with_target_python(python: Path, software_root: Path, tree_root: Path, smoke, sample: bool,
-                              derived: bool, say=print, run=subprocess.run) -> dict:
+                              derived: bool, say=print, run=subprocess.run, write_marker: bool = False) -> dict:
     """Have the software in a folder checked against a tree's data, by that software, with the tree's Python.
 
     python: target_python's result.  software_root: the tree itself, or the temporary folder holding the software
     as it would be.  tree_root: the tree whose data is read and whose scratch folder a smoke case uses.
     smoke: ALL_VARIANTS, NO_VARIANT or a list of identities.  sample, derived: whether those two checks are
-    asked.  run: starts the program; a test passes its own.
+    asked.  run: starts the program; a test passes its own.  write_marker: True only at a tree's creation: the
+    program writes the environment's marker if every smoke case passed (it is the tree's own Python that must
+    write it).
     The program is started in isolated mode, writing no cache, with no time limit; it prints its own lines, and
     writes what it found to a file in a new temporary folder, which is removed here.
     Returns what it found (research.tree_checks.run_checks). Refuses (InstallRefused) if the program ended with
@@ -644,6 +646,7 @@ def checks_with_target_python(python: Path, software_root: Path, tree_root: Path
              '--smoke', smoke if isinstance(smoke, str) else ','.join(smoke)]
     words += ['--sample'] if sample else []
     words += ['--derived'] if derived else []
+    words += ['--write-marker'] if write_marker else []
     try:
         ended = run(words, stdin=subprocess.DEVNULL, check=False).returncode
         try:

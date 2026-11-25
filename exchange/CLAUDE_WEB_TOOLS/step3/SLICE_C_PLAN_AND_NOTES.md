@@ -172,6 +172,30 @@ file; says what it would change before it asks; the cutoff file when a change fr
   the tree does not already mark as not current. A difference the tree already marks is the known one and is
   reported, not a stop. If the `checks` program ends with any exit code but 0, or leaves no result of its kind,
   nothing is known and nothing passes.
+- **C-R13, readings taken in `Init_Tree`** (design 4; specification 12.5).
+  (a) *The environment's marker is written by the tree's own Python, not by DEV's:* the marker lists what the
+  Python that writes it has installed, and the digest takes that Python's base. So the `checks` command gained
+  `--write-marker`, which writes it only after every variant's smoke case passed, in the tree itself; `Init_Tree`
+  asks for it only after the suite passed.
+  (b) *The accepted results of a game* are three files: the results, their version ledger, and their verification
+  record (`<GAME>_results_master_init_verification.json`). All three must be ordinary files in the source, and the
+  results must pass the engine's own reading, before anything is created. The retired opening records
+  (`HOLDOUT_OPENED_*`) are not copied.
+  (c) *"From PROD, or from DEV while no PROD exists":* a PROD tree exists when the folder DEV's file names holds a
+  settings file; it is then checked to be what DEV's file says, and is not read while an install is unfinished
+  there or a results update holds its lock. Each source file is hashed before the copy and again after it.
+  (d) *A QA tree's own `[results] copy_from`* is PROD's folder as DEV's file names it, also before PROD exists; a
+  QA tree created while DEV's file has no `[PROD]` section gets no `[results]` section, and the owner adds it by
+  hand when PROD exists (design 1: "to change a setting later").
+  (e) *The recovery kit is attempted before the list and the log line,* not after them as step 8 lists, so that
+  an answer of NO to "finish without a kit" leaves nothing of step 8 written. The barrier is still removed last.
+  (f) *A continued creation asks no question* (the owner confirmed this same plan), keeps the results it copied,
+  and checks them against `INIT_RECORD.json`. If DEV changed since it began, the plans differ and it is refused
+  with both shown; the refusal says that the owner may delete the half-made folder himself and begin anew.
+  (g) *The pause for the environment ends with exit code 3,* with the barrier in place.
+  (h) *The four environment scripts* (`create_venv.bat`, `install_upgrade_dependencies_into_venv.bat`,
+  `activate_venv.bat`, `deactivate_venv.bat`) are now on the manifest's `[files]`, class `other`: a change to the
+  owner's dependency script therefore reaches a tree by `Make_Installable.bat INFRA` and `Reinstall_Infra.bat`.
 
 ## 4. Where it stands
 
@@ -261,9 +285,15 @@ file; says what it would change before it asks; the cutoff file when a change fr
   refuses any Python but the tree's own, and an invented tree's environment is not a Python that runs). It is
   proved with C3, by a creation run end to end on a tree whose `.venv` is a real one. The whole suite has not
   been run on this state.
-- **Next: C3, `Init_Tree.bat QA|PROD`** (design 4, nine steps), with `deploy/init_tree.py`, its launcher, the
-  command word in `deploy/deploy_command.py`, and the four environment scripts onto the manifest (the note
-  below). Then C4 (`Install`), C5 (`Reinstall_Infra`, with reading C-R9).
+- **25 November 2026, part C3: WRITTEN and committed; its proof (planted faults; the real start of a tree's own
+  Python) is next.** New in the overlay: `deploy/init_tree.py`, `Init_Tree.bat`, `tests/test_trees_init.py` (32
+  tests, pass). Changed: `deploy/deploy_command.py` (the word `init-tree`; a reviewed slice A file),
+  `deploy/INFRA_MANIFEST.ini` (the four environment scripts under `[files]`; the two new tool files),
+  `deploy/SUITE_MANIFEST.ini` (`test_trees_init`; the list is now 21 modules), `src/research/tree_checks.py` and
+  `deploy/install_common.py` (`--write-marker`), `tests/test_trees_verify.py` (33 tests). Passing with them:
+  `test_trees_suite`, `test_file_form`, `test_trees_readiness`, `test_research_manifest`,
+  `test_trees_install_common` (69), `test_trees_check_tree`, `test_trees_installed_files`, `test_trees_checks`.
+- **Next: C3's proof, then C4 (`Install`), C5 (`Reinstall_Infra`, with reading C-R9).**
 - **To settle in C3, seen now:** `Init_Tree` step 6 has the owner build `.venv` "with `create_venv.bat` and
   `install_upgrade_dependencies_into_venv.bat` in the new tree", and design 2 lists those and the two activation
   scripts among a tree's files. They are not on the infrastructure manifest today, so no install would put them

@@ -329,7 +329,7 @@ class TheChecksCommand(VerifyCase):
         code, found, _ = self.checks(tree, '--smoke', 'ALL', '--sample', '--derived')
         self.assertEqual(code, tree_checks.EXIT_RAN)
         self.assertEqual(found, {'kind': 'TREE_CHECKS_V1', 'software_root': str(tree), 'data_root': str(tree),
-                                 'smoke': {'asked': 'ALL', 'failures': []}, 'unreadable': {},
+                                 'smoke': {'asked': 'ALL', 'failures': []}, 'marker': None, 'unreadable': {},
                                  'sample': {'compared': 6, 'differences': []}, 'derived': {GAME: None}})
         self.assertEqual(whole_tree(tree), before)
 
@@ -359,6 +359,37 @@ class TheChecksCommand(VerifyCase):
         fx.alter_list_line(scores, 1156 - fx.FIRST_TOY_TARGET, one_more_hit)
         _, found, _ = self.checks(tree, '--derived')
         self.assertEqual((found['derived'][GAME]['from_draw'], found['derived'][GAME]['known']), (1156, False))
+
+    def test_at_a_trees_creation_the_marker_is_written_by_this_python_only_if_every_smoke_case_passed(self):
+        tree = self.rebuilt()
+        code, found, said = self.checks(tree, '--smoke', 'ALL', '--write-marker')
+        self.assertEqual(code, tree_checks.EXIT_RAN)
+        self.assertEqual(found['marker'], environment_marker.read_marker(tree / '.venv')['digest'])
+        self.assertIn(f'the environment\'s marker is written: {self.marker(tree)}', said[-1])
+        (self.root / 'result.json').unlink()
+        bad = self.tree(variants=('TOY_A_V1', ('TOY_BAD_V1', {'fail_at': [fx.FIRST_TOY_TARGET]})), name='bad')
+        self.assertTrue(self.marker(bad).exists(), 'an older marker')
+        code, found, _ = self.checks(bad, '--smoke', 'ALL', '--write-marker')
+        self.assertEqual((code, found['marker'], len(found['smoke']['failures'])), (tree_checks.EXIT_RAN, None, 1))
+        self.assertFalse(self.marker(bad).exists(), 'no marker after a failed smoke case, and the older one removed')
+
+    def test_the_marker_is_never_written_without_every_smoke_case_nor_by_software_outside_the_tree(self):
+        tree = self.rebuilt()
+        for words in (('--write-marker',), ('--smoke', f'{FAMILY}/TOY_A_V1', '--write-marker'),
+                      ('--smoke', 'NONE', '--sample', '--write-marker')):
+            code, found, said = self.checks(tree, *words)
+            self.assertEqual((code, found), (tree_checks.EXIT_REFUSED, None), words)
+            self.assertIn('is written only after every variant\'s smoke case', said[0])
+        elsewhere = self.tree(name='elsewhere')
+        code, found, _ = self.checks(tree, '--smoke', 'ALL', '--write-marker', software=elsewhere)
+        self.assertEqual((code, found), (tree_checks.EXIT_REFUSED, None))
+        self.assertFalse(self.marker(tree).exists())
+
+    def test_without_being_asked_no_marker_is_written(self):
+        tree = self.rebuilt()
+        code, found, _ = self.checks(tree, '--smoke', 'ALL')
+        self.assertEqual((code, found['marker']), (tree_checks.EXIT_RAN, None))
+        self.assertFalse(self.marker(tree).exists())
 
     def test_a_smoke_case_asked_for_a_variant_the_software_does_not_hold_is_refused(self):
         tree = self.tree()
