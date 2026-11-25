@@ -5,10 +5,11 @@
 log entries 315 and 318; it is to be RAT-60). It goes into `doc/HANDOVER/` only once he has ratified it; the reviewer
 has not read it.
 **It is the next ordinary edition after the consolidated H-1 v14** (RAT-58). **Chapter 0 is written afresh and is the
-only place that says what is true now:** slices A and B of build step 3 have passed review, slice C is written and
-the reviewer has asked for corrections to it (EX_329, RECHECK), nothing of build step 3 is installed. Sections 0A and 0C, sections 1 to 12 and the
-appendices are H-1 v14's, with the corrections the reviewer's cold read of v14 asked for (H14-C01 to H14-C03 and its
-two observations) and the closing of OUTLANDISH_01 made in place, each marked "(v15)"; Appendix D lists every one.
+only place that says what is true now:** slices A and B of build step 3 have passed review, slice C is written, the
+reviewer has asked for corrections to it (EX_329, RECHECK) and they are written but not yet sent to him, nothing of
+build step 3 is installed. Sections 0A and 0C, sections 1 to 12 and the appendices are H-1 v14's, with the
+corrections the reviewer's cold read of v14 asked for (H14-C01 to H14-C03 and its two observations) and the
+closing of OUTLANDISH_01 made in place, each marked "(v15)"; Appendix D lists every one.
 The HISTORY part at the end (sections 0B, 0D and 0E of H-1 v13) is carried as v14 carried it. **Sections 1, 2 and 2A
 are byte for byte H-1 v14's and v13's** (the builder asserts it); **they are H-1 v7r1's text, the same as v7r1's
 only after line endings are normalised** (v7r1 is LF; this file is CRLF; the reviewer's H14-C02). Built from the
@@ -18,7 +19,7 @@ H-1 v14's own chapter 0 is not carried: H-1 v14 stays in `doc/HANDOVER/` as hist
 **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat, which
 checks it against the repository.
 **Repository:** `hydra3333/analysing_perceived_randomness_in_reality`, public GitHub, branch `main`.
-**Baseline described:** `main` at `a26cd3e1ffec791072f03fef7640b8c0349faf12` (decision log entry 318; newest EX: EX_329).
+**Baseline described:** `main` at `9d7eab7777852be12da2275178cde57d3ab0f2ac` (decision log entry 319; newest EX: EX_329).
 **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ.
 `exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. This file authorises nothing.
 **Draw values:** none appear in this file.
@@ -190,8 +191,9 @@ PASS or a ratification gives none.
 
 1. **Slice A, foundations: PASS (EX_321).** Not installed.
 2. **Slice B, backups, the recovery kit, restore: PASS (EX_327).** Not installed.
-3. **Slice C, creating a tree, the installs, verifying a tree: WRITTEN; THE REVIEWER'S EX_329 IS A RECHECK.** Not
-   installed. "The architecture and approach are sound"; no redesign. **Four blockers:** C-B01 (`Reinstall_Infra`:
+3. **Slice C, creating a tree, the installs, verifying a tree: WRITTEN; THE REVIEWER'S EX_329 IS A RECHECK; THE
+   CORRECTIONS ARE WRITTEN AND NOT YET SENT.** Not installed. "The architecture and approach are sound"; no
+   redesign. **Four blockers:** C-B01 (`Reinstall_Infra`:
    the owner's YES can rest on a stale statement if a job finishes during the question; the accepted plan and what
    the statement rested on are checked again under the second reservation, before anything is written; an ordinary
    install likewise must not act on a changed base); C-B02 (`Init_Tree`: the six results files are read as one
@@ -201,10 +203,14 @@ PASS or a ratification gives none.
    corrections:** C-C01 (the read-only checks also make the job's results-only-grew check); C-C02 (an ordinary
    install's suite depends on byte equality with DEV, not on DEV's readiness marker); C-C03 (`Verify_Tree` repeats
    the unfinished-operation and orphan checks under its lock); C-C04 (the smoke case's kept table in CRLF; the
-   suite line in both verdicts). **The corrections were being written, on Fable, when this edition was made** (the
-   owner's go, entry 318); section 4 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says where they
-   stand. They go to the reviewer as EX_330 on the owner's word: a corrections note, the exact differences from
-   `e404c22`, the affected modules' evidence and targeted tests; not the whole suite nor all 250 planted faults.
+   suite line in both verdicts). **All eight are corrected in the overlay and proved in the cloud** (the owner's
+   go, entry 318; done, entry 319): the suite of an install, 23 modules, 787 tests, passed; 29 planted faults for
+   the corrections, none survived; the whole suite and the slice's 250 planted faults were not repeated, as the
+   reviewer asked. The note for him is
+   `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md`, with the exact differences
+   from `e404c22`, the hashes and the evidence beside it; section 4 of
+   `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says where the slice stands. **The corrections are
+   not yet with the reviewer:** EX_330 is issued only on the owner's word.
 4. **Two narrow amendments are proposed as RAT-59,** `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`,
    and the reviewer concurs with both (EX_329, section 2): `Verify_Tree.bat` does not run the test suite (the
    owner's decision, entry 305; deployment design section 7, specification sections 13 and 12.3 item 3); and at an
@@ -229,7 +235,7 @@ PASS or a ratification gives none.
    `doc/CODING_PRACTICES_v0_1.md`, kept minimal (entry 299).
 
 **Waiting on the owner at this edition:** his ratification of the two amendments (RAT-59) and of this edition
-(RAT-60); his word to issue EX_330 when the corrections are ready. **Waiting on the reviewer:** nothing, until
+(RAT-60); his word to issue EX_330 (the corrections are ready). **Waiting on the reviewer:** nothing, until
 EX_330.
 
 ### 0.5 Build step 3 in the overlay: what lies where, and what is settled
