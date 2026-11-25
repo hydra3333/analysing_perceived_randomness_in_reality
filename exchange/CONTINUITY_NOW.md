@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 09:57 Australia/Adelaide (entry 275: the owner's go for slice A's last two parts; he decided option A, one environment digest, the full one, in every tree; the trees stay independent).
+**Last updated:** 25 November 2026, 10:33 Australia/Adelaide (entry 276: slice A is written, all four parts, as working files; the suite with the twenty-five overlay files 59 modules, 984 tests, the three known failing and no other; next, on the owner's word, the package and EX_318).
 
 ## For the owner: NOW
 
+- **SLICE A IS WRITTEN, ALL FOUR PARTS (entry 276; 25 November 2026; working files; the cloud's evidence).** The
+  environment's digest and marker (option A), the process rule and the launch guard are written and wired into
+  the job and the launcher; the overlay is twenty-five files; the suite with it: 59 modules, 984 tests, 829 of
+  the 830 earlier tests the same and one removed with the quick digest, the 155 new ones OK, the three known
+  failing tests and no other. **Everything a successor needs is in**
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_A_NOTES_FOR_THE_PACKAGE.md` (the files, fourteen readings for the reviewer,
+  the evidence). **Waiting on the owner's word:** the package note and EX_318 to the reviewer; then a rehearsal on
+  Windows by the runner; and the consolidated handover, which Claude advises writing now. Nothing is installed
+  and nothing is authorised on his PC.
 - **THE OWNER'S GO AND HIS DECISION ON THE DIGEST (entry 275; 25 November 2026, 09:51 and 09:56).** Slice A's last
   two parts are in hand (the environment's digest and marker; the launch guard with the process rule). **Decided:
   option A:** one environment digest, the full one of specification 13, of each tree's own `.venv`, computed once

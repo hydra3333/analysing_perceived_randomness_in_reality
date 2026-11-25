@@ -6567,3 +6567,56 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (its commit `ecdfa55`, 09:12; no EX number). The operations manual comes after build step 3 (entries 171, 220);
   Claude told the owner it is there.
 - Next numbers: EX_318; entry 276; RAT-56.
+
+## 276. 25 November 2026, 10:33 - SLICE A IS WRITTEN (working files; not a package, not reviewed, nothing installed): the environment's digest and marker, the process rule, the launch guard, wired into the job and the launcher
+
+- **On the owner's go and his option A (entry 275).** Written, on Fable:
+  - **`src/research/environment_marker.py`:** the one environment digest (specification 13): of the tree's own
+    `.venv`, over `pyvenv.cfg`, every file under `Scripts`, every file under `Lib/site-packages` but caches and
+    compiled files, and one line for the base Python; the marker `ENVIRONMENT_VERIFIED.json` (the digest, and the
+    list of installed packages for the cheap first gate of every launch) written, read and compared. A tree
+    reads only its own environment and its own marker.
+  - **`src/research/process_rule.py`:** the rule of deployment design 9 for a job (a Python process is of the
+    tree by its program file, its working folder, or a command line of its own or above it that names the tree;
+    an unreadable Python process refuses; the asking program's own chain is left out, which covers the two
+    processes of one program that TASK_T028 found). Read through psutil (entry 222). It ends, signals and
+    suspends nothing, and a test says so.
+  - **`src/research/launch_guard.py`:** at every launch: the settings, no unfinished operation (five files, named
+    in one place; the one command that finishes each is let through by name), and in QA and PROD the marker; at
+    the start of a job, under the job lock: the digest; in QA and PROD the digest equal to the marker's and the
+    software equal to its list of installed files; in every tree the process rule.
+  - **Wired in:** `src/research/research_job.py` (the guard under the lock; its digest into every envelope; no
+    calculation touched), `src/research_command.py` (the checks of every launch), `src/research/code_identity.py`
+    (the quick digest removed: one digest), the manifest (four files of class `derived`), and `Check_Tree` (the
+    unfinished-operation files; whether the environment has its marker).
+- **What it changed in build step 2's reviewed tests, and why:** `tests/research_fixtures.py` leaves an invented QA
+  or PROD tree "as installed" (its list and its marker) when it is made and when a variant is added, and its toy
+  variants list their family's `__init__.py` as every real family does; four tests of
+  `tests/test_research_ov1_and_checks.py` that change such a tree's software by hand gain one line (the command
+  that changes software also rewrites the list); one test of the removed quick digest is removed. No expectation
+  of any other test changed.
+- **The cloud's evidence** (Claude's, not Windows'; Python 3.15.0b4, Linux; a fresh clone of `main` at `4a3a55e` with
+  the twenty-five overlay files): **the whole suite 59 modules, 984 tests. Of the 830 earlier tests 829 have the
+  same result and the one removed is the quick digest's; the 155 new tests are OK (`test_trees_settings` 32,
+  `test_trees_readiness` 40, `test_trees_installed_files` 22, `test_trees_check_tree` 24, `test_trees_launch_guard` 37);
+  the three known failing tests fail as before and no other.** 31 faults planted one at a time in the three new
+  files and the wiring: 30 caught at once; one survived (a file that is not compiled, inside a cache folder,
+  entered the digest), the test was strengthened, and all 31 are caught. The practices' mechanical parts scanned
+  on the eight newest files: nothing found.
+- **Three mistakes of Claude's own on the way, none in anything committed as tested:** two workspace helpers
+  undid each other's edit of the slice's manifest twice more (found each time by the manifest's own reader
+  refusing a doubled line; the older helper is deleted and the remaining one now rebuilds each file it edits
+  from `main`'s bytes); a first design of the test fixture re-listed a tree before every job, which hid from four
+  tests that software had been changed by hand (replaced by listing at creation); and the cloud's workspace
+  restarted in the middle of a suite run (the work was then committed and pushed as `4a3a55e` before the suite
+  was run again from a clean clone).
+- **What the owner should know of its cost:** every job, in every tree, now reads its own environment first (on
+  his PC 5 to 150 seconds, said while it reads); and a job in DEV refuses while another Python of the DEV tree is
+  running (for example a Claude Code task), listing each process.
+- **The fourteen readings and choices for the reviewer, the files and the evidence:**
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_A_NOTES_FOR_THE_PACKAGE.md`. The unratified narrow amendment of the
+  deployment design's section 2 (entry 222) is among them.
+- **Next, each on the owner's word:** the slice's package note and the EX message to the reviewer (EX_318); a
+  rehearsal on Windows by the runner in a scratch tree; a consolidated handover (Claude's advice: now is the time,
+  entry 272).
+- Next numbers: EX_318; entry 277; RAT-56.
