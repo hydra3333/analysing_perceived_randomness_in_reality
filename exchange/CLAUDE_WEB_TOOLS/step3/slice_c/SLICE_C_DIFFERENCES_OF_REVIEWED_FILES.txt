@@ -1,0 +1,137 @@
+Build step 3, slice C: the exact differences of the three files that slices A and B reviewed and slice C changed
+(git diff 4d6fd82 HEAD; the first is slice B as reviewed at EX_326). Carriage returns at line ends are not shown.
+
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini
+index 71b7645..2dbce16 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/INFRA_MANIFEST.ini
+@@ -43,13 +43,21 @@ src/research/results_step.py = derived
+ src/research_command.py = other
+ Run_Research.bat = other
+ Run_Snapshot.bat = other
++Verify_Tree.bat = other
+ Withdraw_Variant.bat = other
++create_venv.bat = other
++install_upgrade_dependencies_into_venv.bat = other
++activate_venv.bat = other
++deactivate_venv.bat = other
+ deploy/file_form.py = other
+ src/research/installed_files.py = derived
+ src/research/environment_marker.py = derived
+ src/research/process_rule.py = derived
+ src/research/launch_guard.py = derived
+ src/research/snapshot.py = derived
++src/research/tree_checks.py = other
++src/research/tree_verify.py = other
++src/tree_checks_command.py = other
+ 
+ ; The DEV-side install tool's own files (specification 12.4). They are NOT infrastructure: nothing here is ever
+ ; installed into a QA or PROD tree. The infrastructure's readiness marker hashes them too, so that a tree is always
+@@ -66,3 +74,12 @@ deploy/recovery_kit.py = other
+ deploy/restore_tool.py = other
+ deploy/kit/Restore.bat = other
+ deploy/kit/HOW_TO_RESTORE.txt = other
++deploy/SUITE_MANIFEST.ini = other
++deploy/suite_on_copy.py = other
++deploy/install_common.py = other
++Init_Tree.bat = other
++deploy/init_tree.py = other
++Install.bat = other
++deploy/install.py = other
++Reinstall_Infra.bat = other
++deploy/reinstall_infra.py = other
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py
+index 479ee10..832c148 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/deploy_command.py
+@@ -15,6 +15,9 @@ Which of the project's own modules it uses
+     research.settings    read_dev_view: DEV's settings and its entries for QA and PROD, every check made
+     make_installable     main: the command Make_Installable
+     check_tree           main: the command Check_Tree
++    init_tree            main: the command Init_Tree (build step 3, slice C)
++    install              main: the command Install (build step 3, slice C)
++    reinstall_infra      main: the command Reinstall_Infra (build step 3, slice C)
+ 
+ What uses it
+     Make_Installable.bat and Check_Tree.bat. The launchers of the later slices of build step 3 are added to COMMANDS as they arrive.
+@@ -28,7 +31,7 @@ TREE_ROOT = Path(__file__).resolve().parents[1]
+ # The folders Python imports the project's code from: the engine, the variants, and the install tools.
+ IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods', TREE_ROOT / 'deploy')
+ # The commands, by the word the launcher gives.
+-COMMANDS = ('make-installable', 'check-tree')
++COMMANDS = ('make-installable', 'check-tree', 'init-tree', 'install', 'reinstall-infra')
+ # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
+ EXIT_BAD_COMMAND = 2
+ 
+@@ -61,6 +64,15 @@ def run_command(arguments) -> int:
+     if arguments[0] == 'check-tree':
+         from check_tree import main as check_tree
+         return check_tree(arguments[1:], view)
++    if arguments[0] == 'init-tree':
++        from init_tree import main as init_tree
++        return init_tree(arguments[1:], view)
++    if arguments[0] == 'install':
++        from install import main as install
++        return install(arguments[1:], view)
++    if arguments[0] == 'reinstall-infra':
++        from reinstall_infra import main as reinstall_infra
++        return reinstall_infra(arguments[1:], view)
+     from make_installable import main
+     return main(arguments[1:], TREE_ROOT)
+ 
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/research_job.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/research_job.py
+index 7ade2a9..eb05720 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/research_job.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/research_job.py
+@@ -192,17 +192,15 @@ def check_results_only_grew(records: GameRecords) -> None:
+             f'backup; what to recompute otherwise is a reviewed decision.')
+ 
+ 
+-def open_game(job: Job, game_id: str) -> GameRecords:
+-    """The Start step for one game: read the results, the status files, the lists and the ledger; name what is
+-    foreign; make the derived check.
++def read_game(job: Job, game_id: str) -> GameRecords:
++    """Read one game's records into memory, changing nothing: the results on file, each installed variant's
++    lists with its status, the prevailing ledger and the marker NOT_CURRENT_FROM.json.
+ 
+-    Returns the game's records in memory. Refuses with one of GAME_REFUSALS if the game cannot be worked: see
+-    the functions it calls.
++    Returns the game's records. Refuses with one of GAME_REFUSALS if they cannot be read: see the functions it
++    calls. The job's Start step (open_game) reads through here, and so do the checks of an install and of
++    Verify_Tree.bat (research/tree_checks.py), which must read exactly what the job reads and write nothing.
+     """
+     tree_root = job.settings.tree_root
+-    unfinished = finish_interrupted_copy(tree_root, game_id)
+-    if unfinished:
+-        job.say(unfinished)
+     results = results_on_file(tree_root, game_id)
+     states = []
+     for variant in job.variants:
+@@ -213,12 +211,26 @@ def open_game(job: Job, game_id: str) -> GameRecords:
+         states.append(load_variant_state(tree_root, game_id, variant, job.statuses[variant.identity][game_id],
+                                          job.forecasting_code_identity))
+     ledger, ledger_lines = ov1_ledger.read_ledger(tree_root, game_id)
+-    records = GameRecords(
++    return GameRecords(
+         game_id=game_id, tree_root=tree_root, role=job.settings.role, results=results, states=states,
+         foreign=lists_of_variants_not_installed(tree_root, game_id, {state.variant.identity for state in states}),
+         forecasting_code_identity=job.forecasting_code_identity, derived_code_digest=job.derived_code_digest,
+         environment_digest=job.environment_digest, ledger=ledger, ledger_lines=ledger_lines,
+         cutoff=derived_check.read_cutoff(tree_root, game_id))
++
++
++def open_game(job: Job, game_id: str) -> GameRecords:
++    """The Start step for one game: finish or discard an interrupted copy of the results; read the game's
++    records (read_game); name what is foreign; make the derived check.
++
++    Returns the game's records in memory. Refuses with one of GAME_REFUSALS if the game cannot be worked: see
++    the functions it calls.
++    """
++    unfinished = finish_interrupted_copy(job.settings.tree_root, game_id)
++    if unfinished:
++        job.say(unfinished)
++    records = read_game(job, game_id)
++    states = records.states
+     for state in states:
+         if state.held:
+             job.warn(f'{game_id}: a list is foreign and is ignored: {state.variant.identity} '

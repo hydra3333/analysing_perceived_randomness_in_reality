@@ -7488,3 +7488,32 @@ section 17.2 (unpack it into a new folder, never over the clone).
   section 4. Then the whole suite on the slice's final bytes, the package note, and the next edition of H-1.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 312; RAT-59.
+
+## 312. 25 November 2026, 22:59 - slice C is whole: Reinstall_Infra written and proved; the whole suite on the final files; the package note for the reviewer
+
+- **The owner, 22:03:** "go"
+- **Written, tested and pushed** (cloud only; working files in the overlay; not reviewed, nothing installed):
+  `deploy/reinstall_infra.py`, `Reinstall_Infra.bat`, `tests/test_trees_reinstall.py` (35 tests), and the `reports`
+  command by which a tree's own software and Python make its print-outs again. It is the eleven steps of
+  deployment design section 6: the plan with each file's class, both hashes and the differences; a plan that
+  touches code that makes forecasts refused (also a file moved into or out of the forecast class with its bytes
+  unchanged); what it would change found before anything is overwritten, and said as one of the specification's
+  two statements; the warning and the one question; an accepted change of derived results leaving the game marked
+  not current from its draw, with the rerun owed named and nothing recomputed; the print-outs made again when
+  report or scoring code changed; a failure in place leaving the barrier; the same command again, or
+  `--replace-unfinished`, finishing it.
+- **Slice C is whole: parts C1 to C5.** 20 new files and 3 changed ones in the overlay, which holds 54; 246 new
+  tests.
+- **Proved in the cloud:** 250 planted faults in all, every one caught (11 only after a test was added for it).
+  The whole suite on the slice's final files: 68 modules, 1334 tests, the three known failing tests and no other.
+  The suite of an install, run by the tool itself on a temporary copy: 23 modules, 763 tests, passed. A creation
+  on the project's real software with a real Python inside the tree: all 40 real variants pass their smoke cases.
+- **Kept for the Windows rehearsal, said plainly:** everything that needs a real Windows environment and the
+  launchers (the package note, section 7).
+- **For the reviewer:** `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_PACKAGE_NOTE_v0_1.md`, with the files and
+  hashes, the exact differences of the three reviewed files, the evidence, the amendment's proposed wording
+  (entry 305; RAT-59 after his view), the conflict of reading C-R9 and readings C-R1 to C-R15. **EX_328 is issued
+  only on the owner's word.**
+- **Next, as the owner decided (entry 310):** the next ordinary edition of H-1.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 313; RAT-59.

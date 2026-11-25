@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 21:57 Australia/Adelaide (entry 311: slice C parts C1 to C4 written and proved in the cloud; next C5, Reinstall_Infra).
+**Last updated:** 25 November 2026, 22:59 Australia/Adelaide (entry 312: slice C is whole and proved in the cloud; EX_328 on the owner's word; H-1 next).
 
 ## For the owner: NOW
 
+- **SLICE C IS WHOLE AND PROVED IN THE CLOUD (entry 312; 25 November 2026): `Verify_Tree`, `Init_Tree`, `Install`,
+  `Reinstall_Infra` and what they share.** Not reviewed, not installed. The note for the reviewer is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_PACKAGE_NOTE_v0_1.md`. **Waiting on the owner's word:** EX_328 to
+  the reviewer. **Next for Claude (entry 310):** the next ordinary edition of H-1. An amendment of two ratified
+  clauses is owed with the slice (entry 305; RAT-59 after the reviewer's view). Nothing is authorised on the PC.
 - **SLICE C: PARTS C1 TO C4 ARE WRITTEN AND PROVED IN THE CLOUD (entry 311; 25 November 2026).** **Next: part C5,
   `Reinstall_Infra`, the last;** what it needs is listed in section 4 of
   `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`, so that a chat that resumes can begin at once. After

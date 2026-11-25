@@ -1,0 +1,28 @@
+Build step 3, slice C: the files of the overlay that slice C added (A) or changed (M) since slice B as
+reviewed (commit 4d6fd82, EX_326), each with the SHA-256 of its bytes in the overlay and its size.
+
+A  a4ecd150cda0a29d4b695bac6b677cf6b946743d1fbedb520c2a9a139f378ef5     1220  Init_Tree.bat
+A  334f0a5e4dd4f71cd576144a0f57b713cec76516976920cc55d2870d3a19d849     1260  Install.bat
+A  8257d4fbf84148ad00700d1540cbb58f921a8ff3ab40fc869aa40ff3af11d5e9     1313  Reinstall_Infra.bat
+A  6a20ead554e2226642a7ce8ca3cd4dde3cf66306f3d81db2971e6c1850e6578b     1074  Verify_Tree.bat
+M  fb0bdba1559c7ed43f194e68ace1e691da96ce54ebc7e3d772b8dbc4da2e50cc     3722  deploy/INFRA_MANIFEST.ini
+A  2f05b71b8aa3286211d221ac10beb0c98bd6e1674af9601686e2b2af505d18b9     1483  deploy/SUITE_MANIFEST.ini
+M  e1a5fb611ef187833649600ccf840112593e2492813531003c1df43cf192666f     4321  deploy/deploy_command.py
+A  b8380d494147d6ae6cd8fd0af899a4e2f91ea346fe13785770335b7146f8bfac    23400  deploy/init_tree.py
+A  bcacae00fe28ef2c395bceef3702438f38df38a8762ae11ae22c7e47a6a471b9    14881  deploy/install.py
+A  a16325983b367a00164f6c853c95505e95b3b55600920ea1ab37d7e34dbf6649    40295  deploy/install_common.py
+A  418af46fa6b7e607e8f2be4d8e4f410d75ed5c4c31d55f449007aa8e5626e1b2    28858  deploy/reinstall_infra.py
+A  27cc48701c8ab14f5db0ab3199b47b775a35c6a3c1add35a7ef59f94f3f47041     8860  deploy/suite_on_copy.py
+M  6e7dd0b99a0009e21ab20089c8d5858b77d943b2eff2bdcbb89e88af8129a5d4    40113  src/research/research_job.py
+A  1dee7885995f7abb09e4e19e74ec74eefed7ff2f67aa963a784e57ddb4a72780    30956  src/research/tree_checks.py
+A  edf10668b494bd2367d38fee657befe964b121f2e38b3aaa535e4a0b2bd89f52    11229  src/research/tree_verify.py
+A  d0775436f1bb7471e9d24efc99162c1fb9abe54a96a3a7ac0c9b57ebf77cfbda     4352  src/tree_checks_command.py
+A  caea94e010e991a2c716125e79fcb6a5686df88c98a2cbb85f236f2c3c92e6a5    20637  tests/test_trees_checks.py
+A  560b9a439c6e569972c7979c8123d879b1e46495a644f47bf51001a9bc4bb488    32830  tests/test_trees_init.py
+A  d6f00135994ea33e1e1cc0a8bfd9c718bb97e85a9b3934b9c1cf278820ef7a63    28960  tests/test_trees_install.py
+A  c65e5a0b7024caad25df6b5364b02c684dd9c97a44e43adaa492b63ced22ce52    55427  tests/test_trees_install_common.py
+A  4dc163195e3327e55dd1063fc30829162885704621a2ba1f49fe68ffd007dd8c    36867  tests/test_trees_reinstall.py
+A  f844a08508c917f3eca67f08721fa360212e7473f85feddb681881996a3113ab    12379  tests/test_trees_suite.py
+A  2522513da8222de2cb01db94e340c9fc5910f5ac4fbdcd4245ba7489dd1be07d    30779  tests/test_trees_verify.py
+
+23 files (20 added, 3 changed). The overlay now holds 54 files; every one ends each line CRLF.

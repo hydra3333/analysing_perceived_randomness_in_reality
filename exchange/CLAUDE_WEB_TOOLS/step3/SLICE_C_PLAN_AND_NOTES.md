@@ -371,13 +371,19 @@ file; says what it would change before it asks; the cutoff file when a change fr
   stand-in for the start of the tree's Python now imports the variants from the folder the software lies in, as
   the program does). Passing with them: `test_trees_init` (34), `test_trees_install` (29), `test_trees_suite`,
   `test_file_form`, `test_trees_readiness`, `test_research_manifest`.
-- **NEXT, to make slice C whole:** (1) planted faults for `reinstall_infra.py` and the `reports` command; (2) the
-  whole suite on the slice's final bytes, compared with `rep_base` (main) and `rep_dev11` (slice B), and the
-  suite of an install run by the tool on a copy; (3) the two things carried from slice B (tests that make a link
-  skip where Windows refuses; "no research was written"), and the docstring escape in
-  `src/research/environment_marker.py`; (4) the package note for the reviewer with the exact differences of the
-  reviewed slice A and B files that changed (`research_job.py`, `deploy_command.py`, `INFRA_MANIFEST.ini`), the
-  amendment's wording (C-Q1) and readings C-R1 to C-R15; (5) the next edition of H-1 (entry 310).
+- **25 November 2026, part C5 PROVED, and SLICE C IS WHOLE.** Planted faults in `reinstall_infra.py` and the
+  `reports` command (`mutation_check_slice_c5.py`): 43; 40 caught at once, three by tests added for them
+  (`tests/test_trees_reinstall.py` is 35 tests). **The whole suite on the slice's final files:** 68 modules, 1334
+  tests, the three known failing tests and no other; compared with `main` and with slice B's run, nothing changed
+  or disappeared beyond what slices A and B explained. **The suite of an install, run by the tool on a temporary
+  copy:** 23 modules, 763 tests, passed. The evidence is in `slice_c/evidence/`; the files with their hashes in
+  `slice_c/SLICE_C_FILES_AND_HASHES.txt` (20 new, 3 changed; the overlay holds 54); the exact differences of the
+  three reviewed files in `slice_c/SLICE_C_DIFFERENCES_OF_REVIEWED_FILES.txt`; **the note for the reviewer is
+  `slice_c/SLICE_C_PACKAGE_NOTE_v0_1.md`.**
+- **What follows the slice:** EX_328 to the reviewer on the owner's word (the package note is its substance); the
+  next edition of H-1 (the owner, entry 310). Carried to the joined package of build step 3, not done here: the
+  link tests' skip on Windows in slices A and B, "no research was written", and the docstring escape in
+  `src/research/environment_marker.py`.
 - **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
   `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
   through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,
