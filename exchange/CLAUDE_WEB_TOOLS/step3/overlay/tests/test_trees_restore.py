@@ -200,6 +200,20 @@ class TheRecoveryKit(ABackedUpTreeAndItsKit):
         self.assertEqual(earlier.read_bytes(), b'left by another attempt')
         self.assertFalse(beside.exists())
 
+    def test_a_kit_is_never_left_with_its_name_and_without_its_sha256(self):
+        opening = open
+
+        def sha256_cannot_be_written(path, *rest, **more):
+            if str(path).endswith('.sha256'):
+                raise OSError('invented: the ".sha256" could not be written')
+            return opening(path, *rest, **more)
+
+        before = sorted(entry.name for entry in self.settings.backup_root.iterdir())
+        with mock.patch('builtins.open', sha256_cannot_be_written):
+            result = recovery_kit.build_kit(self.dev, self.settings.backup_root, 'cd34' * 16, now=lambda: RESTORED_AT)
+        self.assertFalse(result.made)
+        self.assertEqual(sorted(entry.name for entry in self.settings.backup_root.iterdir()), before)
+
     def test_the_tool_sets_no_time_limit_that_would_end_the_python_it_starts(self):
         source = (REPOSITORY_ROOT / 'deploy' / 'restore_tool.py').read_text(encoding='ascii')
         calls = [node for node in ast.walk(ast.parse(source)) if isinstance(node, ast.Call)
@@ -390,17 +404,20 @@ class NothingIsTouchedUnless(ABackedUpTreeAndItsKit):
         self.backup = other
         self.refused_untouched('it does not hold exactly the files its manifest lists')
 
-    def copy_of_the_backup(self, name: str, change_manifest, leave_out=()) -> None:
+    def copy_of_the_backup(self, name: str, change_manifest, leave_out=(), other_bytes=None) -> None:
         """Make a second, valid ZIP from the backup: every member's bytes as they are, the manifest changed by
-        change_manifest(dict), the members named in leave_out dropped from the ZIP and from the manifest's list."""
-        other = self.backup.with_name(name)
+        change_manifest(dict), the members named in leave_out dropped from the ZIP and from the manifest's list,
+        and the members in other_bytes ({name: bytes}) given those bytes, with their hashes in the list to match."""
+        other, other_bytes = self.backup.with_name(name), other_bytes or {}
         with zipfile.ZipFile(self.backup) as old, zipfile.ZipFile(other, 'w', compression=zipfile.ZIP_DEFLATED) as new:
             manifest = json.loads(old.read(restore_tool.SNAPSHOT_MANIFEST_NAME))
-            manifest['files'] = [entry for entry in manifest['files'] if entry['path'] not in leave_out]
+            manifest['files'] = [entry if entry['path'] not in other_bytes else
+                                 {'path': entry['path'], 'sha256': hashlib.sha256(other_bytes[entry['path']]).hexdigest()}
+                                 for entry in manifest['files'] if entry['path'] not in leave_out]
             change_manifest(manifest)
             for member in old.namelist()[:-1]:
                 if member not in leave_out:
-                    new.writestr(member, old.read(member))
+                    new.writestr(member, other_bytes.get(member, old.read(member)))
             new.writestr(restore_tool.SNAPSHOT_MANIFEST_NAME, json.dumps(manifest))
         self.backup = other
 
@@ -424,6 +441,26 @@ class NothingIsTouchedUnless(ABackedUpTreeAndItsKit):
                 self.backup = the_backup
                 self.copy_of_the_backup(f'QA_20261201_10102{number}_MANUAL.zip', change)
                 self.refused_untouched('A backup is put back only at the path its own settings name')
+
+    def test_a_root_that_is_not_a_full_path_refuses_even_when_the_settings_inside_say_the_same(self):
+        settings = ('[environment]\r\nrole = QA\r\ntree_root = a_p_r_i_r\r\nvenv_dir = a_p_r_i_r/.venv\r\n'
+                    'backup_root = a_p_r_i_r_backups\r\n').encode('ascii')
+        self.copy_of_the_backup('QA_20261201_101015_MANUAL.zip', lambda manifest: manifest.update(tree_root='a_p_r_i_r'),
+                                other_bytes={'ENVIRONMENT.ini': settings})
+        self.refused_untouched('A backup is put back only at the path its own settings name')
+        self.assertFalse(Path('a_p_r_i_r').exists())
+
+    def test_settings_inside_a_backup_that_do_not_describe_a_tree_of_the_project_refuse(self):
+        for number, lines in enumerate((f'venv_dir = {self.qa.parent / "elsewhere" / ".venv"}\r\nbackup_root = {self.settings.backup_root}',
+                                        f'venv_dir = {self.qa / ".venv"}\r\nbackup_root = {self.qa / "backups"}')):
+            with self.subTest(case=number):
+                self.said.clear()
+                the_backup = self.backup
+                settings = f'[environment]\r\nrole = QA\r\ntree_root = {self.qa}\r\n{lines}\r\n'.encode('utf-8')
+                self.copy_of_the_backup(f'QA_20261201_10103{number}_MANUAL.zip', lambda manifest: None,
+                                        other_bytes={'ENVIRONMENT.ini': settings})
+                self.refused_untouched('does not describe a tree of this project')
+                self.backup = the_backup
 
     def test_a_backup_that_holds_no_settings_file_is_not_a_trees_backup(self):
         self.copy_of_the_backup('QA_20261201_101014_MANUAL.zip', lambda manifest: None, leave_out=('ENVIRONMENT.ini',))
