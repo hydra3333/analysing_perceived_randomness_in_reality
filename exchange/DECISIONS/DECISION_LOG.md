@@ -6881,3 +6881,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
   check it first. Until then H-1 v13 stays the handover in force, and a new Claude chat in an emergency reads
   the candidate as the better guide (the continuity page says so).
 - Next numbers: EX_322; entry 286; RAT-58.
+
+## 286. 25 November 2026, 13:55 - RAT-58: THE OWNER RATIFIES H-1 v14 IN ADVANCE; it is installed in doc/HANDOVER/ and is the primary handover in force
+
+- **The owner, 13:54:** "i ratify rat-58 now in advance".
+- **Installed, both new files; no existing file is edited:**
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v14.md`, SHA-256
+    `24cc0579fec0f1b025216d969451457e378d1987eef96bf31f9a3bb924b5a6ac`;
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v14_introductory_blurb.md`, SHA-256
+    `ac70661cde58d98f2e1dcb084ddae6d4f676a688ea49dc771f845cff01f75bf8`.
+  They are the builder's FINAL files (`exchange/CLAUDE_WEB_TOOLS/h1v14/out/`, the same bytes), built with
+  `make_h1_v14.py final` at `main` `d2b6bc9` after a fetch. The blurb names the handover's hash and its path in
+  `doc/`. Hashes computed by Claude.
+- **How the final differs from the candidate of entry 285:** in the handover, four lines (its status; its baseline,
+  now `d2b6bc9` and entry 285; "RAT-58 this edition" in section 0.3; the ratification no longer waited for in
+  section 0.4); in the blurb, the paragraph that names the handover (ratified; its hash; its path). Nothing else.
+- **It was not read by the reviewer before it was installed** (its header says so): the reviewer chat ended today
+  and its successor is only starting. **Its cold read is owed when the owner asks.**
+- **H-1 v14 supersedes H-1 v13 (RAT-54),** which stays in `doc/HANDOVER/` as history with its predecessors. H-2 v9
+  names H-1 v13 as in force and tells the reviewer to fetch a newer one if it exists; this is it.
+- **The handovers in force: H-1 v14 (RAT-58) and H-2 v9 (RAT-57).** The register's next ordinary edition carries
+  RAT-54 to RAT-58. This ratification authorises no install of code and no run.
+- **What waits:** the owner's go for slice B (a new subsystem: the model rule applies first). On the reviewer:
+  nothing until its new chat has taken over; then, when the owner asks, the cold read of H-1 v14.
+- Next numbers: EX_322; entry 287; RAT-59.

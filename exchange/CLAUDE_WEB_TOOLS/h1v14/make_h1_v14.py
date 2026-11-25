@@ -1,5 +1,6 @@
 """Workspace helper (not project code): build H-1 v14, the consolidated edition, and its introductory blurb from the
 installed H-1 v13's Git bytes. Usage: python make_h1_v14.py candidate   (writes out/..._CANDIDATE files)
+                                         python make_h1_v14.py final       (writes out/..._FINAL files, for doc/HANDOVER/)
 The texts written afresh are in h1_v14_texts.py beside this file. It edits no existing file."""
 import hashlib, subprocess, sys
 from pathlib import Path
@@ -84,12 +85,18 @@ overlay = git('ls-files', OV).decode().split()
 assert len(overlay) == 26 and sum(1 for f in overlay if (REPO / f[len(OV):]).is_file()) == 10
 entry = max(int(line.split(b'.')[0][3:]) for line in git('show', 'HEAD:exchange/DECISIONS/DECISION_LOG.md').split(b'\n') if line.startswith(b'## ') and line[3:4].isdigit())
 status = sys.argv[1]
-STATUS = {'candidate': 'CANDIDATE: not reviewed, not ratified, not installed; written at the owner\'s request (decision log entry 284).'}[status]
+STATUS = {'candidate': 'CANDIDATE: not reviewed, not ratified, not installed; written at the owner\'s request (decision log entry 284).',
+          'final': 'OWNER-RATIFIED IN ADVANCE, 25 November 2026 (RAT-58; decision log entry 286): the owner\'s words, "i ratify rat-58 now in advance". IT WAS NOT READ BY THE REVIEWER BEFORE IT WAS INSTALLED: the reviewer chat had ended that day and its successor was only starting; its cold read is owed when the owner asks.'}[status]
 fill = lambda text, **k: [text := text.replace('{' + key + '}', str(value)) for key, value in k.items()][-1]
 header = fill(T.HEADER, STATUS=STATUS, HEAD=head, ENTRY=entry)
 chapter = fill(T.CHAPTER_0, H2V9=shaf('doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md'), OVERLAY=len(overlay),
                MANIFEST=manifest(git('show', f'HEAD:{OV}deploy/INFRA_MANIFEST.ini')), MANIFEST_MAIN=manifest(git('show', 'HEAD:deploy/INFRA_MANIFEST.ini')))
 appendix = fill(T.APPENDIX_C, CORRECTIONS='\n'.join(made))
+if status == 'final':                                # the two sentences that speak of this edition's own ratification
+    for o, n in (('his go for slice B; the ratification of this edition.', 'his go for slice B.'),
+                 ('  edited; restore stays standard library only. RAT-57 H-2 v9.', '  edited; restore stays standard library only. RAT-57 H-2 v9. RAT-58 this edition (entry 286).')):
+        assert chapter.count(o) == 1, o
+        chapter = chapter.replace(o, n)
 assert '{' not in header + chapter.replace('{', '', 0) or True
 HISTORY = '''# HISTORY (not live): sections 0B, 0D and 0E of H-1 v13, byte for byte
 
@@ -104,7 +111,7 @@ next or what waits, chapter 0 prevails.
 doc = crlf(header) + crlf(chapter) + s0A + s0C + s1_2 + rest + b'\r\n' + crlf(appendix) + crlf(HISTORY) + hist.rstrip(b'\r\n') + b'\r\n\r\nEnd of H-1 v14.\r\n'
 assert doc.count(b'\n') == doc.count(b'\r\n') and s1_2 in doc and hist.rstrip(b'\r\n') in doc
 for word in (b'{STATUS}', b'{HEAD}', b'{H2V9}', b'{MANIFEST', b'{OVERLAY}', b'{CORRECTIONS}', b'{ENTRY}'): assert word not in doc, word
-name = 'Claude_Primary_Handover_H1_v14' + ('_CANDIDATE' if status == 'candidate' else '')
+name = 'Claude_Primary_Handover_H1_v14' + ('_CANDIDATE' if status == 'candidate' else '_FINAL')
 OUT.mkdir(exist_ok=True); (OUT / f'{name}.md').write_bytes(doc)
 d = hashlib.sha256(doc).hexdigest()
 # ---- the blurb: H-1 v13's, with its title, its second and third paragraphs replaced; the rest byte for byte
@@ -113,7 +120,7 @@ a, b = b13.index(b'The previous Claude chat left you a handover, H-1 v13'), b13.
 title = b'# Introductory blurb for H-1 v13:'; assert b13.count(title) == 1
 final_path = 'doc/HANDOVER/Claude_Primary_Handover_H1_v14.md'
 where = f'exchange/CLAUDE_WEB_TOOLS/h1v14/out/{name}.md' if status == 'candidate' else final_path
-middle = f'''The previous Claude chat left you a handover, H-1 v14 ({'a candidate, not yet ratified by me' if status == 'candidate' else 'ratified by me'}; SHA-256
+middle = f'''The previous Claude chat left you a handover, H-1 v14 ({'a candidate, not yet ratified by me' if status == 'candidate' else 'ratified by me in advance on 25 November 2026, RAT-58; the reviewer had not yet read it when it was installed'}; SHA-256
 {d}). It is a consolidated edition: its chapter 0 is the whole
 live position, and the layered sections of earlier editions are kept at its end as history. The project was
 redesigned from the root in November 2026. The new design was ratified on 22 November 2026 (RAT-40). Build step 1

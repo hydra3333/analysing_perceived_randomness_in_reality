@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 13:51 Australia/Adelaide (entry 285: the consolidated H-1 v14 is written as a CANDIDATE under exchange/; its ratification is put to the owner; H-2 v9 is installed; slice A has passed; slice B waits for the owner's go).
+**Last updated:** 25 November 2026, 13:55 Australia/Adelaide (entry 286: H-1 v14, the consolidated edition, is ratified in advance (RAT-58) and installed; the handovers in force are H-1 v14 and H-2 v9; slice A has passed; slice B waits for the owner's go; a new reviewer chat is starting).
 
 ## For the owner: NOW
 
+- **BOTH HANDOVERS ARE NEW AND INSTALLED (entries 283 and 286; 25 November 2026). The primary handover in force is
+  H-1 v14,** `doc/HANDOVER/Claude_Primary_Handover_H1_v14.md`, with its blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v14_introductory_blurb.md` (RAT-58, ratified in advance; its chapter 0 is
+  the whole live position). **The reviewer's is H-2 v9** (RAT-57). **A new Claude chat starts from the H-1 v14
+  blurb; a new reviewer chat from the H-2 v9 blurb.** The bullets below this one that speak of a candidate or of
+  H-1 v13 as in force are overtaken. **Waiting on the owner:** his go for slice B (backups, the recovery kit,
+  restore). **Owed by the reviewer when the owner asks:** the cold read of H-1 v14. No finding is open.
 - **THE CONSOLIDATED H-1 v14 IS WRITTEN AS A CANDIDATE (entry 285; 25 November 2026):**
   `exchange/CLAUDE_WEB_TOOLS/h1v14/out/Claude_Primary_Handover_H1_v14_CANDIDATE.md` and its blurb beside it. Its
   chapter 0 is the whole live position. **Waiting on the owner:** ratify and install it (RAT-58), or have the new
