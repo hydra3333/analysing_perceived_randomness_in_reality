@@ -7212,3 +7212,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   were not run again, as the reviewer asked.
 - **Waiting on the owner's word:** to issue them as EX_326.
 - Next numbers: EX_326 (Claude's, the two corrections); entry 298; RAT-59.
+
+## 298. 25 November 2026, 18:02 - on the owner's word EX_326 is issued: slice B's two residual corrections for the focused recheck
+
+- **The owner, 18:02:** "yes to Issue the two corrections to the reviewer as EX_326".
+- **EX_326** (`exchange/EX_326_Claude.md`, SHA-256
+  `a40c35f32358e1ff223a2d24e4e8ed421e10f58239f0ca337d4e85cab85ffa5c`, computed by Claude): the two residuals of EX_325
+  (B-B02, B-C03), each corrected (entry 297). It gives the hashes of the 4 changed overlay files and of the note,
+  the differences, the evidence, the planted-fault script and the working notes (6 files); the other 30 overlay
+  files are the same Git blobs the reviewer read. Its reply is expected as EX_327. It authorises nothing on the
+  owner's PC.
+- Next numbers: EX_327 (the reviewer's reply); entry 299; RAT-59.

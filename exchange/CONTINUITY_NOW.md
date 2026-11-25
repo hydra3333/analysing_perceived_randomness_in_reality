@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 18:00 Australia/Adelaide (entry 297: EX_325's two residual corrections to slice B are made and tested in the cloud; EX_326 waits for the owner's word).
+**Last updated:** 25 November 2026, 18:02 Australia/Adelaide (entry 298: EX_326 issued on the owner's word: slice B's two residual corrections are with the reviewer; its reply is expected as EX_327).
 
 ## For the owner: NOW
 
+- **SLICE B'S TWO RESIDUAL CORRECTIONS ARE WITH THE REVIEWER (entry 298; 25 November 2026): EX_326,**
+  `exchange/EX_326_Claude.md`. **Waiting on the reviewer:** EX_327. **Next after a PASS, on the owner's go:** slice
+  C (`Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree`), a new subsystem (the model rule applies first).
+  **If this chat ends here:** a new chat reads H-1 v14, entries 287 to 298, slice B's three notes, and answers
+  EX_327.
 - **SLICE B: THE TWO RESIDUAL CORRECTIONS ARE MADE (entry 297; 25 November 2026),** cloud only: the note is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_CORRECTIONS_AFTER_EX_325_v0_1.md`, with the exact differences
   (four files, 10 hunks) and the evidence beside it. **Waiting on the owner:** his word to issue them as EX_326.
