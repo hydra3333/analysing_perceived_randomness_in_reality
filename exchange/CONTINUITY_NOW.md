@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 20:32 Australia/Adelaide (entry 306: a status blurb to the reviewer; the rest of part C2 in hand).
+**Last updated:** 25 November 2026, 20:50 Australia/Adelaide (entry 307: slice C parts C1 and C2 written and tested; next C3, Init_Tree).
 
 ## For the owner: NOW
 
+- **SLICE C: PARTS C1 AND C2 ARE WRITTEN AND TESTED (entry 307; 25 November 2026);** head `a405c06` and this
+  entry's commit. **Next: part C3, `Init_Tree`,** then C4 (`Install`) and C5 (`Reinstall_Infra`). Nothing waits on
+  the owner or the reviewer. Section 4 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says exactly
+  where the slice stands; its section 3 holds the readings for the reviewer (C-R1 to C-R12) and the amendment
+  owed (C-Q1, RAT-59).
 - **A STATUS BLURB WENT TO THE REVIEWER THROUGH THE OWNER (entry 306; 25 November 2026);** it asks for no review.
   Part C2's first piece is done (the suite of an install on a temporary copy). **In hand: the rest of part C2**
   (`deploy/install_common.py`); section 4 of the slice's notes says exactly where it stands.

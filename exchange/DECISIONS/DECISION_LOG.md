@@ -7390,3 +7390,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Going on, on the owner's word:** the rest of part C2 (the shared install machinery).
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 307; RAT-59.
+
+## 307. 25 November 2026, 20:50 - slice C part C2 is whole (the machinery every install shares); one conflict between two ratified or reviewed texts found, for the reviewer
+
+- **Written, tested and pushed since entry 306** (cloud only; working files in the overlay; not reviewed, nothing
+  installed; commits `f8eccec` and `a405c06`): `deploy/install_common.py` with `tests/test_trees_install_common.py`
+  (69 tests, all pass). It holds what DEV offers for installing (exactly what the two kinds of marker cover); the
+  plan in one form; the barrier `records/INSTALL_IN_PROGRESS.json` and its comparison with the plan now (deployment
+  design section 8); copying by temporary name, hash and rename, with no installed file changed unless the plan
+  overwrites it; the tree's software checked whole against the plan; the ending (the list of installed files,
+  the log line, the updater's lock released, the barrier removed last); reserving the target (its job lock by an
+  exclusive create, then the process check under it); the recovery kit and the backup attempted and the one
+  question, each result said exactly and only YES proceeding; and how the checks and the suite are asked of the
+  target's own Python.
+- **Proved so far:** 73 faults planted in that file, all caught (two only after tests were added for them). The
+  suite of an install, run by the tool itself on a temporary copy in the cloud: 19 modules, 589 tests, passed
+  (before `test_trees_install_common` joined the list as the twentieth module).
+- **Not yet proved, said plainly:** the real start of a target's own Python on the checks program (the unit tests
+  stand in for the start); it is proved with part C3 by a creation run end to end. The whole suite has not been
+  run on this state; it is run on the slice's final bytes.
+- **Found, for the reviewer when the slice goes to him (the notes' section 3, C-R9):** deployment design section 6
+  has an infrastructure reinstall hold the target's job lock "to the end" from its step 2 and attempt its backup
+  at step 4; slice B's reviewed rule is that no backup is made while a job lock lies in the tree. Reading Claude
+  will take in part C5: the lock is held for step 3, let go for the kit, the backup and the question, and taken
+  again by an exclusive create with a fresh process check before anything is overwritten, as an ordinary install
+  does. No owner decision is asked now.
+- **Next:** part C3, `Init_Tree.bat QA|PROD`.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 308; RAT-59.
