@@ -24,6 +24,7 @@ Which of the project's own modules it uses
     install_common (deploy/)      the plan, the barrier, the copying, the rollback point, the checks, the ending
     research.code_identity        MANIFEST_PATH
     research.derived_check        MISMATCH, read_cutoff, write_cutoff
+    research.environment_marker   MARKER_NAME
     research.installed_files      InstalledFilesRefused, differences, read_list
     research.job_lock             LaunchRefused
     research.reports              set_aside_from
@@ -40,6 +41,7 @@ import argparse
 import configparser
 import difflib
 import hashlib
+import os
 import re
 import shutil
 import tempfile
@@ -48,6 +50,7 @@ from pathlib import Path
 
 import install_common as common
 from research import code_identity, derived_check, installed_files, reports, snapshot
+from research.environment_marker import MARKER_NAME
 from research.job_lock import LaunchRefused
 from research.settings import SettingsRefused, tree_as_dev_names_it
 from research.status_file import StatusRefused
@@ -62,6 +65,10 @@ VARIANTS_PATH = re.compile(r'src/methods/(E_\d{3}|_shared)/')
 FORECAST, DERIVED, OTHER, MANIFEST_ITSELF = 'forecast', 'derived', 'other', 'the manifest'
 # The first of the two statements of step 3.
 NO_CHANGE = 'No stored result changes.'
+# What the statement of step 3 rests on in the tree, besides four named files: these folders, without Python's
+# caches and without the reports folders (print-outs, made again from the lists).
+WATCHED_FOLDERS = ('src', 'source_data', 'results/research')
+NOT_WATCHED = ('__pycache__', 'reports')
 # The start of the name of the temporary folder the software as it would be is assembled in.
 ASSEMBLY_PREFIX = 'a_p_r_i_r_as_it_would_be_'
 # The warning of specification 12.4, said before the one question.
@@ -253,6 +260,35 @@ def what_it_would_change(view, settings, expected: dict, dev: dict, say=print) -
     return statement_of(found)
 
 
+def what_the_statement_rests_on(settings, dev_fingerprint: str) -> str:
+    """One SHA-256 over everything the statement of step 3, and so the owner's answer, rests on.
+
+    settings: the target's settings.  dev_fingerprint: the fingerprint of DEV's infrastructure, read now.
+    It covers DEV's fingerprint and, in the tree: every file under src (the status files among them); the
+    manifest; the list of installed files; the barrier, if one lies there; the accepted results; the stored
+    research (every list, the prevailing ledger, the not-current markers; the reports are print-outs and are
+    left out); and the marker of the verified environment. Taken while the lock is held for step 3, and again
+    under the second hold before anything is written (design section 6, step 6; EX_329 C-B01): equal values mean
+    that no job, install, withdrawal, results update or change of environment came between.
+    """
+    root = settings.tree_root
+    paths = [root / code_identity.MANIFEST_PATH, root / installed_files.LIST_PATH, root / common.BARRIER_PATH,
+             settings.venv_dir / MARKER_NAME]
+
+    def stop(error: OSError) -> None:
+        raise common.InstallRefused(f'a folder of the tree could not be listed ({error}). Nothing was overwritten.')
+
+    for folder in WATCHED_FOLDERS:
+        for current, folders, names in os.walk(root / folder, onerror=stop):
+            folders[:] = [name for name in folders if name not in NOT_WATCHED]
+            paths += [Path(current) / name for name in names]
+    digest = hashlib.sha256(f'DEV\t{dev_fingerprint}\n'.encode('ascii'))
+    for path in sorted(paths):
+        line = f'{path.relative_to(root).as_posix()}\t{_sha256(path) or "no file"}\n'
+        digest.update(line.encode('utf-8'))
+    return digest.hexdigest()
+
+
 def mark_not_current(tree_root: Path, statement: dict, say=print) -> list:
     """Step 9, where a change from a draw was foretold and accepted: write the game's cutoff file for that draw,
     move the stale reports out, and check that both were done (specification 5.8).
@@ -276,8 +312,7 @@ def mark_not_current(tree_root: Path, statement: dict, say=print) -> list:
     return faults
 
 
-def check_in_place_and_finish(view, settings, plan: dict, classes: dict, expected: dict, dev: dict, release, now,
-                              say) -> int:
+def check_in_place_and_finish(view, settings, plan: dict, expected: dict, dev: dict, release, now, say) -> int:
     """Steps 8 to 10, made while the target is reserved and its barrier is in place.
 
     Returns EXIT_REINSTALLED, or EXIT_STOPPED with the barrier left in place and the reason said.
@@ -309,8 +344,7 @@ def check_in_place_and_finish(view, settings, plan: dict, classes: dict, expecte
         for fault in stopping:
             say(f'  {fault}')
         return EXIT_STOPPED
-    changed = [entry['path'] for word in ('add', 'overwrite', 'remove') for entry in plan[word]]
-    if any(classes.get(path) == DERIVED for path in changed):
+    if plan.get('reports_owed', True):
         say('Report or scoring code changed: every league report, next-draw report and OV-1 print-out is made '
             'again with the new code.')
         common.reports_with_target_python(python, root, say)
@@ -344,37 +378,42 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
         current = installed_files.read_list(root)
         unfinished = common.read_barrier(root)
         expected = expected_after(current, dev['files'])
-        in_tree = classes_in_tree(root)
-        classes = dict(in_tree, **dev['classes'])
-        classes[code_identity.MANIFEST_PATH] = MANIFEST_ITSELF
-        by_the_list = common.make_plan(common.REINSTALL_INFRA, role, root,
-                                       *changes_between(infrastructure_on_list(current), dev['files']),
-                                       infrastructure_fingerprint=dev['fingerprint'])
-        check_plan_may_be_carried_out(by_the_list, classes, in_tree, dev['classes'])
-        nothing_differs = not (by_the_list['add'] or by_the_list['overwrite'] or by_the_list['remove'])
         started = now().astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
-        if unfinished is None and nothing_differs:
-            say(f'REINSTALL INFRA - END - no difference: the {role} tree\'s infrastructure is file for file DEV\'s. '
-                f'Nothing was done.')
-            return EXIT_REINSTALLED
-        continuing = unfinished is not None and unfinished.get('operation') == common.REINSTALL_INFRA and (
-            dict(unfinished, statement=None) == by_the_list
-            or (nothing_differs and unfinished.get('infrastructure_fingerprint') == dev['fingerprint']))
+        # The same command again (design section 8): the barrier holds a reinstall of this tree that was accepted
+        # from DEV exactly as DEV is now. Its plan is carried on as it was accepted, whatever of it has already
+        # been copied or removed; it was checked when it was accepted, and nothing of DEV has changed since.
+        continuing = (unfinished is not None and unfinished.get('operation') == common.REINSTALL_INFRA
+                      and unfinished.get('tree_root') == str(root)
+                      and unfinished.get('infrastructure_fingerprint') == dev['fingerprint'])
         if continuing:
             plan = unfinished
             say('This same reinstall was begun before and is being continued; files already in place are passed '
                 'over and every check is made again. Its statement, accepted then, was: '
                 + plan['statement']['text'])
         else:
+            replaced = unfinished if (unfinished or {}).get('operation') == common.REINSTALL_INFRA else None
+            in_tree = classes_in_tree(root)
+            # A class is known from DEV's manifest, from the manifest that lies in the tree, or, for a file an
+            # unfinished reinstall was removing, from that reinstall's accepted plan. Any other path is refused.
+            classes = {**(replaced or {}).get('classes', {}), **in_tree, **dev['classes'],
+                       code_identity.MANIFEST_PATH: MANIFEST_ITSELF}
+            by_the_list = common.make_plan(common.REINSTALL_INFRA, role, root,
+                                           *changes_between(infrastructure_on_list(current), dev['files']),
+                                           infrastructure_fingerprint=dev['fingerprint'])
             if unfinished is None:
+                plan = by_the_list
+                check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
+                if not (plan['add'] or plan['overwrite'] or plan['remove']):
+                    say(f'REINSTALL INFRA - END - no difference: the {role} tree\'s infrastructure is file for file '
+                        f'DEV\'s. Nothing was done.')
+                    return EXIT_REINSTALLED
                 drift = installed_files.differences(root, current)
                 if drift:
                     raise common.InstallRefused(
                         f'the {role} tree\'s software does not match its own list of installed files '
                         f'({len(drift)} difference(s)):\n  ' + '\n  '.join(drift) + f'\n{installed_files.WHAT_TO_DO}')
-                plan = by_the_list
             else:
-                if not (chosen.replace_unfinished and unfinished.get('operation') == common.REINSTALL_INFRA):
+                if not (chosen.replace_unfinished and replaced is not None):
                     try:
                         common.check_barrier(root, by_the_list)
                     except common.InstallRefused as refusal:
@@ -384,19 +423,26 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                             f'--replace-unfinished goes on with the plan now, after the same question.') from None
                     raise common.InstallRefused(f'{root / common.BARRIER_PATH} holds an unfinished operation.')
                 paths = set(infrastructure_on_list(current)) | set(dev['files']) | {
-                    entry['path'] for word in ('add', 'overwrite', 'remove') for entry in unfinished[word]}
+                    entry['path'] for word in ('add', 'overwrite', 'remove') for entry in replaced[word]}
                 plan = common.make_plan(common.REINSTALL_INFRA, role, root,
                                         *changes_between({path: _sha256(root / path) for path in paths}, dev['files']),
                                         infrastructure_fingerprint=dev['fingerprint'])
                 check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
                 say('AN UNFINISHED REINSTALL IS BEING REPLACED (--replace-unfinished). THE UNFINISHED PLAN:')
-                for line in common.plan_lines(unfinished):
+                for line in common.plan_lines(replaced):
                     say(f'  {line}')
                 say('THE PLAN NOW, worked out from the files as they lie in the tree:')
             show_plan(plan, classes, dev_root, root, say)
             with common.reserved(settings, f'Reinstall_Infra {role}: what it would change', started, say):
+                rested_on = what_the_statement_rests_on(settings, dev['fingerprint'])
                 statement = what_it_would_change(view, settings, expected, dev, say)
-            plan = dict(plan, statement=statement)
+            changed = [entry['path'] for word in ('add', 'overwrite', 'remove') for entry in plan[word]]
+            # Kept in the plan, and so in the barrier, for the command that finishes or replaces this reinstall:
+            # the class of each file of the plan, and whether the print-outs are owed a remaking (a file of class
+            # derived is in this plan, or was in an unfinished plan this one replaces).
+            plan = dict(plan, statement=statement, classes={path: classes[path] for path in changed},
+                        reports_owed=bool(any(classes[path] == DERIVED for path in changed)
+                                          or (replaced or {}).get('reports_owed', replaced is not None)))
             say(f'THE STATEMENT: {statement["text"]}')
             kit, backup = common.attempt_rollback_point(dev_root, settings, 'PRE_INFRA', expected, now, say)
             lines = [WARNING.format(role=role, root=root)] + common.question_lines(kit, backup)
@@ -405,13 +451,23 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                     'lines may have been written, as said above.)')
                 return EXIT_REFUSED
         with common.reserved(settings, f'Reinstall_Infra {role}', started, say):
-            if not continuing:
-                common.check_barrier(root, plan, replace_unfinished=True)
+            # The target is reserved again (design section 6, step 6). Before anything is written under this hold,
+            # what the owner's answer rested on must still be so (EX_329 C-B01).
+            if continuing:
+                if common.read_barrier(root) != plan:
+                    raise common.InstallRefused(f'{root / common.BARRIER_PATH} is no longer the record of the '
+                                                f'unfinished reinstall this command read. Nothing was done. Run '
+                                                f'the command again.')
+            elif what_the_statement_rests_on(settings, common.dev_infrastructure(dev_root)['fingerprint']) != rested_on:
+                raise common.InstallRefused(
+                    f'something the statement rested on changed while the backup was being made or the question '
+                    f'stood: a job ran or results arrived in the {role} tree, an install or a withdrawal was made '
+                    f'there, its environment changed, or DEV changed. Nothing was overwritten. Run the command '
+                    f'again: it says afresh what it would change.')
             with common.changing(settings, plan, started) as release:
                 began = True
                 common.carry_out(dev_root, root, plan, say)
-                exit_code = check_in_place_and_finish(view, settings, plan, classes, expected, dev, release, now,
-                                                      say)
+                exit_code = check_in_place_and_finish(view, settings, plan, expected, dev, release, now, say)
         if exit_code != EXIT_REINSTALLED:
             say(f'REINSTALL INFRA - END - not finished. {root / common.BARRIER_PATH} stays in place, so no job runs '
                 f'in that tree. The ways out: correct the cause in DEV, run Make_Installable.bat INFRA, and run '

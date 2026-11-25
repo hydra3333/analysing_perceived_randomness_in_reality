@@ -476,6 +476,24 @@ class TheResultsAreCopiedAsOneSet(CreationCase):
                              (self.dev / 'source_data' / name).read_bytes(), name)
         self.assertEqual(fixtures.run_job(self.target, games=('POWERBALL',))[0], 0, 'and its first job accepts them')
 
+    def test_a_source_updated_after_its_last_file_was_copied_is_found_by_the_second_reading(self):
+        real, copied = common.copy_into_place, []
+
+        def copy_then_the_source_is_updated_at_the_end(source, tree_root, relative, sha256, replace=False):
+            """After the last results file is copied, the source's results are updated."""
+            done = real(source, tree_root, relative, sha256, replace)
+            if relative.startswith('source_data/'):
+                copied.append(relative)
+                if len(copied) == len(RESULT_NAMES):
+                    self.longer_results()
+            return done
+
+        with mock.patch.object(common, 'copy_into_place', copy_then_the_source_is_updated_at_the_end):
+            code, said = self.init(answers=['YES'])
+        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
+        self.assertIn('changed while they were being copied', '\n'.join(said))
+        self.assertFalse(self.record().exists())
+
     def test_a_pair_that_did_not_agree_when_it_was_read_is_caught_in_the_tree_before_any_record(self):
         real, calls = init_tree.results_files, []
         master = self.dev / 'source_data' / 'POWERBALL_results_master.csv'

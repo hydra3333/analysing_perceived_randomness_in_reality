@@ -35,6 +35,7 @@ import recovery_kit                                          # noqa: E402
 import reinstall_infra as reinstall                          # noqa: E402
 import research_fixtures as fixtures                         # noqa: E402
 from research import derived_check, installed_files, job_lock, launch_guard, settings, tree_checks    # noqa: E402
+from research import status_file                             # noqa: E402
 from test_trees_init import KIT, checks_in_this_process      # noqa: E402
 from test_trees_install import InstallCase                   # noqa: E402
 from test_trees_install_common import FAMILY, sha, whole_tree    # noqa: E402
@@ -88,10 +89,11 @@ class ReinstallCase(InstallCase):
                          .encode('ascii'))
         install_readiness.mark_infrastructure(self.dev)
 
-    def reinstall(self, *words, answers=(), suites=(True, True), kit=KIT, derived=None) -> tuple:
+    def reinstall(self, *words, answers=(), suites=(True, True), kit=KIT, derived=None, ask=None) -> tuple:
         """Run the command for the QA tree; return (the exit code, the lines said).
 
         answers: what the owner types, in order.  suites: what the suite answers at each time it is run.
+        ask: a function to answer with in place of `answers`.
         derived: a stand-in for the comparison of the derived results, or None for the real one.
         """
         said, left, verdicts = [], list(answers), list(suites)
@@ -115,7 +117,7 @@ class ReinstallCase(InstallCase):
             stack.enter_context(mock.patch.object(recovery_kit, 'build_kit', return_value=kit))
             if derived is not None:
                 stack.enter_context(mock.patch.object(tree_checks, 'derived_results', derived))
-            code = reinstall.main(['QA', *words], settings.read_dev_view(self.dev), say=said.append, ask=answer,
+            code = reinstall.main(['QA', *words], settings.read_dev_view(self.dev), say=said.append, ask=ask or answer,
                                   now=self.running)
         self.assertEqual(left, [], 'every answer given was asked for')
         return code, said
@@ -388,6 +390,124 @@ class TheTwoStatements(ReinstallCase):
         self.assertEqual((self.software(), self.backups_made()), (before, backups))
 
 
+class TheAnswerMustStillRestOnWhatWasShown(ReinstallCase):
+    """EX_329 C-B01; deployment design section 6, step 6 as amended: under the second hold, before anything is
+    written, the accepted plan and everything the statement rested on must be unchanged."""
+
+    def refused_with_nothing_written(self, ask, *words) -> list:
+        """Run the reinstall with `ask` answering; expect a refusal that overwrote nothing."""
+        derived = (self.target / DERIVED).read_bytes()
+        listed = installed_files.read_list(self.target)
+        code, said = self.reinstall(*words, ask=ask, suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
+        self.assertEqual(said[-1], 'REINSTALL INFRA - END - refused. Nothing was overwritten.')
+        self.assertEqual((self.target / DERIVED).read_bytes(), derived)
+        self.assertEqual(installed_files.read_list(self.target), listed)
+        for lock in (self.target / 'records' / job_lock.JOB_LOCK_NAME, self.target / job_lock.UPDATER_LOCK):
+            self.assertFalse(lock.exists())
+        return said
+
+    def test_a_job_that_finished_while_the_question_stood_refuses_and_the_next_run_states_afresh(self):
+        self.change_in_dev(DERIVED)
+
+        def a_job_runs_and_finishes_then_yes(prompt):
+            """While the owner reads the warning, new draws arrive and a research job works them and ends."""
+            fixtures.write_results(self.target, GAME, FORETOLD + 5, version=2)
+            code, lines = fixtures.run_job(self.target, games=(GAME,))
+            self.assertEqual(code, 0, lines)
+            return 'YES'
+
+        said = self.refused_with_nothing_written(a_job_runs_and_finishes_then_yes)
+        self.assertIn(f'THE STATEMENT: {reinstall.NO_CHANGE}', said, 'the statement the answer was given to')
+        self.assertIn('something the statement rested on changed while the backup was being made or the question '
+                      'stood', '\n'.join(said))
+        self.assertIsNone(common.read_barrier(self.target))
+        code, said = self.reinstall(answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+
+    def test_a_withdrawal_or_an_install_begun_meanwhile_refuses(self):
+        self.change_in_dev(DERIVED)
+        status = fixtures.status_path(self.target, FAMILY, 'TOY_COUNTS_V1')
+
+        def a_withdrawal_then_yes(prompt):
+            """While the owner reads the warning, a variant is withdrawn."""
+            statuses = status_file.read_status(status, ('POWERBALL', 'OZLOTTO'))
+            statuses[GAME] = status_file.with_withdrawal(statuses[GAME], FORETOLD, 'invented', 'now')
+            status_file.write_status(status, FAMILY, 'TOY_COUNTS_V1', statuses)
+            return 'YES'
+
+        self.refused_with_nothing_written(a_withdrawal_then_yes)
+        self.assertIsNone(common.read_barrier(self.target))
+        other = common.make_plan(common.INSTALL, 'QA', self.target, {'src/x.py': 'aa'})
+
+        def an_install_begins_then_yes(prompt):
+            """While the owner reads the warning, an install writes its barrier."""
+            common.write_barrier(self.target, other, 'meanwhile')
+            return 'YES'
+
+        self.refused_with_nothing_written(an_install_begins_then_yes)
+        self.assertEqual(common.read_barrier(self.target), other, 'the other operation\'s barrier is not replaced')
+
+    def test_an_unfinished_plan_that_changed_while_its_replacement_was_asked_about_is_not_replaced(self):
+        self.change_in_dev(OTHER)
+        self.assertEqual(self.reinstall(answers=['YES'], suites=(True, False))[0], reinstall.EXIT_STOPPED)
+        shown = common.read_barrier(self.target)
+        self.change_in_dev(OTHER, '# corrected in DEV\n')
+        meanwhile = dict(shown, infrastructure_fingerprint='another reinstall replaced it meanwhile')
+
+        def it_changes_then_yes(prompt):
+            """While the owner reads the two plans, the unfinished plan he was shown is replaced by another."""
+            common.write_barrier(self.target, meanwhile, 'meanwhile')
+            return 'YES'
+
+        code, said = self.reinstall('--replace-unfinished', ask=it_changes_then_yes, suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
+        self.assertEqual(common.read_barrier(self.target), meanwhile)
+        self.assertEqual((self.target / OTHER).read_bytes(), b'# changed in DEV\r\n', 'nothing more was written')
+
+    def test_a_continued_reinstall_whose_record_changed_before_the_hold_is_not_carried_on(self):
+        self.change_in_dev(OTHER)
+        self.assertEqual(self.reinstall(answers=['YES'], suites=(True, False))[0], reinstall.EXIT_STOPPED)
+        unfinished = common.read_barrier(self.target)
+        meanwhile = dict(unfinished, statement=dict(unfinished['statement'], text='another statement'))
+        real = common.reserved
+
+        @contextlib.contextmanager
+        def the_record_changes_first(tree_settings, purpose, started, say=print):
+            """Between this command's reading of the barrier and its hold, the barrier is rewritten."""
+            common.write_barrier(self.target, meanwhile, 'meanwhile')
+            with real(tree_settings, purpose, started, say):
+                yield
+
+        with mock.patch.object(common, 'reserved', the_record_changes_first):
+            code, said = self.reinstall(suites=())
+        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
+        self.assertIn('is no longer the record of the unfinished reinstall this command read', '\n'.join(said))
+        self.assertEqual(common.read_barrier(self.target), meanwhile)
+
+    def test_what_the_statement_rests_on_does_not_move_with_reports_caches_backups_or_locks(self):
+        dev = common.dev_infrastructure(self.dev)['fingerprint']
+        tree_settings = settings.read_settings(self.target)
+        before = reinstall.what_the_statement_rests_on(tree_settings, dev)
+        reports_folder = self.target / 'results' / 'research' / GAME / 'reports'
+        (reports_folder / 'league' / 'an_extra_print_out.txt').write_bytes(b'a print-out\r\n')
+        (self.target / 'src' / '__pycache__').mkdir()
+        (self.target / 'src' / '__pycache__' / 'x.pyc').write_bytes(b'cache')
+        (self.target / 'records' / 'SNAPSHOT_LOG.jsonl').write_bytes(b'{}\n')
+        with job_lock.job_lock(self.target, 'a hold', 'now'):
+            self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
+        for path, data in ((self.target / 'source_data' / f'{GAME}_results_master_ledger.csv', b'x'),
+                           (self.target / 'results' / 'research' / GAME / 'NOT_CURRENT_FROM.json', b'{}'),
+                           (self.target / '.venv' / 'ENVIRONMENT_VERIFIED.json', b'{}'),
+                           (self.target / DERIVED, b'#')):
+            kept = path.read_bytes() if path.exists() else None
+            path.write_bytes(data)
+            self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before, path.name)
+            path.unlink() if kept is None else path.write_bytes(kept)
+        self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, 'another DEV'), before)
+        self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
+
+
 class ThePrintOutsAreMadeAgainWhenTheirCodeChanges(ReinstallCase):
     """Specification 12.4 (EX_269 R7-F02)."""
 
@@ -495,6 +615,91 @@ class AFailureInPlaceLeavesTheBarrier(ReinstallCase):
         self.assertFalse((self.target / 'src' / 'toy_new.py').exists(), 'what the replaced plan added is gone')
         self.assertEqual((self.target / OTHER).read_bytes(), b'# corrected in DEV\r\n')
         self.infrastructure_is_devs()
+
+    def removal_in_dev(self) -> None:
+        """In DEV one infrastructure file is taken off the manifest and another is put on it."""
+        (self.dev / 'src' / 'toy_new.py').write_bytes(b'# a new infrastructure file\r\n')
+        (self.dev / OTHER).unlink()
+        self.manifest_in_dev(lambda text: text.replace('src/toy_other.py = other\n', 'src/toy_new.py = other\n'))
+
+    def stop_at_the_removal(self) -> None:
+        """Carry the removal plan out until the removal itself, which fails once: the new manifest is in place,
+        the file to remove still lies there, and neither manifest names it any more."""
+        real_unlink, failed = Path.unlink, []
+
+        def unlink_fails_once(path, *arguments, **options):
+            """Fail the first removal of the file the plan removes."""
+            if path.name == 'toy_other.py' and not failed:
+                failed.append(True)
+                raise OSError('an invented fault at the removal')
+            return real_unlink(path, *arguments, **options)
+
+        with mock.patch.object(Path, 'unlink', unlink_fails_once):
+            code, said = self.reinstall(answers=['YES'], suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_STOPPED, said)
+        self.assertTrue((self.target / OTHER).is_file())
+        self.assertNotIn(b'toy_other.py', (self.target / 'deploy' / 'INFRA_MANIFEST.ini').read_bytes())
+
+    def test_a_removal_interrupted_after_the_new_manifest_is_in_place_is_finished_by_the_same_command(self):
+        """EX_329 C-B03."""
+        self.removal_in_dev()
+        self.stop_at_the_removal()
+        code, said = self.reinstall(suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        self.assertFalse((self.target / OTHER).exists())
+        self.assertTrue((self.target / 'src' / 'toy_new.py').is_file())
+        self.infrastructure_is_devs()
+
+    def test_a_removal_made_and_then_stopped_before_the_list_is_finished_by_the_same_command(self):
+        self.removal_in_dev()
+        with mock.patch.object(common, 'finish', side_effect=OSError('an invented fault in finish')):
+            self.assertEqual(self.reinstall(answers=['YES'])[0], reinstall.EXIT_STOPPED)
+        self.assertFalse((self.target / OTHER).exists(), 'the removal was made')
+        code, said = self.reinstall(suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        self.infrastructure_is_devs()
+
+    def test_the_replacement_of_an_interrupted_removal_still_removes_the_file_and_leaves_nothing_extra(self):
+        self.removal_in_dev()
+        self.stop_at_the_removal()
+        (self.dev / 'src' / 'toy_new.py').write_bytes(b'# the new infrastructure file, corrected\r\n')
+        self.manifest_in_dev(lambda text: text)
+        code, said = self.reinstall('--replace-unfinished', answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        self.assertIn(f'  remove: {OTHER} (class other; now ', '\n'.join(said))
+        self.assertFalse((self.target / OTHER).exists())
+        self.infrastructure_is_devs()
+
+    def test_a_replacement_still_makes_again_the_print_outs_the_unfinished_reinstall_owed(self):
+        """EX_329 C-B04."""
+        league = sorted((self.target / 'results' / 'research' / GAME / 'reports' / 'league').glob('*.txt'))[0]
+        wanted = league.read_bytes()
+        self.change_in_dev(DERIVED)
+        self.stopped('the suite does not pass in place', suites=(True, False))
+        self.assertTrue(common.read_barrier(self.target)['reports_owed'])
+        league.write_bytes(b'a report as old report code made it\r\n')
+        self.change_in_dev(OTHER, '# the cause, corrected in DEV in a file that changes no report\n')
+        seen = []
+        real = common.remove_barrier
+
+        def look_then_remove(tree_root):
+            """Note whether the report was already made again when the barrier is removed."""
+            seen.append(league.read_bytes() == wanted)
+            real(tree_root)
+
+        with mock.patch.object(common, 'remove_barrier', look_then_remove):
+            code, said = self.reinstall('--replace-unfinished', answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        text = '\n'.join(said)
+        self.assertNotIn(f'  overwrite: {DERIVED}', text.split('THE PLAN NOW')[1], 'no derived file is in the new plan')
+        self.assertIn('Report or scoring code changed: every league report', text)
+        self.assertEqual(seen, [True], 'made again before the barrier was removed')
+
+    def test_a_reinstall_that_changes_no_report_code_owes_no_print_outs(self):
+        self.change_in_dev(OTHER)
+        self.stopped('the suite does not pass in place', suites=(True, False))
+        self.assertFalse(common.read_barrier(self.target)['reports_owed'])
+        self.assertEqual(common.read_barrier(self.target)['classes'], {OTHER: 'other'})
 
     def test_replace_unfinished_answered_no_leaves_the_unfinished_reinstall_as_it_was(self):
         self.change_in_dev(OTHER)

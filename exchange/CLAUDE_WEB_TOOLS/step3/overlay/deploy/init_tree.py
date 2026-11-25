@@ -256,7 +256,8 @@ def copy_results(view, source_root: Path, source_role: str, plan: dict, now, say
     first = {relative: _sha256(Path(source_root) / relative) for relative in files}
     try:
         for relative in files:
-            common.copy_into_place(Path(source_root) / relative, target_root, relative, first[relative], replace=True)
+            common.copy_into_place(Path(source_root) / relative, target_root, relative, first[relative],
+                                   replace=True)
     except common.InstallRefused as refusal:
         raise common.InstallRefused(f'the accepted results could not be copied from {source_root} as they were first '
                                     f'read; they were probably being updated. ({refusal}) Type the same command '
