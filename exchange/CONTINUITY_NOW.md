@@ -4,10 +4,12 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 23:03 Australia/Adelaide (entry 313: slice C is with the reviewer as EX_328; H-1 next, on Opus).
+**Last updated:** 25 November 2026, 23:04 Australia/Adelaide (entry 314: waiting on EX_329; H-1 after it).
 
 ## For the owner: NOW
 
+- **H-1 WAITS FOR THE REVIEWER (the owner, entry 314; 25 November 2026).** Slice C is with the reviewer as EX_328;
+  **waiting on EX_329.** The next edition of H-1 follows the answer to it. Nothing else is in hand.
 - **SLICE C IS WITH THE REVIEWER (entry 313; 25 November 2026): EX_328,** `exchange/EX_328_Claude.md`. **Waiting on
   the reviewer:** EX_329. **Next for Claude, after the owner has switched to Opus:** the next ordinary edition of
   H-1 (entries 310 and 300 say what it takes in). RAT-59 (the amendment of entry 305) only after the reviewer's

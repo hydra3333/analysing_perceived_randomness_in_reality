@@ -7532,3 +7532,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on:** the reviewer's EX_329; the owner's switch, for H-1.
 - Nothing is authorised on the owner's PC. No install or run is authorised by this message or by a PASS.
 - Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 314; RAT-59.
+
+## 314. 25 November 2026, 23:04 - the owner: H-1 waits for the reviewer's response to EX_328
+
+- **The owner, 23:04** (having switched this chat to Opus): "lets wait for reviewer response before H-1"
+- **So:** the next edition of H-1 is written after EX_329 has arrived and been answered, so that it can take in the
+  reviewer's view of slice C and of the amendment (RAT-59) in one edition. This replaces the timing of entries 310
+  and 313 ("H-1 next"); what the edition takes in is unchanged.
+- **Waiting on:** the reviewer's EX_329.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 315; RAT-59.
