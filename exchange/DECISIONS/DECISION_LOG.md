@@ -7762,3 +7762,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the model rule applies first).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_332 (Claude's); entry 323; RAT-61.
+
+## 323. 26 November 2026, 06:14 - the owner's word for EX_332: slice C's two residual corrections go to the reviewer for the focused recheck
+
+- **Claude's question** (entry 322): issue EX_332 to the reviewer now (recommended: yes)?
+- **The owner, 06:13:** "YES Issue EX_332 to the reviewer".
+- **So:** EX_332 is written and issued next, `exchange/EX_332_Claude.md`: the two residual corrections of C-B01 for
+  the focused recheck, with the corrections note, the exact differences from `3bdd37b`, the hashes and the evidence.
+  Its commit and hash are in Git (`git log -- exchange/EX_332_Claude.md`); the entry that records the reviewer's reply
+  gives its SHA-256. The reply is expected as EX_333.
+- **Waiting on the reviewer:** EX_333. **Waiting on the owner:** nothing. After slice C has passed: slice D on the
+  owner's go (a new subsystem: the model rule applies first).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_332 (Claude's, being issued), then EX_333 (the reviewer's reply); entry 324; RAT-61.

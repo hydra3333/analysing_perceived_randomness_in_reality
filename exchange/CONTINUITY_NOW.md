@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 00:23 Australia/Adelaide (entry 322: EX_331; the two residuals corrected; EX_332 waits for the owner's word).
+**Last updated:** 26 November 2026, 06:14 Australia/Adelaide (entry 323: EX_332 issued; waiting on EX_333).
 
 ## For the owner: NOW
 
+- **EX_332 IS WITH THE REVIEWER (entry 323; 26 November 2026):** `exchange/EX_332_Claude.md`, slice C's two residual
+  corrections of C-B01 for the focused recheck, on the owner's word. **Waiting on the reviewer:** EX_333. **Waiting on
+  the owner:** nothing. **If this chat ends here:** a new chat is started with H-1 v15's blurb, reads H-1 v15's
+  chapter 0 and entries 320 onward, and answers EX_333.
 - **EX_331 (entry 322; 26 November 2026): SEVEN OF SLICE C'S EIGHT FINDINGS CLOSED; the two residuals of C-B01 are
   corrected and proved in the cloud.** The note for the reviewer is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_CORRECTIONS_AFTER_EX_331_v0_1.md`, with the differences from
