@@ -7572,3 +7572,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   free number, RAT-59, and the amendment of entry 305 the number after.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 317; RAT-59.
+
+## 317. 25 November 2026, 23:11 - EX_329 (reviewer): slice C RECHECK, four blockers and four corrections; concurs with both amendments; a clash of RAT numbers
+
+- **EX_329 arrived** while H-1 v15 was being written: `exchange/EX_329_ChatGPT.md` (SHA-256 `e71d77e99df6ff134b1be65f6c10a69f46baf7a87e4e2a6f9808b9f16d6ce8f2`; commit
+  `5f4084b`, before entry 316's commit, which was put after it).
+- **Disposition: RECHECK.** "The architecture and approach are sound ... No redesign." **Blockers:** C-B01
+  (`Reinstall_Infra`: the owner's YES can rest on a stale statement if a job finishes during the question; bind the
+  accepted plan and statement to the current inputs under the second reservation, before anything is written;
+  likewise an ordinary install must not act on a different base); C-B02 (`Init_Tree`: the six results files must be
+  read as one coherent set, and both copied pairs checked with the results reader before the record; a continued
+  creation with its record needs no source read); C-B03 (`Reinstall_Infra`: the same command cannot finish a plan
+  that removes a non-forecast file once the new manifest is in place); C-B04 (a replacement of an unfinished
+  reinstall can forget the owed regeneration of reports). **Corrections:** C-C01 (the read-only checks must also make
+  the job's results-only-grew check); C-C02 (an ordinary install's suite depends on byte equality, not on DEV's
+  readiness marker); C-C03 (`Verify_Tree` repeats the unfinished-operation and orphan checks under its lock); C-C04
+  (the smoke case's kept table in CRLF; the suite line in both verdicts). Readings C-R1 to C-R15: concurs, with C-R3,
+  C-R6, C-R9, C-R13(c) and C-R15 subject to those findings. The three reviewed files' changes: accepted.
+- **The amendments:** the reviewer CONCURS with the `Verify_Tree` amendment (entry 305), with one wording change
+  (12.3 item 3 keeps the ordinary install's conditional suite), and recommends the owner ratify it; and CONCURS with
+  reading C-R9 as a narrow amendment of design section 6 steps 2, 4, 6 and 11, together with it or separately.
+- **A clash of numbers, to be settled by the owner:** EX_329 calls the `Verify_Tree` amendment "RAT-59"; entry 316
+  said H-1 v15 would take RAT-59. Nothing is ratified yet, so nothing is wrong; the owner decides the order.
+- **What the reviewer asks next:** the corrections, the exact differences from `e404c22`, the affected modules'
+  evidence and targeted tests (planted faults where worthwhile); not all 250 planted faults again nor the whole
+  suite; reply as EX_330. H-1 may take EX_329 in "at its next update; do not delay correction work".
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_330 (Claude's); entry 318; RAT-59.

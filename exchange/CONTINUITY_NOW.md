@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 23:10 Australia/Adelaide (entry 316: H-1 v15 candidate written; waiting on the owner's ratification and on EX_329).
+**Last updated:** 25 November 2026, 23:11 Australia/Adelaide (entry 317: EX_329 RECHECK; decisions for the owner).
 
 ## For the owner: NOW
 
+- **EX_329 (entry 317; 25 November 2026): slice C RECHECK,** four blockers (C-B01 to C-B04) and four corrections
+  (C-C01 to C-C04), no redesign; the reviewer concurs with the `Verify_Tree` amendment (one wording change) and with
+  reading C-R9 as a second narrow amendment. **Waiting on the owner:** the order of the ratifications (EX_329 calls
+  the amendment RAT-59; entry 316 gave RAT-59 to H-1 v15), whether H-1 v15 takes EX_329 in first, and his go for the
+  corrections (EX_330).
 - **H-1 v15 IS WRITTEN AS A CANDIDATE (entry 316; 25 November 2026),** `exchange/CLAUDE_WEB_TOOLS/h1v15/out/`, with its
   blurb. **Waiting on the owner:** his ratification (it would be RAT-59), then Claude installs it in `doc/HANDOVER/`.
   **Waiting on the reviewer:** EX_329 (slice C).
