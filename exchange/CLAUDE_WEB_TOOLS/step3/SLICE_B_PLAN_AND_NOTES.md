@@ -86,8 +86,17 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
   `overlay/tests/test_trees_snapshot.py` (23 tests); wired into `research_job.py` (the note before the first write;
   a backup at the start if one is owed, and at the end), `research_command.py` (the command `snapshot`) and the
   manifest (two lines). One existing test of slice A adjusted for the launcher's new line. In the cloud:
-  `test_trees_snapshot`, `test_trees_launch_guard`, `test_research_job` and the other slice modules OK. **Still to
-  do for B1:** the whole suite and its comparison; planted faults. **Next: B2 (the recovery kit), then B3
+  `test_trees_snapshot`, `test_trees_launch_guard`, `test_research_job` and the other slice modules OK.
+- **The whole suite with B1** (a fresh clone, the cloud): 60 modules, 1023 tests. Against slice A as it passed
+  review: 1000 tests in both runs, 999 with the same result, 23 new (the backup's), and **one changed to FAIL:**
+  `test_file_form` `test_no_program_of_the_project_writes_a_text_file_without_naming_its_line_ending` found two
+  lines of `snapshot.py` (a ZIP member opened through `.open(`, which the project's rule reads as a path's text
+  open). **Corrected, not waived:** the ZIP is now written with the library's own streaming `write` (each file is
+  hashed, then written; the read-back check catches a change between the two) and a member is read back with
+  `mode='r'` written out. `test_trees_snapshot` (23) and `test_file_form` (52) rerun: OK. **The whole suite has not
+  been run again since that correction; it is run again before the slice goes to review.** The three known
+  failing tests are as before.
+- **Still to do for B1:** the whole suite once more; planted faults. **Next: B2 (the recovery kit), then B3
   (restore).**
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him

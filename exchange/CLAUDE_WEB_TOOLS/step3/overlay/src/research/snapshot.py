@@ -149,23 +149,18 @@ def _hash_of_file(path: Path) -> str:
 
 
 def _write_archive(tree_root: Path, partial: Path, files, empty, heading: dict) -> dict:
-    """The first reading: write every file and empty folder into the ZIP, hashing each file as it is read, and
-    the manifest as the last member. Returns {path: sha256}."""
+    """The first reading: every file hashed and then written into the ZIP by the library's own streaming write
+    (which keeps the file's time, to two seconds); every empty folder; and the manifest as the last member. A
+    file that changed between its hashing and its writing is caught when the archive is read back.
+    Returns {path: sha256}."""
     hashes = {}
-    with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+    with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9,
+                         strict_timestamps=False) as archive:                    # a time before 1980 is kept as 1980
         for relative in empty:
             archive.writestr(zipfile.ZipInfo(relative + '/'), b'')
         for relative in files:
-            source = tree_root / relative
-            changed = max(time.localtime(source.stat().st_mtime)[:6], (1980, 1, 1, 0, 0, 0))   # ZIP begins in 1980
-            member = zipfile.ZipInfo(relative, date_time=changed)
-            member.compress_type = zipfile.ZIP_DEFLATED
-            digest = hashlib.sha256()
-            with open(source, 'rb') as handle, archive.open(member, 'w', force_zip64=True) as target:
-                for piece in iter(lambda: handle.read(CHUNK), b''):
-                    digest.update(piece)
-                    target.write(piece)
-            hashes[relative] = digest.hexdigest()
+            hashes[relative] = _hash_of_file(tree_root / relative)
+            archive.write(tree_root / relative, arcname=relative, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
         manifest = dict(heading, kind=MANIFEST_KIND, empty_folders=list(empty),
                         files=[{'path': relative, 'sha256': hashes[relative]} for relative in files])
         text = windows_lines(json.dumps(manifest, indent=1, sort_keys=True, ensure_ascii=True) + '\n')
@@ -185,7 +180,7 @@ def _check_archive(partial: Path, hashes: dict, empty) -> None:
             raise BackupNotMade('the archive read back does not hold exactly the files that were read.')
         for relative, expected in hashes.items():
             digest = hashlib.sha256()
-            with archive.open(relative) as member:
+            with archive.open(relative, mode='r') as member:
                 for piece in iter(lambda: member.read(CHUNK), b''):
                     digest.update(piece)
             if digest.hexdigest() != expected:
