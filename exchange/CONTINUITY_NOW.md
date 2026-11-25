@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 14:00 Australia/Adelaide (entry 287: the new reviewer chat has taken over from H-2 v9 and the owner approved it to start; the handovers in force are H-1 v14 and H-2 v9; slice B waits for the owner's go).
+**Last updated:** 25 November 2026, 15:28 Australia/Adelaide (entry 290: slice B of build step 3 is written and proved in the cloud, not reviewed; it waits for the owner's word to go to the reviewer; the handovers in force are H-1 v14 and H-2 v9).
 
 ## For the owner: NOW
 

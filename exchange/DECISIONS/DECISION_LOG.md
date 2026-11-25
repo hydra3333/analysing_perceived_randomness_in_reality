@@ -6968,3 +6968,38 @@ section 17.2 (unpack it into a new folder, never over the clone).
   files (`main` `0962a68`); `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_B_PLAN_AND_NOTES.md` says where it stands.
 - Both points are added to the standing reminders in `exchange/OWNER_REMINDERS.md`.
 - Next numbers: EX_322; entry 290; RAT-59.
+
+## 290. 25 November 2026, 15:28 - Slice B of build step 3 is written (working files): the backup, the recovery kit and the restore, proved in the cloud; not reviewed
+
+- **Authority:** the owner's go (entry 288; "ok please go", 14:41). Cloud only; nothing ran on the owner's PC.
+- **The files, in `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`** (the same overlay as slice A's): new
+  `src/research/snapshot.py` (the backup; class `derived`), `Run_Snapshot.bat`, `deploy/recovery_kit.py`,
+  `deploy/restore_tool.py` (ONE file, standard library only, with its own reader of Windows' process table),
+  `deploy/kit/Restore.bat`, `deploy/kit/HOW_TO_RESTORE.txt`, `tests/test_trees_snapshot.py` (23 tests),
+  `tests/test_trees_restore.py` (32 tests). **Changed, four files that slice A's review passed:**
+  `src/research/research_job.py` (the note that a backup is owed, before the job's first write; a backup at the
+  start if one is owed and at the end, after the job's lock is released; the job's closing lines said after the
+  backup, so its verdict stays last), `src/research_command.py` (the command `snapshot`),
+  `deploy/INFRA_MANIFEST.ini` (two lines under `[files]`, four under `[install_tool]`),
+  `tests/test_trees_launch_guard.py` (one test follows the launcher's new line).
+- **It carries out** deployment design sections 10, 11 and 12 and specification 14.1 as ratified; no new design.
+  Fifteen readings taken while writing are listed for the reviewer in
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_B_PLAN_AND_NOTES.md` section 3 (among them: the software fingerprint
+  taken as the SHA-256 of the tree's list of installed files; a backup not made while a job holds its lock, so
+  that no lock file is inside a ZIP; no typed confirmation of a restore beyond the orphan marker's sentence;
+  a member's name checked to lie inside the tree).
+- **Cloud evidence (Linux, Python 3.15.0b4; Claude's only; in `slice_b/evidence/`):** the whole suite with slices A
+  and B: 61 modules, 1052 tests; the 1000 tests of slice A as reviewed all with the same result; 52 new, all OK;
+  the three known failing tests and no other. Planted faults: 53; the first run caught 50, three tests were added
+  for the three that survived, and the run made again caught 53 of 53. The whole suite has not been run again
+  since those three tests were added (no program file changed).
+- **One fault of Claude's own, found by the project's checker and corrected, not waived:** the first whole run
+  failed `test_file_form`'s rule that no program opens a text file without naming its line ending (two ZIP
+  members opened through `.open(`). The ZIP is now written by the library's streaming `write`.
+- **Not tested, and cannot be in the cloud:** the reader of Windows' own process table, a rename of a real tree on
+  Windows, the restored environment's start, the time a real backup takes. They belong to the joined rehearsal.
+- **Costs to be told to the owner:** every research job in QA and PROD ends with a whole backup (minutes; about
+  180 MB or more each; nothing prunes the backup root); a restore needs every other Python program closed.
+- **Waiting on the owner's word:** to put the slice to the reviewer (the package note and the exact differences
+  are written then, with one more run of the whole suite).
+- Next numbers: EX_322; entry 291; RAT-59.
