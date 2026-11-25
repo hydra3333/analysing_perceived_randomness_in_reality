@@ -7868,3 +7868,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Fable (High) for this" and waits.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 327; RAT-61.
+
+## 327. 26 November 2026, 06:34 - OWNER: identical software acts identically (QA's job starts the updater as PROD's does); the install tools do write into PROD
+
+- **Claude had stated its understanding back** (entry 326) and asked two things: (1) does QA's research job itself
+  start the updater, as PROD's does; (2) what does DEV do.
+- **The owner, 06:33:** "\"Nothing ever writes into PROD from another tree\" apart from INSTALL and related.  re 1.
+  The software in QA can and will be identical at times, they should thus act identically according to their software
+  ."
+- **So, DECIDED (owner):** (a) Claude's sentence is corrected: the install tools, run from DEV, do write into PROD
+  (`Init_Tree`, `Install`, `Reinstall_Infra` and their kind); what stands is that no copy of data or results has PROD
+  as its destination, as the specification already says ("PROD is never the destination of a copy"). (b) Point 1 is
+  YES: identical software acts identically. QA's research job does what PROD's does, the results step included: it
+  starts the updater in its own tree unless `--no-update` is given. Behaviour follows the software, not the tree's
+  name.
+- **Still open, asked again in the chat:** point 2, what DEV does (as ratified, DEV's job copies results from PROD and
+  never contacts the website).
+- **Not started:** the amendment of the ratified clauses (RAT-61) before slice D; Claude has said "Suggest switching
+  to Fable (High) for this" and waits for the owner's go.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 328; RAT-61.

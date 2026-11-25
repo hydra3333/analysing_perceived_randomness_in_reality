@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:30 Australia/Adelaide (entry 326: the owner on how QA works; an amendment is needed before slice D).
+**Last updated:** 26 November 2026, 06:34 Australia/Adelaide (entry 327: identical software acts identically; DEV still to be answered).
 
 ## For the owner: NOW
 
+- **THE OWNER (entry 327; 26 November 2026): identical software acts identically.** QA's research job does what PROD's
+  does, the results step included (it starts the updater in its own tree unless `--no-update`). The install tools do
+  write into PROD; what is never done is a copy of data or results into PROD. **Waiting on the owner:** what DEV does;
+  and his go, the model rule first, for the amendment (RAT-61) before slice D.
 - **THE OWNER ON HOW QA WORKS (entry 326; 26 November 2026); read this before touching slice D.** QA has PROD's
   software and acts as PROD does. A research job in QA runs on whatever accepted results are in QA; how they got there
   (the updater, a copy back from PROD, a catch-up) is immaterial. The updater is not PROD's alone. Copying from PROD
