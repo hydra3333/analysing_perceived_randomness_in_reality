@@ -7775,3 +7775,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   owner's go (a new subsystem: the model rule applies first).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_332 (Claude's, being issued), then EX_333 (the reviewer's reply); entry 324; RAT-61.
+
+## 324. 26 November 2026, 06:20 - EX_332 issued; OWNER'S QUERY, open: should QA be able to run the updater as PROD does? (bears on slice D; not decided)
+
+- **EX_332 issued (the owner's word, entry 323):** `exchange/EX_332_Claude.md`, commit `2ca1e36`. Waiting on the
+  reviewer: EX_333.
+- **The owner, 06:16 to 06:19,** on hearing that slice D is the new edition of the updater and that by the ratified
+  design it runs in PROD only: "Ah I see a gap.  one of QA roles QA is meant to prove things as if it were prod, \"it
+  will have the same software as prod\" apart from config ini, hence if I copy prod data back to QA I should be able
+  to run the updater in QA as if it were prod."
+- **What the ratified text says today:** specification v0.6, the trees: "Two limits are about safety, not science:
+  only PROD may run the updater, and PROD is never the destination of a copy"; its table (official results: DEV and QA
+  "a checked copy from PROD", PROD "the one reviewed updater") and the job's Results step ("neither ever contacts the
+  lottery site"); deployment design v0.12: "`Run_Results_Updater.bat` runs in PROD only; in QA its guard refuses", and
+  its test list ("the updater launcher refusing outside PROD"). The build plan of step 3 has the new updater refuse
+  outside PROD by the settings file's role, and has its first real run be the owner's own, in PROD.
+- **Claude's first reading, given in the chat for discussion; NOT DECIDED:** the gap is real for slice D in
+  particular, since as planned the new updater first meets the real website in PROD, with no tree in which to try it
+  first. The simplest route that keeps "one science, the trees differ only in their settings" is to let QA's own
+  settings file say where its accepted results come from: the checked copy from PROD (as now) or the updater; DEV
+  stays copy only. It would need a narrow amendment of the ratified text, the reviewer's view and the owner's
+  ratification, and is cheapest to settle before slice D is written. To be weighed: each trial in QA is one more
+  automated visit to the lottery website; and, as the code stands, a QA tree that has updated itself past PROD refuses
+  the copy from PROD until PROD has caught up (its results must be the byte-for-byte beginning of PROD's), after which
+  it accepts again or is reseeded from PROD.
+- **Waiting on the owner:** his decision on that question, after discussion. Nothing else. Waiting on the reviewer:
+  EX_333.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_333 (the reviewer's reply); entry 325; RAT-61.

@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:14 Australia/Adelaide (entry 323: EX_332 issued; waiting on EX_333).
+**Last updated:** 26 November 2026, 06:20 Australia/Adelaide (entry 324: EX_332 issued; the owner's open question on the updater in QA).
 
 ## For the owner: NOW
 
+- **AN OPEN QUESTION OF THE OWNER'S (entry 324; 26 November 2026), to settle before slice D is written:** should QA be
+  able to run the updater as PROD does (the ratified text says PROD only)? Claude's first reading is in entry 324; not
+  decided. **Waiting on the owner:** that decision. **Waiting on the reviewer:** EX_333 (slice C's two residuals,
+  EX_332).
 - **EX_332 IS WITH THE REVIEWER (entry 323; 26 November 2026):** `exchange/EX_332_Claude.md`, slice C's two residual
   corrections of C-B01 for the focused recheck, on the owner's word. **Waiting on the reviewer:** EX_333. **Waiting on
   the owner:** nothing. **If this chat ends here:** a new chat is started with H-1 v15's blurb, reads H-1 v15's
