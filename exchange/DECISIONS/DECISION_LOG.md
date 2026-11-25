@@ -7374,3 +7374,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   changing Python versions, the how-to and the mandatory actions.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 306; RAT-59.
+
+## 306. 25 November 2026, 20:32 - the owner: a status blurb for the reviewer, then go on with part C2
+
+- **The owner, 20:31:** "CAN WE HAVE A BLURB UPDATING CHATGPT PLEASE ? THEN gO."
+- **The blurb was given to the owner to paste** (a status update, not an EX message; it asks for no review): head
+  `4c14b55`; slice C is being written in the cloud (entries 301 to 305), with part C1 and the first piece of C2
+  done (the suite of an install on a temporary copy: 19 modules, 589 tests, passed in the cloud); the owner's
+  decision that `Verify_Tree.bat` does not run the suite, and the amendment of design section 7 and specification
+  section 13 that will come to the reviewer with slice C (RAT-59 only after his view); the readings he will see;
+  and that an objection in principle to that decision, said now through the owner, would save a round. Next EX
+  is EX_328, from Claude, when the slice is whole.
+- **Since entry 305, written and pushed (`4c14b55`):** part C2's first piece, `deploy/SUITE_MANIFEST.ini`,
+  `deploy/suite_on_copy.py` and `tests/test_trees_suite.py` (15 tests; 17 planted faults, all caught).
+- **Going on, on the owner's word:** the rest of part C2 (the shared install machinery).
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 307; RAT-59.

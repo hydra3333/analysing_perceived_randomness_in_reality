@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 20:02 Australia/Adelaide (entry 305: C-Q1 decided, option 1; an amendment owed with slice C; next C2).
+**Last updated:** 25 November 2026, 20:32 Australia/Adelaide (entry 306: a status blurb to the reviewer; the rest of part C2 in hand).
 
 ## For the owner: NOW
 
+- **A STATUS BLURB WENT TO THE REVIEWER THROUGH THE OWNER (entry 306; 25 November 2026);** it asks for no review.
+  Part C2's first piece is done (the suite of an install on a temporary copy). **In hand: the rest of part C2**
+  (`deploy/install_common.py`); section 4 of the slice's notes says exactly where it stands.
 - **C-Q1 IS DECIDED (entry 305; 25 November 2026): option 1, `Verify_Tree.bat` does not run the test suite.**
   An amendment of design section 7 and specification section 13 is owed; its proposed wording is in the slice's
   notes (section 3) and goes to the reviewer with slice C (RAT-59 after his view). A reminder is added: the
