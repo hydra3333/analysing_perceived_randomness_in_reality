@@ -1,0 +1,29 @@
+before: 59 modules; unittest ran 984 tests; identified here: 984
+after: 59 modules; unittest ran 1000 tests; identified here: 1000
+MODULE CHANGED: test_trees_launch_guard: ran 37, OK -> ran 52, OK
+MODULE CHANGED: test_trees_readiness: ran 40, OK -> ran 41, OK
+DISAPPEARED: test_trees_check_tree.TheBackupsAndTheLocks.test_an_environment_without_its_marker_is_said_to_be_not_verified_and_one_with_it_verified
+NEW: test_trees_check_tree.TheBackupsAndTheLocks.test_an_environment_without_its_marker_is_not_verified_and_a_marker_is_only_said_to_be_present
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_a_helper_changed_outside_the_tools_refuses_the_withdrawal_before_any_status_or_log_change
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_a_tree_without_its_list_refuses_the_withdrawal
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_a_withdrawal_reads_no_file_of_the_environment_and_no_process_table
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_an_operation_left_unfinished_refuses_the_withdrawal_in_every_tree
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_an_unlisted_python_file_under_src_refuses_the_withdrawal
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_in_a_tree_as_installed_the_withdrawal_is_written_and_logged
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_in_dev_no_list_is_asked_of_a_withdrawal
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_the_orphan_marker_still_refuses_the_withdrawal
+NEW: test_trees_launch_guard.AWithdrawalInAnInstalledTree.test_the_refusal_comes_before_an_interrupted_status_write_is_tidied_away
+NEW: test_trees_launch_guard.TheEnvironmentsDigest.test_a_folder_of_the_inventory_that_cannot_be_listed_refuses_and_is_not_left_out
+NEW: test_trees_launch_guard.TheEnvironmentsDigest.test_an_environment_that_lacks_a_part_of_the_inventory_refuses_and_names_the_part
+NEW: test_trees_launch_guard.TheEnvironmentsDigest.test_the_base_pythons_program_file_enters_by_its_bytes_and_not_only_by_its_path_and_version
+NEW: test_trees_launch_guard.TheProcessRuleOnInventedTables.test_a_command_line_naming_a_folder_whose_name_only_begins_like_the_trees_does_not_count
+NEW: test_trees_launch_guard.TheProcessRuleOnInventedTables.test_the_trees_path_is_named_wherever_a_path_ends_after_it
+NEW: test_trees_launch_guard.TheStartOfAJob.test_an_operation_left_unfinished_refuses_the_job_itself_under_its_lock_and_not_only_the_launcher
+NEW: test_trees_readiness.TheCommandMakeInstallable.test_an_unfinished_operation_or_the_orphan_marker_refuses_and_no_marker_is_made_or_removed
+tests in both runs: 983; with the same result: 983
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '#   be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore', '#   can be found at https://github.com/git"]
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', 'build/', '#   Pixi creates a virtual environment in the .pixi directory, just like venv module creates one', 'htmlcov/', '*.py[codz]',"]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: DIFFERENCES FOUND - each needs an explanation

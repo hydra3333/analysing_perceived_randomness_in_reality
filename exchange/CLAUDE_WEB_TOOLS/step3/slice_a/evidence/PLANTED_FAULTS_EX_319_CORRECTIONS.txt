@@ -1,0 +1,23 @@
+caught   | A-B01: the base program enters the digest by its path and version only
+caught   | A-B01: the base Python's version is left out of the digest
+caught   | A-B01: a base program that cannot be read is passed over
+caught   | A-B01: a folder that cannot be listed is left out of the digest
+caught   | A-B01: a digest is given for an environment that lacks a part of the inventory
+caught   | A-B01: an environment with Scripts is said to lack it
+caught   | A-B01: the count leaves out the base program that was hashed
+caught   | A-B02: the job under its lock does not look for an unfinished operation
+caught   | A-B02: the software is never compared with its list
+caught   | A-B02: a withdrawal is written in a tree whose software differs from its list
+caught   | A-B02: a withdrawal is written while an operation is unfinished
+caught   | A-B02: the withdrawal tidies the staging folder before it refuses
+caught   | A-B02: the withdrawal's own orphan-marker check is lost
+caught   | A-B02: Make_Installable writes markers while an operation is unfinished
+caught   | A-B02: Make_Installable writes markers beside the orphan marker
+caught   | A-C01: a folder whose name begins like the tree's is taken for the tree
+caught   | A-C01: the tree is named only where the text ends with its path
+caught   | A-C01: T:\a_p_r_i_r_backups is taken for T:\a_p_r_i_r
+caught   | A-C01: only the first place the path stands in an argument is looked at
+caught   | A-C02: a marker that is present is called a verified environment
+caught   | A-C02: the closing line says nothing is wrong
+caught   | A-C03: sys.path under another name of sys is not found
+22 faults planted; 0 survived

@@ -1,0 +1,32 @@
+caught   | a Python that is the tree's own program is not listed
+caught   | a Python working in the tree is not listed
+caught   | the processes above are not looked at (the pair, the launcher window)
+caught   | a ring of parents is walked for ever
+caught   | an unreadable Python process is passed
+caught   | the asking program lists itself
+caught   | a program that is not Python is listed
+caught   | a folder whose name begins with the tree's counts as inside it
+caught   | a listed process does not refuse
+caught   | Scripts is left out of the digest
+caught   | pyvenv.cfg is left out of the digest
+caught   | the packages are left out of the digest
+caught   | cache folders enter the digest
+caught   | compiled files enter the digest
+caught   | the digest is of names, not of bytes
+caught   | a changed package list passes the first gate
+caught   | a changed environment passes the job's check
+caught   | a missing marker is not "environment not verified"
+caught   | a file of another kind is taken for the marker
+caught   | the marker's temporary file is left in the environment folder
+caught   | an unfinished operation does not refuse a launch
+caught   | a finishing command passes every unfinished operation
+caught   | QA launches without its environment's marker
+caught   | the job does not compare the digest with the marker
+caught   | software that differs from its list does not refuse the job
+caught   | a tree without its list is run
+caught   | the job does not apply the process rule
+caught   | DEV is asked for a marker and a list it does not have
+caught   | the job skips the guard
+caught   | the envelope does not carry the environment's digest
+caught   | the launcher skips the guard
+31 faults planted; 0 survived

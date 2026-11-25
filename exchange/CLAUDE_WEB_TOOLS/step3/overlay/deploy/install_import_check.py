@@ -117,10 +117,15 @@ def forbidden_constructs(tree_root: Path, file_path: str) -> list:
 
     tree_root, file_path: as for imported_project_files.
     Returns sorted (line number, what was found) pairs, for example [(12, 'importlib'), (30, 'sys.path')]; an
-    empty list when the file is clean. Refuses (ImportCheckRefused) a file that cannot be read as Python.
+    empty list when the file is clean. sys.path is found under any name the file imports sys by ("import sys as
+    s", then "s.path"). The check is against accidents; it does not try to defeat a file written to deceive it. Refuses (ImportCheckRefused) a file that cannot be read as Python.
     """
     found = set()
-    for node in ast.walk(_parse(tree_root, file_path)):
+    parsed = _parse(tree_root, file_path)
+    # The names the file knows the sys module by: 'sys', and any other name an "import sys as ..." gives it.
+    names_of_path_module = {PATH_MODULE} | {alias.asname for node in ast.walk(parsed) if isinstance(node, ast.Import)
+                                           for alias in node.names if alias.name == PATH_MODULE and alias.asname}
+    for node in ast.walk(parsed):
         if isinstance(node, ast.Name) and node.id in FORBIDDEN_NAMES:
             found.add((node.lineno, node.id))
         elif isinstance(node, ast.Attribute) and node.attr in FORBIDDEN_NAMES:
@@ -135,7 +140,7 @@ def forbidden_constructs(tree_root: Path, file_path: str) -> list:
             if node.module == PATH_MODULE and any(alias.name == PATH_ATTRIBUTE for alias in node.names):
                 found.add((node.lineno, f'{PATH_MODULE}.{PATH_ATTRIBUTE}'))
         if (isinstance(node, ast.Attribute) and node.attr == PATH_ATTRIBUTE
-                and isinstance(node.value, ast.Name) and node.value.id == PATH_MODULE):
+                and isinstance(node.value, ast.Name) and node.value.id in names_of_path_module):
             found.add((node.lineno, f'{PATH_MODULE}.{PATH_ATTRIBUTE}'))
     return sorted(found)
 

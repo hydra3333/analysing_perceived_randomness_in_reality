@@ -199,18 +199,21 @@ def _backups(backup_root: Path | None, say) -> None:
 
 
 def _environment(tree, say) -> None:
-    """Print whether the tree's own Python environment has its verified marker. The marker is read; the
-    environment's files are not (this command runs with DEV's Python and cannot speak for another tree's).
+    """Print whether the tree's own Python environment has its verification marker. The marker is read; the
+    environment's files and packages are not compared with it (this command runs with DEV's Python and cannot
+    speak for another tree's), and the line printed says so: a marker that is present is not a finding that the
+    environment is still the one that was verified. Each launch and each job in the tree checks that itself.
 
     tree: the settings of the tree looked at.  say: the function that prints a line.
     """
     if tree.role not in launch_guard.INSTALLED_ROLES:
-        say('Environment: DEV\'s environment has no verified marker; none is asked of it.')
+        say('Environment: DEV\'s environment has no verification marker; none is asked of it.')
         return
     try:
         marker = environment_marker.read_marker(tree.venv_dir)
-        say(f'Environment: verified; {tree.venv_dir / environment_marker.MARKER_NAME} lists '
-            f'{len(marker["distributions"])} package(s). Each job in the tree compares the files with it.')
+        say(f'Environment: verification marker present ({tree.venv_dir / environment_marker.MARKER_NAME}; it '
+            f'lists {len(marker["distributions"])} package(s)). This command did not check the environment\'s '
+            f'files or packages against it; each launch and each job in the tree does.')
     except environment_marker.EnvironmentRefused as refusal:
         say(f'Environment: NOT VERIFIED; every launcher of this tree refuses until it is. {refusal}')
 
@@ -302,5 +305,6 @@ def main(arguments, view, say=print) -> int:
     for finding in findings:
         say(f'FOUND: {finding}')
     say(f'Check_Tree finished: {len(findings)} thing(s) found in {role} {tree_root}.'
-        + ('' if findings else ' Nothing is wrong that this command looks for.'))
+        + ('' if findings else ' Nothing was found by the checks this command makes. It starts nothing and does '
+           'not check the tree\'s Python environment, so it does not say that the tree is ready to run.'))
     return EXIT_FOUND if findings else EXIT_NOTHING_FOUND

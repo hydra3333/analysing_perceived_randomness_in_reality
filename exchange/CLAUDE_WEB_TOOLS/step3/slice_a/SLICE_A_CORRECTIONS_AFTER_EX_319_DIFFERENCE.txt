@@ -1,0 +1,766 @@
+Slice A of build step 3, the corrections after EX_319: the exact difference of each overlay file that changed, from
+the file the reviewer read (the overlay at commit be19ebdf3739c52d83daee00e0cfb1a92be0ee24) to the corrected overlay; and, for
+src/research/withdraw.py, which was not in the overlay, from main's file. Unified, three lines of context;
+line endings are CRLF in both and are not shown. 11 files.
+
+--- reviewed_overlay/deploy/check_tree.py
++++ overlay/deploy/check_tree.py
+@@ -199,18 +199,21 @@
+ 
+ 
+ def _environment(tree, say) -> None:
+-    """Print whether the tree's own Python environment has its verified marker. The marker is read; the
+-    environment's files are not (this command runs with DEV's Python and cannot speak for another tree's).
++    """Print whether the tree's own Python environment has its verification marker. The marker is read; the
++    environment's files and packages are not compared with it (this command runs with DEV's Python and cannot
++    speak for another tree's), and the line printed says so: a marker that is present is not a finding that the
++    environment is still the one that was verified. Each launch and each job in the tree checks that itself.
+ 
+     tree: the settings of the tree looked at.  say: the function that prints a line.
+     """
+     if tree.role not in launch_guard.INSTALLED_ROLES:
+-        say('Environment: DEV\'s environment has no verified marker; none is asked of it.')
++        say('Environment: DEV\'s environment has no verification marker; none is asked of it.')
+         return
+     try:
+         marker = environment_marker.read_marker(tree.venv_dir)
+-        say(f'Environment: verified; {tree.venv_dir / environment_marker.MARKER_NAME} lists '
+-            f'{len(marker["distributions"])} package(s). Each job in the tree compares the files with it.')
++        say(f'Environment: verification marker present ({tree.venv_dir / environment_marker.MARKER_NAME}; it '
++            f'lists {len(marker["distributions"])} package(s)). This command did not check the environment\'s '
++            f'files or packages against it; each launch and each job in the tree does.')
+     except environment_marker.EnvironmentRefused as refusal:
+         say(f'Environment: NOT VERIFIED; every launcher of this tree refuses until it is. {refusal}')
+ 
+@@ -302,5 +305,6 @@
+     for finding in findings:
+         say(f'FOUND: {finding}')
+     say(f'Check_Tree finished: {len(findings)} thing(s) found in {role} {tree_root}.'
+-        + ('' if findings else ' Nothing is wrong that this command looks for.'))
++        + ('' if findings else ' Nothing was found by the checks this command makes. It starts nothing and does '
++           'not check the tree\'s Python environment, so it does not say that the tree is ready to run.'))
+     return EXIT_FOUND if findings else EXIT_NOTHING_FOUND
+
+--- reviewed_overlay/deploy/install_import_check.py
++++ overlay/deploy/install_import_check.py
+@@ -117,10 +117,15 @@
+ 
+     tree_root, file_path: as for imported_project_files.
+     Returns sorted (line number, what was found) pairs, for example [(12, 'importlib'), (30, 'sys.path')]; an
+-    empty list when the file is clean. Refuses (ImportCheckRefused) a file that cannot be read as Python.
++    empty list when the file is clean. sys.path is found under any name the file imports sys by ("import sys as
++    s", then "s.path"). The check is against accidents; it does not try to defeat a file written to deceive it. Refuses (ImportCheckRefused) a file that cannot be read as Python.
+     """
+     found = set()
+-    for node in ast.walk(_parse(tree_root, file_path)):
++    parsed = _parse(tree_root, file_path)
++    # The names the file knows the sys module by: 'sys', and any other name an "import sys as ..." gives it.
++    names_of_path_module = {PATH_MODULE} | {alias.asname for node in ast.walk(parsed) if isinstance(node, ast.Import)
++                                           for alias in node.names if alias.name == PATH_MODULE and alias.asname}
++    for node in ast.walk(parsed):
+         if isinstance(node, ast.Name) and node.id in FORBIDDEN_NAMES:
+             found.add((node.lineno, node.id))
+         elif isinstance(node, ast.Attribute) and node.attr in FORBIDDEN_NAMES:
+@@ -135,7 +140,7 @@
+             if node.module == PATH_MODULE and any(alias.name == PATH_ATTRIBUTE for alias in node.names):
+                 found.add((node.lineno, f'{PATH_MODULE}.{PATH_ATTRIBUTE}'))
+         if (isinstance(node, ast.Attribute) and node.attr == PATH_ATTRIBUTE
+-                and isinstance(node.value, ast.Name) and node.value.id == PATH_MODULE):
++                and isinstance(node.value, ast.Name) and node.value.id in names_of_path_module):
+             found.add((node.lineno, f'{PATH_MODULE}.{PATH_ATTRIBUTE}'))
+     return sorted(found)
+ 
+
+--- reviewed_overlay/deploy/make_installable.py
++++ overlay/deploy/make_installable.py
+@@ -4,7 +4,9 @@
+     It reads what the owner typed after Make_Installable.bat, makes (or with --unmark removes) the readiness
+     marker of each thing named, says what it did for each on a line of its own, and ends with one line of
+     counts. One thing that is refused does not stop the others; the exit code then says that something was
+-    refused. It works in DEV only and changes nothing but markers.
++    refused. It works in DEV only and changes nothing but markers. Before it makes or removes any marker it
++    refuses a tree in which an operation was left unfinished or the orphan marker lies, as every command that
++    writes in a tree does.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 4 (Make_Installable.bat <family> <variant>;
+@@ -13,6 +15,8 @@
+ Which of the project's own modules it uses
+     install_readiness          the markers themselves
+     research.variant_folders   the patterns a family's and a variant's folder name must match
++    research.launch_guard      check_no_unfinished_operation
++    research.job_lock          check_no_orphan_marker, LaunchRefused
+ 
+ What uses it
+     deploy/deploy_command.py, for Make_Installable.bat; and its tests.
+@@ -22,6 +26,8 @@
+ from pathlib import Path
+ 
+ from research import variant_folders
++from research.job_lock import LaunchRefused, check_no_orphan_marker
++from research.launch_guard import check_no_unfinished_operation
+ 
+ import install_readiness
+ 
+@@ -73,13 +79,20 @@
+     arguments: the words the owner typed after Make_Installable.bat.  tree_root: DEV's folder (the caller has
+     checked that this tree is DEV).  say: where the lines for the owner go.
+     Returns the exit code: 0 everything named was marked (or unmarked, or was so already); 1 at least one thing
+-    was refused, the others having been done; 2 what was typed could not be understood, and nothing was done.
++    was refused, the others having been done; 2 what was typed could not be understood, or an operation was left
++    unfinished in the tree, or its orphan marker lies there: nothing was done.
+     """
+     unmark = UNMARK_OPTION in arguments
+     try:
+         named = things_named([word for word in arguments if word != UNMARK_OPTION])
+     except ValueError as problem:
+         say(f'REFUSED: {problem} Nothing was done.\n{USAGE}')
++        return EXIT_USAGE
++    try:
++        check_no_unfinished_operation(tree_root)
++        check_no_orphan_marker(tree_root)
++    except LaunchRefused as refusal:
++        say(f'REFUSED: {refusal} No readiness marker was made or removed.')
+         return EXIT_USAGE
+     names = ', '.join(thing if thing == INFRA_WORD else '/'.join(thing) for thing in named)
+     doing = 'to remove the readiness marker of' if unmark else 'to mark ready'
+
+--- reviewed_overlay/src/research/environment_marker.py
++++ overlay/src/research/environment_marker.py
+@@ -10,8 +10,12 @@
+ 
+     The digest is taken over a fixed inventory (specification section 13): pyvenv.cfg; every file under Scripts;
+     every file under Lib/site-packages except Python's cache folders and compiled files; and the base Python's
+-    version and program file. The marker lies beside pyvenv.cfg, outside all of these, so writing it changes
+-    nothing that is hashed.
++    version and the bytes of its program file. An environment that lacks one of those three parts, or a folder or
++    file of them that cannot be read, is refused: a digest is never given for a part of the inventory. The marker
++    lies beside pyvenv.cfg, outside all of these, so writing it changes nothing that is hashed.
++
++    The layout is Windows' own (Scripts, Lib\site-packages), which is where the project runs. The tests give it
++    invented folders of that layout; nothing here verifies an environment laid out as Linux lays one out.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 13 ("Verified before use"; "The digest does
+@@ -59,29 +63,52 @@
+     what was found, where, and what to do."""
+ 
+ 
++def base_python() -> tuple:
++    """The base Python this environment runs on: its version and its program file, for example
++    ('3.13.1 (tags/v3.13.1:0671451, ...) [MSC v.1942 64 bit (AMD64)]', 'C:\\Python313\\python.exe'). On Windows
++    the environment's own python.exe starts that program, so it is part of what a forecast was computed with."""
++    return sys.version, getattr(sys, '_base_executable', None) or sys.executable
++
++
+ def _inventory(venv_dir: Path) -> list:
+     """The files of the fixed inventory, as paths from the environment's folder with forward slashes, sorted; for
+-    example ['Lib/site-packages/numpy/__init__.py', 'Scripts/python.exe', 'pyvenv.cfg']. A part that does not
+-    exist contributes nothing."""
+-    found = []
++    example ['Lib/site-packages/numpy/__init__.py', 'Scripts/python.exe', 'pyvenv.cfg'].
++    Refuses (EnvironmentRefused) an environment that lacks one of the three parts, naming each part missing."""
++    found, parts_found = [], set()
+     for entry in sorted(os.listdir(venv_dir)):
+         lowered = entry.lower()
+         if lowered == SETTINGS_FILE_OF_AN_ENVIRONMENT and (venv_dir / entry).is_file():
+             found.append(entry)
+-        elif lowered == PROGRAMS_FOLDER.lower():
++            parts_found.add(SETTINGS_FILE_OF_AN_ENVIRONMENT)
++        elif lowered == PROGRAMS_FOLDER.lower() and (venv_dir / entry).is_dir():
+             found.extend(_files_below(venv_dir, entry, leave_out_caches=False))
+-        elif lowered == PACKAGES_FOLDER[0].lower():
++            parts_found.add(PROGRAMS_FOLDER)
++        elif lowered == PACKAGES_FOLDER[0].lower() and (venv_dir / entry).is_dir():
+             for inner in sorted(os.listdir(venv_dir / entry)):
+-                if inner.lower() == PACKAGES_FOLDER[1].lower():
++                if inner.lower() == PACKAGES_FOLDER[1].lower() and (venv_dir / entry / inner).is_dir():
+                     found.extend(_files_below(venv_dir, f'{entry}/{inner}', leave_out_caches=True))
++                    parts_found.add('/'.join(PACKAGES_FOLDER))
++    missing = [part for part in (SETTINGS_FILE_OF_AN_ENVIRONMENT, PROGRAMS_FOLDER, '/'.join(PACKAGES_FOLDER))
++               if part not in parts_found]
++    if missing:
++        raise EnvironmentRefused(f'{venv_dir}: this is not a whole Python environment of this tree: it has no '
++                                 f'{" and no ".join(missing)}. Nothing was started. Build it in this tree with '
++                                 f'create_venv.bat and install_upgrade_dependencies_into_venv.bat.')
+     return sorted(found)
++
++
++def _stop_at_a_folder_that_cannot_be_read(error: OSError) -> None:
++    """What os.walk is given to call when it cannot list a folder: the error goes on to the caller, so that a
++    folder that cannot be read refuses the digest instead of being left out of it."""
++    raise error
+ 
+ 
+ def _files_below(venv_dir: Path, folder: str, leave_out_caches: bool) -> list:
+     """Every file under a folder of the environment, as paths from the environment's folder with forward slashes;
+-    with leave_out_caches, Python's cache folders are not entered and compiled files are passed over."""
++    with leave_out_caches, Python's cache folders are not entered and compiled files are passed over. A folder
++    that cannot be listed raises its OSError."""
+     files = []
+-    for current, folders, names in os.walk(venv_dir / folder):
++    for current, folders, names in os.walk(venv_dir / folder, onerror=_stop_at_a_folder_that_cannot_be_read):
+         if leave_out_caches:
+             folders[:] = [name for name in folders if name != CACHE_FOLDER_NAME]
+         for name in names:
+@@ -96,11 +123,13 @@
+     which can take minutes when the files have not been read lately; the caller says so before it calls.
+ 
+     venv_dir: the environment's folder, as the tree's settings name it.
+-    Returns (digest, files read): 64 hexadecimal characters and a count, for example ('9c1f...e07a', 11997). The
++    Returns (digest, files read): 64 hexadecimal characters and a count, for example ('9c1f...e07a', 11998). The
+     digest is the SHA-256 of one line a file, '<path><TAB><sha256><LF>', sorted by path, followed by one line for
+-    the base Python: 'base python<TAB><its version><TAB><its program file><LF>'. The same environment under the
+-    same base Python gives the same digest; the marker is not in the inventory.
+-    Refuses (EnvironmentRefused) an environment folder that does not exist or a file that cannot be read.
++    the base Python: 'base python<TAB><its version><TAB><its program file><TAB><the sha256 of that file's
++    bytes><LF>'. The count is of the files whose bytes were hashed, the base Python's program file among them.
++    The same environment under the same base Python gives the same digest; the marker is not in the inventory.
++    Refuses (EnvironmentRefused): an environment folder that does not exist; one that lacks pyvenv.cfg, Scripts or
++    Lib/site-packages; a folder or a file of the inventory, or the base Python's program file, that cannot be read.
+     """
+     venv_dir = Path(venv_dir)
+     if not venv_dir.is_dir():
+@@ -111,13 +140,14 @@
+         paths = _inventory(venv_dir)
+         for path in paths:
+             lines.append(f'{path}\t{hashlib.sha256((venv_dir / path).read_bytes()).hexdigest()}\n')
++        version, program = base_python()
++        program_digest = hashlib.sha256(Path(program).read_bytes()).hexdigest()
++        lines.append(f'base python\t{version}\t{program}\t{program_digest}\n')
+     except OSError as error:
+-        raise EnvironmentRefused(f'{venv_dir}: a file of this tree\'s Python environment could not be read '
+-                                 f'({error}). Nothing was started. Close whatever holds it and run the command '
+-                                 f'again.') from None
+-    base_program = getattr(sys, '_base_executable', None) or sys.executable
+-    lines.append(f'base python\t{sys.version}\t{base_program}\n')
+-    return hashlib.sha256(''.join(lines).encode('utf-8')).hexdigest(), len(paths)
++        raise EnvironmentRefused(f'{venv_dir}: a folder or a file of this tree\'s Python environment, or the base '
++                                 f'Python\'s program file, could not be read ({error}). Nothing was started. Close '
++                                 f'whatever holds it and run the command again.') from None
++    return hashlib.sha256(''.join(lines).encode('utf-8')).hexdigest(), len(paths) + 1
+ 
+ 
+ def installed_distributions() -> list:
+
+--- reviewed_overlay/src/research/launch_guard.py
++++ overlay/src/research/launch_guard.py
+@@ -7,9 +7,12 @@
+     packages installed now. AT THE START OF A JOB, under the job lock: the environment's digest is computed once
+     (it goes into every forecast the job makes); in QA and PROD it must equal the marker's, and the tree's
+     software must match its list of installed files with nothing else under src; and, in every tree, no other
+-    Python process of this tree may be running. Every refusal says what was found and what to do. The guard
+-    changes nothing, repairs nothing and ends no process. A tree checks only itself: its own folder, its own
+-    environment and its own records.
++    Python process of this tree may be running; and the check for an unfinished operation is made again there,
++    since one may have begun after the launch. The commands that write in a tree without being a job make the
++    same small checks before they write: a withdrawal (no unfinished operation; in QA and PROD the software
++    matches its list) and Make_Installable in DEV (no unfinished operation, no orphan marker). Every refusal says
++    what was found and what to do. The guard changes nothing, repairs nothing and ends no process. A tree checks
++    only itself: its own folder, its own environment and its own records.
+ 
+     DEV has no marker and no list of installed files (nothing is installed there), so those two checks are QA's
+     and PROD's; everything else is the same in every tree.
+@@ -28,8 +31,9 @@
+     research.process_rule        no other Python process of this tree
+ 
+ What uses it
+-    src/research_command.py (every launch); research/research_job.py (the start of a job); and its tests. The
+-    commands of the later slices of build step 3 call the same two functions.
++    src/research_command.py (every launch); research/research_job.py (the start of a job); research/withdraw.py
++    and deploy/make_installable.py (before they write); deploy/check_tree.py (which only reports); and its tests.
++    The commands of the later slices of build step 3 call the same functions.
+ """
+ from __future__ import annotations
+ 
+@@ -98,6 +102,25 @@
+     return settings
+ 
+ 
++def check_software_is_as_installed(settings: TreeSettings) -> None:
++    """In QA and PROD: the tree's software matches its list of installed files, with nothing else under src
++    (deployment design section 8, last row). In DEV nothing is installed and nothing is asked.
++
++    settings: the tree's settings.
++    Refuses (GuardRefused): a tree without its list, or a list that is not one; any difference, every one named.
++    """
++    if settings.role not in INSTALLED_ROLES:
++        return
++    try:
++        differences = installed_files.differences(settings.tree_root, installed_files.read_list(settings.tree_root))
++    except installed_files.InstalledFilesRefused as refusal:
++        raise GuardRefused(str(refusal)) from None
++    if differences:
++        raise GuardRefused(f'this tree\'s software does not match its list of installed files '
++                           f'({settings.tree_root / installed_files.LIST_PATH}); {len(differences)} '
++                           f'difference(s):\n  ' + '\n  '.join(differences) + f'\n{installed_files.WHAT_TO_DO}')
++
++
+ def check_at_job_start(settings: TreeSettings, say) -> str:
+     """The checks at the start of a research job, made while the job holds the tree's job lock (deployment design
+     section 9, second paragraph). The orphan marker and the lock itself are the job's own first steps.
+@@ -105,25 +128,19 @@
+     settings: the tree's settings.  say: the function that prints a line for the owner.
+     Returns the environment's digest, which the job writes into the envelope of every forecast it makes; for
+     example '9c1f...e07a'.
+-    Refuses: an environment that cannot be read, or in QA and PROD is not the one that was verified
+-    (EnvironmentRefused); in QA and PROD, software that differs from the tree's list of installed files, every
+-    difference named (GuardRefused); another Python process of this tree (ProcessRuleRefused).
++    Refuses: an operation left unfinished in the tree, also one begun since the launch (GuardRefused); an
++    environment that cannot be read, or in QA and PROD is not the one that was verified (EnvironmentRefused); in
++    QA and PROD, software that differs from the tree's list of installed files, every difference named
++    (GuardRefused); another Python process of this tree (ProcessRuleRefused).
+     """
++    check_no_unfinished_operation(settings.tree_root)
+     say(f'Reading this tree\'s own Python environment at {settings.venv_dir}. It can take two or three minutes '
+         f'when its files have not been read lately.')
+     digest, files_read = environment_marker.environment_digest(settings.venv_dir)
+     say(f'The environment: {files_read} file(s) read; digest {digest}.')
+     if settings.role in INSTALLED_ROLES:
+         environment_marker.check_digest_is_the_markers(settings.venv_dir, digest)
+-        try:
+-            differences = installed_files.differences(settings.tree_root,
+-                                                      installed_files.read_list(settings.tree_root))
+-        except installed_files.InstalledFilesRefused as refusal:
+-            raise GuardRefused(str(refusal)) from None
+-        if differences:
+-            raise GuardRefused(f'this tree\'s software does not match its list of installed files '
+-                               f'({settings.tree_root / installed_files.LIST_PATH}); {len(differences)} '
+-                               f'difference(s):\n  ' + '\n  '.join(differences) + f'\n{installed_files.WHAT_TO_DO}')
++        check_software_is_as_installed(settings)
+         say('The environment is the one that was verified, and the software matches its list of installed files.')
+     looked_at = process_rule.check_no_other_process_of_tree(settings.tree_root)
+     say(f'No other Python process of this tree is running ({looked_at} processes of this PC looked at).')
+
+--- reviewed_overlay/src/research/process_rule.py
++++ overlay/src/research/process_rule.py
+@@ -40,6 +40,9 @@
+ 
+ # The names of a Python program on Windows. Elsewhere (the cloud's tests) any program name beginning "python".
+ WINDOWS_PYTHON_NAMES = ('python.exe', 'pythonw.exe')
++# The marks that, like a letter or a digit, can continue a folder's name: after the tree's path in a command line
++# they mean that another, longer-named folder is spoken of (T:\a_p_r_i_r_backups is not T:\a_p_r_i_r).
++NAME_CONTINUES = '_-.~'
+ # What the owner is told to do about a process that is listed. No program of the project ends a process.
+ WHAT_TO_DO = ('Let it finish, or close it yourself in its own window; no program of this project ends a process. '
+               'Then run the command again.')
+@@ -144,9 +147,22 @@
+ 
+ 
+ def _names_the_folder(command_line, folder: Path) -> bool:
+-    """True if any argument of a command line holds the folder's path as text (case set aside)."""
+-    wanted = os.path.normcase(os.path.abspath(str(folder))).lower()
+-    return any(wanted in os.path.normcase(argument).lower() for argument in (command_line or ()))
++    """True if any argument of a command line holds the folder's path as text (case set aside), ending where a
++    path ends. T:\\a_p_r_i_r is named by 'T:\\a_p_r_i_r', 'T:\\a_p_r_i_r\\Run_Research.bat' and
++    'cd /d "T:\\a_p_r_i_r"&& ...'; it is not named by 'T:\\a_p_r_i_r_backups\\QA', which is another folder whose
++    name only begins the same way. The text is taken as the folder's path unless the character after it could
++    continue a folder's name (a letter, a digit, or one of _ - . ~): a separator, a quote, a blank or any other
++    mark ends it."""
++    wanted = os.path.normcase(os.path.abspath(str(folder))).lower().rstrip('\\/')
++    for argument in command_line or ():
++        text = os.path.normcase(argument).lower()
++        at = text.find(wanted)
++        while at >= 0:
++            after = text[at + len(wanted):at + len(wanted) + 1]
++            if not after or not (after.isalnum() or after in NAME_CONTINUES):
++                return True
++            at = text.find(wanted, at + 1)
++    return False
+ 
+ 
+ def processes_of_tree(table, tree_root: Path, left_out) -> list:
+
+--- main/src/research/withdraw.py
++++ overlay/src/research/withdraw.py
+@@ -6,6 +6,9 @@
+     plus one), asks for one typed confirmation, and then rewrites the variant's status file. That is the whole
+     mechanism: nothing is written into any list, nothing is removed, and no command reverses it. From before the
+     draw is shown until the status file is written it holds the tree's job lock and the updater's own lock.
++    Holding them, and before it reads or writes anything else, it refuses a tree in which an operation was left
++    unfinished and, in QA and PROD, a tree whose software does not match its list of installed files: a one-way
++    change is not made in a tree that is not in order.
+ 
+ Which part of the specification it carries out
+     doc/Predictive_Randomness_System_Specification_v0_6.md section 11 (and 3.5: who writes the status file).
+@@ -13,6 +16,7 @@
+ Which of the project's own modules it uses
+     research.settings          read_settings: the tree's role and root
+     research.job_lock          the job lock, the updater's lock, the orphan-marker check
++    research.launch_guard      no unfinished operation; the software matches its list of installed files
+     research.variant_folders   read_variant: the variant and the games it supports
+     research.status_file       read_status, with_withdrawal, write_status, discard_unfinished_writes
+     research.reader            results_on_file, results_paths: the last draw on file
+@@ -31,6 +35,7 @@
+ 
+ from research.job_lock import (RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, check_working_folders,
+                                job_lock, updater_lock)
++from research.launch_guard import check_no_unfinished_operation, check_software_is_as_installed
+ from research.reader import ResultsRefused, results_on_file, results_paths
+ from research.settings import SettingsRefused, read_settings
+ from research.status_file import (STATUS_FILE_NAME, StatusRefused, discard_unfinished_writes, read_status,
+@@ -116,6 +121,8 @@
+         check_no_orphan_marker(tree_root)
+         check_working_folders(tree_root)
+         with job_lock(tree_root, 'withdrawal', stamp), updater_lock(tree_root, 'withdrawal', stamp):
++            check_no_unfinished_operation(tree_root)
++            check_software_is_as_installed(settings)
+             for leftover in discard_unfinished_writes(tree_root):
+                 say(f'  An earlier status write was interrupted before it changed anything; its unfinished copy was '
+                     f'removed ({leftover}).')
+
+--- reviewed_overlay/tests/research_fixtures.py
++++ overlay/tests/research_fixtures.py
+@@ -154,8 +154,26 @@
+     return raw
+ 
+ 
++# An invented Python environment in the Windows layout, the three parts of the fixed inventory (specification 13),
++# small enough to be hashed in no time: {path from the environment's folder: its bytes}.
++INVENTED_ENVIRONMENT = {'pyvenv.cfg': b'home = C:\\Invented\\Python\r\n',
++                        'Scripts/python.exe': b'MZ an invented program file',
++                        'Lib/site-packages/invented_package/__init__.py': b'VALUE = 1\r\n'}
++
++
++def make_invented_environment(venv_dir: Path) -> Path:
++    """Make an invented environment folder in the Windows layout (pyvenv.cfg, Scripts, Lib/site-packages), so
++    that an invented tree has an environment whose digest can be taken. It is not a Python that could run.
++    venv_dir: the folder to make.  Returns it."""
++    for relative, data in INVENTED_ENVIRONMENT.items():
++        (Path(venv_dir) / relative).parent.mkdir(parents=True, exist_ok=True)
++        (Path(venv_dir) / relative).write_bytes(data)
++    return Path(venv_dir)
++
++
+ def make_tree(root: Path, role: str = 'DEV', copy_from: Path | None = None) -> Path:
+-    """Make an empty invented tree: its settings file, a small manifest and the folders the engine expects.
++    """Make an empty invented tree: its settings file, a small manifest, an invented environment folder and the
++    folders the engine expects.
+ 
+     root: an existing empty folder.  role: 'DEV', 'QA' or 'PROD'.  copy_from: the tree its results are copied
+     from, if any.  Returns the tree's real path.
+@@ -163,7 +181,7 @@
+     tree = Path(root).resolve()
+     (tree / 'src' / 'methods').mkdir(parents=True)
+     (tree / 'deploy').mkdir()
+-    (tree / '.venv').mkdir()
++    make_invented_environment(tree / '.venv')
+     for name, text in (('toy_forecast_code.py', '# invented forecasting code\n'),
+                        ('toy_derived_code.py', '# invented scoring code\n'), ('toy_other.py', '# a launcher\n')):
+         (tree / 'src' / name).write_text(text, encoding='ascii')
+
+--- reviewed_overlay/tests/test_trees_check_tree.py
++++ overlay/tests/test_trees_check_tree.py
+@@ -127,7 +127,8 @@
+         code, text = self.look('QA')
+         self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
+         self.assertIn('Drift: 0 difference(s)', text)
+-        self.assertIn('Nothing is wrong that this command looks for.', text)
++        self.assertIn('Nothing was found by the checks this command makes.', text)
++        self.assertIn('it does not say that the tree is ready to run', text)
+ 
+     def test_a_helper_changed_outside_the_tools_is_found_and_the_way_back_is_said(self):
+         with open(self.qa / 'src' / 'methods' / HELPER, 'ab') as handle:
+@@ -282,13 +283,19 @@
+         self.assertIn('Locks and unfinished operations: 1 present.', text)
+         self.assertIn('did not finish in this tree. Run that same command again from DEV', text)
+ 
+-    def test_an_environment_without_its_marker_is_said_to_be_not_verified_and_one_with_it_verified(self):
++    def test_an_environment_without_its_marker_is_not_verified_and_a_marker_is_only_said_to_be_present(self):
+         self.assertIn('Environment: NOT VERIFIED; every launcher of this tree refuses', self.look('QA')[1])
+         environment_marker.write_marker(self.qa / '.venv')
+         code, text = self.look('QA')
+-        self.assertIn('Environment: verified;', text)
+-        self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
+-        self.assertIn('Environment: DEV\'s environment has no verified marker', self.look('DEV')[1])
++        self.assertIn('Environment: verification marker present', text)
++        self.assertIn('This command did not check the environment\'s files or packages against it', text)
++        self.assertNotIn('Environment: verified', text)
++        self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
++        (self.qa / '.venv' / 'Scripts' / 'added.exe').write_bytes(b'MZ')     # changed after it was verified:
++        again = self.look('QA')[1]                                           # this command cannot know, and
++        self.assertIn('Environment: verification marker present', again)     # does not say "verified"
++        self.assertNotIn('Environment: verified', again)
++        self.assertIn('Environment: DEV\'s environment has no verification marker', self.look('DEV')[1])
+ 
+ 
+ if __name__ == '__main__':
+
+--- reviewed_overlay/tests/test_trees_launch_guard.py
++++ overlay/tests/test_trees_launch_guard.py
+@@ -21,9 +21,11 @@
+ import tempfile
+ import unittest
+ from pathlib import Path
++from unittest import mock
+ 
+ import research_fixtures as fx
+-from research import environment_marker, installed_files, launch_guard, process_rule, research_job, settings
++from research import (environment_marker, installed_files, job_lock, launch_guard, process_rule, research_job,
++                      settings, withdraw)
+ from research.process_rule import ProcessSeen
+ 
+ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
+@@ -58,6 +60,24 @@
+ 
+     def test_unrelated_python_work_on_the_pc_does_not_count(self):
+         self.assertEqual(self.listed(self.python(10), self.python(11, working_folder=str(self.tree) + '_backups')), [])
++
++    def test_a_command_line_naming_a_folder_whose_name_only_begins_like_the_trees_does_not_count(self):
++        sibling = str(self.tree) + '_backups'                # as T:\\a_p_r_i_r_backups lies beside T:\\a_p_r_i_r
++        for number, argument in enumerate((sibling, os.path.join(sibling, 'QA'), f'--to="{sibling}"',
++                                           str(self.tree) + '.old', str(self.tree) + '2')):
++            with self.subTest(argument=argument):
++                self.assertEqual(self.listed(self.python(10 + number, command_line=(PYTHON_NAME, 'copy.py', argument))),
++                                 [])
++        window = ProcessSeen(process_id=5, parent_id=1, name='cmd.exe', command_line=('cmd.exe', '/c', f'dir {sibling}'))
++        self.assertEqual(self.listed(window, self.python(30, parent=5)), [])
++
++    def test_the_trees_path_is_named_wherever_a_path_ends_after_it(self):
++        for number, argument in enumerate((str(self.tree), str(self.tree) + os.sep, f'"{self.tree}"',
++                                           f'cd /d {self.tree}&& Run_Research.bat', f'--tree={self.tree};later',
++                                           f'{self.tree}_backups {self.tree / "x.py"}')):
++            with self.subTest(argument=argument):
++                self.assertEqual(self.listed(self.python(10 + number, command_line=(PYTHON_NAME, argument))),
++                                 [(10 + number, 'its command line names the tree')])
+ 
+     def test_a_python_whose_program_file_is_the_trees_own_is_listed(self):
+         found = self.listed(self.python(10, program=str(self.tree / '.venv' / 'Scripts' / PYTHON_NAME)))
+@@ -187,7 +207,7 @@
+ 
+     def test_it_counts_the_files_of_the_inventory_and_is_the_same_when_nothing_changed(self):
+         digest, files_read = environment_marker.environment_digest(self.venv)
+-        self.assertEqual(files_read, 4)
++        self.assertEqual(files_read, 5)                      # the four files of the inventory and the base program
+         self.assertRegex(digest, r'^[0-9a-f]{64}$')
+         self.assertEqual(self.digest(), digest)
+ 
+@@ -213,6 +233,54 @@
+         (self.venv / 'Include').mkdir()
+         (self.venv / 'Include' / 'note.txt').write_bytes(b'not in the inventory\r\n')
+         self.assertEqual(self.digest(), before)
++
++    def test_the_base_pythons_program_file_enters_by_its_bytes_and_not_only_by_its_path_and_version(self):
++        program = Path(self.folder.name).resolve() / 'base' / 'python.exe'       # an invented base program file
++        program.parent.mkdir()
++        program.write_bytes(b'MZ the base Python as it was when the environment was verified')
++        with mock.patch.object(environment_marker, 'base_python', lambda: ('3.15.0 invented', str(program))):
++            before = self.digest()
++            self.assertEqual(self.digest(), before)
++            program.write_bytes(b'MZ another program put at the same path, saying the same version')
++            self.assertNotEqual(self.digest(), before)
++            program.write_bytes(b'MZ the base Python as it was when the environment was verified')
++            self.assertEqual(self.digest(), before)
++            program.unlink()
++            with self.assertRaisesRegex(environment_marker.EnvironmentRefused, 'base Python\'s program file, could '
++                                                                               'not be read'):
++                self.digest()
++            program.write_bytes(b'MZ the base Python as it was when the environment was verified')
++        with mock.patch.object(environment_marker, 'base_python', lambda: ('3.15.1 invented', str(program))):
++            self.assertNotEqual(self.digest(), before)       # another version at the same path, the same bytes
++
++    def test_an_environment_that_lacks_a_part_of_the_inventory_refuses_and_names_the_part(self):
++        aside = self.venv.parent / 'kept_aside'
++        for part in ('pyvenv.cfg', 'Scripts', 'Lib/site-packages'):
++            with self.subTest(part=part):
++                os.rename(self.venv / part, aside)
++                with self.assertRaisesRegex(environment_marker.EnvironmentRefused,
++                                            f'it has no {part.replace(".", chr(92) + ".")}' + r'\. Nothing was started'):
++                    self.digest()
++                with self.assertRaises(environment_marker.EnvironmentRefused):
++                    environment_marker.write_marker(self.venv)
++                self.assertFalse((self.venv / 'ENVIRONMENT_VERIFIED.json').exists())
++                os.rename(aside, self.venv / part)
++        self.assertRegex(self.digest(), r'^[0-9a-f]{64}$')
++
++    def test_a_folder_of_the_inventory_that_cannot_be_listed_refuses_and_is_not_left_out(self):
++        closed = str(self.venv / 'Lib' / 'site-packages' / 'toy')
++        listing = os.scandir
++
++        def scandir(path='.'):
++            """As os.scandir, but the one folder cannot be listed, as a folder held or forbidden on Windows."""
++            if os.fspath(path) == closed:
++                raise PermissionError(13, 'Access is denied', closed)
++            return listing(path)
++
++        with mock.patch('os.scandir', scandir):
++            with self.assertRaisesRegex(environment_marker.EnvironmentRefused, 'could not be read'):
++                self.digest()
++        self.assertRegex(self.digest(), r'^[0-9a-f]{64}$')
+ 
+     def test_writing_the_marker_changes_nothing_that_is_hashed(self):
+         before = self.digest()
+@@ -374,9 +442,15 @@
+ 
+     def test_an_environment_file_changed_after_verification_refuses_the_job(self):
+         tree = self.installed()
+-        (tree / '.venv' / 'Scripts').mkdir()
+         (tree / '.venv' / 'Scripts' / 'added.exe').write_bytes(b'MZ')
+         self.refused(tree, 'environment not verified')
++
++    def test_an_operation_left_unfinished_refuses_the_job_itself_under_its_lock_and_not_only_the_launcher(self):
++        tree = self.tree(role='DEV', with_source=False)      # the job is run here without its launcher
++        (tree / 'records').mkdir(exist_ok=True)
++        (tree / launch_guard.UNFINISHED_OPERATIONS[1][0]).write_bytes(b'{}\r\n')
++        text = self.refused(tree, 'a historical walk-forward rerun did not finish in this tree')
++        self.assertNotIn('Reading this tree\'s own Python environment', text)
+ 
+     def test_an_environment_with_no_marker_refuses_the_job(self):
+         tree = self.installed()
+@@ -407,5 +481,105 @@
+         self.assertEqual(settings.ROLES, ('DEV', 'QA', 'PROD'))
+ 
+ 
++class AWithdrawalInAnInstalledTree(fx.JobCase):
++    """Deployment design section 8 (last row) and specification 11: a withdrawal is one-way, so it is not written
++    in a QA or PROD tree whose software is not the software that was installed, nor in any tree while an operation
++    is unfinished. It checks while it holds its two locks, before it reads, tidies or writes anything; it reads no
++    file of the environment and no process table (deployment design section 9 gives it its own rule)."""
++
++    REASON = 'a test of the guard'
++
++    def withdrawal(self, tree: Path) -> tuple:
++        """Try to withdraw TOY_B_V1 by the command's own route, confirming when asked; return (exit code, what it
++        said as one text)."""
++        said = []
++        code = withdraw.withdraw(tree, [('E_901', 'TOY_B_V1')], (fx.GAME,), self.REASON,
++                                 ask=lambda question: 'WITHDRAW', say=said.append, now=lambda: fx.FIXED_TIME)
++        return code, '\n'.join(said)
++
++    def everything_the_withdrawal_could_change(self, tree: Path) -> dict:
++        """The software with its status files, and the records with the tree's log and the staging folder."""
++        return {**fx.files_under(tree, 'src'), **fx.files_under(tree, 'records')}
++
++    def refused_with_nothing_changed(self, tree: Path, *words) -> None:
++        """The withdrawal refuses naming each of `words`; no status, no log line and no staged file changes."""
++        before = self.everything_the_withdrawal_could_change(tree)
++        code, text = self.withdrawal(tree)
++        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, text)
++        for word in words:
++            self.assertIn(word, text)
++        self.assertIn('refused; no status file was changed by this command', text)
++        self.assertEqual(self.everything_the_withdrawal_could_change(tree), before)
++        self.assertIsNone(self.status(tree, 'TOY_B_V1').withdrawn_from)
++
++    def test_in_a_tree_as_installed_the_withdrawal_is_written_and_logged(self):
++        tree = self.tree()
++        code, text = self.withdrawal(tree)
++        self.assertEqual(code, withdraw.EXIT_DONE, text)
++        self.assertEqual(self.status(tree, 'TOY_B_V1').withdrawn_from, fx.LAST_AT_START + 1)
++        self.assertIn('"operation": "WITHDRAWAL"', (tree / 'records' / withdraw.TREE_LOG_NAME).read_text('ascii'))
++
++    def test_a_helper_changed_outside_the_tools_refuses_the_withdrawal_before_any_status_or_log_change(self):
++        tree = self.tree()
++        with open(tree / 'src' / 'toy_forecast_code.py', 'ab') as handle:
++            handle.write(b'# changed by hand\r\n')
++        self.refused_with_nothing_changed(tree, 'src/toy_forecast_code.py: its bytes are not the bytes that were '
++                                                'installed', 'restore from a backup you choose')
++
++    def test_an_unlisted_python_file_under_src_refuses_the_withdrawal(self):
++        tree = self.tree()
++        (tree / 'src' / 'stray.py').write_bytes(b'# not installed\r\n')
++        self.refused_with_nothing_changed(tree, 'src/stray.py: it lies under src and is not on the list of '
++                                                'installed files')
++
++    def test_a_tree_without_its_list_refuses_the_withdrawal(self):
++        tree = self.tree()
++        (tree / installed_files.LIST_PATH).unlink()
++        self.refused_with_nothing_changed(tree, 'this tree has no list of installed files')
++
++    def test_the_refusal_comes_before_an_interrupted_status_write_is_tidied_away(self):
++        tree = self.tree()
++        staged = tree / 'records' / 'status_staging' / 'E_901__TOY_B_V1__VARIANT_STATUS.ini.writing'
++        staged.parent.mkdir(parents=True, exist_ok=True)
++        staged.write_bytes(b'left by an interrupted status write\r\n')
++        (tree / 'src' / 'stray.py').write_bytes(b'# not installed\r\n')
++        self.refused_with_nothing_changed(tree, 'src/stray.py')
++        self.assertTrue(staged.exists())
++
++    def test_an_operation_left_unfinished_refuses_the_withdrawal_in_every_tree(self):
++        for role in ('QA', 'DEV'):
++            with self.subTest(role=role):
++                tree = self.tree(role=role, name=f'tree_{role}')
++                barrier = tree / launch_guard.UNFINISHED_OPERATIONS[0][0]
++                barrier.parent.mkdir(exist_ok=True)
++                barrier.write_bytes(b'{}\r\n')
++                self.refused_with_nothing_changed(tree, f'{barrier} exists', 'did not finish in this tree')
++
++    def test_the_orphan_marker_still_refuses_the_withdrawal(self):
++        tree = self.tree()
++        marker = tree / job_lock.ORPHAN_MARKER
++        marker.parent.mkdir(parents=True)
++        marker.write_bytes(b'[]\r\n')
++        code, text = self.withdrawal(tree)
++        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, text)
++        self.assertIn('orphan marker present', text)
++        self.assertIsNone(self.status(tree, 'TOY_B_V1').withdrawn_from)
++
++    def test_in_dev_no_list_is_asked_of_a_withdrawal(self):
++        tree = self.tree(role='DEV')
++        self.assertFalse((tree / installed_files.LIST_PATH).exists())
++        self.assertEqual(self.withdrawal(tree)[0], withdraw.EXIT_DONE)
++
++    def test_a_withdrawal_reads_no_file_of_the_environment_and_no_process_table(self):
++        tree = self.tree()
++
++        def never(*arguments):
++            raise AssertionError('a withdrawal must not take the environment\'s digest or read the process table')
++
++        with mock.patch.object(environment_marker, 'environment_digest', never), \
++                mock.patch.object(process_rule, 'read_process_table', never):
++            self.assertEqual(self.withdrawal(tree)[0], withdraw.EXIT_DONE)
++
++
+ if __name__ == '__main__':
+     unittest.main()
+
+--- reviewed_overlay/tests/test_trees_readiness.py
++++ overlay/tests/test_trees_readiness.py
+@@ -30,7 +30,7 @@
+ import install_readiness                                    # noqa: E402
+ import make_installable                                     # noqa: E402
+ import research_fixtures as fixtures                        # noqa: E402
+-from research import code_identity, variant_folders        # noqa: E402
++from research import code_identity, job_lock, launch_guard, variant_folders        # noqa: E402
+ 
+ FAMILY, VARIANT = 'E_901', 'TOY_COUNTS_V1'
+ 
+@@ -258,7 +258,9 @@
+                              ("exec('import json')", 'exec'), ("X = eval('1')", 'eval'),
+                              ("import builtins\nX = builtins.eval('1')", 'eval'),
+                              ("import sys\nsys.path.insert(0, 'x')", r'sys\.path'), ('from sys import path', r'sys\.path'),
+-                             ('import sys\nY = sys.path', r'sys\.path')):
++                             ('import sys\nY = sys.path', r'sys\.path'),
++                             ("import sys as s\ns.path.insert(0, 'x')", r'sys\.path'),
++                             ('import os, sys as system\nY = system.path', r'sys\.path')):
+             with self.subTest(lines=lines):
+                 kept = (self.variant_folder / 'method.py').read_text(encoding='ascii')
+                 self.write_method(lines)
+@@ -428,6 +430,26 @@
+         self.assertEqual(len([line for line in said if line.startswith('REFUSED: ')]), 1)
+         self.assertTrue(said[-1].startswith('MAKE INSTALLABLE - END - 2 done, 1 REFUSED. What was refused is not ready'))
+ 
++    def test_an_unfinished_operation_or_the_orphan_marker_refuses_and_no_marker_is_made_or_removed(self):
++        self.assertEqual(self.run_command('INFRA')[0], 0)    # so that --unmark would have a marker to remove
++        for relative in (launch_guard.UNFINISHED_OPERATIONS[1][0], job_lock.ORPHAN_MARKER):
++            with self.subTest(relative=relative):
++                barrier = self.tree / relative
++                barrier.parent.mkdir(parents=True, exist_ok=True)
++                barrier.write_bytes(b'{}\r\n')
++                before = fixtures.files_under(self.tree, '.')
++                for typed in ((FAMILY, VARIANT), ('INFRA', '--unmark'), (f'{FAMILY}/{VARIANT}', 'INFRA')):
++                    code, said = self.run_command(*typed)
++                    self.assertEqual(code, 2, said)
++                    self.assertEqual(len(said), 1, said)
++                    self.assertRegex(said[0], r'^REFUSED: .* No readiness marker was made or removed\.$')
++                self.assertIn(str(barrier), said[0])
++                self.assertEqual(fixtures.files_under(self.tree, '.'), before)
++                barrier.unlink()
++        self.assertFalse(self.marker.exists())
++        self.assertTrue(self.infra_marker.exists())
++        self.assertEqual(self.run_command(FAMILY, VARIANT)[0], 0)
++
+     def test_unmark_removes_the_markers_named(self):
+         self.run_command(f'{FAMILY}/{VARIANT}', 'INFRA')
+         code, said = self.run_command('--unmark', f'{FAMILY}/{VARIANT}', 'INFRA')
+

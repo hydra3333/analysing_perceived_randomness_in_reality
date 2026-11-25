@@ -40,6 +40,9 @@ from research.job_lock import LaunchRefused
 
 # The names of a Python program on Windows. Elsewhere (the cloud's tests) any program name beginning "python".
 WINDOWS_PYTHON_NAMES = ('python.exe', 'pythonw.exe')
+# The marks that, like a letter or a digit, can continue a folder's name: after the tree's path in a command line
+# they mean that another, longer-named folder is spoken of (T:\a_p_r_i_r_backups is not T:\a_p_r_i_r).
+NAME_CONTINUES = '_-.~'
 # What the owner is told to do about a process that is listed. No program of the project ends a process.
 WHAT_TO_DO = ('Let it finish, or close it yourself in its own window; no program of this project ends a process. '
               'Then run the command again.')
@@ -144,9 +147,22 @@ def _is_inside(path: str | None, folder: Path) -> bool:
 
 
 def _names_the_folder(command_line, folder: Path) -> bool:
-    """True if any argument of a command line holds the folder's path as text (case set aside)."""
-    wanted = os.path.normcase(os.path.abspath(str(folder))).lower()
-    return any(wanted in os.path.normcase(argument).lower() for argument in (command_line or ()))
+    """True if any argument of a command line holds the folder's path as text (case set aside), ending where a
+    path ends. T:\\a_p_r_i_r is named by 'T:\\a_p_r_i_r', 'T:\\a_p_r_i_r\\Run_Research.bat' and
+    'cd /d "T:\\a_p_r_i_r"&& ...'; it is not named by 'T:\\a_p_r_i_r_backups\\QA', which is another folder whose
+    name only begins the same way. The text is taken as the folder's path unless the character after it could
+    continue a folder's name (a letter, a digit, or one of _ - . ~): a separator, a quote, a blank or any other
+    mark ends it."""
+    wanted = os.path.normcase(os.path.abspath(str(folder))).lower().rstrip('\\/')
+    for argument in command_line or ():
+        text = os.path.normcase(argument).lower()
+        at = text.find(wanted)
+        while at >= 0:
+            after = text[at + len(wanted):at + len(wanted) + 1]
+            if not after or not (after.isalnum() or after in NAME_CONTINUES):
+                return True
+            at = text.find(wanted, at + 1)
+    return False
 
 
 def processes_of_tree(table, tree_root: Path, left_out) -> list:

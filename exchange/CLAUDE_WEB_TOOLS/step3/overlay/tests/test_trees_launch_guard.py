@@ -21,9 +21,11 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import research_fixtures as fx
-from research import environment_marker, installed_files, launch_guard, process_rule, research_job, settings
+from research import (environment_marker, installed_files, job_lock, launch_guard, process_rule, research_job,
+                      settings, withdraw)
 from research.process_rule import ProcessSeen
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -58,6 +60,24 @@ class TheProcessRuleOnInventedTables(unittest.TestCase):
 
     def test_unrelated_python_work_on_the_pc_does_not_count(self):
         self.assertEqual(self.listed(self.python(10), self.python(11, working_folder=str(self.tree) + '_backups')), [])
+
+    def test_a_command_line_naming_a_folder_whose_name_only_begins_like_the_trees_does_not_count(self):
+        sibling = str(self.tree) + '_backups'                # as T:\\a_p_r_i_r_backups lies beside T:\\a_p_r_i_r
+        for number, argument in enumerate((sibling, os.path.join(sibling, 'QA'), f'--to="{sibling}"',
+                                           str(self.tree) + '.old', str(self.tree) + '2')):
+            with self.subTest(argument=argument):
+                self.assertEqual(self.listed(self.python(10 + number, command_line=(PYTHON_NAME, 'copy.py', argument))),
+                                 [])
+        window = ProcessSeen(process_id=5, parent_id=1, name='cmd.exe', command_line=('cmd.exe', '/c', f'dir {sibling}'))
+        self.assertEqual(self.listed(window, self.python(30, parent=5)), [])
+
+    def test_the_trees_path_is_named_wherever_a_path_ends_after_it(self):
+        for number, argument in enumerate((str(self.tree), str(self.tree) + os.sep, f'"{self.tree}"',
+                                           f'cd /d {self.tree}&& Run_Research.bat', f'--tree={self.tree};later',
+                                           f'{self.tree}_backups {self.tree / "x.py"}')):
+            with self.subTest(argument=argument):
+                self.assertEqual(self.listed(self.python(10 + number, command_line=(PYTHON_NAME, argument))),
+                                 [(10 + number, 'its command line names the tree')])
 
     def test_a_python_whose_program_file_is_the_trees_own_is_listed(self):
         found = self.listed(self.python(10, program=str(self.tree / '.venv' / 'Scripts' / PYTHON_NAME)))
@@ -187,7 +207,7 @@ class TheEnvironmentsDigest(InventedEnvironment):
 
     def test_it_counts_the_files_of_the_inventory_and_is_the_same_when_nothing_changed(self):
         digest, files_read = environment_marker.environment_digest(self.venv)
-        self.assertEqual(files_read, 4)
+        self.assertEqual(files_read, 5)                      # the four files of the inventory and the base program
         self.assertRegex(digest, r'^[0-9a-f]{64}$')
         self.assertEqual(self.digest(), digest)
 
@@ -213,6 +233,54 @@ class TheEnvironmentsDigest(InventedEnvironment):
         (self.venv / 'Include').mkdir()
         (self.venv / 'Include' / 'note.txt').write_bytes(b'not in the inventory\r\n')
         self.assertEqual(self.digest(), before)
+
+    def test_the_base_pythons_program_file_enters_by_its_bytes_and_not_only_by_its_path_and_version(self):
+        program = Path(self.folder.name).resolve() / 'base' / 'python.exe'       # an invented base program file
+        program.parent.mkdir()
+        program.write_bytes(b'MZ the base Python as it was when the environment was verified')
+        with mock.patch.object(environment_marker, 'base_python', lambda: ('3.15.0 invented', str(program))):
+            before = self.digest()
+            self.assertEqual(self.digest(), before)
+            program.write_bytes(b'MZ another program put at the same path, saying the same version')
+            self.assertNotEqual(self.digest(), before)
+            program.write_bytes(b'MZ the base Python as it was when the environment was verified')
+            self.assertEqual(self.digest(), before)
+            program.unlink()
+            with self.assertRaisesRegex(environment_marker.EnvironmentRefused, 'base Python\'s program file, could '
+                                                                               'not be read'):
+                self.digest()
+            program.write_bytes(b'MZ the base Python as it was when the environment was verified')
+        with mock.patch.object(environment_marker, 'base_python', lambda: ('3.15.1 invented', str(program))):
+            self.assertNotEqual(self.digest(), before)       # another version at the same path, the same bytes
+
+    def test_an_environment_that_lacks_a_part_of_the_inventory_refuses_and_names_the_part(self):
+        aside = self.venv.parent / 'kept_aside'
+        for part in ('pyvenv.cfg', 'Scripts', 'Lib/site-packages'):
+            with self.subTest(part=part):
+                os.rename(self.venv / part, aside)
+                with self.assertRaisesRegex(environment_marker.EnvironmentRefused,
+                                            f'it has no {part.replace(".", chr(92) + ".")}' + r'\. Nothing was started'):
+                    self.digest()
+                with self.assertRaises(environment_marker.EnvironmentRefused):
+                    environment_marker.write_marker(self.venv)
+                self.assertFalse((self.venv / 'ENVIRONMENT_VERIFIED.json').exists())
+                os.rename(aside, self.venv / part)
+        self.assertRegex(self.digest(), r'^[0-9a-f]{64}$')
+
+    def test_a_folder_of_the_inventory_that_cannot_be_listed_refuses_and_is_not_left_out(self):
+        closed = str(self.venv / 'Lib' / 'site-packages' / 'toy')
+        listing = os.scandir
+
+        def scandir(path='.'):
+            """As os.scandir, but the one folder cannot be listed, as a folder held or forbidden on Windows."""
+            if os.fspath(path) == closed:
+                raise PermissionError(13, 'Access is denied', closed)
+            return listing(path)
+
+        with mock.patch('os.scandir', scandir):
+            with self.assertRaisesRegex(environment_marker.EnvironmentRefused, 'could not be read'):
+                self.digest()
+        self.assertRegex(self.digest(), r'^[0-9a-f]{64}$')
 
     def test_writing_the_marker_changes_nothing_that_is_hashed(self):
         before = self.digest()
@@ -374,9 +442,15 @@ class TheStartOfAJob(fx.JobCase):
 
     def test_an_environment_file_changed_after_verification_refuses_the_job(self):
         tree = self.installed()
-        (tree / '.venv' / 'Scripts').mkdir()
         (tree / '.venv' / 'Scripts' / 'added.exe').write_bytes(b'MZ')
         self.refused(tree, 'environment not verified')
+
+    def test_an_operation_left_unfinished_refuses_the_job_itself_under_its_lock_and_not_only_the_launcher(self):
+        tree = self.tree(role='DEV', with_source=False)      # the job is run here without its launcher
+        (tree / 'records').mkdir(exist_ok=True)
+        (tree / launch_guard.UNFINISHED_OPERATIONS[1][0]).write_bytes(b'{}\r\n')
+        text = self.refused(tree, 'a historical walk-forward rerun did not finish in this tree')
+        self.assertNotIn('Reading this tree\'s own Python environment', text)
 
     def test_an_environment_with_no_marker_refuses_the_job(self):
         tree = self.installed()
@@ -405,6 +479,106 @@ class TheStartOfAJob(fx.JobCase):
         self.assertEqual(arguments['check_at_job_start'], ['settings', 'say'])
         self.assertEqual(arguments['check_at_launch'], ['tree_root', 'finishing'])
         self.assertEqual(settings.ROLES, ('DEV', 'QA', 'PROD'))
+
+
+class AWithdrawalInAnInstalledTree(fx.JobCase):
+    """Deployment design section 8 (last row) and specification 11: a withdrawal is one-way, so it is not written
+    in a QA or PROD tree whose software is not the software that was installed, nor in any tree while an operation
+    is unfinished. It checks while it holds its two locks, before it reads, tidies or writes anything; it reads no
+    file of the environment and no process table (deployment design section 9 gives it its own rule)."""
+
+    REASON = 'a test of the guard'
+
+    def withdrawal(self, tree: Path) -> tuple:
+        """Try to withdraw TOY_B_V1 by the command's own route, confirming when asked; return (exit code, what it
+        said as one text)."""
+        said = []
+        code = withdraw.withdraw(tree, [('E_901', 'TOY_B_V1')], (fx.GAME,), self.REASON,
+                                 ask=lambda question: 'WITHDRAW', say=said.append, now=lambda: fx.FIXED_TIME)
+        return code, '\n'.join(said)
+
+    def everything_the_withdrawal_could_change(self, tree: Path) -> dict:
+        """The software with its status files, and the records with the tree's log and the staging folder."""
+        return {**fx.files_under(tree, 'src'), **fx.files_under(tree, 'records')}
+
+    def refused_with_nothing_changed(self, tree: Path, *words) -> None:
+        """The withdrawal refuses naming each of `words`; no status, no log line and no staged file changes."""
+        before = self.everything_the_withdrawal_could_change(tree)
+        code, text = self.withdrawal(tree)
+        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, text)
+        for word in words:
+            self.assertIn(word, text)
+        self.assertIn('refused; no status file was changed by this command', text)
+        self.assertEqual(self.everything_the_withdrawal_could_change(tree), before)
+        self.assertIsNone(self.status(tree, 'TOY_B_V1').withdrawn_from)
+
+    def test_in_a_tree_as_installed_the_withdrawal_is_written_and_logged(self):
+        tree = self.tree()
+        code, text = self.withdrawal(tree)
+        self.assertEqual(code, withdraw.EXIT_DONE, text)
+        self.assertEqual(self.status(tree, 'TOY_B_V1').withdrawn_from, fx.LAST_AT_START + 1)
+        self.assertIn('"operation": "WITHDRAWAL"', (tree / 'records' / withdraw.TREE_LOG_NAME).read_text('ascii'))
+
+    def test_a_helper_changed_outside_the_tools_refuses_the_withdrawal_before_any_status_or_log_change(self):
+        tree = self.tree()
+        with open(tree / 'src' / 'toy_forecast_code.py', 'ab') as handle:
+            handle.write(b'# changed by hand\r\n')
+        self.refused_with_nothing_changed(tree, 'src/toy_forecast_code.py: its bytes are not the bytes that were '
+                                                'installed', 'restore from a backup you choose')
+
+    def test_an_unlisted_python_file_under_src_refuses_the_withdrawal(self):
+        tree = self.tree()
+        (tree / 'src' / 'stray.py').write_bytes(b'# not installed\r\n')
+        self.refused_with_nothing_changed(tree, 'src/stray.py: it lies under src and is not on the list of '
+                                                'installed files')
+
+    def test_a_tree_without_its_list_refuses_the_withdrawal(self):
+        tree = self.tree()
+        (tree / installed_files.LIST_PATH).unlink()
+        self.refused_with_nothing_changed(tree, 'this tree has no list of installed files')
+
+    def test_the_refusal_comes_before_an_interrupted_status_write_is_tidied_away(self):
+        tree = self.tree()
+        staged = tree / 'records' / 'status_staging' / 'E_901__TOY_B_V1__VARIANT_STATUS.ini.writing'
+        staged.parent.mkdir(parents=True, exist_ok=True)
+        staged.write_bytes(b'left by an interrupted status write\r\n')
+        (tree / 'src' / 'stray.py').write_bytes(b'# not installed\r\n')
+        self.refused_with_nothing_changed(tree, 'src/stray.py')
+        self.assertTrue(staged.exists())
+
+    def test_an_operation_left_unfinished_refuses_the_withdrawal_in_every_tree(self):
+        for role in ('QA', 'DEV'):
+            with self.subTest(role=role):
+                tree = self.tree(role=role, name=f'tree_{role}')
+                barrier = tree / launch_guard.UNFINISHED_OPERATIONS[0][0]
+                barrier.parent.mkdir(exist_ok=True)
+                barrier.write_bytes(b'{}\r\n')
+                self.refused_with_nothing_changed(tree, f'{barrier} exists', 'did not finish in this tree')
+
+    def test_the_orphan_marker_still_refuses_the_withdrawal(self):
+        tree = self.tree()
+        marker = tree / job_lock.ORPHAN_MARKER
+        marker.parent.mkdir(parents=True)
+        marker.write_bytes(b'[]\r\n')
+        code, text = self.withdrawal(tree)
+        self.assertEqual(code, withdraw.EXIT_NOTHING_WRITTEN, text)
+        self.assertIn('orphan marker present', text)
+        self.assertIsNone(self.status(tree, 'TOY_B_V1').withdrawn_from)
+
+    def test_in_dev_no_list_is_asked_of_a_withdrawal(self):
+        tree = self.tree(role='DEV')
+        self.assertFalse((tree / installed_files.LIST_PATH).exists())
+        self.assertEqual(self.withdrawal(tree)[0], withdraw.EXIT_DONE)
+
+    def test_a_withdrawal_reads_no_file_of_the_environment_and_no_process_table(self):
+        tree = self.tree()
+
+        def never(*arguments):
+            raise AssertionError('a withdrawal must not take the environment\'s digest or read the process table')
+
+        with mock.patch.object(environment_marker, 'environment_digest', never), \
+                mock.patch.object(process_rule, 'read_process_table', never):
+            self.assertEqual(self.withdrawal(tree)[0], withdraw.EXIT_DONE)
 
 
 if __name__ == '__main__':

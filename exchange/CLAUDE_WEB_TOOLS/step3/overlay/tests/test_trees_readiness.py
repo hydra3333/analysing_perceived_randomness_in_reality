@@ -30,7 +30,7 @@ import install_import_check                                 # noqa: E402
 import install_readiness                                    # noqa: E402
 import make_installable                                     # noqa: E402
 import research_fixtures as fixtures                        # noqa: E402
-from research import code_identity, variant_folders        # noqa: E402
+from research import code_identity, job_lock, launch_guard, variant_folders        # noqa: E402
 
 FAMILY, VARIANT = 'E_901', 'TOY_COUNTS_V1'
 
@@ -258,7 +258,9 @@ class TheStaticImportCheck(InventedDev):
                              ("exec('import json')", 'exec'), ("X = eval('1')", 'eval'),
                              ("import builtins\nX = builtins.eval('1')", 'eval'),
                              ("import sys\nsys.path.insert(0, 'x')", r'sys\.path'), ('from sys import path', r'sys\.path'),
-                             ('import sys\nY = sys.path', r'sys\.path')):
+                             ('import sys\nY = sys.path', r'sys\.path'),
+                             ("import sys as s\ns.path.insert(0, 'x')", r'sys\.path'),
+                             ('import os, sys as system\nY = system.path', r'sys\.path')):
             with self.subTest(lines=lines):
                 kept = (self.variant_folder / 'method.py').read_text(encoding='ascii')
                 self.write_method(lines)
@@ -427,6 +429,26 @@ class TheCommandMakeInstallable(InventedDev):
         self.assertFalse((second / 'I_AM_INSTALLABLE.json').exists())
         self.assertEqual(len([line for line in said if line.startswith('REFUSED: ')]), 1)
         self.assertTrue(said[-1].startswith('MAKE INSTALLABLE - END - 2 done, 1 REFUSED. What was refused is not ready'))
+
+    def test_an_unfinished_operation_or_the_orphan_marker_refuses_and_no_marker_is_made_or_removed(self):
+        self.assertEqual(self.run_command('INFRA')[0], 0)    # so that --unmark would have a marker to remove
+        for relative in (launch_guard.UNFINISHED_OPERATIONS[1][0], job_lock.ORPHAN_MARKER):
+            with self.subTest(relative=relative):
+                barrier = self.tree / relative
+                barrier.parent.mkdir(parents=True, exist_ok=True)
+                barrier.write_bytes(b'{}\r\n')
+                before = fixtures.files_under(self.tree, '.')
+                for typed in ((FAMILY, VARIANT), ('INFRA', '--unmark'), (f'{FAMILY}/{VARIANT}', 'INFRA')):
+                    code, said = self.run_command(*typed)
+                    self.assertEqual(code, 2, said)
+                    self.assertEqual(len(said), 1, said)
+                    self.assertRegex(said[0], r'^REFUSED: .* No readiness marker was made or removed\.$')
+                self.assertIn(str(barrier), said[0])
+                self.assertEqual(fixtures.files_under(self.tree, '.'), before)
+                barrier.unlink()
+        self.assertFalse(self.marker.exists())
+        self.assertTrue(self.infra_marker.exists())
+        self.assertEqual(self.run_command(FAMILY, VARIANT)[0], 0)
 
     def test_unmark_removes_the_markers_named(self):
         self.run_command(f'{FAMILY}/{VARIANT}', 'INFRA')

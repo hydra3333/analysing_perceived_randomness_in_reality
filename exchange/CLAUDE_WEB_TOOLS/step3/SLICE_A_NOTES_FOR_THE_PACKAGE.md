@@ -126,3 +126,10 @@ list of installed files.
 - **Not shown anywhere yet:** anything on Windows (the launchers; psutil's reading there; the time of the digest
   on G: and T:); a real QA or PROD tree. The cloud's workspace restarted once during the work; nothing was lost
   and the suite was run again from a clean clone.
+
+## After EX_319 (25 November 2026)
+
+The reviewer's five findings (A-B01, A-B02, A-C01, A-C02, A-C03) are corrected in the overlay. What changed, the
+tests and the evidence are in `slice_a/SLICE_A_CORRECTIONS_AFTER_EX_319_v0_1.md`; where these notes and that note
+differ, that note is the later one. The slice now changes ten files of main (`src/research/withdraw.py` is the
+tenth) and adds sixteen.

@@ -7,9 +7,12 @@ What this file is for
     packages installed now. AT THE START OF A JOB, under the job lock: the environment's digest is computed once
     (it goes into every forecast the job makes); in QA and PROD it must equal the marker's, and the tree's
     software must match its list of installed files with nothing else under src; and, in every tree, no other
-    Python process of this tree may be running. Every refusal says what was found and what to do. The guard
-    changes nothing, repairs nothing and ends no process. A tree checks only itself: its own folder, its own
-    environment and its own records.
+    Python process of this tree may be running; and the check for an unfinished operation is made again there,
+    since one may have begun after the launch. The commands that write in a tree without being a job make the
+    same small checks before they write: a withdrawal (no unfinished operation; in QA and PROD the software
+    matches its list) and Make_Installable in DEV (no unfinished operation, no orphan marker). Every refusal says
+    what was found and what to do. The guard changes nothing, repairs nothing and ends no process. A tree checks
+    only itself: its own folder, its own environment and its own records.
 
     DEV has no marker and no list of installed files (nothing is installed there), so those two checks are QA's
     and PROD's; everything else is the same in every tree.
@@ -28,8 +31,9 @@ Which of the project's own modules it uses
     research.process_rule        no other Python process of this tree
 
 What uses it
-    src/research_command.py (every launch); research/research_job.py (the start of a job); and its tests. The
-    commands of the later slices of build step 3 call the same two functions.
+    src/research_command.py (every launch); research/research_job.py (the start of a job); research/withdraw.py
+    and deploy/make_installable.py (before they write); deploy/check_tree.py (which only reports); and its tests.
+    The commands of the later slices of build step 3 call the same functions.
 """
 from __future__ import annotations
 
@@ -98,6 +102,25 @@ def check_at_launch(tree_root: Path, finishing: str | None = None) -> TreeSettin
     return settings
 
 
+def check_software_is_as_installed(settings: TreeSettings) -> None:
+    """In QA and PROD: the tree's software matches its list of installed files, with nothing else under src
+    (deployment design section 8, last row). In DEV nothing is installed and nothing is asked.
+
+    settings: the tree's settings.
+    Refuses (GuardRefused): a tree without its list, or a list that is not one; any difference, every one named.
+    """
+    if settings.role not in INSTALLED_ROLES:
+        return
+    try:
+        differences = installed_files.differences(settings.tree_root, installed_files.read_list(settings.tree_root))
+    except installed_files.InstalledFilesRefused as refusal:
+        raise GuardRefused(str(refusal)) from None
+    if differences:
+        raise GuardRefused(f'this tree\'s software does not match its list of installed files '
+                           f'({settings.tree_root / installed_files.LIST_PATH}); {len(differences)} '
+                           f'difference(s):\n  ' + '\n  '.join(differences) + f'\n{installed_files.WHAT_TO_DO}')
+
+
 def check_at_job_start(settings: TreeSettings, say) -> str:
     """The checks at the start of a research job, made while the job holds the tree's job lock (deployment design
     section 9, second paragraph). The orphan marker and the lock itself are the job's own first steps.
@@ -105,25 +128,19 @@ def check_at_job_start(settings: TreeSettings, say) -> str:
     settings: the tree's settings.  say: the function that prints a line for the owner.
     Returns the environment's digest, which the job writes into the envelope of every forecast it makes; for
     example '9c1f...e07a'.
-    Refuses: an environment that cannot be read, or in QA and PROD is not the one that was verified
-    (EnvironmentRefused); in QA and PROD, software that differs from the tree's list of installed files, every
-    difference named (GuardRefused); another Python process of this tree (ProcessRuleRefused).
+    Refuses: an operation left unfinished in the tree, also one begun since the launch (GuardRefused); an
+    environment that cannot be read, or in QA and PROD is not the one that was verified (EnvironmentRefused); in
+    QA and PROD, software that differs from the tree's list of installed files, every difference named
+    (GuardRefused); another Python process of this tree (ProcessRuleRefused).
     """
+    check_no_unfinished_operation(settings.tree_root)
     say(f'Reading this tree\'s own Python environment at {settings.venv_dir}. It can take two or three minutes '
         f'when its files have not been read lately.')
     digest, files_read = environment_marker.environment_digest(settings.venv_dir)
     say(f'The environment: {files_read} file(s) read; digest {digest}.')
     if settings.role in INSTALLED_ROLES:
         environment_marker.check_digest_is_the_markers(settings.venv_dir, digest)
-        try:
-            differences = installed_files.differences(settings.tree_root,
-                                                      installed_files.read_list(settings.tree_root))
-        except installed_files.InstalledFilesRefused as refusal:
-            raise GuardRefused(str(refusal)) from None
-        if differences:
-            raise GuardRefused(f'this tree\'s software does not match its list of installed files '
-                               f'({settings.tree_root / installed_files.LIST_PATH}); {len(differences)} '
-                               f'difference(s):\n  ' + '\n  '.join(differences) + f'\n{installed_files.WHAT_TO_DO}')
+        check_software_is_as_installed(settings)
         say('The environment is the one that was verified, and the software matches its list of installed files.')
     looked_at = process_rule.check_no_other_process_of_tree(settings.tree_root)
     say(f'No other Python process of this tree is running ({looked_at} processes of this PC looked at).')

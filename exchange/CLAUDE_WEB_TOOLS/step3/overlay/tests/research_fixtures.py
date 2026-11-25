@@ -154,8 +154,26 @@ def write_results(tree: Path, game_id: str, last_draw: int, version: int = 1, **
     return raw
 
 
+# An invented Python environment in the Windows layout, the three parts of the fixed inventory (specification 13),
+# small enough to be hashed in no time: {path from the environment's folder: its bytes}.
+INVENTED_ENVIRONMENT = {'pyvenv.cfg': b'home = C:\\Invented\\Python\r\n',
+                        'Scripts/python.exe': b'MZ an invented program file',
+                        'Lib/site-packages/invented_package/__init__.py': b'VALUE = 1\r\n'}
+
+
+def make_invented_environment(venv_dir: Path) -> Path:
+    """Make an invented environment folder in the Windows layout (pyvenv.cfg, Scripts, Lib/site-packages), so
+    that an invented tree has an environment whose digest can be taken. It is not a Python that could run.
+    venv_dir: the folder to make.  Returns it."""
+    for relative, data in INVENTED_ENVIRONMENT.items():
+        (Path(venv_dir) / relative).parent.mkdir(parents=True, exist_ok=True)
+        (Path(venv_dir) / relative).write_bytes(data)
+    return Path(venv_dir)
+
+
 def make_tree(root: Path, role: str = 'DEV', copy_from: Path | None = None) -> Path:
-    """Make an empty invented tree: its settings file, a small manifest and the folders the engine expects.
+    """Make an empty invented tree: its settings file, a small manifest, an invented environment folder and the
+    folders the engine expects.
 
     root: an existing empty folder.  role: 'DEV', 'QA' or 'PROD'.  copy_from: the tree its results are copied
     from, if any.  Returns the tree's real path.
@@ -163,7 +181,7 @@ def make_tree(root: Path, role: str = 'DEV', copy_from: Path | None = None) -> P
     tree = Path(root).resolve()
     (tree / 'src' / 'methods').mkdir(parents=True)
     (tree / 'deploy').mkdir()
-    (tree / '.venv').mkdir()
+    make_invented_environment(tree / '.venv')
     for name, text in (('toy_forecast_code.py', '# invented forecasting code\n'),
                        ('toy_derived_code.py', '# invented scoring code\n'), ('toy_other.py', '# a launcher\n')):
         (tree / 'src' / name).write_text(text, encoding='ascii')

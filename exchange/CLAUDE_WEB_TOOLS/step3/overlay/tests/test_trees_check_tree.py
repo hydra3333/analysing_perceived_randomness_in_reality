@@ -127,7 +127,8 @@ class WhatIsInstalledAndDrift(InventedDevAndQa):
         code, text = self.look('QA')
         self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
         self.assertIn('Drift: 0 difference(s)', text)
-        self.assertIn('Nothing is wrong that this command looks for.', text)
+        self.assertIn('Nothing was found by the checks this command makes.', text)
+        self.assertIn('it does not say that the tree is ready to run', text)
 
     def test_a_helper_changed_outside_the_tools_is_found_and_the_way_back_is_said(self):
         with open(self.qa / 'src' / 'methods' / HELPER, 'ab') as handle:
@@ -282,13 +283,19 @@ class TheBackupsAndTheLocks(InventedDevAndQa):
         self.assertIn('Locks and unfinished operations: 1 present.', text)
         self.assertIn('did not finish in this tree. Run that same command again from DEV', text)
 
-    def test_an_environment_without_its_marker_is_said_to_be_not_verified_and_one_with_it_verified(self):
+    def test_an_environment_without_its_marker_is_not_verified_and_a_marker_is_only_said_to_be_present(self):
         self.assertIn('Environment: NOT VERIFIED; every launcher of this tree refuses', self.look('QA')[1])
         environment_marker.write_marker(self.qa / '.venv')
         code, text = self.look('QA')
-        self.assertIn('Environment: verified;', text)
+        self.assertIn('Environment: verification marker present', text)
+        self.assertIn('This command did not check the environment\'s files or packages against it', text)
+        self.assertNotIn('Environment: verified', text)
         self.assertEqual(code, check_tree.EXIT_NOTHING_FOUND, text)
-        self.assertIn('Environment: DEV\'s environment has no verified marker', self.look('DEV')[1])
+        (self.qa / '.venv' / 'Scripts' / 'added.exe').write_bytes(b'MZ')     # changed after it was verified:
+        again = self.look('QA')[1]                                           # this command cannot know, and
+        self.assertIn('Environment: verification marker present', again)     # does not say "verified"
+        self.assertNotIn('Environment: verified', again)
+        self.assertIn('Environment: DEV\'s environment has no verification marker', self.look('DEV')[1])
 
 
 if __name__ == '__main__':

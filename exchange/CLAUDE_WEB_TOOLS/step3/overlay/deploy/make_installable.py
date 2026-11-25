@@ -4,7 +4,9 @@ What this file is for
     It reads what the owner typed after Make_Installable.bat, makes (or with --unmark removes) the readiness
     marker of each thing named, says what it did for each on a line of its own, and ends with one line of
     counts. One thing that is refused does not stop the others; the exit code then says that something was
-    refused. It works in DEV only and changes nothing but markers.
+    refused. It works in DEV only and changes nothing but markers. Before it makes or removes any marker it
+    refuses a tree in which an operation was left unfinished or the orphan marker lies, as every command that
+    writes in a tree does.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 4 (Make_Installable.bat <family> <variant>;
@@ -13,6 +15,8 @@ Which part of the specification it carries out
 Which of the project's own modules it uses
     install_readiness          the markers themselves
     research.variant_folders   the patterns a family's and a variant's folder name must match
+    research.launch_guard      check_no_unfinished_operation
+    research.job_lock          check_no_orphan_marker, LaunchRefused
 
 What uses it
     deploy/deploy_command.py, for Make_Installable.bat; and its tests.
@@ -22,6 +26,8 @@ from __future__ import annotations
 from pathlib import Path
 
 from research import variant_folders
+from research.job_lock import LaunchRefused, check_no_orphan_marker
+from research.launch_guard import check_no_unfinished_operation
 
 import install_readiness
 
@@ -73,13 +79,20 @@ def main(arguments, tree_root: Path, say=print) -> int:
     arguments: the words the owner typed after Make_Installable.bat.  tree_root: DEV's folder (the caller has
     checked that this tree is DEV).  say: where the lines for the owner go.
     Returns the exit code: 0 everything named was marked (or unmarked, or was so already); 1 at least one thing
-    was refused, the others having been done; 2 what was typed could not be understood, and nothing was done.
+    was refused, the others having been done; 2 what was typed could not be understood, or an operation was left
+    unfinished in the tree, or its orphan marker lies there: nothing was done.
     """
     unmark = UNMARK_OPTION in arguments
     try:
         named = things_named([word for word in arguments if word != UNMARK_OPTION])
     except ValueError as problem:
         say(f'REFUSED: {problem} Nothing was done.\n{USAGE}')
+        return EXIT_USAGE
+    try:
+        check_no_unfinished_operation(tree_root)
+        check_no_orphan_marker(tree_root)
+    except LaunchRefused as refusal:
+        say(f'REFUSED: {refusal} No readiness marker was made or removed.')
         return EXIT_USAGE
     names = ', '.join(thing if thing == INFRA_WORD else '/'.join(thing) for thing in named)
     doing = 'to remove the readiness marker of' if unmark else 'to mark ready'

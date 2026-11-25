@@ -6697,3 +6697,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   corrected slice goes back for a focused recheck as EX_320 when the owner says so. No install, no run on the
   owner's PC and no runner task is authorised; slices B to D and the order of installation are unchanged.
 - Next numbers: EX_320 (Claude's, the corrected slice); entry 279; RAT-56.
+
+## 279. 25 November 2026, 11:55 - Slice A: EX_319's five corrections are made in the working files (cloud only), with focused tests; ready for the focused recheck when the owner says so
+
+- **Authority:** entries 217 and 275 (design and cloud coding) and EX_319's own scope ("the smallest direct code
+  changes and affected tests"). Nothing was redesigned, nothing else in the slice was changed, nothing is installed
+  and nothing ran on the owner's PC.
+- **What changed, in `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`** (eleven files; the exact differences from the
+  files the reviewer read are in `slice_a/SLICE_A_CORRECTIONS_AFTER_EX_319_DIFFERENCE.txt`, 35 hunks; the note is
+  `slice_a/SLICE_A_CORRECTIONS_AFTER_EX_319_v0_1.md`):
+  - *A-B01:* `src/research/environment_marker.py`: the base Python's program file enters the digest by the
+    SHA-256 of its bytes, with its version and path; a program file or a folder that cannot be read refuses; an
+    environment without `pyvenv.cfg`, `Scripts` or `Lib\site-packages` refuses, each missing part named; the
+    count includes the base program file. The tests' invented tree now has a small invented environment in the
+    Windows layout (`tests/research_fixtures.py`).
+  - *A-B02:* `src/research/launch_guard.py` gains `check_software_is_as_installed` (the job's comparison, taken
+    out unchanged) and the job's start begins with the unfinished-operation check. `src/research/withdraw.py`
+    (**a tenth changed file of main**) makes both checks under its two locks before it tidies, plans or writes.
+    `deploy/make_installable.py` refuses, before any marker is made or removed, a tree with an unfinished
+    operation or the orphan marker. `Check_Tree` still only reports them.
+  - *A-C01:* `src/research/process_rule.py`: the tree's path is named only where the character after it does not
+    continue a folder's name (`T:\a_p_r_i_r_backups` is not `T:\a_p_r_i_r`).
+  - *A-C02:* `deploy/check_tree.py`: "verification marker present ... This command did not check the
+    environment's files or packages against it"; the closing line no longer reads as "ready to run".
+  - *A-C03:* `deploy/install_import_check.py`: `sys.path` is found under any name a file imports `sys` by.
+- **Cloud evidence (Linux, Python 3.15.0b4; Claude's own; in `slice_a/evidence/`):** the whole suite in a fresh
+  clone with the corrected overlay: 59 modules, 1000 tests. Against the slice as reviewed: 983 tests in both runs,
+  all with the same result; one test renamed (A-C02); 16 new, all OK. Against `main`: 829 of 830 with the same
+  result, one removed as before, 171 new; the three known failing tests and no other. Planted faults: 22 for the
+  corrections, all caught (`mutation_check_ex319_corrections.py`); the two earlier runs made again, 31 of 31 and
+  22 of 22. `Check_Tree DEV` on a disposable clone's real files: nothing found.
+- **Not done, waiting on the owner:** EX_320 is not issued (his word); the narrow psutil amendment of the
+  deployment design's section 2 is not ratified (his decision, RAT-56).
+- Next numbers: EX_320 (Claude's, the corrected slice); entry 280; RAT-56.

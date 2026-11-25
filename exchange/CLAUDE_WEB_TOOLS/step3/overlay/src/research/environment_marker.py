@@ -10,8 +10,12 @@ What this file is for
 
     The digest is taken over a fixed inventory (specification section 13): pyvenv.cfg; every file under Scripts;
     every file under Lib/site-packages except Python's cache folders and compiled files; and the base Python's
-    version and program file. The marker lies beside pyvenv.cfg, outside all of these, so writing it changes
-    nothing that is hashed.
+    version and the bytes of its program file. An environment that lacks one of those three parts, or a folder or
+    file of them that cannot be read, is refused: a digest is never given for a part of the inventory. The marker
+    lies beside pyvenv.cfg, outside all of these, so writing it changes nothing that is hashed.
+
+    The layout is Windows' own (Scripts, Lib\site-packages), which is where the project runs. The tests give it
+    invented folders of that layout; nothing here verifies an environment laid out as Linux lays one out.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 13 ("Verified before use"; "The digest does
@@ -59,29 +63,52 @@ class EnvironmentRefused(LaunchRefused):
     what was found, where, and what to do."""
 
 
+def base_python() -> tuple:
+    """The base Python this environment runs on: its version and its program file, for example
+    ('3.13.1 (tags/v3.13.1:0671451, ...) [MSC v.1942 64 bit (AMD64)]', 'C:\\Python313\\python.exe'). On Windows
+    the environment's own python.exe starts that program, so it is part of what a forecast was computed with."""
+    return sys.version, getattr(sys, '_base_executable', None) or sys.executable
+
+
 def _inventory(venv_dir: Path) -> list:
     """The files of the fixed inventory, as paths from the environment's folder with forward slashes, sorted; for
-    example ['Lib/site-packages/numpy/__init__.py', 'Scripts/python.exe', 'pyvenv.cfg']. A part that does not
-    exist contributes nothing."""
-    found = []
+    example ['Lib/site-packages/numpy/__init__.py', 'Scripts/python.exe', 'pyvenv.cfg'].
+    Refuses (EnvironmentRefused) an environment that lacks one of the three parts, naming each part missing."""
+    found, parts_found = [], set()
     for entry in sorted(os.listdir(venv_dir)):
         lowered = entry.lower()
         if lowered == SETTINGS_FILE_OF_AN_ENVIRONMENT and (venv_dir / entry).is_file():
             found.append(entry)
-        elif lowered == PROGRAMS_FOLDER.lower():
+            parts_found.add(SETTINGS_FILE_OF_AN_ENVIRONMENT)
+        elif lowered == PROGRAMS_FOLDER.lower() and (venv_dir / entry).is_dir():
             found.extend(_files_below(venv_dir, entry, leave_out_caches=False))
-        elif lowered == PACKAGES_FOLDER[0].lower():
+            parts_found.add(PROGRAMS_FOLDER)
+        elif lowered == PACKAGES_FOLDER[0].lower() and (venv_dir / entry).is_dir():
             for inner in sorted(os.listdir(venv_dir / entry)):
-                if inner.lower() == PACKAGES_FOLDER[1].lower():
+                if inner.lower() == PACKAGES_FOLDER[1].lower() and (venv_dir / entry / inner).is_dir():
                     found.extend(_files_below(venv_dir, f'{entry}/{inner}', leave_out_caches=True))
+                    parts_found.add('/'.join(PACKAGES_FOLDER))
+    missing = [part for part in (SETTINGS_FILE_OF_AN_ENVIRONMENT, PROGRAMS_FOLDER, '/'.join(PACKAGES_FOLDER))
+               if part not in parts_found]
+    if missing:
+        raise EnvironmentRefused(f'{venv_dir}: this is not a whole Python environment of this tree: it has no '
+                                 f'{" and no ".join(missing)}. Nothing was started. Build it in this tree with '
+                                 f'create_venv.bat and install_upgrade_dependencies_into_venv.bat.')
     return sorted(found)
+
+
+def _stop_at_a_folder_that_cannot_be_read(error: OSError) -> None:
+    """What os.walk is given to call when it cannot list a folder: the error goes on to the caller, so that a
+    folder that cannot be read refuses the digest instead of being left out of it."""
+    raise error
 
 
 def _files_below(venv_dir: Path, folder: str, leave_out_caches: bool) -> list:
     """Every file under a folder of the environment, as paths from the environment's folder with forward slashes;
-    with leave_out_caches, Python's cache folders are not entered and compiled files are passed over."""
+    with leave_out_caches, Python's cache folders are not entered and compiled files are passed over. A folder
+    that cannot be listed raises its OSError."""
     files = []
-    for current, folders, names in os.walk(venv_dir / folder):
+    for current, folders, names in os.walk(venv_dir / folder, onerror=_stop_at_a_folder_that_cannot_be_read):
         if leave_out_caches:
             folders[:] = [name for name in folders if name != CACHE_FOLDER_NAME]
         for name in names:
@@ -96,11 +123,13 @@ def environment_digest(venv_dir: Path) -> tuple:
     which can take minutes when the files have not been read lately; the caller says so before it calls.
 
     venv_dir: the environment's folder, as the tree's settings name it.
-    Returns (digest, files read): 64 hexadecimal characters and a count, for example ('9c1f...e07a', 11997). The
+    Returns (digest, files read): 64 hexadecimal characters and a count, for example ('9c1f...e07a', 11998). The
     digest is the SHA-256 of one line a file, '<path><TAB><sha256><LF>', sorted by path, followed by one line for
-    the base Python: 'base python<TAB><its version><TAB><its program file><LF>'. The same environment under the
-    same base Python gives the same digest; the marker is not in the inventory.
-    Refuses (EnvironmentRefused) an environment folder that does not exist or a file that cannot be read.
+    the base Python: 'base python<TAB><its version><TAB><its program file><TAB><the sha256 of that file's
+    bytes><LF>'. The count is of the files whose bytes were hashed, the base Python's program file among them.
+    The same environment under the same base Python gives the same digest; the marker is not in the inventory.
+    Refuses (EnvironmentRefused): an environment folder that does not exist; one that lacks pyvenv.cfg, Scripts or
+    Lib/site-packages; a folder or a file of the inventory, or the base Python's program file, that cannot be read.
     """
     venv_dir = Path(venv_dir)
     if not venv_dir.is_dir():
@@ -111,13 +140,14 @@ def environment_digest(venv_dir: Path) -> tuple:
         paths = _inventory(venv_dir)
         for path in paths:
             lines.append(f'{path}\t{hashlib.sha256((venv_dir / path).read_bytes()).hexdigest()}\n')
+        version, program = base_python()
+        program_digest = hashlib.sha256(Path(program).read_bytes()).hexdigest()
+        lines.append(f'base python\t{version}\t{program}\t{program_digest}\n')
     except OSError as error:
-        raise EnvironmentRefused(f'{venv_dir}: a file of this tree\'s Python environment could not be read '
-                                 f'({error}). Nothing was started. Close whatever holds it and run the command '
-                                 f'again.') from None
-    base_program = getattr(sys, '_base_executable', None) or sys.executable
-    lines.append(f'base python\t{sys.version}\t{base_program}\n')
-    return hashlib.sha256(''.join(lines).encode('utf-8')).hexdigest(), len(paths)
+        raise EnvironmentRefused(f'{venv_dir}: a folder or a file of this tree\'s Python environment, or the base '
+                                 f'Python\'s program file, could not be read ({error}). Nothing was started. Close '
+                                 f'whatever holds it and run the command again.') from None
+    return hashlib.sha256(''.join(lines).encode('utf-8')).hexdigest(), len(paths) + 1
 
 
 def installed_distributions() -> list:
