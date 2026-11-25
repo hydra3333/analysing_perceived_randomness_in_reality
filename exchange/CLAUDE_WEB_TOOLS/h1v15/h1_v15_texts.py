@@ -6,10 +6,11 @@ HEADER = '''# H-1 - Claude primary designer and coder handover - Predictive Rand
 
 **Document:** H-1 under the agreed roles position v0.1r1, section 9 item 4.
 **This edition: v15, 25 November 2026 (Adelaide, UTC+10:30). A CANDIDATE for the owner's ratification** (decision
-log entry 315). It goes into `doc/HANDOVER/` only once he has ratified it; the reviewer has not read it.
+log entries 315 and 318; it is to be RAT-60). It goes into `doc/HANDOVER/` only once he has ratified it; the reviewer
+has not read it.
 **It is the next ordinary edition after the consolidated H-1 v14** (RAT-58). **Chapter 0 is written afresh and is the
 only place that says what is true now:** slices A and B of build step 3 have passed review, slice C is written and
-is with the reviewer (EX_328), nothing of build step 3 is installed. Sections 0A and 0C, sections 1 to 12 and the
+the reviewer has asked for corrections to it (EX_329, RECHECK), nothing of build step 3 is installed. Sections 0A and 0C, sections 1 to 12 and the
 appendices are H-1 v14's, with the corrections the reviewer's cold read of v14 asked for (H14-C01 to H14-C03 and its
 two observations) and the closing of OUTLANDISH_01 made in place, each marked "(v15)"; Appendix D lists every one.
 The HISTORY part at the end (sections 0B, 0D and 0E of H-1 v13) is carried as v14 carried it. **Sections 1, 2 and 2A
@@ -21,7 +22,7 @@ H-1 v14's own chapter 0 is not carried: H-1 v14 stays in `doc/HANDOVER/` as hist
 **Audience:** any later Claude chat that takes over as primary designer and coder; the ChatGPT reviewer chat, which
 checks it against the repository.
 **Repository:** `hydra3333/analysing_perceived_randomness_in_reality`, public GitHub, branch `main`.
-**Baseline described:** `main` at `{head}` (decision log entry 315; newest EX: EX_328).
+**Baseline described:** `main` at `{head}` (decision log entry 318; newest EX: EX_329).
 **Authority:** the ratified documents and the decision log prevail over this handover wherever they differ.
 `exchange/CONTINUITY_NOW.md` with the decision log carries whatever is newer. This file authorises nothing.
 **Draw values:** none appear in this file.
@@ -56,11 +57,11 @@ CHAPTER0 = '''## 0. THE LIVE POSITION (25 November 2026, late). Read this chapte
      go and plan and the probe TASK_T028; 244 to 261 the file-form standard and the conversion of DEV; 262 to 269
      H-1 v12 and v13, H-2 v7 and v8, the register v0.33; **270 to the latest are the present Claude chat: its
      takeover; slice A and its review (271 to 281); the reviewer chat's end, H-2 v9 and H-1 v14 (282 to 286); the new
-     reviewer chat (287); slice B and its review (288 to 300); slice C (301 to 313); this edition (314, 315). Read
-     these in full;**
+     reviewer chat (287); slice B and its review (288 to 300); slice C and its review (301 to 313, 317, 318); this
+     edition (314 to 316). Read these in full;**
    - **build step 3's working record:** the build plan `exchange/CLAUDE_WEB_TOOLS/step3/STEP3_BUILD_PLAN_v0_1r1.md`;
      each slice's package note and corrections notes (`step3/slice_a/`, `step3/slice_b/`, `step3/slice_c/`) with the
-     reviewer's replies (`EX_319`, `EX_321` for A; `EX_323`, `EX_325`, `EX_327` for B); and the working notes kept
+     reviewer's replies (`EX_319`, `EX_321` for A; `EX_323`, `EX_325`, `EX_327` for B; `EX_329` for C); and the working notes kept
      while each slice was written (`step3/SLICE_B_PLAN_AND_NOTES.md`, `step3/SLICE_C_PLAN_AND_NOTES.md`; the second's
      section 0 is the list of checks to make after a stop);
    - the installed packages' notes when you come to build a package: `exchange/CLAUDE_WEB_TOOLS/step1/STEP1_PACKAGE_NOTE_v0_3.md`,
@@ -166,8 +167,8 @@ simplest safe route first. This is not a request for shorter reporting.
 - **The reviewer chat that reviewed slice A ended at its maximum length** just after EX_321 (entry 282). **The
   present reviewer chat took over from H-2 v9** (entry 287) and reviewed slice B (EX_323, EX_325, EX_327: PASS) and
   made the cold read of H-1 v14 (`exchange/ChatGPT_to_Claude_H1_v14_Cold_Read_20261125.md`: PASS with the
-  corrections H14-C01 to C03 and two observations, all made in this edition; Appendix D). **It now holds slice C
-  (EX_328); its reply will be EX_329.**
+  corrections H14-C01 to C03 and two observations, all made in this edition; Appendix D). **It reviewed slice C
+  (EX_328) and replied with EX_329: RECHECK** (0.4 item 3).
 - **The reviewer's handover in force: H-2 v9,** `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`
   (`{h2v9_sha}`), with its blurb beside it (RAT-57; entries 282 and 283). **Claude wrote it,** at the owner's
   request, because the reviewer could not: its live chapter 0 only; the reviewer's rights and its chapters 1 to 19
@@ -176,13 +177,12 @@ simplest safe route first. This is not a request for shorter reporting.
   RAT-54 H-1 v13; RAT-55 the reviewer's H-2 v8; **RAT-56 (entry 280), the one amendment of the deployment design so
   far:** in its section 2, "(`deploy\\`, standard library only)" is read as "(`deploy\\`, standard library only,
   except the process rule of section 9, which uses psutil from the Python that runs the tool)"; the ratified v0.12
-  file is not edited; restore stays standard library only. RAT-57 H-2 v9. RAT-58 H-1 v14 (entry 286). **This
-  edition takes the next free number when the owner ratifies it.** A second amendment is proposed and waits for the
-  reviewer's view before the owner ratifies it (0.4). The register's next ordinary edition carries RAT-54 onward; it
-  is owed, not urgent.
+  file is not edited; restore stays standard library only. RAT-57 H-2 v9. RAT-58 H-1 v14 (entry 286). **RAT-59 is
+  kept for two more narrow amendments, proposed and not yet ratified** (0.4 item 4), **and RAT-60 for this edition**
+  (the owner's order, entry 318). The decision log says whether either is ratified. The register's next ordinary
+  edition carries RAT-54 onward; it is owed, not urgent.
 - **Numbers:** read the log's last line for the next EX, entry and RAT before using one; the reviewer takes EX
-  numbers too. At this edition the newest EX is EX_328 (Claude's); the reviewer's next is EX_329 and Claude's next
-  EX_330.
+  numbers too. At this edition the newest EX is EX_329 (the reviewer's); Claude's next is EX_330.
 
 ### 0.4 What is authorised, what waits, and the order of work
 
@@ -196,12 +196,27 @@ PASS or a ratification gives none.
 
 1. **Slice A, foundations: PASS (EX_321).** Not installed.
 2. **Slice B, backups, the recovery kit, restore: PASS (EX_327).** Not installed.
-3. **Slice C, creating a tree, the installs, verifying a tree: WRITTEN, WITH THE REVIEWER (EX_328).** Not
-   installed. **Waiting on the reviewer: EX_329.** Answer each finding narrowly, as for A and B: a corrections note,
-   the exact differences, hashes, the affected tests and the planted faults for what changed; no redesign.
-4. **The amendment the owner's decision needs (entry 305): `Verify_Tree.bat` does not run the test suite.** Its
-   proposed wording of deployment design section 7 and specification section 13 is in slice C's package note,
-   section 3. **The owner ratifies it only after the reviewer's view** (the next free RAT number then).
+3. **Slice C, creating a tree, the installs, verifying a tree: WRITTEN; THE REVIEWER'S EX_329 IS A RECHECK.** Not
+   installed. "The architecture and approach are sound"; no redesign. **Four blockers:** C-B01 (`Reinstall_Infra`:
+   the owner's YES can rest on a stale statement if a job finishes during the question; the accepted plan and what
+   the statement rested on are checked again under the second reservation, before anything is written; an ordinary
+   install likewise must not act on a changed base); C-B02 (`Init_Tree`: the six results files are read as one
+   set, and both copied pairs are checked with the results reader before the record; a continued creation with
+   its record reads no source); C-B03 (the same command must finish a reinstall that removes a file); C-B04 (a
+   replacement of an unfinished reinstall must not forget the regeneration of reports it owes). **Four
+   corrections:** C-C01 (the read-only checks also make the job's results-only-grew check); C-C02 (an ordinary
+   install's suite depends on byte equality with DEV, not on DEV's readiness marker); C-C03 (`Verify_Tree` repeats
+   the unfinished-operation and orphan checks under its lock); C-C04 (the smoke case's kept table in CRLF; the
+   suite line in both verdicts). **The corrections were being written, on Fable, when this edition was made** (the
+   owner's go, entry 318); section 4 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says where they
+   stand. They go to the reviewer as EX_330 on the owner's word: a corrections note, the exact differences from
+   `e404c22`, the affected modules' evidence and targeted tests; not the whole suite nor all 250 planted faults.
+4. **Two narrow amendments are proposed as RAT-59,** `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`,
+   and the reviewer concurs with both (EX_329, section 2): `Verify_Tree.bat` does not run the test suite (the
+   owner's decision, entry 305; deployment design section 7, specification sections 13 and 12.3 item 3); and at an
+   infrastructure reinstall the job lock is let go for the kit, the backup and the question and taken again before
+   anything is overwritten (reading C-R9; deployment design section 6, steps 2, 4, 6 and 11). **The owner ratifies
+   by his own word; the decision log says whether he has.**
 5. **Slice D:** the clean-sheet updater `results_master_v0_3.py` (entries 180, 181): Lotterywest-GOV only; the old
    v0.2 stays unchanged in DEV; no Mode H preconditions carried over. **It needs the owner's go,** and it is a new
    subsystem: say "Suggest switching to Fable (High) for this" first.
@@ -219,8 +234,9 @@ PASS or a ratification gives none.
    (entry 289); the roles of the two AIs, where the owner favours a trial (entry 292); both AIs' review of
    `doc/CODING_PRACTICES_v0_1.md`, kept minimal (entry 299).
 
-**Waiting on the owner at this edition:** his ratification of this edition; later, of the amendment. **Waiting on the
-reviewer:** EX_329.
+**Waiting on the owner at this edition:** his ratification of the two amendments (RAT-59) and of this edition
+(RAT-60); his word to issue EX_330 when the corrections are ready. **Waiting on the reviewer:** nothing, until
+EX_330.
 
 ### 0.5 Build step 3 in the overlay: what lies where, and what is settled
 
@@ -260,9 +276,9 @@ a new chat must know:
 - **The suite of an install** is `deploy/SUITE_MANIFEST.ini` (23 modules, the tests of the new system), run with the
   target's Python on a temporary copy of DEV's `src`, `deploy`, `tests` and root files, at `Init_Tree` and every
   `Reinstall_Infra`, and at an ordinary install when the target's infrastructure is file for file DEV's.
-- **The conflict of reading C-R9, put to the reviewer:** the design has `Reinstall_Infra` hold the job lock through
-  its `PRE_INFRA` backup; slice B never backs up under a job lock; the reading lets the lock go for the kit, the
-  backup and the question and takes it again before anything is overwritten.
+- **Reading C-R9, with which the reviewer concurs:** the design has `Reinstall_Infra` hold the job lock through
+  its `PRE_INFRA` backup; slice B never backs up under a job lock; the lock is let go for the kit, the backup and
+  the question and taken again before anything is overwritten (the second amendment of 0.4 item 4).
 - **`Reinstall_Infra` refuses** any plan that touches a forecast-class file, and also a file moved into or out of the
   forecast class with its bytes unchanged (the identity of the forecasting code is taken over that class).
 - **The owner's four environment scripts are now infrastructure** (`create_venv.bat` and the other three, class
@@ -382,7 +398,8 @@ November 2026 (RAT-40). Build step 1 (the method files' new layout), the light t
 engine, in DEV) are installed and proved. A standard for the form of every file is in force
 (doc/FILE_FORM_STANDARD_v0_2.md). Build step 3 (the trees, installs, backups, restore and the new updater) has my go
 for design and cloud coding only. Its slices A and B have passed independent review; slice C (creating a tree, the
-installs, verifying a tree) is written and is with the reviewer; slice D (the updater) waits for my go. All of it
+installs, verifying a tree) is written and the reviewer has asked for corrections to it (EX_329); slice D (the
+updater) waits for my go. All of it
 lies as working files under exchange/CLAUDE_WEB_TOOLS/step3/overlay/ and none of it is installed. There is no QA
 and no PROD tree yet, and the old system's code is still in src/ beside the new engine.
 

@@ -8,13 +8,14 @@ conventional statistics missed; the expected outcome is a carefully measured nul
 hydra3333; never write my personal name in anything committed). A separate ChatGPT chat is the independent reviewer.
 I relay between you, and I alone ratify and authorise.
 
-The previous Claude chat left you a handover, H-1 v15 (ratified by me as a candidate, not yet ratified; SHA-256 f3cb108288a9586948157e4d99563e1665c1196695712577e6fee6fa52e8b4da). Its chapter 0 is the
+The previous Claude chat left you a handover, H-1 v15 (ratified by me as a candidate, not yet ratified; SHA-256 075fd390736eb2f9359b1184940e8442a49d4946898b82aa1cb2cb7bc98c722e). Its chapter 0 is the
 whole live position. The project was redesigned from the root in November 2026; the new design was ratified on 22
 November 2026 (RAT-40). Build step 1 (the method files' new layout), the light tidy-up and build step 2 (the research
 engine, in DEV) are installed and proved. A standard for the form of every file is in force
 (doc/FILE_FORM_STANDARD_v0_2.md). Build step 3 (the trees, installs, backups, restore and the new updater) has my go
 for design and cloud coding only. Its slices A and B have passed independent review; slice C (creating a tree, the
-installs, verifying a tree) is written and is with the reviewer; slice D (the updater) waits for my go. All of it
+installs, verifying a tree) is written and the reviewer has asked for corrections to it (EX_329); slice D (the
+updater) waits for my go. All of it
 lies as working files under exchange/CLAUDE_WEB_TOOLS/step3/overlay/ and none of it is installed. There is no QA
 and no PROD tree yet, and the old system's code is still in src/ beside the new engine.
 
