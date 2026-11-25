@@ -150,6 +150,28 @@ file; says what it would change before it asks; the cutoff file when a change fr
   new reader with the first system's). Each module is run in a process of its own with the Python named, in the
   copy; a module that fails, or that ran no test, fails the suite; the copy is removed on a pass and left, with
   each module's output, on a failure. No time limit is put on a module.
+- **C-R9, TO BE TAKEN IN C5, FOR THE REVIEWER: the job lock and the backup at an infrastructure reinstall.** Design 6
+  has the target's job lock "taken and held to the end" at step 2 and the `PRE_INFRA` backup attempted at step 4.
+  Slice B's reviewed rule is that no backup is made while a job lock lies in the tree (the lock file would be
+  inside the ZIP, and a restored tree would refuse every job). Reading to take: `Reinstall_Infra` holds the lock
+  for step 3 (what it would change), lets it go for steps 4 and 5 (the kit, the backup, the question), and takes
+  it again at step 6 by an exclusive create with a fresh process check, exactly as an ordinary install does at
+  its step 6; a job that began meanwhile refuses the reinstall there, nothing having been overwritten. Step 9's
+  full comparison is made under that second hold, so nothing a job wrote in between goes unchecked. The other
+  way (teaching the backup to leave out a lock its caller holds) changes reviewed slice B code and the restore's
+  exact set, and is not proposed.
+- **C-R10, the order at the end of an install.** Design 5 step 10: "`INSTALLED_FILES.json`; the log line; the
+  updater's lock released; the barrier removed, last". Built so: `finish` writes the list and the log line, calls
+  what releases the updater's lock, and removes the barrier; the job lock is let go after that. If the block
+  that holds the updater's lock ends any other way (a failed check, a fault), that lock is released and the
+  barrier stays.
+- **C-R11, "YES".** Only the three capitals, with nothing else on the line but spaces, proceed. "yes", "Y", Enter and
+  an input that has ended are NO.
+- **C-R12, what stops an ordinary install after copying** (design 3.3 items 4, 6, 7): any failed smoke case; a game
+  whose stored records the job itself would refuse; any difference in the forecast sample; a derived difference
+  the tree does not already mark as not current. A difference the tree already marks is the known one and is
+  reported, not a stop. If the `checks` program ends with any exit code but 0, or leaves no result of its kind,
+  nothing is known and nothing passes.
 
 ## 4. Where it stands
 
@@ -226,12 +248,22 @@ file; says what it would change before it asks; the cutoff file when a change fr
   `status_file_faults`); the ending (`log_line`, `finish`: the list, the log line, the barrier removed last).
   Planted faults (`mutation_check_slice_c2b.py`): 37, all caught (two only after tests were added). The whole
   suite has not been run on this state.
-- **Next, part C2, third piece (same file):** reserving the target (the job lock by exclusive create, the
-  process check under it, the updater's lock, no orphan marker, no other unfinished operation, `SNAPSHOT_DUE`);
-  the recovery kit and the backup attempted, and the one question with their results said exactly (design 5,
-  steps 3 to 5); "the target's infrastructure is file for file DEV's"; starting the target's Python on
-  `src/tree_checks_command.py checks` and reading its result file; the suite through `suite_on_copy.run_suite`.
-  Then C3 (`Init_Tree`), C4 (`Install`), C5 (`Reinstall_Infra`).
+- **25 November 2026, part C2, third piece: FINISHED and committed. PART C2 IS WHOLE.** Added to
+  `deploy/install_common.py`: `reserved` (the job lock by an exclusive create, the process check under it, the
+  orphan marker, another unfinished operation, a held updater's lock); `changing` (the barrier, the updater's
+  lock, `SNAPSHOT_DUE`, in that order; the barrier stays if the block fails); `attempt_rollback_point`,
+  `question_lines`, `owner_says_yes`; `target_python`; `infrastructure_differences`, `suite_if_it_is_the_trees`;
+  `checks_with_target_python` (starts `src/tree_checks_command.py checks` isolated, no time limit, reads its
+  result file from a temporary folder outside every tree); `faults_that_stop`. `tests/test_trees_install_common.py`
+  is now 69 tests (pass, with `test_file_form`, `test_trees_readiness`, `test_trees_suite`). Planted faults in
+  the whole file (`mutation_check_slice_c2b.py`): 73, all caught. **Not yet proved in the cloud: the real start
+  of the target's own Python on the `checks` program** (the unit tests stand in for the start; the program
+  refuses any Python but the tree's own, and an invented tree's environment is not a Python that runs). It is
+  proved with C3, by a creation run end to end on a tree whose `.venv` is a real one. The whole suite has not
+  been run on this state.
+- **Next: C3, `Init_Tree.bat QA|PROD`** (design 4, nine steps), with `deploy/init_tree.py`, its launcher, the
+  command word in `deploy/deploy_command.py`, and the four environment scripts onto the manifest (the note
+  below). Then C4 (`Install`), C5 (`Reinstall_Infra`, with reading C-R9).
 - **To settle in C3, seen now:** `Init_Tree` step 6 has the owner build `.venv` "with `create_venv.bat` and
   `install_upgrade_dependencies_into_venv.bat` in the new tree", and design 2 lists those and the two activation
   scripts among a tree's files. They are not on the infrastructure manifest today, so no install would put them

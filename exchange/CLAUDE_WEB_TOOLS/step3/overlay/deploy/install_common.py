@@ -1,4 +1,4 @@
-"""What every install into a QA or PROD tree shares: the plan, the barrier, copying, and the list of installed files.
+"""What every install into a QA or PROD tree shares: the plan, the barrier, the copying, the checks and the ending.
 
 What this file is for
     Init_Tree.bat, Install.bat and Reinstall_Infra.bat each do the same few things to a target tree. They work out
@@ -8,8 +8,11 @@ What this file is for
     tell whether it is finishing its own work or meeting another's. They COPY each file to a temporary name,
     hash what was written, and rename it into place; no existing file is ever opened for writing. They check the
     whole tree's software against what the plan says it must now be. And at the end they write the tree's LIST
-    of installed files, add one line to its log, and remove the barrier, last. This file holds those steps; the
-    three commands put them in their order.
+    of installed files, add one line to its log, and remove the barrier, last. Around these they RESERVE the
+    target (its job lock, then a check that no other Python process of the tree runs), attempt a ROLLBACK POINT
+    (a recovery kit and a backup) and ask the owner the one question with both results said exactly, and have
+    the tree's software CHECKED with the tree's own Python. This file holds those steps; the three commands put
+    them in their order.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_Deployment_Design_v0_12.md sections 3 (what can be installed, and what an install
@@ -18,9 +21,17 @@ Which part of the specification it carries out
 
 Which of the project's own modules it uses
     install_readiness (deploy/)   infrastructure_readiness, variant_readiness: the two markers
+    recovery_kit (deploy/)        build_kit
+    suite_on_copy (deploy/)       run_suite
     research.code_identity        MANIFEST_PATH, read_manifest
+    research.environment_marker   PROGRAMS_FOLDER
     research.installed_files      LIST_PATH, METHODS_FOLDER, differences, read_list, software_now, write_list
-    research.job_lock             RECORDS_FOLDER, is_link
+    research.job_lock             RECORDS_FOLDER, UPDATER_LOCK, LaunchRefused, check_no_orphan_marker, is_link,
+                                  job_lock, updater_lock
+    research.launch_guard         check_no_unfinished_operation
+    research.process_rule         check_no_other_process_of_tree
+    research.snapshot             attempt_snapshot, mark_due
+    research.tree_checks          RESULT_KIND, ALL_VARIANTS, NO_VARIANT: the words of the `checks` command
     research.status_file          STATUS_FILE_NAME, create_active, read_status
     research.variant_folders      find_variants, sha256_of_file
     research.windows_text         windows_lines
@@ -33,12 +44,21 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import shutil
+import subprocess
+import tempfile
+from contextlib import contextmanager
 from datetime import timezone
 from pathlib import Path
 
 import install_readiness
-from research import code_identity, installed_files, variant_folders
-from research.job_lock import RECORDS_FOLDER, is_link
+import recovery_kit
+import suite_on_copy
+from research import code_identity, installed_files, process_rule, snapshot, tree_checks, variant_folders
+from research.environment_marker import PROGRAMS_FOLDER
+from research.job_lock import (RECORDS_FOLDER, UPDATER_LOCK, LaunchRefused, check_no_orphan_marker, is_link,
+                               job_lock, updater_lock)
+from research.launch_guard import check_no_unfinished_operation
 from research.status_file import STATUS_FILE_NAME, StatusRefused, create_active, read_status
 from research.windows_text import windows_lines
 
@@ -55,6 +75,17 @@ OPERATIONS = (INIT, INSTALL, REINSTALL_INFRA)
 INSTALLING_SUFFIX = '.installing'
 # How much of a file is read at a time, in bytes.
 CHUNK = 1024 * 1024
+# The one answer that lets an install go on. Anything else, Enter included, is NO.
+YES = 'YES'
+# The program of the installed software that makes the checks, from the software's root, and its command word.
+CHECKS_PROGRAM = 'src/tree_checks_command.py'
+CHECKS_WORD = 'checks'
+# That command's own words: the kind of its result, and the words for every variant's smoke case and for none.
+CHECKS_RESULT_KIND, ALL_VARIANTS, NO_VARIANT = tree_checks.RESULT_KIND, tree_checks.ALL_VARIANTS, tree_checks.NO_VARIANT
+# The start of the name of the temporary folder a result file is written in.
+RESULT_FOLDER_PREFIX = 'a_p_r_i_r_checks_'
+# What the specification has the tool say when the tests in DEV are not the tests of the target's software.
+SUITE_NOT_RUN = 'the tests in DEV are for newer code than this tree holds; not run'
 
 
 class InstallRefused(ValueError):
@@ -423,11 +454,13 @@ def log_line(tree_root: Path, record: dict, now) -> None:
         stream.write(json.dumps(line, ensure_ascii=True, sort_keys=True) + '\n')
 
 
-def finish(tree_root: Path, plan: dict, expected: dict, now, extra: dict | None = None) -> str:
-    """The ending every install shares (design 5, step 10): the list of installed files, the log line, and the
-    barrier removed, last.
+def finish(tree_root: Path, plan: dict, expected: dict, now, extra: dict | None = None, release=None) -> str:
+    """The ending every install shares (design 5, step 10): the list of installed files, the log line, the
+    updater's lock released, and the barrier removed, last.
 
     expected: the list the tree's software was checked against.  extra: more for the log line.
+    release: called after the log line and before the barrier is removed; the command passes what releases the
+    updater's lock it took.
     Returns the tree's new software fingerprint (the SHA-256 of its list of installed files).
     """
     installed_files.write_list(tree_root, expected)
@@ -439,5 +472,205 @@ def finish(tree_root: Path, plan: dict, expected: dict, now, extra: dict | None 
                               'infrastructure_fingerprint': plan['infrastructure_fingerprint'],
                               'statement': plan['statement'], 'software_fingerprint': fingerprint},
                              **(extra or {})), now)
+    if release is not None:
+        release()
     remove_barrier(tree_root)
     return fingerprint
+
+
+# ------------------------------------------------------------------------------------- reserving the target
+
+@contextmanager
+def reserved(settings, purpose: str, started: str, say=print):
+    """Reserve the target before anything in it is changed (design 5, step 6; EX_269 R7-F04): its job lock, taken
+    by an exclusive create, then the process check under that lock. Use it as `with reserved(...):`; the lock
+    is released when the block ends.
+
+    settings: the target's settings.  purpose, started: written into the lock file for whoever finds it.
+    Refuses, having changed nothing but its own lock file, which it removes: a job that holds the lock
+    (LaunchRefused; the install can simply be run again when the tree is quiet); another Python process of the
+    tree (ProcessRuleRefused; no process is ever ended); the orphan marker; a results update that holds its
+    lock; a rerun, a reseeding, a restore or a backup left unfinished in the tree. An unfinished install is
+    not refused here: the command compares its barrier with the plan (check_barrier).
+    """
+    root = settings.tree_root
+    with job_lock(root, purpose, started):
+        looked_at = process_rule.check_no_other_process_of_tree(root)
+        say(f'The target is reserved: its job lock is held, and no other Python process of the tree is running '
+            f'({looked_at} processes of this PC looked at).')
+        check_no_orphan_marker(root)
+        check_no_unfinished_operation(root, finishing=BARRIER_PATH)
+        if (root / UPDATER_LOCK).exists():
+            raise LaunchRefused(f'a results update holds its lock ({root / UPDATER_LOCK}). Wait for it to finish. '
+                                f'If you are sure none is running, delete that one file by hand and run the '
+                                f'command again.')
+        yield
+
+
+@contextmanager
+def changing(settings, plan: dict, started: str):
+    """The barrier, the updater's own lock and the note that a backup is owed, in that order, before the first
+    change of the target's software (design 5, step 6). Use it inside `reserved`, as
+    `with changing(settings, plan, started) as release:`; give `release` to finish(), which calls it just before
+    it removes the barrier. If the block ends otherwise (a check failed, a fault), the updater's lock is
+    released and THE BARRIER STAYS: no launcher works in the tree until the same command finishes the install.
+    """
+    write_barrier(settings.tree_root, plan, started)
+    lock = updater_lock(settings.tree_root, f'{plan["operation"]} of software', started)
+    lock.__enter__()
+    released = []
+
+    def release() -> None:
+        """Release the updater's lock, once."""
+        if not released:
+            released.append(True)
+            lock.__exit__(None, None, None)
+
+    try:
+        snapshot.mark_due(settings)
+        yield release
+    finally:
+        release()
+
+
+# --------------------------------------------------------------------- the rollback point and the one question
+
+def software_fingerprint_of(expected: dict) -> str:
+    """The software fingerprint a tree will have once its list of installed files is `expected`: the SHA-256 of
+    that list's bytes. A recovery kit is named for it."""
+    return hashlib.sha256(installed_files.list_bytes(expected)).hexdigest()
+
+
+def attempt_rollback_point(dev_root: Path, settings, backup_job: str, expected: dict, now, say=print) -> tuple:
+    """Write the recovery kit for the new software state and attempt a backup of the target as it is now
+    (design 5, steps 3 and 4). Neither failing stops the install: each result is told exactly in the question.
+
+    backup_job: the backup's name, for example 'PRE_INSTALL'.  expected: the list the tree will have.
+    Returns (the KitResult, the SnapshotResult). No earlier backup is looked for, counted or verified.
+    """
+    kit = recovery_kit.build_kit(dev_root, settings.backup_root, software_fingerprint_of(expected), now)
+    say(kit.line())
+    say('A backup of the target is attempted (every file is read three times; it can take several minutes).')
+    backup = snapshot.attempt_snapshot(settings, backup_job, now)
+    say(backup.line())
+    return kit, backup
+
+
+def question_lines(kit, backup) -> list:
+    """The lines of the one question (design 5, step 5; specification 12.3, last paragraph): both results as
+    they are, a warning in capitals for each that failed, and the words to type. No line ever names a backup
+    that was not made."""
+    lines = [f'The backup taken just now: {backup.line()}', f'The recovery kit: {kit.line()}']
+    if not backup.made:
+        lines.append('NO ROLLBACK POINT WAS CREATED BY THIS INSTALL.')
+    if not kit.made:
+        lines.append('THE RESTORE TOOL COULD NOT BE WRITTEN: an existing kit in your backup folder still works for '
+                     'older backups.')
+    lines.append(f'Type {YES} to proceed. Anything else, Enter included, is NO.')
+    return lines
+
+
+def owner_says_yes(lines, ask=input, say=print) -> bool:
+    """Ask the one question. lines: what is said before it.  ask: reads the owner's answer.
+    Returns True only for the answer YES, in capitals, with nothing else on the line."""
+    for line in lines:
+        say(line)
+    try:
+        answer = ask('> ')
+    except EOFError:
+        answer = ''
+    return answer.strip() == YES
+
+
+# ------------------------------------------------------------------ the checks, with the target's own Python
+
+def target_python(settings) -> Path:
+    """The Python of the target's own environment, for example G:\\a_p_r_i_r\\.venv\\Scripts\\python.exe.
+    Refuses (InstallRefused) if it is not there: the environment has not been built."""
+    python = settings.venv_dir / PROGRAMS_FOLDER / 'python.exe'
+    if not python.is_file():
+        raise InstallRefused(f'{python} was not found: the {settings.role} tree\'s Python environment is not built. '
+                             f'In that tree run create_venv.bat, then install_upgrade_dependencies_into_venv.bat, '
+                             f'and run this command again.')
+    return python
+
+
+def infrastructure_differences(dev_files: dict, installed: dict) -> list:
+    """The infrastructure files in which a tree is not file for file DEV's.
+
+    dev_files: dev_infrastructure()['files'].  installed: the tree's list of installed files (or the list it
+    will have).  Returns the paths that the tree lacks or holds with other bytes, sorted; empty when the tree's
+    infrastructure is DEV's. (The manifest is one of the files: with equal manifests neither side lists a file
+    the other does not.)
+    """
+    held = {entry['path']: entry['sha256'] for entry in installed['files']}
+    return sorted(path for path, digest in dev_files.items() if held.get(path) != digest)
+
+
+def suite_if_it_is_the_trees(dev_root: Path, dev_files: dict, installed: dict, python: Path, say=print) -> tuple:
+    """Run DEV's suite with the target's Python on a temporary copy, but only when the target's infrastructure
+    is file for file DEV's (specification 12.3 item 3).
+
+    Returns (None, the specification's line saying it was not run and in which files the tree differs) or
+    (True or False, the suite's own closing line).
+    """
+    differing = infrastructure_differences(dev_files, installed)
+    if differing:
+        return None, f'The test suite: {SUITE_NOT_RUN} (the tree differs from DEV in: {", ".join(differing)}).'
+    try:
+        result = suite_on_copy.run_suite(dev_root, python, say)
+    except suite_on_copy.SuiteRefused as refusal:
+        raise InstallRefused(str(refusal)) from None
+    return result.passed, result.line()
+
+
+def checks_with_target_python(python: Path, software_root: Path, tree_root: Path, smoke, sample: bool,
+                              derived: bool, say=print, run=subprocess.run) -> dict:
+    """Have the software in a folder checked against a tree's data, by that software, with the tree's Python.
+
+    python: target_python's result.  software_root: the tree itself, or the temporary folder holding the software
+    as it would be.  tree_root: the tree whose data is read and whose scratch folder a smoke case uses.
+    smoke: ALL_VARIANTS, NO_VARIANT or a list of identities.  sample, derived: whether those two checks are
+    asked.  run: starts the program; a test passes its own.
+    The program is started in isolated mode, writing no cache, with no time limit; it prints its own lines, and
+    writes what it found to a file in a new temporary folder, which is removed here.
+    Returns what it found (research.tree_checks.run_checks). Refuses (InstallRefused) if the program ended with
+    any exit code but 0, or left no result, or one of another kind: then nothing is known and nothing passes.
+    """
+    folder = Path(tempfile.mkdtemp(prefix=RESULT_FOLDER_PREFIX))
+    result = folder / 'result.json'
+    words = [str(python), '-I', '-B', '-u', str(Path(software_root) / CHECKS_PROGRAM), CHECKS_WORD,
+             '--data', str(tree_root), '--result', str(result),
+             '--smoke', smoke if isinstance(smoke, str) else ','.join(smoke)]
+    words += ['--sample'] if sample else []
+    words += ['--derived'] if derived else []
+    try:
+        ended = run(words, stdin=subprocess.DEVNULL, check=False).returncode
+        try:
+            found = json.loads(result.read_bytes().decode('ascii')) if ended == 0 else None
+        except (OSError, ValueError):
+            found = None
+    finally:
+        shutil.rmtree(folder, ignore_errors=True)
+    if not isinstance(found, dict) or found.get('kind') != CHECKS_RESULT_KIND:
+        raise InstallRefused(f'the checks could not be made with the target\'s Python ({python}; exit code {ended}). '
+                             f'What it printed is above. Nothing is known of the tree\'s software, so nothing '
+                             f'passes.')
+    say(f'The checks were made with {python}.')
+    return found
+
+
+def faults_that_stop(found: dict) -> list:
+    """The findings of the checks that stop an install into an existing tree (design 3.3, items 4, 6 and 7):
+    every failed smoke case; every game whose stored records could not be read; every difference in the forecast
+    sample; and a difference in the derived results that the tree does not already mark as not current (an
+    unexpected one). One sentence each; empty when nothing stops."""
+    faults = list((found['smoke'] or {'failures': []})['failures'])
+    faults += [f'{game_id}: its stored records could not be read: {why}'
+               for game_id, why in sorted((found['unreadable'] or {}).items())]
+    faults += list((found['sample'] or {'differences': []})['differences'])
+    for game_id, answer in sorted((found['derived'] or {}).items()):
+        if answer is not None and not answer['known']:
+            faults.append(f'{game_id}: stored scores or OV-1 lines are not what the installed software computes, '
+                          f'from draw {answer["from_draw"]}: {answer["detail"]}')
+    return faults

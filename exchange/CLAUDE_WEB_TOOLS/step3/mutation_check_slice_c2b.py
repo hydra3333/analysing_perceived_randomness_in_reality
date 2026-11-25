@@ -1,5 +1,6 @@
-"""Workspace helper (not project code): the planted faults for slice C part C2, second piece (deploy/install_common.py:
-the plan, the barrier, the copying, the list of installed files). One fault at a time in a disposable copy of the dev
+"""Workspace helper (not project code): the planted faults for slice C part C2, second and third pieces
+(deploy/install_common.py: the plan, the barrier, the copying, the list of installed files; reserving the target,
+the rollback point and the one question, the checks with the target's Python). One fault at a time in a disposable copy of the dev
 tree that holds the overlay; tests/test_trees_install_common.py must fail. A fault no test catches is SURVIVED."""
 import subprocess
 from pathlib import Path
@@ -44,6 +45,42 @@ FAULTS = [
  (C, "    remove_barrier(tree_root)\r\n    return fingerprint", "    return fingerprint", 'the barrier is not removed'),
  (C, "    installed_files.write_list(tree_root, expected)\r\n    fingerprint", "    remove_barrier(tree_root)\r\n    installed_files.write_list(tree_root, expected)\r\n    fingerprint", 'the barrier is removed first'),
  (C, "'software_fingerprint': fingerprint},", "'software_fingerprint': None},", 'the log does not hold the software fingerprint'),
+ (C, "    with job_lock(root, purpose, started):\r\n        looked_at", "    if True:\r\n        looked_at", 'reserve: the job lock is not taken'),
+ (C, "        looked_at = process_rule.check_no_other_process_of_tree(root)", "        looked_at = 0", 'reserve: no process check under the lock'),
+ (C, "        check_no_orphan_marker(root)\r\n        check_no_unfinished_operation(root, finishing=BARRIER_PATH)", "        check_no_unfinished_operation(root, finishing=BARRIER_PATH)", 'reserve: the orphan marker does not refuse'),
+ (C, "        check_no_unfinished_operation(root, finishing=BARRIER_PATH)", "        pass", 'reserve: another unfinished operation does not refuse'),
+ (C, "        check_no_unfinished_operation(root, finishing=BARRIER_PATH)", "        check_no_unfinished_operation(root)", 'reserve: an unfinished install can never be continued'),
+ (C, "        if (root / UPDATER_LOCK).exists():", "        if False:", 'reserve: a results update that holds its lock does not refuse'),
+ (C, "    write_barrier(settings.tree_root, plan, started)\r\n    lock = updater_lock(", "    lock = updater_lock(", 'changing: no barrier is written'),
+ (C, "    lock.__enter__()\r\n    released = []", "    released = []", 'changing: the updater\'s lock is not taken'),
+ (C, "        snapshot.mark_due(settings)\r\n        yield release", "        yield release", 'changing: the note that a backup is owed is not written'),
+ (C, "    finally:\r\n        release()", "    finally:\r\n        pass", 'changing: a fault leaves the updater\'s lock held'),
+ (C, "    if release is not None:\r\n        release()\r\n    remove_barrier(tree_root)", "    remove_barrier(tree_root)\r\n    if release is not None:\r\n        release()", 'finish: the barrier is removed before the updater\'s lock is released'),
+ (C, "    kit = recovery_kit.build_kit(dev_root, settings.backup_root, software_fingerprint_of(expected), now)", "    kit = recovery_kit.build_kit(dev_root, settings.backup_root, 'x' * 64, now)", 'rollback: the kit is not for the software state to come'),
+ (C, "    backup = snapshot.attempt_snapshot(settings, backup_job, now)", "    backup = snapshot.attempt_snapshot(settings, 'MANUAL', now)", 'rollback: the backup does not carry its name'),
+ (C, "    if not backup.made:\r\n        lines.append('NO ROLLBACK POINT", "    if False:\r\n        lines.append('NO ROLLBACK POINT", 'question: a backup that was not made is not warned of'),
+ (C, "    if not kit.made:\r\n        lines.append('THE RESTORE TOOL", "    if False:\r\n        lines.append('THE RESTORE TOOL", 'question: a kit that was not written is not warned of'),
+ (C, "    if not backup.made:\r\n        lines.append('NO ROLLBACK POINT", "    if True:\r\n        lines.append('NO ROLLBACK POINT", 'question: a warning of no rollback point when there is one'),
+ (C, "    return answer.strip() == YES", "    return answer.strip().upper() == YES", 'question: yes in small letters is taken for YES'),
+ (C, "    return answer.strip() == YES", "    return answer.strip().startswith(YES)", 'question: YES with more on the line is taken for YES'),
+ (C, "    except EOFError:\r\n        answer = ''", "    except EOFError:\r\n        answer = YES", 'question: an input that has ended is taken for YES'),
+ (C, "    if not python.is_file():", "    if False:", 'checks: a tree without its Python is not refused'),
+ (C, "    return sorted(path for path, digest in dev_files.items() if held.get(path) != digest)", "    return sorted(path for path, digest in dev_files.items() if path in held and held[path] != digest)", 'suite: a tree that lacks an infrastructure file counts as DEV\'s'),
+ (C, "    if differing:\r\n        return None,", "    if False:\r\n        return None,", 'suite: it is run for a tree whose infrastructure is not DEV\'s'),
+ (C, "        result = suite_on_copy.run_suite(dev_root, python, say)", "        result = suite_on_copy.run_suite(dev_root, Path(__import__('sys').executable), say)", 'suite: it is run with DEV\'s Python, not the target\'s'),
+ (C, "    return result.passed, result.line()", "    return True, result.line()", 'suite: a failed suite is reported as passed'),
+ (C, "    words = [str(python), '-I', '-B', '-u',", "    words = [str(python), '-B', '-u',", 'checks: the program is not started in isolated mode'),
+ (C, "             '--data', str(tree_root), '--result', str(result),", "             '--data', str(software_root), '--result', str(result),", 'checks: the data read is the software folder\'s, not the tree\'s'),
+ (C, "    words += ['--sample'] if sample else []", "    words += ['--sample']", 'checks: the sample is asked when it was not wanted'),
+ (C, "    words += ['--derived'] if derived else []", "    words += []", 'checks: the derived results are never asked'),
+ (C, "            found = json.loads(result.read_bytes().decode('ascii')) if ended == 0 else None", "            found = json.loads(result.read_bytes().decode('ascii'))", 'checks: a result left by a program that refused is believed'),
+ (C, "    if not isinstance(found, dict) or found.get('kind') != CHECKS_RESULT_KIND:", "    if not isinstance(found, dict):", 'checks: a result of another kind is believed'),
+ (C, "    finally:\r\n        shutil.rmtree(folder, ignore_errors=True)", "    finally:\r\n        pass", 'checks: the temporary folder is left behind'),
+ (C, "    faults = list((found['smoke'] or {'failures': []})['failures'])", "    faults = []", 'verdict: a failed smoke case does not stop the install'),
+ (C, "               for game_id, why in sorted((found['unreadable'] or {}).items())]", "               for game_id, why in ()]", 'verdict: an unreadable game does not stop the install'),
+ (C, "    faults += list((found['sample'] or {'differences': []})['differences'])", "    faults += []", 'verdict: a sample difference does not stop the install'),
+ (C, "        if answer is not None and not answer['known']:", "        if False:", 'verdict: an unexpected derived difference does not stop the install'),
+ (C, "        if answer is not None and not answer['known']:", "        if answer is not None:", 'verdict: a difference the tree already marks stops the install'),
 ]
 survived = 0
 for relative, old, new, what in FAULTS:
