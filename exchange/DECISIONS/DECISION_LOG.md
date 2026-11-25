@@ -7910,3 +7910,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not started, and not to be started before that discussion:** the amendment (RAT-61) and slice D.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 329; RAT-61.
+
+## 329. 26 November 2026, 06:42 - the paper for the three-way discussion is written: how the three trees behave (the owner's rule, the ratified text, what is built, the questions)
+
+- **Written at the owner's request (entry 328):**
+  `exchange/Claude_Three_Way_Discussion_How_The_Three_Trees_Behave_v0_1_20261126.md`, SHA-256
+  `268d1a5dc909ecb1951bde09dcc63b081b66b85f14e4cca1b266385737883b26` (computed by Claude). It is a discussion paper,
+  not an EX message: it proposes no wording, changes no ratified file and no code, and authorises nothing.
+- **What it holds:** (1) why it exists; (2) the owner's own statements of the rule, from entries 136, 305 and 324 to
+  328; (3) his question (a): the two ratified sentences Claude meant (specification v0.6 section 2, "only PROD may run
+  the updater", and section 15, "only in PROD"), and where they came from: Claude's own first draft of the
+  specification (entry 125), never one of the choices put to the owner, carried through review and ratified with the
+  whole document; (4) his question (b): a table of every place where what a tree does depends on its role today, with
+  where it is said and whether it is installed, passed or not written; (5) what his rule changes as Claude reads it
+  (the results step, the updater's launcher, the settings and `Init_Tree`; nothing else) and what it does not; (6)
+  five questions to settle first (how PROD's data gets into QA or DEV; which functions must work inside DEV's own
+  tree; three trees visiting the website; a check asked of the reviewer; the order of work); (7) how the process went
+  wrong, with one small suggestion; (8) where things stand.
+- **Not started:** any amendment (it would be RAT-61), and slice D. Both wait for the three-way discussion and the
+  owner's answers.
+- **Waiting on the owner and the reviewer:** their reading of the paper and their answers to its section 6.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 330; RAT-61.

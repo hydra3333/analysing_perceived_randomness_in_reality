@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:34 Australia/Adelaide (entry 327: identical software acts identically; DEV still to be answered).
+**Last updated:** 26 November 2026, 06:42 Australia/Adelaide (entry 329: the paper for the three-way discussion on how the trees behave).
 
 ## For the owner: NOW
 
+- **THE THREE-WAY DISCUSSION ON HOW THE TREES BEHAVE (entries 328 and 329; 26 November 2026); READ THIS BEFORE SLICE
+  D.** The owner's rule: what a tree does follows from the software in it, not from its name; a research job works on
+  the accepted results in its own tree; the updater is not PROD's alone; it covers DEV too ("QA plus"). The ratified
+  text says otherwise in specification v0.6 sections 2 and 15. The paper is
+  `exchange/Claude_Three_Way_Discussion_How_The_Three_Trees_Behave_v0_1_20261126.md`. **Waiting on the owner and the
+  reviewer:** their answers to its section 6. **Not started:** the amendment (RAT-61) and slice D. Slices A, B and C
+  have passed; nothing is installed.
 - **THE OWNER (entry 327; 26 November 2026): identical software acts identically.** QA's research job does what PROD's
   does, the results step included (it starts the updater in its own tree unless `--no-update`). The install tools do
   write into PROD; what is never done is a copy of data or results into PROD. **Waiting on the owner:** what DEV does;
