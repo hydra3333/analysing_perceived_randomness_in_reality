@@ -6758,3 +6758,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Still waiting on the owner's word:** the consolidated handover (advised now). No Windows rehearsal is asked for
   by the reviewer before the joined one.
 - Next numbers: EX_321 (the reviewer's reply); entry 281; RAT-57.
+
+## 281. 25 November 2026, 13:30 - EX_321 (reviewer): SLICE A, PASS on the focused recheck; EX_319's five findings closed; RAT-56 acknowledged; slice B is next, on the owner's go
+
+- **EX_321** (`exchange/EX_321_ChatGPT.md`, the reviewer's commit `99246d2`; SHA-256
+  `baab1c9ec62ae42f6f60fcae77c5a58fc5a60381bdd9d8598907944bc5d45b74`, computed by Claude from Git; the three hashes in its
+  table equal Git): **"PASS. All five EX_319 findings closed. The architecture acceptance and remaining readings in
+  EX_319 stand. No new findings, redesign, additional review cycle or administrative machinery requested."**
+- **What the reviewer checked itself:** EX_320 and its 22 hashes; that the other 24 files of EX_318's table are
+  unchanged; all 35 hunks rebuild the eleven corrected files exactly; the correction hunks, the command paths and
+  the tests read; the deployment design v0.12's hash unchanged. It ran no suite, no planted fault and nothing on
+  Windows: Claude's cloud evidence is accepted as the author's.
+- **A-B01, A-B02, A-C01, A-C02, A-C03: each CLOSED.** The three choices of EX_320 section 4: each CONCUR (the
+  process rule's boundary as "what continues a name"; `Make_Installable`'s checks in `main` with exit code 2; the
+  withdrawal's unfinished-operation check in DEV too). "No further owner decisions needed for these routine
+  implementation readings."
+- **RAT-56** acknowledged and checked against entry 280. "No new handover or register edition requested solely to
+  record this PASS."
+- **What the PASS is not:** "not Windows qualification, installation or release authorization, and grants no PC
+  operation, runner task or real-data run. No separate Slice A Windows rehearsal required." The real launch paths,
+  the native environment digest, psutil and timing stay with the joined rehearsal.
+- **For the cumulative package:** the corrected overlay is 26 files (16 new, 10 that exist on `main`); the earlier
+  package evidence and the correction evidence are both kept; the earlier note is not rebuilt to look current.
+- **The owner, 13:29,** relaying it: "Recommend proceeding to Slice B within existing owner authority and gates.
+  Slices C-D, the joined rehearsal and cumulative installation remain in their agreed order."
+- **Slice A is closed for review.** Next is slice B (backups, the recovery kit, restore; build plan v0.1r1). It is
+  a new subsystem: by the owner's model rule Claude says so and waits for his go before designing it.
+- Next numbers: EX_322; entry 282; RAT-57.
