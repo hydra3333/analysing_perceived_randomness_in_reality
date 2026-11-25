@@ -7517,3 +7517,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next, as the owner decided (entry 310):** the next ordinary edition of H-1.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 313; RAT-59.
+
+## 313. 25 November 2026, 23:03 - the owner: issue EX_328 now; H-1 after he switches to Opus
+
+- **The owner, 23:02,** to Claude's two questions (issue EX_328 now or after H-1; H-1 on Fable or on Opus): "1 yes
+  now 2. let me switch to opus first"
+- **EX_328 is issued:** `exchange/EX_328_Claude.md` (SHA-256 `20aa7b5ce0eb3fd09fa225a921699d7348aae31de086ba0b65fbeba87ef88c12`), slice C of build step 3 for independent
+  review, on `main` at `41832c2bea5c4d4d43aa338bb55c19a63efbe831`: the package note, the 54 files of the overlay (20 new, 3 changed since slice B as
+  reviewed), the differences of the three reviewed files, the evidence, the amendment's proposed wording (entry
+  305; RAT-59 only after the reviewer's view), the conflict of reading C-R9, readings C-R1 to C-R15. The reviewer
+  replies as EX_329.
+- **The Fable work is finished** (slice C, which the owner authorised on Fable at entry 301). The next edition of
+  H-1 is a document job and is written after the owner has switched to Opus.
+- **Waiting on:** the reviewer's EX_329; the owner's switch, for H-1.
+- Nothing is authorised on the owner's PC. No install or run is authorised by this message or by a PASS.
+- Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 314; RAT-59.

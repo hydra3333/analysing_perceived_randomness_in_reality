@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 22:59 Australia/Adelaide (entry 312: slice C is whole and proved in the cloud; EX_328 on the owner's word; H-1 next).
+**Last updated:** 25 November 2026, 23:03 Australia/Adelaide (entry 313: slice C is with the reviewer as EX_328; H-1 next, on Opus).
 
 ## For the owner: NOW
 
+- **SLICE C IS WITH THE REVIEWER (entry 313; 25 November 2026): EX_328,** `exchange/EX_328_Claude.md`. **Waiting on
+  the reviewer:** EX_329. **Next for Claude, after the owner has switched to Opus:** the next ordinary edition of
+  H-1 (entries 310 and 300 say what it takes in). RAT-59 (the amendment of entry 305) only after the reviewer's
+  view. **If this chat ends here:** a new chat reads H-1 v14, entries 301 to 313, the slice's package note
+  (`exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_PACKAGE_NOTE_v0_1.md`) and its working notes, and answers EX_329.
 - **SLICE C IS WHOLE AND PROVED IN THE CLOUD (entry 312; 25 November 2026): `Verify_Tree`, `Init_Tree`, `Install`,
   `Reinstall_Infra` and what they share.** Not reviewed, not installed. The note for the reviewer is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_PACKAGE_NOTE_v0_1.md`. **Waiting on the owner's word:** EX_328 to
