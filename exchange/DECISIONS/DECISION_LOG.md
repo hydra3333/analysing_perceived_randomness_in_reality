@@ -7649,3 +7649,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
   ratification of H-1 v15 as RAT-60. The Fable task is finished: the owner may switch back to Opus.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_330 (Claude's); entry 320; RAT-59 (the amendments), RAT-60 (H-1 v15).
+
+## 320. 26 November 2026, 00:03 - RAT-59 AND RAT-60: THE OWNER RATIFIES the two narrow amendments and H-1 v15, and gives his word for EX_330
+
+- **Claude's three questions** (entry 319): (1) ratify the two amendments as RAT-59, before EX_330; (2) issue EX_330
+  to the reviewer; (3) ratify H-1 v15 as RAT-60, the reviewer not having read it.
+- **The owner, 00:01 on 26 November 2026:** "1 yes ratified now 2 yes issue 330 3 yes ratify H-1 v15 as RAT-60".
+- **RAT-59, what is ratified:** both amendments, in the wording of
+  `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md` (SHA-256
+  `b86f2aec91b0f716f62cd4b015f83dca461c5cc98a41006fe8f650f8c15d8126`), which the reviewer concurred with in EX_329
+  section 2 and which holds his one change of wording.
+  - *Amendment 1, `Verify_Tree.bat` does not run the test suite* (the owner's decision, entry 305): deployment
+    design v0.12 section 7, first paragraph; specification v0.6 section 13, the item "Verified before use"; and
+    specification 12.3 item 3, which keeps the suite for the install tools in DEV (at creation, at every
+    infrastructure reinstall, and at an ordinary variant installation when the tree's infrastructure is file for
+    file DEV's) and never has `Verify_Tree` run it.
+  - *Amendment 2, the job lock at an infrastructure reinstall* (reading C-R9): deployment design v0.12 section 6,
+    steps 2, 4, 6 and 11. The lock is held through step 3; let go for the recovery kit, the backup and the
+    question; taken again with fresh checks, and the command refuses, nothing overwritten, if the accepted plan or
+    what the statement rested on changed meanwhile; held through step 10; let go before the backup after.
+  - *What it does not do:* it adds no lock, no record and no command; slice B's rule that no backup is made while
+    a job lock lies in the tree is unchanged; W-23 stands in full; the smoke cases, the forecast sample and the
+    derived results in full are not a substitute for the suite.
+  - *The ratified files are not edited:* `doc/Predictive_Randomness_Deployment_Design_v0_12.md` (SHA-256
+    `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d`) and
+    `doc/Predictive_Randomness_System_Specification_v0_6.md` (SHA-256
+    `ee7199d0c17e8bcf877d49e25c6db1a009105c3f8da75ff1ec28b15726216ad0`), both computed by Claude now. The amendments
+    stand by this ratification, as RAT-56 does. The amendments' document is not edited either (its status line
+    still reads "PROPOSED"; this entry is what says that it is ratified). **The register's next ordinary edition
+    carries RAT-54 to RAT-60.**
+  - It authorises no install and no run.
+- **RAT-60: H-1 v15 is ratified.** The candidate he ratified is
+  `exchange/CLAUDE_WEB_TOOLS/h1v15/out/Claude_Primary_Handover_H1_v15_CANDIDATE.md` (SHA-256
+  `999c25af692386b06bdab00fec42cb88f08ca45b129654e3b4a244452ecd6578`, computed by Claude). The reviewer has not read it.
+  The final files are built and installed in `doc/HANDOVER/` next, and the next entry records them with their
+  hashes.
+- **EX_330 is to be issued now,** on his word: the corrections after EX_329, for the focused recheck. The next entry
+  records it.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_330 (Claude's); entry 321; RAT-61.

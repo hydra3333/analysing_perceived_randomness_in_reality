@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 23:58 Australia/Adelaide (entry 319: the corrections after EX_329 are written; three things wait on the owner).
+**Last updated:** 26 November 2026, 00:03 Australia/Adelaide (entry 320: RAT-59 and RAT-60; the word for EX_330).
 
 ## For the owner: NOW
 
+- **RAT-59 AND RAT-60 (entry 320; 26 November 2026): THE OWNER RATIFIED the two narrow amendments** (`Verify_Tree`
+  does not run the suite; the job lock at an infrastructure reinstall; wording in
+  `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`) **and H-1 v15,** and gave his word for EX_330.
+  **In hand for Claude:** EX_330 to the reviewer, then H-1 v15's final files into `doc/HANDOVER/` (the next entry
+  records both). Nothing waits on the owner.
 - **THE CORRECTIONS AFTER EX_329 ARE WRITTEN AND PROVED IN THE CLOUD (entry 319; 25 November 2026).** All eight
   findings corrected in the overlay; the note for the reviewer is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_c/SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md`, with the differences from `e404c22`,
