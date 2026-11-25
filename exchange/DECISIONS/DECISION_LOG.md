@@ -6645,3 +6645,55 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The slice's files are unchanged since entry 276** (`main` `77fec12`); nothing was run on the owner's PC and
   nothing is authorised there.
 - Next numbers: EX_319 (the reviewer's reply); entry 278; RAT-56.
+
+## 278. 25 November 2026, 11:25 - EX_319 (reviewer): slice A, RECHECK, narrowly scoped; two blockers and three corrections, all confirmed by Claude in the code; the narrow psutil amendment passes on its wording and waits for the owner
+
+- **EX_319** (`exchange/EX_319_ChatGPT.md`, the reviewer's commit `9fae598`; SHA-256
+  `958924818a003410ed5c53b7ce258330a6647835096e26b376736f54827cbe2e`, computed by Claude from Git; the eight
+  hashes in its section 6 equal Git): **"RECHECK, narrowly scoped. The overall architecture is accepted. No
+  redesign, additional administrative framework, full-history fill, or further general design round is
+  requested."** The reviewer matched all 36 hashes of EX_318's table and rebuilt the nine changed files exactly
+  from the 28 hunks of the differences file. It ran no project program; Claude's cloud evidence is accepted as
+  the author's, not as Windows'.
+- **The owner, 11:21,** relaying it: "Apply the smallest direct corrections and focused tests. No redesign,
+  additional recovery framework, separate Windows rehearsal or new administrative gate requested."
+- **Its five findings. Claude read each against the submitted files and confirms each one:**
+  - *A-B01 (blocker), the environment's digest is not yet full.* The base Python enters the digest by its version
+    and the PATH of its program file, not the file's bytes: a program file replaced at the same path would pass.
+    Also a folder that cannot be read is silently left out (`os.walk` with no error callback), and a missing part
+    of the fixed inventory (`pyvenv.cfg`, `Scripts`, `Lib\site-packages`) contributes nothing instead of
+    refusing. Asked: hash the base program file's bytes once; refuse if it or any folder cannot be read; require
+    the three parts; no wider inventory, no second pass. The test fixture's empty `.venv` becomes a small invented
+    Windows-layout one.
+  - *A-B02 (blocker), writing commands that escape the refusal.* (a) `Withdraw_Variant` in QA or PROD never
+    compares the software with the list of installed files, so a one-way withdrawal can be written in a tree the
+    deployment design's section 8 says must refuse. Asked: the same comparison, under the withdrawal's existing
+    two locks, before it plans or writes; not the full environment digest and not the process rule. (b)
+    `Make_Installable` writes or removes readiness markers without looking for an unfinished operation or the
+    orphan marker. Asked: reuse the two existing checks on its writing route; `Check_Tree` stays a read-only look
+    that reports them. Also: the unfinished-operation check is made only at the launcher, outside the lock; make
+    the same cheap check again where the job and the withdrawal hold their lock(s), before anything is written.
+  - *A-C01 (correction), the process rule.* A command line is searched for the tree's path as plain text, so an
+    unrelated Python naming `T:\a_p_r_i_r_backups` would be counted as a process of QA (`T:\a_p_r_i_r`).
+    Asked: a path boundary after the tree's root; one more test.
+  - *A-C02 (correction), Check_Tree's words.* "Environment: verified" is printed because a marker file was read;
+    the environment itself is not checked by that command. Asked: say that the marker is present and that this
+    command did not check the digest or the packages; and in the closing line distinguish "nothing found in the
+    checks made" from "ready to run".
+  - *A-C03 (correction), the static import check.* `import sys as s; s.path.insert(...)` passes the check for a
+    change of Python's import path. Asked: recognise the ordinary alias; one test; no attempt at a sandbox.
+- **The fourteen readings:** thirteen CONCUR (five of them with the finding that touches them: 1 with A-C03, 5
+  with A-C02, 13 with A-B02, 14 with A-C01; reading 12 as written); reading 7 is accepted as the owner's decision
+  (option A, entry 275), **except** the path-only reading of the base program file (A-B01). "No need to wait for
+  14 individual owner approvals of routine readings."
+- **The narrow amendment of the deployment design's section 2** (psutil for the process rule only): "PASS
+  (wording only); recommend owner ratification", separately from the code's disposition; the ratified v0.12 is
+  not edited in place; restore stays standard-library-only. **It waits for the owner** (RAT-56 is free).
+- **On overheads (the owner's reminder, entry 273):** "No repair utility, new recovery workflow, second digest,
+  DEV installed registry, cross-tree environment gate or new runtime Git check." Nothing in the slice is found to
+  go beyond the ratified design.
+- **What follows:** the corrections are made in the slice's working files, in the cloud only, with focused tests,
+  under the authority of entries 217 and 275; `src/research/withdraw.py` becomes a tenth changed file. The
+  corrected slice goes back for a focused recheck as EX_320 when the owner says so. No install, no run on the
+  owner's PC and no runner task is authorised; slices B to D and the order of installation are unchanged.
+- Next numbers: EX_320 (Claude's, the corrected slice); entry 279; RAT-56.
