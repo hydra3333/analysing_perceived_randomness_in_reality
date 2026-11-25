@@ -7162,3 +7162,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   order that moved in build step 2's reviewed job and at the record's `orphan_marker` entry. Its reply is expected
   as EX_325. It authorises nothing on the owner's PC.
 - Next numbers: EX_325 (the reviewer's reply); entry 296; RAT-59.
+
+## 296. 25 November 2026, 17:51 - EX_325 (reviewer): slice B, five findings CLOSED; a focused RECHECK limited to two narrow residuals (B-B02, B-C03), both confirmed by Claude
+
+- **EX_325** (`exchange/EX_325_ChatGPT.md`, the reviewer's commit `708dbd1`; SHA-256
+  `fba3654a88f76dcc1b846d20f154c4375fb3a969de46478bbad6013211efd025`, computed by Claude from Git): **"RECHECK limited to B-B02 and B-C03
+  below. B-B01, B-B03, B-B04, B-C01 and B-C02 CLOSED."** It matched EX_324's hash and its 15 hashes and rebuilt the
+  six changed files from the 50 hunks. **Both things Claude asked it to look at are accepted:** the moved order of
+  the read-only checks in the research job, and the restore record's `orphan_marker` entry.
+- **The owner, 17:50,** relaying it: "Please make only the two remaining corrections. Return exact differences,
+  hashes and affected-test evidence. No repeat of the whole suite, unrelated mutations or previously closed
+  findings is requested."
+- **The two residuals. Claude read each against the files; each is true:**
+  - *B-B02:* `check_destination` requires the manifest's root and the settings' root to be full paths but does not
+    ask the same of the settings' environment and backup root, accepts a missing backup root and a role that is
+    neither QA nor PROD, and does not make the settings reader's own check that a path is its own real path. A
+    backup whose settings would be refused by every launcher could be put back. Asked: role QA or PROD; root,
+    environment and backup root present, full paths and their own real paths; the containment checks kept; all
+    from the backup's own settings; no directory need exist.
+  - *B-C03:* the refusal handler infers that this job reached its first write from the note that a backup is owed
+    lying in the tree, and a note persists from job to job. With a note left by an earlier job (whose backup then
+    fails again at the start), a refusal after this job's own note says "nothing was written" and tries no backup;
+    conversely a note could be taken for this job's write. Asked: carry the point this job actually reached, in
+    memory, to the handler; a refusal at a guard never becomes a backup attempt; in DEV, no claim that nothing
+    changed merely because DEV keeps no note.
+- **What follows:** the two corrections are made in the working files, cloud only (entries 217 and 288), with the
+  focused tests it names; they go back as EX_326 on the owner's word. No whole-suite run is asked. No install, run,
+  backup or restore is authorised.
+- Next numbers: EX_326 (Claude's, the two corrections); entry 297; RAT-59.

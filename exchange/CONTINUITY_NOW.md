@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 17:46 Australia/Adelaide (entry 295: EX_324 issued on the owner's word: slice B's corrections are with the reviewer for the focused recheck, reply expected as EX_325; OUTLANDISH_01 is closed, null, not integrated).
+**Last updated:** 25 November 2026, 17:51 Australia/Adelaide (entry 296: EX_325, slice B: five findings closed, two narrow residuals (B-B02, B-C03) confirmed and being corrected in the cloud; they go back as EX_326 on the owner's word).
 
 ## For the owner: NOW
 
+- **SLICE B: TWO NARROW RESIDUALS (entry 296; 25 November 2026): EX_325,** `exchange/EX_325_ChatGPT.md`: five of
+  the seven findings CLOSED; B-B02 (the restore applies the rest of the settings' path rule: role QA or PROD; root,
+  environment and backup root present, full and real paths) and B-C03 (the job's refusal handler goes by the point
+  this job reached, not by the note that a backup is owed lying in the tree) remain. **Claude is making them,**
+  cloud only. **Waiting on the owner:** his word to issue them as EX_326.
 - **SLICE B'S CORRECTIONS ARE WITH THE REVIEWER (entry 295; 25 November 2026): EX_324,**
   `exchange/EX_324_Claude.md`, for the focused recheck of EX_323's seven findings. **Waiting on the reviewer:**
   EX_325. **Next after a PASS, on the owner's go:** slice C (`Init_Tree`, `Install`, `Reinstall_Infra`,
