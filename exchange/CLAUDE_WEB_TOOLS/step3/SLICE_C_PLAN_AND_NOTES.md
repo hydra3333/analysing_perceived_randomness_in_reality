@@ -213,13 +213,30 @@ file; says what it would change before it asks; the cutoff file when a change fr
   the workspace's Python: a copy of 718 files, 19 modules, 589 tests, all passed, the copy removed; about three
   and a half minutes. Planted faults (`mutation_check_slice_c2a.py`): 17, all caught (one only after a test was
   made independent of the exit code). The whole suite has not been run on this state.
-- **Next, part C2, the rest:** `deploy/install_common.py` and its tests: the plan (files with hashes, from the
-  markers and the manifest); "the target's infrastructure is file for file DEV's" (the target's
-  `INSTALLED_FILES.json` against DEV's manifest files hashed now); copying a file (temporary name, hash, rename);
-  the barrier `records/INSTALL_IN_PROGRESS.json` and its comparison with the plan now (design 8); reserving the
-  target (job lock by exclusive create, process check under it, the updater's lock, `SNAPSHOT_DUE`); the kit and
-  the backup attempted and the one question; `INSTALLED_FILES.json`; the log line; starting the target's Python
-  on `src/tree_checks_command.py checks` and reading its result file. Then C3 to C5.
+- **25 November 2026, part C2, second piece: FINISHED and committed: the file machinery every install shares.**
+  New in the overlay: `deploy/install_common.py` (on the manifest's `[install_tool]` list) and
+  `tests/test_trees_install_common.py` (41 tests, pass; the module is on the suite's list). What it holds: what
+  DEV offers (`dev_infrastructure`, `dev_variants`: exactly what the two kinds of marker cover); the plan in one
+  form (`make_plan`, `plan_lines`); the barrier (`read_barrier`, `check_barrier`, `write_barrier`,
+  `remove_barrier`: this install continued, another plan refused with both shown, `--replace-unfinished` only from
+  one infrastructure reinstall to another, an operation of build step 4 refused by its name); the copying
+  (`copy_into_place`: temporary name, the copy hashed, one rename, no installed file changed unless the plan
+  overwrites it; `carry_out`: additions and overwrites, then removals, each passed over if already done);
+  `create_status_files`; the tree's software against the plan (`expected_list`, `software_differences`,
+  `status_file_faults`); the ending (`log_line`, `finish`: the list, the log line, the barrier removed last).
+  Planted faults (`mutation_check_slice_c2b.py`): 37, all caught (two only after tests were added). The whole
+  suite has not been run on this state.
+- **Next, part C2, third piece (same file):** reserving the target (the job lock by exclusive create, the
+  process check under it, the updater's lock, no orphan marker, no other unfinished operation, `SNAPSHOT_DUE`);
+  the recovery kit and the backup attempted, and the one question with their results said exactly (design 5,
+  steps 3 to 5); "the target's infrastructure is file for file DEV's"; starting the target's Python on
+  `src/tree_checks_command.py checks` and reading its result file; the suite through `suite_on_copy.run_suite`.
+  Then C3 (`Init_Tree`), C4 (`Install`), C5 (`Reinstall_Infra`).
+- **To settle in C3, seen now:** `Init_Tree` step 6 has the owner build `.venv` "with `create_venv.bat` and
+  `install_upgrade_dependencies_into_venv.bat` in the new tree", and design 2 lists those and the two activation
+  scripts among a tree's files. They are not on the infrastructure manifest today, so no install would put them
+  in a tree. They go onto `[files]` as class `other` (four lines), after a check that each is in the form the
+  standard gives a `.bat` in DEV.
 - (Superseded note, kept for the record.) First to settle there: design 17's own note that "the code round
   lists exactly what the suite needs from the repository, so that the temporary copy is complete; that list sits
   beside the infrastructure manifest. Tests that served only the old system are not part of the new suite." So
