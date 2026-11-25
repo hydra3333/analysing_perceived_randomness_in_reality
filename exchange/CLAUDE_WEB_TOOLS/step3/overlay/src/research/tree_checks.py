@@ -25,8 +25,9 @@ Which of the project's own modules it uses
     research.forecast_engine  compute_target, content_digest: the ordinary engine
     research.job_lock         is_link: the scratch folder must be a real folder
     research.reader           ResultsOnFile, check_results_bytes, first_target, header_for
-    research.research_job     GAMES, METHODS_FOLDER, Job, read_game: a game's records as the job reads them
-    research.settings         TreeSettings
+    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, read_game: a game's records as the job
+                              reads them
+    research.settings         TreeSettings, read_settings
     research.status_file      read_status: a status file is read here and never created
     research.variant_folders  find_variants, load_method
     research.windows_text     LINE_ENDING
@@ -37,7 +38,9 @@ What uses it
 """
 from __future__ import annotations
 
+import argparse
 import hashlib
+import json
 import random
 import shutil
 import traceback
@@ -46,12 +49,12 @@ from pathlib import Path
 
 from _common.game_profiles import get_profile
 from research import derived_check
-from research.code_identity import derived_code_digest, forecasting_code_identity, read_manifest
+from research.code_identity import ManifestRefused, derived_code_digest, forecasting_code_identity, read_manifest
 from research.forecast_engine import FORECAST, compute_target, content_digest
 from research.job_lock import is_link
 from research.reader import ResultsOnFile, check_results_bytes, first_target, header_for
-from research.research_job import GAMES, METHODS_FOLDER, Job, read_game
-from research.settings import TreeSettings
+from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, read_game
+from research.settings import SettingsRefused, TreeSettings, read_settings
 from research.status_file import STATUS_FILE_NAME, StatusRefused, read_status
 from research.variant_folders import find_variants, load_method
 from research.windows_text import LINE_ENDING
@@ -65,6 +68,12 @@ SMOKE_TABLE_NAME = 'invented_results.csv'
 SMOKE_NOTE_NAME = 'WHAT_FAILED.txt'
 # How many stored forecasts of one variant in one game are computed again: the first, the middle and the last.
 SAMPLE_SIZE = 3
+# The kind of the result file the `checks` command writes for the install tool that started it.
+RESULT_KIND = 'TREE_CHECKS_V1'
+# The word that asks for every variant's smoke case, and the word that asks for none.
+ALL_VARIANTS, NO_VARIANT = 'ALL', 'NONE'
+# The exit codes of the `checks` command: it ran to its end and wrote its result (whatever it found); it refused.
+EXIT_RAN, EXIT_REFUSED = 0, 2
 
 
 class ChecksRefused(ValueError):
@@ -239,13 +248,37 @@ def read_stored(software: Software, settings: TreeSettings, say=print) -> dict:
     Returns {game: GameRecords}. Refuses with what the job's own reading refuses (a list that breaks its
     invariants, results that fail their check, a status file that fails its check): the caller reports it.
     """
+    stored, unreadable = read_stored_game_by_game(software, settings, say, pass_on=True)
+    assert not unreadable
+    return stored
+
+
+def read_stored_game_by_game(software: Software, settings: TreeSettings, say=print, pass_on: bool = False) -> tuple:
+    """As read_stored, but a game whose records the job itself would refuse does not stop the other game.
+
+    pass_on: True to let such a refusal through unchanged (read_stored).
+    Returns (stored, unreadable): {game: GameRecords} and {game: the refusal's own words}, for example
+        ({'OZLOTTO': <GameRecords>}, {'POWERBALL': 'results/research/POWERBALL/...: line 7 is not ...'})
+    Only the refusals the job understands (research_job.GAME_REFUSALS) are caught; any other error is a fault
+    and is passed on.
+    """
     statuses, refusals = read_statuses(software)
     job = Job(settings=settings, variants=software.variants, statuses=statuses, status_refusals=refusals,
               forecasting_code_identity=software.forecasting_code_identity,
               derived_code_digest=software.derived_code_digest, environment_digest='', only=None, no_update=True,
               now=None, say=say)
-    return {game_id: read_game(job, game_id) for game_id in GAMES
-            if any(variant.supports(game_id) for variant in software.variants)}
+    stored, unreadable = {}, {}
+    for game_id in GAMES:
+        if not any(variant.supports(game_id) for variant in software.variants):
+            continue
+        try:
+            stored[game_id] = read_game(job, game_id)
+        except GAME_REFUSALS as refusal:
+            if pass_on:
+                raise
+            unreadable[game_id] = str(refusal)
+            say(f'  {game_id}: its stored records could not be read, so nothing of it was compared: {refusal}')
+    return stored, unreadable
 
 
 # ------------------------------------------------------------------------------------ the forecast sample
@@ -316,3 +349,78 @@ def derived_results(stored: dict, say=print) -> dict:
         say(f'  derived results: {game_id}: NOT what this software computes, from draw {found[0]}: {found[1]}'
             + (f' (the tree already marks them not current from draw {cutoff[0]})' if known else ''))
     return answers
+
+
+# ------------------------------------------------- the checks, asked by an install tool with the tree's Python
+
+def run_checks(software_root: Path, settings: TreeSettings, smoke=None, sample: bool = False, derived: bool = False,
+               say=print) -> dict:
+    """Make the checks an install tool asks for and return what was found, as plain values.
+
+    software_root: the folder the software lies in (the tree, or the software as it would be).
+    settings: the settings of the tree whose data is read and whose scratch folder is used.
+    smoke: None for no smoke case; ALL_VARIANTS for every variant's; or the identities to try, for example
+    ['E_002/RECUR_MEAN_ALL_V1'].  sample, derived: whether the forecast sample and the derived results are asked.
+    Returns, for example,
+        {'kind': 'TREE_CHECKS_V1', 'software_root': 'C:/Temp/as_it_would_be', 'data_root': 'G:/a_p_r_i_r',
+         'smoke': {'asked': 'ALL', 'failures': []},
+         'unreadable': {},
+         'sample': {'compared': 12, 'differences': []},
+         'derived': {'POWERBALL': None, 'OZLOTTO': {'from_draw': 1702, 'detail': '...', 'known': False}}}
+    A check that was not asked is None. It only finds and tells: what stops an install is the tool's to decide.
+    Refuses (ChecksRefused): the software cannot be read (read_software); an identity named for a smoke case
+    that the software does not hold.
+    """
+    software = read_software(software_root)
+    found = {'kind': RESULT_KIND, 'software_root': str(software_root), 'data_root': str(settings.tree_root),
+             'smoke': None, 'unreadable': None, 'sample': None, 'derived': None}
+    if smoke is not None:
+        only = None if smoke == ALL_VARIANTS else list(smoke)
+        unknown = sorted(set(only or ()) - {variant.identity for variant in software.variants})
+        if unknown:
+            raise ChecksRefused(f'a smoke case was asked for {", ".join(unknown)}, which the software in '
+                                f'{software_root} does not hold.')
+        found['smoke'] = {'asked': smoke if only is None else only,
+                          'failures': smoke_cases(software, settings.tree_root, only=only, say=say)}
+    if sample or derived:
+        stored, found['unreadable'] = read_stored_game_by_game(software, settings, say)
+        if sample:
+            compared, differences = forecast_sample(software, stored, say)
+            found['sample'] = {'compared': compared, 'differences': differences}
+        if derived:
+            found['derived'] = {game_id: answer and {'from_draw': answer[0], 'detail': answer[1], 'known': answer[2]}
+                                for game_id, answer in derived_results(stored, say).items()}
+    return found
+
+
+def main(arguments, software_root: Path, say=print) -> int:
+    """The `checks` command of src/tree_checks_command.py. No launcher starts it: an install tool in DEV does,
+    with the target tree's own Python, while it holds the target's job lock.
+
+    arguments: for example ['--data', 'G:/a_p_r_i_r', '--result', 'C:/Temp/x/result.json', '--smoke', 'ALL',
+    '--sample', '--derived'].  software_root: the folder this program's own src/ lies in.
+    Writes the result of run_checks as one line of JSON to the file named, which must not exist yet.
+    Returns EXIT_RAN when the result was written, whatever was found; EXIT_REFUSED, with one line saying why and
+    no result file, when the settings, the software or the arguments are refused.
+    """
+    parser = argparse.ArgumentParser(prog='tree_checks_command.py checks',
+                                     description='The checks of an install, made with the target tree\'s Python '
+                                                 '(specification 12.3 items 2, 4 and 5).')
+    parser.add_argument('--data', required=True, help='the tree whose data is read and whose scratch folder is used')
+    parser.add_argument('--result', required=True, help='the file the result is written to; it must not exist')
+    parser.add_argument('--smoke', default=NO_VARIANT,
+                        help=f'{ALL_VARIANTS}, {NO_VARIANT}, or identities separated by commas, for example '
+                             f'E_002/RECUR_MEAN_ALL_V1,E_002/RECUR_MEDIAN_ALL_V1')
+    parser.add_argument('--sample', action='store_true', help='compute the fixed sample of stored forecasts again')
+    parser.add_argument('--derived', action='store_true', help='compare every stored score and prevailing line')
+    chosen = parser.parse_args(arguments)
+    smoke = {NO_VARIANT: None, ALL_VARIANTS: ALL_VARIANTS}.get(chosen.smoke, chosen.smoke.split(','))
+    try:
+        settings = read_settings(Path(chosen.data))
+        found = run_checks(Path(software_root), settings, smoke, chosen.sample, chosen.derived, say)
+        with open(chosen.result, 'x', encoding='ascii', newline='\n') as stream:
+            stream.write(json.dumps(found, ensure_ascii=True, sort_keys=True) + '\n')
+    except (SettingsRefused, ChecksRefused, ManifestRefused, FileExistsError) as refusal:
+        say(f'REFUSED: {refusal}')
+        return EXIT_REFUSED
+    return EXIT_RAN

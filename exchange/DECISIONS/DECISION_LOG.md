@@ -7290,3 +7290,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   and pushed when its tests pass, and section 4 is brought up to date in the same commit, so that at any stop the
   most that can be lost is the part in hand.
 - Next numbers: EX_328; entry 303; RAT-59.
+
+## 303. 25 November 2026, 19:05 - the work resumed after a stop: nothing was lost; slice C part C1 written (Verify_Tree and the checks command); one question for the owner
+
+- **The owner, 18:54** (the same words as entry 302, sent again as the work resumed): "... when that happens please
+  double check that nothing is lost or forgotten etc during that transition. go on."
+- **The checks of entry 302 were made first** (section 0 of the slice's notes), and found nothing lost: the commit
+  clone and `origin/main` agreed, with nothing uncommitted; the decision log ended at entry 302; the notes' section
+  4 said part C1's first half was finished and its second half was next; the workspace's working files equalled
+  the overlay's; the first half's 27 tests passed again.
+- **Written, part C1's second half** (cloud only; working files in the overlay; not reviewed, nothing installed):
+  `src/research/tree_verify.py` (`Verify_Tree.bat`: deployment design section 7 in its order), the program
+  `src/tree_checks_command.py` (its two commands, `verify` and `checks`), `Verify_Tree.bat`, and
+  `tests/test_trees_verify.py` (35 tests, all pass, with the modules beside them). `src/research/tree_checks.py`
+  gained the `checks` command that DEV's install tools will start with the target tree's Python.
+- **Readings taken, for the reviewer when the slice goes to him** (the notes' section 3, C-R5 to C-R7): only a
+  failed smoke case or a failed suite withholds the environment's marker and removes an older one; a difference in
+  the forecast sample or in the derived results is said in capitals and does not withhold it, because the tree's
+  own remedy for a derived result that is no longer current (the research job marks it, the owner runs the rerun)
+  cannot start without a verified environment; a refusal leaves the marker as it was.
+- **One question is open for the owner (C-Q1): where `Verify_Tree.bat` finds DEV's tests.** The ratified design has
+  the command run in the tree and run DEV's suite, but a QA or PROD tree's settings do not say where DEV is. Built
+  so far, as the recommendation: the owner names DEV when he wants the suite (`Verify_Tree.bat --dev <DEV's
+  folder>`); without it the suite is not run and the summary says so in capitals. The other two ways are in the
+  notes. Not decided until the owner says.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 304; RAT-59.

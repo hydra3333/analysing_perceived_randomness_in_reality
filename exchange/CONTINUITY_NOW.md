@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 18:19 Australia/Adelaide (entry 302: slice C is being written, part C1 first; after a stop, section 0 of the slice's notes).
+**Last updated:** 25 November 2026, 19:05 Australia/Adelaide (entry 303: slice C part C1 written; question C-Q1 waits for the owner; next C2).
 
 ## For the owner: NOW
 
+- **SLICE C, PART C1 IS WRITTEN (entry 303; 25 November 2026): the checks, `Verify_Tree` and the `checks`
+  command.** One question waits for the owner, C-Q1 (where `Verify_Tree.bat` finds DEV's tests; the notes' section
+  3). Next is part C2 (what every install shares). Where it stands, exactly: section 4 of
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`.
 - **AFTER A STOP OR A MODEL RESET (entry 302; 25 November 2026):** the owner asked that nothing be lost in the
   change. The checks to make first are section 0 of `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`;
   its section 4 says which parts of slice C are finished and what was in hand.

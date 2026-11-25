@@ -77,9 +77,39 @@ file; says what it would change before it asks; the cutoff file when a change fr
 - **C-R4, software and data in two folders.** Each check takes the software's folder and the data's tree
   separately, for design 6 step 3 (the software as it would be, against the target's data, writing nothing in the
   tree). Status files are read where the software lies and are never created by a check, in any role.
+- **C-R5, what withholds the environment's marker at `Verify_Tree`, and what is only reported.** Design 7 names
+  two things that write no marker and remove an older one: a failed smoke case and a failed suite. It has the
+  forecast sample's differences reported. For the derived results it says only "in full". Reading taken: a derived
+  result that is not what the software computes here is said in capitals and does NOT withhold the marker, because
+  the tree's own remedy for it (the research job marks it not current; the owner runs the rerun) cannot start
+  without a verified environment; withholding would leave the tree with no command that works. The same for a
+  game whose stored records the job itself would refuse: said, not compared, marker written, and the job refuses
+  that game as it always would. `Verify_Tree` never writes `NOT_CURRENT_FROM.json`.
+- **C-R6, a refusal of `Verify_Tree` leaves the marker as it was** (settings, DEV tree, an unfinished operation,
+  the orphan marker, another Python process of the tree, a held job lock, software that is not what was
+  installed, a status file that fails its check). Only a verdict removes or writes it. The tree's note that a
+  backup is owed (`SNAPSHOT_DUE`) is written before the first smoke case; one line goes into
+  `records/INSTALL_LOG.jsonl` for either verdict (`VERIFICATION`, `VERIFIED` or `NOT_VERIFIED`).
+- **C-R7, the `checks` command only finds and tells.** `src/tree_checks_command.py checks --data <tree> --result
+  <file> [--smoke ALL|NONE|ids] [--sample] [--derived]` is started by DEV's install tools with the target's Python
+  while they hold the target's lock. It writes what it found as one line of JSON to a file that must not exist,
+  and ends with 0 whatever it found; what stops an install is the tool's to decide. It refuses a Python that is
+  not the environment the data tree's settings name.
 - **C-Q1, OPEN, FOR THE OWNER: where `Verify_Tree.bat` finds DEV's tests.** Design 7 has `Verify_Tree.bat` run in
   the tree and run "the suite, if the tree's infrastructure is file for file DEV's". A QA or PROD tree's settings
-  file does not say where DEV is (design 1), and the tests live only in DEV. Not yet decided; see section 4.
+  file does not say where DEV is (design 1), and the tests live only in DEV. Three ways: (a) the owner names DEV
+  when he wants the suite, `Verify_Tree.bat --dev <DEV's folder>`; nothing stored, no ratified text touched;
+  without it the suite is not run and the summary says so in capitals; (b) a `[dev]` line in the tree's own
+  settings file, written by `Init_Tree` (a one-line amendment of ratified design section 1, and a change to slice
+  A's reviewed settings reader); (c) DEV's folder kept in `records/INIT_RECORD.json` (cannot be corrected by hand if
+  DEV moves). In every one, a tree must be verifiable with no DEV on the PC (after a restore onto a new PC), so
+  an absent DEV can never refuse. **Built so far: (a),** the recommendation; another answer changes only how
+  `tree_verify.main` learns the folder. The folder named is checked: its own settings must say DEV and name this
+  tree for this tree's role.
+- **For part C2, fixed here:** the tree asks DEV's tool `deploy/suite_for_tree.py --tree <tree root>`, started with
+  the tree's Python (`-I -B -u`, no time limit). Its exit codes: 0 the suite passed; 1 it failed; 3 not run, because
+  DEV's infrastructure is not file for file this tree's (the tool says which files); anything else counts as
+  failed. The tool is not written yet.
 
 ## 4. Where it stands
 
@@ -111,16 +141,22 @@ file; says what it would change before it asks; the cutoff file when a change fr
   `test_research_ov1_and_checks`, `test_trees_snapshot`, `test_trees_readiness`, `test_trees_launch_guard`).
   Changed: `src/research/research_job.py` (`read_game` extracted from `open_game`), `deploy/INFRA_MANIFEST.ini`
   (one line). The whole suite has NOT yet been run on this state, and no planted-fault run has been made.
-- **Next, part C1, second half:** the program `src/tree_checks_command.py` (two uses: `verify`, for
-  `Verify_Tree.bat` in the tree; `checks`, started by DEV's install tools with the target's Python, software and
-  data named separately, its result written to a file the caller names), `Verify_Tree.bat`, their tests. Design 7's
-  order for `verify`: process check; a backup attempted; the structure; every installed variant's smoke case; the
-  suite; the sample (differences reported, not a refusal); the derived results; the marker; a backup attempted.
-  A failed smoke case or suite writes no marker and removes an older one. It holds the job lock while it checks
-  and attempts its backups outside the lock, as the research job does (a backup refuses while the lock is held).
+- **25 November 2026, part C1, second half: FINISHED and committed** (after a resume; section 0's checks were
+  made first and found nothing lost: the repository and `origin/main` agreed, the workspace's files equalled the
+  overlay's, the 27 tests of the first half passed again). New in the overlay: `src/research/tree_verify.py`
+  (`Verify_Tree`, design 7 in its order; class `other`), `src/tree_checks_command.py` (the program: `verify` and
+  `checks`), `Verify_Tree.bat`, `tests/test_trees_verify.py` (35 tests). Changed: `src/research/tree_checks.py`
+  (reading game by game; `run_checks`; the `checks` command), `deploy/INFRA_MANIFEST.ini` (three lines). Passing
+  with them: `test_trees_checks` (27), `test_file_form`, `test_research_manifest`, `test_trees_readiness`,
+  `test_trees_launch_guard`, `test_trees_installed_files`. **Part C1 is whole except for one thing that belongs to
+  C2:** DEV's tool `deploy/suite_for_tree.py` (section 3 fixes how the tree asks it). The whole suite and the
+  planted-fault run for C1 are made next; their result is added here.
+- **Next: C2** (what every install shares), beginning with the suite on a temporary copy (`suite_for_tree.py`),
+  for which the first thing to settle is what the temporary copy holds (which of DEV's files the tests need).
 - **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
   `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
-  through `fix/ed.py`. If the workspace is gone, take the overlay's files (strip the CR) and go on.
+  through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,
+  `test_trees_verify.py`). If the workspace is gone, take the overlay's files (strip the CR) and go on.
 - **Seen, to carry into the joined package (not slice C's):** Python 3.15 warns on
   `src/research/environment_marker.py` line 17, a docstring that holds `Lib\site-packages` with a single
   backslash ("\s" is an invalid escape sequence; a SyntaxWarning now, an error in some later Python). One
