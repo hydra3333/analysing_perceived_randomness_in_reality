@@ -750,3 +750,14 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
 - The operations manual's appendix of methods (owner, 25 November 2026; decision log entry 289): when the manual is
   written, after build step 3, it has an appendix listing every method family and, within each, every method, each
   with a brief description.
+- The roles of the two AIs (owner, 25 November 2026; decision log entry 292): when the development of new methods
+  is about to begin, reconsider who designs, who codes and who reviews (a reversed trial on one method;
+  alternating by method; independent mathematical proposals from both, then one codes and the other reviews).
+  The owner favours a trial. Discussed together with the future-method-priorities draft (entry 289). Until then
+  nothing changes. Points Claude will raise then: (1) no AI is the final reviewer of its own code, in any
+  arrangement; (2) the agreed roles position v0.1r1 is a ratified document and both handovers are written for the
+  present roles, so a trial needs one short owner decision saying which method, who leads and who reviews, not a
+  new rule book; (3) neither AI writes into src/ or tests/ today (the owner installs reviewed packages), and that
+  can stay as it is whoever codes; (4) whoever codes says plainly where its tests ran, since neither cloud is the
+  owner's Windows PC; (5) the science contract (N-1, games never pooled, immutable variant identity, TOP and
+  WORST from one readout) binds the coder whoever it is.

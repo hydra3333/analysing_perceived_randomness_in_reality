@@ -7021,3 +7021,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the reviewer passed. Its reply is expected as EX_323.
 - **It authorises nothing on the owner's PC.** The Fable task (slice B's design and coding) is finished.
 - Next numbers: EX_323 (the reviewer's reply); entry 292; RAT-59.
+
+## 292. 25 November 2026, 16:12 - the owner: the roles of the two AIs are to be reconsidered when new methods are begun; he favours a trial; DEFERRED, nothing changes now
+
+- **The owner, 16:11,** while slice B is with the reviewer, pasting the reviewer chat's reply to "my ask about
+  changing roles around to spread the workload", and its note addressed to Claude (a pasted text, not a committed
+  file; the reviewer's views, not owner decisions, but for the two lines below, which the note gives as his):
+  - "The owner wishes to reconsider the allocation of designer, coder and independent reviewer roles between
+    Claude and ChatGPT when development of additional scientific methods is about to commence."
+  - "The owner favours the trial approach."
+- **What is to be considered then** (the note's list): identical full repository access for both AIs, with
+  task-specific authority; reversing the present roles for a trial method; alternating designer/coder and reviewer
+  between methods; independent or collaborative mathematical design, especially for the de Broglie-Bohm-inspired
+  methods, then implementation by one AI and independent review by the other; balancing scientific creativity,
+  correctness, efficiency, usage allowances and context limits; keeping what works, "without introducing
+  unnecessary governance".
+- **The reviewer's own preference, as pasted:** keep the present arrangement until the system's implementation is
+  finished, then trial a reversal on one self-contained method; and one distinction to keep in any arrangement:
+  "an AI should not be the final independent reviewer of its own code."
+- **When:** "Discuss alongside `doc/Predictive_Randomness_Future_Method_Priorities_v0_1_DRAFT.md`, immediately
+  before commencing further method development" (entry 289 deferred that draft to the same moment).
+- **Status: "Deferred discussion. No change to current roles, permissions or implementation work is authorised at
+  present."** Claude remains the primary designer and coder and ChatGPT the independent reviewer; build step 3
+  goes on as it is.
+- **Claude's first view, given to the owner in the chat (not a decision):** in favour of the trial, at that time;
+  the points it would raise then are noted in the standing reminders with this entry.
+- Next numbers: EX_323 (the reviewer's reply); entry 293; RAT-59.
