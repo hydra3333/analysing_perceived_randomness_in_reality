@@ -51,7 +51,7 @@ from research.forecast_engine import FORECAST, compute_target, content_digest, v
 from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
                                  load_variant_state, summarise_target_line)
 from research.launch_guard import check_at_job_start
-from research.snapshot import backup_for_a_job, is_due, mark_due
+from research.snapshot import backup_for_a_job, mark_due
 from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
 from research.reader import ResultsRefused, results_on_file
 from research.results_step import copy_results, finish_interrupted_copy
@@ -537,7 +537,7 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
     now = now or (lambda: datetime.now(timezone.utc))
     tree_root = Path(tree_root)
     started = now().astimezone().strftime('%Y-%m-%d %H:%M')
-    settings, due_before = None, False
+    settings, reached = None, {'writing': False}         # how far THIS job got; never read from the tree
     try:
         settings = read_settings(tree_root)
         say(f'RESEARCH JOB - START - {started} - the {settings.role} tree at {settings.tree_root}')
@@ -546,11 +546,10 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
         check_no_orphan_marker(settings.tree_root)
         check_working_folders(settings.tree_root)
         backup_for_a_job(settings, 'start', now, say)        # only if a backup is owed from earlier work
-        due_before = is_due(settings.tree_root)
         with job_lock(settings.tree_root, 'research job', started):
             environment_digest = check_at_job_start(settings, say)
             exit_code, closing = run_locked(settings, games, no_update, only, now, say, checkpoint,
-                                            environment_digest)
+                                            environment_digest, reached)
         backup_for_a_job(settings, 'end', now, say)          # the job's lock is released: the tree is quiet
         say(f'RESEARCH JOB - END - {now().astimezone().strftime("%Y-%m-%d %H:%M")} - the {settings.role} tree at '
             f'{settings.tree_root}')                         # the time is read now, after the backup
@@ -559,26 +558,31 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
         return exit_code
     except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
         say(f'REFUSED: {refusal}')
-        if settings is not None and is_due(settings.tree_root) and not due_before:
-            # The job had written its note that a backup is owed (and may have tidied an interrupted status
-            # write) before it was refused: say so, and try the backup that is now owed. The lock is released.
-            backup_for_a_job(settings, 'end', now, say)
-            say('RESEARCH JOB - END - refused before any game was worked. No forecast, score or report was '
-                'written; the tree\'s note that a backup is owed had been written, so that backup was tried '
-                '(above).')
-        else:
+        if not reached['writing']:                           # refused at a guard or a read-only check
             say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+        elif settings.backup_root is None:                   # DEV keeps no note and makes no backup
+            say('RESEARCH JOB - END - refused before any game was worked. No research was written: no forecast, '
+                'score or report. (If an interrupted status write was tidied away, a line above says so.)')
+        else:
+            # This job had written its note that a backup is owed before it was refused. Its lock is released:
+            # the backup that is owed is tried, and if it cannot be made the standing warning is said.
+            backup_for_a_job(settings, 'end', now, say)
+            say('RESEARCH JOB - END - refused before any game was worked. No research was written: no forecast, '
+                'score or report. This job had written the tree\'s note that a backup is owed, so the backup was '
+                'tried (its result is above).')
         return EXIT_REFUSED
 
 
 def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, checkpoint,
-               environment_digest: str) -> tuple:
+               environment_digest: str, reached: dict) -> tuple:
     """The job once it holds the job lock and the launch guard has passed: read the code's identities and the
     variants, then work each game. environment_digest: the digest of the tree's own Python environment, as the
     guard computed it for this job. The other arguments are as for run(). Returns (the exit code, the job's
     closing lines): run() says those lines, under its END line, after the job's lock is released and its backup
     has been attempted, so that the job's verdict is the last thing the owner reads. It reads and may refuse
-    before it writes anything; its first write is the tree's note that a backup is owed."""
+    before it writes anything; its first write is the tree's note that a backup is owed.
+    reached: the caller's own record of how far this job got; reached['writing'] is set True once the note is
+    written (in DEV, where no note is kept, at the same point), before anything else is written or tidied."""
     tree_root = settings.tree_root
     manifest = read_manifest(tree_root)
     variants, refused = find_variants(tree_root / METHODS_FOLDER)
@@ -593,6 +597,7 @@ def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, c
     # Everything above only reads and may refuse: nothing has been written yet. From here the job writes: the
     # tree's note that a backup is owed comes first (QA and PROD), then the tidying of an interrupted status write.
     mark_due(settings)
+    reached['writing'] = True
     for leftover in discard_unfinished_writes(tree_root):
         say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
             f'({leftover}). The status file it was meant for is as it was.')

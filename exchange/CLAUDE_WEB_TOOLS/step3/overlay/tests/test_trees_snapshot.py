@@ -394,10 +394,76 @@ class TheResearchJobsBackups(InventedQaTree):
         self.assertEqual(code, research_job.EXIT_REFUSED, text)
         self.assertNotIn('nothing was written', text)
         self.assertIn('BACKUP MADE AND VERIFIED: ', text)
-        self.assertTrue(text.endswith('the tree\'s note that a backup is owed had been written, so that backup was '
-                                      'tried (above).'))
+        self.assertTrue(text.endswith('This job had written the tree\'s note that a backup is owed, so the backup was '
+                                      'tried (its result is above).'))
         self.assertFalse(snapshot.is_due(self.qa))
         self.assertFalse((self.qa / 'records' / 'JOB.lock').exists())
+
+    def foreign_file_in_the_staging_folder(self) -> None:
+        """What makes the job refuse just after its first write: a file in the status staging folder that no
+        status write of the project makes."""
+        folder = self.qa / status_file.STAGING_FOLDER
+        folder.mkdir(parents=True, exist_ok=True)
+        (folder / 'not_the_projects.txt').write_bytes(b'put here by hand\r\n')
+
+    def test_a_note_left_by_an_earlier_job_does_not_hide_that_this_job_reached_its_own_first_write(self):
+        if self.backups.exists():
+            self.backups.rmdir()
+        self.backups.write_bytes(b'a file where the backup root should be')     # no backup can be made
+        snapshot.mark_due(self.settings)                                          # left by an earlier job
+        self.foreign_file_in_the_staging_folder()
+        code, text = self.job(self.qa)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertIn('A backup is owed from earlier work in this tree; it is tried first.', text)
+        self.assertIn('holds 1 thing(s) that no status write of this project makes', text)
+        self.assertEqual(text.count('BACKUP NOT MADE: '), 2)                     # at the start, and again at the end
+        self.assertEqual(text.count(snapshot.STANDING_WARNING), 2)
+        self.assertNotIn('nothing was written', text)
+        self.assertTrue(text.endswith('so the backup was tried (its result is above).'))
+        self.assertLess(text.rindex(snapshot.STANDING_WARNING), text.index('RESEARCH JOB - END - '))
+        self.assertTrue(snapshot.is_due(self.qa))
+        self.assertFalse((self.qa / 'results' / 'research').exists())
+
+    def test_a_refusal_at_a_guard_never_becomes_a_backup_attempt_whatever_note_lies_in_the_tree(self):
+        marker = self.qa / job_lock.ORPHAN_MARKER
+        marker.parent.mkdir(parents=True)
+        marker.write_bytes(b'[]\r\n')
+        snapshot.mark_due(self.settings)                                          # left by an earlier job
+        code, text = self.job(self.qa)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertIn('orphan marker present', text)
+        self.assertNotIn('BACKUP', text)                                         # neither at the start nor at the end
+        self.assertTrue(text.endswith('refused before any game was worked; nothing was written.'))
+        self.assertEqual(list(self.backups.iterdir()) if self.backups.is_dir() else [], [])
+        self.assertTrue(snapshot.is_due(self.qa))
+        marker.unlink()
+        (self.qa / 'src' / 'stray.py').write_bytes(b'# not installed\r\n')        # the launch guard refuses under the lock
+        code, text = self.job(self.qa)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertEqual(text.count('BACKUP MADE AND VERIFIED: '), 1)            # the owed one, tried first; no other
+        self.assertLess(text.index('BACKUP MADE AND VERIFIED: '), text.index('REFUSED: '))
+        self.assertTrue(text.endswith('refused before any game was worked; nothing was written.'))
+
+    def test_in_dev_a_refusal_after_the_first_write_point_is_said_without_a_note_or_a_backup(self):
+        dev = self.tree(role='DEV', with_source=False, name='dev')
+        refuse = mock.Mock(side_effect=status_file.StatusRefused('an invented refusal after the first write'))
+        with mock.patch.object(research_job, 'read_statuses', refuse):
+            code, text = self.job(dev)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertNotIn('nothing was written', text)
+        self.assertNotIn('BACKUP', text)
+        self.assertTrue(text.endswith('No research was written: no forecast, score or report. (If an interrupted '
+                                      'status write was tidied away, a line above says so.)'))
+        self.assertFalse(snapshot.is_due(dev))
+
+    def test_a_note_that_cannot_be_written_stops_the_job_before_any_write_and_is_not_taken_for_one(self):
+        with mock.patch.object(research_job, 'mark_due', side_effect=job_lock.LaunchRefused('the note that a backup '
+                                                                                            'is owed could not be written')):
+            code, text = self.job(self.qa)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertNotIn('BACKUP', text)
+        self.assertTrue(text.endswith('refused before any game was worked; nothing was written.'))
+        self.assertFalse((self.qa / 'results' / 'research').exists())
 
     def test_a_note_that_cannot_be_written_refuses_the_job_before_it_writes_research(self):
         (self.qa / snapshot.DUE_PATH).mkdir(parents=True)                # a folder where the note should be

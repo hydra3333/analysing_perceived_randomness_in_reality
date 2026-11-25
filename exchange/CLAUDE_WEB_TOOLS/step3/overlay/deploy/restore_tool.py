@@ -51,6 +51,8 @@ SNAPSHOT_MANIFEST_KIND = 'SNAPSHOT_MANIFEST_V1'
 # launcher runs in a tree that is not whole; an orphan marker is never restored as a live marker.
 SETTINGS_FILE = 'ENVIRONMENT.ini'
 ORPHAN_MARKER = 'transitory_data/poc_runs/UNRESOLVED_ORPHAN.json'
+# The roles whose trees are backed up, and so can be restored (DEV has no backup root).
+BACKED_UP_ROLES = ('QA', 'PROD')
 # What marks a tree in which a restore did not finish; every launcher of the tree refuses while it lies there.
 PROGRESS_FILE = 'records/RESTORE_IN_PROGRESS.json'
 RECORDS_FOLDER = 'records'
@@ -127,11 +129,21 @@ def _lies_inside(inner: str, outer: str) -> bool:
         os.path.normcase(os.path.abspath(outer)).rstrip('\\/') + os.sep)
 
 
+def _is_a_full_real_path(text) -> bool:
+    """True if a path of a settings file is one the settings reader of the project would accept: not empty, a full
+    path (on Windows with its drive), and its own real path. The folder need not exist."""
+    if not text or not Path(text).is_absolute():
+        return False
+    return os.path.normcase(os.path.realpath(text)) == os.path.normcase(str(Path(text)))
+
+
 def check_destination(backup: Path, manifest: dict, settings_bytes: bytes) -> None:
     """The one place a backup may be put back: the tree root its manifest names must be the root its own settings
-    file names, an absolute path, for the same role; with the environment inside the tree and the backup root
-    outside it, as the settings of any tree must be (deployment design section 1). Everything is read from the
-    backup's own bytes. Refuses (RestoreRefused) otherwise, before anything is touched."""
+    file names, for the same role; and those settings must be settings every launcher of the project would
+    accept (deployment design section 1): the role QA or PROD (no other tree is backed up); the root, the
+    environment and the backup root each present, a full path and its own real path; the environment inside the
+    tree and the backup root outside it. Everything is read from the backup's own bytes: no folder need exist,
+    and the old tree is not asked. Refuses (RestoreRefused) otherwise, before anything is touched."""
     import configparser
     settings = configparser.ConfigParser(interpolation=None)
     try:
@@ -142,15 +154,20 @@ def check_destination(backup: Path, manifest: dict, settings_bytes: bytes) -> No
         raise RestoreRefused(f'{backup}: the settings file it holds ({SETTINGS_FILE}) cannot be read as one '
                              f'({type(error).__name__}).') from None
     named = str(manifest.get('tree_root') or '')
-    if (not os.path.isabs(named) or not os.path.isabs(root) or not _same_place(named, root)
+    if (not Path(named).is_absolute() or not Path(root).is_absolute() or not _same_place(named, root)
             or manifest.get('role') != role):
         raise RestoreRefused(f'{backup}: its manifest says it is the {manifest.get("role")} tree at "{named}", but the '
                              f'settings file it holds is of the {role} tree at "{root}". A backup is put back only '
                              f'at the path its own settings name; this one is not put back anywhere.')
-    if not _lies_inside(environment, root) or (backup_root is not None and (
-            _same_place(backup_root, root) or _lies_inside(backup_root, root) or _lies_inside(root, backup_root))):
-        raise RestoreRefused(f'{backup}: the settings file it holds does not describe a tree of this project (its '
-                             f'environment must lie inside the tree and its backup root outside it).')
+    if (role not in BACKED_UP_ROLES
+            or not all(_is_a_full_real_path(text) for text in (named, root, environment, backup_root))
+            or not _lies_inside(environment, root) or _same_place(backup_root, root)
+            or _lies_inside(backup_root, root) or _lies_inside(root, backup_root)):
+        raise RestoreRefused(f'{backup}: the settings file it holds does not describe a tree of this project that '
+                             f'could be run after a restore (its role must be QA or PROD; its tree root, its '
+                             f'environment and its backup root must each be given as a full, real path; the '
+                             f'environment must lie inside the tree and the backup root outside it). It is not '
+                             f'put back anywhere.')
 
 
 def read_backup(backup: Path) -> dict:

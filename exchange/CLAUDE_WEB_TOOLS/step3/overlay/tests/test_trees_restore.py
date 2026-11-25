@@ -451,16 +451,51 @@ class NothingIsTouchedUnless(ABackedUpTreeAndItsKit):
         self.assertFalse(Path('a_p_r_i_r').exists())
 
     def test_settings_inside_a_backup_that_do_not_describe_a_tree_of_the_project_refuse(self):
-        for number, lines in enumerate((f'venv_dir = {self.qa.parent / "elsewhere" / ".venv"}\r\nbackup_root = {self.settings.backup_root}',
-                                        f'venv_dir = {self.qa / ".venv"}\r\nbackup_root = {self.qa / "backups"}')):
-            with self.subTest(case=number):
+        good_environment, good_backups = f'venv_dir = {self.qa / ".venv"}', f'backup_root = {self.settings.backup_root}'
+        cases = {'the environment outside the tree': (f'venv_dir = {self.qa.parent / "elsewhere" / ".venv"}', good_backups),
+                 'the backup root inside the tree': (good_environment, f'backup_root = {self.qa / "backups"}'),
+                 'a backup root that is not a full path': (good_environment, 'backup_root = other_backups'),
+                 'no backup root': (good_environment, ''),
+                 'an empty backup root': (good_environment, 'backup_root ='),
+                 'an environment that is not a full path': ('venv_dir = .venv', good_backups),
+                 'no environment': ('', good_backups)}
+        the_backup = self.backup
+        for number, (what, lines) in enumerate(cases.items()):
+            with self.subTest(what=what):
                 self.said.clear()
-                the_backup = self.backup
-                settings = f'[environment]\r\nrole = QA\r\ntree_root = {self.qa}\r\n{lines}\r\n'.encode('utf-8')
-                self.copy_of_the_backup(f'QA_20261201_10103{number}_MANUAL.zip', lambda manifest: None,
-                                        other_bytes={'ENVIRONMENT.ini': settings})
-                self.refused_untouched('does not describe a tree of this project')
                 self.backup = the_backup
+                settings = (f'[environment]\r\nrole = QA\r\ntree_root = {self.qa}\r\n' + '\r\n'.join(lines)
+                            + '\r\n').encode('utf-8')
+                self.copy_of_the_backup(f'QA_20261201_1010{30 + number}_MANUAL.zip', lambda manifest: None,
+                                        other_bytes={'ENVIRONMENT.ini': settings})
+                self.refused_untouched('does not describe a tree of this project' if 'no environment' != what
+                                       else 'cannot be read as one')
+
+    def test_a_role_that_is_not_backed_up_refuses_though_manifest_and_settings_agree_on_it(self):
+        settings = (f'[environment]\r\nrole = DEV\r\ntree_root = {self.qa}\r\nvenv_dir = {self.qa / ".venv"}\r\n'
+                    f'backup_root = {self.settings.backup_root}\r\n').encode('utf-8')
+        self.copy_of_the_backup('QA_20261201_101040_MANUAL.zip', lambda manifest: manifest.update(role='DEV'),
+                                other_bytes={'ENVIRONMENT.ini': settings})
+        self.refused_untouched('its role must be QA or PROD')
+
+    def test_a_tree_root_that_is_not_its_own_real_path_refuses_as_the_settings_reader_would(self):
+        link = self.root / 'a_link_to_the_parent'
+        os.symlink(self.qa.parent, link, target_is_directory=True)
+        through = link / self.qa.name                        # the same folder, named through a link
+        settings = (f'[environment]\r\nrole = QA\r\ntree_root = {through}\r\nvenv_dir = {through / ".venv"}\r\n'
+                    f'backup_root = {self.settings.backup_root}\r\n').encode('utf-8')
+        self.copy_of_the_backup('QA_20261201_101041_MANUAL.zip', lambda manifest: manifest.update(tree_root=str(through)),
+                                other_bytes={'ENVIRONMENT.ini': settings})
+        self.refused_untouched('full, real path')
+
+    def test_a_tree_that_is_gone_and_a_backup_root_that_is_gone_do_not_stop_a_restore(self):
+        shutil.rmtree(self.qa)
+        kept = self.root / 'the_backup_kept_elsewhere.zip'
+        shutil.copyfile(self.backup, kept)
+        shutil.rmtree(self.settings.backup_root)             # no folder the settings name exists any more
+        self.backup = kept
+        self.assertEqual(self.restore(), restore_tool.EXIT_RESTORED, self.text())
+        self.assertTrue(self.payload.items() <= tree_as_hashes(self.qa).items())
 
     def test_a_backup_that_holds_no_settings_file_is_not_a_trees_backup(self):
         self.copy_of_the_backup('QA_20261201_101014_MANUAL.zip', lambda manifest: None, leave_out=('ENVIRONMENT.ini',))
