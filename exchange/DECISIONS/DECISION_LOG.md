@@ -7047,3 +7047,46 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Claude's first view, given to the owner in the chat (not a decision):** in favour of the trial, at that time;
   the points it would raise then are noted in the standing reminders with this entry.
 - Next numbers: EX_323 (the reviewer's reply); entry 293; RAT-59.
+
+## 293. 25 November 2026, 16:51 - EX_323 (reviewer): slice B, RECHECK; four blockers and three grouped corrections, each confirmed by Claude in the code; the design of the slice accepted
+
+- **EX_323** (`exchange/EX_323_ChatGPT.md`, the reviewer's commit `879e753`; SHA-256
+  `a86f7e58dd1f2de7cff0b1d7c365eaca1ddeb4161471135a98ff74ee662f4de7`, computed by Claude from Git): **"RECHECK before accepting slice B. The
+  architecture of the slice is sound and proportionate ... No redesign, new governance, additional routine
+  recovery subsystem or new confirmation is requested."** The reviewer matched EX_322's hash and its 20 hashes and
+  rebuilt the four changed files from the 12 hunks. It ran no project program; its findings are counterexamples
+  read from the source. Claude's cloud evidence is accepted as the author's, "not a clean all-tests PASS, nor
+  independent execution".
+- **The owner, 16:49,** relaying it: "Please address the findings narrowly, consistent with our agreed working
+  principle. Return a focused correction note, exact differences, hashes and affected-test evidence."
+- **The findings. Claude read each against the submitted files; each is true:**
+  - *B-B01 (blocker):* the backup's own check never reads the manifest's bytes back, nor the empty-folder members;
+    a ZIP with a right payload and a wrong manifest could be called verified. Asked: compare the manifest read
+    back with the bytes meant; a read or decompression failure is BACKUP NOT MADE.
+  - *B-B02 (blocker):* (a) the restore takes its destination from the manifest without checking it against the
+    backup's own settings file, and a backup without a settings file passes; (b) the kit's self-check accepts a
+    manifest that lists none or only some of its three files. Asked: require the settings file and that the
+    manifest's role and root agree with it; require the kit's three files by name.
+  - *B-B03 (blocker):* (a) a failure part-way through Windows' process table is taken for its end; asked: refuse
+    unless the table ended properly and holds the tool's own process; (b) `subprocess.run(..., timeout=300)` ends
+    the child when the time runs out, which breaks "no program ends a process"; asked: no timeout.
+  - *B-B04 (blocker):* an orphan marker that lies only in the old tree is not kept beside the restore record as
+    evidence, though the tool and its instructions say so; and a ZIP's two-second times may round DOWN, so the
+    proof of a restart after the marker must allow for it.
+  - *B-C01:* the restored tree's folders are not compared exactly; an unreadable folder can drop out of the
+    reading; the reconciliation ignores empty folders and the bytes of the manifest it finds; the settings file
+    and the orphan member are written from the archive without a check of their bytes, and the settings file's
+    time is not restored.
+  - *B-C02:* a ".partial" that existed before an attempt is removed when that attempt refuses; a backup can name
+    as its kit a file that only looks like one.
+  - *B-C03:* a job refused after the note that a backup is owed was written says "nothing was written" and tries no
+    backup; `run_locked`'s annotation; the END line's time is of before the backup; `Run_Snapshot` says the tree is
+    read twice where the files are read three times.
+- **The fifteen readings and the one the suite forced: each ACCEPT** (several with the finding that touches them).
+  Reading 11 (no further typed confirmation of a restore) and reading 15 (the member's path check) are accepted.
+- **The four files of slice A that moved:** the manifest, the launcher and the changed test PASS; `research_job.py`
+  accepted subject to B-C03.
+- **What follows:** the corrections are made narrowly in the working files, cloud only, under the authority of
+  entries 217 and 288, with a focused test for each; they go back as EX_324 on the owner's word. No install, run,
+  backup or restore is authorised. H-1 v14's cold read stays deferred to the owner's request.
+- Next numbers: EX_324 (Claude's, the corrections); entry 294; RAT-59.
