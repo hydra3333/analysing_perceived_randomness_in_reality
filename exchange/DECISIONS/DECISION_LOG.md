@@ -6905,3 +6905,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **What waits:** the owner's go for slice B (a new subsystem: the model rule applies first). On the reviewer:
   nothing until its new chat has taken over; then, when the owner asks, the cold read of H-1 v14.
 - Next numbers: EX_322; entry 287; RAT-59.
+
+## 287. 25 November 2026, 14:00 - the new reviewer chat has taken over from H-2 v9; the owner approved it to start; Claude does not object
+
+- **The owner, 13:59,** relaying the new reviewer chat's first reply and its acknowledgement of the working
+  principle: "i the napproved chtgpt to start, unless you object, in an effort to get things moving along."
+  **Claude does not object.**
+- **The new reviewer chat's reply (pasted by the owner; not a committed file; its statements, not owner
+  decisions):** "I accept the independent reviewer role, with the existing rights, responsibilities and GitHub
+  authorisations." It fetched `main` at `b9af987` (the commit that installed H-2 v9) and says it recomputed from
+  GitHub's bytes the hashes of H-2 v9, H-2 v8, H-1 v13, the specification v0.6, the deployment design v0.12, the
+  coding practices v0.1, the file-form standard v0.2 and EX_317 to EX_321: all MATCH. It compared H-2 v9 with H-2 v8
+  and "confirmed exact preservation of inherited chapters 1-19 and sections 0.4, 0.5, 0.7, 0.8 and 0.11. The
+  reviewer rights and protected scientific and safety provisions have therefore not been altered by Claude's
+  refresh." **"No material discrepancy identified in the live position inspected."** It confirms RAT-56 as recorded
+  and slice A as reviewed PASS, not installed, not tested on Windows.
+- **Its own caveat, kept:** it has "not completed an exhaustive line-by-line reading of every historical chapter
+  and every requested decision-log entry", a last retrieval met a server disconnection, and it is "not claiming an
+  exhaustive documentary review". No blind questions were put either way; the owner chose to start it directly.
+- **On the working principle** (`exchange/DECISIONS/WORKING_PRINCIPLE_2026_11_18_MAIN_GAME_PRIORITY.md`): read in
+  full and acknowledged; "I will apply this as a standing principle throughout my reviews, not merely as a
+  preference", to its own findings too.
+- **Two things it could not yet know, which Claude tells it through the owner:** (1) the numbers it gives as next
+  (entry 284, RAT-58) are used: entries 284 to 287 and RAT-58 are taken; next are EX_322, entry 288, RAT-59. (2)
+  The consolidated H-1 it expects to review when asked exists and is installed: H-1 v14 (RAT-58, entry 286), three
+  commits after the `main` it fetched.
+- **Why Claude does not object:** its checks are its own and agree with the recorded hashes; it found the
+  rights carried untouched, which was the point most worth an independent eye; and it states its limits. Before it
+  reviews slice B it reads the ratified backup and restore clauses themselves, as any review needs.
+- **The reviewer chat in role from now is this one.** No finding is open. Slice B waits for the owner's go.
+- Next numbers: EX_322; entry 288; RAT-59.

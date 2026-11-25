@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 13:55 Australia/Adelaide (entry 286: H-1 v14, the consolidated edition, is ratified in advance (RAT-58) and installed; the handovers in force are H-1 v14 and H-2 v9; slice A has passed; slice B waits for the owner's go; a new reviewer chat is starting).
+**Last updated:** 25 November 2026, 14:00 Australia/Adelaide (entry 287: the new reviewer chat has taken over from H-2 v9 and the owner approved it to start; the handovers in force are H-1 v14 and H-2 v9; slice B waits for the owner's go).
 
 ## For the owner: NOW
 
@@ -969,6 +969,9 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
+- **The reviewer chat in role (entry 287): the one that took over from H-2 v9 on 25 November 2026;** the owner
+  approved it to start. It verified the hashes and the carried rights itself and found no material discrepancy;
+  it did not claim an exhaustive read. Open findings: none.
 - **From 25 November 2026, entry 283: a NEW reviewer chat, started by the owner from H-2 v9**
   (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`; RAT-57), written by Claude and to be verified by
   that chat. The lines below describe the chat that ended at maximum length after EX_321 (entry 282).
