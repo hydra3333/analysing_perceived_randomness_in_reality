@@ -7418,3 +7418,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** part C3, `Init_Tree.bat QA|PROD`.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 308; RAT-59.
+
+## 308. 25 November 2026, 21:21 - the owner: a second status blurb for the reviewer
+
+- **The owner, 21:20:** "a blurb for chatgpt please outlining current status"
+- **Given to the owner to paste** (a status update, not an EX message; it asks for no review): head `ca94022`;
+  slice C parts C1 and C2 written and tested in the cloud, C3 to C5 still to write; the owner's decision that
+  `Verify_Tree.bat` does not run the suite and the amendment owed with the slice (RAT-59 after the reviewer's
+  view); the conflict between design section 6 and slice B's backup rule and the reading Claude will take (C-R9);
+  what is not yet proved. Next EX is EX_328, from Claude, when the slice is whole.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 309; RAT-59.

@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 20:50 Australia/Adelaide (entry 307: slice C parts C1 and C2 written and tested; next C3, Init_Tree).
+**Last updated:** 25 November 2026, 21:21 Australia/Adelaide (entry 308: a second status blurb to the reviewer; slice C parts C1 and C2 done; next C3, Init_Tree).
 
 ## For the owner: NOW
 
