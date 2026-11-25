@@ -7141,3 +7141,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
     H-1's sections 9 and 10 are overtaken by that. Nothing is recorded in the roadmap or the reminders until the
     owner directs it.
 - Next numbers: EX_324 (Claude's, the corrections); entry 295; RAT-59.
+
+## 295. 25 November 2026, 17:46 - the owner: OUTLANDISH_01 is completed and closed, null, and will not be integrated; on his word EX_324 is issued: slice B's corrections for the focused recheck
+
+- **The owner, 17:45:** "yes please make updates re OUTLANDISH_01 is completed and closed, null, and will not be
+  integrated. yes to Issue the corrections to the reviewer as EX_324."
+- **OUTLANDISH_01: CLOSED.** It is completed and closed, null (the reviewer's handback records the owner's words to
+  it as "null under the investigated matching criteria"), and will not be integrated into this project. It is no
+  longer a method family to be built here and is out of the method backlog. Its files under `GAIS/` are the
+  owner's and are not touched. **Brought up to date on his word:** `exchange/OWNER_ROADMAP.md` (item I),
+  `exchange/OWNER_REMINDERS.md` (a standing reminder) and three old lines of `exchange/CONTINUITY_NOW.md`. **Still saying otherwise, and left for
+  its next ordinary edition:** H-1 v14, sections 9 and 10 and one line of section 5 or 10 that puts OUTLANDISH_01
+  in the backlog; this entry prevails. R-023 item (d) in the reminders (the OUTLANDISH chat's confirmation of an
+  old handover) is still the owner's to close or to drop.
+- **EX_324 issued** (`exchange/EX_324_Claude.md`, SHA-256
+  `3315d46df65c186934f0d27cfa510bc90ef00de420a03a0e207653b6d07d929e`, computed by Claude): the seven findings of EX_323,
+  each corrected (entry 294), for the focused recheck. It gives the hashes of the 6 changed overlay files and of
+  the note, the differences, the evidence, the planted-fault script and the working notes (9 files); the other 28
+  overlay files are the same Git blobs the reviewer read. It asks the reviewer to look in particular at the one
+  order that moved in build step 2's reviewed job and at the record's `orphan_marker` entry. Its reply is expected
+  as EX_325. It authorises nothing on the owner's PC.
+- Next numbers: EX_325 (the reviewer's reply); entry 296; RAT-59.

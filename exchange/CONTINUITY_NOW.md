@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 17:40 Australia/Adelaide (entry 294: EX_323's corrections to slice B are made and tested in the cloud; EX_324 waits for the owner's word; H-1 v14's cold read is done: PASS for continued use).
+**Last updated:** 25 November 2026, 17:46 Australia/Adelaide (entry 295: EX_324 issued on the owner's word: slice B's corrections are with the reviewer for the focused recheck, reply expected as EX_325; OUTLANDISH_01 is closed, null, not integrated).
 
 ## For the owner: NOW
 
+- **SLICE B'S CORRECTIONS ARE WITH THE REVIEWER (entry 295; 25 November 2026): EX_324,**
+  `exchange/EX_324_Claude.md`, for the focused recheck of EX_323's seven findings. **Waiting on the reviewer:**
+  EX_325. **Next after a PASS, on the owner's go:** slice C (`Init_Tree`, `Install`, `Reinstall_Infra`,
+  `Verify_Tree`), a new subsystem (the model rule applies first). **OUTLANDISH_01 is closed** (completed, null, not
+  integrated; entry 295). **H-1 v14's cold read is done** (PASS; entry 294). **If this chat ends here:** a new chat
+  reads H-1 v14, entries 287 to 295, slice B's two notes, and answers EX_325.
 - **SLICE B: THE CORRECTIONS AFTER EX_323 ARE MADE (entry 294; 25 November 2026),** cloud only: the note is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_CORRECTIONS_AFTER_EX_323_v0_1.md`, with the exact differences
   (six files, 50 hunks) and the evidence beside it. **Waiting on the owner:** his word to issue them as EX_324.
