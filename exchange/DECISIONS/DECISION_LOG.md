@@ -6730,3 +6730,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not done, waiting on the owner:** EX_320 is not issued (his word); the narrow psutil amendment of the
   deployment design's section 2 is not ratified (his decision, RAT-56).
 - Next numbers: EX_320 (Claude's, the corrected slice); entry 280; RAT-56.
+
+## 280. 25 November 2026, 12:33 - RAT-56: THE OWNER RATIFIES the narrow psutil amendment of the deployment design's section 2; on his word EX_320 is issued: slice A's five corrections, for the focused recheck
+
+- **The owner, 12:31,** to the two decisions Claude put to him (1: ratify the narrow psutil amendment, RAT-56;
+  2: issue EX_320 now): **"Yes to 1 and 2"**.
+- **RAT-56, what is ratified:** in section 2 of `doc/Predictive_Randomness_Deployment_Design_v0_12.md`, the words
+  "(`deploy\`, standard library only)" are read as **"(`deploy\`, standard library only, except the process rule
+  of section 9, which uses psutil from the Python that runs the tool)"**. This is the wording of the slice's
+  package note section 4, passed by the reviewer on its wording in EX_319 section 4 ("PASS (wording only);
+  recommend owner ratification").
+  - *Why:* the owner's entry 222 chose psutil for the process rule (option A), and TASK_T028 confirmed the reading
+    on his PC (entries 239 to 242); the design's words had not been brought into line.
+  - *What it does not do:* it adds no dependency and gives no wider permission for third-party packages in the
+    deployment tools. Restore stays standard library only, with its own reader (slice B).
+  - *The ratified file is not edited:* its SHA-256 stays `e9f778d86c0c1a8a73bfbebf21982aec897a3afdb1296c3029f2ba1da9b58b3d` (computed by
+    Claude; equal to the register v0.33's). The amendment stands by this ratification. The register v0.33 still
+    lists it as "not ratified"; **the register's next ordinary edition carries RAT-56** (with RAT-54 and RAT-55).
+  - It authorises no install and no run.
+- **EX_320 issued** (`exchange/EX_320_Claude.md`, SHA-256
+  `02342b5050f67c279d54e368e6017e02d3f77decda29ab7d24ad12783efbab54`, computed by Claude): the five corrections of entry
+  279 for the focused recheck; the hashes of the 12 files changed and the 10 files new since the commit the
+  reviewer read (`be19ebd`), all of bytes on `main` at `32086ba`; the other 24 files of EX_318's table are the same
+  Git blobs as then. It names three choices inside the corrections for the reviewer's eye (the process rule's
+  boundary written as "what continues a name"; `Make_Installable`'s checks in `main` with exit code 2; the
+  withdrawal's unfinished-operation check in DEV too) and records RAT-56. Its reply is expected as EX_321.
+- **Still waiting on the owner's word:** the consolidated handover (advised now). No Windows rehearsal is asked for
+  by the reviewer before the joined one.
+- Next numbers: EX_321 (the reviewer's reply); entry 281; RAT-57.

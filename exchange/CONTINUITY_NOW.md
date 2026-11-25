@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 11:55 Australia/Adelaide (entry 279: EX_319's five corrections to slice A are made in the working files and tested in the cloud; EX_320 and the psutil amendment wait for the owner's word).
+**Last updated:** 25 November 2026, 12:33 Australia/Adelaide (entry 280: RAT-56, the owner ratifies the narrow psutil amendment of the deployment design's section 2; EX_320 issued on his word: slice A's five corrections are with the reviewer for the focused recheck; its reply is expected as EX_321).
 
 ## For the owner: NOW
 
+- **SLICE A'S CORRECTIONS ARE WITH THE REVIEWER (entry 280; 25 November 2026): EX_320,**
+  `exchange/EX_320_Claude.md`, for the focused recheck of EX_319's five findings. **RAT-56:** the owner ratified
+  the narrow psutil amendment of the deployment design's section 2 (the file is not edited; the register's next
+  ordinary edition carries it, with RAT-54 and RAT-55). **Waiting on the reviewer:** EX_321. **Waiting on the
+  owner's word:** the consolidated handover (advised now). **Next after a PASS:** slice B (backups, the recovery
+  kit, restore), on the owner's go. **If this chat ends here:** a new chat reads H-1 v13, entries 270 to 280, the
+  slice's note and the corrections note, and answers EX_321.
 - **SLICE A: THE FIVE CORRECTIONS ARE MADE (entry 279; 25 November 2026),** in
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, cloud only: the note is
   `exchange/CLAUDE_WEB_TOOLS/step3/slice_a/SLICE_A_CORRECTIONS_AFTER_EX_319_v0_1.md`, with the exact differences
@@ -935,7 +942,7 @@ durable EX messages are authoritative.
   56). Fetch before reading or numbering anything; never edit its files.
 - **Now (25 November 2026):** the reviewer chat that started on the evening of 24 November 2026 (entries 232, 234;
   EX_304 to EX_316). Its handover in force is **H-2 v8** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md`;
-  RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: EX_319 on slice A (A-B01, A-B02, A-C01, A-C02, A-C03; entry 278), corrected in the working files (entry 279); the focused recheck, EX_320, waits for the owner's word.** Its
+  RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: EX_319 on slice A (A-B01, A-B02, A-C01, A-C02, A-C03; entry 278), corrected (entry 279) and with the reviewer for the focused recheck, EX_320 (entry 280); its reply is expected as EX_321.** Its
   cold read of H-1 v13 is done (EX_317, entry 271: PASS). Owed to it: slice A's package. Still owed to it in the build:
   its test of EX_271 section 3 (step 4) and the watchpoint of EX_273 section 2 (step 3, the updater). **The bullet
   below is the position of 22 November 2026 and is history.**
