@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 13:30 Australia/Adelaide (entry 281: EX_321, slice A PASSES its focused recheck; all five findings closed; nothing is in flight with the reviewer; slice B is next and waits for the owner's go).
+**Last updated:** 25 November 2026, 13:38 Australia/Adelaide (entry 283: the reviewer chat ended at maximum length; H-2 v9 and its blurb, written by Claude and ratified in advance (RAT-57), are installed; the owner starts a new reviewer chat; slice A has passed; slice B waits for the owner's go).
 
 ## For the owner: NOW
 
+- **THE REVIEWER CHAT ENDED (maximum length) AND ITS HANDOVER IS REFRESHED (entries 282 and 283; 25 November
+  2026).** The reviewer's handover in force is **H-2 v9**,
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`, with its blurb
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_introductory_blurb_20261125.md` (RAT-57, ratified in advance;
+  written by Claude at the owner's request, live chapter 0 only; rights and chapters 1 to 19 carried byte for byte
+  from H-2 v8). **The owner's next step:** start a new ChatGPT chat and paste the v9 blurb. The new reviewer
+  verifies chapter 0 against the repository first. **Then, on the owner's go:** slice B; and the consolidated H-1
+  (H-1 v13 still names H-2 v8, now stale). No finding is open; nothing is in flight.
 - **SLICE A HAS PASSED REVIEW (entry 281; 25 November 2026): EX_321,** `exchange/EX_321_ChatGPT.md`: PASS on the
   focused recheck, EX_319's five findings closed, RAT-56 acknowledged. The slice is the 26 files of
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/` (16 new, 10 that exist on `main`); nothing of it is installed, and
@@ -948,6 +956,9 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
+- **From 25 November 2026, entry 283: a NEW reviewer chat, started by the owner from H-2 v9**
+  (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`; RAT-57), written by Claude and to be verified by
+  that chat. The lines below describe the chat that ended at maximum length after EX_321 (entry 282).
 - **Now (25 November 2026):** the reviewer chat that started on the evening of 24 November 2026 (entries 232, 234;
   EX_304 to EX_316). Its handover in force is **H-2 v8** (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md`;
   RAT-55, entries 268 and 269). It passed the new Claude chat's takeover (entry 270). **Open findings: none (slice A passed its focused recheck, EX_321, entry 281).** Its

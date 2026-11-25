@@ -6804,3 +6804,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
   header says so, and the new reviewer chat is asked to verify it against the repository and to correct it as its
   own first act.** Slice B and the consolidated H-1 wait until this is done.
 - Next numbers: EX_322; entry 283; RAT-57.
+
+## 283. 25 November 2026, 13:38 - RAT-57: the reviewer's handover H-2 v9 and its blurb, written by Claude at the owner's request and RATIFIED IN ADVANCE, are installed in doc/HANDOVER/
+
+- **RAT-57 (the owner's words, entry 282):** "Please do that now and commit them as ratified in advance."
+- **Installed, both new files; no existing file is edited:**
+  - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`, SHA-256
+    `8b7a61506a5275fcf2001f84fada77144560345e641bb8471096d45967983945`;
+  - `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_introductory_blurb_20261125.md`, SHA-256
+    `cfb538cc1971ebb4df857c0b50fad2252b56de63a278acf0bfdbdacc299a7966`.
+  Both are CRLF. The blurb names the handover's hash. Hashes computed by Claude.
+- **Built by a program from the bytes of the installed H-2 v8** (RAT-55; SHA-256
+  `31f1e7f169a8adc2cb7a627145150e542e0901e84baf7163d632a18c4a0934e5`, checked before use), which stays untouched
+  with its predecessors. Evidence cutoff: `main` `11e0901`, entry 282, EX_321, RAT-56.
+- **Carried byte for byte from H-2 v8** (checked by comparing the two files line by line): sections 0.4, 0.5, 0.7,
+  0.8 and 0.11 and the inherited chapters 1 to 19, that is the reviewer's rights R-1 to R-11 and the scientific
+  and safety contract. From v8's line 199 to its end the two files are identical.
+- **Changed, in live chapter 0 only:** the header (status, cutoff, preservation); 0.1 (why a new chat; item 5: this
+  edition was written by Claude and is to be verified and corrected by the new reviewer); 0.2 (four identities
+  added: H-1 v13 and its blurb, H-2 v8 and its blurb; RAT-54 to RAT-57; the RAT-56 amendment's wording; all
+  fifteen rows recomputed from Git, equal to v8's values); 0.3 (one sentence: the OV-1 kernel equals the reviewed
+  kernel once CRLF is read as LF, EX_317 H13-C01, which the reviewer had said it would correct at its next
+  refresh); 0.6 (slice A reviewed and PASSED, EX_318 to EX_321; what is settled in it, with option A and the
+  independence of the trees; the amendment ratified); 0.9 (EX_317 to EX_321 and the Claude chat's takeover, with
+  the five EX hashes; no open finding); 0.10 (next: the takeover, then slice B when asked); 0.12.
+- **The independence caveat, written into the edition itself:** the primary author wrote the reviewer's handover
+  and no reviewer read it before installation. Its status paragraph and section 0.1 say so, and ask the new
+  reviewer chat to treat chapter 0 as Claude's claim, verify it against the repository, tell the owner of any
+  material discrepancy and correct it in its own next edition. The blurb says the same to the reviewer in the
+  owner's voice.
+- **What follows:** the owner starts a new reviewer chat with the v9 blurb. H-1 v13 still names H-2 v8 as the
+  reviewer's handover in force; that is stale from this entry and is corrected in H-1's next (consolidated)
+  edition. The register's next ordinary edition carries RAT-54 to RAT-57. This ratification authorises no install
+  and no run.
+- Next numbers: EX_322; entry 284; RAT-58.
