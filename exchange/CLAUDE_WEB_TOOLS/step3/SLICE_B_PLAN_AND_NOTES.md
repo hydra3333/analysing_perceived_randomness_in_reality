@@ -76,6 +76,19 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
 9. **`Run_Snapshot.bat` passes the launch guard's refusal on a backup's own lock** (it is the command that speaks
    for that lock) and then says what it found: a backup in progress, or a lock left by one that was ended, which
    the owner deletes by hand when he is sure. Nothing clears it for him.
+11. **A restore asks for no typed confirmation of its own** beyond the orphan marker's sentence: the ratified
+    section 12 names none, the command with `--snapshot` is the owner's explicit act, and the old tree is renamed
+    aside, never deleted.
+12. **The old tree's settings file is renamed `ENVIRONMENT.ini.SET_ASIDE`** inside the tree that was set aside
+    ("its settings file is renamed too, so no launcher runs there").
+13. **When the PC was last started** (the orphan exception, part b) is read from Windows' count of milliseconds
+    since its start; an orphan marker's time is its file's time in the old tree, and its member's time in the
+    backup (to two seconds).
+14. **Which third-party modules the restored environment is asked to import:** `numpy` and `psutil`, the two the
+    project's installed programs import.
+15. **A member's name is checked to lie inside the tree** before anything is unpacked (no `..`, no drive, no
+    leading slash). The ratified text does not ask for it; it is three lines against writing outside the tree
+    from a damaged or foreign ZIP. Say if it is more than is wanted.
 10. **A failed attempt removes its own ".partial"** if it can; one left by a backup that was ended is never taken
     for a backup and nothing removes it (nothing prunes a backup root).
 
@@ -96,8 +109,15 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
   `mode='r'` written out. `test_trees_snapshot` (23) and `test_file_form` (52) rerun: OK. **The whole suite has not
   been run again since that correction; it is run again before the slice goes to review.** The three known
   failing tests are as before.
-- **Still to do for B1:** the whole suite once more; planted faults. **Next: B2 (the recovery kit), then B3
-  (restore).**
+- **B2 (the recovery kit) and B3 (restore) are written, with their tests:** `overlay/deploy/recovery_kit.py`,
+  `overlay/deploy/restore_tool.py` (one file, standard library only; its own reader of Windows' process table),
+  `overlay/deploy/kit/Restore.bat`, `overlay/deploy/kit/HOW_TO_RESTORE.txt`, `overlay/tests/test_trees_restore.py`
+  (29 tests); four lines added to the manifest's `[install_tool]`. `snapshot.py` also refuses a backup while a
+  backup's manifest lies at the tree's root (a tree unzipped by hand and not yet reconciled: design section 12).
+  In the cloud `test_trees_restore` (29) and `test_trees_snapshot` (23) are OK.
+- **Still to do for the slice:** the whole suite and its comparison; planted faults for B1, B2 and B3; a last read
+  of every new file against design sections 10 to 12; then the package note, the exact differences of the files
+  slice A's review passed, and the evidence, as for slice A. Then it is put to the owner for the reviewer.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

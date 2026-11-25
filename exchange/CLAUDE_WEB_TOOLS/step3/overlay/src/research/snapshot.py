@@ -239,6 +239,10 @@ def attempt_snapshot(settings: TreeSettings, job: str, now=None) -> SnapshotResu
             try:
                 process_rule.check_no_other_process_of_tree(tree_root)
                 backup_root.mkdir(parents=True, exist_ok=True)
+                if (tree_root / MANIFEST_NAME).exists():
+                    raise BackupNotMade(f'{tree_root / MANIFEST_NAME} lies at the tree\'s root: a backup was unzipped '
+                                        f'here by hand and not yet checked. Run Restore.bat --after-hand-unzip '
+                                        f'--snapshot <that backup> from an unpacked recovery kit first.')
                 if final.exists() or partial.exists():
                     raise BackupNotMade(f'{final} or its ".partial" exists already. Run the command again.')
                 files, empty = _inventory(tree_root)

@@ -1,0 +1,43 @@
+HOW TO RESTORE A TREE FROM A BACKUP
+===================================
+
+What a restore is
+  It puts back exactly one backup of a tree (PROD or QA), at the path the backup came from. The tree that is
+  there now is renamed aside, whole; nothing is deleted. Nothing is installed, rebuilt or withdrawn. Afterwards
+  the research job catches up from what the backup held. Every other change is a new decision of yours.
+
+What you need
+  1. This recovery kit, unpacked into an empty folder (you are reading a file of it).
+  2. The backup you choose: a file  <ROLE>_<date>_<time>_<JOB>.zip  in the tree's backup root. A file whose name
+     ends ".partial" is never a backup.
+  3. Any installed Python. Not DEV, not QA, not a working tree.
+
+Before you start
+  - Close every program that uses Python: Claude Code, editors that run Python, any command window in which a
+    job runs. The tool refuses while one is running and lists what it found. It never ends a program for you.
+  - Close every window and command prompt that is inside the tree's folder: Windows will not rename a folder
+    that is in use.
+
+The command (in a plain Command Prompt, in this folder)
+      Restore.bat --snapshot "T:\a_p_r_i_r_backups\PROD\PROD_20261201_201000_RESEARCH.zip"
+  The tool checks this kit, reads the whole backup, checks that no other Python program is running, renames the
+  old tree to  <its path>_SET_ASIDE_<date>_<time> , unpacks the backup at the old path, reads the result back and
+  writes its record in the tree's  records  folder. It ends with one of:
+      RESTORED AND READY TO RUN
+      RESTORED; ENVIRONMENT NOT READY     (the files are right; the tree's Python did not start: your decision)
+  If it says REFUSED and "nothing was touched", put right what it names and run the same command again.
+  If it says STOPPED PART-WAY, the old tree is already set aside and whole: run the same command again.
+
+If an orphan marker is found
+  The tool shows a warning and asks you to restart the PC first if you have not done so since the marker was
+  written. After a restart, with nothing else running, it asks you to type one sentence. The marker is kept as
+  evidence beside the restore record; it is not restored as a live marker.
+
+The last resort, by hand
+  Close everything that uses Python. Rename the old folder. Make an empty folder at the same path. Extract the
+  backup ZIP into it. Nothing was checked by doing so. Then run:
+      Restore.bat --after-hand-unzip --snapshot "<the same backup>"
+  which checks every file and writes the record. Until then no new backup of that tree is made.
+
+The tree that was set aside
+  It is yours to keep or to delete, when you are sure. Its settings file was renamed so that nothing runs there.
