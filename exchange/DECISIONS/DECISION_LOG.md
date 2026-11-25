@@ -7599,3 +7599,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
   suite; reply as EX_330. H-1 may take EX_329 in "at its next update; do not delay correction work".
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_330 (Claude's); entry 318; RAT-59.
+
+## 318. 25 November 2026, 23:20 - the owner's three decisions after EX_329: fold it into H-1 v15; the amendments as RAT-59 and H-1 v15 as RAT-60; the corrections on Fable
+
+- **Claude's three questions** (entry 317): (1) fold EX_329 into H-1 v15 before he ratifies it (recommended: yes); (2)
+  the order of the ratifications (recommended: both amendments together as RAT-59, their final wording first written
+  in one short document for him, and H-1 v15 as RAT-60); (3) the corrections EX_329 asks for, for which Claude
+  suggested switching to Fable and waited.
+- **The owner, 23:18** (having switched to Fable): "decision 1 yes to your recommendation (ex_329 blurb below)
+  decision 2 yes to your recommendation decision 3 yes to your recommendation (switched now)". With it he relayed
+  the reviewer's own summary of EX_329 (commit `5f4084b`; RECHECK, C-B01 to C-B04 and C-C01 to C-C04; concurrence with
+  RAT-59 and with C-R9's split lock; no redesign; next EX_330).
+- **So:** (1) H-1 v15's chapter 0 takes EX_329 in and the candidate is built again. (2) The two amendments' final
+  wording is `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md` (SHA-256 `b86f2aec91b0f716f62cd4b015f83dca461c5cc98a41006fe8f650f8c15d8126`), with the reviewer's one
+  wording change; **nothing is ratified by this entry:** the owner ratifies RAT-59 (the amendments) and RAT-60 (H-1
+  v15) by his own word on each. (3) The corrections are written now, on Fable; EX_330 is issued only on his word.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_330 (Claude's); entry 319; RAT-59 (the amendments), RAT-60 (H-1 v15).
