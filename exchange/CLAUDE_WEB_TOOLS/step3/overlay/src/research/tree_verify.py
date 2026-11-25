@@ -4,10 +4,14 @@ What this file is for
     A QA or PROD tree's launchers refuse until its Python environment has been verified, and each job compares
     the environment with the one that was verified. After the owner builds or rebuilds a tree's .venv he runs
     Verify_Tree.bat in that tree. It attempts a backup, checks that the software is what was installed, makes
-    every installed variant forecast once on an invented table (the smoke case), runs the test suite if DEV's
-    folder was named and DEV's infrastructure is this tree's, computes the fixed sample of stored forecasts
-    again, compares every stored score and prevailing line, writes the marker
+    every installed variant forecast once on an invented table (the smoke case), computes the fixed sample of
+    stored forecasts again, compares every stored score and prevailing line, writes the marker
     .venv\\ENVIRONMENT_VERIFIED.json, and attempts a backup again.
+
+    The test suite: the tests live in DEV, and no file under src/research starts a program (the project's own
+    test of that is in tests/test_research_job.py). So this file does not run the suite. It takes the suite's
+    answer from a function its caller gives it, and by default that function says, in capitals, that the suite
+    was not run. Whether and how Verify_Tree.bat has the suite run is the owner's open question C-Q1.
 
     Two things withhold the marker and remove an older one: a failed smoke case, and a failed suite. A
     difference in the forecast sample or in the derived results is reported in plain words and does not
@@ -26,7 +30,7 @@ Which of the project's own modules it uses
                                  job_lock
     research.launch_guard        INSTALLED_ROLES, check_no_unfinished_operation, check_software_is_as_installed
     research.process_rule        check_no_other_process_of_tree
-    research.settings            SettingsRefused, read_dev_view, read_settings, tree_as_dev_names_it
+    research.settings            SettingsRefused, read_settings
     research.snapshot            attempt_snapshot, mark_due
     research.tree_checks         the smoke cases, the forecast sample, the derived results
 
@@ -37,9 +41,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
-import subprocess
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -49,15 +50,11 @@ from research.environment_marker import MARKER_NAME, write_marker
 from research.job_lock import (RECORDS_FOLDER, LaunchRefused, check_no_orphan_marker, check_working_folders,
                                job_lock)
 from research.launch_guard import INSTALLED_ROLES, check_no_unfinished_operation, check_software_is_as_installed
-from research.settings import SettingsRefused, read_dev_view, read_settings, tree_as_dev_names_it
+from research.settings import SettingsRefused, read_settings
 from research.snapshot import attempt_snapshot, mark_due
 
 # The tree's log of installs, verifications and withdrawals (deployment design section 2).
 TREE_LOG_NAME = 'INSTALL_LOG.jsonl'
-# DEV's tool that runs DEV's tests for a tree, with the Python that starts it, on a temporary copy. Its exit
-# codes are below; what it prints is the owner's to read.
-SUITE_TOOL = 'deploy/suite_for_tree.py'
-SUITE_PASSED, SUITE_FAILED, SUITE_IS_NOT_THIS_TREES = 0, 1, 3
 # What became of the suite: it ran and passed; it ran and failed, or could not be run; it was not run.
 PASSED, FAILED, NOT_RUN = 'PASSED', 'FAILED', 'NOT RUN'
 # The exit codes of Verify_Tree.bat: the marker was written; a smoke case or the suite failed and there is no
@@ -65,51 +62,14 @@ PASSED, FAILED, NOT_RUN = 'PASSED', 'FAILED', 'NOT RUN'
 EXIT_VERIFIED, EXIT_NOT_VERIFIED, EXIT_REFUSED = 0, 1, 2
 
 
-def check_dev_folder(dev_root: Path, settings) -> Path:
-    """Check that a folder named as DEV is the DEV tree that names this tree, and holds the suite's tool.
+def suite_not_run_here(settings, say) -> tuple:
+    """The suite's answer when nothing runs it: it was not run, and the summary says so.
 
-    dev_root: the folder the owner named.  settings: this tree's settings.
-    Returns the tool's path, for example Path('E:/.../deploy/suite_for_tree.py').
-    Refuses (SettingsRefused): what read_dev_view and tree_as_dev_names_it refuse (no settings file there, a
-    file whose role is not DEV, no entry for this tree's role, an entry that names another folder or disagrees
-    with this tree's own file); a DEV without the tool.
+    settings: the tree's settings.  say: prints a line.  Returns (NOT_RUN, one line for the closing summary).
     """
-    view = read_dev_view(Path(dev_root))
-    named = tree_as_dev_names_it(view, settings.role)
-    if os.path.normcase(os.path.realpath(named.tree_root)) != os.path.normcase(os.path.realpath(settings.tree_root)):
-        raise SettingsRefused(f'{dev_root}: that DEV tree names {named.tree_root} as its {settings.role} tree, and '
-                              f'this tree is {settings.tree_root}. Name the DEV tree this tree was installed from.')
-    tool = view.own.tree_root / SUITE_TOOL
-    if not tool.is_file():
-        raise SettingsRefused(f'{tool} is missing: that DEV tree does not hold the tool that runs its tests for a '
-                              f'tree. Bring DEV up to date, or run Verify_Tree.bat without naming DEV.')
-    return tool
-
-
-def suite_from_dev(tool: Path | None, settings, say) -> tuple:
-    """Have DEV's own tool run DEV's tests with this tree's Python, if DEV was named.
-
-    tool: check_dev_folder's result, or None when DEV was not named.  settings: this tree's settings.
-    The tool compares DEV's infrastructure with this tree's file for file, and runs the tests on a temporary
-    copy only when they are the same (specification 12.3 item 3); it prints what it does. No time limit is put
-    on it: a limit would end it, and no program of this project ends a process.
-    Returns (PASSED, FAILED or NOT_RUN, one line for the closing summary).
-    """
-    if tool is None:
-        return NOT_RUN, ('THE TEST SUITE WAS NOT RUN: DEV\'s folder was not named. The smoke cases, the forecast '
-                         'sample and the derived results are what this verification rests on. To include the '
-                         'suite: Verify_Tree.bat --dev <DEV\'s folder>')
-    say(f'The test suite: asking {tool} to run DEV\'s tests with this tree\'s Python. It takes about ten minutes.')
-    ended = subprocess.run([sys.executable, '-I', '-B', '-u', str(tool), '--tree', str(settings.tree_root)],
-                           check=False).returncode
-    if ended == SUITE_PASSED:
-        return PASSED, 'The test suite passed with this tree\'s Python.'
-    if ended == SUITE_IS_NOT_THIS_TREES:
-        return NOT_RUN, ('THE TEST SUITE WAS NOT RUN: the tests in DEV are for other code than this tree holds (the '
-                         'tool\'s own lines above say which files differ). The smoke cases, the forecast sample '
-                         'and the derived results are what this verification rests on.')
-    return FAILED, (f'THE TEST SUITE FAILED or could not be run with this tree\'s Python (the tool ended with exit '
-                    f'code {ended}; its own lines are above).')
+    return NOT_RUN, ('THE TEST SUITE WAS NOT RUN: the tests live in DEV, and this command, run in the tree, starts '
+                     'no program. The smoke cases, the forecast sample and the derived results are what this '
+                     'verification rests on.')
 
 
 def log_verification(settings, outcome: str, digest: str | None, summary: dict, now) -> None:
@@ -122,7 +82,7 @@ def log_verification(settings, outcome: str, digest: str | None, summary: dict, 
         stream.write(json.dumps(record, ensure_ascii=True, sort_keys=True) + '\n')
 
 
-def verify_locked(settings, tool, now, say, suite) -> tuple:
+def verify_locked(settings, now, say, suite) -> tuple:
     """The part of a verification made while the tree's job lock is held.
 
     Returns (the exit code, the closing lines). Refuses with what the checks it calls refuse; a refusal leaves
@@ -145,7 +105,7 @@ def verify_locked(settings, tool, now, say, suite) -> tuple:
     if smoke_failures:
         suite_outcome, suite_line = NOT_RUN, 'The test suite was not run: a smoke case had failed.'
     else:
-        suite_outcome, suite_line = suite(tool, settings, say)
+        suite_outcome, suite_line = suite(settings, say)
     summary = {'smoke_cases_failed': len(smoke_failures), 'suite': suite_outcome}
     if smoke_failures or suite_outcome == FAILED:
         marker.unlink(missing_ok=True)
@@ -181,11 +141,11 @@ def verify_locked(settings, tool, now, say, suite) -> tuple:
     return EXIT_VERIFIED, closing
 
 
-def verify_tree(tree_root: Path, dev_root: Path | None = None, now=None, say=print, suite=suite_from_dev) -> int:
+def verify_tree(tree_root: Path, now=None, say=print, suite=suite_not_run_here) -> int:
     """Verify the tree's Python environment (deployment design section 7), in its order.
 
-    tree_root: the tree the launcher lies in.  dev_root: DEV's folder if the owner named it, for the suite.
-    now: gives the present time (UTC); a test passes a fixed one.  suite: suite_from_dev, or a test's own.
+    tree_root: the tree the launcher lies in.  now: gives the present time (UTC); a test passes a fixed one.
+    suite: a function (settings, say) that answers (PASSED, FAILED or NOT_RUN, one line for the summary).
     Returns EXIT_VERIFIED, EXIT_NOT_VERIFIED or EXIT_REFUSED.
     """
     now = now or (lambda: datetime.now(timezone.utc))
@@ -194,7 +154,6 @@ def verify_tree(tree_root: Path, dev_root: Path | None = None, now=None, say=pri
         if settings.role not in INSTALLED_ROLES:
             raise LaunchRefused('this is the DEV tree. DEV has no verified-environment marker and its launchers '
                                 'ask for none; there is nothing to verify here.')
-        tool = None if dev_root is None else check_dev_folder(dev_root, settings)
         check_no_unfinished_operation(settings.tree_root)
         check_no_orphan_marker(settings.tree_root)
         check_working_folders(settings.tree_root)
@@ -209,7 +168,7 @@ def verify_tree(tree_root: Path, dev_root: Path | None = None, now=None, say=pri
     say(attempt_snapshot(settings, 'PRE_VERIFY', now).line())
     try:
         with job_lock(settings.tree_root, 'verify tree', started):
-            exit_code, closing = verify_locked(settings, tool, now, say, suite)
+            exit_code, closing = verify_locked(settings, now, say, suite)
     except (SettingsRefused, LaunchRefused, tree_checks.ChecksRefused, ManifestRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('VERIFY TREE - END - refused; the environment\'s marker is as it was.')
@@ -225,13 +184,8 @@ def verify_tree(tree_root: Path, dev_root: Path | None = None, now=None, say=pri
 def main(arguments, tree_root: Path, say=print) -> int:
     """The command line of Verify_Tree.bat.
 
-    arguments: none, or ['--dev', 'E:/SOFTWARE-Win11/powerball/analysing_perceived_randomness_in_reality'].
-    tree_root: the tree the launcher lies in.  Returns the exit code.
+    arguments: none.  tree_root: the tree the launcher lies in.  Returns the exit code.
     """
-    parser = argparse.ArgumentParser(prog='Verify_Tree.bat',
-                                     description='Verify this tree\'s Python environment (specification 13).')
-    parser.add_argument('--dev', metavar='<DEV\'s folder>',
-                        help='the DEV tree this tree was installed from; named, its test suite is run with this '
-                             'tree\'s Python when its infrastructure is this tree\'s')
-    chosen = parser.parse_args(arguments)
-    return verify_tree(Path(tree_root), None if chosen.dev is None else Path(chosen.dev), say=say)
+    argparse.ArgumentParser(prog='Verify_Tree.bat', description='Verify this tree\'s Python environment '
+                                                                '(specification 13).').parse_args(arguments)
+    return verify_tree(Path(tree_root), say=say)

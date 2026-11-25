@@ -95,21 +95,33 @@ file; says what it would change before it asks; the cutoff file when a change fr
   while they hold the target's lock. It writes what it found as one line of JSON to a file that must not exist,
   and ends with 0 whatever it found; what stops an install is the tool's to decide. It refuses a Python that is
   not the environment the data tree's settings name.
-- **C-Q1, OPEN, FOR THE OWNER: where `Verify_Tree.bat` finds DEV's tests.** Design 7 has `Verify_Tree.bat` run in
-  the tree and run "the suite, if the tree's infrastructure is file for file DEV's". A QA or PROD tree's settings
-  file does not say where DEV is (design 1), and the tests live only in DEV. Three ways: (a) the owner names DEV
-  when he wants the suite, `Verify_Tree.bat --dev <DEV's folder>`; nothing stored, no ratified text touched;
-  without it the suite is not run and the summary says so in capitals; (b) a `[dev]` line in the tree's own
-  settings file, written by `Init_Tree` (a one-line amendment of ratified design section 1, and a change to slice
-  A's reviewed settings reader); (c) DEV's folder kept in `records/INIT_RECORD.json` (cannot be corrected by hand if
-  DEV moves). In every one, a tree must be verifiable with no DEV on the PC (after a restore onto a new PC), so
-  an absent DEV can never refuse. **Built so far: (a),** the recommendation; another answer changes only how
-  `tree_verify.main` learns the folder. The folder named is checked: its own settings must say DEV and name this
-  tree for this tree's role.
-- **For part C2, fixed here:** the tree asks DEV's tool `deploy/suite_for_tree.py --tree <tree root>`, started with
-  the tree's Python (`-I -B -u`, no time limit). Its exit codes: 0 the suite passed; 1 it failed; 3 not run, because
-  DEV's infrastructure is not file for file this tree's (the tool says which files); anything else counts as
-  failed. The tool is not written yet.
+- **C-Q1, OPEN, FOR THE OWNER: the test suite at `Verify_Tree.bat`.** Design 7 has `Verify_Tree.bat` run in the
+  tree and run "the suite, if the tree's infrastructure is file for file DEV's". Two facts stand against doing
+  that plainly. (1) The tests live only in DEV, and a QA or PROD tree's settings do not say where DEV is (design
+  1). (2) **The project's own rule is that the engine starts no program** (`tests/test_research_job.py`,
+  `test_the_engine_starts_no_program_and_opens_no_connection`, over every file of `src/research/`): the whole
+  suite failed on the first writing of `tree_verify.py`, which started DEV's tool with `subprocess`. The code was
+  corrected, not the rule. The ways on:
+  - **(1) RECOMMENDED, the simplest: `Verify_Tree` does not run the suite, and says so in capitals every time.** It
+    rests on every installed variant's smoke case, the forecast sample and the derived results in full. The suite
+    is still run with the target's Python at `Init_Tree` and at every `Reinstall_Infra` (DEV's tools start the
+    target's Python by design). Needs a short amendment of design 7 and specification 13 (RAT-59) and the
+    reviewer's view. Why it is safe for the main game: the scores and the ledger are recomputed in full and the
+    forecasts sampled, so what the suite would add at that moment is protection against a later STOP, not against
+    wrong science; W-23 already has DEV rebuilt first and the suite's evidence produced there; and a tree must be
+    verifiable with no DEV on the PC (after a restore onto a new PC), so the suite could never be required.
+    Uncertainty: PROD's `.venv` is built on its own day and may get another build of a package than DEV's; this
+    way leaves that case to the smoke cases and the stored-result checks.
+  - **(2) keeps the ratified words:** the owner names DEV (`Verify_Tree.bat --dev <DEV's folder>`); the tree's
+    program (`src/tree_checks_command.py`, not the engine) starts DEV's tool with the tree's Python; the project's
+    test is widened to watch that program and allow that one call. One named exception to "the installed
+    software starts no program". Written once already (commit `d2cb640`: `check_dev_folder`, `suite_from_dev`, five
+    tests) and taken out again; DEV's tool would still be to write. Without `--dev` the suite is not run, so in
+    practice it runs when the owner remembers the path.
+  - (3) the batch file runs DEV's tool first and hands the verdict to the verification: the order of design 7
+    is lost and a verdict travels on a command line. Not recommended.
+  **Built now: (1)'s shape,** with the suite's answer taken from a function the caller gives (`suite=`), so that
+  (2) is a small addition if the owner chooses it.
 
 ## 4. Where it stands
 
@@ -145,14 +157,27 @@ file; says what it would change before it asks; the cutoff file when a change fr
   made first and found nothing lost: the repository and `origin/main` agreed, the workspace's files equalled the
   overlay's, the 27 tests of the first half passed again). New in the overlay: `src/research/tree_verify.py`
   (`Verify_Tree`, design 7 in its order; class `other`), `src/tree_checks_command.py` (the program: `verify` and
-  `checks`), `Verify_Tree.bat`, `tests/test_trees_verify.py` (35 tests). Changed: `src/research/tree_checks.py`
+  `checks`), `Verify_Tree.bat`, `tests/test_trees_verify.py` (35 tests at first; see the next item). Changed: `src/research/tree_checks.py`
   (reading game by game; `run_checks`; the `checks` command), `deploy/INFRA_MANIFEST.ini` (three lines). Passing
   with them: `test_trees_checks` (27), `test_file_form`, `test_research_manifest`, `test_trees_readiness`,
-  `test_trees_launch_guard`, `test_trees_installed_files`. **Part C1 is whole except for one thing that belongs to
-  C2:** DEV's tool `deploy/suite_for_tree.py` (section 3 fixes how the tree asks it). The whole suite and the
-  planted-fault run for C1 are made next; their result is added here.
-- **Next: C2** (what every install shares), beginning with the suite on a temporary copy (`suite_for_tree.py`),
-  for which the first thing to settle is what the temporary copy holds (which of DEV's files the tests need).
+  `test_trees_launch_guard`, `test_trees_installed_files`.
+- **25 November 2026, part C1 PROVED, with one correction on the way.** The whole suite on the state of commit
+  `d2cb640`: 63 modules, 1150 tests; the three known failing tests, and ONE NEW failure,
+  `test_research_job.TheResultsStep.test_the_engine_starts_no_program_and_opens_no_connection`: `tree_verify.py`
+  imported `subprocess` to start DEV's suite tool. Corrected in the code (section 3, C-Q1): `tree_verify.py`
+  starts nothing; `check_dev_folder`, `suite_from_dev` and `--dev` are gone; `tests/test_trees_verify.py` is now
+  32 tests (five for the DEV folder removed, one added that no file of the tree's checks starts a program, one
+  added by the planted faults). Run again after the correction: `test_research_job` (48, OK),
+  `test_trees_verify` (32, OK), `test_file_form`, `test_trees_readiness`. **The whole suite has not been run again
+  on the corrected state;** it is run on the slice's final bytes. Planted faults
+  (`mutation_check_slice_c1.py`, beside this file): 49 planted in the three new source files, 48 caught at once;
+  the one that survived (a fault while a game's records are read, taken for a refusal the job understands) is
+  caught by the test added for it.
+- **Next: C2** (what every install shares). First to settle there: design 17's own note that "the code round
+  lists exactly what the suite needs from the repository, so that the temporary copy is complete; that list sits
+  beside the infrastructure manifest. Tests that served only the old system are not part of the new suite." So
+  C2 begins with that list (which tests are the new suite; which of DEV's files they read) and DEV's tool that
+  runs them on a temporary copy with a target's Python.
 - **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
   `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
   through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,

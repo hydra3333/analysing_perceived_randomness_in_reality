@@ -17,8 +17,6 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
-import os
-import sys
 import unittest
 from datetime import timedelta
 from pathlib import Path
@@ -48,10 +46,10 @@ def a_clock_that_runs():
 
 def suite_that(outcome: str, calls: list | None = None):
     """A stand-in for the suite: it answers `outcome` and notes that it was asked."""
-    def suite(tool, settings, say):
+    def suite(settings, say):
         """Answer as told."""
         if calls is not None:
-            calls.append(tool)
+            calls.append(settings.role)
         return outcome, f'the suite: {outcome}'
     return suite
 
@@ -91,12 +89,12 @@ class VerifyCase(fx.JobCase):
         lines = [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()] if path.exists() else []
         return [line for line in lines if line['operation'] == 'VERIFICATION']
 
-    def verify(self, tree: Path, dev: Path | None = None, suite=None) -> tuple:
+    def verify(self, tree: Path, suite=None) -> tuple:
         """Run the verification; return (the exit code, the lines said)."""
         said = []
         with fx.ImportPath(tree):
-            code = tree_verify.verify_tree(tree, dev, now=a_clock_that_runs(), say=said.append,
-                                           suite=suite or tree_verify.suite_from_dev)
+            code = tree_verify.verify_tree(tree, now=a_clock_that_runs(), say=said.append,
+                                           suite=suite or tree_verify.suite_not_run_here)
         return code, said
 
 
@@ -129,12 +127,13 @@ class AGoodTreeIsVerified(VerifyCase):
 
     def test_the_steps_come_in_the_designs_order(self):
         tree = self.worked()
-        events = []
+        events, lock_held = [], []
         real_rule, real_snapshot = process_rule.check_no_other_process_of_tree, snapshot.attempt_snapshot
 
         def rule(tree_root):
-            """Note the process check, then make it."""
+            """Note the process check and whether the tree's job lock is held, then make it."""
             events.append('process check')
+            lock_held.append((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
             return real_rule(tree_root)
 
         def backup(settings, job, now=None):
@@ -148,7 +147,7 @@ class AGoodTreeIsVerified(VerifyCase):
                 if line.startswith(word):
                     events.append(word.strip())
 
-        def suite(tool, settings, say):
+        def suite(settings, say):
             """Note the suite."""
             events.append('suite')
             return tree_verify.PASSED, 'passed'
@@ -161,13 +160,16 @@ class AGoodTreeIsVerified(VerifyCase):
                   'derived results', 'POST_VERIFY', 'VERIFIED']
         self.assertEqual([event for event in dict.fromkeys(events) if event in wanted], wanted)
         self.assertEqual(events[0], 'process check', 'before the first backup')
+        self.assertEqual((lock_held[0], lock_held.count(True)), (False, 1),
+                         'asked once more while the verification holds the tree\'s job lock')
         self.assertTrue(self.marker(tree).exists())
 
-    def test_without_dev_named_the_suite_is_not_run_and_the_summary_says_so_in_capitals(self):
+    def test_the_suite_is_not_run_from_the_tree_and_the_summary_says_so_in_capitals(self):
         tree = self.rebuilt()
         code, said = self.verify(tree)
         self.assertEqual(code, tree_verify.EXIT_VERIFIED)
-        self.assertTrue(said[-2].startswith('THE TEST SUITE WAS NOT RUN: DEV\'s folder was not named.'), said[-2])
+        self.assertTrue(said[-2].startswith('THE TEST SUITE WAS NOT RUN: the tests live in DEV, and this command, '
+                                            'run in the tree, starts no program.'), said[-2])
         self.assertEqual(self.log(tree)[0]['suite'], 'NOT RUN')
 
     def test_a_backup_that_cannot_be_made_is_said_and_does_not_stop_the_verification(self):
@@ -272,6 +274,14 @@ class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):
                       f'job will refuse that game for the same reason: ', '\n'.join(said))
         self.assertEqual(self.log(tree)[0]['unreadable'], [GAME])
 
+    def test_a_fault_while_a_games_records_are_read_is_a_fault_and_no_marker_is_written(self):
+        tree = self.worked()
+        with mock.patch.object(tree_checks, 'read_game', side_effect=KeyError('an invented fault')):
+            with self.assertRaises(KeyError):
+                self.verify(tree)
+        self.assertFalse(self.marker(tree).exists(), 'only the refusals the job understands are reported')
+        self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists(), 'the lock is let go')
+
 
 class WhatIsRefused(VerifyCase):
     """A refusal changes nothing in the tree and leaves the marker as it was."""
@@ -334,75 +344,6 @@ class WhatIsRefused(VerifyCase):
         tree = self.tree()
         fx.status_path(tree, FAMILY, 'TOY_A_V1').write_text('not a status file\n', encoding='ascii')
         self.refused(tree, r'REFUSED: a status file fails its own check: E_901/TOY_A_V1: ', backups=1)
-
-
-class TheDevTreeNamedForTheSuite(VerifyCase):
-    """The suite belongs to DEV: the folder named must be the DEV tree that names this tree."""
-
-    def dev_for(self, tree: Path, names: Path | None = None, with_tool: str | None = 'import sys\nsys.exit(0)\n'):
-        """An invented DEV tree whose settings name `names` (default: the tree) as its QA tree."""
-        dev = self.root / 'dev'
-        dev.mkdir()
-        fx.make_tree(dev)
-        named = names or tree
-        with open(dev / 'ENVIRONMENT.ini', 'a', encoding='utf-8', newline='\n') as stream:
-            stream.write(f'[QA]\ntree_root = {named}\nbackup_root = {named.parent / (named.name + "_backups")}\n'
-                         f'venv_dir = {named / ".venv"}\n')
-        if with_tool is not None:
-            (dev / 'deploy' / 'suite_for_tree.py').write_text(with_tool, encoding='ascii')
-        return dev
-
-    def settings(self, tree: Path):
-        """The tree's settings."""
-        from research.settings import read_settings
-        return read_settings(tree)
-
-    def test_the_dev_tree_that_names_this_tree_gives_its_tool(self):
-        tree = self.tree()
-        dev = self.dev_for(tree)
-        self.assertEqual(tree_verify.check_dev_folder(dev, self.settings(tree)), dev / 'deploy' / 'suite_for_tree.py')
-
-    def test_a_folder_that_is_not_a_dev_tree_refuses_before_anything_is_done(self):
-        tree = self.tree()
-        other = self.tree(name='other')
-        before = whole_tree(tree)
-        code, said = self.verify(tree, dev=other)
-        self.assertEqual(code, tree_verify.EXIT_REFUSED)
-        self.assertRegex(said[0], r'^REFUSED: .*ENVIRONMENT\.ini')
-        self.assertEqual(whole_tree(tree), before)
-        self.assertEqual(self.backups(tree), [])
-
-    def test_a_dev_tree_that_names_another_folder_as_this_role_refuses(self):
-        tree = self.tree()
-        other = self.tree(name='other')
-        dev = self.dev_for(tree, names=other)
-        from research.settings import SettingsRefused
-        with self.assertRaisesRegex(SettingsRefused, 'names .*other as its QA tree, and this tree is'):
-            tree_verify.check_dev_folder(dev, self.settings(tree))
-
-    def test_a_dev_tree_without_the_tool_refuses(self):
-        tree = self.tree()
-        dev = self.dev_for(tree, with_tool=None)
-        from research.settings import SettingsRefused
-        with self.assertRaisesRegex(SettingsRefused, 'suite_for_tree.py is missing'):
-            tree_verify.check_dev_folder(dev, self.settings(tree))
-
-    def test_the_tools_exit_code_decides_and_it_is_started_with_the_python_that_is_running(self):
-        tree = self.tree()
-        tool = self.root / 'tool.py'
-        proof = self.root / 'started_with.txt'
-        for exit_code, outcome, words in ((0, tree_verify.PASSED, 'The test suite passed'),
-                                          (1, tree_verify.FAILED, 'THE TEST SUITE FAILED or could not be run'),
-                                          (3, tree_verify.NOT_RUN, 'the tests in DEV are for other code'),
-                                          (2, tree_verify.FAILED, 'exit code 2')):
-            tool.write_text(f'import sys\nopen({str(proof)!r}, "w").write(sys.executable + "|" + "|".join(sys.argv[1:])'
-                            f' + "|" + str(sys.flags.isolated))\nsys.exit({exit_code})\n', encoding='ascii')
-            found, line = tree_verify.suite_from_dev(tool, self.settings(tree), lambda said: None)
-            self.assertEqual(found, outcome)
-            self.assertIn(words, line)
-            started_with, *rest = proof.read_text().split('|')
-            self.assertEqual(os.path.normpath(started_with), os.path.normpath(sys.executable))
-            self.assertEqual(rest, ['--tree', str(tree), '1'], 'the tree named; Python in isolated mode')
 
 
 class TheChecksCommand(VerifyCase):
@@ -518,9 +459,15 @@ class TheProgramAndItsLauncher(VerifyCase):
     def test_verify_without_a_marker_is_let_through_to_the_verification(self):
         tree = self.rebuilt()
         with mock.patch.object(tree_verify, 'main', return_value=0) as main:
-            code, printed = self.run_program(tree, ['verify', '--dev', 'X'])
+            code, printed = self.run_program(tree, ['verify'])
         self.assertEqual(code, 0, printed)
-        main.assert_called_once_with(['--dev', 'X'], tree)
+        main.assert_called_once_with([], tree)
+
+    def test_no_file_of_the_trees_checks_starts_a_program(self):
+        for path in (PROGRAM, Path(tree_verify.__file__), Path(tree_checks.__file__)):
+            text = path.read_text(encoding='utf-8')
+            for word in ('import subprocess', 'os.system', 'os.startfile', 'Popen', 'os.exec', 'os.spawn'):
+                self.assertNotIn(word, text, f'{path.name} holds {word}')
 
     def test_the_launcher_runs_verify_with_the_trees_own_python_isolated_and_passes_on_what_was_typed(self):
         text = (REPOSITORY_ROOT / 'Verify_Tree.bat').read_bytes().decode('ascii')

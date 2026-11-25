@@ -1,7 +1,7 @@
 @echo off
 setlocal DisableDelayedExpansion
 rem Verify this tree's Python environment after it was built or rebuilt (specification v0.6 section 13).
-rem Usage: Verify_Tree.bat [--dev FOLDER_OF_THE_DEV_TREE]    (with --dev, the test suite of DEV is run too)
+rem Usage: Verify_Tree.bat
 rem It runs src\tree_checks_command.py with this tree's own Python, in isolated mode and writing no cache;
 rem what is typed after the command is passed on unchanged. The tree it works in is the folder this file is in.
 set "ROOT=%~dp0"

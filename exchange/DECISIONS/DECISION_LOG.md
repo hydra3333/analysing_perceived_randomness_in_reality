@@ -7316,3 +7316,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   notes. Not decided until the owner says.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 304; RAT-59.
+
+## 304. 25 November 2026, 19:43 - slice C part C1 proved; the whole suite found one fault in it, corrected; question C-Q1 restated for the owner
+
+- **The owner, 19:12, to Claude:** "do you have to run it or is it something I can easily run n vscode claude ?"
+  Claude's answer: the runs are made in the cloud, where waiting for them costs almost nothing; a run on the
+  owner's PC would need a task file, a task clone and his go for files that are not reviewed; the PC's part is the
+  joined rehearsal at the end of build step 3.
+- **The whole suite, run on part C1 as first written (commit `d2cb640`):** 63 modules, 1150 tests; the three known
+  failing tests, and one new failure. The project's own rule that the engine starts no program
+  (`test_research_job`, over every file of `src/research/`) refused `tree_verify.py`, which started DEV's suite
+  tool. **The code was corrected, not the rule:** `Verify_Tree` now starts nothing and says in capitals that the
+  suite was not run. The affected modules pass again; the whole suite is run again on the slice's final bytes.
+- **Planted faults for C1:** 49 in the three new source files; 48 caught at once, the last by a test added for it.
+- **Question C-Q1, for the owner, restated with that fact** (the slice's notes, section 3): design 7 has
+  `Verify_Tree.bat`, run in the tree, run DEV's suite; the tree does not know where DEV is, and the installed
+  software starts no program. Claude recommends the simplest way: `Verify_Tree` does not run the suite and says
+  so, resting on the smoke cases, the forecast sample and the derived results in full, with a short amendment of
+  design 7 and specification 13 for the reviewer's view and the owner's ratification (RAT-59). The alternative
+  that keeps the ratified words needs one named exception to "the installed software starts no program". Not
+  decided until the owner says; part C2 does not wait for it.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 305; RAT-59.

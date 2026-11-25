@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 19:05 Australia/Adelaide (entry 303: slice C part C1 written; question C-Q1 waits for the owner; next C2).
+**Last updated:** 25 November 2026, 19:43 Australia/Adelaide (entry 304: slice C part C1 proved; question C-Q1 waits for the owner; next C2).
 
 ## For the owner: NOW
 
+- **SLICE C, PART C1 IS PROVED (entry 304; 25 November 2026).** The whole suite found one fault (the tree's
+  verification started a program, against the project's own rule); corrected. **Waiting on the owner: question
+  C-Q1** (whether `Verify_Tree` runs DEV's test suite, and how; Claude recommends that it does not, with a short
+  ratified amendment). **Next, not waiting for it: part C2.** Section 4 of
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md` says exactly where the slice stands.
 - **SLICE C, PART C1 IS WRITTEN (entry 303; 25 November 2026): the checks, `Verify_Tree` and the `checks`
   command.** One question waits for the owner, C-Q1 (where `Verify_Tree.bat` finds DEV's tests; the notes' section
   3). Next is part C2 (what every install shares). Where it stands, exactly: section 4 of
