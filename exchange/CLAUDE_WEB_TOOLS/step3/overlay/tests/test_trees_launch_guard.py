@@ -374,8 +374,9 @@ class EveryLaunch(fx.JobCase):
 
     def test_the_launcher_makes_the_guards_checks_before_it_hands_over_to_a_command(self):
         text = (REPOSITORY_ROOT / 'src' / 'research_command.py').read_text(encoding='utf-8')
-        self.assertLess(text.index('check_at_launch(TREE_ROOT)'), text.index('from research.research_job import main'))
-        self.assertLess(text.index('check_at_launch(TREE_ROOT)'), text.index('from research.withdraw import main'))
+        for command in ('research_job', 'withdraw', 'snapshot'):
+            self.assertLess(text.index('check_at_launch(TREE_ROOT, finishing)'),
+                            text.index(f'from research.{command} import main'))
 
 
 class TheStartOfAJob(fx.JobCase):

@@ -63,10 +63,32 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
    excepted (an environment's python.exe is the parent of the base Python that runs the tool: TASK_T028).
 5. **A backup's time in its name** is local time, as the design's `<YYYYMMDD>_<HHMMSS>` reads; the manifest holds
    the same moment in UTC as well.
+6. **A backup is not made while a job or a results update holds its lock,** and the research job makes its own
+   backup after it has released its lock. Otherwise `records/JOB.lock` would be inside the ZIP (nothing but the two
+   control files is left out), and a restored tree would refuse every job. The backup's own lock and the process
+   rule keep the tree quiet meanwhile.
+7. **The job's closing lines are said after its backup,** so that its verdict ("The job finished." or "A STOP is a
+   STOP ...") is still the last thing the owner reads, and the standing warning stands just above the job's END
+   line. For this `run_locked` returns its closing lines instead of saying them (one small change to build step
+   2's reviewed job; no step 2 test changed).
+8. **`PRE_CORRECTION`** is accepted as a backup's job name with the twelve of design section 10: section 6C of the
+   same design uses it.
+9. **`Run_Snapshot.bat` passes the launch guard's refusal on a backup's own lock** (it is the command that speaks
+   for that lock) and then says what it found: a backup in progress, or a lock left by one that was ended, which
+   the owner deletes by hand when he is sure. Nothing clears it for him.
+10. **A failed attempt removes its own ".partial"** if it can; one left by a backup that was ended is never taken
+    for a backup and nothing removes it (nothing prunes a backup root).
 
 ## 4. Where it stands
 
-- 25 November 2026: the ratified clauses read; this plan written; no code yet. Next: B1.
+- 25 November 2026: the ratified clauses read; this plan written.
+- **B1 (the backup) is written, with its tests:** `overlay/src/research/snapshot.py`, `overlay/Run_Snapshot.bat`,
+  `overlay/tests/test_trees_snapshot.py` (23 tests); wired into `research_job.py` (the note before the first write;
+  a backup at the start if one is owed, and at the end), `research_command.py` (the command `snapshot`) and the
+  manifest (two lines). One existing test of slice A adjusted for the launcher's new line. In the cloud:
+  `test_trees_snapshot`, `test_trees_launch_guard`, `test_research_job` and the other slice modules OK. **Still to
+  do for B1:** the whole suite and its comparison; planted faults. **Next: B2 (the recovery kit), then B3
+  (restore).**
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

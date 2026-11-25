@@ -18,7 +18,7 @@ Which of the project's own modules it uses
     research.withdraw       main: the withdrawal
 
 What uses it
-    Run_Research.bat and Withdraw_Variant.bat.
+    Run_Research.bat, Withdraw_Variant.bat and Run_Snapshot.bat.
 """
 import os
 import sys
@@ -29,7 +29,7 @@ TREE_ROOT = Path(__file__).resolve().parents[1]
 # The two folders Python imports the project's code from: the engine (research, evaluation) and the variants.
 IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods')
 # The commands, by the word the launcher gives.
-COMMANDS = ('research', 'withdraw')
+COMMANDS = ('research', 'withdraw', 'snapshot')
 # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
 EXIT_BAD_COMMAND = 2
 
@@ -49,7 +49,10 @@ def run_command(arguments) -> int:
     from research.launch_guard import check_at_launch
     from research.settings import SettingsRefused
     try:
-        environment_folder = check_at_launch(TREE_ROOT).venv_dir
+        # A backup's own lock does not refuse the backup command itself: it says what it found there.
+        from research.snapshot import LOCK_PATH
+        finishing = LOCK_PATH if arguments[0] == 'snapshot' else None
+        environment_folder = check_at_launch(TREE_ROOT, finishing).venv_dir
     except (SettingsRefused, LaunchRefused) as refusal:
         print(f'REFUSED: {refusal}')
         return EXIT_BAD_COMMAND
@@ -59,6 +62,8 @@ def run_command(arguments) -> int:
         return EXIT_BAD_COMMAND
     if arguments[0] == 'research':
         from research.research_job import main
+    elif arguments[0] == 'snapshot':
+        from research.snapshot import main
     else:
         from research.withdraw import main
     return main(arguments[1:], TREE_ROOT)

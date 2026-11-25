@@ -20,6 +20,7 @@ Which of the project's own modules it uses
     research.job_lock          the job lock and the orphan-marker check
     research.code_identity     the code identities quoted in every line
     research.launch_guard      check_at_job_start: the tree's own checks, and the environment's digest
+    research.snapshot          the note that a backup is owed, and the backup at the job's end (QA and PROD)
     research.variant_folders   find_variants, load_method: the installed variants
     research.status_file       the variants' status files (read; created in DEV; the eligibility draw written)
     research.game_state        the game's records in memory
@@ -50,6 +51,7 @@ from research.forecast_engine import FORECAST, compute_target, content_digest, v
 from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
                                  load_variant_state, summarise_target_line)
 from research.launch_guard import check_at_job_start
+from research.snapshot import backup_for_a_job, mark_due
 from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
 from research.reader import ResultsRefused, results_on_file
 from research.results_step import copy_results, finish_interrupted_copy
@@ -542,9 +544,16 @@ def run(tree_root: Path, games, *, no_update: bool = False, only=None, now=None,
             + (f'; limited to {", ".join(sorted(only))} (--only)' if only else ''))
         check_no_orphan_marker(settings.tree_root)
         check_working_folders(settings.tree_root)
+        backup_for_a_job(settings, 'start', now, say)        # only if a backup is owed from earlier work
         with job_lock(settings.tree_root, 'research job', started):
             environment_digest = check_at_job_start(settings, say)
-            return run_locked(settings, games, no_update, only, now, say, checkpoint, environment_digest)
+            mark_due(settings)                               # before the job's first write
+            exit_code, closing = run_locked(settings, games, no_update, only, now, say, checkpoint,
+                                            environment_digest)
+        backup_for_a_job(settings, 'end', now, say)          # the job's lock is released: the tree is quiet
+        for line in closing:                                 # the job's own verdict stays the last thing said
+            say(line)
+        return exit_code
     except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
@@ -555,7 +564,9 @@ def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, c
                environment_digest: str) -> int:
     """The job once it holds the job lock and the launch guard has passed: read the code's identities and the
     variants, then work each game. environment_digest: the digest of the tree's own Python environment, as the
-    guard computed it for this job. The other arguments and the result are as for run()."""
+    guard computed it for this job. The other arguments are as for run(). Returns (the exit code, the job's
+    closing lines): run() says those lines after the job's lock is released and its backup has been attempted, so
+    that the job's verdict is the last thing the owner reads."""
     tree_root = settings.tree_root
     for leftover in discard_unfinished_writes(tree_root):
         say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
@@ -590,14 +601,11 @@ def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, c
                            f'{type(fault).__name__}: {fault}. Running the job again tries again.')
             say(traceback.format_exc())
         say(endings[-1])
-    say(f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}')
-    for ending in endings:
-        say(ending)
-    for warning in job.warnings:
-        say(f'WARNING (said again): {warning}')
-    say('A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
-        else 'The job finished.')
-    return EXIT_GAME_STOPPED if stopped else EXIT_FINISHED
+    closing = [f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}',
+               *endings, *(f'WARNING (said again): {warning}' for warning in job.warnings),
+               'A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
+               else 'The job finished.']
+    return (EXIT_GAME_STOPPED if stopped else EXIT_FINISHED), closing
 
 
 def main(arguments, tree_root: Path) -> int:
