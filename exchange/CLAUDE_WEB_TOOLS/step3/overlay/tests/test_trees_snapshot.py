@@ -18,7 +18,7 @@ from pathlib import Path
 from unittest import mock
 
 import research_fixtures as fx
-from research import job_lock, process_rule, research_job, snapshot
+from research import job_lock, process_rule, research_job, snapshot, status_file
 from research.settings import read_settings
 
 A_TIME = datetime(2026, 12, 1, 9, 40, 12, tzinfo=timezone.utc)
@@ -115,15 +115,45 @@ class AVerifiedBackup(InventedQaTree):
         self.assertFalse(snapshot.is_due(self.qa))
         self.assertFalse((self.qa / snapshot.LOCK_PATH).exists())
 
-    def test_it_names_the_newest_recovery_kit_of_the_trees_software_state(self):
-        fingerprint = snapshot.software_fingerprint(self.qa)
+    def invented_kit(self, name: str, fingerprint: str, sidecar: str = 'right') -> None:
+        """Write an invented recovery kit into the backup root: a ZIP whose manifest names a software fingerprint,
+        with its ".sha256" beside it ('right'), with one that does not agree ('wrong'), or with none ('none')."""
         self.backups.mkdir(exist_ok=True)
-        for name in (f'KIT_20261101_080000_{fingerprint[:12]}.zip', f'KIT_20261120_080000_{fingerprint[:12]}.zip',
-                     'KIT_20261125_080000_000000000000.zip'):
-            (self.backups / name).write_bytes(b'PK invented')
+        with zipfile.ZipFile(self.backups / name, 'w') as kit:
+            kit.writestr('KIT_MANIFEST.json', json.dumps({'software_fingerprint': fingerprint}))
+        digest = hashlib.sha256((self.backups / name).read_bytes()).hexdigest()
+        if sidecar != 'none':
+            (self.backups / (name + '.sha256')).write_bytes(
+                f'{digest if sidecar == "right" else "0" * 64} *{name}\r\n'.encode('ascii'))
+
+    def kit_named_by_a_backup(self):
         with zipfile.ZipFile(self.attempt().path) as archive:
-            manifest = json.loads(archive.read(snapshot.MANIFEST_NAME))
-        self.assertEqual(manifest['recovery_kit'], f'KIT_20261120_080000_{fingerprint[:12]}.zip')
+            return json.loads(archive.read(snapshot.MANIFEST_NAME))['recovery_kit']
+
+    def test_it_names_the_newest_finished_recovery_kit_of_the_trees_software_state(self):
+        fingerprint = snapshot.software_fingerprint(self.qa)
+        short = fingerprint[:12]
+        self.invented_kit(f'KIT_20261101_080000_{short}.zip', fingerprint)
+        self.invented_kit(f'KIT_20261120_080000_{short}.zip', fingerprint)
+        self.invented_kit(f'KIT_20261121_080000_{short}.zip', fingerprint, sidecar='none')      # never finished
+        self.invented_kit(f'KIT_20261122_080000_{short}.zip', fingerprint, sidecar='wrong')     # damaged since
+        self.invented_kit(f'KIT_20261123_080000_{short}.zip', short + 'f' * 52)     # another state, same 12 letters
+        (self.backups / f'KIT_20261124_080000_{short}.zip').write_bytes(b'PK not a kit at all')
+        (self.backups / f'KIT_20261124_080000_{short}.zip.sha256').write_bytes(
+            hashlib.sha256(b'PK not a kit at all').hexdigest().encode('ascii') + b' *x\r\n')
+        self.invented_kit('KIT_20261125_080000_000000000000.zip', '0' * 64)
+        self.assertEqual(self.kit_named_by_a_backup(), f'KIT_20261120_080000_{short}.zip')
+
+    def test_with_no_finished_kit_of_its_state_a_backup_is_made_all_the_same_and_names_none(self):
+        fingerprint = snapshot.software_fingerprint(self.qa)
+        self.invented_kit(f'KIT_20261121_080000_{fingerprint[:12]}.zip', fingerprint, sidecar='none')
+        self.assertIsNone(self.kit_named_by_a_backup())
+
+    def test_the_command_says_how_often_the_tree_is_read(self):
+        said = []
+        snapshot.main([], self.qa, say=said.append)
+        self.assertIn('Every file is read three times (hashed, written into the ZIP, hashed again) and the ZIP is '
+                      'read back', said[0])
 
 
 class ABackupIsOnlyOfAQuietTree(InventedQaTree):
@@ -209,13 +239,64 @@ class ABackupIsOnlyOfAQuietTree(InventedQaTree):
         write = snapshot._write_archive
 
         def write_then_misremember(*arguments):
-            hashes = write(*arguments)
+            hashes, manifest_bytes = write(*arguments)
             hashes['ENVIRONMENT.ini'] = '0' * 64
-            return hashes
+            return hashes, manifest_bytes
 
         with mock.patch.object(snapshot, '_write_archive', write_then_misremember):
             self.not_made('ENVIRONMENT.ini read back from the archive is not the file that was read')
         self.assert_nothing_was_left()
+
+    def rewritten(self, partial: Path, change) -> None:
+        """Write a ZIP again member by member, as a valid ZIP, with change(name, data) giving each member's bytes."""
+        with zipfile.ZipFile(partial) as old:
+            members = [(name, old.read(name)) for name in old.namelist()]
+        partial.unlink()
+        with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED) as new:
+            for name, data in members:
+                new.writestr(name, change(name, data))
+
+    def test_a_manifest_that_reads_back_as_other_bytes_means_no_backup_though_every_file_is_right(self):
+        (self.qa / 'scratch' / 'empty').mkdir(parents=True)
+        write = snapshot._write_archive
+        other_root = lambda name, data: (data.replace(str(self.qa).encode(), str(self.qa.parent / 'elsewhere').encode())
+                                         if name == snapshot.MANIFEST_NAME else data)
+        other_hash = lambda name, data: (data.replace(b'"sha256": "', b'"sha256": "0', 1)
+                                         if name == snapshot.MANIFEST_NAME else data)
+        folder_not_empty = lambda name, data: b'x' if name == 'scratch/empty/' else data
+        for what, change, word in (('another tree root', other_root, 'the manifest read back'),
+                                   ('another hash', other_hash, 'the manifest read back'),
+                                   ('an empty folder that is not empty', folder_not_empty, 'scratch/empty read back')):
+            with self.subTest(what=what):
+                snapshot.mark_due(self.settings)
+
+                def write_then_alter(tree_root, partial, *rest):
+                    result = write(tree_root, partial, *rest)
+                    self.rewritten(partial, change)          # a valid ZIP; every file's bytes as they were read
+                    return result
+
+                with mock.patch.object(snapshot, '_write_archive', write_then_alter):
+                    self.not_made(word)
+                self.assert_nothing_was_left()
+                self.assertTrue(snapshot.is_due(self.qa))
+
+    def test_an_archive_that_does_not_decompress_is_a_backup_not_made_and_never_an_exception(self):
+        import zlib
+        for error in (zlib.error('Error -3 while decompressing data'), EOFError('compressed file ended early'),
+                      zipfile.BadZipFile('Bad CRC-32')):
+            with self.subTest(error=type(error).__name__):
+                with mock.patch.object(snapshot, '_check_archive', side_effect=error):
+                    self.not_made()
+                self.assert_nothing_was_left()
+
+    def test_a_partial_that_lay_there_before_the_attempt_is_another_attempts_and_is_not_removed(self):
+        stamp = A_TIME.astimezone().strftime('%Y%m%d_%H%M%S')
+        self.backups.mkdir(exist_ok=True)
+        earlier = self.backups / f'QA_{stamp}_MANUAL.zip.partial'
+        earlier.write_bytes(b'left by a backup that was ended')
+        self.not_made('exists already', 'Nothing was removed')
+        self.assertEqual(earlier.read_bytes(), b'left by a backup that was ended')
+        self.assertEqual([entry.name for entry in self.backups.iterdir()], [earlier.name])
 
     def test_a_link_in_the_tree_means_no_backup_and_what_it_points_to_is_not_read(self):
         outside = self.root / 'outside'
@@ -274,17 +355,64 @@ class TheResearchJobsBackups(InventedQaTree):
         self.assertNotIn(snapshot.DUE_PATH, names)
         self.assertNotIn(snapshot.LOCK_PATH, names)
 
-    def test_the_note_is_written_before_the_jobs_first_write(self):
-        seen = []
-        run_locked = research_job.run_locked
+    def staged_leftover(self) -> Path:
+        """What an interrupted status write leaves: an unfinished copy in the staging folder."""
+        leftover = self.qa / status_file.STAGING_FOLDER / f'E_901__TOY_B_V1__{status_file.STATUS_FILE_NAME}.writing'
+        leftover.parent.mkdir(parents=True, exist_ok=True)
+        leftover.write_bytes(b'left by an interrupted status write\r\n')
+        return leftover
 
-        def look_then_run(settings, *arguments):
-            seen.append((snapshot.is_due(settings.tree_root), (settings.tree_root / 'results' / 'research').exists()))
-            return run_locked(settings, *arguments)
+    def test_the_note_is_the_jobs_first_write_before_it_tidies_or_writes_anything_else(self):
+        leftover, seen = self.staged_leftover(), []
+        tidy = research_job.discard_unfinished_writes
 
-        with mock.patch.object(research_job, 'run_locked', look_then_run):
+        def look_then_tidy(tree_root):
+            seen.append((snapshot.is_due(tree_root), leftover.exists(), (tree_root / 'results' / 'research').exists()))
+            return tidy(tree_root)
+
+        with mock.patch.object(research_job, 'discard_unfinished_writes', look_then_tidy):
             self.assertEqual(self.job(self.qa)[0], 0)
-        self.assertEqual(seen, [(True, False)])
+        self.assertEqual(seen, [(True, True, False)])
+        self.assertFalse(leftover.exists())
+
+    def test_an_ordinary_refusal_after_the_guard_comes_before_any_write_and_says_so_truthfully(self):
+        leftover, said = self.staged_leftover(), []
+        with fx.ImportPath(self.qa):
+            code = research_job.run(self.qa, (fx.GAME,), now=lambda: fx.FIXED_TIME, say=said.append, no_update=True,
+                                    only=('E_901/NO_SUCH_VARIANT',))
+        self.assertEqual(code, research_job.EXIT_REFUSED, said)
+        self.assertIn('--only names no variant of this tree', '\n'.join(said))
+        self.assertEqual(said[-1], 'RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+        self.assertFalse(snapshot.is_due(self.qa))                       # no note: nothing was written
+        self.assertEqual(leftover.read_bytes(), b'left by an interrupted status write\r\n')    # nor tidied
+        self.assertNotIn('BACKUP', '\n'.join(said))
+
+    def test_a_refusal_that_follows_the_note_is_said_as_it_is_and_the_owed_backup_is_tried(self):
+        refuse = mock.Mock(side_effect=status_file.StatusRefused('an invented refusal after the first write'))
+        with mock.patch.object(research_job, 'read_statuses', refuse):
+            code, text = self.job(self.qa)
+        self.assertEqual(code, research_job.EXIT_REFUSED, text)
+        self.assertNotIn('nothing was written', text)
+        self.assertIn('BACKUP MADE AND VERIFIED: ', text)
+        self.assertTrue(text.endswith('the tree\'s note that a backup is owed had been written, so that backup was '
+                                      'tried (above).'))
+        self.assertFalse(snapshot.is_due(self.qa))
+        self.assertFalse((self.qa / 'records' / 'JOB.lock').exists())
+
+    def test_a_note_that_cannot_be_written_refuses_the_job_before_it_writes_research(self):
+        (self.qa / snapshot.DUE_PATH).mkdir(parents=True)                # a folder where the note should be
+        with self.assertRaisesRegex(job_lock.LaunchRefused, 'the note that a backup is owed could not be written'):
+            snapshot.mark_due(self.settings)
+
+    def test_the_jobs_end_line_gives_the_time_after_its_backup(self):
+        code, text = self.job(self.qa, clock=self.a_clock_that_runs())
+        self.assertEqual(code, 0, text)
+        lines = text.split('\n')
+        start = next(line for line in lines if line.startswith('RESEARCH JOB - START - '))
+        end = next(line for line in lines if line.startswith('RESEARCH JOB - END - '))
+        self.assertLess(lines.index(next(line for line in lines if line.startswith('BACKUP MADE'))), lines.index(end))
+        self.assertGreater(end[len('RESEARCH JOB - END - '):][:16], start[len('RESEARCH JOB - START - '):][:16])
+        self.assertEqual(lines[-1], 'The job finished.')
 
     def test_if_no_backup_can_be_made_the_job_goes_on_and_every_job_says_so_until_one_is_made(self):
         if self.backups.exists():

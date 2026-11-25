@@ -87,8 +87,10 @@ def build_kit(dev_root: Path, backup_root: Path, software_fingerprint: str, now=
         contents[KIT_MANIFEST_NAME] = (json.dumps(manifest, indent=1, sort_keys=True).replace('\n', '\r\n')
                                        + '\r\n').encode('ascii')
         Path(backup_root).mkdir(parents=True, exist_ok=True)
-        if final.exists() or partial.exists():
-            return KitResult(False, reason=f'{final} or its ".partial" exists already. Run the command again.')
+        beside = Path(str(final) + '.sha256')
+        if final.exists() or partial.exists() or beside.exists():
+            return KitResult(False, reason=f'{final}, its ".partial" or its ".sha256" exists already. Nothing was '
+                                           f'removed. Run the command again.')
         try:
             with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
                 for kit_name, data in contents.items():
@@ -97,15 +99,16 @@ def build_kit(dev_root: Path, backup_root: Path, software_fingerprint: str, now=
                 if {member: archive.read(member) for member in archive.namelist()} != contents:
                     raise OSError('the kit read back is not what was written')
             digest = hashlib.sha256(partial.read_bytes()).hexdigest()
+            with open(beside, 'wb') as handle:               # the ".sha256" first: a kit that has its name
+                handle.write(f'{digest} *{name}\r\n'.encode('ascii'))     # always has its ".sha256" beside it
             os.replace(partial, final)
         except BaseException:
-            try:
-                partial.unlink()
-            except OSError:
-                pass
+            for ours in (partial, beside):                   # only what this attempt made itself
+                try:
+                    ours.unlink()
+                except OSError:
+                    pass
             raise
-        with open(Path(str(final) + '.sha256'), 'wb') as handle:
-            handle.write(f'{digest} *{name}\r\n'.encode('ascii'))
     except (OSError, zipfile.BadZipFile) as failure:
         return KitResult(False, reason=f'{failure}')
     return KitResult(True, path=final)

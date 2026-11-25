@@ -2,12 +2,16 @@
 
 What this file is for
     A backup is one ordinary ZIP of everything under a QA or PROD tree's root, its Python environment included.
-    It is written under a name ending ".partial", checked twice (the archive read back against its own list;
-    every source file read and hashed a second time, the set of files unchanged), and only then given its name,
+    It is written under a name ending ".partial", checked twice (the archive read back, every member and the
+    manifest's own bytes against what was meant; every source file hashed a second time, the set of files
+    unchanged), and only then given its name,
     its ".sha256" file and a line in the tree's backup log. The tree must be quiet throughout: the backup's own
     lock file makes every launcher of the tree refuse, no job or results update may hold its lock, and no other
     Python process of the tree may be running before the first reading or after the second. A backup is always
     an attempt: this file returns what happened as a plain result and never stops the work that asked for it.
+
+    What a ZIP keeps, said plainly: every file's bytes and name, and its time to two seconds (a time before 1980
+    is kept as 1980); every empty folder by its name, without its time; no permissions, no alternate streams.
 
     It also keeps the tree's note that a backup is owed (records/SNAPSHOT_DUE): a job writes it before its first
     write, and only a verified backup removes it. While it lies there every job says so in capitals, at its
@@ -36,6 +40,7 @@ import json
 import os
 import time
 import zipfile
+import zlib
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -99,14 +104,19 @@ def is_due(tree_root: Path) -> bool:
 
 
 def mark_due(settings: TreeSettings) -> None:
-    """Write the tree's note that a backup is owed, before a job's first write. In DEV nothing is written.
-    Only a verified backup removes it."""
+    """Write the tree's note that a backup is owed, before a job's first write of research. In DEV nothing is
+    written. Only a verified backup removes it. Refuses (LaunchRefused) if the note cannot be written."""
     if settings.backup_root is None:
         return
     path = settings.tree_root / DUE_PATH
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, 'wb') as handle:
-        handle.write(windows_lines('This tree has been written to since its last verified backup.\n').encode('ascii'))
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, 'wb') as handle:
+            handle.write(windows_lines('This tree has been written to since its last verified backup.\n').encode('ascii'))
+    except OSError as error:
+        raise LaunchRefused(f'{path}: the note that a backup is owed could not be written ({error}). The job '
+                            f'writes no research without it. Put right what the error names and run the job '
+                            f'again.') from None
 
 
 def software_fingerprint(tree_root: Path) -> str | None:
@@ -152,7 +162,7 @@ def _write_archive(tree_root: Path, partial: Path, files, empty, heading: dict) 
     """The first reading: every file hashed and then written into the ZIP by the library's own streaming write
     (which keeps the file's time, to two seconds); every empty folder; and the manifest as the last member. A
     file that changed between its hashing and its writing is caught when the archive is read back.
-    Returns {path: sha256}."""
+    Returns ({path: sha256}, the manifest's exact bytes as they were written)."""
     hashes = {}
     with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9,
                          strict_timestamps=False) as archive:                    # a time before 1980 is kept as 1980
@@ -163,15 +173,17 @@ def _write_archive(tree_root: Path, partial: Path, files, empty, heading: dict) 
             archive.write(tree_root / relative, arcname=relative, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
         manifest = dict(heading, kind=MANIFEST_KIND, empty_folders=list(empty),
                         files=[{'path': relative, 'sha256': hashes[relative]} for relative in files])
-        text = windows_lines(json.dumps(manifest, indent=1, sort_keys=True, ensure_ascii=True) + '\n')
-        archive.writestr(zipfile.ZipInfo(MANIFEST_NAME, date_time=time.localtime()[:6]), text.encode('ascii'),
+        manifest_bytes = windows_lines(json.dumps(manifest, indent=1, sort_keys=True, ensure_ascii=True)
+                                       + '\n').encode('ascii')
+        archive.writestr(zipfile.ZipInfo(MANIFEST_NAME, date_time=time.localtime()[:6]), manifest_bytes,
                          compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
-    return hashes
+    return hashes, manifest_bytes
 
 
-def _check_archive(partial: Path, hashes: dict, empty) -> None:
-    """The first verification: the archive read back, every member against the list. Refuses (BackupNotMade) a
-    member missing, added or of other bytes, or a manifest that is not the last member."""
+def _check_archive(partial: Path, hashes: dict, empty, manifest_bytes: bytes) -> None:
+    """The first verification: the archive read back, every member against what was meant: every file against its
+    hash, every empty folder as an empty member, and the manifest, the last member, against the exact bytes that
+    were written. Refuses (BackupNotMade) a member missing, added or of other bytes."""
     with zipfile.ZipFile(partial) as archive:
         names = archive.namelist()
         if not names or names[-1] != MANIFEST_NAME or names.count(MANIFEST_NAME) != 1:
@@ -185,6 +197,11 @@ def _check_archive(partial: Path, hashes: dict, empty) -> None:
                     digest.update(piece)
             if digest.hexdigest() != expected:
                 raise BackupNotMade(f'{relative} read back from the archive is not the file that was read.')
+        for folder in empty:
+            if archive.read(folder + '/') != b'':
+                raise BackupNotMade(f'the empty folder {folder} read back from the archive is not empty.')
+        if archive.read(MANIFEST_NAME) != manifest_bytes:
+            raise BackupNotMade('the manifest read back from the archive is not the manifest that was written.')
 
 
 def _check_sources_again(tree_root: Path, hashes: dict, empty) -> None:
@@ -201,14 +218,31 @@ def _check_sources_again(tree_root: Path, hashes: dict, empty) -> None:
                                 f'A backup is made only of a quiet tree.')
 
 
+def _is_the_kit_of(path: Path, fingerprint: str) -> bool:
+    """True if a file is a finished recovery kit of a software state: its ".sha256" lies beside it and agrees
+    with its bytes, and its own manifest names that whole fingerprint. Anything that cannot be read is not."""
+    try:
+        beside = Path(str(path) + '.sha256').read_text(encoding='ascii').split()
+        if beside[:1] != [_hash_of_file(path)]:
+            return False
+        with zipfile.ZipFile(path) as kit:
+            return json.loads(kit.read('KIT_MANIFEST.json')).get('software_fingerprint') == fingerprint
+    except (OSError, ValueError, KeyError, IndexError, AttributeError, zipfile.BadZipFile, zlib.error, EOFError):
+        return False
+
+
 def _newest_kit(backup_root: Path, fingerprint: str | None) -> str | None:
-    """The name of the newest recovery kit in a backup root for a software fingerprint, for example
-    'KIT_20261201_101500_5d0c1f3a9b7e.zip'; None if there is none."""
+    """The name of the newest finished recovery kit in a backup root for a software fingerprint, for example
+    'KIT_20261201_101500_5d0c1f3a9b7e.zip'; None if there is none (a backup is made all the same: the kit's
+    name in its manifest is information, and any kit that checks itself can restore it)."""
     if fingerprint is None or not backup_root.is_dir():
         return None
-    kits = sorted(entry.name for entry in backup_root.iterdir()
-                  if entry.name.startswith('KIT_') and entry.name.endswith(f'_{fingerprint[:12]}.zip'))
-    return kits[-1] if kits else None
+    for name in sorted((entry.name for entry in backup_root.iterdir()
+                        if entry.name.startswith('KIT_') and entry.name.endswith(f'_{fingerprint[:12]}.zip')),
+                       reverse=True):
+        if _is_the_kit_of(backup_root / name, fingerprint):
+            return name
+    return None
 
 
 def attempt_snapshot(settings: TreeSettings, job: str, now=None) -> SnapshotResult:
@@ -236,23 +270,24 @@ def attempt_snapshot(settings: TreeSettings, job: str, now=None) -> SnapshotResu
             if (tree_root / held).exists():
                 raise BackupNotMade(f'{what} ({tree_root / held}). A backup is made only of a quiet tree.')
         with FileLock(tree_root / LOCK_PATH, f'backup {name}', moment.astimezone().strftime('%Y-%m-%d %H:%M')):
-            try:
-                process_rule.check_no_other_process_of_tree(tree_root)
-                backup_root.mkdir(parents=True, exist_ok=True)
-                if (tree_root / MANIFEST_NAME).exists():
-                    raise BackupNotMade(f'{tree_root / MANIFEST_NAME} lies at the tree\'s root: a backup was unzipped '
-                                        f'here by hand and not yet checked. Run Restore.bat --after-hand-unzip '
-                                        f'--snapshot <that backup> from an unpacked recovery kit first.')
-                if final.exists() or partial.exists():
-                    raise BackupNotMade(f'{final} or its ".partial" exists already. Run the command again.')
-                files, empty = _inventory(tree_root)
-                fingerprint = software_fingerprint(tree_root)
-                heading = {'made_utc': moment.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
-                           'made_local': moment.astimezone().strftime('%Y-%m-%d %H:%M:%S'), 'role': settings.role,
-                           'tree_root': str(tree_root), 'job': job, 'software_fingerprint': fingerprint,
-                           'recovery_kit': _newest_kit(backup_root, fingerprint)}
-                hashes = _write_archive(tree_root, partial, files, empty, heading)
-                _check_archive(partial, hashes, empty)
+            process_rule.check_no_other_process_of_tree(tree_root)
+            backup_root.mkdir(parents=True, exist_ok=True)
+            if (tree_root / MANIFEST_NAME).exists():
+                raise BackupNotMade(f'{tree_root / MANIFEST_NAME} lies at the tree\'s root: a backup was unzipped '
+                                    f'here by hand and not yet checked. Run Restore.bat --after-hand-unzip '
+                                    f'--snapshot <that backup> from an unpacked recovery kit first.')
+            if final.exists() or partial.exists():           # checked before this attempt owns any file: a
+                raise BackupNotMade(f'{final} or its ".partial" exists already. Nothing was removed. Run the '
+                                    f'command again.')       # ".partial" found here is another attempt's
+            files, empty = _inventory(tree_root)
+            fingerprint = software_fingerprint(tree_root)
+            heading = {'made_utc': moment.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+                       'made_local': moment.astimezone().strftime('%Y-%m-%d %H:%M:%S'), 'role': settings.role,
+                       'tree_root': str(tree_root), 'job': job, 'software_fingerprint': fingerprint,
+                       'recovery_kit': _newest_kit(backup_root, fingerprint)}
+            try:                                             # from here the ".partial" is this attempt's own
+                hashes, manifest_bytes = _write_archive(tree_root, partial, files, empty, heading)
+                _check_archive(partial, hashes, empty, manifest_bytes)
                 _check_sources_again(tree_root, hashes, empty)
                 process_rule.check_no_other_process_of_tree(tree_root)
                 archive_digest, size = _hash_of_file(partial), partial.stat().st_size
@@ -272,7 +307,8 @@ def attempt_snapshot(settings: TreeSettings, job: str, now=None) -> SnapshotResu
                 (tree_root / DUE_PATH).unlink()
             except FileNotFoundError:
                 pass
-    except (BackupNotMade, LaunchRefused, OSError, zipfile.BadZipFile, zipfile.LargeZipFile) as failure:
+    except (BackupNotMade, LaunchRefused, OSError, zipfile.BadZipFile, zipfile.LargeZipFile, zlib.error,
+            EOFError) as failure:                        # the last two: an archive that does not decompress
         return SnapshotResult(False, reason=f'{failure}')
     return SnapshotResult(True, path=final, files=len(files), size=size, seconds=time.monotonic() - began)
 
@@ -313,8 +349,8 @@ def main(arguments, tree_root: Path, say=print) -> int:
     except SettingsRefused as refusal:
         say(f'REFUSED: {refusal}')
         return EXIT_REFUSED
-    say(f'BACKUP - START - the {settings.role} tree at {settings.tree_root}. The whole tree is read twice; it can '
-        f'take several minutes.')
+    say(f'BACKUP - START - the {settings.role} tree at {settings.tree_root}. Every file is read three times (hashed, '
+        f'written into the ZIP, hashed again) and the ZIP is read back; it can take several minutes.')
     result = attempt_snapshot(settings, 'MANUAL')
     say(result.line())
     say('BACKUP - END')
