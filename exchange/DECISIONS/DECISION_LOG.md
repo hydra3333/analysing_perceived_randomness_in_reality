@@ -6785,3 +6785,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Slice A is closed for review.** Next is slice B (backups, the recovery kit, restore; build plan v0.1r1). It is
   a new subsystem: by the owner's model rule Claude says so and waits for his go before designing it.
 - Next numbers: EX_322; entry 282; RAT-57.
+
+## 282. 25 November 2026, 13:34 - the reviewer chat has ended (maximum length); the owner asks Claude to refresh the reviewer's handover and blurb now, RATIFIED IN ADVANCE
+
+- **The owner, 13:34:** "chatgpt reviewer has ceased to function (too much usage with the LF debacle) with
+  \"You've reached the maximum length for this conversation, but you can keep talking by starting a new chat.\".
+  Unfortunately that means we a pause while we need you to locate the latest version of and update chatgpt's
+  handover blurb and doc(s) so that we can then continue - or we are in dire trouble. Please do that now and
+  commit them as ratified in advance."
+- **The reviewer chat that ended** is the one that started on the evening of 24 November 2026 (entries 232, 234);
+  its last message is EX_321 (slice A, PASS; entry 281). **No finding is open and nothing was in flight with it.**
+- **The latest reviewer handover** is H-2 v8 (`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v8_20261125.md` and its
+  introductory blurb; RAT-55, entries 268 and 269), written by the reviewer itself.
+- **What Claude does, on this word:** writes H-2 v9 and its blurb as NEW files in `doc/HANDOVER/` (the reviewer's
+  own files are not edited), brought up to date through entry 281, and commits them as ratified in advance by the
+  owner (RAT-57). The precedents are RAT-51 and RAT-52 (ratified in advance) and entry 232 (Claude refreshing the
+  reviewer's handover when the reviewer cannot). **The primary author is writing the reviewer's handover, so its
+  header says so, and the new reviewer chat is asked to verify it against the repository and to correct it as its
+  own first act.** Slice B and the consolidated H-1 wait until this is done.
+- Next numbers: EX_322; entry 283; RAT-57.
