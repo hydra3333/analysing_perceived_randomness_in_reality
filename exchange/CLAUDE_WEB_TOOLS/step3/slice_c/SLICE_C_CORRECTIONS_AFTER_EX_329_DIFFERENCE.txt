@@ -1,0 +1,1201 @@
+Build step 3, slice C, the corrections after EX_329: the exact differences of the overlay from the bytes the
+reviewer read (git diff e404c22 3bdd37b -- exchange/CLAUDE_WEB_TOOLS/step3/overlay;
+11 files changed, none added or removed). Carriage returns at line ends are not shown.
+
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/init_tree.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/init_tree.py
+index dfceb84..7c6a3ca 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/init_tree.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/init_tree.py
+@@ -4,7 +4,8 @@ What this file is for
+     A QA or PROD tree does not exist until this command makes it. It works out the plan (DEV's infrastructure,
+     whose marker must match, and every variant of DEV that is marked ready), shows it and asks once. Then it
+     creates the folder, writes the tree's own settings file (create-only, from DEV's entry for the role) and the
+-    barrier, copies every planned file, gives each variant its status file, and copies the accepted results.
++    barrier, copies every planned file, gives each variant its status file, and copies the accepted results as
++    one set (read twice at the source; each game's copied pair read as the engine reads it before the record).
+     There it stops and asks the owner to build the tree's Python environment with his two scripts, which are
+     now in the tree. The same command typed again goes on: it checks the tree's software against the plan, runs
+     the suite and every variant's smoke case with the tree's own Python, has that Python write the environment's
+@@ -128,12 +129,12 @@ def target_state(entry, plan: dict, wanted_settings: bytes) -> str:
+ 
+ 
+ def results_source(view, role: str) -> tuple:
+-    """The tree the new tree's accepted results are copied from (specification 12.5): for PROD, DEV; for QA, PROD
++    """The tree a new tree's accepted results are copied from (specification 12.5): for PROD, DEV; for QA, PROD
+     if a PROD tree exists, and DEV while none does.
+ 
+-    Returns (the source tree's folder, 'DEV' or 'PROD'). Refuses a PROD tree that is not what DEV's file says
+-    (SettingsRefused), and one in which an install is unfinished or a results update holds its lock
+-    (InstallRefused): its results are not read while either is so.
++    Returns (the source tree's folder, 'DEV' or 'PROD'). It is chosen once, when a creation begins, shown before
++    the question and kept in the creation's plan, so that a creation continued later copies from the tree the
++    owner was shown.
+     """
+     dev_root = view.own.tree_root
+     if role == 'PROD' or 'PROD' not in view.entries:
+@@ -141,13 +142,27 @@ def results_source(view, role: str) -> tuple:
+     prod_root = view.entries['PROD'].tree_root
+     if not (prod_root / SETTINGS_FILE_NAME).is_file():
+         return dev_root, 'DEV'
+-    tree_as_dev_names_it(view, 'PROD')
++    return prod_root, 'PROD'
++
++
++def check_source_may_be_read(view, source_root: Path, source_role: str) -> None:
++    """Refuse to read a PROD tree's results while they may be changing, or if it is not the tree DEV's file names.
++
++    Refuses a PROD tree that is not what DEV's file says (SettingsRefused); one that is not the folder the
++    creation was begun with, or in which an install is unfinished or a results update holds its lock
++    (InstallRefused). Nothing is ever written to PROD to mark or lock it. DEV as the source asks nothing here.
++    """
++    if source_role != 'PROD':
++        return
++    named = tree_as_dev_names_it(view, 'PROD').tree_root
++    if os.path.normcase(os.path.realpath(named)) != os.path.normcase(os.path.realpath(source_root)):
++        raise common.InstallRefused(f'this creation was begun with the PROD tree at {source_root} as the source of '
++                                    f'its results, and DEV\'s file now names {named} as PROD. Nothing was copied.')
+     for held, what in ((common.BARRIER_PATH, 'an install is unfinished there'),
+                        (UPDATER_LOCK, 'a results update holds its lock there')):
+-        if (prod_root / held).exists():
+-            raise common.InstallRefused(f'the PROD tree at {prod_root} cannot be read for its results now: {what} '
+-                                        f'({prod_root / held}). Let it finish, then run this command again.')
+-    return prod_root, 'PROD'
++        if (Path(source_root) / held).exists():
++            raise common.InstallRefused(f'the PROD tree at {source_root} cannot be read for its results now: {what} '
++                                        f'({Path(source_root) / held}). Let it finish, then run this command again.')
+ 
+ 
+ def results_files(source_root: Path) -> list:
+@@ -185,54 +200,87 @@ def _sha256(path: Path) -> str:
+     return hashlib.sha256(path.read_bytes()).hexdigest()
+ 
+ 
+-def copy_results(source_root: Path, source_role: str, plan: dict, now, say=print) -> None:
+-    """Copy the accepted results of each game into the new tree, each file hashed on both sides, and keep the
+-    list as records/INIT_RECORD.json (deployment design section 4, step 5).
+-
+-    source_root, source_role: results_source's answer.  plan: the creation's plan (its tree_root is the target).
+-    The source's files are first checked (results_files). No forecast, score, report or OV-1 record is read or
+-    copied. A creation being continued that
+-    already has its record is not copied again: its files are checked against the record.
+-    Refuses (InstallRefused): what results_files refuses; a source file that changed while it was copied; a
+-    copied file that is no longer what the record says.
++def check_copied_pairs(target_root: Path) -> None:
++    """Check that each game's results as they now lie in the new tree are a results file with the ledger that
++    names it, by the engine's own reading: what the tree's first research job will ask of them.
++    Refuses (InstallRefused), naming the game."""
++    for game_id in GAMES:
++        try:
++            results_on_file(target_root, game_id)
++        except ResultsRefused as refusal:
++            raise common.InstallRefused(
++                f'the results of {game_id} as they lie in {target_root} are not a results file with the ledger that '
++                f'names it ({refusal}). The source was probably being updated while it was read. No record of the '
++                f'copy stands on them: type the same command again and they are copied afresh.') from None
++
++
++def copy_results(view, source_root: Path, source_role: str, plan: dict, now, say=print) -> None:
++    """Copy the accepted results of each game into the new tree as ONE set, and keep the list as
++    records/INIT_RECORD.json (deployment design section 4, step 5; EX_329 C-B02).
++
++    view: DEV's settings.  source_root, source_role: the source kept in the creation's plan.
++    plan: the creation's plan (its tree_root is the target).
++    A creation that already has its record reads no source: the six files in the tree are checked against the
++    record, and each game's pair by the engine's reading. Otherwise: the source is checked (results_files); all
++    six files are hashed (the first reading); each is copied and its copy must have that hash; all six are
++    hashed again (the second reading) and must be unchanged; each game's copied pair must pass the engine's
++    reading; only then is the record written. Until the record is written the copied files are this creation's
++    own and a retry replaces them. No forecast, score, report or OV-1 record is read or copied, and nothing is
++    written to the source.
++    Refuses (InstallRefused): what results_files and check_source_may_be_read refuse; a source file that changed
++    between the two readings; a copied pair that fails the engine's reading; with a record, a file that is no
++    longer what the record says.
+     """
+     target_root = Path(plan['tree_root'])
+     record_path = target_root / INIT_RECORD_PATH
++    wanted = [f'{SOURCE_FOLDER}/{name.format(game_id=game_id)}' for game_id in GAMES for name in RESULTS_FILE_NAMES]
+     if record_path.exists():
+         try:
+             record = json.loads(record_path.read_bytes().decode('ascii'))
++            listed = [entry['path'] for entry in record['results']]
+             changed = [entry['path'] for entry in record['results']
+                        if not (target_root / entry['path']).is_file()
+                        or _sha256(target_root / entry['path']) != entry['sha256']]
+         except (OSError, ValueError, KeyError, TypeError) as fault:
+             raise common.InstallRefused(f'{record_path} cannot be read as this creation\'s record '
+                                         f'({fault}).') from None
+-        if changed:
++        if listed != wanted or changed:
+             raise common.InstallRefused(f'the results copied when this creation began are no longer what its record '
+-                                        f'{record_path} says: {", ".join(changed)}. Nothing was copied again.')
++                                        f'{record_path} says: {", ".join(changed) or "it does not list the six files"}. '
++                                        f'Nothing was copied again.')
++        check_copied_pairs(target_root)
+         say(f'The accepted results: already copied from {record["results_copied_from"]} '
+-            f'({len(record["results"])} files, as the record says).')
++            f'({len(record["results"])} files, as the record says; each game\'s pair read as the engine reads it).')
+         return
+-    copied = []
+-    for relative in results_files(source_root):
+-        source = Path(source_root) / relative
+-        digest = _sha256(source)
+-        common.copy_into_place(source, target_root, relative, digest)
+-        if _sha256(source) != digest:
+-            raise common.InstallRefused(f'{source} changed while it was being copied. Run the command again when '
+-                                        f'nothing is updating the results there.')
+-        copied.append({'path': relative, 'sha256': digest})
++    check_source_may_be_read(view, source_root, source_role)
++    files = results_files(source_root)
++    first = {relative: _sha256(Path(source_root) / relative) for relative in files}
++    try:
++        for relative in files:
++            common.copy_into_place(Path(source_root) / relative, target_root, relative, first[relative],
++                                   replace=True)
++    except common.InstallRefused as refusal:
++        raise common.InstallRefused(f'the accepted results could not be copied from {source_root} as they were first '
++                                    f'read; they were probably being updated. ({refusal}) Type the same command '
++                                    f'again when nothing is updating the results there.') from None
++    moved = [relative for relative in files if _sha256(Path(source_root) / relative) != first[relative]]
++    if moved:
++        raise common.InstallRefused(f'the accepted results in {source_root} changed while they were being copied '
++                                    f'({", ".join(moved)}). No record of the copy was written. Type the same command '
++                                    f'again when nothing is updating the results there; they are copied afresh.')
++    check_copied_pairs(target_root)
+     record = {'kind': INIT_RECORD_KIND, 'role': plan['role'], 'tree_root': plan['tree_root'],
+               'time': now().astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+-              'results_copied_from': str(source_root), 'results_copied_from_role': source_role, 'results': copied}
++              'results_copied_from': str(source_root), 'results_copied_from_role': source_role,
++              'results': [{'path': relative, 'sha256': first[relative]} for relative in files]}
+     temporary = record_path.with_name(record_path.name + common.INSTALLING_SUFFIX)
+     with open(temporary, 'wb') as handle:
+         handle.write(record_bytes(record))
+         handle.flush()
+         os.fsync(handle.fileno())
+     os.replace(temporary, record_path)
+-    say(f'The accepted results: {len(copied)} files copied from the {source_role} tree at {source_root}, each '
+-        f'hashed on both sides; the list is {record_path}.')
++    say(f'The accepted results: {len(files)} files copied from the {source_role} tree at {source_root} as one set '
++        f'(hashed before and after; each game\'s pair read as the engine reads it); the list is {record_path}.')
+ 
+ 
+ def make_creation_plan(dev_root: Path, entry, say=print) -> tuple:
+@@ -326,9 +374,17 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+         copy_from = view.entries['PROD'].tree_root if role == 'QA' and 'PROD' in view.entries else None
+         wanted_settings = settings_bytes(entry, copy_from)
+         plan, infrastructure = make_creation_plan(dev_root, entry, say)
++        begun = common.read_barrier(root)
++        if begun is not None and begun.get('operation') == common.INIT and begun.get('statement'):
++            source = begun['statement']                  # a creation being continued: the source it was begun with
++        else:
++            chosen_root, chosen_role = results_source(view, role)
++            source = {'results_copied_from': str(chosen_root), 'results_copied_from_role': chosen_role}
++        plan = dict(plan, statement=source)
++        source_root, source_role = Path(source['results_copied_from']), source['results_copied_from_role']
+         state = target_state(entry, plan, wanted_settings)
+-        source_root, source_role = results_source(view, role)
+-        if state == NEW or not (root / INIT_RECORD_PATH).exists():
++        if not (root / INIT_RECORD_PATH).exists():           # with its record, a creation reads no source again
++            check_source_may_be_read(view, source_root, source_role)
+             results_files(source_root)
+         if state == NEW:
+             say(f'The accepted results will be copied from the {source_role} tree at {source_root}.')
+@@ -355,7 +411,7 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+                 common.carry_out(dev_root, root, plan, say)
+                 created = common.create_status_files(root, plan)
+                 say(f'Status files: {created} created as ACTIVE; {len(plan["variants"]) - created} already there.')
+-                copy_results(source_root, source_role, plan, now, say)
++                copy_results(view, source_root, source_role, plan, now, say)
+                 if not (entry.venv_dir / common.PROGRAMS_FOLDER / 'python.exe').is_file():
+                     say(f'INIT TREE - PAUSED - the {role} tree\'s software and results are in place. NOW BUILD ITS '
+                         f'PYTHON ENVIRONMENT: in {root} run create_venv.bat, then '
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install.py
+index e4c114e..e752fd9 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install.py
+@@ -134,11 +134,10 @@ def check_and_finish(view, settings, plan: dict, expected: dict, release, now, s
+     say(f'The tree\'s software is exactly the old list and the plan: {len(expected["files"])} files, '
+         f'{len(expected["variants"])} variant(s), each with its status file, and nothing else under src.')
+     python = common.target_python(settings)
+-    try:
+-        dev_files = common.dev_infrastructure(dev_root)['files']
+-    except common.InstallRefused:
+-        suite, line = None, ('The test suite: not run. DEV\'s infrastructure is not marked ready, so its tests cannot '
+-                             'be said to be the tests of this tree\'s software.')
++    dev_files = common.dev_infrastructure_bytes(dev_root)
++    if dev_files is None:
++        suite, line = None, ('The test suite: not run. DEV\'s infrastructure manifest cannot be read as one, so its '
++                             'tests cannot be said to be the tests of this tree\'s software.')
+     else:
+         suite, line = common.suite_if_it_is_the_trees(dev_root, dev_files, expected, python, say)
+     say(line)
+@@ -212,7 +211,12 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+                     'log lines may have been written, as said above.)')
+                 return EXIT_REFUSED
+         with common.reserved(settings, f'Install {role}', started, say):
+-            common.check_barrier(root, plan)
++            if common.check_barrier(root, plan) != continuing or (not continuing and (
++                    installed_files.read_list(root) != current or installed_files.differences(root, current))):
++                raise common.InstallRefused(
++                    f'the {role} tree\'s installed software, or its record of an unfinished install, changed while '
++                    f'the backup was being made or the question stood (another install began or finished, or a '
++                    f'file was changed). Nothing was copied. Run the command again: it makes its plan anew.')
+             with common.changing(settings, plan, started) as release:
+                 began = True
+                 common.carry_out(dev_root, root, plan, say)
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_common.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_common.py
+index 9cbc0a9..39a89df 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_common.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/install_common.py
+@@ -117,6 +117,22 @@ def dev_infrastructure(dev_root: Path) -> dict:
+     return {'fingerprint': readiness.fingerprint, 'files': files, 'classes': dict(classes)}
+ 
+ 
++def dev_infrastructure_bytes(dev_root: Path) -> dict | None:
++    """The bytes DEV's infrastructure holds now, whether or not it is marked ready: {path: sha256} of the manifest
++    and of every file under its [files]. None if the manifest cannot be read as one (a listed file missing among
++    the reasons): then no tree's infrastructure can be said to be file for file DEV's.
++
++    An ordinary install asks this, and not the readiness marker, whether DEV's tests are the tests of the target's
++    software (specification 12.3 item 3; EX_329 C-C02): it installs no infrastructure, so it needs none marked.
++    """
++    try:
++        manifest = code_identity.read_manifest(Path(dev_root))
++    except code_identity.ManifestRefused:
++        return None
++    return {path: variant_folders.sha256_of_file(Path(dev_root) / path)
++            for path in (code_identity.MANIFEST_PATH, *manifest)}
++
++
+ def dev_variants(dev_root: Path) -> tuple:
+     """Every variant folder of DEV: those ready to be installed, and those that are not, each with its reason.
+ 
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/reinstall_infra.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/reinstall_infra.py
+index ed726b6..28385da 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/reinstall_infra.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/deploy/reinstall_infra.py
+@@ -7,7 +7,10 @@ What this file is for
+     file that can change a forecast; assembles the software as it would be in a temporary folder and, with the
+     target's own Python and the target's own data, read only, runs the suite, compares every stored score and
+     prevailing line, and recomputes the fixed sample of stored forecasts; says one of two plain statements;
+-    attempts a recovery kit and a backup; gives the warning and asks once. Then it reserves the target, writes
++    attempts a recovery kit and a backup; gives the warning and asks once. Then it reserves the target again
++    and, before it writes anything, makes sure that nothing the statement rested on has changed since (a job
++    that ran meanwhile, new results, an install, a withdrawal, the environment, DEV): if anything has, it
++    refuses and the owner runs it afresh. It writes
+     its barrier, carries the plan out, checks the whole tree's software, makes every installed variant forecast
+     once, runs the suite in place and compares the derived results again; where a change from a draw was
+     foretold and accepted it marks that game's results not current from that draw and moves the stale reports
+@@ -24,6 +27,7 @@ Which of the project's own modules it uses
+     install_common (deploy/)      the plan, the barrier, the copying, the rollback point, the checks, the ending
+     research.code_identity        MANIFEST_PATH
+     research.derived_check        MISMATCH, read_cutoff, write_cutoff
++    research.environment_marker   MARKER_NAME
+     research.installed_files      InstalledFilesRefused, differences, read_list
+     research.job_lock             LaunchRefused
+     research.reports              set_aside_from
+@@ -40,6 +44,7 @@ import argparse
+ import configparser
+ import difflib
+ import hashlib
++import os
+ import re
+ import shutil
+ import tempfile
+@@ -48,6 +53,7 @@ from pathlib import Path
+ 
+ import install_common as common
+ from research import code_identity, derived_check, installed_files, reports, snapshot
++from research.environment_marker import MARKER_NAME
+ from research.job_lock import LaunchRefused
+ from research.settings import SettingsRefused, tree_as_dev_names_it
+ from research.status_file import StatusRefused
+@@ -62,6 +68,10 @@ VARIANTS_PATH = re.compile(r'src/methods/(E_\d{3}|_shared)/')
+ FORECAST, DERIVED, OTHER, MANIFEST_ITSELF = 'forecast', 'derived', 'other', 'the manifest'
+ # The first of the two statements of step 3.
+ NO_CHANGE = 'No stored result changes.'
++# What the statement of step 3 rests on in the tree, besides four named files: these folders, without Python's
++# caches and without the reports folders (print-outs, made again from the lists).
++WATCHED_FOLDERS = ('src', 'source_data', 'results/research')
++NOT_WATCHED = ('__pycache__', 'reports')
+ # The start of the name of the temporary folder the software as it would be is assembled in.
+ ASSEMBLY_PREFIX = 'a_p_r_i_r_as_it_would_be_'
+ # The warning of specification 12.4, said before the one question.
+@@ -253,6 +263,35 @@ def what_it_would_change(view, settings, expected: dict, dev: dict, say=print) -
+     return statement_of(found)
+ 
+ 
++def what_the_statement_rests_on(settings, dev_fingerprint: str) -> str:
++    """One SHA-256 over everything the statement of step 3, and so the owner's answer, rests on.
++
++    settings: the target's settings.  dev_fingerprint: the fingerprint of DEV's infrastructure, read now.
++    It covers DEV's fingerprint and, in the tree: every file under src (the status files among them); the
++    manifest; the list of installed files; the barrier, if one lies there; the accepted results; the stored
++    research (every list, the prevailing ledger, the not-current markers; the reports are print-outs and are
++    left out); and the marker of the verified environment. Taken while the lock is held for step 3, and again
++    under the second hold before anything is written (design section 6, step 6; EX_329 C-B01): equal values mean
++    that no job, install, withdrawal, results update or change of environment came between.
++    """
++    root = settings.tree_root
++    paths = [root / code_identity.MANIFEST_PATH, root / installed_files.LIST_PATH, root / common.BARRIER_PATH,
++             settings.venv_dir / MARKER_NAME]
++
++    def stop(error: OSError) -> None:
++        raise common.InstallRefused(f'a folder of the tree could not be listed ({error}). Nothing was overwritten.')
++
++    for folder in WATCHED_FOLDERS:
++        for current, folders, names in os.walk(root / folder, onerror=stop):
++            folders[:] = [name for name in folders if name not in NOT_WATCHED]
++            paths += [Path(current) / name for name in names]
++    digest = hashlib.sha256(f'DEV\t{dev_fingerprint}\n'.encode('ascii'))
++    for path in sorted(paths):
++        line = f'{path.relative_to(root).as_posix()}\t{_sha256(path) or "no file"}\n'
++        digest.update(line.encode('utf-8'))
++    return digest.hexdigest()
++
++
+ def mark_not_current(tree_root: Path, statement: dict, say=print) -> list:
+     """Step 9, where a change from a draw was foretold and accepted: write the game's cutoff file for that draw,
+     move the stale reports out, and check that both were done (specification 5.8).
+@@ -276,8 +315,7 @@ def mark_not_current(tree_root: Path, statement: dict, say=print) -> list:
+     return faults
+ 
+ 
+-def check_in_place_and_finish(view, settings, plan: dict, classes: dict, expected: dict, dev: dict, release, now,
+-                              say) -> int:
++def check_in_place_and_finish(view, settings, plan: dict, expected: dict, dev: dict, release, now, say) -> int:
+     """Steps 8 to 10, made while the target is reserved and its barrier is in place.
+ 
+     Returns EXIT_REINSTALLED, or EXIT_STOPPED with the barrier left in place and the reason said.
+@@ -309,8 +347,7 @@ def check_in_place_and_finish(view, settings, plan: dict, classes: dict, expecte
+         for fault in stopping:
+             say(f'  {fault}')
+         return EXIT_STOPPED
+-    changed = [entry['path'] for word in ('add', 'overwrite', 'remove') for entry in plan[word]]
+-    if any(classes.get(path) == DERIVED for path in changed):
++    if plan.get('reports_owed', True):
+         say('Report or scoring code changed: every league report, next-draw report and OV-1 print-out is made '
+             'again with the new code.')
+         common.reports_with_target_python(python, root, say)
+@@ -344,37 +381,42 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+         current = installed_files.read_list(root)
+         unfinished = common.read_barrier(root)
+         expected = expected_after(current, dev['files'])
+-        in_tree = classes_in_tree(root)
+-        classes = dict(in_tree, **dev['classes'])
+-        classes[code_identity.MANIFEST_PATH] = MANIFEST_ITSELF
+-        by_the_list = common.make_plan(common.REINSTALL_INFRA, role, root,
+-                                       *changes_between(infrastructure_on_list(current), dev['files']),
+-                                       infrastructure_fingerprint=dev['fingerprint'])
+-        check_plan_may_be_carried_out(by_the_list, classes, in_tree, dev['classes'])
+-        nothing_differs = not (by_the_list['add'] or by_the_list['overwrite'] or by_the_list['remove'])
+         started = now().astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+-        if unfinished is None and nothing_differs:
+-            say(f'REINSTALL INFRA - END - no difference: the {role} tree\'s infrastructure is file for file DEV\'s. '
+-                f'Nothing was done.')
+-            return EXIT_REINSTALLED
+-        continuing = unfinished is not None and unfinished.get('operation') == common.REINSTALL_INFRA and (
+-            dict(unfinished, statement=None) == by_the_list
+-            or (nothing_differs and unfinished.get('infrastructure_fingerprint') == dev['fingerprint']))
++        # The same command again (design section 8): the barrier holds a reinstall of this tree that was accepted
++        # from DEV exactly as DEV is now. Its plan is carried on as it was accepted, whatever of it has already
++        # been copied or removed; it was checked when it was accepted, and nothing of DEV has changed since.
++        continuing = (unfinished is not None and unfinished.get('operation') == common.REINSTALL_INFRA
++                      and unfinished.get('tree_root') == str(root)
++                      and unfinished.get('infrastructure_fingerprint') == dev['fingerprint'])
+         if continuing:
+             plan = unfinished
+             say('This same reinstall was begun before and is being continued; files already in place are passed '
+                 'over and every check is made again. Its statement, accepted then, was: '
+                 + plan['statement']['text'])
+         else:
++            replaced = unfinished if (unfinished or {}).get('operation') == common.REINSTALL_INFRA else None
++            in_tree = classes_in_tree(root)
++            # A class is known from DEV's manifest, from the manifest that lies in the tree, or, for a file an
++            # unfinished reinstall was removing, from that reinstall's accepted plan. Any other path is refused.
++            classes = {**(replaced or {}).get('classes', {}), **in_tree, **dev['classes'],
++                       code_identity.MANIFEST_PATH: MANIFEST_ITSELF}
++            by_the_list = common.make_plan(common.REINSTALL_INFRA, role, root,
++                                           *changes_between(infrastructure_on_list(current), dev['files']),
++                                           infrastructure_fingerprint=dev['fingerprint'])
+             if unfinished is None:
++                plan = by_the_list
++                check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
++                if not (plan['add'] or plan['overwrite'] or plan['remove']):
++                    say(f'REINSTALL INFRA - END - no difference: the {role} tree\'s infrastructure is file for file '
++                        f'DEV\'s. Nothing was done.')
++                    return EXIT_REINSTALLED
+                 drift = installed_files.differences(root, current)
+                 if drift:
+                     raise common.InstallRefused(
+                         f'the {role} tree\'s software does not match its own list of installed files '
+                         f'({len(drift)} difference(s)):\n  ' + '\n  '.join(drift) + f'\n{installed_files.WHAT_TO_DO}')
+-                plan = by_the_list
+             else:
+-                if not (chosen.replace_unfinished and unfinished.get('operation') == common.REINSTALL_INFRA):
++                if not (chosen.replace_unfinished and replaced is not None):
+                     try:
+                         common.check_barrier(root, by_the_list)
+                     except common.InstallRefused as refusal:
+@@ -384,19 +426,26 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+                             f'--replace-unfinished goes on with the plan now, after the same question.') from None
+                     raise common.InstallRefused(f'{root / common.BARRIER_PATH} holds an unfinished operation.')
+                 paths = set(infrastructure_on_list(current)) | set(dev['files']) | {
+-                    entry['path'] for word in ('add', 'overwrite', 'remove') for entry in unfinished[word]}
++                    entry['path'] for word in ('add', 'overwrite', 'remove') for entry in replaced[word]}
+                 plan = common.make_plan(common.REINSTALL_INFRA, role, root,
+                                         *changes_between({path: _sha256(root / path) for path in paths}, dev['files']),
+                                         infrastructure_fingerprint=dev['fingerprint'])
+                 check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
+                 say('AN UNFINISHED REINSTALL IS BEING REPLACED (--replace-unfinished). THE UNFINISHED PLAN:')
+-                for line in common.plan_lines(unfinished):
++                for line in common.plan_lines(replaced):
+                     say(f'  {line}')
+                 say('THE PLAN NOW, worked out from the files as they lie in the tree:')
+             show_plan(plan, classes, dev_root, root, say)
+             with common.reserved(settings, f'Reinstall_Infra {role}: what it would change', started, say):
++                rested_on = what_the_statement_rests_on(settings, dev['fingerprint'])
+                 statement = what_it_would_change(view, settings, expected, dev, say)
+-            plan = dict(plan, statement=statement)
++            changed = [entry['path'] for word in ('add', 'overwrite', 'remove') for entry in plan[word]]
++            # Kept in the plan, and so in the barrier, for the command that finishes or replaces this reinstall:
++            # the class of each file of the plan, and whether the print-outs are owed a remaking (a file of class
++            # derived is in this plan, or was in an unfinished plan this one replaces).
++            plan = dict(plan, statement=statement, classes={path: classes[path] for path in changed},
++                        reports_owed=bool(any(classes[path] == DERIVED for path in changed)
++                                          or (replaced or {}).get('reports_owed', replaced is not None)))
+             say(f'THE STATEMENT: {statement["text"]}')
+             kit, backup = common.attempt_rollback_point(dev_root, settings, 'PRE_INFRA', expected, now, say)
+             lines = [WARNING.format(role=role, root=root)] + common.question_lines(kit, backup)
+@@ -405,13 +454,23 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
+                     'lines may have been written, as said above.)')
+                 return EXIT_REFUSED
+         with common.reserved(settings, f'Reinstall_Infra {role}', started, say):
+-            if not continuing:
+-                common.check_barrier(root, plan, replace_unfinished=True)
++            # The target is reserved again (design section 6, step 6). Before anything is written under this hold,
++            # what the owner's answer rested on must still be so (EX_329 C-B01).
++            if continuing:
++                if common.read_barrier(root) != plan:
++                    raise common.InstallRefused(f'{root / common.BARRIER_PATH} is no longer the record of the '
++                                                f'unfinished reinstall this command read. Nothing was done. Run '
++                                                f'the command again.')
++            elif what_the_statement_rests_on(settings, common.dev_infrastructure(dev_root)['fingerprint']) != rested_on:
++                raise common.InstallRefused(
++                    f'something the statement rested on changed while the backup was being made or the question '
++                    f'stood: a job ran or results arrived in the {role} tree, an install or a withdrawal was made '
++                    f'there, its environment changed, or DEV changed. Nothing was overwritten. Run the command '
++                    f'again: it says afresh what it would change.')
+             with common.changing(settings, plan, started) as release:
+                 began = True
+                 common.carry_out(dev_root, root, plan, say)
+-                exit_code = check_in_place_and_finish(view, settings, plan, classes, expected, dev, release, now,
+-                                                      say)
++                exit_code = check_in_place_and_finish(view, settings, plan, expected, dev, release, now, say)
+         if exit_code != EXIT_REINSTALLED:
+             say(f'REINSTALL INFRA - END - not finished. {root / common.BARRIER_PATH} stays in place, so no job runs '
+                 f'in that tree. The ways out: correct the cause in DEV, run Make_Installable.bat INFRA, and run '
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_checks.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_checks.py
+index 4f7cdb6..1396fdd 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_checks.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_checks.py
+@@ -27,8 +27,9 @@ Which of the project's own modules it uses
+     research.job_lock         is_link: the scratch folder must be a real folder
+     research.reader           ResultsOnFile, check_results_bytes, first_target, header_for
+     research.reports          ReportWriter: the print-outs made again after an infrastructure reinstall
+-    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, finish_reports, read_game: a game's
+-                              records as the job reads them, and its own making of the reports
++    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, check_results_only_grew, finish_reports,
++                              read_game: a game's records as the job reads them, its own check that the
++                              results on file only grew, and its own making of the reports
+     research.settings         TreeSettings, read_settings
+     research.status_file      read_status: a status file is read here and never created
+     research.variant_folders  find_variants, load_method
+@@ -58,7 +59,8 @@ from research.forecast_engine import FORECAST, compute_target, content_digest
+ from research.job_lock import LaunchRefused, is_link
+ from research.reader import ResultsOnFile, check_results_bytes, first_target, header_for
+ from research.reports import ReportWriter
+-from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, finish_reports, read_game
++from research.research_job import (GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, check_results_only_grew, finish_reports,
++                                   read_game)
+ from research.settings import SettingsRefused, TreeSettings, read_settings
+ from research.status_file import STATUS_FILE_NAME, StatusRefused, read_status
+ from research.variant_folders import find_variants, load_method
+@@ -184,7 +186,9 @@ def smoke_case(software: Software, data_root: Path, variant, game_id: str) -> st
+     folder.mkdir(parents=True)
+     target = first_target(game_id, variant.minimum_earlier_draws(game_id))
+     results = invented_results(game_id, target)
+-    (folder / SMOKE_TABLE_NAME).write_bytes(results.raw)
++    # The table the engine reads is the bytes in memory. The copy kept beside a failure's note is a file of the
++    # tree's scratch folder, and the file-form standard gives a scratch CSV file CRLF line endings.
++    (folder / SMOKE_TABLE_NAME).write_bytes(results.raw.replace(b'\n', LINE_ENDING.encode('ascii')))
+     profile = get_profile(game_id)
+     try:
+         content, detail = compute_target(variant, software.method_of(variant), results, target)
+@@ -274,6 +278,9 @@ def read_stored_game_by_game(software: Software, settings: TreeSettings, say=pri
+     pass_on: True to let such a refusal through unchanged (read_stored).
+     Returns (stored, unreadable): {game: GameRecords} and {game: the refusal's own words}, for example
+         ({'OZLOTTO': <GameRecords>}, {'POWERBALL': 'results/research/POWERBALL/...: line 7 is not ...'})
++    A game's records count as read only if the job would work them: after reading, the job's own check that the
++    results on file only grew since the lists were written is made (research_job.check_results_only_grew), so
++    that these checks never call a game well whose results the job refuses.
+     Only the refusals the job understands (research_job.GAME_REFUSALS) are caught; any other error is a fault
+     and is passed on.
+     """
+@@ -283,7 +290,9 @@ def read_stored_game_by_game(software: Software, settings: TreeSettings, say=pri
+         if not any(variant.supports(game_id) for variant in software.variants):
+             continue
+         try:
+-            stored[game_id] = read_game(job, game_id)
++            records = read_game(job, game_id)
++            check_results_only_grew(records)
++            stored[game_id] = records
+         except GAME_REFUSALS as refusal:
+             if pass_on:
+                 raise
+@@ -477,6 +486,7 @@ def make_reports_again(software: Software, settings: TreeSettings, now=None, say
+             continue
+         try:
+             records = read_game(job, game_id)
++            check_results_only_grew(records)
+         except GAME_REFUSALS as refusal:
+             say(f'  {game_id}: its stored records could not be read, so its reports were not made again: {refusal}')
+             continue
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_verify.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_verify.py
+index 4034844..6f13761 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_verify.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/src/research/tree_verify.py
+@@ -82,6 +82,10 @@ def verify_locked(settings, now, say) -> tuple:
+     Returns (the exit code, the closing lines). Refuses with what the checks it calls refuse; a refusal leaves
+     the marker as it was.
+     """
++    # Asked again now that the lock is held: an operation may have begun, or an orphan marker been written, while
++    # the first backup was being made.
++    check_no_unfinished_operation(settings.tree_root)
++    check_no_orphan_marker(settings.tree_root)
+     looked_at = process_rule.check_no_other_process_of_tree(settings.tree_root)
+     say(f'No other Python process of this tree is running ({looked_at} processes of this PC looked at).')
+     check_software_is_as_installed(settings)
+@@ -100,7 +104,7 @@ def verify_locked(settings, now, say) -> tuple:
+     if smoke_failures:
+         marker.unlink(missing_ok=True)
+         log_verification(settings, 'NOT_VERIFIED', None, summary, now)
+-        return EXIT_NOT_VERIFIED, smoke_failures + [
++        return EXIT_NOT_VERIFIED, smoke_failures + [SUITE_LINE] + [
+             f'NOT VERIFIED: {marker} was not written, and an older one was removed. No job starts in this tree '
+             f'until Verify_Tree.bat passes. Nothing of the research was changed.']
+     say('The stored results: read as the research job reads them; nothing is written.')
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_checks.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_checks.py
+index 9ef9a00..f356fe5 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_checks.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_checks.py
+@@ -20,6 +20,7 @@ from unittest import mock
+ 
+ import research_fixtures as fx
+ from research import derived_check, ov1_ledger, tree_checks
++from research.reader import ResultsRefused
+ from research.settings import read_settings
+ from research.status_file import StatusRefused
+ 
+@@ -108,7 +109,9 @@ class TheSmokeCase(ChecksCase):
+         self.assertIn(str(folder), failures[0], 'the folder left behind is named')
+         self.assertEqual(sorted(entry.name for entry in folder.iterdir()),
+                          sorted([tree_checks.SMOKE_TABLE_NAME, tree_checks.SMOKE_NOTE_NAME]))
+-        self.assertEqual((folder / tree_checks.SMOKE_TABLE_NAME).read_bytes(),
++        kept = (folder / tree_checks.SMOKE_TABLE_NAME).read_bytes()
++        self.assertEqual(kept.count(b'\n'), kept.count(b'\r\n'), 'a scratch CSV file ends each line CRLF (EX_329 C-C04)')
++        self.assertEqual(kept.replace(b'\r\n', b'\n'),
+                          tree_checks.invented_results(GAME, fx.FIRST_TOY_TARGET).raw)
+         note = (folder / tree_checks.SMOKE_NOTE_NAME).read_bytes()
+         self.assertEqual(note.count(b'\n'), note.count(b'\r\n'), 'the note is a Windows text file')
+@@ -212,6 +215,35 @@ class TheSoftwareIsReadAndNothingIsMade(ChecksCase):
+                 self.assertFalse(fx.status_path(tree, FAMILY, 'TOY_A_V1').exists())
+ 
+ 
++class TheResultsOnFileMustOnlyHaveGrown(ChecksCase):
++    """EX_329 C-C01: the checks never call a game well whose results the research job refuses."""
++
++    def test_a_valid_results_pair_with_an_earlier_draw_changed_is_refused_as_the_job_refuses_it(self):
++        tree = self.worked_tree()
++        last = fx.LAST_AT_START + ARRIVED
++        fx.write_results(tree, GAME, last, version=3, reseed_from=1150)     # a valid pair; draw 1150 on is other
++        before = whole_tree(tree)
++        said = []
++        with fx.ImportPath(tree):
++            software = self.software(tree)
++            with self.assertRaisesRegex(ResultsRefused, 'results changed other than by growing'):
++                tree_checks.read_stored(software, read_settings(tree), say=lambda line: None)
++            stored, unreadable = tree_checks.read_stored_game_by_game(software, read_settings(tree), say=said.append)
++            found = tree_checks.run_checks(tree, read_settings(tree), None, True, True, say=lambda line: None)
++        self.assertEqual(stored, {})
++        self.assertIn('results changed other than by growing', unreadable[GAME])
++        self.assertIn(f'  {GAME}: its stored records could not be read, so nothing of it was compared', said[0])
++        self.assertEqual((found['sample'], found['derived'], list(found['unreadable'])),
++                         ({'compared': 0, 'differences': []}, {}, [GAME]), 'nothing of the game is called well')
++        self.assertEqual(whole_tree(tree), before, 'and the check wrote nothing')
++
++    def test_results_that_only_grew_are_read_as_before(self):
++        tree = self.worked_tree()
++        fx.write_results(tree, GAME, fx.LAST_AT_START + ARRIVED + 2, version=3)
++        _, stored = self.stored(tree)
++        self.assertEqual(list(stored), [GAME])
++
++
+ class TheForecastSample(ChecksCase):
+     """Specification 12.3 item 4: a fixed sample of stored forecasts, computed again and compared by content."""
+ 
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_init.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_init.py
+index 799fa29..1b55efb 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_init.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_init.py
+@@ -408,6 +408,17 @@ class WhereTheResultsComeFrom(CreationCase):
+             self.assertFalse(self.target.exists())
+             (self.prod / held).unlink()
+ 
++    def test_a_creation_that_has_its_record_finishes_while_its_former_source_is_busy_and_reads_no_source(self):
++        self.init(answers=['YES'])
++        (self.prod / common.BARRIER_PATH).write_bytes(b'{}')
++        prod_before = whole_tree(self.prod)
++        self.build_environment()
++        with mock.patch.object(init_tree, 'results_files', side_effect=AssertionError('no source is read')):
++            code, said = self.init()
++        self.assertEqual(code, init_tree.EXIT_CREATED, said)
++        self.assertIn('each game\'s pair read as the engine reads it', '\n'.join(said))
++        self.assertEqual(whole_tree(self.prod), prod_before, 'PROD is never written')
++
+     def test_a_continued_creation_keeps_the_results_it_copied_and_checks_them_against_its_record(self):
+         self.init(answers=['YES'])
+         copied = (self.target / 'source_data' / RESULT_NAMES[0]).read_bytes()
+@@ -428,6 +439,104 @@ class WhereTheResultsComeFrom(CreationCase):
+         self.assertIsNotNone(common.read_barrier(self.target))
+ 
+ 
++class TheResultsAreCopiedAsOneSet(CreationCase):
++    """EX_329 C-B02: six files hashed one by one are not yet one accepted pair for each game."""
++
++    def record(self) -> Path:
++        """The creation's record of what it copied."""
++        return self.target / init_tree.INIT_RECORD_PATH
++
++    def longer_results(self) -> None:
++        """The source's Powerball results grow, as an update would grow them: results and ledger together."""
++        fixtures.write_results(self.dev, 'POWERBALL', get_profile('POWERBALL').first_draw + 20, version=2)
++
++    def test_a_source_updated_between_two_copies_writes_no_record_and_the_same_command_copies_afresh(self):
++        real, copied = common.copy_into_place, []
++
++        def copy_then_the_source_is_updated(source, tree_root, relative, sha256, replace=False):
++            """After the first results file is copied, the source's results are updated."""
++            done = real(source, tree_root, relative, sha256, replace)
++            if relative.startswith('source_data/'):
++                copied.append(relative)
++                if len(copied) == 1:
++                    self.longer_results()
++            return done
++
++        with mock.patch.object(common, 'copy_into_place', copy_then_the_source_is_updated):
++            code, said = self.init(answers=['YES'])
++        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
++        self.assertIn('they were probably being updated', '\n'.join(said))
++        self.assertFalse(self.record().exists())
++        self.assertIsNotNone(common.read_barrier(self.target))
++        self.build_environment()
++        code, said = self.init()
++        self.assertEqual(code, init_tree.EXIT_CREATED, said)
++        for name in RESULT_NAMES:
++            self.assertEqual((self.target / 'source_data' / name).read_bytes(),
++                             (self.dev / 'source_data' / name).read_bytes(), name)
++        self.assertEqual(fixtures.run_job(self.target, games=('POWERBALL',))[0], 0, 'and its first job accepts them')
++
++    def test_a_source_updated_after_its_last_file_was_copied_is_found_by_the_second_reading(self):
++        real, copied = common.copy_into_place, []
++
++        def copy_then_the_source_is_updated_at_the_end(source, tree_root, relative, sha256, replace=False):
++            """After the last results file is copied, the source's results are updated."""
++            done = real(source, tree_root, relative, sha256, replace)
++            if relative.startswith('source_data/'):
++                copied.append(relative)
++                if len(copied) == len(RESULT_NAMES):
++                    self.longer_results()
++            return done
++
++        with mock.patch.object(common, 'copy_into_place', copy_then_the_source_is_updated_at_the_end):
++            code, said = self.init(answers=['YES'])
++        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
++        self.assertIn('changed while they were being copied', '\n'.join(said))
++        self.assertFalse(self.record().exists())
++
++    def test_a_pair_that_did_not_agree_when_it_was_read_is_caught_in_the_tree_before_any_record(self):
++        real, calls = init_tree.results_files, []
++        master = self.dev / 'source_data' / 'POWERBALL_results_master.csv'
++
++        def checked_then_only_the_ledger_moves(source_root):
++            """The source passes its check; then, before it is hashed, its ledger is of other results."""
++            files = real(source_root)
++            calls.append(True)
++            if len(calls) == 2:                          # the reading that the copy itself makes
++                kept = master.read_bytes()
++                self.longer_results()
++                master.write_bytes(kept)
++            return files
++
++        with mock.patch.object(init_tree, 'results_files', checked_then_only_the_ledger_moves):
++            code, said = self.init(answers=['YES'])
++        self.assertEqual(code, init_tree.EXIT_STOPPED, said)
++        self.assertIn('are not a results file with the ledger that names it', '\n'.join(said))
++        self.assertFalse(self.record().exists(), 'each file was stable while it was copied; the pair is not one')
++        self.assertFalse((self.target / installed_files.LIST_PATH).exists())
++        self.longer_results()                            # the source is whole again
++        self.build_environment()
++        code, said = self.init()
++        self.assertEqual(code, init_tree.EXIT_CREATED, said)
++
++    def test_a_continued_creation_copies_from_the_source_the_owner_was_shown(self):
++        prod = self.target.parent / 'prod'
++        self.add_entry('PROD', prod)
++        with mock.patch.object(init_tree, 'copy_results', side_effect=OSError('an invented fault')):
++            code, said = self.init(answers=['YES'])
++        self.assertEqual(code, init_tree.EXIT_STOPPED)
++        self.assertIn(f'The accepted results will be copied from the DEV tree at {self.dev}.', said)
++        self.assertEqual(common.read_barrier(self.target)['statement'],
++                         {'results_copied_from': str(self.dev), 'results_copied_from_role': 'DEV'})
++        qa, qa_backups = self.target, self.backups
++        self.created('PROD', prod)                       # a PROD tree comes to exist meanwhile
++        self.target, self.backups = qa, qa_backups
++        self.build_environment()
++        code, said = self.init()
++        self.assertEqual(code, init_tree.EXIT_CREATED, said)
++        self.assertEqual(json.loads(self.record().read_bytes())['results_copied_from_role'], 'DEV')
++
++
+ class AFailedCheckLeavesTheBarrier(CreationCase):
+     """Steps 7 and 8: a failure stops the creation behind its barrier; the same command finishes it."""
+ 
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_install.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_install.py
+index 270798f..9007aa4 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_install.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_install.py
+@@ -278,6 +278,39 @@ class WhatIsRefusedBeforeAnythingIsCopied(InstallCase):
+             self.assertEqual(self.backups_made(), ['INIT'])
+         self.assertEqual(self.software(), before)
+ 
++    def test_another_install_that_finished_or_began_while_the_owner_was_deciding_refuses_and_nothing_is_copied(self):
++        """EX_329 C-B01, for an ordinary install: it never acts on another base than the one it planned on."""
++        self.add_variant(SECOND)
++        new_folder = self.target / METHODS / FAMILY / SECOND
++
++        def another_install_finished(prompt):
++            """While the owner reads the question, another install adds a file and publishes a new list."""
++            (self.target / 'src' / 'toy_later.py').write_bytes(b'# installed meanwhile\r\n')
++            content = installed_files.read_list(self.target)
++            content['files'] = sorted(content['files'] + [{'path': 'src/toy_later.py',
++                                                           'sha256': sha(self.target / 'src' / 'toy_later.py')}],
++                                      key=lambda entry: entry['path'])
++            installed_files.write_list(self.target, content)
++            return 'YES'
++
++        code, said = self.install(ask=another_install_finished)
++        self.assertEqual(code, install.EXIT_REFUSED, said)
++        self.assertIn('changed while the backup was being made or the question stood', '\n'.join(said))
++        self.assertFalse(new_folder.exists())
++        self.assertIsNone(common.read_barrier(self.target))
++
++        def another_install_began(prompt):
++            """While the owner reads the question, another install writes its barrier."""
++            common.write_barrier(self.target, common.make_plan(common.INSTALL, 'QA', self.target, {'src/x.py': 'aa'}),
++                                 'meanwhile')
++            return 'YES'
++
++        code, said = self.install(ask=another_install_began)
++        self.assertEqual(code, install.EXIT_REFUSED, said)
++        self.assertIn('holds another plan than the plan now', '\n'.join(said))
++        self.assertFalse(new_folder.exists())
++        self.assertEqual(common.read_barrier(self.target)['add'][0]['path'], 'src/x.py', 'the other barrier is left')
++
+     def test_a_job_that_began_while_the_owner_was_deciding_refuses_at_the_reservation_and_nothing_was_copied(self):
+         self.add_variant(SECOND)
+         before = self.software()
+@@ -406,12 +439,46 @@ class TheSuiteBelongsToTheTreeOrIsNotRun(InstallCase):
+         record = json.loads((self.target / common.TREE_LOG_PATH).read_text(encoding='ascii').splitlines()[-1])
+         self.assertEqual(record['suite'], 'NOT RUN')
+ 
+-    def test_when_devs_infrastructure_is_not_marked_ready_the_suite_is_not_run_and_the_line_says_why(self):
++    def test_equal_bytes_decide_not_devs_readiness_marker(self):
++        """EX_329 C-C02: an ordinary install installs no infrastructure, so it needs none marked ready."""
++        result = suite_on_copy.SuiteResult(passed=True, modules=[('test_x', 0, 3)])
+         self.add_variant(SECOND)
+-        install_readiness.unmark_infrastructure(self.dev)
++        install_readiness.unmark_infrastructure(self.dev)                    # no marker at all
++        with mock.patch.object(suite_on_copy, 'run_suite', return_value=result) as run:
++            code, said = self.install(answers=['YES'], suite='real')
++        self.assertEqual((code, run.call_count), (install.EXIT_INSTALLED, 1), said)
++
++    def test_a_marker_stale_only_by_a_dev_side_tool_does_not_change_what_devs_infrastructure_is(self):
++        """EX_329 C-C02: a tool file of DEV is not installed; its change makes the marker stale and nothing else."""
++        tool = self.dev / 'deploy' / 'toy_tool.py'
++        write_crlf(tool, '"""A DEV-side tool that is not installed."""\n')
++        with open(self.dev / 'deploy' / 'INFRA_MANIFEST.ini', 'ab') as handle:
++            handle.write(b'[install_tool]\r\ndeploy/toy_tool.py = other\r\n')
++        install_readiness.mark_infrastructure(self.dev)
++        marked = common.dev_infrastructure(self.dev)['files']
++        write_crlf(tool, '"""A DEV-side tool that is not installed, changed."""\n')
++        self.assertFalse(install_readiness.infrastructure_readiness(self.dev).ready, 'the marker is stale')
++        self.assertEqual(common.dev_infrastructure_bytes(self.dev), marked)
++        self.assertEqual(common.infrastructure_differences(common.dev_infrastructure_bytes(self.dev),
++                                                           {'files': [{'path': path, 'sha256': digest}
++                                                                      for path, digest in marked.items()]}), [],
++                         'a tree that holds those bytes is file for file DEV\'s, and the suite is its suite')
++
++    def test_infrastructure_that_genuinely_differs_is_not_given_the_suite_marked_or_not(self):
++        self.add_variant(SECOND)
++        (self.dev / 'src' / 'toy_other.py').write_bytes(b'# newer infrastructure in DEV, not marked\r\n')
+         code, said = self.run_real_decision()
+         self.assertEqual(code, install.EXIT_INSTALLED, said)
+-        self.assertIn('The test suite: not run. DEV\'s infrastructure is not marked ready', '\n'.join(said))
++        self.assertIn('not run (the tree differs from DEV in: src/toy_other.py)', '\n'.join(said))
++
++    def test_devs_infrastructure_bytes_are_read_without_its_marker_and_a_manifest_that_cannot_be_read_gives_none(self):
++        install_readiness.unmark_infrastructure(self.dev)
++        found = common.dev_infrastructure_bytes(self.dev)
++        self.assertEqual(sorted(found), ['deploy/INFRA_MANIFEST.ini', 'src/toy_derived_code.py',
++                                         'src/toy_forecast_code.py', 'src/toy_other.py'])
++        self.assertEqual(found['src/toy_other.py'], sha(self.dev / 'src' / 'toy_other.py'))
++        (self.dev / 'src' / 'toy_other.py').unlink()
++        self.assertIsNone(common.dev_infrastructure_bytes(self.dev), 'a listed file is missing')
+ 
+     def test_when_the_infrastructure_is_devs_the_suite_is_run_with_the_trees_python(self):
+         self.add_variant(SECOND)
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_reinstall.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_reinstall.py
+index a990174..7be3caa 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_reinstall.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_reinstall.py
+@@ -35,6 +35,7 @@ import recovery_kit                                          # noqa: E402
+ import reinstall_infra as reinstall                          # noqa: E402
+ import research_fixtures as fixtures                         # noqa: E402
+ from research import derived_check, installed_files, job_lock, launch_guard, settings, tree_checks    # noqa: E402
++from research import status_file                             # noqa: E402
+ from test_trees_init import KIT, checks_in_this_process      # noqa: E402
+ from test_trees_install import InstallCase                   # noqa: E402
+ from test_trees_install_common import FAMILY, sha, whole_tree    # noqa: E402
+@@ -88,10 +89,11 @@ class ReinstallCase(InstallCase):
+                          .encode('ascii'))
+         install_readiness.mark_infrastructure(self.dev)
+ 
+-    def reinstall(self, *words, answers=(), suites=(True, True), kit=KIT, derived=None) -> tuple:
++    def reinstall(self, *words, answers=(), suites=(True, True), kit=KIT, derived=None, ask=None) -> tuple:
+         """Run the command for the QA tree; return (the exit code, the lines said).
+ 
+         answers: what the owner types, in order.  suites: what the suite answers at each time it is run.
++        ask: a function to answer with in place of `answers`.
+         derived: a stand-in for the comparison of the derived results, or None for the real one.
+         """
+         said, left, verdicts = [], list(answers), list(suites)
+@@ -115,7 +117,7 @@ class ReinstallCase(InstallCase):
+             stack.enter_context(mock.patch.object(recovery_kit, 'build_kit', return_value=kit))
+             if derived is not None:
+                 stack.enter_context(mock.patch.object(tree_checks, 'derived_results', derived))
+-            code = reinstall.main(['QA', *words], settings.read_dev_view(self.dev), say=said.append, ask=answer,
++            code = reinstall.main(['QA', *words], settings.read_dev_view(self.dev), say=said.append, ask=ask or answer,
+                                   now=self.running)
+         self.assertEqual(left, [], 'every answer given was asked for')
+         return code, said
+@@ -388,6 +390,124 @@ class TheTwoStatements(ReinstallCase):
+         self.assertEqual((self.software(), self.backups_made()), (before, backups))
+ 
+ 
++class TheAnswerMustStillRestOnWhatWasShown(ReinstallCase):
++    """EX_329 C-B01; deployment design section 6, step 6 as amended: under the second hold, before anything is
++    written, the accepted plan and everything the statement rested on must be unchanged."""
++
++    def refused_with_nothing_written(self, ask, *words) -> list:
++        """Run the reinstall with `ask` answering; expect a refusal that overwrote nothing."""
++        derived = (self.target / DERIVED).read_bytes()
++        listed = installed_files.read_list(self.target)
++        code, said = self.reinstall(*words, ask=ask, suites=(True,))
++        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
++        self.assertEqual(said[-1], 'REINSTALL INFRA - END - refused. Nothing was overwritten.')
++        self.assertEqual((self.target / DERIVED).read_bytes(), derived)
++        self.assertEqual(installed_files.read_list(self.target), listed)
++        for lock in (self.target / 'records' / job_lock.JOB_LOCK_NAME, self.target / job_lock.UPDATER_LOCK):
++            self.assertFalse(lock.exists())
++        return said
++
++    def test_a_job_that_finished_while_the_question_stood_refuses_and_the_next_run_states_afresh(self):
++        self.change_in_dev(DERIVED)
++
++        def a_job_runs_and_finishes_then_yes(prompt):
++            """While the owner reads the warning, new draws arrive and a research job works them and ends."""
++            fixtures.write_results(self.target, GAME, FORETOLD + 5, version=2)
++            code, lines = fixtures.run_job(self.target, games=(GAME,))
++            self.assertEqual(code, 0, lines)
++            return 'YES'
++
++        said = self.refused_with_nothing_written(a_job_runs_and_finishes_then_yes)
++        self.assertIn(f'THE STATEMENT: {reinstall.NO_CHANGE}', said, 'the statement the answer was given to')
++        self.assertIn('something the statement rested on changed while the backup was being made or the question '
++                      'stood', '\n'.join(said))
++        self.assertIsNone(common.read_barrier(self.target))
++        code, said = self.reinstall(answers=['YES'])
++        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
++
++    def test_a_withdrawal_or_an_install_begun_meanwhile_refuses(self):
++        self.change_in_dev(DERIVED)
++        status = fixtures.status_path(self.target, FAMILY, 'TOY_COUNTS_V1')
++
++        def a_withdrawal_then_yes(prompt):
++            """While the owner reads the warning, a variant is withdrawn."""
++            statuses = status_file.read_status(status, ('POWERBALL', 'OZLOTTO'))
++            statuses[GAME] = status_file.with_withdrawal(statuses[GAME], FORETOLD, 'invented', 'now')
++            status_file.write_status(status, FAMILY, 'TOY_COUNTS_V1', statuses)
++            return 'YES'
++
++        self.refused_with_nothing_written(a_withdrawal_then_yes)
++        self.assertIsNone(common.read_barrier(self.target))
++        other = common.make_plan(common.INSTALL, 'QA', self.target, {'src/x.py': 'aa'})
++
++        def an_install_begins_then_yes(prompt):
++            """While the owner reads the warning, an install writes its barrier."""
++            common.write_barrier(self.target, other, 'meanwhile')
++            return 'YES'
++
++        self.refused_with_nothing_written(an_install_begins_then_yes)
++        self.assertEqual(common.read_barrier(self.target), other, 'the other operation\'s barrier is not replaced')
++
++    def test_an_unfinished_plan_that_changed_while_its_replacement_was_asked_about_is_not_replaced(self):
++        self.change_in_dev(OTHER)
++        self.assertEqual(self.reinstall(answers=['YES'], suites=(True, False))[0], reinstall.EXIT_STOPPED)
++        shown = common.read_barrier(self.target)
++        self.change_in_dev(OTHER, '# corrected in DEV\n')
++        meanwhile = dict(shown, infrastructure_fingerprint='another reinstall replaced it meanwhile')
++
++        def it_changes_then_yes(prompt):
++            """While the owner reads the two plans, the unfinished plan he was shown is replaced by another."""
++            common.write_barrier(self.target, meanwhile, 'meanwhile')
++            return 'YES'
++
++        code, said = self.reinstall('--replace-unfinished', ask=it_changes_then_yes, suites=(True,))
++        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
++        self.assertEqual(common.read_barrier(self.target), meanwhile)
++        self.assertEqual((self.target / OTHER).read_bytes(), b'# changed in DEV\r\n', 'nothing more was written')
++
++    def test_a_continued_reinstall_whose_record_changed_before_the_hold_is_not_carried_on(self):
++        self.change_in_dev(OTHER)
++        self.assertEqual(self.reinstall(answers=['YES'], suites=(True, False))[0], reinstall.EXIT_STOPPED)
++        unfinished = common.read_barrier(self.target)
++        meanwhile = dict(unfinished, statement=dict(unfinished['statement'], text='another statement'))
++        real = common.reserved
++
++        @contextlib.contextmanager
++        def the_record_changes_first(tree_settings, purpose, started, say=print):
++            """Between this command's reading of the barrier and its hold, the barrier is rewritten."""
++            common.write_barrier(self.target, meanwhile, 'meanwhile')
++            with real(tree_settings, purpose, started, say):
++                yield
++
++        with mock.patch.object(common, 'reserved', the_record_changes_first):
++            code, said = self.reinstall(suites=())
++        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
++        self.assertIn('is no longer the record of the unfinished reinstall this command read', '\n'.join(said))
++        self.assertEqual(common.read_barrier(self.target), meanwhile)
++
++    def test_what_the_statement_rests_on_does_not_move_with_reports_caches_backups_or_locks(self):
++        dev = common.dev_infrastructure(self.dev)['fingerprint']
++        tree_settings = settings.read_settings(self.target)
++        before = reinstall.what_the_statement_rests_on(tree_settings, dev)
++        reports_folder = self.target / 'results' / 'research' / GAME / 'reports'
++        (reports_folder / 'league' / 'an_extra_print_out.txt').write_bytes(b'a print-out\r\n')
++        (self.target / 'src' / '__pycache__').mkdir()
++        (self.target / 'src' / '__pycache__' / 'x.pyc').write_bytes(b'cache')
++        (self.target / 'records' / 'SNAPSHOT_LOG.jsonl').write_bytes(b'{}\n')
++        with job_lock.job_lock(self.target, 'a hold', 'now'):
++            self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
++        for path, data in ((self.target / 'source_data' / f'{GAME}_results_master_ledger.csv', b'x'),
++                           (self.target / 'results' / 'research' / GAME / 'NOT_CURRENT_FROM.json', b'{}'),
++                           (self.target / '.venv' / 'ENVIRONMENT_VERIFIED.json', b'{}'),
++                           (self.target / DERIVED, b'#')):
++            kept = path.read_bytes() if path.exists() else None
++            path.write_bytes(data)
++            self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before, path.name)
++            path.unlink() if kept is None else path.write_bytes(kept)
++        self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, 'another DEV'), before)
++        self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
++
++
+ class ThePrintOutsAreMadeAgainWhenTheirCodeChanges(ReinstallCase):
+     """Specification 12.4 (EX_269 R7-F02)."""
+ 
+@@ -496,6 +616,91 @@ class AFailureInPlaceLeavesTheBarrier(ReinstallCase):
+         self.assertEqual((self.target / OTHER).read_bytes(), b'# corrected in DEV\r\n')
+         self.infrastructure_is_devs()
+ 
++    def removal_in_dev(self) -> None:
++        """In DEV one infrastructure file is taken off the manifest and another is put on it."""
++        (self.dev / 'src' / 'toy_new.py').write_bytes(b'# a new infrastructure file\r\n')
++        (self.dev / OTHER).unlink()
++        self.manifest_in_dev(lambda text: text.replace('src/toy_other.py = other\n', 'src/toy_new.py = other\n'))
++
++    def stop_at_the_removal(self) -> None:
++        """Carry the removal plan out until the removal itself, which fails once: the new manifest is in place,
++        the file to remove still lies there, and neither manifest names it any more."""
++        real_unlink, failed = Path.unlink, []
++
++        def unlink_fails_once(path, *arguments, **options):
++            """Fail the first removal of the file the plan removes."""
++            if path.name == 'toy_other.py' and not failed:
++                failed.append(True)
++                raise OSError('an invented fault at the removal')
++            return real_unlink(path, *arguments, **options)
++
++        with mock.patch.object(Path, 'unlink', unlink_fails_once):
++            code, said = self.reinstall(answers=['YES'], suites=(True,))
++        self.assertEqual(code, reinstall.EXIT_STOPPED, said)
++        self.assertTrue((self.target / OTHER).is_file())
++        self.assertNotIn(b'toy_other.py', (self.target / 'deploy' / 'INFRA_MANIFEST.ini').read_bytes())
++
++    def test_a_removal_interrupted_after_the_new_manifest_is_in_place_is_finished_by_the_same_command(self):
++        """EX_329 C-B03."""
++        self.removal_in_dev()
++        self.stop_at_the_removal()
++        code, said = self.reinstall(suites=(True,))
++        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
++        self.assertFalse((self.target / OTHER).exists())
++        self.assertTrue((self.target / 'src' / 'toy_new.py').is_file())
++        self.infrastructure_is_devs()
++
++    def test_a_removal_made_and_then_stopped_before_the_list_is_finished_by_the_same_command(self):
++        self.removal_in_dev()
++        with mock.patch.object(common, 'finish', side_effect=OSError('an invented fault in finish')):
++            self.assertEqual(self.reinstall(answers=['YES'])[0], reinstall.EXIT_STOPPED)
++        self.assertFalse((self.target / OTHER).exists(), 'the removal was made')
++        code, said = self.reinstall(suites=(True,))
++        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
++        self.infrastructure_is_devs()
++
++    def test_the_replacement_of_an_interrupted_removal_still_removes_the_file_and_leaves_nothing_extra(self):
++        self.removal_in_dev()
++        self.stop_at_the_removal()
++        (self.dev / 'src' / 'toy_new.py').write_bytes(b'# the new infrastructure file, corrected\r\n')
++        self.manifest_in_dev(lambda text: text)
++        code, said = self.reinstall('--replace-unfinished', answers=['YES'])
++        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
++        self.assertIn(f'  remove: {OTHER} (class other; now ', '\n'.join(said))
++        self.assertFalse((self.target / OTHER).exists())
++        self.infrastructure_is_devs()
++
++    def test_a_replacement_still_makes_again_the_print_outs_the_unfinished_reinstall_owed(self):
++        """EX_329 C-B04."""
++        league = sorted((self.target / 'results' / 'research' / GAME / 'reports' / 'league').glob('*.txt'))[0]
++        wanted = league.read_bytes()
++        self.change_in_dev(DERIVED)
++        self.stopped('the suite does not pass in place', suites=(True, False))
++        self.assertTrue(common.read_barrier(self.target)['reports_owed'])
++        league.write_bytes(b'a report as old report code made it\r\n')
++        self.change_in_dev(OTHER, '# the cause, corrected in DEV in a file that changes no report\n')
++        seen = []
++        real = common.remove_barrier
++
++        def look_then_remove(tree_root):
++            """Note whether the report was already made again when the barrier is removed."""
++            seen.append(league.read_bytes() == wanted)
++            real(tree_root)
++
++        with mock.patch.object(common, 'remove_barrier', look_then_remove):
++            code, said = self.reinstall('--replace-unfinished', answers=['YES'])
++        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
++        text = '\n'.join(said)
++        self.assertNotIn(f'  overwrite: {DERIVED}', text.split('THE PLAN NOW')[1], 'no derived file is in the new plan')
++        self.assertIn('Report or scoring code changed: every league report', text)
++        self.assertEqual(seen, [True], 'made again before the barrier was removed')
++
++    def test_a_reinstall_that_changes_no_report_code_owes_no_print_outs(self):
++        self.change_in_dev(OTHER)
++        self.stopped('the suite does not pass in place', suites=(True, False))
++        self.assertFalse(common.read_barrier(self.target)['reports_owed'])
++        self.assertEqual(common.read_barrier(self.target)['classes'], {OTHER: 'other'})
++
+     def test_replace_unfinished_answered_no_leaves_the_unfinished_reinstall_as_it_was(self):
+         self.change_in_dev(OTHER)
+         self.stopped('the suite does not pass in place', suites=(True, False))
+diff --git a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_verify.py b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_verify.py
+index a619efd..bacbf22 100644
+--- a/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_verify.py
++++ b/exchange/CLAUDE_WEB_TOOLS/step3/overlay/tests/test_trees_verify.py
+@@ -174,7 +174,8 @@ class WhatWithholdsTheMarker(VerifyCase):
+         code, said = self.verify(tree)
+         self.assertEqual(code, tree_verify.EXIT_NOT_VERIFIED)
+         self.assertFalse(self.marker(tree).exists())
+-        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-2])
++        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-3])
++        self.assertEqual(said[-2], tree_verify.SUITE_LINE, 'the command says so in both verdicts (EX_329 C-C04)')
+         self.assertTrue(said[-1].startswith(f'NOT VERIFIED: {self.marker(tree)} was not written, and an older one '
+                                             f'was removed.'))
+         self.assertTrue(tree_checks.smoke_folder(tree, mock.Mock(family=FAMILY, variant='TOY_BAD_V1'), GAME).is_dir())
+@@ -240,6 +241,16 @@ class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):
+                       f'job will refuse that game for the same reason: ', '\n'.join(said))
+         self.assertEqual(self.log(tree)[0]['unreadable'], [GAME])
+ 
++    def test_results_changed_other_than_by_growing_are_said_and_do_not_withhold_the_marker(self):
++        tree = self.worked()
++        fx.write_results(tree, GAME, fx.LAST_AT_START + 3, version=3, reseed_from=1150)
++        code, said = self.verify(tree)
++        self.assertEqual(code, tree_verify.EXIT_VERIFIED, said)
++        self.assertIn(f'{GAME}: its stored records could not be read, so nothing of it was compared; the research '
++                      f'job will refuse that game for the same reason: {GAME}: results changed other than by growing',
++                      '\n'.join(said))
++        self.assertTrue(self.marker(tree).exists(), 'the marker certifies the environment (C-R5)')
++
+     def test_a_fault_while_a_games_records_are_read_is_a_fault_and_no_marker_is_written(self):
+         tree = self.worked()
+         with mock.patch.object(tree_checks, 'read_game', side_effect=KeyError('an invented fault')):
+@@ -249,6 +260,35 @@ class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):
+         self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists(), 'the lock is let go')
+ 
+ 
++class WhatAppearsWhileTheFirstBackupIsMade(VerifyCase):
++    """EX_329 C-C03: the unfinished-operation and orphan checks are made again under the job lock."""
++
++    def test_an_operation_begun_or_an_orphan_marker_written_meanwhile_refuses_and_the_marker_is_as_it_was(self):
++        for number, relative in enumerate(('records/INSTALL_IN_PROGRESS.json', job_lock.ORPHAN_MARKER)):
++            tree = self.tree(name=f'tree_{number}')
++            real = snapshot.attempt_snapshot
++
++            def backup_then_it_appears(settings, job, now=None):
++                """Make the backup; then, before the lock is taken, the file appears."""
++                result = real(settings, job, now)
++                (tree / relative).parent.mkdir(parents=True, exist_ok=True)
++                (tree / relative).write_text('[{"run": "invented"}]', encoding='ascii')
++                return result
++
++            marker = self.marker(tree).read_bytes()
++            with mock.patch.object(tree_verify, 'attempt_snapshot', backup_then_it_appears):
++                code, said = self.verify(tree)
++            self.assertEqual(code, tree_verify.EXIT_REFUSED, said)
++            self.assertIn(Path(relative).name, '\n'.join(said))
++            self.assertEqual(said[-1], 'VERIFY TREE - END - refused; the environment\'s marker is as it was.')
++            self.assertEqual(self.marker(tree).read_bytes(), marker)
++            self.assertEqual([name.split('_', 3)[3] for name in self.backups(tree)], ['PRE_VERIFY.zip'],
++                             'no backup is attempted after a refusal')
++            self.assertFalse(snapshot.is_due(tree), 'no note that a backup is owed was written')
++            self.assertEqual(self.log(tree), [])
++            self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
++
++
+ class WhatIsRefused(VerifyCase):
+     """A refusal changes nothing in the tree and leaves the marker as it was."""
+ 
+@@ -468,6 +508,16 @@ class TheReportsCommand(VerifyCase):
+         self.assertFalse(any(name.startswith('ov1/') and 'prevailing' in name and 'not_current' not in name
+                              for name in active), 'the prevailing print-out is not made under a mismatch')
+ 
++    def test_a_game_whose_results_changed_other_than_by_growing_gets_no_report_made_again(self):
++        tree = self.worked()
++        fx.write_results(tree, GAME, fx.LAST_AT_START + 3, version=3, reseed_from=1150)
++        before = whole_tree(tree)
++        code, said = self.reports(tree)
++        self.assertEqual(code, tree_checks.EXIT_RAN)
++        self.assertIn(f'  {GAME}: its stored records could not be read, so its reports were not made again: ', said[0])
++        self.assertIn('results changed other than by growing', said[0])
++        self.assertEqual(whole_tree(tree), before)
++
+     def test_software_that_does_not_lie_in_the_tree_is_refused(self):
+         tree = self.worked()
+         elsewhere = self.tree(name='elsewhere')

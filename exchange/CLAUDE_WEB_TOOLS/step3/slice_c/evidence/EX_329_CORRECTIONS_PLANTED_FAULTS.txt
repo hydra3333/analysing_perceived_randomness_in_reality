@@ -1,0 +1,35 @@
+Build step 3, slice C, the corrections after EX_329: the planted faults for these corrections only
+(exchange/CLAUDE_WEB_TOOLS/step3/mutation_check_ex329_corrections.py), one at a time in a copy of the test clone
+that holds the overlay as committed at 3bdd37b07abeebad296a2edc7adb94fa5e5783c7; the test modules of the file
+in which the fault is planted are run and must fail. Cloud: Linux, Python 3.15.0b4. What it printed:
+
+caught   | C-B01: the answer is acted on although what it rested on changed
+caught   | C-B01: a change of the software or of a status file is not seen
+caught   | C-B01: a change of the stored research is not seen
+caught   | C-B01: a change of the accepted results is not seen
+caught   | C-B01: a barrier that appeared or changed is not seen
+caught   | C-B01: a change of the verified environment is not seen
+caught   | C-B01: a change of DEV is not seen
+caught   | C-B01: a print-out moves what the statement rests on
+caught   | C-B01: a continued reinstall whose record changed is carried on
+caught   | C-B03: a plan that removes a file cannot be continued
+caught   | C-B03: a reinstall accepted from another DEV is continued
+caught   | C-B03: the class of a file an unfinished plan was removing is forgotten
+caught   | C-B03: a replacement forgets what the unfinished plan had added
+caught   | C-B04: a replacement forgets the print-outs owed
+caught   | C-B04: the print-outs owed are not made again
+caught   | C-B02: no second reading of the source
+caught   | C-B02: the copied pairs are not read before the record
+caught   | C-B02: a retry cannot replace its own unrecorded results
+caught   | C-B02: a continued creation chooses its source anew
+caught   | C-B02: a recorded creation still reads its former source
+caught   | C-B02: a busy PROD is read
+caught   | C-B01: an install acts on a base that changed
+caught   | C-C02: the suite depends on DEV's readiness marker
+caught   | C-C01: the checks compare a game whose results the job refuses
+caught   | C-C01: reports are made again for a game whose results the job refuses
+caught   | C-C04: the kept table is not CRLF
+caught   | C-C03: an operation begun meanwhile is not seen under the lock
+caught   | C-C03: an orphan marker written meanwhile is not seen under the lock
+caught   | C-C04: the suite line is missing from the failed verdict
+29 faults planted; 0 survived

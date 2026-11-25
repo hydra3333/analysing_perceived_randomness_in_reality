@@ -1,0 +1,15 @@
+Build step 3, slice C, the corrections after EX_329: the 11 files of the overlay changed (M) since the bytes the
+reviewer read (commit e404c22, EX_328), each with the SHA-256 of its bytes in the overlay now (commit
+3bdd37b) and its size. The other 43 of the overlay's 54 files are byte for byte as they were.
+
+M  a4a54b5f142c934c9994986f52d292191ee477b69f90bd2e3ae5462a578aa5b5    27776  deploy/init_tree.py
+M  98c03f240c823a0ece4f2d004fcde924c386162b7ddeba8ac0ffaf66f1e1b028    15411  deploy/install.py
+M  18f71f052a2552f0aba438c3891214816988be0756b187351c80903f79fc918d    41197  deploy/install_common.py
+M  301762bfda885feeedd9ba0fa7f849973f1d5d604dc88bc0bbd7ec9202e62f92    33575  deploy/reinstall_infra.py
+M  bfcb5f5ac1a22958f603b7de8a4509f6aa48107392d803940c9457358969ba26    31807  src/research/tree_checks.py
+M  d1c46a8f697c98f09faa587b0d3a5f6e463803efb7dbb905ba7abf51dee41c39    11502  src/research/tree_verify.py
+M  06d772f19e91a8440576a5a5a691b2ad093c6894e74851c1be4264b4deef9754    22652  tests/test_trees_checks.py
+M  409000508c1be1fd21caef6876fe6e7b8b2ae687fe4f55de9dfc078309c3f7c9    39067  tests/test_trees_init.py
+M  0240ef95e48a8ad4956212476c474f95193dd64746ea4af608b84d24c2289182    33676  tests/test_trees_install.py
+M  2bda57b1d902949ba5d6722d7ad281ddeb317ffb5158e0e9e6d429d8678b7e6b    49369  tests/test_trees_reinstall.py
+M  3077a4063942440006237835a1d63eb58f8df6bc95eccccce5acd36206dd781f    34018  tests/test_trees_verify.py

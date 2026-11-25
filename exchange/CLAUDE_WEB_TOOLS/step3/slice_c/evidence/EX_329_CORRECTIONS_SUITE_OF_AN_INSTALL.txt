@@ -1,0 +1,29 @@
+Build step 3, slice C, the corrections after EX_329: the suite of an install (deploy/SUITE_MANIFEST.ini), run by
+deploy/suite_on_copy.run_suite on a temporary copy of the test clone that holds the overlay as committed at
+3bdd37b07abeebad296a2edc7adb94fa5e5783c7. Cloud: Linux, Python 3.15.0b4. What it printed:
+
+The test suite: 23 modules, run with /home/claude/work/venv315/bin/python on a copy of 770 files in /tmp/a_p_r_i_r_suite__csuhmfm. It takes several minutes.
+  suite: test_file_form: 52 tests, OK
+  suite: test_research_file_form: 16 tests, OK
+  suite: test_research_forecasts: 26 tests, OK
+  suite: test_research_identity: 24 tests, OK
+  suite: test_research_job: 48 tests, OK
+  suite: test_research_manifest: 9 tests, OK
+  suite: test_research_ov1_and_checks: 34 tests, OK
+  suite: test_research_ov1_numeric: 21 tests, OK
+  suite: test_research_records: 28 tests, OK
+  suite: test_trees_check_tree: 24 tests, OK
+  suite: test_trees_checks: 29 tests, OK
+  suite: test_trees_init: 39 tests, OK
+  suite: test_trees_install: 33 tests, OK
+  suite: test_trees_install_common: 69 tests, OK
+  suite: test_trees_installed_files: 22 tests, OK
+  suite: test_trees_launch_guard: 52 tests, OK
+  suite: test_trees_readiness: 41 tests, OK
+  suite: test_trees_reinstall: 45 tests, OK
+  suite: test_trees_restore: 52 tests, OK
+  suite: test_trees_settings: 32 tests, OK
+  suite: test_trees_snapshot: 36 tests, OK
+  suite: test_trees_suite: 15 tests, OK
+  suite: test_trees_verify: 40 tests, OK
+THE TEST SUITE PASSED: 23 modules, 787 tests.

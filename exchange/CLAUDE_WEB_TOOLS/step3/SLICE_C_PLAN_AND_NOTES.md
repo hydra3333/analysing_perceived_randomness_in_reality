@@ -150,7 +150,8 @@ file; says what it would change before it asks; the cutoff file when a change fr
   new reader with the first system's). Each module is run in a process of its own with the Python named, in the
   copy; a module that fails, or that ran no test, fails the suite; the copy is removed on a pass and left, with
   each module's output, on a failure. No time limit is put on a module.
-- **C-R9, TO BE TAKEN IN C5, FOR THE REVIEWER: the job lock and the backup at an infrastructure reinstall.** Design 6
+- **C-R9, TAKEN IN C5; THE REVIEWER CONCURS (EX_329); PROPOSED TO THE OWNER AS AN AMENDMENT (RAT-59): the job lock
+  and the backup at an infrastructure reinstall.** Design 6
   has the target's job lock "taken and held to the end" at step 2 and the `PRE_INFRA` backup attempted at step 4.
   Slice B's reviewed rule is that no backup is made while a job lock lies in the tree (the lock file would be
   inside the ZIP, and a restored tree would refuse every job). Reading to take: `Reinstall_Infra` holds the lock
@@ -183,7 +184,11 @@ file; says what it would change before it asks; the cutoff file when a change fr
   (`HOLDOUT_OPENED_*`) are not copied.
   (c) *"From PROD, or from DEV while no PROD exists":* a PROD tree exists when the folder DEV's file names holds a
   settings file; it is then checked to be what DEV's file says, and is not read while an install is unfinished
-  there or a results update holds its lock. Each source file is hashed before the copy and again after it.
+  there or a results update holds its lock. **As corrected after EX_329 (C-B02):** all six source files are
+  hashed first, each copy must have that hash, all six are hashed again, and each game's copied pair is read by
+  the engine's own reading before `INIT_RECORD.json` is written; until that record exists a retry replaces the
+  copies. The source chosen is kept in the creation's plan (in the barrier), and a creation that has its record
+  reads no source.
   (d) *A QA tree's own `[results] copy_from`* is PROD's folder as DEV's file names it, also before PROD exists; a
   QA tree created while DEV's file has no `[PROD]` section gets no `[results]` section, and the owner adds it by
   hand when PROD exists (design 1: "to change a setting later").
@@ -211,12 +216,20 @@ file; says what it would change before it asks; the cutoff file when a change fr
   owner said YES to this plan, and a backup of a half-installed tree is no rollback point. It still attempts the
   backup after. If the stop came after the list was written and before the barrier was removed, the list as it
   was before is worked out from the barrier's plan (`list_before`), so that the plan now is the barrier's.
-  (f) *The suite at an install* is run only when DEV's infrastructure is marked ready and is file for file the
-  tree's; otherwise the line says which, and the install goes on, as specification 12.3 item 3 has it.
+  (f) *The suite at an install* is run only when the tree's infrastructure is file for file DEV's, **decided by
+  the bytes (the manifest and the files it lists), not by DEV's readiness marker (EX_329 C-C02);** otherwise the
+  line says which, and the install goes on, as specification 12.3 item 3 has it.
   (g) *NO ends with exit code 2;* a backup and a kit may by then exist, and the closing line says so.
+  (h) *Under the reservation of step 6 (EX_329 C-B01)* a new install goes on only if no barrier has appeared, the
+  tree's list is the one the plan was made on, and the tree still matches it. A research job that ran meanwhile
+  does not stop an additive install.
 - **C-R15, readings taken in `Reinstall_Infra`** (design 6; specification 12.4 and 5.8).
   (a) *C-R9 is taken as written above:* the lock is held for step 3, let go for the kit, the backup and the
-  question, and taken again before anything is overwritten.
+  question, and taken again before anything is overwritten. **As corrected after EX_329 (C-B01):** under that
+  second hold, before the barrier or any file is written, one SHA-256 over everything the statement rested on
+  (`what_the_statement_rests_on`: DEV's fingerprint, the tree's software, manifest, list, barrier, accepted
+  results, stored research without its reports, and the environment's marker) must equal the one taken at step
+  3; otherwise it refuses, nothing overwritten, and the owner runs it afresh.
   (b) *What is infrastructure on a tree's list:* every listed file that is not under a family folder or
   `_shared`. A plan path under either is refused.
   (c) *"Any forecast-class file" is read widely:* added, overwritten or removed, by DEV's manifest or the tree's;
@@ -234,11 +247,14 @@ file; says what it would change before it asks; the cutoff file when a change fr
   (f) *Where a change was accepted,* step 9 writes the game's cutoff for that draw (never a later draw than one
   already marked), moves the stale reports out with the engine's own function, and checks both; then the checks
   in place treat that difference as the known one, and any other difference stops. Nothing is recomputed.
-  (g) *The print-outs are made again* whenever the plan holds a `derived`-class file, by the tree's own software
+  (g) *The print-outs are made again* whenever the plan holds a `derived`-class file, or the unfinished plan that
+  a replacement takes over owed them (the plan's `reports_owed`; EX_329 C-B04), by the tree's own software
   and Python (the new `reports` command of `src/tree_checks_command.py`), before the barrier is removed; under a
   cutoff the job's own rule makes them only up to the draw before it.
-  (h) *The same command again* continues when the barrier holds the plan that DEV and the tree's list give now
-  (the statement accepted then is kept and said; nothing is asked). *`--replace-unfinished`* works its plan out
+  (h) *The same command again* continues when the barrier holds a reinstall of this tree accepted from DEV
+  exactly as DEV is now (its fingerprint): the accepted plan is carried on as it stands, a removal included
+  (EX_329 C-B03; the statement accepted then is kept and said; nothing is asked). The plan keeps the class of
+  each of its files, so that a replacement knows the class of a file the unfinished plan was removing. *`--replace-unfinished`* works its plan out
   from the files as they lie in the tree (so that what the replaced plan added and DEV no longer has is
   removed), shows the unfinished plan and the plan now, makes step 3 again, attempts the kit and the backup
   again and asks the same question. Without the flag another plan is refused with both shown and the flag named.
@@ -384,14 +400,27 @@ file; says what it would change before it asks; the cutoff file when a change fr
   next edition of H-1 (the owner, entry 310). Carried to the joined package of build step 3, not done here: the
   link tests' skip on Windows in slices A and B, "no research was written", and the docstring escape in
   `src/research/environment_marker.py`.
-- **Workspace (a convenience only):** LF copies of slice C's new files are in `/home/claude/work/slicec/`, and
-  `/home/claude/work/fix/wire_c1.py` copies them into the overlay as CRLF and makes the edits of reviewed files
-  through `fix/ed.py` (now also `tree_verify.py`, `tree_checks_command.py`, `Verify_Tree.bat`,
-  `test_trees_verify.py`). If the workspace is gone, take the overlay's files (strip the CR) and go on.
+- **Workspace (a convenience only):** the overlay is edited directly (a small helper replaces one exact text by
+  another, compiles the file and writes CRLF). The LF copies in `/home/claude/work/slicec/` and the `wire_c*.py`
+  helpers are out of date and are not used. If the workspace is gone, nothing is lost: the overlay is the truth.
 - **Seen, to carry into the joined package (not slice C's):** Python 3.15 warns on
   `src/research/environment_marker.py` line 17, a docstring that holds `Lib\site-packages` with a single
   backslash ("\s" is an invalid escape sequence; a SyntaxWarning now, an error in some later Python). One
   character to double, in a file slice A reviewed.
+- **25 November 2026: EX_328 issued** (entry 313), the overlay as committed at `e404c22`. **EX_329 = RECHECK**
+  (entry 317): four blockers (C-B01 to C-B04) and four corrections (C-C01 to C-C04), no redesign; the reviewer
+  concurs with both amendments (`exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`, for the owner as RAT-59).
+- **25 November 2026: THE CORRECTIONS AFTER EX_329 ARE WRITTEN AND PROVED IN THE CLOUD** (the owner's go, entry 318;
+  recorded in entry 319). All eight findings were true as written and are corrected; 11 files of the overlay
+  changed since `e404c22` (six of code, five of tests), none added or removed. The readings above that they change
+  are marked "EX_329" (C-R9, C-R13 (c), C-R14 (f) and (h), C-R15 (a), (g) and (h)). **Evidence, on the final files:**
+  the suite of an install, run by the tool on a temporary copy, 23 modules, 787 tests, passed; planted faults
+  for these corrections only (`mutation_check_ex329_corrections.py`), 29, none survived. Not repeated, as the
+  reviewer asked: the whole suite and the 250 planted faults of the slice. **The note for the reviewer is
+  `slice_c/SLICE_C_CORRECTIONS_AFTER_EX_329_v0_1.md`,** with the exact differences from `e404c22`
+  (`SLICE_C_CORRECTIONS_AFTER_EX_329_DIFFERENCE.txt`), the hashes and the evidence beside it.
+- **What follows:** EX_330 to the reviewer, only on the owner's word (the corrections note is its substance); the
+  owner's ratification of the two amendments (RAT-59) and of H-1 v15 (RAT-60).
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 
