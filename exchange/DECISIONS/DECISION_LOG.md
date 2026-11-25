@@ -7553,3 +7553,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   ratified it. The reviewer's EX_329 is answered when it comes, and the edition after this one takes it in.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 316; RAT-59.
+
+## 316. 25 November 2026, 23:10 - H-1 v15 written as a candidate, with its blurb, for the owner's ratification
+
+- **Written** (on Opus, entry 315), under `exchange/CLAUDE_WEB_TOOLS/h1v15/`: the builder `make_h1_v15.py`, its
+  texts `h1_v15_texts.py`, and in `out/` the candidate `Claude_Primary_Handover_H1_v15_CANDIDATE.md` (SHA-256
+  `f3cb108288a9586948157e4d99563e1665c1196695712577e6fee6fa52e8b4da`) and its blurb (`6ebf9de6026d49ccb175f44536b3d284443c7e5ca53a4417faea573fc81e86d3`). Built from the installed H-1 v14's Git bytes.
+- **What it is:** chapter 0 written afresh (slices A and B passed; slice C with the reviewer as EX_328; the amendment
+  of entry 305 waiting for the reviewer's view; slice D next on the owner's go; the deferred discussions and the
+  manual's sections the owner asked for). In place, each marked "(v15)": the reviewer's cold-read corrections
+  H14-C01 (the file-form standard's exact scope; which hashes are today's bytes, computed by the builder: all 11 of
+  section 4's, 60 of Appendix A's 69), H14-C02 (sections 1, 2 and 2A are byte for byte v13's and v14's, and equal
+  v7r1's only after line endings are normalised), H14-C03 (the restore's one ratified exception beside the orphan
+  rule, in chapter 0, section 11 and the blurb), its two observations, and OUTLANDISH_01 closed in sections 9 and 10.
+  Sections 1, 2 and 2A and the HISTORY part are carried byte for byte (the builder asserts it). Appendix D lists every
+  change.
+- **Not read by the reviewer.** It goes into `doc/HANDOVER/` only on the owner's ratification; it would take the next
+  free number, RAT-59, and the amendment of entry 305 the number after.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_329 (the reviewer's); Claude's next is EX_330; entry 317; RAT-59.

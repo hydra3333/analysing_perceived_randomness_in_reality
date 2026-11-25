@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 23:07 Australia/Adelaide (entry 315: H-1 v15 being written now; waiting on EX_329).
+**Last updated:** 25 November 2026, 23:10 Australia/Adelaide (entry 316: H-1 v15 candidate written; waiting on the owner's ratification and on EX_329).
 
 ## For the owner: NOW
 
+- **H-1 v15 IS WRITTEN AS A CANDIDATE (entry 316; 25 November 2026),** `exchange/CLAUDE_WEB_TOOLS/h1v15/out/`, with its
+  blurb. **Waiting on the owner:** his ratification (it would be RAT-59), then Claude installs it in `doc/HANDOVER/`.
+  **Waiting on the reviewer:** EX_329 (slice C).
 - **H-1 v15 IS BEING WRITTEN NOW (the owner, entry 315; 25 November 2026),** as a candidate under
   `exchange/CLAUDE_WEB_TOOLS/h1v15/`, for the owner's ratification; entry 314's wait is withdrawn. Slice C is with the
   reviewer as EX_328; waiting on EX_329.
