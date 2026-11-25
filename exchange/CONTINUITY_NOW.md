@@ -8,6 +8,10 @@ durable EX messages are authoritative.
 
 ## For the owner: NOW
 
+- **SLICE C HAS THE OWNER'S GO AND IS BEGUN (entry 301; 25 November 2026): creating a tree, the installs, verifying
+  a tree.** Cloud design and coding only. Its plan and running notes, with exactly where it stands, are
+  `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_C_PLAN_AND_NOTES.md`; its files go into the same overlay as slices A and
+  B. **A chat that resumes or a new one reads that file and goes on from its section 4.**
 - **SLICE B HAS PASSED REVIEW (entry 300; 25 November 2026): EX_327,** `exchange/EX_327_ChatGPT.md`: all seven
   findings closed. **Slices A and B are reviewed and not installed:** the 34 files of
   `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`. Two small things are carried into the joined package (a test that
