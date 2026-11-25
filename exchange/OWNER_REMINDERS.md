@@ -744,3 +744,9 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   Recorded as MC-1 in register v0.24 and carried in H-1 v1r8 section 2 and H-1 v2 section 2.
 - Full editions, not layers (owner, 14 November 2026): Claude's handovers come as full updated documents rather than
   further deltas or overlays; the reviewer prepares its own.
+- Future method priorities (owner, 25 November 2026; decision log entry 289): the draft
+  `doc/Predictive_Randomness_Future_Method_Priorities_v0_1_DRAFT.md` is looked at only when the development of new
+  methods is about to begin. Until then it is not read or acted on.
+- The operations manual's appendix of methods (owner, 25 November 2026; decision log entry 289): when the manual is
+  written, after build step 3, it has an appendix listing every method family and, within each, every method, each
+  with a brief description.

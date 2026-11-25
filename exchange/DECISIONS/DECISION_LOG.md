@@ -6947,3 +6947,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
   under `exchange/CLAUDE_WEB_TOOLS/step3/` as the work goes, and the continuity page says where it stands; a chat
   that is resumed, or a new one started from H-1 v14, continues from those.
 - Next numbers: EX_322; entry 289; RAT-59.
+
+## 289. 25 November 2026, 14:40 - the owner: the draft on future method priorities waits until new methods are begun; the operations manual gets an appendix listing every method family and every method
+
+- **The owner, 14:40:** "we will defer looking at Predictive_Randomness_Future_Method_Priorities_v0_1_DRAFT until we
+  are about to commence development of new methods. A thought for the Operations manual construction later, in an
+  appendix we need a very long list of each method family and within each every method for it and a brief
+  description of the method."
+- **The draft:** `doc/Predictive_Randomness_Future_Method_Priorities_v0_1_DRAFT.md` (commit `a141c3c`, 25 November
+  2026, under the owner's account; "draft future method priorities for owner and Claude discussion"). **Not read by
+  Claude and not acted on, by the owner's decision,** until the development of new methods is about to begin. It
+  is a draft: it is not ratified and governs nothing.
+- **The operations manual** (after build step 3; H-1 v14 section 0.4 item 6): its skeleton is to include an
+  appendix that lists every method family and, within each, every method (variant), each with a brief
+  description. Twelve families and 40 variants have code today; the catalogue has 62 families.
+- **Also this hour, for the record:** the owner asked for an update for the reviewer and whether it should review
+  anything now. Claude's answer, which he did not contest: not now; slice B goes to the reviewer whole, when its
+  three parts are written and proved; the cold read of H-1 v14 can be asked for meanwhile at his choice. A status
+  block was given for the reviewer chat; no EX was issued. Slice B's part B1 (the backup) is written as working
+  files (`main` `0962a68`); `exchange/CLAUDE_WEB_TOOLS/step3/SLICE_B_PLAN_AND_NOTES.md` says where it stands.
+- Both points are added to the standing reminders in `exchange/OWNER_REMINDERS.md`.
+- Next numbers: EX_322; entry 290; RAT-59.
