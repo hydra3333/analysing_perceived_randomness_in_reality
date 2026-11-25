@@ -447,17 +447,22 @@ class TheSuiteBelongsToTheTreeOrIsNotRun(InstallCase):
         with mock.patch.object(suite_on_copy, 'run_suite', return_value=result) as run:
             code, said = self.install(answers=['YES'], suite='real')
         self.assertEqual((code, run.call_count), (install.EXIT_INSTALLED, 1), said)
-        self.add_variant(THIRD)
-        install_readiness.mark_infrastructure(self.dev)
-        write_crlf(self.dev / 'deploy' / 'toy_tool.py', '"""A DEV-side tool that is not installed."""\n')
-        with open(self.dev / 'deploy' / 'INFRA_MANIFEST.ini', 'ab') as handle:  # only [install_tool] differs: stale
+
+    def test_a_marker_stale_only_by_a_dev_side_tool_does_not_change_what_devs_infrastructure_is(self):
+        """EX_329 C-C02: a tool file of DEV is not installed; its change makes the marker stale and nothing else."""
+        tool = self.dev / 'deploy' / 'toy_tool.py'
+        write_crlf(tool, '"""A DEV-side tool that is not installed."""\n')
+        with open(self.dev / 'deploy' / 'INFRA_MANIFEST.ini', 'ab') as handle:
             handle.write(b'[install_tool]\r\ndeploy/toy_tool.py = other\r\n')
-        self.assertFalse(install_readiness.infrastructure_readiness(self.dev).ready)
-        with mock.patch.object(suite_on_copy, 'run_suite', return_value=result) as run:
-            code, said = self.install(answers=['YES'], suite='real')
-        self.assertEqual((code, run.call_count), (install.EXIT_INSTALLED, 0), said)
-        self.assertIn('not run (the tree differs from DEV in: deploy/INFRA_MANIFEST.ini)', '\n'.join(said),
-                      'the manifest is one of the infrastructure files: with another manifest it is not DEV\'s')
+        install_readiness.mark_infrastructure(self.dev)
+        marked = common.dev_infrastructure(self.dev)['files']
+        write_crlf(tool, '"""A DEV-side tool that is not installed, changed."""\n')
+        self.assertFalse(install_readiness.infrastructure_readiness(self.dev).ready, 'the marker is stale')
+        self.assertEqual(common.dev_infrastructure_bytes(self.dev), marked)
+        self.assertEqual(common.infrastructure_differences(common.dev_infrastructure_bytes(self.dev),
+                                                           {'files': [{'path': path, 'sha256': digest}
+                                                                      for path, digest in marked.items()]}), [],
+                         'a tree that holds those bytes is file for file DEV\'s, and the suite is its suite')
 
     def test_infrastructure_that_genuinely_differs_is_not_given_the_suite_marked_or_not(self):
         self.add_variant(SECOND)

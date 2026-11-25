@@ -4,7 +4,8 @@ What this file is for
     A QA or PROD tree does not exist until this command makes it. It works out the plan (DEV's infrastructure,
     whose marker must match, and every variant of DEV that is marked ready), shows it and asks once. Then it
     creates the folder, writes the tree's own settings file (create-only, from DEV's entry for the role) and the
-    barrier, copies every planned file, gives each variant its status file, and copies the accepted results.
+    barrier, copies every planned file, gives each variant its status file, and copies the accepted results as
+    one set (read twice at the source; each game's copied pair read as the engine reads it before the record).
     There it stops and asks the owner to build the tree's Python environment with his two scripts, which are
     now in the tree. The same command typed again goes on: it checks the tree's software against the plan, runs
     the suite and every variant's smoke case with the tree's own Python, has that Python write the environment's

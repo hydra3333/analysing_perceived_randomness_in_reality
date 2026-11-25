@@ -7,7 +7,10 @@ What this file is for
     file that can change a forecast; assembles the software as it would be in a temporary folder and, with the
     target's own Python and the target's own data, read only, runs the suite, compares every stored score and
     prevailing line, and recomputes the fixed sample of stored forecasts; says one of two plain statements;
-    attempts a recovery kit and a backup; gives the warning and asks once. Then it reserves the target, writes
+    attempts a recovery kit and a backup; gives the warning and asks once. Then it reserves the target again
+    and, before it writes anything, makes sure that nothing the statement rested on has changed since (a job
+    that ran meanwhile, new results, an install, a withdrawal, the environment, DEV): if anything has, it
+    refuses and the owner runs it afresh. It writes
     its barrier, carries the plan out, checks the whole tree's software, makes every installed variant forecast
     once, runs the suite in place and compares the derived results again; where a change from a draw was
     foretold and accepted it marks that game's results not current from that draw and moves the stale reports
