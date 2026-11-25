@@ -7238,3 +7238,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - It is added to the standing reminders in `exchange/OWNER_REMINDERS.md`. A note for the reviewer chat was given to
   the owner to paste.
 - Next numbers: EX_327 (the reviewer's reply); entry 300; RAT-59.
+
+## 300. 25 November 2026, 18:07 - EX_327 (reviewer): SLICE B, PASS; all seven findings closed; slice C is next, on the owner's go
+
+- **EX_327** (`exchange/EX_327_ChatGPT.md`, the reviewer's commit `7be14a1`; SHA-256
+  `587dbba42ac29f4581891ad6b0184e656bdf37bd5276e178ea34f47aa40b235c`, computed by Claude from Git; it arrived while entry 299 was
+  being written, and that entry's commit was put after it): **"PASS for slice B at the reviewed overlay bytes on
+  main 4d6fd82 ... Both residual findings B-B02 and B-C03 are CLOSED. Together with EX_325's five closures, all
+  seven EX_323 findings are closed. ... No further slice B review round is required. This is review acceptance,
+  not an installation, Windows runtime PASS, owner ratification or operational GO."**
+- **What the reviewer checked itself:** EX_326's hash and its ten hashes; the ten hunks rebuild the four changed
+  files exactly; the other thirty overlay files unchanged; the manifest and the forecast-class files unchanged.
+  It ran nothing; Claude's cloud evidence is the author's; nothing has run on Windows.
+- **Two things to carry into the joined package, neither a further review round, both accepted by Claude:**
+  - *A test's portability:* `test_trees_restore`'s test of a tree root named through a link calls `os.symlink`,
+    which the owner's Windows account has refused before (WinError 1314). That one test is to skip where the
+    platform refuses to make the link (the suite's existing pattern), or use a small mocked real-path test; the
+    skip count is reported. No link engineering, no change of Windows settings. (The same call is in two tests of
+    slice A's and slice B's backup tests; they are looked at with it.)
+  - *A wording:* the early refusal's "nothing was written" means the research; prefer "no research was written"
+    when that line is next touched, with its tests.
+- **Kept for the joined rehearsal** (as EX_323 listed): Windows' real process table and launcher chain; the
+  refusal while another Python runs; the real rename; the restored Python's import; a real whole-tree ZIP's size
+  and time; the whole suite on the final bytes.
+- **Slice B is closed for review.** With slice A (EX_321) the overlay is 34 files, reviewed, not installed. **Next:
+  slice C** (`Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree` and the half-finished states), a new
+  subsystem: Claude says so and waits for the owner's go. Nothing is authorised on the owner's PC.
+- Next numbers: EX_328; entry 301; RAT-59.

@@ -138,6 +138,10 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
 - **After EX_325 (five findings closed; two narrow residuals, B-B02 and B-C03; entry 296):** both are corrected in
   the overlay with focused tests; see `slice_b/SLICE_B_CORRECTIONS_AFTER_EX_325_v0_1.md`. They go back as EX_326 on
   the owner's word.
+- **EX_327 (entry 300): SLICE B PASSES; all seven findings closed.** Carried into the joined package, not a review
+  round: the tests that call `os.symlink` skip where Windows refuses to make a link (`test_trees_restore`, one
+  test; look at `test_trees_snapshot`'s and slice A's too); the early refusal's line to read "no research was
+  written" when next touched. Kept for the joined rehearsal: everything Windows (EX_323 section 6).
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

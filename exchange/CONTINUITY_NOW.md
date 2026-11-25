@@ -4,10 +4,18 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 18:02 Australia/Adelaide (entry 298: EX_326 issued on the owner's word: slice B's two residual corrections are with the reviewer; its reply is expected as EX_327).
+**Last updated:** 25 November 2026, 18:07 Australia/Adelaide (entry 300: EX_327, slice B PASSES; slices A and B are reviewed and not installed; nothing is in flight with the reviewer; slice C waits for the owner's go).
 
 ## For the owner: NOW
 
+- **SLICE B HAS PASSED REVIEW (entry 300; 25 November 2026): EX_327,** `exchange/EX_327_ChatGPT.md`: all seven
+  findings closed. **Slices A and B are reviewed and not installed:** the 34 files of
+  `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`. Two small things are carried into the joined package (a test that
+  makes a link must skip where Windows refuses; "no research was written" for the early refusal's line). **Nothing
+  is in flight with the reviewer. Waiting on the owner's go:** slice C (`Init_Tree`, `Install`, `Reinstall_Infra`,
+  `Verify_Tree`), a new subsystem, so the model rule applies first. **Three discussions are deferred to just before
+  new methods are begun** (entries 289, 292, 299). **If this chat ends here:** a new chat reads H-1 v14, entries
+  287 to 300, and slice B's notes, and starts slice C on the owner's go.
 - **SLICE B'S TWO RESIDUAL CORRECTIONS ARE WITH THE REVIEWER (entry 298; 25 November 2026): EX_326,**
   `exchange/EX_326_Claude.md`. **Waiting on the reviewer:** EX_327. **Next after a PASS, on the owner's go:** slice
   C (`Init_Tree`, `Install`, `Reinstall_Infra`, `Verify_Tree`), a new subsystem (the model rule applies first).
