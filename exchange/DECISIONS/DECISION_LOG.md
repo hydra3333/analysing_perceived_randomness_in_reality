@@ -6935,3 +6935,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviews slice B it reads the ratified backup and restore clauses themselves, as any review needs.
 - **The reviewer chat in role from now is this one.** No finding is open. Slice B waits for the owner's go.
 - Next numbers: EX_322; entry 288; RAT-59.
+
+## 288. 25 November 2026, 14:02 - the owner's go for slice B of build step 3 (backups, the recovery kit, restore), on Fable
+
+- **The owner, 14:02,** to Claude's "Slice B waits for your go ... Suggest switching to Fable (High) for this":
+  "ok let's go now. if during your processing fable runs out of tokens or whatever, I have a free reset to use and
+  hope you could then continue where you left off ?"
+- **What the go covers:** slice B's design within the ratified documents and its cloud coding and tests, as entry
+  217 allows for build step 3. Nothing on the owner's PC; no install, run, tree, backup, restore or runner task.
+- **How it is kept safe against a stop part-way:** working files and a short design note are committed to `main`
+  under `exchange/CLAUDE_WEB_TOOLS/step3/` as the work goes, and the continuity page says where it stands; a chat
+  that is resumed, or a new one started from H-1 v14, continues from those.
+- Next numbers: EX_322; entry 289; RAT-59.
