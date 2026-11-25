@@ -7888,3 +7888,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   to Fable (High) for this" and waits for the owner's go.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 328; RAT-61.
+
+## 328. 26 November 2026, 06:38 - OWNER: the rule covers DEV too (DEV is "QA plus"); he asks for a clarification and one document for a three-way discussion
+
+- **Claude had asked** (entry 327) what DEV does, recommending the same behaviour in all three trees, and had said
+  that point 1 "reverses a safety sentence you ratified".
+- **The owner, 06:38:** "(a) \"because it reverses a safety sentence you ratified\" please clarify what that is (b)
+  rule, taken literally, covers DEV too, because DEV runs the same engine code, that is correct - if I said or agreed
+  otherwise I was wrong ... DEV needs to develop/test all available functions within its tree since that is its
+  purpose, think if it as \"QA plus\" since it can install stuff too and run stuff without so many restrictions and
+  checks (it cannot install into itself) although I do not know what has been implemented for that to happen.  i have
+  to go you.  Please clarify all that and produce a .md for 3 way discussion since this has gone off-track
+  significantly."
+- **So, DECIDED (owner):** the rule of entry 327 covers DEV too. DEV must be able to develop and test every function
+  within its own tree; it is "QA plus": it can also install into the other trees, and runs with fewer restrictions and
+  checks; it cannot install into itself. Where he said or agreed otherwise before, he says he was wrong.
+- **Asked of Claude:** (a) to say which ratified sentence it meant; (b) to set out what is implemented today for each
+  tree; and to write one document for a discussion between the three (owner, reviewer, Claude), because this has gone
+  off track. It is written next, under `exchange/`, as a discussion paper and not an EX message; it proposes no
+  wording for ratification and changes no ratified file.
+- **Not started, and not to be started before that discussion:** the amendment (RAT-61) and slice D.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 329; RAT-61.
