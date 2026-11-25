@@ -95,7 +95,23 @@ file; says what it would change before it asks; the cutoff file when a change fr
   while they hold the target's lock. It writes what it found as one line of JSON to a file that must not exist,
   and ends with 0 whatever it found; what stops an install is the tool's to decide. It refuses a Python that is
   not the environment the data tree's settings name.
-- **C-Q1, OPEN, FOR THE OWNER: the test suite at `Verify_Tree.bat`.** Design 7 has `Verify_Tree.bat` run in the
+- **C-Q1 IS DECIDED: OPTION 1 (the owner, 25 November 2026; decision log entry 305): `Verify_Tree.bat` does not
+  run the test suite.** The code is brought to exactly that; the hook for a suite is removed. **Owed: an
+  amendment of two ratified clauses, to go to the reviewer with slice C and be ratified by the owner after his
+  view (RAT-59).** Proposed wording:
+  - *Deployment design section 7, first paragraph, to read:* "Process check; a backup attempted; the structure;
+    every installed variant's smoke case; the fixed forecast sample, whose differences after an environment change
+    are **reported** for the W-23 review and do not by themselves refuse; the derived results in full, reported
+    likewise; `ENVIRONMENT_VERIFIED.json`; a backup attempted. **The test suite is not run by `Verify_Tree`:** the
+    tests live in DEV and the installed software starts no program; the command says so every time. A failed smoke
+    case writes no marker and removes an older one." (The rest of the paragraph unchanged.)
+  - *Specification section 13, "Verified before use", to read:* "`Verify_Tree.bat`, run in the tree, makes the
+    checks of 12.3 that travel with the installed software (items 1, 4 and 5, and every installed variant's smoke
+    case) with that tree's Python and, on success, writes ..." (the rest unchanged); and item 3 of 12.3 gains: "The
+    suite is run by the install tools in DEV (at a tree's creation and at an infrastructure reinstall), never by
+    `Verify_Tree`."
+  The record of how the question stood before the decision follows.
+- **C-Q1 as it was put to the owner: the test suite at `Verify_Tree.bat`.** Design 7 has `Verify_Tree.bat` run in the
   tree and run "the suite, if the tree's infrastructure is file for file DEV's". Two facts stand against doing
   that plainly. (1) The tests live only in DEV, and a QA or PROD tree's settings do not say where DEV is (design
   1). (2) **The project's own rule is that the engine starts no program** (`tests/test_research_job.py`,
@@ -120,8 +136,7 @@ file; says what it would change before it asks; the cutoff file when a change fr
     practice it runs when the owner remembers the path.
   - (3) the batch file runs DEV's tool first and hands the verdict to the verification: the order of design 7
     is lost and a verdict travels on a command line. Not recommended.
-  **Built now: (1)'s shape,** with the suite's answer taken from a function the caller gives (`suite=`), so that
-  (2) is a small addition if the owner chooses it.
+  (Before the decision the code took the suite's answer from a function its caller gave; that hook is gone.)
 
 ## 4. Where it stands
 
@@ -173,6 +188,11 @@ file; says what it would change before it asks; the cutoff file when a change fr
   (`mutation_check_slice_c1.py`, beside this file): 49 planted in the three new source files, 48 caught at once;
   the one that survived (a fault while a game's records are read, taken for a refusal the job understands) is
   caught by the test added for it.
+- **25 November 2026, after the owner's decision of C-Q1 (entry 305):** `tree_verify.py` no longer has a hook for
+  a suite; its closing lines always say that the suite is not run by this command. `tests/test_trees_verify.py`
+  is 30 tests (all pass, with `test_file_form`); the planted-fault script is brought into step (47 faults; the
+  23 planted in `tree_verify.py` and in the program were run again on this state, and all 23 were caught; the
+  24 in `tree_checks.py`, which did not change, were caught in the run before).
 - **Next: C2** (what every install shares). First to settle there: design 17's own note that "the code round
   lists exactly what the suite needs from the repository, so that the temporary copy is complete; that list sits
   beside the infrastructure manifest. Tests that served only the old system are not part of the new suite." So

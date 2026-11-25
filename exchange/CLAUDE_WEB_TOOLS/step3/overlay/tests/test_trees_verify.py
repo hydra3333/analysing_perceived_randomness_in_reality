@@ -2,9 +2,10 @@
 
 What this file is for
     It shows that research/tree_verify.py carries out deployment design section 7 in its order (process check;
-    a backup attempted; the structure; every installed variant's smoke case; the suite; the forecast sample,
-    reported; the derived results; the marker; a backup attempted), that only a failed smoke case or a failed
-    suite withholds the marker and removes an older one, and that a refusal changes nothing; and that the
+    a backup attempted; the structure; every installed variant's smoke case; the forecast sample, reported;
+    the derived results; the marker; a backup attempted; the suite is not run, by the owner's decision of 25
+    November 2026), that only a failed smoke case withholds the marker and removes an older one, and that a
+    refusal changes nothing; and that the
     `checks` command of src/tree_checks_command.py writes what it found for the install tool that started it.
     Every tree here is invented and lies in a temporary folder.
 
@@ -44,16 +45,6 @@ def a_clock_that_runs():
     return lambda: fx.FIXED_TIME + timedelta(minutes=next(read))
 
 
-def suite_that(outcome: str, calls: list | None = None):
-    """A stand-in for the suite: it answers `outcome` and notes that it was asked."""
-    def suite(settings, say):
-        """Answer as told."""
-        if calls is not None:
-            calls.append(settings.role)
-        return outcome, f'the suite: {outcome}'
-    return suite
-
-
 class VerifyCase(fx.JobCase):
     """An invented QA tree whose environment has just been rebuilt: it has no marker."""
 
@@ -89,12 +80,11 @@ class VerifyCase(fx.JobCase):
         lines = [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()] if path.exists() else []
         return [line for line in lines if line['operation'] == 'VERIFICATION']
 
-    def verify(self, tree: Path, suite=None) -> tuple:
+    def verify(self, tree: Path) -> tuple:
         """Run the verification; return (the exit code, the lines said)."""
         said = []
         with fx.ImportPath(tree):
-            code = tree_verify.verify_tree(tree, now=a_clock_that_runs(), say=said.append,
-                                           suite=suite or tree_verify.suite_not_run_here)
+            code = tree_verify.verify_tree(tree, now=a_clock_that_runs(), say=said.append)
         return code, said
 
 
@@ -103,7 +93,7 @@ class AGoodTreeIsVerified(VerifyCase):
 
     def test_the_marker_is_written_with_a_backup_before_and_after_and_a_line_in_the_log(self):
         tree = self.rebuilt()
-        code, said = self.verify(tree, suite=suite_that(tree_verify.PASSED))
+        code, said = self.verify(tree)
         self.assertEqual(code, tree_verify.EXIT_VERIFIED, said)
         digest = environment_marker.read_marker(tree / '.venv')['digest']
         self.assertEqual(said[-1], f'VERIFIED: {self.marker(tree)} written; the environment\'s digest is {digest}.')
@@ -111,8 +101,7 @@ class AGoodTreeIsVerified(VerifyCase):
                          ['PRE_VERIFY.zip', 'POST_VERIFY.zip'])
         self.assertEqual(len([line for line in said if line.startswith('BACKUP MADE AND VERIFIED: ')]), 2)
         (line,) = self.log(tree)
-        self.assertEqual((line['outcome'], line['environment_digest'], line['role'], line['suite']),
-                         ('VERIFIED', digest, 'QA', 'PASSED'))
+        self.assertEqual((line['outcome'], line['environment_digest'], line['role']), ('VERIFIED', digest, 'QA'))
         self.assertEqual((line['smoke_cases_failed'], line['sample_compared'], line['derived_not_current']),
                          (0, 0, []))
         self.assertEqual(list((tree / tree_checks.SCRATCH_FOLDER).iterdir()), [])
@@ -147,17 +136,12 @@ class AGoodTreeIsVerified(VerifyCase):
                 if line.startswith(word):
                     events.append(word.strip())
 
-        def suite(settings, say):
-            """Note the suite."""
-            events.append('suite')
-            return tree_verify.PASSED, 'passed'
-
         with mock.patch.object(process_rule, 'check_no_other_process_of_tree', rule), \
                 mock.patch.object(tree_verify, 'attempt_snapshot', backup), fx.ImportPath(tree):
-            code = tree_verify.verify_tree(tree, now=a_clock_that_runs(), say=said, suite=suite)
+            code = tree_verify.verify_tree(tree, now=a_clock_that_runs(), say=said)
         self.assertEqual(code, tree_verify.EXIT_VERIFIED)
-        wanted = ['process check', 'PRE_VERIFY', 'The structure', 'smoke case', 'suite', 'forecast sample',
-                  'derived results', 'POST_VERIFY', 'VERIFIED']
+        wanted = ['process check', 'PRE_VERIFY', 'The structure', 'smoke case', 'forecast sample', 'derived results',
+                  'POST_VERIFY', 'VERIFIED']
         self.assertEqual([event for event in dict.fromkeys(events) if event in wanted], wanted)
         self.assertEqual(events[0], 'process check', 'before the first backup')
         self.assertEqual((lock_held[0], lock_held.count(True)), (False, 1),
@@ -168,9 +152,8 @@ class AGoodTreeIsVerified(VerifyCase):
         tree = self.rebuilt()
         code, said = self.verify(tree)
         self.assertEqual(code, tree_verify.EXIT_VERIFIED)
-        self.assertTrue(said[-2].startswith('THE TEST SUITE WAS NOT RUN: the tests live in DEV, and this command, '
-                                            'run in the tree, starts no program.'), said[-2])
-        self.assertEqual(self.log(tree)[0]['suite'], 'NOT RUN')
+        self.assertEqual(said[-2], tree_verify.SUITE_LINE)
+        self.assertTrue(said[-2].startswith('THE TEST SUITE IS NOT RUN BY THIS COMMAND: the tests live in DEV.'))
 
     def test_a_backup_that_cannot_be_made_is_said_and_does_not_stop_the_verification(self):
         tree = self.rebuilt()
@@ -183,18 +166,15 @@ class AGoodTreeIsVerified(VerifyCase):
 
 
 class WhatWithholdsTheMarker(VerifyCase):
-    """Design 7: "A failed smoke case or suite writes no marker and removes an older one." """
+    """Design 7: a failed smoke case writes no marker and removes an older one."""
 
     def test_a_failed_smoke_case_writes_no_marker_removes_an_older_one_and_leaves_its_folder(self):
         tree = self.tree(variants=('TOY_A_V1', ('TOY_BAD_V1', {'fail_at': [fx.FIRST_TOY_TARGET]})))
         self.assertTrue(self.marker(tree).exists(), 'an older marker')
-        asked = []
-        code, said = self.verify(tree, suite=suite_that(tree_verify.PASSED, asked))
+        code, said = self.verify(tree)
         self.assertEqual(code, tree_verify.EXIT_NOT_VERIFIED)
         self.assertFalse(self.marker(tree).exists())
-        self.assertEqual(asked, [], 'the suite is not run after a failed smoke case')
-        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-3])
-        self.assertEqual(said[-2], 'The test suite was not run: a smoke case had failed.')
+        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-2])
         self.assertTrue(said[-1].startswith(f'NOT VERIFIED: {self.marker(tree)} was not written, and an older one '
                                             f'was removed.'))
         self.assertTrue(tree_checks.smoke_folder(tree, mock.Mock(family=FAMILY, variant='TOY_BAD_V1'), GAME).is_dir())
@@ -203,20 +183,6 @@ class WhatWithholdsTheMarker(VerifyCase):
                          ('NOT_VERIFIED', None, 1))
         self.assertEqual(self.backups(tree)[-1].split('_', 3)[3], 'POST_VERIFY.zip', 'a backup is still attempted')
         self.assertEqual(fx.run_job(tree)[0], 2, 'and no job starts')
-
-    def test_a_failed_suite_writes_no_marker_and_removes_an_older_one(self):
-        tree = self.tree()
-        code, said = self.verify(tree, suite=suite_that(tree_verify.FAILED))
-        self.assertEqual(code, tree_verify.EXIT_NOT_VERIFIED)
-        self.assertFalse(self.marker(tree).exists())
-        self.assertEqual(said[-2], 'the suite: FAILED')
-        self.assertEqual(self.log(tree)[0]['suite'], 'FAILED')
-
-    def test_a_suite_that_was_not_run_does_not_withhold_it(self):
-        tree = self.rebuilt()
-        code, _ = self.verify(tree, suite=suite_that(tree_verify.NOT_RUN))
-        self.assertEqual(code, tree_verify.EXIT_VERIFIED)
-        self.assertTrue(self.marker(tree).exists())
 
 
 class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):

@@ -7338,3 +7338,39 @@ section 17.2 (unpack it into a new folder, never over the clone).
   decided until the owner says; part C2 does not wait for it.
 - Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
 - Next numbers: EX_328; entry 305; RAT-59.
+
+## 305. 25 November 2026, 20:02 - the owner decides C-Q1: option 1, Verify_Tree does not run the test suite; a manual section on changing Python versions
+
+- **The owner, 19:52, on the principle behind it:** "in the past we have discussed the principle that DEV and QA and
+  PROD (if they have the same software installed) can act identically because they have the same software, and in
+  particular in some instances QA and software will be identical apart from the config ini ... after production and
+  final method is installed, perhaps DEV and PROD will be identical too. This leads to the conjecture that QA
+  should do what PROD does since the purpose of QA is to try things in QA before installing them to PROD ... and
+  similar relationship of DEV to QA. What am I missing if I say that option 1 appears to be confirm to that ?"
+  Claude's answer: nothing important; option 1 makes `Verify_Tree` depend only on the tree it runs in, so QA
+  rehearses exactly what PROD does. Three things to know: `Verify_Tree` does not run in DEV at all (DEV has no
+  marker, by the ratified design); each tree's `.venv` is its own, so each tree verifies its own; the forecast
+  sample and the derived results are recomputed from each tree's own stored results.
+- **The owner, 19:56:** "I reckon If I install a new python I'll revisit each dev qa prod and del the .vend and run
+  the create/install-dependencies one after the other ... if that is not allowed then we have a problem." Claude's
+  answer: it is allowed and is the path the ratified design expects (specification 13): each `.venv` is built by
+  the owner in its tree; deleting it removes the marker with it; DEV first, its test evidence seen by the reviewer
+  before PROD is touched (W-23 unchanged); then, in QA and PROD, `Verify_Tree.bat` once each.
+- **The owner, 19:58,** asked what "the environment's digest includes the base Python's version and program file"
+  means, "as my initial position is that I give them python and dependencies and they run it full stop." Claude's
+  answer: after a rebuild QA and PROD need one extra command, `Verify_Tree.bat`, and then they run; DEV needs
+  nothing extra. The digest is a fingerprint of the tree's environment; a job compares it with the verified one at
+  its start and stores it in every forecast line. The costs said plainly: one command per tree per rebuild, and
+  the read of the environment at every job start (the rehearsal will show how long it takes on his PC).
+- **The owner, 20:01, DECISION:** "great. We'll need to remember to add a section to the manual along the lines
+  "CHANGING PYTHON VERSIONS -HOWTO AND MANDATORY ACTIONS" or something like that. lets do option 1."
+- **What follows.** (1) `Verify_Tree.bat` does not run the test suite and says so in capitals every time; it rests on
+  every installed variant's smoke case, the forecast sample and the derived results in full. The code is brought
+  to exactly that (the hook for a suite is removed). (2) **An amendment of deployment design section 7 and of
+  specification section 13 is owed;** its proposed wording is in the slice's notes (section 3, C-Q1). It goes to
+  the reviewer with slice C, not as a round of its own, and the owner ratifies it after the reviewer's view
+  (RAT-59 is available for it). Until then the two ratified clauses read as before and the code is a working file.
+  (3) A standing reminder is added to `exchange/OWNER_REMINDERS.md`: the operations manual gets a section on
+  changing Python versions, the how-to and the mandatory actions.
+- Nothing is authorised on the owner's PC. Nothing is in flight with the reviewer.
+- Next numbers: EX_328; entry 306; RAT-59.

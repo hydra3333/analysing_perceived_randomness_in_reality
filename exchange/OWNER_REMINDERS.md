@@ -750,6 +750,14 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
 - The operations manual's appendix of methods (owner, 25 November 2026; decision log entry 289): when the manual is
   written, after build step 3, it has an appendix listing every method family and, within each, every method, each
   with a brief description.
+- The operations manual's section on changing Python versions (owner, 25 November 2026; decision log entry 305):
+  when the manual is written it has a section on the lines of "CHANGING PYTHON VERSIONS - HOWTO AND MANDATORY
+  ACTIONS". What it must hold: the reviewer's assessment and the owner's go before anything (W-23); in each tree,
+  delete `.venv`, run `create_venv.bat`, then `install_upgrade_dependencies_into_venv.bat`; DEV first, with its test
+  evidence seen by the reviewer before PROD is touched; a backup of PROD before its rebuild; in QA and in PROD,
+  `Verify_Tree.bat` once after the rebuild, without which every launcher refuses; that `Verify_Tree` does not run
+  the test suite; that a tree restored from a backup made before the change may need its `.venv` rebuilt and
+  verified again; and how to compare the packages the three trees ended with.
 - The roles of the two AIs (owner, 25 November 2026; decision log entry 292): when the development of new methods
   is about to begin, reconsider who designs, who codes and who reviews (a reversed trial on one method;
   alternating by method; independent mathematical proposals from both, then one codes and the other reviews).

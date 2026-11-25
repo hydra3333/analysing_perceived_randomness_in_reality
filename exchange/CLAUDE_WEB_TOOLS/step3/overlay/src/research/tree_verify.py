@@ -8,20 +8,22 @@ What this file is for
     stored forecasts again, compares every stored score and prevailing line, writes the marker
     .venv\\ENVIRONMENT_VERIFIED.json, and attempts a backup again.
 
-    The test suite: the tests live in DEV, and no file under src/research starts a program (the project's own
-    test of that is in tests/test_research_job.py). So this file does not run the suite. It takes the suite's
-    answer from a function its caller gives it, and by default that function says, in capitals, that the suite
-    was not run. Whether and how Verify_Tree.bat has the suite run is the owner's open question C-Q1.
+    The test suite is not run here (the owner, decision log entry 305): the tests live in DEV, and no file of
+    the installed software starts a program. The closing lines say so in capitals every time. The suite is run
+    with a tree's own Python by the install tools in DEV, when a tree is created and at every infrastructure
+    reinstall.
 
-    Two things withhold the marker and remove an older one: a failed smoke case, and a failed suite. A
-    difference in the forecast sample or in the derived results is reported in plain words and does not
-    withhold it: after a change of the environment such a difference is what the owner's review is for, and the
-    tree's own research job and its rerun, which need a verified environment to start at all, are what act on
-    a derived result that is no longer current.
+    One thing withholds the marker and removes an older one: a failed smoke case. A difference in the forecast
+    sample or in the derived results is reported in plain words and does not withhold it: after a change of the
+    environment such a difference is what the owner's review is for, and the tree's own research job and its
+    rerun, which need a verified environment to start at all, are what act on a derived result that is no
+    longer current.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md section 13 ("Verified before use") and 12.3;
-    doc/Predictive_Randomness_Deployment_Design_v0_12.md sections 7 and 9.
+    doc/Predictive_Randomness_Deployment_Design_v0_12.md sections 7 and 9; both as the owner decided on 25
+    November 2026 that Verify_Tree does not run the suite (an amendment of those two clauses is to be reviewed
+    and ratified with build step 3, slice C).
 
 Which of the project's own modules it uses
     research.code_identity       ManifestRefused
@@ -55,21 +57,13 @@ from research.snapshot import attempt_snapshot, mark_due
 
 # The tree's log of installs, verifications and withdrawals (deployment design section 2).
 TREE_LOG_NAME = 'INSTALL_LOG.jsonl'
-# What became of the suite: it ran and passed; it ran and failed, or could not be run; it was not run.
-PASSED, FAILED, NOT_RUN = 'PASSED', 'FAILED', 'NOT RUN'
-# The exit codes of Verify_Tree.bat: the marker was written; a smoke case or the suite failed and there is no
-# marker; the command refused and changed nothing.
+# What the closing lines say of the test suite, every time.
+SUITE_LINE = ('THE TEST SUITE IS NOT RUN BY THIS COMMAND: the tests live in DEV. This verification rests on the smoke '
+              'cases, the forecast sample and the derived results. The suite is run with a tree\'s own Python when '
+              'the tree is created and at every infrastructure reinstall.')
+# The exit codes of Verify_Tree.bat: the marker was written; a smoke case failed and there is no marker; the
+# command refused and changed nothing.
 EXIT_VERIFIED, EXIT_NOT_VERIFIED, EXIT_REFUSED = 0, 1, 2
-
-
-def suite_not_run_here(settings, say) -> tuple:
-    """The suite's answer when nothing runs it: it was not run, and the summary says so.
-
-    settings: the tree's settings.  say: prints a line.  Returns (NOT_RUN, one line for the closing summary).
-    """
-    return NOT_RUN, ('THE TEST SUITE WAS NOT RUN: the tests live in DEV, and this command, run in the tree, starts '
-                     'no program. The smoke cases, the forecast sample and the derived results are what this '
-                     'verification rests on.')
 
 
 def log_verification(settings, outcome: str, digest: str | None, summary: dict, now) -> None:
@@ -82,7 +76,7 @@ def log_verification(settings, outcome: str, digest: str | None, summary: dict, 
         stream.write(json.dumps(record, ensure_ascii=True, sort_keys=True) + '\n')
 
 
-def verify_locked(settings, now, say, suite) -> tuple:
+def verify_locked(settings, now, say) -> tuple:
     """The part of a verification made while the tree's job lock is held.
 
     Returns (the exit code, the closing lines). Refuses with what the checks it calls refuse; a refusal leaves
@@ -102,15 +96,11 @@ def verify_locked(settings, now, say, suite) -> tuple:
     marker = settings.venv_dir / MARKER_NAME
     say('The smoke cases: every installed variant is made to forecast once, on an invented table.')
     smoke_failures = tree_checks.smoke_cases(software, settings.tree_root, say=say)
+    summary = {'smoke_cases_failed': len(smoke_failures)}
     if smoke_failures:
-        suite_outcome, suite_line = NOT_RUN, 'The test suite was not run: a smoke case had failed.'
-    else:
-        suite_outcome, suite_line = suite(settings, say)
-    summary = {'smoke_cases_failed': len(smoke_failures), 'suite': suite_outcome}
-    if smoke_failures or suite_outcome == FAILED:
         marker.unlink(missing_ok=True)
         log_verification(settings, 'NOT_VERIFIED', None, summary, now)
-        return EXIT_NOT_VERIFIED, smoke_failures + [suite_line] + [
+        return EXIT_NOT_VERIFIED, smoke_failures + [
             f'NOT VERIFIED: {marker} was not written, and an older one was removed. No job starts in this tree '
             f'until Verify_Tree.bat passes. Nothing of the research was changed.']
     say('The stored results: read as the research job reads them; nothing is written.')
@@ -122,7 +112,7 @@ def verify_locked(settings, now, say, suite) -> tuple:
     summary.update(sample_compared=compared, sample_differences=len(differences),
                    derived_not_current=changed, unreadable=sorted(unreadable))
     log_verification(settings, 'VERIFIED', digest, summary, now)
-    closing = [suite_line]
+    closing = [SUITE_LINE]
     if differences:
         closing.append(f'THE FORECAST SAMPLE: {len(differences)} of {compared} stored forecast(s) are NOT what this '
                        f'software computes in this environment. This does not withhold the marker; it is for '
@@ -141,11 +131,10 @@ def verify_locked(settings, now, say, suite) -> tuple:
     return EXIT_VERIFIED, closing
 
 
-def verify_tree(tree_root: Path, now=None, say=print, suite=suite_not_run_here) -> int:
+def verify_tree(tree_root: Path, now=None, say=print) -> int:
     """Verify the tree's Python environment (deployment design section 7), in its order.
 
     tree_root: the tree the launcher lies in.  now: gives the present time (UTC); a test passes a fixed one.
-    suite: a function (settings, say) that answers (PASSED, FAILED or NOT_RUN, one line for the summary).
     Returns EXIT_VERIFIED, EXIT_NOT_VERIFIED or EXIT_REFUSED.
     """
     now = now or (lambda: datetime.now(timezone.utc))
@@ -168,7 +157,7 @@ def verify_tree(tree_root: Path, now=None, say=print, suite=suite_not_run_here) 
     say(attempt_snapshot(settings, 'PRE_VERIFY', now).line())
     try:
         with job_lock(settings.tree_root, 'verify tree', started):
-            exit_code, closing = verify_locked(settings, now, say, suite)
+            exit_code, closing = verify_locked(settings, now, say)
     except (SettingsRefused, LaunchRefused, tree_checks.ChecksRefused, ManifestRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('VERIFY TREE - END - refused; the environment\'s marker is as it was.')

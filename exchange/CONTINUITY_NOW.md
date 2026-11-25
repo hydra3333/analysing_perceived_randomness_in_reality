@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 19:43 Australia/Adelaide (entry 304: slice C part C1 proved; question C-Q1 waits for the owner; next C2).
+**Last updated:** 25 November 2026, 20:02 Australia/Adelaide (entry 305: C-Q1 decided, option 1; an amendment owed with slice C; next C2).
 
 ## For the owner: NOW
 
+- **C-Q1 IS DECIDED (entry 305; 25 November 2026): option 1, `Verify_Tree.bat` does not run the test suite.**
+  An amendment of design section 7 and specification section 13 is owed; its proposed wording is in the slice's
+  notes (section 3) and goes to the reviewer with slice C (RAT-59 after his view). A reminder is added: the
+  operations manual gets a section on changing Python versions. **Nothing waits on the owner. Next: part C2.**
 - **SLICE C, PART C1 IS PROVED (entry 304; 25 November 2026).** The whole suite found one fault (the tree's
   verification started a program, against the project's own rule); corrected. **Waiting on the owner: question
   C-Q1** (whether `Verify_Tree` runs DEV's test suite, and how; Claude recommends that it does not, with a short
