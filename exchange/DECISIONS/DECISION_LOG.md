@@ -7830,3 +7830,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer:** nothing.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 326; RAT-61.
+
+## 326. 26 November 2026, 06:30 - OWNER: how QA works: it runs on whatever data is in it, just like PROD; how the data got there is immaterial; the updater is not PROD's alone. Claude's option 1 of entry 324 is withdrawn
+
+- **The owner, 06:29,** relaying his exchange with the reviewer chat and opening with: "Hmm. We are not working well
+  together now." To the reviewer he had written: "Some of our (all 3 of us) exchanges do not seem to be getting
+  through ...  I had repeatedly indicated QA had the same software as prod and acted like prod (or word to that
+  efefct)".
+- **The reviewer's first answer in its chat** (not an EX message) concurred that QA must be able to run the updater,
+  and recommended that QA's `ENVIRONMENT.ini` choose whether its research job gets results from the updater or from
+  the checked copy from PROD. That is the same arrangement Claude had recommended as option 1 (entry 324).
+- **THE OWNER'S CORRECTION, in his words:** "no, that is 100% incorrect. a research job runs in QA with whatever data
+  is in QA, just like prod.  whether the data is put there by a copy-back job or a catchup job or whatever is
+  immaterial."
+- **The reviewer then withdrew its recommendation** (in its chat): QA is an independently operating tree equivalent to
+  PROD; the research job works with the accepted results in its own tree; the updater runs identically in QA and PROD,
+  each updating only its own tree; copying or reseeding from PROD is a separate operation and not an implicit step of
+  QA's research job; no results-source selector in QA's settings; PROD stays protected against writes from any other
+  tree; QA is optional and never a gate. It asks Claude to reconcile the affected ratified clauses before slice D is
+  written.
+- **Claude's recommendation of entry 324 (option 1, a setting in QA's file that chooses the results source) is
+  WITHDRAWN:** it tied the research job to how the data arrives, which is what the owner rejects. Claude also notes
+  its own miss: on 25 November the owner stated the same principle (QA does what PROD does; entry 305) and Claude
+  applied it to `Verify_Tree` only, without holding the updater clauses against it.
+- **The owner's question to Claude:** "Are you clear on how QA works now ?" Claude answers in the chat by stating its
+  understanding back for him to check, with two points for him to confirm before any wording is drafted: (1) that QA's
+  research job itself starts the updater exactly as PROD's does, with `--no-update` to leave it out, so that such a
+  job in QA visits the lottery website; (2) what DEV does (stay as ratified, copying from PROD and never contacting
+  the website, or something else).
+- **What this will need, NOT STARTED:** an amendment of the ratified clauses that make the updater PROD-only and make
+  the copy from PROD the results step of QA's job (specification v0.6: the trees' table and its "two limits" sentence,
+  the job's Results step, the tests list, decision row A; deployment design v0.12: the settings examples and the
+  launcher's guard; the build plan of step 3, section 5), the reviewer's view and the owner's ratification (it would
+  be RAT-61), before slice D is written. It also touches code already installed in DEV by build step 2
+  (`src/research/results_step.py`, the copy as QA's results step) and slice C's `Init_Tree`, which writes `[results]
+  copy_from` into a QA tree's settings. Designing that change is a model-rule point: Claude says "Suggest switching to
+  Fable (High) for this" and waits.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 327; RAT-61.

@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:21 Australia/Adelaide (entry 325: EX_333, slice C PASS; the owner's open question on the updater in QA).
+**Last updated:** 26 November 2026, 06:30 Australia/Adelaide (entry 326: the owner on how QA works; an amendment is needed before slice D).
 
 ## For the owner: NOW
 
+- **THE OWNER ON HOW QA WORKS (entry 326; 26 November 2026); read this before touching slice D.** QA has PROD's
+  software and acts as PROD does. A research job in QA runs on whatever accepted results are in QA; how they got there
+  (the updater, a copy back from PROD, a catch-up) is immaterial. The updater is not PROD's alone. Copying from PROD
+  is a separate operation, not a step of QA's job. No results-source setting. Claude's option 1 of entry 324 is
+  withdrawn; the reviewer concurs with the owner. **Waiting on the owner:** his confirmation of two points (does QA's
+  job start the updater as PROD's does; what DEV does), then his go, the model rule first, for the amendment of the
+  ratified clauses (RAT-61) before slice D. **Waiting on the reviewer:** nothing.
 - **SLICE C HAS PASSED (EX_333; entry 325; 26 November 2026).** Slices A, B and C of build step 3 have passed
   independent review; nothing is installed. **Next: slice D (the clean-sheet updater), on the owner's go, the model
   rule first.** **Waiting on the owner:** first his decision on the open question of entry 324 (should QA be able to
