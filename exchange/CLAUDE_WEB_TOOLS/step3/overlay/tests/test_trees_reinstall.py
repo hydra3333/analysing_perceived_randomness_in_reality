@@ -29,7 +29,8 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
     sys.path.insert(0, str(REPOSITORY_ROOT / 'deploy'))
 
-import install_common as common                              # noqa: E402  (after the path line above)
+import install                                               # noqa: E402  (after the path line above)
+import install_common as common                              # noqa: E402
 import install_readiness                                     # noqa: E402
 import recovery_kit                                          # noqa: E402
 import reinstall_infra as reinstall                          # noqa: E402
@@ -38,7 +39,7 @@ from research import derived_check, installed_files, job_lock, launch_guard, set
 from research import status_file                             # noqa: E402
 from test_trees_init import KIT, checks_in_this_process      # noqa: E402
 from test_trees_install import InstallCase                   # noqa: E402
-from test_trees_install_common import FAMILY, sha, whole_tree    # noqa: E402
+from test_trees_install_common import FAMILY, SECOND, sha, whole_tree    # noqa: E402
 
 GAME = 'POWERBALL'
 OTHER, DERIVED, FORECAST = 'src/toy_other.py', 'src/toy_derived_code.py', 'src/toy_forecast_code.py'
@@ -71,11 +72,14 @@ def changed_from(draw: int, at_call: int = 1):
 class ReinstallCase(InstallCase):
     """A created QA tree whose job has run, so that it holds forecasts, scores, a ledger and reports."""
 
+    JOB_FIRST = True                # False in a case whose tree is as Init_Tree leaves it: no job has run in it
+
     def setUp(self):
-        """Create the tree and run its job."""
+        """Create the tree and, unless the case says otherwise, run its job."""
         super().setUp()
-        code, said = fixtures.run_job(self.target, games=(GAME,))
-        self.assertEqual(code, 0, said)
+        if self.JOB_FIRST:
+            code, said = fixtures.run_job(self.target, games=(GAME,))
+            self.assertEqual(code, 0, said)
 
     def change_in_dev(self, relative: str, text: str = '# changed in DEV\n') -> None:
         """Change one infrastructure file of DEV and mark the infrastructure ready again."""
@@ -506,6 +510,153 @@ class TheAnswerMustStillRestOnWhatWasShown(ReinstallCase):
             path.unlink() if kept is None else path.write_bytes(kept)
         self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, 'another DEV'), before)
         self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
+
+
+class ThePlanMustStillFitTheTreeWhenItIsReserved(ReinstallCase):
+    """EX_331 C-B01 (a): the plan is worked out before the target is reserved. Under the first hold, before the
+    statement, the backup and the question, the tree must still be what the plan was worked out from."""
+
+    def refused_under_the_first_hold(self, happens, *words) -> list:
+        """Run the reinstall with `happens` taking place just before its first reservation; expect a refusal
+        there: no statement, no suite, no backup, no question, nothing of the plan written."""
+        real, holds = common.reserved, []
+
+        @contextlib.contextmanager
+        def something_happens_first(tree_settings, purpose, started, say=print):
+            """Between this command's reading of the tree and its first hold, something happens in the tree."""
+            holds.append(purpose)
+            if len(holds) == 1:
+                happens()
+            with real(tree_settings, purpose, started, say):
+                yield
+
+        backups = self.backups_made()
+        with mock.patch.object(common, 'reserved', something_happens_first):
+            code, said = self.reinstall(*words, suites=())          # a suite run or a question fails the test
+        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
+        self.assertEqual(said[-1], 'REINSTALL INFRA - END - refused. Nothing was overwritten.')
+        self.assertEqual([purpose for purpose in holds if purpose.startswith('Reinstall_Infra')],
+                         ['Reinstall_Infra QA: what it would change'], 'refused under its first hold')
+        self.assertFalse([line for line in said if line.startswith(('THE STATEMENT', 'What it would change'))], said)
+        self.assertEqual([kind for kind in self.backups_made()[len(backups):] if 'INFRA' in kind], [])
+        for lock in (self.target / 'records' / job_lock.JOB_LOCK_NAME, self.target / job_lock.UPDATER_LOCK):
+            self.assertFalse(lock.exists())
+        return said
+
+    def test_another_installs_barrier_that_appeared_before_the_first_hold_refuses_and_is_left_exactly(self):
+        self.change_in_dev(OTHER)
+        other = common.make_plan(common.INSTALL, 'QA', self.target, {'src/x.py': 'aa'})
+        barrier, written, before = self.target / common.BARRIER_PATH, [], whole_tree(self.target)
+
+        def an_install_begins_and_stops():
+            """Another install writes its barrier and stops, having copied nothing yet."""
+            common.write_barrier(self.target, other, 'meanwhile')
+            written.append(barrier.read_bytes())
+
+        said = self.refused_under_the_first_hold(an_install_begins_and_stops)
+        self.assertIn('is not what this command read a moment ago', '\n'.join(said))
+        self.assertEqual(barrier.read_bytes(), written[0], 'the other operation\'s barrier, byte for byte')
+        after = whole_tree(self.target)
+        self.assertEqual(sorted(path for path in set(before) | set(after) if before.get(path) != after.get(path)),
+                         [common.BARRIER_PATH], 'nothing but the other install\'s own barrier is new')
+
+    def test_an_install_that_finished_before_the_first_hold_refuses_and_the_next_run_plans_afresh(self):
+        self.change_in_dev(OTHER)
+        self.add_variant(SECOND)
+        real_decision = common.suite_if_it_is_the_trees
+
+        def an_install_runs_and_finishes():
+            """A whole ordinary install of a new variant, from its question to its list. (DEV's infrastructure
+            has moved on, so the suite is not the tree's and that install, deciding for itself, does not run it.)"""
+            with mock.patch.object(common, 'suite_if_it_is_the_trees', real_decision):
+                code, lines = self.install(answers=['YES'], suite='real')
+            self.assertEqual(code, install.EXIT_INSTALLED, lines)
+
+        said = self.refused_under_the_first_hold(an_install_runs_and_finishes)
+        self.assertIn('list of installed files changed since this command read it', '\n'.join(said))
+        self.assertNotEqual((self.target / OTHER).read_bytes(), (self.dev / OTHER).read_bytes())
+        self.assertIsNone(common.read_barrier(self.target))
+        code, said = self.reinstall(answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        self.infrastructure_is_devs()
+        self.assertIn(SECOND, json.dumps(installed_files.read_list(self.target)), 'the variant installed meanwhile')
+
+    def test_software_changed_under_a_new_plan_before_the_first_hold_refuses(self):
+        self.change_in_dev(OTHER)
+
+        def a_file_is_changed():
+            """A file of the tree's software is changed by hand."""
+            (self.target / DERIVED).write_bytes(b'# changed by hand\r\n')
+
+        said = self.refused_under_the_first_hold(a_file_is_changed)
+        self.assertIn('software changed since this command worked its plan out', '\n'.join(said))
+        self.assertEqual((self.target / DERIVED).read_bytes(), b'# changed by hand\r\n', 'and it is not put right')
+
+    def test_files_changed_under_a_replacing_plan_before_the_first_hold_refuse_and_the_barrier_stays(self):
+        self.change_in_dev(OTHER)
+        self.assertEqual(self.reinstall(answers=['YES'], suites=(True, False))[0], reinstall.EXIT_STOPPED)
+        unfinished = common.read_barrier(self.target)
+        self.change_in_dev(OTHER, '# corrected in DEV\n')
+
+        def the_file_is_changed():
+            """The file the replacing plan would overwrite is changed after that plan was worked out."""
+            (self.target / OTHER).write_bytes(b'# changed underneath the plan\r\n')
+
+        said = self.refused_under_the_first_hold(the_file_is_changed, '--replace-unfinished')
+        self.assertIn('software changed since this command worked its plan out', '\n'.join(said))
+        self.assertEqual(common.read_barrier(self.target), unfinished)
+        self.assertEqual((self.target / OTHER).read_bytes(), b'# changed underneath the plan\r\n')
+
+
+class ATreeInWhichNoJobHasYetRun(ReinstallCase):
+    """EX_331 C-B01 (b): a tree as Init_Tree leaves it holds no stored research and no folder for it. Its
+    infrastructure can be reinstalled all the same; nothing stored is nothing to compare, not a fault."""
+
+    JOB_FIRST = False
+
+    def test_its_infrastructure_is_reinstalled_and_no_history_is_made_for_it(self):
+        research = self.target / 'results' / 'research'
+        self.assertFalse(research.exists(), 'the tree as it was created')
+        self.change_in_dev(OTHER)
+        code, said = self.reinstall(answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+        self.assertIn(f'THE STATEMENT: {reinstall.NO_CHANGE}', said)
+        self.infrastructure_is_devs()
+        self.assertEqual((self.target / OTHER).read_bytes(), (self.dev / OTHER).read_bytes())
+        self.assertEqual([path for path in research.rglob('*') if path.is_file()] if research.exists() else [], [],
+                         'no forecast, score, ledger or report was made for a tree that had none')
+        self.assertEqual(fixtures.run_job(self.target, games=(GAME,))[0], 0, 'and its first job runs afterwards')
+
+    def test_its_first_job_run_while_the_question_stood_refuses_and_the_next_run_states_afresh(self):
+        self.change_in_dev(DERIVED)
+
+        def the_first_job_runs_then_yes(prompt):
+            """While the owner reads the warning, the tree's first research job runs and ends."""
+            code, lines = fixtures.run_job(self.target, games=(GAME,))
+            self.assertEqual(code, 0, lines)
+            return 'YES'
+
+        derived = (self.target / DERIVED).read_bytes()
+        code, said = self.reinstall(ask=the_first_job_runs_then_yes, suites=(True,))
+        self.assertEqual(code, reinstall.EXIT_REFUSED, said)
+        self.assertIn('something the statement rested on changed', '\n'.join(said))
+        self.assertEqual((self.target / DERIVED).read_bytes(), derived)
+        self.assertIsNone(common.read_barrier(self.target))
+        code, said = self.reinstall(answers=['YES'])
+        self.assertEqual(code, reinstall.EXIT_REINSTALLED, said)
+
+    def test_the_absent_research_folder_is_read_as_empty_and_not_made_but_a_folder_that_must_be_there_refuses(self):
+        dev = common.dev_infrastructure(self.dev)['fingerprint']
+        tree_settings = settings.read_settings(self.target)
+        research = self.target / 'results' / 'research'
+        before = reinstall.what_the_statement_rests_on(tree_settings, dev)
+        self.assertEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
+        self.assertFalse(research.exists(), 'reading it does not make it')
+        self.assertEqual(fixtures.run_job(self.target, games=(GAME,))[0], 0)
+        self.assertNotEqual(reinstall.what_the_statement_rests_on(tree_settings, dev), before)
+        (self.target / 'source_data').rename(self.target / 'source_data_away')
+        with self.assertRaisesRegex(common.InstallRefused, 'could not be listed'):
+            reinstall.what_the_statement_rests_on(tree_settings, dev)
 
 
 class ThePrintOutsAreMadeAgainWhenTheirCodeChanges(ReinstallCase):

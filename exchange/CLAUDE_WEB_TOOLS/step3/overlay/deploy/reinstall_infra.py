@@ -4,7 +4,8 @@ What this file is for
     Infrastructure is the files on DEV's manifest. This command overwrites installed files, so before the owner
     answers it tells him what it would change in the science. It works out the plan (files to add, to overwrite
     and to remove, each with its class, both hashes and the text differences); refuses any plan that touches a
-    file that can change a forecast; assembles the software as it would be in a temporary folder and, with the
+    file that can change a forecast; reserves the target and makes sure that the tree is still what the plan was
+    worked out from; assembles the software as it would be in a temporary folder and, with the
     target's own Python and the target's own data, read only, runs the suite, compares every stored score and
     prevailing line, and recomputes the fixed sample of stored forecasts; says one of two plain statements;
     attempts a recovery kit and a backup; gives the warning and asks once. Then it reserves the target again
@@ -72,6 +73,8 @@ NO_CHANGE = 'No stored result changes.'
 # caches and without the reports folders (print-outs, made again from the lists).
 WATCHED_FOLDERS = ('src', 'source_data', 'results/research')
 NOT_WATCHED = ('__pycache__', 'reports')
+# A tree in which no job has yet run holds no stored research: that folder may be absent, and is then read as empty.
+MAY_BE_ABSENT = ('results/research',)
 # The start of the name of the temporary folder the software as it would be is assembled in.
 ASSEMBLY_PREFIX = 'a_p_r_i_r_as_it_would_be_'
 # The warning of specification 12.4, said before the one question.
@@ -272,7 +275,9 @@ def what_the_statement_rests_on(settings, dev_fingerprint: str) -> str:
     research (every list, the prevailing ledger, the not-current markers; the reports are print-outs and are
     left out); and the marker of the verified environment. Taken while the lock is held for step 3, and again
     under the second hold before anything is written (design section 6, step 6; EX_329 C-B01): equal values mean
-    that no job, install, withdrawal, results update or change of environment came between.
+    that the bytes it covers are the same at both readings (the environment by its marker, not by its files).
+    A tree no job has yet run in has no stored research; that folder's absence is read as nothing stored.
+    Refuses (InstallRefused) if a folder that must be there cannot be listed.
     """
     root = settings.tree_root
     paths = [root / code_identity.MANIFEST_PATH, root / installed_files.LIST_PATH, root / common.BARRIER_PATH,
@@ -282,6 +287,8 @@ def what_the_statement_rests_on(settings, dev_fingerprint: str) -> str:
         raise common.InstallRefused(f'a folder of the tree could not be listed ({error}). Nothing was overwritten.')
 
     for folder in WATCHED_FOLDERS:
+        if folder in MAY_BE_ABSENT and not os.path.lexists(root / folder):
+            continue                # nothing stored yet (EX_331 C-B01 (b)); a job that fills it changes the value
         for current, folders, names in os.walk(root / folder, onerror=stop):
             folders[:] = [name for name in folders if name not in NOT_WATCHED]
             paths += [Path(current) / name for name in names]
@@ -290,6 +297,32 @@ def what_the_statement_rests_on(settings, dev_fingerprint: str) -> str:
         line = f'{path.relative_to(root).as_posix()}\t{_sha256(path) or "no file"}\n'
         digest.update(line.encode('utf-8'))
     return digest.hexdigest()
+
+
+def check_the_tree_is_as_it_was_read(settings, current: dict, unfinished, as_they_lay: dict) -> None:
+    """Under the first hold, before the statement is made: the tree must still be what the plan was worked out
+    from (EX_331 C-B01 (a)). The plan is worked out before the target is reserved; an install that began or
+    finished in that gap is found here, before anything is said, backed up, asked or written.
+
+    settings: the target's settings.  current, unfinished: the list of installed files and the barrier (or None)
+    as this command read them.  as_they_lay: for a plan that replaces an unfinished one, {path: the SHA-256 found
+    for it, or None}; for a new reinstall an empty dict, and the software is compared with its list again.
+    Refuses (InstallRefused), nothing written and the barrier that lies there left as it is.
+    """
+    root, role = settings.tree_root, settings.role
+    again = 'Nothing was written. Run the command again: it works its plan out afresh.'
+    if common.read_barrier(root) != unfinished:
+        raise common.InstallRefused(
+            f'{root / common.BARRIER_PATH} is not what this command read a moment ago: another install or reinstall '
+            f'began, went on or ended in the {role} tree meanwhile. {again}')
+    if installed_files.read_list(root) != current:
+        raise common.InstallRefused(f'the {role} tree\'s list of installed files changed since this command read '
+                                    f'it a moment ago: an install was finished there meanwhile. {again}')
+    moved = (sorted(path for path, digest in as_they_lay.items() if _sha256(root / path) != digest)
+             if unfinished is not None else installed_files.differences(root, current))
+    if moved:
+        raise common.InstallRefused(f'the {role} tree\'s software changed since this command worked its plan out '
+                                    f'({len(moved)} difference(s)):\n  ' + '\n  '.join(moved) + f'\n{again}')
 
 
 def mark_not_current(tree_root: Path, statement: dict, say=print) -> list:
@@ -403,6 +436,7 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
             by_the_list = common.make_plan(common.REINSTALL_INFRA, role, root,
                                            *changes_between(infrastructure_on_list(current), dev['files']),
                                            infrastructure_fingerprint=dev['fingerprint'])
+            as_they_lay = {}
             if unfinished is None:
                 plan = by_the_list
                 check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
@@ -427,8 +461,9 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                     raise common.InstallRefused(f'{root / common.BARRIER_PATH} holds an unfinished operation.')
                 paths = set(infrastructure_on_list(current)) | set(dev['files']) | {
                     entry['path'] for word in ('add', 'overwrite', 'remove') for entry in replaced[word]}
+                as_they_lay = {path: _sha256(root / path) for path in paths}
                 plan = common.make_plan(common.REINSTALL_INFRA, role, root,
-                                        *changes_between({path: _sha256(root / path) for path in paths}, dev['files']),
+                                        *changes_between(as_they_lay, dev['files']),
                                         infrastructure_fingerprint=dev['fingerprint'])
                 check_plan_may_be_carried_out(plan, classes, in_tree, dev['classes'])
                 say('AN UNFINISHED REINSTALL IS BEING REPLACED (--replace-unfinished). THE UNFINISHED PLAN:')
@@ -437,6 +472,9 @@ def main(arguments, view, say=print, ask=input, now=None) -> int:
                 say('THE PLAN NOW, worked out from the files as they lie in the tree:')
             show_plan(plan, classes, dev_root, root, say)
             with common.reserved(settings, f'Reinstall_Infra {role}: what it would change', started, say):
+                # The plan above was worked out before this hold. Under it, and before the statement is made, the
+                # tree must still be what that plan was worked out from (EX_331 C-B01 (a)).
+                check_the_tree_is_as_it_was_read(settings, current, unfinished, as_they_lay)
                 rested_on = what_the_statement_rests_on(settings, dev['fingerprint'])
                 statement = what_it_would_change(view, settings, expected, dev, say)
             changed = [entry['path'] for word in ('add', 'overwrite', 'remove') for entry in plan[word]]
