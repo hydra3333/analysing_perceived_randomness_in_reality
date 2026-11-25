@@ -20,6 +20,7 @@ from unittest import mock
 
 import research_fixtures as fx
 from research import derived_check, ov1_ledger, tree_checks
+from research.reader import ResultsRefused
 from research.settings import read_settings
 from research.status_file import StatusRefused
 
@@ -108,7 +109,9 @@ class TheSmokeCase(ChecksCase):
         self.assertIn(str(folder), failures[0], 'the folder left behind is named')
         self.assertEqual(sorted(entry.name for entry in folder.iterdir()),
                          sorted([tree_checks.SMOKE_TABLE_NAME, tree_checks.SMOKE_NOTE_NAME]))
-        self.assertEqual((folder / tree_checks.SMOKE_TABLE_NAME).read_bytes(),
+        kept = (folder / tree_checks.SMOKE_TABLE_NAME).read_bytes()
+        self.assertEqual(kept.count(b'\n'), kept.count(b'\r\n'), 'a scratch CSV file ends each line CRLF (EX_329 C-C04)')
+        self.assertEqual(kept.replace(b'\r\n', b'\n'),
                          tree_checks.invented_results(GAME, fx.FIRST_TOY_TARGET).raw)
         note = (folder / tree_checks.SMOKE_NOTE_NAME).read_bytes()
         self.assertEqual(note.count(b'\n'), note.count(b'\r\n'), 'the note is a Windows text file')
@@ -210,6 +213,35 @@ class TheSoftwareIsReadAndNothingIsMade(ChecksCase):
                 with fx.ImportPath(tree), self.assertRaises(StatusRefused):
                     self.stored(tree)
                 self.assertFalse(fx.status_path(tree, FAMILY, 'TOY_A_V1').exists())
+
+
+class TheResultsOnFileMustOnlyHaveGrown(ChecksCase):
+    """EX_329 C-C01: the checks never call a game well whose results the research job refuses."""
+
+    def test_a_valid_results_pair_with_an_earlier_draw_changed_is_refused_as_the_job_refuses_it(self):
+        tree = self.worked_tree()
+        last = fx.LAST_AT_START + ARRIVED
+        fx.write_results(tree, GAME, last, version=3, reseed_from=1150)     # a valid pair; draw 1150 on is other
+        before = whole_tree(tree)
+        said = []
+        with fx.ImportPath(tree):
+            software = self.software(tree)
+            with self.assertRaisesRegex(ResultsRefused, 'results changed other than by growing'):
+                tree_checks.read_stored(software, read_settings(tree), say=lambda line: None)
+            stored, unreadable = tree_checks.read_stored_game_by_game(software, read_settings(tree), say=said.append)
+            found = tree_checks.run_checks(tree, read_settings(tree), None, True, True, say=lambda line: None)
+        self.assertEqual(stored, {})
+        self.assertIn('results changed other than by growing', unreadable[GAME])
+        self.assertIn(f'  {GAME}: its stored records could not be read, so nothing of it was compared', said[0])
+        self.assertEqual((found['sample'], found['derived'], list(found['unreadable'])),
+                         ({'compared': 0, 'differences': []}, {}, [GAME]), 'nothing of the game is called well')
+        self.assertEqual(whole_tree(tree), before, 'and the check wrote nothing')
+
+    def test_results_that_only_grew_are_read_as_before(self):
+        tree = self.worked_tree()
+        fx.write_results(tree, GAME, fx.LAST_AT_START + ARRIVED + 2, version=3)
+        _, stored = self.stored(tree)
+        self.assertEqual(list(stored), [GAME])
 
 
 class TheForecastSample(ChecksCase):

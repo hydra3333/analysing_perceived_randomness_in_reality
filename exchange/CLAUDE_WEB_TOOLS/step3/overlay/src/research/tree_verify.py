@@ -82,6 +82,10 @@ def verify_locked(settings, now, say) -> tuple:
     Returns (the exit code, the closing lines). Refuses with what the checks it calls refuse; a refusal leaves
     the marker as it was.
     """
+    # Asked again now that the lock is held: an operation may have begun, or an orphan marker been written, while
+    # the first backup was being made.
+    check_no_unfinished_operation(settings.tree_root)
+    check_no_orphan_marker(settings.tree_root)
     looked_at = process_rule.check_no_other_process_of_tree(settings.tree_root)
     say(f'No other Python process of this tree is running ({looked_at} processes of this PC looked at).')
     check_software_is_as_installed(settings)
@@ -100,7 +104,7 @@ def verify_locked(settings, now, say) -> tuple:
     if smoke_failures:
         marker.unlink(missing_ok=True)
         log_verification(settings, 'NOT_VERIFIED', None, summary, now)
-        return EXIT_NOT_VERIFIED, smoke_failures + [
+        return EXIT_NOT_VERIFIED, smoke_failures + [SUITE_LINE] + [
             f'NOT VERIFIED: {marker} was not written, and an older one was removed. No job starts in this tree '
             f'until Verify_Tree.bat passes. Nothing of the research was changed.']
     say('The stored results: read as the research job reads them; nothing is written.')

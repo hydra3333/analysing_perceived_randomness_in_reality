@@ -174,7 +174,8 @@ class WhatWithholdsTheMarker(VerifyCase):
         code, said = self.verify(tree)
         self.assertEqual(code, tree_verify.EXIT_NOT_VERIFIED)
         self.assertFalse(self.marker(tree).exists())
-        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-2])
+        self.assertIn(f'{FAMILY}/TOY_BAD_V1 for {GAME}: the smoke case failed', said[-3])
+        self.assertEqual(said[-2], tree_verify.SUITE_LINE, 'the command says so in both verdicts (EX_329 C-C04)')
         self.assertTrue(said[-1].startswith(f'NOT VERIFIED: {self.marker(tree)} was not written, and an older one '
                                             f'was removed.'))
         self.assertTrue(tree_checks.smoke_folder(tree, mock.Mock(family=FAMILY, variant='TOY_BAD_V1'), GAME).is_dir())
@@ -240,6 +241,16 @@ class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):
                       f'job will refuse that game for the same reason: ', '\n'.join(said))
         self.assertEqual(self.log(tree)[0]['unreadable'], [GAME])
 
+    def test_results_changed_other_than_by_growing_are_said_and_do_not_withhold_the_marker(self):
+        tree = self.worked()
+        fx.write_results(tree, GAME, fx.LAST_AT_START + 3, version=3, reseed_from=1150)
+        code, said = self.verify(tree)
+        self.assertEqual(code, tree_verify.EXIT_VERIFIED, said)
+        self.assertIn(f'{GAME}: its stored records could not be read, so nothing of it was compared; the research '
+                      f'job will refuse that game for the same reason: {GAME}: results changed other than by growing',
+                      '\n'.join(said))
+        self.assertTrue(self.marker(tree).exists(), 'the marker certifies the environment (C-R5)')
+
     def test_a_fault_while_a_games_records_are_read_is_a_fault_and_no_marker_is_written(self):
         tree = self.worked()
         with mock.patch.object(tree_checks, 'read_game', side_effect=KeyError('an invented fault')):
@@ -247,6 +258,35 @@ class WhatIsReportedAndDoesNotWithholdIt(VerifyCase):
                 self.verify(tree)
         self.assertFalse(self.marker(tree).exists(), 'only the refusals the job understands are reported')
         self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists(), 'the lock is let go')
+
+
+class WhatAppearsWhileTheFirstBackupIsMade(VerifyCase):
+    """EX_329 C-C03: the unfinished-operation and orphan checks are made again under the job lock."""
+
+    def test_an_operation_begun_or_an_orphan_marker_written_meanwhile_refuses_and_the_marker_is_as_it_was(self):
+        for number, relative in enumerate(('records/INSTALL_IN_PROGRESS.json', job_lock.ORPHAN_MARKER)):
+            tree = self.tree(name=f'tree_{number}')
+            real = snapshot.attempt_snapshot
+
+            def backup_then_it_appears(settings, job, now=None):
+                """Make the backup; then, before the lock is taken, the file appears."""
+                result = real(settings, job, now)
+                (tree / relative).parent.mkdir(parents=True, exist_ok=True)
+                (tree / relative).write_text('[{"run": "invented"}]', encoding='ascii')
+                return result
+
+            marker = self.marker(tree).read_bytes()
+            with mock.patch.object(tree_verify, 'attempt_snapshot', backup_then_it_appears):
+                code, said = self.verify(tree)
+            self.assertEqual(code, tree_verify.EXIT_REFUSED, said)
+            self.assertIn(Path(relative).name, '\n'.join(said))
+            self.assertEqual(said[-1], 'VERIFY TREE - END - refused; the environment\'s marker is as it was.')
+            self.assertEqual(self.marker(tree).read_bytes(), marker)
+            self.assertEqual([name.split('_', 3)[3] for name in self.backups(tree)], ['PRE_VERIFY.zip'],
+                             'no backup is attempted after a refusal')
+            self.assertFalse(snapshot.is_due(tree), 'no note that a backup is owed was written')
+            self.assertEqual(self.log(tree), [])
+            self.assertFalse((tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME).exists())
 
 
 class WhatIsRefused(VerifyCase):
@@ -467,6 +507,16 @@ class TheReportsCommand(VerifyCase):
         self.assertTrue(draws and max(draws) < 1160, sorted(active))
         self.assertFalse(any(name.startswith('ov1/') and 'prevailing' in name and 'not_current' not in name
                              for name in active), 'the prevailing print-out is not made under a mismatch')
+
+    def test_a_game_whose_results_changed_other_than_by_growing_gets_no_report_made_again(self):
+        tree = self.worked()
+        fx.write_results(tree, GAME, fx.LAST_AT_START + 3, version=3, reseed_from=1150)
+        before = whole_tree(tree)
+        code, said = self.reports(tree)
+        self.assertEqual(code, tree_checks.EXIT_RAN)
+        self.assertIn(f'  {GAME}: its stored records could not be read, so its reports were not made again: ', said[0])
+        self.assertIn('results changed other than by growing', said[0])
+        self.assertEqual(whole_tree(tree), before)
 
     def test_software_that_does_not_lie_in_the_tree_is_refused(self):
         tree = self.worked()

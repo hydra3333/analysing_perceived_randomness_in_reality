@@ -27,8 +27,9 @@ Which of the project's own modules it uses
     research.job_lock         is_link: the scratch folder must be a real folder
     research.reader           ResultsOnFile, check_results_bytes, first_target, header_for
     research.reports          ReportWriter: the print-outs made again after an infrastructure reinstall
-    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, finish_reports, read_game: a game's
-                              records as the job reads them, and its own making of the reports
+    research.research_job     GAMES, GAME_REFUSALS, METHODS_FOLDER, Job, check_results_only_grew, finish_reports,
+                              read_game: a game's records as the job reads them, its own check that the
+                              results on file only grew, and its own making of the reports
     research.settings         TreeSettings, read_settings
     research.status_file      read_status: a status file is read here and never created
     research.variant_folders  find_variants, load_method
@@ -58,7 +59,8 @@ from research.forecast_engine import FORECAST, compute_target, content_digest
 from research.job_lock import LaunchRefused, is_link
 from research.reader import ResultsOnFile, check_results_bytes, first_target, header_for
 from research.reports import ReportWriter
-from research.research_job import GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, finish_reports, read_game
+from research.research_job import (GAME_REFUSALS, GAMES, METHODS_FOLDER, Job, check_results_only_grew, finish_reports,
+                                   read_game)
 from research.settings import SettingsRefused, TreeSettings, read_settings
 from research.status_file import STATUS_FILE_NAME, StatusRefused, read_status
 from research.variant_folders import find_variants, load_method
@@ -184,7 +186,9 @@ def smoke_case(software: Software, data_root: Path, variant, game_id: str) -> st
     folder.mkdir(parents=True)
     target = first_target(game_id, variant.minimum_earlier_draws(game_id))
     results = invented_results(game_id, target)
-    (folder / SMOKE_TABLE_NAME).write_bytes(results.raw)
+    # The table the engine reads is the bytes in memory. The copy kept beside a failure's note is a file of the
+    # tree's scratch folder, and the file-form standard gives a scratch CSV file CRLF line endings.
+    (folder / SMOKE_TABLE_NAME).write_bytes(results.raw.replace(b'\n', LINE_ENDING.encode('ascii')))
     profile = get_profile(game_id)
     try:
         content, detail = compute_target(variant, software.method_of(variant), results, target)
@@ -274,6 +278,9 @@ def read_stored_game_by_game(software: Software, settings: TreeSettings, say=pri
     pass_on: True to let such a refusal through unchanged (read_stored).
     Returns (stored, unreadable): {game: GameRecords} and {game: the refusal's own words}, for example
         ({'OZLOTTO': <GameRecords>}, {'POWERBALL': 'results/research/POWERBALL/...: line 7 is not ...'})
+    A game's records count as read only if the job would work them: after reading, the job's own check that the
+    results on file only grew since the lists were written is made (research_job.check_results_only_grew), so
+    that these checks never call a game well whose results the job refuses.
     Only the refusals the job understands (research_job.GAME_REFUSALS) are caught; any other error is a fault
     and is passed on.
     """
@@ -283,7 +290,9 @@ def read_stored_game_by_game(software: Software, settings: TreeSettings, say=pri
         if not any(variant.supports(game_id) for variant in software.variants):
             continue
         try:
-            stored[game_id] = read_game(job, game_id)
+            records = read_game(job, game_id)
+            check_results_only_grew(records)
+            stored[game_id] = records
         except GAME_REFUSALS as refusal:
             if pass_on:
                 raise
@@ -477,6 +486,7 @@ def make_reports_again(software: Software, settings: TreeSettings, now=None, say
             continue
         try:
             records = read_game(job, game_id)
+            check_results_only_grew(records)
         except GAME_REFUSALS as refusal:
             say(f'  {game_id}: its stored records could not be read, so its reports were not made again: {refusal}')
             continue
