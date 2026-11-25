@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 13:38 Australia/Adelaide (entry 283: the reviewer chat ended at maximum length; H-2 v9 and its blurb, written by Claude and ratified in advance (RAT-57), are installed; the owner starts a new reviewer chat; slice A has passed; slice B waits for the owner's go).
+**Last updated:** 25 November 2026, 13:51 Australia/Adelaide (entry 285: the consolidated H-1 v14 is written as a CANDIDATE under exchange/; its ratification is put to the owner; H-2 v9 is installed; slice A has passed; slice B waits for the owner's go).
 
 ## For the owner: NOW
 
+- **THE CONSOLIDATED H-1 v14 IS WRITTEN AS A CANDIDATE (entry 285; 25 November 2026):**
+  `exchange/CLAUDE_WEB_TOOLS/h1v14/out/Claude_Primary_Handover_H1_v14_CANDIDATE.md` and its blurb beside it. Its
+  chapter 0 is the whole live position. **Waiting on the owner:** ratify and install it (RAT-58), or have the new
+  reviewer chat check it first. **H-1 v13 is still the handover in force. If this chat ends before v14 is
+  installed, a new Claude chat reads the v14 candidate first** (it is the truer guide), then entries 285 to the
+  latest. Then, on the owner's go: slice B.
 - **THE REVIEWER CHAT ENDED (maximum length) AND ITS HANDOVER IS REFRESHED (entries 282 and 283; 25 November
   2026).** The reviewer's handover in force is **H-2 v9**,
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md`, with its blurb

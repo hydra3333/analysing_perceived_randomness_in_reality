@@ -6851,3 +6851,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `exchange/`, and its ratification and installation in `doc/` are put to him when it is ready.
 - Slice B waits until this is done.
 - Next numbers: EX_322; entry 285; RAT-58.
+
+## 285. 25 November 2026, 13:51 - H-1 v14, the consolidated edition: the CANDIDATE and its blurb are written and on main under exchange/; its ratification is put to the owner
+
+- **The candidate** (not reviewed, not ratified, not installed in `doc/`):
+  - `exchange/CLAUDE_WEB_TOOLS/h1v14/out/Claude_Primary_Handover_H1_v14_CANDIDATE.md`, SHA-256
+    `dd6f61e92541e614c10fd0c87f803eafbbb8fcf913627d4c49c809914059ed6b`;
+  - `exchange/CLAUDE_WEB_TOOLS/h1v14/out/Claude_Primary_Handover_H1_v14_CANDIDATE_introductory_blurb.md`, SHA-256
+    `3df239c3aa0771559934bf739eace413b6f6e9a0161bbb9f666e64388d60df0a`.
+  Built from the installed H-1 v13's Git bytes (hash asserted) by `exchange/CLAUDE_WEB_TOOLS/h1v14/make_h1_v14.py`
+  with the new texts in `h1_v14_texts.py`; baseline `main` `d429201`, entry 284. Hashes computed by Claude.
+- **What is consolidated:** H-1 v13's header of stacked "the edition it is built from" paragraphs and its section 0
+  are replaced by a short header and **one live chapter 0** (0.1 first actions and the hard rules; 0.2 what is
+  installed and proved; 0.3 the chats, the handovers and the ratifications, with RAT-56's wording and H-2 v9; 0.4
+  what is authorised and the order of work, with what is already decided for slice B; 0.5 slice A, its files and
+  what is settled in it; 0.6 the working rules that hold now; 0.7 the cloud workspace and what is known to be out
+  of date). The three layered sections of H-1 v13 (0B, 0D, 0E) are moved, byte for byte, to a part at the end
+  headed HISTORY (not live), so that references to their items still find their text.
+- **Carried byte for byte** (asserted by the builder, and checked by comparing the two files line by line):
+  sections 1, 2 and 2A; sections 0B, 0D and 0E. **Corrected in place, thirteen places, each marked "(v14)"** and
+  listed in its Appendix C: section 0A items 1 and 3; section 0C items 1 and 4; sections 3, 4.4, 5.1 (two), 5.3,
+  7.1, 7.3, 10 and 12.8. Nothing else of H-1 v13 from its section 0A onward differs but its last line.
+- **It answers** entry 270's points (a) to (h) and EX_317's H13-C01 to H13-C04, O01 and O02, and names H-2 v9 as
+  the reviewer's handover in force.
+- **Its size, said plainly:** 2,075 lines where H-1 v13 had 1,875. It is not shorter; what a new chat must read to
+  take over is (chapter 0 with the header is 297 lines, and the 544 lines of HISTORY are not part of taking over).
+  A deeper rewrite of sections 3 to 12 was not attempted: they were corrected where findings named them.
+- **Put to the owner:** ratify it in advance and install it in `doc/HANDOVER/` now, or have the new reviewer chat
+  check it first. Until then H-1 v13 stays the handover in force, and a new Claude chat in an emergency reads
+  the candidate as the better guide (the continuity page says so).
+- Next numbers: EX_322; entry 286; RAT-58.
