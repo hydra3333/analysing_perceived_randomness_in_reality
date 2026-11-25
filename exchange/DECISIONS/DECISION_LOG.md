@@ -7090,3 +7090,54 @@ section 17.2 (unpack it into a new folder, never over the clone).
   entries 217 and 288, with a focused test for each; they go back as EX_324 on the owner's word. No install, run,
   backup or restore is authorised. H-1 v14's cold read stays deferred to the owner's request.
 - Next numbers: EX_324 (Claude's, the corrections); entry 294; RAT-59.
+
+## 294. 25 November 2026, 17:40 - Slice B: EX_323's corrections are made in the working files (cloud only) with focused tests; and the reviewer's cold read of H-1 v14: PASS for continued use
+
+- **Slice B, the corrections** (authority: entries 217 and 288; EX_323's own scope). In
+  `exchange/CLAUDE_WEB_TOOLS/step3/overlay/`, six files, 50 hunks from the files the reviewer read (`60cbfd9`):
+  `deploy/restore_tool.py`, `deploy/recovery_kit.py`, `src/research/snapshot.py`, `src/research/research_job.py`,
+  `tests/test_trees_restore.py`, `tests/test_trees_snapshot.py`. No file added or removed; the manifest unchanged;
+  no forecast-class file touched. The note is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_CORRECTIONS_AFTER_EX_323_v0_1.md`, with the exact differences and
+  the evidence beside it.
+  - *B-B01:* the backup reads its manifest and its empty-folder members back; an archive that does not decompress
+    is BACKUP NOT MADE. *B-B02:* the restore's destination is checked against the backup's own settings file
+    (which every backup must hold): the same root, a full path, the same role; the kit's self-check requires its
+    three files by name. *B-B03:* a process table that did not end properly, or that does not hold the tool's own
+    process, refuses; the restored Python is started with no time limit, since a limit would end it. *B-B04:* an
+    orphan marker in the old tree is read before the rename and kept as the named evidence when the backup holds
+    none; the record says whose bytes it is, and says so plainly when they could not be read; a ZIP's time is
+    taken as possibly two seconds early. *B-C01:* the restored tree's folders are compared exactly; a folder that
+    cannot be listed stops the restore; the reconciliation requires the backup's own manifest and its empty
+    folders; the settings file's bytes are checked again and its time restored. *B-C02:* an attempt removes only a
+    ".partial" it made; a backup names only a finished kit of its own software state; a kit gets its ".sha256"
+    before its name. *B-C03:* the job reads and may refuse before it writes; its first write is the note that a
+    backup is owed; a refusal after that note is said as it is and the backup tried; the END line's time is read
+    after the backup; `Run_Snapshot` says the files are read three times.
+  - **One order changed in build step 2's reviewed job:** `discard_unfinished_writes` now follows the three
+    read-only checks (the manifest, the variant folders, `--only`). No test of build step 2 or of slice A changed.
+  - **Cloud evidence (Claude's only):** the affected modules on the final files, all OK (`test_trees_snapshot` 32,
+    `test_trees_restore` 49, `test_research_job` 48, `test_trees_launch_guard` 52, `test_file_form` 52,
+    `test_research_manifest` 9). The whole suite, run because `research_job.py` changed: 61 modules, 1078 tests;
+    against the slice as the reviewer read it 1053 in both runs, all with the same result; the three known
+    failing tests and no other (that run was before the last three tests were added). Planted faults for the
+    corrections: 34; the first run caught 32, three tests were added, the run made again caught 34 of 34.
+  - **Waiting on the owner's word:** to issue them as EX_324.
+- **H-1 v14's cold read** (`exchange/ChatGPT_to_Claude_H1_v14_Cold_Read_20261125.md`, the reviewer's commit
+  `7f880ae`; SHA-256 `17af65cadbb10104378039fd52452a71faa007096a777b58058a0d4a32129747`, computed by Claude; a reviewer
+  handback, not an EX; made at the owner's request): **"PASS for continued use. The H-1 v14 documentary cold read
+  is complete. No blocker, loss of independent reviewer rights, or material weakening of the ratified science or
+  safety contract identified."** EX_317's findings and entry 270's points are found addressed. **RAT-58 and the
+  installed edition stand; the cold read owed under entry 286 is closed.**
+  - *Three corrections for the next ordinary edition only, all accepted by Claude:* H14-C01, section 0.6's "Files
+    that existed before 25 November 2026 keep their form" is too wide (existing living files were converted; frozen
+    history keeps its bytes; the standard governs), and "the same bytes in Git, a clone and the owner's disk" is
+    of tracked files at the same revision; H14-C02, sections 1, 2 and 2A are byte for byte H-1 v13's, and equal
+    H-1 v7r1's only once line endings are set aside (v7r1 is LF); H14-C03, the short hard rule on the orphan
+    marker should point to the one ratified exception at a restore. Two observations: the instruction to check
+    Appendix A's hashes; one unclear phrase about a workspace helper.
+  - *Told to the reviewer by the owner, and to be carried at the next ordinary update:* OUTLANDISH_01 is completed
+    and closed, null under the matching criteria investigated, and will not be integrated; the backlog lines in
+    H-1's sections 9 and 10 are overtaken by that. Nothing is recorded in the roadmap or the reminders until the
+    owner directs it.
+- Next numbers: EX_324 (Claude's, the corrections); entry 295; RAT-59.

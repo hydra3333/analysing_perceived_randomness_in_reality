@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 25 November 2026, 16:51 Australia/Adelaide (entry 293: EX_323, the reviewer on slice B: RECHECK, four blockers and three grouped corrections, all confirmed by Claude; the corrections are being made in the cloud; they go back as EX_324 on the owner's word).
+**Last updated:** 25 November 2026, 17:40 Australia/Adelaide (entry 294: EX_323's corrections to slice B are made and tested in the cloud; EX_324 waits for the owner's word; H-1 v14's cold read is done: PASS for continued use).
 
 ## For the owner: NOW
 
+- **SLICE B: THE CORRECTIONS AFTER EX_323 ARE MADE (entry 294; 25 November 2026),** cloud only: the note is
+  `exchange/CLAUDE_WEB_TOOLS/step3/slice_b/SLICE_B_CORRECTIONS_AFTER_EX_323_v0_1.md`, with the exact differences
+  (six files, 50 hunks) and the evidence beside it. **Waiting on the owner:** his word to issue them as EX_324.
+  **H-1 v14's cold read is done** (`exchange/ChatGPT_to_Claude_H1_v14_Cold_Read_20261125.md`): PASS for continued
+  use; three wording corrections for its next ordinary edition (entry 294). **If this chat ends here:** a new chat
+  reads H-1 v14, entries 287 to 294, slice B's two notes and EX_323, and writes EX_324 on the owner's word.
 - **SLICE B: THE REVIEWER'S RECHECK (entry 293; 25 November 2026): EX_323,** `exchange/EX_323_ChatGPT.md`. The
   design is accepted; four blockers (B-B01 the backup's manifest is not read back; B-B02 the restore's destination
   and the kit's self-check; B-B03 the process table read part-way, and a timeout that ends a process; B-B04 the

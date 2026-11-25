@@ -1,0 +1,1321 @@
+Slice B of build step 3, the corrections after EX_323: the exact difference of each overlay file that changed, from the
+file the reviewer read (the overlay at commit 60cbfd920f96a77854306f9a3da0f21f7bc882b3, EX_322) to the corrected overlay.
+Unified, three lines of context; line endings are CRLF in both and are not shown. 6 files.
+
+--- as_reviewed/deploy/recovery_kit.py
++++ overlay/deploy/recovery_kit.py
+@@ -87,8 +87,10 @@
+         contents[KIT_MANIFEST_NAME] = (json.dumps(manifest, indent=1, sort_keys=True).replace('\n', '\r\n')
+                                        + '\r\n').encode('ascii')
+         Path(backup_root).mkdir(parents=True, exist_ok=True)
+-        if final.exists() or partial.exists():
+-            return KitResult(False, reason=f'{final} or its ".partial" exists already. Run the command again.')
++        beside = Path(str(final) + '.sha256')
++        if final.exists() or partial.exists() or beside.exists():
++            return KitResult(False, reason=f'{final}, its ".partial" or its ".sha256" exists already. Nothing was '
++                                           f'removed. Run the command again.')
+         try:
+             with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
+                 for kit_name, data in contents.items():
+@@ -97,15 +99,16 @@
+                 if {member: archive.read(member) for member in archive.namelist()} != contents:
+                     raise OSError('the kit read back is not what was written')
+             digest = hashlib.sha256(partial.read_bytes()).hexdigest()
++            with open(beside, 'wb') as handle:               # the ".sha256" first: a kit that has its name
++                handle.write(f'{digest} *{name}\r\n'.encode('ascii'))     # always has its ".sha256" beside it
+             os.replace(partial, final)
+         except BaseException:
+-            try:
+-                partial.unlink()
+-            except OSError:
+-                pass
++            for ours in (partial, beside):                   # only what this attempt made itself
++                try:
++                    ours.unlink()
++                except OSError:
++                    pass
+             raise
+-        with open(Path(str(final) + '.sha256'), 'wb') as handle:
+-            handle.write(f'{digest} *{name}\r\n'.encode('ascii'))
+     except (OSError, zipfile.BadZipFile) as failure:
+         return KitResult(False, reason=f'{failure}')
+     return KitResult(True, path=final)
+
+--- as_reviewed/deploy/restore_tool.py
++++ overlay/deploy/restore_tool.py
+@@ -35,12 +35,15 @@
+ import sys
+ import time
+ import zipfile
++import zlib
+ from datetime import datetime, timezone
+ from pathlib import Path
+ 
+ # The kit's own list of its files, and the word that says what kind of record it is (deployment design 11).
+ KIT_MANIFEST_NAME = 'KIT_MANIFEST.json'
+ KIT_MANIFEST_KIND = 'KIT_MANIFEST_V1'
++# The three files every kit holds beside its manifest; the self-check requires exactly these, each listed once.
++KIT_FILES = ('HOW_TO_RESTORE.txt', 'Restore.bat', 'restore_tool.py')
+ # The last member of every backup ZIP, and its kind (as research/snapshot.py writes it).
+ SNAPSHOT_MANIFEST_NAME = 'SNAPSHOT_MANIFEST.json'
+ SNAPSHOT_MANIFEST_KIND = 'SNAPSHOT_MANIFEST_V1'
+@@ -65,6 +68,10 @@
+ # The sentence the owner types to have a stale orphan marker set aside as evidence (deployment design 12, (d)).
+ ORPHAN_ACKNOWLEDGEMENT = 'I HAVE RESTARTED THE PC AND NO JOB OF THIS PROJECT IS RUNNING'
+ CHUNK = 1024 * 1024
++# How Windows reports the proper end of its process table (ERROR_NO_MORE_FILES).
++ERROR_NO_MORE_FILES = 18
++# A ZIP keeps a file's time to two seconds, rounded down: a time read from one may be this much too early.
++ZIP_TIME_STEP = 2
+ # The exit codes: restored; refused before anything was touched; stopped part-way (the same command again).
+ EXIT_RESTORED, EXIT_REFUSED, EXIT_STOPPED = 0, 2, 1
+ 
+@@ -83,11 +90,12 @@
+ 
+ 
+ def check_kit(kit_folder: Path) -> dict:
+-    """The kit's self-check, before anything else: every file its manifest lists is there with those bytes.
++    """The kit's self-check, before anything else: its manifest lists exactly the kit's three files, each once,
++    and each is there with those bytes.
+ 
+     kit_folder: the folder the kit was unpacked into (where this file lies).  Returns the manifest.
+-    Refuses (RestoreRefused): no manifest, or one that is not a kit's; a listed file missing or of other bytes.
+-    A digest is a check against damage, not a signature.
++    Refuses (RestoreRefused): no manifest, or one that is not a kit's or does not list exactly the three files;
++    a file missing or of other bytes. A digest is a check against damage, not a signature.
+     """
+     path = Path(kit_folder) / KIT_MANIFEST_NAME
+     try:
+@@ -95,6 +103,8 @@
+         listed = {entry['path']: entry['sha256'] for entry in manifest['files']}
+         if manifest['kind'] != KIT_MANIFEST_KIND:
+             raise ValueError('another kind of record')
++        if sorted(entry['path'] for entry in manifest['files']) != sorted(KIT_FILES):
++            raise ValueError(f'it does not list exactly {", ".join(KIT_FILES)}, each once')
+     except (OSError, ValueError, KeyError, TypeError) as error:
+         raise RestoreRefused(f'{path}: this is not a whole recovery kit ({error}). Unpack the kit\'s ZIP again '
+                              f'into an empty folder, or use another kit from the backup root.') from None
+@@ -106,14 +116,53 @@
+     return manifest
+ 
+ 
++def _same_place(one: str, other: str) -> bool:
++    """True if two paths name the same place, compared as Windows does (case and slashes set aside)."""
++    return os.path.normcase(os.path.abspath(one)) == os.path.normcase(os.path.abspath(other))
++
++
++def _lies_inside(inner: str, outer: str) -> bool:
++    """True if a path lies inside a folder (and is not that folder)."""
++    return os.path.normcase(os.path.abspath(inner)).startswith(
++        os.path.normcase(os.path.abspath(outer)).rstrip('\\/') + os.sep)
++
++
++def check_destination(backup: Path, manifest: dict, settings_bytes: bytes) -> None:
++    """The one place a backup may be put back: the tree root its manifest names must be the root its own settings
++    file names, an absolute path, for the same role; with the environment inside the tree and the backup root
++    outside it, as the settings of any tree must be (deployment design section 1). Everything is read from the
++    backup's own bytes. Refuses (RestoreRefused) otherwise, before anything is touched."""
++    import configparser
++    settings = configparser.ConfigParser(interpolation=None)
++    try:
++        settings.read_string(settings_bytes.decode('utf-8-sig'))
++        role, root, environment = (settings.get('environment', key) for key in ('role', 'tree_root', 'venv_dir'))
++        backup_root = settings.get('environment', 'backup_root', fallback=None)
++    except (configparser.Error, UnicodeDecodeError) as error:
++        raise RestoreRefused(f'{backup}: the settings file it holds ({SETTINGS_FILE}) cannot be read as one '
++                             f'({type(error).__name__}).') from None
++    named = str(manifest.get('tree_root') or '')
++    if (not os.path.isabs(named) or not os.path.isabs(root) or not _same_place(named, root)
++            or manifest.get('role') != role):
++        raise RestoreRefused(f'{backup}: its manifest says it is the {manifest.get("role")} tree at "{named}", but the '
++                             f'settings file it holds is of the {role} tree at "{root}". A backup is put back only '
++                             f'at the path its own settings name; this one is not put back anywhere.')
++    if not _lies_inside(environment, root) or (backup_root is not None and (
++            _same_place(backup_root, root) or _lies_inside(backup_root, root) or _lies_inside(root, backup_root))):
++        raise RestoreRefused(f'{backup}: the settings file it holds does not describe a tree of this project (its '
++                             f'environment must lie inside the tree and its backup root outside it).')
++
++
+ def read_backup(backup: Path) -> dict:
+     """Verify a backup in full, before anything is touched, and return its manifest.
+ 
+-    backup: the ZIP.  Returns the manifest with two keys added: 'backup_sha256' and 'orphan_marker_time' (when
+-    the backup's orphan marker was last written, as a time in seconds, or None if it holds none).
++    backup: the ZIP.  Returns the manifest with three keys added: 'backup_sha256'; 'manifest_bytes' (the
++    manifest's exact bytes in the ZIP); and 'orphan_marker_time' (the time the ZIP keeps for the backup's orphan
++    marker, in seconds, or None if it holds none).
+     Refuses (RestoreRefused): not a ZIP; the manifest not its last member or not a backup's; a member that the
+-    list does not name, or a listed file that is missing or of other bytes; a name that would leave the tree; a
+-    ".sha256" file beside the backup that does not agree with it.
++    list does not name, or a listed file that is missing or of other bytes; a name that would leave the tree; no
++    settings file, or one that does not agree with the manifest (check_destination); a ".sha256" file beside the
++    backup that does not agree with it.
+     """
+     backup = Path(backup)
+     if not backup.is_file() or backup.name.endswith('.partial'):
+@@ -129,7 +178,8 @@
+             if not names or names[-1] != SNAPSHOT_MANIFEST_NAME or names.count(SNAPSHOT_MANIFEST_NAME) != 1:
+                 raise RestoreRefused(f'{backup}: its last member is not its manifest; it is not a backup of this '
+                                      f'project, or it is damaged.')
+-            manifest = json.loads(archive.read(SNAPSHOT_MANIFEST_NAME).decode('ascii'))
++            manifest_bytes = archive.read(SNAPSHOT_MANIFEST_NAME)
++            manifest = json.loads(manifest_bytes.decode('ascii'))
+             if manifest.get('kind') != SNAPSHOT_MANIFEST_KIND:
+                 raise RestoreRefused(f'{backup}: its manifest is not a backup\'s.')
+             listed = {entry['path']: entry['sha256'] for entry in manifest['files']}
+@@ -148,18 +198,31 @@
+                 if found.hexdigest() != wanted:
+                     raise RestoreRefused(f'{backup}: "{name}" is not the file that was backed up. The backup is '
+                                          f'damaged; choose another.')
++            if SETTINGS_FILE not in listed:
++                raise RestoreRefused(f'{backup}: it holds no {SETTINGS_FILE}. Every backup of a tree holds the '
++                                     f'tree\'s settings file; this is not one, and it is not put back anywhere.')
++            check_destination(backup, manifest, archive.read(SETTINGS_FILE))
+             marker_time = (time.mktime(archive.getinfo(ORPHAN_MARKER).date_time + (0, 0, -1))
+                            if ORPHAN_MARKER in listed else None)
+-    except (zipfile.BadZipFile, OSError, ValueError, KeyError, TypeError) as error:
++    except (zipfile.BadZipFile, OSError, ValueError, KeyError, TypeError, EOFError, zlib.error) as error:
+         raise RestoreRefused(f'{backup}: it cannot be read as a backup ({type(error).__name__}: {error}).') from None
+-    return dict(manifest, backup_sha256=digest, orphan_marker_time=marker_time)
++    return dict(manifest, backup_sha256=digest, manifest_bytes=manifest_bytes, orphan_marker_time=marker_time)
++
++
++def check_table_was_read_to_its_end(error_code: int) -> None:
++    """Windows ends the reading of its process table by reporting that there are no more entries. Any other
++    report means the reading stopped part-way: such a table is refused (RestoreRefused), never taken as whole."""
++    if error_code != ERROR_NO_MORE_FILES:
++        raise RestoreRefused(f'Windows\' process table could not be read to its end (error {error_code}). A restore '
++                             f'is not made on a table that may be incomplete. Run the command again.')
+ 
+ 
+ def read_windows_processes() -> list:
+     """Windows' process table, read with the standard library: [(process number, parent's number, program name,
+     when it started as a number that grows with time, or None if Windows would not say)], for example
+     [(4120, 4096, 'python.exe', 133771234567890000)]. Refuses (RestoreRefused) on a system that is not Windows
+-    and whenever the table cannot be read: a table that cannot be read is never an empty one."""
++    and whenever the table cannot be read, or its reading stops before Windows reports its end: a table that
++    cannot be read whole is never taken for a quiet PC."""
+     if os.name != 'nt':
+         raise RestoreRefused('this is not Windows: the process table cannot be read here, and a restore is not '
+                              'made without it.')
+@@ -202,8 +265,10 @@
+                 kernel.CloseHandle(handle)
+             found.append((entry.th32ProcessID, entry.th32ParentProcessID, entry.szExeFile, started))
+             more = kernel.Process32NextW(table, ctypes.byref(entry))
++        ended_with = ctypes.get_last_error()                 # read at once, before any other call to Windows
+     finally:
+         kernel.CloseHandle(table)
++    check_table_was_read_to_its_end(ended_with)
+     return found
+ 
+ 
+@@ -229,8 +294,14 @@
+ 
+ def check_no_other_python(read_processes, when: str) -> None:
+     """Refuse (RestoreRefused) while any Python program but this tool runs on the PC, each one named; or if the
+-    process table cannot be read. when: 'before the old tree is renamed' or 'after it', for the message."""
+-    others = other_python_programs(read_processes(), os.getpid())
++    process table cannot be read, or does not hold this tool's own process (it was then not read whole).
++    when: 'before the old tree is renamed' or 'after it', for the message."""
++    table = read_processes()
++    if os.getpid() not in {entry[0] for entry in table}:
++        raise RestoreRefused(f'the process table that was read ({len(table)} entries) does not hold this tool\'s own '
++                             f'process: it was not read whole. A restore is not made without it. Run the command '
++                             f'again.')
++    others = other_python_programs(table, os.getpid())
+     if others:
+         lines = '\n  '.join(f'process {number} ({name}), started by process {parent}'
+                             for number, parent, name, _started in others)
+@@ -265,8 +336,9 @@
+ def check_orphan_condition(markers, started_at, read_processes, ask, say) -> None:
+     """The one exception for a stale orphan marker (deployment design 12): all four parts, none waived.
+ 
+-    markers: (where it lies, when it was written in seconds) for each orphan marker found: in the old tree, in
+-    the backup.
++    markers: (where it lies, the latest moment it can have been written, in seconds) for each orphan marker
++    found: in the old tree, in the backup. A PC started at or before that moment is not shown to have been
++    started after the marker.
+     started_at: gives when the PC was last started.  read_processes, ask, say: the tool's own.
+     Refuses (RestoreRefused): the PC was not started after a marker was written; another Python program runs;
+     the owner does not type the fixed sentence.
+@@ -276,7 +348,8 @@
+         'as evidence, and the old tree is set aside whole. RESTART THE PC before a restore if you have not done '
+         'so since the marker was written.')
+     for where, written in markers:
+-        say(f'  The marker: {where}, written {time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(written))}.')
++        say(f'  The marker: {where}, written no later than '
++            f'{time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(written))}.')
+     if any(started_at() <= written for _where, written in markers):
+         raise RestoreRefused('this PC has not been restarted since the orphan marker was written. Two ways '
+                              'forward: restart the PC and run the same command again; or clear the marker by '
+@@ -288,16 +361,21 @@
+ 
+ 
+ def _tree_now(tree_root: Path) -> tuple:
+-    """Every file under a tree with its SHA-256, and every empty folder: ({path: sha256}, [paths])."""
+-    files, empty = {}, []
+-    for current, folders, names in os.walk(tree_root):
++    """Every file under a tree with its SHA-256, and every folder under it: ({path: sha256}, {paths}). A folder
++    that cannot be listed raises its OSError: it is never left out of the reading."""
++    files, folders = {}, set()
++
++    def stop(error: OSError) -> None:
++        raise error
++
++    for current, _folders, names in os.walk(tree_root, onerror=stop):
+         relative = os.path.relpath(current, tree_root).replace('\\', '/')
+         prefix = '' if relative == '.' else relative + '/'
++        if prefix:
++            folders.add(relative)
+         for name in names:
+             files[prefix + name] = sha256_of(Path(current) / name)
+-        if not folders and not names and prefix:
+-            empty.append(relative)
+-    return files, sorted(empty)
++    return files, folders
+ 
+ 
+ def _write_whole(path: Path, data: bytes) -> None:
+@@ -309,16 +387,35 @@
+         os.fsync(handle.fileno())
+ 
+ 
+-def unpack(backup: Path, manifest: dict, tree_root: Path, stamp: str) -> None:
++def _folders_of(files, empty_folders) -> set:
++    """The folders a tree must hold for a set of files and of empty folders: each empty folder, and every folder
++    above each file and each empty folder; for example {'records', 'src', 'src/research'}."""
++    wanted = set()
++    for path in list(files) + [folder + '/.' for folder in empty_folders]:
++        parts = path.split('/')[:-1]
++        wanted.update('/'.join(parts[:count]) for count in range(1, len(parts) + 1))
++    return wanted
++
++
++def unpack(backup: Path, manifest: dict, tree_root: Path, stamp: str, found: list, set_aside,
++           old_marker: dict) -> dict:
+     """Steps 3 to 6: the fresh folder, the progress file first, every member of the payload but the settings
+-    file and an orphan marker, the fresh tree read back, the restore record and the orphan evidence added, the
+-    settings file last, the progress file removed. Refuses (RestoreRefused) if the fresh tree is not exactly
+-    the payload; the progress file then stays, and the same command again sets the unfinished tree aside."""
++    file and an orphan marker, the fresh tree read back (its files and its folders, exactly), the restore record
++    and the orphan evidence added, the settings file last, the progress file removed.
++
++    found: what was seen in the old tree.  set_aside: where the old tree is now, or None.  old_marker: what was
++    read of an orphan marker in the old tree before it was renamed: {'found', 'bytes', 'note'}.
++    Returns what the record says of orphan markers (None if there was none anywhere).
++    Refuses (RestoreRefused) if the fresh tree is not exactly the payload, or a member held back does not have
++    the bytes the manifest lists; the progress file then stays, and the same command again sets the unfinished
++    tree aside.
++    """
+     listed = {entry['path']: entry['sha256'] for entry in manifest['files']}
+     held_back = {name for name in (SETTINGS_FILE, ORPHAN_MARKER) if name in listed}
+     tree_root.mkdir(parents=True)
+     _write_whole(tree_root / PROGRESS_FILE, (json.dumps(
+         {'kind': 'RESTORE_IN_PROGRESS_V1', 'backup': backup.name, 'started': stamp}, sort_keys=True) + '\r\n').encode('ascii'))
++    held = {}
+     with zipfile.ZipFile(backup) as archive:
+         for folder in manifest['empty_folders']:
+             (tree_root / folder).mkdir(parents=True, exist_ok=True)
+@@ -330,35 +427,55 @@
+                     handle.write(piece)
+             changed = time.mktime(archive.getinfo(name).date_time + (0, 0, -1))
+             os.utime(target, (changed, changed))
+-        settings_bytes = archive.read(SETTINGS_FILE) if SETTINGS_FILE in listed else None
+-        orphan_bytes = archive.read(ORPHAN_MARKER) if ORPHAN_MARKER in listed else None
+-    files, _empty = _tree_now(tree_root)
++        for name in held_back:                               # read once more, so checked once more
++            data = archive.read(name)
++            if hashlib.sha256(data).hexdigest() != listed[name]:
++                raise RestoreRefused(f'"{name}" read from the backup a second time is not the file its manifest '
++                                     f'lists. The fresh tree is left marked unfinished.')
++            held[name] = (data, time.mktime(archive.getinfo(name).date_time + (0, 0, -1)))
++    files, folders = _tree_now(tree_root)
+     wanted = {name: digest for name, digest in listed.items() if name not in held_back}
+     del files[PROGRESS_FILE]
+-    if files != wanted or not all((tree_root / folder).is_dir() for folder in manifest['empty_folders']):
++    if files != wanted or folders != _folders_of(list(wanted) + [PROGRESS_FILE], manifest['empty_folders']):
+         wrong = sorted(set(files.items()) ^ set(wanted.items()))[:1]
+         raise RestoreRefused(f'the fresh tree at {tree_root} is not exactly what the backup holds '
+-                             f'({wrong[0][0] if wrong else "an empty folder is missing"}). It is left as it is, '
+-                             f'marked unfinished. Run the same command again: it sets this attempt aside and '
++                             f'({wrong[0][0] if wrong else "its folders are not the backup\'s"}). It is left as it '
++                             f'is, marked unfinished. Run the same command again: it sets this attempt aside and '
+                              f'begins afresh.')
++    name = f'{RECORDS_FOLDER}/RESTORE_{stamp}'
++    evidence, orphan = None, None
++    if ORPHAN_MARKER in held:
++        evidence, evidence_from = held[ORPHAN_MARKER][0], 'the backup'
++    elif old_marker['bytes'] is not None:
++        evidence, evidence_from = old_marker['bytes'], 'the old tree'
++    if ORPHAN_MARKER in held or old_marker['found']:
++        orphan = {'in_the_backup': ORPHAN_MARKER in held, 'in_the_old_tree': old_marker['found'],
++                  'old_tree_marker_now_at': (str(Path(set_aside) / ORPHAN_MARKER) if old_marker['found'] and set_aside
++                                             else None),
++                  'old_tree_marker_note': old_marker['note'],
++                  'evidence_file': f'{name}_ORPHAN_MARKER.json' if evidence is not None else None,
++                  'evidence_is_the_marker_of': evidence_from if evidence is not None else None}
+     record = {'kind': 'RESTORE_RECORD_V1', 'restored_at': stamp, 'backup': backup.name,
+               'backup_sha256': manifest['backup_sha256'], 'backup_made_utc': manifest.get('made_utc'),
+               'role': manifest.get('role'), 'tree_root': str(tree_root), 'files': len(wanted),
+-              'what_was_found': manifest['what_was_found'], 'set_aside_as': manifest['set_aside_as'],
+-              'orphan_marker_kept_as_evidence': orphan_bytes is not None}
+-    name = f'{RECORDS_FOLDER}/RESTORE_{stamp}'
++              'what_was_found': found, 'set_aside_as': str(set_aside) if set_aside else None,
++              'orphan_marker': orphan}
+     _write_whole(tree_root / f'{name}.json', (json.dumps(record, indent=1, sort_keys=True).replace('\n', '\r\n')
+                                               + '\r\n').encode('ascii'))
+-    if orphan_bytes is not None:
+-        _write_whole(tree_root / f'{name}_ORPHAN_MARKER.json', orphan_bytes)
+-    if settings_bytes is not None:
+-        _write_whole(tree_root / SETTINGS_FILE, settings_bytes)
++    if evidence is not None:
++        _write_whole(tree_root / f'{name}_ORPHAN_MARKER.json', evidence)
++    settings_bytes, settings_time = held[SETTINGS_FILE]
++    _write_whole(tree_root / SETTINGS_FILE, settings_bytes)
++    os.utime(tree_root / SETTINGS_FILE, (settings_time, settings_time))
+     (tree_root / PROGRESS_FILE).unlink()
++    return orphan
+ 
+ 
+ def environment_starts(tree_root: Path) -> bool:
+     """Step 7: start the restored environment's own Python once and have it import the project's third-party
+-    modules. True only if it did; anything else is "not ready", never a guess."""
++    modules. True only if it did; anything else is "not ready", never a guess. It waits for that Python for as
++    long as it takes: no time limit is set, because a limit would end the process when it ran out, and no
++    program of this project ends a process. If it never returns, the owner closes its window himself."""
+     folder = Path(tree_root) / '.venv'
+     try:                                                 # the tree's own settings say where its environment lies
+         import configparser
+@@ -370,7 +487,7 @@
+     python = folder / 'Scripts' / 'python.exe'
+     try:
+         done = subprocess.run([str(python), '-I', '-B', '-c', 'import ' + ', '.join(THIRD_PARTY_MODULES)],
+-                              capture_output=True, timeout=300)
++                              capture_output=True)
+         return done.returncode == 0
+     except (OSError, subprocess.SubprocessError):
+         return False
+@@ -402,11 +519,15 @@
+         found = look_at_old_tree(tree_root)
+         for line in found:
+             say(f'  In the old tree: {line}')
+-        markers = []
+-        if os.path.lexists(tree_root / ORPHAN_MARKER):
++        markers, old_marker = [], {'found': os.path.lexists(tree_root / ORPHAN_MARKER), 'bytes': None, 'note': None}
++        if old_marker['found']:
+             markers.append((str(tree_root / ORPHAN_MARKER), os.path.getmtime(tree_root / ORPHAN_MARKER)))
+-        if manifest['orphan_marker_time'] is not None:
+-            markers.append((f'{ORPHAN_MARKER} inside the backup', manifest['orphan_marker_time']))
++            try:                                             # its bytes are read now, before the tree is renamed
++                old_marker['bytes'] = (tree_root / ORPHAN_MARKER).read_bytes()
++            except OSError as error:
++                old_marker['note'] = f'its bytes could not be read ({error}); it lies in the tree set aside'
++        if manifest['orphan_marker_time'] is not None:       # a ZIP keeps a time to two seconds, rounded down
++            markers.append((f'{ORPHAN_MARKER} inside the backup', manifest['orphan_marker_time'] + ZIP_TIME_STEP))
+         if markers:
+             check_orphan_condition(markers, started_at, read_processes, ask, say)
+         set_aside = None
+@@ -422,8 +543,7 @@
+                 f'settings file.')
+         check_no_other_python(read_processes, 'after the old tree was renamed')
+         touched = True
+-        unpack(Path(backup), dict(manifest, what_was_found=found, set_aside_as=str(set_aside) if set_aside else None),
+-               tree_root, stamp)
++        orphan = unpack(Path(backup), manifest, tree_root, stamp, found, set_aside, old_marker)
+         ready = environment(tree_root)
+     except RestoreRefused as refusal:
+         say(f'REFUSED: {refusal}')
+@@ -439,6 +559,11 @@
+                                   'command again.'))
+         return EXIT_STOPPED if touched else EXIT_REFUSED
+     say(f'The record of this restore is {tree_root / RECORDS_FOLDER / f"RESTORE_{stamp}.json"}.')
++    if orphan is not None:
++        say(f'The orphan marker\'s bytes ({orphan["evidence_is_the_marker_of"]}\'s) are kept as evidence in '
++            f'{tree_root / orphan["evidence_file"]}; no live marker was restored.' if orphan['evidence_file'] else
++            f'WARNING: THE ORPHAN MARKER\'S BYTES COULD NOT BE READ AND ARE NOT KEPT BESIDE THE RECORD. The marker '
++            f'lies only in the tree that was set aside: {orphan["old_tree_marker_now_at"]}. Keep that tree.')
+     say('RESTORE - END - ' + ('RESTORED AND READY TO RUN.' if ready else 'RESTORED; ENVIRONMENT NOT READY. The '
+         'tree\'s files are exactly the backup\'s, but its Python did not start and import what the project needs. '
+         'What to do next is your decision.'))
+@@ -449,12 +574,13 @@
+ 
+ def reconcile_after_hand_unzip(backup: Path, *, kit_folder: Path, read_processes=read_windows_processes,
+                                say=print, now=None) -> int:
+-    """After the owner unzipped a backup by hand into an empty folder at the tree's path: check every file, write
+-    the restore record with its time labelled "reconciliation recorded at", and move the manifest, which the
+-    unzip left at the tree's root, beside the record. An orphan marker the backup held is live and is left so.
+-
+-    Returns EXIT_RESTORED, or EXIT_REFUSED with nothing changed: the tree is not exactly the backup's payload
+-    with its manifest at the root; another Python program is running; the kit or the backup fails its check.
++    """After the owner unzipped a backup by hand into an empty folder at the tree's path: check every file and
++    every folder, and that the manifest the unzip left at the tree's root is this backup's own; write the
++    restore record with its time labelled "reconciliation recorded at"; and move that manifest beside the record.
++    An orphan marker the backup held is live and is left so.
++
++    Returns EXIT_RESTORED, or EXIT_REFUSED with nothing changed: the tree is not exactly the backup unzipped;
++    another Python program is running; the kit or the backup fails its check; the tree cannot be read.
+     """
+     now = now or (lambda: datetime.now(timezone.utc))
+     stamp = now().astimezone().strftime('%Y%m%d_%H%M%S')
+@@ -465,13 +591,19 @@
+         tree_root = Path(manifest['tree_root'])
+         check_no_other_python(read_processes, 'before the tree is read')
+         listed = {entry['path']: entry['sha256'] for entry in manifest['files']}
+-        files, _empty = _tree_now(tree_root) if tree_root.is_dir() else ({}, [])
+-        lying = tree_root / SNAPSHOT_MANIFEST_NAME
+-        if files.pop(SNAPSHOT_MANIFEST_NAME, None) is None or files != listed:
++        try:
++            files, folders = _tree_now(tree_root) if tree_root.is_dir() else ({}, set())
++            lying = tree_root / SNAPSHOT_MANIFEST_NAME
++            its_own = lying.is_file() and lying.read_bytes() == manifest['manifest_bytes']
++        except OSError as error:
++            raise RestoreRefused(f'the tree at {tree_root} could not be read ({error}). Nothing was changed.') from None
++        files.pop(SNAPSHOT_MANIFEST_NAME, None)
++        if not its_own or files != listed or folders != _folders_of(listed, manifest['empty_folders']):
+             wrong = sorted(set(files.items()) ^ set(listed.items()))[:1]
++            what = (wrong[0][0] if wrong else 'its folders are not the backup\'s' if its_own
++                    else f'{SNAPSHOT_MANIFEST_NAME} at its root is missing or is not this backup\'s')
+             raise RestoreRefused(f'the tree at {tree_root} is not exactly this backup unzipped, with its manifest at '
+-                                 f'the root ({wrong[0][0] if wrong else SNAPSHOT_MANIFEST_NAME + " is not there"}). '
+-                                 f'Nothing was changed.')
++                                 f'the root ({what}). Nothing was changed.')
+         record = {'kind': 'RESTORE_RECORD_V1', 'reconciliation_recorded_at': stamp, 'backup': Path(backup).name,
+                   'backup_sha256': manifest['backup_sha256'], 'backup_made_utc': manifest.get('made_utc'),
+                   'role': manifest.get('role'), 'tree_root': str(tree_root), 'files': len(listed),
+
+--- as_reviewed/src/research/research_job.py
++++ overlay/src/research/research_job.py
+@@ -51,7 +51,7 @@
+ from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
+                                  load_variant_state, summarise_target_line)
+ from research.launch_guard import check_at_job_start
+-from research.snapshot import backup_for_a_job, mark_due
++from research.snapshot import backup_for_a_job, is_due, mark_due
+ from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
+ from research.reader import ResultsRefused, results_on_file
+ from research.results_step import copy_results, finish_interrupted_copy
+@@ -537,6 +537,7 @@
+     now = now or (lambda: datetime.now(timezone.utc))
+     tree_root = Path(tree_root)
+     started = now().astimezone().strftime('%Y-%m-%d %H:%M')
++    settings, due_before = None, False
+     try:
+         settings = read_settings(tree_root)
+         say(f'RESEARCH JOB - START - {started} - the {settings.role} tree at {settings.tree_root}')
+@@ -545,32 +546,40 @@
+         check_no_orphan_marker(settings.tree_root)
+         check_working_folders(settings.tree_root)
+         backup_for_a_job(settings, 'start', now, say)        # only if a backup is owed from earlier work
++        due_before = is_due(settings.tree_root)
+         with job_lock(settings.tree_root, 'research job', started):
+             environment_digest = check_at_job_start(settings, say)
+-            mark_due(settings)                               # before the job's first write
+             exit_code, closing = run_locked(settings, games, no_update, only, now, say, checkpoint,
+                                             environment_digest)
+         backup_for_a_job(settings, 'end', now, say)          # the job's lock is released: the tree is quiet
++        say(f'RESEARCH JOB - END - {now().astimezone().strftime("%Y-%m-%d %H:%M")} - the {settings.role} tree at '
++            f'{settings.tree_root}')                         # the time is read now, after the backup
+         for line in closing:                                 # the job's own verdict stays the last thing said
+             say(line)
+         return exit_code
+     except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
+         say(f'REFUSED: {refusal}')
+-        say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
++        if settings is not None and is_due(settings.tree_root) and not due_before:
++            # The job had written its note that a backup is owed (and may have tidied an interrupted status
++            # write) before it was refused: say so, and try the backup that is now owed. The lock is released.
++            backup_for_a_job(settings, 'end', now, say)
++            say('RESEARCH JOB - END - refused before any game was worked. No forecast, score or report was '
++                'written; the tree\'s note that a backup is owed had been written, so that backup was tried '
++                '(above).')
++        else:
++            say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+         return EXIT_REFUSED
+ 
+ 
+ def run_locked(settings: TreeSettings, games, no_update: bool, only, now, say, checkpoint,
+-               environment_digest: str) -> int:
++               environment_digest: str) -> tuple:
+     """The job once it holds the job lock and the launch guard has passed: read the code's identities and the
+     variants, then work each game. environment_digest: the digest of the tree's own Python environment, as the
+     guard computed it for this job. The other arguments are as for run(). Returns (the exit code, the job's
+-    closing lines): run() says those lines after the job's lock is released and its backup has been attempted, so
+-    that the job's verdict is the last thing the owner reads."""
++    closing lines): run() says those lines, under its END line, after the job's lock is released and its backup
++    has been attempted, so that the job's verdict is the last thing the owner reads. It reads and may refuse
++    before it writes anything; its first write is the tree's note that a backup is owed."""
+     tree_root = settings.tree_root
+-    for leftover in discard_unfinished_writes(tree_root):
+-        say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
+-            f'({leftover}). The status file it was meant for is as it was.')
+     manifest = read_manifest(tree_root)
+     variants, refused = find_variants(tree_root / METHODS_FOLDER)
+     if refused and settings.role != 'DEV':
+@@ -581,6 +590,12 @@
+     if unknown:
+         raise VariantRefused(f'--only names no variant of this tree: {", ".join(unknown)}. Give each as '
+                              f'<family>/<variant>, for example E_002/RECUR_MEAN_ALL_V1.')
++    # Everything above only reads and may refuse: nothing has been written yet. From here the job writes: the
++    # tree's note that a backup is owed comes first (QA and PROD), then the tidying of an interrupted status write.
++    mark_due(settings)
++    for leftover in discard_unfinished_writes(tree_root):
++        say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
++            f'({leftover}). The status file it was meant for is as it was.')
+     statuses, status_refusals = read_statuses(settings, variants)
+     job = Job(settings=settings, variants=variants, statuses=statuses, status_refusals=status_refusals,
+               forecasting_code_identity=forecasting_code_identity(tree_root, manifest),
+@@ -601,8 +616,7 @@
+                            f'{type(fault).__name__}: {fault}. Running the job again tries again.')
+             say(traceback.format_exc())
+         say(endings[-1])
+-    closing = [f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}',
+-               *endings, *(f'WARNING (said again): {warning}' for warning in job.warnings),
++    closing = [*endings, *(f'WARNING (said again): {warning}' for warning in job.warnings),
+                'A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
+                else 'The job finished.']
+     return (EXIT_GAME_STOPPED if stopped else EXIT_FINISHED), closing
+
+--- as_reviewed/src/research/snapshot.py
++++ overlay/src/research/snapshot.py
+@@ -2,12 +2,16 @@
+ 
+ What this file is for
+     A backup is one ordinary ZIP of everything under a QA or PROD tree's root, its Python environment included.
+-    It is written under a name ending ".partial", checked twice (the archive read back against its own list;
+-    every source file read and hashed a second time, the set of files unchanged), and only then given its name,
++    It is written under a name ending ".partial", checked twice (the archive read back, every member and the
++    manifest's own bytes against what was meant; every source file hashed a second time, the set of files
++    unchanged), and only then given its name,
+     its ".sha256" file and a line in the tree's backup log. The tree must be quiet throughout: the backup's own
+     lock file makes every launcher of the tree refuse, no job or results update may hold its lock, and no other
+     Python process of the tree may be running before the first reading or after the second. A backup is always
+     an attempt: this file returns what happened as a plain result and never stops the work that asked for it.
++
++    What a ZIP keeps, said plainly: every file's bytes and name, and its time to two seconds (a time before 1980
++    is kept as 1980); every empty folder by its name, without its time; no permissions, no alternate streams.
+ 
+     It also keeps the tree's note that a backup is owed (records/SNAPSHOT_DUE): a job writes it before its first
+     write, and only a verified backup removes it. While it lies there every job says so in capitals, at its
+@@ -36,6 +40,7 @@
+ import os
+ import time
+ import zipfile
++import zlib
+ from dataclasses import dataclass
+ from datetime import datetime, timezone
+ from pathlib import Path
+@@ -99,14 +104,19 @@
+ 
+ 
+ def mark_due(settings: TreeSettings) -> None:
+-    """Write the tree's note that a backup is owed, before a job's first write. In DEV nothing is written.
+-    Only a verified backup removes it."""
++    """Write the tree's note that a backup is owed, before a job's first write of research. In DEV nothing is
++    written. Only a verified backup removes it. Refuses (LaunchRefused) if the note cannot be written."""
+     if settings.backup_root is None:
+         return
+     path = settings.tree_root / DUE_PATH
+-    path.parent.mkdir(parents=True, exist_ok=True)
+-    with open(path, 'wb') as handle:
+-        handle.write(windows_lines('This tree has been written to since its last verified backup.\n').encode('ascii'))
++    try:
++        path.parent.mkdir(parents=True, exist_ok=True)
++        with open(path, 'wb') as handle:
++            handle.write(windows_lines('This tree has been written to since its last verified backup.\n').encode('ascii'))
++    except OSError as error:
++        raise LaunchRefused(f'{path}: the note that a backup is owed could not be written ({error}). The job '
++                            f'writes no research without it. Put right what the error names and run the job '
++                            f'again.') from None
+ 
+ 
+ def software_fingerprint(tree_root: Path) -> str | None:
+@@ -152,7 +162,7 @@
+     """The first reading: every file hashed and then written into the ZIP by the library's own streaming write
+     (which keeps the file's time, to two seconds); every empty folder; and the manifest as the last member. A
+     file that changed between its hashing and its writing is caught when the archive is read back.
+-    Returns {path: sha256}."""
++    Returns ({path: sha256}, the manifest's exact bytes as they were written)."""
+     hashes = {}
+     with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED, compresslevel=9,
+                          strict_timestamps=False) as archive:                    # a time before 1980 is kept as 1980
+@@ -163,15 +173,17 @@
+             archive.write(tree_root / relative, arcname=relative, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+         manifest = dict(heading, kind=MANIFEST_KIND, empty_folders=list(empty),
+                         files=[{'path': relative, 'sha256': hashes[relative]} for relative in files])
+-        text = windows_lines(json.dumps(manifest, indent=1, sort_keys=True, ensure_ascii=True) + '\n')
+-        archive.writestr(zipfile.ZipInfo(MANIFEST_NAME, date_time=time.localtime()[:6]), text.encode('ascii'),
++        manifest_bytes = windows_lines(json.dumps(manifest, indent=1, sort_keys=True, ensure_ascii=True)
++                                       + '\n').encode('ascii')
++        archive.writestr(zipfile.ZipInfo(MANIFEST_NAME, date_time=time.localtime()[:6]), manifest_bytes,
+                          compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
+-    return hashes
+-
+-
+-def _check_archive(partial: Path, hashes: dict, empty) -> None:
+-    """The first verification: the archive read back, every member against the list. Refuses (BackupNotMade) a
+-    member missing, added or of other bytes, or a manifest that is not the last member."""
++    return hashes, manifest_bytes
++
++
++def _check_archive(partial: Path, hashes: dict, empty, manifest_bytes: bytes) -> None:
++    """The first verification: the archive read back, every member against what was meant: every file against its
++    hash, every empty folder as an empty member, and the manifest, the last member, against the exact bytes that
++    were written. Refuses (BackupNotMade) a member missing, added or of other bytes."""
+     with zipfile.ZipFile(partial) as archive:
+         names = archive.namelist()
+         if not names or names[-1] != MANIFEST_NAME or names.count(MANIFEST_NAME) != 1:
+@@ -185,6 +197,11 @@
+                     digest.update(piece)
+             if digest.hexdigest() != expected:
+                 raise BackupNotMade(f'{relative} read back from the archive is not the file that was read.')
++        for folder in empty:
++            if archive.read(folder + '/') != b'':
++                raise BackupNotMade(f'the empty folder {folder} read back from the archive is not empty.')
++        if archive.read(MANIFEST_NAME) != manifest_bytes:
++            raise BackupNotMade('the manifest read back from the archive is not the manifest that was written.')
+ 
+ 
+ def _check_sources_again(tree_root: Path, hashes: dict, empty) -> None:
+@@ -201,14 +218,31 @@
+                                 f'A backup is made only of a quiet tree.')
+ 
+ 
++def _is_the_kit_of(path: Path, fingerprint: str) -> bool:
++    """True if a file is a finished recovery kit of a software state: its ".sha256" lies beside it and agrees
++    with its bytes, and its own manifest names that whole fingerprint. Anything that cannot be read is not."""
++    try:
++        beside = Path(str(path) + '.sha256').read_text(encoding='ascii').split()
++        if beside[:1] != [_hash_of_file(path)]:
++            return False
++        with zipfile.ZipFile(path) as kit:
++            return json.loads(kit.read('KIT_MANIFEST.json')).get('software_fingerprint') == fingerprint
++    except (OSError, ValueError, KeyError, IndexError, AttributeError, zipfile.BadZipFile, zlib.error, EOFError):
++        return False
++
++
+ def _newest_kit(backup_root: Path, fingerprint: str | None) -> str | None:
+-    """The name of the newest recovery kit in a backup root for a software fingerprint, for example
+-    'KIT_20261201_101500_5d0c1f3a9b7e.zip'; None if there is none."""
++    """The name of the newest finished recovery kit in a backup root for a software fingerprint, for example
++    'KIT_20261201_101500_5d0c1f3a9b7e.zip'; None if there is none (a backup is made all the same: the kit's
++    name in its manifest is information, and any kit that checks itself can restore it)."""
+     if fingerprint is None or not backup_root.is_dir():
+         return None
+-    kits = sorted(entry.name for entry in backup_root.iterdir()
+-                  if entry.name.startswith('KIT_') and entry.name.endswith(f'_{fingerprint[:12]}.zip'))
+-    return kits[-1] if kits else None
++    for name in sorted((entry.name for entry in backup_root.iterdir()
++                        if entry.name.startswith('KIT_') and entry.name.endswith(f'_{fingerprint[:12]}.zip')),
++                       reverse=True):
++        if _is_the_kit_of(backup_root / name, fingerprint):
++            return name
++    return None
+ 
+ 
+ def attempt_snapshot(settings: TreeSettings, job: str, now=None) -> SnapshotResult:
+@@ -236,23 +270,24 @@
+             if (tree_root / held).exists():
+                 raise BackupNotMade(f'{what} ({tree_root / held}). A backup is made only of a quiet tree.')
+         with FileLock(tree_root / LOCK_PATH, f'backup {name}', moment.astimezone().strftime('%Y-%m-%d %H:%M')):
+-            try:
+-                process_rule.check_no_other_process_of_tree(tree_root)
+-                backup_root.mkdir(parents=True, exist_ok=True)
+-                if (tree_root / MANIFEST_NAME).exists():
+-                    raise BackupNotMade(f'{tree_root / MANIFEST_NAME} lies at the tree\'s root: a backup was unzipped '
+-                                        f'here by hand and not yet checked. Run Restore.bat --after-hand-unzip '
+-                                        f'--snapshot <that backup> from an unpacked recovery kit first.')
+-                if final.exists() or partial.exists():
+-                    raise BackupNotMade(f'{final} or its ".partial" exists already. Run the command again.')
+-                files, empty = _inventory(tree_root)
+-                fingerprint = software_fingerprint(tree_root)
+-                heading = {'made_utc': moment.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
+-                           'made_local': moment.astimezone().strftime('%Y-%m-%d %H:%M:%S'), 'role': settings.role,
+-                           'tree_root': str(tree_root), 'job': job, 'software_fingerprint': fingerprint,
+-                           'recovery_kit': _newest_kit(backup_root, fingerprint)}
+-                hashes = _write_archive(tree_root, partial, files, empty, heading)
+-                _check_archive(partial, hashes, empty)
++            process_rule.check_no_other_process_of_tree(tree_root)
++            backup_root.mkdir(parents=True, exist_ok=True)
++            if (tree_root / MANIFEST_NAME).exists():
++                raise BackupNotMade(f'{tree_root / MANIFEST_NAME} lies at the tree\'s root: a backup was unzipped '
++                                    f'here by hand and not yet checked. Run Restore.bat --after-hand-unzip '
++                                    f'--snapshot <that backup> from an unpacked recovery kit first.')
++            if final.exists() or partial.exists():           # checked before this attempt owns any file: a
++                raise BackupNotMade(f'{final} or its ".partial" exists already. Nothing was removed. Run the '
++                                    f'command again.')       # ".partial" found here is another attempt's
++            files, empty = _inventory(tree_root)
++            fingerprint = software_fingerprint(tree_root)
++            heading = {'made_utc': moment.astimezone(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ'),
++                       'made_local': moment.astimezone().strftime('%Y-%m-%d %H:%M:%S'), 'role': settings.role,
++                       'tree_root': str(tree_root), 'job': job, 'software_fingerprint': fingerprint,
++                       'recovery_kit': _newest_kit(backup_root, fingerprint)}
++            try:                                             # from here the ".partial" is this attempt's own
++                hashes, manifest_bytes = _write_archive(tree_root, partial, files, empty, heading)
++                _check_archive(partial, hashes, empty, manifest_bytes)
+                 _check_sources_again(tree_root, hashes, empty)
+                 process_rule.check_no_other_process_of_tree(tree_root)
+                 archive_digest, size = _hash_of_file(partial), partial.stat().st_size
+@@ -272,7 +307,8 @@
+                 (tree_root / DUE_PATH).unlink()
+             except FileNotFoundError:
+                 pass
+-    except (BackupNotMade, LaunchRefused, OSError, zipfile.BadZipFile, zipfile.LargeZipFile) as failure:
++    except (BackupNotMade, LaunchRefused, OSError, zipfile.BadZipFile, zipfile.LargeZipFile, zlib.error,
++            EOFError) as failure:                        # the last two: an archive that does not decompress
+         return SnapshotResult(False, reason=f'{failure}')
+     return SnapshotResult(True, path=final, files=len(files), size=size, seconds=time.monotonic() - began)
+ 
+@@ -313,8 +349,8 @@
+     except SettingsRefused as refusal:
+         say(f'REFUSED: {refusal}')
+         return EXIT_REFUSED
+-    say(f'BACKUP - START - the {settings.role} tree at {settings.tree_root}. The whole tree is read twice; it can '
+-        f'take several minutes.')
++    say(f'BACKUP - START - the {settings.role} tree at {settings.tree_root}. Every file is read three times (hashed, '
++        f'written into the ZIP, hashed again) and the ZIP is read back; it can take several minutes.')
+     result = attempt_snapshot(settings, 'MANUAL')
+     say(result.line())
+     say('BACKUP - END')
+
+--- as_reviewed/tests/test_trees_restore.py
++++ overlay/tests/test_trees_restore.py
+@@ -91,8 +91,9 @@
+     def restore(self, table=QUIET_TABLE, ready=True, **options) -> int:
+         """Run the restore of the backup from the unpacked kit with an invented process table."""
+         options.setdefault('read_processes', lambda: table)
++        options.setdefault('now', lambda: RESTORED_AT)
+         return restore_tool.restore(self.backup, kit_folder=self.kit, environment=lambda tree: ready,
+-                                    say=self.said.append, now=lambda: RESTORED_AT, **options)
++                                    say=self.said.append, **options)
+ 
+     def text(self) -> str:
+         return '\n'.join(self.said)
+@@ -167,6 +168,60 @@
+                 imported.add(node.module.split('.')[0])
+         self.assertLessEqual(imported, set(sys.stdlib_module_names) | {'__future__'})
+         for word in ('.kill(', '.terminate(', 'taskkill', 'TerminateProcess', 'signal'):
++            self.assertNotIn(word, source)
++
++    def test_a_kit_whose_own_list_does_not_name_exactly_its_three_files_refuses(self):
++        whole = json.loads((self.kit / 'KIT_MANIFEST.json').read_bytes())
++        before = tree_as_hashes(self.qa)
++        for what, files in (('none', []), ('two of three', whole['files'][:2]),
++                            ('one twice', whole['files'] + whole['files'][:1])):
++            with self.subTest(what=what):
++                self.said.clear()
++                (self.kit / 'KIT_MANIFEST.json').write_text(json.dumps(dict(whole, files=files)), encoding='ascii')
++                (self.kit / 'restore_tool.py').write_bytes(b'# not the tool: and the short list does not notice\r\n')
++                self.assertEqual(self.restore(), restore_tool.EXIT_REFUSED)
++                self.assertIn('it does not list exactly HOW_TO_RESTORE.txt, Restore.bat, restore_tool.py', self.text())
++                self.assert_nothing_was_touched(before)
++
++    def test_a_kit_that_cannot_be_given_its_name_leaves_nothing_that_looks_like_one(self):
++        before = sorted(entry.name for entry in self.settings.backup_root.iterdir())
++        with mock.patch.object(recovery_kit.os, 'replace', side_effect=OSError('invented: the rename failed')):
++            result = recovery_kit.build_kit(self.dev, self.settings.backup_root, 'cd34' * 16, now=lambda: RESTORED_AT)
++        self.assertFalse(result.made)
++        self.assertIn('the rename failed', result.line())
++        self.assertEqual(sorted(entry.name for entry in self.settings.backup_root.iterdir()), before)
++        beside = self.settings.backup_root / 'KIT_20261203_000000_cd34cd34cd34.zip.sha256'
++        stamp = RESTORED_AT.astimezone().strftime('%Y%m%d_%H%M%S')
++        earlier = self.settings.backup_root / f'KIT_{stamp}_cd34cd34cd34.zip.sha256'
++        earlier.write_bytes(b'left by another attempt')
++        result = recovery_kit.build_kit(self.dev, self.settings.backup_root, 'cd34' * 16, now=lambda: RESTORED_AT)
++        self.assertFalse(result.made)
++        self.assertIn('Nothing was removed', result.reason)
++        self.assertEqual(earlier.read_bytes(), b'left by another attempt')
++        self.assertFalse(beside.exists())
++
++    def test_a_kit_is_never_left_with_its_name_and_without_its_sha256(self):
++        opening = open
++
++        def sha256_cannot_be_written(path, *rest, **more):
++            if str(path).endswith('.sha256'):
++                raise OSError('invented: the ".sha256" could not be written')
++            return opening(path, *rest, **more)
++
++        before = sorted(entry.name for entry in self.settings.backup_root.iterdir())
++        with mock.patch('builtins.open', sha256_cannot_be_written):
++            result = recovery_kit.build_kit(self.dev, self.settings.backup_root, 'cd34' * 16, now=lambda: RESTORED_AT)
++        self.assertFalse(result.made)
++        self.assertEqual(sorted(entry.name for entry in self.settings.backup_root.iterdir()), before)
++
++    def test_the_tool_sets_no_time_limit_that_would_end_the_python_it_starts(self):
++        source = (REPOSITORY_ROOT / 'deploy' / 'restore_tool.py').read_text(encoding='ascii')
++        calls = [node for node in ast.walk(ast.parse(source)) if isinstance(node, ast.Call)
++                 and isinstance(node.func, ast.Attribute) and isinstance(node.func.value, ast.Name)
++                 and node.func.value.id == 'subprocess']
++        self.assertEqual([call.func.attr for call in calls], ['run'])
++        self.assertEqual([keyword.arg for keyword in calls[0].keywords], ['capture_output'])
++        for word in ('timeout=', 'Popen', 'check_output', 'wait('):
+             self.assertNotIn(word, source)
+ 
+     def test_a_kit_whose_file_was_damaged_refuses_before_anything_else(self):
+@@ -239,6 +294,31 @@
+         self.assertTrue((self.qa / 'scratch' / 'empty').is_dir())
+         self.assertLess(abs((self.qa / 'src' / 'toy_other.py').stat().st_mtime - 1_700_000_000), 2.5)
+ 
++    def test_the_settings_file_comes_back_with_its_time_and_its_checked_bytes(self):
++        os.utime(self.qa / 'ENVIRONMENT.ini', (1_700_000_000, 1_700_000_000))
++        self.make_backup_again()
++        self.assertEqual(self.restore(), restore_tool.EXIT_RESTORED, self.text())
++        self.assertLess(abs((self.qa / 'ENVIRONMENT.ini').stat().st_mtime - 1_700_000_000), 2.5)
++        self.assertEqual(hashlib.sha256((self.qa / 'ENVIRONMENT.ini').read_bytes()).hexdigest(),
++                         self.payload['ENVIRONMENT.ini'])
++
++    def test_a_settings_file_that_reads_from_the_backup_as_other_bytes_the_second_time_is_not_written(self):
++        read, reads = zipfile.ZipFile.read, []
++
++        def second_reading_differs(archive, name, *rest):
++            data = read(archive, name, *rest)
++            if name == 'ENVIRONMENT.ini':
++                reads.append(name)
++                if len(reads) == 2:                          # the first is the check before anything is touched
++                    return data + b'# other bytes\r\n'
++            return data
++
++        with mock.patch.object(zipfile.ZipFile, 'read', second_reading_differs):
++            self.assertEqual(self.restore(), restore_tool.EXIT_STOPPED, self.text())
++        self.assertIn('read from the backup a second time is not the file its manifest lists', self.text())
++        self.assertFalse((self.qa / 'ENVIRONMENT.ini').exists())
++        self.assertTrue((self.qa / restore_tool.PROGRESS_FILE).is_file())
++
+     def make_backup_again(self) -> None:
+         """A second backup, a minute after the first, of the tree as it stands now."""
+         result = snapshot.attempt_snapshot(self.settings, 'MANUAL', now=lambda: BACKED_UP_AT.replace(minute=41))
+@@ -324,10 +404,83 @@
+         self.backup = other
+         self.refused_untouched('it does not hold exactly the files its manifest lists')
+ 
++    def copy_of_the_backup(self, name: str, change_manifest, leave_out=(), other_bytes=None) -> None:
++        """Make a second, valid ZIP from the backup: every member's bytes as they are, the manifest changed by
++        change_manifest(dict), the members named in leave_out dropped from the ZIP and from the manifest's list,
++        and the members in other_bytes ({name: bytes}) given those bytes, with their hashes in the list to match."""
++        other, other_bytes = self.backup.with_name(name), other_bytes or {}
++        with zipfile.ZipFile(self.backup) as old, zipfile.ZipFile(other, 'w', compression=zipfile.ZIP_DEFLATED) as new:
++            manifest = json.loads(old.read(restore_tool.SNAPSHOT_MANIFEST_NAME))
++            manifest['files'] = [entry if entry['path'] not in other_bytes else
++                                 {'path': entry['path'], 'sha256': hashlib.sha256(other_bytes[entry['path']]).hexdigest()}
++                                 for entry in manifest['files'] if entry['path'] not in leave_out]
++            change_manifest(manifest)
++            for member in old.namelist()[:-1]:
++                if member not in leave_out:
++                    new.writestr(member, other_bytes.get(member, old.read(member)))
++            new.writestr(restore_tool.SNAPSHOT_MANIFEST_NAME, json.dumps(manifest))
++        self.backup = other
++
++    def test_a_backup_whose_manifest_names_another_folder_than_its_own_settings_is_put_back_nowhere(self):
++        elsewhere = self.root / 'another_invented_tree'
++        elsewhere.mkdir()
++        (elsewhere / 'precious.txt').write_bytes(b'not this backup\'s to rename\r\n')
++        self.copy_of_the_backup('QA_20261201_101013_MANUAL.zip', lambda manifest: manifest.update(tree_root=str(elsewhere)))
++        self.refused_untouched('A backup is put back only at the path its own settings name')
++        self.assertEqual(sorted(entry.name for entry in self.root.iterdir() if 'another_invented_tree' in entry.name),
++                         ['another_invented_tree'])          # not renamed, nothing set aside beside it
++        self.assertEqual((elsewhere / 'precious.txt').read_bytes(), b'not this backup\'s to rename\r\n')
++
++    def test_a_backup_whose_root_is_not_a_full_path_or_whose_role_is_not_its_settings_refuses(self):
++        the_backup = self.backup
++        for number, change in enumerate((lambda manifest: manifest.update(tree_root='a_p_r_i_r'),
++                                         lambda manifest: manifest.update(tree_root=''),
++                                         lambda manifest: manifest.update(role='PROD'))):
++            with self.subTest(case=number):
++                self.said.clear()
++                self.backup = the_backup
++                self.copy_of_the_backup(f'QA_20261201_10102{number}_MANUAL.zip', change)
++                self.refused_untouched('A backup is put back only at the path its own settings name')
++
++    def test_a_root_that_is_not_a_full_path_refuses_even_when_the_settings_inside_say_the_same(self):
++        settings = ('[environment]\r\nrole = QA\r\ntree_root = a_p_r_i_r\r\nvenv_dir = a_p_r_i_r/.venv\r\n'
++                    'backup_root = a_p_r_i_r_backups\r\n').encode('ascii')
++        self.copy_of_the_backup('QA_20261201_101015_MANUAL.zip', lambda manifest: manifest.update(tree_root='a_p_r_i_r'),
++                                other_bytes={'ENVIRONMENT.ini': settings})
++        self.refused_untouched('A backup is put back only at the path its own settings name')
++        self.assertFalse(Path('a_p_r_i_r').exists())
++
++    def test_settings_inside_a_backup_that_do_not_describe_a_tree_of_the_project_refuse(self):
++        for number, lines in enumerate((f'venv_dir = {self.qa.parent / "elsewhere" / ".venv"}\r\nbackup_root = {self.settings.backup_root}',
++                                        f'venv_dir = {self.qa / ".venv"}\r\nbackup_root = {self.qa / "backups"}')):
++            with self.subTest(case=number):
++                self.said.clear()
++                the_backup = self.backup
++                settings = f'[environment]\r\nrole = QA\r\ntree_root = {self.qa}\r\n{lines}\r\n'.encode('utf-8')
++                self.copy_of_the_backup(f'QA_20261201_10103{number}_MANUAL.zip', lambda manifest: None,
++                                        other_bytes={'ENVIRONMENT.ini': settings})
++                self.refused_untouched('does not describe a tree of this project')
++                self.backup = the_backup
++
++    def test_a_backup_that_holds_no_settings_file_is_not_a_trees_backup(self):
++        self.copy_of_the_backup('QA_20261201_101014_MANUAL.zip', lambda manifest: None, leave_out=('ENVIRONMENT.ini',))
++        self.refused_untouched('it holds no ENVIRONMENT.ini')
++
++    def test_a_process_table_that_was_not_read_whole_refuses(self):
++        without_this_tool = [entry for entry in QUIET_TABLE if entry[0] != ME]
++        for table in (without_this_tool, []):
++            with self.subTest(entries=len(table)):
++                self.said.clear()
++                self.refused_untouched('does not hold this tool\'s own process: it was not read whole', table=table)
++        restore_tool.check_table_was_read_to_its_end(restore_tool.ERROR_NO_MORE_FILES)
++        for error in (0, 5, 299):                            # no error reported; access denied; a partial copy
++            with self.assertRaisesRegex(restore_tool.RestoreRefused, 'could not be read to its end'):
++                restore_tool.check_table_was_read_to_its_end(error)
++
+     def test_a_member_whose_name_would_leave_the_tree_refuses(self):
+         other = self.backup.with_name('QA_20261201_101011_MANUAL.zip')
+         manifest = {'kind': restore_tool.SNAPSHOT_MANIFEST_KIND, 'tree_root': str(self.qa), 'empty_folders': [],
+-                    'files': [{'path': '../outside.txt', 'sha256': hashlib.sha256(b'x').hexdigest()}]}
++                    'role': 'QA', 'files': [{'path': '../outside.txt', 'sha256': hashlib.sha256(b'x').hexdigest()}]}
+         with zipfile.ZipFile(other, 'w') as new:
+             new.writestr('../outside.txt', b'x')
+             new.writestr(restore_tool.SNAPSHOT_MANIFEST_NAME, json.dumps(manifest))
+@@ -378,6 +531,42 @@
+         self.assertEqual(len(self.set_aside()), 2)
+         self.assertFalse((self.qa / restore_tool.PROGRESS_FILE).exists())
+ 
++    def test_a_fresh_tree_with_a_folder_the_backup_does_not_hold_or_without_one_it_holds_is_not_the_payload(self):
++        read_back = restore_tool._tree_now
++        for what, change in (('one more', lambda folders: folders | {'src/slipped_in'}),
++                             ('one fewer', lambda folders: folders - {'src/methods'})):
++            with self.subTest(what=what):
++                self.said.clear()
++
++                def folders_differ(tree_root):
++                    files, folders = read_back(tree_root)
++                    return files, change(folders)
++
++                with mock.patch.object(restore_tool, '_tree_now', folders_differ):
++                    self.assertEqual(self.restore(now=lambda: RESTORED_AT.replace(second=len(what))),
++                                     restore_tool.EXIT_STOPPED, self.text())
++                self.assertIn('its folders are not the backup\'s', self.text())
++                self.assertTrue((self.qa / restore_tool.PROGRESS_FILE).is_file())
++
++    def test_a_folder_that_cannot_be_listed_stops_the_restore_and_is_never_read_as_absent(self):
++        listing = os.scandir
++
++        def scandir(path='.'):
++            if os.fspath(path) == str(self.qa / 'src' / 'methods'):
++                raise PermissionError(13, 'Access is denied', os.fspath(path))
++            return listing(path)
++
++        real_tree_now = restore_tool._tree_now
++
++        def read_with_one_folder_closed(tree_root):
++            with mock.patch('os.scandir', scandir):
++                return real_tree_now(tree_root)
++
++        with mock.patch.object(restore_tool, '_tree_now', read_with_one_folder_closed):
++            self.assertEqual(self.restore(), restore_tool.EXIT_STOPPED, self.text())
++        self.assertIn('STOPPED: a file or a folder could not be read', self.text())
++        self.assertTrue((self.qa / restore_tool.PROGRESS_FILE).is_file())
++
+ 
+ class AStaleOrphanMarker(ABackedUpTreeAndItsKit):
+     """Deployment design section 12, the one exception: shown with its warning; the PC started after the marker
+@@ -405,10 +594,18 @@
+         self.assertFalse((self.qa / ORPHAN).exists())
+         [evidence] = sorted((self.qa / 'records').glob('RESTORE_*_ORPHAN_MARKER.json'))
+         self.assertEqual(evidence.read_bytes(), b'[{"an": "invented orphan entry"}]\r\n')
+-        [record] = [path for path in (self.qa / 'records').glob('RESTORE_*.json') if 'ORPHAN' not in path.name]
+-        self.assertTrue(json.loads(record.read_bytes())['orphan_marker_kept_as_evidence'])
+         [aside] = self.set_aside()
+         self.assertTrue((aside / ORPHAN).is_file())
++        self.assertEqual(self.orphan_record(), {
++            'in_the_backup': True, 'in_the_old_tree': True, 'old_tree_marker_now_at': str(aside / ORPHAN),
++            'old_tree_marker_note': None, 'evidence_is_the_marker_of': 'the backup',
++            'evidence_file': f'records/{evidence.name}'})
++        self.assertIn('are kept as evidence in', self.text())
++
++    def orphan_record(self) -> dict:
++        """What the restore record says of orphan markers."""
++        [record] = [path for path in (self.qa / 'records').glob('RESTORE_*.json') if 'ORPHAN' not in path.name]
++        return json.loads(record.read_bytes())['orphan_marker']
+ 
+     def test_without_a_restart_since_the_marker_it_refuses_and_typing_the_sentence_does_not_stand_in(self):
+         before = tree_as_hashes(self.qa)
+@@ -444,7 +641,38 @@
+         self.assertEqual(self.with_marker(restore_tool.ORPHAN_ACKNOWLEDGEMENT, 3600), restore_tool.EXIT_RESTORED,
+                          self.text())
+         self.assertFalse((self.qa / ORPHAN).exists())
++        [evidence] = sorted((self.qa / 'records').glob('RESTORE_*_ORPHAN_MARKER.json'))     # read before the rename
++        self.assertEqual(evidence.read_bytes(), b'[{"an": "invented orphan entry"}]\r\n')
++        [aside] = self.set_aside()
++        self.assertEqual((aside / ORPHAN).read_bytes(), b'[{"an": "invented orphan entry"}]\r\n')
++        self.assertEqual(self.orphan_record(), {
++            'in_the_backup': False, 'in_the_old_tree': True, 'old_tree_marker_now_at': str(aside / ORPHAN),
++            'old_tree_marker_note': None, 'evidence_is_the_marker_of': 'the old tree',
++            'evidence_file': f'records/{evidence.name}'})
++
++    def test_an_old_tree_marker_that_cannot_be_read_is_not_said_to_be_kept(self):
++        self.backup = sorted(self.settings.backup_root.glob('QA_*_MANUAL.zip'))[0]
++        (self.qa / ORPHAN).unlink()
++        (self.qa / ORPHAN).mkdir()                           # it is there and its bytes cannot be read
++        self.assertEqual(self.with_marker(restore_tool.ORPHAN_ACKNOWLEDGEMENT, 3600), restore_tool.EXIT_RESTORED,
++                         self.text())
+         self.assertEqual(sorted((self.qa / 'records').glob('RESTORE_*_ORPHAN_MARKER.json')), [])
++        record = self.orphan_record()
++        self.assertEqual((record['evidence_file'], record['evidence_is_the_marker_of']), (None, None))
++        self.assertIn('could not be read', record['old_tree_marker_note'])
++        self.assertIn('ARE NOT KEPT BESIDE THE RECORD', self.text())
++
++    def test_a_restart_within_the_two_seconds_a_zip_cannot_tell_apart_is_not_proof_of_a_later_restart(self):
++        (self.qa / ORPHAN).unlink()                          # the marker is only in the backup: its time is the ZIP's
++        kept = restore_tool.read_backup(self.backup)['orphan_marker_time']
++        for after, expected in ((0, restore_tool.EXIT_REFUSED), (restore_tool.ZIP_TIME_STEP, restore_tool.EXIT_REFUSED),
++                                (restore_tool.ZIP_TIME_STEP + 1, restore_tool.EXIT_RESTORED)):
++            with self.subTest(seconds_after_the_zips_time=after):
++                self.said.clear()
++                tables = iter([QUIET_TABLE] * 4)
++                code = self.restore(read_processes=lambda: next(tables), started_at=lambda: kept + after,
++                                    ask=lambda question: restore_tool.ORPHAN_ACKNOWLEDGEMENT)
++                self.assertEqual(code, expected, self.text())
+ 
+     def test_a_marker_only_in_the_backup_asks_the_same(self):
+         (self.qa / ORPHAN).unlink()
+@@ -455,6 +683,10 @@
+ 
+ 
+ class AfterAnUnzipByHand(ABackedUpTreeAndItsKit):
++    def make_backup(self) -> None:
++        (self.qa / 'scratch' / 'empty').mkdir(parents=True, exist_ok=True)       # so that the backup holds one
++        super().make_backup()
++
+     """Deployment design section 12, the last resort: nothing was checked by the unzip; the reconciliation checks
+     every file, writes the record and moves the manifest; until then no new backup is made."""
+ 
+@@ -484,6 +716,27 @@
+         self.assertTrue((self.qa / 'records' / f'RESTORE_{stamp}_{snapshot.MANIFEST_NAME}').is_file())
+         self.assertTrue(snapshot.attempt_snapshot(self.settings, 'MANUAL', now=lambda: RESTORED_AT).made)
+ 
++    def test_a_missing_empty_folder_or_another_manifest_at_the_root_is_not_this_backup_unzipped(self):
++        empty = [path for path in self.qa.rglob('*') if path.is_dir() and not any(path.iterdir())]
++        self.assertTrue(empty, 'the invented tree holds no empty folder to lose')
++        empty[0].rmdir()
++        before = tree_as_hashes(self.qa)
++        self.assertEqual(self.reconcile(), restore_tool.EXIT_REFUSED)
++        self.assertIn('its folders are not the backup\'s', self.text())
++        self.assertEqual(tree_as_hashes(self.qa), before)
++        empty[0].mkdir()
++        self.said.clear()
++        manifest_at_root = self.qa / snapshot.MANIFEST_NAME
++        kept = manifest_at_root.read_bytes()
++        manifest_at_root.write_bytes(kept.replace(b'"job": "MANUAL"', b'"job": "RESEARCH"'))
++        before = tree_as_hashes(self.qa)
++        self.assertEqual(self.reconcile(), restore_tool.EXIT_REFUSED)
++        self.assertIn('at its root is missing or is not this backup\'s', self.text())
++        self.assertEqual(tree_as_hashes(self.qa), before)
++        manifest_at_root.write_bytes(kept)
++        self.said.clear()
++        self.assertEqual(self.reconcile(), restore_tool.EXIT_RESTORED, self.text())
++
+     def test_a_tree_that_is_not_the_backup_unzipped_is_refused_and_nothing_is_changed(self):
+         with open(self.qa / 'src' / 'toy_other.py', 'ab') as handle:
+             handle.write(b'# not the backup\'s\r\n')
+
+--- as_reviewed/tests/test_trees_snapshot.py
++++ overlay/tests/test_trees_snapshot.py
+@@ -18,7 +18,7 @@
+ from unittest import mock
+ 
+ import research_fixtures as fx
+-from research import job_lock, process_rule, research_job, snapshot
++from research import job_lock, process_rule, research_job, snapshot, status_file
+ from research.settings import read_settings
+ 
+ A_TIME = datetime(2026, 12, 1, 9, 40, 12, tzinfo=timezone.utc)
+@@ -115,15 +115,45 @@
+         self.assertFalse(snapshot.is_due(self.qa))
+         self.assertFalse((self.qa / snapshot.LOCK_PATH).exists())
+ 
+-    def test_it_names_the_newest_recovery_kit_of_the_trees_software_state(self):
++    def invented_kit(self, name: str, fingerprint: str, sidecar: str = 'right') -> None:
++        """Write an invented recovery kit into the backup root: a ZIP whose manifest names a software fingerprint,
++        with its ".sha256" beside it ('right'), with one that does not agree ('wrong'), or with none ('none')."""
++        self.backups.mkdir(exist_ok=True)
++        with zipfile.ZipFile(self.backups / name, 'w') as kit:
++            kit.writestr('KIT_MANIFEST.json', json.dumps({'software_fingerprint': fingerprint}))
++        digest = hashlib.sha256((self.backups / name).read_bytes()).hexdigest()
++        if sidecar != 'none':
++            (self.backups / (name + '.sha256')).write_bytes(
++                f'{digest if sidecar == "right" else "0" * 64} *{name}\r\n'.encode('ascii'))
++
++    def kit_named_by_a_backup(self):
++        with zipfile.ZipFile(self.attempt().path) as archive:
++            return json.loads(archive.read(snapshot.MANIFEST_NAME))['recovery_kit']
++
++    def test_it_names_the_newest_finished_recovery_kit_of_the_trees_software_state(self):
+         fingerprint = snapshot.software_fingerprint(self.qa)
+-        self.backups.mkdir(exist_ok=True)
+-        for name in (f'KIT_20261101_080000_{fingerprint[:12]}.zip', f'KIT_20261120_080000_{fingerprint[:12]}.zip',
+-                     'KIT_20261125_080000_000000000000.zip'):
+-            (self.backups / name).write_bytes(b'PK invented')
+-        with zipfile.ZipFile(self.attempt().path) as archive:
+-            manifest = json.loads(archive.read(snapshot.MANIFEST_NAME))
+-        self.assertEqual(manifest['recovery_kit'], f'KIT_20261120_080000_{fingerprint[:12]}.zip')
++        short = fingerprint[:12]
++        self.invented_kit(f'KIT_20261101_080000_{short}.zip', fingerprint)
++        self.invented_kit(f'KIT_20261120_080000_{short}.zip', fingerprint)
++        self.invented_kit(f'KIT_20261121_080000_{short}.zip', fingerprint, sidecar='none')      # never finished
++        self.invented_kit(f'KIT_20261122_080000_{short}.zip', fingerprint, sidecar='wrong')     # damaged since
++        self.invented_kit(f'KIT_20261123_080000_{short}.zip', short + 'f' * 52)     # another state, same 12 letters
++        (self.backups / f'KIT_20261124_080000_{short}.zip').write_bytes(b'PK not a kit at all')
++        (self.backups / f'KIT_20261124_080000_{short}.zip.sha256').write_bytes(
++            hashlib.sha256(b'PK not a kit at all').hexdigest().encode('ascii') + b' *x\r\n')
++        self.invented_kit('KIT_20261125_080000_000000000000.zip', '0' * 64)
++        self.assertEqual(self.kit_named_by_a_backup(), f'KIT_20261120_080000_{short}.zip')
++
++    def test_with_no_finished_kit_of_its_state_a_backup_is_made_all_the_same_and_names_none(self):
++        fingerprint = snapshot.software_fingerprint(self.qa)
++        self.invented_kit(f'KIT_20261121_080000_{fingerprint[:12]}.zip', fingerprint, sidecar='none')
++        self.assertIsNone(self.kit_named_by_a_backup())
++
++    def test_the_command_says_how_often_the_tree_is_read(self):
++        said = []
++        snapshot.main([], self.qa, say=said.append)
++        self.assertIn('Every file is read three times (hashed, written into the ZIP, hashed again) and the ZIP is '
++                      'read back', said[0])
+ 
+ 
+ class ABackupIsOnlyOfAQuietTree(InventedQaTree):
+@@ -209,13 +239,64 @@
+         write = snapshot._write_archive
+ 
+         def write_then_misremember(*arguments):
+-            hashes = write(*arguments)
++            hashes, manifest_bytes = write(*arguments)
+             hashes['ENVIRONMENT.ini'] = '0' * 64
+-            return hashes
++            return hashes, manifest_bytes
+ 
+         with mock.patch.object(snapshot, '_write_archive', write_then_misremember):
+             self.not_made('ENVIRONMENT.ini read back from the archive is not the file that was read')
+         self.assert_nothing_was_left()
++
++    def rewritten(self, partial: Path, change) -> None:
++        """Write a ZIP again member by member, as a valid ZIP, with change(name, data) giving each member's bytes."""
++        with zipfile.ZipFile(partial) as old:
++            members = [(name, old.read(name)) for name in old.namelist()]
++        partial.unlink()
++        with zipfile.ZipFile(partial, 'x', compression=zipfile.ZIP_DEFLATED) as new:
++            for name, data in members:
++                new.writestr(name, change(name, data))
++
++    def test_a_manifest_that_reads_back_as_other_bytes_means_no_backup_though_every_file_is_right(self):
++        (self.qa / 'scratch' / 'empty').mkdir(parents=True)
++        write = snapshot._write_archive
++        other_root = lambda name, data: (data.replace(str(self.qa).encode(), str(self.qa.parent / 'elsewhere').encode())
++                                         if name == snapshot.MANIFEST_NAME else data)
++        other_hash = lambda name, data: (data.replace(b'"sha256": "', b'"sha256": "0', 1)
++                                         if name == snapshot.MANIFEST_NAME else data)
++        folder_not_empty = lambda name, data: b'x' if name == 'scratch/empty/' else data
++        for what, change, word in (('another tree root', other_root, 'the manifest read back'),
++                                   ('another hash', other_hash, 'the manifest read back'),
++                                   ('an empty folder that is not empty', folder_not_empty, 'scratch/empty read back')):
++            with self.subTest(what=what):
++                snapshot.mark_due(self.settings)
++
++                def write_then_alter(tree_root, partial, *rest):
++                    result = write(tree_root, partial, *rest)
++                    self.rewritten(partial, change)          # a valid ZIP; every file's bytes as they were read
++                    return result
++
++                with mock.patch.object(snapshot, '_write_archive', write_then_alter):
++                    self.not_made(word)
++                self.assert_nothing_was_left()
++                self.assertTrue(snapshot.is_due(self.qa))
++
++    def test_an_archive_that_does_not_decompress_is_a_backup_not_made_and_never_an_exception(self):
++        import zlib
++        for error in (zlib.error('Error -3 while decompressing data'), EOFError('compressed file ended early'),
++                      zipfile.BadZipFile('Bad CRC-32')):
++            with self.subTest(error=type(error).__name__):
++                with mock.patch.object(snapshot, '_check_archive', side_effect=error):
++                    self.not_made()
++                self.assert_nothing_was_left()
++
++    def test_a_partial_that_lay_there_before_the_attempt_is_another_attempts_and_is_not_removed(self):
++        stamp = A_TIME.astimezone().strftime('%Y%m%d_%H%M%S')
++        self.backups.mkdir(exist_ok=True)
++        earlier = self.backups / f'QA_{stamp}_MANUAL.zip.partial'
++        earlier.write_bytes(b'left by a backup that was ended')
++        self.not_made('exists already', 'Nothing was removed')
++        self.assertEqual(earlier.read_bytes(), b'left by a backup that was ended')
++        self.assertEqual([entry.name for entry in self.backups.iterdir()], [earlier.name])
+ 
+     def test_a_link_in_the_tree_means_no_backup_and_what_it_points_to_is_not_read(self):
+         outside = self.root / 'outside'
+@@ -274,17 +355,64 @@
+         self.assertNotIn(snapshot.DUE_PATH, names)
+         self.assertNotIn(snapshot.LOCK_PATH, names)
+ 
+-    def test_the_note_is_written_before_the_jobs_first_write(self):
+-        seen = []
+-        run_locked = research_job.run_locked
+-
+-        def look_then_run(settings, *arguments):
+-            seen.append((snapshot.is_due(settings.tree_root), (settings.tree_root / 'results' / 'research').exists()))
+-            return run_locked(settings, *arguments)
+-
+-        with mock.patch.object(research_job, 'run_locked', look_then_run):
++    def staged_leftover(self) -> Path:
++        """What an interrupted status write leaves: an unfinished copy in the staging folder."""
++        leftover = self.qa / status_file.STAGING_FOLDER / f'E_901__TOY_B_V1__{status_file.STATUS_FILE_NAME}.writing'
++        leftover.parent.mkdir(parents=True, exist_ok=True)
++        leftover.write_bytes(b'left by an interrupted status write\r\n')
++        return leftover
++
++    def test_the_note_is_the_jobs_first_write_before_it_tidies_or_writes_anything_else(self):
++        leftover, seen = self.staged_leftover(), []
++        tidy = research_job.discard_unfinished_writes
++
++        def look_then_tidy(tree_root):
++            seen.append((snapshot.is_due(tree_root), leftover.exists(), (tree_root / 'results' / 'research').exists()))
++            return tidy(tree_root)
++
++        with mock.patch.object(research_job, 'discard_unfinished_writes', look_then_tidy):
+             self.assertEqual(self.job(self.qa)[0], 0)
+-        self.assertEqual(seen, [(True, False)])
++        self.assertEqual(seen, [(True, True, False)])
++        self.assertFalse(leftover.exists())
++
++    def test_an_ordinary_refusal_after_the_guard_comes_before_any_write_and_says_so_truthfully(self):
++        leftover, said = self.staged_leftover(), []
++        with fx.ImportPath(self.qa):
++            code = research_job.run(self.qa, (fx.GAME,), now=lambda: fx.FIXED_TIME, say=said.append, no_update=True,
++                                    only=('E_901/NO_SUCH_VARIANT',))
++        self.assertEqual(code, research_job.EXIT_REFUSED, said)
++        self.assertIn('--only names no variant of this tree', '\n'.join(said))
++        self.assertEqual(said[-1], 'RESEARCH JOB - END - refused before any game was worked; nothing was written.')
++        self.assertFalse(snapshot.is_due(self.qa))                       # no note: nothing was written
++        self.assertEqual(leftover.read_bytes(), b'left by an interrupted status write\r\n')    # nor tidied
++        self.assertNotIn('BACKUP', '\n'.join(said))
++
++    def test_a_refusal_that_follows_the_note_is_said_as_it_is_and_the_owed_backup_is_tried(self):
++        refuse = mock.Mock(side_effect=status_file.StatusRefused('an invented refusal after the first write'))
++        with mock.patch.object(research_job, 'read_statuses', refuse):
++            code, text = self.job(self.qa)
++        self.assertEqual(code, research_job.EXIT_REFUSED, text)
++        self.assertNotIn('nothing was written', text)
++        self.assertIn('BACKUP MADE AND VERIFIED: ', text)
++        self.assertTrue(text.endswith('the tree\'s note that a backup is owed had been written, so that backup was '
++                                      'tried (above).'))
++        self.assertFalse(snapshot.is_due(self.qa))
++        self.assertFalse((self.qa / 'records' / 'JOB.lock').exists())
++
++    def test_a_note_that_cannot_be_written_refuses_the_job_before_it_writes_research(self):
++        (self.qa / snapshot.DUE_PATH).mkdir(parents=True)                # a folder where the note should be
++        with self.assertRaisesRegex(job_lock.LaunchRefused, 'the note that a backup is owed could not be written'):
++            snapshot.mark_due(self.settings)
++
++    def test_the_jobs_end_line_gives_the_time_after_its_backup(self):
++        code, text = self.job(self.qa, clock=self.a_clock_that_runs())
++        self.assertEqual(code, 0, text)
++        lines = text.split('\n')
++        start = next(line for line in lines if line.startswith('RESEARCH JOB - START - '))
++        end = next(line for line in lines if line.startswith('RESEARCH JOB - END - '))
++        self.assertLess(lines.index(next(line for line in lines if line.startswith('BACKUP MADE'))), lines.index(end))
++        self.assertGreater(end[len('RESEARCH JOB - END - '):][:16], start[len('RESEARCH JOB - START - '):][:16])
++        self.assertEqual(lines[-1], 'The job finished.')
+ 
+     def test_if_no_backup_can_be_made_the_job_goes_on_and_every_job_says_so_until_one_is_made(self):
+         if self.backups.exists():
+

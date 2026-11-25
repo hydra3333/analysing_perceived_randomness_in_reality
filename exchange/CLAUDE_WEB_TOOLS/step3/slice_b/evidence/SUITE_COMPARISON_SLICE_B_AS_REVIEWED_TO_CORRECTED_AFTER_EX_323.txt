@@ -1,0 +1,38 @@
+before: 61 modules; unittest ran 1055 tests; identified here: 1055
+after: 61 modules; unittest ran 1078 tests; identified here: 1078
+MODULE CHANGED: test_trees_restore: ran 32, OK -> ran 46, OK
+MODULE CHANGED: test_trees_snapshot: ran 23, OK -> ran 32, OK
+DISAPPEARED: test_trees_snapshot.AVerifiedBackup.test_it_names_the_newest_recovery_kit_of_the_trees_software_state
+DISAPPEARED: test_trees_snapshot.TheResearchJobsBackups.test_the_note_is_written_before_the_jobs_first_write
+NEW: test_trees_restore.ARestore.test_a_settings_file_that_reads_from_the_backup_as_other_bytes_the_second_time_is_not_written
+NEW: test_trees_restore.ARestore.test_the_settings_file_comes_back_with_its_time_and_its_checked_bytes
+NEW: test_trees_restore.AStaleOrphanMarker.test_a_restart_within_the_two_seconds_a_zip_cannot_tell_apart_is_not_proof_of_a_later_restart
+NEW: test_trees_restore.AStaleOrphanMarker.test_an_old_tree_marker_that_cannot_be_read_is_not_said_to_be_kept
+NEW: test_trees_restore.AfterAnUnzipByHand.test_a_missing_empty_folder_or_another_manifest_at_the_root_is_not_this_backup_unzipped
+NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_that_holds_no_settings_file_is_not_a_trees_backup
+NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_whose_manifest_names_another_folder_than_its_own_settings_is_put_back_nowhere
+NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_whose_root_is_not_a_full_path_or_whose_role_is_not_its_settings_refuses
+NEW: test_trees_restore.NothingIsTouchedUnless.test_a_process_table_that_was_not_read_whole_refuses
+NEW: test_trees_restore.StoppedPartWay.test_a_folder_that_cannot_be_listed_stops_the_restore_and_is_never_read_as_absent
+NEW: test_trees_restore.StoppedPartWay.test_a_fresh_tree_with_a_folder_the_backup_does_not_hold_or_without_one_it_holds_is_not_the_payload
+NEW: test_trees_restore.TheRecoveryKit.test_a_kit_that_cannot_be_given_its_name_leaves_nothing_that_looks_like_one
+NEW: test_trees_restore.TheRecoveryKit.test_a_kit_whose_own_list_does_not_name_exactly_its_three_files_refuses
+NEW: test_trees_restore.TheRecoveryKit.test_the_tool_sets_no_time_limit_that_would_end_the_python_it_starts
+NEW: test_trees_snapshot.ABackupIsOnlyOfAQuietTree.test_a_manifest_that_reads_back_as_other_bytes_means_no_backup_though_every_file_is_right
+NEW: test_trees_snapshot.ABackupIsOnlyOfAQuietTree.test_a_partial_that_lay_there_before_the_attempt_is_another_attempts_and_is_not_removed
+NEW: test_trees_snapshot.ABackupIsOnlyOfAQuietTree.test_an_archive_that_does_not_decompress_is_a_backup_not_made_and_never_an_exception
+NEW: test_trees_snapshot.AVerifiedBackup.test_it_names_the_newest_finished_recovery_kit_of_the_trees_software_state
+NEW: test_trees_snapshot.AVerifiedBackup.test_the_command_says_how_often_the_tree_is_read
+NEW: test_trees_snapshot.AVerifiedBackup.test_with_no_finished_kit_of_its_state_a_backup_is_made_all_the_same_and_names_none
+NEW: test_trees_snapshot.TheResearchJobsBackups.test_a_note_that_cannot_be_written_refuses_the_job_before_it_writes_research
+NEW: test_trees_snapshot.TheResearchJobsBackups.test_a_refusal_that_follows_the_note_is_said_as_it_is_and_the_owed_backup_is_tried
+NEW: test_trees_snapshot.TheResearchJobsBackups.test_an_ordinary_refusal_after_the_guard_comes_before_any_write_and_says_so_truthfully
+NEW: test_trees_snapshot.TheResearchJobsBackups.test_the_jobs_end_line_gives_the_time_after_its_backup
+NEW: test_trees_snapshot.TheResearchJobsBackups.test_the_note_is_the_jobs_first_write_before_it_tidies_or_writes_anything_else
+tests in both runs: 1053; with the same result: 1053
+FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
+    before: ['AssertionError: \'results/real/holdout/scores/\' not found in {\'\', \'# PyInstaller\', \'# Environments\', "# WF-1A: real-development contract runs and each batch\'s attempts log (bulk; the batch plans and se']
+    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '# Sphinx documentation', 'eggs/', '# Byte-compiled / optimized / DLL files', '*.lcov', '# pdm', '#   be found at https://github.com/gi"]
+FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
+FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
+RESULT: DIFFERENCES FOUND - each needs an explanation

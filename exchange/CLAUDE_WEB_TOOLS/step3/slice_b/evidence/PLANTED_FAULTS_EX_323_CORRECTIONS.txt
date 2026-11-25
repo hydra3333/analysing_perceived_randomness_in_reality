@@ -1,0 +1,35 @@
+caught   | B-B01: the manifest is not read back
+caught   | B-B01: an empty folder's member is not read back
+caught   | B-B01: an archive that does not decompress is an exception, not a result
+caught   | B-B02: a backup without its settings file is accepted
+caught   | B-B02: the manifest's root and role are not checked against the settings
+caught   | B-B02: another role than the settings' passes
+caught   | B-B02: a root that is not a full path passes
+caught   | B-B02: a kit whose list omits its files passes its self-check
+caught   | B-B03: a table that does not hold the tool itself is taken as whole
+caught   | B-B03: a reading that stopped part-way is taken for the table's end
+caught   | B-B03: a time limit that ends the Python it started
+caught   | B-B04: a marker only in the old tree is not kept as evidence
+caught   | B-B04: the evidence is not the old marker's bytes
+caught   | B-B04: a restart inside the ZIP's two seconds counts as a later restart
+caught   | B-B04: evidence is said to be kept when the marker could not be read
+caught   | B-C01: the fresh tree's folders are not compared
+caught   | B-C01: a folder that cannot be listed is read as absent
+caught   | B-C01: the settings file is written without a check of its bytes
+caught   | B-C01: the settings file's time is not restored
+caught   | B-C01: the reconciliation ignores a missing empty folder
+caught   | B-C01: the reconciliation accepts another manifest at the root
+caught   | B-C02: an earlier attempt's ".partial" is written over or removed
+caught   | B-C02: a kit whose ".sha256" does not agree is named
+caught   | B-C02: a kit of another software state is named
+caught   | B-C02: any file with a kit's name is named
+caught   | B-C02: the kit is named before its ".sha256" is written
+caught   | B-C02: a kit that failed leaves its ".sha256"
+caught   | B-C02: another attempt's ".sha256" is written over
+caught   | B-C03: the job writes no note that a backup is owed
+caught   | B-C03: a refusal after the note says "nothing was written" and tries no backup
+caught   | B-C03: the note is written before the checks that may refuse
+caught   | B-C03: the END line gives a time from before the backup
+caught   | B-C03: a note that cannot be written is an unhandled exception
+caught   | B-C03: the command says the tree is read twice
+34 faults planted; 0 survived

@@ -131,6 +131,10 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
   as reviewed all with the same result; 55 new, all OK; the three known failing tests and no other. The package
   note is `slice_b/SLICE_B_PACKAGE_NOTE_v0_1.md`, with the exact differences of the four files slice A's review
   passed and the evidence beside it. **Next: the reviewer's reply (EX_323).**
+- **After EX_323 (RECHECK: four blockers, three grouped corrections; entry 293):** all are corrected in the
+  overlay with focused tests; what changed, the tests and the evidence are in
+  `slice_b/SLICE_B_CORRECTIONS_AFTER_EX_323_v0_1.md` (the later one where it and the package note differ). They go
+  back to the reviewer as EX_324 on the owner's word.
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 
