@@ -76,6 +76,8 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
 9. **`Run_Snapshot.bat` passes the launch guard's refusal on a backup's own lock** (it is the command that speaks
    for that lock) and then says what it found: a backup in progress, or a lock left by one that was ended, which
    the owner deletes by hand when he is sure. Nothing clears it for him.
+10. **A failed attempt removes its own ".partial"** if it can; one left by a backup that was ended is never taken
+    for a backup and nothing removes it (nothing prunes a backup root).
 11. **A restore asks for no typed confirmation of its own** beyond the orphan marker's sentence: the ratified
     section 12 names none, the command with `--snapshot` is the owner's explicit act, and the old tree is renamed
     aside, never deleted.
@@ -89,8 +91,6 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
 15. **A member's name is checked to lie inside the tree** before anything is unpacked (no `..`, no drive, no
     leading slash). The ratified text does not ask for it; it is three lines against writing outside the tree
     from a damaged or foreign ZIP. Say if it is more than is wanted.
-10. **A failed attempt removes its own ".partial"** if it can; one left by a backup that was ended is never taken
-    for a backup and nothing removes it (nothing prunes a backup root).
 
 ## 4. Where it stands
 
@@ -126,9 +126,11 @@ command again after a stop; `--after-hand-unzip`; the orphan-marker exception wi
     tree). **Three tests were added for them** and the run made again: 53 of 53 caught. `test_trees_restore` is
     now 32 tests; **the whole suite has not been run again since those three tests were added** (no program file
     changed; the module itself passes).
-- **Still to do before it goes to the reviewer (on the owner's word):** the package note; the exact differences
-  of the four files that slice A's review passed and this slice changes (`research_job.py`, `research_command.py`,
-  `INFRA_MANIFEST.ini`, `tests/test_trees_launch_guard.py`); one more run of the whole suite on the final files.
+- **25 November 2026, on the owner's word ("yes to your recommendation"): the slice goes to the reviewer as
+  EX_322.** The whole suite was run once more on the final files: 61 modules, 1055 tests; the 1000 tests of slice A
+  as reviewed all with the same result; 55 new, all OK; the three known failing tests and no other. The package
+  note is `slice_b/SLICE_B_PACKAGE_NOTE_v0_1.md`, with the exact differences of the four files slice A's review
+  passed and the evidence beside it. **Next: the reviewer's reply (EX_323).**
 
 ## 5. Costs on the owner's PC, to be told plainly when the slice is put to him
 

@@ -1,5 +1,5 @@
 before: 54 modules; unittest ran 830 tests; identified here: 830
-after: 61 modules; unittest ran 1052 tests; identified here: 1052
+after: 61 modules; unittest ran 1055 tests; identified here: 1055
 MODULE CHANGED: test_research_identity: ran 25, OK -> ran 24, OK
 MODULE NEW: test_trees_check_tree
 MODULE NEW: test_trees_installed_files
@@ -154,6 +154,7 @@ NEW: test_trees_restore.ARestore.test_it_never_says_ready_when_the_restored_envi
 NEW: test_trees_restore.ARestore.test_the_progress_file_is_written_first_and_the_settings_file_last
 NEW: test_trees_restore.ARestore.test_the_tree_is_put_back_exactly_with_one_record_and_the_old_tree_is_set_aside_whole
 NEW: test_trees_restore.AStaleOrphanMarker.test_a_marker_only_in_the_backup_asks_the_same
+NEW: test_trees_restore.AStaleOrphanMarker.test_a_marker_only_in_the_old_tree_asks_the_same
 NEW: test_trees_restore.AStaleOrphanMarker.test_a_python_program_at_the_fresh_check_refuses_whatever_is_typed
 NEW: test_trees_restore.AStaleOrphanMarker.test_anything_but_the_fixed_sentence_refuses
 NEW: test_trees_restore.AStaleOrphanMarker.test_with_all_four_parts_the_marker_is_kept_as_evidence_and_is_not_live
@@ -161,6 +162,7 @@ NEW: test_trees_restore.AStaleOrphanMarker.test_without_a_restart_since_the_mark
 NEW: test_trees_restore.AfterAnUnzipByHand.test_a_tree_that_is_not_the_backup_unzipped_is_refused_and_nothing_is_changed
 NEW: test_trees_restore.AfterAnUnzipByHand.test_it_checks_every_file_writes_the_record_and_moves_the_manifest_beside_it
 NEW: test_trees_restore.AfterAnUnzipByHand.test_no_new_backup_is_made_while_the_manifest_lies_at_the_trees_root
+NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_that_holds_a_member_its_manifest_does_not_list_refuses
 NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_that_is_damaged_or_is_not_one_refuses
 NEW: test_trees_restore.NothingIsTouchedUnless.test_a_backup_whose_members_are_not_what_its_manifest_lists_refuses
 NEW: test_trees_restore.NothingIsTouchedUnless.test_a_member_whose_name_would_leave_the_tree_refuses
@@ -174,6 +176,7 @@ NEW: test_trees_restore.StoppedPartWay.test_a_python_program_that_appears_after_
 NEW: test_trees_restore.TheRecoveryKit.test_a_backup_names_the_kit_of_its_software_state
 NEW: test_trees_restore.TheRecoveryKit.test_a_kit_file_that_is_not_the_one_the_infrastructure_marker_lists_means_no_kit
 NEW: test_trees_restore.TheRecoveryKit.test_a_kit_that_cannot_be_written_is_a_result_and_never_an_exception
+NEW: test_trees_restore.TheRecoveryKit.test_a_kit_that_does_not_read_back_as_it_was_written_is_not_a_kit
 NEW: test_trees_restore.TheRecoveryKit.test_a_kit_whose_file_was_damaged_refuses_before_anything_else
 NEW: test_trees_restore.TheRecoveryKit.test_it_is_named_for_its_time_and_software_state_and_holds_the_tool_with_its_own_list
 NEW: test_trees_restore.TheRecoveryKit.test_the_restore_tool_is_one_file_of_the_standard_library_and_ends_no_process
@@ -235,7 +238,7 @@ NEW: test_trees_snapshot.TheResearchJobsBackups.test_the_note_is_written_before_
 tests in both runs: 829; with the same result: 829
 FAILS IN BOTH RUNS (1 failure(s); FAILURE LINES DIFFER, compare by eye): test_mhupa_launchers.LauncherStatics.test_gitignore_lines
     before: ["AssertionError: 'results/real/holdout/scores/' not found in {'', '# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm', '# GAIS - large files go here and will be ign"]
-    after:  ["AssertionError: 'results/real/holdout/scores/' not found in {'', '*.manifest', '/results/research_set_aside/', '#   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version"]
+    after:  ['AssertionError: \'results/real/holdout/scores/\' not found in {\'\', \'# PyInstaller\', \'# Environments\', "# WF-1A: real-development contract runs and each batch\'s attempts log (bulk; the batch plans and se']
 FAILS IN BOTH RUNS (2 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_master_source_and_ledger_file_hashes
 FAILS IN BOTH RUNS (5 failure(s), the same failure lines): test_multigame_reader_contracts.V011ReaderTests.test_only_legacy_e1_allowed_at_boundary
 RESULT: DIFFERENCES FOUND - each needs an explanation

@@ -43,7 +43,7 @@ test_trees_check_tree	exit=0	ran=24	OK
 test_trees_installed_files	exit=0	ran=22	OK
 test_trees_launch_guard	exit=0	ran=52	OK
 test_trees_readiness	exit=0	ran=41	OK
-test_trees_restore	exit=0	ran=29	OK
+test_trees_restore	exit=0	ran=32	OK
 test_trees_settings	exit=0	ran=32	OK
 test_trees_snapshot	exit=0	ran=23	OK
 test_wave1_frequency	exit=0	ran=18	OK
@@ -59,4 +59,4 @@ test_wf1b_outcome_reader	exit=0	ran=6	OK
 test_wf1b_report	exit=0	ran=10	OK
 test_wf1b_seed_policy	exit=0	ran=11	OK
 test_wf1b_static	exit=0	ran=4	OK
-DONE: 61 modules, 1052 tests ran
+DONE: 61 modules, 1055 tests ran

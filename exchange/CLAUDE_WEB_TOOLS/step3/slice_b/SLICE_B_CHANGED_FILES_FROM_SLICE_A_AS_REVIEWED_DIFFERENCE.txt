@@ -1,0 +1,155 @@
+Slice B of build step 3: the exact difference of each overlay file that slice A's review passed (the overlay at
+commit 32086bafdce5e6cb8702e687907f32ea081ca2f7, the bytes of EX_320) and that slice B changes. Unified, three lines of context;
+line endings are CRLF in both and are not shown. 4 files. The slice's other 8 files are new.
+
+--- slice_a_as_reviewed/deploy/INFRA_MANIFEST.ini
++++ overlay/deploy/INFRA_MANIFEST.ini
+@@ -42,12 +42,14 @@
+ src/research/results_step.py = derived
+ src/research_command.py = other
+ Run_Research.bat = other
++Run_Snapshot.bat = other
+ Withdraw_Variant.bat = other
+ deploy/file_form.py = other
+ src/research/installed_files.py = derived
+ src/research/environment_marker.py = derived
+ src/research/process_rule.py = derived
+ src/research/launch_guard.py = derived
++src/research/snapshot.py = derived
+ 
+ ; The DEV-side install tool's own files (specification 12.4). They are NOT infrastructure: nothing here is ever
+ ; installed into a QA or PROD tree. The infrastructure's readiness marker hashes them too, so that a tree is always
+@@ -60,3 +62,7 @@
+ deploy/install_import_check.py = other
+ Check_Tree.bat = other
+ deploy/check_tree.py = other
++deploy/recovery_kit.py = other
++deploy/restore_tool.py = other
++deploy/kit/Restore.bat = other
++deploy/kit/HOW_TO_RESTORE.txt = other
+
+--- slice_a_as_reviewed/src/research/research_job.py
++++ overlay/src/research/research_job.py
+@@ -20,6 +20,7 @@
+     research.job_lock          the job lock and the orphan-marker check
+     research.code_identity     the code identities quoted in every line
+     research.launch_guard      check_at_job_start: the tree's own checks, and the environment's digest
++    research.snapshot          the note that a backup is owed, and the backup at the job's end (QA and PROD)
+     research.variant_folders   find_variants, load_method: the installed variants
+     research.status_file       the variants' status files (read; created in DEV; the eligibility draw written)
+     research.game_state        the game's records in memory
+@@ -50,6 +51,7 @@
+ from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
+                                  load_variant_state, summarise_target_line)
+ from research.launch_guard import check_at_job_start
++from research.snapshot import backup_for_a_job, mark_due
+ from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
+ from research.reader import ResultsRefused, results_on_file
+ from research.results_step import copy_results, finish_interrupted_copy
+@@ -542,9 +544,16 @@
+             + (f'; limited to {", ".join(sorted(only))} (--only)' if only else ''))
+         check_no_orphan_marker(settings.tree_root)
+         check_working_folders(settings.tree_root)
++        backup_for_a_job(settings, 'start', now, say)        # only if a backup is owed from earlier work
+         with job_lock(settings.tree_root, 'research job', started):
+             environment_digest = check_at_job_start(settings, say)
+-            return run_locked(settings, games, no_update, only, now, say, checkpoint, environment_digest)
++            mark_due(settings)                               # before the job's first write
++            exit_code, closing = run_locked(settings, games, no_update, only, now, say, checkpoint,
++                                            environment_digest)
++        backup_for_a_job(settings, 'end', now, say)          # the job's lock is released: the tree is quiet
++        for line in closing:                                 # the job's own verdict stays the last thing said
++            say(line)
++        return exit_code
+     except (SettingsRefused, LaunchRefused, ManifestRefused, VariantRefused, StatusRefused) as refusal:
+         say(f'REFUSED: {refusal}')
+         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
+@@ -555,7 +564,9 @@
+                environment_digest: str) -> int:
+     """The job once it holds the job lock and the launch guard has passed: read the code's identities and the
+     variants, then work each game. environment_digest: the digest of the tree's own Python environment, as the
+-    guard computed it for this job. The other arguments and the result are as for run()."""
++    guard computed it for this job. The other arguments are as for run(). Returns (the exit code, the job's
++    closing lines): run() says those lines after the job's lock is released and its backup has been attempted, so
++    that the job's verdict is the last thing the owner reads."""
+     tree_root = settings.tree_root
+     for leftover in discard_unfinished_writes(tree_root):
+         say(f'An earlier status write was interrupted before it changed anything; its unfinished copy was removed '
+@@ -590,14 +601,11 @@
+                            f'{type(fault).__name__}: {fault}. Running the job again tries again.')
+             say(traceback.format_exc())
+         say(endings[-1])
+-    say(f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}')
+-    for ending in endings:
+-        say(ending)
+-    for warning in job.warnings:
+-        say(f'WARNING (said again): {warning}')
+-    say('A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
+-        else 'The job finished.')
+-    return EXIT_GAME_STOPPED if stopped else EXIT_FINISHED
++    closing = [f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}',
++               *endings, *(f'WARNING (said again): {warning}' for warning in job.warnings),
++               'A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
++               else 'The job finished.']
++    return (EXIT_GAME_STOPPED if stopped else EXIT_FINISHED), closing
+ 
+ 
+ def main(arguments, tree_root: Path) -> int:
+
+--- slice_a_as_reviewed/src/research_command.py
++++ overlay/src/research_command.py
+@@ -18,7 +18,7 @@
+     research.withdraw       main: the withdrawal
+ 
+ What uses it
+-    Run_Research.bat and Withdraw_Variant.bat.
++    Run_Research.bat, Withdraw_Variant.bat and Run_Snapshot.bat.
+ """
+ import os
+ import sys
+@@ -29,7 +29,7 @@
+ # The two folders Python imports the project's code from: the engine (research, evaluation) and the variants.
+ IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods')
+ # The commands, by the word the launcher gives.
+-COMMANDS = ('research', 'withdraw')
++COMMANDS = ('research', 'withdraw', 'snapshot')
+ # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
+ EXIT_BAD_COMMAND = 2
+ 
+@@ -49,7 +49,10 @@
+     from research.launch_guard import check_at_launch
+     from research.settings import SettingsRefused
+     try:
+-        environment_folder = check_at_launch(TREE_ROOT).venv_dir
++        # A backup's own lock does not refuse the backup command itself: it says what it found there.
++        from research.snapshot import LOCK_PATH
++        finishing = LOCK_PATH if arguments[0] == 'snapshot' else None
++        environment_folder = check_at_launch(TREE_ROOT, finishing).venv_dir
+     except (SettingsRefused, LaunchRefused) as refusal:
+         print(f'REFUSED: {refusal}')
+         return EXIT_BAD_COMMAND
+@@ -59,6 +62,8 @@
+         return EXIT_BAD_COMMAND
+     if arguments[0] == 'research':
+         from research.research_job import main
++    elif arguments[0] == 'snapshot':
++        from research.snapshot import main
+     else:
+         from research.withdraw import main
+     return main(arguments[1:], TREE_ROOT)
+
+--- slice_a_as_reviewed/tests/test_trees_launch_guard.py
++++ overlay/tests/test_trees_launch_guard.py
+@@ -374,8 +374,9 @@
+ 
+     def test_the_launcher_makes_the_guards_checks_before_it_hands_over_to_a_command(self):
+         text = (REPOSITORY_ROOT / 'src' / 'research_command.py').read_text(encoding='utf-8')
+-        self.assertLess(text.index('check_at_launch(TREE_ROOT)'), text.index('from research.research_job import main'))
+-        self.assertLess(text.index('check_at_launch(TREE_ROOT)'), text.index('from research.withdraw import main'))
++        for command in ('research_job', 'withdraw', 'snapshot'):
++            self.assertLess(text.index('check_at_launch(TREE_ROOT, finishing)'),
++                            text.index(f'from research.{command} import main'))
+ 
+ 
+ class TheStartOfAJob(fx.JobCase):
+
