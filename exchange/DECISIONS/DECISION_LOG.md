@@ -7688,3 +7688,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   records it.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_330 (Claude's); entry 321; RAT-61.
+
+## 321. 26 November 2026, 00:06 - EX_330 is issued (slice C's eight corrections, for the focused recheck); H-1 v15 (RAT-60) is installed in doc/HANDOVER/ and is the primary handover in force
+
+- **EX_330 issued** on the owner's word (entry 320): `exchange/EX_330_Claude.md`, commit `2398864`, SHA-256
+  `e8bcc7cc412b2e513d89131a33b537954011b0d29e2a78c533360890c5e48e02`, computed by Claude. It asks for the focused
+  recheck of EX_329's eight findings; names the corrections note, the exact differences from `e404c22`, the hashes and
+  the evidence; puts five choices inside the corrections to the reviewer (how wide "what the statement rested on" is
+  taken; the barrier being inside that value; where the creation's source is kept; what "the same command" means for a
+  reinstall now; one test of Claude's replaced); and records RAT-59 and RAT-60. Its reply is expected as EX_331.
+- **H-1 v15 installed, both new files; no existing file is edited:**
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v15.md`, SHA-256
+    `5da31eda0532b95b011c0b29694c2c76fd45e322f00153b5c76dfdc99d3aef37`;
+  - `doc/HANDOVER/Claude_Primary_Handover_H1_v15_introductory_blurb.md`, SHA-256
+    `4abd4ebd590d1ef92426d54c5a1f6a3c955594ac8c5a0c2c5bad7d62afcc06a4`. They are the builder's FINAL files
+    (`exchange/CLAUDE_WEB_TOOLS/h1v15/out/`, the same bytes), built with `make_h1_v15.py final RAT-60` at `main`
+    `2398864` after a fetch. The blurb names the handover's hash and its path in `doc/`. Hashes computed by Claude.
+- **How the final differs from the candidate the owner ratified** (entry 320; `999c25af...`): only in what became true
+  by his three words. In the handover, 27 lines became 29: its status (ratified, RAT-60, dated 26 November 2026); its
+  baseline (now `2398864`, entry 320, EX_330); in 0.1 and 0.3 the two amendments as ratified (RAT-59) and RAT-56 as
+  the first, no longer "the one"; the newest EX; in 0.4 item 3 the corrections as sent (EX_330), item 4 the amendments
+  as ratified with the note that neither the ratified files nor the amendments' document is edited, and the closing
+  lines (nothing waits on the owner; EX_331 waits on the reviewer). In the blurb, 2 lines: ratified with its hash, and
+  the corrections as sent. Sections 0A, 0C, 1 to 12, the appendices and the HISTORY part are the candidate's bytes.
+  The builder's final mode was brought into line with the header's wording first (its old text no longer matched).
+- **It was not read by the reviewer before it was installed** (its header says so). **Its cold read is owed when the
+  owner asks.**
+- **H-1 v15 supersedes H-1 v14 (RAT-58),** which stays in `doc/HANDOVER/` as history with its predecessors. **The
+  handovers in force: H-1 v15 (RAT-60) and H-2 v9 (RAT-57).** The register's next ordinary edition carries RAT-54 to
+  RAT-60. Nothing here authorises an install of code or a run.
+- **What waits:** on the reviewer, EX_331. On the owner, nothing. After slice C has passed: slice D on the owner's go
+  (a new subsystem: the model rule applies first).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_331 (the reviewer's reply); entry 322; RAT-61.

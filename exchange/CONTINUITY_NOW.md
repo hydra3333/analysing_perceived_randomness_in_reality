@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 00:03 Australia/Adelaide (entry 320: RAT-59 and RAT-60; the word for EX_330).
+**Last updated:** 26 November 2026, 00:06 Australia/Adelaide (entry 321: EX_330 issued; H-1 v15 installed, RAT-60).
 
 ## For the owner: NOW
 
+- **EX_330 IS WITH THE REVIEWER, AND H-1 v15 (RAT-60) IS THE HANDOVER IN FORCE (entry 321; 26 November 2026).**
+  `exchange/EX_330_Claude.md`: slice C's eight corrections for the focused recheck. `doc/HANDOVER/Claude_Primary_Handover_H1_v15.md`
+  with its blurb beside it. RAT-59 (the two amendments) is ratified (entry 320). **Waiting on the reviewer:**
+  EX_331. **Waiting on the owner:** nothing. **If this chat ends here:** a new chat is started with H-1 v15's
+  blurb, reads H-1 v15's chapter 0 and entries 320 onward, and answers EX_331.
 - **RAT-59 AND RAT-60 (entry 320; 26 November 2026): THE OWNER RATIFIED the two narrow amendments** (`Verify_Tree`
   does not run the suite; the job lock at an infrastructure reinstall; wording in
   `exchange/DECISIONS/AMENDMENTS_PROPOSED_FOR_RAT59_v0_1.md`) **and H-1 v15,** and gave his word for EX_330.

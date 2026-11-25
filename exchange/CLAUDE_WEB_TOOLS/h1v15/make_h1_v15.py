@@ -91,9 +91,10 @@ h2v9 = now_sha('doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v9_20261125.md')
 header = T.HEADER.format(v14_sha=V14_SHA, head=head)
 if mode == 'final':
     header = header.replace('''**This edition: v15, 25 November 2026 (Adelaide, UTC+10:30). A CANDIDATE for the owner's ratification** (decision
-log entry 315). It goes into `doc/HANDOVER/` only once he has ratified it; the reviewer has not read it.''',
-                            f'''**This edition: v15, 25 November 2026 (Adelaide, UTC+10:30). RATIFIED BY THE OWNER ({sys.argv[2]}).** The reviewer had not
-read it when it was installed; its cold read is owed when the owner asks.''')
+log entries 315 and 318; it is to be RAT-60). It goes into `doc/HANDOVER/` only once he has ratified it; the reviewer
+has not read it.''',
+                            f'''**This edition: v15, 26 November 2026 (Adelaide, UTC+10:30). RATIFIED BY THE OWNER ({sys.argv[2]}, decision log
+entry 320).** The reviewer had not read it when it was installed; its cold read is owed when the owner asks.''')
     assert 'RATIFIED BY THE OWNER' in header
 appD = crlf(T.APPENDIX_D.format(made='\n'.join(made)))
 text = crlf(header + T.CHAPTER0.format(h2v9_sha=h2v9)) + b + appD + hist + b'\r\nEnd of H-1 v15.\r\n'
