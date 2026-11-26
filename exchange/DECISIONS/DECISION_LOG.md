@@ -8385,3 +8385,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner:** to relay the paper to the reviewer for its one reading, and his go for step 3 (the updater
   with every Mode H state removed).
 - Next numbers: EX_334 (Claude's); entry 349; RAT-61.
+
+## 349. 26 November 2026, 22:01 - the invented-results comparison repeated on the committed engine: RESULT: SAME (a precision on entry 348)
+
+- **A precision on entry 348, found by Claude on checking its own record.** The comparison on the accepted results
+  used exactly the committed engine (checked file for file). The comparison on invented results had first run on the
+  engine as it stood a little earlier, before three late changes: the rule that scores are in draw order with no gap
+  (`variant_lists.py`), one docstring (`reader.py`), and the removal of the first system's files that nothing in the
+  engine uses.
+- **It was repeated on the committed engine.** The committed `src` was put into the invented tree; its job found the
+  engine's fingerprint changed and made everything again by itself ("everything, in both games (80 stored method
+  results deleted): the engine is not the one these results were made with"; 13 minutes; the starting draws in
+  `IN_PLACE_SINCE` kept). The comparison with the frozen tree then again ended **RESULT: SAME**, all eleven lines. So
+  both statements of entry 348 and of the short paper hold for the committed bytes. (It was also the first run of the
+  "engine changed: rebuild everything" rule on the 40 real methods.)
+- Nothing else changed. Still waiting on the owner as entry 348 says.
+- Next numbers: EX_334 (Claude's); entry 350; RAT-61.
