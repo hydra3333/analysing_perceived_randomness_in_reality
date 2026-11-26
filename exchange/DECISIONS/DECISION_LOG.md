@@ -8180,3 +8180,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Still paused (entry 330).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 339; RAT-61.
+
+## 339. 26 November 2026, 19:43 - OWNER: go for the one short scheme document
+
+- **The owner, 19:43:** "go for the one short scheme document". Claude had said "Suggest switching to Fable (High) for
+  this" (entries 333 to 338); the session is on Fable.
+- **What the go covers:** writing the one short scheme document, with the cost of moving the living system into the
+  `_DEV` subfolder assessed in it. It is then read once by the reviewer and agreed once by the owner. **It covers no
+  code, no move of any file, no amendment and nothing on the owner's PC;** those stay paused until he has agreed the
+  document.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 340; RAT-61.
