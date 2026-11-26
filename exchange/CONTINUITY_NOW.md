@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 18:28 Australia/Adelaide (entry 333: the three agree on the direction; open points for the owner; everything paused).
+**Last updated:** 26 November 2026, 19:12 Australia/Adelaide (entry 334: the two AIs agree; waiting on the owner's answers; everything paused).
 
 ## For the owner: NOW
 
+- **NO DIFFERENCE REMAINS BETWEEN THE TWO AIs (entry 334; 26 November 2026).** The reviewer agrees with Claude on the
+  establishment number, on rebuilding a retired method up to its retirement draw, and favours plain ZIP backups.
+  **Waiting on the owner only:** his answers to section 6 of
+  `exchange/Claude_Response_To_ChatGPT_Consolidated_Comment_v0_1_20261126.md`; then his go (Fable) for the one short
+  scheme document. Everything else stays paused.
 - **THE THREE AGREE ON THE DIRECTION (entry 333; 26 November 2026).** The reviewer's consolidated comment is
   `exchange/ChatGPT_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md`; Claude's response is
   `exchange/Claude_Response_To_ChatGPT_Consolidated_Comment_v0_1_20261126.md`. No further round of papers is needed.

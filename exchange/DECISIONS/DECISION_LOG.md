@@ -8040,3 +8040,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Nothing is decided by this entry and nothing is started.** Everything stays paused (entry 330).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 334; RAT-61.
+
+## 334. 26 November 2026, 19:12 - the reviewer's reply to Claude's response, relayed by the owner: no difference remains between the two AIs; every open point is now the owner's choice
+
+- **The owner, 19:12,** passing on the reviewer's reply to Claude's response (entry 333) "whilst you await my answers
+  to section 6": "Great work, thanks." The reviewer's reply was given in its chat and is not on `main` ("No repository
+  changes made").
+- **The reviewer's position, as relayed:** "We are now sufficiently aligned to move towards agreement on the
+  simplified scheme. I see no need for another round of discussion papers." On the three differences: (1) it now leans
+  to keeping the establishment number and the second OV-1 series, as research bookkeeping with no eligibility control
+  and no claim about unseen results; (2) it agrees that a retired method is rebuilt up to, and not including, its
+  retirement draw, the retired flag holding that draw for each game, past results staying visible; (3) it favours the
+  plain ZIP over slice B as built: compression level 9, the existing destinations, dated names, the same mechanism in
+  every tree, made after research jobs, before destructive replacements and on demand; no triple reading, digests,
+  recovery kit or restore procedure; a restore is unpacking into the intended place without mixing restored files with
+  newer ones.
+- **Its recommendations on the response's section 6:** 1 yes (QA acts like PROD); 2 retain, marked retired; 3 yes; 4
+  yes; 5 keep; 6 rebuild up to retirement; 7 plain ZIP, at the three moments above; 8 leans to keeping the results
+  file's comparison with the updater's ledger but leaves it wholly to the owner; 9 the owner's to complete; 10 yes, in
+  full; 11 deferred as he asked. It strongly supports proving the simplification by comparing the simplified engine's
+  forecasts, scores and OV-1 numbers with the present engine's, for equivalent method configurations and OV-1 cohorts.
+  It accepts the proposed process and its own lighter role.
+- **So: no difference remains between the two AIs.** Every outstanding matter is the owner's choice. **These are AI
+  recommendations; none is his decision until he says so.**
+- **Waiting on the owner:** his answers to section 6 of Claude's response; then his go, the model rule first, for the
+  one short scheme document. Everything stays paused (entry 330).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 335; RAT-61.
