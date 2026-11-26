@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 18:07 Australia/Adelaide (entry 332: the settings proposal is owed later; everything paused).
+**Last updated:** 26 November 2026, 18:28 Australia/Adelaide (entry 333: the three agree on the direction; open points for the owner; everything paused).
 
 ## For the owner: NOW
 
+- **THE THREE AGREE ON THE DIRECTION (entry 333; 26 November 2026).** The reviewer's consolidated comment is
+  `exchange/ChatGPT_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md`; Claude's response is
+  `exchange/Claude_Response_To_ChatGPT_Consolidated_Comment_v0_1_20261126.md`. No further round of papers is needed.
+  **Waiting on the owner:** the open points in the response's section 6 (eleven short items). **Then, on his go and
+  with the model rule first (Fable):** one short scheme document, written once; the reviewer reads it once; the owner
+  agrees it once; a task list follows. Everything else stays paused (entry 330).
 - **OWED LATER (the owner, entry 332; 26 November 2026):** a worked proposal for "a tree must be what its settings say
   it is" (one settings file of the same form in every tree), with the holes looked for; the owner has some in mind and
   defers them until the scheme is written down. Everything stays paused; waiting on his answers to the comment paper's

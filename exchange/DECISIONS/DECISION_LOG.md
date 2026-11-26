@@ -8009,3 +8009,34 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer's own comment.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 333; RAT-61.
+
+## 333. 26 November 2026, 18:28 - the reviewer's consolidated comment (mostly in agreement) and the owner's clarification; Claude's response: no more rounds needed; the open points for the owner, then one short scheme document
+
+- **The reviewer's consolidated comment, relayed by the owner at 18:26:**
+  `exchange/ChatGPT_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md`, commit `a439f53`, SHA-256
+  `91cddb0770b2016be5e04dc037b9701f741c0366758018273ce716e0458ae7c7` (computed by Claude). It agrees substantially
+  with the owner and with Claude's comment, and answers R1 to R4.
+- **The owner's clarification, as that paper reports it and as he relayed it:** whether results have previously been
+  seen is not an eligibility concern for this exploratory project; establishment-draw information may be kept as
+  useful bookkeeping, not as a control; any warranted formal investigation would be a separate follow-on project using
+  then-future draws. The reviewer reports further that the owner agrees to keep content fingerprints as the means of
+  deciding what to rebuild, wants the scraper and the validation of official results to work as they do now, and
+  rejects proof-oriented verification of results and of backups; the reviewer withdrew its own recommendations to the
+  contrary.
+- **The owner to Claude:** "chatgpt has had a look and prepared a reponse mostly in agreement with you. Please assess
+  etc and advice me if we need more rounds and then what the next step(s) should be (eg a new design leading to a new
+  task list ?)."
+- **Claude's response:** `exchange/Claude_Response_To_ChatGPT_Consolidated_Comment_v0_1_20261126.md`, SHA-256
+  `2f30b6fc14f62821184038750ce5b63fdee37a803a0622360fac968a33052fe7` (computed by Claude); a discussion paper.
+  Agreement on the direction and on nearly every particular; concurrence with all seven basic computational
+  correctness principles; the digests sorted into kept (the permitted-view digest, which is part of every tie order;
+  the fingerprints as rebuild triggers), removed (chains and content digests) and one left as it is (the results file
+  against the updater's own ledger). **Three small differences, each a pick between two stated options:** whether to
+  keep the establishment number and the second OV-1 series as bookkeeping; whether a retired method is rebuilt up to
+  its retirement draw or its old results kept; plain ZIP backups or slice B as built. **Claude's advice: no further
+  round of papers is needed.** Next: the owner settles the open points (the response's section 6); then one short
+  scheme document, written once (a model-rule point: Fable, on his go), read once by the reviewer and agreed once by
+  the owner; then a task list; then the research.
+- **Nothing is decided by this entry and nothing is started.** Everything stays paused (entry 330).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 334; RAT-61.
