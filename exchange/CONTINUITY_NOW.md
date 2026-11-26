@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:47 Australia/Adelaide (entry 340: the simple scheme, DRAFT v0.1, awaits the reviewer's reading and the owner's agreement).
+**Last updated:** 26 November 2026, 19:57 Australia/Adelaide (entry 341: the reviewer has read the scheme; waiting on the owner).
 
 ## For the owner: NOW
 
+- **THE REVIEWER HAS READ THE SIMPLE SCHEME (entry 341; 26 November 2026):** agreement, six clarifications accepted by
+  Claude for the final version, YES recommended to the five proposals. **Waiting on the owner:** his answers to the
+  five proposals of the draft's section 13, then his agreement. Still paused.
 - **THE SIMPLE SCHEME IS WRITTEN AS A DRAFT (entries 339 and 340; 26 November 2026):
   `exchange/Claude_The_Simple_Scheme_DRAFT_v0_1_20261126.md`.** It is the one short document that replaces the
   administrative design once agreed. **Waiting on the reviewer:** one reading. **Waiting on the owner:** the five

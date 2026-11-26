@@ -8217,3 +8217,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
   paused (entry 330): no code, no move, nothing on his PC.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 341; RAT-61.
+
+## 341. 26 November 2026, 19:57 - the reviewer's single reading of the simple scheme: agreement, six clarifications (all accepted), YES recommended to the five proposals
+
+- **The reviewer's single reading of the simple scheme DRAFT v0.1** (commit `84a23e1`), relayed by the owner at 19:56
+  (given in its chat; not on `main`): overall agreement; no scientific or architectural objection; no further design
+  discussion or correction round. It recommends YES to all five proposals of section 13, subject to the owner, and
+  finds the present engine a suitable regression reference.
+- **Its six clarifications, all accepted by Claude for the final scheme:** (1) the next-draw forecast is kept, said
+  explicitly; a corrected historical draw T means T's score is recomputed as well as every later forecast it affects;
+  (2) out-of-date research is found from the fingerprint of the software that made the stored data (in the data's own
+  first line), not from `IN_PLACE_SINCE` alone, which matters when software and data are copied separately; (3) the
+  second OV-1 is one combined series per game, each method counting from its establishment draw to its retirement
+  draw; exploratory only; (4) flags, bookkeeping files and generated caches are left out of software fingerprints; (5)
+  lock files are left out of backups, and a command that runs the destination's job does not take the destination's
+  lock twice; (6) before a restore, the ZIP's own settings file must name the intended tree. Item 2 corrects a real
+  fault in the draft's section 5.
+- **The owner asked,** before agreeing DEV's backup folder: "what folders are each of the 3 backups going into ?"
+  Answered in the chat from the draft (section 3).
+- **Waiting on the owner:** his answers to the five proposals, then his agreement to the scheme. Still paused.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 342; RAT-61.
