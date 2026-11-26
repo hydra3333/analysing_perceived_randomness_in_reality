@@ -8489,3 +8489,50 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Then: "please continue"** (the owner, on Fable): the corrections after the reviewer's reading of step 2 are made
   now.
 - Next numbers: EX_334 (Claude's); entry 354; RAT-63.
+
+## 354. 27 November 2026, 07:19 - the corrections after the reviewer's reading of step 2 are made and committed; the corrected engine compared on invented results: RESULT: SAME
+
+- **What was done** (commit `57ca865a60cd5de4fd226be187115c18e5920ab1`; only `a_p_r_i_r_DEV/`; cloud only; the
+  reviewer asked for small targeted corrections with tests, no repeated comparison campaign and no recheck round):
+- **Finding 1:** a rebuild of everything (a changed engine, or `--rebuild-all`) now deletes every stored method
+  result, those of a method the tree has no software for included; an ordinary job still leaves those alone and counts
+  them nowhere. **This narrows choice 4 of RAT-61 in that one case; it is put to the owner in the same message for his
+  confirmation.**
+- **Finding 2:** reports the records no longer give are removed at the end of each job (a draw no longer on file; a
+  next-draw report of a forecast since made again; a file left half written). No "not current" machinery.
+- **Finding 3:** `IN_PLACE_SINCE` is settled before anything reads it; one that cannot be read never stops its method:
+  it reads as "not known", is written afresh, and the job says so.
+- **Choice 3 as amended by the owner (entry 353):** a retired method drops its forecasts as well as its scores from
+  its retirement draw on. A test shows a method retired as draws arrive and the same method rebuilt hold the same
+  history.
+- **All three small files in Git (entry 352):** `a_p_r_i_r_DEV/.gitignore` no longer names `IN_PLACE_SINCE`.
+- **The reviewer's suggestion taken up, as it was straightforward:** `compare_with_frozen.py` now compares the OV-1
+  series over all draws directly, line by line (the frozen engine's own code makes it from the frozen tree's stored
+  lists). On the two trees of the accepted-results comparison of entry 348, as stored: SAME, 447 lines (Powerball) and
+  234 lines (Oz Lotto), content and audit.
+- **Evidence for the corrected engine:** 165 tests pass in the tree. The corrected engine was put into the
+  invented-results tree, made everything again by its own rule (40 real methods, both games) and was compared with the
+  frozen tree: RESULT: SAME, all thirteen lines. **The comparison on the accepted results was not repeated for the
+  corrected engine;** it is repeated in the cloud at the end of step 4 and on the owner's PC at step 5.
+- **Coding practices met,** with the one exception of entry 351.
+- Next numbers: EX_334 (Claude's); entry 355; RAT-63.
+
+## 355. 27 November 2026, 07:19 - OWNER: RAT-63, the reviewer's handover H-2 v10 and its blurb ratified; installed in `doc/HANDOVER/`; H-2 v9 is history
+
+- **The owner's words (07:15):** "when convenient: The owner has ratified H-2 v10 and its introductory blurb. Please
+  record this as RAT-63 (subject to confirming the next available ratification number), install both documents into
+  doc/HANDOVER/, and retain H-2 v9 as history. No further review is required. Continue the agreed implementation work
+  order."
+- **RAT-63 confirmed as the next number, and recorded: H-2 v10 and its introductory blurb, the reviewer's handover,
+  ratified by the owner.** Written by the reviewer and committed by it as candidates in
+  `exchange/HANDOVER_2026_11_27/` (commits `2a8444c` and `7dcf84b`).
+- **Installed by Claude in `doc/HANDOVER/` with the reviewer's bytes exactly** (Claude never edits the reviewer's
+  files): `ChatGPT_Reviewer_Handover_H2_v10_20261127.md` (SHA-256
+  `3234d246ed6574753e3c4495a6fae2ef137bf1d86ac088ca10d6592d09eb10a7`) and
+  `ChatGPT_Reviewer_Handover_H2_v10_20261127_introductory_blurb.md` (SHA-256
+  `514e851fe0e5f2563e8e6d28fc4c7c27d1c1602cb697513e92cf09afd4a4adbb`). The handover's own status line therefore still
+  reads "CANDIDATE for owner ratification"; this entry is the record that it is ratified.
+- **H-2 v9 (RAT-57) is retained as history.** The handovers in force are H-1 v16r1 (Claude, RAT-62) and H-2 v10 (the
+  reviewer, RAT-63).
+- "Continue the agreed implementation work order": step 3 (the updater) is next.
+- Next numbers: EX_334 (Claude's); entry 356; RAT-64.
