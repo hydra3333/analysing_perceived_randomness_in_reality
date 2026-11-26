@@ -8325,3 +8325,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   scheme's section 9; a major change of the engine, so the model rule applies (Fable).
 - Nothing else is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 346; RAT-61.
+
+## 346. 26 November 2026, 20:33 - the owner built DEV's own `.venv` inside `a_p_r_i_r_DEV` (39 packages, SUCCESS); the top-level `.venv` is kept for now
+
+- **The owner, 20:30 to 20:33, on his own PC:** he pulled, and in `a_p_r_i_r_DEV` ran `create_venv.bat` and then
+  `install_upgrade_dependencies_into_venv.bat`. He relayed its last lines: the environment snapshot was written under
+  `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\transitory_data\dependency_snapshots\`,
+  and "[DEPS] SUCCESS. All 39 direct requirements installed; research compatibility tests remain required." **So DEV's
+  own `.venv` exists inside the subfolder.**
+- **He asked whether to remove the top-level `.venv` now. Claude's advice: no, not yet.** The present engine at the
+  top level is the reference for the comparison of the scheme's section 9 and needs it; the local runner's rulebook
+  names it; and the present updater there is how results are fetched until the new one exists. It can go after step 6.
+  Not decided by him either way.
+- **The script's closing words "research compatibility tests remain required"** are its own standing reminder. In the
+  simple scheme that is met by the comparison of section 9 run on his PC (step 5); nothing is to be run for it now.
+- **Waiting on the owner:** his go for step 2 (the engine simplified in the subfolder and proved by the comparison;
+  Fable).
+- Nothing else is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 347; RAT-61.

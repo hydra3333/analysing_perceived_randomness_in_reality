@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 20:27 Australia/Adelaide (entry 345: step 1 done; the owner may build the subfolder's .venv; step 2 next on his go).
+**Last updated:** 26 November 2026, 20:33 Australia/Adelaide (entry 346: DEV's .venv built; waiting on the go for step 2).
 
 ## For the owner: NOW
 
+- **DEV'S OWN `.venv` IS BUILT in `a_p_r_i_r_DEV` (the owner, entry 346; 26 November 2026).** The top-level `.venv` is
+  kept until after step 6. **Waiting on the owner:** his go for step 2 (the engine simplified in the subfolder and
+  proved by the comparison with the frozen top level; Fable).
 - **STEP 1 IS DONE (entry 345; 26 November 2026):** the living system is in `a_p_r_i_r_DEV/` (a byte-for-byte copy;
   its tests pass in the cloud). **The owner may now build its `.venv`** (in `a_p_r_i_r_DEV`: `create_venv.bat`, then
   `install_upgrade_dependencies_into_venv.bat`, from a plain CMD window). **Next, on his go:** step 2, the engine
