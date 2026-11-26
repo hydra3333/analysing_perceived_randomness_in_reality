@@ -7,8 +7,8 @@ What this file is for
     is in the view or in its digest.
 
     The view class (DrawView), the prefix parser and the safe file read are the old reader's code, copied
-    character for character by exchange/CLAUDE_WEB_TOOLS/step2/make_reader.py from
-    src/methods/_common/game_draws_reader.py; a test compares the two. They are between the two marked lines
+    character for character from the first system's src/methods/_common/game_draws_reader.py (a test of the
+    frozen engine, at the top level of the repository, compares the two). They are between the two marked lines
     below and keep the old file's own comments. The old loader's version, owner-record and Mode H opening-record
     checks are not here: the new system has no holdout, and every draw on file is an ordinary target.
 
@@ -23,7 +23,7 @@ Which of the project's own modules it uses
 
 What uses it
     research/forecast_engine.py (the view), research/scoring.py and research/research_job.py (the results on
-    file), research/results_step.py, and the engine's tests.
+    file), and the engine's tests.
 """
 from __future__ import annotations
 

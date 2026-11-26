@@ -8,14 +8,14 @@ What this file is for
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md sections 3.1, 3.2 and 3.4 (identity, layout, the
-    declaration and the fingerprint). The readiness marker and the static import check of 3.4 and 4 belong to
-    the install tools (build step 3).
+    declaration and the fingerprint), as the simple scheme v0.2 keeps them (its section 4).
 
 Which of the project's own modules it uses
     _common.game_profiles     get_profile: to check the games a declaration names
+    research.method_flags     the names of the three small files a method's folder may also hold
 
 What uses it
-    research/research_job.py, research/forecast_engine.py, research/withdraw.py, and the engine's tests.
+    research/research_job.py, research/forecast_engine.py, and the engine's tests.
 """
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from _common.game_profiles import get_profile
+from research.method_flags import PASSED_OVER_NAMES
 
 # A family folder is "E_" and three digits (E_002); a variant folder is capitals, digits and underscores.
 FAMILY_FOLDER_PATTERN = re.compile(r'E_\d{3}\Z')
@@ -35,10 +36,9 @@ VARIANT_FOLDER_PATTERN = re.compile(r'[A-Z0-9_]{3,96}\Z')
 DECLARATION_NAME = 'VARIANT.json'
 DECLARATION_KEYS = ('family', 'variant', 'title', 'description', 'games', 'minimum_earlier_draws',
                     'observation_view', 'files', 'helpers')
-# Files a variant folder may hold besides those its declaration lists (3.4): the status file and the readiness
-# marker. Python's own cache folders and files are ignored.
-STATUS_FILE_NAME = 'VARIANT_STATUS.ini'
-MARKER_FILE_NAME = 'I_AM_INSTALLABLE.json'
+# Files a method's folder may hold besides those its declaration lists: the three small files of
+# research/method_flags.py (I_AM_INSTALLABLE, I_AM_RETIRED, IN_PLACE_SINCE). They and Python's own cache folders
+# and files are passed over, and are part of no fingerprint.
 # The observation views a declaration may name (R2 section 4).
 OBSERVATION_VIEWS = ('UNORDERED_SET', 'OPERATOR_DRAWN_ORDER', 'PAIRED_DIAGNOSTIC')
 # The two functions every method.py provides.
@@ -147,7 +147,7 @@ def read_variant(methods_root: Path, family: str, variant: str) -> Variant:
     Returns the Variant.
     Refuses (VariantRefused): no declaration or one that is not JSON; a declaration that fails its checks; a
     listed file or helper that is missing; and any other file in the folder ("not on the declaration's list:
-    remove it or list it"), the status file, the marker and Python's cache apart.
+    remove it or list it"), the three small files and Python's cache apart.
     """
     folder = methods_root / family / variant
     declaration_path = folder / DECLARATION_NAME
@@ -162,7 +162,7 @@ def read_variant(methods_root: Path, family: str, variant: str) -> Variant:
     for item in sorted(folder.iterdir()):
         if item.name == '__pycache__' or item.suffix in ('.pyc', '.pyo'):
             continue
-        if item.name in (STATUS_FILE_NAME, MARKER_FILE_NAME):
+        if item.name in PASSED_OVER_NAMES:
             continue
         if item.name not in listed or not item.is_file():
             raise VariantRefused(f'{item}: not on the declaration\'s list: remove it or list it in '

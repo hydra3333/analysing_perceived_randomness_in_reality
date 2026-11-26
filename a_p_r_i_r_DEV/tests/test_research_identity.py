@@ -1,15 +1,18 @@
-"""Tests of the engine's identity code: the settings file, variant folders and fingerprints, the manifest.
+"""Tests of the engine's identity code: the settings file, method folders and their fingerprints, and the engine's
+own fingerprint.
 
-Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 5; specification v0.6 section 18, "Roles", "Readiness", "Infrastructure").
+Each test is named for the rule it proves and plants the fault that rule must catch.
+(The simple scheme v0.2 section 4; the settings file is still the first form and is replaced in step 4 of the work
+order, with its tests.)
 """
+import hashlib
 import json
 import tempfile
 import unittest
 from pathlib import Path
 
 import research_fixtures as fixtures
-from research import code_identity, settings, variant_folders
+from research import code_identity, method_flags, settings, variant_folders
 
 
 class SettingsFile(unittest.TestCase):
@@ -85,21 +88,6 @@ class SettingsFile(unittest.TestCase):
         with self.assertRaisesRegex(settings.SettingsRefused, 'outside the tree'):
             settings.read_settings(qa)
 
-    def test_prod_with_a_results_section_refuses(self):
-        prod = fixtures.make_tree(Path(self.folder.name) / 'prod', role='PROD', copy_from=self.tree)
-        with self.assertRaisesRegex(settings.SettingsRefused, 'PROD has no'):
-            settings.read_settings(prod)
-
-    def test_copying_results_from_the_tree_itself_refuses(self):
-        qa = fixtures.make_tree(Path(self.folder.name) / 'qa2', role='QA', copy_from=Path(self.folder.name).resolve() / 'qa2')
-        with self.assertRaisesRegex(settings.SettingsRefused, 'is this tree'):
-            settings.read_settings(qa)
-
-    def test_qa_names_the_tree_its_results_are_copied_from(self):
-        qa = fixtures.make_tree(Path(self.folder.name) / 'qa3', role='QA', copy_from=self.tree)
-        self.assertEqual(settings.read_settings(qa).results_copy_from, self.tree)
-
-
 class VariantFolders(unittest.TestCase):
     """Specification 3.4: the declaration, the folder's files, and the fingerprint."""
 
@@ -150,10 +138,10 @@ class VariantFolders(unittest.TestCase):
             path.write_bytes(original)
             self.assertEqual(self.fingerprint(), before)
 
-    def test_the_status_file_the_marker_and_pythons_cache_do_not_enter_the_fingerprint(self):
+    def test_the_three_small_files_and_pythons_cache_do_not_enter_the_fingerprint(self):
         before = self.fingerprint()
-        (self.variant_folder / 'VARIANT_STATUS.ini').write_text('x')
-        (self.variant_folder / 'I_AM_INSTALLABLE.json').write_text('{}')
+        for name in method_flags.PASSED_OVER_NAMES:
+            (self.variant_folder / name).write_text('x')
         (self.variant_folder / '__pycache__').mkdir()
         (self.variant_folder / '__pycache__' / 'method.cpython-315.pyc').write_bytes(b'\0')
         self.assertEqual(self.fingerprint(), before)
@@ -217,54 +205,57 @@ class VariantFolders(unittest.TestCase):
                 variant_folders.load_method(variant_folders.read_variant(self.methods, 'E_901', 'TOY_COUNTS_V1'))
 
 
-class InfrastructureManifest(unittest.TestCase):
-    """Specification 12.4: the manifest's syntax and the identity of the forecasting code."""
+class TheEnginesFingerprint(unittest.TestCase):
+    """Scheme section 4: one SHA-256 over every file under src/ outside the method families."""
 
     def setUp(self):
-        """An invented tree with the fixtures' three-line manifest."""
+        """An invented tree with one engine file, a shared module and one method."""
         self.folder = tempfile.TemporaryDirectory()
+        self.addCleanup(self.folder.cleanup)
         self.tree = fixtures.make_tree(Path(self.folder.name) / 'dev')
-        self.manifest = self.tree / 'deploy' / 'INFRA_MANIFEST.ini'
+        (self.tree / 'src' / 'methods' / '_common').mkdir()
+        (self.tree / 'src' / 'methods' / '_common' / 'shared.py').write_text('# shared\n', encoding='ascii')
+        self.method = fixtures.add_toy_variant(self.tree, 'E_901', 'TOY_A_V1')
 
-    def tearDown(self):
-        """Remove the temporary folder."""
-        self.folder.cleanup()
+    def test_it_is_the_sha256_of_the_sorted_hashed_file_list(self):
+        files = code_identity.infrastructure_files(self.tree)
+        self.assertEqual(files, ['src/methods/_common/shared.py', f'src/{fixtures.ENGINE_FILE}'])
+        text = ''.join(f'{name}\t{hashlib.sha256((self.tree / name).read_bytes()).hexdigest()}\n' for name in files)
+        self.assertEqual(code_identity.infrastructure_fingerprint(self.tree),
+                         hashlib.sha256(text.encode('utf-8')).hexdigest())
 
-    def test_the_manifest_gives_each_file_its_class(self):
-        self.assertEqual(code_identity.read_manifest(self.tree),
-                         {'src/toy_forecast_code.py': 'forecast', 'src/toy_derived_code.py': 'derived',
-                          'src/toy_other.py': 'other'})
+    def test_a_changed_added_or_removed_engine_file_changes_it(self):
+        seen = {code_identity.infrastructure_fingerprint(self.tree)}
+        (self.tree / 'src' / fixtures.ENGINE_FILE).write_text('# changed\n', encoding='ascii')
+        seen.add(code_identity.infrastructure_fingerprint(self.tree))
+        (self.tree / 'src' / 'research').mkdir()
+        (self.tree / 'src' / 'research' / 'new_module.py').write_text('# new\n', encoding='ascii')
+        seen.add(code_identity.infrastructure_fingerprint(self.tree))
+        (self.tree / 'src' / 'methods' / '_common' / 'shared.py').unlink()
+        seen.add(code_identity.infrastructure_fingerprint(self.tree))
+        self.assertEqual(len(seen), 4)
 
-    def test_each_fault_in_the_manifest_refuses(self):
-        good = self.manifest.read_text()
-        for bad, message in (
-                (good + 'this line has no class\n', 'not a readable manifest'),
-                (good + 'src/toy_other.py = other\n', 'not a readable manifest'),
-                (good + 'src/missing.py = other\n', 'does not exist'),
-                (good.replace('= derived', '= scoring'), 'must be one of'),
-                (good + 'src\\\\toy_other2.py = other\n', 'forward slashes'),
-                (good.replace('[files]', '[things]'), r'\[files\] section')):
-            self.manifest.write_text(bad)
-            with self.assertRaisesRegex(code_identity.ManifestRefused, message, msg=bad[-40:]):
-                code_identity.read_manifest(self.tree)
-        self.manifest.unlink()
-        with self.assertRaisesRegex(code_identity.ManifestRefused, 'missing'):
-            code_identity.read_manifest(self.tree)
+    def test_the_methods_the_small_files_and_pythons_cache_are_not_part_of_it(self):
+        before = code_identity.infrastructure_fingerprint(self.tree)
+        (self.method / 'method.py').write_text('# another method\n', encoding='ascii')
+        (self.method.parent / 'family_helper.py').write_text('# a helper of the family\n', encoding='ascii')
+        (self.tree / 'src' / 'methods' / '_shared').mkdir()
+        (self.tree / 'src' / 'methods' / '_shared' / 'helper.py').write_text('# a helper methods list\n', encoding='ascii')
+        for name in method_flags.PASSED_OVER_NAMES:
+            (self.tree / 'src' / name).write_bytes(b'; a flag\r\n')
+            (self.method / name).write_bytes(b'; a flag\r\n')
+        (self.tree / 'src' / '__pycache__').mkdir()
+        (self.tree / 'src' / '__pycache__' / 'toy_engine.cpython-315.pyc').write_bytes(b'\0')
+        self.assertEqual(code_identity.infrastructure_fingerprint(self.tree), before)
 
-    def test_the_forecasting_identity_changes_only_with_forecast_class_files(self):
-        identity, derived = code_identity.forecasting_code_identity(self.tree), code_identity.derived_code_digest(self.tree)
-        (self.tree / 'src' / 'toy_other.py').write_text('# changed\n')
-        self.assertEqual(code_identity.forecasting_code_identity(self.tree), identity)
-        self.assertEqual(code_identity.derived_code_digest(self.tree), derived)
-        (self.tree / 'src' / 'toy_derived_code.py').write_text('# changed\n')
-        self.assertEqual(code_identity.forecasting_code_identity(self.tree), identity)
-        self.assertNotEqual(code_identity.derived_code_digest(self.tree), derived)
-        (self.tree / 'src' / 'toy_forecast_code.py').write_text('# changed\n')
-        self.assertNotEqual(code_identity.forecasting_code_identity(self.tree), identity)
-
-    def test_the_environment_digest_is_stable_within_a_process(self):
-        self.assertEqual(code_identity.environment_digest(), code_identity.environment_digest())
-        self.assertRegex(code_identity.environment_digest(), r'^[0-9a-f]{64}$')
+    def test_it_is_kept_beside_the_results_and_read_back(self):
+        self.assertIsNone(code_identity.stored_fingerprint(self.tree))
+        code_identity.store_fingerprint(self.tree, 'ab12')
+        self.assertEqual(code_identity.stored_fingerprint(self.tree), 'ab12')
+        path = self.tree / 'results' / 'research' / code_identity.STORED_NAME
+        self.assertTrue(path.read_bytes().endswith(b'fingerprint = ab12\r\n'))
+        path.write_bytes(b'damaged')
+        self.assertIsNone(code_identity.stored_fingerprint(self.tree), 'unreadable is the same as not kept')
 
 
 if __name__ == '__main__':

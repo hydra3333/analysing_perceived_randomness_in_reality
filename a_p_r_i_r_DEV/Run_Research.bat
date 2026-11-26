@@ -1,7 +1,7 @@
 @echo off
 setlocal DisableDelayedExpansion
-rem The research job (specification v0.6 section 7).
-rem Usage: Run_Research.bat --game POWERBALL^|OZLOTTO^|BOTH [--no-update] [--only family/variant ...]
+rem The research job (the simple scheme v0.2, section 5).
+rem Usage: Run_Research.bat [--game POWERBALL^|OZLOTTO^|BOTH] [--no-update] [--rebuild family/variant ...] [--rebuild-all]
 rem It runs src\research_command.py with this tree's own Python, in isolated mode and writing no cache;
 rem what is typed after the command is passed on unchanged. The tree it works in is the folder this file is in.
 set "ROOT=%~dp0"

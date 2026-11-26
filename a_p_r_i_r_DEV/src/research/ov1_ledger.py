@@ -1,30 +1,31 @@
-"""OV-1: the prevailing ledger's lines and the exploratory score, both from the one passed kernel.
+"""OV-1: one draw's line, and the two series of a game, both from the one passed kernel.
 
 What this file is for
-    OV-1 is the one overall evidence score of a game. For each counted draw, every counted variant adds +1 to
+    OV-1 is the one overall evidence score of a game. For each counted draw, every counted method adds +1 to
     each number of its TOP seven and -1 to each number of its WORST seven of the main barrel; X is the sum of
     those weights over the seven numbers drawn; the kernel turns X into six exact log-factors (one for each
-    lambda), each a proved lower bound, and the running sums give the score, whose bar is 40. This file works
-    out one draw's line from the lists and the status files, and never chooses a number itself: the arithmetic
-    is the kernel's (research/ov1_numeric.py, copied unchanged from the passed MHUP-B slice 2).
+    lambda), each a proved lower bound, and the running sums give the score, whose reference bar is 40. This
+    file works out one draw's line from the lists, and never chooses a number itself: the arithmetic is the
+    kernel's (research/ov1_numeric.py, unchanged).
 
-    Two uses, one calculation. The prevailing score counts, at each draw, the cohort fixed by draw number in the
-    status files (eligible at or below the draw, not withdrawn at or below it), and its lines are stored in a
-    ledger. The exploratory score counts every variant wherever it has a scored pair; it is only a print-out.
+    Two series, one calculation, one of each per game. The exploratory series counts every method at every draw
+    it has a scored pair. The second series (called "prevailing" in the files and reports) counts each method
+    only from the draw after its establishment draw (IN_PLACE_SINCE) up to, and not including, its retirement
+    draw. Both are made again by every job, both are exploratory indicators, and neither claims that any result
+    was unseen when a method was written.
 
-Which part of the specification it carries out
-    doc/Predictive_Randomness_System_Specification_v0_6.md sections 10.1 to 10.5;
+Which part of the scheme it carries out
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5 step 6;
     doc/Predictive_Randomness_MHUPB_Design_Supplement_v0_8.md sections 6.1, 6.3 and 6.5 (the mathematics).
 
 Which of the project's own modules it uses
     research.ov1_numeric    the kernel: factor_table, mixture_lower, crossing, z_text, fixed_text
-    research.game_state     MAIN_BARREL; the VariantStates it is given hold each variant's summarised lines
-    research.variant_lists  the ledger file is a list of the same chained form
+    research.game_state     MAIN_BARREL; the VariantStates it is given hold each method's summarised lines
+    research.variant_lists  the two series are written as plain lists
     _common.game_profiles   get_profile: the size of the main barrel
 
 What uses it
-    research/research_job.py (writes prevailing lines), research/derived_check.py (rebuilds and compares),
-    research/reports.py (prints both scores), and the engine's tests.
+    research/research_job.py, research/reports.py (prints both series), and the tests.
 """
 from __future__ import annotations
 
@@ -35,64 +36,52 @@ from research import ov1_numeric as kernel
 from research import variant_lists as lists
 from research.game_state import MAIN_BARREL
 
-# The prevailing ledger of a game, under the tree's research folder (specification 10.4).
+# The two series of a game, under the tree's research folder.
 PREVAILING_LEDGER = 'ov1/prevailing.jsonl'
+EXPLORATORY_LEDGER = 'ov1/exploratory.jsonl'
 # The two states of a cohort member in a line.
 COUNTED = 'counted'
 NO_PAIR = 'no_pair'
 
 
 class Blocked(Exception):
-    """A prevailing line cannot be written yet: a cohort member is not complete for the draw, or is held. An
-    operational wait, named with the variant that causes it; never a skip (specification 10.4)."""
+    """A line of the second series cannot be made: a method that counts at the draw has no line for it, or a
+    forecast for it that is not scored (its calculation failed in this job). The series stops at that draw."""
 
 
-def ledger_path(tree_root: Path, game_id: str) -> Path:
-    """The prevailing ledger of a game, for example <tree>/results/research/POWERBALL/ov1/prevailing.jsonl."""
-    return Path(tree_root) / lists.RESEARCH_FOLDER / game_id / PREVAILING_LEDGER
+def ledger_path(tree_root: Path, game_id: str, which: str = PREVAILING_LEDGER) -> Path:
+    """Where a series is kept, for example <tree>/results/research/POWERBALL/ov1/prevailing.jsonl."""
+    return Path(tree_root) / lists.RESEARCH_FOLDER / game_id / which
 
 
-def ledger_header(game_id: str) -> dict:
-    """The header line of a new prevailing ledger: the game, the kernel's version, the bar and the lambdas."""
-    return {'line': lists.HEADER_LINE, 'format': lists.LIST_FORMAT, 'list': lists.PREVAILING_KIND, 'game': game_id,
+def series_header(game_id: str, kind: str) -> dict:
+    """The header line of a series file: the game, the kernel's version, the bar and the lambdas."""
+    return {'line': lists.HEADER_LINE, 'format': lists.LIST_FORMAT, 'list': kind, 'game': game_id,
             'kernel_version': kernel.KERNEL_VERSION, 'bar': kernel.BAR,
-            'lambdas': [f'{numerator}/{denominator}' for numerator, denominator in kernel.LAMBDAS], 'prev': None}
+            'lambdas': [f'{numerator}/{denominator}' for numerator, denominator in kernel.LAMBDAS]}
 
 
-def read_ledger(tree_root: Path, game_id: str) -> tuple:
-    """Read a game's prevailing ledger and check it.
-
-    Returns (None, []) if it is not begun; otherwise (the ListOnFile, its lines after the header).
-    Refuses (ListFault): a broken chain (see variant_lists.read_list); a header for another game or another
-    kernel version; lines whose draws do not run upward by one.
-    """
-    path = ledger_path(tree_root, game_id)
-    listed = lists.read_list(path, lists.PREVAILING_KIND)
-    if listed is None:
-        return None, []
-    if listed.header.get('game') != game_id or listed.header.get('kernel_version') != kernel.KERNEL_VERSION:
-        raise lists.ListFault(f'{path} line 1: the header is not that of the {game_id} prevailing ledger under '
-                              f'kernel {kernel.KERNEL_VERSION}.')
-    lines = list(listed.lines)
-    for number, line in enumerate(lines, start=2):
-        draw = (line.get('content') or {}).get('draw')
-        if type(draw) is not int or (number > 2 and draw != lines[number - 3]['content']['draw'] + 1):
-            raise lists.ListFault(f'{path} line {number}: the draws of the prevailing ledger run upward by one; '
-                                  f'this line does not follow the one before it.')
-    listed.lines = []
-    return listed, lines
+def write_series(tree_root: Path, game_id: str, prevailing: list, exploratory: list) -> int:
+    """Write both series of a game as plain lists, each afresh. Returns how many of the two files changed."""
+    written = 0
+    for which, kind, line_name, series in (
+            (PREVAILING_LEDGER, lists.PREVAILING_KIND, lists.PREVAILING_LINE, prevailing),
+            (EXPLORATORY_LEDGER, lists.EXPLORATORY_KIND, lists.EXPLORATORY_LINE, exploratory)):
+        lines = [{'line': line_name, 'content': made['content'], 'audit': made['audit']} for made in series]
+        written += lists.write_whole(ledger_path(tree_root, game_id, which), series_header(game_id, kind), lines)
+    return written
 
 
 def prevailing_start(states) -> int | None:
-    """The draw the prevailing score starts at: the smallest eligibility draw among the installed variants, or
-    None while no variant has one (specification 10.3). For example 1607."""
+    """The draw the second series starts at: the smallest first-counted draw among the methods (the draw after
+    an establishment draw), or None while no method has one. For example 1607."""
     eligible = [state.status.eligible_from for state in states if state.status.eligible_from is not None]
     return min(eligible) if eligible else None
 
 
 def prevailing_cohort(states, draw: int) -> list:
-    """The prevailing cohort as of a draw, read from the status files: every installed variant whose eligibility
-    draw is at or below it and which is not withdrawn from a draw at or below it; in identity order."""
+    """Who counts in the second series at a draw: every method in place before it and not retired from a draw
+    at or below it; in identity order."""
     return sorted((state for state in states if state.status.in_prevailing_cohort_at(draw)),
                   key=lambda state: state.variant.identity)
 
@@ -194,3 +183,27 @@ def exploratory_series(game_id: str, states, outcomes: dict, through: int) -> li
         running = running_logs_of(line['content'])
         series.append(line)
     return series
+
+
+def prevailing_series(game_id: str, states, outcome_of, through: int) -> tuple:
+    """The second series, draw by draw: each method counting from the draw after its establishment draw up to,
+    and not including, its retirement draw.
+
+    states: the game's VariantStates.  outcome_of: gives the seven main numbers drawn at a draw.
+    through: the last draw to include.
+    Returns (series, blocked): the list of draw_line results for each draw from the series' start, in order;
+    and None, or the one line saying at which draw it had to stop and why (see Blocked).
+    """
+    start = prevailing_start(states)
+    series, running = [], [0] * len(kernel.LAMBDAS)
+    if start is None:
+        return series, None
+    for draw in range(start, through + 1):
+        try:
+            cohort = [state for state in prevailing_cohort(states, draw) if state.first_target <= draw]
+            line = draw_line(game_id, draw, cohort, outcome_of(draw), running)
+        except Blocked as blocked:
+            return series, str(blocked)
+        running = running_logs_of(line['content'])
+        series.append(line)
+    return series, None

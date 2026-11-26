@@ -18,8 +18,8 @@ Which of the project's own modules it uses
     _common.game_profiles    get_profile: the game's barrels
 
 What uses it
-    research/research_job.py (the fill and the catch-up), research/derived_check.py (the full check), and the
-    engine's tests.
+    research/research_job.py (the fill, the catch-up, and the check that a stored score still follows from the
+    results on file), research/game_state.py, and the engine's tests.
 """
 from __future__ import annotations
 

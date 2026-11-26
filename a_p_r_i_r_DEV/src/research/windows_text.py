@@ -15,9 +15,8 @@ Which of the project's own modules it uses
     None.
 
 What uses it
-    research/reports.py (report files, read-me files, the side file of making times), research/status_file.py
-    (VARIANT_STATUS.ini), research/derived_check.py (the not-current marker) and research/job_lock.py (lock
-    files).
+    research/reports.py (report files, read-me files, the side file of making times) and research/job_lock.py
+    (lock files).
 """
 from __future__ import annotations
 

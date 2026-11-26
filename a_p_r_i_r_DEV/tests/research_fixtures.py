@@ -1,13 +1,13 @@
 """Fixtures for the research engine's tests: invented trees, invented draws and toy variants.
 
 What this file is for
-    The engine's tests run on disposable trees made here: a settings file, a small infrastructure manifest,
-    results files of invented draws (made by a seeded generator, never real draws) with their version ledgers,
-    and toy variants whose behaviour at chosen targets is planted (a failure of the method's own mathematics, an
-    environmental fault, too little history, a bad output, a verify that disagrees).
+    The engine's tests run on disposable trees made here: a settings file, results files of invented draws (made
+    by a seeded generator, never real draws) with their version ledgers, and toy methods whose behaviour at
+    chosen targets is planted (a failure of the method's own mathematics, a fault, too little history, a bad
+    output, a verify that disagrees).
 
-Which part of the specification it carries out
-    doc/Predictive_Randomness_System_Specification_v0_6.md section 18 ("on invented games and toy variants").
+Which part of the scheme it carries out
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 9 (tests on invented games and toy methods).
 
 Which of the project's own modules it uses
     _common.game_profiles    get_profile: the two games' first draws, barrels and draw dates
@@ -37,9 +37,11 @@ FIXED_TIME = datetime(2026, 12, 1, 9, 40, 12, tzinfo=timezone.utc)
 # The game most tests use, and the first target of a toy variant that declares three earlier draws in it.
 GAME = 'POWERBALL'
 FIRST_TOY_TARGET = 1147
-# The last draw on file when a job test's tree is made, and the last draw of the tree its results are copied from.
+# The last draw on file when a job test's tree is made, and after new results have "arrived" in a test.
 LAST_AT_START = 1160
-LAST_IN_SOURCE = 1166
+LAST_AFTER_NEW = 1166
+# The one file every invented tree holds as "the engine": changing it changes the infrastructure's fingerprint.
+ENGINE_FILE = 'toy_engine.py'
 # The version ledger's columns as the fixtures write them (the reader uses the first six).
 LEDGER_COLUMNS = ('version', 'utc', 'action', 'master_sha256', 'first_draw', 'last_draw', 'draw_count')
 # The toy method every toy variant uses; BEHAVIOUR is replaced by the planted behaviour of each variant.
@@ -154,29 +156,21 @@ def write_results(tree: Path, game_id: str, last_draw: int, version: int = 1, **
     return raw
 
 
-def make_tree(root: Path, role: str = 'DEV', copy_from: Path | None = None) -> Path:
-    """Make an empty invented tree: its settings file, a small manifest and the folders the engine expects.
+def make_tree(root: Path, role: str = 'DEV') -> Path:
+    """Make an empty invented tree: its settings file, one invented file of "the engine" (so that a test can
+    change the engine's fingerprint) and the folders the engine expects.
 
-    root: an existing empty folder.  role: 'DEV', 'QA' or 'PROD'.  copy_from: the tree its results are copied
-    from, if any.  Returns the tree's real path.
+    root: an existing empty folder.  role: 'DEV', 'QA' or 'PROD'.  Returns the tree's real path.
     """
     tree = Path(root).resolve()
     (tree / 'src' / 'methods').mkdir(parents=True)
-    (tree / 'deploy').mkdir()
     (tree / '.venv').mkdir()
-    for name, text in (('toy_forecast_code.py', '# invented forecasting code\n'),
-                       ('toy_derived_code.py', '# invented scoring code\n'), ('toy_other.py', '# a launcher\n')):
-        (tree / 'src' / name).write_text(text, encoding='ascii')
-    (tree / 'deploy' / 'INFRA_MANIFEST.ini').write_text(
-        '[files]\nsrc/toy_forecast_code.py = forecast\nsrc/toy_derived_code.py = derived\nsrc/toy_other.py = other\n',
-        encoding='ascii')
+    (tree / 'src' / ENGINE_FILE).write_text('# an invented file of the engine\n', encoding='ascii')
     lines = ['[environment]', f'role = {role}', f'tree_root = {tree}', f'venv_dir = {tree / ".venv"}']
     if role != 'DEV':
         backups = tree.parent / (tree.name + '_backups')
         backups.mkdir(exist_ok=True)
         lines.append(f'backup_root = {backups}')
-    if copy_from is not None:
-        lines += ['[results]', f'copy_from = {copy_from}']
     (tree / 'ENVIRONMENT.ini').write_text('\n'.join(lines) + '\n', encoding='utf-8')
     return tree
 
@@ -237,13 +231,15 @@ class ImportPath:
 def run_job(tree: Path, games=(GAME,), **options) -> tuple:
     """Run the research job in an invented tree at the fixed time.
 
-    tree: the tree.  games: the games to work.  options: run()'s other arguments (no_update, only, checkpoint).
+    tree: the tree.  games: the games to work.  options: run()'s other arguments (no_update, rebuild,
+    rebuild_all, checkpoint); the updater is left out unless a test says otherwise.
     Returns (the exit code, the lines the job said), for example (0, ['RESEARCH JOB - START - ...', ...]).
     """
     from research import research_job
     said = []
     with ImportPath(tree):
-        code = research_job.run(tree, games, now=lambda: FIXED_TIME, say=said.append, **options)
+        code = research_job.run(tree, games, now=lambda: FIXED_TIME, say=said.append,
+                                **{'no_update': True, **options})
     return code, said
 
 
@@ -263,29 +259,23 @@ def list_lines(tree: Path, family: str, variant: str, which: str = 'forecasts', 
     return [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()][1:] if path.is_file() else []
 
 
-def ledger_lines(tree: Path, game_id: str = GAME) -> list:
-    """The lines of a game's prevailing ledger after the header, as records ([] if the ledger is not begun)."""
-    path = tree / 'results' / 'research' / game_id / 'ov1' / 'prevailing.jsonl'
+def ledger_lines(tree: Path, game_id: str = GAME, which: str = 'prevailing') -> list:
+    """The lines of one of a game's two OV-1 series after the header, as records ([] if the file is not there);
+    which is 'prevailing' (each method from its establishment draw) or 'exploratory' (every draw)."""
+    path = tree / 'results' / 'research' / game_id / 'ov1' / f'{which}.jsonl'
     return [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()][1:] if path.is_file() else []
 
 
 def alter_list_line(path: Path, position: int, change) -> None:
-    """Alter one line of a list file and chain the file again, as a careful forger would: the chain stays
-    unbroken, so that only a comparison of the content can find the change.
+    """Alter one line of a list file, leaving every other byte as it was.
 
     path: the list file.  position: which line after the header, from 0.  change: called with that line's record,
     which it alters in place.
     """
-    from _common.canonical_encoding import canonical_bytes
+    from research.variant_lists import record_bytes
     records = [json.loads(line) for line in path.read_text(encoding='ascii').splitlines()]
     change(records[position + 1])
-    out, previous = [], None
-    for record in records:
-        record['prev'] = previous
-        raw = canonical_bytes(record)
-        previous = hashlib.sha256(raw).hexdigest()
-        out.append(raw)
-    path.write_bytes(b''.join(out))
+    path.write_bytes(b''.join(record_bytes(record) for record in records))
 
 
 def make_folder_link(link: Path, target: Path) -> str | None:
@@ -307,9 +297,19 @@ def make_folder_link(link: Path, target: Path) -> str | None:
         return None
 
 
-def status_path(tree: Path, family: str, variant: str) -> Path:
-    """A variant's status file in a tree."""
-    return tree / 'src' / 'methods' / family / variant / 'VARIANT_STATUS.ini'
+def method_folder(tree: Path, family: str, variant: str) -> Path:
+    """A method's own folder in a tree, where its software and its small files lie."""
+    return tree / 'src' / 'methods' / family / variant
+
+
+def set_in_place(tree: Path, family: str, variant: str, since: int, game_id: str = GAME) -> None:
+    """Write a method's IN_PLACE_SINCE as if this version of it had first been used when the tree held results
+    through `since`: it then counts in the second OV-1 series from the draw after."""
+    from research.method_flags import IN_PLACE_NAME, write_flag
+    from research.variant_folders import read_variant
+    folder = method_folder(tree, family, variant)
+    write_flag(folder / IN_PLACE_NAME, {'fingerprint': read_variant(tree / 'src' / 'methods', family, variant).fingerprint,
+                                        f'in_place_since_{game_id}': str(since)}, 'Written by a test.')
 
 
 def report_text(tree: Path, name: str, game_id: str = GAME) -> str:
@@ -319,7 +319,7 @@ def report_text(tree: Path, name: str, game_id: str = GAME) -> str:
 
 
 class JobCase(unittest.TestCase):
-    """A temporary folder with a QA tree and the tree its results are copied from."""
+    """A temporary folder in which each test makes its invented trees."""
 
     def setUp(self):
         """Make the folder; the trees are made by each test."""
@@ -330,28 +330,16 @@ class JobCase(unittest.TestCase):
         """Remove the folder."""
         self._temporary.cleanup()
 
-    def source(self, last_draw: int = LAST_IN_SOURCE, version: int = 2, game_id: str = GAME, **generator) -> Path:
-        """Make or regrow the tree whose results are copied (it holds results only). Returns its folder."""
-        folder = self.root / 'source'
-        folder.mkdir(exist_ok=True)
-        write_results(folder, game_id, last_draw, version=version, **generator)
-        return folder
-
-    def tree(self, variants=('TOY_A_V1', 'TOY_B_V1'), role: str = 'QA', last_draw: int = LAST_AT_START,
-             with_source: bool = True, name: str = 'tree') -> Path:
-        """Make a tree with invented results and toy variants of family E_901, each ACTIVE. Returns its folder.
+    def tree(self, variants=('TOY_A_V1', 'TOY_B_V1'), role: str = 'DEV', last_draw: int = LAST_AT_START,
+             name: str = 'tree') -> Path:
+        """Make a tree with invented results and toy methods of family E_901. Returns its folder.
 
         variants: names, or (name, behaviour) pairs; TOY_B_V1 is given the reversed order unless a behaviour is
-        named.  with_source: whether its settings name the source tree to copy results from.
+        named.
         """
         folder = self.root / name
         folder.mkdir()
-        copy_from = None
-        if with_source:
-            copy_from = self.root / 'source'
-            if not copy_from.exists():
-                self.source(last_draw, version=1)
-        tree = make_tree(folder, role=role, copy_from=copy_from)
+        tree = make_tree(folder, role=role)
         write_results(tree, GAME, last_draw)
         for entry in variants:
             self.add_variant(tree, *((entry,) if isinstance(entry, str) else entry))
@@ -360,14 +348,12 @@ class JobCase(unittest.TestCase):
     @staticmethod
     def add_variant(tree: Path, name: str, behaviour: dict | None = None, family: str = 'E_901',
                     games=(GAME,), minimum: int = 3) -> None:
-        """Add one toy variant with its ACTIVE status file, as an install would leave it."""
+        """Add one toy method."""
         if behaviour is None:
             behaviour = {'reverse': True} if name == 'TOY_B_V1' else {}
         add_toy_variant(tree, family, name, games=games, minimum=minimum, behaviour=behaviour)
-        from research.status_file import create_active
-        create_active(status_path(tree, family, name), family, name, list(games))
 
     def status(self, tree: Path, name: str, family: str = 'E_901'):
-        """A variant's status in the test game, read from its status file."""
-        from research.status_file import read_status
-        return read_status(status_path(tree, family, name), [GAME])[GAME]
+        """A method's status in the test game, read from the small files in its folder."""
+        from research.method_flags import status_of
+        return status_of(method_folder(tree, family, name), GAME)

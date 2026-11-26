@@ -3,23 +3,23 @@ means, the one way a file is brought to its form, and the search of Python code 
 ending.
 
 What this file is for
-    Every text file of the living project ends its lines CRLF, whoever wrote it; the line-record files (.jsonl)
-    end them LF, because a list line is the canonical encoding whose bytes, ending included, the hash chain is
-    computed from. This file is the one piece of code that knows that rule. It says which form a file must have
+    Every text file of the living project ends its lines CRLF, whoever wrote it, the line-record files (.jsonl)
+    and the small files without an extension included (the simple scheme v0.2: nothing is chained any more, so
+    the old LF exception for .jsonl is gone). This file is the one piece of code that knows that rule. It says which form a file must have
     from its name alone, reads a file's bytes and says exactly how they break the rule, changes line endings and
     nothing else, and reads Python source to find a file write that leaves the line ending to the platform. It
     reads the disk only: it never asks Git anything, and it never looks inside a tree's .venv.
 
 Which part of the project's rules it carries out
-    doc/FILE_FORM_STANDARD_v0_2.md (RAT-49): section 3 (the list), 3A (the six files left out by name), 3B (what
-    conforms means), 4 (every program says what it writes) and 6 (the checker).
+    doc/FILE_FORM_STANDARD_v0_2.md (RAT-49): section 3 (the list), 3B (what conforms means), 4 (every program
+    says what it writes) and 6 (the checker); as changed by exchange/Claude_The_Simple_Scheme_v0_2_20261126.md
+    (everything CRLF; the six files the standard left out by name are not part of this tree).
 
 Which of the project's own modules it uses
     None: standard library only, so that the conversion program can use it before anything else is installed.
 
 What uses it
-    tests/test_file_form.py (the suite's check of DEV's own files); the conversion program of the standard's
-    section 7; Make_Installable and Check_Tree of build step 3.
+    tests/test_research_file_form.py, and the commands of step 4 of the work order.
 """
 from __future__ import annotations
 
@@ -49,7 +49,7 @@ FORM_BY_SUFFIX = {
     '.log': CRLF,       # logs
     '.md': CRLF,        # documents
     '.lock': CRLF,      # lock files (JOB.lock and the like)
-    '.jsonl': LF,       # THE ONE EXCEPTION: line-record files; the line ending is part of what is hashed
+    '.jsonl': CRLF,     # line-record files: the lists, both OV-1 series, the job log
     '.sh': LF,          # shell scripts of the cloud helpers; none is part of the living project
     '.zip': BINARY,
     '.pdf': BINARY,
@@ -64,31 +64,24 @@ FORM_BY_NAME = {
     '.gitattributes': CRLF,
     '.gitignore': CRLF,
     'LICENSE': CRLF,
-    'SNAPSHOT_DUE': CRLF,
+    'I_AM_INSTALLABLE': CRLF,      # the three small files beside a method (research/method_flags.py)
+    'I_AM_RETIRED': CRLF,
+    'IN_PLACE_SINCE': CRLF,
+    'INFRASTRUCTURE': CRLF,        # the engine's fingerprint kept beside the results
 }
-# The six files of the retired Mode H release machinery (standard section 3A), from the tree root with forward
-# slashes. They are pinned to their exact bytes by that machinery's own tests; they are neither converted nor
-# checked, and stay exactly as they are.
-LEFT_OUT_BY_NAME = (
-    'src/methods/_common/contract_data/install_records/INSTALL_MHUP_A_V1.json',
-    'src/methods/_common/contract_data/install_records/RELEASE_BASELINE_20261031_V1.json',
-    'src/methods/_common/contract_data/install_records/RELEASE_MHUP_A_V1.json',
-    'src/package_tools/process_check.py',
-    'src/results_master_v0_2.py',
-    'tests/fixtures/results_master_v0_1_reference.py.txt',
-)
+# Files left out by name, from the tree root with forward slashes: neither converted nor checked. The first
+# system's six (standard section 3A) are not part of this tree, so there are none.
+LEFT_OUT_BY_NAME = ()
 # Folders that are never walked: Python's own cache folders, which hold nothing the project wrote.
 NEVER_WALKED_FOLDERS = ('__pycache__',)
 # The mark Windows puts on a link, a junction or any other reparse point (stat.FILE_ATTRIBUTE_REPARSE_POINT).
 REPARSE_POINT_ATTRIBUTE = 0x400
 # The rule in one paragraph, with its exception: the standard requires that the exception is said wherever the
 # rule is summarised (section 3), so every message of the checker ends with this.
-RULE_IN_SHORT = ('The standard (doc/FILE_FORM_STANDARD_v0_2.md): every text file of the project ends its lines CRLF. '
-                 'The one exception: every .jsonl file ends its lines LF, because the line ending is part of what '
-                 'its hash chain is computed from.')
+RULE_IN_SHORT = 'Every text file of the project ends its lines CRLF, the .jsonl files included.'
 # What a person does about a file in the wrong form (standard section 10).
 WHAT_TO_DO = ('To correct a file by hand: in VS Code, click LF or CRLF at the bottom right and choose; in Notepad++, '
-              'Edit, EOL Conversion. A .jsonl file is never edited by hand.')
+              'Edit, EOL Conversion.')
 
 # A carriage return that no line feed follows, and a line feed that no carriage return precedes.
 _BARE_CR = re.compile(rb'\r(?!\n)')
@@ -133,7 +126,7 @@ def as_root_path(relative_path: str | os.PathLike) -> str:
 
 
 def is_left_out_by_name(relative_path: str | os.PathLike) -> bool:
-    """Whether a file is one of the six the standard leaves out by name (section 3A).
+    """Whether a file is one of those left out by name (LEFT_OUT_BY_NAME; none today).
 
     relative_path   the file, from the tree root
     Returns True or False. Windows does not tell upper case from lower in a path, so neither does this.
@@ -147,7 +140,7 @@ def form_of(relative_path: str | os.PathLike) -> str | None:
 
     relative_path   the file, from the tree root or just its name
     Returns CRLF, LF or BINARY; or None when the standard's table does not name this kind of file (the caller
-    refuses such a file: section 3B). For example 'CRLF' for 'Run_Research.bat', 'LF' for 'FORECASTS.jsonl',
+    refuses such a file: section 3B). For example 'CRLF' for 'Run_Research.bat' and for 'forecasts.jsonl',
     None for 'notes.docx'.
     """
     name = as_root_path(relative_path).rsplit('/', 1)[-1]

@@ -1,14 +1,13 @@
-"""Tests that the research engine writes each of its files in the form the project's standard gives it: every
-text file with each line ending CRLF, every line-record file (.jsonl) with LF.
+"""Tests that the research engine writes each of its files in the form the project gives it: every text file
+with each line ending CRLF, the line-record files (.jsonl) and the small files beside a method included.
 
 Each test is named for the rule it proves and plants the fault that rule must catch
-(doc/CODING_PRACTICES_v0_1.md section 6; doc/FILE_FORM_STANDARD_v0_2.md sections 1, 3, 3B and 4).
+(the simple scheme v0.2: everything CRLF; doc/FILE_FORM_STANDARD_v0_2.md sections 3B and 4).
 
 Which of the project's own modules it uses
     research_fixtures       invented trees, toy variants and the research job run in them
     file_form (deploy/)     the project's one checker of the form of a file
-    research.windows_text, research.status_file, research.reports, research.derived_check, research.job_lock,
-    research.withdraw       the writers under test
+    research.windows_text, research.reports, research.job_lock, research.method_flags   the writers under test
 
 What uses it
     The project's test suite.
@@ -25,8 +24,7 @@ if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
 
 import file_form                                            # noqa: E402  (after the path line above)
 import research_fixtures as fx                              # noqa: E402
-from research import derived_check, job_lock, reports, status_file, withdraw       # noqa: E402
-from research.status_file import GameStatus                # noqa: E402
+from research import job_lock, method_flags, reports       # noqa: E402
 from research.windows_text import LINE_ENDING, windows_lines                       # noqa: E402
 
 GAME = fx.GAME
@@ -52,41 +50,6 @@ class TheOnePlaceThatMakesWindowsLines(unittest.TestCase):
     def test_text_that_already_holds_a_carriage_return_is_refused_not_converted_twice(self):
         with self.assertRaises(ValueError):
             windows_lines(windows_lines('one\ntwo\n'))
-
-
-class TheStatusFile(unittest.TestCase):
-    """VARIANT_STATUS.ini is a settings file: CRLF, with its check over the bytes as they are written."""
-
-    def setUp(self):
-        self.folder = tempfile.TemporaryDirectory()
-        self.addCleanup(self.folder.cleanup)
-        self.tree = fx.make_tree(Path(self.folder.name) / 'tree')
-        variant_folder = fx.add_toy_variant(self.tree, FAMILY, VARIANT, games=(GAME,))
-        self.path = variant_folder / status_file.STATUS_FILE_NAME
-        self.statuses = {GAME: GameStatus()}
-
-    def test_the_rendered_file_ends_every_line_crlf(self):
-        data = status_file.render(FAMILY, VARIANT, self.statuses)
-        self.assertEqual(crlf_faults(data), [])
-        self.assertIn(b'[check]\r\nsha256 = ', data)
-        self.assertTrue(data.endswith(b'\r\n'))
-
-    def test_a_written_status_file_is_crlf_on_disk_and_reads_back(self):
-        status_file.write_status(self.path, FAMILY, VARIANT, self.statuses)
-        self.assertEqual(crlf_faults(self.path.read_bytes()), [])
-        self.assertEqual(status_file.read_status(self.path, (GAME,)), self.statuses)
-
-    def test_a_status_file_in_the_old_lf_form_is_refused(self):
-        self.path.write_bytes(status_file.render(FAMILY, VARIANT, self.statuses).replace(b'\r\n', b'\n'))
-        with self.assertRaises(status_file.StatusRefused) as refusal:
-            status_file.read_status(self.path, (GAME,))
-        self.assertIn('every line ending CRLF', str(refusal.exception))
-
-    def test_one_line_of_a_status_file_changed_to_lf_is_caught_by_its_check(self):
-        data = status_file.render(FAMILY, VARIANT, self.statuses)
-        self.path.write_bytes(data.replace(b'status = ACTIVE\r\n', b'status = ACTIVE\n', 1))
-        with self.assertRaises(status_file.StatusRefused):
-            status_file.read_status(self.path, (GAME,))
 
 
 class TheReportFiles(unittest.TestCase):
@@ -133,19 +96,22 @@ class TheReportFiles(unittest.TestCase):
 
 
 class TheSmallFiles(unittest.TestCase):
-    """The not-current marker and a lock file are text files too: CRLF."""
+    """A lock file and the small files beside a method are text files too: CRLF."""
 
     def setUp(self):
         self.folder = tempfile.TemporaryDirectory()
         self.addCleanup(self.folder.cleanup)
         self.tree = Path(self.folder.name)
 
-    def test_the_not_current_marker_is_crlf_and_reads_back(self):
-        derived_check.write_cutoff(self.tree, GAME, 1601, 'MISMATCH', 'a score differs at draw 1601')
-        data = derived_check.cutoff_path(self.tree, GAME).read_bytes()
-        self.assertEqual(crlf_faults(data), [])
-        self.assertGreater(data.count(b'\r\n'), 2)
-        self.assertEqual(derived_check.read_cutoff(self.tree, GAME)[0], 1601)
+    def test_a_retired_file_and_an_in_place_file_are_crlf_and_read_back(self):
+        method_flags.write_retired(self.tree, {GAME: 1601}, 'a test of the file forms')
+        method_flags.settle_in_place(self.tree, 'ab12', GAME, 1600)
+        for name in (method_flags.RETIRED_NAME, method_flags.IN_PLACE_NAME):
+            data = (self.tree / name).read_bytes()
+            self.assertEqual(crlf_faults(data), [], name)
+            self.assertGreater(data.count(b'\r\n'), 2, name)
+        self.assertEqual(method_flags.status_of(self.tree, GAME),
+                         method_flags.MethodStatus(1601, 'a test of the file forms', 1601))
 
     def test_a_lock_file_is_one_line_ending_crlf(self):
         path = self.tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME
@@ -157,52 +123,52 @@ class TheSmallFiles(unittest.TestCase):
 
 
 class EverythingAJobWrites(fx.JobCase):
-    """The whole of it at once: after a research job and a withdrawal in an invented tree, the project's own
-    checker finds every file the engine wrote in its form, and the lists are the LF exception."""
+    """The whole of it at once: after two research jobs in an invented tree, one of them with a method retired,
+    the project's own checker finds every file the engine wrote in its form."""
 
     def written_files(self, tree: Path) -> list:
-        """Every file under the folders the engine writes in, and every status file, from the tree root."""
+        """Every file under the folders the engine writes in, and every small file beside a method, from the
+        tree root."""
         paths = file_form.files_under(tree, WRITTEN_FOLDERS, with_root_files=False)
-        paths += [path.relative_to(tree).as_posix() for path in sorted(tree.rglob(status_file.STATUS_FILE_NAME))]
+        paths += [path.relative_to(tree).as_posix() for name in method_flags.FLAG_NAMES
+                  for path in sorted(tree.rglob(name))]
         return paths
 
-    def test_every_file_a_job_and_a_withdrawal_write_is_in_its_form(self):
+    def after_two_jobs(self) -> Path:
+        """A tree after a job, a retirement written by hand as an empty file, and a second job."""
         tree = self.tree()
         code, said = fx.run_job(tree, no_update=True)
         self.assertEqual(code, 0, said)
-        with fx.ImportPath(tree):
-            withdrawn = withdraw.withdraw(tree, [(FAMILY, 'TOY_B_V1')], (GAME,), 'a test of the file forms',
-                                          ask=lambda _question: 'WITHDRAW', say=lambda _line: None,
-                                          now=lambda: fx.FIXED_TIME)
-        self.assertEqual(withdrawn, withdraw.EXIT_DONE)
+        (tree / 'src' / 'methods' / FAMILY / 'TOY_B_V1' / method_flags.RETIRED_NAME).write_bytes(b'')
+        code, said = fx.run_job(tree, no_update=True)
+        self.assertEqual(code, 0, said)
+        return tree
+
+    def test_every_file_two_jobs_write_is_in_its_form(self):
+        tree = self.after_two_jobs()
         paths = self.written_files(tree)
-        endings = {Path(path).suffix for path in paths}
-        self.assertLessEqual({'.txt', '.csv', '.jsonl', '.ini'}, endings, paths)
+        names = {Path(path).suffix or Path(path).name for path in paths}
+        self.assertLessEqual({'.txt', '.csv', '.jsonl', 'INFRASTRUCTURE', 'IN_PLACE_SINCE', 'I_AM_RETIRED'}, names,
+                             paths)
         faults = file_form.faults_of_files(tree, paths)
         self.assertEqual(faults, [], '\n' + file_form.describe(faults))
 
-    def test_the_lists_are_lf_and_the_reports_are_crlf(self):
-        tree = self.tree()
-        fx.run_job(tree, no_update=True)
+    def test_the_lists_and_the_reports_are_crlf(self):
+        tree = self.after_two_jobs()
         paths = self.written_files(tree)
-        lists = [path for path in paths if path.endswith('.jsonl')]
-        texts = [path for path in paths if path.endswith(('.txt', '.csv', '.ini'))]
-        self.assertTrue(lists and texts)
-        for path in lists:
-            self.assertNotIn(b'\r', (tree / path).read_bytes(), path)
-        for path in texts:
+        self.assertTrue(any(path.endswith('.jsonl') for path in paths) and any(path.endswith('.txt') for path in paths))
+        for path in paths:
             data = (tree / path).read_bytes()
             self.assertEqual(data.count(b'\n'), data.count(b'\r\n'), path)
             self.assertGreater(data.count(b'\r\n'), 0, path)
 
-    def test_a_planted_lf_report_and_a_planted_crlf_list_are_each_named_by_the_checker(self):
-        tree = self.tree()
-        fx.run_job(tree, no_update=True)
+    def test_a_planted_lf_report_and_a_planted_lf_list_are_each_named_by_the_checker(self):
+        tree = self.after_two_jobs()
         paths = self.written_files(tree)
         report = next(path for path in paths if path.endswith('.txt'))
         listed = next(path for path in paths if path.endswith('.jsonl'))
-        (tree / report).write_bytes((tree / report).read_bytes().replace(b'\r\n', b'\n'))
-        (tree / listed).write_bytes((tree / listed).read_bytes().replace(b'\n', b'\r\n'))
+        for path in (report, listed):
+            (tree / path).write_bytes((tree / path).read_bytes().replace(b'\r\n', b'\n'))
         named = {fault.path for fault in file_form.faults_of_files(tree, paths)}
         self.assertEqual(named, {report, listed})
 

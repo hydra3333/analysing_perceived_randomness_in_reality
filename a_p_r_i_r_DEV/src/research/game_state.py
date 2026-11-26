@@ -1,26 +1,23 @@
-"""One game's research records as the job holds them in memory: variants, lists, statuses, what is foreign.
+"""A game's records in memory while the research job works it: the methods' lists, summarised.
 
 What this file is for
-    Before anything is computed, the job reads what the tree already holds for a game: each installed variant's
-    status file and two lists, checked against their rules. It keeps a small summary of every line (the TOP and
-    WORST sets, the score, where and when the forecast was made) and decides which lists belong to this tree's
-    software and status and which are foreign. A foreign list is never appended to and counts nowhere; if its
-    variant is installed here, the variant is held. Scoring, OV-1, the full check and the reports all read this
-    one picture, so they cannot disagree about what the lists say.
+    For one game the job holds, for every method in the tree, what its two lists say: which draws it has a
+    line for, the TOP and WORST sets of each forecast, and each score. This file reads a method's lists into
+    that form and says when they must be made again instead: when they cannot be read, do not follow on, or
+    were made by other software than the method's files in the tree now.
 
-Which part of the specification it carries out
-    doc/Predictive_Randomness_System_Specification_v0_6.md sections 5.6 (invariant 5: the list agrees with the
-    status file), 5.6A (foreign lists and held variants) and 5.7 (what to do next is read from the files).
+Which part of the scheme it carries out
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5 (steps 4 and 5).
 
 Which of the project's own modules it uses
-    research.variant_lists     read_list, check_lists, the list paths and kinds
-    research.status_file       GameStatus
-    research.variant_folders   Variant
-    research.reader            first_target
+    research.variant_lists    the list files
+    research.reader           first_target: a method's first draw in a game
+    research.scoring          read_outcome: a draw's result
+    research.method_flags     MethodStatus
+    research.variant_folders  Variant
 
 What uses it
-    research/research_job.py, research/ov1_ledger.py, research/derived_check.py, research/reports.py,
-    research/withdraw.py, and the engine's tests.
+    research/research_job.py, research/ov1_ledger.py, research/reports.py, and the tests.
 """
 from __future__ import annotations
 
@@ -28,8 +25,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from research import variant_lists as lists
+from research.method_flags import MethodStatus
 from research.reader import first_target
-from research.status_file import GameStatus
+from research.scoring import read_outcome
 from research.variant_folders import Variant
 
 # The barrel OV-1 and the league's main figures are taken on, in both games.
@@ -62,14 +60,15 @@ class TargetFacts:
 class VariantState:
     """One installed variant's records for one game.
 
-    variant: the Variant.  status: its GameStatus from the status file.
+    variant: the Variant.  status: its MethodStatus, from the small files in its folder.
     first_target: the first draw it can forecast in this game.
     forecasts, scores: its two lists as read (their lines are dropped once summarised), or None if not begun.
     targets: {target: TargetFacts}.  score_contents: {target: the score line's content}.
-    held: True if a foreign list stands in its place; foreign_reason says why.
+    held, foreign_reason: always False and None (the reports still ask; nothing is held in this scheme).
+    failed: None, or why the method stopped in this job (a fault in its calculation); it is then passed over.
     """
     variant: Variant
-    status: GameStatus
+    status: MethodStatus
     first_target: int
     forecasts: lists.ListOnFile | None = None
     scores: lists.ListOnFile | None = None
@@ -77,6 +76,7 @@ class VariantState:
     score_contents: dict = field(default_factory=dict)
     held: bool = False
     foreign_reason: str | None = None
+    failed: str | None = None
 
     @property
     def next_target(self) -> int:
@@ -96,15 +96,15 @@ class VariantState:
 class GameRecords:
     """Everything the job holds for one game while it runs.
 
-    game_id: the game.  tree_root, role: the tree and its role.  results: the results on file (replaced when the
-    results step brings more).  states: the installed variants' VariantStates, in identity order.
-    foreign: the identities of variants that have lists here but are not installed.
-    ledger: the prevailing ledger as read, or None if not begun.  ledger_lines: its lines after the header, in
-    draw order (each {'line', 'content', 'audit', 'envelope', 'prev'}).
-    blocked: None, or the one line saying which variant makes the next prevailing line wait.
-    cutoff: None, or (draw, reason, detail) from NOT_CURRENT_FROM.json.
+    game_id: the game.  tree_root, role: the tree and its role.  results: the results on file.
+    states: the VariantStates of the methods in the tree, in identity order.
+    foreign: the identities of methods that have results here but no software in this tree; they are left
+    alone and count nowhere.
+    ledger_lines: the second OV-1 series (each method counting from its establishment draw to its retirement
+    draw), one {'content', 'audit'} a draw, made again by every job.
+    blocked: None, or the one line saying at which draw that series had to stop, and why.
+    cutoff: always None (the reports still ask; nothing is "not current" in this scheme).
     outcomes: {draw: read_outcome's result}, filled as draws are needed.
-    forecasting_code_identity, derived_code_digest, environment_digest: the identities quoted in lines.
     """
     game_id: str
     tree_root: Path
@@ -112,10 +112,6 @@ class GameRecords:
     results: object
     states: list
     foreign: list
-    forecasting_code_identity: str
-    derived_code_digest: str
-    environment_digest: str
-    ledger: lists.ListOnFile | None = None
     ledger_lines: list = field(default_factory=list)
     cutoff: tuple | None = None
     outcomes: dict = field(default_factory=dict)
@@ -123,18 +119,19 @@ class GameRecords:
 
     @property
     def ledger_contents(self) -> list:
-        """The scientific content of each prevailing line, in draw order."""
+        """The scientific content of each line of the second OV-1 series, in draw order."""
         return [line['content'] for line in self.ledger_lines]
 
     @property
     def workable(self) -> list:
-        """The variants that are not held: those the job computes for and the reports show."""
-        return [state for state in self.states if not state.held]
+        """The methods the job computes for and the reports show: all of them."""
+        return list(self.states)
 
-    def withheld(self, draw: int) -> bool:
-        """True if no score, prevailing line or report may be written at this draw: the game's derived results
-        are not current from a draw at or below it because of a mismatch (specification 5.8)."""
-        return self.cutoff is not None and self.cutoff[1] == 'MISMATCH' and draw >= self.cutoff[0]
+    def outcome_of(self, draw: int) -> dict:
+        """The result of a draw on file, read once and kept (see scoring.read_outcome)."""
+        if draw not in self.outcomes:
+            self.outcomes[draw] = read_outcome(self.results, draw)
+        return self.outcomes[draw]
 
 
 def summarise_target_line(line: dict) -> TargetFacts:
@@ -158,73 +155,51 @@ def _forget_lines(state: VariantState) -> None:
             listed.lines = []
 
 
-def load_variant_state(tree_root: Path, game_id: str, variant: Variant, status: GameStatus,
-                       forecasting_code_identity: str) -> VariantState:
-    """Read one installed variant's two lists for a game, check them, and decide whether they belong.
+def load_variant_state(tree_root: Path, game_id: str, variant: Variant, status: MethodStatus) -> tuple:
+    """Read one method's two lists for a game, and say whether they must be made again.
 
-    tree_root: the tree.  game_id: the game.  variant: the installed Variant.  status: its status in the game.
-    forecasting_code_identity: the identity of the forecasting code installed in this tree.
-    Returns the VariantState. Its lists are foreign, and the variant held, when (5.6A): the forecast list's
-    header names another fingerprint than the installed variant's, or another forecasting-code identity than the
-    installed code's, or the lists break invariant 5 against the status file (a TARGET line beyond the withdrawal
-    draw, or a score at or beyond it). A foreign list is not read further.
-    Refuses (ListFault): a list that belongs but breaks invariants 1 to 4; a header that names another game or
-    variant than its folder; a score list without its forecast list.
+    tree_root: the tree.  game_id: the game.  variant: the Variant.  status: its status in the game.
+    Returns (state, stale): the VariantState, and None or the reason its stored results must be made again. With
+    a reason the state is empty (nothing was summarised) and the caller deletes the method's results. The
+    reasons: a list was made by other software than the method's files in the tree now (its header names another
+    fingerprint); a list cannot be read or does not follow on; a score list without its forecast list; a header
+    that names another game or method than its folder, or another first target than the declaration gives.
     """
     state = VariantState(variant=variant, status=status,
                          first_target=first_target(game_id, variant.minimum_earlier_draws(game_id)))
     forecasts_path, scores_path = lists.variant_list_paths(tree_root, game_id, variant.family, variant.variant)
-    forecasts = lists.read_list(forecasts_path, lists.FORECASTS_KIND)
-    scores = lists.read_list(scores_path, lists.SCORES_KIND)
-    if forecasts is None:
-        if scores is not None:
-            raise lists.ListFault(f'{scores_path}: a score list without its forecast list. Restore both from a '
-                                  f'backup, or rerun the variant.')
-        return state
-    for listed in (forecasts, scores):
-        if listed is not None and (listed.header.get('game'), listed.header.get('family'),
-                                   listed.header.get('variant')) != (game_id, variant.family, variant.variant):
-            raise lists.ListFault(f'{listed.path} line 1: the header names another game or variant than the folder '
-                                  f'it lies in.')
-    for listed in (forecasts, scores):
-        if listed is None:
-            continue
-        if listed.header.get('variant_fingerprint') != variant.fingerprint:
-            state.held, state.foreign_reason = True, 'it was made by other files than the variant installed here'
-        elif listed.header.get('forecasting_code_identity') != forecasting_code_identity:
-            state.held = True
-            state.foreign_reason = 'it was made under other shared forecasting code than is installed here'
-    state.forecasts, state.scores = forecasts, scores
-    if state.held:
-        # The foreign list's own first draw is where the stored reports first held this variant (5.6A, 5.8).
-        if type(forecasts.header.get('first_target')) is int:
-            state.first_target = forecasts.header['first_target']
-        _forget_lines(state)
-        return state
-    summary = lists.check_lists(forecasts, scores)
+    try:
+        forecasts = lists.read_list(forecasts_path, lists.FORECASTS_KIND)
+        scores = lists.read_list(scores_path, lists.SCORES_KIND)
+        if forecasts is None:
+            return state, ('a score list without its forecast list' if scores is not None else None)
+        for listed in (forecasts, scores):
+            if listed is None:
+                continue
+            if (listed.header.get('game'), listed.header.get('family'),
+                    listed.header.get('variant')) != (game_id, variant.family, variant.variant):
+                return state, f'{listed.path.name} names another game or method than the folder it lies in'
+            if listed.header.get('variant_fingerprint') != variant.fingerprint:
+                return state, 'its stored results were made by other files than the method has now'
+        summary = lists.check_lists(forecasts, scores)
+    except lists.ListFault as fault:
+        return state, f'a list cannot be used ({fault})'
     if summary['first_target'] != state.first_target:
-        raise lists.ListFault(f'{forecasts_path} line 1: the first target is {summary["first_target"]} but the '
-                              f'variant\'s declaration gives {state.first_target}.')
-    withdrawn_from = status.withdrawn_from
-    if withdrawn_from is not None and (summary['next_target'] > withdrawn_from + 1
-                                       or any(target >= withdrawn_from for target in summary['scored'])):
-        state.held = True
-        state.foreign_reason = (f'it does not agree with the status file: the variant is withdrawn from draw '
-                                f'{withdrawn_from}, but the list has a line beyond it or a score at or beyond it')
-        _forget_lines(state)
-        return state
+        return state, (f'its list begins at draw {summary["first_target"]} but its declaration now gives '
+                       f'{state.first_target}')
+    state.forecasts, state.scores = forecasts, scores
     for line in forecasts.lines:
         state.targets[line['content']['target']] = summarise_target_line(line)
     for line in (scores.lines if scores is not None else []):
         state.score_contents[line['content']['target']] = line['content']
     _forget_lines(state)
-    return state
+    return state, None
 
 
 def lists_of_variants_not_installed(tree_root: Path, game_id: str, installed) -> list:
-    """The variants that have lists on disk for a game but are not installed in this tree (5.6A: foreign).
+    """The methods that have results on disk for a game but no software in this tree. They are left alone.
 
-    installed: the identities of the installed variants, for example {'E_002/RECUR_MEAN_ALL_V1', ...}.
+    installed: the identities of the methods in the tree, for example {'E_002/RECUR_MEAN_ALL_V1', ...}.
     Returns their identities in order, for example ['E_002/RECUR_OLD_V1'].
     """
     folder = Path(tree_root) / lists.RESEARCH_FOLDER / game_id / 'variants'
