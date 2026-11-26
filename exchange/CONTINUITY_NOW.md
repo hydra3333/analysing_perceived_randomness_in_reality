@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 17:55 Australia/Adelaide (entry 330: the owner pauses everything; back to the research with the controls largely removed).
+**Last updated:** 26 November 2026, 17:59 Australia/Adelaide (entry 331: Claude's comment on the owner's reframing; everything paused).
 
 ## For the owner: NOW
 
+- **CLAUDE'S COMMENT ON THE OWNER'S REFRAMING IS WRITTEN (entry 331; 26 November 2026):**
+  `exchange/Claude_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md`. It holds the owner's words
+  exactly, then the comment and the questions (its section 2.10). **Waiting on the owner:** his reading and answers.
+  **Then the reviewer:** its own comment. **Everything else stays paused** (entry 330). If this chat ends here, a new
+  chat reads entries 324 to 331 and that paper before anything else; H-1 v15's account of build step 3 is overtaken by
+  them.
 - **EVERYTHING IS PAUSED (the owner, entry 330; 26 November 2026). READ THIS FIRST.** The owner finds that the project
   has lost itself in control mechanisms and wants it back at the research: environments that all act the same,
   installs at will (backup, replace, walk-forward again from the starting draws), a flag file to make a method

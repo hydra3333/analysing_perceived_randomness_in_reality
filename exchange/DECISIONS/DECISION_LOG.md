@@ -7968,3 +7968,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   and no code).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 331; RAT-61.
+
+## 331. 26 November 2026, 17:59 - Claude's comment on the owner's reframing is written (the scheme works; three small things to keep; one kind of install; edge cases; a lighter process); for the owner, then the reviewer
+
+- **Written at the owner's request (entry 330):**
+  `exchange/Claude_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md`, SHA-256
+  `29c982f5e7ddad901f9b40d7ef6d628c90749602aa6504a4e28b73f529f4741e` (computed by Claude). A discussion paper, not an
+  EX message. Part 1 carries the owner's words of 17:51 exactly, taken by program from what he sent; Part 2 is
+  Claude's comment.
+- **Claude's comment in short:** agreement with the direction; the scheme works because everything a tree holds, bar a
+  few small things, can be made again from the official results and the software. **Three small things to keep:** a
+  tree must be what its settings say it is (the path in the role's section is the folder the file lies in; the
+  settings file is never copied between trees); one lock file per tree; and one number for each method in each tree,
+  the last draw the tree held when that method's code arrived or changed ("in place since draw N"), so that
+  walk-forward evidence and evidence gathered after the code was fixed can be told apart if something ever warrants
+  formal attention. **One refinement:** one kind of install; each method's data already names the fingerprint of the
+  software that made it, so a difference means "rebuild that part", never a refusal; an infrastructure change rebuilds
+  everything (a first fill took 46 to 47 minutes on the owner's PC). Fourteen edge cases with the simplest answer
+  seen; what stays exactly as it is (N-1, no pooling, scoring and OV-1 arithmetic, the one results source, no AI or
+  runner on a lottery site, no process ended, no change of the PC's clock, the owner's go); what happens to what is
+  built (the step 2 engine mostly kept; most of slices A and C set aside; slice B kept or cut down); and a lighter
+  process for the exploratory phase.
+- **Seven questions for the owner and four for the reviewer** are in its section 2.10; R1 asks the reviewer for its
+  own view of the scientific point.
+- **Nothing is redrafted, amended or coded.** Everything stays paused until the three have agreed.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 332; RAT-61.
