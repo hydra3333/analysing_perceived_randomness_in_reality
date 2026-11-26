@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:37 Australia/Adelaide (entry 337: tree identity decided; waiting on the go for the scheme document).
+**Last updated:** 26 November 2026, 19:42 Australia/Adelaide (entry 338: all three agree; waiting on the owner's go for the scheme document).
 
 ## For the owner: NOW
 
+- **THE REVIEWER CONCURS WITH THE TREE-IDENTITY SCHEME (entry 338; 26 November 2026),** with three small points Claude
+  accepts (no backup root in or equal to any tree root; a copy checks the identity of the tree it reads from too; the
+  local root comes from the launcher's location). **All three agree on the whole simple scheme.** **Waiting on the
+  owner only:** his go (Fable) for the one short scheme document. Still paused until then.
 - **TREE IDENTITY IS DECIDED (the owner, entry 337; 26 November 2026):** the four rules of
   `exchange/Claude_Proposal_How_A_Tree_Knows_Which_Tree_It_Is_v0_1_20261126.md`, with the role as the ending of each
   tree's folder name (`G:\a_p_r_i_r_PROD`, `T:\a_p_r_i_r_QA`), and DEV as a `_DEV` subfolder of the repository holding

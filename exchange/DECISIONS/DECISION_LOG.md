@@ -8161,3 +8161,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   rules.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 338; RAT-61.
+
+## 338. 26 November 2026, 19:42 - the reviewer concurs with the decided tree-identity scheme, with three small points that Claude accepts; it recommends the one short scheme document on the owner's go
+
+- **The reviewer's view, relayed by the owner at 19:42** (given in its chat; not on `main`): it concurs with the
+  decided tree-identity scheme (entry 337), the role as the ending of each folder's name and DEV as a subfolder of the
+  repository included. "No remaining architectural objection." It asks for no further machinery, identity record or
+  control.
+- **Three small points from it, all accepted by Claude and to be written into the scheme document for the owner's
+  agreement:** (1) rule 4 is widened: no backup root may equal or lie inside ANY of the three tree roots, not only its
+  own tree, so that QA's backups cannot land inside PROD; (2) a copy between trees applies the identity check to the
+  tree it reads from as well as to the tree it writes into; (3) paths are compared as real absolute Windows paths, as
+  the proposal has it, and the local root is taken from the launcher's own location, never from the current working
+  directory or from a configured path.
+- **The reviewer recommends** going on to the one short scheme document on the owner's go, with the cost of moving the
+  living system into the `_DEV` subfolder assessed in it.
+- **Waiting on the owner:** his go for that document; Claude has said "Suggest switching to Fable (High) for this".
+  Still paused (entry 330).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 339; RAT-61.
