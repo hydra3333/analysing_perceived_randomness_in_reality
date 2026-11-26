@@ -8281,3 +8281,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
   nothing is built, moved or installed.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 344; RAT-61.
+
+## 344. 26 November 2026, 20:21 - OWNER: the simple scheme v0.2 is agreed; go for step 1, copying the living system into `a_p_r_i_r_DEV`
+
+- **The owner, 20:20:** "I agree to v0.2 so go opying the living system into `a_p_r_i_r_DEV` (I suppose when ready you
+  will prompt me to cd into there and run create_venv.bat and install_upgrade_dependencies_into_venv.bat ... )"
+- **DECIDED (owner): the simple scheme v0.2 is agreed** (`exchange/Claude_The_Simple_Scheme_v0_2_20261126.md`, commit
+  `bf1c6b2`). From now it is the design of the research system. It replaces the administrative parts of the
+  specification v0.6 and the whole deployment design v0.12 (its section 11); RAT-59's amendments are moot; the build
+  plan of step 3 and slices A to C as built are set aside. The pause of entry 330 ends for the work the scheme lists,
+  each step on his go.
+- **His go for step 1:** copy the living system into `a_p_r_i_r_DEV` (scheme section 10). Claude commits it there
+  directly (entry 342). On his PC, when it is ready, Claude tells him what to run (building the subfolder's `.venv`
+  with its own two scripts); nothing runs there before that.
+- Nothing else is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 345; RAT-61.
