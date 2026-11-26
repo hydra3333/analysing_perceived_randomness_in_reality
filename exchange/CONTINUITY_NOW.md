@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:25 Australia/Adelaide (entry 335: the owner's answers; the tree-identity proposal in discussion; still paused).
+**Last updated:** 26 November 2026, 19:34 Australia/Adelaide (entry 336: the role as the ending of each tree's folder name; still paused).
 
 ## For the owner: NOW
 
+- **TREE IDENTITY (entry 336; 26 November 2026):** the owner agrees that a command works on the folder its own
+  launcher lies in, and adds: each tree's folder name ends with its role (`..._QA`, `..._PROD`, `..._DEV`) and the
+  settings' role is checked against it. Claude recommends adopting it beside the path comparison. **Open, for the
+  scheme document:** how DEV gets such a name (his idea: the living system as a `..._DEV` subfolder of the
+  repository). **Waiting on the owner:** his go (Fable) for the scheme document. Still paused.
 - **THE OWNER HAS ANSWERED THE OPEN POINTS (entry 335; 26 November 2026): yes to the recommendations.** Decided: one
   install operation; rebuild what is out of date (everything, after an infrastructure change); retired methods keep
   their past results and are rebuilt up to their retirement draw; the establishment number and second OV-1 series kept

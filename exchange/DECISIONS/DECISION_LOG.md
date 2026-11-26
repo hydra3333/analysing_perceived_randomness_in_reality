@@ -8110,3 +8110,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   first (Fable): the one short scheme document.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 336; RAT-61.
+
+## 336. 26 November 2026, 19:34 - OWNER: yes to "a command works on the folder its own launcher lies in"; his addition: the role as the ending of each tree's folder name, checked against the settings
+
+- **The owner, 19:33,** on the tree-identity proposal (entry 335): "OK to 'A command works on the folder its own
+  launcher lies in'. I have an additive suggestion the QA and PROD folders names (and perhaps even a new DEV subtree
+  in our github project ? or somewhere else) has that as a part of their name eg 'T:\a_p_r_i_r_PROD' etc, and the
+  config role can be validated against the trailing part of current tree name ?"
+- **DECIDED (owner):** rule 1 of the proposal: a command works on the folder its own launcher lies in.
+- **His suggestion, and Claude's view given in the chat (a recommendation, not yet his decision):** adopt it. A tree's
+  folder name ends with its role (`..._QA`, `..._PROD`, `..._DEV`), and the role in the settings file must be that
+  ending. It costs nothing for QA and PROD, which do not exist yet; it shows the role wherever the folder is seen; and
+  it closes the one hole the proposal admitted, a consistent relabelling of the settings file, since the folder would
+  have to be renamed too. It is kept beside the comparison of paths, not in place of it, because each catches what the
+  other does not (a copy of a tree unpacked elsewhere under the same name passes the name check and fails the path
+  check).
+- **DEV, open:** DEV's tree is today the Git clone itself, whose folder name does not end in `_DEV` and is named
+  throughout the local runner's rulebook and tools. Three ways: leave DEV out of the name check; rename the clone's
+  folder; or, as the owner suggests, make the living system a subfolder of the repository named `..._DEV`, of the same
+  shape as QA and PROD, with the documents, the exchange and the old system's code outside it. Claude leans to the
+  subfolder, not yet costed; it is to be worked out and costed in the scheme document. The drive letters decided in
+  entry 181 (PROD on G:, QA and the backups on T:) are taken as unchanged; his example path is read as an example of
+  the naming only.
+- **Still paused** (entry 330). Waiting on the owner: his go, the model rule first (Fable), for the one short scheme
+  document. Waiting on the reviewer: its assessment of the proposal with this addition.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 337; RAT-61.
