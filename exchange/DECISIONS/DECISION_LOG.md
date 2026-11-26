@@ -8238,3 +8238,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner:** his answers to the five proposals, then his agreement to the scheme. Still paused.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 342; RAT-61.
+
+## 342. 26 November 2026, 20:08 - OWNER: yes to the five proposals of the simple scheme (including Claude committing code into `a_p_r_i_r_DEV`); his question on the commands
+
+- **The owner, 20:08:** "I am ok with the latest agreement re  backups and DEV.  we can afford to lose the QA tree and
+  recreate it. I will extend my own separate additive backups to separate external USB3 disks later after
+  implementation." To the five proposals of the scheme's section 13, each: "Yes."
+- **So, DECIDED (owner):** (1) DEV's backups go to `T:\a_p_r_i_r_backups\DEV` (QA's and PROD's beside it, as decided
+  before); (2) the backup ZIP leaves out `.venv`; (3) a failed backup stops a replacement before anything is replaced,
+  and only warns after a research job; (4) the living system is copied into the `a_p_r_i_r_DEV` subfolder and the top
+  level left frozen, not moved; (5) **Claude commits the living system's code directly into `a_p_r_i_r_DEV\` on
+  `main`** (named paths only; nothing at the top level touched; the reviewer reads the commit; the owner pulls).
+  **This changes his standing rule that code never comes from Claude by commit, for that subfolder only.** Nothing
+  runs on his PC without his go, as before. He accepts losing the QA tree in a failure of T:; his own additive copies
+  to USB drives follow later.
+- **Before anything else, he asked about section 6 (the commands):** whether a walk-forward can be started that looks
+  for what is missing, recalculates and re-ranks, without fetching new results; and whether anything of the old scheme
+  has been given up. Answered in the chat: `Run_Research.bat --no-update` is that command; and the commands of the
+  ratified design not carried into the simple scheme are listed, with three small additions offered for his choice.
+- **The scheme is not yet agreed as a whole;** still paused.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 343; RAT-61.

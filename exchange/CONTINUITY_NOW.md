@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:57 Australia/Adelaide (entry 341: the reviewer has read the scheme; waiting on the owner).
+**Last updated:** 26 November 2026, 20:08 Australia/Adelaide (entry 342: yes to the five proposals; the commands in discussion).
 
 ## For the owner: NOW
 
+- **THE OWNER SAID YES TO THE FIVE PROPOSALS (entry 342; 26 November 2026),** among them that Claude commits the
+  living system's code directly into `a_p_r_i_r_DEV\` (a change of his standing rule, for that subfolder only). **In
+  discussion:** the commands of the scheme's section 6. Then the final version of the scheme (with the reviewer's six
+  clarifications, entry 341) and the task list. Still paused.
 - **THE REVIEWER HAS READ THE SIMPLE SCHEME (entry 341; 26 November 2026):** agreement, six clarifications accepted by
   Claude for the final version, YES recommended to the five proposals. **Waiting on the owner:** his answers to the
   five proposals of the draft's section 13, then his agreement. Still paused.
