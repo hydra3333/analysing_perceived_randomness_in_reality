@@ -8470,3 +8470,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
   not a rebuild); since the owner has just agreed Claude's choices, Claude puts this one back to him with a
   recommendation before changing it.
 - Next numbers: EX_334 (Claude's); entry 353; RAT-63.
+
+## 353. 27 November 2026, 06:51 - OWNER: a retired method drops its forecasts too from the retirement draw (amends choice 3 of RAT-61); the orphan-marker check is dropped in the new trees at step 4
+
+- **Two questions put to the owner on a card, each with a recommendation, and his answers (06:49):**
+- **Retirement (choice 3 of RAT-61, questioned by the reviewer).** The question: a method retired from draw 1601
+  already holds its forecast for 1601, made as the next draw; kept, a later rebuild of the method would hold a
+  different history. The owner chose **"Drop it too (Recommended)"**: retiring from a draw drops the method's
+  forecasts as well as its scores from that draw on, so that an incremental job and a rebuild hold the same history.
+  **This amends choice 3 of RAT-61.**
+- **The orphan marker in the new trees.** Claude's clarification: it is a safety file of the first system; the old
+  coordinator wrote it when it had started worker processes and could not confirm they had ended (it may never end a
+  process), and every launch was then blocked until the owner had checked by hand. The new research job starts no
+  worker process and nothing in the living system writes the marker, so in the new trees the check can never fire; two
+  jobs at once are prevented by the lock file. The owner chose **"Drop it in new trees (Recommended)"**: the check is
+  removed from `a_p_r_i_r_DEV` in step 4, with the new lock. **His hard rule stays word for word for the first system
+  at the frozen top level,** where the old coordinator lies.
+- **Then: "please continue"** (the owner, on Fable): the corrections after the reviewer's reading of step 2 are made
+  now.
+- Next numbers: EX_334 (Claude's); entry 354; RAT-63.
