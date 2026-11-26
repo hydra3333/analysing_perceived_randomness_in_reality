@@ -8136,3 +8136,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   document. Waiting on the reviewer: its assessment of the proposal with this addition.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 337; RAT-61.
+
+## 337. 26 November 2026, 19:37 - OWNER: yes to the tree-identity scheme, with the role as the ending of each folder's name, and DEV as a `_DEV` subfolder of the repository (option 3)
+
+- **The owner, 19:36,** to Claude's recommendation on tree identity (entry 336): "yes ot your scheme including option
+  3, please re-cast the blurb for chatgpt".
+- **DECIDED (owner): how a tree knows which tree it is.** (1) A command works on the folder its own launcher lies in.
+  (2) Before anything, the role in the settings file must be the ending of that folder's name, and that role's
+  `tree_root` must be that folder; otherwise it stops and says why. (3) Before writing into another tree, it reads
+  that tree's own settings file and requires the role intended; no settings file there means it is not a tree; a new
+  tree is made only by the create step, into an absent or empty folder. (4) When the file is read: no two roles share
+  a path; no tree lies inside another; no backup folder lies inside its own tree. The settings file is never copied
+  between trees. One settings file of the same form in every tree, only the role line differing.
+- **DECIDED (owner): the names.** Each tree's folder name ends with its role: `G:\a_p_r_i_r_PROD`, `T:\a_p_r_i_r_QA`;
+  **and DEV is option 3: the living system becomes a subfolder of the repository whose name ends `_DEV`,** of the same
+  shape as QA and PROD, with the documents, the exchange and the old system's code outside it. The drives are as
+  decided in entry 181 (PROD on G:, QA and the backups on T:).
+- **Owed by Claude in the scheme document:** the cost of moving the living system into that subfolder (the tests and
+  launchers refer to `src` at the top level today), which was not worked out when he decided; if it proves larger than
+  expected Claude says so before anything is moved. Also DEV's backup folder (suggested: `T:\a_p_r_i_r_backups\DEV`),
+  not yet confirmed by him.
+- **Still paused** (entry 330): nothing is moved, designed or coded. Waiting on the owner: his go, the model rule
+  first (Fable), for the one short scheme document. Waiting on the reviewer: its assessment of the tree-identity
+  rules.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 338; RAT-61.

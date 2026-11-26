@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:34 Australia/Adelaide (entry 336: the role as the ending of each tree's folder name; still paused).
+**Last updated:** 26 November 2026, 19:37 Australia/Adelaide (entry 337: tree identity decided; waiting on the go for the scheme document).
 
 ## For the owner: NOW
 
+- **TREE IDENTITY IS DECIDED (the owner, entry 337; 26 November 2026):** the four rules of
+  `exchange/Claude_Proposal_How_A_Tree_Knows_Which_Tree_It_Is_v0_1_20261126.md`, with the role as the ending of each
+  tree's folder name (`G:\a_p_r_i_r_PROD`, `T:\a_p_r_i_r_QA`), and DEV as a `_DEV` subfolder of the repository holding
+  the living system. **Every open point of the simple scheme is now answered** (entries 335 to 337). **Waiting on the
+  owner:** his go (Fable) for the one short scheme document, which also costs the move into the DEV subfolder. Still
+  paused until then.
 - **TREE IDENTITY (entry 336; 26 November 2026):** the owner agrees that a command works on the folder its own
   launcher lies in, and adds: each tree's folder name ends with its role (`..._QA`, `..._PROD`, `..._DEV`) and the
   settings' role is checked against it. Claude recommends adopting it beside the path comparison. **Open, for the
