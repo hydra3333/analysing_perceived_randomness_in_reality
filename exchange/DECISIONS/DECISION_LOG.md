@@ -8401,3 +8401,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   "engine changed: rebuild everything" rule on the 40 real methods.)
 - Nothing else changed. Still waiting on the owner as entry 348 says.
 - Next numbers: EX_334 (Claude's); entry 350; RAT-61.
+
+## 350. 27 November 2026, 06:35 - OWNER: RAT-61, the nine choices of step 2 ratified; the reviewer reading step 2; go for a short handover and blurb now; step 3 next, on Fable
+
+- **The owner's words:** "I ratify your choices, thank you. chatgpt is looking at it now. a git pull has been done. OK
+  to create handover doc and blurb now please, then I return to fable for step 3 because the updater and the copy,
+  restore and backup commands are critical. please outline the next steps and where "left for later" fits in too."
+- **RAT-61: the nine choices of step 2 are ratified**
+  (`exchange/Claude_Step_2_Engine_Simplified_And_Compared_v0_1_20261126.md` section 4, as committed in `2044704`): a
+  stored score rechecked against the results each job and made again if it no longer follows; a failing method passed
+  over, the job ending with exit code 1; an `I_AM_RETIRED` made by hand retiring from the next draw; results of a
+  method with no software left alone; a changed engine rebuilding both games; `IN_PLACE_SINCE` kept unless the
+  method's own fingerprint changes; a method not counting in the second OV-1 series before its own first target; the
+  content digest written but not checked; scores in draw order with no gap.
+- **The reviewer is reading step 2 now.** The owner has pulled `main` (the step 2 commits are on his PC; nothing was
+  run).
+- **Go for a short handover and its blurb now** (brought forward from step 7 of the work order), written on Opus. Step
+  3 follows on Fable, on the owner's go.
+- Next numbers: EX_334 (Claude's); entry 351; RAT-62.
