@@ -8067,3 +8067,46 @@ section 17.2 (unpack it into a new folder, never over the clone).
   one short scheme document. Everything stays paused (entry 330).
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 335; RAT-61.
+
+## 335. 26 November 2026, 19:25 - OWNER: his answers to the eleven open points (yes to the recommendations; plain ZIP backups; the lighter process); the tree-identity proposal is written for discussion
+
+- **The owner, 19:23,** to the eleven open points of Claude's response (entry 333, its section 6): "Thank you.  Yes to
+  your recommendations." Then point by point, his words after each question:
+  - **1.** (QA "acts like QA": did he mean "acts like PROD"?) "yes"
+  - **2.** (retired: past results stay, marked retired, or vanish?) "yes per your recommendation"
+  - **3.** (one install operation, the job rebuilding what is out of date?) "yes per your recommendation"
+  - **4.** (an infrastructure change rebuilds everything, about 47 minutes today?) "yes per your recommendation"
+  - **5.** (the establishment number and second OV-1 series: keep as bookkeeping or leave out?) "yes to your
+    recommendation"
+  - **6.** (a retired method at a rebuild: rebuilt up to its retirement draw, or its old results kept?) "yes to your
+    recommendation"
+  - **7.** (backups: plain ZIP or slice B as built; and when?) "Plain ZIP max compression; after jobs, before
+    destructive replacements and retirements and on demand"
+  - **8.** (the results file's one comparison with the updater's ledger: leave as it is or remove?) "yes to your
+    recommendation"
+  - **9.** (his unfinished note) "Ignore this, it was to be about CRLF as well as minimal data/settings files."
+  - **10.** (the lighter process?) "yes to your recommendation, you both will need to state at each point what you
+    think I should do next."
+  - **11.** (the tree-identity proposal) "yes please discuss now if possible, also a recommendation in a blurb to
+    chatgpt for their assessment."
+- **And on the proof that the simplification breaks nothing** (the simplified engine must give the same forecasts,
+  scores and OV-1 numbers as the present engine from the same results): "OK if you and chatgpt agree on it." Both do
+  (the reviewer "strongly support[s] this", entry 334), so it stands.
+- **So, DECIDED (owner):** QA acts like PROD. A retired method's past results stay, marked retired; at a rebuild it is
+  rebuilt up to its retirement draw. One install operation; a job rebuilds what is out of date; an infrastructure
+  change rebuilds everything. The establishment number and the second OV-1 series are kept as bookkeeping, not as a
+  control. Backups are plain ZIPs at maximum compression, made after jobs, before destructive replacements and
+  retirements, and on demand, by the same mechanism in every tree. The results file's comparison with the updater's
+  own ledger is left as it is. The lighter process is adopted, and **both AIs state at each point what they think he
+  should do next.** His unfinished note is to be ignored.
+- **Point 11, discussed now as he asked:** Claude's proposal for how a tree knows which tree it is,
+  `exchange/Claude_Proposal_How_A_Tree_Knows_Which_Tree_It_Is_v0_1_20261126.md`, SHA-256
+  `000d33c6fb9e5cd0b83c620ead56536c751cdd878ffbad397bcb30a420761959` (computed by Claude); a discussion paper. The
+  owner's one-file layout is kept, with four short rules: a command works on the folder its own launcher lies in;
+  before anything it checks that the role's `tree_root` is that folder; before writing into another tree it reads that
+  tree's own settings file and requires the role intended; and three path checks when the file is read. The holes
+  looked for, and what the rules do not catch, are set out in it. For the owner's holes and the reviewer's assessment.
+- **Still paused** (entry 330): nothing is designed, amended or coded. Next, on the owner's go and with the model rule
+  first (Fable): the one short scheme document.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 336; RAT-61.

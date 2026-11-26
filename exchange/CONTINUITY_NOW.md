@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:12 Australia/Adelaide (entry 334: the two AIs agree; waiting on the owner's answers; everything paused).
+**Last updated:** 26 November 2026, 19:25 Australia/Adelaide (entry 335: the owner's answers; the tree-identity proposal in discussion; still paused).
 
 ## For the owner: NOW
 
+- **THE OWNER HAS ANSWERED THE OPEN POINTS (entry 335; 26 November 2026): yes to the recommendations.** Decided: one
+  install operation; rebuild what is out of date (everything, after an infrastructure change); retired methods keep
+  their past results and are rebuilt up to their retirement draw; the establishment number and second OV-1 series kept
+  as bookkeeping; plain ZIP backups at maximum compression after jobs, before destructive replacements and
+  retirements, and on demand; the lighter process, with both AIs saying at each point what he should do next. **In
+  discussion:** how a tree knows which tree it is,
+  `exchange/Claude_Proposal_How_A_Tree_Knows_Which_Tree_It_Is_v0_1_20261126.md`. **Waiting on the owner:** his holes
+  for that proposal, and his go (Fable) for the one short scheme document. **Waiting on the reviewer:** its assessment
+  of that proposal. Still paused.
 - **NO DIFFERENCE REMAINS BETWEEN THE TWO AIs (entry 334; 26 November 2026).** The reviewer agrees with Claude on the
   establishment number, on rebuilding a retired method up to its retirement draw, and favours plain ZIP backups.
   **Waiting on the owner only:** his answers to section 6 of
