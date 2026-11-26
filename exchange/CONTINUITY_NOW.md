@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 20:08 Australia/Adelaide (entry 342: yes to the five proposals; the commands in discussion).
+**Last updated:** 26 November 2026, 20:13 Australia/Adelaide (entry 343: the simple scheme v0.2 awaits the owner's agreement).
 
 ## For the owner: NOW
 
+- **THE SIMPLE SCHEME v0.2 IS WRITTEN FOR THE OWNER'S AGREEMENT (entry 343; 26 November 2026):
+  `exchange/Claude_The_Simple_Scheme_v0_2_20261126.md`.** Every open point is answered; the reviewer's six
+  clarifications and the owner's three additions are in it. **Waiting on the owner:** his agreement. Then the task
+  list. Still paused. **If this chat ends here:** a new chat reads this page, entries 324 to 343 and the scheme v0.2;
+  H-1 v15's account of build step 3 is overtaken by them.
 - **THE OWNER SAID YES TO THE FIVE PROPOSALS (entry 342; 26 November 2026),** among them that Claude commits the
   living system's code directly into `a_p_r_i_r_DEV\` (a change of his standing rule, for that subfolder only). **In
   discussion:** the commands of the scheme's section 6. Then the final version of the scheme (with the reviewer's six

@@ -8259,3 +8259,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The scheme is not yet agreed as a whole;** still paused.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 343; RAT-61.
+
+## 343. 26 November 2026, 20:13 - OWNER: yes to the three additions (`--rebuild <method>`, `Install --show`, `Who_Uses`); the operations manual revisited after implementation; the simple scheme v0.2 is written for his agreement
+
+- **The owner, 20:12:** "yes to your 3 additions". **DECIDED (owner):** `Run_Research.bat --rebuild <method>` (one
+  chosen method recomputed); `Install.bat QA|PROD --show` (prints what an install would add, replace and rebuild, and
+  does nothing); `Who_Uses.bat <helper>` (lists the methods that use a helper file; DEV only). He had been told what
+  the scheme gives up from the ratified design: `Verify_Tree`, `Check_Tree`, `Check_Forecasts`, `Who_Uses`,
+  `Make_Successors` and the chosen-range form of the historical walk-forward rerun; the three additions bring back
+  what of these was useful. `Run_Research.bat --no-update` is the walk-forward without fetching results.
+- **The simple scheme v0.2 is written:** `exchange/Claude_The_Simple_Scheme_v0_2_20261126.md`, SHA-256
+  `15f52cabb54068860f439cb69a8480067a8e688b3c85107988743ecba38a1a77` (computed by Claude); 272 lines. It is v0.1 with
+  the owner's answers of entries 342 and 343 and the reviewer's six clarifications of entry 341 taken in; its section
+  13 lists every change. Nothing is marked PROPOSED any more. v0.1 is left as it was.
+- **The owner, 20:13:** "and a decision for us 3 to revisit what is needed in the operations manual, after
+  implementation." **DECIDED (owner):** what the operations manual needs is to be revisited by the three of them after
+  the simple scheme is implemented. Until then no manual is written; the reminders already kept for it (the appendix
+  of every method family and method, entry 289; changing Python versions, entry 305) are inputs to that discussion,
+  not a design.
+- **Waiting on the owner:** his agreement to the scheme v0.2. Then the task list (Opus). Still paused (entry 330):
+  nothing is built, moved or installed.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 344; RAT-61.
