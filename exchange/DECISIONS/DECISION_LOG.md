@@ -7932,3 +7932,39 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner and the reviewer:** their reading of the paper and their answers to its section 6.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 330; RAT-61.
+
+## 330. 26 November 2026, 17:55 - OWNER: "We PAUSE now"; the project is to get back to the research with the controls largely removed; his suggested scheme, for Claude's comment and then the reviewer's
+
+- **The owner, 17:51,** having read Claude's discussion paper (entry 329): **"We PAUSE now."** Then, in his words: "I
+  have a perception that this project has got away from me again, complexity-wise. It is 100% my fault, going with the
+  flow and making some bad decisions. We have spent an enormous amount of resources on control mechanisms, so much so
+  that we have not been near actual research in a long time."
+- **His reframing:** "This project is clearly a highly speculative research initiative, it seeks to examine the
+  unusual and detect unusual results. It has been said already that if something is detected then that is the time we
+  will consider more formal approaches and proof type controls rather than stifling research now with bureaucracy."
+  The bureaucracy he names: "seeking to overly restrict what can and cannot be done in each environment (DEV QA,
+  PROD)"; "restrict what can and cannot be (re)installed and when"; "\"sealing\" of all kinds when we know we can
+  re-run from the known compatible starting draws and produce exactly the same results"; "hashing of most kinds as
+  controls for what can and canot be locked or even prevent software from being changed or run at will"; "nearly all
+  the controls limiting action"; "\"smoke tests\" (we have DEV and QA in place to prove things)". "We just want to get
+  onto real research to find if anything warrants formal attention."
+- **His suggested scheme, in outline** (his full words are carried exactly in the comment paper named below): DEV is
+  where things are developed, changed, tested and (re)deployed into QA or PROD at will. An install is: a backup; the
+  old method or infrastructure deleted from the target and replaced by DEV's (for a reinstall, its data files deleted
+  too); then a walk-forward from the known compatible starting draws that regenerates the files, reports, rankings and
+  OV-1. "Make installable" is a flag file `I_AM_INSTALLABLE` in the DEV folder holding a hash of its files; a
+  different hash in the target means a valid reinstall; no flag means not a candidate. "Make retired" is a flag file
+  `I_AM_RETIRED` in the folder in every tree; a retired method no longer runs. QA verifies deployed software, may
+  equal PROD or be ahead of it, and can take software and data back from PROD. PROD is where the ongoing work happens,
+  stable, with backups; each tree uses the same backup mechanism. Everything is CRLF. One settings file of the same
+  form in every tree, with the role and a section for each tree. A few flag files and small data files in place of the
+  controls, hashes and sealed records.
+- **Asked of Claude:** to comment first, in a form that also holds or references his words so that the reviewer can
+  see them; to flesh the scheme out and name the edge cases, or to propose something more workable; then it goes to
+  the reviewer for comment; "once we agree then propose aligning everything to the new scheme".
+- **So, DECIDED (owner): everything is paused.** No amendment (RAT-61), no slice D, no further work on build step 3
+  until the three have agreed a scheme. The questions of the paper of entry 329 are overtaken by this wider one.
+- **Claude's comment is written next,** as a paper under `exchange/` (not an EX message; it changes no ratified file
+  and no code).
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 331; RAT-61.

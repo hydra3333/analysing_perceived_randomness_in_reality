@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 06:42 Australia/Adelaide (entry 329: the paper for the three-way discussion on how the trees behave).
+**Last updated:** 26 November 2026, 17:55 Australia/Adelaide (entry 330: the owner pauses everything; back to the research with the controls largely removed).
 
 ## For the owner: NOW
 
+- **EVERYTHING IS PAUSED (the owner, entry 330; 26 November 2026). READ THIS FIRST.** The owner finds that the project
+  has lost itself in control mechanisms and wants it back at the research: environments that all act the same,
+  installs at will (backup, replace, walk-forward again from the starting draws), a flag file to make a method
+  installable and one to retire it, no sealing, no hashes that forbid, no smoke tests. **No amendment, no slice D and
+  no further work on build step 3** until the owner, the reviewer and Claude have agreed a scheme. In hand: Claude's
+  comment on his suggestions, as a paper under `exchange/`, then the reviewer's.
 - **THE THREE-WAY DISCUSSION ON HOW THE TREES BEHAVE (entries 328 and 329; 26 November 2026); READ THIS BEFORE SLICE
   D.** The owner's rule: what a tree does follows from the software in it, not from its name; a research job works on
   the accepted results in its own tree; the updater is not PROD's alone; it covers DEV too ("QA plus"). The ratified
