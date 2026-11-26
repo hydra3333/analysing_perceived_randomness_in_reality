@@ -8419,3 +8419,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Go for a short handover and its blurb now** (brought forward from step 7 of the work order), written on Opus. Step
   3 follows on Fable, on the owner's go.
 - Next numbers: EX_334 (Claude's); entry 351; RAT-62.
+
+## 351. 27 November 2026, 06:40 - OWNER'S QUERY: does the handover reference the coding standards? Not plainly enough: H-1 v16r1 corrects it; step 2 stated "coding practices met"
+
+- **The owner's words:** "i hope the handover refences the coding standards".
+- **What Claude found:** H-1 v16 named `doc/CODING_PRACTICES_v0_1.md` only in a table row headed "Science documents
+  kept" and as a step 8 discussion; it did not put it in the reading order or say it binds all code, and it did not
+  name the file-form standard. Not good enough: a new chat could have missed them.
+- **Corrected in H-1 v16r1** (`exchange/HANDOVER_2026_11_27/`, beside v16, which is left as it was): both standards in
+  the reading order as binding; section 9 summarises the practices, says every code commit states "coding practices
+  met" or lists its exceptions, says how three items read under the scheme until the owner ratifies a revision, and
+  gives the file form (everything CRLF and ASCII, `.jsonl` included; checked by `a_p_r_i_r_DEV/deploy/file_form.py`).
+  The blurb names the standards too. v16r1 is the candidate for RAT-62; v16 is superseded unratified.
+- **Step 2 against the coding practices, checked now with a tool:** every changed or new `.py` file of step 2 has the
+  header (what it is for; which modules it uses; what uses it) and every function and class its comment; errors say
+  what, where, why and what to do; tests are named for their rules with planted faults. **Exception:** the small
+  programs `compare_with_frozen.py` starts in each tree are text inside that file and have no header of their own; the
+  file's header describes them. **Omission:** the step 2 commit and paper did not say "coding practices met"; they are
+  hereby stated met, with that exception. Every later code commit will say it.
+- Next numbers: EX_334 (Claude's); entry 352; RAT-62.

@@ -4,15 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 06:37 Australia/Adelaide (entry 350: RAT-61; H-1 v16 written as a candidate; waiting on RAT-62 and the go for step 3).
+**Last updated:** 27 November 2026, 06:40 Australia/Adelaide (entry 351: H-1 v16r1 names the coding standards; waiting on RAT-62 and the go for step 3).
 
 ## For the owner: NOW
 
-- **RAT-61 and a short handover (entry 350; 27 November 2026).** The owner ratified the nine choices of step 2. The
-  short handover H-1 v16 and its blurb are written as CANDIDATES in `exchange/HANDOVER_2026_11_27/`; on the owner's
+- **RAT-61 and a short handover (entries 350 and 351; 27 November 2026).** The owner ratified the nine choices of step 2. The
+  short handover H-1 v16r1 and its blurb are written as CANDIDATES in `exchange/HANDOVER_2026_11_27/`; on the owner's
   ratification (RAT-62) Claude installs them in `doc/HANDOVER/` and brings this page's "If a chat ends" section up to
   date. Until then H-1 v15 is the installed handover, but its chapter 0 is overtaken: a new Claude chat should read
-  the H-1 v16 candidate. **Waiting on the owner:** RAT-62; his go for step 3 (on Fable). The reviewer is reading step
+  the H-1 v16r1 candidate. **Waiting on the owner:** RAT-62; his go for step 3 (on Fable). The reviewer is reading step
   2.
 - **STEP 2 IS DONE (Claude, entry 348; 26 November 2026).** The engine is simplified inside `a_p_r_i_r_DEV/` (commit
   `aedda2e`) and, in the cloud, gives the same forecasts, scores, OV-1 numbers and reports as the frozen engine from
