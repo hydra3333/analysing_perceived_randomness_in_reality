@@ -8343,3 +8343,12 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Fable).
 - Nothing else is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 347; RAT-61.
+
+## 347. 26 November 2026, 20:35 - OWNER: go for step 2 (the engine simplified in `a_p_r_i_r_DEV` and proved by comparison with the frozen engine)
+
+- **The owner, 20:35:** "ok go for step 2". The session is on Fable (the model rule for a major change of the engine).
+- **What the go covers** (the simple scheme v0.2, sections 5, 9 and 12 step 2): the engine simplified inside
+  `a_p_r_i_r_DEV/` only, committed there by Claude, and proved in the cloud by comparison with the frozen engine at
+  the top level (the same forecasts, scores and OV-1 numbers from the same accepted results). Nothing at the top level
+  is changed. Nothing is run on the owner's PC; the comparison on his PC is step 5.
+- Next numbers: EX_334 (Claude's); entry 348; RAT-61.
