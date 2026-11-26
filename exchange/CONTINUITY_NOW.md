@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 20:33 Australia/Adelaide (entry 346: DEV's .venv built; waiting on the go for step 2).
+**Last updated:** 26 November 2026, 21:47 Australia/Adelaide (entry 348: step 2 done and compared; waiting on the go for step 3).
 
 ## For the owner: NOW
 
+- **STEP 2 IS DONE (Claude, entry 348; 26 November 2026).** The engine is simplified inside `a_p_r_i_r_DEV/` (commit
+  `aedda2e`) and, in the cloud, gives the same forecasts, scores, OV-1 numbers and reports as the frozen engine from
+  the same accepted results (`compare_with_frozen.py`: RESULT: SAME; 161 tests pass). The short paper:
+  `exchange/Claude_Step_2_Engine_Simplified_And_Compared_v0_1_20261126.md`. **Waiting on the owner:** to relay it to
+  the reviewer for one reading, and his go for step 3 (the updater without Mode H). Nothing is authorised on his PC;
+  the top-level `.venv` stays until after step 6.
 - **DEV'S OWN `.venv` IS BUILT in `a_p_r_i_r_DEV` (the owner, entry 346; 26 November 2026).** The top-level `.venv` is
   kept until after step 6. **Waiting on the owner:** his go for step 2 (the engine simplified in the subfolder and
   proved by the comparison with the frozen top level; Fable).

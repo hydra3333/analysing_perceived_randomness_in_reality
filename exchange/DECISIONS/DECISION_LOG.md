@@ -8352,3 +8352,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the top level (the same forecasts, scores and OV-1 numbers from the same accepted results). Nothing at the top level
   is changed. Nothing is run on the owner's PC; the comparison on his PC is step 5.
 - Next numbers: EX_334 (Claude's); entry 348; RAT-61.
+
+## 348. 26 November 2026, 21:47 - STEP 2 DONE: the engine simplified in `a_p_r_i_r_DEV/` and compared with the frozen engine in the cloud: RESULT: SAME on the accepted results
+
+- **What was done** (on the owner's go of entry 347; the simple scheme v0.2, sections 5, 9 and 12 step 2): the engine
+  inside `a_p_r_i_r_DEV/` simplified and committed there by Claude (commit
+  `aedda2ebb8da2110c8725ff166d56301d293ab65`). Nothing at the top level was touched. Nothing was run on the owner's
+  PC. Evidence class: the cloud only (Linux, Python 3.15.0b4).
+- **The comparison (scheme section 9), in the cloud:** two trees from the same accepted results, the frozen engine (a
+  clone of `main`) and the simplified engine (a copy of `a_p_r_i_r_DEV/src`, checked file for file against the
+  commit), each filled by its own job in its own process; then the same starting draws given to both for the second
+  OV-1 series, both jobs again, and `a_p_r_i_r_DEV/deploy/compare_with_frozen.py trees`: **RESULT: SAME**, all eleven
+  lines: Powerball 15118 forecast lines and 15078 scores, Oz Lotto 6598 and 6558, 40 methods each; the second OV-1
+  series line by line (41 lines a game); every report file byte for byte (901 and 475). The same whole comparison on
+  invented results with the 40 real methods: RESULT: SAME.
+- **Which files could have moved the science:** by the tool's `code` listing, 17 engine files and all 119 method and
+  helper files are the same bytes as the frozen ones (among them the forecast engine, the readout, the OV-1
+  arithmetic, the divisions, the reports and the shared contract modules); reader, scoring and windows_text differ in
+  docstrings only; seven are changed (code_identity, game_state, ov1_ledger, research_job, variant_folders,
+  variant_lists, research_command) and one is new (method_flags).
+- **Tests:** 161 pass in the tree, on invented draws and toy methods; one module plants a difference of each kind for
+  the comparison tool to find.
+- **The short paper for the owner and the reviewer:**
+  `exchange/Claude_Step_2_Engine_Simplified_And_Compared_v0_1_20261126.md`: the result, the tool's output, what
+  changed, nine choices Claude made while writing it (any of which the owner or the reviewer may overrule), what is
+  left for later (the reports' wording, unchanged on purpose so that the reports compare byte for byte; the settings
+  file, the lock and the updater, which are steps 3 and 4; whether `I_AM_INSTALLABLE` and `I_AM_RETIRED` in DEV are
+  kept in Git, a question for step 4), where the reviewer should look, and what Claude thinks the owner should do
+  next.
+- **Not authorised, not done:** no install, no run, no tree created, nothing on the owner's PC. The comparison on his
+  PC is step 5.
+- **Waiting on the owner:** to relay the paper to the reviewer for its one reading, and his go for step 3 (the updater
+  with every Mode H state removed).
+- Next numbers: EX_334 (Claude's); entry 349; RAT-61.
