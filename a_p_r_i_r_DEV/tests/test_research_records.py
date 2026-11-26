@@ -211,19 +211,21 @@ class TheSmallFilesBesideAMethod(unittest.TestCase):
         self.assertEqual(flags.status_of(self.folder, 'POWERBALL'), flags.MethodStatus(1650, 'typed by hand', None))
 
     def test_the_establishment_draw_is_written_once_for_a_version_and_afresh_when_the_code_changes(self):
-        self.assertTrue(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1595))
-        self.assertFalse(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1599), 'written once for this version')
-        self.assertTrue(flags.settle_in_place(self.folder, 'ab12', 'OZLOTTO', 1710), 'the other game, when first worked')
+        self.assertEqual(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1595), flags.WRITTEN_FIRST)
+        self.assertIsNone(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1599), 'written once for this version')
+        self.assertEqual(flags.settle_in_place(self.folder, 'ab12', 'OZLOTTO', 1710), flags.WRITTEN_GAME)
         self.assertEqual(flags.read_flag(self.folder / flags.IN_PLACE_NAME),
                          {'fingerprint': 'ab12', 'in_place_since_POWERBALL': '1595', 'in_place_since_OZLOTTO': '1710'})
-        self.assertTrue(flags.settle_in_place(self.folder, 'cd34', 'POWERBALL', 1601), 'the code changed')
+        self.assertEqual(flags.settle_in_place(self.folder, 'cd34', 'POWERBALL', 1601), flags.WRITTEN_CHANGED)
         self.assertEqual(flags.read_flag(self.folder / flags.IN_PLACE_NAME),
                          {'fingerprint': 'cd34', 'in_place_since_POWERBALL': '1601'})
 
     def test_an_establishment_file_that_cannot_be_read_is_written_afresh_and_stops_nothing(self):
         for damaged in (b'\xff\xfe', b'no equals sign here\r\n', b'fingerprint = ab12\r\nin_place_since_POWERBALL = soon\r\n'):
             (self.folder / flags.IN_PLACE_NAME).write_bytes(damaged)
-            self.assertTrue(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1595))
+            self.assertEqual(flags.status_of(self.folder, 'POWERBALL'), flags.MethodStatus(None, None, None),
+                             'bookkeeping only: unreadable reads as not known, and refuses nothing')
+            self.assertEqual(flags.settle_in_place(self.folder, 'ab12', 'POWERBALL', 1595), flags.WRITTEN_UNREADABLE)
             self.assertEqual(flags.status_of(self.folder, 'POWERBALL').eligible_from, 1596)
 
     def test_a_retired_file_without_a_draw_for_the_game_is_given_the_next_draw_and_its_reason_is_kept(self):

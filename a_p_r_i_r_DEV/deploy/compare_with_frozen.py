@@ -4,9 +4,9 @@ What this file is for
     The simple scheme took the administration out of the engine and left the science alone. This tool is the
     proof that it did: given the same results, the simplified engine (in a_p_r_i_r_DEV) and the frozen engine
     (the code at the top level of the repository, as reviewed) must give the same forecasts, the same scores,
-    the same OV-1 numbers and the same reports. It runs each engine in its own Python process, each importing
-    only the code of its own tree, and compares what the two trees then hold. It changes nothing in the
-    repository and reads no draw value itself.
+    the same two OV-1 series, line by line, and the same reports. It runs each engine in its own Python
+    process, each importing only the code of its own tree, and compares what the two trees then hold. It changes
+    nothing in the repository and reads no draw value itself.
 
     Commands (the first word after the program's name):
       run <tree> [job arguments]      run the research job of the engine that lies in <tree>, with this Python
@@ -94,6 +94,31 @@ for variant in variants:
                             'Set by compare_with_frozen.py for the comparison.')
 print(f'new tree: {len(variants)} IN_PLACE_SINCE files given the same draws')
 """
+# The frozen engine keeps no file of its series over all draws: this makes it from the frozen tree's stored
+# lists with the frozen engine's own code, and prints it as one JSON line.
+FROZEN_EXPLORATORY = PREAMBLE + """
+import json
+from research import ov1_ledger
+from research.code_identity import forecasting_code_identity, read_manifest
+from research.game_state import MAIN_BARREL, load_variant_state
+from research.reader import results_on_file
+from research.scoring import read_outcome
+from research.status_file import STATUS_FILE_NAME, read_status
+from research.variant_folders import find_variants
+game_id = sys.argv[2]
+variants, refused = find_variants(tree / 'src' / 'methods')
+code_identity = forecasting_code_identity(tree, read_manifest(tree))
+results = results_on_file(tree, game_id)
+states = []
+for variant in variants:
+    if variant.supports(game_id):
+        statuses = read_status(variant.folder / STATUS_FILE_NAME, [g for g in GAMES if variant.supports(g)])
+        states.append(load_variant_state(tree, game_id, variant, statuses[game_id], code_identity))
+drawn = {draw: read_outcome(results, draw)[MAIN_BARREL]
+         for state in states for draw in state.score_contents if draw <= results.last_draw}
+series = ov1_ledger.exploratory_series(game_id, states, drawn, results.last_draw)
+print(json.dumps([[line['content'], line['audit']] for line in series]))
+"""
 INVENT_RESULTS = PREAMBLE + """
 sys.path.insert(0, str(tree / 'tests'))
 from research.reader import first_target
@@ -123,6 +148,20 @@ def methods_with_results(tree: Path, game_id: str) -> list:
     """The identities of the methods that have results for a game in a tree, in order."""
     top = tree / RESEARCH / game_id / 'variants'
     return sorted(f'{path.parent.name}/{path.name}' for path in top.glob('*/*') if path.is_dir())
+
+
+def series_over_all_draws(tree: Path, game_id: str) -> list:
+    """The series over all draws of a game in a tree, as [content, audit] pairs in draw order: read from the
+    tree's own file of it (the simplified engine writes one), or, for a tree of the frozen engine, made from the
+    tree's stored lists by the frozen engine's own code in its own process."""
+    stored = tree / RESEARCH / game_id / 'ov1' / 'exploratory.jsonl'
+    if stored.is_file():
+        return [[line['content'], line['audit']] for line in records_of(stored)]
+    done = subprocess.run([sys.executable, '-I', '-B', '-c', FROZEN_EXPLORATORY, str(tree), game_id],
+                          capture_output=True, text=True)
+    if done.returncode:
+        raise RuntimeError(f'the series over all draws could not be made in {tree}: {done.stderr[-2000:]}')
+    return json.loads(done.stdout)
 
 
 def report_files(tree: Path, game_id: str) -> dict:
@@ -179,6 +218,9 @@ def compare_trees(frozen: Path, new: Path, say=print) -> bool:
         check(f'{game_id}: the second OV-1 series, line by line', series[0], series[1],
               f' ({len(series[0])} and {len(series[1])} lines'
               + (f'; draws {series[1][0][0]["draw"]} to {last["draw"]}' if last else '') + ')')
+        every = [series_over_all_draws(tree, game_id) for tree in (frozen, new)]
+        check(f'{game_id}: the OV-1 series over all draws, line by line', every[0], every[1],
+              f' ({len(every[0])} and {len(every[1])} lines)')
         frozen_reports, new_reports = report_files(frozen, game_id), report_files(new, game_id)
         check(f'{game_id}: the names of the report files', sorted(frozen_reports), sorted(new_reports),
               f' ({len(frozen_reports)} and {len(new_reports)})')

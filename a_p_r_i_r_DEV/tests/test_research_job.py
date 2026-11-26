@@ -335,26 +335,62 @@ class WhatIsOutOfDateIsMadeAgain(fx.JobCase):
         self.assertEqual(code, 0, said)
         self.assertEqual(contents(tree, 'TOY_A_V1')[-1]['target'], LAST_AT_START + 1)
         self.assertEqual(contents(tree, 'TOY_A_V1', 'scores')[-1]['target'], LAST_AT_START)
+        # The league reports of the six draws no longer on file, and the next-draw report of the draw after them.
+        self.assertTrue(any(f'{GAME}: 14 report files that the records no longer give were removed' in line
+                            for line in said), [line for line in said if 'removed' in line])
         fresh = self.tree(name='fresh')
         fx.run_job(fresh)
         self.assertEqual(contents(tree, 'TOY_A_V1'), contents(fresh, 'TOY_A_V1'))
+        # The same report files as a tree that never held the later draws; but for the next-draw report of draw
+        # 1161, which only the fresh tree has, because only there was that forecast made before its result.
+        reports_of = f'results/research/{GAME}/reports'
+        self.assertEqual(set(fx.files_under(fresh, reports_of, leave_out=())) - set(fx.files_under(tree, reports_of, leave_out=())),
+                         {f'{reports_of}/next/next_draw_{GAME}_d{LAST_AT_START + 1:05d}.{kind}' for kind in ('csv', 'txt')})
+        self.assertEqual(set(fx.files_under(tree, reports_of, leave_out=())) - set(fx.files_under(fresh, reports_of, leave_out=())), set())
+        times = fx.report_text(tree, reports.MADE_TIMES_NAME)
+        self.assertNotIn(f'd{LAST_AFTER_NEW:05d}', times, 'the side file of making times names no removed report')
 
-    def test_results_of_a_method_this_tree_has_no_software_for_are_left_alone_and_count_nowhere(self):
+    def test_an_ordinary_job_leaves_alone_the_results_of_a_method_it_has_no_software_for_and_counts_them_nowhere(self):
         tree = self.tree(variants=('TOY_A_V1', 'TOY_B_V1', ('TOY_C_V1', {'rotate': 5})))
         fx.run_job(tree)
         shutil.rmtree(fx.method_folder(tree, 'E_901', 'TOY_C_V1'))
         left = {name: data for name, data in fx.files_under(tree).items() if 'TOY_C_V1' in name and '/variants/' in name}
-        code, said = fx.run_job(tree, rebuild_all=True)
-        self.assertEqual(code, 0, said)
-        self.assertTrue(any('stored results of E_901/TOY_C_V1 are left alone: this tree has no software for it' in line
-                            for line in said), said)
-        self.assertEqual({name: data for name, data in fx.files_under(tree).items()
-                          if 'TOY_C_V1' in name and '/variants/' in name}, left)
+        self.assertEqual(len(left), 2)
+        for options in ({}, {'rebuild': ['E_901/TOY_A_V1']}):
+            code, said = fx.run_job(tree, **options)
+            self.assertEqual(code, 0, said)
+            self.assertTrue(any('stored results of E_901/TOY_C_V1 are left alone: this tree has no software for it'
+                                in line for line in said), said)
+            self.assertEqual({name: data for name, data in fx.files_under(tree).items()
+                              if 'TOY_C_V1' in name and '/variants/' in name}, left)
         text = fx.report_text(tree, f'league/league_{GAME}_d{LAST_AT_START:05d}.txt')
         self.assertIn('Variants: 2', text)
         self.assertIn('E_901/TOY_C_V1 (not installed here)', text)
         self.assertEqual({member['variant'] for line in fx.ledger_lines(tree, which='exploratory')
                           for member in line['content']['cohort']}, {'E_901/TOY_A_V1', 'E_901/TOY_B_V1'})
+
+    def test_a_rebuild_of_everything_deletes_them_too_so_a_method_that_comes_back_is_never_taken_as_up_to_date(self):
+        tree = self.tree(variants=('TOY_A_V1', 'TOY_B_V1', ('TOY_C_V1', {'rotate': 5})))
+        fx.run_job(tree)
+        software, away = fx.method_folder(tree, 'E_901', 'TOY_C_V1'), self.root / 'TOY_C_V1_away'
+        shutil.move(software, away)
+        (tree / 'src' / fx.ENGINE_FILE).write_text('# the engine, changed\n', encoding='ascii')
+        code, said = fx.run_job(tree)
+        self.assertEqual(code, 0, said)
+        self.assertTrue(any('REBUILD: everything, in both games (3 stored method results deleted)' in line
+                            for line in said), said)
+        self.assertFalse(list_path(tree, 'TOY_C_V1').parent.exists(), 'made by another engine: it may not stay')
+        self.assertFalse(any('left alone' in line for line in said), said)
+        shutil.move(away, software)                                     # the same software comes back, unchanged
+        code, said = fx.run_job(tree)
+        self.assertEqual(code, 0, said)
+        made = 2 * (LAST_AT_START - fx.FIRST_TOY_TARGET + 1) + 1
+        self.assertTrue(any(f'written: {LAST_AT_START - fx.FIRST_TOY_TARGET + 2} forecasts' in line for line in said),
+                        (made, said))
+        fresh = self.tree(variants=('TOY_A_V1', 'TOY_B_V1', ('TOY_C_V1', {'rotate': 5})), name='fresh')
+        fx.run_job(fresh)
+        for which in ('forecasts', 'scores'):
+            self.assertEqual(contents(tree, 'TOY_C_V1', which), contents(fresh, 'TOY_C_V1', which))
 
 
 class RetiredAndInPlace(fx.JobCase):
@@ -386,7 +422,8 @@ class RetiredAndInPlace(fx.JobCase):
         status = self.status(tree, 'TOY_B_V1')
         self.assertEqual((status.withdrawn_from, status.withdrawn_reason), (LAST_AT_START + 1, 'no reason was written'))
         self.assertEqual(contents(tree, 'TOY_B_V1', 'scores'), before, 'its earlier results stay')
-        self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], LAST_AT_START + 1, 'no forecast after it stopped')
+        self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], LAST_AT_START,
+                         'no forecast for its retirement draw or later: the one it held for that draw is dropped')
         self.assertEqual(contents(tree, 'TOY_A_V1')[-1]['target'], LAST_AFTER_NEW + 1)
         text = fx.report_text(tree, f'league/league_{GAME}_d{LAST_AFTER_NEW:05d}.txt')
         self.assertIn(f'WITHDRAWN from draw {LAST_AT_START + 1}: no reason was written', text)
@@ -404,12 +441,27 @@ class RetiredAndInPlace(fx.JobCase):
         method_flags.write_retired(fx.method_folder(tree, 'E_901', 'TOY_B_V1'), {GAME: 1155}, 'the table was wrong')
         code, said = fx.run_job(tree)
         self.assertEqual(code, 0, said)
-        self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], 1155, 'its forecast for that draw stays, unscored')
+        self.assertTrue(any('E_901/TOY_B_V1: retired from draw 1155: 7 forecasts and 6 scores for that draw or later '
+                            'dropped' in line for line in said), said)
+        self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], 1154)
         self.assertEqual(contents(tree, 'TOY_B_V1', 'scores')[-1]['target'], 1154)
         self.assertIn('WITHDRAWN from draw 1155: the table was wrong',
                       fx.report_text(tree, f'league/league_{GAME}_d{LAST_AT_START:05d}.txt'))
         code, said = fx.run_job(tree)
         self.assertTrue(any('0 forecasts, 0 scores, 0 series files, 0 report files' in line for line in said), said)
+
+    def test_a_method_retired_as_draws_arrive_and_the_same_method_rebuilt_hold_the_same_history(self):
+        tree = self.tree()
+        fx.run_job(tree)                                                # it holds its forecast for draw 1161
+        method_flags.write_retired(fx.method_folder(tree, 'E_901', 'TOY_B_V1'), {GAME: LAST_AT_START + 1}, 'a test')
+        fx.write_results(tree, GAME, LAST_AFTER_NEW, version=2)
+        fx.run_job(tree)
+        as_draws_arrived = {which: contents(tree, 'TOY_B_V1', which) for which in ('forecasts', 'scores')}
+        code, said = fx.run_job(tree, rebuild=['E_901/TOY_B_V1'])
+        self.assertEqual(code, 0, said)
+        self.assertEqual({which: contents(tree, 'TOY_B_V1', which) for which in ('forecasts', 'scores')},
+                         as_draws_arrived)
+        self.assertEqual(as_draws_arrived['forecasts'][-1]['target'], LAST_AT_START)
 
     def test_a_small_file_that_cannot_be_read_passes_its_method_over_and_the_job_goes_on(self):
         tree = self.tree()
@@ -421,6 +473,23 @@ class RetiredAndInPlace(fx.JobCase):
         self.assertTrue(any('E_901/TOY_B_V1 is passed over' in line and 'not "key = value"' in line for line in said))
         self.assertEqual(contents(tree, 'TOY_A_V1')[-1]['target'], LAST_AFTER_NEW + 1)
         self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], LAST_AT_START + 1, 'its results are as they were')
+
+    def test_an_establishment_file_that_cannot_be_read_never_stops_its_method_and_is_written_afresh(self):
+        tree = self.tree()
+        fx.run_job(tree)
+        path = fx.method_folder(tree, 'E_901', 'TOY_B_V1') / method_flags.IN_PLACE_NAME
+        for damaged in (b'in place since, I think\r\n', b'fingerprint = ab12\r\nin_place_since_POWERBALL = soon\r\n'):
+            path.write_bytes(damaged)
+            fx.write_results(tree, GAME, fx.read_last_draw(tree) + 1, version=2)
+            last = fx.read_last_draw(tree)
+            code, said = fx.run_job(tree)
+            self.assertEqual(code, 0, said)
+            self.assertTrue(any(f'E_901/TOY_B_V1: its {method_flags.IN_PLACE_NAME} could not be read and was written '
+                                f'afresh: it now counts in the second OV-1 series from draw {last + 1}' in line
+                                for line in said), said)
+            self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], last + 1, 'the method was worked as usual')
+            self.assertEqual(self.status(tree, 'TOY_B_V1').eligible_from, last + 1)
+            self.assertEqual(self.status(tree, 'TOY_A_V1').eligible_from, LAST_AT_START + 1, 'not touched')
 
     def test_a_job_stopped_while_a_small_file_was_written_leaves_nothing_that_stops_the_next_job(self):
         tree = self.tree()
@@ -448,6 +517,22 @@ class Reports(fx.JobCase):
         shutil.rmtree(tree / 'results/research' / GAME / 'ov1')
         fx.run_job(tree)
         self.assertEqual(fx.files_under(tree, f'results/research/{GAME}/reports'), first)
+
+    def test_a_next_draw_report_of_a_forecast_since_made_again_is_removed(self):
+        tree = self.tree()
+        fx.run_job(tree)
+        fx.write_results(tree, GAME, LAST_AFTER_NEW, version=2)
+        fx.run_job(tree)
+        folder = tree / 'results/research' / GAME / 'reports/next'
+        both = [f'next_draw_{GAME}_d{draw:05d}.{kind}' for draw in (LAST_AT_START + 1, LAST_AFTER_NEW + 1)
+                for kind in ('csv', 'txt')]
+        self.assertEqual(sorted(path.name for path in folder.iterdir()), both)
+        (folder / 'left_half_written.txt.writing').write_bytes(b'half')
+        code, said = fx.run_job(tree, rebuild_all=True)                 # every forecast is now made after its result
+        self.assertEqual(code, 0, said)
+        self.assertEqual(sorted(path.name for path in folder.iterdir()), both[2:])
+        self.assertFalse(any(f'd{LAST_AT_START + 1:05d}' in line and line.startswith('next/')
+                             for line in fx.report_text(tree, reports.MADE_TIMES_NAME).splitlines()))
 
     def test_a_changed_report_formatter_leaves_no_file_of_the_old_format(self):
         tree = self.tree()

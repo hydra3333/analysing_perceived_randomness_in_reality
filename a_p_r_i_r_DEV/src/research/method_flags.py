@@ -5,7 +5,8 @@ What this file is for
     text: one "key = value" a line. None of them is part of any fingerprint.
       I_AM_INSTALLABLE  written by "make installable" in DEV: this version may be installed.
       I_AM_RETIRED      written by "retire": for each game, the draw from which the method makes no forecast.
-                        Its earlier results stay, marked retired. Deleting the file brings the method back.
+                        Its results for earlier draws stay, marked retired; what it held for that draw or a
+                        later one is dropped. Deleting the file brings the method back.
       IN_PLACE_SINCE    written by the research job in each tree: the method's fingerprint, and for each game
                         the last draw the tree held when this version of its code was first used there. It is
                         bookkeeping only: a report can then show how a method did on the draws since.
@@ -38,6 +39,11 @@ STAGED_SUFFIX = '.writing'
 PASSED_OVER_NAMES = FLAG_NAMES + tuple(name + STAGED_SUFFIX for name in FLAG_NAMES)
 # The line ending of every file this project writes.
 LINE_ENDING = '\r\n'
+# Why settle_in_place wrote a method's IN_PLACE_SINCE (what it returns).
+WRITTEN_FIRST = 'it did not exist'
+WRITTEN_CHANGED = 'the method\'s files changed'
+WRITTEN_GAME = 'this game is worked for the first time with this version'
+WRITTEN_UNREADABLE = 'it could not be read'
 # The comment line a retired file begins with.
 RETIRED_FIRST_LINE = ('This method is retired: it makes no forecast for these draws or later ones. Delete this '
                       'file to bring it back.')
@@ -126,7 +132,9 @@ def status_of(folder: Path, game_id: str) -> MethodStatus:
     folder: the method's folder.  game_id: the game.
     Returns for example MethodStatus(withdrawn_from=None, withdrawn_reason=None, eligible_from=1592).
     The job calls settle_retired first, so that a retired file always names a draw for the game.
-    Refuses (FlagFault) as read_flag and _draw do.
+    Refuses (FlagFault) a retired file that cannot be read: whether a method is retired must be known. An
+    IN_PLACE_SINCE that cannot be read never refuses: it is bookkeeping, and reads as "not known" (the job
+    writes it afresh; see settle_in_place).
     """
     retired_path, in_place_path = folder / RETIRED_NAME, folder / IN_PLACE_NAME
     withdrawn_from = reason = None
@@ -134,12 +142,15 @@ def status_of(folder: Path, game_id: str) -> MethodStatus:
         retired = read_flag(retired_path)
         withdrawn_from = _draw(retired_path, retired, f'retired_from_{game_id}')
         reason = retired.get('reason') or 'no reason was written'
-    since = _draw(in_place_path, read_flag(in_place_path), f'in_place_since_{game_id}')
+    try:
+        since = _draw(in_place_path, read_flag(in_place_path), f'in_place_since_{game_id}')
+    except FlagFault:
+        since = None
     return MethodStatus(withdrawn_from=withdrawn_from, withdrawn_reason=reason,
                         eligible_from=None if since is None else since + 1)
 
 
-def settle_in_place(folder: Path, fingerprint: str, game_id: str, last_draw: int) -> bool:
+def settle_in_place(folder: Path, fingerprint: str, game_id: str, last_draw: int) -> str | None:
     """Bring a method's IN_PLACE_SINCE up to date for one game, as the research job does when it opens the game.
 
     folder: the method's folder.  fingerprint: the method's fingerprint now.  game_id: the game.
@@ -147,24 +158,26 @@ def settle_in_place(folder: Path, fingerprint: str, game_id: str, last_draw: int
     If the file names another fingerprint (the code changed), or is missing or unreadable, it is written afresh
     with this game's draw alone: the other game's draw is written when that game is next worked. If it names
     this fingerprint and has no draw for the game, the draw is added. Otherwise nothing is written.
-    Returns True if the file was written.
+    Returns None if nothing was written, otherwise why the file was written: one of the WRITTEN_... texts
+    below, for example WRITTEN_UNREADABLE. Refuses nothing; a file that cannot be written raises OSError.
     """
     path = folder / IN_PLACE_NAME
     key = f'in_place_since_{game_id}'
+    why = WRITTEN_FIRST if not path.exists() else None
     try:
         pairs = read_flag(path)
         if any(not value.isdigit() for name, value in pairs.items() if name.startswith('in_place_since_')):
-            pairs = {}
+            raise FlagFault(f'{path}: a draw that is not a number')
     except FlagFault:
-        pairs = {}
+        pairs, why = {}, WRITTEN_UNREADABLE
     if pairs.get('fingerprint') != fingerprint:
-        pairs = {'fingerprint': fingerprint}
+        pairs, why = {'fingerprint': fingerprint}, why or WRITTEN_CHANGED
     if key in pairs:
-        return False
+        return None
     pairs[key] = str(last_draw)
     write_flag(path, pairs, 'Written by the research job: the last draw this tree held when this version of the '
                             'method was first used here. Bookkeeping only.')
-    return True
+    return why or WRITTEN_GAME
 
 
 def settle_retired(folder: Path, game_id: str, last_draw: int) -> bool:

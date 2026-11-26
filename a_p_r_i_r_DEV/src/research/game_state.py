@@ -202,7 +202,7 @@ def lists_of_variants_not_installed(tree_root: Path, game_id: str, installed) ->
     installed: the identities of the methods in the tree, for example {'E_002/RECUR_MEAN_ALL_V1', ...}.
     Returns their identities in order, for example ['E_002/RECUR_OLD_V1'].
     """
-    folder = Path(tree_root) / lists.RESEARCH_FOLDER / game_id / 'variants'
+    folder = Path(tree_root) / lists.RESEARCH_FOLDER / game_id / lists.VARIANTS_FOLDER
     found = []
     if folder.is_dir():
         for family in sorted(p for p in folder.iterdir() if p.is_dir()):

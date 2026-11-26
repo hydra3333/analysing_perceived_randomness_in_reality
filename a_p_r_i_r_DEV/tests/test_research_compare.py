@@ -75,6 +75,7 @@ class TwoTreesCompared(fx.JobCase):
             ('variants/E_901/TOY_A_V1/forecasts.jsonl', change_made_before, 'every forecast and every score'),
             ('variants/E_901/TOY_B_V1/scores.jsonl', change_matches, 'every forecast and every score'),
             ('ov1/prevailing.jsonl', change_x, 'the second OV-1 series'),
+            ('ov1/exploratory.jsonl', change_x, 'the OV-1 series over all draws'),
         )
         for name, change, wanted in plants:
             fx.alter_list_line(research / name, 2, change)

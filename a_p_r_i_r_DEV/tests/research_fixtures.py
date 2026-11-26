@@ -297,6 +297,12 @@ def make_folder_link(link: Path, target: Path) -> str | None:
         return None
 
 
+def read_last_draw(tree: Path, game_id: str = GAME) -> int:
+    """The last draw of the results a tree holds for a game, read from the results file's last row."""
+    rows = (tree / 'source_data' / f'{game_id}_results_master.csv').read_text(encoding='ascii').splitlines()
+    return int(rows[-1].split(',')[0])
+
+
 def method_folder(tree: Path, family: str, variant: str) -> Path:
     """A method's own folder in a tree, where its software and its small files lie."""
     return tree / 'src' / 'methods' / family / variant

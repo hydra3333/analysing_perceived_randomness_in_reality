@@ -25,8 +25,10 @@ from pathlib import Path
 
 from _common.canonical_encoding import canonical_bytes
 
-# Where a tree keeps what the job computes, and the two list files of a method.
+# Where a tree keeps what the job computes; under it, for each game, the folder of the methods' results; and the
+# two list files of a method.
 RESEARCH_FOLDER = 'results/research'
+VARIANTS_FOLDER = 'variants'
 FORECASTS_NAME = 'forecasts.jsonl'
 SCORES_NAME = 'scores.jsonl'
 # The format name every header carries, and the kinds of list.
@@ -73,7 +75,7 @@ def record_bytes(record: dict) -> bytes:
 def variant_folder(tree_root: Path, game_id: str, family: str, variant: str) -> Path:
     """The folder of a method's results for a game, for example
     <tree>/results/research/POWERBALL/variants/E_002/RECUR_MEAN_ALL_V1."""
-    return Path(tree_root) / RESEARCH_FOLDER / game_id / 'variants' / family / variant
+    return Path(tree_root) / RESEARCH_FOLDER / game_id / VARIANTS_FOLDER / family / variant
 
 
 def variant_list_paths(tree_root: Path, game_id: str, family: str, variant: str) -> tuple:

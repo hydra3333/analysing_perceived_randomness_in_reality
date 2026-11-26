@@ -9,7 +9,5 @@
 /scratch/
 /transitory_data/
 __pycache__/
-# Written by the research job in each tree, beside each method: this tree's own bookkeeping, not software.
-IN_PLACE_SINCE
 # What a job leaves if it is stopped while writing a small file or a report.
 *.writing

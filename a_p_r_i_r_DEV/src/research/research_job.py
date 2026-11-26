@@ -14,7 +14,9 @@ What this file is for
       a method's files changed (its fingerprint is not the one in the first line of its stored lists), its lists
       cannot be read, or --rebuild names it: that method's results;
       a draw's result was corrected at the source: that draw's scores, and every forecast that was computed
-      from it (found from the permitted-view digest each forecast holds), with their scores.
+      from it (found from the permitted-view digest each forecast holds), with their scores;
+      a method was retired: what it held for its retirement draw or a later one;
+      a report the records no longer give (for a draw no longer on file, say): it is removed.
 
 Which part of the scheme it carries out
     exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5. Arriving with later steps of the work order:
@@ -66,6 +68,9 @@ GAMES = ('POWERBALL', 'OZLOTTO')
 METHODS_FOLDER = 'src/methods'
 # The job log: one line a job, under the tree's records folder.
 JOB_LOG = 'records/JOB_LOG.jsonl'
+# The folders of a game's reports folder whose every file the job makes again (the README and the side file of
+# making times lie beside them).
+REPORT_FOLDERS = ('league', 'next', 'ov1')
 # During a long fill the job says how far it has got after every so many draws in which it wrote something.
 PROGRESS_EVERY_DRAWS = 25
 # The job's exit codes: finished; a game stopped or a method failed; the job itself refused before any game.
@@ -145,25 +150,27 @@ def delete_method_results(job: Job, game_id: str, variant, why: str) -> None:
 
 
 def settle_infrastructure(job: Job, rebuild_all: bool) -> None:
-    """Compare the engine in the tree with the one the tree's results were made with, and delete every method's
-    results, in both games, if they differ or --rebuild-all was given. The fingerprint of the engine now in the
-    tree is then kept beside the results. Results of methods that have no software in this tree are left alone.
+    """Compare the engine in the tree with the one the tree's results were made with, and delete every stored
+    method result, in both games, if they differ or --rebuild-all was given. The fingerprint of the engine now in
+    the tree is then kept beside the results.
+
+    Every stored result goes, those of a method that has no software in this tree included: the fingerprint
+    kept beside the results says which engine made all of them, so none made by another engine may stay (such a
+    method, coming back unchanged, would otherwise be taken as up to date).
     """
     tree_root = job.settings.tree_root
     current = code_identity.infrastructure_fingerprint(tree_root)
     stored = code_identity.stored_fingerprint(tree_root)
     research = tree_root / lists.RESEARCH_FOLDER
-    with_results = [(game_id, variant) for game_id in GAMES for variant in job.variants
-                    if lists.variant_folder(tree_root, game_id, variant.family, variant.variant).is_dir()]
+    with_results = [folder for game_id in GAMES
+                    for folder in sorted((research / game_id / lists.VARIANTS_FOLDER).glob('*/*')) if folder.is_dir()]
     why = ('--rebuild-all was given' if rebuild_all
            else None if stored == current
            else 'the engine is not the one these results were made with' if stored is not None
            else 'nothing says which engine made these results' if with_results else None)
     if why is not None:
-        for game_id, variant in with_results:
-            shutil.rmtree(lists.variant_folder(tree_root, game_id, variant.family, variant.variant))
         for game_id in GAMES:
-            for folder in ('ov1', reports.REPORTS_FOLDER):
+            for folder in (lists.VARIANTS_FOLDER, 'ov1', reports.REPORTS_FOLDER):
                 if (research / game_id / folder).is_dir():
                     shutil.rmtree(research / game_id / folder)
         job.note_rebuild(f'everything, in both games ({len(with_results)} stored method results deleted): {why}. '
@@ -224,30 +231,45 @@ def drop_what_results_no_longer_support(job: Job, records: GameRecords, state: V
     return True
 
 
-def drop_beyond_retirement(job: Job, records: GameRecords, state: VariantState) -> bool:
-    """Drop what a retired method holds past its retirement draw: forecasts for later draws, and scores for the
-    retirement draw or later (its forecast for the retirement draw itself stays, unscored, as it was made).
+def drop_from_retirement(job: Job, records: GameRecords, state: VariantState) -> bool:
+    """Drop what a retired method holds for its retirement draw or a later one: forecasts and scores alike. The
+    lists then hold exactly what a rebuild of the retired method would make (the owner, decision log entry 353).
     Returns True if anything was dropped."""
     retired_from = state.status.withdrawn_from
-    if retired_from is None or not state.targets:
-        return False
-    if state.next_target - 1 <= retired_from and all(target < retired_from for target in state.score_contents):
+    if retired_from is None or state.next_target <= retired_from:
         return False
     variant = state.variant
     forecasts_path, scores_path = lists.variant_list_paths(records.tree_root, records.game_id, variant.family,
                                                            variant.variant)
-    forecasts = lists.keep_below(forecasts_path, lists.FORECASTS_KIND, retired_from + 1)
+    forecasts = lists.keep_below(forecasts_path, lists.FORECASTS_KIND, retired_from)
     scores = lists.keep_below(scores_path, lists.SCORES_KIND, retired_from)
-    job.note_rebuild(f'{records.game_id}: {variant.identity}: retired from draw {retired_from}: {forecasts} later '
-                     f'forecasts and {scores} scores dropped')
+    job.note_rebuild(f'{records.game_id}: {variant.identity}: retired from draw {retired_from}: {forecasts} '
+                     f'forecasts and {scores} scores for that draw or later dropped')
     return True
+
+
+def settle_establishment(job: Job, game_id: str, variant, last_draw: int) -> None:
+    """Bring a method's IN_PLACE_SINCE up to date before anything else reads it. It is bookkeeping only: a file
+    that could not be read is written afresh and said; one that cannot be written is said; neither stops the
+    method."""
+    try:
+        why = method_flags.settle_in_place(variant.folder, variant.fingerprint, game_id, last_draw)
+    except OSError as fault:
+        job.warn(f'{game_id}: {variant.identity}: its {method_flags.IN_PLACE_NAME} could not be written ({fault}). '
+                 f'It is bookkeeping only: the method is worked as usual, and counts in the second OV-1 series '
+                 f'once the file can be written.')
+        return
+    if why == method_flags.WRITTEN_UNREADABLE:
+        job.warn(f'{game_id}: {variant.identity}: its {method_flags.IN_PLACE_NAME} could not be read and was '
+                 f'written afresh: it now counts in the second OV-1 series from draw {last_draw + 1}.')
 
 
 def open_game(job: Job, game_id: str) -> GameRecords:
     """Read one game: the results, the methods' small files and lists; delete what is out of date.
 
     Returns the game's records in memory. Stops the game (ResultsRefused) only if the results on file cannot be
-    read. A method whose small files cannot be read is reported and passed over.
+    read. A method whose I_AM_RETIRED cannot be read is reported and passed over (whether it is retired must be
+    known); its IN_PLACE_SINCE is bookkeeping and never stops it.
     """
     tree_root = job.settings.tree_root
     results = results_on_file(tree_root, game_id)
@@ -258,6 +280,7 @@ def open_game(job: Job, game_id: str) -> GameRecords:
         if not variant.supports(game_id):
             continue
         in_tree.add(variant.identity)
+        settle_establishment(job, game_id, variant, results.last_draw)
         try:
             method_flags.settle_retired(variant.folder, game_id, results.last_draw)
             status = method_flags.status_of(variant.folder, game_id)
@@ -271,12 +294,9 @@ def open_game(job: Job, game_id: str) -> GameRecords:
         if stale:
             delete_method_results(job, game_id, variant, stale)
             state, _ = load_variant_state(tree_root, game_id, variant, status)
-        if method_flags.settle_in_place(variant.folder, variant.fingerprint, game_id, results.last_draw):
-            state.status = method_flags.status_of(variant.folder, game_id)
         dropped = drop_what_results_no_longer_support(job, records, state)
-        dropped = drop_beyond_retirement(job, records, state) or dropped
+        dropped = drop_from_retirement(job, records, state) or dropped
         if dropped:
-            status = state.status
             state, _ = load_variant_state(tree_root, game_id, variant, status)
         records.states.append(state)
     records.foreign = lists_of_variants_not_installed(tree_root, game_id, in_tree)
@@ -367,12 +387,37 @@ def complete_draw(job: Job, records: GameRecords, draw: int) -> None:
         append_scores(job, records, draw)
 
 
+def remove_reports_no_longer_made(reports_folder: Path, made: set) -> int:
+    """Delete every file of the league, next-draw and OV-1 report folders that this job did not make: a report
+    for a draw the results no longer hold, a next-draw report of a forecast that has since been made again, a
+    file left half written. What stays is exactly what the records now give.
+
+    reports_folder: the game's reports folder.  made: the names this job made (written or found unchanged), from
+    that folder with forward slashes, for example {'league/league_POWERBALL_d01601.txt', ...}.
+    Returns how many files were deleted.
+    """
+    removed = 0
+    for folder in REPORT_FOLDERS:
+        for path in sorted((reports_folder / folder).glob('*')) if (reports_folder / folder).is_dir() else []:
+            if path.is_file() and f'{folder}/{path.name}' not in made:
+                path.unlink()
+                removed += 1
+    return removed
+
+
 def make_series_and_reports(job: Job, records: GameRecords) -> None:
     """Make both OV-1 series, the league report of every draw, the next-draw reports and the README again from
-    the records as they now stand, and write each file whose bytes differ."""
+    the records as they now stand; write each file whose bytes differ; delete each report no longer made."""
     game_id, last_draw = records.game_id, records.results.last_draw
     written = job.counts[game_id]
     writer = reports.ReportWriter(records.tree_root, game_id, job.local_time())
+    made = set()
+
+    def write(name: str, content: str) -> None:
+        """Write one report if its bytes differ, and note that this job made it."""
+        made.add(name)
+        written['report files'] += writer.write(name, content)
+
     main_drawn = {draw: records.outcome_of(draw)[MAIN_BARREL]
                   for state in records.states for draw in state.score_contents if draw <= last_draw}
     exploratory = ov1_ledger.exploratory_series(game_id, records.states, main_drawn, last_draw)
@@ -386,18 +431,21 @@ def make_series_and_reports(job: Job, records: GameRecords) -> None:
     for draw in range(lowest, last_draw + 1):
         if league.add_draw(draw):
             for name, content in zip(reports.league_names(game_id, draw), league.render(draw)):
-                written['report files'] += writer.write(name, content)
+                write(name, content)
     made_before_result = sorted({target for state in records.workable for target, facts in state.targets.items()
                                  if not facts.result_on_file})
     for draw in made_before_result:
         for name, content in zip(reports.next_draw_names(game_id, draw), reports.next_draw_report(records, draw)):
-            written['report files'] += writer.write(name, content)
+            write(name, content)
     for name, content in zip(reports.ov1_names(game_id, 'exploratory'),
                              reports.exploratory_report(records, exploratory)):
-        written['report files'] += writer.write(name, content)
+        write(name, content)
     for name, content in zip(reports.ov1_names(game_id, 'prevailing'), reports.prevailing_report(records)):
-        written['report files'] += writer.write(name, content)
+        write(name, content)
     writer.write(reports.README_NAME, reports.readme_text(game_id))
+    written['reports removed'] = remove_reports_no_longer_made(writer.root, made)
+    if written['reports removed']:
+        job.say(f'{game_id}: {written["reports removed"]} report files that the records no longer give were removed')
     writer.tidy_times()
 
 

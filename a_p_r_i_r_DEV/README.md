@@ -27,24 +27,30 @@ reports and both OV-1 series again; add one line to `records\JOB_LOG.jsonl`. Wha
 
 | What changed | What is made again |
 |---|---|
-| the engine (any file under `src\` outside the method families), or `--rebuild-all` | everything, both games |
+| the engine (any file under `src\` outside the method families), or `--rebuild-all` | everything, both games (stored results of methods the tree has no software for included) |
 | a method's files (its fingerprint is not the one in the first line of its stored lists), or `--rebuild` names it | that method |
 | a list that cannot be read or does not follow on | that method |
 | a draw's result corrected at the source | that draw's scores, and every forecast computed from it |
+| a method retired | what it held for its retirement draw or a later one is dropped |
+| a report the records no longer give (a draw no longer on file, say) | it is removed |
 
-A method whose calculation fails writes no line; it is reported, and the job goes on with the others.
+A method whose calculation fails writes no line; it is reported, and the job goes on with the others. An ordinary
+job leaves alone the stored results of a method the tree has no software for, and counts them nowhere.
 
 ## The three small files beside a method (`src\methods\<family>\<variant>\`)
 
-Plain text, one `key = value` a line; none is part of any fingerprint.
+Plain text, one `key = value` a line; none is part of any fingerprint. All three are kept in Git (the owner,
+decision log entry 352).
 
 - `I_AM_INSTALLABLE`: written by "make installable" (step 4).
 - `I_AM_RETIRED`: `retired_from_POWERBALL = 1601`, `retired_from_OZLOTTO = 1712`, `reason = ...`. The method makes
-  no forecast for those draws or later ones; its earlier results stay. An empty file made by hand retires it from
-  the next draw (the job writes the draw in). Deleting the file brings the method back.
+  no forecast for those draws or later ones; its results for earlier draws stay, and anything it held for those
+  draws or later is dropped (so a retired method and the same method rebuilt hold the same history). An empty file
+  made by hand retires it from the next draw (the job writes the draw in). Deleting the file brings the method
+  back.
 - `IN_PLACE_SINCE`: written by the job: the method's fingerprint, and for each game the last draw the tree held
   when this version of the method was first used here. Bookkeeping only: the second OV-1 series counts a method
-  from the draw after it.
+  from the draw after it. A file that cannot be read never stops its method: the job writes it afresh and says so.
 
 ## Tests
 
@@ -58,8 +64,8 @@ Everything runs on invented draws and toy methods.
 ## The comparison with the frozen engine (`deploy\compare_with_frozen.py`)
 
 It runs each engine in its own Python process and compares what the two trees then hold: every forecast, every
-score, the second OV-1 series line by line, and every report file byte for byte (the series over all draws is
-compared through its print-out, because the frozen engine stores no file of it).
+score, both OV-1 series line by line, and every report file byte for byte. (The frozen engine stores no file of
+its series over all draws; the tool has the frozen engine's own code make it from the frozen tree's stored lists.)
 
 - `invented <new folder>`: the whole comparison on invented results with the real methods (two trees are made in
   the folder; about as long as two first fills).
