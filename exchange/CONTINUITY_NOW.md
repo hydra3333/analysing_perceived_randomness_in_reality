@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 19:42 Australia/Adelaide (entry 338: all three agree; waiting on the owner's go for the scheme document).
+**Last updated:** 26 November 2026, 19:47 Australia/Adelaide (entry 340: the simple scheme, DRAFT v0.1, awaits the reviewer's reading and the owner's agreement).
 
 ## For the owner: NOW
 
+- **THE SIMPLE SCHEME IS WRITTEN AS A DRAFT (entries 339 and 340; 26 November 2026):
+  `exchange/Claude_The_Simple_Scheme_DRAFT_v0_1_20261126.md`.** It is the one short document that replaces the
+  administrative design once agreed. **Waiting on the reviewer:** one reading. **Waiting on the owner:** the five
+  proposals in its section 13 (one of them changes a standing rule: Claude committing code directly into
+  `a_p_r_i_r_DEV\`), then his agreement. Nothing is built or moved; still paused. **If this chat ends here:** a new
+  chat reads this page, entries 324 to 340 and that draft; H-1 v15's account of build step 3 is overtaken by them.
 - **THE REVIEWER CONCURS WITH THE TREE-IDENTITY SCHEME (entry 338; 26 November 2026),** with three small points Claude
   accepts (no backup root in or equal to any tree root; a copy checks the identity of the tree it reads from too; the
   local root comes from the launcher's location). **All three agree on the whole simple scheme.** **Waiting on the

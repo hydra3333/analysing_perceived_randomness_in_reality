@@ -8191,3 +8191,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
   document.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 340; RAT-61.
+
+## 340. 26 November 2026, 19:47 - the one short scheme document is written (DRAFT v0.1), for the reviewer's one reading and the owner's agreement
+
+- **Written on the owner's go (entry 339), on Fable:** `exchange/Claude_The_Simple_Scheme_DRAFT_v0_1_20261126.md`,
+  SHA-256 `21c94d64b763e1793bfb2d34dc3ca2af40d99e827cddd7770ee8a3077eb60deb` (computed by Claude); 253 lines. A DRAFT
+  for one reading by the reviewer and the owner's agreement. Nothing in it is built, moved or installed.
+- **What it holds:** the purpose and three principles; what stays exactly as it is (the science by reference, the one
+  source, the standing rules); the three trees, their names and one shape, the settings file and the identity rules as
+  decided (entries 335 to 337) with the reviewer's three points (entry 338); the three small files beside a method
+  (`I_AM_INSTALLABLE`, `I_AM_RETIRED`, `IN_PLACE_SINCE`); the research job in eight steps, with what is rebuilt and
+  when; nine commands; plain ZIP backups and restore; the updater without Mode H; the proof by comparison with the
+  present engine; the cost of moving the living system into `a_p_r_i_r_DEV`; what is set aside and what the scheme
+  replaces; how the work goes from here, in eight steps.
+- **The cost of the DEV subfolder, as assessed:** small. The present engine already takes its root from where its own
+  program lies and names every folder relative to it, so the living system can be copied into the subfolder with the
+  same inner layout and no change to how it finds anything. Claude proposes copying, not moving: the top level stays
+  as it is, frozen, and the present engine there is the reference for the proof.
+- **Five points in it are Claude's proposals, not yet the owner's decisions** (its section 13): DEV's backup folder;
+  the ZIP leaving out `.venv`; a failed backup stopping a replacement but only warning after a job; copying, not
+  moving, into the subfolder; and Claude committing the living system's code directly into `a_p_r_i_r_DEV\`, **which
+  would change the owner's standing rule that code never comes from Claude by commit** and needs his plain yes or no.
+- **The Fable task is finished:** the owner may switch back to Opus.
+- **Waiting on the reviewer:** its one reading. **Waiting on the owner:** the five points, then his agreement. Still
+  paused (entry 330): no code, no move, nothing on his PC.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 341; RAT-61.
