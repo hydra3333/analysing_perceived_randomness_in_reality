@@ -7994,3 +7994,18 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Nothing is redrafted, amended or coded.** Everything stays paused until the three have agreed.
 - Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 332; RAT-61.
+
+## 332. 26 November 2026, 18:07 - OWNER: he likes the comment; the proposal for "a tree must be what its settings say it is" is owed in full later, and he defers his query on it
+
+- **The owner, 18:07,** on Claude's comment (entry 331): "I like and look forward to seeing the proposal around \"A
+  tree must be what its settings say it is\" since I can p-picture holes in several schemes, I'll defer that query
+  until later."
+- **So:** that point (section 2.4 item 1 of the comment paper: one settings file of the same form in every tree; the
+  path in the role's own section must be the folder the file lies in; the file never copied between trees) is **owed a
+  worked proposal, with the holes looked for,** when the scheme is written down. The owner has holes in mind and will
+  raise them then; it is not to be treated as settled by the sketch in the paper. His other answers to the paper's
+  questions are still to come.
+- **Unchanged:** everything is paused (entry 330). Waiting on the owner's answers to section 2.10 and on the
+  reviewer's own comment.
+- Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 333; RAT-61.
