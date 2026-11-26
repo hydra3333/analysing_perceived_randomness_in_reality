@@ -8296,3 +8296,32 @@ section 17.2 (unpack it into a new folder, never over the clone).
   with its own two scripts); nothing runs there before that.
 - Nothing else is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 345; RAT-61.
+
+## 345. 26 November 2026, 20:27 - STEP 1 DONE: the living system copied into `a_p_r_i_r_DEV/` (258 files byte for byte, two new); its tests pass in the cloud; the owner may build its `.venv`
+
+- **Step 1 of the simple scheme is done in Git** (the owner's go, entry 344): the living system is copied into
+  `a_p_r_i_r_DEV/`, committed by Claude directly (entry 342). **258 files copied byte for byte from the top level, and
+  two new files** (the subfolder's own `.gitignore` and a `README.md`). Nothing outside `a_p_r_i_r_DEV/` was touched;
+  nothing in the copy is changed.
+- **What was copied:** the 31 source files and two launchers of the infrastructure manifest; for each of the 40
+  methods in 12 families, its declaration, its own files and the helpers its declaration lists (the three shared
+  helpers among them); the manifest itself; the owner's four environment scripts; `ENVIRONMENT.example.ini`; the
+  engine's eight test modules and their fixtures, with what those tests import: `deploy/file_form.py`, eight
+  old-system modules of `src/methods/_common/` and the old declarations under
+  `src/methods/_common/contract_data/declarations/` (84 files), which the copied tests use as oracles of the old
+  system and which step 2 removes when the comparison of the scheme's section 9 replaces those tests. The set was
+  worked out from the manifest and the declarations, and checked by following every import: nothing the engine or the
+  methods import lies outside it.
+- **Not kept in Git** (the subfolder's `.gitignore`): its `ENVIRONMENT.ini`, `.venv`, `source_data`, `results`,
+  `records`, `scratch` and `transitory_data`. **So DEV's accepted results are copied into `a_p_r_i_r_DEV\source_data`
+  by the owner himself on his PC, when the first job there is due (step 6);** Claude writes no data.
+- **Evidence, cloud only:** the eight test modules run inside the subfolder, each by itself: 207 tests, all passed
+  (two skipped, as at the top level: one needs a results master in the tree). Every one of the 262 files passes the
+  project's own form check (CRLF), with no fault.
+- **On the owner's PC, when he chooses, as he foresaw:** after pulling, in a plain CMD window with no environment
+  active, `cd` into `a_p_r_i_r_DEV` and run `create_venv.bat`, then `install_upgrade_dependencies_into_venv.bat`. Both
+  work on the folder they lie in. Nothing else is to be run there yet.
+- **Next, on the owner's go: step 2,** the engine simplified inside the subfolder and proved by the comparison of the
+  scheme's section 9; a major change of the engine, so the model rule applies (Fable).
+- Nothing else is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 346; RAT-61.

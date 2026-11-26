@@ -1,0 +1,24 @@
+{
+  "family": "E_017",
+  "variant": "HAZARD_LOGAGE_SIGN_V1",
+  "title": "E_17 - Discrete Recurrence Hazard Curves",
+  "description": "Variant HAZARD_LOGAGE_SIGN_V1: its fixed settings are the HAZARD_LOGAGE_SIGN_V1 line of E_017/variants.py; the calculation is E_017/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 52,
+    "OZLOTTO": 52
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_017/__init__.py",
+    "E_017/core_v1.py",
+    "E_017/variants.py",
+    "_shared/recurrence_gaps_v1.py"
+  ]
+}

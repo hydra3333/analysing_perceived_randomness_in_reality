@@ -1,0 +1,24 @@
+{
+  "family": "E_009",
+  "variant": "EXP_DECAY_5_6_V1",
+  "title": "E_9 - Exponentially Decayed Occurrence Rates",
+  "description": "Variant EXP_DECAY_5_6_V1: its fixed settings are the EXP_DECAY_5_6_V1 line of E_009/variants.py; the calculation is E_009/core_v1.py",
+  "games": [
+    "POWERBALL",
+    "OZLOTTO"
+  ],
+  "minimum_earlier_draws": {
+    "POWERBALL": 1,
+    "OZLOTTO": 1
+  },
+  "observation_view": "UNORDERED_SET",
+  "files": [
+    "method.py"
+  ],
+  "helpers": [
+    "E_009/__init__.py",
+    "E_009/core_v1.py",
+    "E_009/variants.py",
+    "_shared/occurrence_counts_v1.py"
+  ]
+}

@@ -1,0 +1,11 @@
+# a_p_r_i_r_DEV: the living research system's DEV tree (the simple scheme v0.2, section 3).
+# Git keeps its software and tests. What the tree holds or makes on the owner's PC is not kept here:
+# its own settings, its Python environment, its accepted results, what it computes, and its working files.
+/ENVIRONMENT.ini
+/.venv/
+/source_data/
+/results/
+/records/
+/scratch/
+/transitory_data/
+__pycache__/

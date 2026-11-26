@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 26 November 2026, 20:21 Australia/Adelaide (entry 344: the simple scheme agreed; step 1 in hand).
+**Last updated:** 26 November 2026, 20:27 Australia/Adelaide (entry 345: step 1 done; the owner may build the subfolder's .venv; step 2 next on his go).
 
 ## For the owner: NOW
 
+- **STEP 1 IS DONE (entry 345; 26 November 2026):** the living system is in `a_p_r_i_r_DEV/` (a byte-for-byte copy;
+  its tests pass in the cloud). **The owner may now build its `.venv`** (in `a_p_r_i_r_DEV`: `create_venv.bat`, then
+  `install_upgrade_dependencies_into_venv.bat`, from a plain CMD window). **Next, on his go:** step 2, the engine
+  simplified and proved (Fable).
 - **THE SIMPLE SCHEME v0.2 IS AGREED (the owner, entry 344; 26 November 2026).** It is now the design:
   `exchange/Claude_The_Simple_Scheme_v0_2_20261126.md`. **In hand: step 1, copying the living system into
   `a_p_r_i_r_DEV`** (his go). Each later step on his go.
