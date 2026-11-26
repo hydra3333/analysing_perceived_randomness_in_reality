@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 06:40 Australia/Adelaide (entry 351: H-1 v16r1 names the coding standards; waiting on RAT-62 and the go for step 3).
+**Last updated:** 27 November 2026, 06:47 Australia/Adelaide (entry 352: RAT-62, H-1 v16r1 installed; the reviewer's three findings being corrected).
 
 ## For the owner: NOW
 
+- **RAT-62: H-1 v16r1 INSTALLED (entry 352; 27 November 2026).** `doc/HANDOVER/Claude_Primary_Handover_H1_v16r1.md`
+  and its blurb are the Claude handover in force. The reviewer has read step 2: three small findings, being corrected;
+  one question back to the owner on retirement (choice 3) and one on the orphan marker. All three small files beside a
+  method are kept in Git. **Waiting on the owner:** those two answers; then his go for step 3 (on Fable).
 - **RAT-61 and a short handover (entries 350 and 351; 27 November 2026).** The owner ratified the nine choices of step 2. The
   short handover H-1 v16r1 and its blurb are written as CANDIDATES in `exchange/HANDOVER_2026_11_27/`; on the owner's
   ratification (RAT-62) Claude installs them in `doc/HANDOVER/` and brings this page's "If a chat ends" section up to
@@ -1265,6 +1269,11 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From RAT-62 (27 November 2026, entry 352): Claude chat ended:** start a new Claude chat with the blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v16r1_introductory_blurb.md`. It reads H-1 v16r1, the documents its section
+  0 lists, and the decision log from entry 330. **ChatGPT reviewer chat ended:** its handover in force is H-2 v9
+  (RAT-57), which predates the pause; if the reviewer has committed a later one, use that. Everything below in this
+  section is history.
 - **Claude chat ended:** start a new Claude chat with the blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v13_introductory_blurb.md` (RAT-54, entry 268). It reads H-1 v13 (its
   section 0 gives the reading order; its section 0E holds everything since H-1 v11, and items 13 to 16 of it
@@ -1309,6 +1318,10 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-62 (27 November 2026, entry 352): H-1 v16r1 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v16r1.md`,
+SHA-256 `9aa609d7ae3898df718c293be85103f7c54d391cb21ffa116ba3793c0434e8f1`), the short handover of the simple
+scheme;** for the reviewer, H-2 v9 (RAT-57). Everything below in this section is history.
 
 **From RAT-54 and RAT-55 (25 November 2026, entry 268): H-1 v13 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v13.md`,
 SHA-256 `37aa0196e828ddf012c83d61c66c49f814892341ffe88d1dc976609da289bbae`) and, for the reviewer, H-2 v8 (ratified at the

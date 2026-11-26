@@ -8438,3 +8438,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
   file's header describes them. **Omission:** the step 2 commit and paper did not say "coding practices met"; they are
   hereby stated met, with that exception. Every later code commit will say it.
 - Next numbers: EX_334 (Claude's); entry 352; RAT-62.
+
+## 352. 27 November 2026, 06:47 - OWNER: RAT-62, H-1 v16r1 ratified and installed; keep all three small files in Git; the reviewer's single reading of step 2: three small findings
+
+- **The owner's words:** "i Ratify H-1 v16r1 and its blurb as RAT-62. below is chatgpt feedback as an fyi, I do not
+  currently see it aligns with your steps etc, continue with your plan, I agree with your choices." On step 4's two
+  questions: the orphan marker: "I do not know can you briefly clarify its use and make a recommendation"; the small
+  files in Git: "Keep all 3 in git".
+- **RAT-62: H-1 v16r1 and its blurb ratified and installed** in `doc/HANDOVER/`: `Claude_Primary_Handover_H1_v16r1.md`
+  (SHA-256 `9aa609d7ae3898df718c293be85103f7c54d391cb21ffa116ba3793c0434e8f1`; the one change from the candidate's
+  bytes is its status line, now "RATIFIED ... RAT-62") and `Claude_Primary_Handover_H1_v16r1_introductory_blurb.md`
+  (SHA-256 `244135cc714cbc4cd625f7df789ada224ceeebf0a13736f097c82a61b7c56413`, the candidate's bytes). H-1 v15 and
+  earlier, and the unratified v16, are history.
+- **Keep all three small files in Git** (`I_AM_INSTALLABLE`, `I_AM_RETIRED`, `IN_PLACE_SINCE`): this reverses Claude's
+  choice to have Git ignore `IN_PLACE_SINCE` in `a_p_r_i_r_DEV`; the `.gitignore` line is removed with the step 2
+  corrections.
+- **The reviewer's single reading of step 2** (relayed by the owner, no EX number): scientific equivalence well
+  supported; no objection to the mathematics or the simplification. Three small findings: (1) a global rebuild leaves
+  the results of absent methods while advancing the engine's fingerprint, so an absent method returning unchanged
+  could reuse results made under another engine: a global rebuild should delete all generated method results, ordinary
+  jobs may leave absent methods alone; (2) reports no longer applicable (for example after the results become shorter)
+  are not removed: remove obsolete generated reports, no not-current machinery; (3) `open_game` reads the status
+  before settling `IN_PLACE_SINCE`, so a malformed one can stop a valid method: repair the bookkeeping first, and keep
+  it bookkeeping only. It concurs with the nine choices subject to (1), with a preference on choice 3: drop forecasts
+  as well as scores from the retirement draw on, "Otherwise an incremental retirement and a subsequent full rebuild
+  leave different stored histories." The comparison tool is suitable; a direct comparison of the whole exploratory
+  OV-1 content would be useful if straightforward, without substantial machinery. It recommends small targeted
+  corrections with tests, no repeated comparison campaign and no formal recheck round, then step 3 on the owner's go.
+- **Claude's assessment:** all three findings are right and are corrected now, on Opus, with tests. On choice 3 the
+  reviewer has found a real inconsistency (a forecast for the retirement draw survives an incremental retirement but
+  not a rebuild); since the owner has just agreed Claude's choices, Claude puts this one back to him with a
+  recommendation before changing it.
+- Next numbers: EX_334 (Claude's); entry 353; RAT-63.
