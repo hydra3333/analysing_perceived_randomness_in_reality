@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 14:22 Australia/Adelaide (entry 359: step 3 reviewed and corrected; waiting on the go for step 4).
+**Last updated:** 27 November 2026, 15:59 Australia/Adelaide (entry 361: step 4a built and committed; waiting on the reviewer's reading and the go for step 4b).
 
 ## For the owner: NOW
 
+- **STEP 4a BUILT AND COMMITTED (entry 361; 27 November 2026).** Commit `3effdbe`: the settings file in its new form
+  and the four identity rules, the one lock `records\TREE.lock` (the updater's own lock and the orphan-marker check
+  are gone from the new trees), a backup ZIP at the end of every job, `Backup.bat`, and in DEV `Make_Installable.bat`
+  and `Who_Uses.bat`. 213 tests; the updater comparison and the engine comparison on the accepted results both say
+  SAME. **Waiting on:** the reviewer's one reading of 4a, then the owner's go for step 4b (`Create_Tree`, `Install`,
+  `Retire`, `Copy_From_PROD`, `Restore`; Fable). Nothing is authorised on the owner's PC.
 - **STEP 3 REVIEWED AND CORRECTED (entry 359; 27 November 2026).** The reviewer concurs; its three small corrections
   are in (commit `2ebbb11`; 192 tests; the updater comparison: SAME). **For step 4:** the common checks must cover an
   updater started by itself; the updater's lock and the tree's lock become the one lock; the orphan-marker check goes

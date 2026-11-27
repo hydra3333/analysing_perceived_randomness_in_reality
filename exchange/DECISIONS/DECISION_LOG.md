@@ -8648,3 +8648,37 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `Restore`), on a separate go.
 - **GO FOR STEP 4a,** on Fable. Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 361; RAT-64.
+
+## 361. 27 November 2026, 15:59 - CLAUDE: step 4a built and committed (`3effdbe`): the settings file and identity rules, the one lock, backups, DEV's own commands; the engine comparison repeated: SAME
+
+- **Step 4a is built and committed: `3effdbe`** (only files under `a_p_r_i_r_DEV/`; coding practices met, with the two
+  exceptions the commit names). It is what touches only its own tree (entry 360). Step 4b is not started.
+- **What it holds.** (1) The settings file in its new form (this tree's role, then `tree_root` and `backup_root` for
+  each of DEV, QA and PROD) and the four identity rules (`src/research/settings.py`); `ENVIRONMENT.example.ini` in
+  that form. (2) One lock for every command of a tree, `records\TREE.lock` (`tree_lock.py`, which was `job_lock.py`);
+  `enter_tree` is the first step of every command, an updater started by itself included; the updater's own lock is
+  removed (the caller holds the tree's lock); the first system's orphan-marker check is not in the new trees (entry
+  353). (3) Backups (`backup.py`): one plain ZIP without `.venv`, the lock file and Python's caches, written under
+  another name and renamed when whole, never written over; one at the end of every job; `Backup.bat` on demand. (4) In
+  DEV: `Make_Installable.bat` and `Who_Uses.bat`.
+- **Claude's choices, for the owner to accept or change.** (a) If the backup at the end of a job cannot be made, the
+  job says so loudly (when it happens and again at its end), adds a note to the job log and ends with exit code 1;
+  what it computed stands. (b) The job log's line is written before the backup, so that the ZIP holds it. (c) The
+  folder's name must end with the role exactly as written (`a_p_r_i_r_DEV`); paths are compared as Windows compares
+  them (letter case ignored). (d) The INFRA flag (`src\I_AM_INSTALLABLE`) holds two fingerprints: the engine's and the
+  updater's. (e) `Make_Installable` flags what passes its checks and says NOT FLAGGED (exit code 1) for the rest; a
+  flag that already says the same is left as it is. (f) A lock left by a command that was killed is deleted by hand;
+  no command ever removes another's lock. (g) `Backup.bat` works in any tree; the two DEV commands refuse a tree of
+  another role.
+- **Evidence (cloud only: Linux, Python 3.15.0b4).** 213 tests pass (were 192; the new file is
+  `tests/test_research_tree_commands.py`). The updater comparison: RESULT: SAME (the removal of its own lock is
+  declared). **The engine comparison on the accepted results was repeated on the engine of `3effdbe`: RESULT: SAME**
+  (Powerball 15,118 forecasts and 15,078 scores, Oz Lotto 6,598 and 6,558, 40 methods a game, both OV-1 series line by
+  line, 901 and 475 report files byte for byte). That job's own backup was made (one ZIP of 1,739 files, about 16.6
+  MB; no `.venv`, no lock, no caches; it holds the job log with that job's line). The comparison on invented results
+  (the tool now writes the new tree's settings in the new form) was repeated as well: RESULT: SAME (5,918 forecasts
+  and 5,878 scores a game, 441 report files a game).
+- **Not done.** Nothing has run on the owner's PC. The updater has never fetched from the real site. Step 4b, the
+  report wording and the refresh of H-1 are still to come.
+- **Waiting on:** the reviewer's one reading of step 4a at `3effdbe`; then the owner's go for step 4b (Fable).
+- Next numbers: EX_334 (Claude's); entry 362; RAT-64.
