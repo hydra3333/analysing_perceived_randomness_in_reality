@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 07:19 Australia/Adelaide (entries 354 and 355: step 2 corrected; RAT-63, H-2 v10 installed; waiting on the go for step 3).
+**Last updated:** 27 November 2026, 13:18 Australia/Adelaide (entry 357: step 3 done; waiting on the go for step 4).
 
 ## For the owner: NOW
 
+- **STEP 3 IS DONE (entries 356 and 357; 27 November 2026).** The results updater is in `a_p_r_i_r_DEV/` (commit
+  `d4f01e0`): the reviewed updater with every Mode H state taken out, shown by `deploy/compare_updater_with_frozen.py`
+  (RESULT: SAME); the research job fetches with it first unless `--no-update`; `src/updater` is outside the engine's
+  fingerprint; 189 tests. The owner confirmed that a rebuild of everything also deletes absent methods' results (entry
+  356). **The updater's first real fetch is the owner's own, at step 6; no AI and no runner ever runs it.** **Waiting
+  on the owner:** his go for step 4 (settings and identity rules, the lock, the backup, the commands), on Fable.
 - **STEP 2 CORRECTED; BOTH HANDOVERS NEW (entries 353 to 355; 27 November 2026).** The reviewer's three findings and
   the owner's retirement rule are in `a_p_r_i_r_DEV/` (commit `57ca865`; 165 tests; compared on invented results:
   SAME). The handovers in force: **H-1 v16r1** (Claude, RAT-62) and **H-2 v10** (the reviewer, RAT-63;

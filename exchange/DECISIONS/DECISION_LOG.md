@@ -8558,3 +8558,42 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **GO FOR STEP 3** (the updater with every Mode H state removed, the same in every tree), on Fable. Nothing is
   authorised on the owner's PC; neither AI ever runs the updater against the real site.
 - Next numbers: EX_334 (Claude's); entry 357; RAT-64.
+
+## 357. 27 November 2026, 13:18 - STEP 3 DONE: the results updater in `a_p_r_i_r_DEV/` with every Mode H state taken out; compared with the frozen updater: RESULT: SAME
+
+- **What was done** (on the owner's go and four points of entry 356; the simple scheme v0.2 section 8; commit
+  `d4f01e0c1cd7cbc6e7a80eedf2f146f24b7330e1`; only `a_p_r_i_r_DEV/`; cloud only; nothing run on the owner's PC; **no
+  website was reached by any test or tool**):
+- **The updater:** `a_p_r_i_r_DEV/src/updater/results_updater.py`, made from the first system's reviewed updater
+  (`src/results_master_v0_2.py`) by exact removals: the quarantine of the former holdout, the opening, freeze and seal
+  records, the weekly session lock, the first-update admission, the one-off `init` command and the self-test. The
+  source (Lotterywest-GOV, https, the exact host, no fallback), the parsing and every check of game, draw number,
+  date, range and overlap are that program's own statements. It writes only its own tree's `source_data`. Its ledger
+  lines carry tool version 0.3. `Run_Results_Updater.bat` starts it by itself, under the tree's lock.
+- **The research job** fetches with it at the start of each game, under the job's lock, unless `--no-update`; the
+  engine loads the updater in that one place only. If the updater does not finish, the job says so loudly (twice),
+  goes on with the results the tree holds, and ends with exit code 1.
+- **The engine's fingerprint leaves `src/updater` out** (entry 356).
+- **The proof (scheme section 8), `a_p_r_i_r_DEV/deploy/compare_updater_with_frozen.py`: RESULT: SAME.** Definition by
+  definition: 41 definitions of the new updater are the frozen updater's, comments apart; 11 are changed
+  (`BrowserFetcher.fetch`, `Store.__init__`, `Store.load_verified_master`, `TOOL_VERSION`, `check_constants`,
+  `cmd_update`, `main`, `parse_gov`, `update_game`, `validate_draw`, `validate_series`) and 21 are removed, exactly
+  the lists the tool declares; none is new. On the same invented pages, in twelve situations (new draws; nothing new;
+  a thirty-month window; one game; a draw that disagrees; results that end before the window; a draw left out; a
+  number shown twice; a label missing; a lock left behind; a results file edited by hand; too short a pause), both end
+  the same way with the same message and leave the same results file, ledger lines, grab and backup. The frozen
+  updater was given invented owner records of an opened and sealed holdout, its ordinary state after Mode H. A test
+  plants a changed statement and the tool finds it both ways.
+- **Tests:** 189 pass in the tree (24 new for the updater and the job's use of it). In every test and in the tool the
+  class that starts a real browser is replaced by one that refuses; a test job that tried to fetch without a stand-in
+  would fail.
+- **Coding practices met, with two exceptions:** the updater keeps the reviewed program's names and layout, so that it
+  can be compared with it statement for statement (its header and every function now have their comments); and the
+  exception of entry 351.
+- **Not done, and said plainly:** the new updater has never fetched from the real site, and neither AI nor the local
+  runner ever lets it: **its first real fetch is the owner's own, on his PC, at step 6.** The comparison of the engine
+  with the frozen engine on the accepted results was not repeated after steps 2c and 3; it is repeated in the cloud at
+  the end of step 4 and on the owner's PC at step 5.
+- **Waiting on the owner:** his go for step 4 (the settings file and identity rules, the lock, the backup, and the
+  commands), on Fable.
+- Next numbers: EX_334 (Claude's); entry 358; RAT-64.
