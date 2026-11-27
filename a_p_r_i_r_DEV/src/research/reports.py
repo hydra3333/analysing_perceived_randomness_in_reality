@@ -56,9 +56,10 @@ PREVAILING_CLAIM = (
     'An exploratory indicator, like the series over all draws: the same OV-1 calculation, with each method counted '
     'only from the draw after its establishment draw (the last draw this tree held when that version of the '
     'method was first used here) up to, and not including, the draw it is retired from. No error bound is claimed '
-    'for it: methods are added, corrected and retired as the research goes on, and this score is not kept free of '
-    'those choices. 40 is a reference line only. The software checks that each forecast was computed from earlier '
-    'draws only and that every draw is taken once.')
+    'for it: methods are added, corrected and retired as the research goes on, and those choices may be influenced '
+    'by observed results. 40 is a reference line only. Forecasts are computed using the permitted earlier-draw '
+    'view, and each draw contributes at most once. These safeguards do not establish that method choices were '
+    'independent of observed results.')
 NOT_STARTED_TEXT = 'prevailing OV-1: not started; no method has an establishment draw yet'
 # The claim is one long sentence group; the text report breaks it into lines of at most this many characters.
 CLAIM_LINE_WIDTH = 110
@@ -379,7 +380,7 @@ def next_draw_report(records: GameRecords, draw: int) -> tuple:
 
 def prevailing_status_line(records: GameRecords) -> str:
     """One line saying where the prevailing OV-1 stands, for example 'prevailing OV-1: lines for draws 1592 to
-    1600; score (proved lower bound) 0; reference line 40: not reached'."""
+    1600; score (numerical lower bound) 0; reference line 40: not reached'."""
     eligible = [s.status.eligible_from for s in records.states if s.status.eligible_from is not None]
     if not eligible:
         return NOT_STARTED_TEXT
@@ -388,7 +389,7 @@ def prevailing_status_line(records: GameRecords) -> str:
     else:
         last = records.ledger_lines[-1]['content']
         text = (f'prevailing OV-1: lines for draws {records.ledger_lines[0]["content"]["draw"]} to {last["draw"]}; '
-                f'score (proved lower bound) {last["score_lower_bound"]}; reference line {kernel.BAR}: '
+                f'score (numerical lower bound) {last["score_lower_bound"]}; reference line {kernel.BAR}: '
                 + ('reached' if any(line['content']['crossed'] for line in records.ledger_lines) else 'not reached'))
     return text + (f'; BLOCKED: {records.blocked}' if records.blocked else '')
 

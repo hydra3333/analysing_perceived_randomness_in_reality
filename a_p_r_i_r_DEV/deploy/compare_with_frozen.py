@@ -68,9 +68,10 @@ NEW_CLAIM = (
     'An exploratory indicator, like the series over all draws: the same OV-1 calculation, with each method counted '
     'only from the draw after its establishment draw (the last draw this tree held when that version of the '
     'method was first used here) up to, and not including, the draw it is retired from. No error bound is claimed '
-    'for it: methods are added, corrected and retired as the research goes on, and this score is not kept free of '
-    'those choices. 40 is a reference line only. The software checks that each forecast was computed from earlier '
-    'draws only and that every draw is taken once.')
+    'for it: methods are added, corrected and retired as the research goes on, and those choices may be influenced '
+    'by observed results. 40 is a reference line only. Forecasts are computed using the permitted earlier-draw '
+    'view, and each draw contributes at most once. These safeguards do not establish that method choices were '
+    'independent of observed results.')
 CLAIM_WIDTH = 110
 
 
@@ -89,6 +90,7 @@ WORDING_CHANGES = claim_changes() + (
     ('a variant\'s figures at draws before its installation', 'a method\'s figures at draws before its installation'),
     ('    Variants: ', '    Methods: '),
     ('What each variant forecast for this draw', 'What each method forecast for this draw'),
+    ('score (proved lower bound) ', 'score (numerical lower bound) '),
     ('; bar 40; REACHED', '; reference line 40: reached'),
     ('; bar 40; not reached', '; reference line 40: not reached'),
     ('prevailing OV-1: not started; waiting for a successful results step',
