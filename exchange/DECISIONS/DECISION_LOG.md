@@ -8911,3 +8911,11 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Not authorised by this:** any task. The owner's separate go is needed for TASK_T029 (then T030; T031 after his DEV
   first fill).
 - Next numbers: EX_334 (Claude's); entry 371; RAT-67.
+
+## 371. 27 November 2026, 19:05 - OWNER: GO for TASK_T029
+
+- **The owner's words (19:05):** "ok go for T029"
+- **GO for TASK_T029** (the living system's test suite on Windows in a scratch DEV tree under `D:\DELETE_ME\`,
+  rulebook v0.8 section 2A), run by the local runner on the owner's PC at the task file of commit `4180ac2` or later.
+  It authorises T029 alone: not T030, not DEV's first fill, not T031, and nothing on a real tree.
+- Next numbers: EX_334 (Claude's); entry 372; RAT-67.
