@@ -9164,3 +9164,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
   with its defaults; then his look at the ledger lines, `source_data\grabs` and `source_data\backups`; only then
   `Run_Research.bat` without `--no-update`. Neither AI nor the runner runs the updater. Then item 7: QA, then PROD.
 - Next numbers: EX_334 (Claude's); entry 386; RAT-67.
+
+## 386. 28 November 2026, 08:10 - THE OWNER'S FIRST REAL FETCH, in DEV, by the new updater: done, all overlapping draws matched
+
+- **Item 6 of the work order (entry 365), its first half.** The owner ran `Run_Results_Updater.bat` by itself in DEV,
+  with its defaults, at 08:05 on 28 November 2026: the new updater's first fetch from the real Lotterywest-GOV site
+  (entry 358). Its output (counts only, no draw values): Powerball, 24 overlapping draws checked, all matched, 2 added
+  (1592 and 1593), 0 warnings; Oz Lotto, 24 checked, all matched, 2 added (1709 and 1710), 0 warnings; each game's
+  grab kept (26 draws each: Powerball 1568 to 1593, Oz Lotto 1685 to 1710) and its master backed up before the change;
+  `RESULTS UPDATER - END - done.` The counts agree: 24 checked plus 2 added is each grab's 26 draws.
+- **Next:** the owner's look at the ledger lines, `source_data\grabs` and `source_data\backups`; then `Run_Research.bat`
+  without `--no-update` (it fetches again, expecting nothing new, then forecasts and scores the four new draws). Then
+  item 7: QA, then PROD.
+- Next numbers: EX_334 (Claude's); entry 387; RAT-67.
