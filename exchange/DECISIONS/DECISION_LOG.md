@@ -8943,3 +8943,20 @@ section 17.2 (unpack it into a new folder, never over the clone).
   next fallback is a rule without the backslash (for example `*T:*`), which no command of the three tasks holds
   either.
 - Next numbers: EX_334 (Claude's); entry 373; RAT-67.
+
+## 373. 27 November 2026, 19:16 - OWNER: the permission settings r1 approved and installed; GO for TASK_T029 again (r2)
+
+- **The reviewer** (relayed by the owner) concurs with the settings r1 candidate and TASK_T029 r2 at `849f0a4`: the
+  first STOP was correct; the backslash explanation is plausible and unconfirmed until the probes run; trying all
+  seven probes before deciding the step is a narrowly bounded diagnostic exception, not a relaxation of the STOP rule;
+  if the escaped backslash fails, the simpler drive-prefix patterns (`T:`, `t:`, `G:`, `g:`) with the POSIX guards
+  kept. The guards remain supplementary protections, not a sandbox.
+- **The owner's words (19:15), to Claude's two questions (does he approve the settings r1 candidate; does he give a
+  new go for T029):** "yes to both"
+- **The permission settings r1 are approved by the owner and installed:** `.claude/settings.json` is now
+  `settings_v0_8r1_CANDIDATE.json`, the same bytes (SHA-256
+  `4b1231523dd504df3decdc3857f516d77a49f41d99fc6f559fa02735b59d7cb6`): the settings of RAT-66 with four rules added.
+  The rulebook v0.8 (RAT-66) is unchanged.
+- **GO for TASK_T029 again** (the r2 task file of `849f0a4`: seven probes in step 3, all tried before the step is
+  decided). It authorises T029 alone.
+- Next numbers: EX_334 (Claude's); entry 374; RAT-67.
