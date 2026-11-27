@@ -1,4 +1,4 @@
-"""The one program behind the research system's launchers in a tree (today: Run_Research.bat).
+"""The one program behind the research system's launchers in a tree: Run_Research.bat and Run_Results_Updater.bat.
 
 What this file is for
     A launcher starts this file with the tree's own Python and the name of a command. It puts this tree's two
@@ -12,14 +12,17 @@ Which part of the scheme it carries out
     It also checks that the Python running it is the tree's own environment, the one the settings file names.
 
 Which of the project's own modules it uses
-    research.settings       read_settings: the tree's environment folder
-    research.research_job   main: the research job
+    research.settings          read_settings: the tree's environment folder
+    research.research_job      main: the research job
+    research.job_lock          the tree's lock, taken for an update started by itself
+    updater.results_updater    main: the results updater
 
 What uses it
-    Run_Research.bat.
+    Run_Research.bat and Run_Results_Updater.bat.
 """
 import os
 import sys
+from datetime import datetime
 from pathlib import Path
 
 # The tree this program lies in: <tree>/src/research_command.py.
@@ -27,7 +30,7 @@ TREE_ROOT = Path(__file__).resolve().parents[1]
 # The two folders Python imports the project's code from: the engine (research, evaluation) and the methods.
 IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods')
 # The commands, by the word the launcher gives.
-COMMANDS = ('research',)
+COMMANDS = ('research', 'update')
 # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
 EXIT_BAD_COMMAND = 2
 
@@ -53,8 +56,33 @@ def run_command(arguments) -> int:
         print(f'REFUSED: the Python running is {sys.prefix}, but this tree\'s settings name {environment_folder} '
               f'as its environment. Start the command with the launcher in the tree\'s own folder.')
         return EXIT_BAD_COMMAND
+    if arguments[0] == 'update':
+        return update_alone(arguments[1:])
     from research.research_job import main
     return main(arguments[1:], TREE_ROOT)
+
+
+def update_alone(arguments) -> int:
+    """Run the results updater by itself in this tree, holding the tree's lock, so that it never changes the
+    results while a research job reads them.
+
+    arguments: what the owner typed after Run_Results_Updater.bat, for example ['--months-back', '11'].
+    Returns the updater's exit code (0 done or nothing new, 1 a check failed, 2 STOP, 3 refused), or
+    EXIT_BAD_COMMAND if the tree's lock is held.
+    """
+    from research.job_lock import LaunchRefused, job_lock
+    from updater.results_updater import main as update
+    started = datetime.now().astimezone().strftime('%Y-%m-%d %H:%M')
+    print(f'RESULTS UPDATER - START - {started} - the tree at {TREE_ROOT}')
+    try:
+        with job_lock(TREE_ROOT, 'results updater', started):
+            code = update(arguments, TREE_ROOT)
+    except LaunchRefused as refusal:
+        print(f'REFUSED: {refusal}')
+        return EXIT_BAD_COMMAND
+    print('RESULTS UPDATER - END - ' + ('done.' if code == 0 else f'it did not finish (exit code {code}); see above. '
+                                        f'The results file is as it was unless an update was reported.'))
+    return code
 
 
 if __name__ == '__main__':

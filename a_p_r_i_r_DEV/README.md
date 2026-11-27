@@ -13,16 +13,19 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
   research job makes again whatever is out of date. The science is the frozen engine's: the reader and the
   permitted view, the readout and its tie order, one target's forecast, scoring, the divisions and the OV-1
   arithmetic are the same programs (`deploy\compare_with_frozen.py code` lists every file by how it differs).
-- **Still to come:** the results updater in this tree (step 3); the new settings file, the lock, the backup at
-  the end of a job and the other commands (step 4). Until step 4 the settings file is still the first form
-  (`ENVIRONMENT.example.ini`), and `Run_Research.bat` works on the results the tree already holds.
+- **Step 3 (done): the results updater in this tree** (`src\updater\results_updater.py`,
+  `Run_Results_Updater.bat`): the first system's reviewed updater with every Mode H state taken out and nothing
+  else changed. The research job runs it at its start unless `--no-update`.
+- **Still to come:** the new settings file, the lock, the backup at the end of a job and the other commands
+  (step 4). Until then the settings file is still the first form (`ENVIRONMENT.example.ini`).
 
 ## What the research job does (`Run_Research.bat`)
 
 `Run_Research.bat [--game POWERBALL|OZLOTTO|BOTH] [--no-update] [--rebuild family/variant ...] [--rebuild-all]`
 
-For each game: read the results on file; delete what is out of date and only that; forecast every draw a method
-has no line for, the next draw included; score every forecast whose result is on file; make the league, the
+For each game: fetch new official results with the tree's updater (unless `--no-update`); read the results on
+file; delete what is out of date and only that; forecast every draw a method has no line for, the next draw
+included; score every forecast whose result is on file; make the league, the
 reports and both OV-1 series again; add one line to `records\JOB_LOG.jsonl`. What is out of date:
 
 | What changed | What is made again |
@@ -34,7 +37,9 @@ reports and both OV-1 series again; add one line to `records\JOB_LOG.jsonl`. Wha
 | a method retired | what it held for its retirement draw or a later one is dropped |
 | a report the records no longer give (a draw no longer on file, say) | it is removed |
 
-A method whose calculation fails writes no line; it is reported, and the job goes on with the others. An ordinary
+If the updater does not finish (the site is down, a page cannot be read, a draw disagrees), the job says so
+loudly, goes on with the results the tree holds, and ends with exit code 1. A method whose calculation fails
+writes no line; it is reported, and the job goes on with the others (exit code 1 again). An ordinary
 job leaves alone the stored results of a method the tree has no software for, and counts them nowhere.
 
 ## The three small files beside a method (`src\methods\<family>\<variant>\`)
@@ -51,6 +56,22 @@ decision log entry 352).
 - `IN_PLACE_SINCE`: written by the job: the method's fingerprint, and for each game the last draw the tree held
   when this version of the method was first used here. Bookkeeping only: the second OV-1 series counts a method
   from the draw after it. A file that cannot be read never stops its method: the job writes it afresh and says so.
+
+## The results updater (`Run_Results_Updater.bat`)
+
+`Run_Results_Updater.bat [--games POWERBALL,OZLOTTO] [--months-back 5] [--browser chrome|firefox] [--pause 2]`
+
+It fetches the results of the last few months from the one official source (Lotterywest's own results search on
+`www.lotterywest.wa.gov.au`, https, a headless real browser, at least 2 seconds between pages, a block page means
+STOP), requires every fetched draw the tree already holds to agree with the tree's file, and appends the new
+draws to this tree's `source_data` only. It keeps what it fetched (`source_data\grabs`) and the file as it was
+(`source_data\backups`), and adds one line to the game's ledger. Started by itself it holds the tree's lock, so
+it never runs while a research job does. **Only the project owner ever runs it against the real site;** every
+test reads invented pages.
+
+It is not part of the engine's fingerprint: a change to the updater makes no research again.
+`deploy\compare_updater_with_frozen.py` shows that it is the reviewed updater with its Mode H states out:
+definition by definition, and by running both on the same invented pages.
 
 ## Tests
 

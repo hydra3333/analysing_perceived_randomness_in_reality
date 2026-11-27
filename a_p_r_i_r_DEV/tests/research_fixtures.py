@@ -228,18 +228,25 @@ class ImportPath:
         importlib.invalidate_caches()
 
 
+def never_the_real_updater(tree_root, game_id) -> None:
+    """What every test job is given in place of the real updater, unless the test gives its own stand-in: no
+    test ever lets the real updater run, because it would reach the lottery's website."""
+    raise AssertionError('a test job tried to fetch results without a stand-in for the updater')
+
+
 def run_job(tree: Path, games=(GAME,), **options) -> tuple:
     """Run the research job in an invented tree at the fixed time.
 
     tree: the tree.  games: the games to work.  options: run()'s other arguments (no_update, rebuild,
-    rebuild_all, checkpoint); the updater is left out unless a test says otherwise.
+    rebuild_all, checkpoint, update); the updater is left out unless a test says otherwise, and is then the
+    test's own stand-in.
     Returns (the exit code, the lines the job said), for example (0, ['RESEARCH JOB - START - ...', ...]).
     """
     from research import research_job
     said = []
     with ImportPath(tree):
         code = research_job.run(tree, games, now=lambda: FIXED_TIME, say=said.append,
-                                **{'no_update': True, **options})
+                                **{'no_update': True, 'update': never_the_real_updater, **options})
     return code, said
 
 

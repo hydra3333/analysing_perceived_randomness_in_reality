@@ -1,10 +1,13 @@
 """The infrastructure's fingerprint: one number that changes when any file of the engine changes.
 
 What this file is for
-    The infrastructure is every file under src/ outside the method families: the engine in src/research, the
-    shared modules in src/methods/_common, the evaluation helpers and the command program. The research job
-    takes one SHA-256 over all of it and keeps it beside the results it computes. When the fingerprint of the
-    software in the tree is not the one kept there, everything is made again. Nothing is refused on its account.
+    The infrastructure is every file under src/ outside the method families and outside the results updater:
+    the engine in src/research, the shared modules in src/methods/_common, the evaluation helpers and the
+    command program. (The updater, src/updater, fetches results and computes none: a change to it cannot change
+    a forecast, a score or a report, so it does not make everything again; the owner, decision log entry 356.)
+    The research job takes one SHA-256 over all of it and keeps it beside the results it computes. When the
+    fingerprint of the software in the tree is not the one kept there, everything is made again. Nothing is
+    refused on its account.
     The three small files beside a method and Python's own cache files are never part of it.
 
 Which part of the scheme it carries out
@@ -28,6 +31,8 @@ from research.variant_lists import RESEARCH_FOLDER
 
 # The one folder under src/methods that is infrastructure; every other folder there belongs to the methods.
 COMMON_FOLDER = '_common'
+# The folder under src/ of the results updater, which is not part of the fingerprint.
+UPDATER_FOLDER = 'updater'
 # Where the tree keeps the fingerprint its results were made with, under the research folder.
 STORED_NAME = 'INFRASTRUCTURE'
 
@@ -38,14 +43,16 @@ def sha256_of_file(path: Path) -> str:
 
 
 def infrastructure_files(tree_root: Path) -> list:
-    """Every infrastructure file of a tree, as paths from the tree root with forward slashes, in order; for
-    example ['src/methods/_common/__init__.py', ..., 'src/research/scoring.py', 'src/research_command.py']."""
+    """Every infrastructure file of a tree (the updater's left out), as paths from the tree root with forward
+    slashes, in order; for example ['src/methods/_common/__init__.py', ..., 'src/research/scoring.py',
+    'src/research_command.py']."""
     source = Path(tree_root) / 'src'
     found = []
     for current, folders, names in os.walk(source):
         here = Path(current).relative_to(source).parts
         folders[:] = sorted(name for name in folders if name != '__pycache__'
-                            and not (here == ('methods',) and name != COMMON_FOLDER))
+                            and not (here == ('methods',) and name != COMMON_FOLDER)
+                            and not (here == () and name == UPDATER_FOLDER))
         for name in names:
             if name in PASSED_OVER_NAMES or name.endswith(('.pyc', '.pyo')):
                 continue

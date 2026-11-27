@@ -1,8 +1,9 @@
 """The research job: what Run_Research.bat runs, for one game or both, in any tree.
 
 What this file is for
-    One job does everything routine, and the same in every tree. For each game it reads what the tree holds,
-    deletes what is out of date (and only that), forecasts every draw a method has no line for, the next draw
+    One job does everything routine, and the same in every tree. For each game it fetches new official results
+    with the tree's updater (unless --no-update), reads what the tree holds, deletes what is out of date (and
+    only that), forecasts every draw a method has no line for, the next draw
     included, scores every forecast whose result is on file, and makes the league, the reports and both OV-1
     series again. What to do is always read from the files, never remembered, so an interrupted job is continued
     by running the same command again. Nothing is refused because it differs: a difference means "make that part
@@ -19,9 +20,8 @@ What this file is for
       a report the records no longer give (for a draw no longer on file, say): it is removed.
 
 Which part of the scheme it carries out
-    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5. Arriving with later steps of the work order:
-    the results updater at the job's start (step 3); the new settings file, the lock and the backup at the job's
-    end (step 4).
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5. Arriving with step 4 of the work order: the
+    new settings file, the lock and the backup at the job's end.
 
 Which of the project's own modules it uses
     research.settings          read_settings: the tree's role and paths
@@ -35,6 +35,7 @@ Which of the project's own modules it uses
     research.ov1_ledger        both OV-1 series
     research.reports           the saved reports
     research.variant_lists     the list files
+    updater.results_updater    the results updater: loaded only when a job fetches (never with --no-update)
 
 What uses it
     src/research_command.py (the program behind Run_Research.bat), and the tests.
@@ -89,6 +90,7 @@ class Job:
 
     settings: the tree's settings.  variants: the methods in the tree.
     rebuild: the identities --rebuild names (empty if none).  no_update: True to leave the updater out.
+    update: called with (tree root, game) to fetch new official results; see update_with_the_trees_updater.
     now: gives the present time (UTC); a test passes a fixed one.  say: prints one line for the owner.
     checkpoint: called with a label after each kind of write; see no_checkpoint.
     warnings: every warning said so far, to be said again at the end.  counts: {game: Counter of what was written}.
@@ -99,6 +101,7 @@ class Job:
     variants: tuple
     rebuild: frozenset
     no_update: bool
+    update: object
     now: object
     say: object
     checkpoint: object = no_checkpoint
@@ -139,6 +142,33 @@ class Job:
     def in_scope(self, records: GameRecords) -> list:
         """The methods of a game this job still computes for: those whose calculation has not failed in it."""
         return [state for state in records.workable if state.failed is None]
+
+
+def update_with_the_trees_updater(tree_root: Path, game_id: str) -> None:
+    """Fetch new official results for one game into the tree with the tree's own updater, with its default
+    window, browser and pause. The updater is loaded here and nowhere else in the engine: a job with
+    --no-update loads nothing of it. Raises whatever the updater raises when it does not finish."""
+    from updater import results_updater
+    results_updater.cmd_update(Path(tree_root), [game_id], results_updater.DEFAULT_MONTHS_BACK, 'chrome',
+                               results_updater.MIN_PAUSE_SECONDS)
+
+
+def fetch_new_results(job: Job, game_id: str) -> None:
+    """The job's first step for a game, unless --no-update: fetch new official results with the updater, under
+    the job's lock. If the updater does not finish, for whatever reason, the job says so loudly, notes it as a
+    failure of this job (so that the job does not end as a clean one) and goes on with the results the tree
+    holds; the reader's usual checks of them are made as always when the game is opened."""
+    if job.no_update:
+        return
+    job.say(f'{game_id}: fetching new official results with the results updater')
+    try:
+        job.update(job.settings.tree_root, game_id)
+    except Exception as fault:                  # whatever stopped the updater must not stop the research
+        text = f'{type(fault).__name__}: {fault}'
+        job.failed.append(f'{game_id}: the results updater did not finish: {text}')
+        job.warn(f'{game_id}: THE RESULTS UPDATER DID NOT FINISH ({text}). No new results were added for '
+                 f'{game_id}. The job goes on with the results the tree already holds. To try again: run the job '
+                 f'again, or Run_Results_Updater.bat by itself.')
 
 
 def delete_method_results(job: Job, game_id: str, variant, why: str) -> None:
@@ -456,6 +486,7 @@ def run_game(job: Job, game_id: str) -> str:
     written before it stays, and the same command continues from there.
     """
     job.counts[game_id] = Counter()
+    fetch_new_results(job, game_id)
     records = open_game(job, game_id)
     last_draw = records.results.last_draw
     job.say(f'{game_id}: results on file through draw {last_draw}; {len(records.states)} methods in the tree')
@@ -502,16 +533,16 @@ def write_job_log(job: Job, games, started: str, endings: list, how: str) -> Non
 
 
 def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_all: bool = False, now=None,
-        say=print, checkpoint=no_checkpoint) -> int:
+        say=print, checkpoint=no_checkpoint, update=update_with_the_trees_updater) -> int:
     """Run the research job in a tree.
 
     tree_root: the tree's folder.  games: the games to work, for example ('POWERBALL', 'OZLOTTO').
     no_update: leave the results updater out.  rebuild: method identities ('E_002/RECUR_MEAN_ALL_V1') whose
     results are deleted and made again.  rebuild_all: delete and make again everything.
-    now, say, checkpoint: see Job (a test passes its own).
-    Returns the exit code: 0 finished; 1 a game stopped or a method's calculation failed (the rest is still
-    worked); 2 the job itself refused before any game (the settings, a working folder that is not the tree's
-    own, the job lock, an unknown --rebuild name).
+    now, say, checkpoint, update: see Job (a test passes its own; no test lets the real updater run).
+    Returns the exit code: 0 finished; 1 a game stopped, a method's calculation failed or the updater did not
+    finish (the rest is still worked); 2 the job itself refused before any game (the settings, a working folder
+    that is not the tree's own, the job lock, an unknown --rebuild name).
     """
     now = now or (lambda: datetime.now(timezone.utc))
     tree_root = Path(tree_root)
@@ -525,7 +556,8 @@ def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_
         check_no_orphan_marker(settings.tree_root)
         check_working_folders(settings.tree_root)
         with job_lock(settings.tree_root, 'research job', started):
-            return run_locked(settings, games, no_update, rebuild, rebuild_all, now, say, checkpoint, started)
+            return run_locked(settings, games, no_update, rebuild, rebuild_all, now, say, checkpoint, started,
+                              update)
     except (SettingsRefused, LaunchRefused, VariantRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
@@ -533,7 +565,7 @@ def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_
 
 
 def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_all: bool, now, say, checkpoint,
-               started: str) -> int:
+               started: str, update) -> int:
     """The job once it holds the job lock: read the methods, settle the engine's fingerprint, then work each
     game. Arguments and result as for run()."""
     tree_root = settings.tree_root
@@ -542,14 +574,11 @@ def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_
     if unknown:
         raise VariantRefused(f'--rebuild names no method of this tree: {", ".join(unknown)}. Give each as '
                              f'<family>/<variant>, for example E_002/RECUR_MEAN_ALL_V1.')
-    job = Job(settings=settings, variants=variants, rebuild=frozenset(rebuild), no_update=no_update, now=now,
-              say=say, checkpoint=checkpoint)
+    job = Job(settings=settings, variants=variants, rebuild=frozenset(rebuild), no_update=no_update, update=update,
+              now=now, say=say, checkpoint=checkpoint)
     for name, why in refused:
         job.warn(f'the method folder {name} fails its checks and is passed over: {why}')
         job.failed.append(f'{name}: passed over: {why}')
-    if not no_update:
-        job.say('The results updater is not part of the job yet (it arrives with step 3 of the work order): this '
-                'job works on the results on file.')
     settle_infrastructure(job, rebuild_all)
     endings, stopped = [], False
     for game_id in games:

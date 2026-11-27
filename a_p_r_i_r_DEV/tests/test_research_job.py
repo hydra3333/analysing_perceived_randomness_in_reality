@@ -664,12 +664,6 @@ class StartingAndStopping(fx.JobCase):
         self.assertEqual(contents(tree, 'TOY_A_V1')[-1]['target'], LAST_AT_START + 1)
         self.assertEqual(fx.list_lines(tree, 'E_901', 'TOY_B_V1'), [])
 
-    def test_without_no_update_the_job_says_the_updater_is_not_part_of_it_yet_and_goes_on(self):
-        tree = self.tree()
-        code, said = fx.run_job(tree, no_update=False)
-        self.assertEqual(code, 0, said)
-        self.assertTrue(any('The results updater is not part of the job yet' in line for line in said), said)
-
     def test_the_engine_starts_no_program_and_opens_no_connection(self):
         engine = sorted((TREE_OF_THIS_FILE / 'src' / 'research').glob('*.py')) + [TREE_OF_THIS_FILE / 'src'
                                                                                   / 'research_command.py']
@@ -687,8 +681,22 @@ class StartingAndStopping(fx.JobCase):
                 if isinstance(node, ast.Attribute):
                     self.assertNotIn(node.attr, FORBIDDEN_CALLS, f'{path.name} uses .{node.attr}')
             text = path.read_text(encoding='utf-8')
-            for word in ('Run_Results_Updater', 'results_master_v0', 'lotterywest', 'thelott'):
+            for word in ('results_master_v0', 'lotterywest', 'thelott', 'selenium', 'webdriver'):
                 self.assertNotIn(word.lower(), text.lower(), f'{path.name} names {word}')
+
+    def test_the_engine_loads_the_updater_in_one_place_only_and_never_when_the_file_is_read(self):
+        for path in sorted((TREE_OF_THIS_FILE / 'src' / 'research').glob('*.py')) + [TREE_OF_THIS_FILE / 'src'
+                                                                                     / 'research_command.py']:
+            tree = ast.parse(path.read_text(encoding='utf-8'))
+            at_the_top = [node for node in tree.body if isinstance(node, (ast.Import, ast.ImportFrom))]
+            for node in at_the_top:
+                names = [alias.name for alias in node.names] + [getattr(node, 'module', None) or '']
+                self.assertFalse(any(name.split('.')[0] == 'updater' for name in names), f'{path.name}, at its top')
+            inside = [node for node in ast.walk(tree) if isinstance(node, (ast.Import, ast.ImportFrom))
+                      and node not in at_the_top and (getattr(node, 'module', None) or node.names[0].name
+                                                      ).split('.')[0] == 'updater']
+            expected = {'research_job.py': 1, 'research_command.py': 1}.get(path.name, 0)
+            self.assertEqual(len(inside), expected, path.name)
 
 
 class TheCommandProgram(fx.JobCase):
