@@ -8,6 +8,12 @@ What this file is for
     process, each importing only the code of its own tree, and compares what the two trees then hold. It changes
     nothing in the repository and reads no draw value itself.
 
+    The reports' wording was changed on purpose after the engine was proved the same (the scheme's words:
+    "retired" for "withdrawn", "method" for "variant", the second OV-1 series exploratory with no error bound
+    claimed, nothing "set aside"). So before the report files are compared byte for byte, the frozen engine's
+    report files are given the new wording by the declared list WORDING_CHANGES below, and nothing else. A
+    change of wording that is not on the list, or a figure that differs, still shows as DIFFERENT.
+
     Commands (the first word after the program's name):
       run <tree> [job arguments]      run the research job of the engine that lies in <tree>, with this Python
       align <frozen tree> <new tree>  give the methods of both trees the same starting draws for the second
@@ -36,6 +42,7 @@ import json
 import shutil
 import subprocess
 import sys
+import textwrap
 from pathlib import Path
 
 GAMES = ('POWERBALL', 'OZLOTTO')
@@ -48,6 +55,71 @@ NEW_PARTS = ('src', 'tests/research_fixtures.py')
 # draw SPREAD_BACK - SPREAD_STEP * (i % SPREAD_GROUPS) before the last draw on file, or from its own first
 # target if that is later (the frozen engine never lets a method count before it has a line).
 SPREAD_BACK, SPREAD_STEP, SPREAD_GROUPS = 40, 8, 5
+
+# The text the second OV-1 series' print-out prints after its preamble: the frozen engine's (specification
+# 10.6), and the simplified engine's (research/reports.py PREVAILING_CLAIM). Both print it wrapped at 110 columns.
+FROZEN_CLAIM = (
+    'If this game\'s draws are fair, and if nothing that decided a draw\'s forecasts or which variants counted at '
+    'it was influenced by that draw\'s result (that includes what code was installed, corrected or withdrawn and '
+    'when, which backup was restored, and any rerun), the chance that this score ever reaches 40 is at most 2.5%. '
+    'The software checks that each forecast was computed from earlier draws only, that the variants counted are '
+    'those fixed by draw number, and that every draw is taken once. It cannot check the second \'if\'.')
+NEW_CLAIM = (
+    'An exploratory indicator, like the series over all draws: the same OV-1 calculation, with each method counted '
+    'only from the draw after its establishment draw (the last draw this tree held when that version of the '
+    'method was first used here) up to, and not including, the draw it is retired from. No error bound is claimed '
+    'for it: methods are added, corrected and retired as the research goes on, and this score is not kept free of '
+    'those choices. 40 is a reference line only. The software checks that each forecast was computed from earlier '
+    'draws only and that every draw is taken once.')
+CLAIM_WIDTH = 110
+
+
+def claim_changes() -> tuple:
+    """The claim's change as it stands in the two kinds of report file: as plain lines in the .txt, and as lines
+    beginning '# ' in the .csv."""
+    frozen, new = textwrap.wrap(FROZEN_CLAIM, CLAIM_WIDTH), textwrap.wrap(NEW_CLAIM, CLAIM_WIDTH)
+    return (('\r\n'.join(frozen), '\r\n'.join(new)),
+            ('\r\n'.join(f'# {line}' for line in frozen), '\r\n'.join(f'# {line}' for line in new)))
+
+
+# The declared changes of the reports' wording, as (the frozen engine's text, the simplified engine's text), applied
+# in this order to the frozen engine's report files (whose lines end CRLF) before they are compared. Each keeps the
+# columns of a table where it stands: a column's name is replaced together with the spaces that pad it.
+WORDING_CHANGES = claim_changes() + (
+    ('a variant\'s figures at draws before its installation', 'a method\'s figures at draws before its installation'),
+    ('    Variants: ', '    Methods: '),
+    ('What each variant forecast for this draw', 'What each method forecast for this draw'),
+    ('; bar 40; REACHED', '; reference line 40: reached'),
+    ('; bar 40; not reached', '; reference line 40: not reached'),
+    ('prevailing OV-1: not started; waiting for a successful results step',
+     'prevailing OV-1: not started; no method has an establishment draw yet'),
+    ('OV-1 EXPLORATORY RETROSPECTIVE - not the prevailing score;', 'OV-1 EXPLORATORY RETROSPECTIVE - over all draws;'),
+    ('counting every variant wherever it has one', 'counting every method wherever it has one'),
+    ('WITHDRAWN from draw ', 'RETIRED from draw '),
+    ('not scored: withdrawn)', 'not scored: retired)'),
+    ('  variant ', '  method  '),                          # a .txt table's column name, not the first column
+    ('\r\nvariant ', '\r\nmethod  '),                      # a .txt table's column name, the first column
+    ('order_top,variant,', 'order_top,method,'),            # the league .csv's column names
+    ('\r\nvariant,line,', '\r\nmethod,line,'),              # the next-draw .csv's column names
+    ('each variant over every draw up to that one', 'each method over every draw up to that one'),
+    ('    What each variant forecast for a draw.', '    What each method forecast for a draw.'),
+    ('    The prevailing OV-1 score: one line a draw from its start, with the claim it supports and the counts\r\n'
+     '    that say what kind of evidence it is.',
+     '    The second OV-1 series: one line a draw, each method counted from its establishment draw until it\r\n'
+     '    is retired. Exploratory, like the one below; with the counts that say what kind of evidence it is.'),
+    ('\r\nnot_current/\r\n    Reports the job moved out of view because the stored results they were made from are '
+     'not current\r\n    (see NOT_CURRENT_FROM.json one folder up, and what the job said).', ''),
+)
+
+
+def with_new_wording(data: bytes) -> tuple:
+    """A frozen engine's report file given the new wording. Returns (the bytes, how many replacements were made)."""
+    made = 0
+    for frozen, new in WORDING_CHANGES:
+        made += data.count(frozen.encode('ascii'))
+        data = data.replace(frozen.encode('ascii'), new.encode('ascii'))
+    return data, made
+
 
 # The small programs run inside a tree. Each puts that tree's code, and no other, first on the import path.
 PREAMBLE = """
@@ -166,7 +238,7 @@ def series_over_all_draws(tree: Path, game_id: str) -> list:
 
 def report_files(tree: Path, game_id: str) -> dict:
     """Every report file of a game with its bytes, the tree's own path replaced by <TREE>; the side file of
-    making times and anything set aside are left out."""
+    making times and anything the frozen engine set aside are left out."""
     top = tree / RESEARCH / game_id / 'reports'
     found = {}
     for path in sorted(top.rglob('*')):
@@ -174,6 +246,16 @@ def report_files(tree: Path, game_id: str) -> dict:
         if path.is_file() and relative != 'made_times.csv' and not relative.startswith('not_current/'):
             found[relative] = path.read_bytes().replace(str(tree).encode('ascii'), b'<TREE>')
     return found
+
+
+def frozen_report_files(tree: Path, game_id: str) -> tuple:
+    """The frozen engine's report files as report_files gives them, each given the new wording; and how many
+    replacements that took in all."""
+    found, made = {}, 0
+    for relative, data in report_files(tree, game_id).items():
+        found[relative], times = with_new_wording(data)
+        made += times
+    return found, made
 
 
 def compare_trees(frozen: Path, new: Path, say=print) -> bool:
@@ -221,13 +303,15 @@ def compare_trees(frozen: Path, new: Path, say=print) -> bool:
         every = [series_over_all_draws(tree, game_id) for tree in (frozen, new)]
         check(f'{game_id}: the OV-1 series over all draws, line by line', every[0], every[1],
               f' ({len(every[0])} and {len(every[1])} lines)')
-        frozen_reports, new_reports = report_files(frozen, game_id), report_files(new, game_id)
+        (frozen_reports, reworded), new_reports = frozen_report_files(frozen, game_id), report_files(new, game_id)
         check(f'{game_id}: the names of the report files', sorted(frozen_reports), sorted(new_reports),
               f' ({len(frozen_reports)} and {len(new_reports)})')
         unlike = [name for name in sorted(set(frozen_reports) & set(new_reports))
                   if frozen_reports[name] != new_reports[name]]
         check(f'{game_id}: every report file, byte for byte (league, next draw, both OV-1 print-outs, README)',
-              unlike, [], f'; differing: {", ".join(unlike[:10])}' if unlike else '')
+              unlike, [], f' (the frozen engine\'s given the new wording: {reworded} replacements of '
+                          f'{len(WORDING_CHANGES)} declared kinds)' + (f'; differing: {", ".join(unlike[:10])}'
+                                                                     if unlike else ''))
     say(f'RESULT: {"SAME" if same else "DIFFERENT"}: the frozen engine at {frozen} and the simplified engine at '
         f'{new}')
     return same

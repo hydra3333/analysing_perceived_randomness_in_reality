@@ -159,6 +159,9 @@ Everything runs on invented draws and toy methods.
 It runs each engine in its own Python process and compares what the two trees then hold: every forecast, every
 score, both OV-1 series line by line, and every report file byte for byte. (The frozen engine stores no file of
 its series over all draws; the tool has the frozen engine's own code make it from the frozen tree's stored lists.)
+The reports' wording was changed on purpose afterwards ("retired", "method", the second series exploratory with
+no error bound claimed, nothing set aside): before the byte comparison the frozen engine's report files are given
+the new wording by the tool's declared list `WORDING_CHANGES`, and nothing else is forgiven.
 
 - `invented <new folder>`: the whole comparison on invented results with the real methods (two trees are made in
   the folder; about as long as two first fills).

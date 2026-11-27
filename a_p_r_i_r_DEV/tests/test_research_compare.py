@@ -4,6 +4,7 @@ The comparison itself is made on the real methods by the tool's own commands; he
 with this tree's engine, which the tool must find the same, and then one thing at a time is changed in one of them.
 (The simple scheme v0.2 section 9.)
 """
+import ast
 import shutil
 import sys
 import unittest
@@ -47,6 +48,23 @@ class TwoTreesCompared(fx.JobCase):
     def test_two_trees_with_the_same_science_are_the_same_whatever_their_paths_and_times(self):
         same, different = self.compared()
         self.assertTrue(same, different)
+
+    def test_the_frozen_reports_are_given_exactly_the_declared_new_wording_and_no_other_change_is_forgiven(self):
+        new_reports = compare.report_files(self.trees[1], GAME)
+        frozen_reports, made = compare.frozen_report_files(self.trees[1], GAME)
+        self.assertEqual((frozen_reports, made), (new_reports, 0), 'the new wording is left as it is')
+        league = self.trees[0] / 'results/research' / GAME / f'reports/league/league_{GAME}_d01160.txt'
+        text = league.read_bytes()
+        old = text.replace(b'Methods: ', b'Variants: ').replace(b'  method  ', b'  variant ')
+        self.assertNotEqual(old, text)
+        league.write_bytes(old)
+        same, different = self.compared()
+        self.assertTrue(same, 'the frozen engine\'s words are given the new ones')
+        league.write_bytes(old.replace(b'Variants: ', b'Entries: '))
+        same, different = self.compared()
+        self.assertEqual(len(different), 1, 'a wording that is not on the declared list is not forgiven')
+        self.assertIn('every report file', different[0])
+        self.assertIn(f'league/league_{GAME}_d01160.txt', different[0])
 
     def test_each_planted_difference_is_found_and_named(self):
         research = self.trees[1] / 'results/research' / GAME
@@ -105,6 +123,39 @@ class TwoTreesCompared(fx.JobCase):
 
 class TheCodeCompared(unittest.TestCase):
     """without_comments: a file that differs only in comments and docstrings is the same program."""
+
+    def test_each_declared_change_turns_the_frozen_text_into_the_new_and_keeps_a_tables_columns(self):
+        for frozen, new in compare.WORDING_CHANGES:
+            data, made = compare.with_new_wording(frozen.encode('ascii'))
+            self.assertEqual((data, made), (new.encode('ascii'), 1), frozen[:60])
+        columns = [(frozen, new) for frozen, new in compare.WORDING_CHANGES if frozen.endswith('variant ')]
+        self.assertEqual(len(columns), 2)
+        for frozen, new in columns:
+            self.assertEqual(len(frozen), len(new), 'a column name keeps its padded width')
+        row = b'\r\nvariant                  line\r\nE_002/RECUR_MEAN_ALL_V1  FORECAST'
+        self.assertEqual(compare.with_new_wording(row)[0],
+                         b'\r\nmethod                   line\r\nE_002/RECUR_MEAN_ALL_V1  FORECAST')
+
+    def test_the_declared_wording_is_that_of_the_two_engines(self):
+        frozen_source = TREE_OF_THIS_FILE.parent / 'src/research/reports.py'
+        if not frozen_source.is_file():
+            self.skipTest('the frozen engine is not beside this tree')
+        frozen_module = ast.parse(frozen_source.read_text(encoding='utf-8'))
+        new_module = ast.parse((TREE_OF_THIS_FILE / 'src/research/reports.py').read_text(encoding='utf-8'))
+
+        def constant(module, name):
+            """The value of a module's top-level text constant."""
+            for node in module.body:
+                if isinstance(node, ast.Assign) and getattr(node.targets[0], 'id', None) == name:
+                    return ast.literal_eval(node.value)
+            raise AssertionError(name)
+
+        NOT_STARTED = next(pair for pair in compare.WORDING_CHANGES if pair[0].startswith('prevailing OV-1: not'))
+        for module, claim, not_started in ((frozen_module, compare.FROZEN_CLAIM, NOT_STARTED[0]),
+                                           (new_module, compare.NEW_CLAIM, NOT_STARTED[1])):
+            self.assertEqual(constant(module, 'PREVAILING_CLAIM'), claim)
+            self.assertEqual(constant(module, 'NOT_STARTED_TEXT'), not_started)
+            self.assertEqual(constant(module, 'CLAIM_LINE_WIDTH'), compare.CLAIM_WIDTH)
 
     def test_comments_and_docstrings_are_left_out_and_any_other_change_is_seen(self):
         first = b'"""About."""\nimport os\n\n\ndef f(a):\n    """Old words."""\n    return a + 1  # one more\n'

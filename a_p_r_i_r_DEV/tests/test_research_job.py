@@ -364,7 +364,7 @@ class WhatIsOutOfDateIsMadeAgain(fx.JobCase):
             self.assertEqual({name: data for name, data in fx.files_under(tree).items()
                               if 'TOY_C_V1' in name and '/variants/' in name}, left)
         text = fx.report_text(tree, f'league/league_{GAME}_d{LAST_AT_START:05d}.txt')
-        self.assertIn('Variants: 2', text)
+        self.assertIn('Methods: 2', text)
         self.assertIn('E_901/TOY_C_V1 (not installed here)', text)
         self.assertEqual({member['variant'] for line in fx.ledger_lines(tree, which='exploratory')
                           for member in line['content']['cohort']}, {'E_901/TOY_A_V1', 'E_901/TOY_B_V1'})
@@ -426,7 +426,7 @@ class RetiredAndInPlace(fx.JobCase):
                          'no forecast for its retirement draw or later: the one it held for that draw is dropped')
         self.assertEqual(contents(tree, 'TOY_A_V1')[-1]['target'], LAST_AFTER_NEW + 1)
         text = fx.report_text(tree, f'league/league_{GAME}_d{LAST_AFTER_NEW:05d}.txt')
-        self.assertIn(f'WITHDRAWN from draw {LAST_AT_START + 1}: no reason was written', text)
+        self.assertIn(f'RETIRED from draw {LAST_AT_START + 1}: no reason was written', text)
         for line in fx.ledger_lines(tree):
             self.assertEqual([member['variant'] for member in line['content']['cohort']], ['E_901/TOY_A_V1'])
         (folder / method_flags.RETIRED_NAME).unlink()
@@ -445,7 +445,7 @@ class RetiredAndInPlace(fx.JobCase):
                             'dropped' in line for line in said), said)
         self.assertEqual(contents(tree, 'TOY_B_V1')[-1]['target'], 1154)
         self.assertEqual(contents(tree, 'TOY_B_V1', 'scores')[-1]['target'], 1154)
-        self.assertIn('WITHDRAWN from draw 1155: the table was wrong',
+        self.assertIn('RETIRED from draw 1155: the table was wrong',
                       fx.report_text(tree, f'league/league_{GAME}_d{LAST_AT_START:05d}.txt'))
         code, said = fx.run_job(tree)
         self.assertTrue(any('0 forecasts, 0 scores, 0 series files, 0 report files' in line for line in said), said)
@@ -563,7 +563,7 @@ class Reports(fx.JobCase):
         self.assertEqual(row[f'top_last_{reports.LAST_DRAWS_SHOWN}'],
                          ''.join(str(s['matches']['MAIN']['top']) for s in through[-reports.LAST_DRAWS_SHOWN:]))
         text = fx.report_text(tree, f'league/league_{GAME}_d01155.txt')
-        for wanted in (reports.LEAGUE_HEADLINE, f'the DEV tree at {tree}', 'Runs to draw: 1155', 'Variants: 2',
+        for wanted in (reports.LEAGUE_HEADLINE, f'the DEV tree at {tree}', 'Runs to draw: 1155', 'Methods: 2',
                        'Foreign lists ignored: none'):
             self.assertIn(wanted, text)
 
