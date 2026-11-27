@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 17:37 Australia/Adelaide (entry 365: step 4 reviewed, corrected and accepted; the work order from here).
+**Last updated:** 27 November 2026, 18:24 Australia/Adelaide (entry 366: the rehearsal decisions; GO for the rulebook, task files and H-1).
 
 ## For the owner: NOW
 
+- **REHEARSAL PREPARATION UNDER WAY (entry 366; 27 November 2026).** The reports' wording is done (`168b896`,
+  `56cc3ec`). The owner decided: T030 on invented results; T031 may use real DEV's own Python for scratch calculations
+  only; two more permission guards. **Claude is writing:** the refresh of H-1, the runner's rulebook v0.8 candidate
+  with the guards, and the task files T029 (the test suite on Windows), T030 (the commands on three scratch trees),
+  T031 (after the owner's DEV first fill: the comparison in scratch). Nothing is authorised on the owner's PC.
 - **STEP 4 REVIEWED, CORRECTED AND ACCEPTED (entry 365; 27 November 2026).** The reviewer's F01 to F04 are in (commit
   `068c93f`; 277 tests). The owner accepted Claude's 4b choices, the lock file as the one write in PROD during
   Copy_From_PROD, and the reversed seeding. **THE WORK ORDER NOW:** 1 report wording and the runner's rulebook

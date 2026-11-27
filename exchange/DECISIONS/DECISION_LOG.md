@@ -8800,3 +8800,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next (Opus work; the owner's approval of 17:33 covers it):** the report wording; the runner's rulebook edition and
   the task files for the rehearsal; the refresh of H-1 with this work order. Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 366; RAT-64.
+
+## 366. 27 November 2026, 18:24 - OWNER: the three rehearsal decisions (invented results for T030; real DEV's Python for T031 on scratch trees only; two permission guards); GO for the rulebook v0.8 candidate, T029 to T031 and the H-1 refresh
+
+- **The reports' wording (item 1 of the work order of entry 365):** commit `168b896` ("retired" for "withdrawn",
+  "method" for "variant", the second OV-1 series exploratory with no error bound claimed, nothing "set aside"; the
+  comparison tool's declared list `WORDING_CHANGES`), then the reviewer's two refinements in commit `56cc3ec` (its
+  preferred text for the second series, which says that the choices to add, correct and retire methods may be
+  influenced by observed results and that the safeguards do not establish otherwise; "numerical lower bound" for
+  "proved lower bound"). 280 tests; on the accepted results, the reports remade from the stored results and compared
+  through the declared list: RESULT: SAME. Cloud only.
+- **The owner's words (18:15):** "I approve the decisions as agreed to by chatgpt if you also do. GO for the rulebook
+  candidate, rehearsal task files and H-1 refresh." Claude agrees with the reviewer on all three.
+- **DECIDED BY THE OWNER.** (1) **TASK_T030 rehearses the commands on invented results:** it qualifies the commands,
+  not the science; TASK_T031 establishes the science. (2) **TASK_T031 may use the real DEV tree's own Python**
+  (`a_p_r_i_r_DEV\.venv\Scripts\python.exe`) as the interpreter for calculations on scratch trees only, with `-I -B`,
+  the working folder, `TMP`/`TEMP` and every output in the scratch folder: no package installed or upgraded, nothing
+  of DEV or its environment changed, no updater run. A narrow permission to use the interpreter, not to change DEV.
+  (3) **Two more guards in the runner's permission settings** (`.claude\settings.json`): deny any command naming
+  `results_updater`, and any naming the `T:\` or `G:\` drives; their patterns to be checked to refuse what is meant
+  without stopping the tests on invented pages. They add to the rulebook and replace nothing.
+- **The rulebook v0.8 shall say plainly three kinds of thing:** commands never run against a real tree; commands a
+  task file names for a scratch tree, run there only; and the real results updater, which the runner never runs
+  anywhere (its only use is inside the test suite, on invented pages with a browser that refuses).
+- **GO** for the rulebook v0.8 candidate (with the settings guards), the three rehearsal task files T029 to T031, and
+  the refresh of H-1. **The reviewer has written its H-2 v11 candidate and introductory blurb** (commits `2f5beef` and
+  `e0878af`); it is to be refreshed again before the Windows rehearsal.
+- Next numbers: EX_334 (Claude's); entry 367; RAT-64.
