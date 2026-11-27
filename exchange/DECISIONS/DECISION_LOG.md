@@ -9317,3 +9317,35 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **DEV is now right on the corrected engine. Next is item 7: QA, then PROD,** the owner running every step on
   Claude's instructions.
 - Next numbers: EX_334 (Claude's); entry 394; RAT-69.
+
+## 394. 28 November 2026, 09:50 - DEV confirmed clean; the Git history reset measured (about 5 MB to gain); a tree tidy proposed
+
+- **DEV after the rebuild:** the owner's `git status` (09:21) says "nothing to commit, working tree clean", so the 40
+  `IN_PLACE_SINCE` files are unchanged. Entry 393's last check is done.
+- **The reviewer's discussion paper** "Git history reset - ChatGPT discussion proposal v0.1" (28 November; relayed by
+  the owner at 09:42, not committed): the owner finds the repository large on disk and asked both AIs to agree a
+  safe way to discard all earlier commit history, in the same GitHub repository.
+- **Claude measured before discussing method** (a full clone at `a86f104`; 1,244 commits since 21 October 2026): the
+  whole history packed is 68 MB; the same tree as one commit with no history is 63 MB. **A reset would save about
+  5 MB.** Tracked files: 5,024, 178 MB (`exchange/` 89, `results/` 44, `review/` 18, `doc/` 18, `GAIS/` 3.6, `src/`
+  2.2, `a_p_r_i_r_DEV/` 1.1). GitHub holds one branch, `main`, no tags, no pull requests. The owner's figures: the
+  whole tree 1.5 GB, his `.git` 95 MB. So about 1.2 GB is in files Git does not track.
+- **Claude's recommendation: no history reset.** Its cost is every commit id cited in this log, the handovers and
+  the reports; its gain is about 5 MB. A plain `git gc` would take the owner's `.git` from 95 MB to about 70, with
+  nothing lost. Keeping the history is also what makes a tidy of the tree safe: a file removed from the tree stays
+  in the history.
+- **The owner's words (09:48):** "perhaps a cleanup of the tree as well ? ... there are folder trees at the top level
+  which I am unsure if we need any more (erg I um unsure how we develop into the future, eg directly in DEV or still
+  using src etc ? GAIS can go. EXCHANGE is 88Mb. etc. please consider and propose yes or no to git cleanup and then
+  consider the "normal tree" cleanup for chatgpt to consider also, all with your recommendations."
+- **Claude's proposal, for the reviewer's view and the owner's decision (nothing is decided or done):** all future
+  development is in `a_p_r_i_r_DEV` (the scheme); the top-level `src/` is frozen and never developed again. One tidy,
+  once, after QA and PROD exist (it is the scheme's step 7): mark the commit before it with a tag, then remove from
+  the tree what the living project no longer uses, all of it staying in the history. Remove: `GAIS/` (the owner's
+  word; it can go at once), `review/`, and at the tidy the EX messages and their folders, the old work packages
+  under `exchange/CLAUDE_WEB_TOOLS/` and the superseded editions in `doc/`. Keep: `a_p_r_i_r_DEV/`; the first
+  system's `results/` (the sealed Mode H records are never altered); the frozen `src/`, `tests/`, `source_data/` and
+  launchers while the living system's tests and its two comparison tools read them (they are 4 MB); the runner's
+  folder; the decision log, the continuity page, the reminders, the scheme and the handovers. The space itself is
+  in untracked files: the owner lists folder sizes so that it can be found.
+- Next numbers: EX_334 (Claude's); entry 395; RAT-69.
