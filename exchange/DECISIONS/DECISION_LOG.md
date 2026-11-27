@@ -9018,3 +9018,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
   settings, apart from T029's seven probes.
 - **Waiting on the owner:** he deletes `D:\DELETE_ME\a_p_r_i_r\T029`, pulls, and gives his go for T029 again.
 - Next numbers: EX_334 (Claude's); entry 377; RAT-67.
+
+## 377. 27 November 2026, 19:42 - OWNER: GO for TASK_T029 again (r3); it is running
+
+- **The reviewer** (relayed by the owner) concurs with the correction at `7bfc772`: the seven refused probes settle
+  the permission guards; the STOP at step 8 was correct; the command-local subshell is accepted (the inherited `PATH`
+  entry remains, and the scripts verify the destination interpreter, so nothing more is asked unless a real problem
+  shows). T030's expected folder listing already names `tmp_env` and `pip_cache` (checked).
+- **The owner's words (19:42):** "go iyt is running now"
+- **GO for TASK_T029 again** (the r3 task file of `7bfc772`); the owner has started it. It authorises T029 alone.
+- Next numbers: EX_334 (Claude's); entry 378; RAT-67.

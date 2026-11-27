@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 19:38 Australia/Adelaide (entry 376: T029 stopped at step 8 (a venv already active); task files corrected; waiting on the owner's go).
+**Last updated:** 27 November 2026, 19:42 Australia/Adelaide (entry 377: TASK_T029 r3 is running on the owner's PC; waiting on its report).
 
 ## For the owner: NOW
 
