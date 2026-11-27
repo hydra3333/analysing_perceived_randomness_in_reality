@@ -8984,3 +8984,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the documentation says: of all the commands of T029, T030 and T031 they refuse the five drive probes of T029 step 3
   and nothing else. TASK_T029 is unchanged (r2).
 - Next numbers: EX_334 (Claude's); entry 375; RAT-67.
+
+## 375. 27 November 2026, 19:24 - OWNER: the permission settings r2 approved and installed; GO for TASK_T029 again
+
+- **The reviewer** (relayed by the owner) concurs with the settings r2 candidate at `28d6b97`, having read the four
+  added patterns: agreed not to use the bare drive prefix, given how `:*` at a rule's end is read; the narrower
+  patterns are acceptable as supplementary protections; the rulebook's prohibition of all access to `T:` and `G:` is
+  unchanged. If all seven probes are refused, T029 goes on as written and no more is asked about the patterns.
+- **The owner's words (19:23), to Claude's two questions (does he approve the settings r2 candidate; does he give a
+  new go for T029):** "Yes to both"
+- **The permission settings r2 are approved by the owner and installed:** `.claude/settings.json` is now
+  `settings_v0_8r2_CANDIDATE.json`, the same bytes (SHA-256
+  `026408594841046a46c0bc934e58c9779513f85f3c99a3e5f3deba73f5dbc9fa`). The rulebook v0.8 (RAT-66) is unchanged.
+- **GO for TASK_T029 again** (the r2 task file, unchanged since `849f0a4`). It authorises T029 alone.
+- Next numbers: EX_334 (Claude's); entry 376; RAT-67.
