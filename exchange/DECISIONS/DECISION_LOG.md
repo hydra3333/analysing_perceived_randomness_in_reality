@@ -9277,3 +9277,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   command that writes it.
 - **Still running:** DEV's rebuild (started 08:28).
 - Next numbers: EX_334 (Claude's); entry 392; RAT-68.
+
+## 392. 28 November 2026, 09:10 - OWNER: RAT-68, H-1 v18 and its blurb ratified; installed in `doc/HANDOVER/`
+
+- **RAT-68. The owner's words** (09:10): "I ratify H-1 v18 and its blurb". Ratified at the candidate of entry 391
+  (`6b73310`), without a reading by the reviewer first (Claude had recommended one; the owner's choice).
+- **Installed by Claude in `doc/HANDOVER/` (commit `b652d54`):**
+  - `Claude_Primary_Handover_H1_v18.md`: the candidate with its status line alone changed to "RATIFIED by the owner,
+    RAT-68 (decision log entry 392)"; SHA-256
+    `e565b3745ed8a9571e2d33de5ecc1f11b359d04ebb0b460ccd935f2ecbec5550`;
+  - `Claude_Primary_Handover_H1_v18_introductory_blurb.md`: the candidate's bytes; SHA-256
+    `1cb5de3977db1a2422d2f482fd56366def8e096cd1b478d9e39a1a82c21ba90d`.
+  Both CRLF and ASCII. **H-1 v18 supersedes H-1 v17r1 (RAT-64).** The handovers in force: H-1 v18 (RAT-68) and H-2
+  v12 (RAT-67).
+- **The continuity page** names them in its top block, in "If a chat ends" and in "Installed handovers" (same commit).
+- **This entry follows its commit:** a line-length check in the writing command stopped the entry after the files and
+  the page were written, and the commit went out without it; nothing else was affected.
+- **Still running:** DEV's rebuild (started 08:28). Then item 7: QA, then PROD.
+- Next numbers: EX_334 (Claude's); entry 393; RAT-69.
