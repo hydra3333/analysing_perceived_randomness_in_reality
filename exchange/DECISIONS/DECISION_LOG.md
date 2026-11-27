@@ -8693,3 +8693,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   (the owner asked after ninety minutes without word, entry 361's comparisons).
 - **Waiting on:** the reviewer's one reading of step 4a at `3effdbe`; then the owner's go for step 4b.
 - Next numbers: EX_334 (Claude's); entry 363; RAT-64.
+
+## 363. 27 November 2026, 16:10 - REVIEWER and CLAUDE: step 4a read (concurrence); one backup correction and two small improvements made (`e452f32`)
+
+- **The reviewer's one reading of step 4a at `3effdbe`** (relayed by the owner): overall concurrence, the six choices
+  of entry 362 included; the common first step and the one lock answer the two points carried from step 3; the 213
+  tests and the updater and engine comparisons are accepted; no repeated comparison and no formal recheck asked. It
+  recommends going on to step 4b on the owner's go, with the small corrections below.
+- **One material correction, made:** `files_to_back_up` walked the tree without saying what to do when a folder cannot
+  be listed, so such a folder was passed over and the ZIP would have looked whole. It now raises, and the backup fails
+  as any other failed backup does (so a replacement that waits on it does not start). One planted-fault test, which
+  failed before the correction and passes after it. No readback or hashing was added (none was asked).
+- **Two small improvements, made:** `Make_Installable` finds and fingerprints the methods inside its lock; `Who_Uses`
+  is named as the one read-only command that takes no lock (code comments and the README), with a test line showing
+  that it is not refused while another command holds the lock.
+- **Commit `e452f32`** (only files under `a_p_r_i_r_DEV/`; coding practices met). 215 tests pass (were 213); cloud
+  only. No computation is touched, so the comparisons were not repeated.
+- **Waiting on:** the owner's go for step 4b (Fable). Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 364; RAT-64.

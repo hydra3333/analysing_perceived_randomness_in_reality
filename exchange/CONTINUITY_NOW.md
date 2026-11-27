@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 16:06 Australia/Adelaide (entry 362: the owner accepted the step 4a choices; waiting on the reviewer's reading and the go for step 4b).
+**Last updated:** 27 November 2026, 16:10 Australia/Adelaide (entry 363: step 4a reviewed and corrected; waiting on the go for step 4b).
 
 ## For the owner: NOW
 
+- **STEP 4a REVIEWED AND CORRECTED (entry 363; 27 November 2026).** The reviewer concurs; its one backup correction
+  (an unreadable folder now fails the backup) and two small improvements are in (commit `e452f32`; 215 tests). The
+  owner accepted the 4a choices (entry 362). **Waiting on the owner:** his go for step 4b (`Create_Tree`, `Install`,
+  `Retire`, `Copy_From_PROD`, `Restore`; Fable). Nothing is authorised on the owner's PC.
 - **STEP 4a BUILT AND COMMITTED (entry 361; 27 November 2026).** Commit `3effdbe`: the settings file in its new form
   and the four identity rules, the one lock `records\TREE.lock` (the updater's own lock and the orphan-marker check
   are gone from the new trees), a backup ZIP at the end of every job, `Backup.bat`, and in DEV `Make_Installable.bat`
