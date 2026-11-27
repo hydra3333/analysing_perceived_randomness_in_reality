@@ -9349,3 +9349,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   folder; the decision log, the continuity page, the reminders, the scheme and the handovers. The space itself is
   in untracked files: the owner lists folder sizes so that it can be found.
 - Next numbers: EX_334 (Claude's); entry 395; RAT-69.
+
+## 395. 28 November 2026, 10:08 - The reviewer concurs: no history reset, one tree tidy after QA and PROD; the proposal written
+
+- **The owner (10:04):** his full-tree backup is done, with verified copies on three external USB drives (his own
+  script, read by Claude at 09:13 and given a list of drives and a busy-tree check at 09:15).
+- **The owner asked (09:56)** whether DEV, QA and PROD read the first system at the repository's root. Claude checked
+  the code: none does. Nothing under `a_p_r_i_r_DEV/src` reaches outside its own tree; QA and PROD are outside the
+  repository; only the two comparison tools in `a_p_r_i_r_DEV/deploy` and three tests read it. Claude changed its
+  recommendation to: retire the first system's software at the tidy.
+- **The reviewer's view (relayed 10:04): agreement in principle.** It withdraws its history-reset proposal (the
+  measured saving decides it); all history kept; one tidy after QA and PROD, an annotated tag pushed first; retire
+  GAIS, review, the old EX material and work packages, superseded documents, and the first system's software,
+  launchers, `source_data`, tests and environments, with the two comparison tools and their tests; keep the first
+  system's results unchanged, the science and method documents, the standards, the scheme, the records, the current
+  handovers and the runner's folder; one short archive index; the tag keeps tracked files only, so the owner's
+  backups are checked before untracked files go; rebuild-equals-before proves only behaviour-preserving changes; no
+  fingerprint to change; a shortened runner rulebook; refreshed handovers. It asked Claude for the final keep and
+  remove inventory and the procedure.
+- **Claude's proposal is written:** `exchange/Claude_Tree_Tidy_Inventory_And_Procedure_v0_1_20261128.md`. By its
+  rules, counted at `59f7a31`: 4,599 of 5,024 tracked files and 129 MB leave the tree, 425 files and 50 MB stay.
+  It corrects Claude's "three tests": retiring the two tools takes 8 tests (280 to 272), and the invented pages and
+  trees that the other 25 updater tests use move into a fixtures file. Nothing under `src/` changes, so no
+  fingerprint changes. Three points for the owner are in its section 5 (GAIS now or then; the runner's Python once
+  the top-level `.venv` goes; the runner's folder kept whole).
+- **Nothing is decided or done.** The tidy needs the reviewer's agreement, the exact list (step P1) and the owner's
+  ratification (it would be RAT-69), and comes only after QA and PROD. **Next is still item 7: QA.**
+- Next numbers: EX_334 (Claude's); entry 396; RAT-69.
