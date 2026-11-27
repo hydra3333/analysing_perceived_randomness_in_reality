@@ -5,11 +5,12 @@ What this file is for
     This tool shows it in two ways, and reaches no website in either:
       1. Definition by definition: every function, method, class and constant of the new updater is the frozen
          one's, comments apart, except a short declared list (each changed only by taking a Mode H state out;
-         and BrowserFetcher.fetch also by one added statement, the final-URL check made a second time before
-         the page is parsed), and the frozen updater has nothing more than a declared list of what was removed.
+         BrowserFetcher.fetch also by one added statement, the final-URL check made a second time before the
+         page is parsed; cmd_update also by no longer taking a lock of its own, because the tree's one lock is
+         held by whoever starts an update), and the frozen updater has nothing more than a declared list of what
+         was removed.
       2. By running both on the same invented pages: in each of a dozen situations (new draws, nothing new, a
-         draw that disagrees, a gap, a page that cannot be read, a lock left behind, a results file edited by
-         hand ...) both must end the same way, with the same message, and leave the same results file, ledger
+         draw that disagrees, a gap, a page that cannot be read, a results file edited by hand ...) both must end the same way, with the same message, and leave the same results file, ledger
          lines, grab and backup. The frozen updater is given invented owner records that put it in its ordinary
          state after Mode H (holdout opened and sealed), which is the state the new updater is always in.
     The pages are made from invented draws by a formula; no real draw is read. In both updaters the class that
@@ -47,8 +48,10 @@ FROZEN_FILE = Path(__file__).resolve().parents[2] / 'src' / 'results_master_v0_2
 # taken out of it (or, for the version and the command line, because the program is no longer the same edition).
 CHANGED = ('BrowserFetcher.fetch', 'Store.__init__', 'Store.load_verified_master', 'TOOL_VERSION', 'check_constants',
            'cmd_update', 'main', 'parse_gov', 'update_game', 'validate_draw', 'validate_series')
-# What the frozen updater has and the new one has not: the Mode H states, the one-off "init" and the self-test.
-REMOVED = ('ADVANCE_SCHEMA', 'BATCH_ID_SCHEMA', 'FIRST_QUARANTINED_DRAW', 'HOLDOUT_DRAWS', 'OLD_HISTORY', 'OLD_ORDER',
+# What the frozen updater has and the new one has not: the Mode H states, the one-off "init", the self-test, and
+# the updater's own lock (the tree's one lock stands in its place).
+REMOVED = ('ADVANCE_SCHEMA', 'BATCH_ID_SCHEMA', 'FIRST_QUARANTINED_DRAW', 'HOLDOUT_DRAWS', 'Lock', 'Lock.__enter__',
+           'Lock.__exit__', 'Lock.__init__', 'OLD_HISTORY', 'OLD_ORDER',
            'OLD_POWERBALL_COMMIT', 'QUARANTINE_START_DATE', 'SEAL_SCHEMA', '_owner_json', 'cmd_init', 'freeze_state',
            'holdout_last', 'holdout_opened', 'mode_h_sealed', 'old_powerball_dev_rows', 'read_build_run',
            'read_lott_check_run', 'self_test', 'session_lock_present', 'study_version_advance')
@@ -233,8 +236,8 @@ def run_update(module, tree: Path, games, months_back: int, plant=None, pause: f
 def what_a_tree_holds(module, tree: Path) -> dict:
     """Everything an updater keeps in a tree's source_data, in a form two trees can be compared by: each results
     file's bytes; each ledger line without its time and the writing program's version; each grab and backup by
-    its name (time stamp taken out) and bytes; whether the lock was left behind."""
-    held = {'lock left behind': (tree / 'source_data' / '.results_master.lock').exists()}
+    its name (time stamp taken out) and bytes."""
+    held = {}
     for game in module.ERAS:
         store = module.Store(tree, game)
         held[game] = {
@@ -260,7 +263,6 @@ def compare_behaviour(frozen, new, say=print) -> bool:
         ('the page leaves out a draw', {'plant': ('skipped', 1595), 'games': ('POWERBALL',)}),
         ('a draw on the page shows a number twice', {'plant': ('repeated', 1593), 'games': ('POWERBALL',)}),
         ('the label before the secondary numbers is missing', {'plant': ('label', 1702), 'games': ('OZLOTTO',)}),
-        ('the updater\'s lock was left behind', {'lock': True}),
         ('the results file was edited outside the updater', {'edited': 'OZLOTTO'}),
         ('a pause shorter than the least allowed', {'pause': 1.0}),
     )
@@ -276,8 +278,6 @@ def compare_behaviour(frozen, new, say=print) -> bool:
                     tree = make_tree(module, Path(folder) / f'{index}_{which}', how.get('held', HELD),
                                      which == 'frozen')
                 kept[title, which] = tree
-                if how.get('lock'):
-                    (tree / 'source_data' / '.results_master.lock').write_bytes(b'x')
                 if how.get('edited'):
                     master = module.Store(tree, how['edited']).master
                     data = bytearray(master.read_bytes())

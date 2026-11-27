@@ -13,7 +13,7 @@ if not exist "%TOOL%" goto :missing_tool
 "%PY%" -I -B -u "%TOOL%" research %*
 exit /b %ERRORLEVEL%
 :missing_settings
-echo REFUSED: %ROOT%ENVIRONMENT.ini is missing. In DEV, copy ENVIRONMENT.example.ini to ENVIRONMENT.ini and put this PC's paths in it. 1>&2
+echo REFUSED: %ROOT%ENVIRONMENT.ini is missing, so this folder is not a tree. In DEV, copy ENVIRONMENT.example.ini to ENVIRONMENT.ini and check its paths. 1>&2
 exit /b 2
 :missing_venv
 echo REFUSED: this tree's Python was not found at %PY%. Build the tree's .venv first. 1>&2

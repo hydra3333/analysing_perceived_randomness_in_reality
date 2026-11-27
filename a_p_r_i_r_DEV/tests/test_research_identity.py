@@ -2,11 +2,12 @@
 own fingerprint.
 
 Each test is named for the rule it proves and plants the fault that rule must catch.
-(The simple scheme v0.2 section 4; the settings file is still the first form and is replaced in step 4 of the work
-order, with its tests.)
+(The simple scheme v0.2 sections 3.1 and 4.)
 """
+import configparser
 import hashlib
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -14,79 +15,122 @@ from pathlib import Path
 import research_fixtures as fixtures
 from research import code_identity, method_flags, settings, variant_folders
 
+TREE_OF_THIS_FILE = Path(__file__).resolve().parents[1]
+
 
 class SettingsFile(unittest.TestCase):
-    """Specification section 2 and deployment design section 1: a tree is what its own file says."""
+    """Scheme section 3.1: one file of the same form in every tree, and the four rules by which a folder is, or
+    is not, the tree its file says."""
 
     def setUp(self):
-        """An invented DEV tree in a temporary folder."""
+        """An invented QA tree in a temporary folder, with the places of the two other trees beside it."""
         self.folder = tempfile.TemporaryDirectory()
-        self.tree = fixtures.make_tree(Path(self.folder.name) / 'dev')
+        self.addCleanup(self.folder.cleanup)
+        self.tree = fixtures.make_tree(Path(self.folder.name) / 'research_QA', role='QA')
+        self.places = fixtures.places_around(self.tree, 'QA')
 
-    def tearDown(self):
-        """Remove the temporary folder."""
-        self.folder.cleanup()
+    def write(self, role: str = 'QA', tree: Path | None = None, **changed) -> None:
+        """Write the tree's settings file again with one or more places changed: write(PROD=(tree, backups))."""
+        places = {**self.places, **changed}
+        ((tree or self.tree) / 'ENVIRONMENT.ini').write_text(fixtures.settings_text(role, places), encoding='utf-8')
 
     def edit(self, old: str, new: str) -> None:
         """Replace one piece of text in the tree's settings file."""
         path = self.tree / 'ENVIRONMENT.ini'
-        text = path.read_text()
+        text = path.read_text(encoding='utf-8')
         self.assertIn(old, text)
-        path.write_text(text.replace(old, new))
+        path.write_text(text.replace(old, new), encoding='utf-8')
 
-    def test_a_valid_file_gives_the_role_and_the_roots(self):
-        found = settings.read_settings(self.tree)
-        self.assertEqual((found.role, found.tree_root, found.backup_root, found.results_copy_from),
-                         ('DEV', self.tree, None, None))
+    def test_a_valid_file_gives_this_trees_role_and_the_places_of_all_three_trees(self):
+        read = settings.read_settings(self.tree)
+        self.assertEqual((read.role, read.tree_root, read.backup_root), ('QA', self.tree, self.places['QA'][1]))
+        self.assertEqual(read.venv_dir, self.tree / '.venv')
+        self.assertEqual({role: (place.tree_root, place.backup_root) for role, place in read.places.items()},
+                         self.places)
 
-    def test_a_missing_file_refuses_and_says_how_to_make_it(self):
+    def test_the_tracked_example_has_the_same_form(self):
+        example = configparser.ConfigParser(interpolation=None)
+        example.read_string((TREE_OF_THIS_FILE / settings.EXAMPLE_FILE_NAME).read_text(encoding='ascii'))
+        self.assertEqual(example.sections(), ['environment', 'DEV', 'QA', 'PROD'])
+        self.assertEqual(example['environment']['role'], 'DEV')
+        for role in settings.ROLES:
+            self.assertEqual(sorted(example[role]), ['backup_root', 'tree_root'])
+            self.assertTrue(example[role]['tree_root'].endswith(role), 'a tree\'s folder name ends with its role')
+
+    def test_a_folder_without_a_settings_file_is_not_a_tree(self):
         (self.tree / 'ENVIRONMENT.ini').unlink()
-        with self.assertRaisesRegex(settings.SettingsRefused, 'ENVIRONMENT.example.ini'):
+        with self.assertRaisesRegex(settings.SettingsRefused, 'no settings file here, so this folder is not a tree'):
             settings.read_settings(self.tree)
 
-    def test_a_missing_key_refuses_naming_file_section_and_key(self):
-        self.edit(f'venv_dir = {self.tree / ".venv"}\n', '')
-        with self.assertRaisesRegex(settings.SettingsRefused, r'\[environment\] venv_dir'):
+    def test_a_missing_key_or_section_refuses_naming_file_section_and_key(self):
+        self.edit(f'backup_root = {self.places["PROD"][1]}\n', '')
+        with self.assertRaisesRegex(settings.SettingsRefused, r'ENVIRONMENT\.ini \[PROD\] backup_root: this setting is missing'):
+            settings.read_settings(self.tree)
+        self.write()
+        self.edit('[DEV]', '[DEVELOPMENT]')
+        with self.assertRaisesRegex(settings.SettingsRefused, r'\[DEV\] tree_root: this setting is missing'):
             settings.read_settings(self.tree)
 
     def test_an_unknown_role_refuses(self):
-        self.edit('role = DEV', 'role = STAGING')
-        with self.assertRaisesRegex(settings.SettingsRefused, 'STAGING'):
+        self.edit('role = QA', 'role = TEST')
+        with self.assertRaisesRegex(settings.SettingsRefused, '"TEST" is not one of DEV, QA, PROD'):
             settings.read_settings(self.tree)
 
-    def test_a_tree_copied_to_another_place_refuses(self):
-        other = fixtures.make_tree(Path(self.folder.name) / 'copy')
-        (other / 'ENVIRONMENT.ini').write_text((self.tree / 'ENVIRONMENT.ini').read_text())
-        with self.assertRaisesRegex(settings.SettingsRefused, 'not what its file says'):
-            settings.read_settings(other)
+    def test_rule_2_the_role_must_be_the_ending_of_the_folders_name(self):
+        self.write(role='PROD', PROD=(self.tree, self.places['PROD'][1]), QA=self.places['PROD'])
+        with self.assertRaisesRegex(settings.SettingsRefused, 'the file says PROD, but the folder it lies in is named '
+                                                              '"research_QA", which does not end with PROD'):
+            settings.read_settings(self.tree)
+
+    def test_rule_2_a_tree_copied_or_renamed_is_not_the_tree_its_file_says(self):
+        for name, said in (('copy_of_research_QA', 'the file says the QA tree is .*research_QA", but the file lies in '
+                                                   '.*copy_of_research_QA'),
+                           ('research_QA_set_aside', 'does not end with QA')):
+            copy = self.tree.parent / name
+            shutil.copytree(self.tree, copy)
+            with self.assertRaisesRegex(settings.SettingsRefused, said, msg=name):
+                settings.read_settings(copy)
+        settings.read_settings(self.tree)
+
+    def test_rule_3_a_command_that_means_another_role_is_refused(self):
+        self.assertEqual(settings.read_settings(self.tree, must_be='QA').role, 'QA')
+        with self.assertRaisesRegex(settings.SettingsRefused, 'this tree is QA, but the command means the PROD tree'):
+            settings.read_settings(self.tree, must_be='PROD')
+
+    def test_rule_4_no_two_roles_share_a_folder_and_no_tree_lies_inside_another(self):
+        for prod, said in ((self.tree, 'the QA tree .* and the PROD tree .* are the same folder, or one lies inside'),
+                           (self.tree / 'inner_PROD', 'the QA tree .* and the PROD tree'),
+                           (self.places['DEV'][0], 'the DEV tree .* and the PROD tree')):
+            self.write(PROD=(prod, self.places['PROD'][1]))
+            with self.assertRaisesRegex(settings.SettingsRefused, said, msg=prod):
+                settings.read_settings(self.tree)
+
+    def test_rule_4_no_backup_folder_is_a_tree_or_lies_inside_any_of_the_three(self):
+        for role, backups, said in (
+                ('QA', self.tree / 'backups', r'\[QA\] backup_root: .* is the QA tree .* or lies inside it'),
+                ('QA', self.tree, r'\[QA\] backup_root'),
+                ('QA', self.places['PROD'][0] / 'backups', r'\[QA\] backup_root: .* is the PROD tree'),
+                ('DEV', self.tree / 'dev_backups', r'\[DEV\] backup_root: .* is the QA tree'),
+                ('PROD', self.places['DEV'][0], r'\[PROD\] backup_root: .* is the DEV tree')):
+            self.write(**{role: (self.places[role][0], backups)})
+            with self.assertRaisesRegex(settings.SettingsRefused, said, msg=(role, backups)):
+                settings.read_settings(self.tree)
+        self.write(DEV=(self.places['DEV'][0], self.places['QA'][1]))
+        settings.read_settings(self.tree)                   # two roles may keep their backups in one folder
 
     def test_a_relative_path_refuses(self):
-        self.edit(f'tree_root = {self.tree}', 'tree_root = some/folder')
-        with self.assertRaisesRegex(settings.SettingsRefused, 'not an absolute path'):
+        self.edit(f'tree_root = {self.places["DEV"][0]}', 'tree_root = research_DEV')
+        with self.assertRaisesRegex(settings.SettingsRefused, r'\[DEV\] tree_root: "research_DEV" is not an absolute path'):
             settings.read_settings(self.tree)
 
     def test_a_path_through_a_link_refuses(self):
-        link = Path(self.folder.name) / 'link'
-        try:
-            link.symlink_to(self.tree, target_is_directory=True)
-        except OSError:
-            self.skipTest('this account cannot create a symbolic link')
-        self.edit(f'tree_root = {self.tree}', f'tree_root = {link}')
-        with self.assertRaisesRegex(settings.SettingsRefused, 'not its own real path'):
+        link = self.tree.parent / 'link_QA'
+        if fixtures.make_folder_link(link, self.tree) is None:
+            self.skipTest('this machine allows neither a symbolic link nor a junction')
+        self.write(QA=(link, self.places['QA'][1]))
+        with self.assertRaisesRegex(settings.SettingsRefused, 'is not its own real path'):
             settings.read_settings(link)
 
-    def test_an_environment_folder_outside_the_tree_refuses(self):
-        self.edit(f'venv_dir = {self.tree / ".venv"}', f'venv_dir = {self.tree.parent / "elsewhere"}')
-        with self.assertRaisesRegex(settings.SettingsRefused, 'not inside the tree'):
-            settings.read_settings(self.tree)
-
-    def test_a_backup_root_inside_the_tree_refuses(self):
-        qa = fixtures.make_tree(Path(self.folder.name) / 'qa', role='QA')
-        path = qa / 'ENVIRONMENT.ini'
-        path.write_text(path.read_text().replace(f'backup_root = {qa.parent / "qa_backups"}',
-                                                 f'backup_root = {qa / "backups"}'))
-        with self.assertRaisesRegex(settings.SettingsRefused, 'outside the tree'):
-            settings.read_settings(qa)
 
 class VariantFolders(unittest.TestCase):
     """Specification 3.4: the declaration, the folder's files, and the fingerprint."""

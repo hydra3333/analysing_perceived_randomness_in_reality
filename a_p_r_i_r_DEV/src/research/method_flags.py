@@ -39,6 +39,10 @@ STAGED_SUFFIX = '.writing'
 PASSED_OVER_NAMES = FLAG_NAMES + tuple(name + STAGED_SUFFIX for name in FLAG_NAMES)
 # The line ending of every file this project writes.
 LINE_ENDING = '\r\n'
+# How an I_AM_INSTALLABLE flag stands against the files it is for (what installable_state returns).
+NOT_FLAGGED = 'not flagged'
+FLAG_OUT_OF_DATE = 'its flag is older than its files'
+FLAGGED = 'flagged'
 # Why settle_in_place wrote a method's IN_PLACE_SINCE (what it returns).
 WRITTEN_FIRST = 'it did not exist'
 WRITTEN_CHANGED = 'the method\'s files changed'
@@ -200,6 +204,40 @@ def settle_retired(folder: Path, game_id: str, last_draw: int) -> bool:
     pairs['reason'] = reason
     write_flag(path, pairs, RETIRED_FIRST_LINE)
     return True
+
+
+def write_installable(folder: Path, fingerprints: dict, made: str) -> bool:
+    """Write an I_AM_INSTALLABLE flag ("make installable", in DEV), unless the flag there already says the same.
+
+    folder: the method's folder, or the tree's src folder for the infrastructure's flag.
+    fingerprints: what the flag vouches for, for example {'fingerprint': 'ab12...'}; for the infrastructure also
+    {'updater_fingerprint': 'cd34...'}.  made: when, as text, for the reader.
+    Returns True if the file was written; False if it already held these fingerprints (it is then left as it is,
+    with its earlier time).
+    """
+    path = folder / INSTALLABLE_NAME
+    try:
+        held = read_flag(path)
+    except FlagFault:
+        held = {}
+    if {key: held.get(key) for key in fingerprints} == fingerprints:
+        return False
+    write_flag(path, {**fingerprints, 'made': made}, 'This version may be installed (written by Make_Installable.bat '
+                                                    'in DEV). It is out of date once the files it names change.')
+    return True
+
+
+def installable_state(folder: Path, fingerprints: dict) -> str:
+    """How a folder's I_AM_INSTALLABLE flag stands against what is in the folder now: NOT_FLAGGED (no flag, or one
+    that cannot be read), FLAG_OUT_OF_DATE (the flag names other fingerprints: the files changed since) or
+    FLAGGED.  fingerprints: as for write_installable, computed from the files now."""
+    try:
+        held = read_flag(folder / INSTALLABLE_NAME)
+    except FlagFault:
+        held = {}
+    if not held:
+        return NOT_FLAGGED
+    return FLAGGED if {key: held.get(key) for key in fingerprints} == fingerprints else FLAG_OUT_OF_DATE
 
 
 def write_retired(folder: Path, retired_from: dict, reason: str) -> None:

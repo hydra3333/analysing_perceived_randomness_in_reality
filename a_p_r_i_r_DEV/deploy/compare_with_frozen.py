@@ -303,9 +303,13 @@ def invented(folder: Path, frozen_from: Path, new_from: Path, draws: int) -> boo
     frozen, new = folder / 'frozen_DEV', folder / 'new_DEV'
     copy_parts(frozen_from, frozen, FROZEN_PARTS)
     copy_parts(new_from, new, NEW_PARTS)
-    for tree in (frozen, new):
-        (tree / 'ENVIRONMENT.ini').write_bytes(
-            f'[environment]\r\nrole = DEV\r\ntree_root = {tree}\r\nvenv_dir = {tree / ".venv"}\r\n'.encode('ascii'))
+    # Each tree's settings file in its own engine's form: the frozen engine's first form, and the scheme's.
+    (frozen / 'ENVIRONMENT.ini').write_bytes(
+        f'[environment]\r\nrole = DEV\r\ntree_root = {frozen}\r\nvenv_dir = {frozen / ".venv"}\r\n'.encode('ascii'))
+    places = {'DEV': new, 'QA': folder / 'no_such_tree_QA', 'PROD': folder / 'no_such_tree_PROD'}
+    (new / 'ENVIRONMENT.ini').write_bytes(('[environment]\r\nrole = DEV\r\n' + ''.join(
+        f'[{role}]\r\ntree_root = {place}\r\nbackup_root = {folder / "backups" / role}\r\n'
+        for role, place in places.items())).encode('ascii'))
     if in_tree(new, INVENT_RESULTS, str(draws)):
         return False
     shutil.copytree(new / 'source_data', frozen / 'source_data')

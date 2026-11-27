@@ -19,7 +19,7 @@ from unittest import mock
 
 import research_command
 import research_fixtures as fx
-from research import code_identity, job_lock, method_flags, reports, research_job
+from research import code_identity, method_flags, reports, research_job, tree_lock
 
 GAME = fx.GAME
 TREE_OF_THIS_FILE = Path(__file__).resolve().parents[1]
@@ -607,20 +607,9 @@ class Reports(fx.JobCase):
 class StartingAndStopping(fx.JobCase):
     """What stops the job before any game, and the games kept apart."""
 
-    def test_an_orphan_marker_blocks_the_launch(self):
+    def test_a_lock_that_exists_refuses_and_is_never_removed_by_another_job(self):
         tree = self.tree()
-        marker = tree / job_lock.ORPHAN_MARKER
-        marker.parent.mkdir(parents=True)
-        marker.write_text('{}', encoding='ascii')
-        code, said = fx.run_job(tree)
-        self.assertEqual(code, 2)
-        self.assertTrue(any('REFUSED: orphan marker present' in line for line in said), said)
-        self.assertFalse((tree / 'results').exists())
-        self.assertTrue(marker.is_file(), 'the job never clears the marker')
-
-    def test_a_job_lock_that_exists_refuses_and_is_never_removed_by_another_job(self):
-        tree = self.tree()
-        lock = tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME
+        lock = tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME
         lock.parent.mkdir(exist_ok=True)
         lock.write_text('research job; started earlier\n', encoding='ascii')
         code, said = fx.run_job(tree)
@@ -634,11 +623,15 @@ class StartingAndStopping(fx.JobCase):
 
     def test_a_tree_that_is_not_what_its_settings_say_refuses(self):
         tree = self.tree()
-        moved = self.root / 'moved'
-        shutil.copytree(tree, moved)
-        code, said = fx.run_job(moved)
-        self.assertEqual(code, 2)
-        self.assertTrue(any('This tree is not what its file says' in line for line in said), said)
+        for name, why in (('moved', 'does not end with DEV'), ('moved_DEV', 'but the file lies in')):
+            moved = self.root / name
+            shutil.copytree(tree, moved)
+            code, said = fx.run_job(moved)
+            self.assertEqual(code, 2, name)
+            self.assertTrue(any(line.startswith('REFUSED:') and why in line
+                                and 'This folder is not the tree its file says: nothing is done here' in line
+                                for line in said), said)
+            self.assertFalse((moved / 'results').exists(), 'nothing was written in it')
 
     def test_the_games_are_worked_apart_and_one_stopping_leaves_the_other_finished(self):
         tree = self.tree(variants=())

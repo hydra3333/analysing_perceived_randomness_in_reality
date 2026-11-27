@@ -16,8 +16,22 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
 - **Step 3 (done): the results updater in this tree** (`src\updater\results_updater.py`,
   `Run_Results_Updater.bat`): the first system's reviewed updater with every Mode H state taken out and nothing
   else changed. The research job runs it at its start unless `--no-update`.
-- **Still to come:** the new settings file, the lock, the backup at the end of a job and the other commands
-  (step 4). Until then the settings file is still the first form (`ENVIRONMENT.example.ini`).
+- **Step 4a (done): what touches only its own tree.** The settings file in its new form and the four rules by
+  which a folder is, or is not, the tree its file says; one lock for every command; a backup at the end of every
+  job; `Backup.bat`; and in DEV `Make_Installable.bat` and `Who_Uses.bat`.
+- **Still to come (step 4b):** the commands that touch another tree: `Create_Tree.bat`, `Install.bat`,
+  `Retire.bat`, `Copy_From_PROD.bat` and `Restore.bat`.
+
+## The settings file, and how a tree knows which tree it is
+
+`ENVIRONMENT.ini`, at the tree's root, has the same form in every tree: this tree's `role`, then for each of DEV,
+QA and PROD its `tree_root` and `backup_root`. In DEV it is made by copying `ENVIRONMENT.example.ini`; Git ignores
+it. Every command works on the folder its own launcher lies in, and first checks that folder: the role must be
+the ending of the folder's name, and that role's `tree_root` must be that folder. No two trees share a folder,
+none lies inside another, and no backup folder lies inside a tree. A folder that fails any of this runs nothing.
+
+Then the command takes the tree's one lock, `records\TREE.lock`. While it exists every other command in that tree
+refuses. A lock left by a command that was killed is deleted by hand, once nothing of the tree is running.
 
 ## What the research job does (`Run_Research.bat`)
 
@@ -26,7 +40,7 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
 For each game: fetch new official results with the tree's updater (unless `--no-update`); read the results on
 file; delete what is out of date and only that; forecast every draw a method has no line for, the next draw
 included; score every forecast whose result is on file; make the league, the
-reports and both OV-1 series again; add one line to `records\JOB_LOG.jsonl`. What is out of date:
+reports and both OV-1 series again; add one line to `records\JOB_LOG.jsonl`; make a backup. What is out of date:
 
 | What changed | What is made again |
 |---|---|
@@ -56,6 +70,21 @@ decision log entry 352).
 - `IN_PLACE_SINCE`: written by the job: the method's fingerprint, and for each game the last draw the tree held
   when this version of the method was first used here. Bookkeeping only: the second OV-1 series counts a method
   from the draw after it. A file that cannot be read never stops its method: the job writes it afresh and says so.
+
+## Backups (`Backup.bat`, and the end of every job)
+
+A backup is one plain ZIP of the whole tree at maximum compression, in the tree's backup folder, named with the
+role, the date and time and why it was made (`PROD_20261201_201012_after_job.zip`). It leaves out `.venv` (rebuilt
+by the two environment scripts; the job log records the versions) and the lock file. Any ZIP program opens it.
+None is ever written over or deleted by this project. If the backup at the end of a job cannot be made, the job
+says so loudly and ends with exit code 1; what it computed stands.
+
+## DEV's own commands
+
+- `Make_Installable.bat family/variant ... | ALL | INFRA` writes the flag `I_AM_INSTALLABLE` beside each method
+  named (ALL: every method) with the method's fingerprint, and for INFRA once in `src\` with the engine's
+  fingerprint and the updater's. A flag is out of date as soon as a file it vouches for changes.
+- `Who_Uses.bat helper_file` lists every method that uses a helper file. It changes nothing.
 
 ## The results updater (`Run_Results_Updater.bat`)
 

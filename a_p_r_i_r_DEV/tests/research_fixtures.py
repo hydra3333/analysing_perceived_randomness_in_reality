@@ -156,22 +156,38 @@ def write_results(tree: Path, game_id: str, last_draw: int, version: int = 1, **
     return raw
 
 
+def settings_text(role: str, places: dict) -> str:
+    """The text of a settings file: this tree's role, and {role: (tree folder, backup folder)} for all three."""
+    lines = ['[environment]', f'role = {role}']
+    for name in ('DEV', 'QA', 'PROD'):
+        lines += [f'[{name}]', f'tree_root = {places[name][0]}', f'backup_root = {places[name][1]}']
+    return '\n'.join(lines) + '\n'
+
+
+def places_around(tree: Path, role: str) -> dict:
+    """Invented places for the three trees and their backup folders, all beside one another: the given tree for
+    its own role, and folders that need not exist for the two other roles."""
+    stem = tree.name[:-len(role)].rstrip('_') or 'tree'
+    return {name: (tree if name == role else tree.parent / f'{stem}_other_{name}',
+                   tree.parent / f'{stem}_backups' / name) for name in ('DEV', 'QA', 'PROD')}
+
+
 def make_tree(root: Path, role: str = 'DEV') -> Path:
     """Make an empty invented tree: its settings file, one invented file of "the engine" (so that a test can
     change the engine's fingerprint) and the folders the engine expects.
 
-    root: an existing empty folder.  role: 'DEV', 'QA' or 'PROD'.  Returns the tree's real path.
+    root: where to make it; if the folder's name does not end with the role, the role is added to it (a tree's
+    folder name ends with its role).  role: 'DEV', 'QA' or 'PROD'.  Returns the tree's real path.
     """
-    tree = Path(root).resolve()
+    root = Path(root)
+    if not root.name.endswith(role):
+        root = root.with_name(f'{root.name}_{role}')
+    root.mkdir(parents=True, exist_ok=True)
+    tree = root.resolve()
     (tree / 'src' / 'methods').mkdir(parents=True)
     (tree / '.venv').mkdir()
     (tree / 'src' / ENGINE_FILE).write_text('# an invented file of the engine\n', encoding='ascii')
-    lines = ['[environment]', f'role = {role}', f'tree_root = {tree}', f'venv_dir = {tree / ".venv"}']
-    if role != 'DEV':
-        backups = tree.parent / (tree.name + '_backups')
-        backups.mkdir(exist_ok=True)
-        lines.append(f'backup_root = {backups}')
-    (tree / 'ENVIRONMENT.ini').write_text('\n'.join(lines) + '\n', encoding='utf-8')
+    (tree / 'ENVIRONMENT.ini').write_text(settings_text(role, places_around(tree, role)), encoding='utf-8')
     return tree
 
 
@@ -234,19 +250,26 @@ def never_the_real_updater(tree_root, game_id) -> None:
     raise AssertionError('a test job tried to fetch results without a stand-in for the updater')
 
 
+def backup_left_out(settings, why, moment) -> Path:
+    """What a test job is given in place of the backup at its end, unless the test is about the backup: nothing
+    is written, so that tests stay quick and a tree's files are only what the job itself made."""
+    return Path('(no backup is made in this test)')
+
+
 def run_job(tree: Path, games=(GAME,), **options) -> tuple:
     """Run the research job in an invented tree at the fixed time.
 
     tree: the tree.  games: the games to work.  options: run()'s other arguments (no_update, rebuild,
-    rebuild_all, checkpoint, update); the updater is left out unless a test says otherwise, and is then the
-    test's own stand-in.
+    rebuild_all, checkpoint, update, backup); the updater is left out unless a test says otherwise, and is then
+    the test's own stand-in; the backup at the end is left out unless the test gives research.backup.make_backup.
     Returns (the exit code, the lines the job said), for example (0, ['RESEARCH JOB - START - ...', ...]).
     """
     from research import research_job
     said = []
     with ImportPath(tree):
         code = research_job.run(tree, games, now=lambda: FIXED_TIME, say=said.append,
-                                **{'no_update': True, 'update': never_the_real_updater, **options})
+                                **{'no_update': True, 'update': never_the_real_updater, 'backup': backup_left_out,
+                                   **options})
     return code, said
 
 
@@ -350,9 +373,7 @@ class JobCase(unittest.TestCase):
         variants: names, or (name, behaviour) pairs; TOY_B_V1 is given the reversed order unless a behaviour is
         named.
         """
-        folder = self.root / name
-        folder.mkdir()
-        tree = make_tree(folder, role=role)
+        tree = make_tree(self.root / name, role=role)
         write_results(tree, GAME, last_draw)
         for entry in variants:
             self.add_variant(tree, *((entry,) if isinstance(entry, str) else entry))

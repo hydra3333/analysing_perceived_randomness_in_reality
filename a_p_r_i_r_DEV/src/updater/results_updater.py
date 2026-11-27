@@ -22,10 +22,11 @@ What this file is for
     records, the weekly session lock, the first-update admission and the one-off "init" command are gone; the
     source, the parsing and every check of game, draw number, date, range and overlap are that program's own
     statements. One statement is added: the check of the browser's final URL is made a second time, after the
-    page has finished loading and immediately before it is parsed. deploy/compare_updater_with_frozen.py shows it, function by
-    function and by running both on the same invented pages. For that reason the names and the layout of the
-    statements are the reviewed program's, not this project's later style (the one exception to the coding
-    practices in this file).
+    page has finished loading and immediately before it is parsed. And the updater's own lock file is gone:
+    the tree's one lock, held by whoever starts an update, stands in its place.
+    deploy/compare_updater_with_frozen.py shows all of this, definition by definition and by running both on
+    the same invented pages. For that reason the names and the layout of the statements are the reviewed
+    program's, not this project's later style (the one exception to the coding practices in this file).
 
     Exit codes: 0 done (or nothing new); 1 a check failed or the files disagree; 2 STOP (a blocked page, a page
     that cannot be read); 3 refused.
@@ -538,54 +539,28 @@ def update_game(root: Path, game: str, fetcher, months_back: int, today: date) -
             "warnings": warns, "grab": grab_path.name, "backup": backup.name}
 
 
-class Lock:
-    """The updater's own lock in a tree: one file, made by an exclusive create and removed when the block ends,
-    so that two updates never run in one tree at once. Refuses (Refused) if the file exists."""
-
-    def __init__(self, root: Path):
-        """root: the tree."""
-        self.path = root / "source_data" / ".results_master.lock"
-
-    def __enter__(self):
-        """Take the lock, or refuse if the file exists."""
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        try:
-            fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-        except FileExistsError:
-            raise Refused(f"{self.path.name} exists: another run is active, or a previous run crashed "
-                          "(check, then delete the lock by hand)") from None
-        os.write(fd, datetime.now(timezone.utc).isoformat().encode("ascii"))
-        os.close(fd)
-        return self
-
-    def __exit__(self, *exc):
-        """Release the lock: remove the file."""
-        try:
-            self.path.unlink()
-        except FileNotFoundError:
-            pass
-
-
 def cmd_update(root: Path, games: list[str], months_back: int, browser: str, pause: float,
                fetcher_factory=None, today: date | None = None) -> int:
-    """Update the results files of the named games in a tree, under the updater's lock, and say what was done.
+    """Update the results files of the named games in a tree, and say what was done.
 
     root: the tree.  games: for example ["POWERBALL", "OZLOTTO"].  months_back: previous months to ask for
     besides the current one.  browser, pause: for the real fetcher.  fetcher_factory: makes the fetcher (a test
     gives one that reads invented pages; left out, the real browser is started).  today: the last date asked for
     (left out, the PC's date).
+    The caller holds the tree's lock (research/tree_lock.py): the research job, or the command program when
+    the updater is started by itself. The first system's updater had a lock of its own; the tree's one lock
+    stands in its place.
     Returns 0. Raises Refused, Stop or VerifyFail as update_game does; a game after the one that failed is not
     worked."""
     check_constants()
     if pause < MIN_PAUSE_SECONDS:
         raise Refused(f"--pause must be at least {MIN_PAUSE_SECONDS}")
     today = today or date.today()
-    with Lock(root):
-        fetcher = (fetcher_factory or (lambda: BrowserFetcher(browser, pause)))()
-        try:
-            results = [update_game(root, g, fetcher, months_back, today) for g in games]
-        finally:
-            getattr(fetcher, "close", lambda: None)()
+    fetcher = (fetcher_factory or (lambda: BrowserFetcher(browser, pause)))()
+    try:
+        results = [update_game(root, g, fetcher, months_back, today) for g in games]
+    finally:
+        getattr(fetcher, "close", lambda: None)()
     for r in results:
         print(f"[MASTER] {r['game']}: checked {r['checked']} overlapping draws (all matched), added {r['added']}"
               + (f" ({r['added_range']})" if r.get("added_range") else "") + f", warnings {len(r['warnings'])}")

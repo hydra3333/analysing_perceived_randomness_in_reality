@@ -18,7 +18,7 @@ Which of the project's own modules it uses
     research.variant_lists  RESEARCH_FOLDER
 
 What uses it
-    research/research_job.py, the commands of deploy/ and the tests.
+    research/research_job.py, deploy/dev_tools.py and the tests.
 """
 from __future__ import annotations
 
@@ -65,6 +65,16 @@ def infrastructure_fingerprint(tree_root: Path) -> str:
     order. For example 'ab12...' (64 hexadecimal characters)."""
     text = ''.join(f'{relative}\t{sha256_of_file(Path(tree_root) / relative)}\n'
                    for relative in infrastructure_files(tree_root))
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()
+
+
+def updater_fingerprint(tree_root: Path) -> str:
+    """One SHA-256 over every file of a tree's results updater (src/updater), made as the infrastructure's is.
+    The updater is not part of the engine's fingerprint; this one lets an install see whether it differs."""
+    folder = Path(tree_root) / 'src' / UPDATER_FOLDER
+    files = sorted(path.relative_to(tree_root).as_posix() for path in folder.rglob('*')
+                   if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.pyo'))
+    text = ''.join(f'{relative}\t{sha256_of_file(Path(tree_root) / relative)}\n' for relative in files)
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 

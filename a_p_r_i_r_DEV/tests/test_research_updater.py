@@ -22,7 +22,7 @@ if str(TREE_OF_THIS_FILE / 'deploy') not in sys.path:
 import compare_updater_with_frozen as compare               # noqa: E402  (after the path line above)
 import research_command                                     # noqa: E402
 import research_fixtures as fx                              # noqa: E402
-from research import code_identity, job_lock, research_job  # noqa: E402
+from research import code_identity, research_job, tree_lock  # noqa: E402
 
 # The updater under test, loaded from its file with its real fetcher replaced by one that refuses.
 updater = compare.load(compare.NEW_FILE, 'updater_under_test')
@@ -229,12 +229,9 @@ class AnUpdate(WithATree):
             update(self.tree, games=('OZLOTTO',))
         self.assertFalse(store.grabs.exists(), 'nothing was fetched')
 
-    def test_a_lock_left_behind_refuses_and_a_grab_or_a_backup_is_never_written_over(self):
-        lock = self.tree / 'source_data' / '.results_master.lock'
-        lock.write_text('x', encoding='ascii')
-        with self.assertRaisesRegex(updater.Refused, 'another run is active, or a previous run crashed'):
-            update(self.tree)
-        self.assertTrue(lock.exists(), 'never removed for the owner')
+    def test_a_grab_or_a_backup_is_never_written_over_and_the_updater_has_no_lock_of_its_own(self):
+        self.assertFalse(hasattr(updater, 'Lock'), 'the tree\'s one lock, held by whoever starts an update, stands in '
+                                                   'its place')
         path = self.tree / 'x.csv'
         updater.write_new(path, b'a')
         with self.assertRaises(FileExistsError):
@@ -287,7 +284,7 @@ class TheCommandLine(WithATree):
 
     def test_started_by_itself_the_updater_holds_the_trees_lock_and_refuses_while_a_job_holds_it(self):
         tree = fx.make_tree(self.tree / 'whole_tree')
-        lock = tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME
+        lock = tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME
         seen = []
 
         def stand_in(arguments, root):
@@ -340,7 +337,7 @@ class TheJobFetchesFirst(fx.JobCase):
 
     def test_new_results_are_fetched_under_the_jobs_lock_and_worked_in_the_same_job(self):
         tree = self.tree_of_both()
-        lock, held = tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME, []
+        lock, held = tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME, []
         fetch = self.stand_in()
 
         def watched(tree_root, game_id):
@@ -370,8 +367,8 @@ class TheJobFetchesFirst(fx.JobCase):
         self.assertNotIn('No new results were added', loud[0], 'an update can fail after it has published')
         targets = [line['content']['target'] for line in fx.list_lines(tree, 'E_901', 'TOY_A_V1')]
         self.assertEqual(targets[-1], HELD['POWERBALL'] + 1, 'the research was done on the results held')
-        self.assertEqual(said[-1], 'The job finished, but not cleanly: the results updater or a method did not finish. '
-                                   'See the warnings above.')
+        self.assertEqual(said[-1], 'The job finished, but not cleanly: the results updater, a method or the backup '
+                                   'did not finish. See the warnings above.')
 
         def broken(tree_root, game_id):
             """An updater that fails in a way of its own (no browser on this PC, say)."""
@@ -458,7 +455,7 @@ class TheSameAsTheFrozenUpdater(unittest.TestCase):
         self.assertTrue(compare.compare_definitions(compare.FROZEN_FILE, compare.NEW_FILE, say=said.append), said)
         frozen = compare.load(compare.FROZEN_FILE, 'frozen_updater_under_test')
         self.assertTrue(compare.compare_behaviour(frozen, updater, say=said.append), said)
-        self.assertEqual(len([line for line in said if line.startswith('SAME')]), 13, said)
+        self.assertEqual(len([line for line in said if line.startswith('SAME')]), 12, said)
 
     def test_a_changed_statement_in_the_new_updater_is_found_both_ways(self):
         source = compare.NEW_FILE.read_text(encoding='ascii')

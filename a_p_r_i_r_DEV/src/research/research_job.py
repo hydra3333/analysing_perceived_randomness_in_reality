@@ -20,12 +20,12 @@ What this file is for
       a report the records no longer give (for a draw no longer on file, say): it is removed.
 
 Which part of the scheme it carries out
-    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5. Arriving with step 4 of the work order: the
-    new settings file, the lock and the backup at the job's end.
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5 (all eight steps).
 
 Which of the project's own modules it uses
-    research.settings          read_settings: the tree's role and paths
-    research.job_lock          the job lock
+    research.settings          the tree's role and paths
+    research.tree_lock         enter_tree: the tree's identity and working folders; the tree's lock
+    research.backup            the backup at the end of the job
     research.code_identity     the infrastructure's fingerprint
     research.variant_folders   find_variants, load_method: the methods in the tree
     research.method_flags      the small files beside a method: retired, in place since
@@ -52,15 +52,16 @@ from datetime import datetime, timezone
 from importlib import metadata
 from pathlib import Path
 
+from research import backup as backups
 from research import code_identity, method_flags, ov1_ledger, reports
 from research import variant_lists as lists
 from research.forecast_engine import FORECAST, compute_target, content_digest, view_digest_for
 from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
                                  load_variant_state, summarise_target_line)
-from research.job_lock import LaunchRefused, check_no_orphan_marker, check_working_folders, job_lock
+from research.tree_lock import LaunchRefused, enter_tree, tree_lock
 from research.reader import ResultsRefused, results_on_file
 from research.scoring import score_content
-from research.settings import SettingsRefused, TreeSettings, read_settings
+from research.settings import SettingsRefused, TreeSettings
 from research.variant_folders import VariantRefused, find_variants, load_method
 
 # The games, in the order a job for BOTH works them. They are never pooled.
@@ -95,6 +96,7 @@ class Job:
     rebuild: the identities --rebuild names (empty if none).  no_update: True to leave the updater out.
     update: called with (tree root, game) to fetch new official results; see update_with_the_trees_updater.
     fetching_stopped: True once the website has stopped the updater in this job; nothing more is fetched then.
+    backup: called with (settings, why, the time) to make the backup at the job's end; see research/backup.py.
     now: gives the present time (UTC); a test passes a fixed one.  say: prints one line for the owner.
     checkpoint: called with a label after each kind of write; see no_checkpoint.
     warnings: every warning said so far, to be said again at the end.  counts: {game: Counter of what was written}.
@@ -106,6 +108,7 @@ class Job:
     rebuild: frozenset
     no_update: bool
     update: object
+    backup: object
     now: object
     say: object
     checkpoint: object = no_checkpoint
@@ -547,39 +550,54 @@ def write_job_log(job: Job, games, started: str, endings: list, how: str) -> Non
 
 
 def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_all: bool = False, now=None,
-        say=print, checkpoint=no_checkpoint, update=update_with_the_trees_updater) -> int:
+        say=print, checkpoint=no_checkpoint, update=update_with_the_trees_updater,
+        backup=backups.make_backup) -> int:
     """Run the research job in a tree.
 
     tree_root: the tree's folder.  games: the games to work, for example ('POWERBALL', 'OZLOTTO').
     no_update: leave the results updater out.  rebuild: method identities ('E_002/RECUR_MEAN_ALL_V1') whose
     results are deleted and made again.  rebuild_all: delete and make again everything.
-    now, say, checkpoint, update: see Job (a test passes its own; no test lets the real updater run).
-    Returns the exit code: 0 finished; 1 a game stopped, a method's calculation failed or the updater did not
-    finish (the rest is still worked); 2 the job itself refused before any game (the settings, a working folder
-    that is not the tree's own, the job lock, an unknown --rebuild name).
+    now, say, checkpoint, update, backup: see Job (a test passes its own; no test lets the real updater run).
+    Returns the exit code: 0 finished; 1 a game stopped, or a method's calculation, the updater or the backup did
+    not finish (the rest is still worked, and what was computed stands); 2 the job itself refused before any
+    game (the folder is not the tree its settings say, a working folder is not the tree's own, the tree's lock
+    is held, an unknown --rebuild name).
     """
     now = now or (lambda: datetime.now(timezone.utc))
-    tree_root = Path(tree_root)
     started = now().astimezone().strftime('%Y-%m-%d %H:%M')
     try:
-        settings = read_settings(tree_root)
+        settings = enter_tree(Path(tree_root))
         say(f'RESEARCH JOB - START - {started} - the {settings.role} tree at {settings.tree_root}')
         say(f'About to work: {", ".join(games)}' + (' (results updater left out: --no-update)' if no_update else '')
             + (f'; rebuilding {", ".join(sorted(rebuild))} (--rebuild)' if rebuild else '')
             + ('; rebuilding everything (--rebuild-all)' if rebuild_all else ''))
-        check_no_orphan_marker(settings.tree_root)
-        check_working_folders(settings.tree_root)
-        with job_lock(settings.tree_root, 'research job', started):
+        with tree_lock(settings.tree_root, 'research job', started):
             return run_locked(settings, games, no_update, rebuild, rebuild_all, now, say, checkpoint, started,
-                              update)
+                              update, backup)
     except (SettingsRefused, LaunchRefused, VariantRefused) as refusal:
         say(f'REFUSED: {refusal}')
         say('RESEARCH JOB - END - refused before any game was worked; nothing was written.')
         return EXIT_REFUSED
 
 
+def back_up_after_the_job(job: Job, started: str) -> None:
+    """The job's last step: a backup of the tree, made while the job still holds the lock. If it cannot be made
+    the job says so loudly and notes it in the job log; what the job computed stands (scheme section 7)."""
+    try:
+        path = job.backup(job.settings, 'after job', job.now().astimezone())
+    except Exception as fault:                  # a backup that fails must not undo or hide the job's work
+        text = f'{type(fault).__name__}: {fault}'
+        job.failed.append(f'the backup after the job was not made: {text}')
+        job.warn(f'THE BACKUP AFTER THIS JOB WAS NOT MADE ({text}). What the job computed stands. When the cause is '
+                 f'put right, make one with Backup.bat.')
+        with open(job.settings.tree_root / JOB_LOG, 'ab') as stream:
+            stream.write(lists.record_bytes({'started': started, 'note': job.failed[-1]}))
+        return
+    job.say(f'Backup made: {path}')
+
+
 def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_all: bool, now, say, checkpoint,
-               started: str, update) -> int:
+               started: str, update, backup) -> int:
     """The job once it holds the job lock: read the methods, settle the engine's fingerprint, then work each
     game. Arguments and result as for run()."""
     tree_root = settings.tree_root
@@ -589,7 +607,7 @@ def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_
         raise VariantRefused(f'--rebuild names no method of this tree: {", ".join(unknown)}. Give each as '
                              f'<family>/<variant>, for example E_002/RECUR_MEAN_ALL_V1.')
     job = Job(settings=settings, variants=variants, rebuild=frozenset(rebuild), no_update=no_update, update=update,
-              now=now, say=say, checkpoint=checkpoint)
+              backup=backup, now=now, say=say, checkpoint=checkpoint)
     for name, why in refused:
         job.warn(f'the method folder {name} fails its checks and is passed over: {why}')
         job.failed.append(f'{name}: passed over: {why}')
@@ -607,6 +625,10 @@ def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_
                            f'{type(fault).__name__}: {fault}. Running the job again tries again.')
             say(traceback.format_exc())
         say(endings[-1])
+    how = ('at least one game did not finish' if stopped
+           else 'finished, but not cleanly: the updater or a method did not finish' if job.failed else 'finished')
+    write_job_log(job, games, started, endings, how)            # before the backup, so that the backup holds it
+    back_up_after_the_job(job, started)
     say(f'RESEARCH JOB - END - {job.local_time()} - the {settings.role} tree at {settings.tree_root}')
     for ending in endings:
         say(ending)
@@ -614,15 +636,11 @@ def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_
         say(f'REBUILT (said again): {text}')
     for warning in job.warnings:
         say(f'WARNING (said again): {warning}')
-    not_clean = stopped or bool(job.failed)
-    how = ('at least one game did not finish' if stopped
-           else 'finished, but not cleanly: the updater or a method did not finish' if job.failed else 'finished')
-    write_job_log(job, games, started, endings, how)
     say('A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
-        else 'The job finished, but not cleanly: the results updater or a method did not finish. See the warnings '
-             'above.'
+        else 'The job finished, but not cleanly: the results updater, a method or the backup did not finish. See '
+             'the warnings above.'
         if job.failed else 'The job finished.')
-    return EXIT_GAME_STOPPED if not_clean else EXIT_FINISHED
+    return EXIT_GAME_STOPPED if stopped or job.failed else EXIT_FINISHED
 
 
 def main(arguments, tree_root: Path) -> int:

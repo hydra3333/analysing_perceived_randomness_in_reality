@@ -7,7 +7,7 @@ Each test is named for the rule it proves and plants the fault that rule must ca
 Which of the project's own modules it uses
     research_fixtures       invented trees, toy variants and the research job run in them
     file_form (deploy/)     the project's one checker of the form of a file
-    research.windows_text, research.reports, research.job_lock, research.method_flags   the writers under test
+    research.windows_text, research.reports, research.tree_lock, research.method_flags   the writers under test
 
 What uses it
     The project's test suite.
@@ -24,7 +24,7 @@ if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
 
 import file_form                                            # noqa: E402  (after the path line above)
 import research_fixtures as fx                              # noqa: E402
-from research import job_lock, method_flags, reports       # noqa: E402
+from research import method_flags, reports, tree_lock      # noqa: E402
 from research.windows_text import LINE_ENDING, windows_lines                       # noqa: E402
 
 GAME = fx.GAME
@@ -114,8 +114,8 @@ class TheSmallFiles(unittest.TestCase):
                          method_flags.MethodStatus(1601, 'a test of the file forms', 1601))
 
     def test_a_lock_file_is_one_line_ending_crlf(self):
-        path = self.tree / job_lock.RECORDS_FOLDER / job_lock.JOB_LOCK_NAME
-        with job_lock.FileLock(path, 'research job', '2026-12-01 20:10'):
+        path = self.tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME
+        with tree_lock.FileLock(path, 'research job', '2026-12-01 20:10'):
             data = path.read_bytes()
         self.assertEqual(crlf_faults(data), [])
         self.assertEqual(data.count(b'\r\n'), 1)

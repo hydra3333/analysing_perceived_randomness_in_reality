@@ -1,20 +1,35 @@
-"""A tree's own settings file, ENVIRONMENT.ini: reading it and checking it.
+r"""A tree's settings file, ENVIRONMENT.ini: reading it, and how a tree knows which tree it is.
 
 What this file is for
-    Every tree (DEV, QA, PROD) has one small settings file at its root that says what the tree is: its role, its
-    own folder, where its backups go, and (in QA and DEV) where the accepted results are copied from. No path and
-    no role is written in any program: programs read them here. This file reads the settings and makes the
-    checks that concern one tree. It never writes a settings file.
+    Every tree (DEV, QA, PROD) has one small settings file at its root, of the same form in all three: the
+    tree's own role, and for each of the three roles where that tree lies and where its backups go.
 
-Which part of the specification it carries out
-    doc/Predictive_Randomness_System_Specification_v0_6.md section 2;
-    doc/Predictive_Randomness_Deployment_Design_v0_12.md section 1 (the checks 1 to 4 as they apply to one tree).
+        [environment]
+        role = QA
+        [DEV]
+        tree_root = E:\...\a_p_r_i_r_DEV
+        backup_root = T:\a_p_r_i_r_backups\DEV
+        [QA]
+        tree_root = T:\a_p_r_i_r_QA
+        backup_root = T:\a_p_r_i_r_backups\QA
+        [PROD]
+        tree_root = G:\a_p_r_i_r_PROD
+        backup_root = T:\a_p_r_i_r_backups\PROD
+
+    No path and no role is written in any program: programs read them here. A command works on the folder its
+    own launcher lies in, and this file checks that folder before anything else is done there: the role must be
+    the ending of the folder's name, and that role's tree_root must be that folder. So a tree that was copied or
+    renamed, or a settings file put into the wrong tree, runs nothing. It never writes a settings file.
+
+Which part of the scheme it carries out
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 3.1 (the four rules of identity).
 
 Which of the project's own modules it uses
-    None.
+    none.
 
 What uses it
-    research/research_job.py and research/withdraw.py (through the launchers), and the engine's tests.
+    src/research_command.py and research/research_job.py (every command, first), research/backup.py, the tools of
+    deploy/, and the tests.
 """
 from __future__ import annotations
 
@@ -23,43 +38,60 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
-# The settings file's name, at the root of every tree.
+# The settings file's name, at the root of every tree, and the tracked example it is made from in DEV.
 SETTINGS_FILE_NAME = 'ENVIRONMENT.ini'
-# The tracked example the owner copies to make DEV's file (deployment design section 1).
 EXAMPLE_FILE_NAME = 'ENVIRONMENT.example.ini'
 # The three roles a tree can have.
 ROLES = ('DEV', 'QA', 'PROD')
+# A tree's own Python environment, a folder at its root (built by the owner's two scripts; left out of backups).
+ENVIRONMENT_FOLDER = '.venv'
 
 
 class SettingsRefused(ValueError):
-    """The settings file is missing or wrong. The message names the file, the section and the key, says what was
-    found and what to do."""
+    """The settings file is missing or wrong, or the folder is not the tree the file says. The message names the
+    file, the section and the key, says what was found and what to do."""
+
+
+@dataclass(frozen=True)
+class TreePlace:
+    """Where one role's tree lies and where its backups go, as the settings file says."""
+    tree_root: Path
+    backup_root: Path
 
 
 @dataclass(frozen=True)
 class TreeSettings:
     """What a tree's settings file says.
 
-    role: 'DEV', 'QA' or 'PROD'.  tree_root: the tree's own folder.  venv_dir: its Python environment folder.
-    backup_root: where its backups go (None in DEV, which has none).
-    results_copy_from: the tree whose accepted results this tree copies (None in PROD, and in a DEV or QA tree
-    whose file names none yet).
+    role: this tree's own role, 'DEV', 'QA' or 'PROD'.  places: {role: TreePlace} for all three roles.
     """
     role: str
-    tree_root: Path
-    venv_dir: Path
-    backup_root: Path | None
-    results_copy_from: Path | None
+    places: dict
+
+    @property
+    def tree_root(self) -> Path:
+        """This tree's own folder."""
+        return self.places[self.role].tree_root
+
+    @property
+    def backup_root(self) -> Path:
+        """Where this tree's backups go."""
+        return self.places[self.role].backup_root
+
+    @property
+    def venv_dir(self) -> Path:
+        """This tree's own Python environment folder."""
+        return self.tree_root / ENVIRONMENT_FOLDER
 
 
-def _same_folder(a: Path, b: Path) -> bool:
+def same_folder(a: Path, b: Path) -> bool:
     """True if two paths name the same folder, compared as the operating system compares names (Windows ignores
-    letter case). For example _same_folder(Path('E:/a'), Path('e:/A')) is True on Windows."""
+    letter case). For example same_folder(Path('E:/a'), Path('e:/A')) is True on Windows."""
     return os.path.normcase(str(a)) == os.path.normcase(str(b))
 
 
-def _inside(inner: Path, outer: Path) -> bool:
-    """True if `inner` is `outer` itself or lies under it, for example _inside(Path('/t/.venv'), Path('/t'))."""
+def inside(inner: Path, outer: Path) -> bool:
+    """True if `inner` is `outer` itself or lies under it, for example inside(Path('/t/.venv'), Path('/t'))."""
     inner_text, outer_text = os.path.normcase(str(inner)), os.path.normcase(str(outer))
     return inner_text == outer_text or inner_text.startswith(outer_text.rstrip('\\/') + os.sep)
 
@@ -67,7 +99,7 @@ def _inside(inner: Path, outer: Path) -> bool:
 def _real_absolute_path(text: str, where: str) -> Path:
     """Turn one path of the settings file into a Path, refusing a relative path or one that passes through a link.
 
-    text: the value as written, for example 'D:\\TEST_BED'.  where: 'file [section] key', for the message.
+    text: the value as written, for example 'T:\\a_p_r_i_r_QA'.  where: 'file [section] key', for the message.
     Returns the Path. Refuses (SettingsRefused) a path that is not absolute, or that is not its own real path
     (a junction, a link or a substituted drive lies in it), saying which.
     """
@@ -75,34 +107,38 @@ def _real_absolute_path(text: str, where: str) -> Path:
     if not text or not path.is_absolute():
         raise SettingsRefused(f'{where}: "{text}" is not an absolute path. Type the full path of the folder.')
     real = Path(os.path.realpath(path))
-    if not _same_folder(real, path):
+    if not same_folder(real, path):
         raise SettingsRefused(f'{where}: "{text}" is not its own real path (it resolves to "{real}"): a link, a '
                               f'junction or a substituted drive lies in it. Type the real path.')
     return path
 
 
-def read_settings(tree_root: Path) -> TreeSettings:
-    """Read and check the settings file of the tree at `tree_root`.
+def read_settings(tree_folder: Path, must_be: str | None = None) -> TreeSettings:
+    """Read the settings file of the tree in a folder, and check that the folder is the tree the file says.
 
-    tree_root: the folder the launcher is in.
-    Returns the TreeSettings, for example TreeSettings(role='DEV', tree_root=Path('E:/.../project'), venv_dir=...,
-    backup_root=None, results_copy_from=None).
-    Refuses (SettingsRefused): no file; a file Python's INI reader rejects; a missing section or key; a role that
-    is not DEV, QA or PROD; a path that is relative or not real; a tree_root that is not this folder ("this tree
-    is not what its file says"); an environment folder outside the tree; a backup root inside the tree; a
-    [results] section in PROD; a copy_from that is this tree itself.
+    tree_folder: the folder the launcher lies in (or, for a command that touches another tree, that tree's
+    folder).  must_be: None, or the role the tree must have (rule 3: a command that reads from or writes into
+    another tree says which role it means).
+    Returns the TreeSettings, for example TreeSettings(role='QA', places={'DEV': TreePlace(...), 'QA': ..., ...}).
+    Refuses (SettingsRefused), in this order: no file ("not a tree"); a file Python's INI reader rejects; a missing
+    section or key; a role that is not DEV, QA or PROD; a path that is relative or not real; two roles with one
+    tree_root, or one tree inside another; a backup folder that is one of the trees or lies inside one (rule 4);
+    a role that is not the ending of the folder's name, or whose tree_root is not this folder (rule 2); a role
+    other than must_be (rule 3).
     """
-    file_path = Path(tree_root) / SETTINGS_FILE_NAME
+    folder = Path(tree_folder)
+    file_path = folder / SETTINGS_FILE_NAME
     if not file_path.is_file():
-        raise SettingsRefused(f'{file_path}: the settings file is missing. In DEV, copy {EXAMPLE_FILE_NAME} to '
-                              f'{SETTINGS_FILE_NAME} beside it and type this PC\'s paths; in QA and PROD only '
-                              f'Init_Tree creates it.')
+        raise SettingsRefused(f'{file_path}: there is no settings file here, so this folder is not a tree. In DEV, '
+                              f'copy {EXAMPLE_FILE_NAME} to {SETTINGS_FILE_NAME} beside it and check its paths; a QA '
+                              f'or PROD tree is made only by Create_Tree.bat.')
     parser = configparser.ConfigParser(interpolation=None, delimiters=('=',), strict=True)
     parser.optionxform = str
     try:
         parser.read_string(file_path.read_text(encoding='utf-8'), source=str(file_path))
     except (configparser.Error, UnicodeDecodeError) as error:
-        raise SettingsRefused(f'{file_path}: not a readable settings file ({error}). Correct the file by hand.') from None
+        raise SettingsRefused(f'{file_path}: not a readable settings file ({error}). Correct the file by '
+                              f'hand.') from None
 
     def value(section: str, key: str) -> str:
         """One value of the file, refusing a missing section or key by name."""
@@ -114,28 +150,33 @@ def read_settings(tree_root: Path) -> TreeSettings:
     role = value('environment', 'role')
     if role not in ROLES:
         raise SettingsRefused(f'{file_path} [environment] role: "{role}" is not one of {", ".join(ROLES)}.')
-    root = _real_absolute_path(value('environment', 'tree_root'), f'{file_path} [environment] tree_root')
-    if not _same_folder(root, Path(os.path.realpath(tree_root))):
-        raise SettingsRefused(f'{file_path} [environment] tree_root: the file says "{root}" but it lies in '
-                              f'"{tree_root}". This tree is not what its file says: a copied or moved tree is '
-                              f'refused. Correct the file, or use the tree where it was created.')
-    venv = _real_absolute_path(value('environment', 'venv_dir'), f'{file_path} [environment] venv_dir')
-    if not _inside(venv, root) or _same_folder(venv, root):
-        raise SettingsRefused(f'{file_path} [environment] venv_dir: "{venv}" is not inside the tree "{root}". The '
-                              f'environment folder must lie inside its own tree, so that every backup holds it.')
-    backup = None
-    if role != 'DEV':
-        backup = _real_absolute_path(value('environment', 'backup_root'), f'{file_path} [environment] backup_root')
-        if _inside(backup, root) or _inside(root, backup):
-            raise SettingsRefused(f'{file_path} [environment] backup_root: "{backup}" and the tree "{root}" lie '
-                                  f'one inside the other. The backup root must be outside the tree.')
-    copy_from = None
-    if parser.has_section('results'):
-        if role == 'PROD':
-            raise SettingsRefused(f'{file_path} [results]: PROD has no [results] section; its results come from '
-                                  f'the updater. Remove the section.')
-        copy_from = _real_absolute_path(value('results', 'copy_from'), f'{file_path} [results] copy_from')
-        if _inside(copy_from, root) or _inside(root, copy_from):
-            raise SettingsRefused(f'{file_path} [results] copy_from: "{copy_from}" is this tree, or lies inside '
-                                  f'or around it. It must name the other tree whose results are copied.')
-    return TreeSettings(role=role, tree_root=root, venv_dir=venv, backup_root=backup, results_copy_from=copy_from)
+    places = {name: TreePlace(_real_absolute_path(value(name, 'tree_root'), f'{file_path} [{name}] tree_root'),
+                              _real_absolute_path(value(name, 'backup_root'), f'{file_path} [{name}] backup_root'))
+              for name in ROLES}
+    for index, first in enumerate(ROLES):
+        for second in ROLES[index + 1:]:
+            a, b = places[first].tree_root, places[second].tree_root
+            if inside(a, b) or inside(b, a):
+                raise SettingsRefused(f'{file_path}: the {first} tree "{a}" and the {second} tree "{b}" are the same '
+                                      f'folder, or one lies inside the other. Each tree has a folder of its own.')
+    for name in ROLES:
+        for tree in ROLES:
+            if inside(places[name].backup_root, places[tree].tree_root):
+                raise SettingsRefused(f'{file_path} [{name}] backup_root: "{places[name].backup_root}" is the {tree} '
+                                      f'tree "{places[tree].tree_root}" or lies inside it. A backup folder lies '
+                                      f'outside all three trees.')
+    real_folder = Path(os.path.realpath(folder))
+    if not real_folder.name.endswith(role):
+        raise SettingsRefused(f'{file_path} [environment] role: the file says {role}, but the folder it lies in is '
+                              f'named "{real_folder.name}", which does not end with {role}. This folder is not the '
+                              f'tree its file says: nothing is done here. (A tree that was copied or renamed, or a '
+                              f'settings file from another tree, is refused.)')
+    if not same_folder(places[role].tree_root, real_folder):
+        raise SettingsRefused(f'{file_path} [{role}] tree_root: the file says the {role} tree is '
+                              f'"{places[role].tree_root}", but the file lies in "{real_folder}". This folder is not '
+                              f'the tree its file says: nothing is done here. Correct the file, or use the tree where '
+                              f'it was created.')
+    if must_be is not None and role != must_be:
+        raise SettingsRefused(f'{file_path} [environment] role: this tree is {role}, but the command means the '
+                              f'{must_be} tree. Nothing is done.')
+    return TreeSettings(role=role, places=places)
