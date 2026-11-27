@@ -8960,3 +8960,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **GO for TASK_T029 again** (the r2 task file of `849f0a4`: seven probes in step 3, all tried before the step is
   decided). It authorises T029 alone.
 - Next numbers: EX_334 (Claude's); entry 374; RAT-67.
+
+## 374. 27 November 2026, 19:21 - TASK_T029 r2 STOPPED AT STEP 3: the backslash forms still ran; the settings r2 candidate (no backslash, no colon at the end)
+
+- **TASK_T029 r2 STOPPED AT STEP 3 AGAIN** (report `outbox/REPORT_T029.md`, commit `062c62e`). All seven probes were
+  tried, as the step asks. Refused: `echo results_updater`, `echo T:/a_p_r_i_r_QA`, `echo /g/a_p_r_i_r_PROD`. Ran: the
+  four backslash forms (`T:\`, `t:\`, `G:\`, `g:\`, each in single quotes). Steps 4 to 11 were not run; nothing was
+  made under `D:\DELETE_ME\`; nothing of a real tree was touched.
+- **What this shows:** a rule holding no backslash works; neither `*T:\*` nor `*T:\\*` refuses a command that holds
+  `T:\`. Claude's reading: a backslash just before the `*` makes the asterisk a literal one, with one backslash or
+  two.
+- **Why not the bare drive prefix** (the fallback first spoken of, `*T:*`): the documentation says that `:*` at the
+  end of a rule is another way of writing a trailing wildcard after a space, so `*T:*` would be read as `*T *` and
+  `*t:*` as `*t *`, which refuse nearly every command (`git status` holds "t "). That would stop every task at its
+  first step.
+- **Proposed (for the owner's word): the settings r2 candidate**
+  (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_8/settings_v0_8r2_CANDIDATE.json`, SHA-256
+  `026408594841046a46c0bc934e58c9779513f85f3c99a3e5f3deba73f5dbc9fa`): the installed settings with four rules added
+  and nothing removed: `*T:*a_p_r_i_r*`, `*t:*a_p_r_i_r*`, `*G:*a_p_r_i_r*`, `*g:*a_p_r_i_r*`. They hold no backslash,
+  and their colon is not at the rule's end, so it is a literal colon. They refuse a command that names a drive T: or
+  G: and then `a_p_r_i_r`, in either slash form: the real QA and PROD trees and their backups. (The forward-slash
+  rules and the Read and Edit rules still cover the whole of both drives.) Checked by a program, reading the rules as
+  the documentation says: of all the commands of T029, T030 and T031 they refuse the five drive probes of T029 step 3
+  and nothing else. TASK_T029 is unchanged (r2).
+- Next numbers: EX_334 (Claude's); entry 375; RAT-67.
