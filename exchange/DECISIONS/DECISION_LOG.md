@@ -9080,3 +9080,11 @@ section 17.2 (unpack it into a new folder, never over the clone).
   file into the tree it builds, under `transitory_data\dependency_snapshots\`; DEV's `.gitignore` already leaves
   `transitory_data` out, and the system uses nothing of it.
 - Next numbers: EX_334 (Claude's); entry 381; RAT-67.
+
+## 381. 27 November 2026, 20:27 - OWNER: GO for TASK_T030
+
+- **The owner's word (20:26), to Claude's request for his go for T030:** "go"
+- **GO for TASK_T030** (the simple scheme's commands on three scratch trees with invented results, under
+  `D:\DELETE_ME\a_p_r_i_r\T030`; the r2 task file of `7bfc772`), run by the local runner on the owner's PC. It
+  authorises T030 alone: not DEV's first fill, not T031, and nothing on a real tree.
+- Next numbers: EX_334 (Claude's); entry 382; RAT-67.
