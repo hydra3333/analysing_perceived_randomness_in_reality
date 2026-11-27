@@ -4,11 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 09:06 Australia/Adelaide (entry 391: H-1 v18 written as a candidate; DEV's rebuild
+**Last updated:** 28 November 2026, 09:10 Australia/Adelaide (entry 392: RAT-68, H-1 v18 installed; DEV's rebuild
 running).
 
 ## For the owner: NOW
 
+- **RAT-68: H-1 v18 IS THE CLAUDE HANDOVER IN FORCE (entry 392; 28 November 2026),**
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v18.md` with its blurb beside it; the reviewer's is H-2 v12 (RAT-67).
+  **Waiting on the owner:** the output of DEV's rebuild (started 08:28; Claude checks the totals, the second OV-1
+  series, the unchanged `IN_PLACE_SINCE` files and the backup). **Then item 7: QA, then PROD,** on Claude's
+  step-by-step instructions, the owner running every step.
 - **H-1 v18 IS WRITTEN AS A CANDIDATE (entry 391; 28 November 2026),**
   `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v18.md` with its blurb beside it: current to entry 391 (the
   rehearsal, DEV's fill, the first real fetch, the progress-line correction, H-2 v12). **Waiting on the owner:** his
@@ -1369,6 +1374,10 @@ running).
 
 ## If a chat ends
 
+- **From RAT-68 (28 November 2026, entry 392): Claude chat ended:** start a new Claude chat with the blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v18_introductory_blurb.md`. It reads H-1 v18, the documents its section 0
+  lists, this page's top block and the decision log from entry 392 on for what is newer. **ChatGPT reviewer chat
+  ended:** H-2 v12 (RAT-67), as the next bullet says. The bullets below are history, except for H-2 v12.
 - **From RAT-64 and RAT-67 (27 and 28 November 2026, entries 367 and 390): Claude chat ended:** start a new Claude chat
   with the blurb `doc/HANDOVER/Claude_Primary_Handover_H1_v17r1_introductory_blurb.md`. It reads H-1 v17r1, the
   documents its section 0 lists, this page's top block and the decision log from entry 365 (H-1 v17r1 predates the
@@ -1425,6 +1434,11 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-68 (28 November 2026, entry 392): H-1 v18 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v18.md`,
+SHA-256 `e565b3745ed8a9571e2d33de5ecc1f11b359d04ebb0b460ccd935f2ecbec5550`; its blurb
+`1cb5de3977db1a2422d2f482fd56366def8e096cd1b478d9e39a1a82c21ba90d`) and, for the reviewer, H-2 v12 (RAT-67, entry 390; its
+hashes in the next paragraph).** H-1 v17r1 (RAT-64) is history.
 
 **From RAT-67 (28 November 2026, entry 390): H-1 v17r1 (Claude; RAT-64, entry 367;
 `doc/HANDOVER/Claude_Primary_Handover_H1_v17r1.md`, SHA-256
