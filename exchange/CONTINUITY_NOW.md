@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 19:42 Australia/Adelaide (entry 377: TASK_T029 r3 is running on the owner's PC; waiting on its report).
+**Last updated:** 27 November 2026, 20:01 Australia/Adelaide (entry 378: T029 r3, 279 of 280 on Windows; one test corrected; waiting on the owner's go).
 
 ## For the owner: NOW
 
+- **T029 ON WINDOWS: 279 OF 280 (entry 378; 27 November 2026).** The guards hold; a scratch tree built its own
+  `.venv`; the suite ran. One test failed for a line-ending fault of its own, corrected (`165d19f`). **Waiting on the
+  owner:** push the report, delete the T029 scratch folder, and his go for T029 once more; then T030.
 - **T029 STOPPED AT STEP 3 (entry 372; 27 November 2026):** the permission guard did not refuse `echo 'T:\...'`;
   nothing else ran. **Waiting on the owner:** his word on the settings r1 candidate (four rules with an escaped
   backslash) and on rerunning T029 as r2 (seven probes).

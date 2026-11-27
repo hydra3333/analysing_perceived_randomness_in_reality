@@ -9028,3 +9028,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The owner's words (19:42):** "go iyt is running now"
 - **GO for TASK_T029 again** (the r3 task file of `7bfc772`); the owner has started it. It authorises T029 alone.
 - Next numbers: EX_334 (Claude's); entry 378; RAT-67.
+
+## 378. 27 November 2026, 20:01 - TASK_T029 r3: the suite on Windows, 279 of 280; the one failure is a test's own line-ending fault, corrected (`165d19f`)
+
+- **TASK_T029 r3 STOPPED AT STEP 10** (as the owner relayed the runner's result; its report is local commit `f080ffe`
+  on his PC). Steps 1 to 9 passed: the seven probes refused; the scratch DEV tree; **its own Python environment built
+  by its own two scripts (39 requirements)**. **The living system's test suite ran on Windows for the first time: 280
+  run, 279 passed, 1 failure, 0 errors, 3 skipped as expected.** Among those that passed are the tests only Windows
+  can decide: an install starting the destination's job as another process with its own Python under the lock held;
+  Ctrl+C ending no process; links and junctions refused; the restore's renames.
+- **The one failure is a fault of the test, not of the command:**
+  `CopyFromProd.test_both_makes_qa_the_twin_of_prod_after_a_backup_and_its_job_then_finds_nothing_to_make_again`. Its
+  fixture added a line to a file in text mode, which on Windows ends the line CRLF; the test then looked for the line
+  ending LF. Claude reproduced it in the cloud by running the whole suite with text-mode writes made to end lines
+  CRLF: exactly that one test failed. Corrected (commit `165d19f`: two fixtures write bytes); the suite then passes
+  280 of 280 both that way and normally. No program of the system is changed.
+- **Two deviations the runner recorded, both accepted by Claude as facts of its harness:** the long commands of steps
+  8 and 10 were started as background commands of Git Bash, their command lines unchanged, each running to its own
+  end; and the report was written with the editor's file tool, because the permission settings refuse a shell command
+  whose text holds the words and paths that step 3 has the report record.
+- **Waiting on the owner:** he pushes the report (after `git pull --rebase`), deletes `D:\DELETE_ME\a_p_r_i_r\T029`,
+  and gives his go for T029 once more, for a clean pass on the corrected tests.
+- Next numbers: EX_334 (Claude's); entry 379; RAT-67.
