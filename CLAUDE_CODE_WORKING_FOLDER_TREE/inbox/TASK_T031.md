@@ -1,6 +1,6 @@
 # TASK_T031 - the comparison of the two engines on the accepted results, on Windows, in the scratch folder on D:
 
-**Task ID:** T031. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed; step 1 checks), including section 2A item 7(b), which this task uses.** **Section 2A applies to steps 3 to 12, in the folder `D:\DELETE_ME\a_p_r_i_r\T031`** (new; this task creates it). **Run it only after the owner has made DEV's first fill** (item 3 of the work order, decision log entry 365), with the software of the commit this task checks.
+**Task ID:** T031. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed; step 1 checks), including section 2A item 7(b), which this task uses.** **Section 2A applies to steps 2 to 12, in the folder `D:\DELETE_ME\a_p_r_i_r\T031`** (new; this task creates it). (r1: the reviewer's corrections of its reading at `3c765bb`, decision log entry 369.) **Run it only after the owner has made DEV's first fill** (item 3 of the work order, decision log entry 365), with the software of the commit this task checks.
 
 **Purpose.** Item 4 of the owner's work order: the proof of the simple scheme's section 9, made on the owner's PC. From the same accepted results, the simplified engine must give the same forecasts, scores, both OV-1 series and report files (through the declared wording changes) as the frozen engine at the top level of the repository. The simplified engine's side is DEV's own first fill, computed in DEV with DEV's own Python; this task copies it into the scratch folder by reading (the owner's decision, entry 365: nothing leaves the scratch folder, and the comparison's artificial alignment never touches DEV). The frozen engine's side is computed here, **with the real DEV tree's own Python as the interpreter** (entry 366), so that both sides are computed in the same environment.
 
@@ -8,7 +8,7 @@
 
 **What it does not do.** It writes nothing in the real DEV tree and never reads its `ENVIRONMENT.ini`; it reads only DEV's software as committed (through `git ls-files`) and, by copying, DEV's `source_data` and `results\research`. It changes nothing in the main repository (only this task's report is committed there) and nothing in any `.venv`. It ends no process. It changes no date, time or time zone. **It copies no figure of the results into the report:** only the exit codes, the start and end lines of each job and the comparison's SAME or DIFFERENT lines, which hold counts only.
 
-**Before the owner starts this task (the owner, not the runner):** DEV's first fill has finished (`Run_Research.bat --no-update` in DEV, ending `The job finished.`); `git pull --ff-only` has been done and this is a new Claude Code conversation; nothing of the project is running. The task takes about 60 to 75 minutes, most of it the frozen engine's first fill (step 6), and writes about 1 GB into the scratch folder.
+**Before the owner starts this task (the owner, not the runner):** DEV's first fill has finished (`Run_Research.bat --no-update` in DEV, ending `The job finished.`); **the 40 `IN_PLACE_SINCE` files it wrote beside DEV's methods are committed and pushed** (H-1 v17r1 section 8 item 3); `git pull --ff-only` has been done and this is a new Claude Code conversation; nothing of the project is running. The task takes about 60 to 75 minutes, most of it the frozen engine's first fill (step 6), and writes about 1 GB into the scratch folder.
 
 ## Owner options
 
@@ -35,27 +35,35 @@ Run each command in Git Bash exactly as written. The commands that use DPY begin
 ```
 grep -c "^\*\*Version:\*\* v0.8" CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md
 git rev-parse HEAD
-git status --short --untracked-files=no -- a_p_r_i_r_DEV/src a_p_r_i_r_DEV/deploy CLAUDE_CODE_WORKING_FOLDER_TREE/inbox
+git status --short -- a_p_r_i_r_DEV/src a_p_r_i_r_DEV/deploy CLAUDE_CODE_WORKING_FOLDER_TREE/inbox
+git status --short -- src deploy/INFRA_MANIFEST.ini Run_Research.bat Withdraw_Variant.bat
 ```
-Expected: `1`; one commit hash (record it); then no output at all (DEV's software is as committed; DEV's own `IN_PLACE_SINCE` files may be uncommitted, and are not looked at). Anything else: STOP.
+Expected: `1`; one commit hash (record it); then no output at all from either `git status` (DEV's software, its `IN_PLACE_SINCE` files included, and the frozen engine's parts at the top level are as committed). Anything else: STOP.
 
-**2. The real DEV tree's own Python** (only its version and place are printed).
-```
-"E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv\Scripts\python.exe" -I -B -c "import sys, numpy; print(sys.version); print(sys.prefix); print('numpy', numpy.__version__)"
-```
-Expected: a Python version; `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv`; a numpy version.
-
-**3. The scratch folder is an ordinary folder on D:, and this task's folder is new.**
+**2. The scratch folder is an ordinary folder on D:, and this task's folder is new.**
 ```
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -B "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\inbox\REHEARSAL_HELPER.py" check-scratch "D:\DELETE_ME\a_p_r_i_r\T031"
 ```
 Expected: `SCRATCH CHECK PASS`; exit code 0.
 
+**3. The real DEV tree's own Python** (only its version and place are printed; from this step on every use of it
+changes to SCRATCH and sets `TMP` and `TEMP` inside it first).
+```
+mkdir -p "D:/DELETE_ME/a_p_r_i_r/T031/tmp" && cd "D:/DELETE_ME/a_p_r_i_r/T031" && TMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' TEMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv\Scripts\python.exe" -I -B -c "import sys, numpy; print(sys.version); print(sys.prefix); print('numpy', numpy.__version__)"
+```
+Expected: a Python version; `E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv`; a numpy version; exit code 0.
+
 **4. The two trees** (DEV's committed software; DEV's `source_data` and `results\research` copied by reading; the frozen engine from the repository's top level; then the check that DEV's results were made by the engine of this commit).
 ```
-mkdir -p "D:/DELETE_ME/a_p_r_i_r/T031/tmp" && git ls-files a_p_r_i_r_DEV > "D:/DELETE_ME/a_p_r_i_r/T031/files.txt" && cd "D:/DELETE_ME/a_p_r_i_r/T031" && TMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' TEMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv\Scripts\python.exe" -I -B "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\inbox\REHEARSAL_HELPER.py" comparison-trees "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality" "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV" "D:\DELETE_ME\a_p_r_i_r\T031\files.txt" "D:\DELETE_ME\a_p_r_i_r\T031"
+git ls-files a_p_r_i_r_DEV > "D:/DELETE_ME/a_p_r_i_r/T031/files.txt" && cd "D:/DELETE_ME/a_p_r_i_r/T031" && TMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' TEMP='D:\DELETE_ME\a_p_r_i_r\T031\tmp' "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV\.venv\Scripts\python.exe" -I -B "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\CLAUDE_CODE_WORKING_FOLDER_TREE\inbox\REHEARSAL_HELPER.py" comparison-trees "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality" "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\a_p_r_i_r_DEV" "D:\DELETE_ME\a_p_r_i_r\T031\files.txt" "D:\DELETE_ME\a_p_r_i_r\T031"
 ```
 Expected: `COPY PASS`; `source_data: 4 files copied by reading from the real DEV tree`; `results/research: <number> files copied by reading from the real DEV tree`; `source_data: 4 files copied into the frozen tree`; a line `engine copied: ...; engine the copied results were made with: ...` with the two the same; `COMPARISON TREES PASS`; exit code 0. **A line `STOP: the results copied from the real DEV tree were not made by the engine of this commit.` means DEV's first fill was made with other software than this commit's: STOP** (the owner then fills DEV again with this commit's software, or the web chat is asked).
+
+**4b. The two trees' settings files** (rulebook section 2A item 5; the frozen tree's is of the first system's form, as that item says).
+```
+cat "D:/DELETE_ME/a_p_r_i_r/T031/new_DEV/ENVIRONMENT.ini" "D:/DELETE_ME/a_p_r_i_r/T031/frozen_DEV/ENVIRONMENT.ini"
+```
+Expected: first the new tree's eleven lines (`role = DEV`; `tree_root` of DEV `D:\DELETE_ME\a_p_r_i_r\T031\new_DEV`, of QA and PROD `D:\DELETE_ME\a_p_r_i_r\T031\none_QA` and `...\none_PROD`, folders that are never made; the three `backup_root` under `D:\DELETE_ME\a_p_r_i_r\T031\backups\`); then the frozen tree's four lines (`[environment]`, `role = DEV`, `tree_root = D:\DELETE_ME\a_p_r_i_r\T031\frozen_DEV`, `venv_dir = D:\DELETE_ME\a_p_r_i_r\T031\frozen_DEV\.venv`). Every path begins `D:\DELETE_ME\a_p_r_i_r\T031\`; otherwise: STOP.
 
 **5. What the two engines' code is** (a listing; this step does not stop the task unless its exit code is not 0).
 ```

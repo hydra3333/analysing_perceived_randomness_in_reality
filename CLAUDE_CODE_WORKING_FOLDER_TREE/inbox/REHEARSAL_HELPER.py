@@ -200,8 +200,9 @@ def one_backup(folder: Path, ending: str) -> int:
 
 
 def copy_folder(source: Path, target: Path) -> int:
-    """Copy a folder by reading (Python's caches left out) into the scratch folder; return the files copied.
-    Refuses (Refused) a source that is absent or empty, or a target outside the scratch folder."""
+    """Copy a folder by reading (Python's caches left out) into the scratch folder, reading every copy back
+    against its source; return the files copied. Refuses (Refused) a source that is absent or empty, a copy that
+    does not read back as its source, or a target outside the scratch folder."""
     target = inside_scratch(target)
     names = [path for path in sorted(source.rglob('*')) if path.is_file() and '__pycache__' not in path.parts]
     if not names:
@@ -210,6 +211,8 @@ def copy_folder(source: Path, target: Path) -> int:
         copy = target / path.relative_to(source)
         copy.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(path, copy)
+        if copy.read_bytes() != path.read_bytes():
+            raise Refused(f'{copy} does not read back as {path}.')
     return len(names)
 
 
@@ -231,6 +234,8 @@ def comparison_trees(repository: Path, dev: Path, file_list: Path, folder: Path)
         else:
             (frozen / part).parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(source, inside_scratch(frozen / part))
+            if (frozen / part).read_bytes() != source.read_bytes():
+                raise Refused(f'{frozen / part} does not read back as {source}.')
     print(f'source_data: {copy_folder(dev / "source_data", frozen / "source_data")} files copied into the frozen tree')
     (frozen / 'ENVIRONMENT.ini').write_bytes((f'[environment]\r\nrole = DEV\r\ntree_root = {frozen}\r\n'
                                               f'venv_dir = {frozen / ".venv"}\r\n').encode('ascii'))

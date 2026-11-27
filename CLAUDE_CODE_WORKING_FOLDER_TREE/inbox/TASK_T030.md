@@ -1,6 +1,6 @@
 # TASK_T030 - the simple scheme's commands on three scratch trees with invented results, in the scratch folder on D:
 
-**Task ID:** T030. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed; step 1 checks).** **Section 2A applies to steps 3 to 31, in the folder `D:\DELETE_ME\a_p_r_i_r\T030`** (new; this task creates it). Run it after TASK_T029 has passed.
+**Task ID:** T030. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed; step 1 checks).** **Section 2A applies to steps 3 to 31, in the folder `D:\DELETE_ME\a_p_r_i_r\T030`** (new; this task creates it). Run it after TASK_T029 has passed, with no `SKIPPED:` line but the three it names (or with any other assessed by the web chat). (r1: the reviewer's corrections of its reading at `3c765bb`, decision log entry 369.)
 
 **Purpose.** Item 2 of the owner's work order (decision log entry 365), second part: the commands of the simple scheme, run on the owner's Windows PC as he will run them, on three scratch trees (`s_DEV`, `s_QA`, `s_PROD`) with **invented results** (the owner's decision, entry 366: this task qualifies the commands, not the science; TASK_T031 establishes the science). It covers: a research job; `Make_Installable`; `Create_Tree` QA and PROD; each new tree building its own Python environment and running its first job; `Install --show` and `Install` (whose child process, the destination's own job under the lock the install holds, is the part only Windows can show); a part whose flag is out of date left alone; `Backup`; `Retire` in all three trees; `Copy_From_PROD both`; `Restore` (the rename of a whole tree aside, the other part only Windows can show); three refusals planted on purpose; and `Who_Uses`. The scratch DEV tree keeps two of the 12 method families (E_001 and E_002, four methods), so that every job takes seconds. Every step's expected lines below were taken from a dry run of the same sequence in the cloud.
 
@@ -25,7 +25,7 @@
 | DEV, QA, PROD (the scratch trees) | `D:\DELETE_ME\a_p_r_i_r\T030\s_DEV`, `...\s_QA`, `...\s_PROD` |
 | BACKUPS (their backup folders) | `D:\DELETE_ME\a_p_r_i_r\T030\backups\DEV`, `...\QA`, `...\PROD` |
 
-Run each command in Git Bash, from MAIN, exactly as written. Each step gives its expected exit code and the lines that must appear (a step's output may hold more lines; paths in it are the scratch paths above, and `<time>` stands for a date and time). On anything else: **STOP**, record the output, and go to step 32. Never retry, repair or reorder a step. Three steps (28, 29, 30) expect a refusal on purpose and say so; a refusal anywhere else is a STOP. **After a STOP, leave `D:\DELETE_ME\a_p_r_i_r\T030` exactly as it is.** This task does not delete its scratch folder; the owner deletes it by hand when he wishes.
+Run each command in Git Bash, from MAIN, exactly as written. Each step gives its expected exit code and the lines that must appear (a step's output may hold more lines; paths in it are the scratch paths above, and `<time>` stands for a date and time). On anything else: **STOP**, record the output, and go to step 32. Never retry, repair or reorder a step. Three steps (28, 29, 30) expect a refusal on purpose and say so (step 29 is of rulebook section 2A item 5 kind (ii): you are authorised to attempt it); a refusal anywhere else is a STOP. **After a STOP, leave `D:\DELETE_ME\a_p_r_i_r\T030` exactly as it is.** This task does not delete its scratch folder; the owner deletes it by hand when he wishes.
 
 - **What goes into the report:** every step's command, exit code and whole output, except steps 5, 11 and 19 (the `tail` lines only). The files under the scratch folder stay there.
 
@@ -57,10 +57,10 @@ Expected: `files listed: N; copied and read back: M; families kept: ['E_001', 'E
 ```
 Expected: eleven lines naming `D:\DELETE_ME\a_p_r_i_r\T030\s_DEV`, `...\s_QA`, `...\s_PROD` and `D:\DELETE_ME\a_p_r_i_r\T030\backups\DEV`, `...\QA`, `...\PROD`; `every path above lies under D:\DELETE_ME`; `SETTINGS PASS`; exit code 0. Check by eye that every path begins `D:\DELETE_ME\a_p_r_i_r\T030\`; if one does not: STOP.
 
-**5. (long) The scratch DEV tree's own Python environment.**
+**5. (long) The scratch DEV tree's own Python environment** (`TMP`, `TEMP` and `PIP_CACHE_DIR` inside the scratch folder, here and in steps 11 and 19).
 ```
-"D:/DELETE_ME/a_p_r_i_r/T030/s_DEV/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt"
-"D:/DELETE_ME/a_p_r_i_r/T030/s_DEV/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt"
+mkdir -p "D:/DELETE_ME/a_p_r_i_r/T030/tmp_env" "D:/DELETE_ME/a_p_r_i_r/T030/pip_cache" && TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_DEV/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_1.txt"
+TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_DEV/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_DEV_2.txt"
 ```
 Expected: `VENV EXIT CODE 0`; then `[DEPS] SUCCESS. ...` and `PACKAGES EXIT CODE 0`.
 
@@ -96,8 +96,8 @@ Expected: two comment lines, then `[environment]`, `role = QA`, and the same six
 
 **11. (long) The QA tree's own Python environment.**
 ```
-"D:/DELETE_ME/a_p_r_i_r/T030/s_QA/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt"
-"D:/DELETE_ME/a_p_r_i_r/T030/s_QA/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt"
+TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_QA/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_1.txt"
+TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_QA/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_QA_2.txt"
 ```
 Expected: `VENV EXIT CODE 0`; then `[DEPS] SUCCESS. ...` and `PACKAGES EXIT CODE 0`.
 
@@ -138,16 +138,17 @@ Expected: in each folder `JOB_LOG.jsonl` only (no `TREE.lock`).
 ```
 Expected exit code 0, exactly: the `INSTALL from DEV ...` line and `  Nothing to install: the QA tree already has every part that is flagged in DEV.`
 
-**18. Create_Tree PROD.**
+**18. Create_Tree PROD, and the new tree's settings file.**
 ```
 "D:/DELETE_ME/a_p_r_i_r/T030/s_DEV/Create_Tree.bat" PROD
+cat "D:/DELETE_ME/a_p_r_i_r/T030/s_PROD/ENVIRONMENT.ini"
 ```
-Expected exit code 0: `CREATE the PROD tree at D:\DELETE_ME\a_p_r_i_r\T030\s_PROD, ...`; `  copied: the infrastructure and 4 methods (53 files), and DEV's accepted results (4 files). ...`; a last line beginning `The PROD tree is created.`
+Expected exit code 0: `CREATE the PROD tree at D:\DELETE_ME\a_p_r_i_r\T030\s_PROD, ...`; `  copied: the infrastructure and 4 methods (53 files), and DEV's accepted results (4 files). ...`; a last line beginning `The PROD tree is created.` Then the settings file: `role = PROD` and the same six paths as step 4, all beginning `D:\DELETE_ME\a_p_r_i_r\T030\`. Otherwise: STOP.
 
 **19. (long) The PROD tree's own Python environment.**
 ```
-"D:/DELETE_ME/a_p_r_i_r/T030/s_PROD/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt"
-"D:/DELETE_ME/a_p_r_i_r/T030/s_PROD/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt"
+TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_PROD/create_venv.bat" > "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt" 2>&1; echo "VENV EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_1.txt"
+TMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' TEMP='D:\DELETE_ME\a_p_r_i_r\T030\tmp_env' PIP_CACHE_DIR='D:\DELETE_ME\a_p_r_i_r\T030\pip_cache' "D:/DELETE_ME/a_p_r_i_r/T030/s_PROD/install_upgrade_dependencies_into_venv.bat" INSTALL > "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt" 2>&1; echo "PACKAGES EXIT CODE $?" >> "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt"; tail -n 2 "D:/DELETE_ME/a_p_r_i_r/T030/venv_PROD_2.txt"
 ```
 Expected: `VENV EXIT CODE 0`; then `[DEPS] SUCCESS. ...` and `PACKAGES EXIT CODE 0`.
 
@@ -194,11 +195,12 @@ Expected exit code 0, among the lines: `COPY FROM PROD (D:\DELETE_ME\a_p_r_i_r\T
 ```
 Expected exit code 0: `RESTORE the QA tree at D:\DELETE_ME\a_p_r_i_r\T030\s_QA from D:\DELETE_ME\a_p_r_i_r\T030\backups\QA\QA_<time>_on_demand.zip:`; `Backup made of the QA tree: ...\QA_<time>_before_restore.zip`; `  unpacked: <number> files into a fresh folder.`; `  the tree as it was is kept at D:\DELETE_ME\a_p_r_i_r\T030\s_QA_set_aside_<time>. ...`; last line beginning `Restored: the QA tree at D:\DELETE_ME\a_p_r_i_r\T030\s_QA is now as the backup holds it.`
 
-**27. The folders after the restore.**
+**27. The folders after the restore, and the restored tree's settings file.**
 ```
 ls "D:/DELETE_ME/a_p_r_i_r/T030"
+cat "D:/DELETE_ME/a_p_r_i_r/T030/s_QA/ENVIRONMENT.ini"
 ```
-Expected: `backups`, `files.txt`, `s_DEV`, `s_PROD`, `s_QA`, one `s_QA_set_aside_<time>`, and the `venv_*.txt` files.
+Expected: `backups`, `files.txt`, `pip_cache`, `s_DEV`, `s_PROD`, `s_QA`, one `s_QA_set_aside_<time>`, `tmp_env` and the `venv_*.txt` files; then the settings file: `role = QA` and the same six paths as step 4, all beginning `D:\DELETE_ME\a_p_r_i_r\T030\`. Otherwise: STOP.
 
 **28. (A refusal planted on purpose.) The restored QA tree has no Python environment: its launcher refuses.**
 ```
@@ -206,7 +208,7 @@ Expected: `backups`, `files.txt`, `s_DEV`, `s_PROD`, `s_QA`, one `s_QA_set_aside
 ```
 Expected exit code 2 and the line `REFUSED: this tree's Python was not found at D:\DELETE_ME\a_p_r_i_r\T030\s_QA\.venv\Scripts\python.exe. Build the tree's .venv first.` This is the PASS of this step.
 
-**29. (A refusal planted on purpose.) Nothing runs in the tree set aside: its folder name no longer ends with its role.**
+**29. (A refusal planted on purpose, rulebook section 2A item 5 kind (ii).) Nothing runs in the tree set aside: its folder name no longer ends with its role.**
 ```
 "$(ls -d D:/DELETE_ME/a_p_r_i_r/T030/s_QA_set_aside_*)/Run_Research.bat" --no-update
 ```
