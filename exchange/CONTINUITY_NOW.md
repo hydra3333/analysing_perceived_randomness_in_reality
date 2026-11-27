@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 18:24 Australia/Adelaide (entry 366: the rehearsal decisions; GO for the rulebook, task files and H-1).
+**Last updated:** 27 November 2026, 18:33 Australia/Adelaide (entry 367: H-1 v17r1 and H-2 v11 ratified).
 
 ## For the owner: NOW
 
+- **HANDOVERS RATIFIED (entry 367; 27 November 2026).** RAT-64: H-1 v17r1 and its blurb (`doc/HANDOVER/`); RAT-65: H-2
+  v11 and its blurb. **Waiting on:** the reviewer's reading of the rulebook v0.8 candidate (`eb1e5d6`) and the owner's
+  ratification of it; Claude writes the task files T029 to T031. Nothing is authorised on the owner's PC.
 - **REHEARSAL PREPARATION UNDER WAY (entry 366; 27 November 2026).** The reports' wording is done (`168b896`,
   `56cc3ec`). The owner decided: T030 on invented results; T031 may use real DEV's own Python for scratch calculations
   only; two more permission guards. **Claude is writing:** the refresh of H-1, the runner's rulebook v0.8 candidate

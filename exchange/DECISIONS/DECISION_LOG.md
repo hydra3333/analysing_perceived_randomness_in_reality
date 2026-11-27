@@ -8827,3 +8827,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the refresh of H-1. **The reviewer has written its H-2 v11 candidate and introductory blurb** (commits `2f5beef` and
   `e0878af`); it is to be refreshed again before the Windows rehearsal.
 - Next numbers: EX_334 (Claude's); entry 367; RAT-64.
+
+## 367. 27 November 2026, 18:33 - OWNER: RAT-64, H-1 v17r1 ratified (the reviewer's four corrections made); RAT-65, H-2 v11 ratified; both installed in `doc/HANDOVER/`
+
+- **The reviewer's reading of H-1 v17 and its blurb at `0729a28`** (relayed by the owner): both SHA-256 values
+  verified, ASCII and CRLF, the seven long table rows accepted; PASS subject to four textual corrections (C01: H-2 v11
+  is ratified; C02: section 8 keeps every restriction of entry 366 on T031's use of DEV's Python; C03: the blurb's
+  frozen-top-level rule allows the owner's specific exceptions, the two permission guards among them; C04: "a
+  difference never refuses" means differences in what was computed, not invalid settings or unusable results; and a
+  console Ctrl+C on Windows may reach the child job, which the parent never ends, keeping the lock until it has). No
+  recheck asked. It also accepts the revised second-series text at `56cc3ec`.
+- **The owner's words:** (18:31) "H-1 v?? is ratified if you agree with and make the changes as outlined by chatgpt";
+  (18:33) "H-2 v11 and its introductory blurb are now owner-ratified, superseding H-2 v10."
+- **RAT-64: H-1 v17r1 and its introductory blurb ratified** (Claude agrees with all four corrections and made them;
+  nothing else changed). Installed in `doc/HANDOVER/` and kept in `exchange/HANDOVER_2026_11_27/`:
+  `Claude_Primary_Handover_H1_v17r1.md` (SHA-256 `de5939902bb11c309e8349d6e1408799dab3145f7d4ef2e754e79102833cc60d`)
+  and its blurb (SHA-256 `b5fae7800e4124cec14305588f09598850c3d728e2d08fb1a95171cea0f274a2`). H-1 v16r1 (RAT-62) and
+  v17 are history.
+- **RAT-65: H-2 v11 and its introductory blurb ratified,** superseding H-2 v10 (RAT-63), at the reviewer's bytes
+  (`2f5beef`, `e0878af`). Copied unchanged into `doc/HANDOVER/`: `ChatGPT_Reviewer_Handover_H2_v11_20261127.md`
+  (SHA-256 `990a411363aff25ed4403e718c046c007f5e782d41b46b76a843b3b237fd6dd3`) and its blurb (SHA-256
+  `5272f0b42c3fbfaafc32a7748db911e93bde7e90c3f538687ce29018110a8dda`). Its own status line still says CANDIDATE, as
+  v10's did; it is the reviewer's file and is not edited.
+- **Next:** the rehearsal task files T029 to T031 (Claude, Opus); the reviewer's one reading of the rulebook v0.8
+  candidate (`eb1e5d6`) and the owner's ratification of it. Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 368; RAT-66.
