@@ -53,11 +53,19 @@ def backup_name(role: str, moment, why: str) -> str:
 
 def files_to_back_up(tree_root: Path) -> list:
     """Every file of a tree that goes into a backup, as paths from the tree root with forward slashes, in order:
-    all of them but the Python environment, the lock file and Python's caches."""
+    all of them but the Python environment, the lock file and Python's caches.
+
+    Raises OSError if any folder of the tree cannot be listed (the tree itself included): a backup that silently
+    lacked a folder would look whole, and a replacement would then go ahead on the strength of it."""
     tree_root = Path(tree_root)
     lock = f'{RECORDS_FOLDER}/{LOCK_NAME}'
     found = []
-    for current, folders, names in os.walk(tree_root):
+
+    def not_listed(fault: OSError):
+        """os.walk passes over a folder it cannot list unless told otherwise: raise the fault instead."""
+        raise fault
+
+    for current, folders, names in os.walk(tree_root, onerror=not_listed):
         at_root = Path(current) == tree_root
         folders[:] = sorted(name for name in folders
                             if name != CACHE_FOLDER and not (at_root and name == ENVIRONMENT_FOLDER))
@@ -75,9 +83,9 @@ def make_backup(settings: TreeSettings, why: str, moment) -> Path:
     why: a few words for the file's name, for example 'after job' or 'before install'.
     moment: the present time on the PC's clock, for the file's name.
     Returns the backup's path, for example T:\\a_p_r_i_r_backups\\PROD\\PROD_20261201_201012_after_job.zip.
-    Raises BackupFailed if the folder cannot be made, a file cannot be read or the ZIP cannot be written; what
-    was begun is removed, so that no half backup is left looking like a whole one. A backup of the same name is
-    never written over: the new one is given a number.
+    Raises BackupFailed if the backup folder cannot be made, a folder or a file of the tree cannot be read or
+    the ZIP cannot be written; what was begun is removed, so that no half backup is left looking like a whole
+    one. A backup of the same name is never written over: the new one is given a number.
     """
     tree_root, folder = settings.tree_root, settings.backup_root
     try:

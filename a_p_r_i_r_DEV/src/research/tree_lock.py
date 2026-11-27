@@ -6,7 +6,8 @@ What this file is for
     records/TREE.lock, made by an exclusive create when a command starts and removed when it ends: while the file
     exists, every other command in that tree refuses. No program ever ends another process, and none removes
     another's lock: a lock left by a command that was killed is removed by the owner by hand, once he has seen
-    that nothing of the tree is running.
+    that nothing of the tree is running. The one exception is DEV's Who_Uses, which only reads and prints: it
+    makes the first step below but takes no lock.
 
     It also gives every command its first step, enter_tree: the settings file is read and the folder is checked
     to be the tree the file says (research/settings.py), and the folders a command writes in must be real

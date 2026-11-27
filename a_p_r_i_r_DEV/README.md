@@ -31,7 +31,8 @@ the ending of the folder's name, and that role's `tree_root` must be that folder
 none lies inside another, and no backup folder lies inside a tree. A folder that fails any of this runs nothing.
 
 Then the command takes the tree's one lock, `records\TREE.lock`. While it exists every other command in that tree
-refuses. A lock left by a command that was killed is deleted by hand, once nothing of the tree is running.
+refuses. A lock left by a command that was killed is deleted by hand, once nothing of the tree is running. The one
+exception is `Who_Uses.bat`, which only reads and prints: it makes the same check of the folder but takes no lock.
 
 ## What the research job does (`Run_Research.bat`)
 
@@ -77,14 +78,15 @@ A backup is one plain ZIP of the whole tree at maximum compression, in the tree'
 role, the date and time and why it was made (`PROD_20261201_201012_after_job.zip`). It leaves out `.venv` (rebuilt
 by the two environment scripts; the job log records the versions) and the lock file. Any ZIP program opens it.
 None is ever written over or deleted by this project. If the backup at the end of a job cannot be made, the job
-says so loudly and ends with exit code 1; what it computed stands.
+says so loudly and ends with exit code 1; what it computed stands. A folder or file of the tree that cannot be
+read fails the backup: none is ever made that silently lacks part of the tree.
 
 ## DEV's own commands
 
 - `Make_Installable.bat family/variant ... | ALL | INFRA` writes the flag `I_AM_INSTALLABLE` beside each method
   named (ALL: every method) with the method's fingerprint, and for INFRA once in `src\` with the engine's
   fingerprint and the updater's. A flag is out of date as soon as a file it vouches for changes.
-- `Who_Uses.bat helper_file` lists every method that uses a helper file. It changes nothing.
+- `Who_Uses.bat helper_file` lists every method that uses a helper file. It changes nothing and takes no lock.
 
 ## The results updater (`Run_Results_Updater.bat`)
 

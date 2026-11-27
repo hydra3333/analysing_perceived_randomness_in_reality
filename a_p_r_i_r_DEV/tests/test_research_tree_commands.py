@@ -7,6 +7,7 @@ draws and toy methods.
 import contextlib
 import io
 import json
+import os
 import sys
 import zipfile
 from datetime import datetime
@@ -104,6 +105,9 @@ class TheFirstStepOfEveryCommand(fx.JobCase):
                 self.assertEqual(code, 2, arguments)
                 self.assertIn('REFUSED: a process of this tree is running', printed, arguments)
         self.assertFalse(updater_main.called)
+        code, printed = run_program(dev_command, tree, 'who_uses', 'method.py')
+        self.assertEqual(code, 0, 'the one command that only reads and prints: it takes no lock and is not refused')
+        self.assertIn('2 of 2 methods use "method.py"', printed)
         self.assertTrue(lock.is_file(), 'never removed by another command')
         self.assertFalse(any(name.endswith(method_flags.INSTALLABLE_NAME) for name in fx.files_under(tree, 'src')))
         self.assertFalse((tree / 'results').exists())
@@ -168,6 +172,26 @@ class TheBackup(fx.JobCase):
             with self.assertRaisesRegex(backup.BackupFailed, 'OSError: the disk is full'):
                 backup.make_backup(read, 'after job', MOMENT)
         self.assertEqual(list(read.backup_root.iterdir()), [], 'what was begun is removed')
+
+    def test_a_folder_that_cannot_be_read_fails_the_backup_rather_than_being_left_out_of_it(self):
+        tree = self.tree()
+        read = settings.read_settings(tree)
+        real = os.scandir
+
+        def one_folder_locked(path):
+            """List a folder as the operating system does, but refuse the tree's source_data."""
+            if Path(path).name == 'source_data':
+                raise PermissionError(13, 'Access is denied', str(path))
+            return real(path)
+
+        with mock.patch('os.scandir', one_folder_locked):
+            with self.assertRaisesRegex(backup.BackupFailed, 'was not made: PermissionError: .*source_data'):
+                backup.make_backup(read, 'before install', MOMENT)
+        self.assertEqual(list(read.backup_root.iterdir()), [], 'no ZIP that lacks a folder is left looking whole')
+        with self.assertRaisesRegex(backup.BackupFailed, 'was not made: FileNotFoundError'):
+            backup.make_backup(settings.TreeSettings('DEV', {'DEV': settings.TreePlace(
+                self.root / 'no_such_tree_DEV', read.backup_root)}), 'on demand', MOMENT)
+        self.assertEqual(list(read.backup_root.iterdir()), [])
 
     def test_every_job_ends_with_a_backup_that_holds_what_the_job_made_and_its_line_of_the_job_log(self):
         tree = self.tree()
@@ -259,6 +283,20 @@ class MakeInstallableAndWhoUses(fx.JobCase):
                          (engine_before, code_identity.updater_fingerprint(tree)))
         self.assertEqual(code_identity.infrastructure_fingerprint(tree), engine_before, 'a flag changes no fingerprint')
         self.assertFalse((tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME).exists())
+
+    def test_the_methods_are_read_and_fingerprinted_while_the_lock_is_held(self):
+        tree = self.tree()
+        lock, seen = tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME, []
+        real = dev_tools.find_variants
+
+        def watched(folder):
+            """Note whether the lock is held while the methods are read."""
+            seen.append(lock.exists())
+            return real(folder)
+
+        with mock.patch.object(dev_tools, 'find_variants', watched):
+            code, said = self.said_by(dev_tools.make_installable, settings.read_settings(tree), ['ALL'], MOMENT)
+        self.assertEqual((code, seen), (0, [True]), said)
 
     def test_a_flag_that_already_says_the_same_is_left_as_it_is(self):
         tree = self.tree()

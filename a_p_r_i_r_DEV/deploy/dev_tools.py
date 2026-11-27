@@ -10,7 +10,7 @@ What this file is for
           flag is made again.
       Who_Uses.bat <helper file>
           lists every method that uses a helper file, so that the owner sees what a change to it would touch.
-          It changes nothing.
+          It changes nothing, and so it is the one command that takes no lock.
 
 Which part of the scheme it carries out
     exchange/Claude_The_Simple_Scheme_v0_2_20261126.md sections 4 and 6.
@@ -19,7 +19,7 @@ Which of the project's own modules it uses
     research.variant_folders   find_variants: the methods, their declarations and fingerprints
     research.code_identity     the engine's and the updater's fingerprints
     research.method_flags      the flag files
-    research.tree_lock         the tree's lock, held while flags are written
+    research.tree_lock         the tree's lock, held while methods are read and flags are written
 
 What uses it
     deploy/dev_command.py (the program behind Make_Installable.bat and Who_Uses.bat), and the tests.
@@ -48,7 +48,7 @@ def infrastructure_fingerprints(tree_root: Path) -> dict:
 
 
 def make_installable(settings, names, moment, say=print) -> int:
-    """Write the I_AM_INSTALLABLE flags that were asked for, under the tree's lock.
+    """Find the methods and write the I_AM_INSTALLABLE flags that were asked for, all under the tree's lock.
 
     settings: DEV's settings.  names: what the owner typed: method identities ('E_002/RECUR_MEAN_ALL_V1'), and/or
     ALL (every method), and/or INFRA (the infrastructure).  moment: the present time on the PC's clock.
@@ -62,12 +62,14 @@ def make_installable(settings, names, moment, say=print) -> int:
         say('Nothing was named. Give method identities (family/variant), or ALL for every method, or INFRA for the '
             'infrastructure; for example: Make_Installable.bat ALL INFRA')
         return EXIT_NOT_ALL
-    variants, refused = find_variants(tree_root / METHODS_FOLDER)
-    by_identity = {variant.identity: variant for variant in variants}
-    wanted_methods = sorted(by_identity) if ALL_METHODS in names else [name for name in names
-                                                                     if name not in (ALL_METHODS, INFRASTRUCTURE)]
     not_all = False
+    # The methods are found and fingerprinted under the lock too, so that what is flagged is what was read while
+    # no other command of this tree could be at work.
     with tree_lock(tree_root, 'make installable', made):
+        variants, refused = find_variants(tree_root / METHODS_FOLDER)
+        by_identity = {variant.identity: variant for variant in variants}
+        wanted_methods = sorted(by_identity) if ALL_METHODS in names else [
+            name for name in names if name not in (ALL_METHODS, INFRASTRUCTURE)]
         for identity in wanted_methods:
             if identity not in by_identity:
                 why = dict(refused).get(identity, 'there is no such method in this tree (give it as family/variant)')
@@ -92,7 +94,8 @@ def make_installable(settings, names, moment, say=print) -> int:
 
 
 def who_uses(settings, helper: str, say=print) -> int:
-    """List every method that uses a helper file. Changes nothing.
+    """List every method that uses a helper file. It only reads and prints, so it is the one command that takes
+    no lock: it changes nothing, and it may be run while another command of the tree is at work.
 
     settings: DEV's settings.  helper: the file, as a declaration lists it ('_shared/recurrence_gaps_v1.py',
     'E_002/core_v1.py') or by its name alone ('core_v1.py'), in either spelling of the slashes.
