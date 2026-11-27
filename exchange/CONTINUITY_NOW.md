@@ -4,10 +4,19 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 08:01 Australia/Adelaide (entry 384: T031 passed; waiting on the owner's acceptance).
+**Last updated:** 28 November 2026, 09:05 Australia/Adelaide (entry 390: H-2 v12 ratified, RAT-67; DEV's rebuild
+running).
 
 ## For the owner: NOW
 
+- **ITEMS 5 AND 6 DONE; THE PROGRESS LINE CORRECTED; DEV REBUILDING; H-2 v12 IN FORCE (entries 385 to 390; 28 November
+  2026).** The owner accepted T031 (entry 385). His first real fetch in DEV matched every overlapping draw and added
+  two a game (entry 386); DEV's first job with the updater in it followed (entry 387). His finding there, a misleading
+  progress line, is corrected (`8fce853`, the reviewer's PASS; entries 388 and 389); the engine's fingerprint changed,
+  so DEV rebuilds everything once: **running since 08:28**. **Next:** the owner sends its output; Claude checks the
+  totals (Powerball 15,198 forecasts and 15,158 scores, Oz Lotto 6,678 and 6,638), the prevailing OV-1 (the same as at
+  08:17), the 40 `IN_PLACE_SINCE` files unchanged and the backup; then item 7: QA, then PROD. **Handovers in force:**
+  H-1 v17r1 (RAT-64) and H-2 v12 (RAT-67, installed by the reviewer, `436f05e` and `e3b14c7`).
 - **TASK_T031 PASSED: RESULT: SAME ON THE OWNER'S PC (entry 384; 28 November 2026).** **Next:** the owner's word that
   he accepts the comparison (item 5); then his first real fetch, `Run_Results_Updater.bat` BY ITSELF in DEV, and a
   look at what it wrote (item 6, entry 358); then a job that fetches; then QA, then PROD.
@@ -1323,6 +1332,8 @@ durable EX messages are authoritative.
 
 - **The reviewer may commit its own EX replies to `exchange/` and its H-2 files to `doc/HANDOVER/`** (owner, entries 50 and
   56). Fetch before reading or numbering anything; never edit its files.
+- **Now (28 November 2026, entry 390):** the reviewer's handover in force is **H-2 v12** (RAT-67), which the owner
+  authorised it to install itself. Open findings: none. Its last reading: PASS for `8fce853` (entry 389).
 - **The reviewer chat in role (entry 287): the one that took over from H-2 v9 on 25 November 2026;** the owner
   approved it to start. It verified the hashes and the carried rights itself and found no material discrepancy;
   it did not claim an exhaustive read. Open findings: none.
@@ -1353,6 +1364,13 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From RAT-64 and RAT-67 (27 and 28 November 2026, entries 367 and 390): Claude chat ended:** start a new Claude chat
+  with the blurb `doc/HANDOVER/Claude_Primary_Handover_H1_v17r1_introductory_blurb.md`. It reads H-1 v17r1, the
+  documents its section 0 lists, this page's top block and the decision log from entry 365 (H-1 v17r1 predates the
+  rehearsal and DEV's fill and first fetch; entries 368 to 390 hold them). **ChatGPT reviewer chat ended:** its
+  handover in force is **H-2 v12** (RAT-67, entry 390; `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v12_20261128.md`
+  and its blurb beside it); if the reviewer has committed a later one, use that. Everything below in this section is
+  history.
 - **From RAT-62 (27 November 2026, entry 352): Claude chat ended:** start a new Claude chat with the blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v16r1_introductory_blurb.md`. It reads H-1 v16r1, the documents its section
   0 lists, and the decision log from entry 330. **ChatGPT reviewer chat ended:** its handover in force is H-2 v10
@@ -1402,6 +1420,16 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-67 (28 November 2026, entry 390): H-1 v17r1 (Claude; RAT-64, entry 367;
+`doc/HANDOVER/Claude_Primary_Handover_H1_v17r1.md`, SHA-256
+`de5939902bb11c309e8349d6e1408799dab3145f7d4ef2e754e79102833cc60d`; its blurb
+`b5fae7800e4124cec14305588f09598850c3d728e2d08fb1a95171cea0f274a2`) and, for the reviewer, H-2 v12 (RAT-67;
+`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v12_20261128.md`, SHA-256
+`311539dc15ce7db0a8e3eee03c875dc778603a29620c89ab700d2f898f36acfa`; its blurb
+`cbb661a766ff0cd632b4be892c635c8cd217e5948460110b875c4ffbee91ec1b`; installed by the reviewer, commits `436f05e`
+and `e3b14c7`).** H-2 v11 (RAT-65) and H-2 v10 (RAT-63) are history; so is H-1 v16r1 (RAT-62). Everything below in
+this section is history.
 
 **From RAT-62 (27 November 2026, entry 352): H-1 v16r1 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v16r1.md`,
 SHA-256 `9aa609d7ae3898df718c293be85103f7c54d391cb21ffa116ba3793c0434e8f1`), the short handover of the simple

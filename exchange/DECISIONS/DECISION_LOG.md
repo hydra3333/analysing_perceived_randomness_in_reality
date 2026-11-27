@@ -9236,3 +9236,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   as at 08:17 (lines 1592 to 1593 and 1709 to 1710, the same two scores); the 40 IN_PLACE_SINCE files unchanged
   (`git status` clean); a backup line. Then item 7: QA, then PROD.
 - Next numbers: EX_334 (Claude's); entry 390; RAT-67.
+
+## 390. 28 November 2026, 09:05 - RAT-67: H-2 v12 and its blurb ratified and installed by the reviewer
+
+- **RAT-67: the owner ratified H-2 v12** (the reviewer's handover, short form; cutoff `fcdc1c1`, entry 389) and its
+  introductory blurb, and authorised the reviewer to install both itself. Relayed by the owner at 09:00. Installed in
+  `doc/HANDOVER/` by the reviewer: `ChatGPT_Reviewer_Handover_H2_v12_20261128.md` (commit `436f05e`, SHA-256
+  `311539dc15ce7db0a8e3eee03c875dc778603a29620c89ab700d2f898f36acfa`) and
+  `ChatGPT_Reviewer_Handover_H2_v12_20261128_introductory_blurb.md` (commit `e3b14c7`, SHA-256
+  `cbb661a766ff0cd632b4be892c635c8cd217e5948460110b875c4ffbee91ec1b`); both ASCII and CRLF (hashes computed by Claude
+  after its pull). **H-2 v12 supersedes H-2 v11 (RAT-65).** The reviewer left the decision log, the continuity page and
+  every Claude file to Claude. Open reviewer findings: none.
+- **The continuity page brought up to date** in the same commit: a new top block; "If a chat ends" and "Installed
+  handovers" now name H-1 v17r1 (RAT-64) and H-2 v12 (RAT-67); both sections had still named H-1 v16r1 and H-2 v10,
+  stale since RAT-64 and RAT-65 (corrected under the owner's standing instruction on out-of-date statements).
+- **Still running:** DEV's rebuild, started by the owner at 08:28 (`Run_Research.bat` without `--no-update`: one more
+  fetch, all 26 draws matched, added 0 a game, so the rebuild works from the same results). Then item 7: QA, then
+  PROD.
+- Next numbers: EX_334 (Claude's); entry 391; RAT-68.
