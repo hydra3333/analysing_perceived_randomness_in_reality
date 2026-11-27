@@ -9064,3 +9064,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   more T029 run for a clean pass on Windows, then T030 on the owner's separate go.
 - **Waiting on the owner:** his go for T029 once more.
 - Next numbers: EX_334 (Claude's); entry 380; RAT-67.
+
+## 380. 27 November 2026, 20:24 - TASK_T029 PASSED: the living system's test suite on Windows, 280 run, 277 passed, 3 skipped as expected
+
+- **The owner's go for the run** was given in the chat after entry 379 (Claude asked for it; the owner ran it);
+  recorded here with its result.
+- **TASK_T029 PASSED** (report `outbox/REPORT_T029.md`, commit `a0662da`, at the task file of `6cf414d`). All eleven
+  steps: the seven planted probes refused; the scratch DEV tree copied and read back; its own Python environment built
+  by its own two scripts (Python 3.15.2, 39 requirements); **the living system's whole test suite on Windows: 280 run,
+  0 failures, 0 errors, 3 skipped (the three expected), 277 passed, exit code 0**; the tests' temporary folder left
+  empty. Evidence class from here: Windows, on the owner's PC, in the scratch folder.
+- **Item 2 of the work order (entry 365), first part, is done.** Next: TASK_T030 (the commands on three scratch trees
+  with invented results), on the owner's separate go.
+- **Also known from the earlier run of the same day** (report `6cf414d`): the package-install script writes a snapshot
+  file into the tree it builds, under `transitory_data\dependency_snapshots\`; DEV's `.gitignore` already leaves
+  `transitory_data` out, and the system uses nothing of it.
+- Next numbers: EX_334 (Claude's); entry 381; RAT-67.

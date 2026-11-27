@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 20:11 Australia/Adelaide (entry 379: the count of entry 378 corrected to 276 passed; waiting on the owner's go for T029).
+**Last updated:** 27 November 2026, 20:24 Australia/Adelaide (entry 380: TASK_T029 passed; waiting on the go for T030).
 
 ## For the owner: NOW
 
+- **TASK_T029 PASSED (entry 380; 27 November 2026).** The test suite on Windows in a scratch DEV tree with its own
+  `.venv`: 280 run, 277 passed, 3 skipped as expected. **Next:** the owner's go for TASK_T030 (the commands on three
+  scratch trees; about 30 to 50 minutes).
 - **T029 ON WINDOWS: 280 RUN, 276 PASSED, 1 FAILED, 3 SKIPPED (entries 378 and 379; 27 November 2026).** The guards hold; a scratch tree built its own
   `.venv`; the suite ran. One test failed for a line-ending fault of its own, corrected (`165d19f`). **Waiting on the
   owner:** push the report, delete the T029 scratch folder, and his go for T029 once more; then T030.
