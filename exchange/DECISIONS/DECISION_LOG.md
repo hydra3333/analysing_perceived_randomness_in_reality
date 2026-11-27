@@ -9223,3 +9223,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
   first fill. The owner may delete everything under `D:\DELETE_ME\a_p_r_i_r\` (T029, T030, T031: all passed, their
   reports committed).
 - Next numbers: EX_334 (Claude's); entry 389; RAT-67.
+
+## 389. 28 November 2026, 08:31 - The reviewer's PASS for the progress-line correction; DEV's rebuild to use --no-update
+
+- **The reviewer's PASS for `8fce853`** (relayed 08:29): the whole diff read; one file, two lines, confined to the
+  agreed message; no change of computation, control flow or safeguard; the test results accepted; no further
+  correction or comparison asked.
+- **The reviewer recommends DEV's rebuild with `--no-update`**, checking the totals, the OV-1 values, the unchanged
+  establishment records and the backup. Claude agrees (DEV fetched twice this morning; no draw is due before Oz Lotto's
+  on Tuesday) and changes entry 388's step to `Run_Research.bat --no-update`. What it should show: one REBUILD line
+  (the engine); Powerball 15,198 forecasts and 15,158 scores, Oz Lotto 6,678 and 6,638; the prevailing OV-1 the same
+  as at 08:17 (lines 1592 to 1593 and 1709 to 1710, the same two scores); the 40 IN_PLACE_SINCE files unchanged
+  (`git status` clean); a backup line. Then item 7: QA, then PROD.
+- Next numbers: EX_334 (Claude's); entry 390; RAT-67.
