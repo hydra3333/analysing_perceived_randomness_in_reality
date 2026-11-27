@@ -8919,3 +8919,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
   rulebook v0.8 section 2A), run by the local runner on the owner's PC at the task file of commit `4180ac2` or later.
   It authorises T029 alone: not T030, not DEV's first fill, not T031, and nothing on a real tree.
 - Next numbers: EX_334 (Claude's); entry 372; RAT-67.
+
+## 372. 27 November 2026, 19:11 - TASK_T029 STOPPED AT STEP 3: the drive guard's Windows form did not refuse; a corrected settings candidate and T029 r2
+
+- **TASK_T029 STOPPED AT STEP 3** (report `outbox/REPORT_T029.md`, commit `76571d0`, at the task file of `e76f48b`).
+  The first planted probe (`echo results_updater`) was refused by the permission settings, as expected. The second
+  (`echo 'T:\a_p_r_i_r_QA'`) was not refused: it ran and printed its words, so the step stopped, as it is written to;
+  the third was not attempted. Steps 4 to 11 were not run; nothing was made under `D:\DELETE_ME\`; nothing of a real
+  tree, or on `T:` or `G:`, was read, listed or written. The probe did its work: the guard for the Windows form of a
+  drive path does not work as written.
+- **Claude's reading of the cause (not yet confirmed):** in a Bash permission rule a backslash is read as an escape
+  character, so the rule text `*T:\*` asks for "T:" followed by a literal asterisk, which no command holds. The
+  documentation (code.claude.com, "Configure permissions") says how `*` works and nothing about a backslash. The same
+  reading predicts that the guard for `results_updater` and the forward-slash forms work, since they hold no
+  backslash. None of the three task files has a command that any guard refuses (checked by a program), so the tasks
+  themselves are not affected.
+- **Proposed (for the owner's word): the settings r1 candidate**
+  (`exchange/CLAUDE_WEB_TOOLS/rulebook_v0_8/settings_v0_8r1_CANDIDATE.json`, SHA-256
+  `4b1231523dd504df3decdc3857f516d77a49f41d99fc6f559fa02735b59d7cb6`): the settings of RAT-66 with four rules added,
+  `*T:\\*`, `*t:\\*`, `*G:\\*`, `*g:\\*` (an escaped backslash, then the wildcard); nothing removed. **And TASK_T029
+  r2:** step 3 tries seven probes (the updater word; `T:\`, `t:\`, `G:\`, `g:\`; `T:/`; `/g/`), all of them even if
+  one runs, so that one run shows which forms hold. The rest of T029 is unchanged. If a backslash form still runs, the
+  next fallback is a rule without the backslash (for example `*T:*`), which no command of the three tasks holds
+  either.
+- Next numbers: EX_334 (Claude's); entry 373; RAT-67.

@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 19:05 Australia/Adelaide (entry 371: GO for TASK_T029; waiting on its report).
+**Last updated:** 27 November 2026, 19:11 Australia/Adelaide (entry 372: T029 stopped at step 3; a corrected settings candidate).
 
 ## For the owner: NOW
 
+- **T029 STOPPED AT STEP 3 (entry 372; 27 November 2026):** the permission guard did not refuse `echo 'T:\...'`;
+  nothing else ran. **Waiting on the owner:** his word on the settings r1 candidate (four rules with an escaped
+  backslash) and on rerunning T029 as r2 (seven probes).
 - **RULEBOOK v0.8 RATIFIED AND INSTALLED (RAT-66, entry 370; 27 November 2026),** with its permission settings.
   **Next:** the owner pulls, then gives his go for TASK_T029 in a new Claude Code conversation (`Do
   inbox\TASK_T029.md`); after it passes, T030; then his own DEV first fill; then T031.

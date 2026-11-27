@@ -1,6 +1,6 @@
 # TASK_T029 - the living system's test suite on Windows, in a scratch DEV tree with its own Python environment, in the scratch folder on D:
 
-**Task ID:** T029. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed, with the permission settings of the same edition; step 1 checks).** **Section 2A applies to steps 3 to 11, in the folder `D:\DELETE_ME\a_p_r_i_r\T029`** (new; this task creates it). (r1: the reviewer's corrections of its reading at `3c765bb`, decision log entry 369.)
+**Task ID:** T029. **Date:** 27 November 2026. **Author:** the Claude web chat. **Rulebook v0.8 (needs it ratified and installed, with the permission settings of the same edition; step 1 checks).** **Section 2A applies to steps 3 to 11, in the folder `D:\DELETE_ME\a_p_r_i_r\T029`** (new; this task creates it). (r1: the reviewer's corrections of its reading at `3c765bb`, decision log entry 369. r2: step 3 probes every form of the drive guard, after the first run stopped there because the settings did not refuse `T:\`; decision log entry 372.)
 
 **Purpose.** The simple scheme's living system (`a_p_r_i_r_DEV`) has been built and tested only in the cloud, on Linux. This task is item 2 of the owner's work order (decision log entry 365), first part: the whole test suite of the living system on the owner's Windows PC, in a scratch copy of the DEV tree that builds its own Python environment with its own two scripts, exactly as the owner will build his. Among the tests are those that start a tree's research job as another process with that tree's own Python, that press Ctrl+C while such a job runs, and that make links and junctions. Every test runs on invented draws and toy methods; none lets the results updater reach any website (each replaces the browser with one that refuses). It also checks, harmlessly, that the new permission settings refuse what they are meant to refuse.
 
@@ -47,13 +47,17 @@ git status --short --untracked-files=no -- a_p_r_i_r_DEV CLAUDE_CODE_WORKING_FOL
 ```
 Expected: one commit hash (record it), then no output at all (the living system and the task files are as committed). Any output from the second command: STOP.
 
-**3. (Refusals planted on purpose, rulebook section 2A item 5 kind (i).) The permission settings refuse what they are meant to** (three harmless commands; each would only print its own words if it ran). You are authorised to attempt them; their refusal is the PASS of this step.
+**3. (Refusals planted on purpose, rulebook section 2A item 5 kind (i).) The permission settings refuse what they are meant to** (seven harmless commands; each would only print its own words if it ran). You are authorised to attempt them; their refusal is the PASS of this step. **Attempt all seven, one at a time, even if one of them runs,** and record for each what happened; only then decide the step.
 ```
 echo results_updater
 echo 'T:\a_p_r_i_r_QA'
+echo 't:\a_p_r_i_r_QA'
+echo 'G:\a_p_r_i_r_PROD'
+echo 'g:\a_p_r_i_r_PROD'
+echo T:/a_p_r_i_r_QA
 echo /g/a_p_r_i_r_PROD
 ```
-Expected for each: **refused by the permission settings, and not run** (Claude Code says the permission was denied). Record what Claude Code said for each. If any of the three runs (prints its words): STOP.
+Expected for each: **refused by the permission settings, and not run** (Claude Code says the permission was denied). Record what Claude Code said for each. If any of the seven ran (printed its words): STOP after the seventh, and list in the report which ran.
 
 **4. The scratch folder is an ordinary folder on D:, and this task's folder is new** (rulebook section 2A item 2).
 ```
