@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 20:53 Australia/Adelaide (entry 382: TASK_T030 passed; next is the owner's DEV first fill).
+**Last updated:** 28 November 2026, 06:52 Australia/Adelaide (entry 383: DEV filled; waiting on the go for TASK_T031).
 
 ## For the owner: NOW
 
+- **DEV IS FILLED (entry 383; 28 November 2026).** The owner's first fill of DEV (49 minutes; the backup on T:) and
+  its 40 `IN_PLACE_SINCE` files committed (`62872f8`). **Next: the owner's go for TASK_T031** (the comparison on his
+  PC, about 70 minutes). Then, after he accepts it: the results updater BY ITSELF in DEV (entry 358), then QA and
+  PROD.
 - **TASK_T030 PASSED (entry 382; 27 November 2026): THE REHEARSAL OF THE COMMANDS IS DONE.** All 31 steps on Windows,
   the child-process install and the restore's rename aside included. **Next: the owner runs DEV's first fill himself**
   (the four accepted-results files into `a_p_r_i_r_DEV\source_data`, `ENVIRONMENT.ini` from the example,

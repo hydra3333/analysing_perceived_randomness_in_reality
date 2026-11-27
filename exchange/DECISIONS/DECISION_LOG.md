@@ -9110,3 +9110,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   files are committed; then TASK_T031 on his go. **Between the fill and T031 no file of the engine may change** (T031
   checks that DEV's results were made by the engine of its commit).
 - Next numbers: EX_334 (Claude's); entry 383; RAT-67.
+
+## 383. 28 November 2026, 06:52 - DEV'S FIRST FILL made by the owner; its 40 IN_PLACE_SINCE files committed; the reviewer accepts T029 and T030
+
+- **The reviewer** (relayed by the owner, 27 November, 21:02) accepts the passes of TASK_T029 and TASK_T030: the
+  Windows qualification of the commands is complete; no further rehearsal or correction asked. It agrees that no
+  engine file changes between DEV's first fill and T031, and that the first real updater run waits until the Windows
+  comparison is accepted.
+- **DEV'S FIRST FILL, MADE BY THE OWNER** (item 3 of the work order, entry 365): the accepted results put into
+  `a_p_r_i_r_DEV\source_data`, `ENVIRONMENT.ini` from the example, then `Run_Research.bat --no-update` in DEV, 27
+  November 21:02 to 21:51 (49 minutes). As he relayed it: Powerball through draw 1591, 15,118 forecasts and 15,078
+  scores; Oz Lotto through draw 1708, 6,598 forecasts and 6,558 scores; 40 methods; `Backup made:
+  T:\a_p_r_i_r_backups\DEV\DEV_20261127_215052_after_job.zip`; the job finished (its last line was cut short in the
+  owner's paste). The counts are those of the engine comparison in the cloud on the same results.
+- **The 40 `IN_PLACE_SINCE` files committed and pushed by the owner** (commit `62872f8`). Checked by Claude: one
+  beside each of the 40 methods; each names the fingerprint of its method as committed (so the fill ran with this
+  commit's methods); each holds an establishment draw for both games, the same pair in all; all CRLF and ASCII (0 form
+  faults over the 229 tracked files of DEV).
+- **Item 3 of the work order is done.** Next: TASK_T031, the comparison of the two engines on the owner's PC, on his
+  go. No engine file is changed before it.
+- Next numbers: EX_334 (Claude's); entry 384; RAT-67.
