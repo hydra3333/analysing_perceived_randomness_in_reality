@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 17:19 Australia/Adelaide (entry 364: step 4b built; step 4 is built; waiting on the reviewer's reading).
+**Last updated:** 27 November 2026, 17:37 Australia/Adelaide (entry 365: step 4 reviewed, corrected and accepted; the work order from here).
 
 ## For the owner: NOW
 
+- **STEP 4 REVIEWED, CORRECTED AND ACCEPTED (entry 365; 27 November 2026).** The reviewer's F01 to F04 are in (commit
+  `068c93f`; 277 tests). The owner accepted Claude's 4b choices, the lock file as the one write in PROD during
+  Copy_From_PROD, and the reversed seeding. **THE WORK ORDER NOW:** 1 report wording and the runner's rulebook
+  edition; 2 rehearsal of the commands in the scratch folder; 3 the owner runs DEV's first fill (`--no-update`); 4 the
+  runner copies DEV into scratch and makes the frozen-engine comparison there; 5 the owner accepts it; 6 the owner
+  runs the results updater BY ITSELF in DEV first (entry 358); 7 QA, then PROD. **Next from Claude (Opus):** report
+  wording, rulebook edition and task files, refresh of H-1. Nothing is authorised on the owner's PC.
 - **STEP 4 IS BUILT (entry 364; 27 November 2026).** Step 4b, commit `42bb082`: `Create_Tree`, `Install` (`--show`),
   `Retire`, `Copy_From_PROD` (`software`, `data` or `both`) and `Restore`, all run from DEV; each reads the other
   tree's own settings first, locks every tree it touches and backs a tree up before replacing anything in it. 270

@@ -8763,3 +8763,40 @@ section 17.2 (unpack it into a new folder, never over the clone).
   Opus: the report wording, the runner's rulebook edition and the task file for step 5, and the refresh of H-1. Step
   4, the Fable work, is finished.
 - Next numbers: EX_334 (Claude's); entry 365; RAT-64.
+
+## 365. 27 November 2026, 17:37 - REVIEWER, OWNER and CLAUDE: step 4b read; F01 to F04 corrected (`068c93f`); the owner accepts the 4b choices, the lock in PROD and the reversed seeding; the work order from here
+
+- **The reviewer's one reading of step 4b at `42bb082`** (relayed by the owner): concurrence with the design and the
+  choices, with four targeted findings, F01 to F04, and two smaller points. Claude checked each against the code and
+  agreed with all of them.
+- **The owner's words:** (17:27) "ok yes go for \"The four findings\" and for \"The two smaller points\" and for and
+  \"the README line\". Lets pause on the seeding dev->delete_me and the lock on prod"; then (17:33) "I approve
+  everything proposed, with the sequencing qualification mentioned by chatgpt below".
+- **DECIDED BY THE OWNER (17:33).** (1) **Claude's step 4b choices of entry 364 stand as built** (the seven put to
+  him: the shared-helper rule; `both` for Copy_From_PROD; PROD's `I_AM_RETIRED` and `IN_PLACE_SINCE` go with a
+  software copy; no typed confirmations; Restore never deletes; Retire runs no job; a retired method is replaced if
+  flagged and differing but never added). (2) **The four corrections F01 to F04 and the README line.** (3) **The lock
+  in PROD:** `records\TREE.lock` is the one thing Copy_From_PROD may write in PROD, made when the command starts and
+  removed when it ends; nothing else of PROD is ever changed by it. (4) **Seeding DEV: the reversed direction.** The
+  owner runs DEV's first fill himself; the runner then copies DEV into the scratch folder by reading and makes the
+  comparison with the frozen engine there. Nothing leaves the scratch folder, and the comparison's alignment of
+  `IN_PLACE_SINCE` never touches DEV. No new tool.
+- **THE WORK ORDER FROM HERE (the owner, 17:33; it replaces the order of steps 5 and 6 in the scheme's section 12).**
+  1. Finish the corrections, the report wording and the runner's rulebook edition. 2. Rehearse the commands in the
+  scratch folder on the owner's PC, the Windows restore and the child-process job included. 3. The owner runs DEV's
+  first fill with `--no-update`. 4. The runner copies what is needed of DEV into the scratch folder and makes the
+  comparison with the frozen engine there. 5. The owner accepts the Windows comparison. 6. The owner runs the results
+  updater by itself in DEV, for the first time against the real site (entry 358, unchanged). 7. QA is created, then
+  PROD. The comparison itself is made in equivalent environments. No import tool, no environment gate.
+- **The corrections are made: commit `068c93f`** (only files under `a_p_r_i_r_DEV/`; coding practices met). F01: the
+  infrastructure's flag also vouches for the root launchers (a third fingerprint, for installing only). F02: the
+  shared-helper rule also looks at a destination method that fails its checks, by its declaration. F03: Copy_From_PROD
+  checks PROD's accepted results of both games with the engine's reader, and that PROD holds what is to be copied,
+  before anything is touched; a folder is listed before anything is removed. F04: Python's `subprocess.run` kills the
+  process it started when Ctrl+C is pressed, which the project forbids; the job is now started and waited for in steps
+  that never end it, and the lock is kept until it has ended by itself. 277 tests pass (were 270); each corrected
+  fault, planted back, is caught. Cloud only. No computation is touched, so the comparisons were not repeated (the
+  reviewer asked for none).
+- **Next (Opus work; the owner's approval of 17:33 covers it):** the report wording; the runner's rulebook edition and
+  the task files for the rehearsal; the refresh of H-1 with this work order. Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 366; RAT-64.
