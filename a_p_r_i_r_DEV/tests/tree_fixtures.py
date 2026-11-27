@@ -50,9 +50,10 @@ def give_python(tree: Path) -> None:
 
 
 def edit(path: Path, text: str) -> None:
-    """Add a line to a text file of a tree: the smallest change that makes its bytes other bytes."""
-    with open(path, 'a', encoding='ascii') as stream:
-        stream.write(text + '\n')
+    """Add a line to a text file of a tree: the smallest change that makes its bytes other bytes. The line is
+    written as bytes ending LF, so that a test sees the same bytes on Windows and elsewhere."""
+    with open(path, 'ab') as stream:
+        stream.write(text.encode('ascii') + b'\n')
 
 
 class TreesCase(fx.JobCase):

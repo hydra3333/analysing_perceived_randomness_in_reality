@@ -147,7 +147,7 @@ class CopyFromProd(ThreeTrees):
         fx.write_results(prod, OTHER_GAME, OTHER_LAST)      # PROD holds both games' accepted results, as it must
         tf.edit(prod / ENGINE, '# PROD\'s engine')
         method_flags.write_retired(self.retired_file('PROD').parent, {GAME: LAST + 2}, 'retired in PROD')
-        (prod / 'src' / method_flags.INSTALLABLE_NAME).write_text('fingerprint = planted\n', encoding='ascii')
+        (prod / 'src' / method_flags.INSTALLABLE_NAME).write_bytes(b'fingerprint = planted\n')
         self.assertEqual(fx.run_job(prod)[0], 0)
         tf.edit(qa / ENGINE, '# QA\'s own engine')
         self.add_variant(qa, 'TOY_ONLY_IN_QA_V1')
