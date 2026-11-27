@@ -9088,3 +9088,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `D:\DELETE_ME\a_p_r_i_r\T030`; the r2 task file of `7bfc772`), run by the local runner on the owner's PC. It
   authorises T030 alone: not DEV's first fill, not T031, and nothing on a real tree.
 - Next numbers: EX_334 (Claude's); entry 382; RAT-67.
+
+## 382. 27 November 2026, 20:53 - TASK_T030 PASSED: the simple scheme's commands on Windows, on three scratch trees; item 2 of the work order is done
+
+- **TASK_T030 PASSED** (report `outbox/REPORT_T030.md`, commit `607834e`, at the task file of `d1a43bd`; ten minutes
+  on the owner's PC). All 31 steps printed what the task file expects, on three scratch trees with invented results,
+  each tree with its own Python environment built by its own two scripts: a first research job in each;
+  `Make_Installable ALL INFRA`; `Create_Tree` QA and PROD (53 files and 4 results files each; the settings file
+  written last and naming only scratch places); `Install --show`; **`Install`, with the QA tree's own job run as
+  another process, with QA's own Python, under the lock the install held** (the method rebuilt in both games; no lock
+  left in either tree); a second install with nothing to do; a method changed and not flagged again named and left
+  alone; `Backup.bat`; `Retire` in all three trees, each from its own next draw, and PROD's job applying it;
+  `Copy_From_PROD both` (QA then PROD's twin: its job computed 0 forecasts and 0 scores); **`Restore`, the tree
+  renamed aside on Windows and the backup's 563 files put in its place**; the three planted refusals (no Python
+  environment; the tree set aside; a tree created where one is); `Who_Uses`. No deviation in what was run. The report
+  was written with the runner's file tool, the permission settings refusing a shell heredoc of it.
+- **Item 2 of the work order (entry 365) is done: the rehearsal of the commands on Windows.** The two things only
+  Windows could show, the child-process job and the rename of a whole tree aside, both work. Evidence class: Windows,
+  the owner's PC, scratch trees, invented results.
+- **Next, item 3: the owner runs DEV's first fill himself** (Claude gives him the steps); then the 40 `IN_PLACE_SINCE`
+  files are committed; then TASK_T031 on his go. **Between the fill and T031 no file of the engine may change** (T031
+  checks that DEV's results were made by the engine of its commit).
+- Next numbers: EX_334 (Claude's); entry 383; RAT-67.

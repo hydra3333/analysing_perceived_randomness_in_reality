@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 20:27 Australia/Adelaide (entry 381: GO for TASK_T030; waiting on its report).
+**Last updated:** 27 November 2026, 20:53 Australia/Adelaide (entry 382: TASK_T030 passed; next is the owner's DEV first fill).
 
 ## For the owner: NOW
 
+- **TASK_T030 PASSED (entry 382; 27 November 2026): THE REHEARSAL OF THE COMMANDS IS DONE.** All 31 steps on Windows,
+  the child-process install and the restore's rename aside included. **Next: the owner runs DEV's first fill himself**
+  (the four accepted-results files into `a_p_r_i_r_DEV\source_data`, `ENVIRONMENT.ini` from the example,
+  `Run_Research.bat --no-update`, about 47 minutes), commits the 40 `IN_PLACE_SINCE` files, then gives his go for
+  TASK_T031. **No engine file may change between the fill and T031.** After T031: the owner runs the results updater
+  BY ITSELF in DEV first (entry 358).
 - **TASK_T029 PASSED (entry 380; 27 November 2026).** The test suite on Windows in a scratch DEV tree with its own
   `.venv`: 280 run, 277 passed, 3 skipped as expected. **Next:** the owner's go for TASK_T030 (the commands on three
   scratch trees; about 30 to 50 minutes).
