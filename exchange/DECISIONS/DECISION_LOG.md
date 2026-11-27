@@ -9295,3 +9295,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the page were written, and the commit went out without it; nothing else was affected.
 - **Still running:** DEV's rebuild (started 08:28). Then item 7: QA, then PROD.
 - Next numbers: EX_334 (Claude's); entry 393; RAT-69.
+
+## 393. 28 November 2026, 09:19 - DEV'S REBUILD DONE on the corrected engine: the same totals and the same OV-1 values
+
+- **The owner's rebuild of DEV** (`Run_Research.bat`, 08:28 to 09:17, 49 minutes; its whole output sent to Claude).
+  One REBUILD line: "everything, in both games (80 stored method results deleted): the engine is not the one these
+  results were made with". The updater ran first for each game (26 overlapping draws checked, all matched, added 0,
+  0 warnings), so the rebuild worked from the same accepted results. The progress lines have the new wording
+  (`8fce853`), the last of Powerball being "processed target draw 1594 (results on file through 1593)".
+- **Checked by Claude against what entry 389 expected, all as expected:** Powerball 15,198 forecasts and 15,158
+  scores; Oz Lotto 6,678 and 6,638; the second OV-1 series the same as before the rebuild to the last digit
+  (Powerball lines 1592 to 1593, score 0.983267352796; Oz Lotto 1709 to 1710, score 0.997794221022; reference line
+  40 not reached in either); the backup `T:\a_p_r_i_r_backups\DEV\DEV_20261128_091700_after_job.zip`; "The job
+  finished." The report files written, 904 and 478, are what the code gives: two league files for each of 449 and
+  236 draws, two next-draw files, four OV-1 files.
+- **Not shown by the output, asked of the owner:** `git status` in the repository (the 40 `IN_PLACE_SINCE` files
+  should be unchanged).
+- **A consequence of the rebuild, as foreseen in entry 388:** every stored forecast in DEV was made again today, so
+  none but the next draw's is now one made before its result was on file. It is bookkeeping only, and the reason
+  the correction was made before QA and PROD exist.
+- **DEV is now right on the corrected engine. Next is item 7: QA, then PROD,** the owner running every step on
+  Claude's instructions.
+- Next numbers: EX_334 (Claude's); entry 394; RAT-69.

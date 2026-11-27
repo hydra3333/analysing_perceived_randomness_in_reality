@@ -4,11 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 09:10 Australia/Adelaide (entry 392: RAT-68, H-1 v18 installed; DEV's rebuild
-running).
+**Last updated:** 28 November 2026, 09:19 Australia/Adelaide (entry 393: DEV's rebuild done; QA is next).
 
 ## For the owner: NOW
 
+- **DEV'S REBUILD IS DONE (entry 393; 28 November 2026):** the corrected engine gives the same totals and the same
+  second OV-1 values as before it. **Next, item 7: QA.** The owner, in DEV: `Make_Installable.bat ALL INFRA` (then
+  commits the 41 flag files), `Create_Tree.bat QA`; in QA, from a plain window with no environment active:
+  `create_venv.bat`, `install_upgrade_dependencies_into_venv.bat`, `Run_Research.bat --no-update` (about 49
+  minutes); then the updater BY ITSELF in QA before any fetching job (entry 358). Then the same for PROD.
 - **RAT-68: H-1 v18 IS THE CLAUDE HANDOVER IN FORCE (entry 392; 28 November 2026),**
   `doc/HANDOVER/Claude_Primary_Handover_H1_v18.md` with its blurb beside it; the reviewer's is H-2 v12 (RAT-67).
   **Waiting on the owner:** the output of DEV's rebuild (started 08:28; Claude checks the totals, the second OV-1
