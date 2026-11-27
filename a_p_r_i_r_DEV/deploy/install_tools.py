@@ -109,8 +109,8 @@ def plan_infrastructure(plan: Plan, dev: Path, target: Path) -> None:
         return
     state = method_flags.installable_state(dev / 'src', infrastructure_fingerprints(dev))
     if state != method_flags.FLAGGED:
-        plan.infrastructure_note = (f'the infrastructure differs ({len(to_copy) + len(gone)} files) but is {state} '
-                                    f'in DEV; Make_Installable.bat INFRA makes the flag')
+        plan.infrastructure_note = (f'the infrastructure differs ({len(to_copy) + len(gone)} files), and in DEV it is '
+                                    f'{state}; Make_Installable.bat INFRA makes the flag')
         return
     plan.infrastructure, plan.infrastructure_gone = to_copy, gone
     plan.engine_differs = (code_identity.infrastructure_fingerprint(dev)
@@ -198,7 +198,7 @@ def plan_install(dev: Path, target: Path) -> Plan:
         missing = variant.identity not in there and variant.identity not in there_but_refused
         state = flag_state(variant)
         if state != method_flags.FLAGGED:
-            plan.passed_over.append((variant.identity, f'it is {state} in DEV; Make_Installable.bat makes the flag'))
+            plan.passed_over.append((variant.identity, f'in DEV it is {state}; Make_Installable.bat makes the flag'))
         elif missing and (variant.folder / method_flags.RETIRED_NAME).exists():
             plan.passed_over.append((variant.identity, 'it is retired in DEV, and a retired method is not added to '
                                                        'a tree that lacks it'))
@@ -322,7 +322,7 @@ def choose_for_a_new_tree(dev: Path, say) -> list:
     not flagged as it now stands, no method is, or DEV holds no accepted results."""
     state = method_flags.installable_state(dev / 'src', infrastructure_fingerprints(dev))
     if state != method_flags.FLAGGED:
-        raise CommandRefused(f'the infrastructure is {state} in DEV, so there is no engine to give the new tree. '
+        raise CommandRefused(f'in DEV the infrastructure is {state}, so there is no engine to give the new tree. '
                              f'Nothing was changed. Run Make_Installable.bat ALL INFRA first.')
     variants, refused = find_variants(dev / METHODS_FOLDER)
     chosen = []
@@ -331,7 +331,7 @@ def choose_for_a_new_tree(dev: Path, say) -> list:
         if (variant.folder / method_flags.RETIRED_NAME).exists():
             say(f'  not copied: {variant.identity}: it is retired in DEV.')
         elif state != method_flags.FLAGGED:
-            say(f'  not copied: {variant.identity}: it is {state} in DEV; Make_Installable.bat makes the flag.')
+            say(f'  not copied: {variant.identity}: in DEV it is {state}; Make_Installable.bat makes the flag.')
         else:
             chosen.append(variant)
     for name, why in refused:

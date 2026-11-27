@@ -509,7 +509,7 @@ class TheCommandProgram(ThreeTrees):
         self.dev(flag=())
         code, printed = run_program(dev_command, self.place('DEV'), 'create_tree', 'QA')
         self.assertEqual(code, 2)
-        self.assertIn('REFUSED: the infrastructure is not flagged in DEV', printed)
+        self.assertIn('REFUSED: in DEV the infrastructure is not flagged', printed)
         code, printed = run_program(dev_command, self.place('DEV'), 'install', 'QA')
         self.assertEqual(code, 2)
         self.assertIn('REFUSED: ', printed)

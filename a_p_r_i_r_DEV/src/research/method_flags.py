@@ -41,7 +41,7 @@ PASSED_OVER_NAMES = FLAG_NAMES + tuple(name + STAGED_SUFFIX for name in FLAG_NAM
 LINE_ENDING = '\r\n'
 # How an I_AM_INSTALLABLE flag stands against the files it is for (what installable_state returns).
 NOT_FLAGGED = 'not flagged'
-FLAG_OUT_OF_DATE = 'its flag is older than its files'
+FLAG_OUT_OF_DATE = 'flagged, but its flag is older than its files'
 FLAGGED = 'flagged'
 # Why settle_in_place wrote a method's IN_PLACE_SINCE (what it returns).
 WRITTEN_FIRST = 'it did not exist'

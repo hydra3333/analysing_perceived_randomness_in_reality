@@ -81,13 +81,13 @@ class CreateTree(tf.TreesCase):
         self.assertEqual(sorted(path.name for path in (qa / 'src/methods/E_901').iterdir()), ['TOY_A_V1'])
         text = self.said_text()
         for name, why in (('TOY_B_V1', 'its flag is older than its files'), ('TOY_C_V1', 'it is retired in DEV'),
-                          ('TOY_D_V1', 'it is not flagged in DEV'), ('TOY_E_V1', 'its folder in DEV fails its checks')):
+                          ('TOY_D_V1', 'in DEV it is not flagged'), ('TOY_E_V1', 'its folder in DEV fails its checks')):
             self.assertRegex(text, rf'not copied: E_901/{name}: .*{why}')
         self.assertIn('the infrastructure and 1 methods', text)
 
     def test_without_a_flagged_engine_or_a_flagged_method_or_results_no_tree_is_made(self):
         dev = self.dev(flag=())
-        for flags, removed, why in (((), None, 'the infrastructure is not flagged in DEV'),
+        for flags, removed, why in (((), None, 'in DEV the infrastructure is not flagged'),
                                     (('INFRA',), None, 'no method is flagged in DEV'),
                                     (('ALL', 'INFRA'), 'source_data', 'DEV holds no accepted results')):
             if flags:
@@ -98,7 +98,7 @@ class CreateTree(tf.TreesCase):
                 self.command(install_tools.create_tree, 'QA')
             self.assertFalse(self.place('QA').exists(), why)
         tf.edit(dev / 'src' / fx.ENGINE_FILE, '# changed after it was flagged')
-        with self.assertRaisesRegex(CommandRefused, 'the infrastructure is its flag is older than its files in DEV'):
+        with self.assertRaisesRegex(CommandRefused, 'in DEV the infrastructure is flagged, but its flag is older than its files'):
             self.command(install_tools.create_tree, 'QA')
         self.assertTrue(self.no_lock_is_left())
 
@@ -246,8 +246,8 @@ class Install(tf.TreesCase):
         before = self.snapshot('QA')
         self.assertEqual(self.install(), 0)
         text = self.said_text()
-        self.assertIn(f'NOT INSTALLED: {A}: it is its flag is older than its files in DEV', text)
-        self.assertIn('NOT INSTALLED: E_901/TOY_NEW_V1: it is not flagged in DEV', text)
+        self.assertIn(f'NOT INSTALLED: {A}: in DEV it is flagged, but its flag is older than its files', text)
+        self.assertIn('NOT INSTALLED: E_901/TOY_NEW_V1: in DEV it is not flagged', text)
         self.assertIn(f'NOT INSTALLED: {B}: its folder in DEV fails its checks', text)
         self.assertIn('Nothing to install', text)
         self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
@@ -257,7 +257,8 @@ class Install(tf.TreesCase):
         tf.edit(dev / 'src' / fx.ENGINE_FILE, '# the engine, changed')
         (dev / 'src' / 'new_engine_file.py').write_text('# new\n', encoding='ascii')
         self.assertEqual(self.install(), 0)
-        self.assertIn('NOT INSTALLED: the infrastructure differs (2 files) but is its flag is older than its files',
+        self.assertIn('NOT INSTALLED: the infrastructure differs (2 files), and in DEV it is flagged, but its flag is '
+                      'older than its files',
                       self.said_text())
         self.assertEqual((self.backups, self.jobs), ([], []))
         self.flag('INFRA')
@@ -295,10 +296,11 @@ class Install(tf.TreesCase):
                          method_flags.FLAG_OUT_OF_DATE)
         before = self.snapshot('QA')
         self.assertEqual(self.install(), 0)
-        self.assertIn('NOT INSTALLED: the infrastructure differs (1 files) but is its flag is older than its files',
+        self.assertIn('NOT INSTALLED: the infrastructure differs (1 files), and in DEV it is flagged, but its flag is '
+                      'older than its files',
                       self.said_text())
         self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
-        with self.assertRaisesRegex(CommandRefused, 'the infrastructure is its flag is older than its files in DEV'):
+        with self.assertRaisesRegex(CommandRefused, 'in DEV the infrastructure is flagged, but its flag is older than its files'):
             self.command(install_tools.create_tree, 'PROD')
         self.assertFalse(self.place('PROD').exists())
         self.flag('INFRA')
@@ -481,7 +483,7 @@ class ASharedHelper(tf.TreesCase):
         text = self.said_text()
         self.assertRegex(text, rf'NOT INSTALLED: {A}: it brings a changed helper file \({self.HELPER}\) that {B} in the '
                                rf'destination also uses, and that method is not installed with it')
-        self.assertIn(f'NOT INSTALLED: {B}: it is its flag is older than its files in DEV', text)
+        self.assertIn(f'NOT INSTALLED: {B}: in DEV it is flagged, but its flag is older than its files', text)
         self.assertIn('  replace: E_901/TOY_C_V1', text)
         self.assertEqual((qa / 'src/methods' / self.HELPER).read_bytes(), before, 'the helper did not go in')
         self.flag('ALL')
