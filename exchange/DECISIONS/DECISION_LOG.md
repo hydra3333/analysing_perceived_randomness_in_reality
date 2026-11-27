@@ -8711,3 +8711,55 @@ section 17.2 (unpack it into a new folder, never over the clone).
   only. No computation is touched, so the comparisons were not repeated.
 - **Waiting on:** the owner's go for step 4b (Fable). Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 364; RAT-64.
+
+## 364. 27 November 2026, 17:19 - OWNER and CLAUDE: GO for step 4b; step 4b built and committed (`42bb082`): Create_Tree, Install, Retire, Copy_From_PROD, Restore; step 4 is built
+
+- **The owner's words (16:11):** "thank you. Blurb pasted to chatgpt. go for step 4b."
+- **Step 4b is built and committed: `42bb082`** (only files under `a_p_r_i_r_DEV/`; coding practices met, with the
+  exceptions the commit names). With it step 4 is built. It is DEV's five commands that touch another tree:
+  `Create_Tree.bat QA|PROD`, `Install.bat QA|PROD [--show]`, `Retire.bat family/variant reason`, `Copy_From_PROD.bat
+  software|data|both QA` (and `data DEV`), `Restore.bat QA|PROD backup.zip`.
+- **What every one of them does first.** It reads the other tree's own settings file and requires the role meant and
+  the same places as DEV's file (rule 3); it takes the lock of every tree it touches, the tree it reads from included;
+  and it makes a backup of a tree before it replaces anything there. If that backup cannot be made, nothing is
+  replaced.
+- **How the destination's job runs under the lock already held.** Each lock file now holds a key. Install and
+  Copy_From_PROD start the destination's own job as a separate process, with that tree's own Python and its own copy
+  of the engine, `--no-update`, and give it the key (`--under-lock`). The job works only if the lock file is there and
+  holds that key, and leaves the lock for its owner to remove.
+- **Claude's choices, for the owner to accept or change.** (a) Install brings a helper file that several methods share
+  only if every method of the destination that uses it is installed in the same run; otherwise the methods that need
+  the changed file are named and held back, so that no method becomes a mix of files that was never flagged (in
+  practice: `Make_Installable.bat ALL` before an install). (b) Install replaces a retired method that is flagged and
+  differs (its helper may have changed) but never adds one; Install and Create_Tree copy none of the three small
+  files. (c) Copy_From_PROD also takes the word `both` (one backup, one job, no wasted rebuild between the two
+  copies), and with the software it copies PROD's `I_AM_RETIRED` and `IN_PLACE_SINCE` (never an `I_AM_INSTALLABLE`),
+  so that QA becomes PROD's twin and its job finds nothing to make again. **This changes the note of entry 359 that
+  none of the three is copied between trees:** that still holds for Install and Create_Tree. (d) `--show` takes the
+  locks too, so that what it shows is true of trees at rest. (e) Create_Tree writes the settings file last, so that a
+  half-made folder is not a tree; it reads its copy back against DEV before that. (f) Restore checks the ZIP whole and
+  that its own settings file names that tree, unpacks into a fresh folder, and only then renames the tree aside (never
+  deleted; nothing can run in it) and the fresh folder into its place; the `.venv` is built again by the owner. An
+  absent or empty place is restored into directly. (g) Retire computes the draw when it is run (that tree's last draw
+  on file plus one), makes every backup before it writes any file, and runs no job; the tree's next job applies it.
+  (h) No command asks for a typed confirmation: the backup and `--show` are the guard. (i) The launchers at a tree's
+  root go with the infrastructure; no fingerprint covers them, so they are compared byte for byte. (j) Exit codes: 0
+  done; 1 done, but the destination's job did not finish cleanly; 2 refused, or failed part way with a message in
+  capitals that says what state the tree is in and what to do.
+- **Evidence (cloud only: Linux, Python 3.15.0b4).** 270 tests pass (were 215); the new files are
+  `tests/tree_fixtures.py`, `tests/test_research_install.py` and `tests/test_research_tree_moves.py`. Fifteen faults
+  planted one at a time in the new commands were each caught by the tests. One test starts the destination's job as
+  the commands do (another process, its own Python, its own copy of the real engine, under the installing command's
+  lock) and it finished. A test of a damaged backup found a real fault while the commands were being written (a
+  damaged ZIP raised an error that was not caught); it is corrected. The updater comparison: RESULT: SAME. **The
+  engine comparison on the accepted results was repeated on the engine of `42bb082`, the end of step 4: RESULT: SAME**
+  (Powerball 15,118 forecasts and 15,078 scores, Oz Lotto 6,598 and 6,558, 40 methods a game, both OV-1 series line by
+  line, 901 and 475 report files byte for byte).
+- **Not done, and not known.** Nothing has run on the owner's PC or on Windows. Two things can only be shown there, at
+  step 5: renaming a whole tree folder aside (Restore), and starting a tree's job with its own
+  `.venv\Scripts\python.exe`. The updater has never fetched from the real site. The report wording and the refresh of
+  H-1 are still to come.
+- **Waiting on:** the reviewer's one reading of step 4b at `42bb082`; the owner's word on the choices above. Then, on
+  Opus: the report wording, the runner's rulebook edition and the task file for step 5, and the refresh of H-1. Step
+  4, the Fable work, is finished.
+- Next numbers: EX_334 (Claude's); entry 365; RAT-64.

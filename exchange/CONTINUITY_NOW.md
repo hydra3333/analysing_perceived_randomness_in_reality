@@ -4,10 +4,17 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 16:10 Australia/Adelaide (entry 363: step 4a reviewed and corrected; waiting on the go for step 4b).
+**Last updated:** 27 November 2026, 17:19 Australia/Adelaide (entry 364: step 4b built; step 4 is built; waiting on the reviewer's reading).
 
 ## For the owner: NOW
 
+- **STEP 4 IS BUILT (entry 364; 27 November 2026).** Step 4b, commit `42bb082`: `Create_Tree`, `Install` (`--show`),
+  `Retire`, `Copy_From_PROD` (`software`, `data` or `both`) and `Restore`, all run from DEV; each reads the other
+  tree's own settings first, locks every tree it touches and backs a tree up before replacing anything in it. 270
+  tests; the engine comparison on the accepted results: SAME. **Waiting on:** the reviewer's one reading of 4b and the
+  owner's word on Claude's choices (entry 364). **Then (Opus):** report wording, the runner's rulebook edition and
+  task file for the step 5 rehearsal on the owner's PC, and the refresh of H-1. Nothing is authorised on the owner's
+  PC.
 - **STEP 4a REVIEWED AND CORRECTED (entry 363; 27 November 2026).** The reviewer concurs; its one backup correction
   (an unreadable folder now fails the backup) and two small improvements are in (commit `e452f32`; 215 tests). The
   owner accepted the 4a choices (entry 362). **Waiting on the owner:** his go for step 4b (`Create_Tree`, `Install`,
