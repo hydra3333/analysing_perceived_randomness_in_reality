@@ -18,10 +18,11 @@ What this file is for
     browser's final URL must be https on exactly that host; there is no fallback source of any kind.
 
     It is the first system's reviewed updater (src/results_master_v0_2.py at the top level of the repository)
-    with every Mode H state taken out and nothing else changed: the quarantine of the former holdout, the
-    opening, freeze and seal records, the weekly session lock, the first-update admission and the one-off
-    "init" command are gone; the source, the parsing and every check of game, draw number, date, range and
-    overlap are that program's own statements. deploy/compare_updater_with_frozen.py shows it, function by
+    with every Mode H state taken out: the quarantine of the former holdout, the opening, freeze and seal
+    records, the weekly session lock, the first-update admission and the one-off "init" command are gone; the
+    source, the parsing and every check of game, draw number, date, range and overlap are that program's own
+    statements. One statement is added: the check of the browser's final URL is made a second time, after the
+    page has finished loading and immediately before it is parsed. deploy/compare_updater_with_frozen.py shows it, function by
     function and by running both on the same invented pages. For that reason the names and the layout of the
     statements are the reviewed program's, not this project's later style (the one exception to the coding
     practices in this file).
@@ -426,7 +427,8 @@ class BrowserFetcher:
     def fetch(self, game: str, a: date, b: date) -> list[Draw]:
         """Load the results search for a game and the dates a..b, wait until the page shows the draws expected
         between them, and return the draws it shows. Raises Stop on a block or challenge page and when the
-        results do not appear; Refused if the browser ended anywhere but the official host."""
+        results do not appear; Refused if the browser is anywhere but the official host, when the page is first
+        loaded or when it has finished loading."""
         from selenium.webdriver.common.by import By
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.common.exceptions import TimeoutException
@@ -457,6 +459,9 @@ class BrowserFetcher:
             text = WebDriverWait(self.driver, PAGE_WAIT_SECONDS, poll_frequency=WAIT_POLL_SECONDS).until(ready)
         except TimeoutException:
             raise Stop(f"results for {a}..{b} did not appear (expected at least {len(inner)}, saw {seen['headings']})") from None
+        # The one statement that is not the first system's: the final-URL check again, now that the page has
+        # finished loading and immediately before it is parsed (the reviewer's reading of step 3).
+        check_final_url(self.driver.current_url)
         return parse_gov(game, text, a, b)
 
     def close(self):

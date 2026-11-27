@@ -4,8 +4,9 @@ What this file is for
     The simple scheme keeps the reviewed updater "with every Mode H state taken out and nothing else changed".
     This tool shows it in two ways, and reaches no website in either:
       1. Definition by definition: every function, method, class and constant of the new updater is the frozen
-         one's, comments apart, except a short declared list (each changed only by taking a Mode H state out),
-         and the frozen updater has nothing more than a declared list of what was removed.
+         one's, comments apart, except a short declared list (each changed only by taking a Mode H state out;
+         and BrowserFetcher.fetch also by one added statement, the final-URL check made a second time before
+         the page is parsed), and the frozen updater has nothing more than a declared list of what was removed.
       2. By running both on the same invented pages: in each of a dozen situations (new draws, nothing new, a
          draw that disagrees, a gap, a page that cannot be read, a lock left behind, a results file edited by
          hand ...) both must end the same way, with the same message, and leave the same results file, ledger
@@ -144,6 +145,28 @@ def invented_draw(game: str, number: int) -> tuple:
     return main, secondary
 
 
+def page_text(module, game: str, a, b, plant=None) -> str:
+    """The visible text of an invented results page for a game and the dates a..b, as the real page reads.
+    module: the updater whose calendar is used.  plant: see InventedPages."""
+    lines, number = [], module.ERAS[game].first_draw
+    what, which = plant or (None, None)
+    while module.derived_date(game, number) <= b:
+        day = module.derived_date(game, number)
+        if a <= day <= b and not (what == 'skipped' and number == which):
+            main, secondary = invented_draw(game, number)
+            if number == which and what == 'differs':
+                main = main[1:] + main[:1]
+            if number == which and what == 'repeated':
+                main = main[:6] + main[:1]
+            label = 'Powerball:' if game == 'POWERBALL' else 'Supplementary numbers:'
+            heading = f'{day.strftime("%A")} {day.day} {module.MONTH_NAMES[day.month - 1]} {day.year}'
+            lines += [f'Draw {number}', heading, 'Winning numbers:', *map(str, main),
+                      *([] if number == which and what == 'label' else [label]), *map(str, secondary),
+                      'View prizes']
+        number += 1
+    return '\n'.join(lines)
+
+
 class InventedPages:
     """A fetcher that reads invented results pages instead of the website, for one updater.
 
@@ -159,23 +182,7 @@ class InventedPages:
     def fetch(self, game, a, b, **mode_h):
         """The draws the invented page for a game and the dates a..b shows, read by the updater's own parser.
         mode_h: what the frozen updater passes besides (its quarantine switch), handed on unchanged."""
-        module, lines, number = self.module, [], self.module.ERAS[game].first_draw
-        what, which = self.plant or (None, None)
-        while module.derived_date(game, number) <= b:
-            day = module.derived_date(game, number)
-            if a <= day <= b and not (what == 'skipped' and number == which):
-                main, secondary = invented_draw(game, number)
-                if number == which and what == 'differs':
-                    main = main[1:] + main[:1]
-                if number == which and what == 'repeated':
-                    main = main[:6] + main[:1]
-                label = 'Powerball:' if game == 'POWERBALL' else 'Supplementary numbers:'
-                heading = f'{day.strftime("%A")} {day.day} {module.MONTH_NAMES[day.month - 1]} {day.year}'
-                lines += [f'Draw {number}', heading, 'Winning numbers:', *map(str, main),
-                          *([] if number == which and what == 'label' else [label]), *map(str, secondary),
-                          'View prizes']
-            number += 1
-        return module.parse_gov(game, '\n'.join(lines), a, b, **mode_h)
+        return self.module.parse_gov(game, page_text(self.module, game, a, b, self.plant), a, b, **mode_h)
 
 
 def make_tree(module, folder: Path, held: dict, frozen: bool) -> Path:

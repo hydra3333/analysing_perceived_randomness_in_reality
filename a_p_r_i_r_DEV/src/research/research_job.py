@@ -72,6 +72,9 @@ JOB_LOG = 'records/JOB_LOG.jsonl'
 # The folders of a game's reports folder whose every file the job makes again (the README and the side file of
 # making times lie beside them).
 REPORT_FOLDERS = ('league', 'next', 'ov1')
+# The updater's kinds of refusal that mean the website itself stopped it (a block or challenge page, results
+# that did not appear, a page that could not be read), by the name of the exception's class.
+WEBSITE_STOPS = ('Stop',)
 # During a long fill the job says how far it has got after every so many draws in which it wrote something.
 PROGRESS_EVERY_DRAWS = 25
 # The job's exit codes: finished; a game stopped or a method failed; the job itself refused before any game.
@@ -91,6 +94,7 @@ class Job:
     settings: the tree's settings.  variants: the methods in the tree.
     rebuild: the identities --rebuild names (empty if none).  no_update: True to leave the updater out.
     update: called with (tree root, game) to fetch new official results; see update_with_the_trees_updater.
+    fetching_stopped: True once the website has stopped the updater in this job; nothing more is fetched then.
     now: gives the present time (UTC); a test passes a fixed one.  say: prints one line for the owner.
     checkpoint: called with a label after each kind of write; see no_checkpoint.
     warnings: every warning said so far, to be said again at the end.  counts: {game: Counter of what was written}.
@@ -109,6 +113,7 @@ class Job:
     counts: dict = field(default_factory=dict)
     rebuilt: list = field(default_factory=list)
     failed: list = field(default_factory=list)
+    fetching_stopped: bool = False
     methods: dict = field(default_factory=dict)
 
     def warn(self, text: str) -> None:
@@ -155,20 +160,29 @@ def update_with_the_trees_updater(tree_root: Path, game_id: str) -> None:
 
 def fetch_new_results(job: Job, game_id: str) -> None:
     """The job's first step for a game, unless --no-update: fetch new official results with the updater, under
-    the job's lock. If the updater does not finish, for whatever reason, the job says so loudly, notes it as a
-    failure of this job (so that the job does not end as a clean one) and goes on with the results the tree
-    holds; the reader's usual checks of them are made as always when the game is opened."""
+    the job's lock. If the updater does not finish normally, for whatever reason, the job says so loudly, notes
+    it as a failure of this job (so that the job does not end as a clean one) and goes on with the accepted
+    results on file, whatever they now are; the reader's usual checks of them are made as always when the game
+    is opened. If it was the website that stopped the updater (WEBSITE_STOPS), nothing more is fetched in this
+    job, for either game: a site that blocks or does not answer is not asked again."""
     if job.no_update:
+        return
+    if job.fetching_stopped:
+        job.say(f'{game_id}: nothing is fetched: the website stopped the results updater earlier in this job. '
+                f'The job works on the accepted results on file.')
         return
     job.say(f'{game_id}: fetching new official results with the results updater')
     try:
         job.update(job.settings.tree_root, game_id)
     except Exception as fault:                  # whatever stopped the updater must not stop the research
         text = f'{type(fault).__name__}: {fault}'
-        job.failed.append(f'{game_id}: the results updater did not finish: {text}')
-        job.warn(f'{game_id}: THE RESULTS UPDATER DID NOT FINISH ({text}). No new results were added for '
-                 f'{game_id}. The job goes on with the results the tree already holds. To try again: run the job '
-                 f'again, or Run_Results_Updater.bat by itself.')
+        job.failed.append(f'{game_id}: the results updater did not finish normally: {text}')
+        job.fetching_stopped = type(fault).__name__ in WEBSITE_STOPS
+        job.warn(f'{game_id}: THE RESULTS UPDATER DID NOT FINISH NORMALLY ({text}). The job goes on with the '
+                 f'accepted results on file for {game_id}.'
+                 + (' The website stopped it: nothing more is fetched in this job, for either game.'
+                    if job.fetching_stopped else '')
+                 + ' To try again: run the job again, or Run_Results_Updater.bat by itself.')
 
 
 def delete_method_results(job: Job, game_id: str, variant, why: str) -> None:
@@ -602,10 +616,11 @@ def run_locked(settings: TreeSettings, games, no_update: bool, rebuild, rebuild_
         say(f'WARNING (said again): {warning}')
     not_clean = stopped or bool(job.failed)
     how = ('at least one game did not finish' if stopped
-           else 'finished, but at least one method failed or was passed over' if job.failed else 'finished')
+           else 'finished, but not cleanly: the updater or a method did not finish' if job.failed else 'finished')
     write_job_log(job, games, started, endings, how)
     say('A STOP is a STOP: at least one game did not finish; nothing retries by itself.' if stopped
-        else 'The job finished, but at least one method failed or was passed over: see the warnings above.'
+        else 'The job finished, but not cleanly: the results updater or a method did not finish. See the warnings '
+             'above.'
         if job.failed else 'The job finished.')
     return EXIT_GAME_STOPPED if not_clean else EXIT_FINISHED
 

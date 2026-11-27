@@ -5,6 +5,7 @@ Each test is named for the rule it proves and plants the fault that rule must ca
 (The simple scheme v0.2 sections 8 and 5 step 3; the owner's four points of decision log entry 356.)
 """
 import contextlib
+import importlib.util
 import io
 import shutil
 import sys
@@ -112,6 +113,56 @@ class TheRules(unittest.TestCase):
     def test_no_test_can_start_a_real_browser(self):
         with self.assertRaisesRegex(RuntimeError, 'never starts a browser'):
             updater.BrowserFetcher('chrome', 2.0)
+
+    @unittest.skipUnless(importlib.util.find_spec('selenium'), 'selenium is not in this environment')
+    def test_a_page_that_is_somewhere_else_once_it_has_loaded_is_refused_before_anything_is_parsed(self):
+        # The real fetcher's own fetch, driven by a stand-in for the browser: its __init__, which starts the
+        # browser, is never run, so nothing is started and nothing is requested.
+        spec = importlib.util.spec_from_file_location('updater_with_its_fetcher', compare.NEW_FILE)
+        real = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = real
+        spec.loader.exec_module(real)
+        a, b = date(2026, 12, 1), date(2027, 1, 20)
+
+        class Body:
+            """The page's body: the text of an invented results page."""
+            text = compare.page_text(real, 'POWERBALL', a, b)
+
+        class Browser:
+            """A stand-in for the browser: it loads nothing, and says where it is each time it is asked."""
+            title = 'Results'
+
+            def __init__(self, places):
+                """places: what current_url gives, one for each time it is read."""
+                self.places, self.loaded = list(places), []
+
+            def get(self, url):
+                """Note the address asked for."""
+                self.loaded.append(url)
+
+            @property
+            def current_url(self):
+                """Where the browser is now."""
+                return self.places.pop(0)
+
+            def find_element(self, by, value):
+                """The page's body."""
+                return Body
+
+        official = real.gov_url('POWERBALL', a, b)
+        for places, refused in (((official, official), False), ((official, 'https://www.example.net/results'), True),
+                                (('https://www.example.net/results', official), True)):
+            fetcher = object.__new__(real.BrowserFetcher)
+            fetcher.driver, fetcher.pause, fetcher.last, fetcher.log = Browser(places), 2.0, 0.0, []
+            with mock.patch.object(real, 'parse_gov', wraps=real.parse_gov) as parsed:
+                if refused:
+                    with self.assertRaisesRegex(real.Refused, 'www.example.net.*no fallback source'):
+                        fetcher.fetch('POWERBALL', a, b)
+                    self.assertFalse(parsed.called, 'nothing is parsed from a page that is not the official one')
+                else:
+                    draws = fetcher.fetch('POWERBALL', a, b)
+                    self.assertEqual([draw.number for draw in draws], list(range(1594, 1601)))
+            self.assertEqual(fetcher.driver.loaded, [official])
 
 
 class AnUpdate(WithATree):
@@ -314,11 +365,13 @@ class TheJobFetchesFirst(fx.JobCase):
         loud = [line for line in said if 'THE RESULTS UPDATER DID NOT FINISH' in line]
         self.assertEqual(len(loud), 2, 'said when it happens and again at the end')
         self.assertIn('Stop: POWERBALL: the grab has a gap in draw numbers', loud[0])
-        self.assertIn('The job goes on with the results the tree already holds', loud[0])
+        self.assertIn('DID NOT FINISH NORMALLY', loud[0])
+        self.assertIn('The job goes on with the accepted results on file for POWERBALL', loud[0])
+        self.assertNotIn('No new results were added', loud[0], 'an update can fail after it has published')
         targets = [line['content']['target'] for line in fx.list_lines(tree, 'E_901', 'TOY_A_V1')]
         self.assertEqual(targets[-1], HELD['POWERBALL'] + 1, 'the research was done on the results held')
-        self.assertTrue(said[-1].startswith('The job finished, but at least one method failed or was passed over')
-                        or 'did not' in said[-1], said[-1])
+        self.assertEqual(said[-1], 'The job finished, but not cleanly: the results updater or a method did not finish. '
+                                   'See the warnings above.')
 
         def broken(tree_root, game_id):
             """An updater that fails in a way of its own (no browser on this PC, say)."""
@@ -326,8 +379,54 @@ class TheJobFetchesFirst(fx.JobCase):
 
         code, said = fx.run_job(tree, no_update=False, update=broken)
         self.assertEqual(code, 1)
-        self.assertTrue(any('THE RESULTS UPDATER DID NOT FINISH (OSError: chromedriver was not found)' in line
+        self.assertTrue(any('THE RESULTS UPDATER DID NOT FINISH NORMALLY (OSError: chromedriver was not found)' in line
                             for line in said), said)
+
+    def tree_of_both_games(self) -> Path:
+        """As tree_of_both, with a toy method that works both games."""
+        tree = self.tree(variants=())
+        shutil.rmtree(tree / 'source_data')
+        compare.make_tree(updater, tree, HELD, frozen=False)
+        self.add_variant(tree, 'TOY_A_V1', games=('POWERBALL', 'OZLOTTO'), minimum=220)
+        return tree
+
+    def test_after_the_website_stops_the_updater_nothing_more_is_fetched_in_that_job_and_both_games_are_worked(self):
+        tree = self.tree_of_both_games()
+        asked = []
+
+        def blocked(tree_root, game_id):
+            """The website serves a block page."""
+            asked.append(game_id)
+            raise updater.Stop('www.lotterywest.wa.gov.au served a block/challenge page; nothing was bypassed')
+
+        code, said = fx.run_job(tree, games=('POWERBALL', 'OZLOTTO'), no_update=False, update=blocked)
+        self.assertEqual(code, 1)
+        self.assertEqual(asked, ['POWERBALL'], 'the other game is not asked for once the website has stopped the updater')
+        self.assertTrue(any('The website stopped it: nothing more is fetched in this job, for either game' in line
+                            for line in said), said)
+        self.assertTrue(any(line.startswith('OZLOTTO: nothing is fetched: the website stopped the results updater '
+                                            'earlier in this job') for line in said), said)
+        for game in ('POWERBALL', 'OZLOTTO'):
+            self.assertTrue(any(line.startswith(f'{game}: finished') for line in said), (game, said))
+            targets = [line['content']['target'] for line in fx.list_lines(tree, 'E_901', 'TOY_A_V1', game_id=game)]
+            self.assertEqual(targets[-1], HELD[game] + 1, game)
+
+    def test_a_failure_that_is_not_the_websites_stop_does_not_keep_the_other_game_from_being_fetched(self):
+        tree = self.tree_of_both_games()
+        asked, fetch = [], self.stand_in()
+
+        def disagrees_for_powerball(tree_root, game_id):
+            """One game's fetched draws disagree with the tree's; the other game's update is ordinary."""
+            asked.append(game_id)
+            if game_id == 'POWERBALL':
+                raise updater.VerifyFail('POWERBALL: 1 overlapping draw(s) disagree with the master')
+            fetch(tree_root, game_id)
+
+        code, said = fx.run_job(tree, games=('POWERBALL', 'OZLOTTO'), no_update=False, update=disagrees_for_powerball)
+        self.assertEqual(code, 1)
+        self.assertEqual(asked, ['POWERBALL', 'OZLOTTO'])
+        self.assertTrue(any(f'OZLOTTO: results on file through draw {LATEST["OZLOTTO"]}' in line for line in said), said)
+        self.assertFalse(any('nothing more is fetched' in line for line in said), said)
 
     def test_with_no_update_the_updater_is_never_called(self):
         tree = self.tree_of_both()
