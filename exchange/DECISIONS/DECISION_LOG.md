@@ -8636,3 +8636,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer's one reading (4a: the settings file and identity rules, the one lock, the backup, and the commands that
   touch only their own tree; 4b: the commands that touch another tree).
 - Next numbers: EX_334 (Claude's); entry 360; RAT-64.
+
+## 360. 27 November 2026, 14:29 - OWNER: step 4 in two parts; GO for step 4a (settings and identity rules, the one lock, the backup, the own-tree commands)
+
+- **The owner's words:** "yes to \"Two parts (my recommendation).\". \"go for step 4a."
+- **Step 4 is made in two parts, each with the reviewer's one reading.** 4a: what touches only its own tree: the
+  settings file in its new form with the four identity rules, the one lock (the updater's own lock folded into it; the
+  common checks made for an updater started by itself too), the backup at the end of a job, the first system's
+  orphan-marker check taken out of the new trees (entry 353), and the commands `Backup.bat`, `Make_Installable.bat`
+  and `Who_Uses.bat`. 4b: the commands that touch another tree (`Create_Tree`, `Install`, `Retire`, `Copy_From_PROD`,
+  `Restore`), on a separate go.
+- **GO FOR STEP 4a,** on Fable. Nothing is authorised on the owner's PC.
+- Next numbers: EX_334 (Claude's); entry 361; RAT-64.
