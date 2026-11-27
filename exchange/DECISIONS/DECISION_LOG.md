@@ -8611,3 +8611,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   without `--no-update`); and again before the first job in QA and in PROD. It is entered in
   `exchange/OWNER_REMINDERS.md` and at the top of the continuity page, so that a later Claude chat gives it too.
 - Next numbers: EX_334 (Claude's); entry 359; RAT-64.
+
+## 359. 27 November 2026, 14:22 - the reviewer concurs with step 3; its three small corrections are made; two points carried into step 4
+
+- **The reviewer's single reading of step 3 at `d4f01e0`** (relayed by the owner at 14:16, no EX number): overall
+  concurrence; no remaining operational Mode H dependency and no lost check found; the reader still checks the
+  accepted results after an updater failure; the comparison evidence accepted, no repeated campaign and no recheck
+  requested; entry 358 (the owner's own first real fetch in DEV) supported. It notes that the source restriction is
+  what it was (the requests made and the final URLs accepted are Lotterywest-GOV over https; it is not a network
+  firewall against a browser's own sub-requests) and asks for no more.
+- **Its three small corrections, made** (commit `2ebbb119ec43b7ec13371a86e976b027c4cccda7`; only `a_p_r_i_r_DEV/`;
+  cloud only; no website reached): (1) when the website itself stops the updater (its `Stop`), the job fetches nothing
+  more in that job, for either game, and both games are still worked on their accepted results; any other updater
+  failure does not keep the other game from being fetched. (2) After an updater failure the job no longer says that no
+  new results were added: it says the updater did not finish normally and that the job goes on with the accepted
+  results on file. (3) The updater repeats its final-URL check after the page has loaded, immediately before parsing:
+  the one statement in it that is not the first system's, said in its header and in the comparison tool.
+- **Evidence:** `compare_updater_with_frozen.py`: RESULT: SAME. 192 tests pass; one drives the real fetch with a
+  stand-in for the browser and shows a page that is elsewhere refused before anything is parsed.
+- **Carried into step 4, from the same reading:** the common tree and working-folder checks must cover an updater
+  started by itself too; and the updater's own lock and the tree's lock are brought together into the one lock of the
+  scheme.
+- **Waiting on the owner:** his go for step 4, on Fable; Claude recommends it be made in two parts, each with the
+  reviewer's one reading (4a: the settings file and identity rules, the one lock, the backup, and the commands that
+  touch only their own tree; 4b: the commands that touch another tree).
+- Next numbers: EX_334 (Claude's); entry 360; RAT-64.
