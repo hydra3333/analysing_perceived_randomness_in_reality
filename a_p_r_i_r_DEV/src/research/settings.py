@@ -19,7 +19,8 @@ What this file is for
     No path and no role is written in any program: programs read them here. A command works on the folder its
     own launcher lies in, and this file checks that folder before anything else is done there: the role must be
     the ending of the folder's name, and that role's tree_root must be that folder. So a tree that was copied or
-    renamed, or a settings file put into the wrong tree, runs nothing. It never writes a settings file.
+    renamed, or a settings file put into the wrong tree, runs nothing. The one time a settings file is written
+    is when DEV creates a new QA or PROD tree: settings_text gives its text.
 
 Which part of the scheme it carries out
     exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 3.1 (the four rules of identity).
@@ -83,6 +84,11 @@ class TreeSettings:
         """This tree's own Python environment folder."""
         return self.tree_root / ENVIRONMENT_FOLDER
 
+    @property
+    def python(self) -> Path:
+        """This tree's own Python program, for example T:\\a_p_r_i_r_QA\\.venv\\Scripts\\python.exe."""
+        return self.venv_dir / 'Scripts' / 'python.exe'
+
 
 def same_folder(a: Path, b: Path) -> bool:
     """True if two paths name the same folder, compared as the operating system compares names (Windows ignores
@@ -113,30 +119,20 @@ def _real_absolute_path(text: str, where: str) -> Path:
     return path
 
 
-def read_settings(tree_folder: Path, must_be: str | None = None) -> TreeSettings:
-    """Read the settings file of the tree in a folder, and check that the folder is the tree the file says.
+def settings_from_text(text: str, file_path) -> TreeSettings:
+    """What a settings file's text says, checked by rule 4, wherever the text came from: a tree's own file, or
+    the settings file inside a backup that is about to be restored.
 
-    tree_folder: the folder the launcher lies in (or, for a command that touches another tree, that tree's
-    folder).  must_be: None, or the role the tree must have (rule 3: a command that reads from or writes into
-    another tree says which role it means).
-    Returns the TreeSettings, for example TreeSettings(role='QA', places={'DEV': TreePlace(...), 'QA': ..., ...}).
-    Refuses (SettingsRefused), in this order: no file ("not a tree"); a file Python's INI reader rejects; a missing
-    section or key; a role that is not DEV, QA or PROD; a path that is relative or not real; two roles with one
-    tree_root, or one tree inside another; a backup folder that is one of the trees or lies inside one (rule 4);
-    a role that is not the ending of the folder's name, or whose tree_root is not this folder (rule 2); a role
-    other than must_be (rule 3).
+    text: the file's text.  file_path: where it came from, for the messages.
+    Returns the TreeSettings. Refuses (SettingsRefused), in this order: a text Python's INI reader rejects; a
+    missing section or key; a role that is not DEV, QA or PROD; a path that is relative or not real; two roles
+    with one tree_root, or one tree inside another; a backup folder that is one of the trees or lies inside one.
     """
-    folder = Path(tree_folder)
-    file_path = folder / SETTINGS_FILE_NAME
-    if not file_path.is_file():
-        raise SettingsRefused(f'{file_path}: there is no settings file here, so this folder is not a tree. In DEV, '
-                              f'copy {EXAMPLE_FILE_NAME} to {SETTINGS_FILE_NAME} beside it and check its paths; a QA '
-                              f'or PROD tree is made only by Create_Tree.bat.')
     parser = configparser.ConfigParser(interpolation=None, delimiters=('=',), strict=True)
     parser.optionxform = str
     try:
-        parser.read_string(file_path.read_text(encoding='utf-8'), source=str(file_path))
-    except (configparser.Error, UnicodeDecodeError) as error:
+        parser.read_string(text, source=str(file_path))
+    except configparser.Error as error:
         raise SettingsRefused(f'{file_path}: not a readable settings file ({error}). Correct the file by '
                               f'hand.') from None
 
@@ -165,6 +161,33 @@ def read_settings(tree_folder: Path, must_be: str | None = None) -> TreeSettings
                 raise SettingsRefused(f'{file_path} [{name}] backup_root: "{places[name].backup_root}" is the {tree} '
                                       f'tree "{places[tree].tree_root}" or lies inside it. A backup folder lies '
                                       f'outside all three trees.')
+    return TreeSettings(role=role, places=places)
+
+
+def read_settings(tree_folder: Path, must_be: str | None = None) -> TreeSettings:
+    """Read the settings file of the tree in a folder, and check that the folder is the tree the file says.
+
+    tree_folder: the folder the launcher lies in (or, for a command that touches another tree, that tree's
+    folder).  must_be: None, or the role the tree must have (rule 3: a command that reads from or writes into
+    another tree says which role it means).
+    Returns the TreeSettings, for example TreeSettings(role='QA', places={'DEV': TreePlace(...), 'QA': ..., ...}).
+    Refuses (SettingsRefused), in this order: no file ("not a tree"); whatever settings_from_text refuses (rule
+    4); a role that is not the ending of the folder's name, or whose tree_root is not this folder (rule 2); a
+    role other than must_be (rule 3).
+    """
+    folder = Path(tree_folder)
+    file_path = folder / SETTINGS_FILE_NAME
+    if not file_path.is_file():
+        raise SettingsRefused(f'{file_path}: there is no settings file here, so this folder is not a tree. In DEV, '
+                              f'copy {EXAMPLE_FILE_NAME} to {SETTINGS_FILE_NAME} beside it and check its paths; a QA '
+                              f'or PROD tree is made only by Create_Tree.bat.')
+    try:
+        text = file_path.read_text(encoding='utf-8')
+    except UnicodeDecodeError as error:
+        raise SettingsRefused(f'{file_path}: not a readable settings file ({error}). Correct the file by '
+                              f'hand.') from None
+    read = settings_from_text(text, file_path)
+    role, places = read.role, read.places
     real_folder = Path(os.path.realpath(folder))
     if not real_folder.name.endswith(role):
         raise SettingsRefused(f'{file_path} [environment] role: the file says {role}, but the folder it lies in is '
@@ -179,4 +202,25 @@ def read_settings(tree_folder: Path, must_be: str | None = None) -> TreeSettings
     if must_be is not None and role != must_be:
         raise SettingsRefused(f'{file_path} [environment] role: this tree is {role}, but the command means the '
                               f'{must_be} tree. Nothing is done.')
-    return TreeSettings(role=role, places=places)
+    return read
+
+
+def same_places(first: TreeSettings, second: TreeSettings) -> bool:
+    """True if two settings files name the same three trees and the same three backup folders (their roles may
+    differ). A command that touches another tree requires it, so that both files mean the same places."""
+    return all(same_folder(first.places[name].tree_root, second.places[name].tree_root)
+               and same_folder(first.places[name].backup_root, second.places[name].backup_root) for name in ROLES)
+
+
+def settings_text(role: str, places: dict) -> str:
+    """The text of a settings file, for the one command that writes one (Create_Tree, into a new tree).
+
+    role: the new tree's role.  places: {role: TreePlace} for all three roles, as the creating tree's own file has
+    them.  Returns the text with LF line ends, for example '[environment]\nrole = QA\n[DEV]\ntree_root = ...'.
+    """
+    lines = ['; The settings of this tree (the simple scheme v0.2, section 3.1). Written by Create_Tree.bat in DEV.',
+             '; The same form in every tree; only the role differs. Never copy this file into another tree.',
+             '[environment]', f'role = {role}']
+    for name in ROLES:
+        lines += [f'[{name}]', f'tree_root = {places[name].tree_root}', f'backup_root = {places[name].backup_root}']
+    return '\n'.join(lines) + '\n'

@@ -19,8 +19,9 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
 - **Step 4a (done): what touches only its own tree.** The settings file in its new form and the four rules by
   which a folder is, or is not, the tree its file says; one lock for every command; a backup at the end of every
   job; `Backup.bat`; and in DEV `Make_Installable.bat` and `Who_Uses.bat`.
-- **Still to come (step 4b):** the commands that touch another tree: `Create_Tree.bat`, `Install.bat`,
+- **Step 4b (done): the commands that touch another tree,** all run from DEV: `Create_Tree.bat`, `Install.bat`,
   `Retire.bat`, `Copy_From_PROD.bat` and `Restore.bat`.
+- **Still to come:** the rehearsal on the owner's PC (step 5), the real trees (step 6), the how-to (step 7).
 
 ## The settings file, and how a tree knows which tree it is
 
@@ -87,6 +88,39 @@ read fails the backup: none is ever made that silently lacks part of the tree.
   named (ALL: every method) with the method's fingerprint, and for INFRA once in `src\` with the engine's
   fingerprint and the updater's. A flag is out of date as soon as a file it vouches for changes.
 - `Who_Uses.bat helper_file` lists every method that uses a helper file. It changes nothing and takes no lock.
+
+## DEV's commands that touch another tree
+
+Each first reads the other tree's own settings file and requires the role meant and the same places as DEV's
+file; takes the lock of every tree it touches; and makes a backup of a tree before it replaces anything there.
+If that backup cannot be made, nothing is replaced. None of them asks a question: what protects a tree is the
+backup, and `Install.bat --show`.
+
+- `Create_Tree.bat QA|PROD` makes a new tree in a folder that is absent or empty: DEV's flagged infrastructure,
+  every method that is flagged and not retired, and DEV's accepted results. The settings file is written last, so
+  a half-made folder is not a tree. Then, in the new tree: `create_venv.bat`,
+  `install_upgrade_dependencies_into_venv.bat`, `Run_Research.bat --no-update`.
+- `Install.bat QA|PROD [--show]` replaces the infrastructure if it is flagged and differs, and replaces or adds
+  every flagged method that differs or is missing; then it runs the destination's own job (`--no-update`) under
+  the lock it holds, which makes again whatever the new software changes. A part whose flag is missing or older
+  than its files is named and left alone. A helper file several methods share goes in only together with every
+  method of the destination that uses it (so flag them all: `Make_Installable.bat ALL`). A retired method is
+  never added. A method only the destination has is left alone. None of the three small files is copied.
+  `--show` prints what would be done and changes nothing.
+- `Retire.bat family/variant reason` writes `I_AM_RETIRED` beside the method in every tree that has it, from that
+  tree's own next draw, after a backup of each. The tree's next job drops what the method had from that draw on.
+- `Copy_From_PROD.bat software|data|both QA` makes QA's software, its data (`source_data` and
+  `results\research`) or both the same as PROD's; `Copy_From_PROD.bat data DEV` copies the data into DEV. Then
+  the destination's own job runs. With the software go PROD's `I_AM_RETIRED` and `IN_PLACE_SINCE` files, so that
+  after `both` QA is PROD's twin and its job finds nothing to make again.
+- `Restore.bat QA|PROD backup.zip` puts a tree back from one of its own backups (a file name in that tree's
+  backup folder, or a full path). The ZIP must read back whole and its own settings file must name that tree. It
+  is unpacked into a fresh folder; the tree as it was is renamed aside (`..._set_aside_<date>_<time>`, where
+  nothing can run) and never deleted; the fresh folder takes the tree's name. Then the tree's `.venv` is built
+  again. DEV is not restored this way: its software is in Git.
+
+Exit codes: 0 done; 1 done, but the destination's job did not finish cleanly; 2 refused before anything was
+changed, or failed part way (the message, in capitals, says what state the tree is in and what to do).
 
 ## The results updater (`Run_Results_Updater.bat`)
 

@@ -172,12 +172,20 @@ def places_around(tree: Path, role: str) -> dict:
                    tree.parent / f'{stem}_backups' / name) for name in ('DEV', 'QA', 'PROD')}
 
 
-def make_tree(root: Path, role: str = 'DEV') -> Path:
+def three_places(root: Path, stem: str = 'three') -> dict:
+    """Invented places for three trees that know of one another, as places_around gives them for one: for
+    example {'DEV': (root/three_DEV, root/three_backups/DEV), 'QA': (root/three_QA, ...), 'PROD': ...}."""
+    return {name: (root / f'{stem}_{name}', root / f'{stem}_backups' / name) for name in ('DEV', 'QA', 'PROD')}
+
+
+def make_tree(root: Path, role: str = 'DEV', places: dict | None = None) -> Path:
     """Make an empty invented tree: its settings file, one invented file of "the engine" (so that a test can
     change the engine's fingerprint) and the folders the engine expects.
 
     root: where to make it; if the folder's name does not end with the role, the role is added to it (a tree's
-    folder name ends with its role).  role: 'DEV', 'QA' or 'PROD'.  Returns the tree's real path.
+    folder name ends with its role).  role: 'DEV', 'QA' or 'PROD'.
+    places: None (invented places around this one tree), or the places of three trees that know of one another
+    (three_places); root must then be this role's place.  Returns the tree's real path.
     """
     root = Path(root)
     if not root.name.endswith(role):
@@ -187,7 +195,7 @@ def make_tree(root: Path, role: str = 'DEV') -> Path:
     (tree / 'src' / 'methods').mkdir(parents=True)
     (tree / '.venv').mkdir()
     (tree / 'src' / ENGINE_FILE).write_text('# an invented file of the engine\n', encoding='ascii')
-    (tree / 'ENVIRONMENT.ini').write_text(settings_text(role, places_around(tree, role)), encoding='utf-8')
+    (tree / 'ENVIRONMENT.ini').write_text(settings_text(role, places or places_around(tree, role)), encoding='utf-8')
     return tree
 
 

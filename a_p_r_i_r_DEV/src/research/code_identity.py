@@ -68,13 +68,19 @@ def infrastructure_fingerprint(tree_root: Path) -> str:
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
+def updater_files(tree_root: Path) -> list:
+    """Every file of a tree's results updater (src/updater), as paths from the tree root with forward slashes,
+    in order; for example ['src/updater/__init__.py', 'src/updater/results_updater.py']."""
+    folder = Path(tree_root) / 'src' / UPDATER_FOLDER
+    return sorted(path.relative_to(tree_root).as_posix() for path in folder.rglob('*')
+                  if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.pyo'))
+
+
 def updater_fingerprint(tree_root: Path) -> str:
     """One SHA-256 over every file of a tree's results updater (src/updater), made as the infrastructure's is.
     The updater is not part of the engine's fingerprint; this one lets an install see whether it differs."""
-    folder = Path(tree_root) / 'src' / UPDATER_FOLDER
-    files = sorted(path.relative_to(tree_root).as_posix() for path in folder.rglob('*')
-                   if path.is_file() and '__pycache__' not in path.parts and path.suffix not in ('.pyc', '.pyo'))
-    text = ''.join(f'{relative}\t{sha256_of_file(Path(tree_root) / relative)}\n' for relative in files)
+    text = ''.join(f'{relative}\t{sha256_of_file(Path(tree_root) / relative)}\n'
+                   for relative in updater_files(tree_root))
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 

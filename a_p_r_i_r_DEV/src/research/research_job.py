@@ -551,17 +551,19 @@ def write_job_log(job: Job, games, started: str, endings: list, how: str) -> Non
 
 def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_all: bool = False, now=None,
         say=print, checkpoint=no_checkpoint, update=update_with_the_trees_updater,
-        backup=backups.make_backup) -> int:
+        backup=backups.make_backup, under_lock: str | None = None) -> int:
     """Run the research job in a tree.
 
     tree_root: the tree's folder.  games: the games to work, for example ('POWERBALL', 'OZLOTTO').
     no_update: leave the results updater out.  rebuild: method identities ('E_002/RECUR_MEAN_ALL_V1') whose
     results are deleted and made again.  rebuild_all: delete and make again everything.
     now, say, checkpoint, update, backup: see Job (a test passes its own; no test lets the real updater run).
+    under_lock: None, or the key of this tree's lock when a command of DEV that installs holds it and started
+    this job: the job then works under that lock and leaves it in place.
     Returns the exit code: 0 finished; 1 a game stopped, or a method's calculation, the updater or the backup did
     not finish (the rest is still worked, and what was computed stands); 2 the job itself refused before any
     game (the folder is not the tree its settings say, a working folder is not the tree's own, the tree's lock
-    is held, an unknown --rebuild name).
+    is held or is not the one named by under_lock, an unknown --rebuild name).
     """
     now = now or (lambda: datetime.now(timezone.utc))
     started = now().astimezone().strftime('%Y-%m-%d %H:%M')
@@ -571,7 +573,7 @@ def run(tree_root: Path, games, *, no_update: bool = False, rebuild=(), rebuild_
         say(f'About to work: {", ".join(games)}' + (' (results updater left out: --no-update)' if no_update else '')
             + (f'; rebuilding {", ".join(sorted(rebuild))} (--rebuild)' if rebuild else '')
             + ('; rebuilding everything (--rebuild-all)' if rebuild_all else ''))
-        with tree_lock(settings.tree_root, 'research job', started):
+        with tree_lock(settings.tree_root, 'research job', started, held_key=under_lock):
             return run_locked(settings, games, no_update, rebuild, rebuild_all, now, say, checkpoint, started,
                               update, backup)
     except (SettingsRefused, LaunchRefused, VariantRefused) as refusal:
@@ -656,6 +658,8 @@ def main(arguments, tree_root: Path) -> int:
     parser.add_argument('--rebuild', nargs='+', default=(), metavar='<family>/<variant>',
                         help='delete these methods\' results and make them again')
     parser.add_argument('--rebuild-all', action='store_true', help='delete every result and make it again')
+    parser.add_argument('--under-lock', default=None, metavar='<key>',
+                        help='given only by the commands of DEV that install: work under the lock they hold')
     chosen = parser.parse_args(arguments)
     return run(tree_root, GAMES if chosen.game == 'BOTH' else (chosen.game,), no_update=chosen.no_update,
-               rebuild=tuple(chosen.rebuild), rebuild_all=chosen.rebuild_all)
+               rebuild=tuple(chosen.rebuild), rebuild_all=chosen.rebuild_all, under_lock=chosen.under_lock)
