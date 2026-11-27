@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 13:18 Australia/Adelaide (entry 357: step 3 done; waiting on the go for step 4).
+**Last updated:** 27 November 2026, 14:13 Australia/Adelaide (entry 358: the step 6 reminder; step 3 done; waiting on the go for step 4).
 
 ## For the owner: NOW
 
+- **A REMINDER CLAUDE OWES THE OWNER AT STEP 6 (entry 358; 27 November 2026).** The updater's first real fetch is the
+  owner's own: `Run_Results_Updater.bat` by itself in DEV, after the first fill (run with `--no-update`) and before
+  any job that fetches; the same care before the first job in QA and in PROD. Say so in the steps written for step 6.
+  (Also in `exchange/OWNER_REMINDERS.md`.)
 - **STEP 3 IS DONE (entries 356 and 357; 27 November 2026).** The results updater is in `a_p_r_i_r_DEV/` (commit
   `d4f01e0`): the reviewed updater with every Mode H state taken out, shown by `deploy/compare_updater_with_frozen.py`
   (RESULT: SAME); the research job fetches with it first unless `--no-update`; `src/updater` is outside the engine's

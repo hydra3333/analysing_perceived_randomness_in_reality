@@ -8597,3 +8597,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner:** his go for step 4 (the settings file and identity rules, the lock, the backup, and the
   commands), on Fable.
 - Next numbers: EX_334 (Claude's); entry 358; RAT-64.
+
+## 358. 27 November 2026, 14:13 - OWNER: the updater's first real fetch is his own, by itself in DEV, before any job that fetches; Claude reminds him at step 6
+
+- **The owner's words:** "ok to \"I suggest running `Run_Results_Updater.bat` by itself in DEV first, before any job
+  that fetches\"  and i hope you will remind me at the right point."
+- **Decided:** at step 6, in DEV, the new updater's first real fetch is made by the owner with
+  `Run_Results_Updater.bat` by itself, before any research job that fetches. Until that has been done and looked at,
+  every job in DEV is run with `--no-update` (DEV's first fill included).
+- **The reminder is Claude's to give, at these points:** in the steps Claude writes for step 6 (DEV's accepted results
+  copied in; then the first fill with `--no-update`; then `Run_Results_Updater.bat` alone, and what to look at
+  afterwards: the lines it prints, the new ledger line, the grab and the backup under `source_data`; only then a job
+  without `--no-update`); and again before the first job in QA and in PROD. It is entered in
+  `exchange/OWNER_REMINDERS.md` and at the top of the continuity page, so that a later Claude chat gives it too.
+- Next numbers: EX_334 (Claude's); entry 359; RAT-64.

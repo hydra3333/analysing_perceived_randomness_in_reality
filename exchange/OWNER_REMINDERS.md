@@ -780,3 +780,9 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   what they would add or change from what building the system has taught, keeping it minimal. A change to that
   ratified document is put to the owner and ratified by him. Done together with the future-method-priorities
   draft (entry 289) and the roles of the two AIs (entry 292).
+- **At step 6 of the simple scheme, before any job that fetches (owner, 27 November 2026; decision log entry
+  358):** the new results updater has never fetched from the real site, and no AI or runner may run it. Its first
+  real fetch is the owner's own: `Run_Results_Updater.bat` by itself in `a_p_r_i_r_DEV`, after DEV's first fill
+  (run with `--no-update`). Look at what it prints, the new ledger line and the grab and backup under
+  `source_data`. Only then run a job without `--no-update`. The same care before the first job in QA and in PROD.
+  Claude gives this reminder in the steps it writes for step 6.
