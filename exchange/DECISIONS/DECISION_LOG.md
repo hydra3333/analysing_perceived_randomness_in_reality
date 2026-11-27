@@ -9154,3 +9154,13 @@ section 17.2 (unpack it into a new folder, never over the clone).
   November 2026) and Oz Lotto through 1708 (10 November); the updater's default window (this month and the five
   before) reaches back past both.
 - Next numbers: EX_334 (Claude's); entry 385; RAT-67.
+
+## 385. 28 November 2026, 08:04 - The owner accepts the Windows comparison (item 5 done); his first real fetch is next
+
+- **The owner's acceptance** (his words in the chat, 08:04): "yes, I accept it", for TASK_T031's comparison of the
+  two engines on his PC (entry 384, RESULT: SAME). **Item 5 of the work order (entry 365) is done.** The simplified
+  engine in `a_p_r_i_r_DEV` stands as the proven equivalent of the frozen engine's science (scheme v0.2 section 9).
+- **Next is item 6: the owner's first real fetch, by himself, in DEV** (entry 358): `Run_Results_Updater.bat` alone,
+  with its defaults; then his look at the ledger lines, `source_data\grabs` and `source_data\backups`; only then
+  `Run_Research.bat` without `--no-update`. Neither AI nor the runner runs the updater. Then item 7: QA, then PROD.
+- Next numbers: EX_334 (Claude's); entry 386; RAT-67.
