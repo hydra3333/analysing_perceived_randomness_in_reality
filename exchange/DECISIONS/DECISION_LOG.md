@@ -9254,3 +9254,26 @@ section 17.2 (unpack it into a new folder, never over the clone).
   fetch, all 26 draws matched, added 0 a game, so the rebuild works from the same results). Then item 7: QA, then
   PROD.
 - Next numbers: EX_334 (Claude's); entry 391; RAT-68.
+
+## 391. 28 November 2026, 09:06 - OWNER: update Claude's handover fully; H-1 v18 written as a candidate
+
+- **The owner's words** (09:02, after RAT-67): "great, time for you to update you handover fully too".
+- **H-1 v18 and its introductory blurb are written as CANDIDATES** in `exchange/HANDOVER_2026_11_28/`:
+  `Claude_Primary_Handover_H1_v18.md` (362 lines; SHA-256
+  `d3815b7423bbf4cfa3c4e51676987b564438b4ab0691b0ab85f5d9602b16cdfd`) and
+  `Claude_Primary_Handover_H1_v18_introductory_blurb.md` (59 lines; SHA-256
+  `1cb5de3977db1a2422d2f482fd56366def8e096cd1b478d9e39a1a82c21ba90d`); both CRLF and ASCII. It replaces H-1 v17r1
+  (RAT-64) once ratified (it would be RAT-68); Claude then installs both in `doc/HANDOVER/`.
+- **What is new in it:** the rehearsal on the owner's PC (T029 to T031) and what it taught for the next task file;
+  the runner's rulebook v0.8 and permission settings r2 as in force; DEV filled, the first real fetch and the first
+  job with the updater; the rule "only the owner runs the updater", with the same care owed in QA and PROD; the
+  progress-line correction and what a change to an engine file costs; where the second OV-1 series starts in each
+  tree; H-2 v12; items 1 to 6 of the work order done, and item 7 (QA, then PROD) in outline; DEV's rebuild under way
+  and what to check in its output.
+- **`exchange/OWNER_REMINDERS.md`, item R-030:** the reminder of entry 358 marked done for DEV, still owed for QA and
+  PROD.
+- **Corrections of typed times:** the headings of entries 388 and 390 say 08:35 and 09:05; they were written at
+  about 08:27 and 09:01 (and entry 387's, corrected in 388). From this entry the time is read from the clock in the
+  command that writes it.
+- **Still running:** DEV's rebuild (started 08:28).
+- Next numbers: EX_334 (Claude's); entry 392; RAT-68.

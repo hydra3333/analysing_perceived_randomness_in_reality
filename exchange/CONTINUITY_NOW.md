@@ -4,11 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 09:05 Australia/Adelaide (entry 390: H-2 v12 ratified, RAT-67; DEV's rebuild
+**Last updated:** 28 November 2026, 09:06 Australia/Adelaide (entry 391: H-1 v18 written as a candidate; DEV's rebuild
 running).
 
 ## For the owner: NOW
 
+- **H-1 v18 IS WRITTEN AS A CANDIDATE (entry 391; 28 November 2026),**
+  `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v18.md` with its blurb beside it: current to entry 391 (the
+  rehearsal, DEV's fill, the first real fetch, the progress-line correction, H-2 v12). **Waiting on the owner:** his
+  ratification (it would be RAT-68; Claude then installs both files in `doc/HANDOVER/`), and the output of DEV's
+  rebuild. **If this chat ends before RAT-68:** a new Claude chat reads that candidate rather than H-1 v17r1.
 - **ITEMS 5 AND 6 DONE; THE PROGRESS LINE CORRECTED; DEV REBUILDING; H-2 v12 IN FORCE (entries 385 to 390; 28 November
   2026).** The owner accepted T031 (entry 385). His first real fetch in DEV matched every overlapping draw and added
   two a game (entry 386); DEV's first job with the updater in it followed (entry 387). His finding there, a misleading

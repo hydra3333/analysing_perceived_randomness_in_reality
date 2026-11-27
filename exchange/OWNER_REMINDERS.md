@@ -786,3 +786,5 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   (run with `--no-update`). Look at what it prints, the new ledger line and the grab and backup under
   `source_data`. Only then run a job without `--no-update`. The same care before the first job in QA and in PROD.
   Claude gives this reminder in the steps it writes for step 6.
+  Progress (28 November 2026): DONE for DEV (the owner's first real fetch, decision log entry 386; the job that
+  fetches, entry 387). STILL OWED: the same care before the first fetching job in QA and in PROD.
