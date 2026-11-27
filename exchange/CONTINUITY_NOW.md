@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 06:52 Australia/Adelaide (entry 383: DEV filled; waiting on the go for TASK_T031).
+**Last updated:** 28 November 2026, 08:01 Australia/Adelaide (entry 384: T031 passed; waiting on the owner's acceptance).
 
 ## For the owner: NOW
 
+- **TASK_T031 PASSED: RESULT: SAME ON THE OWNER'S PC (entry 384; 28 November 2026).** **Next:** the owner's word that
+  he accepts the comparison (item 5); then his first real fetch, `Run_Results_Updater.bat` BY ITSELF in DEV, and a
+  look at what it wrote (item 6, entry 358); then a job that fetches; then QA, then PROD.
 - **DEV IS FILLED (entry 383; 28 November 2026).** The owner's first fill of DEV (49 minutes; the backup on T:) and
   its 40 `IN_PLACE_SINCE` files committed (`62872f8`). **Next: the owner's go for TASK_T031** (the comparison on his
   PC, about 70 minutes). Then, after he accepts it: the results updater BY ITSELF in DEV (entry 358), then QA and

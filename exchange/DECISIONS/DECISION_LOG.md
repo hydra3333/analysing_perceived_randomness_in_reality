@@ -9130,3 +9130,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Item 3 of the work order is done.** Next: TASK_T031, the comparison of the two engines on the owner's PC, on his
   go. No engine file is changed before it.
 - Next numbers: EX_334 (Claude's); entry 384; RAT-67.
+
+## 384. 28 November 2026, 08:01 - TASK_T031 PASSED: the two engines compared on the owner's PC from DEV's own fill, RESULT: SAME
+
+- **The owner's go for T031** was given in the chat after entry 383 (Claude asked for it; the owner ran it); recorded
+  here with its result.
+- **TASK_T031 PASSED: THE PROOF OF THE SCHEME'S SECTION 9, ON THE OWNER'S PC** (report `outbox/REPORT_T031.md`, commit
+  `22ea440`, at the task file of `0c8d033`; 28 November, about an hour). DEV's own first fill was copied into the
+  scratch folder by reading (its stored engine fingerprint the same as the engine copied); the frozen engine was
+  filled there; both trees were aligned and run again, **every job of either engine with the real DEV tree's own
+  Python 3.15.2 and numpy 2.5.5** (entry 366), every job with `--no-update`. The comparison: **twelve lines `SAME` and
+  `RESULT: SAME`**. Powerball: 40 methods; 15,118 forecasts and 15,078 scores; the second OV-1 series, 41 lines (draws
+  1551 to 1591); the series over all draws, 447 lines; 901 report files byte for byte (2,710 declared wording
+  replacements). Oz Lotto: 40 methods; 6,598 forecasts and 6,558 scores; 41 lines (draws 1668 to 1708); 234 lines; 475
+  report files (1,432 replacements). The simplified engine's tree needed nothing made again (no REBUILD line).
+- **Two deviations the runner recorded:** step 6 run as a background command of the shell (unchanged, ran to its end,
+  nothing ended); the report written with the file tool, the permission settings refusing a shell command whose text
+  holds the updater's file name (it is in step 5's listing). **One observation:** in step 5's listing two group
+  headings count more files than they list; the tool names the method and helper files only in the groups that differ,
+  by design.
+- **Item 4 of the work order (entry 365) is done.** Next is item 5: **the owner accepts the Windows comparison** (his
+  word). Then item 6: his first real fetch, by itself in DEV (entry 358). DEV holds Powerball through draw 1591 (12
+  November 2026) and Oz Lotto through 1708 (10 November); the updater's default window (this month and the five
+  before) reaches back past both.
+- Next numbers: EX_334 (Claude's); entry 385; RAT-67.
