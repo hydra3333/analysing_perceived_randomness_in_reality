@@ -513,8 +513,8 @@ def run_game(job: Job, game_id: str) -> str:
         complete_draw(job, records, draw)
         if (draw - lowest + 1) % PROGRESS_EVERY_DRAWS == 0 and written['forecasts'] + written['scores'] > said_at:
             said_at = written['forecasts'] + written['scores']
-            job.say(f'{game_id}: worked through draw {draw} of {last_draw}; so far {written["forecasts"]} '
-                    f'forecasts and {written["scores"]} scores written')
+            job.say(f'{game_id}: processed target draw {draw} (results on file through {last_draw}); so far '
+                    f'{written["forecasts"]} forecasts and {written["scores"]} scores written')
     make_series_and_reports(job, records)
     summary = ', '.join(f'{written[what]} {what}' for what in ('forecasts', 'scores', 'series files',
                                                                'report files'))
