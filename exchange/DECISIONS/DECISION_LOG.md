@@ -8536,3 +8536,25 @@ section 17.2 (unpack it into a new folder, never over the clone).
   reviewer, RAT-63).
 - "Continue the agreed implementation work order": step 3 (the updater) is next.
 - Next numbers: EX_334 (Claude's); entry 356; RAT-64.
+
+## 356. 27 November 2026, 13:07 - OWNER: the four points of step 3 confirmed (yes to all); the reviewer accepts the step 2 corrections; GO for step 3, the updater
+
+- **The reviewer (relayed by the owner at 13:06, no EX number):** "ChatGPT accepts the reported step-2 corrections and
+  evidence. No further recheck requested." It recommended that the owner agree to each of the points below, added to
+  the fourth "provided the accepted local results pass the ordinary existing reader checks. Otherwise stop the
+  affected game", and asked for no additional controls or testing machinery.
+- **The owner, on a card that set the points out, chose "Yes to all, go (Recommended)":**
+- (1) **Confirmed:** a rebuild of everything also deletes the stored results of methods the tree has no software for
+  (choice 4 of RAT-61 as narrowed in entry 354).
+- (2) **The research job loads the updater itself, under its own lock,** unless `--no-update`.
+- (3) **The updater is left out of the engine's fingerprint,** so that a change to the updater does not rebuild all
+  research. This departs from the sentence of the simple scheme v0.2, section 4, that the infrastructure's fingerprint
+  covers every file under `src\` outside the method families.
+- (4) **If the updater fails** (site down, a block page, a mismatch), the job warns loudly, carries on with the
+  results the tree holds if they pass the reader's usual checks (otherwise that game stops), and ends with exit code
+  1.
+- **Also agreed:** the updater's one-off `init` command is dropped; old and new updater are compared on the same
+  invented pages (scheme section 8).
+- **GO FOR STEP 3** (the updater with every Mode H state removed, the same in every tree), on Fable. Nothing is
+  authorised on the owner's PC; neither AI ever runs the updater against the real site.
+- Next numbers: EX_334 (Claude's); entry 357; RAT-64.
