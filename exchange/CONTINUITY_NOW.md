@@ -4,7 +4,7 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 15:59 Australia/Adelaide (entry 361: step 4a built and committed; waiting on the reviewer's reading and the go for step 4b).
+**Last updated:** 27 November 2026, 16:06 Australia/Adelaide (entry 362: the owner accepted the step 4a choices; waiting on the reviewer's reading and the go for step 4b).
 
 ## For the owner: NOW
 

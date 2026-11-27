@@ -8682,3 +8682,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   report wording and the refresh of H-1 are still to come.
 - **Waiting on:** the reviewer's one reading of step 4a at `3effdbe`; then the owner's go for step 4b (Fable).
 - Next numbers: EX_334 (Claude's); entry 362; RAT-64.
+
+## 362. 27 November 2026, 16:06 - OWNER: accepts Claude's step 4a choices, exit code 1 after a failed backup included
+
+- **The owner's words:** "yes to your option \"exit 1\". yes to your choices. i send blurb to chatgpt now."
+- **Decided:** Claude's choices (a) to (f) of entry 361 stand as built in `3effdbe`. In particular, when the backup at
+  the end of a job cannot be made, the job warns loudly, notes it in the job log and ends with exit code 1; what it
+  computed stands. No code changes.
+- **Working note:** before any wait longer than a few minutes Claude tells the owner what is running and for how long
+  (the owner asked after ninety minutes without word, entry 361's comparisons).
+- **Waiting on:** the reviewer's one reading of step 4a at `3effdbe`; then the owner's go for step 4b.
+- Next numbers: EX_334 (Claude's); entry 363; RAT-64.
