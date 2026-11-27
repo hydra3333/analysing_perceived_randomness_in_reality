@@ -8897,3 +8897,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
   installs them as `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` and `.claude/settings.json`); then his separate go for
   TASK_T029.
 - Next numbers: EX_334 (Claude's); entry 370; RAT-66.
+
+## 370. 27 November 2026, 19:02 - OWNER: RAT-66, the runner's rulebook v0.8 and its permission settings ratified; installed
+
+- **The owner's words (19:01):** "i ratify the rulebook v0.8 and the candidate settings"
+- **RAT-66: the runner's rulebook v0.8 and its permission settings ratified and installed.**
+  `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` is the candidate r1 (SHA-256
+  `e680ba212714470bc1005979bcfceec0d480b0f43d90aa7d3326b4cf03b243fc`) with its status words alone changed (installed
+  SHA-256 `a51ca9bdb7f39c475a74ce87a77fd61c42b9318b1894938e708b065a80aea381`); `.claude/settings.json` is the
+  candidate settings, the same bytes (SHA-256 `cc59c962df3a088444dc91fc50011b28ba153180857e55f725f1d2ae5789220b`): the
+  two guards of entry 366 added. The candidates stay in `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_8/`. v0.7 (RAT-44) is
+  history.
+- **Not authorised by this:** any task. The owner's separate go is needed for TASK_T029 (then T030; T031 after his DEV
+  first fill).
+- Next numbers: EX_334 (Claude's); entry 371; RAT-67.

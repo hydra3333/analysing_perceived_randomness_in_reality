@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 18:58 Australia/Adelaide (entry 369: the rulebook v0.8 candidate r1 and the tasks corrected; waiting on the owner's ratification).
+**Last updated:** 27 November 2026, 19:02 Australia/Adelaide (entry 370: the rulebook v0.8 ratified and installed).
 
 ## For the owner: NOW
 
+- **RULEBOOK v0.8 RATIFIED AND INSTALLED (RAT-66, entry 370; 27 November 2026),** with its permission settings.
+  **Next:** the owner pulls, then gives his go for TASK_T029 in a new Claude Code conversation (`Do
+  inbox\TASK_T029.md`); after it passes, T030; then his own DEV first fill; then T031.
 - **REHEARSAL PREPARED (entry 368; 27 November 2026).** The runner's rulebook v0.8 candidate and permission settings
   (`eb1e5d6`) and the task files T029 to T031 with their helper (`86468a8`). **Waiting on:** the reviewer's reading;
   the owner's ratification of v0.8 (then Claude installs it); his go for T029, then T030; then his own DEV first fill;
