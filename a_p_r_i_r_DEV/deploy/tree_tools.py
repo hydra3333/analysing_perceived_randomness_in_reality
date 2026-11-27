@@ -7,7 +7,9 @@ What this file is for
         from that draw on and makes no more for it; its earlier results stay. Deleting the file brings it back.
     Copy_From_PROD.bat software|data|both QA   and   Copy_From_PROD.bat data DEV
         makes QA's software, or its data (source_data and results\research), or both, the same as PROD's, after
-        a backup of QA; into DEV, data only (DEV's software is Git's). Then the destination's own research job
+        a backup of QA; into DEV, data only (DEV's software is Git's). Before anything is touched, PROD must
+        hold what is to be copied and its accepted results must pass the engine's reader; what PROD holds is
+        listed before anything of the destination is removed. Then the destination's own research job
         runs (results updater left out), which makes again whatever no longer fits. With the software go PROD's
         I_AM_RETIRED and IN_PLACE_SINCE files, so that QA retires and counts exactly as PROD does.
     Restore.bat QA|PROD <backup zip>
@@ -151,6 +153,26 @@ def copy_software(prod: Path, target: Path) -> None:
         raise CommandFailed('the software copied does not match PROD\'s when read back')
 
 
+def check_prod_holds(prod: Path, what: str) -> None:
+    """Before anything of the destination is touched: PROD holds what is to be copied, and what is to be copied
+    is usable. For the data, the accepted results of both games must pass the engine's own reader (each file
+    whole, in draw order, and the one its ledger names), and PROD must hold computed results.
+    Refuses (CommandRefused) otherwise; nothing has been changed."""
+    if what in (SOFTWARE, BOTH) and not tree_parts.files_under(prod / 'src'):
+        raise CommandRefused(f'the PROD tree holds no software ({prod / "src"} is absent or empty). Nothing was '
+                             f'changed.')
+    if what in (DATA, BOTH):
+        for game_id in GAMES:
+            try:
+                results_on_file(prod, game_id)
+            except ResultsRefused as refusal:
+                raise CommandRefused(f'the PROD tree\'s accepted results for {game_id} cannot be used, so they are '
+                                     f'not copied over another tree\'s: {refusal} Nothing was changed.') from None
+        if not tree_parts.files_under(prod / RESEARCH_RESULTS):
+            raise CommandRefused(f'the PROD tree holds no computed results ({prod / RESEARCH_RESULTS} is absent or '
+                                 f'empty). Nothing was changed. Run its research job first.')
+
+
 def copy_from_prod(settings, what: str, role: str, *, moment, say=print, run_job=tree_parts.run_job_of,
                    backup=backups.make_backup) -> int:
     """Copy_From_PROD.bat: make QA's software, data or both the same as PROD's, or DEV's data; then run the
@@ -174,6 +196,7 @@ def copy_from_prod(settings, what: str, role: str, *, moment, say=print, run_job
         locks = tree_parts.lock_trees(stack, {tree.role: tree for tree in (settings, prod, theirs)}.values(),
                                       'copy from PROD', moment.strftime('%Y-%m-%d %H:%M'))
         say(f'COPY FROM PROD ({prod.tree_root}) into the {role} tree ({target}): {what}.')
+        check_prod_holds(prod.tree_root, what)
         tree_parts.require_python(theirs)
         made = tree_parts.back_up_first(theirs, 'before copy from PROD', moment, say, backup)
         try:

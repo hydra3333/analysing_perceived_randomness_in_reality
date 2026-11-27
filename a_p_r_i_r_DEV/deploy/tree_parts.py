@@ -28,6 +28,7 @@ What uses it
 """
 from __future__ import annotations
 
+import hashlib
 import os
 import shutil
 import subprocess
@@ -46,6 +47,8 @@ ROOT_FILES = ('Run_Research.bat', 'Run_Results_Updater.bat', 'Backup.bat', 'crea
 METHODS_FOLDER = 'src/methods'
 SOURCE_DATA = 'source_data'
 RESEARCH_RESULTS = 'results/research'
+# How long one step of waiting for a tree's job lasts; between steps Python notices a Ctrl+C.
+WAIT_STEP_SECONDS = 1.0
 # What a file is called while it is being copied; it is renamed to its own name when it is whole.
 UNFINISHED_SUFFIX = '.writing'
 # The exit codes of the cross-tree commands: done; done, but the destination's job did not finish cleanly;
@@ -110,6 +113,16 @@ def infrastructure_paths(tree_root: Path) -> list:
     tree_root = Path(tree_root)
     return (code_identity.infrastructure_files(tree_root) + code_identity.updater_files(tree_root)
             + [name for name in ROOT_FILES if (tree_root / name).is_file()])
+
+
+def launcher_fingerprint(tree_root: Path) -> str:
+    """One SHA-256 over the root launchers a tree holds (ROOT_FILES), made as the engine's fingerprint is. It is
+    part of what the infrastructure's flag vouches for, so that a launcher changed after the flag was made is
+    not installed. It is used for installing only: no research job reads it, and it makes nothing again."""
+    tree_root = Path(tree_root)
+    text = ''.join(f'{name}\t{code_identity.sha256_of_file(tree_root / name)}\n'
+                   for name in sorted(ROOT_FILES) if (tree_root / name).is_file())
+    return hashlib.sha256(text.encode('utf-8')).hexdigest()
 
 
 def method_paths(variant) -> list:
@@ -184,7 +197,31 @@ def run_job_of(settings: TreeSettings, key: str, say) -> int:
     command = [str(settings.python), '-I', '-B', '-u', str(settings.tree_root / 'src' / 'research_command.py'),
                'research', '--no-update', '--under-lock', key]
     say(f'Now the {settings.role} tree\'s own research job (results updater left out), under the lock held:')
-    return subprocess.run(command, cwd=settings.tree_root).returncode
+    return wait_without_ending(subprocess.Popen(command, cwd=settings.tree_root), settings.role, say)
+
+
+def wait_without_ending(child, role: str, say) -> int:
+    """Wait until a started job has ended by itself, however long that takes, and return its exit code.
+
+    No program of this project ends another process. (Python's own subprocess.run would: it kills the process it
+    started when Ctrl+C is pressed.) So this waits in short steps and, when Ctrl+C is pressed here, says that the
+    job is still working and goes on waiting. It returns only when the job has ended, so the command that
+    called it never lets go of a lock while the job may still be working under it.
+
+    child: the started process (subprocess.Popen).  role: the tree's role, for the message.  say: prints a line.
+    """
+    pressed = told = 0
+    while True:
+        try:
+            if pressed > told:
+                told = pressed
+                say(f'Ctrl+C was pressed. This command ends no process: the {role} tree\'s job (process {child.pid}) '
+                    f'is still working and its lock is kept. Waiting for it to end by itself...')
+            return child.wait(timeout=WAIT_STEP_SECONDS)
+        except subprocess.TimeoutExpired:
+            continue
+        except KeyboardInterrupt:
+            pressed += 1
 
 
 def replace_folder(source_root: Path, target_root: Path, relative: str, leave_out=()) -> int:
@@ -193,12 +230,15 @@ def replace_folder(source_root: Path, target_root: Path, relative: str, leave_ou
 
     relative: the folder from the tree root, for example 'source_data'.
     leave_out: file names never copied, for example ('I_AM_INSTALLABLE',).
-    Returns the number of files copied (0 if the source tree has no such folder: the target then has none).
+    Returns the number of files copied. The source's files are listed before anything is removed; if the source
+    has no such folder, or it holds nothing to copy, nothing is removed and CommandFailed is raised.
     """
-    target = Path(target_root) / relative
+    source, target = Path(source_root) / relative, Path(target_root) / relative
+    names = [name for name in files_under(source) if Path(name).name not in leave_out]
+    if not names:
+        raise CommandFailed(f'{source} is absent or holds nothing to copy; nothing was removed from {target}')
     if target.exists():
         shutil.rmtree(target)
-    names = [name for name in files_under(Path(source_root) / relative) if Path(name).name not in leave_out]
     for name in names:
         copy_file(source_root, target_root, f'{relative}/{name}')
     return len(names)

@@ -16,7 +16,8 @@ What this file is for
     A flag (I_AM_INSTALLABLE) that is missing or older than its files installs nothing: the part is named and
     left alone. A helper file several methods share is brought only if every method of the destination that
     uses it is installed with it; otherwise the methods that need the changed file are named and not installed,
-    so that no method ever ends up as a mix of files that was never flagged. None of the three small files
+    so that no method ever ends up as a mix of files that was never flagged (a method folder of the destination
+    that fails its checks there is looked at too, by its declaration). None of the three small files
     beside a method is copied: the destination's own stay, and its job writes its own IN_PLACE_SINCE.
 
 Which part of the scheme it carries out
@@ -37,6 +38,7 @@ What uses it
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import shutil
 from dataclasses import dataclass, field
@@ -115,15 +117,41 @@ def plan_infrastructure(plan: Plan, dev: Path, target: Path) -> None:
                            != code_identity.infrastructure_fingerprint(target))
 
 
-def hold_back_shared_helper_mixes(candidates: list, theirs, dev_identities, passed_over: list) -> list:
+def files_of_destination_methods(target: Path, theirs, theirs_refused) -> list:
+    """For every method folder of the destination, the files it uses with what the destination holds of each:
+    [(identity, ((path from src/methods, sha256 or None if the file is missing), ...)), ...].
+
+    A valid method gives the files its fingerprint covers. A folder that fails its checks there gives the
+    helpers its declaration lists, if the declaration can be read: such a method must be looked at too, because
+    bringing a helper it lacks would let it run again as a mix nobody flagged. One whose declaration cannot be
+    read gives nothing; nothing brought can make it run.
+    """
+    found = [(variant.identity, variant.fingerprint_lines) for variant in theirs]
+    methods_root = Path(target) / METHODS_FOLDER
+    for identity, _ in theirs_refused:
+        try:
+            declared = json.loads((methods_root / identity / DECLARATION_NAME).read_text(encoding='utf-8'))
+            helpers = [helper for helper in declared['helpers'] if isinstance(helper, str)]
+        except (OSError, ValueError, KeyError, TypeError):
+            continue
+        held = {helper: (code_identity.sha256_of_file(methods_root / helper)
+                         if (methods_root / helper).is_file() else None) for helper in helpers}
+        found.append((identity, tuple(held.items())))
+    return found
+
+
+def hold_back_shared_helper_mixes(candidates: list, destination_files: list, dev_identities,
+                                  passed_over: list) -> list:
     """Take out of the install every method that would change another method of the destination behind its back.
 
-    A method brings its helper files with it. If a helper it brings differs from the destination's, every method
-    of the destination that lists that helper changes too. That is right only when those methods are installed
-    in the same run (they are then DEV's flagged versions). Otherwise the method bringing the file is held back
-    and named, and the question is asked again without it, until nothing more changes.
+    A method brings its helper files with it. If a helper it brings differs from the destination's (or is
+    missing there), every method of the destination that lists that helper changes too. That is right only when
+    those methods are installed in the same run (they are then DEV's flagged versions). Otherwise the method
+    bringing the file is held back and named, and the question is asked again without it, until nothing more
+    changes.
 
-    candidates: the MethodSteps that are flagged and differ.  theirs: the destination's Variants.
+    candidates: the MethodSteps that are flagged and differ.
+    destination_files: what files_of_destination_methods gives for the destination.
     dev_identities: the identities of DEV's methods.  passed_over: (identity, why) is added for each held back.
     Returns the steps that remain.
     """
@@ -131,20 +159,23 @@ def hold_back_shared_helper_mixes(candidates: list, theirs, dev_identities, pass
     while True:
         brought = {path: sha for step in remaining for path, sha in step.variant.fingerprint_lines}
         installing = {step.identity for step in remaining}
-        mixed = [(variant, sorted(path for path, sha in variant.fingerprint_lines if brought.get(path, sha) != sha))
-                 for variant in theirs if variant.identity not in installing]
-        mixed = [(variant, changed) for variant, changed in mixed if changed]
+        mixed = [(identity, sorted(path for path, sha in lines if brought.get(path, sha) != sha))
+                 for identity, lines in destination_files if identity not in installing]
+        mixed = [(identity, changed) for identity, changed in mixed if changed]
         if not mixed:
             return remaining
-        variant, changed = mixed[0]
-        why_not = ('DEV has no such method' if variant.identity not in dev_identities
+        identity, changed = mixed[0]
+        why_not = ('DEV has no such method' if identity not in dev_identities
                    else 'it is not flagged as it now stands in DEV, or is itself held back')
-        for step in [step for step in remaining if set(changed) & {path for path, _ in step.variant.fingerprint_lines}]:
+        bringing = [step for step in remaining
+                    if set(changed) & {path for path, _ in step.variant.fingerprint_lines}]
+        for step in bringing:
             remaining.remove(step)
-            passed_over.append((step.identity,
-                                f'it brings a changed helper file ({", ".join(changed)}) that {variant.identity} in '
-                                f'the destination also uses, and that method is not installed with it ({why_not}). '
-                                f'Flag every method that uses the file (Make_Installable.bat ALL), then install again'))
+            passed_over.append((
+                step.identity,
+                f'it brings a changed helper file ({", ".join(changed)}) that {identity} in the destination also '
+                f'uses, and that method is not installed with it ({why_not}). Flag every method that uses the '
+                f'file (Make_Installable.bat ALL), then install again'))
 
 
 def plan_install(dev: Path, target: Path) -> Plan:
@@ -174,7 +205,8 @@ def plan_install(dev: Path, target: Path) -> Plan:
         else:
             candidates.append(MethodStep(variant.identity, ADD if missing else REPLACE, variant))
     known = {variant.identity for variant in ours} | {name for name, _ in ours_refused}
-    plan.steps = hold_back_shared_helper_mixes(candidates, theirs, known, plan.passed_over)
+    plan.steps = hold_back_shared_helper_mixes(
+        candidates, files_of_destination_methods(target, theirs, theirs_refused), known, plan.passed_over)
     plan.passed_over.sort()
     plan.left_alone = sorted((set(there) | set(there_but_refused)) - known)
     return plan

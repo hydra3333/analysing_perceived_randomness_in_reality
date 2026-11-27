@@ -5,6 +5,7 @@ draws and toy methods; the destination's job is the real job run inside the test
 test, which starts it as the commands do: a separate process with the destination's own Python.
 (The simple scheme v0.2 sections 3, 3.1 rule 3, 4, 6 and 7.)
 """
+import _thread
 import json
 import os
 import re
@@ -12,6 +13,7 @@ import shutil
 import subprocess
 import sys
 import sysconfig
+import threading
 import venv
 from pathlib import Path
 from unittest import mock
@@ -284,6 +286,27 @@ class Install(tf.TreesCase):
         self.assertFalse((qa / 'src' / 'updater' / 'old_part.py').exists())
         self.assertEqual((qa / 'Backup.bat').read_bytes(), (dev / 'Backup.bat').read_bytes())
 
+    def test_a_launcher_changed_after_the_infrastructure_was_flagged_is_not_installed(self):
+        dev, qa = self.two_trees()
+        engine = tree_parts.code_identity.infrastructure_fingerprint(dev)
+        tf.edit(dev / 'Backup.bat', 'rem changed after the flag was made')
+        self.assertEqual(tree_parts.code_identity.infrastructure_fingerprint(dev), engine, 'no result depends on it')
+        self.assertEqual(method_flags.installable_state(dev / 'src', install_tools.infrastructure_fingerprints(dev)),
+                         method_flags.FLAG_OUT_OF_DATE)
+        before = self.snapshot('QA')
+        self.assertEqual(self.install(), 0)
+        self.assertIn('NOT INSTALLED: the infrastructure differs (1 files) but is its flag is older than its files',
+                      self.said_text())
+        self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
+        with self.assertRaisesRegex(CommandRefused, 'the infrastructure is its flag is older than its files in DEV'):
+            self.command(install_tools.create_tree, 'PROD')
+        self.assertFalse(self.place('PROD').exists())
+        self.flag('INFRA')
+        self.said.clear()
+        self.assertEqual(self.install(), 0)
+        self.assertEqual((qa / 'Backup.bat').read_bytes(), (dev / 'Backup.bat').read_bytes())
+        self.assertFalse(any('REBUILD' in line for line in self.job_said), self.job_said)
+
     def test_show_prints_the_plan_and_changes_nothing(self):
         dev, qa = self.two_trees()
         tf.edit(dev / METHOD_A, '# changed')
@@ -481,6 +504,29 @@ class ASharedHelper(tf.TreesCase):
                                    rf'E_901/TOY_ONLY_IN_QA_V1 in the destination also uses.*DEV has no such method')
         self.assertEqual((self.snapshot('QA'), self.backups), (before, []))
 
+    def test_a_method_that_fails_its_checks_in_the_destination_is_not_brought_back_by_anothers_helper(self):
+        dev, qa = self.two_trees()
+        fx.add_toy_variant(qa, 'E_901', 'TOY_BROKEN_IN_QA_V1', games=(GAME,), helpers=('E_901/core_v2.py',))
+        with self.assertRaisesRegex(Exception, 'a helper listed in .* is missing'):
+            install_tools.find_variants(qa / 'src/methods')[1] and (_ for _ in ()).throw(
+                Exception(install_tools.find_variants(qa / 'src/methods')[1][0][1]))
+        (dev / 'src/methods/E_901/core_v2.py').write_text('# a second calculation\n', encoding='ascii')
+        fx.add_toy_variant(dev, 'E_901', 'TOY_NEW_V1', games=(GAME,), helpers=('E_901/core_v2.py',))
+        self.flag('E_901/TOY_NEW_V1')
+        before = self.snapshot('QA')
+        self.assertEqual(self.install(), 0)
+        self.assertRegex(self.said_text(), r'NOT INSTALLED: E_901/TOY_NEW_V1: it brings a changed helper file '
+                                           r'\(E_901/core_v2.py\) that E_901/TOY_BROKEN_IN_QA_V1 in the destination '
+                                           r'also\s+uses.*DEV has no such method')
+        self.assertEqual((self.snapshot('QA'), self.backups), (before, []))
+        self.assertEqual([name for name, _ in install_tools.find_variants(qa / 'src/methods')[1]],
+                         ['E_901/TOY_BROKEN_IN_QA_V1'], 'still failing its checks, as before')
+        (fx.method_folder(qa, 'E_901', 'TOY_BROKEN_IN_QA_V1') / 'VARIANT.json').write_text('not JSON', encoding='ascii')
+        self.said.clear()
+        self.assertEqual(self.install(), 0)
+        self.assertIn('  add: E_901/TOY_NEW_V1', self.said_text(), 'a folder whose declaration cannot be read can run '
+                                                                   'with nothing, so it holds nothing back')
+
     def test_a_new_method_that_brings_a_new_helper_changes_no_other_and_is_added(self):
         dev, qa = self.two_trees()
         (dev / 'src/methods/E_901/core_v2.py').write_text('# a second calculation\n', encoding='ascii')
@@ -489,6 +535,55 @@ class ASharedHelper(tf.TreesCase):
         self.assertEqual(self.install(), 0)
         self.assertIn('  add: E_901/TOY_NEW_V1', self.said_text())
         self.assertTrue((qa / 'src/methods/E_901/core_v2.py').is_file())
+
+
+class WaitingForTheDestinationsJob(fx.JobCase):
+    """No program of this project ends another process: Ctrl+C while a tree's job runs ends nothing."""
+
+    def test_ctrl_c_while_the_job_runs_ends_no_process_and_the_wait_goes_on_until_the_job_has_ended(self):
+        finished, said = self.root / 'the_job_finished.txt', []
+        job = (f'import pathlib, time; time.sleep(1.2); '
+               f'pathlib.Path({str(finished)!r}).write_text("by itself", encoding="ascii"); raise SystemExit(3)')
+        child = subprocess.Popen([sys.executable, '-c', job])
+        ended = []
+        with mock.patch.object(child, 'kill', lambda: ended.append('kill')), \
+                mock.patch.object(child, 'terminate', lambda: ended.append('terminate')), \
+                mock.patch.object(child, 'send_signal', lambda signal: ended.append('signal')):
+            threading.Timer(0.2, _thread.interrupt_main).start()       # Ctrl+C while the job is working
+            code = tree_parts.wait_without_ending(child, 'QA', said.append)
+        self.assertEqual((code, ended), (3, []), 'the job ended by itself, with its own exit code')
+        self.assertEqual(finished.read_text(encoding='ascii'), 'by itself')
+        self.assertEqual(len(said), 1, said)
+        self.assertIn(f'This command ends no process: the QA tree\'s job (process {child.pid}) is still working and '
+                      f'its lock is kept', said[0])
+
+    def test_each_ctrl_c_is_answered_and_the_wait_ends_only_with_the_job(self):
+        steps, said = iter([KeyboardInterrupt, subprocess.TimeoutExpired('job', 1), KeyboardInterrupt,
+                            KeyboardInterrupt, subprocess.TimeoutExpired('job', 1), 0]), []
+
+        def one_step(timeout):
+            """One step of waiting: Ctrl+C pressed, the job still working, or the job ended with exit code 0."""
+            self.assertEqual(timeout, tree_parts.WAIT_STEP_SECONDS)
+            step = next(steps)
+            if step == 0:
+                return 0
+            raise step() if step is KeyboardInterrupt else step
+
+        child = mock.Mock(pid=4242, wait=one_step, kill=mock.Mock(), terminate=mock.Mock(), send_signal=mock.Mock())
+        self.assertEqual(tree_parts.wait_without_ending(child, 'PROD', said.append), 0)
+        self.assertEqual(len(said), 3, 'one answer for each Ctrl+C')
+        self.assertTrue(all('the PROD tree\'s job (process 4242) is still working' in line for line in said))
+        self.assertEqual((child.kill.called, child.terminate.called, child.send_signal.called), (False, False, False))
+        self.assertIsNone(next(steps, None), 'every step was waited through')
+
+    def test_the_job_is_started_and_waited_for_by_that_wait_and_never_by_pythons_own_run(self):
+        seen = []
+        read = mock.Mock(role='QA', python=Path('p'), tree_root=Path('t'))
+        with mock.patch.object(tree_parts.subprocess, 'Popen', lambda command, cwd: seen.append(command) or 'child'), \
+                mock.patch.object(tree_parts.subprocess, 'run', side_effect=AssertionError('it ends the child')), \
+                mock.patch.object(tree_parts, 'wait_without_ending', lambda child, role, say: (child, role)):
+            self.assertEqual(tree_parts.run_job_of(read, 'thekey', lambda line: None), ('child', 'QA'))
+        self.assertEqual(seen[0][-4:], ['research', '--no-update', '--under-lock', 'thekey'])
 
 
 class AJobUnderAnotherCommandsLock(fx.JobCase):
@@ -562,17 +657,19 @@ class TheDestinationsOwnJobInItsOwnProcess(tf.TreesCase):
         self.real_python(qa)
         tf.edit(dev / METHOD_A, '# changed')
         self.flag('ALL')
-        real_run, children = subprocess.run, []
+        real_popen, children, printed = subprocess.Popen, [], self.root / 'what_the_child_printed.txt'
 
         def captured(command, cwd):
             """Start the child as the command does, but keep what it prints for the test."""
-            children.append((command, real_run(command, cwd=cwd, capture_output=True, text=True)))
+            with open(printed, 'w', encoding='utf-8') as stream:
+                children.append((command, real_popen(command, cwd=cwd, stdout=stream, stderr=subprocess.STDOUT)))
             return children[-1][1]
 
-        with mock.patch.object(tree_parts.subprocess, 'run', captured):
+        with mock.patch.object(tree_parts.subprocess, 'Popen', captured):
             code = install_tools.install(self.settings(), 'QA', show=False, moment=tf.MOMENT, say=self.said.append)
         command, child = children[0]
-        self.assertEqual((code, child.returncode), (0, 0), child.stdout + child.stderr)
+        child.stdout = printed.read_text(encoding='utf-8')
+        self.assertEqual((code, child.returncode), (0, 0), child.stdout)
         self.assertEqual(command[:4] + command[5:7], [str(self.settings('QA').python), '-I', '-B', '-u', 'research',
                                                       '--no-update'])
         self.assertEqual(Path(command[4]), qa / 'src' / 'research_command.py', 'the destination\'s own copy')
@@ -588,7 +685,7 @@ class TheDestinationsOwnJobInItsOwnProcess(tf.TreesCase):
         self.assertRegex(made[0], r'^QA_\d{8}_\d{6}_after_job\.zip$')
         self.assertEqual(made[1], 'QA_20261201_201012_before_install.zip')
         self.assertTrue(self.no_lock_is_left())
-        wrong = real_run(command[:-1] + ['0' * 16], cwd=qa, capture_output=True, text=True)
+        wrong = subprocess.run(command[:-1] + ['0' * 16], cwd=qa, capture_output=True, text=True)
         self.assertEqual(wrong.returncode, 2, wrong.stdout + wrong.stderr)
         self.assertIn('is not there or is not that command\'s lock', wrong.stdout)
         self.assertEqual(sys.executable != command[0], True, 'another Python program than the one running the tests')

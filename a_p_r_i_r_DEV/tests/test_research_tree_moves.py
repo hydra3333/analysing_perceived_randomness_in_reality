@@ -12,6 +12,7 @@ from unittest import mock
 
 import research_fixtures as fx
 import tree_fixtures as tf
+from _common.game_profiles import get_profile
 
 import dev_command                                          # noqa: E402  (tree_fixtures put deploy on the path)
 import install_tools                                        # noqa: E402
@@ -23,6 +24,8 @@ from tree_parts import CommandFailed, CommandRefused       # noqa: E402
 
 GAME = fx.GAME
 LAST = fx.LAST_AT_START
+OTHER_GAME = 'OZLOTTO'
+OTHER_LAST = get_profile(OTHER_GAME).first_draw + 16
 B = 'E_901/TOY_B_V1'
 METHOD_A = 'src/methods/E_901/TOY_A_V1/method.py'
 ENGINE = 'src/' + fx.ENGINE_FILE
@@ -141,6 +144,7 @@ class CopyFromProd(ThreeTrees):
         gone its own way (its own method, its own engine file)."""
         dev, qa, prod = self.three()
         fx.write_results(prod, GAME, LAST + 2)
+        fx.write_results(prod, OTHER_GAME, OTHER_LAST)      # PROD holds both games' accepted results, as it must
         tf.edit(prod / ENGINE, '# PROD\'s engine')
         method_flags.write_retired(self.retired_file('PROD').parent, {GAME: LAST + 2}, 'retired in PROD')
         (prod / 'src' / method_flags.INSTALLABLE_NAME).write_text('fingerprint = planted\n', encoding='ascii')
@@ -191,7 +195,7 @@ class CopyFromProd(ThreeTrees):
             self.assertEqual(fx.files_under(qa, folder, leave_out=()), fx.files_under(prod, folder, leave_out=()),
                              folder)
         self.assertEqual(fx.files_under(qa, 'src'), software)
-        self.assertIn('2 files of accepted results', self.said_text())
+        self.assertIn('4 files of accepted results', self.said_text())
 
     def test_the_software_copied_is_prods_and_the_data_is_left_alone_until_the_job(self):
         dev, qa, prod = self.diverged()
@@ -245,6 +249,39 @@ class CopyFromProd(ThreeTrees):
         with self.assertRaisesRegex(settings.SettingsRefused, 'this folder is not a tree'):
             self.command(tree_tools.copy_from_prod, 'both', 'QA')
         self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
+
+    def test_prods_accepted_results_must_pass_the_reader_before_they_replace_another_trees(self):
+        dev, qa, prod = self.diverged()
+        before = self.snapshot('QA')
+        master = prod / 'source_data' / f'{GAME}_results_master.csv'
+        whole = master.read_bytes()
+        master.write_bytes(whole[:-40])                     # cut short: no longer the file its ledger names
+        for what, role in (('data', 'QA'), ('both', 'QA'), ('data', 'DEV')):
+            with self.assertRaisesRegex(CommandRefused, f'the PROD tree\'s accepted results for {GAME} cannot be used'):
+                self.command(tree_tools.copy_from_prod, what, role)
+        master.write_bytes(whole)
+        (prod / 'source_data' / f'{OTHER_GAME}_results_master.csv').unlink()
+        with self.assertRaisesRegex(CommandRefused, f'accepted results for {OTHER_GAME} cannot be used'):
+            self.command(tree_tools.copy_from_prod, 'data', 'QA')
+        self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
+        self.assertEqual(self.command(tree_tools.copy_from_prod, 'software', 'QA'), 0, 'the software does not need them')
+        self.assertTrue(self.no_lock_is_left())
+
+    def test_a_prod_with_nothing_to_copy_never_empties_the_destination(self):
+        dev, qa, prod = self.diverged()
+        before = self.snapshot('QA')
+        shutil.rmtree(prod / 'results' / 'research')
+        with self.assertRaisesRegex(CommandRefused, 'the PROD tree holds no computed results'):
+            self.command(tree_tools.copy_from_prod, 'data', 'QA')
+        self.assertEqual((self.snapshot('QA'), self.backups, self.jobs), (before, [], []))
+        for folder in ('results/research', 'no_such_folder'):
+            with self.assertRaisesRegex(CommandFailed, 'is absent or holds nothing to copy; nothing was removed'):
+                tree_parts.replace_folder(prod, qa, folder)
+        (prod / 'only_flags').mkdir()
+        (prod / 'only_flags' / 'I_AM_INSTALLABLE').write_text('x', encoding='ascii')
+        with self.assertRaisesRegex(CommandFailed, 'holds nothing to copy'):
+            tree_parts.replace_folder(prod, qa, 'only_flags', leave_out=('I_AM_INSTALLABLE',))
+        self.assertEqual(self.snapshot('QA'), before, 'the source is listed before anything is removed')
 
     def test_a_copy_that_fails_part_way_says_so_runs_no_job_and_is_finished_by_running_it_again(self):
         dev, qa, prod = self.diverged()

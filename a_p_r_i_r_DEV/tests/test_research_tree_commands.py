@@ -281,6 +281,7 @@ class MakeInstallableAndWhoUses(fx.JobCase):
         flag = method_flags.read_flag(tree / 'src' / method_flags.INSTALLABLE_NAME)
         self.assertEqual((flag['fingerprint'], flag['updater_fingerprint']),
                          (engine_before, code_identity.updater_fingerprint(tree)))
+        self.assertRegex(flag['launcher_fingerprint'], r'^[0-9a-f]{64}$')
         self.assertEqual(code_identity.infrastructure_fingerprint(tree), engine_before, 'a flag changes no fingerprint')
         self.assertFalse((tree / tree_lock.RECORDS_FOLDER / tree_lock.LOCK_NAME).exists())
 

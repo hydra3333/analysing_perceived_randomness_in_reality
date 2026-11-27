@@ -4,10 +4,10 @@ What this file is for
     DEV is where methods and the engine are written and installed from. Two small commands help with that:
       Make_Installable.bat <family>/<variant> ... | ALL | INFRA
           writes the flag I_AM_INSTALLABLE beside each named method (ALL: every method), holding the method's
-          fingerprint; INFRA writes the same kind of flag once, in src, holding the engine's fingerprint and the
-          updater's. A flag says "this version may be installed". It is out of date as soon as a file it
-          vouches for changes, and the install commands then report it and leave that part alone until the
-          flag is made again.
+          fingerprint; INFRA writes the same kind of flag once, in src, holding the engine's fingerprint, the
+          updater's and the root launchers'. A flag says "this version may be installed". It is out of date
+          as soon as a file it vouches for changes, and the install commands then report it and leave that part
+          alone until the flag is made again.
       Who_Uses.bat <helper file>
           lists every method that uses a helper file, so that the owner sees what a change to it would touch.
           It changes nothing, and so it is the one command that takes no lock.
@@ -20,6 +20,7 @@ Which of the project's own modules it uses
     research.code_identity     the engine's and the updater's fingerprints
     research.method_flags      the flag files
     research.tree_lock         the tree's lock, held while methods are read and flags are written
+    tree_parts                 launcher_fingerprint: the root launchers the infrastructure's flag also vouches for
 
 What uses it
     deploy/dev_command.py (the program behind Make_Installable.bat and Who_Uses.bat), and the tests.
@@ -31,6 +32,7 @@ from pathlib import Path
 from research import code_identity, method_flags
 from research.tree_lock import tree_lock
 from research.variant_folders import find_variants
+from tree_parts import launcher_fingerprint
 
 # Where a tree keeps its methods, from the tree root; and the two words that stand for "every method" and "the
 # infrastructure" on Make_Installable's command line.
@@ -41,10 +43,13 @@ EXIT_DONE, EXIT_NOT_ALL = 0, 1
 
 
 def infrastructure_fingerprints(tree_root: Path) -> dict:
-    """What the infrastructure's flag vouches for, computed from the files now: the engine's fingerprint and the
-    updater's, for example {'fingerprint': 'ab12...', 'updater_fingerprint': 'cd34...'}."""
+    """What the infrastructure's flag vouches for, computed from the files now: the engine's fingerprint, the
+    updater's and the root launchers', for example
+    {'fingerprint': 'ab12...', 'updater_fingerprint': 'cd34...', 'launcher_fingerprint': 'ef56...'}.
+    Only the first is the engine's: a change to the updater or to a launcher makes no result again."""
     return {'fingerprint': code_identity.infrastructure_fingerprint(tree_root),
-            'updater_fingerprint': code_identity.updater_fingerprint(tree_root)}
+            'updater_fingerprint': code_identity.updater_fingerprint(tree_root),
+            'launcher_fingerprint': launcher_fingerprint(tree_root)}
 
 
 def make_installable(settings, names, moment, say=print) -> int:
@@ -88,7 +93,8 @@ def make_installable(settings, names, moment, say=print) -> int:
             fingerprints = infrastructure_fingerprints(tree_root)
             written = method_flags.write_installable(tree_root / 'src', fingerprints, made)
             say(f'{"flagged" if written else "already flagged, unchanged"}: the infrastructure (engine '
-                f'{fingerprints["fingerprint"][:12]}..., updater {fingerprints["updater_fingerprint"][:12]}...)')
+                f'{fingerprints["fingerprint"][:12]}..., updater {fingerprints["updater_fingerprint"][:12]}..., '
+                f'launchers {fingerprints["launcher_fingerprint"][:12]}...)')
     say('Done, but not everything named was flagged: see NOT FLAGGED above.' if not_all else 'Done.')
     return EXIT_NOT_ALL if not_all else EXIT_DONE
 

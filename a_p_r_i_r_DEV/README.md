@@ -86,7 +86,8 @@ read fails the backup: none is ever made that silently lacks part of the tree.
 
 - `Make_Installable.bat family/variant ... | ALL | INFRA` writes the flag `I_AM_INSTALLABLE` beside each method
   named (ALL: every method) with the method's fingerprint, and for INFRA once in `src\` with the engine's
-  fingerprint and the updater's. A flag is out of date as soon as a file it vouches for changes.
+  fingerprint, the updater's and the root launchers'. A flag is out of date as soon as a file it vouches for
+  changes. (Only the engine's fingerprint makes results again; the other two only decide what may be installed.)
 - `Who_Uses.bat helper_file` lists every method that uses a helper file. It changes nothing and takes no lock.
 
 ## DEV's commands that touch another tree
@@ -102,8 +103,10 @@ backup, and `Install.bat --show`.
   `install_upgrade_dependencies_into_venv.bat`, `Run_Research.bat --no-update`.
 - `Install.bat QA|PROD [--show]` replaces the infrastructure if it is flagged and differs, and replaces or adds
   every flagged method that differs or is missing; then it runs the destination's own job (`--no-update`) under
-  the lock it holds, which makes again whatever the new software changes. A part whose flag is missing or older
-  than its files is named and left alone. A helper file several methods share goes in only together with every
+  the lock it holds, which makes again whatever the new software changes. It waits for that job however long it
+  takes and never ends it: Ctrl+C in the installing window only prints that the job is still working. A part
+  whose flag is missing or older than its files is named and left alone (the launchers at the tree's root are
+  part of what the INFRA flag vouches for). A helper file several methods share goes in only together with every
   method of the destination that uses it (so flag them all: `Make_Installable.bat ALL`). A retired method is
   never added. A method only the destination has is left alone. None of the three small files is copied.
   `--show` prints what would be done and changes nothing.
@@ -112,12 +115,16 @@ backup, and `Install.bat --show`.
 - `Copy_From_PROD.bat software|data|both QA` makes QA's software, its data (`source_data` and
   `results\research`) or both the same as PROD's; `Copy_From_PROD.bat data DEV` copies the data into DEV. Then
   the destination's own job runs. With the software go PROD's `I_AM_RETIRED` and `IN_PLACE_SINCE` files, so that
-  after `both` QA is PROD's twin and its job finds nothing to make again.
+  after `both` QA is PROD's twin and its job finds nothing to make again. Before anything is touched, PROD's
+  accepted results of both games must pass the engine's own reader and PROD must hold what is to be copied. The
+  one thing this command writes in PROD is its lock file, removed when the command ends.
 - `Restore.bat QA|PROD backup.zip` puts a tree back from one of its own backups (a file name in that tree's
   backup folder, or a full path). The ZIP must read back whole and its own settings file must name that tree. It
   is unpacked into a fresh folder; the tree as it was is renamed aside (`..._set_aside_<date>_<time>`, where
   nothing can run) and never deleted; the fresh folder takes the tree's name. Then the tree's `.venv` is built
-  again. DEV is not restored this way: its software is in Git.
+  again. DEV is not restored this way: its software is in Git. **A tree so damaged that its settings file cannot
+  be read** is not touched by this command: rename its folder aside by hand (to a name that does not end with
+  its role), then run `Restore.bat`, which restores into the place that is now empty.
 
 Exit codes: 0 done; 1 done, but the destination's job did not finish cleanly; 2 refused before anything was
 changed, or failed part way (the message, in capitals, says what state the tree is in and what to do).
