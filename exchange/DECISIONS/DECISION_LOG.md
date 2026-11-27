@@ -9202,3 +9202,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
   tree). Claude's recommendation: leave the engine exactly as T031 compared it while QA and PROD are made; correct the
   line with the next change to the engine. The owner's decision is asked.
 - Next numbers: EX_334 (Claude's); entry 388; RAT-67.
+
+## 388. 28 November 2026, 08:35 - The progress line corrected, at the owner's go; DEV rebuilds once at its next job
+
+- **A correction of entry 387:** its heading says 08:30; it was written at 08:20.
+- **The reviewer's reading** (relayed 08:20, of `research_job.py` at `de28934`): the same as Claude's; a defect of the
+  progress message, not of the science; its wording suggested; the fingerprint safeguards not to be weakened; no
+  comparison campaign warranted for a wording-only correction.
+- **Claude changed its recommendation of entry 387** from "with the next change to the engine" to "now": no QA or PROD
+  tree exists yet, so now costs one rebuild of DEV, and later would cost three, PROD's among them (remaking forecasts
+  that had been made before their results were known).
+- **The owner's decision** (his words, 08:22): "lets change it now and het it all right in dev before QA etc."
+- **Done: commit `8fce853`.** Two lines of one message in `a_p_r_i_r_DEV/src/research/research_job.py`: the line now
+  reads "processed target draw 1594 (results on file through 1593); so far ..." (the reviewer's wording). 280 tests
+  pass in the cloud; no test or tool reads the line. The engine's fingerprint changes (cloud copy: `cfdb7ea6...` to
+  `75c7e619...`); the updater's and every method's do not, so the IN_PLACE_SINCE files and the second series'
+  starting draws stay. Coding practices met.
+- **What follows on the owner's PC:** after his pull, DEV's next `Run_Research.bat` prints one REBUILD line and fills
+  everything again (about 49 minutes, unattended). Then item 7: QA, then PROD, with the corrected engine from their
+  first fill. The owner may delete everything under `D:\DELETE_ME\a_p_r_i_r\` (T029, T030, T031: all passed, their
+  reports committed).
+- Next numbers: EX_334 (Claude's); entry 389; RAT-67.
