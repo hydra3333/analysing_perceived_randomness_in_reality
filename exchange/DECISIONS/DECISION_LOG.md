@@ -9177,3 +9177,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
   without `--no-update` (it fetches again, expecting nothing new, then forecasts and scores the four new draws). Then
   item 7: QA, then PROD.
 - Next numbers: EX_334 (Claude's); entry 387; RAT-67.
+
+## 387. 28 November 2026, 08:30 - DEV's first job with the updater in it: done; ITEM 6 DONE; one misleading progress line
+
+- **The owner looked at the files after his first fetch** (entry 386): the Powerball master backup ends at draw 1591,
+  as its name says. Then he ran `Run_Research.bat` in DEV **without** `--no-update` (08:13 to 08:17, four minutes).
+- **Its output, as expected (entry 386's forecast held):** for each game the updater checked 26 overlapping draws, all
+  matched, added 0, 0 warnings; 40 methods; written 80 forecasts and 80 scores a game (40 methods, two draws each: the
+  scores of the two new draws, the forecasts of the second new draw and of the next draw), 2 series files, 12 report
+  files; no REBUILD line. Powerball: results on file through 1593. Oz Lotto: through 1710. The job's own backup:
+  `T:\a_p_r_i_r_backups\DEV\DEV_20261128_081745_after_job.zip`. "The job finished." **Item 6 of the work order (entry
+  365) is done.**
+- **The second OV-1 series in DEV** now has its first lines: Powerball draws 1592 to 1593, Oz Lotto 1709 to 1710,
+  reference line 40 not reached. That is the scheme's rule (v0.2 section 3: each tree's methods count from the draw
+  after the last draw the tree held when their code was first used there; DEV's first fill was at 1591 and 1708;
+  bookkeeping only, entries of 26 November). The 41-line series of 1551 to 1591 belongs to the frozen top level and to
+  T031's comparison trees, which were given the frozen starting draws on purpose.
+- **THE OWNER'S FINDING: a misleading progress line.** The job printed "POWERBALL: worked through draw 1594 of 1593".
+  Claude read the code (`a_p_r_i_r_DEV/src/research/research_job.py`, `run_game`): the job works every draw on file
+  and then one more step, the forecasts for the next draw (1594, not yet drawn); the progress line is said at every
+  25th step, and here the 25th step was that last one. Nothing is wrong in what was written (the counts above; no
+  result of a draw 1594 exists or was used); the wording is wrong, and it is Claude's. It is a line of the engine, so
+  correcting it changes the engine's fingerprint and every tree then rebuilds everything once (about 49 minutes a
+  tree). Claude's recommendation: leave the engine exactly as T031 compared it while QA and PROD are made; correct the
+  line with the next change to the engine. The owner's decision is asked.
+- Next numbers: EX_334 (Claude's); entry 388; RAT-67.
