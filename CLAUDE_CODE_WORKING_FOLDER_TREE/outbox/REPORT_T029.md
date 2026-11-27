@@ -2,35 +2,40 @@
 
 RESULT: STOP at step 3
 
-- Task file: inbox/TASK_T029.md at main-repository commit e76f48b22a3df0c246fbb9440229f0a4f69e8ff9
-- Run by: Claude Code (local runner), 27 November 2026 19:08 +1030 (Cen. Australia Summer Time)
+- Task file: inbox/TASK_T029.md at main-repository commit b71c0994cb29f448e45444cc4bd093bb88046de9
+- Run by: Claude Code (local runner), 27 November 2026 19:17 +1030 (Cen. Australia Summer Time)
 - Owner options used: defaults (the task file offers none)
 - Machine: Windows-11-10.0.26300-SP0; Python 3.15.2 at E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe
 
-The STOP is at step 3, the step of refusals planted on purpose. The first of the three
-commands was refused by the permission settings, as the step expects. The second,
-`echo 'T:\a_p_r_i_r_QA'`, was not refused: it ran and printed its words. Step 3 says that if
-any of the three runs, that is a STOP. The task stopped there. The third command of step 3
-was not attempted, and steps 4 to 11 were not run.
+This is the second run of TASK_T029, with the task file r2 (seven probes) and the
+permission settings r1 installed at commit b71c099. The STOP is again at step 3, the step
+of refusals planted on purpose.
+
+All seven probes of step 3 were attempted, one at a time, as the step requires. Three were
+refused by the permission settings; four ran and printed their words:
+
+- refused (PASS): probe 1 `echo results_updater`; probe 6 `echo T:/a_p_r_i_r_QA`;
+  probe 7 `echo /g/a_p_r_i_r_PROD`.
+- ran (not refused): probe 2 `echo 'T:\a_p_r_i_r_QA'`; probe 3 `echo 't:\a_p_r_i_r_QA'`;
+  probe 4 `echo 'G:\a_p_r_i_r_PROD'`; probe 5 `echo 'g:\a_p_r_i_r_PROD'`.
+
+That is, the forms that name the drive with a backslash after the colon were not refused,
+in either letter case, for either drive; the forms with a forward slash after the colon,
+the Git Bash form `/g/...`, and the updater name were refused. Step 3 says that if any of
+the seven runs, that is a STOP after the seventh. The task stopped there. Steps 4 to 11
+were not run.
 
 Nothing was created under `D:\DELETE_ME\`: step 5 is this task's first write there, and the
-run stopped before step 4. `D:\DELETE_ME` was empty before the run and is empty after it.
+run stopped before step 4.
 
 ## Steps
 
 | Step | What | Exit code | Result line |
 |---|---|---|---|
-| 1 | Python, and the rulebook and permission settings in force | 0, 0, 0 | PASS (Python 3.15.2, Windows platform line, `1`, `1`) |
-| 2 | The repository's state (read only) | 0, 0 | PASS (commit e76f48b2..., no output from `git status`) |
-| 3 | Refusals planted on purpose (three harmless `echo` commands) | see Outputs | STOP (command 1 refused; command 2 ran and printed its words; command 3 not attempted) |
-| 4 | The scratch folder is an ordinary folder on D: | - | not run |
-| 5 | The list of the living system's files | - | not run |
-| 6 | The scratch DEV tree: a copy of those files, each read back | - | not run |
-| 7 | The scratch tree's settings file | - | not run |
-| 8 | The scratch tree's own Python environment | - | not run |
-| 9 | The scratch tree's Python | - | not run |
-| 10 | The whole test suite | - | not run |
-| 11 | The tests left no temporary file behind | - | not run |
+| 1 | Python, and the rulebook and permission settings in force | 0, 0, 0 | PASS (Python 3.15.2, Windows platform line, then `1`, then `1`) |
+| 2 | The repository's state (read only) | 0, 0 | PASS (commit b71c0994cb29f448e45444cc4bd093bb88046de9; the second command printed nothing) |
+| 3 | The permission settings refuse what they are meant to (seven probes) | n/a | STOP (3 of 7 refused; probes 2, 3, 4 and 5 ran) |
+| 4 to 11 | - | - | not run |
 
 ## Outputs
 
@@ -42,7 +47,7 @@ Command:
 "E:\SOFTWARE-Win11\powerball\analysing_perceived_randomness_in_reality\.venv\Scripts\python.exe" -I -c "import sys, platform; print(sys.version); print(platform.platform())"
 ```
 
-Exit code 0. Output:
+Output (exit code 0):
 
 ```text
 3.15.2 (tags/v3.15.2:5e58eaa, Oct 25 2026, 17:27:03) [MSC v.1951 64 bit (AMD64)]
@@ -55,7 +60,7 @@ Command:
 grep -c "^\*\*Version:\*\* v0.8" CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md
 ```
 
-Exit code 0. Output:
+Output (exit code 0):
 
 ```text
 1
@@ -67,11 +72,13 @@ Command:
 grep -c "results_upd" .claude/settings.json
 ```
 
-Exit code 0. Output:
+Output (exit code 0):
 
 ```text
 1
 ```
+
+Step 1: PASS (as expected: a Python version and a Windows platform line, then `1`, then `1`).
 
 ### Step 2
 
@@ -81,10 +88,10 @@ Command:
 git rev-parse HEAD
 ```
 
-Exit code 0. Output:
+Output (exit code 0):
 
 ```text
-e76f48b22a3df0c246fbb9440229f0a4f69e8ff9
+b71c0994cb29f448e45444cc4bd093bb88046de9
 ```
 
 Command:
@@ -93,66 +100,140 @@ Command:
 git status --short --untracked-files=no -- a_p_r_i_r_DEV CLAUDE_CODE_WORKING_FOLDER_TREE/inbox
 ```
 
-Exit code 0. Output: no output at all.
+Output (exit code 0): no output at all.
+
+Step 2: PASS (the living system and the task files are as committed).
 
 ### Step 3
 
-Command one:
+Each of the seven commands was attempted on its own, in the order the task file gives.
+What Claude Code said for each is recorded exactly below.
+
+Probe 1, command:
 
 ```text
 echo results_updater
 ```
 
-Not run. Claude Code said:
+What Claude Code said:
 
 ```text
 Permission to use Bash with command echo results_updater has been denied.
 ```
 
-This is the expected result for this command: refused by the permission settings, and not run.
+Probe 1: refused, not run - PASS.
 
-Command two:
+Probe 2, command:
 
 ```text
 echo 'T:\a_p_r_i_r_QA'
 ```
 
-Ran. Exit code 0. Output:
+The command was not refused. It ran, with exit code 0, and printed:
 
 ```text
 T:\a_p_r_i_r_QA
 ```
 
-This is not the expected result. The step expects this command to be refused by the
-permission settings and not run. It was not refused, and it printed its words. STOP.
+Probe 2: ran - not refused.
 
-Command three:
+Probe 3, command:
+
+```text
+echo 't:\a_p_r_i_r_QA'
+```
+
+The command was not refused. It ran, with exit code 0, and printed:
+
+```text
+t:\a_p_r_i_r_QA
+```
+
+Probe 3: ran - not refused.
+
+Probe 4, command:
+
+```text
+echo 'G:\a_p_r_i_r_PROD'
+```
+
+The command was not refused. It ran, with exit code 0, and printed:
+
+```text
+G:\a_p_r_i_r_PROD
+```
+
+Probe 4: ran - not refused.
+
+Probe 5, command:
+
+```text
+echo 'g:\a_p_r_i_r_PROD'
+```
+
+The command was not refused. It ran, with exit code 0, and printed:
+
+```text
+g:\a_p_r_i_r_PROD
+```
+
+Probe 5: ran - not refused.
+
+Probe 6, command:
+
+```text
+echo T:/a_p_r_i_r_QA
+```
+
+What Claude Code said:
+
+```text
+Permission to use Bash with command echo T:/a_p_r_i_r_QA has been denied.
+```
+
+Probe 6: refused, not run - PASS.
+
+Probe 7, command:
 
 ```text
 echo /g/a_p_r_i_r_PROD
 ```
 
-Not attempted: the task stopped at command two of this step.
+What Claude Code said:
+
+```text
+Permission to use Bash with command echo /g/a_p_r_i_r_PROD has been denied.
+```
+
+Probe 7: refused, not run - PASS.
+
+Which of the seven ran: probes 2, 3, 4 and 5 (`echo 'T:\a_p_r_i_r_QA'`,
+`echo 't:\a_p_r_i_r_QA'`, `echo 'G:\a_p_r_i_r_PROD'`, `echo 'g:\a_p_r_i_r_PROD'`).
+
+Step 3: STOP.
+
+### Steps 4 to 11
+
+Not run (the task stopped at step 3).
 
 ## Clean-up
 
-None was required and none was done. The task makes no task clone, and it does not delete
-its scratch folder in any case. No folder was created under `D:\DELETE_ME\`, because the run
-stopped before step 4 and step 5 is the task's first write there. `D:\DELETE_ME` was empty
-before the run and is empty after it.
+None was required and none was done. No task clone was made. Nothing was created under
+`D:\DELETE_ME\`: the run stopped before step 4, and step 5 is this task's first write
+there. No folder of this task exists under `D:\DELETE_ME\`, so there is nothing to list or
+remove.
 
 ## Deviations
 
-None. Steps 1 and 2 were run exactly as written; step 3's three commands were attempted in
-the order written until the STOP at command two; nothing else was run.
+None. Every command was run exactly as the task file gives it, in order; all seven probes
+of step 3 were attempted, as that step requires, before the step was decided.
 
 ## Observations
 
-- Steps 1's third command recorded that `.claude/settings.json` contains one line matching
-  `results_upd`, and the first command of step 3 was duly refused.
-- The second command of step 3 names the `T:` drive in Windows form (`T:\a_p_r_i_r_QA`),
-  inside single quotes. It was not refused.
-- No command naming the `G:` drive was attempted, so this run says nothing about the third
-  command of step 3.
-- No step of this run read, listed or wrote anything in a real QA or PROD tree, on `T:` or on
-  `G:`, or under any `source_data`, `results` or `transitory_data` folder.
+- Of the seven probes, the three that were refused are the updater name and the two
+  slash forms (`T:/...` and `/g/...`); the four that ran are the four backslash forms,
+  both drive letters, both cases.
+- In the first run of this task (REPORT_T029 at commit 76571d0, task file r1, settings
+  before r1) the same `echo 'T:\a_p_r_i_r_QA'` also ran, and the run stopped there without
+  attempting the remaining probes of that edition.
+- No other difference was seen: steps 1 and 2 printed exactly what the task file expects.
