@@ -8998,3 +8998,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `026408594841046a46c0bc934e58c9779513f85f3c99a3e5f3deba73f5dbc9fa`). The rulebook v0.8 (RAT-66) is unchanged.
 - **GO for TASK_T029 again** (the r2 task file, unchanged since `849f0a4`). It authorises T029 alone.
 - Next numbers: EX_334 (Claude's); entry 376; RAT-67.
+
+## 376. 27 November 2026, 19:38 - TASK_T029: the permission guards hold (seven of seven refused); STOPPED AT STEP 8, a virtual environment already active in the runner's shell; task files corrected
+
+- **TASK_T029 (third run, settings r2) STOPPED AT STEP 8** (report `outbox/REPORT_T029.md`, commit `7c02e17`). **Steps
+  1 to 7 passed. Step 3: all seven planted probes were refused by the permission settings and none ran: the guards of
+  entry 366 now hold in every form tried** (the updater's name; `T:\`, `t:\`, `G:\`, `g:\`; `T:/`; `/g/`). The scratch
+  DEV tree was copied and read back and its settings written.
+- **The STOP:** the scratch tree's own `create_venv.bat` ended with exit code 3, "A virtual environment is already
+  active", naming the main repository's `.venv`. The script is right to refuse: the shell Claude Code is given on the
+  owner's PC has the main `.venv` active (`VIRTUAL_ENV` is set in it; the runner did not activate it). Nothing was
+  retried; no environment was made; no network was used; `D:\DELETE_ME\a_p_r_i_r\T029` was left as it is.
+- **Corrected in the task files (Claude):** TASK_T029 r3 (step 8) and TASK_T030 r2 (steps 5, 11 and 19) run each
+  environment script in a subshell that first unsets `VIRTUAL_ENV` for that command alone. Nothing is deactivated and
+  no environment is changed by it; the scratch tree's scripts activate its own environment inside their own process,
+  as they do for the owner. T029 now also says that a scratch folder left by an earlier run that stopped is deleted by
+  the owner before the task is started again (its step 4 stops if the folder is there). Checked by a program: no
+  command of the three task files, nor any part of a compound command, is refused by any deny rule of the installed
+  settings, apart from T029's seven probes.
+- **Waiting on the owner:** he deletes `D:\DELETE_ME\a_p_r_i_r\T029`, pulls, and gives his go for T029 again.
+- Next numbers: EX_334 (Claude's); entry 377; RAT-67.
