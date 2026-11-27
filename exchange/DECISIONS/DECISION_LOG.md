@@ -8852,3 +8852,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the rehearsal task files T029 to T031 (Claude, Opus); the reviewer's one reading of the rulebook v0.8
   candidate (`eb1e5d6`) and the owner's ratification of it. Nothing is authorised on the owner's PC.
 - Next numbers: EX_334 (Claude's); entry 368; RAT-66.
+
+## 368. 27 November 2026, 18:47 - CLAUDE: the runner's rulebook v0.8 candidate with its permission settings (`eb1e5d6`); the rehearsal task files T029 to T031 and their helper (`86468a8`)
+
+- **Item 1 of the work order is written (Claude, at the owner's go of entry 366), for the reviewer's one reading and
+  the owner's ratification.** Nothing is installed and nothing is authorised on the owner's PC.
+- **The runner's rulebook v0.8 candidate** (commit `eb1e5d6`, in `exchange/CLAUDE_WEB_TOOLS/rulebook_v0_8/`: the
+  candidate, its diff from v0.7, and `settings_v0_8_CANDIDATE.json`, which is `.claude\settings.json` with fifteen
+  deny rules added for the two guards of entry 366: any command naming `results_updater`, and any command or file path
+  on the `T:` or `G:` drives, in Windows and POSIX forms and both letter cases). Rule 7 is in three kinds as the owner
+  asked (never anywhere: the results updater in every way of starting it, and the first system's programs; never
+  against a real tree: the scheme's commands; for a scratch tree only when a task file names them). Section 2A item
+  7(b) holds every restriction of entry 366 on the real DEV tree's Python. On ratification the candidate becomes
+  `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` and the settings become `.claude/settings.json`.
+- **The rehearsal task files** (commit `86468a8`): TASK_T029 (the test suite on Windows in a scratch DEV tree with its
+  own `.venv`; a harmless check that the guards refuse), TASK_T030 (the commands on three scratch trees with invented
+  results; every expected line taken from a dry run of the same sequence in the cloud), TASK_T031 (after the owner's
+  DEV first fill: the comparison in the scratch folder with DEV's own Python), and their shared helper
+  `inbox/REHEARSAL_HELPER.py`, which writes only under `D:\DELETE_ME\`.
+- **A wording fix found by the dry run** (commit `ae1d4f3`): Install's and Create_Tree's messages read "it is its flag
+  is older than its files in DEV"; they now read "in DEV it is flagged, but its flag is older than its files". 280
+  tests. (`method_flags.py` is part of the engine: its fingerprint changed, which matters to no tree yet.)
+- **Waiting on:** the reviewer's one reading of the rulebook v0.8 candidate with its settings, the helper and the
+  three task files; then the owner's ratification of v0.8 (and its installation by Claude); then the owner's go for
+  TASK_T029.
+- Next numbers: EX_334 (Claude's); entry 369; RAT-66.
