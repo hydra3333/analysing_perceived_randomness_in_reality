@@ -8877,3 +8877,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
   three task files; then the owner's ratification of v0.8 (and its installation by Claude); then the owner's go for
   TASK_T029.
 - Next numbers: EX_334 (Claude's); entry 369; RAT-66.
+
+## 369. 27 November 2026, 18:58 - REVIEWER and CLAUDE: the rulebook v0.8 candidate and the rehearsal tasks read (concurrence); the corrections made (`4180ac2`)
+
+- **The reviewer's one reading of the rulebook v0.8 candidate, the permission settings, T029 to T031 and the helper at
+  `3c765bb`** (relayed by the owner): overall concurrence (the three kinds of command, the rehearsal, the reversed
+  seeding and the comparison accepted; the guards accepted as supplementary protections, not a sandbox). Corrections
+  before execution: F01, T031 used DEV's Python before the scratch folder was ready and without its restrictions, and
+  2A item 7(b) should name T031 alone; F02, `TMP`, `TEMP` and `PIP_CACHE_DIR` in the scratch folder for the
+  environment scripts too; F03, the settings checks after Create_Tree PROD and Restore QA, both settings files in
+  T031, the frozen tree's legacy settings form said; F04, the planted refusals of T029 step 3 and T030 step 29
+  explicitly allowed; and three small points (DEV's `IN_PLACE_SINCE` committed before T031; an unexpected skip in T029
+  assessed before T030; the frozen parts checked unchanged by `git status`). No recheck asked.
+- **All made by Claude** (commit `4180ac2`; the rulebook candidate r1 SHA-256
+  `e680ba212714470bc1005979bcfceec0d480b0f43d90aa7d3326b4cf03b243fc`, LF as v0.7 is; the settings candidate unchanged,
+  SHA-256 `cc59c962df3a088444dc91fc50011b28ba153180857e55f725f1d2ae5789220b`). Claude noted that T031's `git status`
+  already left uncommitted files aside; the prerequisite is stated all the same, as H-1 v17r1 has it.
+- **Waiting on the owner:** his ratification of the rulebook v0.8 candidate r1 and the settings (on it, Claude
+  installs them as `CLAUDE_CODE_WORKING_FOLDER_TREE/CLAUDE.md` and `.claude/settings.json`); then his separate go for
+  TASK_T029.
+- Next numbers: EX_334 (Claude's); entry 370; RAT-66.
