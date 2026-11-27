@@ -9050,3 +9050,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Waiting on the owner:** he pushes the report (after `git pull --rebase`), deletes `D:\DELETE_ME\a_p_r_i_r\T029`,
   and gives his go for T029 once more, for a clean pass on the corrected tests.
 - Next numbers: EX_334 (Claude's); entry 379; RAT-67.
+
+## 379. 27 November 2026, 20:11 - A CORRECTION OF ENTRY 378: 276 tests passed on Windows, not 279 (1 failed, 3 skipped); the reviewer concurs with the test correction
+
+- **A correction of entry 378's count, found by the reviewer:** of the 280 tests run on Windows, 1 failed and 3 were
+  skipped, so **276 passed, not 279** (Claude counted the three skipped tests as passed; the commit message of
+  `165d19f` and entry 378 say "279 of 280"). The three skips are the expected ones (tests that need the repository's
+  top level beside the tree). A clean run is 280 run, 0 failures, 0 errors, 3 skipped: 277 passed.
+- **The reviewer** (relayed by the owner) concurs with the diagnosis and the correction at `165d19f`, having read both
+  test files' differences: the CRLF reproduction and the passes after it are convincing evidence of the cause; no
+  program of the system changed; LF bytes written on purpose in invented fixtures are acceptable. Both runner
+  deviations are accepted, provided each background command has finished before the runner goes on. It recommends one
+  more T029 run for a clean pass on Windows, then T030 on the owner's separate go.
+- **Waiting on the owner:** his go for T029 once more.
+- Next numbers: EX_334 (Claude's); entry 380; RAT-67.

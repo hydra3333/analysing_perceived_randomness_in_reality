@@ -4,11 +4,11 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 27 November 2026, 20:01 Australia/Adelaide (entry 378: T029 r3, 279 of 280 on Windows; one test corrected; waiting on the owner's go).
+**Last updated:** 27 November 2026, 20:11 Australia/Adelaide (entry 379: the count of entry 378 corrected to 276 passed; waiting on the owner's go for T029).
 
 ## For the owner: NOW
 
-- **T029 ON WINDOWS: 279 OF 280 (entry 378; 27 November 2026).** The guards hold; a scratch tree built its own
+- **T029 ON WINDOWS: 280 RUN, 276 PASSED, 1 FAILED, 3 SKIPPED (entries 378 and 379; 27 November 2026).** The guards hold; a scratch tree built its own
   `.venv`; the suite ran. One test failed for a line-ending fault of its own, corrected (`165d19f`). **Waiting on the
   owner:** push the report, delete the T029 scratch folder, and his go for T029 once more; then T030.
 - **T029 STOPPED AT STEP 3 (entry 372; 27 November 2026):** the permission guard did not refuse `echo 'T:\...'`;
