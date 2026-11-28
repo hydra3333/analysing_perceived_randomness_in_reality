@@ -9675,3 +9675,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `Install.bat QA`, then `Install.bat PROD` (each adds the manual and runs that tree's ordinary job, which finds
   nothing to make again; a few minutes each).
 - Next numbers: EX_334 (Claude's); entry 407; RAT-72.
+
+## 407. 28 November 2026, 13:31 - The manual's edition 2 installed in QA and PROD; all three trees hold it
+
+- **The owner (13:20 to 13:28):** `Make_Installable.bat INFRA` in DEV: "flagged: the infrastructure (engine
+  75c7e6195c53..., updater 69f204cea1c2..., launchers 732181fc0cc3...)", "Done." (the engine's fingerprint unchanged;
+  the root files' changed, the manual being one of them); the one changed flag committed (`16d2071`).
+  `Install.bat QA`, then `Install.bat PROD`: each "infrastructure: 1 files added or replaced, 0 removed. The
+  engine's fingerprint is the same ... nothing is made again on its account"; a backup before
+  (`QA_20261128_132158_before_install.zip`, `PROD_20261128_132504_before_install.zip`); the tree's own job
+  (`--no-update`) wrote 0 forecasts, 0 scores, 0 series files, 0 report files in both games, no REBUILD; a backup
+  after (`QA_20261128_132455_after_job.zip`, `PROD_20261128_132809_after_job.zip`); "The job finished."; "Install
+  finished". About three minutes each. **Checked by Claude: as designed.**
+- **Observed, not changed:** the install's message still says "only the updater or the launchers differ"; the manual
+  is now a root file too. The wording is in `deploy/`, outside every fingerprint, and can be widened with the next
+  change there.
+- Next numbers: EX_334 (Claude's); entry 408; RAT-72.
