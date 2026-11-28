@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:40 Australia/Adelaide (entry 426: plan v0.2; the roadmap).
+**Last updated:** 28 November 2026, 20:42 Australia/Adelaide (entry 427: RAT-77, the roadmap).
 
 ## For the owner: NOW
 
+- **RAT-77: THE REMAINING ROADMAP IS RATIFIED (entry 427; 28 November 2026),** `doc/ROADMAP.md`: stages 0 to 8;
+  stage 1 (reporting) is next. **Waiting on the reviewer:** confirmation of C01 to C05 in the code plan v0.2.
+  **Waiting on the owner:** his go for S1. Both handovers name the roadmap at their next refresh.
 - **THE CODE PLAN v0.2 AND THE ROADMAP CANDIDATE ARE WRITTEN (entry 426; 28 November 2026).** The reviewer
   accepted the five slices and the proof tool; its C01 to C05 are worked into
   `exchange/Claude_Reporting_Code_Plan_v0_2_20261128.md`. The owner's roadmap (stages 0 to 8), endorsed by both

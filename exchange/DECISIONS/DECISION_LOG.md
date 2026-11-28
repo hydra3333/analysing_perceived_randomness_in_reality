@@ -10160,3 +10160,16 @@ section 17.2 (unpack it into a new folder, never over the clone).
   since `doc/` takes only what he has ratified.
 - **Next:** the reviewer's confirmation of C01 to C05 in v0.2; the owner's go for S1; his word on the roadmap.
 - Next numbers: EX_334 (Claude's); entry 427; RAT-77 (the roadmap).
+
+## 427. 28 November 2026, 20:42 - OWNER: RAT-77, the remaining roadmap ratified; installed as doc/ROADMAP.md
+
+- **The owner's words (20:42):** "i ratify rat77".
+- **RAT-77: the remaining roadmap is ratified** and installed by Claude as `doc/ROADMAP.md` (99 lines;
+  SHA-256 `84d9f977c44bfc360322014bf1d4619a6b4ac337989da05a707b2910afd777bc`): the candidate of entry 426 with
+  one line added to say it is ratified. It is the owner's roadmap, stages 0 to 8 with 1.5, endorsed by the reviewer
+  and Claude: reporting (stage 1, with phases 2 and 3 immediately after phase 1); the owner's review of reporting
+  (1.5); backups; the tidy; backups; the methods template; future methods' priorities and working arrangements;
+  the research; performance engineering, deferred.
+- **It is a living document:** Claude updates its Status column as milestones are completed. It adds no approval
+  step. Both handovers refer to it from their next refresh.
+- Next numbers: EX_334 (Claude's); entry 428; RAT-78.
