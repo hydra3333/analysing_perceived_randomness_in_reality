@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:42 Australia/Adelaide (entry 427: RAT-77, the roadmap).
+**Last updated:** 28 November 2026, 20:45 Australia/Adelaide (entry 428: GO for S1).
 
 ## For the owner: NOW
 
+- **GO FOR S1 (entry 428; 28 November 2026).** The reviewer passed the roadmap and the code plan v0.2, with
+  qualifications C02 (S2), C03 (S1) and C04 (S3). **In hand (Claude):** S1, the engine's one change, in
+  `a_p_r_i_r_DEV/`. Nothing runs on the owner's PC until all five slices are read.
 - **RAT-77: THE REMAINING ROADMAP IS RATIFIED (entry 427; 28 November 2026),** `doc/ROADMAP.md`: stages 0 to 8;
   stage 1 (reporting) is next. **Waiting on the reviewer:** confirmation of C01 to C05 in the code plan v0.2.
   **Waiting on the owner:** his go for S1. Both handovers name the roadmap at their next refresh.

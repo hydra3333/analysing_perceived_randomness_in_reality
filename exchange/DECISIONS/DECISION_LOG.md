@@ -10173,3 +10173,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **It is a living document:** Claude updates its Status column as milestones are completed. It adds no approval
   step. Both handovers refer to it from their next refresh.
 - Next numbers: EX_334 (Claude's); entry 428; RAT-78.
+
+## 428. 28 November 2026, 20:45 - REVIEWER: PASS for the roadmap and the code plan v0.2; OWNER: GO for S1
+
+- **The reviewer, relayed by the owner (20:44):** `doc/ROADMAP.md` (RAT-77, `f2d346f`): PASS in full. The code plan
+  v0.2 (`304d6e1`): PASS for proceeding to S1 on the owner's go; C01 and C05 fully resolved; C02 to C04 accepted,
+  with implementation qualifications to be met in their slices, and no further edition of the plan asked for:
+  - **C02 (S2):** total chance near 1 is necessary but does not show that extreme tails are accurate: test the
+    numerical reporting limit; bounded probabilities never become exact ranking keys or falsely resolved orders;
+  - **C03 (S1):** `SCIENCE_IDENTITY.json` holds the engine's fingerprint and all material method status, retirement
+    reasons included; an explicit "no block" is told apart from a missing field; the identity is published only
+    after the game's scientific work has finished;
+  - **C04 (S3):** changes to existing OV-1 lines and report-relevant OV-1 information count in the staleness check;
+    ordinary later draws do not needlessly make earlier reports stale; conservative regeneration stays acceptable
+    subject to MEASURE.
+  The roadmap's order holds: the proof and the measurements in DEV before QA and PROD.
+- **The owner's words (20:44):** "GO for s1." On Opus, at Claude's advice (Fable for S2's numerical work, and for
+  any unexplained STOP).
+- **S1 authorises code in `a_p_r_i_r_DEV/` only.** Nothing is run on the owner's PC; his pull and DEV's run come
+  after all five slices are read.
+- Next numbers: EX_334 (Claude's); entry 429; RAT-78.
