@@ -9407,3 +9407,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The reviewer has committed an H-2 v13 candidate and its blurb** (`74e1c1d`, `8d2a20a`), for the owner's
   ratification; not yet ratified.
 - Next numbers: EX_334 (Claude's); entry 397; RAT-69.
+
+## 397. 28 November 2026, 10:40 - OWNER: RAT-69, H-2 v13 and its blurb ratified (corrected by Claude); installed
+
+- **The reviewer chat ended** after committing its H-2 v13 candidate and blurb (`74e1c1d`, `8d2a20a`; cutoff
+  `5498e5a`, entry 395). **The owner asked Claude (10:36)** to check and correct them, so that he could ratify
+  them in advance and start a new reviewer chat from the blurb, this time without the opening questions.
+- **Claude's check:** every cited commit exists; the figures, backup names, commands and options match the
+  repository. **Corrected (`ff93447`), the position only:** QA created and its first fill running; the owner's
+  decision of entry 396 (QA's first fill a fetching job, no separate first fetch; the same recommended for PROD) in
+  place of "first fill --no-update" and "standalone updater first"; the tidy agreement on main (`cbda280`); Claude's
+  proposed `exchange/` rule noted as awaiting review; the tidy's ratification number left open; the blurb pointing at
+  the installed file and RAT-69. Claude recommended skipping the opening questions: the blurb's first-reply
+  statement of the position is the check.
+- **RAT-69. The owner's words (10:39):** "I ratify H-2 v13 and its blurb. Thank you."
+- **Installed by Claude in `doc/HANDOVER/` (commit `0333edc`):**
+  - `ChatGPT_Reviewer_Handover_H2_v13_20261128.md`: the corrected candidate with its status line alone changed to
+    "RATIFIED by the owner, RAT-69"; SHA-256 `999da79139bd1dd96c2129b6ab2826156c569db90cfdd21b8450c8eb952aea55`;
+  - its blurb: the corrected candidate's bytes; SHA-256
+    `f8405661ad2c8565d7464a66b7e863e16083f0cb75d7ce782723c65933c09f74`.
+  **H-2 v13 supersedes H-2 v12 (RAT-67).** The handovers in force: H-1 v18 (RAT-68) and H-2 v13 (RAT-69). The
+  continuity page names them (same commit).
+- **This entry follows its commit:** a line-length check in the writing command stopped the entry after the files
+  and the page were written (as in entry 392). From here the entry is written and checked before the other files.
+- Next numbers: EX_334 (Claude's); entry 398; RAT-70.
