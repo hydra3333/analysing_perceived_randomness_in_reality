@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 16:13 Australia/Adelaide (entry 411: the reporting proposal).
+**Last updated:** 28 November 2026, 17:35 Australia/Adelaide (entry 412: the reporting discussion).
 
 ## For the owner: NOW
 
+- **REPORTING AND RANKINGS: A THREE-WAY DISCUSSION IS OPEN (entry 412; 28 November 2026).** The reviewer's v0.1
+  and Claude's v0.2 are in `exchange/` (`..._Reporting_And_Rankings_Discussion_v0_1` and `_v0_2`). v0.2 is a
+  ledger: a status for every item. **Waiting on the reviewer:** v0.3, on the rows not AGREED. **Waiting on the
+  owner:** the seven choices of v0.2 section 9. **Then Claude:** proposal v0.2 for ratification. No code before it.
 - **THE REPORTING PART AND RANKINGS: PROPOSAL v0.1 IS WRITTEN (entry 411; 28 November 2026),**
   `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_1_20261128.md`.
   **Waiting on the owner:** his reading, then his relay to the reviewer (seven questions in its section 9).

@@ -9793,3 +9793,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the owner reads it and says what is wrong or missing; then he relays it to the reviewer. No code before
   his decision. The Oz Lotto league and the OV-1 files are still to be walked through.
 - Next numbers: EX_334 (Claude's); entry 412; RAT-74.
+
+## 412. 28 November 2026, 17:35 - REVIEWER and CLAUDE: the reporting and rankings discussion, v0.1 and v0.2
+
+- **The owner relayed the reviewer's discussion paper v0.1** (17:26), made from Claude's proposal (entry 411) with
+  the owner's latest directions, "for the 3 of us to table positions and determine what ends up getting recommended
+  and or approved", and asked Claude to commit it in `exchange/`, with the version number in the file name rising
+  as each of the two commits a turn, and to show where the three agree, partly agree and differ.
+- **Committed unchanged, at the owner's word:**
+  `exchange/ChatGPT_Reporting_And_Rankings_Discussion_v0_1_20261128.md`
+  (396 lines; SHA-256 `67e0110a5f63fe14b36e9acfd2588c70009cfd56c7db5cdffdfa1ebba91650f6`).
+  It holds the owner's provisional positions (not ratification): all printing out of the engine now; a large set of
+  rankings welcome, with a convenient way to switch reports off; a multi-sheet Excel workbook and charts of interest;
+  "remove AND recalculate" for stale reports; the installing route his to choose at the time.
+- **Written, Claude's positions:**
+  `exchange/Claude_Reporting_And_Rankings_Discussion_v0_2_20261128.md`
+  (216 lines; CRLF and ASCII; SHA-256 `73a184bfbf63459ed5ea8005be490e77f7871469732f0727075067d27de11be0`).
+  **Discussion only.** Every item of v0.1 has a row with one status word (AGREED, AGREED+, PARTLY, OWNER, MEASURE).
+  No flat disagreement. Claude concedes four points (the yardstick is a reference, not a guarantee, in exploratory
+  reports; the reviewer's signed Z; worked examples from the exact chance; the proof compares scientific content,
+  not bytes, since each stored line's envelope changes on a rebuild). Three rows PARTLY (MR17: the simple sum and
+  an equal-say form beside it; the width of a text report; where MR5 and MR16 sit in the phasing). Seven choices
+  are the owner's (its section 9), XlsxWriter as one more package among them. A phasing is proposed: after the
+  engine's one change a new measure costs no rebuild.
+- **Noted for a later day:** a rebuild marks every earlier forecast as made after its result, so the record of
+  forecasts made before a result lasts only until the next engine change.
+- **Next:** the reviewer's v0.3 on the rows not AGREED; the owner's choices; then Claude's proposal v0.2 with the
+  amendment of specification v0.6 section 9, for ratification. No code before that.
+- Next numbers: EX_334 (Claude's); entry 413; RAT-74.
