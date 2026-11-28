@@ -1,7 +1,7 @@
 # H-1 v20 - the Claude web chat's handover (short form)
 
 Version v20, 28 November 2026, evening. Written by the Claude web chat (primary designer and coder) at the owner's
-word ("please update your handover", decision log entry 416), for the next Claude chat. It replaces H-1 v19
+word ("please update your handover", decision log entries 416 and 417), for the next Claude chat. It replaces H-1 v19
 (RAT-72), written at midday before the owner's review of the league tables opened the reporting and rankings work.
 **Status: CANDIDATE, for the owner's ratification (it would be RAT-75; RAT-74 is the reporting design's).**
 
@@ -23,14 +23,14 @@ Read, in this order, and check what you read against the repository:
 4. **The owner's reframing**, which is why the scheme exists:
    `exchange/Claude_Comment_On_The_Owners_Reframing_Back_To_The_Research_v0_1_20261126.md` (it carries his words).
 5. **The decision log from entry 330** (`exchange/DECISIONS/DECISION_LOG.md`, the pause) to the last entry.
-   Entries 409 to 416 are the work since H-1 v19 (section 6 lists them).
+   Entries 409 to 417 are the work since H-1 v19 (section 6 lists them).
 6. The top block of `exchange/CONTINUITY_NOW.md` ("For the owner: NOW"), and its sections "If a chat ends" and
    "Installed handovers". The rest of the page is mostly history.
 7. **The coding standards, binding on every line of code you write:** `doc/CODING_PRACTICES_v0_1.md` (RAT-40) and
    `doc/FILE_FORM_STANDARD_v0_2.md` (RAT-49) as the scheme changed it. Section 9 says how they apply now.
 8. `a_p_r_i_r_DEV/README.md`, then the code in `a_p_r_i_r_DEV/src/research/` and `a_p_r_i_r_DEV/deploy/`.
 9. **The work in hand, the reporting part and the rankings (section 8, item 1):** the candidate for ratification,
-   `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_20261128.md`
+   `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`
    (Part A the design, Part B amendment A1 with what becomes of every R3 section 17 measure); R3 v0.5 section 17
    itself (`doc/Predictive_Randomness_Evaluation_and_Reporting_Specifications_R3_v0_5.md`); and the four
    discussion papers `exchange/*_Reporting_And_Rankings_Discussion_v0_1` to `_v0_4` if a question of why arises.
@@ -200,6 +200,7 @@ The operations manual says how it is used; the scheme and the README say how it 
 | 414 | consensus in discussion, with the reviewer's last qualifications; the dependency versions |
 | 415 | Claude's final design (proposal v0.2) and amendment A1 (candidate v0.1) |
 | 416 | the reviewer's one consolidated candidate v0.3; Claude's agreement but for one point; this handover |
+| 417 | the owner's decision on that point and the end state; the consolidated candidate v0.4 |
 
 ## 7. Where everything is
 
@@ -216,7 +217,7 @@ The operations manual says how it is used; the scheme and the README say how it 
 | Standing reminders | `exchange/OWNER_REMINDERS.md` (CRLF) |
 | Handovers | in force in `doc/HANDOVER/`; Claude's candidates in `exchange/HANDOVER_2026_11_28/` |
 | The tidy | `exchange/Claude_Tree_Tidy_Inventory_And_Procedure_v0_1_20261128.md`; `exchange/ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md` |
-| The reporting and rankings work | the candidate `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_20261128.md`; its two sources `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_2_20261128.md` and `exchange/Claude_Specification_Amendment_A1_Reporting_CANDIDATE_v0_1_20261128.md`; the discussion `exchange/*_Reporting_And_Rankings_Discussion_v0_1` to `_v0_4`; the first proposal `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_1_20261128.md` |
+| The reporting and rankings work | the candidate `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`; its two sources `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_2_20261128.md` and `exchange/Claude_Specification_Amendment_A1_Reporting_CANDIDATE_v0_1_20261128.md`; the discussion `exchange/*_Reporting_And_Rankings_Discussion_v0_1` to `_v0_4`; the first proposal `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_1_20261128.md` |
 | The owner's ranking decisions | R3 v0.5 section 17 in `doc/Predictive_Randomness_Evaluation_and_Reporting_Specifications_R3_v0_5.md`; the one past implementation, the frozen `src/evaluation/Method_Rankings_Report.py` |
 | Science kept | `doc/Predictive_Randomness_System_Specification_v0_6.md` (its science sections); R1, R2, R3 and the method designs in `doc/` |
 | Coding standards (binding) | `doc/CODING_PRACTICES_v0_1.md`; `doc/FILE_FORM_STANDARD_v0_2.md` as the scheme changed it |
@@ -248,16 +249,16 @@ never built in the living system: specification v0.6 section 9 left them "on req
 as owed. The league is ordered by the TOP ticket's main-barrel hits alone. Owner, reviewer and Claude reached
 consensus the same day (entries 410 to 414).
 
-- **The candidate for ratification (proposed RAT-74), one governing document at the owner's wish:** the reviewer's
-  `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_20261128.md`
-  (`3372e4b`). Part A is the design, Part B the amendment A1 (specification v0.6 section 9 replaced; the simple
-  scheme's fingerprint rule, step 6 and commands amended; a disposition for every measure of R3 section 17). It is
-  Claude's design v0.2 and amendment v0.1 (`add50b6`, `e7a600d`) with the reviewer's corrections, listed in its
-  opening section. **Claude agrees with it but for one point** (entry 416): it would carry every league endpoint
-  that exists today (one for every scored draw) forward as "requested", which makes "every draw" the standing rule
-  before its cost is measured. Claude's wording: the old league files are removed at the first migration and the
-  requested endpoints start with LAST. **Read the decision log after entry 416 for how that was settled** and
-  whether RAT-74 has been given. On ratification the one document is installed in `doc/`.
+- **The candidate for ratification (proposed RAT-74), one governing document at the owner's wish:**
+  `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`
+  (`9bf5ab8`). Part A is the design, Part B the amendment A1 (specification v0.6 section 9 replaced; the simple
+  scheme's fingerprint rule, steps 4 and 6 and commands amended; a disposition for every measure of R3 section 17).
+  It is Claude's design v0.2 and amendment v0.1 (`add50b6`, `e7a600d`), consolidated by the reviewer with its
+  corrections (its v0.3, `3372e4b`), then the owner's decision of entry 417 worked in by Claude: **the first
+  migration makes LAST only; the owner measures in DEV, then runs ALL once in each tree; the end state is reports
+  for every scored draw, kept current; LAST reports each newly scored draw; workbooks for the latest draw and for
+  endpoints asked for; the engine no longer deletes the reports folder.** Read the decision log after entry 417
+  for the reviewer's confirmation and whether RAT-74 has been given. On ratification it is installed in `doc/`.
 - **The design in brief.** A reporting part, `src/reporting/`, outside the engine's fingerprint as the updater is,
   with a fingerprint of its own: it reads the stored lists and computes no forecast, score or OV-1 line; all
   printing moves into it (the next-draw reports and OV-1 print-outs unchanged). Each method's TOP and WORST ticket
@@ -272,13 +273,14 @@ consensus the same day (entries 410 to 414).
   posing as current. Everything stays exploratory: "A descriptive order. It selects nothing."
 - **After ratification, in order:** Claude's code plan (on Fable: the files; the benchmark of MR1's grid; the reason
   the second OV-1 series stopped early stored beside the series, since it lives only in the job's memory today;
-  the requested-endpoint bookkeeping, simplest if the engine no longer deletes the reports folder and leaves it to
-  the reporting part; the core columns as built); the code and tests in DEV for the reviewer's reading; **the
+  the inventory of endpoints, with the engine no longer deleting the reports folder;
+  the core columns as built); the code and tests in DEV for the reviewer's reading; **the
   engine's one change, after which every tree makes everything again once;** the proof in DEV against the backup
   made just before (the scientific content of every forecast and score and both OV-1 series equal; each line's
   envelope rightly differs); the owner's installs on his separate go, by route A (DEV, QA, PROD) or B (DEV, PROD,
   then `Copy_From_PROD.bat both QA`); **the MEASURE item** (three timings in DEV: LAST, ALL, ALL with workbooks)
-  and Claude's recommendation; the manual's section 2 rewritten; the handovers.
+  and Claude's recommendation; the owner's ALL in each tree;
+  the manual's section 2 rewritten; the handovers.
 - **Owed after it, promptly, and not to be forgotten as R3 section 17 was:** phase 2 (MR16 and MR5 first; then
   MR10, MR10.BOTTOM, MR11; the workbook's draw-detail sheet, "observations worth inspecting" and charts) and phase
   3 (MR2, MR3, MR8, MR9, MR12, MR13, MR15; MR6 and MR14 for methods with their own probabilities). Both change the
@@ -366,7 +368,7 @@ direction.
 - **Documents:** every new text file CRLF and ASCII; the decision log and the continuity page are LF until the
   tidying. Lines of documents at most 120 characters.
 - **Commit trailer:** the attribution lines the session gives you.
-- **Numbers at this writing:** next EX is EX_334 (Claude's); next decision log entry 417; RAT-74 is named in its
+- **Numbers at this writing:** next EX is EX_334 (Claude's); next decision log entry 418; RAT-74 is named in its
   papers for the reporting design and amendment A1, so this document would be RAT-75. The decision log's last line
   is the authority.
 

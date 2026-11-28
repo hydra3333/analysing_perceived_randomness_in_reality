@@ -9974,3 +9974,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   or retired method, a change to the reporting part or its settings, an engine change) remakes that game's whole
   collection. That is the end state chosen, and is what the measurement of A14 prices.
 - Next numbers: EX_334 (Claude's); entry 418; RAT-74 (the reporting design), RAT-75 (H-1 v20).
+
+## 418. 28 November 2026, 19:54 - CLAUDE: the H-1 v20 candidate brought up to entry 417
+
+- The H-1 v20 candidate of entry 416 named the reviewer's v0.3 as the candidate for RAT-74 and one point as open.
+  It is corrected in place (it is Claude's own candidate, not ratified) to name the consolidated candidate v0.4 and
+  the owner's decision of entry 417. **The candidates for RAT-75 are now:**
+  `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v20.md` (383 lines; SHA-256
+  `503fb73e3eca07ec0a3c1ade44e8f174bb155d66b9716dffba090660e7e9a34f`) and its blurb, unchanged (SHA-256
+  `06b6c4ecfdea6989566bf0e392ab8b65542ca371f24c13266f1f2a930553c8a4`).
+  The SHA-256 of the handover given in entry 416 is superseded by this one.
+- Next numbers: EX_334 (Claude's); entry 419; RAT-74 (the reporting design), RAT-75 (H-1 v20).
