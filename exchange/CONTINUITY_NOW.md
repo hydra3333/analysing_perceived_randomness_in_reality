@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 17:35 Australia/Adelaide (entry 412: the reporting discussion).
+**Last updated:** 28 November 2026, 18:49 Australia/Adelaide (entry 413: consensus on reporting).
 
 ## For the owner: NOW
 
+- **REPORTING AND RANKINGS: CONSENSUS REACHED IN DISCUSSION (entry 413; 28 November 2026).** The reviewer's v0.3
+  (the owner's seven choices; draw numbers the only time axis) and Claude's v0.4 (agrees, reopens nothing; four
+  details answered) are in `exchange/`. **Waiting on the owner:** his word that consensus is reached, and whether
+  the dependency script changed numpy, scipy or pandas. **Then Claude:** the final design and the amendment of
+  specification v0.6, for ratification. No code before it.
 - **REPORTING AND RANKINGS: A THREE-WAY DISCUSSION IS OPEN (entry 412; 28 November 2026).** The reviewer's v0.1
   and Claude's v0.2 are in `exchange/` (`..._Reporting_And_Rankings_Discussion_v0_1` and `_v0_2`). v0.2 is a
   ledger: a status for every item. **Waiting on the reviewer:** v0.3, on the rows not AGREED. **Waiting on the

@@ -9821,3 +9821,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the reviewer's v0.3 on the rows not AGREED; the owner's choices; then Claude's proposal v0.2 with the
   amendment of specification v0.6 section 9, for ratification. No code before that.
 - Next numbers: EX_334 (Claude's); entry 413; RAT-74.
+
+## 413. 28 November 2026, 18:49 - OWNER and REVIEWER: discussion v0.3; CLAUDE: v0.4, consensus reached
+
+- **The owner's step (18:21):** XlsxWriter added to `a_p_r_i_r_DEV/install_upgrade_dependencies_into_venv.bat` and
+  the infrastructure flag renewed (his commit `d16fa7b`); the script "has been run in all environments".
+- **The reviewer's discussion paper v0.3** (`46c54c6`,
+  `exchange/ChatGPT_Reporting_And_Rankings_Discussion_v0_3_20261128.md`) records the owner's seven choices for the
+  design discussion (not ratification): Claude's three phases, MR5 and MR16 first in phase 2, which follows
+  promptly; both MR17 forms (SUM and EQ); Excel through XlsxWriter; a local settings file in each tree; each track's
+  own scored draws by default; stale existing reports removed and made again by draw-number endpoint, the cost of
+  making every endpoint to be measured first; sixteen default text sorts. **It corrects "dates" to draw numbers:**
+  the game's draw numbers are the only scientific time axis (MRD-12; R3 17.3.1). The error began in the reviewer's
+  v0.1 and was repeated in Claude's v0.2; the historical papers stay unchanged.
+- **Written, Claude's reply:**
+  `exchange/Claude_Reporting_And_Rankings_Discussion_v0_4_20261128.md`
+  (130 lines; CRLF and ASCII; SHA-256 `07380c61c183b6fc441c9eaf577a6e739bfc61688702ca404fe8ffe09be78d25`).
+  **Discussion only.** It says that substantive consensus is reached: it agrees with every position of v0.3 and
+  reopens nothing. It gives the four answers v0.3 asked for (MR1's display and ordering by the bracket of Z; the
+  fixed-grid rule from the declaration and the draw numbers; the exact inclusive tail of MR17.EQ; the core columns
+  of a text report and the handling of a workbook Excel holds open) and the plan for the one open MEASURE row (three
+  timings in DEV once the code exists).
+- **Asked of the owner:** whether the script's run changed numpy, scipy or pandas in any tree (its one installing
+  mode upgrades every package). Phase 1's rebuild would make everything again with the versions then installed.
+- **Next:** the owner's word on consensus; the reviewer's short confirmation; then Claude's final design (proposal
+  v0.2) and the amendment of specification v0.6, for ratification. No code before that.
+- Next numbers: EX_334 (Claude's); entry 414; RAT-74.
