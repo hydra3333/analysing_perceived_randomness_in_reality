@@ -9,7 +9,7 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
 ## Where the work stands
 
 - **Step 1 (done):** the engine, its 40 methods in 12 families and its tests copied here byte for byte.
-- **Step 2 (this state): the engine simplified.** Nothing is sealed, chained or refused because it differs: the
+- **Step 2 (done): the engine simplified.** Nothing is sealed, chained or refused because it differs: the
   research job makes again whatever is out of date. The science is the frozen engine's: the reader and the
   permitted view, the readout and its tie order, one target's forecast, scoring, the divisions and the OV-1
   arithmetic are the same programs (`deploy\compare_with_frozen.py code` lists every file by how it differs).
@@ -21,7 +21,11 @@ was reviewed, frozen: it is the reference for the comparison of the scheme's sec
   job; `Backup.bat`; and in DEV `Make_Installable.bat` and `Who_Uses.bat`.
 - **Step 4b (done): the commands that touch another tree,** all run from DEV: `Create_Tree.bat`, `Install.bat`,
   `Retire.bat`, `Copy_From_PROD.bat` and `Restore.bat`.
-- **Still to come:** the rehearsal on the owner's PC (step 5), the real trees (step 6), the how-to (step 7).
+- **Steps 5 and 6 (done, 27 and 28 November 2026):** the rehearsal on the owner's PC (TASK_T029 to T031, the last
+  comparing this engine with the frozen one: SAME), then the real trees: DEV filled, QA and PROD created, every
+  tree giving the same results from the same accepted results. **The system is in production.**
+- **Step 7 (in hand): the how-to** is `OPERATIONS_MANUAL.md` in this folder, the one master; `Create_Tree`,
+  `Install` and `Copy_From_PROD software` put a copy at the root of QA and PROD. Then the tidy of the repository.
 
 ## The settings file, and how a tree knows which tree it is
 
