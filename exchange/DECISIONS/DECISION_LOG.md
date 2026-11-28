@@ -10065,3 +10065,23 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** Claude's code plan for the reporting part, on the owner's go (Fable). No code before the reviewer has
   read the plan; no install or run without the owner's separate go.
 - Next numbers: EX_334 (Claude's); entry 423; RAT-76.
+
+## 423. 28 November 2026, 20:11 - REVIEWER: H-2 v15 and its blurb as candidates (proposed RAT-76)
+
+- **Relayed by the owner (20:11):** the reviewer has brought its handover up to decision log entry 421, RAT-74 and
+  the proposed remaining roadmap included, and asks that their availability be recorded with the next RAT number
+  after H-1 v20's.
+- **The candidates, the reviewer's own files, committed by it:**
+  `exchange/ChatGPT_Reviewer_Handover_H2_v15_20261128_CANDIDATE.md`
+  (`62eeb61`; 697 lines; SHA-256
+  `d66a6c0936cffd29b391880a63ec3e70f377e59897e52088ea1dec35c8164f28`) and
+  `exchange/ChatGPT_Reviewer_Handover_H2_v15_20261128_introductory_blurb_CANDIDATE.md`
+  (`59a066e`; SHA-256
+  `755ccaa1fd68e9f5bab45debfd3809ed50dcb453eb4c750d1a831502782ac3c1`).
+  Its cutoff is main `b50d220`, entry 421; it says H-1 v20 then awaited RAT-75, which entry 422 has since given.
+- **Proposed ratification: RAT-76,** the owner's to give. Until then H-2 v14 (RAT-73) is the reviewer's handover
+  in force; if the reviewer chat ends first, a new one should read the v15 candidate. On ratification the reviewer
+  installs its own final files in `doc/HANDOVER/`, as for RAT-67 and RAT-73.
+- Claude has recorded the candidates and has not reviewed their text.
+- **Next substantive work:** Claude's code plan for the reporting part under RAT-74, on the owner's go.
+- Next numbers: EX_334 (Claude's); entry 424; RAT-76 (H-2 v15).

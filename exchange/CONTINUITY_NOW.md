@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:10 Australia/Adelaide (entry 422: RAT-75, H-1 v20 installed).
+**Last updated:** 28 November 2026, 20:11 Australia/Adelaide (entry 423: H-2 v15 candidate).
 
 ## For the owner: NOW
 
+- **H-2 v15 IS WRITTEN AS A CANDIDATE BY THE REVIEWER (entry 423; 28 November 2026),**
+  `exchange/ChatGPT_Reviewer_Handover_H2_v15_20261128_CANDIDATE.md` with its blurb; current to entry 421.
+  **Waiting on the owner:** RAT-76. **If the reviewer chat ends before it:** a new one reads that candidate, not
+  H-2 v14. **Next for Claude, on the owner's go (Fable):** the reporting code plan under RAT-74.
 - **RAT-75: H-1 v20 IS INSTALLED (entry 422; 28 November 2026).** RAT-74, the reporting design, is in `doc/`.
   **Next for Claude, on the owner's go (Fable):** the code plan for the reporting part. **Still to do with the
   owner:** the walk through Oz Lotto's league and the OV-1 files. **For the reviewer to consider:** H-2 v14
