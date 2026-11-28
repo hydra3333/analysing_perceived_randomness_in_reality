@@ -39,10 +39,12 @@ from research import code_identity
 from research.settings import ROLES, SETTINGS_FILE_NAME, SettingsRefused, TreeSettings, same_places
 from research.tree_lock import enter_tree, tree_lock
 
-# The launchers and environment scripts every tree has at its root. They go with the infrastructure. (DEV's own
-# launchers, deploy\ and tests\ stay in DEV.)
+# The files every tree has at its root: the launchers, the environment scripts and the operations manual (its one
+# master is DEV's; owner, decision log entry 402). They go with the infrastructure and are part of what its flag
+# vouches for, but of no fingerprint a result depends on. (DEV's own launchers, deploy\ and tests\ stay in DEV.)
 ROOT_FILES = ('Run_Research.bat', 'Run_Results_Updater.bat', 'Backup.bat', 'create_venv.bat',
-              'install_upgrade_dependencies_into_venv.bat', 'activate_venv.bat', 'deactivate_venv.bat')
+              'install_upgrade_dependencies_into_venv.bat', 'activate_venv.bat', 'deactivate_venv.bat',
+              'OPERATIONS_MANUAL.md')
 # Where a tree keeps its methods, its accepted results and what it computes, from the tree root.
 METHODS_FOLDER = 'src/methods'
 SOURCE_DATA = 'source_data'

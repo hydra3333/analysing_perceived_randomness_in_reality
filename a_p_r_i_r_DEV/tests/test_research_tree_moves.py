@@ -207,6 +207,13 @@ class CopyFromProd(ThreeTrees):
         self.assertEqual((qa / ENGINE).read_bytes(), (prod / ENGINE).read_bytes())
         self.assertEqual((qa / 'Backup.bat').read_bytes(), (prod / 'Backup.bat').read_bytes())
 
+    def test_a_software_copy_brings_prods_operations_manual(self):
+        dev, qa, prod = self.diverged()
+        (prod / 'OPERATIONS_MANUAL.md').write_bytes(b'# PROD\'s edition of the manual\r\n')
+        self.job_code = 0
+        self.assertEqual(self.command(tree_tools.copy_from_prod, 'software', 'QA'), 0)
+        self.assertEqual((qa / 'OPERATIONS_MANUAL.md').read_bytes(), (prod / 'OPERATIONS_MANUAL.md').read_bytes())
+
     def test_into_dev_only_data_is_copied_and_devs_software_stays_gits(self):
         dev, qa, prod = self.diverged()
         software = fx.files_under(dev, 'src')

@@ -287,6 +287,29 @@ class Install(tf.TreesCase):
         self.assertFalse((qa / 'src' / 'updater' / 'old_part.py').exists())
         self.assertEqual((qa / 'Backup.bat').read_bytes(), (dev / 'Backup.bat').read_bytes())
 
+    def test_the_operations_manual_goes_with_the_infrastructure_and_makes_nothing_again(self):
+        self.assertIn('OPERATIONS_MANUAL.md', tree_parts.ROOT_FILES, 'the manual is one of the root files')
+        dev, qa = self.two_trees()
+        engine = tree_parts.code_identity.infrastructure_fingerprint(dev)
+        (dev / 'OPERATIONS_MANUAL.md').write_bytes(b'# Operations manual, edition 1\r\n')
+        self.assertEqual(tree_parts.code_identity.infrastructure_fingerprint(dev), engine, 'no result depends on it')
+        self.assertIn('OPERATIONS_MANUAL.md', tree_parts.infrastructure_paths(dev))
+        self.assertEqual(method_flags.installable_state(dev / 'src', install_tools.infrastructure_fingerprints(dev)),
+                         method_flags.FLAG_OUT_OF_DATE, 'a new or edited manual makes the flag out of date')
+        self.flag('INFRA')
+        self.assertEqual(self.install(), 0)
+        self.assertEqual((qa / 'OPERATIONS_MANUAL.md').read_bytes(), (dev / 'OPERATIONS_MANUAL.md').read_bytes())
+        self.assertFalse(any('REBUILD' in line for line in self.job_said), self.job_said)
+        tf.edit(dev / 'OPERATIONS_MANUAL.md', 'an edit of the manual')
+        self.flag('INFRA')
+        self.said.clear()
+        self.assertEqual(self.install(), 0)
+        self.assertEqual((qa / 'OPERATIONS_MANUAL.md').read_bytes(), (dev / 'OPERATIONS_MANUAL.md').read_bytes())
+        self.assertFalse(any('REBUILD' in line for line in self.job_said), self.job_said)
+        self.assertEqual(self.command(install_tools.create_tree, 'PROD'), 0)
+        self.assertEqual((self.place('PROD') / 'OPERATIONS_MANUAL.md').read_bytes(),
+                         (dev / 'OPERATIONS_MANUAL.md').read_bytes(), 'a new tree is given the manual too')
+
     def test_a_launcher_changed_after_the_infrastructure_was_flagged_is_not_installed(self):
         dev, qa = self.two_trees()
         engine = tree_parts.code_identity.infrastructure_fingerprint(dev)
