@@ -10123,3 +10123,40 @@ section 17.2 (unpack it into a new folder, never over the clone).
   where the engine would rebuild.
 - **Next:** the reviewer's reading; then the owner's go for S1. No code before that.
 - Next numbers: EX_334 (Claude's); entry 426; RAT-77.
+
+## 426. 28 November 2026, 20:40 - REVIEWER: the code plan read (C01 to C05); CLAUDE: plan v0.2; the roadmap
+
+- **The reviewer's reading of the code plan v0.1 at `f21b657`, relayed by the owner (20:37):** the five slices are
+  "fundamentally accepted"; the read-only tool `compare_science_with_backup.py` is "expressly supported" and does
+  not conflict with the rule against new deployment machinery; one rebuild a tree is kept; no further 49-minute
+  rehearsal runs are recommended. Five qualifications: C01 (add the observed profile's chance to MR1's lower bounds
+  only when l_obs < u_obs; never the no-prize profile twice; equal-score profiles may leave a bracket open); C02
+  (extreme tails kept reliable; `ndtri_exp`; no chance lost silently; the MR1 lump beyond every boundary asked for);
+  C03 (the read-only checks must see a corrected Oz Lotto supplementary number, which the stored scores and the
+  forecast view do not show; bind the stored science to the complete accepted results; no rescoring; no chains);
+  C04 (a line added at the end of a list may be for an earlier draw; detect it, and establishment changes;
+  conservative regeneration accepted subject to MEASURE; later draws stay incremental); C05 (the tool reports
+  missing, unexpected and changed records with a nonzero code; the same-bytes test of S1 on invented inputs).
+  Subject to these, the reviewer supports S1 on the owner's go.
+- **Claude accepts all five. Written:**
+  `exchange/Claude_Reporting_Code_Plan_v0_2_20261128.md`
+  (276 lines; CRLF and ASCII; SHA-256 `ed67e1f74694e2606f2f380fd85215bea374031dea3113b930f5d1ab4ecbb4ed`);
+  v0.1 is left unchanged. What changed is listed in its section "Changes in v0.2". **C03 simplified the plan:**
+  at the end of each game's work the job writes one plain file, `SCIENCE_IDENTITY.json`, saying what its stored
+  science was made from (the SHA-256 of the whole accepted results file, of every list file and of both series
+  files; each method's fingerprint, first counted draw, retirement draw and how far its lines run; the reason the
+  second OV-1 series stopped, or null). The reporting part compares those and scores nothing. The series files are
+  no longer changed at all. **A plan still: no code is written.**
+- **The roadmap.** The owner drafted the remaining roadmap (stages 0 to 8, with 1.5 OWNER REVIEW OF REPORTING),
+  "subject to endorsement by claude and chatgpt". The reviewer endorses it in full with three qualifications
+  (phases 2 and 3 immediately after phase 1, subject to any genuinely missing scientific inputs; stage 1.5 also
+  examines selected historical reports and interesting TOP and WORST performances, with independent verification;
+  stage 8 stays deferred until the project is mature and the owner authorises it) and asks for it as a short
+  living document under `doc/`, referred to by both handovers. **Claude endorses it in full.** Written as
+  `exchange/Claude_Remaining_Roadmap_CANDIDATE_v0_1_20261128.md`
+  (98 lines; SHA-256 `6cd8004da43e37452db028bf2377af2feb408265c3d4498eff83e1d63ba36c9e`):
+  the owner's stages in his words with the three qualifications, a status column, and a closing list of where
+  earlier commitments sit in it. **It goes into `doc/` as `doc/ROADMAP.md` on the owner's word** (it would be RAT-77),
+  since `doc/` takes only what he has ratified.
+- **Next:** the reviewer's confirmation of C01 to C05 in v0.2; the owner's go for S1; his word on the roadmap.
+- Next numbers: EX_334 (Claude's); entry 427; RAT-77 (the roadmap).

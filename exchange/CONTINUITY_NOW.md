@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:24 Australia/Adelaide (entry 425: the reporting code plan).
+**Last updated:** 28 November 2026, 20:40 Australia/Adelaide (entry 426: plan v0.2; the roadmap).
 
 ## For the owner: NOW
 
+- **THE CODE PLAN v0.2 AND THE ROADMAP CANDIDATE ARE WRITTEN (entry 426; 28 November 2026).** The reviewer
+  accepted the five slices and the proof tool; its C01 to C05 are worked into
+  `exchange/Claude_Reporting_Code_Plan_v0_2_20261128.md`. The owner's roadmap (stages 0 to 8), endorsed by both
+  AIs, is `exchange/Claude_Remaining_Roadmap_CANDIDATE_v0_1_20261128.md`. **Waiting on the owner:** his go for
+  S1 (the engine's one change); his word for the roadmap to go into `doc/ROADMAP.md` (RAT-77). No code yet.
 - **THE REPORTING CODE PLAN v0.1 IS WRITTEN (entry 425; 28 November 2026),**
   `exchange/Claude_Reporting_Code_Plan_v0_1_20261128.md`: five slices, the engine changed once (S1, a pure
   move). **Waiting on the reviewer:** its reading (the MR1 bracket's tightening, the staleness check, the proof
