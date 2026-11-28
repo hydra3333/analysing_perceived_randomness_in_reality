@@ -1,5 +1,5 @@
 ; This version may be installed (written by Make_Installable.bat in DEV). It is out of date once the files it names change.
 fingerprint = 75c7e6195c53a237cd2bc32653b762fe5ac1af7841115c7c04751616447ab051
 updater_fingerprint = 69f204cea1c2cdf1ac81c94e12d6737db74cc86158e36dbe810bde5635a6512c
-launcher_fingerprint = 3dea97596ab5e360584dabe63cab66a08a9cb5dd3142f633b86ef8d35b006b7b
-made = 2026-11-28 10:23
+launcher_fingerprint = 732181fc0cc3ed6acfe9a5f756a58684a056d35415180e8c0b0a11e973545cca
+made = 2026-11-28 13:20
