@@ -9691,3 +9691,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   is now a root file too. The wording is in `deploy/`, outside every fingerprint, and can be widened with the next
   change there.
 - Next numbers: EX_334 (Claude's); entry 408; RAT-72.
+
+## 408. 28 November 2026, 13:37 - OWNER: update Claude's handover now; H-1 v19 written as a candidate
+
+- **The owner's words (13:34):** "good. yes to updating your handover now", after Claude proposed it at the milestone
+  (the system in production; much done since H-1 v18; the chat long).
+- **H-1 v19 and its introductory blurb are written as CANDIDATES** in `exchange/HANDOVER_2026_11_28/`:
+  `Claude_Primary_Handover_H1_v19.md` (315 lines; SHA-256
+  `1e8a9a0b61b3a4f2c2f9aa9a6231a21db71ebb40ffe7f67deeb5df7f3c5a93d2`) and its blurb (57 lines; SHA-256
+  `f643cac657f7fec6d3dc3c9847d09e7bdcc5d61a192f4d8a57b49b3b01ed342a`); both CRLF and ASCII. Current to entry 408:
+  QA and PROD made and the system in production; the operations manual (RAT-70, RAT-71) as the first thing to
+  read; H-2 v13 and the new reviewer; the tidy now due, with everything its revision must take in; the four
+  deferred discussions and the dummy-method sequence; E_63 to E_71 with NL-means last; the lesson on writing records.
+  It would be RAT-72; on ratification Claude installs both in `doc/HANDOVER/`.
+- **The reviewer has committed an H-2 v14 candidate and its blurb** (`b93c504`, `6e7919b`; current through entry
+  407), for the owner's ratification; not yet ratified. Both handovers can be ratified together.
+- Next numbers: EX_334 (Claude's); entry 409; RAT-72 (H-1 v19), RAT-73 (H-2 v14).

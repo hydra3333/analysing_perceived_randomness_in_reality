@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 13:19 Australia/Adelaide (entry 406: RAT-71, the manual's edition 2 in DEV).
+**Last updated:** 28 November 2026, 13:37 Australia/Adelaide (entry 408: H-1 v19 written as a candidate).
 
 ## For the owner: NOW
 
+- **H-1 v19 IS WRITTEN AS A CANDIDATE (entry 408; 28 November 2026),**
+  `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v19.md` with its blurb: current to the system in
+  production, the manual and the tidy now due. **Waiting on the owner:** his ratification (RAT-72). **If this chat
+  ends before it:** a new Claude chat reads this candidate, not H-1 v18.
 - **RAT-71: THE MANUAL'S EDITION 2 IS IN DEV (entry 406; 28 November 2026),** with the provisional research
   identities E_63 to E_71 (NL-means, E_71, last) and Appendix D. **Next for the owner:** pull;
   `Make_Installable.bat INFRA`, commit the flag; `Install.bat QA` and `Install.bat PROD`. **Next for Claude:** the
