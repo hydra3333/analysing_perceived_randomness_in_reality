@@ -9899,3 +9899,45 @@ section 17.2 (unpack it into a new folder, never over the clone).
   part of its one change, so that the reporting part only reads (the design's section 11).
 - **Next:** the reviewer's reading; the owner's ratification; then Claude's code plan. No code before ratification.
 - Next numbers: EX_334 (Claude's); entry 416; RAT-74.
+
+## 416. 28 November 2026, 19:39 - REVIEWER: one consolidated candidate v0.3; CLAUDE: agrees but for one point; H-1 v20
+
+- **The owner (19:36):** he prefers one governing document to a separate design and amendment. The reviewer read
+  both of Claude's candidates (entry 415), agrees with the substance, and consolidated them with its review
+  corrections into
+  `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_20261128.md`
+  (`3372e4b`; 692 lines; Part A the design, Part B amendment A1), the single candidate for RAT-74. He asked Claude
+  to evaluate the corrections, the preserving of report endpoints through an engine rebuild and `GameRecords.cutoff`
+  above all, and to update its handover. No implementation GO.
+- **Claude's evaluation: it agrees with the consolidated document as the single candidate, but for one point.**
+  - **Accepted in full:** the wider read-only checks of what the reports are made from, with no report left
+    posing as current after a refusal or an interruption (1); retirement at the requested draw, variance and not
+    "spread", the division-one aliases, nought wins not being nought Z, true ties apart from overlapping bounds,
+    and the fuller MR1 rules (4); descriptive sorts apart from tails, the CSV's provenance in columns, a workbook's
+    container data not being science (5); the surviving per-draw wording read with the new section 9 (6); a STOP
+    of the proof on any difference, with an old-code rebuild only on the owner's separate go (7).
+  - **Conceded (3):** `GameRecords.cutoff` is always None under the simple scheme (`src/research/game_state.py`);
+    Claude was wrong to list it as a fact to store. Only the reason the second OV-1 series stopped early is stored,
+    with an explicit "no block".
+  - **Accepted, with one difference (2):** the requested endpoints must survive `settle_infrastructure`, which
+    removes the whole reports folder of both games: right. For the code plan the simplest way is that the engine no
+    longer deletes the reports folder and leaves it to the reporting part. **But "recreate valid prior league
+    endpoints as ranking reports at first migration" is not agreed:** a league file exists today for every scored
+    draw because the old section 9 required one, not because the owner asked for each. Carrying them all forward
+    as "requested" makes "every scored draw, kept current at every change" the standing rule from the first day,
+    before the MEASURE item has shown its cost, which v0.3 section 7 of the discussion and the owner's choice 6
+    kept open. **Claude's wording** (for the opening item 2, A10, A15 and B1 9.10): "At the first migration the old
+    league files are removed; they were made for every scored draw by the old rule and are not requests. The
+    requested endpoints start with LAST. The owner may run ALL once after the measurement of A14; those endpoints
+    are then kept current." If the owner would rather have every draw from the first day, that is his choice and
+    the document then says so plainly.
+- **H-1 v20 and its blurb are written as CANDIDATES** (the owner: "please update your handover"):
+  `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v20.md` (SHA-256
+  `9c57f6f49d85c1e5f63900ed6f6584548e507e0273c7400039c28ef6b8cf7619`) and
+  `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v20_introductory_blurb.md` (SHA-256
+  `06b6c4ecfdea6989566bf0e392ab8b65542ca371f24c13266f1f2a930553c8a4`); both CRLF and ASCII. Current to
+  this entry: the reporting work as section 8's first item, the draw-number rule among the hard rules, the ledger
+  method, H-2 v14, the unfinished results review. It would be RAT-75 (RAT-74 is named for the reporting design).
+- **`exchange/OWNER_REMINDERS.md`** gains two reminders: phases 2 and 3 of the reporting work are owed; a rebuild
+  marks every earlier forecast as made after its result (for a later discussion).
+- Next numbers: EX_334 (Claude's); entry 417; RAT-74 (the reporting design), RAT-75 (H-1 v20).

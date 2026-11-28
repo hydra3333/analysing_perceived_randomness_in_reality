@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 19:09 Australia/Adelaide (entry 415: final design, amendment A1).
+**Last updated:** 28 November 2026, 19:39 Australia/Adelaide (entry 416: one candidate; H-1 v20).
 
 ## For the owner: NOW
 
+- **REPORTING: ONE CONSOLIDATED CANDIDATE FOR RAT-74; H-1 v20 WRITTEN AS A CANDIDATE (entry 416; 28 November
+  2026).** The reviewer's `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_...`
+  is agreed by Claude but for one point (the old league endpoints are not "requested" endpoints). **Waiting on
+  the owner and the reviewer:** that point; then RAT-74. **Waiting on the owner:** RAT-75, H-1 v20 in
+  `exchange/HANDOVER_2026_11_28/`. **If this chat ends first:** a new Claude chat reads that candidate, not v19.
 - **REPORTING AND RANKINGS: THE FINAL DESIGN AND AMENDMENT A1 ARE WRITTEN (entry 415; 28 November 2026),** in
   `exchange/`: `Claude_Reporting_Part_And_Rankings_Proposal_v0_2_20261128.md` and
   `Claude_Specification_Amendment_A1_Reporting_CANDIDATE_v0_1_20261128.md`. **Waiting on the reviewer:** its
@@ -1430,6 +1435,10 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From entry 416 (28 November 2026), until H-1 v20 is ratified: Claude chat ended:** H-1 v19 is the installed
+  handover, but its sections 6 and 8 are overtaken by the reporting work. Start the new chat with the candidate
+  blurb `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v20_introductory_blurb.md` (it names the
+  `doc/HANDOVER/` path; until ratification the file is beside the blurb in `exchange/HANDOVER_2026_11_28/`).
 - **From RAT-72 and RAT-73 (28 November 2026, entry 409): Claude chat ended:** start a new Claude chat with the blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v19_introductory_blurb.md`; it reads H-1 v19 and the documents its
   section 0 lists. **ChatGPT reviewer chat ended:** use the blurb of H-2 v14, installed in `doc/HANDOVER/` by the

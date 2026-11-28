@@ -812,3 +812,11 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   Progress (28 November 2026): DROPPED for QA by the owner (decision log entry 396: QA's first fill is an
   ordinary fetching job; the updater has fetched three times in DEV with every overlap matching). Claude
   recommends the same for PROD; the owner decides.
+- Phases 2 and 3 of the reporting work are owed (owner and reviewer, 28 November 2026; decision log entries 413
+  to 416): phase 2 promptly after phase 1 (MR16 and MR5 first; then MR10, MR10.BOTTOM, MR11; the workbook's detail
+  sheet, "observations worth inspecting" and charts), then phase 3 (MR2, MR3, MR8, MR9, MR12, MR13, MR15; MR6 and
+  MR14 for methods with their own probabilities). They change the reporting part alone. They are not to become
+  another forgotten commitment, as R3 section 17 was. Claude raises phase 2 when phase 1 is installed.
+- A rebuild marks every earlier forecast as made after its result (Claude, 28 November 2026; decision log entries
+  412 and 414): the record of forecasts made before a result lasts only until the next change to the engine. Kept
+  for a later discussion, with the four deferred ones, before the engine is changed again after the reporting work.
