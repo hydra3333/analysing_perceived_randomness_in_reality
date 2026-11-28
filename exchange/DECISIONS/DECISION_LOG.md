@@ -9562,3 +9562,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   3. The manual may name his `0-Backup-DO_COPY.bat` (a short paragraph; no private paths or other contents).
   4. PROD's output, above.
 - Next numbers: EX_334 (Claude's); entry 403; RAT-70.
+
+## 403. 28 November 2026, 12:42 - The operations manual v0.2: the reviewer's sixteen corrections and two editorial points applied
+
+- **v0.2 CANDIDATE:** `exchange/Claude_Operations_Manual_v0_2_20261128.md` (773 lines; SHA-256
+  `e0a99b5e5724e837603550971d1cb7ae12938eb2818f59f5bce6bdbe2404ce53`; CRLF, ASCII), from v0.1 at `d96e64d` and the
+  reviewer's review (entry 402). No disagreement with any finding. Claude checked the code facts the findings rest
+  on (`MAX_MONTHS_BACK = 60`; the "does not overlap ... widen --months-back" refusal; `settle_infrastructure` deleting
+  both games; the install's "Nothing to install" path with no backup or job; `Who_Uses` exit 1; the BLOCKED text).
+- **Disposition** (all applied):
+  - OM-C01 OV-1: the reviewer's wording in section 2 (main barrel; six components averaged; certified lower bound;
+    the full conditional statement; both series exploratory, no error bound); "no evidence of anything" replaced.
+  - OM-C02 STOPs that leave mixed files, and the lock's two exceptions: section 0 and section 9.
+  - OM-C03 the fetch window (5 months by default, up to 60) and the no-overlap refusal: section 1, section 9 and
+    Appendix B; research catch-up kept as automatic.
+  - OM-C04 after a successful standalone retry, `Run_Research.bat --no-update`, or nothing: sections 1 and 9.
+  - OM-C05 VERIFY FAIL: master unchanged, grab may be kept; FILE ERROR may follow the master's replacement: look,
+    then report if inconsistent; not "close and retry": sections 1 and 9.
+  - OM-C06 equal totals a summary, not proof of identical forecasts; detailed comparison where it matters: sections 3
+    and 8.
+  - OM-C07 deleting a failed new tree's folder only after checking it: section 5.
+  - OM-C08 PROD's results checked only for `data` and `both`: section 6 and Appendix B.
+  - OM-C09 `--rebuild-all` and an engine change delete both games' results even with `--game`: section 3 and
+    Appendix B.
+  - OM-C10 how an install (and a copy) can end, and what to do: a new table in section 3; Appendix B.
+  - OM-C11 the league's order (TOP hits per scored draw), `W#`, the Powerball columns, divisions, `OV-1 from`.
+  - OM-C12 "before the result was on file" throughout, and what it does not show; the blocked second series.
+  - OM-C13 three kinds of backup, the owner's `0-Backup-DO_COPY.bat` named (his decision, entry 402) in one short
+    paragraph and table column, with no paths or switches.
+  - OM-C14 the install script's modes; OM-C15 `Who_Uses` exit 1; both in Appendix B.
+  - OM-C16 one line per implemented variant, with what it does and its minimum history; the R1 pilot-wave leads.
+  - E01 the opening: a difference may be a documentation error or a software fault; report it.
+  - E02 section 1's example is PROD's real first job of 28 November, labelled as a first fill.
+- **Also:** an edition line and where the manual lives (the master `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md`; each tree's
+  copy is the edition last installed there).
+- **Next:** the reviewer's focused check; the owner's ratification; then, as separate reviewable commits, the
+  master in `a_p_r_i_r_DEV/` with the `ROOT_FILES` change and its test, a pointer in `doc/`, and DEV's README
+  brought up to date.
+- Next numbers: EX_334 (Claude's); entry 404; RAT-70.
