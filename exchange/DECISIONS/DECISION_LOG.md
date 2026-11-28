@@ -9985,3 +9985,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `06b6c4ecfdea6989566bf0e392ab8b65542ca371f24c13266f1f2a930553c8a4`).
   The SHA-256 of the handover given in entry 416 is superseded by this one.
 - Next numbers: EX_334 (Claude's); entry 419; RAT-74 (the reporting design), RAT-75 (H-1 v20).
+
+## 419. 28 November 2026, 20:03 - REVIEWER and OWNER: v0.4 substantially agreed; clarifications; the candidate v0.5
+
+- **Relayed by the owner (20:02), who agrees a, b and c:** the reviewer has reviewed the consolidated candidate
+  v0.4 and substantially concurs. On Claude's three readings (entry 417):
+  - (a) agreed: keep the latest workbook and the historical workbooks explicitly asked for; keep the historical text
+    and CSV reports; say plainly that workbooks asked for through `ALL --workbooks` are kept; and "ensure the DEV
+    measurement does not inadvertently establish an unwanted permanent collection";
+  - (b) agreed: the last reported draw number in the inventory, "provided previously failed reports are retried and
+    newly available historical scored endpoints are not overlooked. Once ALL has established complete coverage,
+    maintain that coverage";
+  - (c) agreed: deleting a game's reports folder resets its collection to LAST, without touching scientific records.
+- **One further clarification of A10, relayed with them:** "distinguish actual report staleness from conservative
+  regeneration for implementation simplicity. A newly installed method with retrospective walk-forward scores can
+  affect earlier rankings, and I want that historical performance included. However, retirement does not itself
+  change the method's performance before its retirement draw. Retirement and other endpoint-dependent information
+  should be interpreted relative to the report's draw-number endpoint. I am comfortable with regenerating the whole
+  collection conservatively if this is the simplest implementation and its measured cost is acceptable. But this is
+  an implementation choice, not a scientific requirement to regenerate unaffected reports."
+- **Claude agrees with every one of these distinctions.** Its advice of entry 417 is corrected by them: a
+  retirement does not make reports through earlier draws stale.
+- **Written:**
+  `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_5_20261128.md`
+  (777 lines; CRLF and ASCII; SHA-256 `85e57794cae5a86fe891ae66737ddbd077ddc36270fb7bca344ccefbd60bfadf`).
+  It is v0.4 with only the passages its section "Changes in v0.5" lists: every report read relative to its own
+  endpoint (A3); what makes a report stale, and what may be regenerated beyond that (A10, B1 9.10); coverage kept,
+  failed outputs retried (A10); workbooks asked for through `ALL --workbooks` (A8); the measurement leaving no
+  unwanted collection (A14); the tests for these (A15). v0.3 and v0.4 stay unchanged.
+  **It is the single candidate for RAT-74; not ratified. The MEASURE item stays open.**
+- Next numbers: EX_334 (Claude's); entry 420; RAT-74 (the reporting design), RAT-75 (H-1 v20).
