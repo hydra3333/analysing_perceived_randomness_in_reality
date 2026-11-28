@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:13 Australia/Adelaide (entry 424: RAT-76, H-2 v15 installed).
+**Last updated:** 28 November 2026, 20:24 Australia/Adelaide (entry 425: the reporting code plan).
 
 ## For the owner: NOW
 
+- **THE REPORTING CODE PLAN v0.1 IS WRITTEN (entry 425; 28 November 2026),**
+  `exchange/Claude_Reporting_Code_Plan_v0_1_20261128.md`: five slices, the engine changed once (S1, a pure
+  move). **Waiting on the reviewer:** its reading (the MR1 bracket's tightening, the staleness check, the proof
+  tool). **Then the owner's go for S1.** No code is written; nothing is authorised on the owner's PC.
 - **RAT-76: H-2 v15 IS INSTALLED BY THE REVIEWER (entry 424; 28 November 2026).** Both handovers in force are of
   this evening: H-1 v20 (RAT-75) and H-2 v15 (RAT-76). **In hand (Claude, on the owner's go):** the reporting code
   plan under RAT-74, for the reviewer's reading before any code.

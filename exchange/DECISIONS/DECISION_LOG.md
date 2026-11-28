@@ -10097,3 +10097,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The owner's word (20:13): "go"** for Claude's reporting code plan under RAT-74 (on Fable). The plan is for the
   reviewer's independent reading before any code. It authorises no code, install or run.
 - Next numbers: EX_334 (Claude's); entry 425; RAT-77.
+
+## 425. 28 November 2026, 20:24 - CLAUDE: the reporting code plan v0.1, for the reviewer's reading
+
+- **On the owner's "go" (entry 424; on Fable). Written:**
+  `exchange/Claude_Reporting_Code_Plan_v0_1_20261128.md`
+  (228 lines; CRLF and ASCII; SHA-256 `6c3bcb64cc49cfc09184d8afb24aefe78ed89fe9e9320893f63e9b595d49c02a`).
+  **A plan: no code is written; it authorises no install or run.**
+- **Its shape:** five slices, one commit each. S1 is the engine's one change and a pure move: all printing goes to
+  `src/reporting/` and prints the same bytes as before (the league included, until S3); only `reports.py` (removed),
+  `research_job.py`, `ov1_ledger.py` and `code_identity.py` change in the engine. S2 the laws and measures as a
+  library. S3 the ranking reports, settings, inventory and `Run_Reports.bat`. S4 the workbook. S5 the manual's
+  section 2 and the READMEs. The owner pulls and runs in DEV only after all five are read: one rebuild a tree.
+- **The MR1 benchmark** (the cloud workspace; the division profiles of PROD's 80 Powerball tracks from the league
+  table the owner attached; suggestive use): a grid of 0.0001 bit, both roundings, every n to 449, in 10.3 seconds,
+  the two bounds agreeing to two decimals for all 80 tracks (0.001 bit: 0.5 seconds, 65 of 80). **Found:** A5.3's
+  lower bound leaves out the chance of the observed outcome itself whenever a prize was won; the plan adds that
+  exact multinomial chance to it, a valid tightening, set out for the reviewer's confirmation.
+- **Proposed in it, as the design left them to the plan:** the conservative staleness check A10 allows (anything
+  but lines added at the end makes every draw held stale; a finer check only if the MEASURE timings ask for it);
+  and a small read-only proof tool, `deploy/compare_science_with_backup.py`, for A12's proof and every later
+  engine change.
+- **Read in the code while planning:** the job's `open_game` changes things as it reads, so the reporting part
+  loads through the functions that only read (`load_variant_state`, `status_of`, `results_on_file`) and refuses
+  where the engine would rebuild.
+- **Next:** the reviewer's reading; then the owner's go for S1. No code before that.
+- Next numbers: EX_334 (Claude's); entry 426; RAT-77.
