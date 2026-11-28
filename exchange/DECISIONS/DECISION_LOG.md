@@ -10085,3 +10085,15 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - Claude has recorded the candidates and has not reviewed their text.
 - **Next substantive work:** Claude's code plan for the reporting part under RAT-74, on the owner's go.
 - Next numbers: EX_334 (Claude's); entry 424; RAT-76 (H-2 v15).
+
+## 424. 28 November 2026, 20:13 - OWNER: RAT-76, H-2 v15 ratified; installed by the reviewer; GO for the code plan
+
+- **Relayed by the owner (20:13):** he has ratified H-2 v15 and its introductory blurb as **RAT-76**; the reviewer
+  has installed both in `doc/HANDOVER/`: `ChatGPT_Reviewer_Handover_H2_v15_20261128.md` (`9432053`; SHA-256
+  `e96f1aeb8c80f50e28902c3e88a5215cde631275f2e583f706e4f4fa2de93efd`) and
+  `ChatGPT_Reviewer_Handover_H2_v15_20261128_introductory_blurb.md` (`51d4d69`; SHA-256
+  `bf6ff6ebecb35d973d86518d317a8b0e3a6609a622eaa666db691319cdd06237`). **H-2 v15 supersedes H-2 v14 (RAT-73).**
+- **Both handovers in force are now of this evening:** H-1 v20 (RAT-75) and H-2 v15 (RAT-76).
+- **The owner's word (20:13): "go"** for Claude's reporting code plan under RAT-74 (on Fable). The plan is for the
+  reviewer's independent reading before any code. It authorises no code, install or run.
+- Next numbers: EX_334 (Claude's); entry 425; RAT-77.

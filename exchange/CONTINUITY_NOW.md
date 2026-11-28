@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:11 Australia/Adelaide (entry 423: H-2 v15 candidate).
+**Last updated:** 28 November 2026, 20:13 Australia/Adelaide (entry 424: RAT-76, H-2 v15 installed).
 
 ## For the owner: NOW
 
+- **RAT-76: H-2 v15 IS INSTALLED BY THE REVIEWER (entry 424; 28 November 2026).** Both handovers in force are of
+  this evening: H-1 v20 (RAT-75) and H-2 v15 (RAT-76). **In hand (Claude, on the owner's go):** the reporting code
+  plan under RAT-74, for the reviewer's reading before any code.
 - **H-2 v15 IS WRITTEN AS A CANDIDATE BY THE REVIEWER (entry 423; 28 November 2026),**
   `exchange/ChatGPT_Reviewer_Handover_H2_v15_20261128_CANDIDATE.md` with its blurb; current to entry 421.
   **Waiting on the owner:** RAT-76. **If the reviewer chat ends before it:** a new one reads that candidate, not
@@ -1457,6 +1460,9 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From RAT-76 (28 November 2026, entry 424): ChatGPT reviewer chat ended:** start a new reviewer chat with the
+  blurb `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v15_20261128_introductory_blurb.md`. **Claude chat ended:** the
+  blurb of H-1 v20, as the next bullet says.
 - **From RAT-75 (28 November 2026, entry 422): Claude chat ended:** start a new Claude chat with the blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v20_introductory_blurb.md`; it reads H-1 v20 and the documents its
   section 0 lists, then the decision log from entry 422. **ChatGPT reviewer chat ended:** the blurb of H-2 v14 in
@@ -1533,6 +1539,10 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-76 (28 November 2026, entry 424): for the reviewer, H-2 v15
+(`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v15_20261128.md`, SHA-256
+`e96f1aeb8c80f50e28902c3e88a5215cde631275f2e583f706e4f4fa2de93efd`). H-2 v14 (RAT-73) is history.**
 
 **From RAT-75 (28 November 2026, entry 422): H-1 v20 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v20.md`,
 SHA-256 `1437091bc2502dc3059135cdeeeffd87d07f5da676b12467108ca573155273cf`; its blurb
