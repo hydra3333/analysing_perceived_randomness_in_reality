@@ -4,10 +4,13 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:45 Australia/Adelaide (entry 428: GO for S1).
+**Last updated:** 28 November 2026, 21:03 Australia/Adelaide (entry 429: reporting S1 committed).
 
 ## For the owner: NOW
 
+- **REPORTING SLICE S1 IS COMMITTED (entry 429; 28 November 2026), `8da4330`:** the print-outs moved out of the
+  engine with the same bytes; the science identity; `Run_Reports.bat`. **Waiting on the reviewer:** its reading.
+  **Next for Claude:** S2 (Fable). **Nothing to run on the owner's PC until all five slices are read.**
 - **GO FOR S1 (entry 428; 28 November 2026).** The reviewer passed the roadmap and the code plan v0.2, with
   qualifications C02 (S2), C03 (S1) and C04 (S3). **In hand (Claude):** S1, the engine's one change, in
   `a_p_r_i_r_DEV/`. Nothing runs on the owner's PC until all five slices are read.

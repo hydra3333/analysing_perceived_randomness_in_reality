@@ -11,7 +11,7 @@ to it from their next refresh.
 | Stage | What | Status |
 |---|---|---|
 | 0 | Reporting design and specification | COMPLETE: RAT-74 (`b50d220`) |
-| 1 | Develop, test and install reporting | NEXT: the code plan is with the reviewer |
+| 1 | Develop, test and install reporting | IN HAND: the code plan passed; slice S1 of 5 committed |
 | 1.5 | OWNER REVIEW OF REPORTING | |
 | 2 | BACKUPS | |
 | 3 | TIDY | |

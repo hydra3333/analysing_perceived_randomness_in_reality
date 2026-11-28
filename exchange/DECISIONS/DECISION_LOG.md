@@ -10193,3 +10193,22 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **S1 authorises code in `a_p_r_i_r_DEV/` only.** Nothing is run on the owner's PC; his pull and DEV's run come
   after all five slices are read.
 - Next numbers: EX_334 (Claude's); entry 429; RAT-78.
+
+## 429. 28 November 2026, 21:03 - CLAUDE: reporting slice S1 committed (`8da4330`), for the reviewer's reading
+
+- **S1, the engine's one change, on the owner's GO (entry 428).** All printing moves out of the engine into
+  `src/reporting/`, unchanged in what it prints; `SCIENCE_IDENTITY.json` (the reviewer's C03); `Run_Reports.bat`;
+  the engine no longer deletes the reports folder; install, create and copy carry the reporting part.
+- **Proof of the move:** an invented history (three methods, both games, two jobs, a retirement) gives 94 report
+  and series files, byte for byte the same from the code before S1 (`7b30d26`) and after it, with the tree's path
+  set aside; kept as a permanent test. 294 tests pass (12 new); seven planted faults are each caught; pyflakes
+  clean; 0 file-form faults.
+- **Fingerprints:** engine `90156475672e...` (changed, as planned); reporting `c485884e77f8...` (new); updater
+  unchanged. **The INFRA flag is out of date by design: nothing is pulled and run on the owner's PC until all five
+  slices are read** (DEV would make everything again once, about 49 minutes).
+- **Departures from the plan's letter, declared in the commit:** a fifth engine file, the new
+  `research/science_identity.py`, used by both sides; `research_command.py` gains the `reports` command (its
+  checks reused, not duplicated); the proof tool `deploy/compare_science_with_backup.py` comes in a later slice,
+  before the owner's proof.
+- **Next:** the reviewer reads `8da4330`; Claude goes on to S2 (the laws and measures; on Fable).
+- Next numbers: EX_334 (Claude's); entry 430; RAT-78.
