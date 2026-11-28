@@ -10015,3 +10015,14 @@ section 17.2 (unpack it into a new folder, never over the clone).
   unwanted collection (A14); the tests for these (A15). v0.3 and v0.4 stay unchanged.
   **It is the single candidate for RAT-74; not ratified. The MEASURE item stays open.**
 - Next numbers: EX_334 (Claude's); entry 420; RAT-74 (the reporting design), RAT-75 (H-1 v20).
+
+## 420. 28 November 2026, 20:04 - CLAUDE: the H-1 v20 candidate names v0.5; a note on entry 419's commit
+
+- **The H-1 v20 candidate was corrected in place** in the commit of entry 419 (`30ec387`) to name the consolidated
+  candidate v0.5 and entry 419: 384 lines; SHA-256
+  `fbe57e1bc5b128738a433c4a65596df91730a7e565f17bb3a872ada09969d8c8`.
+  The SHA-256 given in entry 418 is superseded. Its blurb is unchanged.
+- The continuity page's bullet of entry 419 said the handover still named v0.4; it is corrected here.
+- **How it happened:** the record of this fact stopped on a line-width check, and the commit beside it went out
+  without it: the fifth time today. The writing and the commit were again in one command; they are now separate.
+- Next numbers: EX_334 (Claude's); entry 421; RAT-74 (the reporting design), RAT-75 (H-1 v20).

@@ -11,7 +11,7 @@ durable EX messages are authoritative.
 - **REPORTING: THE CONSOLIDATED CANDIDATE v0.5 IS THE ONE CANDIDATE FOR RAT-74 (entry 419; 28 November 2026),**
   `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_5_20261128.md`: v0.4 with the
   owner's and the reviewer's clarifications (staleness defined, by each report's own draw endpoint; coverage
-  kept). **Waiting on the owner:** RAT-74, and RAT-75 (H-1 v20; its section 8 names v0.4, which v0.5 replaces).
+  kept). **Waiting on the owner:** RAT-74, and RAT-75 (H-1 v20, which names v0.5).
   **Then Claude:** install v0.5 in `doc/`; the code plan (Fable). No implementation GO yet.
 - **REPORTING: THE CONSOLIDATED CANDIDATE v0.4 IS THE ONE CANDIDATE FOR RAT-74 (entry 417; 28 November 2026),**
   `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`: the reviewer's
