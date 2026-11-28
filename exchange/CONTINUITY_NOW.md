@@ -4,10 +4,16 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 09:19 Australia/Adelaide (entry 393: DEV's rebuild done; QA is next).
+**Last updated:** 28 November 2026, 10:39 Australia/Adelaide (entry 397: RAT-69, H-2 v13 installed; QA's first fill
+running).
 
 ## For the owner: NOW
 
+- **RAT-69: H-2 v13 IS THE REVIEWER'S HANDOVER IN FORCE (entry 397; 28 November 2026),**
+  `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v13_20261128.md` with its blurb beside it (the reviewer chat that wrote
+  it ended; Claude corrected its position to entry 396). Claude's is H-1 v18 (RAT-68). **QA is created; its first
+  (fetching) fill has run since about 10:31.** **Next:** the owner starts a new reviewer chat with the H-2 v13 blurb;
+  he sends QA's output to Claude; then PROD.
 - **DEV'S REBUILD IS DONE (entry 393; 28 November 2026):** the corrected engine gives the same totals and the same
   second OV-1 values as before it. **Next, item 7: QA.** The owner, in DEV: `Make_Installable.bat ALL INFRA` (then
   commits the 41 flag files), `Create_Tree.bat QA`; in QA, from a plain window with no environment active:
@@ -1378,6 +1384,9 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From RAT-69 (28 November 2026, entry 397): ChatGPT reviewer chat ended:** start a new reviewer chat with the
+  blurb `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v13_20261128_introductory_blurb.md`; it reads H-2 v13 and the
+  decision log from entry 330. **Claude chat ended:** H-1 v18 (RAT-68), as the next bullet says.
 - **From RAT-68 (28 November 2026, entry 392): Claude chat ended:** start a new Claude chat with the blurb
   `doc/HANDOVER/Claude_Primary_Handover_H1_v18_introductory_blurb.md`. It reads H-1 v18, the documents its section 0
   lists, this page's top block and the decision log from entry 392 on for what is newer. **ChatGPT reviewer chat
@@ -1438,6 +1447,12 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-69 (28 November 2026, entry 397): for the reviewer, H-2 v13
+(`doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v13_20261128.md`, SHA-256
+`999da79139bd1dd96c2129b6ab2826156c569db90cfdd21b8450c8eb952aea55`; its blurb
+`f8405661ad2c8565d7464a66b7e863e16083f0cb75d7ce782723c65933c09f74`).** H-2 v12 (RAT-67) is history. For Claude, H-1
+v18 (RAT-68), as the next paragraph says.
 
 **From RAT-68 (28 November 2026, entry 392): H-1 v18 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v18.md`,
 SHA-256 `e565b3745ed8a9571e2d33de5ecc1f11b359d04ebb0b460ccd935f2ecbec5550`; its blurb
