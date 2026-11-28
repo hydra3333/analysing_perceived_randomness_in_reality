@@ -1,28 +1,34 @@
-"""The saved reports: the league tables, the next-draw reports and the two OV-1 print-outs.
+"""The print-outs: the league tables, the next-draw reports and the two OV-1 print-outs.
 
 What this file is for
     Reports are print-outs for the owner. They are made from the lists, the results and the status files alone,
     and are made again whenever those change: a file is written only when its bytes would differ from what is
     on disk, so the reports folder always shows exactly what the installed code makes of the current records and
     an unchanged report is left untouched. Nothing here is evidence and nothing here is ever read back by the
-    job. The time each file was made is kept in a side file, so that the same records give the same report
+    engine. The time each file was made is kept in a side file, so that the same records give the same report
     bytes.
+
+    This file was the engine's research/reports.py. It moved into the reporting part unchanged in what it
+    prints (RAT-74, slice S1 of the code plan); the line on the prevailing series moved to research/ov1_ledger.py,
+    beside the series, because the research job's ending prints it too. The league table is replaced by the
+    ranking reports in slice S3.
 
 Which part of the specification it carries out
     doc/Predictive_Randomness_System_Specification_v0_6.md sections 9 (saved reports) and 10.5 and 10.6 (the
     two OV-1 print-outs), with the words of the simple scheme v0.2: "retired" and "method", and both OV-1 series
-    exploratory (section 5 step 6), so that the second series' print-out claims no error bound. Since the scheme
-    nothing is set aside as "not current": what no longer fits is made again.
+    exploratory (section 5 step 6), so that the second series' print-out claims no error bound; and
+    doc/Predictive_Randomness_Reporting_Design_And_Specification_Amendment_A1_v0_5.md (RAT-74) A2 and A11.
 
 Which of the project's own modules it uses
     research.game_state     GameRecords, MAIN_BARREL: the game's records in memory
     research.ov1_numeric    BAR, the kernel's bar, for the print-outs
+    research.ov1_ledger     prevailing_status_line: the line on the prevailing series
     research.variant_lists  RESEARCH_FOLDER
     research.windows_text   windows_lines, LINE_ENDING: every report file is written with each line ending CRLF
     _common.game_profiles   get_profile: the barrels' sizes
 
 What uses it
-    research/research_job.py, and the engine's tests.
+    reporting/report_job.py, and the tests.
 """
 from __future__ import annotations
 
@@ -37,6 +43,7 @@ from pathlib import Path
 from _common.game_profiles import get_profile
 from research import ov1_numeric as kernel
 from research.game_state import MAIN_BARREL, GameRecords
+from research.ov1_ledger import prevailing_status_line
 from research.variant_lists import RESEARCH_FOLDER
 from research.windows_text import LINE_ENDING, windows_lines
 
@@ -60,7 +67,6 @@ PREVAILING_CLAIM = (
     'by observed results. 40 is a reference line only. Forecasts are computed using the permitted earlier-draw '
     'view, and each draw contributes at most once. These safeguards do not establish that method choices were '
     'independent of observed results.')
-NOT_STARTED_TEXT = 'prevailing OV-1: not started; no method has an establishment draw yet'
 # The claim is one long sentence group; the text report breaks it into lines of at most this many characters.
 CLAIM_LINE_WIDTH = 110
 # How many of a method's latest scored draws the league table shows one by one.
@@ -376,22 +382,6 @@ def next_draw_report(records: GameRecords, draw: int) -> tuple:
                  'list. It selects nothing.')
     lines.append(prevailing_status_line(records))
     return '\n'.join(lines + [''] + as_table(header, rows)) + '\n', as_csv(lines, header, rows)
-
-
-def prevailing_status_line(records: GameRecords) -> str:
-    """One line saying where the prevailing OV-1 stands, for example 'prevailing OV-1: lines for draws 1592 to
-    1600; score (numerical lower bound) 0; reference line 40: not reached'."""
-    eligible = [s.status.eligible_from for s in records.states if s.status.eligible_from is not None]
-    if not eligible:
-        return NOT_STARTED_TEXT
-    if not records.ledger_lines:
-        text = f'prevailing OV-1: starts at draw {min(eligible)}; no line yet'
-    else:
-        last = records.ledger_lines[-1]['content']
-        text = (f'prevailing OV-1: lines for draws {records.ledger_lines[0]["content"]["draw"]} to {last["draw"]}; '
-                f'score (numerical lower bound) {last["score_lower_bound"]}; reference line {kernel.BAR}: '
-                + ('reached' if any(line['content']['crossed'] for line in records.ledger_lines) else 'not reached'))
-    return text + (f'; BLOCKED: {records.blocked}' if records.blocked else '')
 
 
 def _ov1_rows(lines: list) -> tuple:

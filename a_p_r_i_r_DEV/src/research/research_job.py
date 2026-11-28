@@ -4,8 +4,10 @@ What this file is for
     One job does everything routine, and the same in every tree. For each game it fetches new official results
     with the tree's updater (unless --no-update), reads what the tree holds, deletes what is out of date (and
     only that), forecasts every draw a method has no line for, the next draw
-    included, scores every forecast whose result is on file, and makes the league, the reports and both OV-1
-    series again. What to do is always read from the files, never remembered, so an interrupted job is continued
+    included, scores every forecast whose result is on file, makes both OV-1 series again, notes what the game's
+    stored science was made from (research/science_identity.py), and then starts the reporting part, which makes
+    the reports (src/reporting; RAT-74).
+    What to do is always read from the files, never remembered, so an interrupted job is continued
     by running the same command again. Nothing is refused because it differs: a difference means "make that part
     again". The games are worked one after the other and never mixed.
 
@@ -16,11 +18,13 @@ What this file is for
       cannot be read, or --rebuild names it: that method's results;
       a draw's result was corrected at the source: that draw's scores, and every forecast that was computed
       from it (found from the permitted-view digest each forecast holds), with their scores;
-      a method was retired: what it held for its retirement draw or a later one;
-      a report the records no longer give (for a draw no longer on file, say): it is removed.
+      a method was retired: what it held for its retirement draw or a later one.
+    The reports are the reporting part's: the job never deletes them, even when it makes everything again.
 
 Which part of the scheme it carries out
-    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5 (all eight steps).
+    exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 5 (all eight steps), as amended by
+    doc/Predictive_Randomness_Reporting_Design_And_Specification_Amendment_A1_v0_5.md (RAT-74) Part B section 3:
+    step 4 no longer deletes the reports, and step 6 ends by starting the reporting part.
 
 Which of the project's own modules it uses
     research.settings          the tree's role and paths
@@ -32,8 +36,10 @@ Which of the project's own modules it uses
     research.game_state        the game's records in memory
     research.forecast_engine   compute_target: one forecast; view_digest_for: what it was computed from
     research.scoring           score_content: one score
-    research.ov1_ledger        both OV-1 series
-    research.reports           the saved reports
+    research.ov1_ledger        both OV-1 series, and the line on the second one in the job's ending
+    research.science_identity  what each game's stored science was made from, written at the end of its work
+    reporting.report_job       the reports: loaded at the end of each game's work, so that a fault in it leaves
+                               the forecasts and scores as they are
     research.variant_lists     the list files
     updater.results_updater    the results updater: loaded only when a job fetches (never with --no-update)
 
@@ -53,7 +59,7 @@ from importlib import metadata
 from pathlib import Path
 
 from research import backup as backups
-from research import code_identity, method_flags, ov1_ledger, reports
+from research import code_identity, method_flags, ov1_ledger, science_identity
 from research import variant_lists as lists
 from research.forecast_engine import FORECAST, compute_target, content_digest, view_digest_for
 from research.game_state import (MAIN_BARREL, GameRecords, VariantState, lists_of_variants_not_installed,
@@ -70,9 +76,6 @@ GAMES = ('POWERBALL', 'OZLOTTO')
 METHODS_FOLDER = 'src/methods'
 # The job log: one line a job, under the tree's records folder.
 JOB_LOG = 'records/JOB_LOG.jsonl'
-# The folders of a game's reports folder whose every file the job makes again (the README and the side file of
-# making times lie beside them).
-REPORT_FOLDERS = ('league', 'next', 'ov1')
 # The updater's kinds of refusal that mean the website itself stopped it (a block or challenge page, results
 # that did not appear, a page that could not be read), by the name of the exception's class.
 WEBSITE_STOPS = ('Stop',)
@@ -217,7 +220,7 @@ def settle_infrastructure(job: Job, rebuild_all: bool) -> None:
            else 'nothing says which engine made these results' if with_results else None)
     if why is not None:
         for game_id in GAMES:
-            for folder in (lists.VARIANTS_FOLDER, 'ov1', reports.REPORTS_FOLDER):
+            for folder in (lists.VARIANTS_FOLDER, 'ov1'):          # never the reports: they are the reporting part's
                 if (research / game_id / folder).is_dir():
                     shutil.rmtree(research / game_id / folder)
         job.note_rebuild(f'everything, in both games ({len(with_results)} stored method results deleted): {why}. '
@@ -434,37 +437,10 @@ def complete_draw(job: Job, records: GameRecords, draw: int) -> None:
         append_scores(job, records, draw)
 
 
-def remove_reports_no_longer_made(reports_folder: Path, made: set) -> int:
-    """Delete every file of the league, next-draw and OV-1 report folders that this job did not make: a report
-    for a draw the results no longer hold, a next-draw report of a forecast that has since been made again, a
-    file left half written. What stays is exactly what the records now give.
-
-    reports_folder: the game's reports folder.  made: the names this job made (written or found unchanged), from
-    that folder with forward slashes, for example {'league/league_POWERBALL_d01601.txt', ...}.
-    Returns how many files were deleted.
-    """
-    removed = 0
-    for folder in REPORT_FOLDERS:
-        for path in sorted((reports_folder / folder).glob('*')) if (reports_folder / folder).is_dir() else []:
-            if path.is_file() and f'{folder}/{path.name}' not in made:
-                path.unlink()
-                removed += 1
-    return removed
-
-
-def make_series_and_reports(job: Job, records: GameRecords) -> None:
-    """Make both OV-1 series, the league report of every draw, the next-draw reports and the README again from
-    the records as they now stand; write each file whose bytes differ; delete each report no longer made."""
+def make_series(job: Job, records: GameRecords) -> list:
+    """Make both OV-1 series again from the records as they now stand and write them. Returns the exploratory
+    series' lines (the second series is kept in records.ledger_lines, with records.blocked)."""
     game_id, last_draw = records.game_id, records.results.last_draw
-    written = job.counts[game_id]
-    writer = reports.ReportWriter(records.tree_root, game_id, job.local_time())
-    made = set()
-
-    def write(name: str, content: str) -> None:
-        """Write one report if its bytes differ, and note that this job made it."""
-        made.add(name)
-        written['report files'] += writer.write(name, content)
-
     main_drawn = {draw: records.outcome_of(draw)[MAIN_BARREL]
                   for state in records.states for draw in state.score_contents if draw <= last_draw}
     exploratory = ov1_ledger.exploratory_series(game_id, records.states, main_drawn, last_draw)
@@ -472,38 +448,40 @@ def make_series_and_reports(job: Job, records: GameRecords) -> None:
         game_id, records.states, lambda draw: records.outcome_of(draw)[MAIN_BARREL], last_draw)
     if records.blocked:
         job.warn(f'{game_id}: the second OV-1 series stops early: {records.blocked}')
-    written['series files'] += ov1_ledger.write_series(records.tree_root, game_id, records.ledger_lines, exploratory)
-    league = reports.LeagueTable(records)
-    lowest = min((state.first_target for state in records.workable), default=last_draw + 1)
-    for draw in range(lowest, last_draw + 1):
-        if league.add_draw(draw):
-            for name, content in zip(reports.league_names(game_id, draw), league.render(draw)):
-                write(name, content)
-    made_before_result = sorted({target for state in records.workable for target, facts in state.targets.items()
-                                 if not facts.result_on_file})
-    for draw in made_before_result:
-        for name, content in zip(reports.next_draw_names(game_id, draw), reports.next_draw_report(records, draw)):
-            write(name, content)
-    for name, content in zip(reports.ov1_names(game_id, 'exploratory'),
-                             reports.exploratory_report(records, exploratory)):
-        write(name, content)
-    for name, content in zip(reports.ov1_names(game_id, 'prevailing'), reports.prevailing_report(records)):
-        write(name, content)
-    writer.write(reports.README_NAME, reports.readme_text(game_id))
-    written['reports removed'] = remove_reports_no_longer_made(writer.root, made)
-    if written['reports removed']:
-        job.say(f'{game_id}: {written["reports removed"]} report files that the records no longer give were removed')
-    writer.tidy_times()
+    job.counts[game_id]['series files'] += ov1_ledger.write_series(records.tree_root, game_id, records.ledger_lines,
+                                                                   exploratory)
+    return exploratory
+
+
+def start_the_reporting_part(job: Job, records: GameRecords, exploratory: list) -> None:
+    """The last step of a game's work: the reporting part makes its reports from the records the job holds. A
+    fault in it is said loudly and counted (the job then ends "not cleanly"); the forecasts and scores it was
+    given stand, and Run_Reports.bat makes the reports when the cause is put right."""
+    game_id, written = records.game_id, job.counts[records.game_id]
+    try:
+        from reporting import report_job
+        counts = report_job.make_reports(records, exploratory, job.local_time())
+    except Exception as fault:              # a report that fails must not undo or hide the science
+        text = f'{type(fault).__name__}: {fault}'
+        job.failed.append(f'{game_id}: the reports were not made: {text}')
+        job.warn(f'{game_id}: THE REPORTS WERE NOT MADE ({text}). The forecasts, scores and both OV-1 series '
+                 f'stand. When the cause is put right, run Run_Reports.bat.')
+        return
+    written['report files'] += counts['report files']
+    if counts['reports removed']:
+        job.say(f'{game_id}: {counts["reports removed"]} report files that the records no longer give were removed')
 
 
 def run_game(job: Job, game_id: str) -> str:
-    """The whole job for one game: read, delete what is out of date, fill and catch up, make the reports.
+    """The whole job for one game: read, delete what is out of date, fill and catch up, make both series, note
+    what the stored science was made from, and start the reporting part.
 
     Returns the one line that says how the game finished. A fault passes through as an exception; whatever was
     written before it stays, and the same command continues from there.
     """
     job.counts[game_id] = Counter()
     fetch_new_results(job, game_id)
+    science_identity.remove_identity(job.settings.tree_root, game_id)      # written again only when all is done
     records = open_game(job, game_id)
     last_draw = records.results.last_draw
     job.say(f'{game_id}: results on file through draw {last_draw}; {len(records.states)} methods in the tree')
@@ -515,12 +493,15 @@ def run_game(job: Job, game_id: str) -> str:
             said_at = written['forecasts'] + written['scores']
             job.say(f'{game_id}: processed target draw {draw} (results on file through {last_draw}); so far '
                     f'{written["forecasts"]} forecasts and {written["scores"]} scores written')
-    make_series_and_reports(job, records)
+    exploratory = make_series(job, records)
+    science_identity.write_identity(records, code_identity.infrastructure_fingerprint(job.settings.tree_root),
+                                    records.blocked)
+    start_the_reporting_part(job, records, exploratory)
     summary = ', '.join(f'{written[what]} {what}' for what in ('forecasts', 'scores', 'series files',
                                                                'report files'))
     failed = sum(1 for state in records.states if state.failed)
     return (f'{game_id}: finished{f" with {failed} methods failed" if failed else ""}. Results on file through '
-            f'draw {last_draw}; written: {summary}. ' + reports.prevailing_status_line(records))
+            f'draw {last_draw}; written: {summary}. ' + ov1_ledger.prevailing_status_line(records))
 
 
 def environment_versions() -> dict:

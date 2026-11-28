@@ -7,7 +7,7 @@ Each test is named for the rule it proves and plants the fault that rule must ca
 Which of the project's own modules it uses
     research_fixtures       invented trees, toy variants and the research job run in them
     file_form (deploy/)     the project's one checker of the form of a file
-    research.windows_text, research.reports, research.tree_lock, research.method_flags   the writers under test
+    research.windows_text, reporting.printouts, research.tree_lock, research.method_flags   the writers under test
 
 What uses it
     The project's test suite.
@@ -24,7 +24,8 @@ if str(REPOSITORY_ROOT / 'deploy') not in sys.path:
 
 import file_form                                            # noqa: E402  (after the path line above)
 import research_fixtures as fx                              # noqa: E402
-from research import method_flags, reports, tree_lock      # noqa: E402
+from reporting import printouts as reports                 # noqa: E402
+from research import method_flags, tree_lock               # noqa: E402
 from research.windows_text import LINE_ENDING, windows_lines                       # noqa: E402
 
 GAME = fx.GAME

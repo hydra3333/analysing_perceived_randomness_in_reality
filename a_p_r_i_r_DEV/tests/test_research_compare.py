@@ -141,7 +141,11 @@ class TheCodeCompared(unittest.TestCase):
         if not frozen_source.is_file():
             self.skipTest('the frozen engine is not beside this tree')
         frozen_module = ast.parse(frozen_source.read_text(encoding='utf-8'))
-        new_module = ast.parse((TREE_OF_THIS_FILE / 'src/research/reports.py').read_text(encoding='utf-8'))
+        # The living system's print-outs moved to src/reporting/printouts.py (RAT-74, slice S1), and the line on
+        # the prevailing series to src/research/ov1_ledger.py; the constants are read from the two together.
+        new_module = ast.Module(body=[node for name in ('src/reporting/printouts.py', 'src/research/ov1_ledger.py')
+                                      for node in ast.parse((TREE_OF_THIS_FILE / name).read_text(encoding='utf-8')).body],
+                                type_ignores=[])
 
         def constant(module, name):
             """The value of a module's top-level text constant."""

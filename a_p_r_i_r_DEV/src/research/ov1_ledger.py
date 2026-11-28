@@ -25,7 +25,8 @@ Which of the project's own modules it uses
     _common.game_profiles   get_profile: the size of the main barrel
 
 What uses it
-    research/research_job.py, research/reports.py (prints both series), and the tests.
+    research/research_job.py (the line on the prevailing series in its ending), reporting/printouts.py (prints
+    both series), and the tests.
 """
 from __future__ import annotations
 
@@ -42,6 +43,8 @@ EXPLORATORY_LEDGER = 'ov1/exploratory.jsonl'
 # The two states of a cohort member in a line.
 COUNTED = 'counted'
 NO_PAIR = 'no_pair'
+# What the line on the prevailing series says before any method has an establishment draw.
+NOT_STARTED_TEXT = 'prevailing OV-1: not started; no method has an establishment draw yet'
 
 
 class Blocked(Exception):
@@ -207,3 +210,21 @@ def prevailing_series(game_id: str, states, outcome_of, through: int) -> tuple:
         running = running_logs_of(line['content'])
         series.append(line)
     return series, None
+
+
+def prevailing_status_line(records) -> str:
+    """One line saying where the prevailing OV-1 stands, for example 'prevailing OV-1: lines for draws 1592 to
+    1600; score (numerical lower bound) 0; reference line 40: not reached'. records: the game's GameRecords (its
+    states, its second series' lines and why that series stopped, if it did). The research job ends with this
+    line and the prevailing print-out shows it, so it lives here, beside the series it describes."""
+    eligible = [s.status.eligible_from for s in records.states if s.status.eligible_from is not None]
+    if not eligible:
+        return NOT_STARTED_TEXT
+    if not records.ledger_lines:
+        text = f'prevailing OV-1: starts at draw {min(eligible)}; no line yet'
+    else:
+        last = records.ledger_lines[-1]['content']
+        text = (f'prevailing OV-1: lines for draws {records.ledger_lines[0]["content"]["draw"]} to {last["draw"]}; '
+                f'score (numerical lower bound) {last["score_lower_bound"]}; reference line {kernel.BAR}: '
+                + ('reached' if any(line['content']['crossed'] for line in records.ledger_lines) else 'not reached'))
+    return text + (f'; BLOCKED: {records.blocked}' if records.blocked else '')

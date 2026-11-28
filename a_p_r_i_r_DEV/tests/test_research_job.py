@@ -19,7 +19,8 @@ from unittest import mock
 
 import research_command
 import research_fixtures as fx
-from research import code_identity, method_flags, reports, research_job, tree_lock
+from reporting import printouts as reports
+from research import code_identity, method_flags, research_job, tree_lock
 
 GAME = fx.GAME
 TREE_OF_THIS_FILE = Path(__file__).resolve().parents[1]

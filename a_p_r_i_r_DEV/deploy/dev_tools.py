@@ -44,11 +44,13 @@ EXIT_DONE, EXIT_NOT_ALL = 0, 1
 
 def infrastructure_fingerprints(tree_root: Path) -> dict:
     """What the infrastructure's flag vouches for, computed from the files now: the engine's fingerprint, the
-    updater's and the root launchers', for example
-    {'fingerprint': 'ab12...', 'updater_fingerprint': 'cd34...', 'launcher_fingerprint': 'ef56...'}.
-    Only the first is the engine's: a change to the updater or to a launcher makes no result again."""
+    updater's, the reporting part's and the root launchers', for example {'fingerprint': 'ab12...',
+    'updater_fingerprint': 'cd34...', 'reporting_fingerprint': '9a8b...', 'launcher_fingerprint': 'ef56...'}.
+    Only the first is the engine's: a change to the updater, the reporting part or a launcher makes no forecast
+    or score again (a change to the reporting part makes the reports again)."""
     return {'fingerprint': code_identity.infrastructure_fingerprint(tree_root),
             'updater_fingerprint': code_identity.updater_fingerprint(tree_root),
+            'reporting_fingerprint': code_identity.reporting_fingerprint(tree_root),
             'launcher_fingerprint': launcher_fingerprint(tree_root)}
 
 

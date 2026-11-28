@@ -1,4 +1,5 @@
-"""The one program behind the launchers every tree has: Run_Research.bat, Run_Results_Updater.bat and Backup.bat.
+"""The one program behind the launchers every tree has: Run_Research.bat, Run_Reports.bat, Run_Results_Updater.bat
+and Backup.bat.
 
 What this file is for
     A launcher starts this file with the tree's own Python and the name of a command. It puts this tree's two
@@ -7,7 +8,8 @@ What this file is for
 
 Which part of the scheme it carries out
     exchange/Claude_The_Simple_Scheme_v0_2_20261126.md section 3.1 rule 1 (a command works on the folder its
-    own launcher lies in) and section 6 (the commands; the others arrive with step 4 of the work order).
+    own launcher lies in) and section 6 (the commands; the others arrive with step 4 of the work order); and
+    RAT-74 Part B section 3 (Run_Reports.bat).
 
     Before any command it makes the tree's first step (the folder is the tree its settings say; its working
     folders are its own) and checks that the Python running it is the tree's own environment.
@@ -15,11 +17,12 @@ Which part of the scheme it carries out
 Which of the project's own modules it uses
     research.tree_lock         enter_tree: the first step; the tree's lock, for an update or a backup by itself
     research.research_job      main: the research job
+    reporting.report_job       main: the reports, without a research job
     research.backup            make_backup: a backup now
     updater.results_updater    main: the results updater
 
 What uses it
-    Run_Research.bat, Run_Results_Updater.bat and Backup.bat.
+    Run_Research.bat, Run_Reports.bat, Run_Results_Updater.bat and Backup.bat.
 """
 import os
 import sys
@@ -28,10 +31,11 @@ from pathlib import Path
 
 # The tree this program lies in: <tree>/src/research_command.py.
 TREE_ROOT = Path(__file__).resolve().parents[1]
-# The two folders Python imports the project's code from: the engine (research, evaluation) and the methods.
+# The two folders Python imports the project's code from: the engine (research, evaluation), the reporting part
+# and the updater; and the methods.
 IMPORT_FOLDERS = (TREE_ROOT / 'src', TREE_ROOT / 'src' / 'methods')
 # The commands, by the word the launcher gives.
-COMMANDS = ('research', 'update', 'backup')
+COMMANDS = ('research', 'reports', 'update', 'backup')
 # The exit code when the program refuses before a command runs: an unknown command, bad settings, a foreign Python.
 EXIT_BAD_COMMAND = 2
 
@@ -62,6 +66,9 @@ def run_command(arguments) -> int:
         return update_alone(settings, arguments[1:])
     if arguments[0] == 'backup':
         return backup_alone(settings)
+    if arguments[0] == 'reports':
+        from reporting.report_job import main as reports_main
+        return reports_main(arguments[1:], TREE_ROOT)
     from research.research_job import main
     return main(arguments[1:], TREE_ROOT)
 

@@ -103,8 +103,8 @@ def plan_infrastructure(plan: Plan, dev: Path, target: Path) -> None:
     """Fill in the plan's infrastructure part: what differs, and whether DEV's flag lets it be installed."""
     wanted = infrastructure_paths(dev)
     to_copy = differing(dev, target, wanted)
-    gone = sorted(set(code_identity.infrastructure_files(target) + code_identity.updater_files(target))
-                  - set(wanted))
+    gone = sorted(set(code_identity.infrastructure_files(target) + code_identity.updater_files(target)
+                      + code_identity.reporting_files(target)) - set(wanted))
     if not to_copy and not gone:
         return
     state = method_flags.installable_state(dev / 'src', infrastructure_fingerprints(dev))
@@ -219,8 +219,9 @@ def describe(plan: Plan, role: str) -> list:
         lines.append(f'  infrastructure: {len(plan.infrastructure)} files added or replaced, '
                      f'{len(plan.infrastructure_gone)} removed. '
                      + (f'The engine differs, so the {role} tree\'s job makes everything again, in both games.'
-                        if plan.engine_differs else 'The engine\'s fingerprint is the same (only the updater or the '
-                                                    'launchers differ): nothing is made again on its account.'))
+                        if plan.engine_differs else 'The engine\'s fingerprint is the same (only the updater, the '
+                                                    'reporting part or the root files differ): no forecast or score '
+                                                    'is made again on its account.'))
     if plan.infrastructure_note:
         lines.append(f'  NOT INSTALLED: {plan.infrastructure_note}.')
     for step in plan.steps:
@@ -360,7 +361,8 @@ def copy_and_check_new_tree(dev: Path, target: Path, chosen: list) -> tuple:
                     == {variant.identity: variant.fingerprint for variant in chosen})
     if (refused or not same_methods or differing(dev, target, software + data)
             or code_identity.infrastructure_fingerprint(target) != code_identity.infrastructure_fingerprint(dev)
-            or code_identity.updater_fingerprint(target) != code_identity.updater_fingerprint(dev)):
+            or code_identity.updater_fingerprint(target) != code_identity.updater_fingerprint(dev)
+            or code_identity.reporting_fingerprint(target) != code_identity.reporting_fingerprint(dev)):
         raise CommandFailed('the copy does not match DEV when read back')
     return len(software), len(data)
 

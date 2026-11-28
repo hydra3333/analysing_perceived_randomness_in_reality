@@ -57,7 +57,7 @@ NEW_PARTS = ('src', 'tests/research_fixtures.py')
 SPREAD_BACK, SPREAD_STEP, SPREAD_GROUPS = 40, 8, 5
 
 # The text the second OV-1 series' print-out prints after its preamble: the frozen engine's (specification
-# 10.6), and the simplified engine's (research/reports.py PREVAILING_CLAIM). Both print it wrapped at 110 columns.
+# 10.6), and the simplified engine's (reporting/printouts.py PREVAILING_CLAIM). Both print it wrapped at 110 columns.
 FROZEN_CLAIM = (
     'If this game\'s draws are fair, and if nothing that decided a draw\'s forecasts or which variants counted at '
     'it was influenced by that draw\'s result (that includes what code was installed, corrected or withdrawn and '

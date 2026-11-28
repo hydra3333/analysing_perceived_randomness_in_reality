@@ -39,10 +39,11 @@ from research import code_identity
 from research.settings import ROLES, SETTINGS_FILE_NAME, SettingsRefused, TreeSettings, same_places
 from research.tree_lock import enter_tree, tree_lock
 
-# The files every tree has at its root: the launchers, the environment scripts and the operations manual (its one
-# master is DEV's; owner, decision log entry 402). They go with the infrastructure and are part of what its flag
-# vouches for, but of no fingerprint a result depends on. (DEV's own launchers, deploy\ and tests\ stay in DEV.)
-ROOT_FILES = ('Run_Research.bat', 'Run_Results_Updater.bat', 'Backup.bat', 'create_venv.bat',
+# The files every tree has at its root: the launchers (Run_Reports.bat since RAT-74), the environment scripts and
+# the operations manual (its one master is DEV's; owner, decision log entry 402). They go with the infrastructure
+# and are part of what its flag vouches for, but of no fingerprint a result depends on. (DEV's own launchers,
+# deploy\ and tests\ stay in DEV.)
+ROOT_FILES = ('Run_Research.bat', 'Run_Reports.bat', 'Run_Results_Updater.bat', 'Backup.bat', 'create_venv.bat',
               'install_upgrade_dependencies_into_venv.bat', 'activate_venv.bat', 'deactivate_venv.bat',
               'OPERATIONS_MANUAL.md')
 # Where a tree keeps its methods, its accepted results and what it computes, from the tree root.
@@ -111,9 +112,10 @@ def differing(source_root: Path, target_root: Path, paths) -> list:
 
 def infrastructure_paths(tree_root: Path) -> list:
     """Every file of a tree's infrastructure, as paths from the tree root: the engine (what its fingerprint
-    covers), the updater, and those of the root launchers that are there."""
+    covers), the updater, the reporting part, and those of the root launchers that are there."""
     tree_root = Path(tree_root)
     return (code_identity.infrastructure_files(tree_root) + code_identity.updater_files(tree_root)
+            + code_identity.reporting_files(tree_root)
             + [name for name in ROOT_FILES if (tree_root / name).is_file()])
 
 

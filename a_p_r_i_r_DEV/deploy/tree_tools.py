@@ -149,7 +149,8 @@ def copy_software(prod: Path, target: Path) -> None:
             != {variant.identity: variant.fingerprint for variant in theirs}
             or sorted(name for name, _ in ours_refused) != sorted(name for name, _ in theirs_refused)
             or code_identity.infrastructure_fingerprint(prod) != code_identity.infrastructure_fingerprint(target)
-            or code_identity.updater_fingerprint(prod) != code_identity.updater_fingerprint(target)):
+            or code_identity.updater_fingerprint(prod) != code_identity.updater_fingerprint(target)
+            or code_identity.reporting_fingerprint(prod) != code_identity.reporting_fingerprint(target)):
         raise CommandFailed('the software copied does not match PROD\'s when read back')
 
 
