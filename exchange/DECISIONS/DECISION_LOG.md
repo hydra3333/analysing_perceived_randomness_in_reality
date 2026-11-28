@@ -9392,8 +9392,8 @@ section 17.2 (unpack it into a new folder, never over the clone).
   infrastructure flagged (engine `75c7e6195c53...`, as Claude computed after `8fce853`; updater `69f204cea1c2...`;
   launchers `3dea97596ab5...`), "Done."; `Create_Tree.bat QA`: the infrastructure and 40 methods (157 files) and
   DEV's accepted results (12 files) copied to `T:\a_p_r_i_r_QA`, the settings file last; QA's `.venv` built
-  (Python 3.15.2; all 39 direct packages, numpy 2.5.5, "No broken requirements found"). The 41 flag files are not
-  yet committed (the owner commits them). **QA's first job, `Run_Research.bat` (fetching), started about 10:31.**
+  (Python 3.15.2; all 39 direct packages, numpy 2.5.5, "No broken requirements found"). The owner committed the
+  41 flag files (`5498e5a`). **QA's first job, `Run_Research.bat` (fetching), started about 10:31.**
 - **The reviewer's "One repository tree tidy - consolidated agreement and outstanding actions v0.1"** (relayed
   10:31): committed unchanged at its request as
   `exchange/ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md` (SHA-256
@@ -9404,4 +9404,6 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Claude's measurement for the `exchange/` question:** of the work-package folders (`EX_nnn_*` and
   `CLAUDE_WEB_TOOLS`), 1,291 files and 38.5 MB are copies of code and data (888 `.py`, 285 `.diff`, 79 `.zip`, and
   `.bat`, `.ini`, `.cmd`); 1,308 files and 25 MB are writing and evidence (600 `.md`, 570 `.txt`, 96 `.json`).
+- **The reviewer has committed an H-2 v13 candidate and its blurb** (`74e1c1d`, `8d2a20a`), for the owner's
+  ratification; not yet ratified.
 - Next numbers: EX_334 (Claude's); entry 397; RAT-69.
