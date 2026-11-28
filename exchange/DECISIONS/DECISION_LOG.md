@@ -9707,3 +9707,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **The reviewer has committed an H-2 v14 candidate and its blurb** (`b93c504`, `6e7919b`; current through entry
   407), for the owner's ratification; not yet ratified. Both handovers can be ratified together.
 - Next numbers: EX_334 (Claude's); entry 409; RAT-72 (H-1 v19), RAT-73 (H-2 v14).
+
+## 409. 28 November 2026, 13:39 - OWNER: RAT-72, H-1 v19, and RAT-73, H-2 v14, ratified; H-1 v19 installed
+
+- **The owner's words (13:38):** "I ratify them all" (H-1 v19 and its blurb, entry 408; H-2 v14 and its blurb, the
+  reviewer's candidates `b93c504` and `6e7919b`).
+- **RAT-72: H-1 v19 installed by Claude in `doc/HANDOVER/`:** `Claude_Primary_Handover_H1_v19.md` (the candidate
+  with its status line alone changed to "RATIFIED by the owner, RAT-72"; SHA-256
+  `07ebc4da88647e123f6828595cf05c1a2deb2b9bf1aa5b2d9e8526bcb3092b5e`) and its blurb (the candidate's bytes; SHA-256
+  `f643cac657f7fec6d3dc3c9847d09e7bdcc5d61a192f4d8a57b49b3b01ed342a`). **H-1 v19 supersedes H-1 v18 (RAT-68).**
+- **RAT-73: H-2 v14 ratified** at the reviewer's candidates
+  `exchange/ChatGPT_Reviewer_Handover_H2_v14_20261128_CANDIDATE.md` (SHA-256
+  `216b0d2826710afae048d2d666f992fe5d1d89c9aaf953a82e22ef1e99dea7e5`) and
+  `exchange/ChatGPT_Reviewer_Handover_H2_v14_20261128_BLURB_CANDIDATE.md` (SHA-256
+  `4c9df8fe855d61764be5d9a2cecf56476e2881defbed77e187127ab46769bebc`); cutoff `fc6b06e`, entry 407. **It
+  supersedes H-2 v13 (RAT-69).** The reviewer installs its own final file in `doc/HANDOVER/`, as for RAT-67; its
+  blurb already says to read the installed edition when there is one. Until then the candidate is the text.
+- **The continuity page** names H-1 v19 and H-2 v14 in its top block and its two handover sections.
+- Next numbers: EX_334 (Claude's); entry 410; RAT-74.
