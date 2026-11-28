@@ -9431,3 +9431,47 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **This entry follows its commit:** a line-length check in the writing command stopped the entry after the files
   and the page were written (as in entry 392). From here the entry is written and checked before the other files.
 - Next numbers: EX_334 (Claude's); entry 398; RAT-70.
+
+## 398. 28 November 2026, 11:16 - OWNER: the method template reconsidered (the fourth deferred discussion); the reviewer's takeover
+
+- **The new reviewer chat's takeover** (relayed 10:47): it read H-2 v13 and the governing material at `b1f0a2e`,
+  through entry 397; no outstanding installed-engine findings; QA created and its first fetching job under way, PROD
+  next on the owner's separate GO; it concurs with an ordinary fetching first job for PROD (the owner's decision);
+  it concurs in principle with Claude's `exchange/` rule of entry 396, keeping all EX messages and written
+  material, **with exceptions where code or other attachments embody unique useful scientific ideas; keep when in
+  doubt**; C01 to C04 and the tidy agreement stand; the revised candidate and P1 after QA and PROD. Claude checked
+  its statement against the repository: correct. No questionnaire, as the owner chose.
+- **The owner raised the old method template (11:01).** The reviewer found that `doc/METHOD_TEMPLATE/` draft 5
+  survives, that R-030 (h) scheduled a new draft after build step 3, and that entry 171 relates it to the operations
+  manual. Claude read draft 5: most of it describes the first system's machinery (contracts, registry, release
+  records, `IN_DEVELOPMENT.txt`, the runner's line, publication); a living method folder is `method.py`,
+  `VARIANT.json` and two flags written by the tools; its specification template and its N-1 and determinism
+  lessons are worth keeping. The owner then proposed proven boilerplate code (11:06), and a dummy method, proved
+  separately and never part of normal processing, before the first new method (11:12).
+- **THE OWNER'S DECISIONS** (relayed by the reviewer at 11:15 as his, "The owner agrees with our combined
+  recommendations"; his own words "ok lets do as you say" at 11:06 and "ok. no generator script. yes add the
+  discussion to the fourth deferred discussion" at 11:12):
+  1. Retain `doc/METHOD_TEMPLATE/` through the repository tidy.
+  2. Reconsider and substantially simplify the method template rather than discard the concept.
+  3. Add this as the fourth deferred discussion alongside entries 289, 292 and 299.
+  4. Include proven reusable boilerplate derived from existing living methods, subject to that discussion.
+  5. No generator script.
+  6. Include in the discussion the proposal to develop and prove a dummy method before developing the first new
+     scientific method.
+- **The agreed preferred sequence:** (a) the four deferred discussions: future method selection and priorities
+  (289); the AI roles and a possible reversal trial (292); minimal coding-practice improvements (299); the method
+  template, proven boilerplate, the dummy-method proof and the relationship to the operations manual (this entry).
+  (b) The agreed simplified template, boilerplate and dummy method developed outside the living `src/` tree. (c) The
+  dummy method independently reviewed and proved with the actual research engine in an isolated temporary tree on
+  invented draws; the proof kept as a permanent regression test. (d) The first new scientific method developed from
+  the proven boilerplate, the template refined through that practical experience.
+- **The reviewer's considerations for the dummy-method proof:** a trivial history-dependent calculation, so that N-1
+  suffix isolation is meaningfully exercised; deliberate equal scores, to exercise the prescribed deterministic tie
+  rule; both games, with their different barrel structures; compute/verify agreement, insufficient history, legal
+  outputs and TOP/WORST from the same ranking; no possibility of the dummy method entering real research results,
+  method catalogues, league tables or OV-1 calculations.
+- **The exact template, boilerplate and test design are for discussion and review at the appropriate time. No
+  implementation is authorised now.** No separate planning document or generator tooling is needed. Recorded in
+  `exchange/OWNER_REMINDERS.md` beside the other three; `doc/METHOD_TEMPLATE/` is retained in the revised tidy
+  candidate; both handovers carry these at their next refresh. QA and PROD continue without interruption.
+- Next numbers: EX_334 (Claude's); entry 399; RAT-70.

@@ -780,6 +780,19 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   what they would add or change from what building the system has taught, keeping it minimal. A change to that
   ratified document is put to the owner and ratified by him. Done together with the future-method-priorities
   draft (entry 289) and the roles of the two AIs (entry 292).
+- The method template, proven boilerplate and a dummy method (owner, 28 November 2026; decision log entry 398):
+  the fourth deferred discussion, held with the three above when the development of new methods is about to begin.
+  `doc/METHOD_TEMPLATE/` (draft 5, written for the first system) is kept through the repository tidy. The template
+  is reconsidered and substantially simplified, not discarded; it includes proven reusable boilerplate derived from
+  the living methods; no generator script; and its relationship to the operations manual is settled. The agreed
+  sequence: (a) the four discussions (future method priorities, entry 289; the AI roles, entry 292; the coding
+  practices, entry 299; this one); (b) the simplified template, boilerplate and a dummy method developed outside the
+  living `src/`; (c) the dummy method reviewed and proved with the real engine in an isolated temporary tree on
+  invented draws, the proof kept as a permanent regression test; (d) the first new scientific method built from the
+  boilerplate. The proof exercises: a trivial history-dependent calculation (so N-1 is meaningfully tested); equal
+  scores (the tie rule); both games and their barrels; compute/verify agreement; insufficient history; legal
+  outputs; TOP and WORST from one ranking; and the dummy can never enter real results, catalogues, league tables or
+  OV-1. Nothing is implemented until then.
 - **At step 6 of the simple scheme, before any job that fetches (owner, 27 November 2026; decision log entry
   358):** the new results updater has never fetched from the real site, and no AI or runner may run it. Its first
   real fetch is the owner's own: `Run_Results_Updater.bat` by itself in `a_p_r_i_r_DEV`, after DEV's first fill
@@ -788,3 +801,6 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   Claude gives this reminder in the steps it writes for step 6.
   Progress (28 November 2026): DONE for DEV (the owner's first real fetch, decision log entry 386; the job that
   fetches, entry 387). STILL OWED: the same care before the first fetching job in QA and in PROD.
+  Progress (28 November 2026): DROPPED for QA by the owner (decision log entry 396: QA's first fill is an
+  ordinary fetching job; the updater has fetched three times in DEV with every overlap matching). Claude
+  recommends the same for PROD; the owner decides.
