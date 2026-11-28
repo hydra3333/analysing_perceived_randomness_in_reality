@@ -10026,3 +10026,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **How it happened:** the record of this fact stopped on a line-width check, and the commit beside it went out
   without it: the fifth time today. The writing and the commit were again in one command; they are now separate.
 - Next numbers: EX_334 (Claude's); entry 421; RAT-74 (the reporting design), RAT-75 (H-1 v20).
+
+## 421. 28 November 2026, 20:07 - OWNER: RAT-74, the reporting design and amendment A1 (v0.5) ratified; installed
+
+- **The reviewer's independent review of v0.5: PASS** (relayed by the owner, 20:06): v0.5 at `30ec387` was compared
+  with v0.4; every change lies in the declared sections and reflects the agreed clarifications; no further
+  correction; v0.5 recommended as the single governing document for RAT-74; the MEASURE item stays open by
+  agreement; no install or run authority implied.
+- **The owner's words (20:06):** "I ratify it."
+- **RAT-74: the consolidated reporting design and specification amendment A1, v0.5, is ratified.** Installed by
+  Claude as
+  `doc/Predictive_Randomness_Reporting_Design_And_Specification_Amendment_A1_v0_5.md`
+  (777 lines; SHA-256 `c0f6b1edc52512fb7d9d8e1d395346ab2723bffa2dde6a4d591795440d400f48`):
+  the candidate
+  `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_5_20261128.md`
+  (SHA-256
+  `85e57794cae5a86fe891ae66737ddbd077ddc36270fb7bca344ccefbd60bfadf`)
+  with its title word and status lines alone changed to say it is ratified. It governs the reporting work: Part
+  A the design, Part B the amendment of specification v0.6 section 9 and of the simple scheme v0.2, with the
+  disposition of every measure of R3 section 17.
+- **What RAT-74 does not do:** it authorises no code, install or run. The MEASURE item (its A14) stays open. The
+  next deliverable is Claude's code plan, on the owner's go.
+- **The H-1 v20 candidate** is corrected in place to say so (387 lines; SHA-256
+  `465cbd02da6084479d8e0178b8554dd5d5769d0dd35b59b6875286b0ce64328e`); earlier SHA-256 values of it are
+  superseded. It awaits the owner's ratification (RAT-75).
+- Next numbers: EX_334 (Claude's); entry 422; RAT-75 (H-1 v20).

@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:03 Australia/Adelaide (entry 419: candidate v0.5 for RAT-74).
+**Last updated:** 28 November 2026, 20:07 Australia/Adelaide (entry 421: RAT-74, the reporting design).
 
 ## For the owner: NOW
 
+- **RAT-74: THE REPORTING DESIGN AND AMENDMENT A1 ARE RATIFIED (entry 421; 28 November 2026)** and installed as
+  `doc/Predictive_Randomness_Reporting_Design_And_Specification_Amendment_A1_v0_5.md`. It authorises no code,
+  install or run; the MEASURE item stays open. **Next for Claude, on the owner's go (Fable):** the code plan.
+  **Waiting on the owner:** RAT-75, H-1 v20 (`exchange/HANDOVER_2026_11_28/`). **The tidy waits for this work.**
 - **REPORTING: THE CONSOLIDATED CANDIDATE v0.5 IS THE ONE CANDIDATE FOR RAT-74 (entry 419; 28 November 2026),**
   `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_5_20261128.md`: v0.4 with the
   owner's and the reviewer's clarifications (staleness defined, by each report's own draw endpoint; coverage
