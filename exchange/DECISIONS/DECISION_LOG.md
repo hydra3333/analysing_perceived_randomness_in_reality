@@ -9376,3 +9376,32 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Nothing is decided or done.** The tidy needs the reviewer's agreement, the exact list (step P1) and the owner's
   ratification (it would be RAT-69), and comes only after QA and PROD. **Next is still item 7: QA.**
 - Next numbers: EX_334 (Claude's); entry 396; RAT-69.
+
+## 396. 28 November 2026, 10:32 - QA CREATED; its first fill running (the owner drops the separate first fetch); the reviewer's tidy agreement committed
+
+- **DEV confirmed clean after its rebuild** (the owner's `git status`, 09:21: "nothing to commit, working tree
+  clean"); the 40 `IN_PLACE_SINCE` files unchanged.
+- **The owner asked (10:26):** "can we skip Run_Research.bat --no-update etc and jump to Run_Research.bat ? what are
+  the implications ?" Claude: yes; the separate first fetch of entry 358 was owed because the new updater had never
+  fetched; it has now fetched three times in DEV, every overlapping draw matching, and `Create_Tree` checks that
+  QA's updater is DEV's by its fingerprint; a STOP in the updater writes nothing and the job goes on with QA's
+  results; read the two `[MASTER]` lines; run it before Tuesday's Oz Lotto draw so that QA's totals can be compared
+  with DEV's exactly. **The owner ran it so** (his decision; it changes entry 358 for QA, and Claude recommends the
+  same for PROD).
+- **Item 7, QA (the owner, about 10:12 to 10:28):** `Make_Installable.bat ALL INFRA` in DEV: 40 methods and the
+  infrastructure flagged (engine `75c7e6195c53...`, as Claude computed after `8fce853`; updater `69f204cea1c2...`;
+  launchers `3dea97596ab5...`), "Done."; `Create_Tree.bat QA`: the infrastructure and 40 methods (157 files) and
+  DEV's accepted results (12 files) copied to `T:\a_p_r_i_r_QA`, the settings file last; QA's `.venv` built
+  (Python 3.15.2; all 39 direct packages, numpy 2.5.5, "No broken requirements found"). The 41 flag files are not
+  yet committed (the owner commits them). **QA's first job, `Run_Research.bat` (fetching), started about 10:31.**
+- **The reviewer's "One repository tree tidy - consolidated agreement and outstanding actions v0.1"** (relayed
+  10:31): committed unchanged at its request as
+  `exchange/ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md` (SHA-256
+  `a6032a02628a0ef17b4a1122f6f62a78dd211424c56a5622234d5e9729480c7b`). Agreement in principle, not ratification or
+  authority. It carries the owner's instruction (given in the reviewer's chat) that useful material in `exchange/`,
+  notably the decision log, must not be lost; its four corrections C01 to C04 to Claude's procedure; the runner's
+  rulebook v0.9 in principle; and asks Claude for a revised candidate and the exact list P1. QA and PROD come first.
+- **Claude's measurement for the `exchange/` question:** of the work-package folders (`EX_nnn_*` and
+  `CLAUDE_WEB_TOOLS`), 1,291 files and 38.5 MB are copies of code and data (888 `.py`, 285 `.diff`, 79 `.zip`, and
+  `.bat`, `.ini`, `.cmd`); 1,308 files and 25 MB are writing and evidence (600 `.md`, 570 `.txt`, 96 `.json`).
+- Next numbers: EX_334 (Claude's); entry 397; RAT-69.
