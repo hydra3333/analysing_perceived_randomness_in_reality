@@ -9657,3 +9657,21 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the manual is installed into QA and PROD, so that it is installed once: the owner's `Make_Installable.bat INFRA`
   and installs wait for it.
 - Next numbers: EX_334 (Claude's); entry 406; RAT-71.
+
+## 406. 28 November 2026, 13:19 - OWNER: RAT-71, the operations manual's edition 2 ratified; installed as DEV's master
+
+- **RAT-71. The owner's words (13:18):** "i ratify it now." (edition 2, the reviewer's draft of entry 405).
+- **Installed by Claude, commit `2fc0899`,** as `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md` (1,685 lines; CRLF, ASCII; file
+  form 0 faults; SHA-256
+  `c5becab0812f4a116ca3be194869c26946eddf857052338516bc59f5a8feb746`).
+  It is the draft with its edition and status lines alone rewritten ("Edition 2"; "RATIFIED by the owner, RAT-71"),
+  and its long prose lines rewrapped to 120 characters, whitespace only (the word sequence checked by machine to be
+  the draft's). Sections 0 to 10 and appendices A and B are still edition 1's, byte for byte.
+  `doc/OPERATIONS_MANUAL.md` names both editions.
+- **This entry follows its commit:** its line-length check stopped it after the files were written (the fourth time
+  today; the shell's stop-on-error did not apply inside the command chain). From here each record is written and
+  checked in a command of its own before any commit.
+- **Next for the owner, now one installation:** `git pull`; in DEV `Make_Installable.bat INFRA`, commit the flag;
+  `Install.bat QA`, then `Install.bat PROD` (each adds the manual and runs that tree's ordinary job, which finds
+  nothing to make again; a few minutes each).
+- Next numbers: EX_334 (Claude's); entry 407; RAT-72.
