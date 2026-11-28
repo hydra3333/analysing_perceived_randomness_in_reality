@@ -6,12 +6,11 @@ You are taking over as ChatGPT, independent reviewer for
 hydra3333/analysing_perceived_randomness_in_reality. I am the project owner and sole decision maker;
 never publish my personal name. Claude is primary designer/coder. I relay between the chats.
 
-Fetch main first. Read the refreshed H-2 v13 candidate at
-exchange/HANDOVER_2026_11_28/ChatGPT_Reviewer_Handover_H2_v13_20261128.md and its section 0 reading list.
-It records the latest position at my request, not a ratification or new operational GO. H-2 v12
-(RAT-67, entry 390) remains ratified until I approve its successor. If v13 has since been installed,
-read the installed edition in doc/HANDOVER/. Apply newest decisions, not merely the candidate cutoff
-at 5498e5a, entry 395, plus my subsequent chat instructions. H-1 v18 RAT-68. Do not revive old controls.
+Fetch main first. Read H-2 v13, doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v13_20261128.md, and its
+section 0 reading list. I ratified it (RAT-69, entry 397; it supersedes H-2 v12); it is not an
+operational GO. The previous reviewer chat wrote it; Claude corrected its position to entry 396 at my
+request after that chat ended. Apply the newest decisions in the decision log, not merely its cutoff.
+H-1 v18 RAT-68. Do not revive old controls.
 
 DO FIRST: read, tell me actual current status, what is/is not authorised, uncertainties and
 your next recommendation. No automatic tests, edits or runs. I accept takeover; no questionnaire.
@@ -22,16 +21,17 @@ two-line progress-wording fix 8fce853 complete. DEV rebuild 393: PB 15,198 forec
 scores through 1593, Oz 6,678 / 6,638 through 1710. Prevailing OV-1 unchanged (PB 1592-1593,
 0.983267352796; Oz 1709-1710, 0.997794221022); backup successful; Git clean 394, 40 establishment
 records unchanged. 41 I_AM_INSTALLABLE flags (INFRA + 40 variants) committed 5498e5a.
-No repeat rebuild/comparison. Item 7: QA, then PROD, each on my separate GO. Check latest progress;
-Create_Tree QA, own venv, first fill --no-update, owner-only standalone updater before fetching job.
+No repeat rebuild/comparison. Item 7: QA, then PROD, each on my separate GO. QA is created with its own
+venv; its first fill is an ordinary fetching job (my decision, entry 396: no separate first fetch).
+Check the latest progress in the decision log before advising.
 Compare identical forecasts/scores; prevailing OV-1 may legitimately differ by local establishment.
 Never artificially align real trees. Only I operate real trees.
 
 DEFERRED TIDY: retain ALL Git history; reset would save only 5 MB. No rewrite/force-push/new repo.
 One tidy after QA and PROD are established, exact inventory reviewed and ratified and separate GO.
 Read H-2 section 7A, Claude_Tree_Tidy_Inventory_And_Procedure_v0_1_20261128.md and
-ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md (latter supplied for Claude to commit;
-check newest main). My direction: keep useful exchange material, especially complete DECISIONS,
+ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md (both in exchange/ on main).
+My direction: keep useful exchange material, especially complete DECISIONS,
 live reminders/roadmap, scientific ideas, unresolved questions and deferred work. Keep when in doubt.
 Review corrections C01-C04: local OV-1 cohorts; two VS Code venv paths; full-path cleanup/rollback;
 no-update no-rebuild/no-new-output check. Retire two frozen comparison tools and eight tests only,

@@ -3,9 +3,11 @@
 Date: 28 November 2026
 Project: hydra3333/analysing_perceived_randomness_in_reality
 Status: CANDIDATE, refreshed at the owner's request; not a new ratification or operational GO.
+Corrected by the Claude web chat at the owner's request after the reviewer chat ended (entry 397): the
+position brought to entry 396 (QA created; the owner's decision on QA's first fetch; the agreement on main).
 Proposed successor to installed H-2 v12 (RAT-67, entry 390). H-2 v12 remains ratified until replaced.
 Cutoff: main 5498e5a1b0a5a7ee475385904a3052ca024a65fe, decision log entry 395, plus subsequent
-owner/reviewer chat and consolidated tidy agreement supplied to the owner for Claude to commit.
+owner/reviewer chat; Claude's corrections bring the position to entry 396 (main 0185e71).
 Prepared by the incumbent reviewer. DEV rebuild complete and clean; 41 installable flags committed.
 QA then PROD are next.
 
@@ -30,7 +32,7 @@ Read, in order:
    evidence named in the decision log; a_p_r_i_r_DEV/README.md.
 8. The scientific references and actual code appropriate to the next requested review (sections 3-4).
 9. For the deferred tidy only: exchange/Claude_Tree_Tidy_Inventory_And_Procedure_v0_1_20261128.md;
-   ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md (owner to relay, Claude to commit), or
+   exchange/ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md (committed by Claude, cbda280), or
    its later agreed successor. See section 7A. Do not interrupt QA/PROD work for the tidy.
 
 For the owner's precise direction, read Part 1 of
@@ -315,8 +317,15 @@ Prevailing OV-1 unchanged to last digit (PB 1592-1593, 0.983267352796; Oz 1709-1
 outcomes were on file, bookkeeping only. Owner git status clean (394); all 40 establishment flags
 unchanged. Reviewer accepts reported outcome. No repeat rebuild or comparison needed.
 H-2 v12 installed 436f05e9 (blurb e3b14c7a), RAT-67 entry 390; H-1 v18 RAT-68 entry 392.
-At 5498e5a, 41 I_AM_INSTALLABLE flags (INFRA and 40 variants) committed; exact QA creation/fill
-status not yet reported. Fetch newest main before advising owner.
+At 5498e5a, 41 I_AM_INSTALLABLE flags (INFRA and 40 variants) committed. QA CREATED (entry 396):
+Make_Installable ALL INFRA flagged 40 methods and the infrastructure (engine 75c7e6195c53...);
+Create_Tree QA copied 157 software and 12 results files to T:\a_p_r_i_r_QA, settings last; QA's own
+.venv built (Python 3.15.2, numpy 2.5.5, 39 packages, no broken requirements). OWNER DECISION (396):
+QA's first fill is an ordinary fetching Run_Research.bat, no --no-update fill and no separate
+standalone fetch first; the updater has fetched three times in DEV with every overlap matching, and
+Create_Tree checks QA's updater fingerprint. That fill started about 10:31; its output is awaited.
+Expected: 26 matched/0 added each game, then DEV's totals (PB 15,198/15,158; Oz 6,678/6,638) while no
+new draw has arrived (Oz Lotto's next is Tuesday 1 December). Fetch newest main before advising owner.
 Evidence distinction: independent static review and acceptance of author/runner/owner reports,
 not independent runtime execution. No outstanding installed-engine findings.
 
@@ -327,13 +336,14 @@ runs. Do not repeat completed rehearsal/fetch milestones.
 
 DEV rebuild and clean Git status confirmed (393-394). No repeat. Immediate item 7: establish QA
 then PROD, each on owner's separate GO. Make_Installable ALL INFRA flags committed at 5498e5a.
-Read actual README and commands; confirm progress before advising Create_Tree QA, fresh own venv
-and first fill --no-update. Create_Tree copies flagged infrastructure and nonretired flagged
+QA is created and its first (fetching) fill was running at the cutoff (entry 396); check its output
+before advising PROD. Create_Tree copies flagged infrastructure and nonretired flagged
 methods, accepted results only, not historical computed outputs. Local establishment draws
 settled at first use. Do not artificially align or copy old establishment flags. Compare
 forecasts/scores for identical data/methods/targets; all-draw OV-1 comparable on matching inputs,
-prevailing OV-1 may differ by local establishment. Before each tree's first fetching job remind
-owner to run standalone updater and inspect results. Only owner operates real trees; no AI or
+prevailing OV-1 may differ by local establishment. The separate standalone first fetch of entry 358
+is dropped for QA by the owner (396); Claude recommends the same for PROD (the owner's decision); read
+the job's two [MASTER] lines. Only owner operates real trees; no AI or
 runner real fetch. Fetch newest status, do not assume QA/PROD exist. Complete QA then PROD before
 any tidy. Frozen top-level venv remains until ratified tidy.
 
@@ -369,8 +379,8 @@ proposal: gain about 5 MB not worth loss of cited commits. Retain all history an
 secrets and permissions. Optional ordinary git gc owner only, after backup. No force-push or rewrite.
 
 Read Claude's tidy proposal v0.1 at 6d0ba88 and the reviewer's consolidated agreement v0.1 dated
-28 Nov (owner asked Claude to commit; at cutoff NOT on main). Its exact supplied filename:
-ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md.
+28 Nov, committed unchanged by Claude (cbda280, entry 396):
+exchange/ChatGPT_Tree_Tidy_Consolidated_Agreement_v0_1_20261128.md.
 SHA-256 a6032a02628a0ef17b4a1122f6f62a78dd211424c56a5622234d5e9729480c7b.
 Owner expressly wants useful exchange material preserved. Current proposal's blanket EX/package
 removal is conditional on retaining unique valuable science, mathematical reasoning, deferred
@@ -381,6 +391,11 @@ Keep current scientific specs, method designs, errata, standards, handovers, GAS
 future priorities, deferred performance, R-002 in reminders. Actual doc listing and selected E1/E2R
 designs reviewed; no additional specific doc requested, subject to retention check. Preserve original
 results/ unchanged and runner folder incl old reports/tasks (historical tasks not executable authority).
+CLAUDE'S PROPOSED exchange/ RULE (entry 396; awaits the reviewer's view): in the work-package folders
+(EX_nnn_* and CLAUDE_WEB_TOOLS) keep every .md/.txt/.json (1,308 files, 25 MB) and remove only code
+and data copies .py/.diff/.zip/.bat/.ini/.cmd (1,291 files, 38.5 MB), whose real versions are in
+history and a_p_r_i_r_DEV; keep all 334 EX messages and the rest of exchange/; any file may be named
+as an exception. Claude proposes writing the revised candidate and P1 once, after PROD.
 
 Proposed removal after QA/PROD: GAIS (owner says can go), obsolete review/work packages and EX
 correspondence subject to retention policy, superseded documents, frozen root software, tests,
@@ -411,7 +426,8 @@ Next actions for Claude: commit consolidated agreement unchanged, record status;
 conservatively, check live dependencies, update proposal incorporating corrections; prepare exact
 P1 tracked removal list/counts/sizes at actual baseline and permitted change list; retain P1.
 Send revised proposal and P1 to reviewer, iterate to mutual agreement; owner ratifies exact scope
-(anticipated RAT-69, actual number may change), QA/PROD established, separate GO. Refresh full backup,
+(the RAT number at the time; RAT-69 went to this handover), QA/PROD established, separate GO. Refresh
+full backup,
 no active runner/job, clean Git, annotated before_tidy_<date> tag pushed and peeled commit verified.
 P3/P4 two principal commits with source/results tree equality and exact diff checks, archive index
 links to tag/inventory and retrieval examples. P4a rulebook candidate/ratification; P5 owner pull
