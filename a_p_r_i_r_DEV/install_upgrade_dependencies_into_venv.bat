@@ -1,6 +1,6 @@
 @echo off
 setlocal DisableDelayedExpansion
-rem 39 direct requirements; mirror these in the future per-user installer.
+rem direct requirements; mirror these in the future per-user installer.
 rem Source: union of both original lists, minus redundant Python stdlib configparser backport.
 rem The standard configparser module comes with Python 3.15; no PyPI backport needed.
 rem Host-specific source policy: COMPUTERNAME=3900X allows source distributions.
@@ -16,8 +16,13 @@ rem Modes: INSTALL_UPGRADE (default), INSTALL (alias for upgrade), UPGRADE, VERI
 rem Explicit Python interpreter, not the possibly active python on PATH.
 rem This script does not uninstall PyInstaller or run pip-review --auto.
 rem These are independent environments; equal names do not guarantee equal installed versions.
-set "DIRECT_PACKAGES=pip tzdata tzlocal pytz numpy pandas mypy pymediainfo pydub sockets requests python-utils python-dotenv pyyaml html5lib psutil pywin32 pywin32-ctypes python-dateutil blake3 chardet charset-normalizer libcst wakepy pystray pillow py7zr rich pydantic beautifulsoup4 scipy threadpoolctl selenium pyahocorasick setuptools wheel packaging pipdeptree pip-review"
-set "APP_PACKAGES=tzdata tzlocal pytz numpy pandas mypy pymediainfo pydub sockets requests python-utils python-dotenv pyyaml html5lib psutil pywin32 pywin32-ctypes python-dateutil blake3 chardet charset-normalizer libcst wakepy pystray pillow py7zr rich pydantic beautifulsoup4 scipy threadpoolctl selenium pyahocorasick setuptools wheel packaging pipdeptree pip-review"
+REM Variable	    Purpose
+REM DIRECT_PACKAGES	Complete list of required packages, including pip, used for verification and reporting.
+REM APP_PACKAGES	Packages to install or upgrade after pip itself has been upgraded separately.
+REM set "DIRECT_PACKAGES=pip tzdata tzlocal pytz numpy pandas mypy pymediainfo pydub sockets requests python-utils python-dotenv pyyaml html5lib psutil pywin32 pywin32-ctypes python-dateutil blake3 chardet charset-normalizer libcst wakepy pystray pillow py7zr rich pydantic beautifulsoup4 scipy threadpoolctl selenium pyahocorasick xlsxwriter setuptools wheel packaging pipdeptree pip-review"
+REM set "APP_PACKAGES=tzdata tzlocal pytz numpy pandas mypy pymediainfo pydub sockets requests python-utils python-dotenv pyyaml html5lib psutil pywin32 pywin32-ctypes python-dateutil blake3 chardet charset-normalizer libcst wakepy pystray pillow py7zr rich pydantic beautifulsoup4 scipy threadpoolctl selenium pyahocorasick xlsxwriter setuptools wheel packaging pipdeptree pip-review"
+set "APP_PACKAGES=tzdata tzlocal pytz numpy pandas mypy pymediainfo pydub sockets requests python-utils python-dotenv pyyaml html5lib psutil pywin32 pywin32-ctypes python-dateutil blake3 chardet charset-normalizer libcst wakepy pystray pillow py7zr rich pydantic beautifulsoup4 scipy threadpoolctl selenium pyahocorasick xlsxwriter setuptools wheel packaging pipdeptree pip-review"
+set "DIRECT_PACKAGES=pip %APP_PACKAGES%"
 set "ROOT=%~dp0"
 set "PY=%ROOT%.venv\Scripts\python.exe"
 set "VENV_ACTIVATE=%ROOT%.venv\Scripts\activate.bat"
@@ -51,7 +56,7 @@ echo [DEPS] Environment: project .venv
 echo [DEPS] Computer: %COMPUTERNAME%
 echo [DEPS] Package policy: %INSTALL_POLICY%
 echo [DEPS] Python: "%PY%"
-echo [DEPS] 39 direct packages: %DIRECT_PACKAGES%
+echo [DEPS] direct packages: %DIRECT_PACKAGES%
 "%PY%" --version
 if errorlevel 1 goto :failure
 "%PY%" -m pip --version
@@ -120,10 +125,10 @@ if errorlevel 1 goto :failure
 if errorlevel 1 goto :failure
 echo [DEPS] Generated environment snapshot: "%SNAP%"
 if "%INCOMPLETE%"=="1" goto :incomplete
-echo [DEPS] SUCCESS. All 39 direct requirements installed; research compatibility tests remain required.
+echo [DEPS] SUCCESS. All direct requirements installed; research compatibility tests remain required.
 goto :finish
 :incomplete
-echo [DEPS] INCOMPLETE. One or more of the 39 required packages could not be installed or verified.
+echo [DEPS] INCOMPLETE. One or more of the required packages could not be installed or verified.
 if exist "%UNAVAILABLE%" (
     echo [DEPS] Packages whose installation failed:
     type "%UNAVAILABLE%"
