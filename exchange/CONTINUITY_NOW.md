@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 19:02 Australia/Adelaide (entry 414: consensus on reporting).
+**Last updated:** 28 November 2026, 19:09 Australia/Adelaide (entry 415: final design, amendment A1).
 
 ## For the owner: NOW
 
+- **REPORTING AND RANKINGS: THE FINAL DESIGN AND AMENDMENT A1 ARE WRITTEN (entry 415; 28 November 2026),** in
+  `exchange/`: `Claude_Reporting_Part_And_Rankings_Proposal_v0_2_20261128.md` and
+  `Claude_Specification_Amendment_A1_Reporting_CANDIDATE_v0_1_20261128.md`. **Waiting on the reviewer:** its
+  reading. **Waiting on the owner:** ratification (RAT-74). **Then Claude:** the code plan. No code before it.
 - **REPORTING AND RANKINGS: CONSENSUS (entry 414; 28 November 2026).** Owner, reviewer and Claude agree the design
   discussion (`exchange/..._Reporting_And_Rankings_Discussion_v0_1` to `_v0_4`); the MEASURE item stays open.
   **Next for Claude:** the final design (proposal v0.2) and the amendment of specification v0.6, for the reviewer

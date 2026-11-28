@@ -9872,3 +9872,30 @@ section 17.2 (unpack it into a new folder, never over the clone).
   section 17 measure's disposition and draw numbers as the only time axis, for the reviewer's reading and the
   owner's ratification. Then the code plan. No code before ratification.
 - Next numbers: EX_334 (Claude's); entry 415; RAT-74.
+
+## 415. 28 November 2026, 19:09 - CLAUDE: the final design (proposal v0.2) and amendment A1, for ratification
+
+- **On the owner's "go" (19:04; on Fable), after the consensus of entry 414.** Two papers, for the reviewer's
+  reading and the owner's ratification (they would be RAT-74). **Neither is ratified; nothing is built.**
+- **The final design:**
+  `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_2_20261128.md`
+  (357 lines; CRLF and ASCII; SHA-256 `d061b2ef5c7e0e3251d60fcd19566441f4321f9070d62fbde2b1e138c0b686e5`;
+  commit `add50b6`). It gathers the discussion v0.1 to v0.4 and entry 414: the reporting part in `src/reporting/`
+  with its own fingerprint; tracks (TOP and WORST apart) on their own scored draws; phase 1's measures (MR0, MR1,
+  MR1-T, every MR4 event, MR7 MAIN and PB, MR17.SUM and MR17.EQ) and their sorts, sixteen text sorts on by default
+  for Powerball and eleven for Oz Lotto; exact tails and signed Z, MR1 by a bracket; the yardsticks as reference
+  lines; text, CSV and workbook; introductions and legends; `REPORT_SETTINGS.ini`; LAST, DRAW n and ALL; no stale
+  report; failures and a locked workbook; the engine's one change and its proof; phases 2 and 3; tests; the
+  MEASURE item. Draw numbers are the only time axis throughout.
+- **The amendment:**
+  `exchange/Claude_Specification_Amendment_A1_Reporting_CANDIDATE_v0_1_20261128.md`
+  (162 lines; CRLF and ASCII; SHA-256 `f33de68e95c95e2b6b29eb35c4115cfbb3c98a067586c9ab7aee9a97f4a088f1`).
+  It replaces specification v0.6 section 9; names the other sentences of the specification and of the simple scheme
+  v0.2 that are read differently (the engine's fingerprint leaves `src/reporting` out; step 6 of the job; the new
+  `Run_Reports.bat`); gives the disposition of every measure of R3 section 17 (MR0 to MR16) and of the new MR17;
+  and lists where the living system departs from R3 section 17 and what is unchanged.
+- **Found while writing, for the code plan:** two things the OV-1 print-outs show live only in the job's memory
+  today (why the second series stopped early; a results cutoff); the engine will store them beside the series as
+  part of its one change, so that the reporting part only reads (the design's section 11).
+- **Next:** the reviewer's reading; the owner's ratification; then Claude's code plan. No code before ratification.
+- Next numbers: EX_334 (Claude's); entry 416; RAT-74.
