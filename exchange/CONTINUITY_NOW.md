@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 12:39 Australia/Adelaide (entry 402: PROD established; the manual v0.2 in hand).
+**Last updated:** 28 November 2026, 13:02 Australia/Adelaide (entry 404: RAT-70, the operations manual installed in DEV).
 
 ## For the owner: NOW
 
+- **RAT-70: THE OPERATIONS MANUAL IS RATIFIED (entry 404; 28 November 2026);** its one master is
+  `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md`, and `ROOT_FILES` now carries it into QA and PROD (`5812b70`, for the
+  reviewer's reading). **Next for the owner:** pull; `Make_Installable.bat INFRA`, commit the flag; `Install.bat QA`
+  and `Install.bat PROD`. **Next for Claude:** the tidy's revised candidate and exact list (P1).
 - **PROD IS ESTABLISHED; THE SYSTEM IS IN PRODUCTION (entry 402; 28 November 2026).** DEV, QA and PROD give the same
   results from the same accepted results. **The routine:** `Run_Research.bat` in PROD after each draw. **In hand
   (Claude):** the operations manual v0.2 (the reviewer's sixteen corrections), then its master in

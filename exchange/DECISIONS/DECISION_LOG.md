@@ -9600,3 +9600,31 @@ section 17.2 (unpack it into a new folder, never over the clone).
   master in `a_p_r_i_r_DEV/` with the `ROOT_FILES` change and its test, a pointer in `doc/`, and DEV's README
   brought up to date.
 - Next numbers: EX_334 (Claude's); entry 404; RAT-70.
+
+## 404. 28 November 2026, 13:02 - OWNER: RAT-70, the operations manual ratified; installed as DEV's master; it travels with the software
+
+- **The reviewer's focused check of v0.2** (relayed 12:57, at `4e91e51`): PASS subject to five small residual
+  corrections: R01 tree backups are not read back when made (written whole, then named; checked on restore); R02
+  section 9's failed-`Create_Tree` advice to refer to section 5's safeguards; R03 section 9's definitions to admit
+  partial changes; R04 `Copy_From_PROD` has no "nothing to install" case; R05 VERIFY FAIL's "master unchanged" only
+  for the overlap and consecutive-draw checks. Also: the distribution to be reflected in Appendix A, the root-file
+  fingerprint and the software-copy scopes. PROD's establishment accepted; no outstanding operational findings.
+- **RAT-70. The owner's words (12:57):** "if you agree with the fixes then ratified once changed and can be
+  installed". Claude agrees with all five (R01 checked in `backup.py`: no read-back at creation). All applied.
+- **The owner asked (12:58)** whether the de Broglie-inspired methods are named with their name. They were called
+  "pilot-wave-inspired"; the manual now says "pilot-wave (de Broglie-Bohm) inspired", as R1's own heading names the
+  family (section 4.7), in Appendix C's table and its note on the unnumbered leads.
+- **Installed (three commits):**
+  - `cc9977d`: `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md`, edition 1, the one master (781 lines; CRLF, ASCII; status
+    "RATIFIED by the owner, RAT-70"); SHA-256
+    `4a99ee243910472eba84a505f9d1f55a28578b1d95f7f7640da0b3d5b4aec280`.
+  - `5812b70`: `deploy/tree_parts.py` `ROOT_FILES` gains `OPERATIONS_MANUAL.md` (owner, entry 402), so
+    `Create_Tree`, `Install` and `Copy_From_PROD software` carry it; outside every fingerprint a result depends on;
+    two new tests; 282 pass; pyflakes clean; file form 0 faults. **For the reviewer's reading.**
+  - `5e0e308`: `doc/OPERATIONS_MANUAL.md`, a pointer to the master; `a_p_r_i_r_DEV/README.md` brought up to date
+    (steps 5 and 6 done; step 7's manual). Its message names this entry, which a line-length check stopped; this
+    entry follows it in its own commit (the third time today; the writing command now stops at a failed check).
+- **What the owner does next, when he likes:** `git pull`; in DEV `Make_Installable.bat INFRA` (the root files'
+  fingerprint now includes the manual), commit the flag; `Install.bat QA`, then `Install.bat PROD`. Each adds one
+  file and runs that tree's ordinary job, which finds nothing to make again (a few minutes). No rebuild anywhere.
+- Next numbers: EX_334 (Claude's); entry 405; RAT-71.
