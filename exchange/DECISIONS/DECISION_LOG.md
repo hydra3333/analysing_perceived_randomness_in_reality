@@ -9475,3 +9475,24 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `exchange/OWNER_REMINDERS.md` beside the other three; `doc/METHOD_TEMPLATE/` is retained in the revised tidy
   candidate; both handovers carry these at their next refresh. QA and PROD continue without interruption.
 - Next numbers: EX_334 (Claude's); entry 399; RAT-70.
+
+## 399. 28 November 2026, 11:21 - QA'S FIRST FILL: the same as DEV; one website STOP in Oz Lotto's fetch, nothing written
+
+- **QA's first job** (the owner, `Run_Research.bat`, fetching, 10:31 to 11:19, 48 minutes; whole output sent).
+- **The science, checked by Claude against DEV's rebuild (entry 393): the same.** Powerball 15,198 forecasts and
+  15,158 scores, Oz Lotto 6,678 and 6,638; 904 and 478 report files; results on file through 1593 and 1710; the
+  progress lines step for step as DEV's. The prevailing OV-1: "starts at draw 1594; no line yet" and "starts at draw
+  1711; no line yet", as designed (QA's methods count from QA's own first fill; reviewer's C01). Backup
+  `T:\a_p_r_i_r_backups\QA\QA_20261128_111906_after_job.zip`.
+- **Powerball's fetch:** 26 overlapping draws checked, all matched, added 0, 0 warnings.
+- **Oz Lotto's fetch STOPPED:** "Stop: results for 2026-05-31..2026-11-28 did not appear (expected at least 26,
+  saw 0)". Claude read the updater: the results page showed none of the 26 expected result headings within its
+  15-second wait (`PAGE_WAIT_SECONDS`); it was not a block or challenge page (that has its own message). As
+  designed: nothing was written, nothing more was fetched in that job, the job went on with QA's accepted Oz Lotto
+  results (through 1710, the same as DEV's), warned twice, and ended "not cleanly" (exit code 1). The same fetch
+  worked three times in DEV this morning (08:05, 08:13, 08:28). **Its cause on the website is not known.**
+- **Claude's recommendation:** QA's science is right, so QA stands. One retry, on the owner's go:
+  `Run_Results_Updater.bat` by itself in QA, a while later. If it checks 26, all matched, added 0: a passing fault of
+  the page, recorded, and PROD next. If it stops the same way again: an unexplained STOP, investigated before PROD
+  fetches (the model rule: Fable).
+- Next numbers: EX_334 (Claude's); entry 400; RAT-70.
