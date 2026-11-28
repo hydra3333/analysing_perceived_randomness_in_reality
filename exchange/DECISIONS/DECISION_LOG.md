@@ -9725,3 +9725,41 @@ section 17.2 (unpack it into a new folder, never over the clone).
   blurb already says to read the installed edition when there is one. Until then the candidate is the text.
 - **The continuity page** names H-1 v19 and H-2 v14 in its top block and its two handover sections.
 - Next numbers: EX_334 (Claude's); entry 410; RAT-74.
+
+## 410. 28 November 2026, 15:45 - OWNER: the league's ranking to be put right before the tidy; a gap found
+
+- **The owner's review of the latest league tables found a gap** (PROD's tables through Powerball 1593 and Oz
+  Lotto 1710). His ranking decisions of 26 October 2026 (MRD-01 to MRD-24; R3 v0.5 section 17, [MR-RATIFIED]) are
+  not in the living system's league. Specification v0.6 section 9 left them as "a further report over the same
+  files, on request"; that report was never built in `a_p_r_i_r_DEV`, and neither the scheme nor a handover named
+  it as owed. The one implementation there has been is the frozen first system's
+  `src/evaluation/Method_Rankings_Report.py`, which the tidy would retire (it reads the first system's files).
+- **What the present league does** (read in `a_p_r_i_r_DEV/src/research/reports.py`): one line for each method,
+  ordered by TOP main-barrel hits a draw above chance. WORST, the Powerball barrel and the prize divisions (which
+  use both barrels) are shown as columns; none of them takes part in the order.
+- **The owner's decision (15:41):** "yes to doing something before the tidy". The tidy's revised candidate and its
+  exact list wait for it; the tidy's candidate will name `Method_Rankings_Report.py` as the one past implementation.
+- **The owner's points for the design (his, for discussion; nothing of the design is decided, and the reviewer is
+  not yet involved, at his word):**
+  - his own ranking criteria (the weighting by division, MR1-T, with the others of R3 section 17) are to be among
+    several criteria, each a ranking of its own;
+  - an assessment that leaves out a barrel is a serious omission: both barrels are to count;
+  - TOP and WORST are separate predictors: one line each, each ranked on its own (R3 17.3.4 already calls each a
+    "track"; the simple league folded the two into one line);
+  - a report for each ranking criterion, ordered by it, with a file name that says which;
+  - under every report a legend that explains every column and how to read it, with an example;
+  - perhaps the same columns in every report, with a column of ranks for each criterion at the right;
+  - a reporting and evaluation part separate from the engine, in place of the present arrangement.
+- **Claude's advice (given in the chat on Fable, from the code as read):** it fits. Each method's
+  `forecasts.jsonl` and `scores.jsonl` already hold, for every scored draw, the whole ranking of each barrel, the
+  TOP and WORST sets, the matches in each barrel for each set and the division each set would have won, so a
+  separate part computes nothing the engine has not stored. The results updater is the precedent for a part outside
+  the engine's fingerprint (entry 356): with its own fingerprint, a change to the reports makes only the reports
+  again. The cost is one change to the engine (its fingerprint leaves the reports out, and the league leaves the
+  engine), so one rebuild in each tree, once; and an amendment of specification v0.6 section 9, to be ratified.
+  A "luckiest of N" reference line belongs in each report: how far the first of N lines gets by luck alone.
+- Figures Claude worked in the chat from the attached tables are suggestive only and are not recorded here.
+- **The order of work now:** the results review (Oz Lotto's table and the OV-1 files still to walk through); the
+  ranking reports (Claude's design paper, the owner's reading, then the reviewer; code; one install); then the tidy.
+  The manual's correction (Oz Lotto's chance figure) and its worked example go with that install, on the owner's go.
+- Next numbers: EX_334 (Claude's); entry 411; RAT-74.
