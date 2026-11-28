@@ -10051,3 +10051,17 @@ section 17.2 (unpack it into a new folder, never over the clone).
   `465cbd02da6084479d8e0178b8554dd5d5769d0dd35b59b6875286b0ce64328e`); earlier SHA-256 values of it are
   superseded. It awaits the owner's ratification (RAT-75).
 - Next numbers: EX_334 (Claude's); entry 422; RAT-75 (H-1 v20).
+
+## 422. 28 November 2026, 20:10 - OWNER: RAT-75, H-1 v20 ratified; installed
+
+- **The owner's words (20:10):** "yes I ratify it now as RAT-75".
+- **RAT-75: H-1 v20 installed by Claude in `doc/HANDOVER/`:** `Claude_Primary_Handover_H1_v20.md` (the candidate
+  with its status line alone changed to "RATIFIED by the owner, RAT-75"; 387 lines; SHA-256
+  `1437091bc2502dc3059135cdeeeffd87d07f5da676b12467108ca573155273cf`) and its blurb
+  `Claude_Primary_Handover_H1_v20_introductory_blurb.md` (the candidate's bytes; SHA-256
+  `06b6c4ecfdea6989566bf0e392ab8b65542ca371f24c13266f1f2a930553c8a4`). **H-1 v20 supersedes H-1 v19 (RAT-72).**
+- **The continuity page** names H-1 v20 in its top block and its two handover sections. H-2 v14 (RAT-73) remains
+  the reviewer's handover in force; it predates the reporting work (entries 410 to 421).
+- **Next:** Claude's code plan for the reporting part, on the owner's go (Fable). No code before the reviewer has
+  read the plan; no install or run without the owner's separate go.
+- Next numbers: EX_334 (Claude's); entry 423; RAT-76.

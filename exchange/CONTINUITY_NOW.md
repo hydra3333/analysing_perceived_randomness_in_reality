@@ -4,10 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 20:07 Australia/Adelaide (entry 421: RAT-74, the reporting design).
+**Last updated:** 28 November 2026, 20:10 Australia/Adelaide (entry 422: RAT-75, H-1 v20 installed).
 
 ## For the owner: NOW
 
+- **RAT-75: H-1 v20 IS INSTALLED (entry 422; 28 November 2026).** RAT-74, the reporting design, is in `doc/`.
+  **Next for Claude, on the owner's go (Fable):** the code plan for the reporting part. **Still to do with the
+  owner:** the walk through Oz Lotto's league and the OV-1 files. **For the reviewer to consider:** H-2 v14
+  predates the reporting work. **The routine:** `Run_Research.bat` in PROD after each draw. The tidy waits.
 - **RAT-74: THE REPORTING DESIGN AND AMENDMENT A1 ARE RATIFIED (entry 421; 28 November 2026)** and installed as
   `doc/Predictive_Randomness_Reporting_Design_And_Specification_Amendment_A1_v0_5.md`. It authorises no code,
   install or run; the MEASURE item stays open. **Next for Claude, on the owner's go (Fable):** the code plan.
@@ -1449,6 +1453,10 @@ durable EX messages are authoritative.
 
 ## If a chat ends
 
+- **From RAT-75 (28 November 2026, entry 422): Claude chat ended:** start a new Claude chat with the blurb
+  `doc/HANDOVER/Claude_Primary_Handover_H1_v20_introductory_blurb.md`; it reads H-1 v20 and the documents its
+  section 0 lists, then the decision log from entry 422. **ChatGPT reviewer chat ended:** the blurb of H-2 v14 in
+  `doc/HANDOVER/`, then the decision log from entry 410 (the reporting work). The bullets below are history.
 - **From entry 416 (28 November 2026), until H-1 v20 is ratified: Claude chat ended:** H-1 v19 is the installed
   handover, but its sections 6 and 8 are overtaken by the reporting work. Start the new chat with the candidate
   blurb `exchange/HANDOVER_2026_11_28/Claude_Primary_Handover_H1_v20_introductory_blurb.md` (it names the
@@ -1521,6 +1529,11 @@ build the staged slice 3 tree for reading.
   top of slice 2's tree. Next free EX number after `git fetch`: EX_244 at the time of writing.
 
 ## Installed handovers (authoritative)
+
+**From RAT-75 (28 November 2026, entry 422): H-1 v20 (Claude; `doc/HANDOVER/Claude_Primary_Handover_H1_v20.md`,
+SHA-256 `1437091bc2502dc3059135cdeeeffd87d07f5da676b12467108ca573155273cf`; its blurb
+`06b6c4ecfdea6989566bf0e392ab8b65542ca371f24c13266f1f2a930553c8a4`).**
+For the reviewer, H-2 v14 (RAT-73) stays in force. H-1 v19 (RAT-72) is history.
 
 **From RAT-72 and RAT-73 (28 November 2026, entry 409): H-1 v19 (Claude;
 `doc/HANDOVER/Claude_Primary_Handover_H1_v19.md`, SHA-256
