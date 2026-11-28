@@ -9763,3 +9763,33 @@ section 17.2 (unpack it into a new folder, never over the clone).
   ranking reports (Claude's design paper, the owner's reading, then the reviewer; code; one install); then the tidy.
   The manual's correction (Oz Lotto's chance figure) and its worked example go with that install, on the owner's go.
 - Next numbers: EX_334 (Claude's); entry 411; RAT-74.
+
+## 411. 28 November 2026, 16:13 - CLAUDE: the reporting part and rankings, proposal v0.1, for the owner's reading
+
+- **The owner's words (16:05), on Claude's advice of entry 410** (his points for the design, not yet a decision on
+  it): a WORST line that leads would be "good to see since an perceived anti-luck aspect of reality is still a
+  valid finding we intentionally look for"; a column heading carries the MR code and a title of a few words, with
+  "a well-explained plain english legend below"; yes to "every report states the yardstick"; each criterion needs
+  its clear explanation and "its Z form stated in plain english perhaps with a short example"; WORST lines are
+  ranked as TOP lines are, "mixed in together as if no difference exists for ranking purposes"; the draws: "(a)
+  default LAST for last draw (b) ALL recompute all draws (c) DRAW x for a nominated draw"; and the paper to be
+  written as a proposal of "a .md new replacement reporting engine" for the reviewer, with the issues that arose,
+  the proposal, how it answers them, and "plain english introduction and legends with small example(s)".
+- **He asked whether the engine's one change could go DEV, then PROD, then both software and data from PROD to QA.**
+  Read in `deploy/tree_tools.py`: yes, as the commands stand (`Install.bat PROD`, then `Copy_From_PROD.bat both QA`;
+  QA then has nothing to make again). It saves one rebuild and gives up QA as a separate trial of that change. The
+  paper sets both routes out (its section 7); the choice is his, at the time.
+- **Written:**
+  `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_1_20261128.md`
+  (283 lines; CRLF and ASCII; SHA-256 `1fbbfaab79c9b02512917d50e84223da0c886b13e49bf02c1a8c9c0017bccbd5`).
+  **A proposal: nothing in it is done, decided or authorised.** In
+  short: a reporting part in `src/reporting/`, outside the engine's fingerprint as the updater is; each method's TOP
+  and WORST ticket a line of its own, all ranked together; one report for each criterion (to start: MR7 main hits,
+  MR7.PB Powerball hits, MR4 prizes won, MR0 best divisions, MR1 prize rarity, the owner's MR1-T), the same lines and
+  columns in each with a column of ranks for every criterion; a luck figure Z from the exact chance under fair draws;
+  the yardstick in every report; an introduction and a legend with worked examples in every report; LAST, ALL and
+  DRAW n; one change to the engine, so one rebuild a tree, once; specification v0.6 section 9 to be amended. Seven
+  questions for the reviewer (its section 9).
+- **Next:** the owner reads it and says what is wrong or missing; then he relays it to the reviewer. No code before
+  his decision. The Oz Lotto league and the OV-1 files are still to be walked through.
+- Next numbers: EX_334 (Claude's); entry 412; RAT-74.

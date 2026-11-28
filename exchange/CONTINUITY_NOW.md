@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 15:45 Australia/Adelaide (entry 410: the league's ranking before the tidy).
+**Last updated:** 28 November 2026, 16:13 Australia/Adelaide (entry 411: the reporting proposal).
 
 ## For the owner: NOW
 
+- **THE REPORTING PART AND RANKINGS: PROPOSAL v0.1 IS WRITTEN (entry 411; 28 November 2026),**
+  `exchange/Claude_Reporting_Part_And_Rankings_Proposal_v0_1_20261128.md`.
+  **Waiting on the owner:** his reading, then his relay to the reviewer (seven questions in its section 9).
+  **No code before his decision.** Still to do in the results review: Oz Lotto's league and the OV-1 files.
+  **The tidy waits for this work.**
 - **THE LEAGUE'S RANKING IS TO BE PUT RIGHT BEFORE THE TIDY (entry 410; 28 November 2026).** The owner's ranking
   decisions (R3 v0.5 section 17: MR0, MR1, his MR1-T and the rest; TOP and WORST as separate lines; both barrels)
   were never built in the living system; its league is ordered by TOP main-barrel hits alone. **In discussion
