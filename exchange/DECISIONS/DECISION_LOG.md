@@ -9941,3 +9941,36 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **`exchange/OWNER_REMINDERS.md`** gains two reminders: phases 2 and 3 of the reporting work are owed; a rebuild
   marks every earlier forecast as made after its result (for a later discussion).
 - Next numbers: EX_334 (Claude's); entry 417; RAT-74 (the reporting design), RAT-75 (H-1 v20).
+
+## 417. 28 November 2026, 19:53 - OWNER: the first migration and the end state decided; the candidate v0.4
+
+- **The owner's words (19:51):** "I choose option 1, followed by running ALL once the measurement has been
+  undertaken. Our intended end state remains comprehensive reporting for every scored draw, subject to the actual
+  performance measurements." Clarified by him:
+  - "Initially migrate to the new reporting system using LAST."
+  - "Undertake the agreed measurements in DEV."
+  - "Subsequently run ALL to establish the complete historical text and CSV report collection."
+  - "Excel workbooks for the latest scored draw and any other specifically requested draw endpoints."
+  - "Routine jobs generate reports for each newly scored draw, including when catching up multiple draws."
+  - "Existing valid reports need not be recalculated. Remove and recalculate those that become stale."
+  - "Retain ALL as an explicit recalculation command."
+- **Also his:** "I agree that the engine should cease deleting the reports folder directly, leaving the reporting
+  component responsible for managing its derived outputs and preserving the requested endpoint inventory." And:
+  "Please incorporate this into the consolidated candidate for RAT-74, subject to any further advice you may have."
+- **Written, at that request:**
+  `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`
+  (732 lines; CRLF and ASCII; SHA-256 `90c014e4968af424de3fefe116f7ca1c9e858801a19bd8ca33cef5f164e6860c`).
+  It is the reviewer's v0.3 (`3372e4b`, left unchanged) with only the passages its section "Changes in v0.4" lists:
+  the first migration makes LAST only and removes the old league files; LAST reports each newly scored draw (every
+  draw scored since the game's reports were last brought up to date); the end state and the owner's ALL after the
+  measurement; workbooks for the latest scored draw and for endpoints asked for; the engine no longer deletes the
+  reports folder. **The single candidate for RAT-74; not ratified.**
+- **Claude's readings within it, for the owner and the reviewer to confirm or change:** (a) when a newer draw
+  becomes the latest, the earlier latest draw's workbook is removed unless that endpoint was asked for by DRAW n
+  (so workbooks do not pile up one a draw); (b) "newly scored" is reckoned from the draw the reports were last
+  brought up to, kept in the inventory, so that a DRAW n request for an old draw does not make LAST fill every draw
+  after it; (c) a reports folder the owner deletes by hand starts again with LAST.
+- **Claude's advice, recorded:** once ALL has been run in a tree, anything that makes earlier reports stale (a new
+  or retired method, a change to the reporting part or its settings, an engine change) remakes that game's whole
+  collection. That is the end state chosen, and is what the measurement of A14 prices.
+- Next numbers: EX_334 (Claude's); entry 418; RAT-74 (the reporting design), RAT-75 (H-1 v20).

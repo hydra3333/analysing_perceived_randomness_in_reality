@@ -4,10 +4,15 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 19:39 Australia/Adelaide (entry 416: one candidate; H-1 v20).
+**Last updated:** 28 November 2026, 19:53 Australia/Adelaide (entry 417: candidate v0.4 for RAT-74).
 
 ## For the owner: NOW
 
+- **REPORTING: THE CONSOLIDATED CANDIDATE v0.4 IS THE ONE CANDIDATE FOR RAT-74 (entry 417; 28 November 2026),**
+  `exchange/Claude_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_4_20261128.md`: the reviewer's
+  v0.3 with the owner's decision worked in (migrate with LAST; measure; then ALL; the engine no longer deletes the
+  reports folder). **Waiting on the reviewer:** confirmation of v0.4's changes. **Waiting on the owner:** RAT-74,
+  and RAT-75 (H-1 v20). **Then Claude:** install it in `doc/`; the code plan (Fable). No implementation GO yet.
 - **REPORTING: ONE CONSOLIDATED CANDIDATE FOR RAT-74; H-1 v20 WRITTEN AS A CANDIDATE (entry 416; 28 November
   2026).** The reviewer's `exchange/ChatGPT_Reporting_Design_And_Specification_Amendment_A1_CANDIDATE_v0_3_...`
   is agreed by Claude but for one point (the old league endpoints are not "requested" endpoints). **Waiting on
