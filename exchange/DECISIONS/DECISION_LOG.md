@@ -9496,3 +9496,19 @@ section 17.2 (unpack it into a new folder, never over the clone).
   the page, recorded, and PROD next. If it stops the same way again: an unexplained STOP, investigated before PROD
   fetches (the model rule: Fable).
 - Next numbers: EX_334 (Claude's); entry 400; RAT-70.
+
+## 400. 28 November 2026, 11:24 - QA's updater retried by itself: both games normal; the first STOP a transient fetch failure
+
+- **The reviewer's concurrence with entry 399** (relayed 11:23, checked at `b11c5f5`): QA stands; its first-fill
+  evidence passes, C01 and the local establishment boundaries included; the engine's response to the STOP and its
+  exit code 1 are correct; one owner-authorised standalone retry in QA after a pause; if it succeeds with unchanged
+  results, towards PROD on the owner's separate GO; **record the original occurrence as a transient fetch failure of
+  unknown cause, not a proven website fault**; if it recurs, investigate before further fetching, PROD included. No
+  timeout change, automatic retry, QA recreation, repeated first fill or further comparison asked. Claude agrees,
+  and **corrects entry 399's "a passing fault of the page" to that wording.**
+- **The retry** (the owner, `Run_Results_Updater.bat` by itself in QA, 11:22): Powerball and Oz Lotto each checked
+  26 overlapping draws, all matched, added 0, 0 warnings; both grabs kept; "RESULTS UPDATER - END - done." QA's
+  results are unchanged (through 1593 and 1710). **The STOP of 11:05 is recorded as a transient fetch failure of
+  unknown cause.** It did not recur.
+- **QA is established.** Next: PROD, on the owner's separate GO.
+- Next numbers: EX_334 (Claude's); entry 401; RAT-70.
