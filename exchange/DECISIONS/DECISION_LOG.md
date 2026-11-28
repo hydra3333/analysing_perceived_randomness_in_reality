@@ -9628,3 +9628,32 @@ section 17.2 (unpack it into a new folder, never over the clone).
   fingerprint now includes the manual), commit the flag; `Install.bat QA`, then `Install.bat PROD`. Each adds one
   file and runs that tree's ordinary job, which finds nothing to make again (a few minutes). No rebuild anywhere.
 - Next numbers: EX_334 (Claude's); entry 405; RAT-71.
+
+## 405. 28 November 2026, 13:17 - OWNER (through the reviewer): NL-means last; numbers for the unnumbered leads; a proposed edition 2 of the manual
+
+- **Relayed by the owner (13:16), from his discussion with the reviewer:** "The owner agrees to the expanded
+  research appendices and additionally directs: NL-means is LAST. Research leads without numbers are to receive
+  numbers, even if temporary." Recorded as the owner's directions, as relayed.
+- **The reviewer's proposed edition 2:**
+  `exchange/ChatGPT_Operations_Manual_Expanded_Research_Appendices_DRAFT_20261128.md` (commit `81b0280`; 1,422
+  lines; SHA-256 `980b75cf38e68ec4f2b5a6c919e67e0d717ae1add6b67eafec3325f32cddc2ae`; ASCII, CRLF). Appendix C gains
+  the provisional identities; a new Appendix D keeps the research ideas and their origins.
+- **The provisional identities (temporary labels, not R2 additions, not permission to build, not an order except
+  that NL-means is last):** E_63 constrained free-beta field; E_64 regularised wave-node motion; E_65 independently
+  noisy positions; E_66 two-dimensional torus; E_67 cross-barrel field coupling; E_68 full configuration-space /
+  entangled wave (E_63 to E_68 pilot-wave, de Broglie-Bohm, inspired, from R1 section 4.7.1b); E_69 topological
+  data analysis / persistent homology and E_70 algorithmic information / normality in multiple bases (historical
+  GAIS leads, keeping their earlier dispositions); **E_71 pattern-spotting by non-local means (NL-means), LAST.**
+  Methods A and B take no new numbers (E_17 and E_45). R2's catalogue is not amended; the labels are reconciled
+  with R2 before any is built. No identity E_63 or later existed before (the old handovers held it open).
+- **Claude's check of the draft:** sections 0 to 10 and appendices A and B are byte for byte edition 1's; only the
+  edition, status and contents lines, Appendix C's end and the new Appendix D differ. D.1 matches R1 section 4.7
+  word for word apart from ASCII substitutions (section sign, pi, an accented letter, "in" for the element sign) and
+  an added bibliography; D.3 keeps about 78% of the Methods A and B proposal's words (its research sections); the
+  source documents stay in `doc/`. 146 prose lines run past 120 characters (copied paragraphs): to be rewrapped,
+  words unchanged, when installed.
+- **The reviewer's reading of `5812b70`** (the manual in `ROOT_FILES`, two tests): PASS, no corrections.
+- **Recorded in `exchange/OWNER_REMINDERS.md`** (R-001, R-002). The reviewer recommends ratifying edition 2 before
+  the manual is installed into QA and PROD, so that it is installed once: the owner's `Make_Installable.bat INFRA`
+  and installs wait for it.
+- Next numbers: EX_334 (Claude's); entry 406; RAT-71.

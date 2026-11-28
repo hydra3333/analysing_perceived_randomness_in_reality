@@ -51,6 +51,11 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
   first light counting methods; B in wave 3 (with E_27), after releases and WF-1.
 - Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED. Method A is installed (E_17's log-age variant). Method B becomes E_45's specification in wave 3,
   as new variants after build step 3 (roadmap step I).
+- Update (28 November 2026; decision log entry 405): Methods A and B take no new numbers (E_17 and E_45).
+  The owner's direction that unnumbered leads get numbers, even temporary, gives provisional identities to
+  others: E_63 to E_68 (the remaining pilot-wave, de Broglie-Bohm, inspired leads of R1 section 4.7.1b),
+  E_69 (topological data analysis), E_70 (algorithmic information / normality), E_71 (NL-means, last).
+  Temporary labels, reconciled with R2 before any is built; no order is decided by them.
 
 ## R-002  Pattern-spotting by non-local means (the NLMEANS idea)
 
@@ -71,6 +76,9 @@ Nothing is deleted. PROPOSED means Claude's suggestion, waiting for your word.
 - When (owner's revised order, 30 October 2026): straight after wave 3 (Method B), or whenever the
   owner asks. Any method it yields joins a later wave.
 - Update (22 November 2026, after the redesign; RAT-40 and RAT-41): CARRIED, postponed as you left it. Nothing in the redesign changes it.
+- Update (28 November 2026; decision log entry 405): the owner places this idea LAST among the research ideas,
+  superseding the timing above. Provisional identity E_71 (a temporary label; R2's catalogue not amended).
+  Kept in the operations manual's Appendix D once edition 2 is ratified.
 
 ## R-003  Optional tidy-up of old EX copies in review/
 
