@@ -9536,3 +9536,29 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Noticed while writing (not changed):** `a_p_r_i_r_DEV/README.md` still says steps 5 to 7 are "still to come"
   and step 2 is "this state"; outside every fingerprint; to be brought up to date with the manual's installation.
 - Next numbers: EX_334 (Claude's); entry 402; RAT-70.
+
+## 402. 28 November 2026, 12:39 - PROD ESTABLISHED: the same as DEV and QA; ITEM 7 DONE; the owner's four decisions on the manual
+
+- **PROD** (the owner): `Create_Tree.bat PROD` in DEV (its printout was cleared from the screen; the owner showed
+  the settings file `G:\a_p_r_i_r_PROD\ENVIRONMENT.ini`, written 11:25: role PROD and the three trees' places, as
+  designed); PROD's own `.venv` built from a new window (Python 3.15.2; all 39 direct and all 87 installed package
+  versions identical to QA's, Claude compared them); **PROD's first job, an ordinary fetching `Run_Research.bat`
+  (11:31 to 12:19, 48 minutes):** Powerball and Oz Lotto each checked 26 overlapping draws, all matched, added 0,
+  0 warnings (no recurrence of QA's transient Oz Lotto failure); Powerball 15,198 forecasts and 15,158 scores, Oz
+  Lotto 6,678 and 6,638; 904 and 478 report files; through 1593 and 1710; prevailing OV-1 "starts at draw 1594 /
+  1711; no line yet"; backup `T:\a_p_r_i_r_backups\PROD\PROD_20261128_121921_after_job.zip`; "The job
+  finished." **The same as DEV and QA. PROD is established; item 7 of the work order (entry 365) is done; the
+  system is in production.** From now the routine is `Run_Research.bat` in PROD after each draw.
+- **The reviewer's full review of the manual v0.1** (relayed 12:15): committed unchanged at its offer as
+  `exchange/ChatGPT_Operations_Manual_v0_1_Review_20261128.md`. Outline and approach PASS; OV-1 mathematics PASS;
+  corrections OM-C01 to OM-C16 and two editorial points E01, E02, all documentary; a separate section 4 on where the
+  manual lives.
+- **The owner's decisions (12:38), to Claude's four questions:** "1. yes 2. yes 3. yes 4. here it is":
+  1. Claude applies OM-C01 to OM-C16, E01 and E02, as v0.2 with a disposition of each.
+  2. The manual's one master is `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md` (in Git; a pointer in `doc/`), installed into
+     QA and PROD by the existing mechanism: one line in `ROOT_FILES` (`deploy/tree_parts.py`) and a test, as a
+     separate commit for the reviewer to read. Outside the engine's fingerprint; an edit then needs
+     `Make_Installable.bat INFRA` and an install.
+  3. The manual may name his `0-Backup-DO_COPY.bat` (a short paragraph; no private paths or other contents).
+  4. PROD's output, above.
+- Next numbers: EX_334 (Claude's); entry 403; RAT-70.

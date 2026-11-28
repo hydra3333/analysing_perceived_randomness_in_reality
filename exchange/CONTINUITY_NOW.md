@@ -4,11 +4,14 @@ Living page (P0 and P3, adopted 14 November 2026). Updated in place by the Claud
 keeps the history. It is a recovery index, not a handover, and grants no permission; the installed handovers and the
 durable EX messages are authoritative.
 
-**Last updated:** 28 November 2026, 10:39 Australia/Adelaide (entry 397: RAT-69, H-2 v13 installed; QA's first fill
-running).
+**Last updated:** 28 November 2026, 12:39 Australia/Adelaide (entry 402: PROD established; the manual v0.2 in hand).
 
 ## For the owner: NOW
 
+- **PROD IS ESTABLISHED; THE SYSTEM IS IN PRODUCTION (entry 402; 28 November 2026).** DEV, QA and PROD give the same
+  results from the same accepted results. **The routine:** `Run_Research.bat` in PROD after each draw. **In hand
+  (Claude):** the operations manual v0.2 (the reviewer's sixteen corrections), then its master in
+  `a_p_r_i_r_DEV/OPERATIONS_MANUAL.md` with the `ROOT_FILES` change; then the tidy's revised candidate and P1.
 - **RAT-69: H-2 v13 IS THE REVIEWER'S HANDOVER IN FORCE (entry 397; 28 November 2026),**
   `doc/HANDOVER/ChatGPT_Reviewer_Handover_H2_v13_20261128.md` with its blurb beside it (the reviewer chat that wrote
   it ended; Claude corrected its position to entry 396). Claude's is H-1 v18 (RAT-68). **QA is created; its first
