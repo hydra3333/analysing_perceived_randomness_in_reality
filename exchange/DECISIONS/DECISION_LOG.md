@@ -9512,3 +9512,27 @@ section 17.2 (unpack it into a new folder, never over the clone).
   unknown cause.** It did not recur.
 - **QA is established.** Next: PROD, on the owner's separate GO.
 - Next numbers: EX_334 (Claude's); entry 401; RAT-70.
+
+## 401. 28 November 2026, 12:01 - The operations manual: outline agreed by the owner and the reviewer; v0.1 written as a candidate
+
+- **The owner (11:34):** "could we do the manual now ? there may be a draft doc outline somewhere, we all were going
+  to discuss/agree on its structure but things have been simplified since then." The inputs: entries 171, 182, 202,
+  220 (EX_298), 230 and 231, 275, 289, 305, 343 and 398, the reminders, and the reviewer's discussion starter
+  `exchange/ChatGPT_to_Claude_Operations_Manual_Discussion_v0_1_20261125.md` (`ecdfa55`), which the reviewer asked
+  to keep through the tidy (it is in the keep list).
+- **The outline, agreed in three rounds:** Claude's first proposal; the reviewer's concurrence with refinements; the
+  owner's wish for short titles each saying what the section holds, in the order understanding, operating, reading
+  results, managing, problems, the rest, and for Appendix B as a full command reference (every command's one-line
+  syntax with every sub-command and option, what it does, and each option's effect and where it applies). The
+  owner (11:55): "that looks good to me, lets see what chatgpt says." **The reviewer (11:56) agrees in full**
+  (Appendix B the single complete syntax and options reference; sections may hold usage examples; transient,
+  retryable updater failures distinguished from other STOPs; DEV tests and a comparison of totals and OV-1 when
+  changing Python versions) and recommended the owner authorise v0.1.
+- **v0.1 written as a CANDIDATE:** `exchange/Claude_Operations_Manual_v0_1_20261128.md` (660 lines; SHA-256
+  `4f4eff368212946f02d86ae9057067c67f46a89dbc0c1cdc9157bbda37901a27`; CRLF, ASCII). Sections 0 to 10, appendices
+  A to C, from the commands as built, the README and the outputs of 27 and 28 November. Appendix C lists the 40
+  implemented variants and the 50 catalogued families not built, from R2 section 7 (not the priorities draft, entry
+  289). Next: the reviewer's one reading, the owner's ratification, then into `doc/`.
+- **Noticed while writing (not changed):** `a_p_r_i_r_DEV/README.md` still says steps 5 to 7 are "still to come"
+  and step 2 is "this state"; outside every fingerprint; to be brought up to date with the manual's installation.
+- Next numbers: EX_334 (Claude's); entry 402; RAT-70.
