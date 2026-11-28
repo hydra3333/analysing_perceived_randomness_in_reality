@@ -9847,3 +9847,28 @@ section 17.2 (unpack it into a new folder, never over the clone).
 - **Next:** the owner's word on consensus; the reviewer's short confirmation; then Claude's final design (proposal
   v0.2) and the amendment of specification v0.6, for ratification. No code before that.
 - Next numbers: EX_334 (Claude's); entry 414; RAT-74.
+
+## 414. 28 November 2026, 19:02 - REVIEWER, CLAUDE and OWNER: consensus on reporting and rankings
+
+- **The reviewer's confirmation (relayed by the owner, 19:01):** substantive consensus is reached; v0.4 sections 2
+  to 5 are accepted; no further discussion round is needed on its account. Two qualifications:
+  - MR1: handle zero probability bounds and possibly infinite sigma explicitly in the midpoint ordering;
+  - text reports: hits a scored draw and excess a draw stay among the core columns; the existing detailed
+    information stays in the complete CSV and workbook.
+  A third, on verifying the dependency versions of the three environments, the reviewer marked superseded: it
+  checked PyPI's release dates of NumPy 2.5.5, SciPy 1.18.1, pandas 3.1.1, threadpoolctl 3.8.0 and BLAKE3 1.0.11
+  (all before the recent environment installations, and all matching the owner's own check), which supports the
+  owner's assumption that the scientific packages did not change; no further investigation unless phase 1's
+  scientific comparison finds a difference.
+- **Claude agrees with all three.** MR1: inclusive tails are worked in log form, and are never truly nought (each
+  includes the observed score); a bound that is nought or a sigma that is infinite is shown as such, and ordering
+  then uses the other bound, never a midpoint of an infinity. Core columns: hits a draw and excess a draw added to
+  main hits (and to Powerball hits). Dependencies: if phase 1's comparison finds a difference, it is first told
+  apart from the move by a rebuild of the old code with the present environment.
+- **The owner's words:** "if you agree with the latest chatgpt suggestions then we have consensus". **Consensus is
+  reached** on the design discussion (the reviewer's v0.1 and v0.3, Claude's v0.2 and v0.4), with the MEASURE item
+  open. This is agreement in discussion, not ratification.
+- **Next:** Claude's final design (proposal v0.2) and the focused amendment of specification v0.6, with every R3
+  section 17 measure's disposition and draw numbers as the only time axis, for the reviewer's reading and the
+  owner's ratification. Then the code plan. No code before ratification.
+- Next numbers: EX_334 (Claude's); entry 415; RAT-74.
